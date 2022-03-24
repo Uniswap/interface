@@ -6,7 +6,7 @@ import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments
 import useIsValidBlock from 'lib/hooks/useIsValidBlock'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
@@ -125,12 +125,7 @@ class GAMetric extends IMetric {
   }
 
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    ReactGA.timing({
-      category: 'Routing API',
-      variable: `${key} | ${unit}`,
-      value,
-      label: 'client',
-    })
+    ReactGA._gaCommandSendTiming('Routing API', `${key} | ${unit}`, value, 'client')
   }
 }
 
