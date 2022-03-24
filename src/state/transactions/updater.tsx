@@ -184,6 +184,7 @@ export default function Updater(): null {
             console.error(`failed to check transaction hash: ${hash}`, error)
           })
       })
+    // eslint-disable-next-line
   }, [
     chainId,
     library,

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useCallback, useEffect } from 'react'
+import React, { useState, useRef, useContext, useCallback } from 'react'
 import styled, { css, ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Text, Flex } from 'rebass'

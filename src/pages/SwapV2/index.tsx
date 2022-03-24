@@ -307,11 +307,13 @@ export default function Swap({ history }: RouteComponentProps) {
     if (isExpertMode) {
       mixpanelHandler(MIXPANEL_TYPE.ADVANCED_MODE_ON)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpertMode])
   useEffect(() => {
     if (allowedSlippage !== 50) {
       mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: allowedSlippage / 100 })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedSlippage])
   const shareUrl =
     currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]

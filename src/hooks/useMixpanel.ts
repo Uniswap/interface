@@ -237,16 +237,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           })
           break
         }
-        case MIXPANEL_TYPE.ADD_LIQUIDITY_INITIATED: {
-          const { token_1, token_2 } = payload
-
-          mixpanel.track('Add Liquidity Initiated', {
-            token_1,
-            token_2,
-            network,
-          })
-          break
-        }
         case MIXPANEL_TYPE.ADD_LIQUIDITY_COMPLETED: {
           const { token_1, token_2, add_liquidity_method } = payload
           mixpanel.track('Add Liquidity Completed', {
@@ -403,6 +393,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currencies, network, saveGas, account, trade, mixpanel.hasOwnProperty('get_distinct_id')],
   )
   return { mixpanelHandler }
@@ -428,6 +419,7 @@ export const useGlobalMixpanelEvents = () => {
         mixpanel.reset()
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
   useEffect(() => {
@@ -437,6 +429,7 @@ export const useGlobalMixpanelEvents = () => {
         old_network: oldNetwork && NETWORK_LABEL[oldNetwork as ChainId],
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])
 
   useEffect(() => {
@@ -485,5 +478,6 @@ export const useGlobalMixpanelEvents = () => {
       }
       pageName && mixpanelHandler(MIXPANEL_TYPE.PAGE_VIEWED, { page: pageName })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, location.pathname, account])
 }

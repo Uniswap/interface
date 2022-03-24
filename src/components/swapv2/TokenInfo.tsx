@@ -111,7 +111,8 @@ const TokenInfo = ({ currencies }: { currencies: { [field in Field]?: Currency }
   // Handle switch network case
   useEffect(() => {
     inputNativeCurrency?.symbol && setActiveTab(inputNativeCurrency.symbol)
-  }, [chainId, inputNativeCurrency?.symbol])
+    //eslint-disable-next-line
+  }, [chainId, inputNativeCurrency, inputNativeCurrency?.symbol])
 
   return (
     <>
