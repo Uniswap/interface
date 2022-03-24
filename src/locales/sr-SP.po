@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-23 19:09\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -797,6 +797,10 @@ msgstr "Грешка при повезивању. Покушајте да осв
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Детаљи о грешци"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Грешка при преузимању трговине"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"

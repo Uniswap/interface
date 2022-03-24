@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-23 19:09\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -797,6 +797,10 @@ msgstr "Erreur de connexion. Essayez d'actualiser la page."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Détails de l'erreur"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Erreur lors de la récupération de l'échange"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"

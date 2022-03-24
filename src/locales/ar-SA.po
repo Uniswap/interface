@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-23 19:09\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -797,6 +797,10 @@ msgstr "خطأ في الاتصال. حاول تحديث الصفحة."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "تفاصيل الخطأ"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "خطأ في جلب التجارة"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"

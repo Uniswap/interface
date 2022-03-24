@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-23 19:09\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -797,6 +797,10 @@ msgstr "Der opstod en fejl. Prøv at opdatere siden."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Fejldetaljer"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Fejl ved hentning af handel"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"

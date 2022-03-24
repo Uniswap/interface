@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-23 19:09\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -797,6 +797,10 @@ msgstr "Chyba připojení. Zkuste obnovit stránku."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Detaily chyby"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Chyba při načítání obchodu"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
