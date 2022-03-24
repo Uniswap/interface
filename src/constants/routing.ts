@@ -83,7 +83,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH9_EXTENDED[SupportedChainId.RINKEBY],
   ],
   [SupportedChainId.BINANCE]: [
-    new Token(SupportedChainId.BINANCE, '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', 9, 'KIBA', 'Kiba Inu'),
+    new Token(SupportedChainId.BINANCE, '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', 9, 'KIBA', 'Kiba Inu'),
     binanceTokens.bnb,
     binanceTokens.wbnb,
     binanceTokens.busd,

@@ -385,7 +385,7 @@ export const Chart = () => {
     const [ethPrice, ethPriceOld] = useEthPrice()
     const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
-    const binanceTransactionData = useBscTokenTransactions('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase(), 60000)
+    const binanceTransactionData = useBscTokenTransactions('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase(), 60000)
     const prices = useBnbPrices()
     const hasAccess = useHasAccess()
     const accessDenied = !hasAccess
@@ -398,7 +398,7 @@ export const Chart = () => {
     const tokenDataAddress = React.useMemo(() => chainId === 1 ?
         '0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase()
         : chainId === 56 ?
-            '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase() : '', [chainId])
+            '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase() : '', [chainId])
     const [tokenDataPriceParam, tokenDataPriceParamTwo] = React.useMemo(() => {
         const valueOne = chainId === 56 ? prices?.current : ethPrice;
         const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
