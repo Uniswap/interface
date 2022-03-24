@@ -1,4 +1,8 @@
 export const getFormattedTimeFromSecond = (numberOfSeconds: number, showDetail = false) => {
+  if (numberOfSeconds === 0) {
+    return '0 Days'
+  }
+
   const second = numberOfSeconds % 60
   const estimatedRemainingMinutes = (numberOfSeconds - second) / 60
   const minute = estimatedRemainingMinutes % 60

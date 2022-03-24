@@ -233,6 +233,13 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
             />
           </Flex>
 
+          <Flex grid-area="vesting_duration" alignItems="center" justifyContent="flex-end">
+            <ClickableText>
+              <Trans>Vesting</Trans>
+            </ClickableText>
+            <InfoHelper text={t`After harvesting, your rewards will unlock linearly over the indicated time period`} />
+          </Flex>
+
           <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">
             <ClickableText>
               <Trans>My Rewards</Trans>

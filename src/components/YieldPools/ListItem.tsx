@@ -297,6 +297,9 @@ const ListItem = ({ farm }: ListItemProps) => {
             />
           )}
         </APY>
+        <DataText grid-area="vesting_duration" align="right">
+          {getFormattedTimeFromSecond(farm.vestingDuration, true)}
+        </DataText>
         <DataText
           grid-area="reward"
           align="right"
@@ -531,7 +534,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                   </Link>
                 )}
               </LPInfoContainer>
-              {farm.vestingDuration ? (
+              {farm.vestingDuration !== undefined ? (
                 <Flex style={{ gap: '4px' }}>
                   <img src={IconLock} alt="icon_lock" />
                   <Text fontSize="14px" color={theme.subText}>
@@ -619,7 +622,7 @@ const ListItem = ({ farm }: ListItemProps) => {
           <DataText>{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
         </GridItem>
 
-        <GridItem noBorder>
+        <GridItem noBorder={farm.vestingDuration === undefined}>
           <DataTitle>
             <span>
               <Trans>Ending In</Trans>
@@ -627,9 +630,29 @@ const ListItem = ({ farm }: ListItemProps) => {
           </DataTitle>
         </GridItem>
 
-        <GridItem noBorder>
+        <GridItem noBorder={farm.vestingDuration === undefined}>
           <DataText>{farm.time}</DataText>
         </GridItem>
+
+        {farm.vestingDuration !== undefined && (
+          <>
+            <GridItem noBorder>
+              <DataTitle>
+                <span>
+                  <Trans>Vesting</Trans>
+                </span>
+                <InfoHelper
+                  text={t`After harvesting, your rewards will unlock linearly over the indicated time period`}
+                  size={12}
+                />
+              </DataTitle>
+            </GridItem>
+
+            <GridItem noBorder>
+              <DataText>{getFormattedTimeFromSecond(farm.vestingDuration, true)}</DataText>
+            </GridItem>
+          </>
+        )}
       </StyledItemCard>
 
       {expand && (
@@ -841,7 +864,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                   </Link>
                 )}
               </LPInfoContainer>
-              {farm.vestingDuration ? (
+              {farm.vestingDuration !== undefined ? (
                 <Flex style={{ gap: '4px' }}>
                   <img src={IconLock} alt="icon_lock" />
                   <Text fontSize="14px" color={theme.subText}>
