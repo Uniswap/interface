@@ -5348,10 +5348,10 @@
   optionalDependencies:
     "@ethersproject/providers" "^5.5.1"
 
-"@web3-react/eip1193@8.0.12-beta.0":
-  version "8.0.12-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.12-beta.0.tgz#07aae52dd1b10870b29889499d9854b7e81322ee"
-  integrity sha512-Euj/JL3S3V4BuBI9qe/DdcviQ3VK+PItcdmyn/cdieaejiRUfgGj7Nqa3uhvlD98zvzeoGKBX5mzU10gvx7PGQ==
+"@web3-react/eip1193@8.0.15-beta.0":
+  version "8.0.15-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.15-beta.0.tgz#38fa4fa1cf61231d043a77db8151bc01c075931f"
+  integrity sha512-Ch69TGwJgyGTXr/nepCSLhd9Ime1cCaPmz+1oBQMn109NzOCWn8wOFbFwNojyh+e80zWq2WiaIs2NqiZVzUJPA==
   dependencies:
     "@web3-react/types" "^8.0.10-beta.0"
 
