@@ -25,7 +25,6 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
     trade: { trade, state },
     impact,
   } = useSwapInfo()
-  const isRouteLoading = state === TradeState.SYNCING || state === TradeState.LOADING
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
@@ -38,22 +37,23 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
+      if (state === TradeState.SYNCING || state === TradeState.LOADING) {
+        return <Caption.LoadingTrade />
+      }
       if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
       if (wrapType !== WrapType.NONE) {
         return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
       }
-      if (isRouteLoading) {
-        return <Caption.LoadingTrade />
+      if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
+        return <Caption.InsufficientLiquidity />
       }
-      if (trade) {
-        if (!trade.swaps) {
-          return <Caption.InsufficientLiquidity />
-        }
-        if (trade.inputAmount && trade.outputAmount) {
-          return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
-        }
+      if (trade?.inputAmount && trade.outputAmount) {
+        return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
+      }
+      if (state === TradeState.INVALID) {
+        return <Caption.Error />
       }
     }
 
@@ -66,9 +66,9 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
     inputBalance,
     inputCurrency,
     isAmountPopulated,
-    isRouteLoading,
     outputCurrency,
     outputUSDC,
+    state,
     trade,
     wrapType,
   ])

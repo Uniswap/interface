@@ -4,7 +4,6 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
 import useDebounce from 'hooks/useDebounce'
-import useLast from 'hooks/useLast'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useCallback, useMemo } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
@@ -111,28 +110,18 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     }
     return
   }, [gasUseEstimateUSD, route, tradeType])
-  const lastTrade = useLast(trade, Boolean) ?? undefined
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return { state: TradeState.INVALID, trade: undefined }
     }
 
-    // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
     if (!trade && !error) {
-      // Dont return last trade if currencies dont match.
-      const isStale =
-        (currencyIn && !lastTrade?.inputAmount?.currency.equals(currencyIn)) ||
-        (currencyOut && !lastTrade?.outputAmount?.currency.equals(currencyOut))
-
-      if (isStale) {
+      if (isDebouncing) {
+        return { state: TradeState.SYNCING, trade: undefined }
+      } else if (!isValid) {
         return { state: TradeState.LOADING, trade: undefined }
-      } else if (isDebouncing) {
-        return { state: TradeState.SYNCING, trade: lastTrade }
       }
-    }
-    if (!isValid && !error) {
-      return { state: TradeState.LOADING, trade: lastTrade }
     }
 
     let otherAmount = undefined
@@ -155,5 +144,5 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, trade, error, isValid, quoteResult, route, isDebouncing, lastTrade, tradeType])
+  }, [currencyIn, currencyOut, trade, error, isValid, quoteResult, route, isDebouncing, tradeType])
 }

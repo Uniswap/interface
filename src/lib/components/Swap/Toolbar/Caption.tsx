@@ -48,6 +48,10 @@ export function InsufficientLiquidity() {
   return <Caption caption={<Trans>Insufficient liquidity in the pool for your trade</Trans>} />
 }
 
+export function Error() {
+  return <Caption caption={<Trans>Error fetching trade</Trans>} />
+}
+
 export function Empty() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
