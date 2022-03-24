@@ -1,5 +1,12 @@
+This repo is home to the Uniswap Widgets package and the web app interface [app.uniswap.org](https://app.uniswap.org).
+
 # Uniswap Widgets
-For information about the [@uniswap/widgets](https://www.npmjs.com/package/@uniswap/widgets) package, please see [WIDGETS_README](./WIDGETS_README.md).
+
+The @uniswap/widgets package is an npm package of React components used to provide subsets of the Uniswap Protocol functionality in a small and configurable user interface element.
+
+The npm package can be found here. [@uniswap/widgets](https://www.npmjs.com/package/@uniswap/
+
+For documentation of the widgets package, please view the reademe here. [WIDGETS_README.md](./WIDGETS_README.md).
 
 # Uniswap Interface
 
