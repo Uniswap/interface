@@ -104,8 +104,8 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
     latestChainId.current = chainId
   }, [chainId])
 
-  const latestRenderTime = useRef(0)
   useEffect(() => {
+    let cancelled = false
     const currentTimestamp = Math.round(Date.now() / 1000)
 
     async function getListFarmsForContract(contract: Contract): Promise<Farm[]> {
@@ -234,7 +234,7 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
       return farms.filter(farm => !!farm.totalSupply)
     }
 
-    async function checkForFarms(currentRenderTime: number) {
+    async function checkForFarms() {
       try {
         if (!fairLaunchContracts) {
           dispatch(setFarmsData({}))
@@ -258,14 +258,11 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
           result[address] = promiseResult[index]
         })
 
-        if (
-          latestChainId.current === chainId &&
-          (Object.keys(farmsDataRef.current).length === 0 || currentRenderTime === latestRenderTime.current)
-        ) {
+        if (latestChainId.current === chainId && (Object.keys(farmsDataRef.current).length === 0 || !cancelled)) {
           dispatch(setFarmsData(result))
         }
       } catch (err) {
-        if (currentRenderTime === latestRenderTime.current) {
+        if (!cancelled) {
           console.error(err)
           dispatch(setYieldPoolsError((err as Error).message))
         }
@@ -274,11 +271,10 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
       dispatch(setLoading(false))
     }
 
-    checkForFarms(latestRenderTime.current)
+    checkForFarms()
 
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      latestRenderTime.current++
+      cancelled = true
     }
   }, [
     apolloClient,

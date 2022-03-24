@@ -365,15 +365,14 @@ export function useAllPoolsData(): {
   const loading = useSelector((state: AppState) => state.pools.loading)
   const error = useSelector((state: AppState) => state.pools.error)
 
-  const latestRenderTime = useRef(0)
-
   const { currentPrice: ethPrice } = useETHPrice()
 
   const poolCountSubgraph = usePoolCountInSubgraph()
 
-  const getPoolsData = useCallback(
-    async (currentRenderTime: number) => {
-      if (currentRenderTime > 200) return //preventing infinity loop may happen accidentally in the future
+  useEffect(() => {
+    let cancelled = false
+
+    const getPoolsData = async () => {
       try {
         if (poolCountSubgraph > 0 && poolsData.length === 0 && !error && ethPrice) {
           dispatch(setLoading(true))
@@ -383,25 +382,21 @@ export function useAllPoolsData(): {
             promises.push(() => getBulkPoolDataWithPagination(ITEM_PER_CHUNK, i, apolloClient, ethPrice, chainId))
           }
           const pools = (await Promise.all(promises.map(callback => callback()))).flat()
-          currentRenderTime === latestRenderTime.current && dispatch(updatePools({ pools }))
-          currentRenderTime === latestRenderTime.current && dispatch(setLoading(false))
+          !cancelled && dispatch(updatePools({ pools }))
+          !cancelled && dispatch(setLoading(false))
         }
       } catch (error) {
-        currentRenderTime === latestRenderTime.current && dispatch(setError(error as Error))
-        currentRenderTime === latestRenderTime.current && dispatch(setLoading(false))
+        !cancelled && dispatch(setError(error as Error))
+        !cancelled && dispatch(setLoading(false))
       }
-    },
-    [apolloClient, chainId, dispatch, error, ethPrice, poolCountSubgraph, poolsData.length],
-  )
+    }
 
-  useEffect(() => {
-    getPoolsData(latestRenderTime.current)
+    getPoolsData()
 
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      latestRenderTime.current++
+      cancelled = true
     }
-  }, [getPoolsData])
+  }, [apolloClient, chainId, dispatch, error, ethPrice, poolCountSubgraph, poolsData.length])
 
   return useMemo(() => ({ loading, error, data: poolsData }), [error, loading, poolsData])
 }
