@@ -420,6 +420,7 @@ export const useGlobalMixpanelEvents = () => {
         debug: process.env.REACT_APP_MAINNET_ENV === 'staging',
       })
       mixpanel.identify(account)
+      mixpanel.people.set({})
       mixpanelHandler(MIXPANEL_TYPE.WALLET_CONNECTED, { account })
     }
     return () => {
