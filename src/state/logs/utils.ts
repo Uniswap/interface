@@ -924,7 +924,7 @@ query trackerdata {
 const KIBA_TOKEN_BSC = gql`
 query trackerdata {
   
-  pairs(first:2 , where:{ token0_in:["0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5", "0x612e1726435fe38dd49a0b35b4065b56f49c8f11"]}) {
+  pairs(first:2 , where:{ token0_in:["0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5", "0x612e1726435fe38dd49a0b35b4065b56f49c8f11"]}) {
     id
     token0 {
       id
@@ -1168,7 +1168,7 @@ export const useTotalKibaGains = (account ?: string | null) => {
   const kibaBalance = useKiba(account)
   const currencySold = React.useMemo(() => {
     if (chainId === 1) return { address: '0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), symbol: 'KIBA' }
-    if (chainId === 56) return { address: '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase(), symbol: 'KIBA' }
+    if (chainId === 56) return { address: '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase(), symbol: 'KIBA' }
 
     return { address: '', symbol: '' }
   }, [chainId])
@@ -1187,7 +1187,7 @@ export const useTotalKibaGains = (account ?: string | null) => {
   const [airdroppedAmount, setAirdroppedAmount] = React.useState<number>(0)
   const transferAPIurl = React.useMemo(() => {
     if (!account || !chainId) return '';
-    if (chainId === 56) return `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5&address=${account}&page=1&offset=10000&startblock=0&endblock=999999999&sort=asc&apikey=G5GE5FR37HCTS1UZ957PRB9DYUBGV4SU75`
+    if (chainId === 56) return `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5&address=${account}&page=1&offset=10000&startblock=0&endblock=999999999&sort=asc&apikey=G5GE5FR37HCTS1UZ957PRB9DYUBGV4SU75`
     if (chainId === 1) return `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0x005d1123878fc55fbd56b54c73963b234a64af3c&address=${account}&page=1&offest=10000&startblock=0&endblock=999999999&sort=asc&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
     return ''
   }, [chainId, account])

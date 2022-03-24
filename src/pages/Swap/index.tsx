@@ -424,7 +424,7 @@ setAutomaticCalculatedSlippage(value as number)
   const floozUrl = React.useMemo(() => {
     let retVal = 'https://www.flooz.trade/embedded/0x005d1123878fc55fbd56b54c73963b234a64af3c/?backgroundColor=transparent&refId=I56v2c&chainId=1'
     if (chainId === 56) {
-      retVal = 'https://www.flooz.trade/embedded/0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5/?backgroundColor=transparent&refId=I56v2c'
+      retVal = 'https://www.flooz.trade/embedded/0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5/?backgroundColor=transparent&refId=I56v2c'
     } 
     return retVal;
   },[chainId])
