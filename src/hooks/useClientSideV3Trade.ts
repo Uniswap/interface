@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useSingleContractWithCallData } from 'lib/hooks/multicall'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { useAllV3Routes } from './useAllV3Routes'
@@ -46,7 +46,6 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   const quotesResults = useSingleContractWithCallData(quoter, callData, {
     gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
-  useEffect(() => console.log('quotesResults'), [quotesResults])
 
   return useMemo(() => {
     if (
