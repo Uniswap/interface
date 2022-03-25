@@ -83,3 +83,4 @@ export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA564
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
 ])
+export const FLASHBOTS_PROTECT_CHECK_ADDRESS = '0xf1a54b0759b58661cea17cff19dd37940a9b5f1a'
