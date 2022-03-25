@@ -9,7 +9,7 @@ import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
 import React, { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
@@ -158,11 +158,7 @@ export default function LiquidityChartRangeInput({
   )
 
   if (isError) {
-    ReactGA.exception({
-      ...error,
-      category: 'Liquidity',
-      fatal: false,
-    })
+    ReactGA.event('exception', { description: error.toString(), fatal: false })
   }
 
   return (

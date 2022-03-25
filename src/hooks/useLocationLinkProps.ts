@@ -3,7 +3,7 @@ import { LocationDescriptor } from 'history'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { stringify } from 'qs'
 import { useMemo } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { useLocation } from 'react-router-dom'
 
 import { useActiveLocale } from './useActiveLocale'
