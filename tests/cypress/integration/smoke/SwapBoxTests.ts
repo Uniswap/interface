@@ -98,11 +98,11 @@ describe('Swap page smoke tests', () => {
   it('Should calculate output based on FROM and display it in TO section', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('usdc')
     SwapPage.typeValueFrom('100')
-    SwapPage.getToInput().should('not.be.empty')
+    SwapPage.getToInput().should('not.have.value', undefined)
   })
   it('Should calculate output based on TO and display it in FROM section', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('usdc')
     SwapPage.typeValueTo('100')
-    SwapPage.getFromInput().should('not.be.empty')
+    SwapPage.getFromInput().should('not.have.value', undefined)
   })
 })

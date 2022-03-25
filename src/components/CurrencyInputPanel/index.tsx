@@ -179,7 +179,7 @@ export default function CurrencyInputPanel({
                     onUserInput(val)
                   }}
                   disabled={disabled}
-                  data-testid={label.toLowerCase() + "-value-input"}
+                  data-testid={'transaction-value-input'}
                 />
               </>
             )}

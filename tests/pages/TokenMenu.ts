@@ -6,9 +6,8 @@ export class TokenMenu {
     cy.get('#token-search-input')
       .should('be.visible')
       .type(token)
-    cy.get('[data-testid=select-button-' + token + ']')
-      .should('be.visible')
-      .then(e => e.click())
+      .click()
+      .type('{enter}')
       .should('not.exist')
     return SwapPage
   }
