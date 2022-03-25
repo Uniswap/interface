@@ -215,7 +215,9 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonDark2 onClick={showManageView}>Manage token lists</ButtonDark2>
+          <ButtonDark2 onClick={showManageView} data-testid="manage-token-lists-button">
+            Manage token lists
+          </ButtonDark2>
         </Row>
       </Footer>
     </ContentWrapper>

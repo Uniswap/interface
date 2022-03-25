@@ -101,10 +101,10 @@ function CurrencyRow({
       alignItems="center"
       style={style}
     >
-      <Box>
+      <Box data-testid={'select-button-' + currency.symbol?.toLowerCase()}>
         <AutoRow>
           <CurrencyLogo currency={currency} size={'20px'} />
-          <Text marginLeft={'6px'} fontWeight={500} data-testid={"select-button-" + currency.symbol?.toLowerCase()}>
+          <Text marginLeft={'6px'} fontWeight={500}>
             {currency.symbol}
           </Text>
         </AutoRow>
