@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-03-25 07:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -206,7 +206,7 @@ msgstr "Dovolite trgovanje z visokim vplivom na ceno in preskočite zaslon za po
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow in your wallet"
-msgstr "Dovolite v denarnici"
+msgstr "Dovolite v svoji denarnici"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -512,7 +512,7 @@ msgstr "Potrdi menjavo"
 #: src/lib/components/Swap/Summary/index.tsx
 #: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Confirm in your wallet"
-msgstr "Potrdite v denarnici"
+msgstr "Potrdite v svoji denarnici"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
