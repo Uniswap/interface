@@ -1,8 +1,8 @@
 import { FLASHBOTS_PROTECT_CHECK_ADDRESS } from 'constants/addresses'
-import FLASHBOTS_PROTECT_CHECK_ABI from '../abis/flashbots_protect_rpc_check.json'
 import { SupportedChainId } from 'constants/chains'
 import { useEffect, useState } from 'react'
 
+import FLASHBOTS_PROTECT_CHECK_ABI from '../abis/flashbots_protect_rpc_check.json'
 import { useBlockNumber } from '../state/application/hooks'
 import { useContract } from './useContract'
 import { useActiveWeb3React } from './web3'
