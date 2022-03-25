@@ -8,10 +8,13 @@ export class TokenMenu {
       .type(token, { force: true })
     cy.get('[data-testid=select-button-' + token + ']')
       .should('be.visible')
-      .click({ force: true })
+      .then(e => e.click())
     return SwapPage
   }
   static getOpenTokenManagerButton() {
     return cy.get('[data-testid=manage-token-lists-button]')
+  }
+  static getPicker() {
+    return cy.get('[data-testid=token-picker]')
   }
 }

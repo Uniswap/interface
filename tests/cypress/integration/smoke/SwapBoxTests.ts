@@ -1,11 +1,8 @@
 import { SwapPage } from '../../../pages/SwapPage'
-import { TokenPicker } from '../../../pages/TokenPicker'
 import { TokenMenu } from '../../../pages/TokenMenu'
-import { MenuBar } from '../../../pages/MenuBar'
 
 describe('Swap page smoke tests', () => {
   beforeEach(() => {
-    cy.clearCookies().clearLocalStorage()
     SwapPage.visitSwapPage()
   })
   it('Should display swap box with 2 inputs and 2 currency selectors', () => {
@@ -16,7 +13,7 @@ describe('Swap page smoke tests', () => {
   })
   it('Should display token menu after clicking select token', () => {
     SwapPage.openTokenToSwapMenu()
-    TokenPicker.getPicker().should('be.visible')
+    TokenMenu.getPicker().should('be.visible')
   })
   it('Should pick only eth as default from value', () => {
     SwapPage.getCurrencySelectors()
