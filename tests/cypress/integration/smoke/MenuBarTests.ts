@@ -12,7 +12,7 @@ describe('Menu bar smoke tests', () => {
     MenuBar.checkHrefs()
     MenuBar.getBridge().click()
     MenuBar.checkHrefs()
-    MenuBar.liquidity()
+    MenuBar.getLiquidity()
     MenuBar.checkHrefs()
   })
   it('Charts and Votes should have href to dxstats and snapshot', () => {
@@ -28,7 +28,7 @@ describe('Menu bar smoke tests', () => {
       .click()
       .url()
       .should('include', 'rewards')
-    MenuBar.liquidity()
+    MenuBar.getLiquidity()
       .click()
       .url()
       .should('include', 'pools')

@@ -35,7 +35,7 @@ describe('SWAP', () => {
   it('Should wrap eth to weth', () => {
     SwapPage.openTokenToSwapMenu()
       .chooseToken('weth')
-      .typeValueIn(TRANSACTION_VALUE.toFixed(9).toString())
+      .typeValueFrom(TRANSACTION_VALUE.toFixed(9).toString())
       .wrap()
     cy.confirmMetamaskTransaction({ gasFee: 11 })
 
@@ -57,7 +57,7 @@ describe('SWAP', () => {
       .chooseToken('eth')
       .openTokenToSwapMenu()
       .chooseToken('weth')
-      .typeValueIn(TRANSACTION_VALUE.toFixed(9).toString())
+      .typeValueFrom(TRANSACTION_VALUE.toFixed(9).toString())
       .wrap()
     cy.confirmMetamaskTransaction({ gasFee: 11 })
 

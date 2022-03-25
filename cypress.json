@@ -9,7 +9,7 @@
   "viewportWidth": 1366,
   "viewportHeight": 768,
   "supportFile": "tests/cypress/support/index.ts",
-  "video": false,
+  "video": true,
   "component": {
     "componentFolder": ".",
     "testFiles": "**/*spec.{js,jsx,ts,tsx}"

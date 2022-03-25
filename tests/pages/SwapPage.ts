@@ -10,7 +10,7 @@ export class SwapPage {
     return TokenMenu
   }
 
-  static typeValueIn(value: string) {
+  static typeValueFrom(value: string) {
     cy.get('[data-testid=from-value-input]').type(value)
     return this
   }

@@ -118,10 +118,10 @@ export default function Manage({
         </ToggleWrapper>
       </Box>
       <TabContainer>
-        <AnimatedSlide style={styles}>
+        <AnimatedSlide style={styles} data-testid="token-lists-manage">
           <ManageLists setModalView={setModalView} setImportList={setImportList} setListUrl={setListUrl} />
         </AnimatedSlide>
-        <AnimatedSlide style={styles}>
+        <AnimatedSlide style={styles} data-testid="single-token-manage">
           <ManageTokens setModalView={setModalView} setImportToken={setImportToken} />
         </AnimatedSlide>
       </TabContainer>
