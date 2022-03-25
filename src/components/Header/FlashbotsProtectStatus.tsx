@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import flashbotsProtectShieldOff from 'assets/images/flashbots-protect-shield-off.png'
 import flashbotsProtectShieldOn from 'assets/images/flashbots-protect-shield-on.png'
+import { SupportedChainId } from 'constants/chains'
 import useIsFlashbotsProtectRPC from 'hooks/useIsFlashbotsProtectRPC'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -140,7 +141,7 @@ export default function FlashbotsProtect() {
   const toggle = useToggleModal(ApplicationModal.FLASHBOTS_PROTECT)
   useOnClickOutside(node, open ? toggle : undefined)
 
-  const showSelector = Boolean(chainId === 1)
+  const showSelector = Boolean(chainId === SupportedChainId.MAINNET)
 
   const conditionalToggle = useCallback(() => {
     if (showSelector) {
