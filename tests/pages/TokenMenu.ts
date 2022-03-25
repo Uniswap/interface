@@ -5,10 +5,11 @@ export class TokenMenu {
     cy.scrollTo('top')
     cy.get('#token-search-input')
       .should('be.visible')
-      .type(token, { force: true })
+      .type(token)
     cy.get('[data-testid=select-button-' + token + ']')
       .should('be.visible')
       .then(e => e.click())
+      .should('not.exist')
     return SwapPage
   }
   static getOpenTokenManagerButton() {
