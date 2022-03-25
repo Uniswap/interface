@@ -10,11 +10,14 @@ export class LiquidityPage {
   static createPair_Button() {
     return  cy.get('[data-testid=create-pair]')
   }
-  static campaigns_ToggleSwitch() {
-    return cy.get('#CAMPAIGNS')
+  static campaignsAndMyPairs_ToggleSwitch() {
+    return cy.get('[data-testid=campaigns-toggle]')
   }  
-  static myPairs_ToggleSwitch() {
-    return  cy.get('[data-testid=]')
+  static inputFields() {
+    return  cy.get('[data-testid=input-value-input]')
+  }
+  static selectToken_Button() {
+    return  cy.get('[data-testid=select-token-button]')
   }
 
 }

@@ -7,8 +7,11 @@ describe('Check Liquidity Page', () => {
   
     it('Check all buttons and elements on Liquidity Page', () => {
       LiquidityPage.allPairs_Button().should('be.visible')
-      LiquidityPage.campaigns_ToggleSwitch().should('be.visible')
+      LiquidityPage.campaignsAndMyPairs_ToggleSwitch().should('be.visible')
       LiquidityPage.createPair_Button().should('be.visible')
+      LiquidityPage.createPair_Button().click()
+      LiquidityPage.inputFields().should('be.visible')
+      LiquidityPage.selectToken_Button().should('be.visible')
     })
    
   })

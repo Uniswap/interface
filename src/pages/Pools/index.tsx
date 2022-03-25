@@ -153,8 +153,8 @@ function Title({
             </Text>
           </TransperentButton>
         </Flex>
-        <Flex>
-          <Switch
+        <Flex data-testid="campaigns-toggle" >
+          <Switch 
             label="CAMPAIGNS"
             handleToggle={() =>
               onFilterChange(
