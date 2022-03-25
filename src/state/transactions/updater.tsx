@@ -18,17 +18,8 @@ interface TxInterface {
 
 export function checkPrivateTxStatusFailed(txHash: string): Promise<boolean> {
   return new Promise((resolve) => {
-    axios.get(`https://protection-api.flashbots.net/tx/${txHash}`).then((result) => {
-      if (
-        result &&
-        result.data &&
-        result.data.status &&
-        (result.data.status === 'FAILED' || result.data.status === 'FAILED_BUNDLE')
-      ) {
-        // transaction has failed and dropped from MetaMask
-        return resolve(true)
-      }
-      return resolve(false)
+    axios.get(`https://protect.flashbots.net/tx/${txHash}`).then((result) => {
+      return resolve(result?.data?.status === 'FAILED' || result?.data?.status === 'FAILED_BUNDLE')
     })
   })
 }
