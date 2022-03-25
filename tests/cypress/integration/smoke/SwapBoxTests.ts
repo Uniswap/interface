@@ -81,8 +81,9 @@ describe('Swap page smoke tests', () => {
       .should('be.visible')
       .should('contain.text', 'Connect wallet')
       .click()
-    cy.scrollTo('top')
-    SwapPage.getWalletConnectList().should('be.visible')
+    SwapPage.getWalletConnectList()
+      .scrollIntoView()
+      .should('be.visible')
   })
   it('Should display connect button when transaction data is filled', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('usdc')
