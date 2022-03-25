@@ -25,7 +25,7 @@ interface RenameParams extends EditParamsBase {
 interface RemoveParams extends EditParamsBase {
   type: EditAccountAction.Remove
 }
-type EditAccountParams = RenameParams | RemoveParams
+export type EditAccountParams = RenameParams | RemoveParams
 
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params

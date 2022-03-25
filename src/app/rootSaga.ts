@@ -6,6 +6,8 @@ import {
   fetchBalancesSaga,
   fetchBalancesSagaName,
 } from 'src/features/balances/fetchBalances'
+import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
+import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
 import {
   importAccountActions,
   importAccountReducer,
@@ -48,7 +50,7 @@ import {
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
-const sagas: any[] = [initProviders, transactionWatcher]
+const sagas: any[] = [initProviders, initFirebase, transactionWatcher, firebaseDataWatcher]
 
 interface MonitoredSaga {
   name: string
