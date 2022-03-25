@@ -33,7 +33,7 @@ import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 
 import { formattedNum, isAddressString } from 'utils'
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
-import { ExternalLink, TYPE } from 'theme'
+import { ExternalLink } from 'theme'
 import { currencyIdFromAddress } from 'utils/currencyId'
 import { t, Trans } from '@lingui/macro'
 import InfoHelper from 'components/InfoHelper'

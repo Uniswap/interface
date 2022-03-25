@@ -173,6 +173,11 @@ msgstr "Advanced Settings"
 msgid "Advanced mode is on!"
 msgstr "Advanced mode is on!"
 
+#: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "After harvesting, your rewards will unlock linearly over the indicated time period"
+msgstr "After harvesting, your rewards will unlock linearly over the indicated time period"
+
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 msgid "All Tokens"
 msgstr "All Tokens"
@@ -2174,6 +2179,11 @@ msgstr "V1"
 #: src/components/Vesting/index.tsx
 msgid "VESTING PERIODS"
 msgstr "VESTING PERIODS"
+
+#: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Vesting"
+msgstr "Vesting"
 
 #: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"

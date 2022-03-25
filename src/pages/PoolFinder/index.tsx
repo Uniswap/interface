@@ -104,6 +104,7 @@ export default function PoolFinder() {
   const { mixpanelHandler } = useMixpanel()
   useEffect(() => {
     mixpanelHandler(MIXPANEL_TYPE.IMPORT_POOL_INITIATED)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <AppBody>

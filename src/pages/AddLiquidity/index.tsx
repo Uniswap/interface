@@ -44,6 +44,7 @@ export default function AddLiquidity({
   const { mixpanelHandler } = useMixpanel()
   useEffect(() => {
     mixpanelHandler(MIXPANEL_TYPE.ADD_LIQUIDITY_INITIATED, { token_1: nativeA?.symbol, token_2: nativeB?.symbol })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <>

@@ -54,7 +54,6 @@ import {
   PoolRatioWrapper,
   DynamicFeeRangeWrapper,
 } from './styled'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const TokenPair = ({
   currencyIdA,
@@ -149,7 +148,6 @@ const TokenPair = ({
     parsedAmounts[Field.CURRENCY_B],
     !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
   )
-  const { mixpanelHandler } = useMixpanel()
 
   const addTransactionWithType = useTransactionAdder()
   async function onAdd() {

@@ -7,7 +7,7 @@ import { useAllTransactions, useTransactionAdder } from 'state/transactions/hook
 import useSWR from 'swr'
 import { getClaimRewardContract } from 'utils'
 import { t } from '@lingui/macro'
-
+// eslint-disable react-hooks/exhaustive-deps
 export default function useClaimReward() {
   const { chainId, account, library } = useActiveWeb3React()
   const rewardContract = useMemo(() => {
@@ -130,9 +130,9 @@ export default function useClaimReward() {
     data,
     rewardAmounts,
     userReward,
-    userReward?.amounts,
-    userReward?.index,
-    userReward?.proof,
+    userReward?.amounts, // eslint-disable-line
+    userReward?.index, // eslint-disable-line
+    userReward?.proof, // eslint-disable-line
     addTransactionWithType,
   ])
 
