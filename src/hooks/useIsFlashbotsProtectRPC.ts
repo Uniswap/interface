@@ -1,11 +1,11 @@
 import { FLASHBOTS_PROTECT_CHECK_ADDRESS } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useState } from 'react'
 
 import FLASHBOTS_PROTECT_CHECK_ABI from '../abis/flashbots_protect_rpc_check.json'
-import { useBlockNumber } from '../state/application/hooks'
+import useActiveWeb3React from './useActiveWeb3React'
 import { useContract } from './useContract'
-import { useActiveWeb3React } from './web3'
 
 export default function useIsFlashbotsProtectRPC(): [boolean, () => Promise<boolean>] {
   const [isFlashRPC, setIsFlashRPC] = useState<boolean>(false)

@@ -4,7 +4,6 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import LibUpdater from 'lib/hooks/transactions/updater'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useEffect, useMemo } from 'react'
-import { updateBlockNumber } from 'state/application/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
 
@@ -118,7 +117,7 @@ export default function Updater() {
     },
     [chainId, library]
   )
-  
+
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
 
@@ -155,11 +154,6 @@ export default function Updater() {
                 hash,
                 isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
               )
-
-              // the receipt was fetched before the block, fast forward to that block to trigger balance updates
-              if (receipt.blockNumber > lastBlockNumber) {
-                dispatch(updateBlockNumber({ chainId, blockNumber: receipt.blockNumber }))
-              }
             } else {
               checkPrivateTxStatusFailed(hash).then((isFailed) => {
                 // Set transaction status as failed or dropped
