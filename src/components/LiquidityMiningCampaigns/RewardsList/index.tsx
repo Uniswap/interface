@@ -31,7 +31,7 @@ export function RewardsList({ dataFilter, pair, setDataFiler, loading }: Rewards
 
   return (
     <View gap="16px">
-      <Flex style={{ alignItems: 'center' }}>
+      <Flex style={{ alignItems: 'center' }} data-testid="campaigns-and-exipred" >
         <TabBar
           titles={[
             <TabTitle
