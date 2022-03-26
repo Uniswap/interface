@@ -173,11 +173,19 @@ export default function FlashbotsProtect() {
           </FlyoutHeader>
           {!isFlashRPC && (
             <FlyoutRow>
-              Connect to the RPC
-              <SubRow>Name: Flashbots Protect</SubRow>
-              <SubRow>URL: https://rpc.flashbots.net</SubRow>
-              <SubRow>Chain ID: 1</SubRow>
-              <SubRow>Currency Symbol: ETH</SubRow>
+              <Trans>Connect to the RPC</Trans>
+              <Trans>
+                <SubRow>Name: Flashbots Protect</SubRow>
+              </Trans>
+              <Trans>
+                <SubRow>URL: https://rpc.flashbots.net</SubRow>
+              </Trans>
+              <Trans>
+                <SubRow>Chain ID: 1</SubRow>
+              </Trans>
+              <Trans>
+                <SubRow>Currency Symbol: ETH</SubRow>
+              </Trans>
             </FlyoutRow>
           )}
           <Action onClick={detectFlashRPC}>Refresh RPC Status</Action>
