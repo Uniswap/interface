@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
+import multicall from 'lib/state/multicall'
 import { load, save } from 'redux-localstorage-simple'
 
 import application from './application/reducer'
@@ -11,7 +12,6 @@ import lists from './lists/reducer'
 import logs from './logs/slice'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
-import multicall from './multicall/reducer'
 import { routingApi } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
@@ -29,7 +29,7 @@ const store = configureStore({
     mintV3,
     burn,
     burnV3,
-    multicall,
+    multicall: multicall.reducer,
     lists,
     logs,
     [dataApi.reducerPath]: dataApi.reducer,

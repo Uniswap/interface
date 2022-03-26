@@ -1,8 +1,10 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import { Token } from '@uniswap/sdk-core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useTransactionMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { useActiveWeb3React } from '../../hooks/web3'
 import { addTransaction, TransactionInfo, TransactionType } from './actions'
 import { TransactionDetails } from './reducer'
 
@@ -10,6 +12,8 @@ import { TransactionDetails } from './reducer'
 export function useTransactionAdder(): (response: TransactionResponse, info: TransactionInfo) => void {
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
+
+  const logMonitoringEvent = useTransactionMonitoringEventCallback()
 
   return useCallback(
     (response: TransactionResponse, info: TransactionInfo) => {
@@ -21,8 +25,10 @@ export function useTransactionAdder(): (response: TransactionResponse, info: Tra
         throw Error('No transaction hash found.')
       }
       dispatch(addTransaction({ hash, from: account, info, chainId }))
+
+      logMonitoringEvent(info, response)
     },
-    [dispatch, chainId, account]
+    [account, chainId, dispatch, logMonitoringEvent]
   )
 }
 
@@ -70,11 +76,11 @@ export function isTransactionRecent(tx: TransactionDetails): boolean {
 }
 
 // returns whether a token has a pending approval transaction
-export function useHasPendingApproval(tokenAddress: string | undefined, spender: string | undefined): boolean {
+export function useHasPendingApproval(token?: Token, spender?: string): boolean {
   const allTransactions = useAllTransactions()
   return useMemo(
     () =>
-      typeof tokenAddress === 'string' &&
+      typeof token?.address === 'string' &&
       typeof spender === 'string' &&
       Object.keys(allTransactions).some((hash) => {
         const tx = allTransactions[hash]
@@ -83,10 +89,10 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
           return false
         } else {
           if (tx.info.type !== TransactionType.APPROVAL) return false
-          return tx.info.spender === spender && tx.info.tokenAddress === tokenAddress && isTransactionRecent(tx)
+          return tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)
         }
       }),
-    [allTransactions, spender, tokenAddress]
+    [allTransactions, spender, token?.address]
   )
 }
 

@@ -5,8 +5,9 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { useActiveWeb3React } from 'hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
 import React, { useCallback, useMemo, useState } from 'react'
 import {
@@ -18,11 +19,11 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import { tryParseAmount } from 'state/swap/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, TYPE } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 
 import { CreateProposalTabs } from '../../components/NavigationTabs'
+import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
 import { ProposalActionDetail } from './ProposalActionDetail'
@@ -88,8 +89,7 @@ export default function CreateProposal() {
   const { account, chainId } = useActiveWeb3React()
 
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
-  // the first argument below should be the index of the latest governor
-  const latestProposalData = useProposalData(/* governorIndex */ 2, latestProposalId)
+  const latestProposalData = useProposalData(LATEST_GOVERNOR_INDEX, latestProposalId)
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
 
@@ -184,7 +184,7 @@ export default function CreateProposal() {
 
     if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
 
-    const tokenAmount = tryParseAmount(amountValue, currencyValue)
+    const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
     if (!tokenAmount) return
 
     createProposalData.targets = [currencyValue.address]
@@ -230,7 +230,7 @@ ${bodyValue}
       <CreateProposalWrapper>
         <BlueCard>
           <AutoColumn gap="10px">
-            <TYPE.link fontWeight={400} color={'primaryText1'}>
+            <ThemedText.Link fontWeight={400} color={'primaryText1'}>
               <Trans>
                 <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal cannot
                 be modified after submission, so please verify all information before submitting. The voting period will
@@ -240,7 +240,7 @@ ${bodyValue}
                 </ExternalLink>
                 .
               </Trans>
-            </TYPE.link>
+            </ThemedText.Link>
           </AutoColumn>
         </BlueCard>
 

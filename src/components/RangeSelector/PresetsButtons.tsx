@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import { ButtonOutlined } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import React from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
   padding: '8px',
@@ -26,9 +26,9 @@ export default function PresetsButtons({ setFullRange }: { setFullRange: () => v
           })
         }}
       >
-        <TYPE.body fontSize={12}>
+        <ThemedText.Body fontSize={12}>
           <Trans>Full Range</Trans>
-        </TYPE.body>
+        </ThemedText.Body>
       </Button>
     </AutoRow>
   )

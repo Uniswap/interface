@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
@@ -16,13 +17,12 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { ExtendedEther } from '../../constants/tokens'
+import { nativeOnChain } from '../../constants/tokens'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
@@ -44,7 +44,7 @@ export default function PoolFinder() {
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Currency | null>(() => (chainId ? ExtendedEther.onChain(chainId) : null))
+  const [currency0, setCurrency0] = useState<Currency | null>(() => (chainId ? nativeOnChain(chainId) : null))
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   const [pairState, pair] = useV2Pair(currency0 ?? undefined, currency1 ?? undefined)
@@ -101,11 +101,11 @@ export default function PoolFinder() {
         <AutoColumn style={{ padding: '1rem' }} gap="md">
           <BlueCard>
             <AutoColumn gap="10px">
-              <TYPE.link fontWeight={400} color={'primaryText1'}>
+              <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                 <Trans>
                   <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                 </Trans>
-              </TYPE.link>
+              </ThemedText.Link>
             </AutoColumn>
           </BlueCard>
           <ButtonDropdownLight

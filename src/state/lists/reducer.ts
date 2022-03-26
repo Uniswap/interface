@@ -95,7 +95,7 @@ export default createReducer(initialState, (builder) =>
       }
 
       state.byUrl[url] = {
-        current: null,
+        current: state.byUrl[url].current ? state.byUrl[url].current : null,
         pendingUpdate: null,
         loadingRequestId: null,
         error: errorMessage,

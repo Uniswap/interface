@@ -1,31 +1,30 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
-import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
-import { useETHBalances } from 'state/wallet/hooks'
+import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
-import Modal from '../Modal'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import FlashbotsProtect from './FlashbotsProtectStatus'
+import HolidayOrnament from './HolidayOrnament'
 import NetworkSelector from './NetworkSelector'
-import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -92,7 +91,7 @@ const HeaderLinks = styled(Row)`
   justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
-  padding: 4px;
+  padding: 2px;
   border-radius: 16px;
   display: grid;
   grid-auto-flow: column;
@@ -124,10 +123,11 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
-  border-radius: 12px;
+  background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg0)};
+  border-radius: 16px;
   white-space: nowrap;
   width: 100%;
+  height: 40px;
 
   :focus {
     border: 1px solid blue;
@@ -182,6 +182,8 @@ const UniIcon = styled.div`
   :hover {
     transform: rotate(-5deg);
   }
+
+  position: relative;
 `
 
 const activeClassName = 'ACTIVE'
@@ -203,11 +205,11 @@ const StyledNavLink = styled(NavLink).attrs({
   overflow: hidden;
   white-space: nowrap;
   &.${activeClassName} {
-    border-radius: 12px;
+    border-radius: 14px;
     font-weight: 600;
     justify-content: center;
     color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.bg1};
   }
 
   :hover,
@@ -232,7 +234,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   font-weight: 500;
 
   &.${activeClassName} {
-    border-radius: 12px;
+    border-radius: 14px;
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
@@ -247,7 +249,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
   const { white, black } = useTheme()
 
@@ -257,21 +259,22 @@ export default function Header() {
 
   const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
 
-  const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
   const showClaimPopup = useShowClaimPopup()
 
   const scrollY = useScrollPosition()
 
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  const {
+    infoLink,
+    nativeCurrency: { symbol: nativeCurrencySymbol },
+  } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
-      <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
-        <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
-      </Modal>
       <Title href=".">
         <UniIcon>
           <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <HolidayOrnament />
         </UniIcon>
       </Title>
       <HeaderLinks>
@@ -313,7 +316,7 @@ export default function Header() {
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
+                <ThemedText.White padding="0 2px">
                   {claimTxn && !claimTxn?.receipt ? (
                     <Dots>
                       <Trans>Claiming UNI</Trans>
@@ -321,7 +324,7 @@ export default function Header() {
                   ) : (
                     <Trans>Claim UNI</Trans>
                   )}
-                </TYPE.white>
+                </ThemedText.White>
               </UNIAmount>
               <CardNoise />
             </UNIWrapper>
@@ -329,7 +332,9 @@ export default function Header() {
           <AccountElement active={!!account}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                <Trans>{userEthBalance?.toSignificant(3)} ETH</Trans>
+                <Trans>
+                  {userEthBalance?.toSignificant(3)} {nativeCurrencySymbol}
+                </Trans>
               </BalanceText>
             ) : null}
             <Web3Status />

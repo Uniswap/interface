@@ -6,6 +6,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useContext, useMemo } from 'react'
 import { Text } from 'rebass'
@@ -17,16 +18,15 @@ import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { BackArrow, StyledInternalLink, TYPE } from '../../theme'
+import { BackArrow, StyledInternalLink, ThemedText } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
     <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
-      <TYPE.body>{message}</TYPE.body>
+      <ThemedText.Body>{message}</ThemedText.Body>
     </AutoColumn>
   )
 }
@@ -117,34 +117,34 @@ export default function MigrateV2() {
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrow to="/pool/v2" />
-            <TYPE.mediumHeader>
+            <ThemedText.MediumHeader>
               <Trans>Migrate V2 Liquidity</Trans>
-            </TYPE.mediumHeader>
+            </ThemedText.MediumHeader>
             <div>
               <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
             </div>
           </AutoRow>
 
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+          <ThemedText.Body style={{ marginBottom: 8, fontWeight: 400 }}>
             <Trans>
               For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
               Uniswap V3.
             </Trans>
-          </TYPE.body>
+          </ThemedText.Body>
 
           {!account ? (
             <LightCard padding="40px">
-              <TYPE.body color={theme.text3} textAlign="center">
+              <ThemedText.Body color={theme.text3} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
-              </TYPE.body>
+              </ThemedText.Body>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <TYPE.body color={theme.text3} textAlign="center">
+              <ThemedText.Body color={theme.text3} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>
-              </TYPE.body>
+              </ThemedText.Body>
             </LightCard>
           ) : v2Pairs.filter(([, pair]) => !!pair).length > 0 ? (
             <>

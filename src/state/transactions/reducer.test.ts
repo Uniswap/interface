@@ -20,7 +20,7 @@ describe('transaction reducer', () => {
   describe('updateVersion', () => {
     it('clears old format transactions that do not have info', () => {
       store = createStore(reducer, {
-        [1]: {
+        1: {
           abc: {
             hash: 'abc',
           } as any,
@@ -31,7 +31,7 @@ describe('transaction reducer', () => {
     })
     it('keeps old format transactions that do have info', () => {
       store = createStore(reducer, {
-        [1]: {
+        1: {
           abc: {
             hash: 'abc',
             info: {},

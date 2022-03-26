@@ -3,9 +3,11 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
@@ -22,21 +24,19 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import Slider from '../../components/Slider'
 import { Dots } from '../../components/swap/styleds'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { WETH9_EXTENDED } from '../../constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { StyledInternalLink, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
@@ -239,7 +239,7 @@ export default function RemoveLiquidity({
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map((methodName) =>
         router.estimateGas[methodName](...args)
-          .then((estimateGas) => calculateGasMargin(chainId, estimateGas))
+          .then((estimateGas) => calculateGasMargin(estimateGas))
           .catch((error) => {
             console.error(`estimateGas failed`, methodName, args, error)
             return undefined
@@ -318,12 +318,12 @@ export default function RemoveLiquidity({
           </RowFixed>
         </RowBetween>
 
-        <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
+        <ThemedText.Italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </TYPE.italic>
+        </ThemedText.Italic>
       </AutoColumn>
     )
   }
@@ -373,8 +373,8 @@ export default function RemoveLiquidity({
 
   const pendingText = (
     <Trans>
-      Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencyA?.symbol} and $
-      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}
+      Removing {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} {currencyA?.symbol} and
+      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} {currencyB?.symbol}
     </Trans>
   )
 
@@ -386,10 +386,12 @@ export default function RemoveLiquidity({
   )
 
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
+
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      WETH9_EXTENDED[chainId] &&
-      (currencyA?.equals(WETH9_EXTENDED[chainId]) || currencyB?.equals(WETH9_EXTENDED[chainId]))
+      WRAPPED_NATIVE_CURRENCY[chainId] &&
+      ((currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA)) ||
+        (currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -450,12 +452,12 @@ export default function RemoveLiquidity({
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <TYPE.link fontWeight={400} color={'primaryText1'}>
+                <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                   <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
                   </Trans>
-                </TYPE.link>
+                </ThemedText.Link>
               </AutoColumn>
             </BlueCard>
             <LightCard>
@@ -532,16 +534,24 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.isNative ? WETH9_EXTENDED[chainId].address : currencyIdA}/${
-                              currencyB?.isNative ? WETH9_EXTENDED[chainId].address : currencyIdB
+                            to={`/remove/v2/${
+                              currencyA?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                                ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
+                                : currencyIdA
+                            }/${
+                              currencyB?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                                ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
+                                : currencyIdB
                             }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : currencyIdA}/${
-                              currencyB?.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : currencyIdB
+                            to={`/remove/v2/${
+                              currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA) ? 'ETH' : currencyIdA
+                            }/${
+                              currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB) ? 'ETH' : currencyIdB
                             }`}
                           >
                             Receive ETH

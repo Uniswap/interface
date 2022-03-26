@@ -23,7 +23,7 @@ export const BaseButton = styled(RebassButton)<
   border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
   outline: none;
   border: 1px solid transparent;
-  color: white;
+  color: ${({ theme }) => theme.text1};
   text-decoration: none;
   display: flex;
   justify-content: center;
@@ -33,6 +33,7 @@ export const BaseButton = styled(RebassButton)<
   position: relative;
   z-index: 1;
   &:disabled {
+    opacity: 50%;
     cursor: auto;
     pointer-events: none;
   }
@@ -236,7 +237,7 @@ const ButtonConfirmedStyle = styled(BaseButton)`
   /* border: 1px solid ${({ theme }) => theme.green1}; */
 
   &:disabled {
-    /* opacity: 50%; */
+    opacity: 50%;
     background-color: ${({ theme }) => theme.bg2};
     color: ${({ theme }) => theme.text2};
     cursor: auto;
@@ -315,8 +316,8 @@ const ActiveOutlined = styled(ButtonOutlined)`
 `
 
 const Circle = styled.div`
-  height: 20px;
-  width: 20px;
+  height: 17px;
+  width: 17px;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.primary1};
   display: flex;
@@ -325,11 +326,11 @@ const Circle = styled.div`
 `
 
 const CheckboxWrapper = styled.div`
-  width: 30px;
+  width: 20px;
   padding: 0 10px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 11px;
+  right: 15px;
 `
 
 const ResponsiveCheck = styled(Check)`

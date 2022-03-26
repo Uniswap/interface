@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { CloseIcon, CustomLightSpinner, TYPE } from '../../theme'
+import { CloseIcon, CustomLightSpinner, ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -32,9 +32,9 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify={'center'}>
         {children}
-        <TYPE.subHeader>
+        <ThemedText.SubHeader>
           <Trans>Confirm this transaction in your wallet</Trans>
-        </TYPE.subHeader>
+        </ThemedText.SubHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
   )
@@ -68,9 +68,9 @@ export function SubmittedView({
             href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
             style={{ marginLeft: '4px' }}
           >
-            <TYPE.subHeader>
+            <ThemedText.SubHeader>
               <Trans>View transaction on Explorer</Trans>
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
           </ExternalLink>
         )}
       </AutoColumn>

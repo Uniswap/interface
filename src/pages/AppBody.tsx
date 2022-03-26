@@ -12,6 +12,8 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
   margin-top: 1rem;
+  margin-left: auto;
+  margin-right: auto;
   z-index: ${Z_INDEX.deprecated_content};
 `
 

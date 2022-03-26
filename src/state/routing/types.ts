@@ -1,6 +1,9 @@
-import { Token } from '@uniswap/sdk-core'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Route as V2Route } from '@uniswap/v2-sdk'
+import { Route as V3Route } from '@uniswap/v3-sdk'
 
-export enum V3TradeState {
+export enum TradeState {
   LOADING,
   INVALID,
   NO_ROUTE_FOUND,
@@ -8,11 +11,12 @@ export enum V3TradeState {
   SYNCING,
 }
 
+// from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
+
 export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
-export type PoolInRoute = {
+export type V3PoolInRoute = {
   type: 'v3-pool'
-  address: string
   tokenIn: TokenInRoute
   tokenOut: TokenInRoute
   sqrtRatioX96: string
@@ -21,6 +25,28 @@ export type PoolInRoute = {
   fee: string
   amountIn?: string
   amountOut?: string
+
+  // not used in the interface
+  address?: string
+}
+
+export type V2Reserve = {
+  token: TokenInRoute
+  quotient: string
+}
+
+export type V2PoolInRoute = {
+  type: 'v2-pool'
+  tokenIn: TokenInRoute
+  tokenOut: TokenInRoute
+  reserve0: V2Reserve
+  reserve1: V2Reserve
+  amountIn?: string
+  amountOut?: string
+
+  // not used in the interface
+  // avoid returning it from the client-side smart-order-router
+  address?: string
 }
 
 export interface GetQuoteResult {
@@ -38,6 +64,35 @@ export interface GetQuoteResult {
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  route: PoolInRoute[][]
+  route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
   routeString: string
+}
+
+export class InterfaceTrade<
+  TInput extends Currency,
+  TOutput extends Currency,
+  TTradeType extends TradeType
+> extends Trade<TInput, TOutput, TTradeType> {
+  gasUseEstimateUSD: CurrencyAmount<Token> | null | undefined
+
+  constructor({
+    gasUseEstimateUSD,
+    ...routes
+  }: {
+    gasUseEstimateUSD?: CurrencyAmount<Token> | undefined | null
+    v2Routes: {
+      routev2: V2Route<TInput, TOutput>
+      inputAmount: CurrencyAmount<TInput>
+      outputAmount: CurrencyAmount<TOutput>
+    }[]
+    v3Routes: {
+      routev3: V3Route<TInput, TOutput>
+      inputAmount: CurrencyAmount<TInput>
+      outputAmount: CurrencyAmount<TOutput>
+    }[]
+    tradeType: TTradeType
+  }) {
+    super(routes)
+    this.gasUseEstimateUSD = gasUseEstimateUSD
+  }
 }

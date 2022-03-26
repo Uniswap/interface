@@ -4,9 +4,10 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
@@ -21,21 +22,20 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { ZERO_PERCENT } from '../../constants/misc'
-import { WETH9_EXTENDED } from '../../constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useV2RouterContract } from '../../hooks/useContract'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PairState } from '../../hooks/useV2Pairs'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
@@ -54,15 +54,18 @@ export default function AddLiquidity({
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
+
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
+  const wrappedNativeCurrency = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
+
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyA.equals(WETH9_EXTENDED[chainId])) ||
-        (currencyB && currencyB.equals(WETH9_EXTENDED[chainId])))
+      wrappedNativeCurrency &&
+      ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
@@ -184,7 +187,7 @@ export default function AddLiquidity({
       .then((estimatedGasLimit) =>
         method(...args, {
           ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(chainId, estimatedGasLimit),
+          gasLimit: calculateGasMargin(estimatedGasLimit),
         }).then((response) => {
           setAttemptingTxn(false)
 
@@ -247,12 +250,12 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+        <ThemedText.Italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </TYPE.italic>
+        </ThemedText.Italic>
       </AutoColumn>
     )
   }
@@ -272,8 +275,8 @@ export default function AddLiquidity({
 
   const pendingText = (
     <Trans>
-      Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencies[Field.CURRENCY_A]?.symbol} and $
-      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}
+      Supplying {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} {currencies[Field.CURRENCY_A]?.symbol} and{' '}
+      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} {currencies[Field.CURRENCY_B]?.symbol}
     </Trans>
   )
 
@@ -344,15 +347,15 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={600} color={'primaryText1'}>
                         <Trans>You are the first liquidity provider.</Trans>
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      </ThemedText.Link>
+                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      </ThemedText.Link>
+                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
-                      </TYPE.link>
+                      </ThemedText.Link>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -360,7 +363,7 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -369,7 +372,7 @@ export default function AddLiquidity({
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
                           time.
                         </Trans>
-                      </TYPE.link>
+                      </ThemedText.Link>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -405,13 +408,13 @@ export default function AddLiquidity({
               <>
                 <LightCard padding="0px" $borderRadius={'20px'}>
                   <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
+                    <ThemedText.SubHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
                         <Trans>Initial prices and pool share</Trans>
                       ) : (
                         <Trans>Prices and pool share</Trans>
                       )}
-                    </TYPE.subHeader>
+                    </ThemedText.SubHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" $borderRadius={'20px'}>
                     <PoolPriceBar
@@ -427,9 +430,9 @@ export default function AddLiquidity({
 
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
-                <TYPE.main mb="4px">
+                <ThemedText.Main mb="4px">
                   <Trans>Unsupported Asset</Trans>
-                </TYPE.main>
+                </ThemedText.Main>
               </ButtonPrimary>
             ) : !account ? (
               <ButtonLight onClick={toggleWalletModal}>

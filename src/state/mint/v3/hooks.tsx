@@ -11,17 +11,17 @@ import {
   TickMath,
   tickToPrice,
 } from '@uniswap/v3-sdk'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
-import { useActiveWeb3React } from '../../../hooks/web3'
 import { AppState } from '../../index'
-import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
 import {
   Bound,
@@ -150,10 +150,10 @@ export function useV3DerivedMintInfo(
   )
 
   // balances
-  const balances = useCurrencyBalances(account ?? undefined, [
-    currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B],
-  ])
+  const balances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies])
+  )
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
     [Field.CURRENCY_A]: balances[0],
     [Field.CURRENCY_B]: balances[1],
@@ -170,9 +170,9 @@ export function useV3DerivedMintInfo(
   const price: Price<Token, Token> | undefined = useMemo(() => {
     // if no liquidity use typed value
     if (noLiquidity) {
-      const parsedQuoteAmount = tryParseAmount(startPriceTypedValue, invertPrice ? token0 : token1)
+      const parsedQuoteAmount = tryParseCurrencyAmount(startPriceTypedValue, invertPrice ? token0 : token1)
       if (parsedQuoteAmount && token0 && token1) {
-        const baseAmount = tryParseAmount('1', invertPrice ? token1 : token0)
+        const baseAmount = tryParseCurrencyAmount('1', invertPrice ? token1 : token0)
         const price =
           baseAmount && parsedQuoteAmount
             ? new Price(
@@ -194,14 +194,14 @@ export function useV3DerivedMintInfo(
   // check for invalid price input (converts to invalid ratio)
   const invalidPrice = useMemo(() => {
     const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.numerator, price.denominator) : undefined
-    const invalid =
+    return (
       price &&
       sqrtRatioX96 &&
       !(
         JSBI.greaterThanOrEqual(sqrtRatioX96, TickMath.MIN_SQRT_RATIO) &&
         JSBI.lessThan(sqrtRatioX96, TickMath.MAX_SQRT_RATIO)
       )
-    return invalid
+    )
   }, [price])
 
   // used for ratio calculation when pool not initialized
@@ -294,7 +294,7 @@ export function useV3DerivedMintInfo(
   )
 
   // amounts
-  const independentAmount: CurrencyAmount<Currency> | undefined = tryParseAmount(
+  const independentAmount: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(
     typedValue,
     currencies[independentField]
   )
@@ -446,11 +446,11 @@ export function useV3DerivedMintInfo(
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    errorMessage = <Trans>Insufficient ${currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
+    errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    errorMessage = <Trans>Insufficient ${currencies[Field.CURRENCY_B]?.symbol} balance</Trans>
+    errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_B]?.symbol} balance</Trans>
   }
 
   const invalidPool = poolState === PoolState.INVALID

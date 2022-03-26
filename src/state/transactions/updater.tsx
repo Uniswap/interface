@@ -1,13 +1,15 @@
 import axios from 'axios'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import LibUpdater from 'lib/hooks/transactions/updater'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useEffect, useMemo } from 'react'
+import { updateBlockNumber } from 'state/application/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { retry, RetryableError, RetryOptions } from 'utils/retry'
 
 import { L2_CHAIN_IDS, SupportedChainId } from '../../constants/chains'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { retry, RetryableError, RetryOptions } from '../../utils/retry'
-import { updateBlockNumber } from '../application/actions'
-import { useAddPopup, useBlockNumber } from '../application/hooks'
+import { useAddPopup } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './actions'
 
 interface TxInterface {
@@ -50,7 +52,7 @@ const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
 }
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
-export default function Updater(): null {
+export default function Updater() {
   const { chainId, library } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
@@ -58,13 +60,45 @@ export default function Updater(): null {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.transactions)
 
-  const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
+  const pendingTransactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
 
   // show popup on confirm
   const addPopup = useAddPopup()
-
   // speed up popup dismisall time if on L2
   const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
+
+  const onCheck = useCallback(
+    ({ chainId, hash, blockNumber }) => dispatch(checkedTransaction({ chainId, hash, blockNumber })),
+    [dispatch]
+  )
+  const onReceipt = useCallback(
+    ({ chainId, hash, receipt }) => {
+      dispatch(
+        finalizeTransaction({
+          chainId,
+          hash,
+          receipt: {
+            blockHash: receipt.blockHash,
+            blockNumber: receipt.blockNumber,
+            contractAddress: receipt.contractAddress,
+            from: receipt.from,
+            status: receipt.status,
+            to: receipt.to,
+            transactionHash: receipt.transactionHash,
+            transactionIndex: receipt.transactionIndex,
+          },
+        })
+      )
+      addPopup(
+        {
+          txn: { hash },
+        },
+        hash,
+        isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
+      )
+    },
+    [addPopup, dispatch, isL2]
+  )
 
   const getReceipt = useCallback(
     (hash: string) => {
@@ -72,7 +106,7 @@ export default function Updater(): null {
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
-          library.getTransactionReceipt(hash).then((receipt) => {
+          library.getTransactionReceipt(hash).then((receipt: any) => {
             if (receipt === null) {
               console.debug('Retrying for hash', hash)
               throw new RetryableError()
@@ -84,16 +118,16 @@ export default function Updater(): null {
     },
     [chainId, library]
   )
-
+  
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
 
-    const cancels = Object.keys(transactions)
-      .filter((hash) => shouldCheck(lastBlockNumber, transactions[hash]))
+    const cancels = Object.keys(pendingTransactions)
+      .filter((hash) => shouldCheck(lastBlockNumber, pendingTransactions[hash]))
       .map((hash) => {
         const { promise, cancel } = getReceipt(hash)
         promise
-          .then((receipt) => {
+          .then((receipt: any) => {
             if (receipt) {
               dispatch(
                 finalizeTransaction({
@@ -149,7 +183,7 @@ export default function Updater(): null {
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2])
+  }, [chainId, library, pendingTransactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2])
 
-  return null
+  return <LibUpdater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
 }

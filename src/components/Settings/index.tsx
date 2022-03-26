@@ -1,19 +1,19 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
-import { useActiveWeb3React } from 'hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -27,7 +27,7 @@ const StyledMenuIcon = styled(Settings)`
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.text2};
+    stroke: ${({ theme }) => theme.text1};
   }
 
   :hover {
@@ -199,16 +199,13 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <Text fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
             </Text>
-
-            {chainId === SupportedChainId.MAINNET && (
+            {chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId) && (
               <RowBetween>
                 <RowFixed>
-                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                    <Trans>Auto Router</Trans>
-                  </TYPE.black>
-                  <QuestionHelper
-                    text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
-                  />
+                  <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
+                    <Trans>Auto Router API</Trans>
+                  </ThemedText.Black>
+                  <QuestionHelper text={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>} />
                 </RowFixed>
                 <Toggle
                   id="toggle-optimized-router-button"
@@ -223,12 +220,11 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 />
               </RowBetween>
             )}
-
             <RowBetween>
               <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Expert Mode</Trans>
-                </TYPE.black>
+                </ThemedText.Black>
                 <QuestionHelper
                   text={
                     <Trans>Allow high price impact trades and skip the confirm screen. Use at your own risk.</Trans>

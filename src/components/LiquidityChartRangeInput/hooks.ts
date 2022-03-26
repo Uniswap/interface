@@ -1,15 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
-import JSBI from 'jsbi'
+import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { useCallback, useMemo } from 'react'
 
 import { ChartEntry } from './types'
-
-export interface TickProcessed {
-  liquidityActive: JSBI
-  price0: string
-}
 
 export function useDensityChartData({
   currencyA,

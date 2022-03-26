@@ -9,17 +9,23 @@ import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
 import React, { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
 import { ZoomLevels } from './types'
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
+  [FeeAmount.LOWEST]: {
+    initialMin: 0.999,
+    initialMax: 1.001,
+    min: 0.00001,
+    max: 1.5,
+  },
   [FeeAmount.LOW]: {
     initialMin: 0.999,
     initialMax: 1.001,
@@ -52,9 +58,9 @@ function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
     <ColumnCenter style={{ height: '100%', justifyContent: 'center' }}>
       {icon}
       {message && (
-        <TYPE.mediumHeader padding={10} marginTop="20px" textAlign="center">
+        <ThemedText.MediumHeader padding={10} marginTop="20px" textAlign="center">
           {message}
-        </TYPE.mediumHeader>
+        </ThemedText.MediumHeader>
       )}
     </ColumnCenter>
   )
@@ -152,11 +158,7 @@ export default function LiquidityChartRangeInput({
   )
 
   if (isError) {
-    ReactGA.exception({
-      ...error,
-      category: 'Liquidity',
-      fatal: false,
-    })
+    ReactGA.event('exception', { description: error.toString(), fatal: false })
   }
 
   return (

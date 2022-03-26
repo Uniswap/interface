@@ -1,8 +1,9 @@
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+
 import ArgentWalletContractABI from '../abis/argent-wallet-contract.json'
 import { ArgentWalletContract } from '../abis/types'
 import { useContract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
-import { useActiveWeb3React } from './web3'
 
 export function useArgentWalletContract(): ArgentWalletContract | null {
   const { account } = useActiveWeb3React()

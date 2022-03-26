@@ -1,16 +1,24 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import MerkleDistributorJson from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { MERKLE_DISTRIBUTOR_ADDRESS } from 'constants/addresses'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
 
 import { UNI } from '../../constants/tokens'
-import { useMerkleDistributorContract } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
+import { useContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { useSingleCallResult } from '../multicall/hooks'
 import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
+
+const { abi: MERKLE_DISTRIBUTOR_ABI } = MerkleDistributorJson
+
+function useMerkleDistributorContract() {
+  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
+}
 
 interface UserClaimData {
   index: number
@@ -164,7 +172,7 @@ export function useClaimCallback(account: string | null | undefined): {
 
     return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
-        .claim(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
+        .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.CLAIM,

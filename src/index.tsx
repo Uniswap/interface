@@ -3,11 +3,13 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
+import { BlockUpdater } from 'lib/hooks/useBlockNumber'
+import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+import { createWeb3ReactRoot, Web3ReactProvider } from 'web3-react-core'
 
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants/misc'
@@ -18,7 +20,6 @@ import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
-import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
@@ -39,6 +40,7 @@ function Updaters() {
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
+      <BlockUpdater />
       <MulticallUpdater />
       <LogsUpdater />
     </>

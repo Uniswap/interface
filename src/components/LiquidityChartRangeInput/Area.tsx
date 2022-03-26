@@ -37,7 +37,7 @@ export const Area = ({
             .y0(yScale(0))(
             series.filter((d) => {
               const value = xScale(xValue(d))
-              return value > 0 && value <= innerWidth
+              return value > 0 && value <= window.innerWidth
             }) as Iterable<[number, number]>
           ) ?? undefined
         }

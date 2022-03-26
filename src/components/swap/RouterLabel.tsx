@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { useRoutingAPIEnabled } from 'state/user/hooks'
+import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
-import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
 import { ReactComponent as StaticRouterIcon } from '../../assets/svg/static_route.svg'
+import AutoRouterIcon from './AutoRouterIcon'
 
 const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   height: 16px;
@@ -26,7 +26,7 @@ const StyledStaticRouterIcon = styled(StaticRouterIcon)`
   }
 `
 
-const StyledAutoRouterLabel = styled(TYPE.black)`
+const StyledAutoRouterLabel = styled(ThemedText.Black)`
   line-height: 1rem;
 
   /* fallback color */
@@ -40,19 +40,19 @@ const StyledAutoRouterLabel = styled(TYPE.black)`
 `
 
 export function AutoRouterLogo() {
-  const routingAPIEnabled = useRoutingAPIEnabled()
+  const autoRouterSupported = useAutoRouterSupported()
 
-  return routingAPIEnabled ? <StyledAutoRouterIcon /> : <StyledStaticRouterIcon />
+  return autoRouterSupported ? <StyledAutoRouterIcon /> : <StyledStaticRouterIcon />
 }
 
 export function AutoRouterLabel() {
-  const routingAPIEnabled = useRoutingAPIEnabled()
+  const autoRouterSupported = useAutoRouterSupported()
 
-  return routingAPIEnabled ? (
+  return autoRouterSupported ? (
     <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
   ) : (
-    <TYPE.black fontSize={14}>
+    <ThemedText.Black fontSize={14}>
       <Trans>Trade Route</Trans>
-    </TYPE.black>
+    </ThemedText.Black>
   )
 }

@@ -4,8 +4,9 @@ import { animated } from 'react-spring'
 import { useSpring } from 'react-spring/web'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
+import { PopupContent } from '../../state/application/reducer'
+import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 import TransactionPopup from './TransactionPopup'
 
 const StyledClose = styled(X)`
@@ -77,6 +78,8 @@ export default function PopupItem({
       txn: { hash },
     } = content
     popupContent = <TransactionPopup hash={hash} />
+  } else if ('failedSwitchNetwork' in content) {
+    popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
 
   const faderStyle = useSpring({

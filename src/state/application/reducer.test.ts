@@ -1,7 +1,13 @@
 import { createStore, Store } from 'redux'
 
-import { addPopup, ApplicationModal, removePopup, setOpenModal, updateBlockNumber, updateChainId } from './actions'
-import reducer, { ApplicationState } from './reducer'
+import reducer, {
+  addPopup,
+  ApplicationModal,
+  ApplicationState,
+  removePopup,
+  setOpenModal,
+  updateChainId,
+} from './reducer'
 
 describe('application reducer', () => {
   let store: Store<ApplicationState>
@@ -9,12 +15,8 @@ describe('application reducer', () => {
   beforeEach(() => {
     store = createStore(reducer, {
       chainId: null,
-      chainConnectivityWarning: false,
-      popupList: [],
-      blockNumber: {
-        [1]: 3,
-      },
       openModal: null,
+      popupList: [],
     })
   })
 
@@ -61,24 +63,6 @@ describe('application reducer', () => {
       store.dispatch(updateChainId({ chainId: 1 }))
 
       expect(store.getState().chainId).toEqual(1)
-    })
-  })
-
-  describe('updateBlockNumber', () => {
-    it('updates block number', () => {
-      store.dispatch(updateBlockNumber({ chainId: 1, blockNumber: 4 }))
-      expect(store.getState().blockNumber[1]).toEqual(4)
-    })
-    it('no op if late', () => {
-      store.dispatch(updateBlockNumber({ chainId: 1, blockNumber: 2 }))
-      expect(store.getState().blockNumber[1]).toEqual(3)
-    })
-    it('works with non-set chains', () => {
-      store.dispatch(updateBlockNumber({ chainId: 3, blockNumber: 2 }))
-      expect(store.getState().blockNumber).toEqual({
-        [1]: 3,
-        [3]: 2,
-      })
     })
   })
 

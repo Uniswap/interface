@@ -1,6 +1,6 @@
 import React, { HTMLProps } from 'react'
 import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components/macro'
 
@@ -260,4 +260,10 @@ export const SmallOnly = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: block;
   `};
+`
+
+export const Separator = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg2};
 `

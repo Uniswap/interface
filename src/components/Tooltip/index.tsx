@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import Popover, { PopoverProps } from '../Popover'
 
 export const TooltipContainer = styled.div`
-  width: 256px;
+  max-width: 256px;
   padding: 0.6rem 1rem;
   font-weight: 400;
   word-break: break-word;
@@ -25,6 +25,7 @@ interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   onOpen?: () => void
   // whether to wrap the content in a `TooltipContainer`
   wrap?: boolean
+  disableHover?: boolean // disable the hover and content display
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {
@@ -52,6 +53,7 @@ export function MouseoverTooltipContent({
   content,
   children,
   onOpen: openCallback = undefined,
+  disableHover,
   ...rest
 }: Omit<TooltipContentProps, 'show'>) {
   const [show, setShow] = useState(false)
@@ -61,7 +63,7 @@ export function MouseoverTooltipContent({
   }, [openCallback])
   const close = useCallback(() => setShow(false), [setShow])
   return (
-    <TooltipContent {...rest} show={show} content={content}>
+    <TooltipContent {...rest} show={show} content={disableHover ? null : content}>
       <div
         style={{ display: 'inline-block', lineHeight: 0, padding: '0.25rem' }}
         onMouseEnter={open}

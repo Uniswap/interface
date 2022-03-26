@@ -1,7 +1,7 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
-import { useSingleCallResult } from '../state/multicall/hooks'
 import { useTokenContract } from './useContract'
 
 export function useTokenAllowance(token?: Token, owner?: string, spender?: string): CurrencyAmount<Token> | undefined {

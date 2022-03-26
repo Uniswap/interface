@@ -6,7 +6,7 @@ import { ButtonPrimary } from '../../components/Button'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Field } from '../../state/mint/actions'
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 
 export function ConfirmAddModalBottom({
   noLiquidity,
@@ -26,47 +26,47 @@ export function ConfirmAddModalBottom({
   return (
     <>
       <RowBetween>
-        <TYPE.body>
+        <ThemedText.Body>
           <Trans>{currencies[Field.CURRENCY_A]?.symbol} Deposited</Trans>
-        </TYPE.body>
+        </ThemedText.Body>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
-          <TYPE.body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.body>
+          <ThemedText.Body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</ThemedText.Body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>
+        <ThemedText.Body>
           <Trans>{currencies[Field.CURRENCY_B]?.symbol} Deposited</Trans>
-        </TYPE.body>
+        </ThemedText.Body>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
-          <TYPE.body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
+          <ThemedText.Body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</ThemedText.Body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>
+        <ThemedText.Body>
           <Trans>Rates</Trans>
-        </TYPE.body>
-        <TYPE.body>
+        </ThemedText.Body>
+        <ThemedText.Body>
           {`1 ${currencies[Field.CURRENCY_A]?.symbol} = ${price?.toSignificant(4)} ${
             currencies[Field.CURRENCY_B]?.symbol
           }`}
-        </TYPE.body>
+        </ThemedText.Body>
       </RowBetween>
       <RowBetween style={{ justifyContent: 'flex-end' }}>
-        <TYPE.body>
+        <ThemedText.Body>
           {`1 ${currencies[Field.CURRENCY_B]?.symbol} = ${price?.invert().toSignificant(4)} ${
             currencies[Field.CURRENCY_A]?.symbol
           }`}
-        </TYPE.body>
+        </ThemedText.Body>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>
+        <ThemedText.Body>
           <Trans>Share of Pool:</Trans>
-        </TYPE.body>
-        <TYPE.body>
+        </ThemedText.Body>
+        <ThemedText.Body>
           <Trans>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</Trans>
-        </TYPE.body>
+        </ThemedText.Body>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
         <Text fontWeight={500} fontSize={20}>

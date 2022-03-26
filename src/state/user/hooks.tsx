@@ -1,8 +1,10 @@
 import { Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -11,7 +13,6 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
 import {
   addSerializedPair,
@@ -19,9 +20,9 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
-  updateOptimismAlphaAcknowledged,
+  updateShowDonationLink,
+  updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -106,6 +107,38 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
+export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const showSurveyPopup = useAppSelector((state) => state.user.showSurveyPopup)
+  const toggleShowSurveyPopup = useCallback(
+    (showPopup: boolean) => {
+      dispatch(updateShowSurveyPopup({ showSurveyPopup: showPopup }))
+    },
+    [dispatch]
+  )
+  return [showSurveyPopup, toggleShowSurveyPopup]
+}
+
+const DONATION_END_TIMESTAMP = 1646864954 // Jan 15th
+
+export function useShowDonationLink(): [boolean | undefined, (showDonationLink: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const showDonationLink = useAppSelector((state) => state.user.showDonationLink)
+
+  const toggleShowDonationLink = useCallback(
+    (showPopup: boolean) => {
+      dispatch(updateShowDonationLink({ showDonationLink: showPopup }))
+    },
+    [dispatch]
+  )
+
+  const timestamp = useCurrentBlockTimestamp()
+  const durationOver = timestamp ? timestamp.toNumber() > DONATION_END_TIMESTAMP : false
+  const donationVisible = showDonationLink !== false && !durationOver
+
+  return [donationVisible, toggleShowDonationLink]
+}
+
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
   const dispatch = useAppDispatch()
 
@@ -119,13 +152,6 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
   )
 
   return [clientSideRouter, setClientSideRouter]
-}
-
-export function useRoutingAPIEnabled(): boolean {
-  const { chainId } = useActiveWeb3React()
-  const [clientSideRouter] = useClientSideRouter()
-
-  return chainId === SupportedChainId.MAINNET && !clientSideRouter
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {
@@ -234,7 +260,10 @@ export function useUserAddedTokens(): Token[] {
 
   return useMemo(() => {
     if (!chainId) return []
-    return Object.values(serializedTokensMap?.[chainId] ?? {}).map(deserializeToken)
+    const tokenMap: Token[] = serializedTokensMap?.[chainId]
+      ? Object.values(serializedTokensMap[chainId]).map(deserializeToken)
+      : []
+    return tokenMap
   }, [serializedTokensMap, chainId])
 }
 
@@ -344,24 +373,4 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
-}
-
-export function useArbitrumAlphaAlert(): [boolean, (arbitrumAlphaAcknowledged: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const arbitrumAlphaAcknowledged = useAppSelector(({ user }) => user.arbitrumAlphaAcknowledged)
-  const setArbitrumAlphaAcknowledged = (arbitrumAlphaAcknowledged: boolean) => {
-    dispatch(updateArbitrumAlphaAcknowledged({ arbitrumAlphaAcknowledged }))
-  }
-
-  return [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged]
-}
-
-export function useOptimismAlphaAlert(): [boolean, (optimismAlphaAcknowledged: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const optimismAlphaAcknowledged = useAppSelector(({ user }) => user.optimismAlphaAcknowledged)
-  const setOptimismAlphaAcknowledged = (optimismAlphaAcknowledged: boolean) => {
-    dispatch(updateOptimismAlphaAcknowledged({ optimismAlphaAcknowledged }))
-  }
-
-  return [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged]
 }

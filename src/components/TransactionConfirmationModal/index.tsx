@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
-import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import useIsFlashbotsProtectRPC from 'hooks/useIsFlashbotsProtectRPC'
 import { ReactNode, useContext } from 'react'
@@ -12,9 +14,8 @@ import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink } from '../../theme'
-import { CloseIcon, CustomLightSpinner } from '../../theme/components'
+import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
@@ -300,11 +301,11 @@ function L2Content({
               </Text>
             </ExternalLink>
           ) : (
-            <div style={{ height: '17px' }}></div>
+            <div style={{ height: '17px' }} />
           )}
           <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
             {!secondsToConfirm ? (
-              <div style={{ height: '24px' }}></div>
+              <div style={{ height: '24px' }} />
             ) : (
               <div>
                 <Trans>Transaction completed in </Trans>

@@ -1,19 +1,26 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import StakingRewardsJson from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { useStakingContract } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
+import { useContract } from '../../hooks/useContract'
 import { StakingInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { CloseIcon, TYPE } from '../../theme'
+import { CloseIcon, ThemedText } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import { RowBetween } from '../Row'
+
+const { abi: STAKING_REWARDS_ABI } = StakingRewardsJson
+
+function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
+}
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -74,24 +81,24 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>
+            <ThemedText.MediumHeader>
               <Trans>Claim</Trans>
-            </TYPE.mediumHeader>
+            </ThemedText.MediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <ThemedText.Body fontWeight={600} fontSize={36}>
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
-              </TYPE.body>
-              <TYPE.body>
+              </ThemedText.Body>
+              <ThemedText.Body>
                 <Trans>Unclaimed UNI</Trans>
-              </TYPE.body>
+              </ThemedText.Body>
             </AutoColumn>
           )}
-          <TYPE.subHeader style={{ textAlign: 'center' }}>
+          <ThemedText.SubHeader style={{ textAlign: 'center' }}>
             <Trans>When you claim without withdrawing your liquidity remains in the mining pool.</Trans>
-          </TYPE.subHeader>
+          </ThemedText.SubHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
             {error ?? <Trans>Claim</Trans>}
           </ButtonError>
@@ -100,21 +107,21 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>
+            <ThemedText.Body fontSize={20}>
               <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
-            </TYPE.body>
+            </ThemedText.Body>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>
+            <ThemedText.LargeHeader>
               <Trans>Transaction Submitted</Trans>
-            </TYPE.largeHeader>
-            <TYPE.body fontSize={20}>
+            </ThemedText.LargeHeader>
+            <ThemedText.Body fontSize={20}>
               <Trans>Claimed UNI!</Trans>
-            </TYPE.body>
+            </ThemedText.Body>
           </AutoColumn>
         </SubmittedView>
       )}

@@ -1,7 +1,10 @@
 {
-  "staticPath": "public",
-  "watchDirs": ["src"],
+  "watchDirs": [
+    "src"
+  ],
   "webpack": {
-    "configPath": "react-scripts/config/webpack.config"
-  }
+    "configPath": "react-scripts/config/webpack.config",
+    "overridePath": "cosmos.override.cjs"
+  },
+  "port": 5001
 }

@@ -10,10 +10,10 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateMatchesDarkMode,
-  updateOptimismAlphaAcknowledged,
+  updateShowDonationLink,
+  updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -25,13 +25,10 @@ import {
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  arbitrumAlphaAcknowledged: boolean
-
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
   matchesDarkMode: boolean // whether the dark mode media query matches
-  optimismAlphaAcknowledged: boolean
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
@@ -65,6 +62,11 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+
+  // undefined means has not gone through A/B split yet
+  showSurveyPopup: boolean | undefined
+
+  showDonationLink: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -72,9 +74,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  arbitrumAlphaAcknowledged: false,
   matchesDarkMode: false,
-  optimismAlphaAcknowledged: false,
   userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
@@ -87,6 +87,8 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
+  showSurveyPopup: undefined,
+  showDonationLink: true,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -132,12 +134,6 @@ export default createReducer(initialState, (builder) =>
       state.matchesDarkMode = action.payload.matchesDarkMode
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateArbitrumAlphaAcknowledged, (state, action) => {
-      state.arbitrumAlphaAcknowledged = action.payload.arbitrumAlphaAcknowledged
-    })
-    .addCase(updateOptimismAlphaAcknowledged, (state, action) => {
-      state.optimismAlphaAcknowledged = action.payload.optimismAlphaAcknowledged
-    })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode
       state.timestamp = currentTimestamp()
@@ -159,6 +155,12 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
+    })
+    .addCase(updateShowSurveyPopup, (state, action) => {
+      state.showSurveyPopup = action.payload.showSurveyPopup
+    })
+    .addCase(updateShowDonationLink, (state, action) => {
+      state.showDonationLink = action.payload.showDonationLink
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
       if (!state.tokens) {

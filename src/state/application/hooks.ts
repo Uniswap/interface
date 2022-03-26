@@ -2,15 +2,8 @@ import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
-import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal } from './actions'
-
-export function useBlockNumber(): number | undefined {
-  const { chainId } = useActiveWeb3React()
-
-  return useAppSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
-}
+import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal } from './reducer'
 
 export function useModalOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)
@@ -49,6 +42,10 @@ export function useToggleDelegateModal(): () => void {
 
 export function useToggleVoteModal(): () => void {
   return useToggleModal(ApplicationModal.VOTE)
+}
+
+export function useTogglePrivacyPolicy(): () => void {
+  return useToggleModal(ApplicationModal.PRIVACY_POLICY)
 }
 
 // returns a function that allows adding a popup

@@ -1,8 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { tickToPrice } from '@uniswap/v3-sdk'
-import { TickProcessed } from 'hooks/usePoolTickData'
+import { TickData, TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
-import { AllV3TicksQuery } from 'state/data/generated'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -11,7 +10,7 @@ export default function computeSurroundingTicks(
   token0: Token,
   token1: Token,
   activeTickProcessed: TickProcessed,
-  sortedTickData: AllV3TicksQuery['ticks'],
+  sortedTickData: TickData[],
   pivot: number,
   ascending: boolean
 ): TickProcessed[] {
@@ -22,12 +21,12 @@ export default function computeSurroundingTicks(
   // building active liquidity for every tick.
   let processedTicks: TickProcessed[] = []
   for (let i = pivot + (ascending ? 1 : -1); ascending ? i < sortedTickData.length : i >= 0; ascending ? i++ : i--) {
-    const tickIdx = Number(sortedTickData[i].tickIdx)
+    const tick = Number(sortedTickData[i].tick)
     const currentTickProcessed: TickProcessed = {
       liquidityActive: previousTickProcessed.liquidityActive,
-      tickIdx,
+      tick,
       liquidityNet: JSBI.BigInt(sortedTickData[i].liquidityNet),
-      price0: tickToPrice(token0, token1, tickIdx).toFixed(PRICE_FIXED_DIGITS),
+      price0: tickToPrice(token0, token1, tick).toFixed(PRICE_FIXED_DIGITS),
     }
 
     // Update the active liquidity.
