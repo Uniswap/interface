@@ -201,6 +201,41 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
+
+export const STETH: { [chainId: number]: Token } = {
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
+    18,
+    'stETH',
+    'Lido Liquid Staked Ether 2.0'
+  ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    '0x1643E812aE58766192Cf7D2Cf9567dF2C37e9B7F',
+    18,
+    'stETH',
+    'Lido Liquid Staked Ether 2.0'
+  ),
+}
+
+export const WSTETH: { [chainId: number]: Token } = {
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
+    18,
+    'wstETH',
+    'Lido Wrapped Liquid Staked Ether 2.0'
+  ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    '0x1643e812ae58766192cf7d2cf9567df2c37e9b7f',
+    18,
+    'wstETH',
+    'Lido Wrapped Liquid Staked Ether 2.0'
+  ),
+}
+
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),

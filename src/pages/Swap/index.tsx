@@ -125,6 +125,8 @@ export default function Swap({ history }: RouteComponentProps) {
     wrapType,
     execute: onWrap,
     inputError: wrapInputError,
+    approvalCallback: wrapApprovalCallback,
+    approvalState: wrapApprovalState,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
@@ -256,10 +258,10 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
-    if (approvalState === ApprovalState.PENDING) {
+    if (approvalState === ApprovalState.PENDING || wrapApprovalState === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
     }
-  }, [approvalState, approvalSubmitted])
+  }, [approvalState, wrapApprovalState, approvalSubmitted])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -388,6 +390,59 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
+  function getApprovalButton({
+    approveCallback,
+    tokenApprovalState,
+    tokenSignatureState,
+    approvedMessage,
+    pendingApprovalMessage,
+    tooltipMessage,
+  }: {
+    approveCallback?: () => Promise<void>
+    tokenApprovalState?: ApprovalState
+    tokenSignatureState?: UseERC20PermitState
+    approvedMessage: JSX.Element
+    pendingApprovalMessage: JSX.Element
+    tooltipMessage: JSX.Element
+  }) {
+    return (
+      <ButtonConfirmed
+        onClick={approveCallback}
+        disabled={
+          tokenApprovalState !== ApprovalState.NOT_APPROVED ||
+          approvalSubmitted ||
+          tokenSignatureState === UseERC20PermitState.SIGNED
+        }
+        width="100%"
+        altDisabledStyle={tokenApprovalState === ApprovalState.PENDING} // show solid button while waiting
+        confirmed={tokenApprovalState === ApprovalState.APPROVED || tokenSignatureState === UseERC20PermitState.SIGNED}
+      >
+        <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            <CurrencyLogo
+              currency={currencies[Field.INPUT]}
+              size={'20px'}
+              style={{ marginRight: '8px', flexShrink: 0 }}
+            />
+            {tokenApprovalState === ApprovalState.APPROVED || tokenSignatureState === UseERC20PermitState.SIGNED
+              ? approvedMessage
+              : pendingApprovalMessage}
+          </span>
+          {tokenApprovalState === ApprovalState.PENDING ? (
+            <Loader stroke="white" />
+          ) : (approvalSubmitted && tokenApprovalState === ApprovalState.APPROVED) ||
+            tokenSignatureState === UseERC20PermitState.SIGNED ? (
+            <CheckCircle size="20" color={theme.green1} />
+          ) : (
+            <MouseoverTooltip text={tooltipMessage}>
+              <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+            </MouseoverTooltip>
+          )}
+        </AutoRow>
+      </ButtonConfirmed>
+    )
+  }
+
   return (
     <>
       <TokenWarningModal
@@ -492,7 +547,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <ButtonLight onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>
                 </ButtonLight>
-              ) : showWrap ? (
+              ) : showWrap && wrapType !== WrapType.PENDING_APPROVAL ? (
                 <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                   {wrapInputError ? (
                     <WrapErrorText wrapInputError={wrapInputError} />
@@ -502,6 +557,19 @@ export default function Swap({ history }: RouteComponentProps) {
                     <Trans>Unwrap</Trans>
                   ) : null}
                 </ButtonPrimary>
+              ) : showWrap && wrapType === WrapType.PENDING_APPROVAL ? (
+                getApprovalButton({
+                  tokenApprovalState: wrapApprovalState,
+                  approveCallback: wrapApprovalCallback,
+                  approvedMessage: <Trans>You can now wrap {currencies[Field.INPUT]?.symbol}</Trans>,
+                  pendingApprovalMessage: <Trans>Approve your {currencies[Field.INPUT]?.symbol} for wrapping</Trans>,
+                  tooltipMessage: (
+                    <Trans>
+                      You must give the Lido {currencies[Field.OUTPUT]?.symbol} contract permission to use your{' '}
+                      {currencies[Field.INPUT]?.symbol}.
+                    </Trans>
+                  ),
+                })
               ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <ThemedText.Main mb="4px">
@@ -511,52 +579,22 @@ export default function Swap({ history }: RouteComponentProps) {
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                   <AutoColumn style={{ width: '100%' }} gap="12px">
-                    <ButtonConfirmed
-                      onClick={handleApprove}
-                      disabled={
-                        approvalState !== ApprovalState.NOT_APPROVED ||
-                        approvalSubmitted ||
-                        signatureState === UseERC20PermitState.SIGNED
-                      }
-                      width="100%"
-                      altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={
-                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                      }
-                    >
-                      <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <CurrencyLogo
-                            currency={currencies[Field.INPUT]}
-                            size={'20px'}
-                            style={{ marginRight: '8px', flexShrink: 0 }}
-                          />
-                          {/* we need to shorten this string on mobile */}
-                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
-                            <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                          ) : (
-                            <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                          )}
-                        </span>
-                        {approvalState === ApprovalState.PENDING ? (
-                          <Loader stroke="white" />
-                        ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                          signatureState === UseERC20PermitState.SIGNED ? (
-                          <CheckCircle size="20" color={theme.green1} />
-                        ) : (
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                You must give the Uniswap smart contracts permission to use your{' '}
-                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                              </Trans>
-                            }
-                          >
-                            <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                          </MouseoverTooltip>
-                        )}
-                      </AutoRow>
-                    </ButtonConfirmed>
+                    {getApprovalButton({
+                      tokenApprovalState: approvalState,
+                      approveCallback: handleApprove,
+                      tokenSignatureState: signatureState,
+                      /* we need to shorten this string on mobile */
+                      approvedMessage: <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>,
+                      pendingApprovalMessage: (
+                        <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                      ),
+                      tooltipMessage: (
+                        <Trans>
+                          You must give the Uniswap smart contracts permission to use your{' '}
+                          {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                        </Trans>
+                      ),
+                    })}
                     <ButtonError
                       onClick={() => {
                         if (isExpertMode) {

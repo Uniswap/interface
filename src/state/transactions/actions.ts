@@ -96,6 +96,8 @@ export interface WrapTransactionInfo {
   unwrapped: boolean
   currencyAmountRaw: string
   chainId?: number
+  unwrappedTokenSymbol?: string
+  wrappedTokenSymbol?: string
 }
 
 export interface ClaimTransactionInfo {

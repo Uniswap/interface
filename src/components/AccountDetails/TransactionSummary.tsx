@@ -131,7 +131,11 @@ function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInf
   return <Trans>Delegate voting power to {ENSName ?? delegatee}</Trans>
 }
 
-function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+function WrapSummary({
+  info: { chainId, currencyAmountRaw, unwrapped, unwrappedTokenSymbol, wrappedTokenSymbol },
+}: {
+  info: WrapTransactionInfo
+}) {
   const native = chainId ? nativeOnChain(chainId) : undefined
 
   if (unwrapped) {
@@ -140,11 +144,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Unwrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.wrapped?.symbol ?? 'WETH'}
+          symbol={wrappedTokenSymbol ?? native?.wrapped?.symbol ?? 'WETH'}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.symbol ?? 'ETH'}
+        to {unwrappedTokenSymbol ?? native?.symbol ?? 'ETH'}
       </Trans>
     )
   } else {
@@ -153,11 +157,11 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
         Wrap{' '}
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
-          symbol={native?.symbol ?? 'ETH'}
+          symbol={unwrappedTokenSymbol ?? native?.symbol ?? 'ETH'}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.wrapped?.symbol ?? 'WETH'}
+        to {wrappedTokenSymbol ?? native?.wrapped?.symbol ?? 'WETH'}
       </Trans>
     )
   }
