@@ -127,6 +127,7 @@ export default function Swap({ history }: RouteComponentProps) {
     inputError: wrapInputError,
     approvalCallback: wrapApprovalCallback,
     approvalState: wrapApprovalState,
+    needsApproval: wrapNeedsApproval,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
@@ -390,7 +391,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
-  function getApprovalButton({
+  const getApprovalButton = ({
     approveCallback,
     tokenApprovalState,
     tokenSignatureState,
@@ -404,7 +405,7 @@ export default function Swap({ history }: RouteComponentProps) {
     approvedMessage: JSX.Element
     pendingApprovalMessage: JSX.Element
     tooltipMessage: JSX.Element
-  }) {
+  }) => {
     return (
       <ButtonConfirmed
         onClick={approveCallback}
@@ -547,29 +548,35 @@ export default function Swap({ history }: RouteComponentProps) {
                 <ButtonLight onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>
                 </ButtonLight>
-              ) : showWrap && wrapType !== WrapType.PENDING_APPROVAL ? (
-                <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                  {wrapInputError ? (
-                    <WrapErrorText wrapInputError={wrapInputError} />
-                  ) : wrapType === WrapType.WRAP ? (
-                    <Trans>Wrap</Trans>
-                  ) : wrapType === WrapType.UNWRAP ? (
-                    <Trans>Unwrap</Trans>
-                  ) : null}
-                </ButtonPrimary>
-              ) : showWrap && wrapType === WrapType.PENDING_APPROVAL ? (
-                getApprovalButton({
-                  tokenApprovalState: wrapApprovalState,
-                  approveCallback: wrapApprovalCallback,
-                  approvedMessage: <Trans>You can now wrap {currencies[Field.INPUT]?.symbol}</Trans>,
-                  pendingApprovalMessage: <Trans>Approve your {currencies[Field.INPUT]?.symbol} for wrapping</Trans>,
-                  tooltipMessage: (
-                    <Trans>
-                      You must give the Lido {currencies[Field.OUTPUT]?.symbol} contract permission to use your{' '}
-                      {currencies[Field.INPUT]?.symbol}.
-                    </Trans>
-                  ),
-                })
+              ) : showWrap ? (
+                <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
+                  <AutoColumn style={{ width: '100%' }} gap="12px">
+                    {wrapNeedsApproval &&
+                      getApprovalButton({
+                        tokenApprovalState: wrapApprovalState,
+                        approveCallback: wrapApprovalCallback,
+                        approvedMessage: <Trans>You can now wrap {currencies[Field.INPUT]?.symbol}</Trans>,
+                        pendingApprovalMessage: (
+                          <Trans>Approve your {currencies[Field.INPUT]?.symbol} for wrapping</Trans>
+                        ),
+                        tooltipMessage: (
+                          <Trans>
+                            You must give the Lido {currencies[Field.OUTPUT]?.symbol} contract permission to use your{' '}
+                            {currencies[Field.INPUT]?.symbol}.
+                          </Trans>
+                        ),
+                      })}
+                    <ButtonPrimary disabled={Boolean(wrapInputError) || wrapNeedsApproval} onClick={onWrap}>
+                      {wrapInputError ? (
+                        <WrapErrorText wrapInputError={wrapInputError} />
+                      ) : wrapType === WrapType.WRAP ? (
+                        <Trans>Wrap</Trans>
+                      ) : wrapType === WrapType.UNWRAP ? (
+                        <Trans>Unwrap</Trans>
+                      ) : null}
+                    </ButtonPrimary>
+                  </AutoColumn>
+                </AutoRow>
               ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <ThemedText.Main mb="4px">

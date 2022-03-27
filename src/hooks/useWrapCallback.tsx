@@ -14,7 +14,6 @@ import { useWETHContract, useWSTETHContract } from './useContract'
 
 export enum WrapType {
   NOT_APPLICABLE,
-  PENDING_APPROVAL,
   WRAP,
   UNWRAP,
 }
@@ -79,6 +78,7 @@ export default function useWrapCallback(
   inputError?: WrapInputError
   approvalCallback?: () => Promise<void>
   approvalState?: ApprovalState
+  needsApproval?: boolean
 } {
   const { chainId, account } = useActiveWeb3React()
   const wethContract = useWETHContract()
@@ -160,9 +160,10 @@ export default function useWrapCallback(
       if (steth.equals(inputCurrency) && wsteth.equals(outputCurrency)) {
         if (stethApproval === ApprovalState.NOT_APPROVED) {
           return {
-            wrapType: WrapType.PENDING_APPROVAL,
+            wrapType: WrapType.WRAP,
             approvalCallback: getStethApproval,
             approvalState: stethApproval,
+            needsApproval: true,
           }
         }
 
