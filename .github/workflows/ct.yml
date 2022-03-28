@@ -28,8 +28,11 @@ jobs:
         run: yarn lint
       - name: Install cypress
         run: yarn add -D cypress@9.2.0 && yarn cypress install && yarn cypress verify
-      - name: Run integration synpress tests
+      - name: Run synpress tests
         run: yarn synpress:ct
+        continue-on-error: true
+      - name: Run cypress tests
+        run: yarn cypress:ct
         continue-on-error: true
       - name: Merge test results into one
         run: npm run report:merge

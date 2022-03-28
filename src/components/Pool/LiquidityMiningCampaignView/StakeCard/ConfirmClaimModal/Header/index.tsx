@@ -38,7 +38,6 @@ export default function ConfirmClaimModalHeader({ claimableRewards, onAmountChan
                 setTypedAmount({ ...typedAmount, [rewardTokenAddress]: claimableReward.toExact() })
                 onAmountChange(new TokenAmount(rewardToken, claimableReward.raw.toString()))
               }}
-              showMaxButton
               currency={rewardToken}
               id={rewardTokenAddress}
               disableCurrencySelect

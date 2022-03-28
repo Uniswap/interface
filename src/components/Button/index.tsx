@@ -360,7 +360,7 @@ export const AddSWPRToMetamaskButton = styled(Base)<{ active?: boolean }>`
   text-transform: uppercase;
   color: ${props => (props.active ? props.theme.white : '#c0baf7')};
   background: ${props =>
-    props.active ? `linear-gradient(90deg, ${props.theme.primary1} -24.77%, #fb52a1 186.93%)` : '#191a24'};
+    props.active ? `linear-gradient(90deg, ${props.theme.primary1} -24.77%, #fb52a1 186.93%)` : props.theme.bg8};
   border-radius: 8px;
   border: none;
   box-shadow: ${props => (props.active ? '0px 0px 42px rgba(165, 58, 196, 0.35)' : 'none')};

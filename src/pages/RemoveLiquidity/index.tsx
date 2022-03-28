@@ -113,8 +113,6 @@ export default function RemoveLiquidity({
   )
   const swapFee = pair ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)) : undefined
 
-  const atMaxAmount = parsedAmounts[Field.LIQUIDITY_PERCENT]?.equalTo(new Percent('1'))
-
   // pair contract
   const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
 
@@ -650,7 +648,6 @@ export default function RemoveLiquidity({
                   onMax={() => {
                     onUserInput(Field.LIQUIDITY_PERCENT, '100')
                   }}
-                  showMaxButton={!atMaxAmount}
                   disableCurrencySelect
                   currency={pair?.liquidityToken}
                   pair={pair}
@@ -664,7 +661,6 @@ export default function RemoveLiquidity({
                   value={formattedAmounts[Field.CURRENCY_A]}
                   onUserInput={onCurrencyAInput}
                   onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
-                  showMaxButton={!atMaxAmount}
                   currency={currencyA}
                   label={'Output'}
                   onCurrencySelect={handleSelectCurrencyA}
@@ -678,7 +674,6 @@ export default function RemoveLiquidity({
                   value={formattedAmounts[Field.CURRENCY_B]}
                   onUserInput={onCurrencyBInput}
                   onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
-                  showMaxButton={!atMaxAmount}
                   currency={currencyB}
                   label={'Output'}
                   onCurrencySelect={handleSelectCurrencyB}
