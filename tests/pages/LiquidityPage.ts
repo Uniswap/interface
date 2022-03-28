@@ -14,7 +14,7 @@ export class LiquidityPage {
     return cy.get('[data-testid=campaigns-toggle]')
   }  
   static inputFields() {
-    return  cy.get('[data-testid=input-value-input]')
+    return  cy.get('[data-testid=transaction-value-input]')
   }
   static selectToken_Button() {
     return  cy.get('[data-testid=select-token-button]')
