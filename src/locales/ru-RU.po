@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-03-28 23:07\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -206,7 +206,7 @@ msgstr "Разрешить сделки с высоким влиянием на 
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow in your wallet"
-msgstr "Разрешить в своем кошельке"
+msgstr "Разрешите в своём кошельке"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -218,7 +218,7 @@ msgstr "Сначала одобрите {0}"
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
-msgstr "Пособие ожидается"
+msgstr "Разрешение подтверждается"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -248,7 +248,7 @@ msgstr "Одобрить токен"
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve in your wallet"
-msgstr "Одобрить в своем кошельке"
+msgstr "Одобрите в своём кошельке"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -512,7 +512,7 @@ msgstr "Подтвердить обмен"
 #: src/lib/components/Swap/Summary/index.tsx
 #: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Confirm in your wallet"
-msgstr "Подтвердить в своем кошельке"
+msgstr "Подтвердите в своём кошельке"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
@@ -577,7 +577,7 @@ msgstr "Подключено к {name}"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1} with no slippage"
-msgstr "Преобразование {0} в {1} без проскальзывания"
+msgstr "Конвертировать {0} в {1} без проскальзывания"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -2086,7 +2086,7 @@ msgstr "Неподдерживаемые активы"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unsupported network - switch to another to trade"
-msgstr "Неподдерживаемая сеть — переключитесь на другую для обмена"
+msgstr "Сеть не поддерживается; переключитесь на другую, чтобы торговать"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
@@ -2282,11 +2282,11 @@ msgstr "Вы вывели UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Завернуть"
+msgstr "Обернуть"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr "Завернуть <0/> в {0}"
+msgstr "Обернуть <0/> в {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap confirmed"
