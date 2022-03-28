@@ -1,4 +1,4 @@
-# Uniswap Labs' Swap Widget
+# Uniswap Labs Swap Widget
 
 The Swap Widget bundles the whole swapping experience into a single React component that developers can easily embed in their app with one line of code. 
 
