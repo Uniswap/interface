@@ -15,7 +15,6 @@ type Props = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-// Just shows a solid color for now
 export function Identicon({ address, size = 36, ...rest }: Props) {
   if (!isValidAddress(address)) throw new Error(`Invalid address for identicon ${address}`)
   const isDarkMode = useColorScheme() === 'dark'

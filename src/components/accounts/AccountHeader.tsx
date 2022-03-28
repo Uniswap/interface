@@ -2,14 +2,11 @@ import React, { PropsWithChildren, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { useAccountStackNavigation } from 'src/app/navigation/types'
-import { Identicon } from 'src/components/accounts/Identicon'
-import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
-import { Text } from 'src/components/Text'
-import { NULL_ADDRESS } from 'src/constants/accounts'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -22,7 +19,6 @@ type AccountHeaderProps = PropsWithChildren<{
 export function AccountHeader({ children, onPress, chevronDirection }: AccountHeaderProps) {
   const activeAccount = useActiveAccount()
 
-  const displayName = useAccountDisplayName(activeAccount)
   const navigation = useAccountStackNavigation()
   const onPressAccount = useCallback(() => {
     if (onPress) {
@@ -44,10 +40,11 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
         testID={ElementName.Manage}
         onPress={onPressAccount}>
         <Flex centered flexDirection="row" gap="xs">
-          <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={24} />
-          <Text color="textColor" variant="buttonLabel">
-            {displayName || t('Connect Wallet')}
-          </Text>
+          <AddressDisplay
+            address={activeAccount?.address}
+            fallback={t('Connect Wallet')}
+            variant="buttonLabel"
+          />
           <Chevron
             color={theme.colors.gray400}
             direction={chevronDirection ?? 's'}

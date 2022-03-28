@@ -11,8 +11,7 @@ import {
 import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
 import StarIcon from 'src/assets/icons/star.svg'
-import { Identicon } from 'src/components/accounts/Identicon'
-import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackX } from 'src/components/buttons/BackX'
 import { Button } from 'src/components/buttons/Button'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
@@ -181,17 +180,13 @@ function SettingsRow({ page: { screen, icon, text }, navigation, theme }: Settin
 
 function ActiveAccountSummary() {
   const activeAccount = useActiveAccount()
-  const displayName = useAccountDisplayName(activeAccount)
   if (!activeAccount) return null
   return (
     <Box alignItems="center" borderRadius="lg" overflow="hidden" p="md">
       <GradientBackground opacity={1}>
         <BlueToPinkRadial />
       </GradientBackground>
-      <Identicon address={activeAccount.address} size={50} />
-      <Text mt="md" variant="h4">
-        {displayName}
-      </Text>
+      <AddressDisplay address={activeAccount.address} size={50} variant="h4" />
       <CopyTextButton
         copyText={activeAccount.address}
         mt="sm"
