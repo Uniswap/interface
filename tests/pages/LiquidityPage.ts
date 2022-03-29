@@ -19,5 +19,11 @@ export class LiquidityPage {
   static selectToken_Button() {
     return  cy.get('[data-testid=select-token-button]')
   }
+  static createAPairInput_Field() {
+    return  cy.get('[data-testid=select-token-button]')
+  }
+  static tokenSearch_Field() {
+    return  cy.get('[id=token-search-input]')
+  }
 
 }
