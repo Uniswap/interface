@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@shopify/restyle'
 import { theme } from '../src/styles/theme'
+import { NavigationDecorator } from './StoryNavigator'
 
 export const parameters = {
   docs: {
@@ -11,6 +12,7 @@ export const parameters = {
 }
 
 export const decorators = [
+  NavigationDecorator,
   (Story) => (
     <ThemeProvider theme={theme}>
       <Story />

@@ -6,13 +6,13 @@ import { ListRenderItemInfo } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
 import { Option } from 'src/components/CurrencySelector/Option'
+import { SearchTextInput } from 'src/components/input/SearchInput'
 import { Flex } from 'src/components/layout'
 import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { currencyId } from 'src/utils/currencyId'
 import { useFilteredCurrencies } from './hooks'
-import { CurrencySearchTextInput } from './SearchInput'
 import { CurrencySearchResultList } from './SearchResults'
 
 interface CurrencySearchProps {
@@ -49,7 +49,7 @@ export function CurrencySelect({
     <Flex gap="lg" px="md">
       <Flex centered row gap="sm">
         <BackButton />
-        <CurrencySearchTextInput value={searchFilter} onChangeText={onChangeText} />
+        <SearchTextInput value={searchFilter} onChangeText={onChangeText} />
       </Flex>
 
       <FilterGroup

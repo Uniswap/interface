@@ -7,8 +7,8 @@ import { TabScreenProp } from 'src/app/navigation/types'
 import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
 import { useFilteredCurrencies } from 'src/components/CurrencySelector/hooks'
 import { Option } from 'src/components/CurrencySelector/Option'
-import { CurrencySearchTextInput } from 'src/components/CurrencySelector/SearchInput'
 import { CurrencySearchResultList } from 'src/components/CurrencySelector/SearchResults'
+import { SearchTextInput } from 'src/components/input/SearchInput'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { useSpotPrices } from 'src/features/dataApi/prices'
@@ -57,7 +57,7 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
 
   return (
     <Flex gap="lg" p="md">
-      <CurrencySearchTextInput value={searchFilter} onChangeText={onChangeText} />
+      <SearchTextInput value={searchFilter} onChangeText={onChangeText} />
 
       <FilterGroup
         resetButtonLabel={t('All tokens')}
