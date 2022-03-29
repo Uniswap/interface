@@ -12,7 +12,7 @@ module.exports = {
     [
       'react-native-reanimated/plugin',
       {
-        globals: ['__scanOCR'],
+        globals: ['__scanCodes', '__scanOCR'],
       },
     ],
     // TypeScript compiles this, but in production builds, metro doesn't use tsc

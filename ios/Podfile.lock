@@ -452,6 +452,9 @@ PODS:
     - GoogleUtilities/Environment (~> 7.2)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleMLKit/BarcodeScanning (2.6.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitBarcodeScanning (~> 1.7.0)
   - GoogleMLKit/MLKitCore (2.6.0):
     - MLKitCommon (~> 5.0.0)
   - GoogleMLKit/TextRecognition (2.6.0):
@@ -517,6 +520,9 @@ PODS:
   - GTMSessionFetcher/Core (1.7.0)
   - leveldb-library (1.22.1)
   - MLImage (1.0.0-beta2)
+  - MLKitBarcodeScanning (1.7.0):
+    - MLKitCommon (~> 5.0)
+    - MLKitVision (~> 3.0)
   - MLKitCommon (5.0.0):
     - GoogleDataTransport (~> 9.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
@@ -887,6 +893,9 @@ PODS:
     - Sentry/Core (= 7.3.0)
   - Sentry/Core (7.3.0)
   - Starscream (3.1.1)
+  - vision-camera-code-scanner (0.1.6):
+    - GoogleMLKit/BarcodeScanning
+    - React-Core
   - vision-camera-ocr (0.1.0):
     - GoogleMLKit/TextRecognition
     - React-Core
@@ -959,6 +968,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
+  - vision-camera-code-scanner (from `../node_modules/vision-camera-code-scanner`)
   - vision-camera-ocr (from `../node_modules/vision-camera-ocr`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - WalletConnectSwift (= 1.6.0)
@@ -990,6 +1000,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - leveldb-library
     - MLImage
+    - MLKitBarcodeScanning
     - MLKitCommon
     - MLKitTextRecognition
     - MLKitTextRecognitionCommon
@@ -1117,6 +1128,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  vision-camera-code-scanner:
+    :path: "../node_modules/vision-camera-code-scanner"
   vision-camera-ocr:
     :path: "../node_modules/vision-camera-ocr"
   VisionCamera:
@@ -1165,6 +1178,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   MLImage: a454f9f8ecfd537783a12f9488f5be1a68820829
+  MLKitBarcodeScanning: b8257854f6afc1c8443d61ec6b98c28b35625df6
   MLKitCommon: 3bc17c6f7d25ce3660f030350b46ae7ec9ebca6e
   MLKitTextRecognition: 8b0e0023a4babc66ca83d8b82864e57931164445
   MLKitTextRecognitionCommon: 3e84602c928fe2b775fae81376f2136324cbd763
@@ -1216,6 +1230,7 @@ SPEC CHECKSUMS:
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   Sentry: 9a4e621430e2dae4477d791f2f7e905720b6efbf
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
+  vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de
   vision-camera-ocr: 4a70ae5bbc6a8ed83b607bfb27bf1ccfbe7fc25d
   VisionCamera: e3f4eea37f32f9a2ab40ce560940174a5258abaf
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824

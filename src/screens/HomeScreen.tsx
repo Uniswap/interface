@@ -1,11 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useTheme } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
-import QrCode from 'src/assets/icons/qr-code.svg'
 import Scan from 'src/assets/icons/scan.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountCardList } from 'src/components/AccountCardList/AccountCardList'
@@ -16,7 +14,6 @@ import { PrimaryToSecondaryLinear } from 'src/components/gradients/PinkToBlueLin
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-import { WalletQRCode } from 'src/components/modals/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
@@ -28,8 +25,8 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { WalletConnectScanSheet } from 'src/features/walletConnect/WalletConnectScanSheet'
 import { Screens } from 'src/screens/Screens'
-import { Theme } from 'src/styles/theme'
 import { sleep } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
@@ -39,7 +36,6 @@ export function HomeScreen({ navigation }: Props) {
   useTestAccount()
 
   const { t } = useTranslation()
-  const theme = useTheme<Theme>()
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
@@ -53,9 +49,10 @@ export function HomeScreen({ navigation }: Props) {
     sleep(300).then(() => setRefreshing(false))
   }, [])
 
-  const [showQRModal, setShowQRModal] = useState(false)
+  const [, setShowQRModal] = useState(false)
+  const [showWalletConnectModal, setShowWalletConnectModal] = useState(false)
+
   const onPressQRCode = () => setShowQRModal(true)
-  const onCloseQrCode = () => setShowQRModal(false)
 
   const onPressSend = () => {
     navigation.navigate(Screens.Transfer)
@@ -69,7 +66,9 @@ export function HomeScreen({ navigation }: Props) {
   const onPressSettings = () =>
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
 
-  const onPressScan = () => {}
+  const onPressScan = () => {
+    setShowWalletConnectModal(true)
+  }
 
   if (!activeAccount)
     return (
@@ -116,18 +115,13 @@ export function HomeScreen({ navigation }: Props) {
               <Flex flexGrow={1} gap="xxs">
                 <TotalBalance balances={balances} />
               </Flex>
-              <Button
-                backgroundColor="mainBackground"
-                name={ElementName.QRCodeModalToggle}
-                padding="md"
-                style={buttonStyle}
-                onPress={onPressQRCode}>
-                <QrCode height={16} stroke={theme.colors.textColor} width={16} />
-              </Button>
             </Flex>
           </Flex>
         )}
-        <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
+        <WalletConnectScanSheet
+          isVisible={showWalletConnectModal}
+          onClose={() => setShowWalletConnectModal(false)}
+        />
       </Flex>
       <Box bg="mainBackground" flex={1}>
         <TokenBalanceList
@@ -141,5 +135,3 @@ export function HomeScreen({ navigation }: Props) {
     </Screen>
   )
 }
-
-const buttonStyle = { borderRadius: 16 }

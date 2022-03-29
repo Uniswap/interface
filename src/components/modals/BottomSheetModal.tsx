@@ -7,6 +7,7 @@ import {
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
 import React, { PropsWithChildren, useEffect, useRef } from 'react'
+import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -20,6 +21,7 @@ type Props = {
   name: ModalName
   onClose: () => void
   snapPoints?: Array<string | number>
+  fullScreen?: boolean
 }
 
 const HandleBar = () => {
@@ -41,7 +43,7 @@ const Backdrop = (props: BottomSheetBackdropProps) => {
 }
 
 const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']
-const FULL_HEIGHT_SNAP_POINTS = ['90%']
+const FULL_HEIGHT_SNAP_POINTS = ['93%']
 
 export function BottomSheetModal({
   isVisible,
@@ -49,10 +51,12 @@ export function BottomSheetModal({
   name,
   onClose,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
+  fullScreen,
+  hideHandlebar,
 }: Props) {
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
-    useBottomSheetDynamicSnapPoints(snapPoints)
+    useBottomSheetDynamicSnapPoints(fullScreen ? FULL_HEIGHT_SNAP_POINTS : snapPoints)
   const theme = useAppTheme()
 
   useEffect(() => {
@@ -68,13 +72,15 @@ export function BottomSheetModal({
       ref={modalRef}
       backdropComponent={Backdrop}
       backgroundStyle={{ backgroundColor: theme.colors.mainBackground }}
-      contentHeight={animatedContentHeight}
-      handleComponent={HandleBar}
+      contentHeight={fullScreen ? undefined : animatedContentHeight}
+      handleComponent={hideHandlebar ? null : HandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       onDismiss={onClose}>
       <Trace logImpression section={name}>
-        <BottomSheetView onLayout={handleContentLayout}>{children}</BottomSheetView>
+        <BottomSheetView style={BottomSheetStyle.view} onLayout={handleContentLayout}>
+          {children}
+        </BottomSheetView>
       </Trace>
     </BaseModal>
   )
@@ -113,3 +119,9 @@ export function BottomSheetScrollModal({
     </BaseModal>
   )
 }
+
+const BottomSheetStyle = StyleSheet.create({
+  view: {
+    flex: 1,
+  },
+})

@@ -9,3 +9,7 @@ export async function openUri(uri: string) {
     logger.error('utils/linking', 'openUri', 'error opening uri', error)
   }
 }
+
+export function openSettings() {
+  Linking.openSettings()
+}

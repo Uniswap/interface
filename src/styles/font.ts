@@ -46,6 +46,12 @@ export const textVariants = {
     lineHeight: 24,
     color: 'mainForeground',
   },
+  bodyLgBold: {
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 18,
+    lineHeight: 24,
+    color: 'mainForeground',
+  },
   body: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 16,

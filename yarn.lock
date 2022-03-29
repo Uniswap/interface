@@ -19456,6 +19456,11 @@ vinyl@^2.0.0, vinyl@~2.2.1:
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
 
+vision-camera-code-scanner@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/vision-camera-code-scanner/-/vision-camera-code-scanner-0.1.6.tgz#78e65875953a15138e375432112f969b35527df5"
+  integrity sha512-pAhfOYGaHj6ndUqu9L7nyIaPjf+aX6yx/Sz6V6Sgngp6Fa6AE0yckm6Jsl5cdvblL2+Vasdk8W/eWdJCnmV5CA==
+
 "vision-camera-ocr@https://github.com/UN-ICC/vision-camera-ocr#a9c1531":
   version "0.1.0"
   resolved "https://github.com/UN-ICC/vision-camera-ocr#a9c15311b9c0fec5ae4eabafa98d7e4f9c40e3f1"

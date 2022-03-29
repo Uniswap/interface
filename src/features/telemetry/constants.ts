@@ -29,6 +29,7 @@ export const enum ModalName {
   NetworkSelector = 'network-selector-modal',
   WalletQRCode = 'wallet-qr-code-modal',
   NFTAsset = 'nft-asset',
+  WalletConnectScan = 'wallet-connect-scan-modal',
 }
 
 /**
@@ -80,6 +81,7 @@ export const enum ElementName {
   OnboardingCreateWallet = 'onboarding-create-wallet',
   OnboardingImportWallet = 'onboarding-import-wallet',
   OnboardingExplore = 'onboarding-explore',
+  OpenSettingsButton = 'open-settings-button',
 }
 
 /**
