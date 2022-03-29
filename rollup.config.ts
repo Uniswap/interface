@@ -37,6 +37,11 @@ function isAsset(source: string) {
   return extname && [...ASSET_EXTENSIONS, '.css', '.scss'].includes(extname)
 }
 
+function isEthers(source: string) {
+  // @ethersproject/* modules are provided by ethers, with the exception of experimental.
+  return source.startsWith('@ethersproject/') && !source.endsWith('experimental')
+}
+
 const TS_CONFIG = './tsconfig.lib.json'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { baseUrl, paths }: CompilerOptions = require(TS_CONFIG).compilerOptions
@@ -60,7 +65,7 @@ const plugins = [
 const check = {
   input: 'src/lib/index.tsx',
   output: { file: 'dist/widgets.tsc', inlineDynamicImports: true },
-  external: isAsset,
+  external: (source: string) => isAsset(source) || isEthers(source),
   plugins: [
     externals({ exclude: ['constants'], deps: true, peerDeps: true }), // marks builtins, dependencies, and peerDependencies external
     ...plugins,
@@ -72,7 +77,7 @@ const check = {
 const type = {
   input: 'dist/dts/lib/index.d.ts',
   output: { file: 'dist/index.d.ts' },
-  external: isAsset,
+  external: (source: string) => isAsset(source) || isEthers(source),
   plugins: [
     externals({ exclude: ['constants'], deps: true, peerDeps: true }),
     dts({ compilerOptions: { baseUrl: 'dist/dts' } }),
@@ -112,6 +117,7 @@ const transpile = {
       sourcemap: false,
     },
   ],
+  external: isEthers,
   plugins: [
     externals({
       exclude: [
