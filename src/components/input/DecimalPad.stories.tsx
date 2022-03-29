@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import { DecimalPad } from 'src/components/input/DecimalPad'
-import { Box } from 'src/components/layout'
+import { Box } from '../layout'
+import { DecimalPad } from './DecimalPad'
 
 export default {
   title: 'Inputs/DecimalPad',
