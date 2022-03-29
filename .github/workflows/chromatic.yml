@@ -9,7 +9,7 @@ jobs:
       # uses v1 to get full git history to track changes
       - uses: actions/checkout@v1
       - name: Install dependencies
-        run: yarn
+        run: rm -rf node_modules && yarn cache clean && yarn install
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
