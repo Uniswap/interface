@@ -5,8 +5,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import GovernorAlphaJson from '@uniswap/governance/build/GovernorAlpha.json'
-import UniJson from '@uniswap/governance/build/Uni.json'
+import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
@@ -36,9 +36,6 @@ import { useLogs } from '../logs/hooks'
 import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
 import { VoteOption } from './types'
-
-const { abi: GOVERNANCE_ABI } = GovernorAlphaJson
-const { abi: UNI_ABI } = UniJson
 
 function useGovernanceV0Contract(): Contract | null {
   return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ABI, false)
