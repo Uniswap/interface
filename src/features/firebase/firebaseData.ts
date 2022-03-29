@@ -5,6 +5,7 @@ import {
   getFirestoreMetadataRef,
   getFirestorePushTokenRef,
   getFirestoreUidRef,
+  getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
 import { AccountBase, AccountType } from 'src/features/wallet/accounts/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
@@ -78,8 +79,7 @@ export function* mapAddressesToFirebaseUid(addresses: Address[]) {
 
 export const mapAddressesToPushToken = async (addresses: Address[]) => {
   try {
-    // TODO: Replace `DUMMY` pushId with the push token identifier outputted by our notification provider
-    const pushId = 'DUMMY'
+    const pushId = await getOneSignalUserIdOrError()
     const firebaseApp = firebase.app()
     const batch = firestore(firebaseApp).batch()
     addresses.forEach((address: string) => {
@@ -115,8 +115,7 @@ export function* disassociateAddressesFromFirebaseUid(addresses: Address[]) {
 
 export const disassociateAddressesFromPushToken = async (addresses: Address[]) => {
   try {
-    // TODO: Replace `DUMMY` pushId with the push token identifier outputted by our notification provider
-    const pushId = 'DUMMY'
+    const pushId = await getOneSignalUserIdOrError()
     const firebaseApp = firebase.app()
     const batch = firestore(firebaseApp).batch()
     addresses.forEach((address: string) => {

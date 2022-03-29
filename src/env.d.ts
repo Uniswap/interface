@@ -9,4 +9,5 @@ declare module 'react-native-dotenv' {
   export const OPENSEA_API_KEY: string
   export const SENTRY_DSN: string
   export const VERSION: string
+  export const ONESIGNAL_APP_ID: string
 }

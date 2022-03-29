@@ -4,6 +4,7 @@ import {
   DEBUG,
   INFURA_PROJECT_ID,
   LOG_BUFFER_SIZE,
+  ONESIGNAL_APP_ID,
   OPENSEA_API_KEY,
   SENTRY_DSN,
   VERSION,
@@ -22,6 +23,7 @@ export interface Config {
   openseaApiKey: string
   sentryDsn: string
   version: string
+  onesignalAppId: string
 }
 
 const _config: Config = {
@@ -33,6 +35,7 @@ const _config: Config = {
   openseaApiKey: OPENSEA_API_KEY,
   sentryDsn: SENTRY_DSN,
   version: VERSION,
+  onesignalAppId: ONESIGNAL_APP_ID,
 }
 
 function parseBoolean(value: string): boolean {

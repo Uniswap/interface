@@ -1,14 +1,14 @@
 import { ElementName } from '../../src/features/telemetry/constants'
 import { by, expect, element, device } from 'detox'
 import { sleep } from '../../src/utils/timing'
-import { Accounts } from '../utils/fixtures'
+import { Accounts, permissions } from '../utils/fixtures'
 
 export function NewAccountOnboarding() {
   beforeAll(async () => {
     // await device.terminateApp()
     await device.launchApp({
       delete: true,
-      permissions: { faceid: 'YES' },
+      permissions,
     })
     await device.setBiometricEnrollment(true)
   })

@@ -19,6 +19,7 @@ import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceLi
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import 'src/features/notifications/Onesignal'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName } from 'src/features/telemetry/constants'

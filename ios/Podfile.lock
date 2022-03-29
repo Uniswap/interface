@@ -552,6 +552,7 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - OneSignalXCFramework (3.10.1)
   - PromisesObjC (2.0.0)
   - Protobuf (3.19.4)
   - RCT-Folly (2021.06.28.00-v2):
@@ -757,6 +758,9 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.7.0):
     - React-Core
+  - react-native-onesignal (4.3.7):
+    - OneSignalXCFramework (= 3.10.1)
+    - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (3.3.2):
     - React-Core
   - react-native-webview (11.14.3):
@@ -925,6 +929,7 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - OneSignalXCFramework (< 4.0, >= 3.0)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -941,6 +946,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
+  - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1007,6 +1013,7 @@ SPEC REPOS:
     - MLKitVision
     - MultiplatformBleAdapter
     - nanopb
+    - OneSignalXCFramework
     - PromisesObjC
     - Protobuf
     - Sentry
@@ -1074,6 +1081,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-ble-plx"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
+  react-native-onesignal:
+    :path: "../node_modules/react-native-onesignal"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -1185,6 +1194,7 @@ SPEC CHECKSUMS:
   MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  OneSignalXCFramework: fe027712118f2862ab193b72270487f11450ea63
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
@@ -1201,6 +1211,7 @@ SPEC CHECKSUMS:
   React-logger: 9a9cd87d4ea681ae929b32ef580638ff1b50fb24
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-get-random-values: 237bffb1c7e05fb142092681531810a29ba53015
+  react-native-onesignal: 7643517fe655b94cfda8e697ec16f9b9135648b8
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-webview: b83cf1aa6b4453fe53ffcc5896c36cdf37f0383f
   React-perflogger: 1f554c2b684e2f484f9edcdfdaeedab039fbaca8
@@ -1236,6 +1247,6 @@ SPEC CHECKSUMS:
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: c11abbf5809216c91fcd62f5571078b83d9b6720
 
-PODFILE CHECKSUM: ff6f61d18f8b28de33c9c2772484c1be21b81652
+PODFILE CHECKSUM: 52496a14625e4208755f08c491e75cfbc7042bd5
 
 COCOAPODS: 1.11.3
