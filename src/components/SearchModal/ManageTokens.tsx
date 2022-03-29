@@ -115,7 +115,11 @@ export default function ManageTokens({
             </Row>
             {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
             {searchToken && (
-              <Card backgroundColor={theme.bg2} padding="10px 0">
+              <Card
+                backgroundColor={theme.bg2}
+                padding="10px 0"
+                data-testid={searchToken.symbol?.toLowerCase() + '-token-row'}
+              >
                 <ImportRow
                   token={searchToken}
                   showImportView={() => setModalView(CurrencyModalView.IMPORT_TOKEN)}

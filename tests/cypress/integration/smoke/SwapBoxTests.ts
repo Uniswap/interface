@@ -4,6 +4,11 @@ import { TokenMenu } from '../../../pages/TokenMenu'
 describe('Swap page smoke tests', () => {
   beforeEach(() => {
     SwapPage.visitSwapPage()
+    cy.intercept('GET', 'https://ipfs.io/ipfs/*').as('request')
+    cy.wait('@request')
+      .its('response.statusCode')
+      .should('equal', 200)
+    cy.log('@dataGetFirst')
   })
   it('Should display swap box with 2 inputs and 2 currency selectors', () => {
     SwapPage.getSwapBox().should('be.visible')

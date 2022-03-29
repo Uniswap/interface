@@ -47,7 +47,7 @@
     "cids": "^1.1.7",
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.2",
-    "cypress": "^9.5.2",
+    "cypress": "^9.5.3",
     "cypress-localstorage-commands": "^1.7.0",
     "decimal.js-light": "^2.5.1",
     "eslint": "^6.8.0",
