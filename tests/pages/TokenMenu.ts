@@ -3,7 +3,7 @@ import { SwapPage } from './SwapPage'
 export class TokenMenu {
   static chooseToken(token: string) {
     cy.scrollTo('top')
-    cy.get('#token-search-input')
+    this.getSingleTokenManagerInput()
       .should('be.visible')
       .type(token)
       .click()
@@ -29,12 +29,17 @@ export class TokenMenu {
   }
   static switchTokenManagerToTokens() {
     cy.get('[data-testid=switch-to-tokens-button').click()
+    this.getSingleTokenMenageWindow().should('be.visible')
   }
   static switchTokenManagerToLists() {
     cy.get('[data-testid=switch-to-lists-button').click()
+    this.getTokenListMenageWindow().should('be.visible')
   }
-  static getTokenManagerInput() {
+  static getSingleTokenManagerInput() {
     return cy.get('#token-search-input')
+  }
+  static getTokenListManagerInput() {
+    return cy.get('#list-add-input')
   }
   static getTokenManagerRow(tokenSymbol: string) {
     return cy.get('[data-testid=' + tokenSymbol + '-token-row]')
@@ -67,5 +72,17 @@ export class TokenMenu {
   static goBack() {
     cy.get('[data-testid=go-back-icon]').click()
     return this
+  }
+  static getTokenRow(tokenName: string) {
+    return cy.get('[data-testid=select-button-' + tokenName + ']')
+  }
+  static getSingleTokenMenageWindow() {
+    return cy.get('[data-testid=single-token-manage]')
+  }
+  static getTokenListMenageWindow() {
+    return cy.get('[data-testid=token-lists-manage]')
+  }
+  static getTokenManagerErrorMessage() {
+    return cy.get('[data-testid=token-manager-error-message]')
   }
 }

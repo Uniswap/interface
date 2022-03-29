@@ -113,7 +113,11 @@ export default function ManageTokens({
                 onChange={handleInput}
               />
             </Row>
-            {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
+            {searchQuery !== '' && !isAddressSearch && (
+              <TYPE.error data-testid="token-manager-error-message" error={true}>
+                Enter valid token address
+              </TYPE.error>
+            )}
             {searchToken && (
               <Card
                 backgroundColor={theme.bg2}

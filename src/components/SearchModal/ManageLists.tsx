@@ -268,7 +268,12 @@ export function ManageLists({
           />
         </Row>
         {addError ? (
-          <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+          <TYPE.error
+            data-testid="token-manager-error-message"
+            title={addError}
+            style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+            error
+          >
             {addError}
           </TYPE.error>
         ) : null}
