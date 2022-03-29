@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-03-29 06:07\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -206,7 +206,7 @@ msgstr "価格への大きな影響がある取引を許可し、確認画面を
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow in your wallet"
-msgstr "あなたの財布に入れてください"
+msgstr "ウォレットで許可する"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -341,7 +341,7 @@ msgstr "非常に安定したペアに最適"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
-msgstr "ベストプライスルートコスト〜{formattedGasPriceString} ガスインチ"
+msgstr "ベスト価格のルートでガス代として〜{formattedGasPriceString} の費用がかかります。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -565,7 +565,7 @@ msgstr "ウォレットに接続して流動性を確認します。"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
-msgstr "ウォレットをスワップに接続します"
+msgstr "ウォレットを接続してスワップする"
 
 #: src/lib/components/Wallet.tsx
 msgid "Connect your wallet"
@@ -676,7 +676,7 @@ msgstr "流動性を預ける"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit tokens to the {label} network."
-msgstr "{label} ネットワークにトークンをデポジットします。"
+msgstr "{label} ネットワークにトークンを預け入れます"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -777,7 +777,7 @@ msgstr "有効なトークンアドレスを入力してください"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 msgid "Enter {0} amount"
-msgstr "{0} 金額を入力してください"
+msgstr "{0} の数量を入力してください"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -808,7 +808,7 @@ msgstr "リストのインポートエラー"
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimate may differ due to your wallet gas settings"
-msgstr "ウォレットガスの設定により、見積もりが異なる場合があります"
+msgstr "ウォレットのガス設定により、見積もりが異なる場合があります"
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
@@ -828,7 +828,7 @@ msgstr "あなたが利用していないトークンリストからの検索結
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
-msgstr "期待される出力"
+msgstr "予想される結果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -848,7 +848,7 @@ msgstr "Uniswap Analyticsをご覧ください。"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "ユニスワップインターフェイスからのネットワークの切り替えに失敗しました。 {0}でユニスワップを使用するには、ウォレットのネットワークを変更する必要があります。"
+msgstr "Uniswapのインターフェイスからのネットワークの切り替えに失敗しました。 {0} でUniswapを使用するには、ウォレットのネットワークを変更する必要があります。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -860,11 +860,11 @@ msgstr "手数料レベル"
 
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
-msgstr "最高の価格を取得しています..."
+msgstr "ベストな価格を取得中…"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
-msgstr "最安値を取得…"
+msgstr "ベストな価格を取得中…"
 
 #: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -992,7 +992,7 @@ msgstr "流動性が不足しているため、取引できません。"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
-msgstr "あなたの取引のためのプールの不十分な流動性"
+msgstr "流動性が不足しているため、取引できません。"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -1328,7 +1328,7 @@ msgstr "取引結果は概算です。<0>{0} {1}</0> 以上を買えない場合
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "出力は推定されます。少なくとも {1} を受け取るか、トランザクションが元に戻り {0}。"
+msgstr "取引結果は概算です。{0} {1} 以上を買えない場合は、取引は差し戻されます。"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
@@ -1417,7 +1417,7 @@ msgstr "プールの概要"
 
 #: src/lib/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
-msgstr "ユニスワッププロトコルを搭載"
+msgstr "Uniswapプロトコルによって提供"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
