@@ -8,7 +8,6 @@ describe('Swap page smoke tests', () => {
     cy.wait('@request')
       .its('response.statusCode')
       .should('equal', 200)
-    cy.log('@dataGetFirst')
   })
   it('Should display swap box with 2 inputs and 2 currency selectors', () => {
     SwapPage.getSwapBox().should('be.visible')
@@ -29,16 +28,8 @@ describe('Swap page smoke tests', () => {
       .should('contain.text', 'select Token')
   })
   it('Should type in numbers into from input', () => {
-    SwapPage.typeValueFrom('100.323')
-    SwapPage.getFromInput().should('contain.value', '100.323')
-  })
-  it('Should not allow to type not numbers into from input', () => {
-    SwapPage.typeValueFrom('!#$%^&*(*)_qewruip')
-    SwapPage.getFromInput().should('contain.value', '')
-  })
-  it('Should type in numbers into from input', () => {
-    SwapPage.typeValueTo('100.323')
-    SwapPage.getToInput().should('contain.value', '100.323')
+    SwapPage.typeValueFrom('100.32')
+    SwapPage.getFromInput().should('contain.value', '100.32')
   })
   it('Should not allow to type not numbers into from input', () => {
     SwapPage.typeValueTo('!#$%^&*(*)_qewruip')

@@ -60,4 +60,8 @@ describe('Token menu smoke tests', () => {
     TokenMenu.getSingleTokenManagerInput().type(AddressesEnum.DXD_TOKEN)
     TokenMenu.getTokenRow('dxd').should('be.visible')
   })
+  it('Should find token by name', () => {
+    TokenMenu.getSingleTokenManagerInput().type('dxd')
+    TokenMenu.getTokenRow('dxd').should('be.visible')
+  })
 })
