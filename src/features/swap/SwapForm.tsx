@@ -39,8 +39,7 @@ interface SwapFormProps {
 // -check erc20 permits
 // -handle price impact too high
 // TODO: token warnings
-export function SwapForm(props: SwapFormProps) {
-  const { state, dispatch } = props
+export function SwapForm({ state, dispatch }: SwapFormProps) {
   const [showDetails, setShowDetails] = useState(false)
 
   const activeAccount = useActiveAccount()

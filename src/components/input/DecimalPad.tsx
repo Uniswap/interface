@@ -25,7 +25,7 @@ const keys: KeyProps[] = [
 
 interface DecimalPadProps {
   setValue: (newValue: string) => void
-  value: string
+  value?: string
 }
 
 export function DecimalPad({ setValue, value = '' }: DecimalPadProps) {

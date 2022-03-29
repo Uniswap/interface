@@ -3,15 +3,14 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useUSDCPrice } from 'src/features/prices/useUSDCPrice'
 import { Theme } from 'src/styles/theme'
-import { maxAmountSpend } from 'src/utils/balance'
 import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
+import { MaxAmountButton } from '../buttons/MaxAmountButton'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
@@ -51,16 +50,6 @@ export function CurrencyInput(props: CurrencyInputProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
-  const maxInputAmount = maxAmountSpend(currencyBalance)
-  // Only show max button when balance is sufficient and max amount is not already set
-  const showMaxButton = Boolean(
-    // TODO: consider being more explicit about showing the max button
-    //      either via a param, or telling this component which CurrencyField it is
-    showNonZeroBalancesOnly &&
-      maxInputAmount?.greaterThan(0) &&
-      !currencyAmount?.equalTo(maxInputAmount)
-  )
-
   return (
     <Flex borderRadius="lg" gap="sm" mb="sm" p="md" px="md" {...transformedProps}>
       {title && (
@@ -86,20 +75,13 @@ export function CurrencyInput(props: CurrencyInputProps) {
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           onPressIn={() => onSetAmount('')}
         />
-        {
-          // TODO: use `soft` button variant when available
-          showMaxButton && maxInputAmount && (
-            <PrimaryButton
-              borderRadius="md"
-              label={t('MAX')}
-              px="xs"
-              py="xs"
-              textVariant="bodyBold"
-              variant="blue"
-              onPress={() => onSetAmount(maxInputAmount.toSignificant())}
-            />
-          )
-        }
+        {showNonZeroBalancesOnly && (
+          <MaxAmountButton
+            currencyAmount={currencyAmount}
+            currencyBalance={currencyBalance}
+            onSetAmount={onSetAmount}
+          />
+        )}
         <CurrencySelector
           otherSelectedCurrency={otherSelectedCurrency}
           selectedCurrency={currency}

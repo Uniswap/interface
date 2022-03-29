@@ -23,12 +23,18 @@ type DirectionProps =
       flexDirection?: ComponentProps<typeof Box>['flexDirection']
     }
 
+type LayoutShorthandProps = {
+  fill?: boolean // flex=1
+  grow?: boolean // flexGrow=1
+  shrink?: boolean // flexShrink=1
+}
+
 export type FlexProps = ComponentProps<typeof Box> &
   CenteredProps &
   DirectionProps & {
     /** spacing _between_ elements */
     gap?: keyof Theme['spacing']
-  }
+  } & LayoutShorthandProps
 
 /**
  * Layout component to place child items with spacing between them
@@ -40,14 +46,17 @@ export function Flex({
   alignItems = 'stretch',
   centered = false,
   children,
+  fill,
   flexBasis = 'auto',
   flexDirection = 'column',
   flexGrow = 0,
   flexShrink = 0,
   flexWrap = 'nowrap',
   gap = 'md',
+  grow,
   justifyContent = 'flex-start',
   row,
+  shrink,
   ...boxProps
 }: FlexProps) {
   const childrenArr = useMemo(() => React.Children.toArray(children).filter((c) => !!c), [children])
@@ -61,10 +70,11 @@ export function Flex({
   return (
     <Box
       alignItems={centered ? 'center' : alignItems}
+      flex={fill ? 1 : undefined}
       flexBasis={flexBasis}
       flexDirection={row ? 'row' : flexDirection}
-      flexGrow={flexGrow}
-      flexShrink={flexShrink}
+      flexGrow={grow ? 1 : flexGrow}
+      flexShrink={shrink ? 1 : flexShrink}
       flexWrap={flexWrap}
       justifyContent={centered ? 'center' : justifyContent}
       {...boxProps}>
