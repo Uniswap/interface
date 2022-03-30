@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
+import { MaxAmountButton } from 'src/components/buttons/MaxAmountButton'
 import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Flex } from 'src/components/layout/Flex'
@@ -10,7 +11,6 @@ import { Text } from 'src/components/Text'
 import { useUSDCPrice } from 'src/features/prices/useUSDCPrice'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
-import { MaxAmountButton } from '../buttons/MaxAmountButton'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>

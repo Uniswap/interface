@@ -60,6 +60,7 @@ export const enum ElementName {
   Rename = 'rename',
   Restart = 'restart',
   Reset = 'reset',
+  SelectRecipient = 'select-recipient',
   SellToken = 'sell-token',
   Settings = 'settings',
   Submit = 'submit',

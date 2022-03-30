@@ -6,7 +6,7 @@ import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import SearchIcon from '../../assets/icons/search.svg'
 
-interface SearchTextInputProps {
+export interface SearchTextInputProps {
   value: string | null
   onChangeText: (newText: string) => void
 
@@ -38,6 +38,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
       alignItems="center"
       backgroundColor="gray50"
       borderRadius="lg"
+      flex={1}
       flexGrow={1}
       gap="sm"
       minHeight={48}>
@@ -68,7 +69,8 @@ interface ClearButtonProps {
 function ClearButton(props: ClearButtonProps) {
   const theme = useAppTheme()
 
-  const { onPress, clearIcon = <X height={12} stroke={theme.colors.gray600} /> } = props
+  const { onPress, clearIcon = <X height={12} stroke={theme.colors.textColor} width={12} /> } =
+    props
 
   return <IconButton bg="gray200" borderRadius="full" icon={clearIcon} onPress={onPress} />
 }

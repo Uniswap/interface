@@ -2,9 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import { ChainId } from 'src/constants/chains'
 
-// TODO: consider a more flexible logic similar to the interface
-// https://github.com/Uniswap/interface/blob/main/src/components/SearchModal/filtering.ts#L74
-
 const searchOptions: Fuse.IFuseOptions<Currency> = {
   includeMatches: true,
   isCaseSensitive: false,

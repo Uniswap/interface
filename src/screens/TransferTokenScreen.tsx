@@ -1,18 +1,23 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box } from 'src/components/layout/Box'
-import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { initialSwapFormState, swapFormReducer } from 'src/features/swap/swapFormSlice'
 import { TransferTokenForm } from 'src/features/transfer/TransferTokenForm'
+import { Screens } from 'src/screens/Screens'
+import { SheetWithNetworkSelector } from 'src/screens/SwapScreen'
 
-export function TransferTokenScreen() {
+export function TransferTokenScreen({ route }: AppStackScreenProp<Screens.Transfer>) {
+  // TODO: generalize swap form reducer
+  const [state, dispatch] = useReducer(
+    swapFormReducer,
+    route.params?.swapFormState || initialSwapFormState
+  )
+
   const { t } = useTranslation()
+
   return (
-    <Screen>
-      <Box alignItems="center">
-        <Text textAlign="center">{t('Send those tokens around')}</Text>
-        <TransferTokenForm />
-      </Box>
-    </Screen>
+    <SheetWithNetworkSelector dispatch={dispatch} label={t('Send')} state={state}>
+      <TransferTokenForm dispatch={dispatch} state={state} />
+    </SheetWithNetworkSelector>
   )
 }

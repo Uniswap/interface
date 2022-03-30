@@ -3,7 +3,7 @@ import { Identicon } from 'src/components/accounts/Identicon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { useENSName } from 'src/features/ens/useENSName'
+import { useENS } from 'src/features/ens/useENS'
 import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -26,22 +26,22 @@ export function AddressDisplay({
   variant = 'body',
   alwaysShowAddress,
 }: AddressDisplayProps) {
-  const displayName = useDisplayName(address, override, fallback)
+  const { name, address: validatedAddress } = useDisplayName(address, override, fallback)
 
-  if (!address || !displayName) {
+  if (!validatedAddress || !name) {
     return null
   }
 
   return (
-    <Flex centered row gap="sm">
-      <Identicon address={address} size={size} />
-      <Flex gap="xs">
+    <Flex row alignItems="center" gap="sm">
+      <Identicon address={validatedAddress} size={size} />
+      <Flex gap="xxs">
         <Text color="textColor" variant={variant}>
-          {displayName}
+          {name}
         </Text>
         {alwaysShowAddress && (
           <Text color="gray600" variant="bodySm">
-            {shortenAddress(address)}
+            {shortenAddress(validatedAddress)}
           </Text>
         )}
       </Flex>
@@ -50,7 +50,10 @@ export function AddressDisplay({
 }
 
 function useDisplayName(address?: string, nameOverride?: string, fallback?: string) {
-  const ens = useENSName(ChainId.Mainnet, address)
+  const ens = useENS(ChainId.Mainnet, address)
 
-  return nameOverride ?? ens.ENSName ?? (address ? shortenAddress(address) : fallback)
+  return {
+    name: nameOverride ?? ens.name ?? (ens.address ? shortenAddress(ens.address) : fallback),
+    address: ens.address,
+  }
 }

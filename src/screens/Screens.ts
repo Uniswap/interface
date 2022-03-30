@@ -12,6 +12,7 @@ export enum Screens {
   Notifications = 'Notifications',
   NFTCollection = 'NFTCollection',
   OnboardingStack = 'OnboardingStack',
+  RecipientSelector = 'RecipientSelector',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
   SettingsChains = 'SettingsChains',

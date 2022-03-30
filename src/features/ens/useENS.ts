@@ -11,7 +11,8 @@ import { parseAddress } from 'src/utils/addresses'
  */
 export function useENS(
   chainId: ChainId,
-  nameOrAddress?: string | null
+  nameOrAddress?: string | null,
+  autocompleteDomain?: boolean
 ): {
   loading: boolean
   address: string | null
@@ -19,7 +20,10 @@ export function useENS(
 } {
   const validated = parseAddress(nameOrAddress)
   const reverseLookup = useENSName(chainId, validated ? validated : undefined)
-  const lookup = useENSAddress(chainId, nameOrAddress)
+  const lookup = useENSAddress(
+    chainId,
+    autocompleteDomain ? getCompletedENSName(nameOrAddress) : nameOrAddress
+  )
 
   return {
     loading: reverseLookup.loading || lookup.loading,
@@ -27,7 +31,10 @@ export function useENS(
     name: reverseLookup.ENSName
       ? reverseLookup.ENSName
       : !validated && lookup.address
-      ? nameOrAddress || null
+      ? lookup.name
       : null,
   }
 }
+
+const getCompletedENSName = (name?: string | null) =>
+  name?.concat(name ? (!name?.endsWith('.eth') ? '.eth' : '') : '')

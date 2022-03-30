@@ -53,11 +53,15 @@ export type AppStackParamList = {
     nftAssets: OpenseaNFTAsset[]
   }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
+  [Screens.RecipientSelector]: {
+    selectedRecipient?: string
+    setSelectedRecipient: (newRecipient: string) => void
+  }
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.Swap]: { swapFormState?: SwapFormState } | undefined
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
-  [Screens.Transfer]: undefined
+  [Screens.Transfer]: { swapFormState?: SwapFormState } | undefined
   [Screens.TokenDetails]: { currency: Currency }
 }
 

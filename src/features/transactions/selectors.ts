@@ -1,0 +1,19 @@
+import { createSelector } from '@reduxjs/toolkit'
+import { RootState } from 'src/app/rootReducer'
+import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
+import { flattenObjectOfObjects } from 'src/utils/objects'
+
+export const selectTransactions = (state: RootState) => state.transactions.byChainId
+
+/** Returns a list of past recipients by chain id ordered from lastest to oldest */
+export const selectRecentRecipients = createSelector(selectTransactions, (txsByChainId) =>
+  flattenObjectOfObjects(txsByChainId)
+    .filter(
+      (txDetails: TransactionDetails) =>
+        txDetails.typeInfo.type === TransactionType.Send &&
+        txDetails.options.request.to !== undefined
+    )
+    .sort((a, b) => (a.addedTime < b.addedTime ? 1 : -1))
+    .map((txDetails) => txDetails.options.request.to ?? '')
+    .slice(0, 15)
+)

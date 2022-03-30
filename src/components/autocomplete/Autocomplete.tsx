@@ -3,7 +3,7 @@ import { ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { SearchTextInput } from 'src/components/input/SearchInput'
+import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Flex, Inset } from 'src/components/layout'
 
 export type AutocompleteOption<T> = { data: T; key: string }
@@ -59,7 +59,7 @@ export function Autocomplete<T>({
   const renderInitialComponent = Boolean(!pattern && InitialComponent)
 
   return (
-    <Flex flex={1}>
+    <Flex>
       <Flex row alignItems="center" gap="sm">
         <BackButton />
         <SearchTextInput

@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { useFavoriteCurrencies } from 'src/features/favorites/hooks'
 import { useDebounce } from 'src/utils/timing'
-import { filter } from './util'
+import { filter } from './filter'
 
 export function useFilteredCurrencies(
   currencies: Currency[],

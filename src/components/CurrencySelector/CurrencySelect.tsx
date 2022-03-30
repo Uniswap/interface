@@ -3,11 +3,10 @@ import Fuse from 'fuse.js'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
 import { Option } from 'src/components/CurrencySelector/Option'
-import { SearchTextInput } from 'src/components/input/SearchInput'
 import { Flex } from 'src/components/layout'
+import { SearchBar } from 'src/components/SearchBar'
 import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
@@ -47,10 +46,11 @@ export function CurrencySelect({
 
   return (
     <Flex gap="lg" px="md">
-      <Flex centered row gap="sm">
-        <BackButton />
-        <SearchTextInput value={searchFilter} onChangeText={onChangeText} />
-      </Flex>
+      <SearchBar
+        placeholder={t('Search token symbols or address')}
+        value={searchFilter}
+        onChangeText={onChangeText}
+      />
 
       <FilterGroup
         resetButtonLabel={showNonZeroBalancesOnly ? t('Your tokens') : t('All tokens')}

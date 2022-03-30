@@ -17,6 +17,7 @@ export function useENSAddress(
 ): {
   loading: boolean
   address: string | null
+  name: string | null
 } {
   const debouncedName = useDebounce(ensName)
   const ensNodeArgument = useMemo(() => {
@@ -45,5 +46,6 @@ export function useENSAddress(
   return {
     address: changed ? null : addr.result?.[0] ?? null,
     loading: changed || resolverAddress.loading || addr.loading,
+    name: debouncedName ?? null,
   }
 }

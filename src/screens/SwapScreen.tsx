@@ -1,37 +1,64 @@
 import { useHeaderHeight } from '@react-navigation/elements'
+import { AnyAction } from '@reduxjs/toolkit'
 import { impactAsync } from 'expo-haptics'
-import React, { useReducer, useState } from 'react'
+import React, { PropsWithChildren, useReducer, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
-import { AppStackScreenProp } from 'src/app/navigation/types'
+import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { SwapNetworkModal } from 'src/components/swap/SwapNetworkModal'
 import { ChainId } from 'src/constants/chains'
-import { Header } from 'src/features/swap/Header'
+import { HeaderWithNetworkSelector } from 'src/features/swap/HeaderWithNetworkSelector'
 import { useSwapActionHandlers } from 'src/features/swap/hooks'
 import { SwapForm } from 'src/features/swap/SwapForm'
 import {
   CurrencyField,
   initialSwapFormState,
   swapFormReducer,
+  SwapFormState,
 } from 'src/features/swap/swapFormSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 
-export function SwapScreen({ route, navigation }: AppStackScreenProp<Screens.Swap>) {
+export function SwapScreen({ route }: AppStackScreenProp<Screens.Swap>) {
   const [state, dispatch] = useReducer(
     swapFormReducer,
     route.params?.swapFormState || initialSwapFormState
   )
 
-  const chainId = state[state.exactCurrencyField]?.chainId
+  const { t } = useTranslation()
+
+  return (
+    <SheetWithNetworkSelector dispatch={dispatch} label={t('Swap')} state={state}>
+      <SwapForm dispatch={dispatch} state={state} />
+    </SheetWithNetworkSelector>
+  )
+}
+
+interface SheetWithNetworkSelectorProps {
+  dispatch: React.Dispatch<AnyAction>
+  label: string
+  state: Readonly<SwapFormState>
+}
+
+// TODO: export to new file once swapform reducer is finalized
+export function SheetWithNetworkSelector({
+  children,
+  dispatch,
+  label,
+  state,
+}: PropsWithChildren<SheetWithNetworkSelectorProps>) {
+  const navigation = useAppStackNavigation()
+
   const headerHeight = useHeaderHeight()
   const [showNetworkModal, setShowNetworkModal] = useState(false)
   const onCloseNetworkModal = () => setShowNetworkModal(false)
 
+  const chainId = state[state.exactCurrencyField]?.chainId
   const { onSelectCurrency } = useSwapActionHandlers(dispatch)
 
   const setChainId = (newChainId: ChainId) => {
@@ -46,15 +73,16 @@ export function SwapScreen({ route, navigation }: AppStackScreenProp<Screens.Swa
         style={flex.fill}>
         <ScrollView contentContainerStyle={flex.grow} keyboardShouldPersistTaps="always">
           <Box flex={1}>
-            <Header
+            <HeaderWithNetworkSelector
               chainId={chainId}
+              label={label}
               onPressBack={() => navigation.goBack()}
               onPressNetwork={() => {
                 impactAsync()
                 setShowNetworkModal(true)
               }}
             />
-            <SwapForm dispatch={dispatch} state={state} />
+            {children}
           </Box>
         </ScrollView>
       </KeyboardAvoidingView>

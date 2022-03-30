@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { filter } from 'src/components/CurrencySelector/util'
+import { filter } from 'src/components/CurrencySelector/filter'
 import { ChainId } from 'src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'

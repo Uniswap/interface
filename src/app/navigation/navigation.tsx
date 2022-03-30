@@ -23,6 +23,7 @@ import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTScreen } from 'src/screens/NFTScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
+import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
@@ -93,6 +94,7 @@ export function AppStackNavigator() {
         <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
         <AppStack.Screen component={SwapScreen} name={Screens.Swap} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
+        <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
         <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
         <AppStack.Screen component={TransferTokenScreen} name={Screens.Transfer} />
       </AppStack.Group>

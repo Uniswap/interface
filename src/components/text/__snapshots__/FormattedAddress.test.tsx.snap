@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a FormattedAddress with a name 1`] = `
+<Text
+  style={
+    Array [
+      Object {
+        "color": "#000000",
+        "display": "flex",
+        "fontFamily": "UniswapSansBeta4-Regular",
+        "fontSize": 16,
+        "lineHeight": 24,
+      },
+    ]
+  }
+>
+  Test Account
+</Text>
+`;
+
+exports[`renders a FormattedAddress without a name 1`] = `
+<Text
+  style={
+    Array [
+      Object {
+        "color": "#000000",
+        "display": "flex",
+        "fontFamily": "UniswapSansBeta4-Regular",
+        "fontSize": 16,
+        "lineHeight": 24,
+      },
+    ]
+  }
+>
+  0xf39f...2266
+</Text>
+`;

@@ -1,0 +1,369 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders text with few matches 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "stretch",
+        "display": "flex",
+        "flexBasis": "auto",
+        "flexDirection": "row",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "flexWrap": "nowrap",
+        "justifyContent": "flex-start",
+      },
+    ]
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#000000",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    A
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#000000",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+     
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    t
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    e
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#000000",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    x
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#000000",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    t
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#000000",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+     
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#000000",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    w
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#000000",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    i
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    t
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    h
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    o
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    u
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    t
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+     
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    m
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    a
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    t
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    c
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    h
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    e
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#C3C5CB",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta4-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ]
+    }
+  >
+    s
+  </Text>
+</View>
+`;
+
+exports[`renders text without matches 1`] = `
+<Text
+  style={
+    Array [
+      Object {
+        "color": "#000000",
+        "display": "flex",
+        "fontFamily": "UniswapSansBeta4-Regular",
+        "fontSize": 16,
+        "lineHeight": 24,
+      },
+    ]
+  }
+>
+  A text without matches
+</Text>
+`;

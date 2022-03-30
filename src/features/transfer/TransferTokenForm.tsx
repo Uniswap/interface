@@ -1,89 +1,63 @@
-import { utils } from 'ethers'
-import { Formik } from 'formik'
-import React from 'react'
-import { ActivityIndicator, Text } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
-import { useAppStackNavigation } from 'src/app/navigation/types'
+import { AnyAction } from '@reduxjs/toolkit'
+import { Currency } from '@uniswap/sdk-core'
+import React, { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { AddressInput } from 'src/components/input/AddressInput'
-import { AmountInput } from 'src/components/input/AmountInput'
-import { Box } from 'src/components/layout/Box'
-import { Modal } from 'src/components/modals/Modal'
-import { NULL_ADDRESS } from 'src/constants/accounts'
-import { ChainId } from 'src/constants/chains'
+import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
+import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
+import { DecimalPad } from 'src/components/input/DecimalPad'
+import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
+import { Flex } from 'src/components/layout'
+import { useDerivedSwapInfo, useSwapActionHandlers } from 'src/features/swap/hooks'
+import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { ElementName } from 'src/features/telemetry/constants'
-import {
-  transferTokenActions,
-  transferTokenSagaName,
-} from 'src/features/transfer/transferTokenSaga'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { parseAddress } from 'src/utils/addresses'
-import { SagaStatus } from 'src/utils/saga'
-import { useSagaStatus } from 'src/utils/useSagaStatus'
 
-const initialValues = {
-  tokenAddress: '',
-  amount: '',
-  toAddress: '',
+interface TransferTokenProps {
+  state: SwapFormState
+  dispatch: React.Dispatch<AnyAction>
 }
 
-type FormValues = typeof initialValues
+export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
+  const { t } = useTranslation()
 
-// TODO the transferSaga is working and supports both native / token transfers
-// but this UI still needs to be redone. Still just a PoC for native Eth transfers on Rinkeby
-export function TransferTokenForm() {
-  const navigation = useAppStackNavigation()
-  const dispatch = useAppDispatch()
-  const activeAccount = useActiveAccount()
+  const derivedSwapInfo = useDerivedSwapInfo(state)
 
-  const onSubmit = (values: FormValues) => {
-    if (!activeAccount) return
-    // See ImportAccountForm for an example of how to validate properly
-    // and useDerivedSwapInfo for how to handle currencies
-    const toAddress = parseAddress(values.toAddress)
-    const amountInWei = utils.parseEther(values.amount).toString()
-    if (!toAddress || !amountInWei) return
-    dispatch(
-      transferTokenActions.trigger({
-        account: activeAccount,
-        toAddress,
-        amountInWei,
-        tokenAddress: NULL_ADDRESS,
-        chainId: ChainId.Rinkeby,
-      })
-    )
-  }
+  const { currencies, currencyAmounts, currencyBalances, formattedAmounts } = derivedSwapInfo
 
-  const { status } = useSagaStatus(transferTokenSagaName, () => navigation.goBack())
+  const { onSelectCurrency, onEnterExactAmount } = useSwapActionHandlers(dispatch)
+
+  const setRecipientAddress = useCallback(() => {
+    /* TODO: update redux slice */
+  }, [])
 
   return (
-    <>
-      <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
-          <Box alignItems="center" justifyContent="center">
-            <Box alignItems="center" flexDirection="row" justifyContent="flex-end" mt="md">
-              <Text>Address: </Text>
-              <AddressInput
-                value={values.toAddress}
-                onBlur={handleBlur('toAddress')}
-                onChangeText={handleChange('toAddress')}
-              />
-            </Box>
-            <Box alignItems="center" flexDirection="row" justifyContent="flex-end" my="md">
-              <Text>Amount: </Text>
-              <AmountInput
-                value={values.amount}
-                onBlur={handleBlur('amount')}
-                onChangeText={handleChange('amount')}
-              />
-            </Box>
-            <PrimaryButton label="Send" name={ElementName.Submit} onPress={handleSubmit} />
-          </Box>
-        )}
-      </Formik>
-      <Modal title="Sending" visible={status === SagaStatus.Started}>
-        <ActivityIndicator />
-      </Modal>
-    </>
+    <Flex grow justifyContent="space-between" p="md">
+      <Flex grow gap="lg" justifyContent="center">
+        <CurrencyInputPanel
+          currency={currencies[CurrencyField.INPUT]}
+          currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+          currencyBalance={currencyBalances[CurrencyField.INPUT]}
+          value={formattedAmounts[CurrencyField.INPUT]}
+          onSelectCurrency={(newCurrency: Currency) =>
+            onSelectCurrency(CurrencyField.INPUT, newCurrency)
+          }
+          onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
+        />
+
+        <TransferArrowButton disabled />
+
+        <RecipientInputPanel
+          recipientAddress={/* TODO: fill address when available in state */ undefined}
+          setRecipientAddress={setRecipientAddress}
+        />
+      </Flex>
+
+      <DecimalPad
+        setValue={(newValue) => onEnterExactAmount(CurrencyField.INPUT, newValue)}
+        value={formattedAmounts[CurrencyField.INPUT]}
+      />
+
+      <PrimaryButton disabled={false} label={t('Send')} name={ElementName.Submit} />
+    </Flex>
   )
 }
