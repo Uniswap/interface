@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { ExternalProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { EMPTY } from '@web3-react/empty'
@@ -9,9 +9,9 @@ import { atom } from 'jotai'
 import JsonRpcConnector from 'lib/utils/JsonRpcConnector'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 
-export type Web3ContextType<T extends JsonRpcProvider = JsonRpcProvider> = {
+type Web3ContextType = {
   connector: Connector
-  library?: T
+  library?: (JsonRpcProvider & { provider?: ExternalProvider }) | Web3Provider
   chainId?: ReturnType<Web3ReactHooks['useChainId']>
   accounts?: ReturnType<Web3ReactHooks['useAccounts']>
   account?: ReturnType<Web3ReactHooks['useAccount']>

@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
@@ -40,7 +40,7 @@ interface FailedCall extends SwapCallEstimate {
 export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
-  library: Web3Provider | undefined,
+  library: JsonRpcProvider | undefined,
   trade: AnyTrade | undefined, // trade to execute, required
   swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
