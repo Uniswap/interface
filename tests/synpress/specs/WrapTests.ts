@@ -52,7 +52,6 @@ describe('SWAP', () => {
   })
 
   it('Should unwrap eth to weth', () => {
-    console.log('tx', Object.keys(JSON.parse(localStorage.getItem('swapr_transactions')!)[4])[0])
     SwapPage.openTokenToSwapMenu()
       .chooseToken('eth')
       .openTokenToSwapMenu()

@@ -30,6 +30,7 @@ jobs:
         run: yarn add -D cypress@9.2.0 && yarn cypress install && yarn cypress verify
       - name: Run synpress tests
         run: yarn synpress:ct
+        continue-on-error: true
       - name: Run cypress tests
         run: yarn cypress:ct
         continue-on-error: true
@@ -37,7 +38,7 @@ jobs:
         run: npm run report:merge
         continue-on-error: true
       - name: Generate HTML report
-        run: npm run report:generate
+        run: npm run report:generate -t "${{ github.event.pull_request.title }}"
         continue-on-error: true
       - name: Deploy report page
         uses: peaceiris/actions-gh-pages@v3

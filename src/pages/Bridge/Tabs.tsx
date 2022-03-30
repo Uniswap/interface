@@ -52,7 +52,7 @@ const TabsRow = styled(Row)`
   width: auto;
   margin: 0 0 10px;
   padding: 2px;
-  background: #191a24;
+  background: ${({ theme }) => theme.bg8};
   border-radius: 12px;
 `
 
@@ -65,7 +65,7 @@ const Button = styled.button`
   line-height: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #8780bf;
+  color: ${({ theme }) => theme.text5};
   border-radius: 10px;
   border: none;
   background: none;
@@ -73,11 +73,11 @@ const Button = styled.button`
 
   &.active {
     color: #ffffff;
-    background: #2a2f42;
+    background: ${({ theme }) => theme.bg2};
   }
 
   &:disabled {
-    color: #504d72;
+    color: ${({ theme }) => theme.text6};
     cursor: not-allowed;
   }
 `

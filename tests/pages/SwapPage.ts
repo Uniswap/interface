@@ -11,11 +11,11 @@ export class SwapPage {
   }
 
   static typeValueFrom(value: string) {
-    cy.get('[data-testid=from-value-input]').type(value)
+    this.getFromInput().type(value)
     return this
   }
   static typeValueTo(value: string) {
-    cy.get('[data-testid=to-value-input]').type(value)
+    this.getToInput().type(value)
     return this
   }
 
@@ -46,10 +46,10 @@ export class SwapPage {
   }
 
   static getFromInput() {
-    return cy.get('[data-testid=from-value-input]')
+    return cy.get('[data-testid=transaction-value-input]').first()
   }
   static getToInput() {
-    return cy.get('[data-testid=to-value-input]')
+    return cy.get('[data-testid=transaction-value-input]').last()
   }
   static switchTokens() {
     return cy.get('[data-testid=switch-tokens-button').click()
