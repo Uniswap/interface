@@ -16,13 +16,11 @@ import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { ChainId } from 'src/constants/chains'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { ElementName } from 'src/features/telemetry/constants'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
 
@@ -77,9 +75,7 @@ export function TokenDetailsScreen({
       exactAmount: '0',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        currencyId: currency.isToken
-          ? currency.wrapped.address
-          : currencyId(NativeCurrency.onChain(ChainId.Rinkeby)),
+        currencyId: currencyId(currency),
         chainId: currency.wrapped.chainId,
       },
     }
@@ -91,7 +87,7 @@ export function TokenDetailsScreen({
       exactCurrencyField: CurrencyField.INPUT,
       exactAmount: '0',
       [CurrencyField.INPUT]: {
-        currencyId: currency.isToken ? currency.wrapped.address : currencyId(currency),
+        currencyId: currencyId(currency),
         chainId: currency.wrapped.chainId,
       },
       [CurrencyField.OUTPUT]: null,
