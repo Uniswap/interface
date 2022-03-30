@@ -19,8 +19,8 @@ const EXCHANGE_SUBGRAPH_URLS = {
   bscStaging: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'],
   bscTestnet: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-ropsten'],
   avalanche: [
-    'https://avalanche-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-avalanche',
-    'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-avax',
+    // 'https://avalanche-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-avalanche',
+    'https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-avalanche',
   ],
   avalancheTestnet: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij'],
   fantom: [

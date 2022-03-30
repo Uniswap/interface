@@ -88,6 +88,10 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const farmsList =
     fairLaunchVersion === FairLaunchVersion.V1
       ? (farms || []).map(farm => {
+          // TODO: hard code for SIPHER. Need to be remove later
+          const isSipherFarm =
+            farm.fairLaunchAddress.toLowerCase() === '0xc0601973451d9369252Aee01397c0270CD2Ecd60'.toLowerCase()
+
           const isFarmStarted = farm && blockNumber && farm.startBlock < blockNumber
           const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
 
@@ -111,7 +115,13 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
 
           return {
             ...farm,
-            time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Starting in ') + formattedEstimatedRemainingTime}`,
+            time: `${
+              isSipherFarm
+                ? ''
+                : isFarmEnded
+                ? 'Ended'
+                : (isFarmStarted ? '' : 'Starting in ') + formattedEstimatedRemainingTime
+            }`,
           }
         })
       : (farms || []).map(farm => {

@@ -6,7 +6,6 @@ import { useFairLaunchContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { calculateGasMargin } from 'utils'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { FastForward } from 'react-feather'
 
 const useFairLaunch = (address: string) => {
   const addTransactionWithType = useTransactionAdder()

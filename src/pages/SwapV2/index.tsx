@@ -515,22 +515,31 @@ export default function Swap({ history }: RouteComponentProps) {
 
                     <TradeTypeSelection />
 
-                    {trade?.priceImpact && trade.priceImpact > 5 && (
-                      <PriceImpactHigh veryHigh={trade?.priceImpact > 15}>
-                        <AlertTriangle
-                          color={trade?.priceImpact > 15 ? theme.red : theme.warning}
-                          size={16}
-                          style={{ marginRight: '10px' }}
-                        />
-                        {trade?.priceImpact > 15 ? (
-                          <>
-                            <Trans>Price Impact is Very High</Trans>
-                            <InfoHelper text="Turn on Advanced Mode for high slippage trades" color={theme.text} />
-                          </>
-                        ) : (
-                          <Trans>Price Impact is High</Trans>
-                        )}
+                    {trade?.priceImpact === -1 ? (
+                      <PriceImpactHigh>
+                        <AlertTriangle color={theme.warning} size={16} style={{ marginRight: '10px' }} />
+                        <Trans>Unable to calculate Price Impact</Trans>
+                        <InfoHelper text="Turn on Advanced Mode to trade" color={theme.text} />
                       </PriceImpactHigh>
+                    ) : (
+                      trade?.priceImpact &&
+                      trade.priceImpact > 5 && (
+                        <PriceImpactHigh veryHigh={trade?.priceImpact > 15}>
+                          <AlertTriangle
+                            color={trade?.priceImpact > 15 ? theme.red : theme.warning}
+                            size={16}
+                            style={{ marginRight: '10px' }}
+                          />
+                          {trade?.priceImpact > 15 ? (
+                            <>
+                              <Trans>Price Impact is Very High</Trans>
+                              <InfoHelper text="Turn on Advanced Mode for high slippage trades" color={theme.text} />
+                            </>
+                          ) : (
+                            <Trans>Price Impact is High</Trans>
+                          )}
+                        </PriceImpactHigh>
+                      )
                     )}
 
                     <BottomGrouping>
@@ -621,7 +630,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             !isValid ||
                             !!swapCallbackError ||
                             approval !== ApprovalState.APPROVED ||
-                            (!isExpertMode && trade && trade.priceImpact > 15)
+                            (!isExpertMode && trade && (trade.priceImpact > 15 || trade.priceImpact === -1))
                           }
                           style={{
                             border: 'none',
@@ -629,10 +638,10 @@ export default function Swap({ history }: RouteComponentProps) {
                               !isValid ||
                               !!swapCallbackError ||
                               approval !== ApprovalState.APPROVED ||
-                              (!isExpertMode && trade && trade.priceImpact > 15)
+                              (!isExpertMode && trade && (trade.priceImpact > 15 || trade.priceImpact === -1))
                             ) &&
                             trade &&
-                            trade.priceImpact > 5
+                            (trade.priceImpact > 5 || trade.priceImpact === -1)
                               ? { background: theme.red, color: theme.white }
                               : {}),
                           }}
@@ -642,7 +651,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               ? swapInputError
                               : approval !== ApprovalState.APPROVED
                               ? t`Checking allowance...`
-                              : trade && trade.priceImpact > 5
+                              : trade && (trade.priceImpact > 5 || trade.priceImpact === -1)
                               ? t`Swap Anyway`
                               : t`Swap`}
                           </Text>
