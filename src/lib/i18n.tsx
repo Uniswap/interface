@@ -1,6 +1,6 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { DEFAULT_CATALOG, DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import { SupportedLocale } from 'constants/locales'
 import {
   af,
   ar,
@@ -78,12 +78,13 @@ const plurals: LocalePlural = {
 
 export async function dynamicActivate(locale: SupportedLocale) {
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
-  // There are no default messages in production; instead, bundle the default to save a network request:
-  // see https://github.com/lingui/js-lingui/issues/388#issuecomment-497779030
-  const catalog =
-    locale === DEFAULT_LOCALE ? DEFAULT_CATALOG : await import(`${process.env.REACT_APP_LOCALES}/${locale}.js`)
-  // Bundlers will either export it as default or as a named export named default.
-  i18n.load(locale, catalog.messages || catalog.default.messages)
+  try {
+    // There are no default messages in production,
+    // see https://github.com/lingui/js-lingui/issues/388#issuecomment-497779030
+    const catalog = await import(`${process.env.REACT_APP_LOCALES}/${locale}.js`)
+    // Bundlers will either export it as default or as a named export named default.
+    i18n.load(locale, catalog.messages || catalog.default.messages)
+  } catch {}
   i18n.activate(locale)
 }
 
