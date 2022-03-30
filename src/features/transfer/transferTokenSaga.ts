@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish, providers } from 'ethers'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
@@ -20,9 +20,9 @@ export function* transferToken(params: TransferTokenParams) {
   const provider = yield* call(getProvider, chainId)
   const contractManager = yield* call(getContractManager)
 
-  // NULL_ADDRESS represents a native (e.g. Eth) transfer
+  // NATIVE_ADDRESS represents a native (e.g. Eth) transfer
   let transactionRequest: providers.TransactionRequest
-  if (tokenAddress === NULL_ADDRESS) {
+  if (tokenAddress === NATIVE_ADDRESS) {
     transactionRequest = yield* call(prepareNativeTransfer, params, provider)
   } else {
     transactionRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
@@ -80,6 +80,8 @@ async function prepareTokenTransfer(
   )
   return transactionRequest
 }
+
+// async function prepareERC721Transfer()
 
 function validateTransferAmount(amountInWei: string, currentBalance: BigNumberish) {
   const amount = BigNumber.from(amountInWei)

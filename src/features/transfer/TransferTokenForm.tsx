@@ -1,16 +1,20 @@
+import { StackActions } from '@react-navigation/native'
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
+import { notificationAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { Flex } from 'src/components/layout'
-import { useDerivedSwapInfo, useSwapActionHandlers } from 'src/features/swap/hooks'
+import { useDerivedSwapInfo, useSendCallback, useSwapActionHandlers } from 'src/features/swap/hooks'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { ElementName } from 'src/features/telemetry/constants'
+import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferTokenProps {
   state: SwapFormState
@@ -19,16 +23,28 @@ interface TransferTokenProps {
 
 export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
   const { t } = useTranslation()
+  const navigation = useAppStackNavigation()
+
+  const onSubmit = useCallback(() => {
+    navigation.dispatch(StackActions.popToTop())
+  }, [navigation])
 
   const derivedSwapInfo = useDerivedSwapInfo(state)
 
-  const { currencies, currencyAmounts, currencyBalances, formattedAmounts } = derivedSwapInfo
+  const { currencies, currencyAmounts, currencyBalances, formattedAmounts, recipient } =
+    derivedSwapInfo
+  const currencyIn = currencies[CurrencyField.INPUT]
 
-  const { onSelectCurrency, onEnterExactAmount } = useSwapActionHandlers(dispatch)
+  const { onSelectCurrency, onEnterExactAmount, onSelectRecipient } =
+    useSwapActionHandlers(dispatch)
 
-  const setRecipientAddress = useCallback(() => {
-    /* TODO: update redux slice */
-  }, [])
+  const { sendCallback } = useSendCallback(
+    currencyIn ? currencyAddress(currencyIn) : undefined,
+    currencyIn?.chainId,
+    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    recipient,
+    onSubmit
+  )
 
   return (
     <Flex grow justifyContent="space-between" p="md">
@@ -46,10 +62,7 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
 
         <TransferArrowButton disabled />
 
-        <RecipientInputPanel
-          recipientAddress={/* TODO: fill address when available in state */ undefined}
-          setRecipientAddress={setRecipientAddress}
-        />
+        <RecipientInputPanel recipientAddress={recipient} setRecipientAddress={onSelectRecipient} />
       </Flex>
 
       <DecimalPad
@@ -57,7 +70,15 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
         value={formattedAmounts[CurrencyField.INPUT]}
       />
 
-      <PrimaryButton disabled={false} label={t('Send')} name={ElementName.Submit} />
+      <PrimaryButton
+        disabled={false}
+        label={t('Send')}
+        name={ElementName.Submit}
+        onPress={() => {
+          notificationAsync()
+          sendCallback()
+        }}
+      />
     </Flex>
   )
 }

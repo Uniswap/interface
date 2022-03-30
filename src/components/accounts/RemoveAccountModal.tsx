@@ -6,7 +6,7 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Modal } from 'src/components/modals/Modal'
 import { Text } from 'src/components/Text'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { dimensions } from 'src/styles/sizing'
 
 interface RemoveAccountModalProps {
@@ -23,7 +23,7 @@ export function RemoveAccountModal({ address, onCancel, onConfirm }: RemoveAccou
       hide={onCancel}
       visible={!!address}
       width={dimensions.fullWidth * 0.85}>
-      <Identicon address={address || NULL_ADDRESS} size={50} />
+      <Identicon address={address || NATIVE_ADDRESS} size={50} />
       <Text mt="md" textAlign="center" variant="bodyLg">
         {t('Remove this account?')}
       </Text>

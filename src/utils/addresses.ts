@@ -1,5 +1,5 @@
 import { utils } from 'ethers'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { logger } from 'src/utils/logger'
 
 export enum AddressStringFormat {
@@ -23,7 +23,7 @@ export function isValidAddress(address: Nullable<Address>, allowZero = true) {
   try {
     const isValid = address && utils.isAddress(address)
     if (allowZero) return !!isValid
-    else return !!isValid && address !== NULL_ADDRESS
+    else return !!isValid && address !== NATIVE_ADDRESS
   } catch (error) {
     logger.warn('addresses', 'isValidAddress', 'Invalid address', error, address)
     return false

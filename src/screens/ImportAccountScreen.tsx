@@ -7,7 +7,7 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ImportAccountForm } from 'src/features/import/ImportAccountForm'
 import { NameAccountForm } from 'src/features/import/NameAccountForm'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -60,7 +60,7 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
                 {t('Set a name for this account to help you stay organized.')}
               </Text>
               <NameAccountForm
-                address={activeAccount?.address ?? NULL_ADDRESS}
+                address={activeAccount?.address ?? NATIVE_ADDRESS}
                 onSuccess={onNamingSuccess}
               />
             </>

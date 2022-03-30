@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
+import { QueryStatus } from 'react-query'
 import { QuoteResult } from 'src/features/prices/types'
 import { useQuote } from 'src/features/prices/useQuote'
 import { transformQuoteToTrade } from 'src/features/swap/routeUtils'
@@ -63,7 +64,7 @@ export function useTrade(
     }
 
     return {
-      status: isDebouncing ? 'loading' : status,
+      status: (isDebouncing ? 'loading' : status) as QueryStatus,
       error,
       trade: transformQuoteToTrade(currencyIn, currencyOut, tradeType, data),
     }

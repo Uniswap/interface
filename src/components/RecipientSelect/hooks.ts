@@ -18,12 +18,12 @@ export function useWalletRecipients(): string[] {
       return ret
     })
     .flat()
-  return wallets
+  return unique(wallets)
 }
 
 export function useRecentRecipients(): string[] {
   const recentRecipients = useAppSelector(selectRecentRecipients)
-  return recentRecipients
+  return unique(recentRecipients)
 }
 
 export function useFullAddressRecipient(searchTerm: string | null): string[] {

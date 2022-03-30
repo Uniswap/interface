@@ -6,7 +6,7 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Modal } from 'src/components/modals/Modal'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { dimensions } from 'src/styles/sizing'
 
 interface RenameAccountModalProps {
@@ -36,7 +36,7 @@ export function RenameAccountModal({ address, onCancel, onConfirm }: RenameAccou
       visible={!!address}
       width={dimensions.fullWidth * 0.85}>
       <CenterBox mt="md">
-        <Identicon address={address || NULL_ADDRESS} size={50} />
+        <Identicon address={address || NATIVE_ADDRESS} size={50} />
         <TextInput
           fontSize={20}
           mt="md"

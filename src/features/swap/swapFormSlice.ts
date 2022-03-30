@@ -8,28 +8,27 @@ export enum CurrencyField {
   OUTPUT,
 }
 
-export interface SwapFormState {
-  exactCurrencyField: CurrencyField
-  exactAmount: string
-  [CurrencyField.INPUT]: {
-    currencyId: string
-    chainId: number
-  } | null
-  [CurrencyField.OUTPUT]: {
-    currencyId: string
-    chainId: number
-  } | null
+type TradeableAsset = {
+  currencyId: string
+  chainId: number
 }
 
-// Represents the active swap form
+export interface SwapFormState {
+  [CurrencyField.INPUT]: TradeableAsset | null
+  [CurrencyField.OUTPUT]: TradeableAsset | null
+  exactCurrencyField: CurrencyField
+  exactAmount: string
+  recipient?: Address
+}
+
 export const initialSwapFormState: Readonly<SwapFormState> = {
-  exactCurrencyField: CurrencyField.INPUT,
-  exactAmount: '',
   [CurrencyField.INPUT]: {
     currencyId: currencyId(NativeCurrency.onChain(ChainId.Rinkeby)),
     chainId: ChainId.Rinkeby,
   },
   [CurrencyField.OUTPUT]: null,
+  exactCurrencyField: CurrencyField.INPUT,
+  exactAmount: '',
 }
 
 // using `createSlice` for convenience -- slice is not added to root reducer
@@ -88,8 +87,14 @@ const slice = createSlice({
       state.exactCurrencyField = field
       state.exactAmount = exactAmount
     },
+    /** Changes the recipient */
+    selectRecipient: (state, action: PayloadAction<{ recipient: Address }>) => {
+      const { recipient } = action.payload
+      state.recipient = recipient
+    },
   },
 })
 
-export const { selectCurrency, switchCurrencySides, enterExactAmount } = slice.actions
+export const { selectCurrency, switchCurrencySides, enterExactAmount, selectRecipient } =
+  slice.actions
 export const { reducer: swapFormReducer, actions: swapFormActions } = slice

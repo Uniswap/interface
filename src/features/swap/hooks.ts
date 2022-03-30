@@ -19,6 +19,10 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'src/features/transactions/types'
+import {
+  transferTokenActions,
+  transferTokenSagaName,
+} from 'src/features/transfer/transferTokenSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
@@ -47,6 +51,7 @@ export interface DerivedSwapInfo {
     [CurrencyField.INPUT]: string
     [CurrencyField.OUTPUT]: string
   }
+  recipient: Address | undefined
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
 }
@@ -54,10 +59,11 @@ export interface DerivedSwapInfo {
 /** Returns information derived from the current swap state */
 export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
   const {
-    exactAmount,
-    exactCurrencyField,
     [CurrencyField.INPUT]: partialCurrencyIn,
     [CurrencyField.OUTPUT]: partialCurrencyOut,
+    exactAmount,
+    exactCurrencyField,
+    recipient,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -94,23 +100,23 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
   )
   const otherCurrency = isExactIn ? currencyOut : currencyIn
 
-  const skipQuote = isWrapAction(wrapType)
-  const { status, error, trade } = useTrade(
-    skipQuote ? null : amountSpecified,
+  const shouldGetQuote = !isWrapAction(wrapType)
+  const trade = useTrade(
+    shouldGetQuote ? amountSpecified : null,
     otherCurrency,
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
   )
 
-  const currencyAmounts = skipQuote
+  const currencyAmounts = shouldGetQuote
     ? {
-        [CurrencyField.INPUT]: amountSpecified,
-        [CurrencyField.OUTPUT]: amountSpecified,
+        [CurrencyField.INPUT]:
+          exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade.trade?.inputAmount,
+        [CurrencyField.OUTPUT]:
+          exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade.trade?.outputAmount,
       }
     : {
-        [CurrencyField.INPUT]:
-          exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade?.inputAmount,
-        [CurrencyField.OUTPUT]:
-          exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade?.outputAmount,
+        [CurrencyField.INPUT]: amountSpecified,
+        [CurrencyField.OUTPUT]: amountSpecified,
       }
 
   return {
@@ -130,11 +136,8 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
         ? (currencyAmounts[CurrencyField.OUTPUT]?.toExact() ?? '').toString()
         : exactAmount,
     },
-    trade: {
-      error,
-      status,
-      trade,
-    },
+    recipient,
+    trade,
     wrapType,
   }
 }
@@ -154,12 +157,62 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   const onSwitchCurrencies = () => dispatch(swapFormActions.switchCurrencySides())
   const onEnterExactAmount = (field: CurrencyField, exactAmount: string) =>
     dispatch(swapFormActions.enterExactAmount({ field, exactAmount }))
+  const onSelectRecipient = (recipient: Address) =>
+    dispatch(swapFormActions.selectRecipient({ recipient }))
 
   return {
-    onSelectCurrency,
-    onSwitchCurrencies,
     onEnterExactAmount,
+    onSelectCurrency,
+    onSelectRecipient,
+    onSwitchCurrencies,
   }
+}
+
+export function useSendCallback(
+  tokenAddress: Nullable<Address>,
+  chainId: Nullable<ChainId>,
+  amountInWei: Nullable<string>,
+  toAddress: Nullable<Address>,
+  onSubmit: () => void
+) {
+  const dispatch = useAppDispatch()
+  const account = useActiveAccount()
+
+  const transferState = useSagaStatus(transferTokenSagaName, undefined, true)
+
+  useEffect(() => {
+    if (transferState.status === SagaStatus.Started) {
+      onSubmit()
+    }
+  })
+
+  return useMemo(() => {
+    if (!account || !tokenAddress || !chainId || !amountInWei || !toAddress) {
+      return {
+        sendCallback: () => {
+          logger.error(
+            'hooks',
+            'useSendCallback',
+            'Missing sendCallback params. Is the provider enabled?'
+          )
+        },
+      }
+    }
+
+    return {
+      sendCallback: () => {
+        dispatch(
+          transferTokenActions.trigger({
+            account,
+            toAddress,
+            amountInWei,
+            tokenAddress,
+            chainId,
+          })
+        )
+      },
+    }
+  }, [account, amountInWei, chainId, dispatch, toAddress, tokenAddress])
 }
 
 /** Callback to submit trades and track progress */
@@ -182,7 +235,7 @@ export function useSwapCallback(
     trade?.inputAmount.currency.isToken ? trade?.inputAmount.currency.wrapped.address : undefined
   )
 
-  const swapState = useSagaStatus(swapSagaName, onSubmit)
+  const swapState = useSagaStatus(swapSagaName, onSubmit, true)
 
   useEffect(() => {
     if (swapState.status === SagaStatus.Started) {

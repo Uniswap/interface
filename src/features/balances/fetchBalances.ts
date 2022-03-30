@@ -1,6 +1,6 @@
 import { appSelect } from 'src/app/hooks'
 import { getProviderManager } from 'src/app/walletContext'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { Balance } from 'src/features/balances/types'
 import { selectActiveChainIds } from 'src/features/chains/utils'
@@ -35,9 +35,9 @@ async function _fetchBalances(
   logger.debug('fetchBalances', '', 'Fetching for:', address)
   const provider = await manager.getInitalizedProvider(chainId)
 
-  // TODO using NULL_ADDRESS for Eth, eventually use currencyId util function
+  // TODO using NATIVE_ADDRESS for Eth, eventually use currencyId util function
   const amount = await provider.getBalance(address)
-  const tokenAddress = NULL_ADDRESS
+  const tokenAddress = NATIVE_ADDRESS
   const balance: Balance = { amount: amount.toString() }
   logger.debug('fetchBalances', '', 'Fetched balance:', amount.toString())
 

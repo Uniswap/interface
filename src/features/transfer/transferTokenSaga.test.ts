@@ -3,7 +3,7 @@ import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { getContractManager, getProvider } from 'src/app/walletContext'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
@@ -14,7 +14,7 @@ import { account, mockContractManager, mockProvider, txRequest } from 'src/test/
 
 const tranferParams: TransferTokenParams = {
   account,
-  tokenAddress: NULL_ADDRESS,
+  tokenAddress: NATIVE_ADDRESS,
   chainId: ChainId.Rinkeby,
   toAddress: account.address,
   amountInWei: '100000000000000000',
