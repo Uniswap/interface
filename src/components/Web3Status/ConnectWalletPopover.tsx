@@ -41,7 +41,7 @@ export const DisconnectButton = styled.button`
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.text1};
-  background: ${({ theme }) => theme.dark2};;
+  background: ${({ theme }) => theme.dark2};
   border: none;
   outline: none;
   cursor: pointer;
@@ -79,7 +79,7 @@ const ListIconWrapper = styled.div<{ isActive?: boolean }>`
   align-items: center;
   width: 20px;
   height: 20px;
-  margin-right: ${ props => (props.isActive ? "34px" : "8px")};
+  margin-right: ${props => (props.isActive ? '34px' : '8px')};
 
   img {
     max-width: 100%;
@@ -94,7 +94,7 @@ const StyledPopover = styled(Popover)<{ isActive?: boolean }>`
   border-width: 1.2px;
   border-radius: 12px;
   border-image: none;
-  padding: ${ props => (props.isActive ? "8px 0 0 0" : "8px")};
+  padding: ${props => (props.isActive ? '8px 0 0 0' : '8px')};
 `
 
 interface ConnectWalletProps {
@@ -192,9 +192,9 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
       <StyledPopover
         innerRef={popoverRef}
         content={
-          <List>
+          <List data-testid="wallet-connect-list">
             {getOptions()}
-            { active && <DisconnectButton onClick={deactivate}>Disconnect Wallet</DisconnectButton> }
+            {active && <DisconnectButton onClick={deactivate}>Disconnect Wallet</DisconnectButton>}
           </List>
         }
         show={walletSwitcherPopoverOpen}
@@ -220,7 +220,7 @@ export const Item = ({ id, onClick, name, icon, link, isActive }: ItemProps) => 
   const getContent = () => (
     <>
       <ListIconWrapper isActive={isActive}>
-        { isActive && <StyledConnectedIcon width="50px" padding="0 0 0 12px" /> }
+        {isActive && <StyledConnectedIcon width="50px" padding="0 0 0 12px" />}
         <img src={icon} alt={name + ' logo'} />
       </ListIconWrapper>
       {name}
@@ -234,9 +234,7 @@ export const Item = ({ id, onClick, name, icon, link, isActive }: ItemProps) => 
           {getContent()}
         </ListButton>
       ) : (
-        <ListButton onClick={onClick}>
-          {getContent()}
-        </ListButton>
+        <ListButton onClick={onClick}>{getContent()}</ListButton>
       )}
     </ListItem>
   )

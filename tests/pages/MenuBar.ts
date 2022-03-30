@@ -13,45 +13,45 @@ export class MenuBar {
     cy.get('.Toastify__toast').should('contain', message)
     this.closeToastAlerts()
   }
-  static swap() {
+  static getSwap() {
     return cy.get('#swap-nav-link')
   }
-  static liquidity() {
+  static getLiquidity() {
     return cy.get('#pool-nav-link')
   }
-  static rewards() {
+  static getRewards() {
     return cy.get('#rewards-nav-link')
   }
-  static vote() {
+  static getVote() {
     return cy.get('#vote-nav-link')
   }
-  static bridge() {
+  static getBridge() {
     return cy.get('#bridge-nav-link')
   }
-  static charts() {
+  static getCharts() {
     return cy.get('#charts-nav-link')
   }
-  static connectWalletButton() {
+  static getConnectWalletButton() {
     return cy.get('#connect-wallet')
   }
-  static networkSwitcher() {
+  static getNetworkSwitcher() {
     return cy.get('[data-testid=network-switcher]').first()
   }
-  static settings() {
+  static getSettings() {
     return cy.get('#open-settings-dialog-button')
   }
-  static web3Status() {
+  static getWeb3Status() {
     return cy.get('#web3-status-connected')
   }
   static checkHrefs() {
-    MenuBar.rewards().should('be.visible')
-    MenuBar.liquidity().should('be.visible')
-    MenuBar.swap().should('be.visible')
-    MenuBar.bridge().should('be.visible')
-    MenuBar.charts().should('be.visible')
-    MenuBar.connectWalletButton().should('be.visible')
-    MenuBar.networkSwitcher().should('be.visible')
-    MenuBar.settings().should('be.visible')
+    MenuBar.getRewards().should('be.visible')
+    MenuBar.getLiquidity().should('be.visible')
+    MenuBar.getSwap().should('be.visible')
+    MenuBar.getBridge().should('be.visible')
+    MenuBar.getCharts().should('be.visible')
+    MenuBar.getConnectWalletButton().should('be.visible')
+    MenuBar.getNetworkSwitcher().should('be.visible')
+    MenuBar.getSettings().should('be.visible')
     return cy.wrap(null)
   }
 }

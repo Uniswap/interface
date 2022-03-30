@@ -83,6 +83,7 @@ export default function ImportRow({
         <ButtonPrimary
           width="fit-content"
           padding="6px 12px"
+          data-testid="import-button"
           fontWeight={500}
           fontSize="14px"
           onClick={() => {

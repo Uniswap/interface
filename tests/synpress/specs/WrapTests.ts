@@ -28,14 +28,14 @@ describe('SWAP', () => {
   })
 
   it('Should display that wallet is connected to rinkeby', () => {
-    MenuBar.web3Status().should('be.visible')
-    MenuBar.networkSwitcher().should('contain.text', 'Rinkeby')
+    MenuBar.getWeb3Status().should('be.visible')
+    MenuBar.getNetworkSwitcher().should('contain.text', 'Rinkeby')
   })
 
   it('Should wrap eth to weth', () => {
     SwapPage.openTokenToSwapMenu()
       .chooseToken('weth')
-      .typeValueIn(TRANSACTION_VALUE.toFixed(9).toString())
+      .typeValueFrom(TRANSACTION_VALUE.toFixed(9).toString())
       .wrap()
     cy.confirmMetamaskTransaction({ gasFee: 11 })
 
@@ -52,12 +52,11 @@ describe('SWAP', () => {
   })
 
   it('Should unwrap eth to weth', () => {
-    console.log('tx', Object.keys(JSON.parse(localStorage.getItem('swapr_transactions')!)[4])[0])
     SwapPage.openTokenToSwapMenu()
       .chooseToken('eth')
       .openTokenToSwapMenu()
       .chooseToken('weth')
-      .typeValueIn(TRANSACTION_VALUE.toFixed(9).toString())
+      .typeValueFrom(TRANSACTION_VALUE.toFixed(9).toString())
       .wrap()
     cy.confirmMetamaskTransaction({ gasFee: 11 })
 

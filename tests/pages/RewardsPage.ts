@@ -3,6 +3,7 @@ export class RewardsPage {
       cy.visit('/rewards?chainId=100')
     }
 
+    //TODO: separate these two buttons
     static campaignsAndExpiredCampaigns_Buttons() {
       return  cy.get('[data-testid=campaigns-and-exipred]')
     }

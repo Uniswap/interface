@@ -171,7 +171,7 @@ export function CurrencySearch({
   }, [inputRef])
 
   return (
-    <ContentWrapper>
+    <ContentWrapper data-testid="token-picker">
       <AutoColumn style={{ padding: '22px 18.5px 20px 18.5px' }} gap="15px">
         <RowBetween>
           <TYPE.body fontWeight={500}>Select a token</TYPE.body>
@@ -215,7 +215,9 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonDark2 onClick={showManageView}>Manage token lists</ButtonDark2>
+          <ButtonDark2 onClick={showManageView} data-testid="manage-token-lists-button">
+            Manage token lists
+          </ButtonDark2>
         </Row>
       </Footer>
     </ContentWrapper>

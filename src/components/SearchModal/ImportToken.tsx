@@ -39,7 +39,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
   const addToken = useAddUserToken()
 
   return (
-    <Wrapper>
+    <Wrapper data-testid="unknown-token-warning">
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           <GoBackIcon onClick={onBack} />
@@ -69,6 +69,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
               return <TokenWarningCard key={token.address} token={token} list={list} />
             })}
             <SpacedButtonError
+              data-testid="confirm-import-button"
               error
               onClick={() => {
                 tokens.map(token => addToken(token))
