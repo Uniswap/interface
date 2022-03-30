@@ -13,6 +13,7 @@ import Dialog, { Header } from '../Dialog'
 import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
+import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
 import TokenBase from './TokenBase'
 import TokenButton from './TokenButton'
 import TokenOptions from './TokenOptions'
@@ -45,9 +46,23 @@ interface TokenSelectDialogProps {
 }
 
 export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
+  const { chainId } = useActiveWeb3React()
+  const [previousChainId, setPreviousChainId] = useState(chainId)
+
   const [query, setQuery] = useState('')
   const queriedTokens = useQueryCurrencies(query)
   const tokens = useMemo(() => queriedTokens?.filter((token) => token !== value), [queriedTokens, value])
+
+  useEffect(() => {
+    setPreviousChainId(chainId)
+  }, [chainId])
+  useEffect(() => {
+    if (chainId && chainId !== previousChainId) {
+      setQuery('')
+    }
+  }, [chainId, previousChainId])
+
+  console.log(tokens)
 
   const isTokenListLoaded = useIsTokenListLoaded()
   const areBalancesLoaded = useAreBalancesLoaded()
@@ -72,45 +87,59 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
+  // TODO(jordan): check if native
+  const listHasMoreTokensThanJustNativeAsset = useMemo(() => {
+    if (tokens.length > 1) {
+      return true
+    }
+    return false
+  }, [tokens])
+
   return (
     <>
       <Header title={<Trans>Select a token</Trans>} />
-      <Column gap={0.75}>
-        <Row pad={0.75} grow>
-          <ThemedText.Body1>
-            <SearchInput
-              value={query}
-              onChange={setQuery}
-              placeholder={t`Search by token name or address`}
-              onKeyDown={options?.onKeyDown}
-              onBlur={options?.blur}
-              ref={input}
-            />
-          </ThemedText.Body1>
-        </Row>
-        {Boolean(baseTokens.length) && (
-          <Row pad={0.75} gap={0.25} justify="flex-start" flex>
-            {baseTokens.map((token) => (
-              <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
-            ))}
-          </Row>
-        )}
-        <Rule padded />
-      </Column>
-      {isLoaded ? (
-        tokens.length ? (
-          <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
-        ) : (
-          <Column padded>
-            <Row justify="center">
-              <ThemedText.Body1 color="secondary">
-                <Trans>No results found.</Trans>
+      {listHasMoreTokensThanJustNativeAsset ? (
+        <>
+          <Column gap={0.75}>
+            <Row pad={0.75} grow>
+              <ThemedText.Body1>
+                <SearchInput
+                  value={query}
+                  onChange={setQuery}
+                  placeholder={t`Search by token name or address`}
+                  onKeyDown={options?.onKeyDown}
+                  onBlur={options?.blur}
+                  ref={input}
+                />
               </ThemedText.Body1>
             </Row>
+            {Boolean(baseTokens.length) && (
+              <Row pad={0.75} gap={0.25} justify="flex-start" flex>
+                {baseTokens.map((token) => (
+                  <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
+                ))}
+              </Row>
+            )}
+            <Rule padded />
           </Column>
-        )
+          {isLoaded ? (
+            tokens.length ? (
+              <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
+            ) : (
+              <Column padded>
+                <Row justify="center">
+                  <ThemedText.Body1 color="secondary">
+                    <Trans>No results found.</Trans>
+                  </ThemedText.Body1>
+                </Row>
+              </Column>
+            )
+          ) : (
+            <TokenOptionsSkeleton />
+          )}
+        </>
       ) : (
-        <TokenOptionsSkeleton />
+        <NoTokensAvailableOnNetwork />
       )}
     </>
   )

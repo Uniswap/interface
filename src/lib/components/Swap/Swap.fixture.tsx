@@ -1,4 +1,4 @@
-import { tokens } from '@uniswap/default-token-list'
+import { TokenInfo } from '@uniswap/token-lists'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -6,6 +6,18 @@ import { useSelect, useValue } from 'react-cosmos/fixture'
 
 import Swap from '.'
 import { colorAtom } from './Output'
+
+const tokens: TokenInfo[] = [
+  {
+    chainId: 1,
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    name: 'DAI',
+    decimals: 18,
+    symbol: 'DAI',
+    logoURI:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+  },
+]
 
 const validateColor = (() => {
   const validator = document.createElement('div').style
