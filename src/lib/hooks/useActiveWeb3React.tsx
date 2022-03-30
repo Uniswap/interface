@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { EMPTY } from '@web3-react/empty'
@@ -5,6 +6,7 @@ import { Actions, Connector, Provider as Eip1193Provider, Web3ReactStore } from 
 import { Url } from '@web3-react/url'
 import { useAtom, WritableAtom } from 'jotai'
 import { atom } from 'jotai'
+import JsonRpcConnector from 'lib/utils/JsonRpcConnector'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 
 type Web3ContextType = {
@@ -48,12 +50,21 @@ function useConnector<T extends { new (actions: Actions, initializer: I): Connec
 }
 
 interface Web3ProviderProps {
-  provider?: Eip1193Provider
-  jsonRpcEndpoint?: string
+  provider?: Eip1193Provider | JsonRpcProvider
+  jsonRpcEndpoint?: string | JsonRpcProvider
 }
 
 export function Web3Provider({ provider, jsonRpcEndpoint, children }: PropsWithChildren<Web3ProviderProps>) {
-  const injectedConnector = useConnector(injectedConnectorAtom, EIP1193, provider)
+  const Injected = useMemo(() => {
+    if (provider) {
+      if (JsonRpcProvider.isProvider(provider)) return JsonRpcConnector
+      if (JsonRpcProvider.isProvider((provider as any).provider)) {
+        throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
+      }
+    }
+    return EIP1193
+  }, [provider]) as { new (actions: Actions, initializer: typeof provider): Connector }
+  const injectedConnector = useConnector(injectedConnectorAtom, Injected, provider)
   const urlConnector = useConnector(urlConnectorAtom, Url, jsonRpcEndpoint)
   const [connector, hooks] = injectedConnector[1].useIsActive() ? injectedConnector : urlConnector ?? EMPTY_CONNECTOR
 
