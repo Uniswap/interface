@@ -8,7 +8,6 @@ import { t } from '@lingui/macro'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
@@ -323,7 +322,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== ChainId.MAINNET ||
+    chainId !== SupportedChainId.MAINNET ||
     !uni ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )

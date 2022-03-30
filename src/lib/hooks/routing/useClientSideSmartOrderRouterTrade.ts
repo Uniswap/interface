@@ -2,7 +2,7 @@ import 'setimmediate'
 
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
+import { SupportedChainId } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useCallback, useMemo } from 'react'
@@ -13,7 +13,6 @@ import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
 import { useGetIsValidBlock } from '../useIsValidBlock'
 import usePoll from '../usePoll'
-import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -21,14 +20,14 @@ import { useRoutingAPIArguments } from './useRoutingAPIArguments'
  * Defaults are defined in https://github.com/Uniswap/smart-order-router/blob/309e6f6603984d3b5aef0733b0cfaf129c29f602/src/routers/alpha-router/config.ts#L83.
  */
 const DistributionPercents: { [key: number]: number } = {
-  [ChainId.MAINNET]: 10,
-  [ChainId.OPTIMISM]: 10,
-  [ChainId.OPTIMISTIC_KOVAN]: 10,
-  [ChainId.ARBITRUM_ONE]: 25,
-  [ChainId.ARBITRUM_RINKEBY]: 25,
+  [SupportedChainId.MAINNET]: 10,
+  [SupportedChainId.OPTIMISM]: 10,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 10,
+  [SupportedChainId.ARBITRUM_ONE]: 25,
+  [SupportedChainId.ARBITRUM_RINKEBY]: 25,
 }
 const DEFAULT_DISTRIBUTION_PERCENT = 10
-function getConfig(chainId: ChainId | undefined) {
+function getConfig(chainId: SupportedChainId | undefined) {
   return {
     // Limit to only V2 and V3.
     protocols: [Protocol.V2, Protocol.V3],
@@ -76,7 +75,11 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     if (wrapType !== WrapType.NONE) return { error: undefined }
     if (!queryArgs || !params) return { error: undefined }
     try {
-      const quoteResult = await getClientSideQuote(queryArgs, params, config)
+      // Lazy-load the smart order router to improve initial pageload times.
+      const quoteResult = await (
+        await import('./clientSideSmartOrderRouter')
+      ).getClientSideQuote(queryArgs, params, config)
+
       // There is significant post-fetch processing, so delay a tick to prevent dropped frames.
       // This is only important in the context of integrations - if we control the whole site,
       // then we can afford to drop a few frames.
