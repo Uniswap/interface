@@ -9,9 +9,9 @@ import { atom } from 'jotai'
 import JsonRpcConnector from 'lib/utils/JsonRpcConnector'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 
-type Web3ContextType = {
+export type Web3ContextType<T extends JsonRpcProvider = JsonRpcProvider> = {
   connector: Connector
-  library?: ReturnType<Web3ReactHooks['useProvider']>
+  library?: T
   chainId?: ReturnType<Web3ReactHooks['useChainId']>
   accounts?: ReturnType<Web3ReactHooks['useAccounts']>
   account?: ReturnType<Web3ReactHooks['useAccount']>
@@ -49,12 +49,16 @@ function useConnector<T extends { new (actions: Actions, initializer: I): Connec
   return connector
 }
 
-interface Web3ProviderProps {
+interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcEndpoint?: string | JsonRpcProvider
 }
 
-export function Web3Provider({ provider, jsonRpcEndpoint, children }: PropsWithChildren<Web3ProviderProps>) {
+export function ActiveWeb3Provider({
+  provider,
+  jsonRpcEndpoint,
+  children,
+}: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const Injected = useMemo(() => {
     if (provider) {
       if (JsonRpcProvider.isProvider(provider)) return JsonRpcConnector
