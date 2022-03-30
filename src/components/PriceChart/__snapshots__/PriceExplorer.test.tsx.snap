@@ -327,7 +327,7 @@ exports[`renders correctly 1`] = `
             "value": Object {
               "transform": Array [
                 Object {
-                  "translateX": 0,
+                  "translateX": 140,
                 },
               ],
             },
@@ -350,7 +350,7 @@ exports[`renders correctly 1`] = `
               "top": 0,
               "transform": Array [
                 Object {
-                  "translateX": 0,
+                  "translateX": 140,
                 },
               ],
             },
@@ -382,14 +382,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "rgba(255, 255, 255, 1)",
+              "color": "#FF007A",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "rgba(255, 255, 255, 1)",
+            "color": "#FF007A",
             "display": "flex",
             "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
@@ -425,14 +425,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#FF007A",
+              "color": "rgba(255, 255, 255, 1)",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#FF007A",
+            "color": "rgba(255, 255, 255, 1)",
             "display": "flex",
             "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,

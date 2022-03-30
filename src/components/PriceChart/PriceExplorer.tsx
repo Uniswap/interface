@@ -41,9 +41,9 @@ export const PriceExplorer = ({ graphs, title }: GraphProps) => {
   // used in animations
   const transition = useSharedValue(1)
   // previous graph index used in animations
-  const previousGraphIndex = useSharedValue<number>(0)
+  const previousGraphIndex = useSharedValue<number>(1)
   // graph index used to display the current graph
-  const currentGraphIndex = useSharedValue<number>(0)
+  const currentGraphIndex = useSharedValue<number>(1)
 
   // mixes graph paths on index change
   const graphTransitionAnimatedProps = useAnimatedProps(() => {
