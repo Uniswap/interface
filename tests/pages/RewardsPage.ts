@@ -3,12 +3,18 @@ export class RewardsPage {
       cy.visit('/rewards?chainId=100')
     }
 
-    //TODO: separate these two buttons
-    static campaignsAndExpiredCampaigns_Buttons() {
-      return  cy.get('[data-testid=campaigns-and-exipred]')
+    
+    static activeCmapaigns_Button() {
+      return  cy.get('[data-testid=active-campaigns]')
+    }
+    static expiredCampaigns_Button() {
+      return  cy.get('[data-testid=expired-campaigns]')
     }
     static creeateCapmaign_Button() {
       return  cy.get('[data-testid=create-campaign]')
+    }
+    static allPairs_Button() {
+      return  cy.get('[data-testid=all-pairs]')
     }
     static searchAPair_ModalWindow() {
       return  cy.get('[data-testid=select-a-pair]')
@@ -19,5 +25,11 @@ export class RewardsPage {
     static myPairs_ToggleSwitch() {
       return  cy.get('.react-switch-button')
     }
-    //TODO: Find Selector for ALL pairs button 
+    static endedCmapaign_Card() {
+      return  cy.get('[data-testid=ended-campaign]')
+    }
+    static activeCmapaign_Card() {
+      return  cy.get('[data-testid=search-pair]')
+    }
+    
 }    
