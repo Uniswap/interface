@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { impactAsync } from 'expo-haptics'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { TabBar } from 'src/app/navigation/TabBar'
@@ -11,7 +10,6 @@ import {
   OnboardingStackParamList,
   SettingsStackParamList,
   TabParamList,
-  useAppStackNavigation,
 } from 'src/app/navigation/types'
 import { selectFinishedOnboarding } from 'src/features/user/slice'
 import { AccountsScreen } from 'src/screens/AccountsScreen'
@@ -41,54 +39,12 @@ const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 
 function TabNavigator() {
-  const navigation = useAppStackNavigation()
-
-  const genericTabListeners = useMemo(
-    () => ({
-      tabPress: () => {
-        impactAsync()
-      },
-    }),
-    []
-  )
-
-  const swapTabListeners = useMemo(
-    () => ({
-      tabPress: (e: any) => {
-        impactAsync()
-        e.preventDefault()
-        navigation.navigate(Screens.Swap)
-      },
-    }),
-    [navigation]
-  )
-
   return (
     <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-      <Tab.Screen
-        component={HomeScreen}
-        listeners={genericTabListeners}
-        name={Tabs.Home}
-        options={navOptions.noHeader}
-      />
-      <Tab.Screen
-        component={NFTScreen}
-        listeners={genericTabListeners}
-        name={Tabs.NFT}
-        options={navOptions.noHeader}
-      />
-      <Tab.Screen
-        component={ExploreScreen}
-        listeners={genericTabListeners}
-        name={Tabs.Explore}
-        options={navOptions.noHeader}
-      />
-      <Tab.Screen
-        component={View}
-        listeners={swapTabListeners}
-        name={Tabs.Swap}
-        options={navOptions.noHeader}
-      />
+      <Tab.Screen component={HomeScreen} name={Tabs.Home} options={navOptions.noHeader} />
+      <Tab.Screen component={NFTScreen} name={Tabs.NFT} options={navOptions.noHeader} />
+      <Tab.Screen component={ExploreScreen} name={Tabs.Explore} options={navOptions.noHeader} />
+      <Tab.Screen component={View} name={Tabs.Swap} options={navOptions.noHeader} />
     </Tab.Navigator>
   )
 }
