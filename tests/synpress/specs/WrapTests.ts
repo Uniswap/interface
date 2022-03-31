@@ -1,23 +1,26 @@
 import 'cypress-localstorage-commands'
+import { TransactionHelper } from '../../utils/TransactionHelper'
 import { MenuBar } from '../../pages/MenuBar'
 import { SwapPage } from '../../pages/SwapPage'
 import { AddressesEnum } from '../../utils/AddressesEnum'
-import { EtherscanFacade } from '../../utils/EtherscanFacade'
-import { TransactionHelper } from '../../utils/TransactionHelper'
 
-describe('SWAP functional tests', () => {
-  const TRANSACTION_VALUE: number = 0.001
+describe('SWAP', () => {
+  const TRANSACTION_VALUE: number = 0.000000001
 
-  let balanceBefore: number
+  let balanceBefore: {
+    message: string
+    result: string
+    status: string
+  }
 
   beforeEach(() => {
     cy.clearLocalStorage()
     cy.clearCookies()
-    SwapPage.visitSwapPage()
+    cy.visit('/')
     MenuBar.connectWallet()
-
-    EtherscanFacade.erc20TokenBalance(AddressesEnum.WETH_TOKEN).then(response => {
-      balanceBefore = parseInt(response.body.result)
+    TransactionHelper.checkTokenBalance(AddressesEnum.WETH_TOKEN).then(balance => {
+      console.log('Balance before test:', balance)
+      balanceBefore = balance
     })
   })
   afterEach(() => {
@@ -36,14 +39,19 @@ describe('SWAP functional tests', () => {
       .wrap()
     cy.confirmMetamaskTransaction({ gasFee: 11 })
 
-    TransactionHelper.checkIfTxFromLocalStorageHaveNoError()
-
+    cy.window().then(
+      async () =>
+        await TransactionHelper.checkIfTransactionIsValid(
+          parseInt(balanceBefore.result),
+          TRANSACTION_VALUE * Math.pow(10, 18),
+          AddressesEnum.WETH_TOKEN
+        )
+    )
+    //TODO Not sure why, but cypress do not wait until tx check above is executed
     MenuBar.checkToastMessage('Wrap')
-
-    TransactionHelper.checkErc20TokenBalance(AddressesEnum.WETH_TOKEN, balanceBefore, TRANSACTION_VALUE)
   })
 
-  it('Should unwrap weth to eth', () => {
+  it('Should unwrap eth to weth', () => {
     SwapPage.openTokenToSwapMenu()
       .chooseToken('eth')
       .openTokenToSwapMenu()
@@ -52,10 +60,16 @@ describe('SWAP functional tests', () => {
       .wrap()
     cy.confirmMetamaskTransaction({ gasFee: 11 })
 
-    TransactionHelper.checkIfTxFromLocalStorageHaveNoError()
+    cy.window().then(
+      async () =>
+        await TransactionHelper.checkIfTransactionIsValid(
+          parseInt(balanceBefore.result),
+          -(TRANSACTION_VALUE * Math.pow(10, 18)),
+          AddressesEnum.WETH_TOKEN
+        )
+    )
 
+    //TODO Not sure why, but cypress do not wait until tx check above is executed
     MenuBar.checkToastMessage('Unwrap')
-
-    TransactionHelper.checkErc20TokenBalance(AddressesEnum.WETH_TOKEN,balanceBefore,-(TRANSACTION_VALUE))
   })
 })
