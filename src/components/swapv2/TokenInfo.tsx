@@ -112,7 +112,7 @@ const TokenInfo = ({ currencies }: { currencies: { [field in Field]?: Currency }
   useEffect(() => {
     inputNativeCurrency?.symbol && setActiveTab(inputNativeCurrency.symbol)
     //eslint-disable-next-line
-  }, [chainId, inputNativeCurrency, inputNativeCurrency?.symbol])
+  }, [chainId, JSON.stringify(inputNativeCurrency), inputNativeCurrency?.symbol])
 
   return (
     <>
