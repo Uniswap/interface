@@ -23,6 +23,7 @@ import { useWeb3React } from '@web3-react/core'
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 1rem;
+  overflow:hidden;
 `
 function abbreviateNumber(value: any) {
     return Intl.NumberFormat('en-US', {
@@ -49,9 +50,11 @@ export const BurntKiba = ({showDetails}:{showDetails?:boolean}) => {
     const relayer = useV2RouterContract()
     const [ethRelayed, setEthRelayed] = React.useState({formatted:'0', value: 0})
     React.useEffect(() => {
-      if (relayer && ethRelayed.formatted === '0') {
+      if (relayer) {
         relayer.totalEthRelayed().then((response:any) => {
-          setEthRelayed({formatted: utils.utils.formatEther(response), value: response})
+          if (!_.isEqual(ethRelayed.value, response)) {
+            setEthRelayed({formatted: utils.utils.formatEther(response), value: response})
+          }
         })
       }
     }, [relayer])
