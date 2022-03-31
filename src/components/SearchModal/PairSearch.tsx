@@ -100,16 +100,16 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filt
   }, [inputRef])
 
   return (
-    <Wrapper>
+    <Wrapper data-testid="select-a-pair" >
       <Column style={{ width: '100%', height: '100%', flex: '1 1' }}>
         <PaddedColumn gap="16px">
           <RowBetween>
             <TYPE.body fontWeight={500} fontSize={16}>
               Select a pair
             </TYPE.body>
-            <CloseIcon onClick={onDismiss} />
+            <CloseIcon onClick={onDismiss} data-testid="close-search-pair"/>
           </RowBetween>
-          <SearchInput
+          <SearchInput data-testid="search-pair"
             type="text"
             placeholder={t('pairSearchPlaceholder')}
             value={searchQuery}

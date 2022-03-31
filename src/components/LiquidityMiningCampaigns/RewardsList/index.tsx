@@ -34,13 +34,13 @@ export function RewardsList({ dataFilter, pair, setDataFiler, loading }: Rewards
       <Flex style={{ alignItems: 'center' }}>
         <TabBar
           titles={[
-            <TabTitle
+            <TabTitle 
               key="active"
               loadingAmount={loadingPairs || loading}
               itemsAmount={miningCampaigns.active.length}
-              badgeTheme="orange"
+              badgeTheme="orange" 
             >
-              Campaigns
+             <div data-testid="active-campaigns" >Campaigns</div> 
             </TabTitle>,
             <TabTitle
               key="active"
@@ -48,13 +48,14 @@ export function RewardsList({ dataFilter, pair, setDataFiler, loading }: Rewards
               itemsAmount={miningCampaigns.expired.length}
               badgeTheme="red"
             >
-              Expired (150 days)
+              <div data-testid="expired-campaigns" >Expired (150 days)</div>
+              
             </TabTitle>
           ]}
           active={activeTab}
           onChange={setActiveTab}
         />
-        <Switch
+        <Switch  
           style={{ marginLeft: 'auto' }}
           isOn={dataFilter === PairsFilterType.MY}
           label="MY PAIRS"
