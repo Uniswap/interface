@@ -85,6 +85,9 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   if (currency?.symbol?.toLowerCase() === 'vulture' || currency?.name?.toLowerCase() === 'vulture')
   return <StyledLogo size={size} srcs={['https://pbs.twimg.com/profile_banners/1504955501230051328/1648078134/1500x500']} alt={`Vulture logo`} style={style} {...rest} />
 
+  if (currency?.symbol?.toLowerCase() === 'ck' || currency?.name?.toLowerCase() === 'crypto king') 
+  return <StyledLogo size={size} srcs={['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt7jQS8Jx_R171pHWK3ffTtXnXKod0bZFoUg&usqp=CAU']} alt={`Vulture logo`} style={style} {...rest} />
+
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 }, _.isEqual);
 
