@@ -1,8 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { View } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { TabBar } from 'src/app/navigation/TabBar'
 import {
   AccountStackParamList,
@@ -12,7 +14,6 @@ import {
   TabParamList,
 } from 'src/app/navigation/types'
 import { selectFinishedOnboarding } from 'src/features/user/slice'
-import { AccountsScreen } from 'src/screens/AccountsScreen'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
@@ -32,12 +33,14 @@ import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
+import { dimensions } from 'src/styles/sizing'
 
 const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
+const Drawer = createDrawerNavigator()
 
 function TabNavigator() {
   return (
@@ -47,16 +50,6 @@ function TabNavigator() {
       <Tab.Screen component={ExploreScreen} name={Tabs.Explore} options={navOptions.noHeader} />
       <Tab.Screen component={View} name={Tabs.Swap} options={navOptions.noHeader} />
     </Tab.Navigator>
-  )
-}
-
-function AccountStackGroup() {
-  return (
-    <AccountStack.Navigator screenOptions={navOptions.noHeader}>
-      <AccountStack.Screen component={AccountsScreen} name={Screens.Accounts} />
-      <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
-      <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />
-    </AccountStack.Navigator>
   )
 }
 
@@ -72,6 +65,27 @@ function SettingsStackGroup() {
   )
 }
 
+export function DrawerNavigator() {
+  const theme = useAppTheme()
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => <AccountDrawer {...props} />}
+      screenOptions={{
+        drawerStyle: {
+          width: dimensions.fullWidth - theme.spacing.xxl,
+        },
+      }}>
+      <Drawer.Screen
+        component={AppStackNavigator}
+        name="AppStack"
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Drawer.Navigator>
+  )
+}
+
 export function AppStackNavigator() {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
 
@@ -84,13 +98,15 @@ export function AppStackNavigator() {
       ) : (
         <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       )}
-
+      <AppStack.Group screenOptions={navOptions.presentationModal}>
+        <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
+        <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />
+      </AppStack.Group>
       <AppStack.Group>
         <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
       <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AppStack.Screen component={AccountStackGroup} name={Screens.AccountStack} />
         <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
         <AppStack.Screen component={SwapScreen} name={Screens.Swap} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />

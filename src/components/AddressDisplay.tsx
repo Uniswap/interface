@@ -15,6 +15,7 @@ type AddressDisplayProps = {
   override?: string
   size?: number
   variant?: keyof Theme['textVariants']
+  verticalGap?: keyof Theme['spacing']
 }
 
 /** Helper component to display identicon and formatted address */
@@ -24,6 +25,7 @@ export function AddressDisplay({
   override,
   size = 24,
   variant = 'body',
+  verticalGap = 'xxs',
   alwaysShowAddress,
 }: AddressDisplayProps) {
   const { name, address: validatedAddress } = useDisplayName(address, override, fallback)
@@ -35,7 +37,7 @@ export function AddressDisplay({
   return (
     <Flex row alignItems="center" gap="sm">
       <Identicon address={validatedAddress} size={size} />
-      <Flex gap="xxs">
+      <Flex gap={verticalGap}>
         <Text color="textColor" variant={variant}>
           {name}
         </Text>

@@ -8,7 +8,7 @@ import { setLogger } from 'react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
-import { AppStackNavigator } from 'src/app/navigation/navigation'
+import { DrawerNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { QueryProvider } from 'src/app/QueryProvider'
 import { persistor, store } from 'src/app/store'
@@ -86,7 +86,7 @@ function DataUpdaters() {
 function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <NavigationContainer>
-      <AppStackNavigator />
+      <DrawerNavigator />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <BiometricCheck />
     </NavigationContainer>

@@ -1,3 +1,4 @@
+import { DrawerActions } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
@@ -6,7 +7,6 @@ import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
 import Scan from 'src/assets/icons/scan.svg'
 import Settings from 'src/assets/icons/settings.svg'
-import { AccountCardList } from 'src/components/AccountCardList/AccountCardList'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
@@ -19,9 +19,6 @@ import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceLi
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
-import 'src/features/notifications/Onesignal'
-import { isEnabled } from 'src/features/remoteConfig'
-import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -50,14 +47,7 @@ export function HomeScreen({ navigation }: Props) {
     sleep(300).then(() => setRefreshing(false))
   }, [])
 
-  const [, setShowQRModal] = useState(false)
   const [showWalletConnectModal, setShowWalletConnectModal] = useState(false)
-
-  const onPressQRCode = () => setShowQRModal(true)
-
-  const onPressSend = () => {
-    navigation.navigate(Screens.Transfer)
-  }
 
   const onPressNotifications = () => navigation.navigate(Screens.Notifications)
 
@@ -71,11 +61,15 @@ export function HomeScreen({ navigation }: Props) {
     setShowWalletConnectModal(true)
   }
 
+  const onPressAccountHeader = () => {
+    navigation.dispatch(DrawerActions.toggleDrawer())
+  }
+
   if (!activeAccount)
     return (
       <Screen>
         <Box mx="md" my="sm">
-          <AccountHeader />
+          <AccountHeader onPress={onPressAccountHeader} />
         </Box>
       </Screen>
     )
@@ -87,7 +81,7 @@ export function HomeScreen({ navigation }: Props) {
       </GradientBackground>
       <Flex gap="md" mt="lg" mx="lg">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between">
-          <AccountHeader />
+          <AccountHeader onPress={onPressAccountHeader} />
           <Flex centered row>
             <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
               <Scan height={20} stroke="gray100" width={20} />
@@ -101,24 +95,14 @@ export function HomeScreen({ navigation }: Props) {
           </Flex>
         </Box>
         <TransactionStatusBanner />
-        {isEnabled(TestConfig.SwipeableAccounts) ? (
-          <AccountCardList
-            balances={balances}
-            onPressQRCode={onPressQRCode}
-            onPressSend={onPressSend}
-          />
-        ) : (
-          <Flex gap="xs">
-            <Text color="gray600" variant="bodySm">
-              {t('Total Balance')}
-            </Text>
-            <Flex alignItems="flex-start" flexDirection="row" gap="sm">
-              <Flex flexGrow={1} gap="xxs">
-                <TotalBalance balances={balances} />
-              </Flex>
-            </Flex>
+        <Flex gap="xs">
+          <Text color="gray600" variant="bodySm">
+            {t('Total Balance')}
+          </Text>
+          <Flex alignItems="flex-start" flexDirection="row" gap="sm">
+            <TotalBalance balances={balances} />
           </Flex>
-        )}
+        </Flex>
         <WalletConnectScanSheet
           isVisible={showWalletConnectModal}
           onClose={() => setShowWalletConnectModal(false)}

@@ -26,7 +26,7 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
   }
 
   const onNamingSuccess = () => {
-    navigation.navigate(Screens.Accounts)
+    navigation.popToTop()
   }
 
   const connectLedger = () => {

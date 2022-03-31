@@ -32,6 +32,7 @@ export function NewAccountOnboarding() {
   })
 
   it('creates a managed account', async () => {
+    await element(by.id(ElementName.Manage)).tap()
     await element(by.id(ElementName.ImportAccount)).tap()
 
     // enter address / eth
