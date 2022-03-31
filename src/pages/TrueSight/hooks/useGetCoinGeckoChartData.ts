@@ -34,6 +34,7 @@ export default function useGetCoinGeckoChartData(
   const [error, setError] = useState<Error>()
 
   useEffect(() => {
+    const controller = new AbortController()
     const fetchData = async () => {
       if (tokenNetwork && tokenAddress) {
         try {
@@ -48,7 +49,7 @@ export default function useGetCoinGeckoChartData(
           setError(undefined)
           setIsLoading(true)
           setData({ prices: [], market_caps: [], total_volumes: [] })
-          const response = await fetch(url)
+          const response = await fetch(url, { signal: controller.signal })
           if (response.ok) {
             const result = await response.json()
             setData(result)
@@ -63,6 +64,10 @@ export default function useGetCoinGeckoChartData(
     }
 
     fetchData()
+
+    return () => {
+      controller.abort()
+    }
   }, [timeframe, tokenAddress, tokenNetwork])
 
   return useMemo(() => ({ isLoading, data: formatCoinGeckoChartData(data), error }), [data, isLoading, error])
