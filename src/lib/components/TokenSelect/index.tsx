@@ -56,6 +56,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   useEffect(() => {
     setPreviousChainId(chainId)
   }, [chainId])
+
   useEffect(() => {
     if (chainId && chainId !== previousChainId) {
       setQuery('')
@@ -87,18 +88,17 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
-  // TODO(jordan): check if native
   const listHasMoreTokensThanJustNativeAsset = useMemo(() => {
     if (tokens.length > 1) {
       return true
     }
-    return false
+    return !tokens.find((token) => token.isNative)
   }, [tokens])
 
   return (
     <>
       <Header title={<Trans>Select a token</Trans>} />
-      {listHasMoreTokensThanJustNativeAsset ? (
+      {listHasMoreTokensThanJustNativeAsset || !isLoaded ? (
         <>
           <Column gap={0.75}>
             <Row pad={0.75} grow>
@@ -113,6 +113,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
                 />
               </ThemedText.Body1>
             </Row>
+
             {Boolean(baseTokens.length) && (
               <Row pad={0.75} gap={0.25} justify="flex-start" flex>
                 {baseTokens.map((token) => (
