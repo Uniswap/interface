@@ -229,7 +229,7 @@ export default function TopTokenMovers() {
             a.tradeVolumeUSD > b.tradeVolumeUSD ? -1 : 1
           : -1
       })
-        .slice(0, 12 - ourTokens.length)
+        .slice(0, 12)
         .filter((
           a: {
             symbol: string;
