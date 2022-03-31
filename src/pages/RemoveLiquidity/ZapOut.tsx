@@ -390,7 +390,7 @@ export default function ZapOut({
               arbitrary: {
                 token_1: convertToNativeTokenFromETH(currencyA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(currencyB, chainId).symbol,
-                add_liquidity_method: '1 Token',
+                remove_liquidity_method: 'single token',
               },
             })
 

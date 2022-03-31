@@ -360,7 +360,7 @@ export default function TokenPair({
               arbitrary: {
                 token_1: convertToNativeTokenFromETH(currencyA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(currencyB, chainId).symbol,
-                add_liquidity_method: '2 Tokens',
+                remove_liquidity_method: 'token pair',
               },
             })
 
