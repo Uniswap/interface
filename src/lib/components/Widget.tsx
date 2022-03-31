@@ -1,11 +1,10 @@
-import { Provider as EthersProvider } from '@ethersproject/abstract-provider'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
-import { Web3Provider } from 'lib/hooks/useActiveWeb3React'
+import { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
-import useEip1193Provider from 'lib/hooks/useEip1193Provider'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
@@ -95,8 +94,8 @@ function Updaters() {
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: Eip1193Provider | EthersProvider
-  jsonRpcEndpoint?: string
+  provider?: Eip1193Provider | JsonRpcProvider
+  jsonRpcEndpoint?: string | JsonRpcProvider
   width?: string | number
   dialog?: HTMLElement | null
   className?: string
@@ -115,7 +114,6 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     className,
     onError,
   } = props
-  const eip1193 = useEip1193Provider(provider)
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
@@ -128,10 +126,10 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                 <WidgetPropValidator {...props}>
                   <ReduxProvider store={multicallStore}>
                     <AtomProvider>
-                      <Web3Provider provider={eip1193} jsonRpcEndpoint={jsonRpcEndpoint}>
+                      <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                         <Updaters />
                         {children}
-                      </Web3Provider>
+                      </ActiveWeb3Provider>
                     </AtomProvider>
                   </ReduxProvider>
                 </WidgetPropValidator>
