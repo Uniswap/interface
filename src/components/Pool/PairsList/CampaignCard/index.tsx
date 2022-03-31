@@ -165,7 +165,7 @@ export function CampaignCard({
             </EllipsizedText>
           </Flex>
           <RightSection>
-            <Flex width="max-content" alignItems="center" data-testid="ended-campaign" >
+            <Flex width="max-content" alignItems="center" data-testid="reward-card" >
               <ClockSvg width={'10px'} height={'10px'} />
               <TYPE.body marginLeft="4px" fontSize="10px" fontFamily="Fira Code" fontWeight="500">
                 <Countdown

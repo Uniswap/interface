@@ -2,15 +2,14 @@ export class RewardsPage {
     static visitSwapPage() {
       cy.visit('/rewards?chainId=100')
     }
-
     
-    static activeCmapaigns_Button() {
+    static activeCampaigns_Button() {
       return  cy.get('[data-testid=active-campaigns]')
     }
     static expiredCampaigns_Button() {
       return  cy.get('[data-testid=expired-campaigns]')
     }
-    static creeateCapmaign_Button() {
+    static createCampaign_Button() {
       return  cy.get('[data-testid=create-campaign]')
     }
     static allPairs_Button() {
@@ -22,14 +21,14 @@ export class RewardsPage {
     static searchAPair_Field() {
       return  cy.get('[data-testid=search-pair]')
     }
+    static closeSearchAPairModalWindow_Button() {
+      return  cy.get('[data-testid=close-search-pair]')
+    }
     static myPairs_ToggleSwitch() {
       return  cy.get('.react-switch-button')
     }
-    static endedCmapaign_Card() {
-      return  cy.get('[data-testid=ended-campaign]')
-    }
-    static activeCmapaign_Card() {
-      return  cy.get('[data-testid=search-pair]')
+    static rewardCard() {
+      return  cy.get('[data-testid=reward-card]')
     }
     
 }    

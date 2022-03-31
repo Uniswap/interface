@@ -107,7 +107,7 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filt
             <TYPE.body fontWeight={500} fontSize={16}>
               Select a pair
             </TYPE.body>
-            <CloseIcon onClick={onDismiss} />
+            <CloseIcon onClick={onDismiss} data-testid="close-search-pair"/>
           </RowBetween>
           <SearchInput data-testid="search-pair"
             type="text"

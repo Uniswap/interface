@@ -194,9 +194,9 @@ export default function Rewards({
                   )}
                 </PointableFlex>
               </Flex>
-              <ButtonRow data-testid="create-campaign" >
+              <ButtonRow>
                 {liquidityMiningEnabled && (
-                  <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+                  <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create" data-testid="create-campaign">
                     <Text fontWeight={700} fontSize={12} lineHeight="15px">
                       CREATE CAMPAIGN
                     </Text>
