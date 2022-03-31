@@ -117,27 +117,26 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
-      <I18nProvider locale={locale}>
-        <ThemeProvider theme={theme}>
-          <WidgetWrapper width={width} className={className}>
+      <ThemeProvider theme={theme}>
+        <WidgetWrapper width={width} className={className}>
+          <I18nProvider locale={locale}>
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={userDialog || dialog}>
               <ErrorBoundary onError={onError}>
-                <WidgetPropValidator {...props}>
-                  <ReduxProvider store={multicallStore}>
-                    <AtomProvider>
-                      <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                        <Updaters />
-                        {children}
-                      </ActiveWeb3Provider>
-                    </AtomProvider>
-                  </ReduxProvider>
-                </WidgetPropValidator>
+                <WidgetPropValidator {...props} />
+                <ReduxProvider store={multicallStore}>
+                  <AtomProvider>
+                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                      <Updaters />
+                      {children}
+                    </ActiveWeb3Provider>
+                  </AtomProvider>
+                </ReduxProvider>
               </ErrorBoundary>
             </DialogProvider>
-          </WidgetWrapper>
-        </ThemeProvider>
-      </I18nProvider>
+          </I18nProvider>
+        </WidgetWrapper>
+      </ThemeProvider>
     </StrictMode>
   )
 }

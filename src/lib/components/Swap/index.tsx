@@ -47,11 +47,15 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
   onConnectWallet?: () => void
 }
 
-export default function Swap(props: SwapProps) {
+function Updaters(props: SwapProps & { disabled: boolean }) {
   useSyncTokenList(props.tokenList)
   useSyncTokenDefaults(props)
   useSyncConvenienceFee(props)
 
+  return props.disabled ? null : <SwapInfoUpdater />
+}
+
+export default function Swap(props: SwapProps) {
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -71,8 +75,9 @@ export default function Swap(props: SwapProps) {
   const isInteractive = Boolean(active && onSupportedNetwork)
 
   return (
-    <SwapPropValidator {...props}>
-      {isSwapSupported && <SwapInfoUpdater />}
+    <>
+      <SwapPropValidator {...props} />
+      <Updaters {...props} disabled={!isSwapSupported} />
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!isInteractive} />
@@ -92,6 +97,6 @@ export default function Swap(props: SwapProps) {
           <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />
         </Dialog>
       )}
-    </SwapPropValidator>
+    </>
   )
 }

@@ -26,5 +26,5 @@ export default function WidgetsPropsValidator(props: PropsWithChildren<WidgetPro
     }
   }, [locale])
 
-  return <>{props.children}</>
+  return null
 }

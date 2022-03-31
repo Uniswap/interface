@@ -81,5 +81,5 @@ export default function SwapPropValidator(props: ValidatorProps) {
     }
   }, [defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount])
 
-  return <>{props.children}</>
+  return null
 }
