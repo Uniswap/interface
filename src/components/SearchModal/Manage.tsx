@@ -96,11 +96,11 @@ export default function Manage({
   }, [api, width, tabIndicatorApi])
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref} data-testid="token-list-manager">
       <Box p="20px">
         <RowBetween>
-          <GoBackIcon onClick={() => setModalView(CurrencyModalView.SEARCH)} />
-          <Text fontWeight={500} fontSize={16}>
+          <GoBackIcon data-testid="go-back-icon" onClick={() => setModalView(CurrencyModalView.SEARCH)} />
+          <Text fontWeight={500} fontSize={16} data-testid="token-manager-title">
             Select a {showLists ? 'list' : 'token'}
           </Text>
           <CloseIcon onClick={onDismiss} />
@@ -109,10 +109,10 @@ export default function Manage({
       <Box px="20px">
         <ToggleWrapper>
           <AnimatedToggleIndicator style={tabIndicatorStyles} />
-          <ToggleOption onClick={handleListsClick} active={showLists}>
+          <ToggleOption onClick={handleListsClick} active={showLists} data-testid="switch-to-lists-button">
             Lists
           </ToggleOption>
-          <ToggleOption onClick={handleTokensClick} active={!showLists}>
+          <ToggleOption onClick={handleTokensClick} active={!showLists} data-testid="switch-to-tokens-button">
             Tokens
           </ToggleOption>
         </ToggleWrapper>

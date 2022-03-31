@@ -136,7 +136,13 @@ function ListRow({ listUrl }: { listUrl: string }) {
 
   if (!list || tokensAmountInCurrentChain === 0) return null
   return (
-    <RowWrapper active={isActive} bgColor={theme.primary1} key={listUrl} id={listUrlRowHTMLId(listUrl)}>
+    <RowWrapper
+      active={isActive}
+      bgColor={theme.primary1}
+      key={listUrl}
+      id={listUrlRowHTMLId(listUrl)}
+      data-testid={list.name.toLowerCase().replace(/ /g, '-') + '-row'}
+    >
       <ListLogo size="40px" style={{ marginRight: '1rem' }} logoURI={list.logoURI || ''} defaultText={list.name} />
       <Column style={{ flex: '1' }}>
         <Row>
@@ -262,7 +268,12 @@ export function ManageLists({
           />
         </Row>
         {addError ? (
-          <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+          <TYPE.error
+            data-testid="token-manager-error-message"
+            title={addError}
+            style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+            error
+          >
             {addError}
           </TYPE.error>
         ) : null}
