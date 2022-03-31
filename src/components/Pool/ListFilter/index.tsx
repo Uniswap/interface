@@ -33,8 +33,8 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
   )
 
   return (
-    <StyledRoot justifyContent="space-between" disabled={disabled}> 
-      <Flex flex="1" flexWrap="wrap">  
+    <StyledRoot justifyContent="space-between" disabled={disabled}>
+      <Flex flex="1" flexWrap="wrap">
         <Box mb={['8px', '0px']} mr="24px">
           <Radio
             onChange={handleFilterRadioChange}

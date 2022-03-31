@@ -168,7 +168,7 @@ export default function Rewards({
                     </Box>
                   )}
                   <Box mr="4px">
-                    <Text fontWeight="600" fontSize="16px" lineHeight="20px" data-testid="all-pairs" >
+                    <Text fontWeight="600" fontSize="16px" lineHeight="20px">
                       {filterPair
                         ? `${unwrappedToken(filterPair.token0)?.symbol}/${unwrappedToken(filterPair.token1)?.symbol}`
                         : wrappedPair[0] === PairState.LOADING
@@ -196,7 +196,7 @@ export default function Rewards({
               </Flex>
               <ButtonRow>
                 {liquidityMiningEnabled && (
-                  <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create" data-testid="create-campaign">
+                  <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
                     <Text fontWeight={700} fontSize={12} lineHeight="15px">
                       CREATE CAMPAIGN
                     </Text>
