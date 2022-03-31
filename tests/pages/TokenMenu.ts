@@ -28,16 +28,10 @@ export class TokenMenu {
     return cy.get('[data-testid=token-manager-title')
   }
   static switchTokenManagerToTokens() {
-    this.getSwitchTokenManagerToTokens().click()
+    cy.get('[data-testid=switch-to-tokens-button').click()
   }
   static switchTokenManagerToLists() {
-    this.getSwitchTokenManagerToLists().click()
-  }
-  static getSwitchTokenManagerToTokens() {
-    return cy.get('[data-testid=switch-to-tokens-button')
-  }
-  static getSwitchTokenManagerToLists() {
-    return cy.get('[data-testid=switch-to-lists-button')
+    cy.get('[data-testid=switch-to-lists-button').click()
   }
   static getSingleTokenManagerInput() {
     return cy.get('#token-search-input')
@@ -88,8 +82,5 @@ export class TokenMenu {
   }
   static getTokenManagerErrorMessage() {
     return cy.get('[data-testid=token-manager-error-message]')
-  }
-  static getCommonTokens() {
-    return cy.get('[data-testid=common-tokens]')
   }
 }

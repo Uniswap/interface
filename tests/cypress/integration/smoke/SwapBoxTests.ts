@@ -9,7 +9,7 @@ describe('Swap page smoke tests', () => {
       .its('response.statusCode')
       .should('equal', 200)
   })
-  it('Should display swap box with 2 inputs and 2 currency selectors [TC-20]', () => {
+  it('Should display swap box with 2 inputs and 2 currency selectors', () => {
     SwapPage.getSwapBox().should('be.visible')
     SwapPage.getCurrencySelectors().should('have.length', 2)
     SwapPage.getToInput().should('be.visible')
@@ -27,30 +27,22 @@ describe('Swap page smoke tests', () => {
       .last()
       .should('contain.text', 'select Token')
   })
-  it('Should type in numbers into FROM input [TC-21]', () => {
+  it('Should type in numbers into from input', () => {
     SwapPage.typeValueFrom('100.32')
     SwapPage.getFromInput().should('contain.value', '100.32')
   })
-  it('Should not allow to type not numbers into FROM input [TC-22]', () => {
-    SwapPage.typeValueFrom('!#$%^&*(*)_qewruip')
-    SwapPage.getFromInput().should('have.value', '')
-  })
-  it('Should type in numbers into TO input [TC-23]', () => {
-    SwapPage.typeValueTo('100.32')
-    SwapPage.getToInput().should('contain.value', '100.32')
-  })
-  it('Should not allow to type not numbers into TO input [TC-24]', () => {
+  it('Should not allow to type not numbers into from input', () => {
     SwapPage.typeValueTo('!#$%^&*(*)_qewruip')
-    SwapPage.getToInput().should('have.value', '')
+    SwapPage.getToInput().should('contain.value', '')
   })
-  it('Should allow to select wrapped eth token as TO input [TC-25]', () => {
+  it('Should allow to select wrapped eth token as to input', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('weth')
     SwapPage.getCurrencySelectors()
       .last()
       .focus()
       .should('contain.text', 'WETH')
   })
-  it('Should allow to select wrapped eth token as FROM input [TC-26]', () => {
+  it('Should allow to select wrapped eth token as from input', () => {
     SwapPage.getCurrencySelectors()
       .first()
       .click()
@@ -60,13 +52,13 @@ describe('Swap page smoke tests', () => {
       .focus()
       .should('contain.text', 'WETH')
   })
-  it('Should allow to select other token as TO input [TC-27]', () => {
+  it('Should allow to select other token as to input', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('usdc')
     SwapPage.getCurrencySelectors()
       .last()
       .should('contain.text', 'USDC')
   })
-  it('Should allow to select other token as FROM input [TC-28]', () => {
+  it('Should allow to select other token as FROM input', () => {
     SwapPage.getCurrencySelectors()
       .first()
       .click()
@@ -75,7 +67,7 @@ describe('Swap page smoke tests', () => {
       .first()
       .should('contain.text', 'USDC')
   })
-  it('Should switch the currency selectors when choosing the same value [TC-29]', () => {
+  it('Should switch the currency selectors when choosing the same value', () => {
     cy.wait(1000)
     SwapPage.openTokenToSwapMenu().chooseToken('weth')
     SwapPage.getCurrencySelectors()
@@ -89,7 +81,7 @@ describe('Swap page smoke tests', () => {
       .last()
       .should('contain.text', 'ETH')
   })
-  it('Should switch token places when using switch button [TC-30]', () => {
+  it('Should switch token places when using switch button', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('weth')
     SwapPage.switchTokens()
     SwapPage.getCurrencySelectors()
@@ -99,7 +91,7 @@ describe('Swap page smoke tests', () => {
       .last()
       .should('contain.text', 'ETH')
   })
-  it('Should connect button which opens network switcher be displayed instead of confirm button [TC-31]', () => {
+  it('Should connect button which opens network switcher be displayed instead of confirm button', () => {
     SwapPage.getConfirmButton()
       .should('be.visible')
       .should('contain.text', 'Connect wallet')
@@ -108,7 +100,7 @@ describe('Swap page smoke tests', () => {
       .scrollIntoView()
       .should('be.visible')
   })
-  it('Should display connect button when transaction data is filled [TC-32]', () => {
+  it('Should display connect button when transaction data is filled', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('usdc')
     SwapPage.typeValueFrom('100')
     SwapPage.getConfirmButton()
@@ -119,12 +111,12 @@ describe('Swap page smoke tests', () => {
       .scrollIntoView()
       .should('be.visible')
   })
-  it('Should calculate output based on FROM and display it in TO section [TC-33]', () => {
+  it('Should calculate output based on FROM and display it in TO section', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('usdc')
     SwapPage.typeValueFrom('100')
     SwapPage.getToInput().should('not.have.value', undefined)
   })
-  it('Should calculate output based on TO and display it in FROM section [TC-34]', () => {
+  it('Should calculate output based on TO and display it in FROM section', () => {
     SwapPage.openTokenToSwapMenu().chooseToken('usdc')
     SwapPage.typeValueTo('100')
     SwapPage.getFromInput().should('not.have.value', undefined)

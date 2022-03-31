@@ -6,7 +6,7 @@ describe('Menu bar smoke tests', () => {
   before(() => {
     cy.visit('/')
   })
-  it('Should display nav items on every page [TC-16]', () => {
+  it('Should display nav items on every page', () => {
     MenuBar.checkHrefs()
     MenuBar.getRewards().click()
     MenuBar.checkHrefs()
@@ -15,7 +15,7 @@ describe('Menu bar smoke tests', () => {
     MenuBar.getLiquidity()
     MenuBar.checkHrefs()
   })
-  it('Charts and Votes should have href to dxstats and snapshot [TC-16]', () => {
+  it('Charts and Votes should have href to dxstats and snapshot', () => {
     MenuBar.getCharts()
       .should('have.attr', 'href')
       .and('include', 'dxstats.eth.link')
@@ -23,7 +23,7 @@ describe('Menu bar smoke tests', () => {
       .should('have.attr', 'href')
       .and('include', 'snapshot.org/#/swpr.eth')
   })
-  it('Should redirect to correct page after clicking on nav item [TC-16]', () => {
+  it('Should redirect to correct page after clicking on nav item', () => {
     MenuBar.getRewards()
       .click()
       .url()
@@ -41,7 +41,7 @@ describe('Menu bar smoke tests', () => {
       .url()
       .should('include', 'bridge')
   })
-  it('Should open network switcher with all networks [TC-17]', () => {
+  it('Should open network switcher with all networks', () => {
     MenuBar.getNetworkSwitcher().click()
     NetworkSwitcher.ethereum().should('be.visible')
     NetworkSwitcher.rinkeby().should('be.visible')
@@ -49,7 +49,7 @@ describe('Menu bar smoke tests', () => {
     NetworkSwitcher.gnosis().should('be.visible')
     NetworkSwitcher.arinkeby().should('be.visible')
   })
-  it('Should open settings dialog [TC-18]', () => {
+  it('Should open settings dialog', () => {
     MenuBar.getSettings().click()
     SettingsDialog.get().should('be.visible')
   })
