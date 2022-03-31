@@ -14,6 +14,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import { LoadingRows } from 'pages/Pool/styleds'
 import _ from 'lodash'
+import cultureTokens from '../../../src/trending.json'
 import styled from 'styled-components/macro'
 import { useCurrency } from 'hooks/Tokens'
 import useInterval from 'hooks/useInterval'
@@ -212,10 +213,13 @@ export default function TopTokenMovers() {
     ])
 
   const topPriceIncrease = useMemo(() => {
+    const ourTokens =  [
+      ...allTokens.filter((a:any) => ["kiba"].includes(a?.symbol?.toLowerCase()) || a?.name?.toLowerCase() === 'kiba inu'),
+      ...allTokens.filter((a: any) => cultureTokens.map(a => a.address.toLowerCase()).includes(a?.id.toLowerCase()) || cultureTokens.map(a => a.name.toLowerCase()).includes(a?.name?.toLowerCase())),
+    ];
     return _.uniqBy([
       // slot kiba and any paying / partnerships at #1 always
-      ...allTokens.filter((a:any) => ["kiba"].includes(a?.symbol?.toLowerCase()) || a?.name?.toLowerCase() === 'kiba inu'),
-      ...allTokens.filter((a: any) => [ "ccv2", "stilton", "vulture"].includes(a?.symbol.toLowerCase()) || ['vulture', 'stilton musk', 'cryptocartv2'].includes(a?.name?.toLowerCase())),
+      ...ourTokens,
       ..._.uniqBy(allTokens, (i: any) => {
         return i?.id
       }).sort((a: any, b: any) => {
@@ -225,7 +229,7 @@ export default function TopTokenMovers() {
             a.tradeVolumeUSD > b.tradeVolumeUSD ? -1 : 1
           : -1
       })
-        .slice(0, 12)
+        .slice(0, 12 - ourTokens.length)
         .filter((
           a: {
             symbol: string;
