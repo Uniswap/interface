@@ -49,6 +49,11 @@ type ErrorBoundaryState = {
 
 const IS_UNISWAP = window.location.hostname === 'app.uniswap.org'
 
+async function updateServiceWorker(): Promise<void> {
+  const ready = await navigator.serviceWorker.ready
+  await ready.update()
+}
+
 export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
   constructor(props: unknown) {
     super(props)
@@ -56,6 +61,13 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    updateServiceWorker()
+      .then(() => {
+        window.location.reload()
+      })
+      .catch((error) => {
+        console.error('Failed to update service worker', error)
+      })
     return { error }
   }
 
