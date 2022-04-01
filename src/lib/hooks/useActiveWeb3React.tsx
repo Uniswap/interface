@@ -7,7 +7,7 @@ import { Url } from '@web3-react/url'
 import { useAtom, WritableAtom } from 'jotai'
 import { atom } from 'jotai'
 import JsonRpcConnector from 'lib/utils/JsonRpcConnector'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 
 type Web3ContextType = {
   connector: Connector
@@ -73,7 +73,21 @@ export function ActiveWeb3Provider({
   const [connector, hooks] = injectedConnector[1].useIsActive() ? injectedConnector : urlConnector ?? EMPTY_CONNECTOR
 
   const library = hooks.useProvider()
-  const chainId = hooks.useChainId()
+
+  // TODO(zzmp): walletconnect returns chainId as a number, so web3-react incorrectly parses it as hex.
+  const [chainId, setChainId] = useState(hooks.useChainId())
+  useEffect(() => {
+    let stale = false
+    library?.getNetwork().then(({ chainId }) => {
+      if (!stale) {
+        setChainId(chainId)
+      }
+    })
+    return () => {
+      stale = true
+    }
+  }, [library])
+
   const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
   const active = hooks.useIsActive()
