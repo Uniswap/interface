@@ -160,7 +160,7 @@ export default function Updater(): null {
                     mixpanelHandler(MIXPANEL_TYPE.ADD_LIQUIDITY_COMPLETED, {
                       token_1: transaction.arbitrary.token_1,
                       token_2: transaction.arbitrary.token_2,
-                      amp: transaction.arbitrary.amp,
+                      add_liquidity_method: transaction.arbitrary.add_liquidity_method,
                     })
                     break
                   }
@@ -168,7 +168,7 @@ export default function Updater(): null {
                     mixpanelHandler(MIXPANEL_TYPE.REMOVE_LIQUIDITY_COMPLETED, {
                       token_1: transaction.arbitrary.token_1,
                       token_2: transaction.arbitrary.token_2,
-                      amp: transaction.arbitrary.amp,
+                      remove_liquidity_method: transaction.arbitrary.remove_liquidity_method,
                     })
                     break
                   }

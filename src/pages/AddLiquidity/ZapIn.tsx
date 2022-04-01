@@ -251,7 +251,7 @@ const ZapIn = ({
               arbitrary: {
                 token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
-                add_liquidity_method: '1 Token',
+                add_liquidity_method: 'single token',
               },
             })
             setTxHash(tx.hash)
