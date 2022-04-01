@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ColumnCenter } from 'components/Column'
+import Row from 'components/Row'
 import { HelpCircle } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 
@@ -10,23 +11,20 @@ const HelpCircleIcon = styled(HelpCircle)`
   width: 64px;
 `
 
-const Text = styled(ThemedText.Body1)`
-  text-align: center;
-`
-
 const Wrapper = styled(ColumnCenter)`
   height: 80%;
   justify-content: center;
 `
 
-function NoTokensAvailableOnNetwork() {
+export default function NoTokensAvailableOnNetwork() {
   return (
     <Wrapper>
-      <HelpCircleIcon />
-      <Text color="primary">
-        <Trans>No tokens are available on this network. Please switch to another network.</Trans>
-      </Text>
+      <Row>
+        <HelpCircleIcon />
+        <ThemedText.Body1 color="primary">
+          <Trans>No tokens are available on this network. Please switch to another network.</Trans>
+        </ThemedText.Body1>
+      </Row>
     </Wrapper>
   )
 }
-export default NoTokensAvailableOnNetwork

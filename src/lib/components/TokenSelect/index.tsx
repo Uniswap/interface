@@ -6,7 +6,6 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryCurrencies } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -14,7 +13,6 @@ import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
 import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
-import TokenBase from './TokenBase'
 import TokenButton from './TokenButton'
 import TokenOptions from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
@@ -46,24 +44,9 @@ interface TokenSelectDialogProps {
 }
 
 export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
-  const { chainId } = useActiveWeb3React()
-  const [previousChainId, setPreviousChainId] = useState(chainId)
-
   const [query, setQuery] = useState('')
   const queriedTokens = useQueryCurrencies(query)
   const tokens = useMemo(() => queriedTokens?.filter((token) => token !== value), [queriedTokens, value])
-
-  useEffect(() => {
-    setPreviousChainId(chainId)
-  }, [chainId])
-
-  useEffect(() => {
-    if (chainId && chainId !== previousChainId) {
-      setQuery('')
-    }
-  }, [chainId, previousChainId])
-
-  console.log(tokens)
 
   const isTokenListLoaded = useIsTokenListLoaded()
   const areBalancesLoaded = useAreBalancesLoaded()
@@ -81,24 +64,19 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
     [query, areBalancesLoaded, isTokenListLoaded]
   )
 
-  const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
-
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
-  const listHasMoreTokensThanJustNativeAsset = useMemo(() => {
-    if (tokens.length > 1) {
-      return true
-    }
-    return !tokens.find((token) => token.isNative)
-  }, [tokens])
+  const listHasTokens = useMemo(() => {
+    const filteredList = tokens.filter((token) => !token.isNative)
+    return filteredList.length > 0 && !query
+  }, [query, tokens])
 
-  return (
-    <>
-      <Header title={<Trans>Select a token</Trans>} />
-      {listHasMoreTokensThanJustNativeAsset || !isLoaded ? (
+  const Body = useCallback(() => {
+    if (listHasTokens || !isLoaded) {
+      return (
         <>
           <Column gap={0.75}>
             <Row pad={0.75} grow>
@@ -113,14 +91,6 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
                 />
               </ThemedText.Body1>
             </Row>
-
-            {Boolean(baseTokens.length) && (
-              <Row pad={0.75} gap={0.25} justify="flex-start" flex>
-                {baseTokens.map((token) => (
-                  <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
-                ))}
-              </Row>
-            )}
             <Rule padded />
           </Column>
           {isLoaded ? (
@@ -139,9 +109,15 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
             <TokenOptionsSkeleton />
           )}
         </>
-      ) : (
-        <NoTokensAvailableOnNetwork />
-      )}
+      )
+    }
+    return <NoTokensAvailableOnNetwork />
+  }, [isLoaded, listHasTokens, onSelect, options?.blur, options?.onKeyDown, query, tokens])
+
+  return (
+    <>
+      <Header title={<Trans>Select a token</Trans>} />
+      <Body />
     </>
   )
 }
