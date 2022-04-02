@@ -377,7 +377,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-      <NetworkAlert />
+    
       <AppBody style={{maxWidth: view === 'bridge' ? 690 : 480}}>
       <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
 
@@ -528,9 +528,9 @@ export default function Swap({ history }: RouteComponentProps) {
               </Row>
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              {tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && window.location.href.includes('swap') && <p style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
-              <Modal onDismiss={() => setShowChart(false)} isOpen={showChart && tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu'}>
-                {!cannotUseFeature && <ChartModal onDismiss={() => setShowChart(false)} isOpen={showChart && tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu'} />}
+              {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && window.location.href.includes('swap') && <p style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
+              <Modal onDismiss={() => setShowChart(false)} isOpen={showChart &&  !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'}>
+                {!cannotUseFeature && <ChartModal onDismiss={() => setShowChart(false)} isOpen={showChart &&  !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'} />}
                 {cannotUseFeature && <div style={{ padding: '3rem 6rem', display: 'flex', flexFlow: 'row wrap' }}>
                   <AlertOctagon /> You must hold Kiba Inu tokens to use this feature.
                 </div>}
@@ -717,6 +717,7 @@ export default function Swap({ history }: RouteComponentProps) {
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}
+
     </>
   )
 }

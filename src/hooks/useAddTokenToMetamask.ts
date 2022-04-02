@@ -25,7 +25,7 @@ export default function useAddTokenToMetamask(currencyToAdd: Currency | undefine
               address: token.address,
               symbol: token.symbol,
               decimals: token.decimals,
-              image: getTokenLogoURL(token.address),
+              image: token.symbol?.toUpperCase() === 'KIBA' ? 'https://assets.coingecko.com/coins/images/19525/large/2021-11-13-18-11-18-removebg-preview.png?1636989110':getTokenLogoURL(token.address),
             },
           },
         })

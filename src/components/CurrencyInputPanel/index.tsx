@@ -19,7 +19,11 @@ import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-
+import MetaMaskLogo from '../../assets/images/metamask.png'
+import Tooltip from 'components/Tooltip'
+import React from 'react'
+import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
+import Swal from 'sweetalert2'
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
@@ -28,7 +32,11 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
 `
-
+const StyledLogo = styled.img`
+  height: 16px;
+  width: 16px;
+  margin-left: 6px;
+`
 const FixedContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -198,6 +206,8 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
+  const { addToken, success } = useAddTokenToMetamask(currency as Currency | undefined)
+  const [showMetaTip, setShowMetaTip] = React.useState(false)
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
       {locked && (
@@ -247,9 +257,25 @@ export default function CurrencyInputPanel({
                 )}
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
+             
+
             </Aligner>
             
           </CurrencySelect>
+          {currency && <RowFixed>
+            <Tooltip placement={'top'}
+              show={showMetaTip} 
+              text={`Add ${currency?.name} (${currency?.symbol}) to Metamask`}>
+              <StyledLogo 
+                onClick={() => {
+                  addToken();
+                }}
+                style={{cursor:'pointer'}}
+                onMouseEnter={() => setShowMetaTip(true)} 
+                onMouseLeave={() => setShowMetaTip(false)} 
+                src={MetaMaskLogo} />
+            </Tooltip>
+          </RowFixed>}
           {!hideInput && (
             <>
               <NumericalInput
