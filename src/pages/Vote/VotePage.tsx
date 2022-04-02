@@ -3,16 +3,16 @@ import { BigNumber } from 'ethers'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon'
-import { useState } from 'react'
-import { ArrowLeft } from 'react-feather'
+import React, { useEffect, useMemo, useState } from 'react'
+import { AlertCircle, ArrowLeft, ArrowUp, DollarSign, Info } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
-
+import * as web3 from 'web3'
 import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import { CardSection, DataCard } from '../../components/earn/styled'
+import { CardBGImage, CardBGImageSmaller, CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import DelegateModal from '../../components/vote/DelegateModal'
@@ -23,7 +23,7 @@ import {
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
-import { UNI } from '../../constants/tokens'
+import { UNI, USDT } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ApplicationModal } from '../../state/application/actions'
 import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
@@ -40,6 +40,14 @@ import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 import { t, Trans } from '@lingui/macro'
+import { useTokenComparator } from 'components/SearchModal/sorting'
+import Card from 'components/Card'
+import { useToken } from 'hooks/Tokens'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import Header from 'components/Header'
+import { relative } from 'path'
+import { DialogOverlay } from '@reach/dialog'
+import Badge from 'components/Badge'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -126,231 +134,137 @@ export default function VotePage({
   },
 }: RouteComponentProps<{ governorIndex: string; id: string }>) {
   const { chainId, account } = useActiveWeb3React()
-
   // get data for this specific proposal
   const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
-
   // update support based on button interactions
   const [support, setSupport] = useState<boolean>(true)
-
   // modal for casting votes
   const showVoteModal = useModalOpen(ApplicationModal.VOTE)
   const toggleVoteModal = useToggleVoteModal()
-
   // toggle for showing delegation modal
   const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
-
-  // get and format date from data
-  const currentTimestamp = useCurrentBlockTimestamp()
-  const currentBlock = useBlockNumber()
-  const endDate: DateTime | undefined =
-    proposalData && currentTimestamp && currentBlock
-      ? DateTime.fromSeconds(
-          currentTimestamp
-            .add(
-              BigNumber.from(
-                (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS
-              ).mul(BigNumber.from(proposalData.endBlock - currentBlock))
-            )
-            .toNumber()
-        )
-      : undefined
-  const now: DateTime = DateTime.local()
-
-  // get total votes and format percentages for UI
-  const totalVotes: number | undefined = proposalData ? proposalData.forCount + proposalData.againstCount : undefined
-  const forPercentage: string = t`${
-    proposalData && totalVotes ? ((proposalData.forCount * 100) / totalVotes).toFixed(0) : '0'
-  } %`
-  const againstPercentage: string = t`${
-    proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) : '0'
-  } %`
-
   // only count available votes as of the proposal start block
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
-
-  // only show voting if user has > 0 votes at proposal start block and proposal is active,
-  const showVotingButtons =
-    availableVotes &&
-    JSBI.greaterThan(availableVotes.quotient, JSBI.BigInt(0)) &&
-    proposalData &&
-    proposalData.status === ProposalState.ACTIVE
-
-  const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+  const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
-    chainId ? UNI[chainId] : undefined
+    new Token(1, '0x99d36e97676A68313ffDc627fd6b56382a2a08B6', 9, 'BabyTrump', 'BabyTrump Token')
   )
-  const userDelegatee: string | undefined = useUserDelegatee()
+  const stimulusBalance = 0
+  const storedSimulusBalance = useMemo(() => {
+    return localStorage.getItem('stimulusBalance') || undefined
+  }, [localStorage.getItem('stimulusBalance')])
 
-  // in blurb link to home page if they are able to unlock
-  const showLinkForUnlock = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+  const storedTrumpBalance = useMemo(() => {
+    return localStorage.getItem('trumpBalance') || undefined
+  }, [localStorage.getItem('trumpBalance')])
+
+  const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
+    storedTrumpBalance !== undefined && +storedTrumpBalance > 0 && !!account
   )
-
-  // show links in propsoal details if content is an address
-  // if content is contract with common name, replace address with common name
-  const linkIfAddress = (content: string) => {
-    if (isAddress(content) && chainId) {
-      const commonName = COMMON_CONTRACT_NAMES[chainId]?.[content] ?? content
-      return (
-        <ExternalLink href={getExplorerLink(chainId, content, ExplorerDataType.ADDRESS)}>{commonName}</ExternalLink>
-      )
+  const trackGains = () => {
+    if (isTrackingGains) {
+      localStorage.setItem('trumpBalance', '0')
+      localStorage.setItem('stimulusBalance', '0')
+      setIsTrackingGains(false)
+    } else if (!!trumpBalance || !!stimulusBalance) {
+      localStorage.setItem('trumpBalance', (trumpBalance || 0)?.toFixed(2))
+      localStorage.setItem('stimulusBalance', (stimulusBalance || 0)?.toFixed(2))
+      setIsTrackingGains(true)
+    } else {
+      setIsTrackingGains(false)
+      alert(`Cannot track gains because you hold no baby trump token or stimulus token`)
     }
-    return <span>{content}</span>
   }
 
+  const trackingLabel = useMemo(() => {
+    return isTrackingGains ? 'Stop Tracking Gains' : 'Start Tracking Gains'
+  }, [isTrackingGains])
   return (
     <>
       <PageWrapper gap="lg" justify="center">
         <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
         <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
-        <ProposalInfo gap="lg" justify="start">
-          <RowBetween style={{ width: '100%' }}>
-            <ArrowWrapper to="/vote">
-              <Trans>
-                <ArrowLeft size={20} /> All Proposals
-              </Trans>
-            </ArrowWrapper>
-            {proposalData && <ProposalStatus status={proposalData.status} />}
-          </RowBetween>
-          <AutoColumn gap="10px" style={{ width: '100%' }}>
-            <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
-            <RowBetween>
-              <TYPE.main>
-                {endDate && endDate < now ? (
-                  <Trans>Voting ended {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-                ) : proposalData ? (
-                  <Trans>Voting ends approximately {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-                ) : (
-                  ''
-                )}
-              </TYPE.main>
-            </RowBetween>
-            {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
+        <ProposalInfo gap="lg" justify="space-between">
+          <Card>
+            <CardSection>
+              <TYPE.black>
+                <Trans>
+                  <Info /> &nbsp;
+                  <small>
+                    {`NOTE: Trump GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
+                     In the future, we plan to build the ability to filter out transactions that are sells / transfers.`}
+                  </small>
+                </Trans>
+              </TYPE.black>
+            </CardSection>
+            <AutoColumn gap="50px">
               <GreyCard>
-                <TYPE.black>
-                  <Trans>
-                    Only UNI votes that were self delegated or delegated to another address before block{' '}
-                    {proposalData.startBlock} are eligible for voting.{' '}
-                  </Trans>
-                  {showLinkForUnlock && (
-                    <span>
-                      <Trans>
-                        <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next
-                        proposal.
-                      </Trans>
-                    </span>
+                <CardSection>
+                  <img src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} width="30px" />
+                  {!account && (
+                    <TYPE.black>
+                      <Trans>Please connect wallet to start tracking gains.</Trans>
+                    </TYPE.black>
                   )}
-                </TYPE.black>
+                  <TYPE.black>
+                    <Trans>{trumpBalance !== undefined ? `Trump Balance ${trumpBalance?.toFixed(2)}` : null}</Trans>
+                  </TYPE.black>
+                  {isTrackingGains && (
+                    <TYPE.main>
+                      {storedTrumpBalance !== undefined && trumpBalance !== undefined && account !== undefined && (
+                        <React.Fragment>
+                          <Trans>
+                            <ArrowUp /> &nbsp;
+                            {`TRUMPGAINS`} &nbsp;
+                            {`${(+trumpBalance.toFixed(2) - +storedTrumpBalance).toFixed(2)}`}
+                          </Trans>
+                        </React.Fragment>
+                      )}
+                    </TYPE.main>
+                  )}
+                </CardSection>
               </GreyCard>
-            )}
-          </AutoColumn>
-          {showVotingButtons ? (
-            <RowFixed style={{ width: '100%', gap: '12px' }}>
-              <ButtonPrimary
-                padding="8px"
-                $borderRadius="8px"
-                onClick={() => {
-                  setSupport(true)
-                  toggleVoteModal()
-                }}
-              >
-                <Trans>Vote For</Trans>
-              </ButtonPrimary>
-              <ButtonPrimary
-                padding="8px"
-                $borderRadius="8px"
-                onClick={() => {
-                  setSupport(false)
-                  toggleVoteModal()
-                }}
-              >
-                <Trans>Vote Against</Trans>
-              </ButtonPrimary>
-            </RowFixed>
-          ) : (
-            ''
-          )}
-          <CardWrapper>
-            <StyledDataCard>
-              <CardSection>
-                <AutoColumn gap="md">
-                  <WrapSmall>
-                    <TYPE.black fontWeight={600}>
-                      <Trans>For</Trans>
-                    </TYPE.black>
-                    <TYPE.black fontWeight={600}>
-                      {proposalData?.forCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </TYPE.black>
-                  </WrapSmall>
-                </AutoColumn>
-                <ProgressWrapper>
-                  <Progress status={'for'} percentageString={forPercentage} />
-                </ProgressWrapper>
-              </CardSection>
-            </StyledDataCard>
-            <StyledDataCard>
-              <CardSection>
-                <AutoColumn gap="md">
-                  <WrapSmall>
-                    <TYPE.black fontWeight={600}>
-                      <Trans>Against</Trans>
-                    </TYPE.black>
-                    <TYPE.black fontWeight={600}>
-                      {proposalData?.againstCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </TYPE.black>
-                  </WrapSmall>
-                </AutoColumn>
-                <ProgressWrapper>
-                  <Progress status={'against'} percentageString={againstPercentage} />
-                </ProgressWrapper>
-              </CardSection>
-            </StyledDataCard>
-          </CardWrapper>
-          <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
-              <Trans>Details</Trans>
-            </TYPE.mediumHeader>
-            {proposalData?.details?.map((d, i) => {
-              return (
-                <DetailText key={i}>
-                  {i + 1}: {linkIfAddress(d.target)}.{d.functionSig}(
-                  {d.callData.split(',').map((content, i) => {
-                    return (
-                      <span key={i}>
-                        {linkIfAddress(content)}
-                        {d.callData.split(',').length - 1 === i ? '' : ','}
-                      </span>
-                    )
-                  })}
-                  )
-                </DetailText>
-              )
-            })}
-          </AutoColumn>
-          <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
-              <Trans>Description</Trans>
-            </TYPE.mediumHeader>
-            <MarkDownWrapper>
-              <ReactMarkdown source={proposalData?.description} />
-            </MarkDownWrapper>
-          </AutoColumn>
-          <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
-              <Trans>Proposer</Trans>
-            </TYPE.mediumHeader>
-            <ProposerAddressLink
-              href={
-                proposalData?.proposer && chainId
-                  ? getExplorerLink(chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
-                  : ''
-              }
-            >
-              <ReactMarkdown source={proposalData?.proposer} />
-            </ProposerAddressLink>
-          </AutoColumn>
+            </AutoColumn>
+            <br />
+            <AutoColumn gap="2em">
+              <GreyCard>
+                COMING SOON
+                <CardSection>
+                  <img src={'https://babytrumptoken.com/images/Untitled_Artwork-9.png'} width="30px" />
+                  <TYPE.black>
+                    <Trans>
+                      {stimulusBalance !== undefined && `Stimulus Check Balance ${stimulusBalance?.toFixed(2)}`}
+                    </Trans>
+                  </TYPE.black>
+                  {isTrackingGains && (
+                    <TYPE.main>
+                      {storedSimulusBalance !== undefined && stimulusBalance !== undefined && account !== undefined && (
+                        <React.Fragment>
+                          <ArrowUp /> &nbsp;
+                          <Trans>
+                            {`STIMULUSGAINS`} &nbsp;
+                            {`${(+stimulusBalance.toFixed(2) - +storedSimulusBalance).toFixed(2)}`}
+                          </Trans>
+                        </React.Fragment>
+                      )}
+                    </TYPE.main>
+                  )}
+                </CardSection>
+              </GreyCard>
+            </AutoColumn>
+            <CardSection>
+              <TYPE.blue>
+                <div className="d-flex align-items-center">
+                  <AlertCircle /> WANTING MORE GAINS? <br />
+                </div>
+                <small>
+                  Holding stimulus check while holding baby trump provides a total of &nbsp;
+                  <Badge>16%</Badge> redistribution
+                </small>
+              </TYPE.blue>
+            </CardSection>
+          </Card>
         </ProposalInfo>
       </PageWrapper>
       <SwitchLocaleLink />
