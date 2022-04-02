@@ -34,6 +34,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
+  background:radial-gradient(#eb5b2c,rgba(129,3,3,.95));
 
   h5 {
     margin: 0;
@@ -50,6 +51,8 @@ const UpperSection = styled.div`
     margin-top: 0;
     font-weight: 500;
   }
+
+
 `
 
 const InfoCard = styled.div`
@@ -318,7 +321,7 @@ export default function AccountDetails({
                     </WalletAction>
                   )}
                   <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400 }}
+                    style={{ fontSize: '.825rem', color:"#FFF", fontWeight: 400 }}
                     onClick={() => {
                       openOptions()
                     }}

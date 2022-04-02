@@ -124,6 +124,13 @@ export const WETH9_EXTENDED: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether'
   ),
+  [SupportedChainId.BINANCE]: new Token(
+    SupportedChainId.BINANCE,
+    '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
+    18,
+    'BETH',
+    'Binance Pegged Ethereum'
+  ),
   [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
     SupportedChainId.OPTIMISTIC_KOVAN,
     '0x4200000000000000000000000000000000000006',
