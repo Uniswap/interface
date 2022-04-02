@@ -21,7 +21,7 @@ import { useActiveWeb3React } from "../../hooks/web3";
 import { useTokenBalance } from "../../state/wallet/hooks";
 import { ExternalLink, StyledInternalLink, TYPE } from "../../theme";
 import { Trans } from "@lingui/macro";
-import Badge from "components/Badge";
+import Badge, { BadgeVariant } from "components/Badge";
 import moment from "moment";
 import Web3 from "web3";
 import { routerAbi, routerAddress, pancakeAbi, pancakeAddress } from "./routerAbi";
@@ -30,6 +30,7 @@ import { useDarkModeManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { SupportedChainId } from "constants/chains";
 import { useBinanceTokenBalance } from "utils/binance.utils";
+import { useTotalKibaGains } from '../../state/logs/utils'
 import { binanceTokens } from "utils/binance.tokens";
 import { useUserTransactions } from "state/logs/utils";
 import { Transactions } from "./TransactionsPage";
@@ -267,6 +268,31 @@ export default function VotePage() {
   const [trumpGainsUSD, setTrumpGainsUSD] = React.useState("-");
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
 
+  const allTimeGains = useTotalKibaGains(account)
+  const [allTimeGainsUsd, setAllTimeGainsUsd] = React.useState('-');
+
+  useEffect(() => {
+    if (allTimeGains.totalGained && chainId && chainId === 1) {
+      const provider = window.ethereum ? window.ethereum : walletconnect
+      const w3 = new Web3(provider as any).eth;
+      const routerContr = new w3.Contract(routerABI as any, routerADD);
+      const ten9 = 10 ** 9;
+      const amount = +allTimeGains.totalGained.toFixed(0) * ten9;
+      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+        kibaCoin.address,
+        isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
+        isBinance ? binanceTokens.busd.address : USDC.address, 
+      ]);
+      amountsOut.call().then((response: any) => {
+        const usdc = response[response.length - 1];
+        const ten6 = 10 ** 6;
+        let usdcValue = usdc / ten6;
+        if (isBinance) usdcValue = usdcValue / 10 ** 12;
+        const number = Number(usdcValue.toFixed(2));
+        setAllTimeGainsUsd(number.toLocaleString());
+      });
+    }
+  }, [allTimeGains, chainId])
 
   useEffect(() => {
     try {
@@ -366,20 +392,23 @@ const [darkMode] = useDarkModeManager()
                   )}
               
                   <div style={{ display:'flex', flexFlow:'column wrap', alignItems: "center" }}>
-                 
-                    <div style={{display:'block', width:'100%'}}>
+
+                    <div style={{ alignItems: 'center', display:'flex', justifyContent:'space-between', width:'100%'}}>
                     <TYPE.white>
+                
                       <Trans>
                         {kibaBalance !== undefined 
                         && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0 )
-                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} (${(kibaBalanceUSD)} USD) </span></div>
+                          ? <div style={{alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.DEFAULT}>(${(kibaBalanceUSD)} USD) </Badge></span></div>
                           : null}
                       </Trans>
+                
                     </TYPE.white>
                       </div>
-                      <div style={{display:'block', width:'100%', marginTop:15}}>
+                      <div style={{display:'block', width:'100%'}}>
 
                       {isTrackingGains === true && (
+                        <>
                       <GainsText  className="d-flex">
                         {storedKibaBalance !== undefined &&
                           kibaBalance !== undefined &&
@@ -406,15 +435,21 @@ const [darkMode] = useDarkModeManager()
                             </React.Fragment>
                           )}
                       </GainsText>
+  
+                      </>
                     )}
                       </div>
 
                   </div>
                 </div>
-                
+               
             </AutoColumn>
+
+            {!!allTimeGainsUsd && allTimeGainsUsd !== '-' &&<AutoColumn gap="50px" style={{marginTop:10}}>
+    <div style={{ alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight: 10}}>Lifetime Reflections</GainsText> <span style={{fontSize:18}}>{Number(allTimeGains.totalGained?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.DEFAULT} style={{color:"#FFF", fontSize:18}}> (${(allTimeGainsUsd)} USD) </Badge></span></div>
+</AutoColumn>}
             { !!kibaBalance && +kibaBalance?.toFixed(0) > 0 &&
-            <AutoColumn gap="50px">
+            <AutoColumn gap="50px" >
               <ButtonLight style={{background: darkMode ? '#fff ' : 'inherit', color: darkMode ? '#222' : '#fff', marginTop:15}} onClick={trackGains}>
                 {isTrackingGains && <Trans>Stop Tracking</Trans>}
                 {!isTrackingGains&& <Trans>Start Tracking</Trans>}
@@ -423,6 +458,7 @@ const [darkMode] = useDarkModeManager()
 }
             <br/>
             <small style={{marginTop:2, marginBottom:2}}>When switching networks, you need to restart tracking (stop and start tracking again).</small>
+         
           </ProposalInfo>
       </PageWrapper>
       <SwitchLocaleLink />
