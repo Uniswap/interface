@@ -61,7 +61,7 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
     const rest: Token[] = []
     const kibaCoin = new Token(
       1,
-      "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
+      "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
       9,
       "Kiba",
       "Kiba Inu"
