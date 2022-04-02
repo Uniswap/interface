@@ -1,8 +1,9 @@
 import { AlertOctagon, ArrowDown, ArrowLeft, CheckCircle, ChevronRight, HelpCircle, Info } from 'react-feather'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { DarkGreyCard, GreyCard } from '../../components/Card'
 import { ExternalLink, ExternalLinkIcon, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
 import { Flex, Text } from 'rebass'
@@ -19,7 +20,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
@@ -27,7 +28,6 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import AppBody from '../AppBody'
 import { AutoColumn } from '../../components/Column'
-import Badge from 'components/Badge'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { ChartModal } from 'components/swap/ChartModal'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -55,6 +55,7 @@ import { V3TradeState } from '../../hooks/useBestV3Trade'
 import { borderRadius } from 'polished'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
+import { getTokenTaxes } from 'pages/HoneyUtils'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import logo from '../../assets/images/download.png'
@@ -70,6 +71,7 @@ import { useTokenData } from 'state/logs/utils'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { warningSeverity } from '../../utils/prices'
+
 export const CardWrapper = styled(ExternalLink)`
   min-width: 190px;
   width:100%;
@@ -109,7 +111,7 @@ export const ScrollableRow = styled.div`
 
 export default function Swap({ history }: RouteComponentProps) {
   const params = useParams<{ tokenAddress?: string }>()
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const isBinance = React.useMemo(() => chainId === 56, [chainId]);
   const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
   const binanceSwapURL = React.useMemo(() => isBinance ? `https://kibaswapbsc.app/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
@@ -167,6 +169,7 @@ export default function Swap({ history }: RouteComponentProps) {
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
+  const [useAutoSlippage,] = useSetAutoSlippage()
 
   const parsedAmounts = useMemo(
     () =>
@@ -181,6 +184,36 @@ export default function Swap({ history }: RouteComponentProps) {
         },
     [independentField, parsedAmount, showWrap, trade]
   )
+  const [automaticCalculatedSlippage, setAutomaticCalculatedSlippage] = React.useState(0) 
+  const setSlippage = useSetUserSlippageTolerance()
+  React.useEffect(() => {
+    const test = async () => {
+    if (parsedAmounts.INPUT && parsedAmounts.INPUT?.currency &&  
+        parsedAmounts.OUTPUT && 
+        useAutoSlippage && 
+        parsedAmounts.OUTPUT?.currency && 
+        library?.provider) {
+        const address = !parsedAmounts?.OUTPUT?.currency?.isNative ? 
+                      ((parsedAmounts.OUTPUT.currency as any).address ? (parsedAmounts?.OUTPUT?.currency as any).address : (parsedAmounts.OUTPUT.currency.wrapped).address) as string
+                       : !parsedAmounts?.INPUT?.currency?.isNative ? 
+                       ((parsedAmounts?.INPUT?.currency as any).address ? (parsedAmounts?.INPUT?.currency as any).address : (parsedAmounts.INPUT.currency.wrapped).address) as string : 
+                       ''
+console.log(address)
+                  getTokenTaxes(address, library?.provider).then((taxes) => {
+          const value:number | null = parsedAmounts?.INPUT?.currency.isNative ? 
+          ((taxes?.buy ?? 0) + 1) : parsedAmounts?.OUTPUT?.currency.isNative ? 
+          taxes.sell : 0;
+const parsed = Math.floor(Number.parseFloat((value ?? '0').toString()) * 100)
+console.log(parsed)
+
+setSlippage(new Percent(parsed, 10_000))
+setAutomaticCalculatedSlippage(value as number)
+
+        })
+    }
+  }
+  test()
+  }, [parsedAmounts.OUTPUT, parsedAmounts.INPUT, library, useAutoSlippage])
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
   const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
@@ -425,10 +458,12 @@ export default function Swap({ history }: RouteComponentProps) {
 
       <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
         <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
-
+    
         {!isBinance && (
           <>
+         
             {view === 'swap' && <Wrapper id="swap-page">
+         
               <ConfirmSwapModal
                 isOpen={showConfirm}
                 trade={trade}
@@ -444,6 +479,8 @@ export default function Swap({ history }: RouteComponentProps) {
               />
 
               <AutoColumn gap={'xs'}>
+              {useAutoSlippage && automaticCalculatedSlippage > 0 && <Badge  variant={BadgeVariant.DEFAULT}>
+          Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
                 <div style={{ display: 'relative' }}>
                   <CurrencyInputPanel
                     label={
@@ -593,7 +630,6 @@ export default function Swap({ history }: RouteComponentProps) {
                     </div>}
                   </Modal>
                   {[currencies[Field.OUTPUT], currencies[Field.INPUT]].some(curr => curr?.name === 'Kiba Inu') && <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <ShowSellTaxComponent />
                   </div>}
                 </div>
 
@@ -761,7 +797,7 @@ export default function Swap({ history }: RouteComponentProps) {
         {view === 'bridge' && (
           <Wrapper id="bridgepage">
             <AutoColumn>
-              <iframe style={{ maxWidth: 750, width: '100%', height: 520, border: '1px solid #7b3744', borderRadius: 30 }} src="https://kiba-inu-bridge.netlify.app/"></iframe>
+              <iframe style={{ maxWidth: 750, width: '100%', height: 520, border: '1px solid #7b3744', borderRadius: 30 }} src="https://kiba-inu-bridgev2.netlify.app/"></iframe>
             </AutoColumn>
           </Wrapper>
         )}
