@@ -37,19 +37,21 @@ export default function CurrencyLogo({
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const {chainId} = useWeb3React()
   const srcs: string[] = useMemo(() => {
+    console.log(currency)
     if (!currency || currency.isNative) return []
 
     if (currency.isToken || (currency as any)?.id) {
       let tokenAdd = currency?.address
       if((currency as any)?.id && !currency?.address) tokenAdd = (currency as any)?.id
-      const defaultUrls = chainId === 1 ? [getTokenLogoURL(tokenAdd)] : chainId === 56 ? [`https://pancakeswap.finance/images/tokens/${tokenAdd}.png`] : []
+      const defaultURL = [getTokenLogoURL(tokenAdd)] ;
+      const defaultUrls = chainId === 56 ? [`https://pancakeswap.finance/images/tokens/${tokenAdd}.png`] : defaultURL
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, ...defaultUrls]
       }
       return defaultUrls
     }
     return []
-  }, [currency, uriLocations])
+  }, [currency, chainId, uriLocations])
 
   if (currency?.isNative) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />

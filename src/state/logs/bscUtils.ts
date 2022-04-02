@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import moment from 'moment'
 import React, { useCallback, useDebugValue } from 'react'
 import { subDays, subWeeks, startOfMinute } from 'date-fns'
-import { bscClient, BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, get2DayPercentChange, getPercentChange, TOKEN_DATA } from './utils'
+import { bscClient, BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, get2DayPercentChange, getBlockFromTimestamp, getPercentChange, TOKEN_DATA } from './utils'
 import { isEqual } from 'lodash'
 import useInterval from 'hooks/useInterval'
 import { useWeb3React } from '@web3-react/core';
@@ -185,7 +185,7 @@ const fetchBnbPrices = async (
   blockWeek: { number: number, timestamp: string },
 ): Promise<{ bnbPrices: BnbPrices | undefined; error: boolean }> => {
   try {
-    const data = await request<PricesResponse>(INFO_CLIENT, BNB_PRICES, { 
+    const data = await request<PricesResponse>(INFO_CLIENT, BNB_PRICES, {
       "block24": block24.number,
       "block48": block48.number,
       "blockWeek": blockWeek.number,
@@ -222,7 +222,7 @@ export const getDeltaTimestamps = (): [number, number, number, number] => {
 export const BLOCKS_CLIENT = 'https://api.thegraph.com/subgraphs/name/pancakeswap/blocks'
 
 const getBlockSubqueries = (timestamps: number[]) =>
-  timestamps.map((timestamp) => {
+  timestamps?.map((timestamp) => {
     return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${timestamp + 600
       } }) {
       number
@@ -334,16 +334,30 @@ export const useBlocksFromTimestamps = (
 
   const timestampsString = JSON.stringify(timestamps)
   const blocksString = blocks ? JSON.stringify(blocks) : undefined
+  const { chainId } = useWeb3React()
+
+
+  React.useEffect (() => {
+    // refetch blocks on network switch
+    setBlocks(undefined)
+  }, [chainId])
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const timestampsArray = JSON.parse(timestampsString)
-      const result = await getBlocksFromTimestamps(timestampsArray, sortDirection, skipCount)
-
-      if (result.length === 0) {
-        setError(true)
-      } else {
-        setBlocks(result)
+        if (!blocks?.length) {
+        const timestampsArray = JSON.parse(timestampsString)
+        if (chainId === 1 || !chainId) {
+          const result1 = await getBlockFromTimestamp(timestampsArray[0])
+          const result2 = await getBlockFromTimestamp(timestampsArray[1]);
+          setBlocks([result1, result2])
+        } else if (chainId === 56) {
+          const result = await getBlocksFromTimestamps(timestampsArray, sortDirection, skipCount)
+          if (result.length === 0) {
+            setError(true)
+          } else {
+            setBlocks(result)
+          }
+        }
       }
     }
     const blocksArray = blocksString ? JSON.parse(blocksString) : undefined
@@ -368,14 +382,14 @@ export const useBnbPrices = (): BnbPrices | undefined => {
   const [block24h, block48h, block7d, block14d] = blocks ?? []
   const fetchData = React.useCallback(async () => {
     try {
-    //await axios.get('https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
-    if (block24h && block48h && block7d) {
-    const data = await fetchBnbPrices(block24h, block48h, block7d);
-    setPrices(data.bnbPrices);
+      //await axios.get('https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
+      if (block24h && block48h && block7d) {
+        const data = await fetchBnbPrices(block24h, block48h, block7d);
+        setPrices(data.bnbPrices);
+      }
+    } catch (er) {
+      console.error(er);
     }
-  } catch (er) {
-    console.error(er);
-  }
   }, [prices, block24h, block7d, block48h])
   useInterval(fetchData, 60000, true)
   return prices
@@ -421,6 +435,7 @@ export const useBscTokenData = (addy: any, price: any, price1: any) => {
 }
 
 export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: any) => {
+
   const address = addy?.toLowerCase()
   const utcCurrentTime = moment().utc()
   const [isPolling, setIsPolling] = React.useState(false)
@@ -445,6 +460,7 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
   if (chainId && chainId !== 56) {
     queryOne.stopPolling();
     setIsPolling(false)
+    return undefined;
   } else if (chainId &&
     chainId === 56 &&
     !isPolling &&
@@ -454,6 +470,7 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
     setIsPolling(true)
     queryOne.startPolling(15000)
   }
+
 
   const data = one?.tokens[0];
   if (data) data.id = 1;
@@ -497,8 +514,8 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
       const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedBNB
 
       // set data
-      data.txCount = +data.totalTransactions
-      data.priceUSD = (((+data?.derivedBNB) * (+ethPrice)))
+      data.txCount = +data?.totalTransactions
+      data.priceUSD = (((+data?.derivedBNB) * +(ethPrice ? ethPrice : 0)))
       data.totalLiquidityUSD = currentLiquidityUSD
       data.oneDayVolumeUSD = oneDayVolumeUSD
       data.volumeChangeUSD = volumeChangeUSD
@@ -522,57 +539,67 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
   } catch (e) {
     console.error(e)
   }
+  if (!data.priceUSD) data.priceUSD = data.derivedUSD
   return data
 }
 
 
-export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld: any) => {
+export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, blockOne?: number, blockTwo?: number) => {
   const address = addy?.toLowerCase()
   const utcCurrentTime = moment().utc()
 
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(2, 'days').unix()
-
-  const QUERY_ONE = BSC_TOKEN_DATA(address)
+  const [t24h, t48h, t7d, t14d] = getDeltaTimestamps()
+  let blocks: any[] = [];
+  if (blockOne && blockTwo) {
+    blocks = [{ number: blockOne }, { number: blockTwo }]
+  } else {
+    blocks = await getBlocksFromTimestamps([t24h, t48h]);
+  }
+  const QUERY = BSC_TOKEN_DATA(address)
+  const QUERY_ONE = BSC_TOKEN_DATA_BY_BLOCK_ONE(address, blocks[0].number)
+  const QUERY_TWO = BSC_TOKEN_DATA_BY_BLOCK_TWO(address, blocks[1].number)
 
   // initialize data arrays
-  const queryOne = await request(INFO_CLIENT, QUERY_ONE)
+  const queryOne = await request(INFO_CLIENT, QUERY)
+  const queryTwo = await request(INFO_CLIENT, QUERY_ONE)
+  const queryThree = await request(INFO_CLIENT, QUERY_TWO)
 
-  const one = queryOne.data
-  const data = one?.tokens[0];
-
-
+  const data = queryOne?.tokens[0]
+  const oneDayData = queryTwo?.tokens[0];
+  const twoDayData = queryThree?.tokens[0];
   try {
     if (data
     ) {
       // calculate percentage changes and daily changes
       const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
         +data?.tradeVolumeUSD ?? 0,
-        0,
-        0
+        +oneDayData?.tradeVolumeUSD ?? 0,
+        +twoDayData?.tradeVolumeUSD ?? 0
       )
 
       // calculate percentage changes and daily changes
       const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
         +data?.untrackedVolumeUSD,
-        0,
-        0
+        +oneDayData?.untrackedVolumeUSD ?? 0,
+        +twoDayData?.untrackedVolumeUSD ?? 0
       )
 
       // calculate percentage changes and daily changes
       const [oneDayTxns, txnChange] = get2DayPercentChange(
         +data?.totalTransactions,
-        0,
-        0
+        +oneDayData?.totalTransactions ?? 0,
+        +twoDayData?.totalTransactions ?? 0
       )
 
       const priceChangeUSD = getPercentChange(
         +data?.derivedBNB * (+ethPrice),
-        0
+        +oneDayData?.derivedBNB * (+ethPrice)
       )
 
       const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedBNB
-      const oldLiquidityUSD = 0
+      const oldLiquidityUSD = oneDayData?.totalLiquidity * +ethPrice * +data?.derivedBNB
 
       // set data
       data.txCount = +data.totalTransactions
@@ -587,12 +614,12 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
       data.liquidityChangeUSD = liquidityChangeUSD
       data.oneDayTxns = oneDayTxns
       data.txnChange = txnChange
-      data.oneDayData = undefined
-      data.twoDayData = undefined
+      data.oneDayData = oneDayData
+      data.twoDayData = twoDayData
       data.isBSC = true;
       // new tokens
       if (data) {
-        data.oneDayVolumeUSD = data?.tradeVolumeUSD
+        data.oneDayVolumeUSD = data?.tradeVolumeUSD / 100
         data.oneDayVolumeETH = +data?.tradeVolume * +data?.derivedBNB
         data.oneDayTxns = data?.totalTransactions
       }
@@ -600,7 +627,8 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
   } catch (e) {
     console.error(e)
   }
-  return data
+  console.log(data)
+  return data;
 }
 
 
@@ -650,12 +678,10 @@ interface TransactionResults {
 
 const fetchTokenTransactions = async (address: string): Promise<{ data?: any; error: boolean }> => {
   try {
-    console.log("Fetching token transactions")
 
     const data = await request<TransactionResults>(INFO_CLIENT, TOKEN_TRANSACTIONS, {
       address
     }).catch(console.error)
-    console.log("Got token transactions")
 
     return { data, error: false }
   } catch (error) {
@@ -676,19 +702,18 @@ export function useBscTokenTransactions(tokenAddress: string, interval: null | n
     pollInterval: 5000
   })
   if (chainId && chainId !== 56) query.stopPolling();
-  return React.useMemo(() => ({ data: query.data, lastFetched: new Date(), loading:query.loading }), [query]);
+  return React.useMemo(() => ({ data: query.data, lastFetched: new Date(), loading: query.loading }), [query]);
 }
 
 export function useBscPoocoinTransactions() {
   const [data, setData] = React.useState<any[]>()
   const { chainId } = useActiveWeb3React()
   const fn = React.useCallback(async () => {
-      if (chainId && chainId === 56) {
-        console.log("fetching...")
-        fetch('https://stg-api.unmarshal.io/v2/bsc/address/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
-          .then(response => response.json())
-          .then(setData)
-      }
+    if (chainId && chainId === 56) {
+      fetch('https://stg-api.unmarshal.io/v2/bsc/address/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
+        .then(response => response.json())
+        .then(setData)
+    }
   }, [chainId])
 
   useInterval(fn, 15000, true);
@@ -744,7 +769,7 @@ const BSC_POOL_TRANSACTIONS = gql`
     burns(first: 5, orderBy: timestamp, orderDirection: desc, where: { pair_in: $address }) {
       id
       timestamp
-      pair {
+      pair {a
         token0 {
           id
           symbol

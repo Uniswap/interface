@@ -107,7 +107,6 @@ export const getTaxesForBscToken = async (address: string, provider: any): Promi
           if (+sellGasUsed > 1500000) {
             warnings.push("Selling costs a lot of gas.");
           }
-          console.log(buyTax, sellTax);
           let maxDiv = '';
           if (maxTXAmount !== 0 || maxSell !== 0) {
             let n = 'Max TX';
