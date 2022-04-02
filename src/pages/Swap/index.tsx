@@ -184,7 +184,7 @@ export default function Swap({ history }: RouteComponentProps) {
         },
     [independentField, parsedAmount, showWrap, trade]
   )
-  const [automaticCalculatedSlippage, setAutomaticCalculatedSlippage] = React.useState(0) 
+  const [automaticCalculatedSlippage, setAutomaticCalculatedSlippage] = React.useState(-1) 
   const setSlippage = useSetUserSlippageTolerance()
   React.useEffect(() => {
     const test = async () => {
@@ -479,7 +479,7 @@ setAutomaticCalculatedSlippage(value as number)
               />
 
               <AutoColumn gap={'xs'}>
-              {useAutoSlippage && automaticCalculatedSlippage > 0 && <Badge  variant={BadgeVariant.DEFAULT}>
+              {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge  variant={BadgeVariant.DEFAULT}>
           Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
                 <div style={{ display: 'relative' }}>
                   <CurrencyInputPanel
