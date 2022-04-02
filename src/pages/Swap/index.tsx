@@ -389,9 +389,9 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const floozUrl = React.useMemo(() => {
-    let retVal = 'https://www.flooz.trade/embedded/0x4b2c54b80b77580dc02a0f6734d3bad733f50900/?backgroundColor=transparent&refId=I56v2c&chainId=1'
+    let retVal = 'https://www.flooz.trade/embedded/0x005D1123878Fc55fbd56b54C73963b234a64af3c/?backgroundColor=transparent&refId=I56v2c&chainId=1'
     if (chainId === 56) {
-      retVal = 'https://www.flooz.trade/embedded/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/?backgroundColor=transparent&refId=I56v2c'
+      retVal = 'https://www.flooz.trade/embedded/0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5/?backgroundColor=transparent&refId=I56v2c'
     } 
     return retVal;
   },[chainId])
@@ -637,19 +637,19 @@ export default function Swap({ history }: RouteComponentProps) {
                         <ButtonConfirmed
                           style={{ marginTop: 15 }}
                           onClick={handleApprove}
+                          width="100%"
                           disabled={
                             approvalState !== ApprovalState.NOT_APPROVED ||
                             approvalSubmitted ||
                             signatureState === UseERC20PermitState.SIGNED
                           }
-                          width="100%"
                           altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
                           confirmed={
                             approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                           }
                         >
                           <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ display: 'flex-grow:1', alignItems: 'center' }}>
                               <CurrencyLogo
                                 currency={currencies[Field.INPUT]}
                                 size={'20px'}
@@ -659,7 +659,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
                                 <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
                               ) : (
-                                <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                                <Trans>Enable {currencies[Field.INPUT]?.symbol}</Trans>
                               )}
                             </span>
                             {approvalState === ApprovalState.PENDING ? (
@@ -773,7 +773,7 @@ export default function Swap({ history }: RouteComponentProps) {
           <Wrapper>
             <LimitOrders />
           </Wrapper>}
-        {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={binanceSwapURL} />}
+        {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 800, width: '100%' }} src={binanceSwapURL} />}
       </AppBody>
 
       
