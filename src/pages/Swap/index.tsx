@@ -63,6 +63,7 @@ import { useTokenData } from 'state/logs/utils'
 import Modal from 'components/Modal'
 import { useKiba } from 'pages/Vote/VotePage'
 import { ChartModal } from 'components/swap/ChartModal'
+import { LimitOrders } from 'state/transactions/hooks'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -360,7 +361,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
   const [view, setView] = React.useState<'bridge' | 'swap' |
-    'honey'
+    'limit'
   >('swap')
   const StyledDiv = styled.div`
   font-family: 'Bangers', cursive;
@@ -707,7 +708,10 @@ export default function Swap({ history }: RouteComponentProps) {
             </AutoColumn>
           </Wrapper>
         )}
-      {!!isBinance && view === 'swap' && <iframe style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width:475}} src="https://pancakeswap.finance/swap?outputCurrency=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341" />}
+        {view === 'limit' && <Wrapper>
+          <AutoColumn>
+            <LimitOrders /></AutoColumn></Wrapper>}
+      {!!isBinance && view === 'swap' && <iframe style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src="https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341" />}
       </AppBody>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (

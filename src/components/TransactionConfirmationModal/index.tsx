@@ -191,7 +191,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
           <Text
             fontWeight={500}
             fontSize={16}
-            color={theme.red1}
+            color={theme.white}
             style={{ textAlign: 'center', width: '85%', wordBreak: 'break-word' }}
           >
             {message}

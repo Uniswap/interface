@@ -13,6 +13,8 @@ import { Interface } from '@ethersproject/abi'
 import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
 import { SupportedChainId } from 'constants/chains'
+import bep20abi from '../../utils/bep20abi.json'
+import React from 'react'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
@@ -71,8 +73,8 @@ export function useTokenBalancesWithLoadingIndicator(
   const { chainId } = useActiveWeb3React()
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
-  const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
-  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20Interface, 'balanceOf', [address], {
+  const ERC20Interface = React.useMemo(() => new Interface(chainId === 56 ? bep20abi : ERC20ABI) as Erc20Interface, [chainId])
+  const balances = useMultipleContractSingleData(validatedTokenAddresses,  ERC20Interface, 'balanceOf', [address], {
     gasRequired: (chainId && TOKEN_BALANCE_GAS_OVERRIDE[chainId]) ?? 100_000,
   })
 
