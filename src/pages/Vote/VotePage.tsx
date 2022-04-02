@@ -221,58 +221,65 @@ export default function VotePage({
               )}
             </CardSection>
             <AutoColumn gap="50px">
-              <GreyCard>
-                <CardSection>
-                  <img src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} width="30px" />
+              <GreyCard justifyContent="center">
+                <div style={{ display: 'flex', flexFlow: 'row wrap' }}>
                   {!account && (
                     <TYPE.black>
                       <Trans>Please connect wallet to start tracking gains.</Trans>
                     </TYPE.black>
                   )}
-                  <TYPE.black>
-                    <Trans>{trumpBalance !== undefined ? `Trump Balance ${trumpBalance?.toFixed(2)}` : null}</Trans>
-                  </TYPE.black>
-                  {isTrackingGains && (
-                    <TYPE.main>
-                      {storedTrumpBalance !== undefined && trumpBalance !== undefined && account !== undefined && (
-                        <React.Fragment>
-                          <Trans>
-                            <ArrowUp /> &nbsp;
-                            {`TRUMPGAINS`} &nbsp;
-                            {`${(+trumpBalance.toFixed(2) - +storedTrumpBalance).toFixed(2)}`}
-                          </Trans>
-                        </React.Fragment>
-                      )}
-                    </TYPE.main>
-                  )}
-                </CardSection>
+                  <img src={'https://babytrumptoken.com/images/Trump_Open_Eyes.png'} width="100px" />
+                  <div style={{ marginTop: 40, alignItems: 'baseline' }}>
+                    <TYPE.black className="d-flex">
+                      <Trans>{trumpBalance !== undefined ? `Trump Balance ${trumpBalance?.toFixed(2)}` : null}</Trans>
+                    </TYPE.black>
+                    {isTrackingGains && (
+                      <TYPE.main className="d-flex">
+                        {storedTrumpBalance !== undefined && trumpBalance !== undefined && account !== undefined && (
+                          <React.Fragment>
+                            <Trans>
+                              <ArrowUp /> &nbsp;
+                              {`TRUMPGAINS`} &nbsp;
+                              {`${(+trumpBalance.toFixed(2) - +storedTrumpBalance).toFixed(2)}`}
+                            </Trans>
+                            <br />
+                          </React.Fragment>
+                        )}
+                      </TYPE.main>
+                    )}
+                  </div>
+                </div>
               </GreyCard>
             </AutoColumn>
             <br />
             <AutoColumn gap="2em">
               <GreyCard>
-                COMING SOON
-                <CardSection>
-                  <img src={'https://babytrumptoken.com/images/Untitled_Artwork-9.png'} width="30px" />
-                  <TYPE.black>
-                    <Trans>
-                      {stimulusBalance !== undefined && `Stimulus Check Balance ${stimulusBalance?.toFixed(2)}`}
-                    </Trans>
-                  </TYPE.black>
-                  {isTrackingGains && (
-                    <TYPE.main>
-                      {storedSimulusBalance !== undefined && stimulusBalance !== undefined && account !== undefined && (
-                        <React.Fragment>
-                          <ArrowUp /> &nbsp;
-                          <Trans>
-                            {`STIMULUSGAINS`} &nbsp;
-                            {`${(+stimulusBalance.toFixed(2) - +storedSimulusBalance).toFixed(2)}`}
-                          </Trans>
-                        </React.Fragment>
-                      )}
-                    </TYPE.main>
-                  )}
-                </CardSection>
+                <Badge>COMING SOON</Badge>
+                <div style={{ display: 'flex', flexFlow: 'row wrap' }}>
+                  <div>
+                    <img src={'https://babytrumptoken.com/images/Untitled_Artwork-9.png'} width="100px" />
+                  </div>
+                  <CardSection style={{ marginTop: 40, alignItems: 'center' }}>
+                    <TYPE.black>
+                      <Trans>
+                        {stimulusBalance !== undefined && `Stimulus Check Balance ${stimulusBalance?.toFixed(2)}`}
+                      </Trans>
+                    </TYPE.black>
+                    {isTrackingGains && (
+                      <TYPE.main>
+                        {storedSimulusBalance !== undefined && stimulusBalance !== undefined && account !== undefined && (
+                          <React.Fragment>
+                            <ArrowUp /> &nbsp;
+                            <Trans>
+                              {`STIMULUSGAINS`} &nbsp;
+                              {`${(+stimulusBalance.toFixed(2) - +storedSimulusBalance).toFixed(2)}`}
+                            </Trans>
+                          </React.Fragment>
+                        )}
+                      </TYPE.main>
+                    )}
+                  </CardSection>
+                </div>
               </GreyCard>
             </AutoColumn>
             <br />
