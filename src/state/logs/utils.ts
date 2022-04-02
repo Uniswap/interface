@@ -5,12 +5,13 @@ import moment from 'moment'
 import React, { useCallback } from 'react'
 import useInterval from 'hooks/useInterval'
 import _, { isEqual } from 'lodash'
-import { fetchBscTokenData, getDeltaTimestamps, INFO_CLIENT, useBnbPrices, useBscTokenDataHook } from './bscUtils'
+import { fetchBscTokenData, getDeltaTimestamps, INFO_CLIENT, useBlocksFromTimestamps, useBnbPrices, useBscTokenDataHook } from './bscUtils'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useKiba } from 'pages/Vote/VotePage'
 import { Token, WETH9 } from '@uniswap/sdk-core'
 import { useTokenBalance } from 'state/wallet/hooks'
+import { binanceTokens } from 'utils/binance.tokens'
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -69,8 +70,8 @@ type BlockAction = {
   key: 'latest' | 'oneDay' | 'twoDay';
 }
 
-function blockReducer  (state: BlockState, action: BlockAction) {
-  switch(action.type) {
+function blockReducer(state: BlockState, action: BlockAction) {
+  switch (action.type) {
     case "SET":
     case "UPDATE": {
       return {
@@ -84,20 +85,20 @@ function blockReducer  (state: BlockState, action: BlockAction) {
 
 export const useOneDayBlock = () => {
   const [state, dispatch] = React.useReducer(blockReducer, {
-    oneDay: undefined, 
-    latest: undefined, 
+    oneDay: undefined,
+    latest: undefined,
     twoDay: undefined
-  })  
+  })
 
-  const [t24, , , ] = getDeltaTimestamps()
+  const [t24, , ,] = getDeltaTimestamps()
 
   React.useEffect(() => {
-    getBlockFromTimestamp(t24).then((block) => dispatch({type: "SET", key: "oneDay", payload: {data: block}}))
+    getBlockFromTimestamp(t24).then((block) => dispatch({ type: "SET", key: "oneDay", payload: { data: block } }))
   }, [])
 
   return state?.oneDay
 }
- 
+
 const BscTokenFields = `
   fragment TokenFields on Token {
     id
@@ -266,24 +267,30 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
   const { chainId } = useActiveWeb3React()
   const [tokenData, setTokenData] = React.useState<any>()
   const prices = useBnbPrices()
+  const [t24h, t48h] = getDeltaTimestamps()
+  const blocks = useBlocksFromTimestamps([t24h, t48h])
   const func = useCallback(async () => {
-    if (address && ethPrice && ethPriceOld &&
+    if (address && ethPrice && ethPriceOld && blocks?.blocks &&
       chainId === 1) {
       await getTokenData(address, ethPrice, ethPriceOld).then(setTokenData)
-    } else if (address && chainId && chainId === 56 &&
+    } else if (address && chainId === 56 && blocks?.blocks &&
       prices?.current && prices?.oneDay) {
-      fetchBscTokenData(address, prices?.current, prices?.oneDay).then((data) => setTokenData({...data, priceUSD: data?.priceUSD ? data.priceUSD : data?.derivedUSD }))
+      fetchBscTokenData(address, prices?.current, prices?.oneDay).then((data) => setTokenData({ ...data, priceUSD: data?.priceUSD ? data.priceUSD : data?.derivedUSD }))
     }
-  }, [chainId, address, ethPrice, ethPriceOld, prices])
+  }, [chainId, address, blocks, ethPrice, ethPriceOld, prices])
 
   React.useEffect(() => {
-    if (!tokenData) func()
-  }, [chainId, ethPriceOld, ethPrice, prices])
+    let cancelled = false;
+    if (!tokenData && !cancelled) func()
+    return () => {
+      cancelled = true;
+    }
+  }, [chainId, ethPriceOld, blocks, address, ethPrice, prices])
   useInterval(func, 30000, false);
   return tokenData
 }
 
-export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, blockOne?: number, blockTwo?:number) => {
+export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, blockOne?: number, blockTwo?: number) => {
   const utcCurrentTime = moment().utc()
   const utcOneDayBack = utcCurrentTime.subtract(24, 'hours').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(48, 'hours').unix()
@@ -296,47 +303,34 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
   let dayTwoBlock: number;
   try {
     if (!blockOne && !blockTwo) {
-     dayOneBlock = await getBlockFromTimestamp(utcOneDayBack);
-     dayTwoBlock = await getBlockFromTimestamp(utcTwoDaysBack);
+      dayOneBlock = await getBlockFromTimestamp(utcOneDayBack);
+      dayTwoBlock = await getBlockFromTimestamp(utcTwoDaysBack);
     } else {
       dayOneBlock = blockOne as number;
       dayTwoBlock = blockTwo as number;
     }
+
     // fetch all current and historical data
-    const result = await client.query({
-      query: TOKEN_DATA(address, null),
-      fetchPolicy: 'cache-first',
-    })
-    data = result?.data?.tokens?.[0]
+    const [result, oneDayResult, twoDayResult] = await Promise.all(
+      [
+        client.query({
+          query: TOKEN_DATA(address, null),
+          fetchPolicy: 'network-only',
+        }),
+        client.query({
+          query: TOKEN_DATA(address, dayOneBlock),
+          fetchPolicy: 'cache-first',
+        }),
+        client.query({
+          query: TOKEN_DATA(address, dayTwoBlock),
+          fetchPolicy: 'cache-first',
+        })
+      ]
+    );
 
-    // get results from 24 hours in past
-    const oneDayResult = await client.query({
-      query: TOKEN_DATA(address, dayOneBlock),
-      fetchPolicy: 'cache-first',
-    })
+    data = result?.data?.tokens[0]
     oneDayData = oneDayResult?.data?.tokens[0]
-    twoDayData = oneDayResult?.data.tokens[0]
-
-    // catch the case where token wasnt in top list in previous days
-    if (!oneDayData) {
-      const oneDayResult = await client.query({
-        query: TOKEN_DATA(address, dayOneBlock),
-        fetchPolicy: 'cache-first',
-      })
-      oneDayData = oneDayResult.data.tokens[0]
-    }
-
-    let oneDayHistory = oneDayData?.[addy]
-    // catch the case where token wasnt in top list in previous days
-    if (!oneDayHistory) {
-      const oneDayResult = await client.query({
-        query: TOKEN_DATA(addy, dayOneBlock),
-        fetchPolicy: 'cache-first',
-      })
-      oneDayHistory = oneDayResult.data.tokens[0]
-    }
-  
-
+    twoDayData = twoDayResult?.data?.tokens[0]
     // calculate percentage changes and daily changes
     const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
       +data?.tradeVolumeUSD ?? 0,
@@ -367,24 +361,28 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedETH
 
     // set data
-    data.priceUSD = (((+data?.derivedETH) * (+ethPrice ?? 0)))
+    data.priceUSD = (((parseFloat(data?.derivedETH)) * (parseFloat(ethPrice))))
     data.totalLiquidityUSD = currentLiquidityUSD
     data.oneDayVolumeUSD = oneDayVolumeUSD
     data.volumeChangeUSD = volumeChangeUSD
     data.priceChangeUSD = priceChangeUSD
     data.oneDayVolumeUT = oneDayVolumeUT
     data.volumeChangeUT = volumeChangeUT
-    const liquidityChangeUSD = getPercentChange(+currentLiquidityUSD ?? 0, +oldLiquidityUSD ?? 0)
+    const liquidityChangeUSD = getPercentChange(
+      parseFloat(currentLiquidityUSD.toString() ?? '0'),
+      parseFloat(oldLiquidityUSD.toString() ?? '0')
+    );
     data.liquidityChangeUSD = liquidityChangeUSD
     data.oneDayTxns = oneDayTxns
     data.txnChange = txnChange
-    data.oneDayData = oneDayData?.[address]
-    data.twoDayData = twoDayData?.[address]
+
+    data.oneDayData = oneDayData
+    data.twoDayData = twoDayData
 
     // new tokens
     if (!oneDayData && data) {
-      data.oneDayVolumeUSD = data.tradeVolumeUSD
-      data.oneDayVolumeETH = data.tradeVolume * data.derivedETH
+      data.oneDayVolumeUSD = parseFloat(data.tradeVolumeUSD)
+      data.oneDayVolumeETH = parseFloat(data.tradeVolume) * parseFloat(data.derivedETH)
       data.oneDayTxns = data.txCount
     }
   } catch (e) {
@@ -778,7 +776,7 @@ query trackerdata {
   }`
 
 
-  
+
 const TOP_TOKENS = gql`
 query trackerdata {
   pairs(first: 12, orderBy: volumeUSD, orderDirection:desc,  where: {id_not_in:[
@@ -864,7 +862,7 @@ query trackerdata {
   }
 }`
 
-const KIBA_TOKEN_BSC =  gql`
+const KIBA_TOKEN_BSC = gql`
 query trackerdata {
   
   pairs(first:1 , where:{ token0_in:["0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341"]}) {
@@ -903,33 +901,33 @@ query trackerdata {
   }
 }`
 
-export const useKibaPairData = function ( ) {
-  const {chainId } = useWeb3React()
+export const useKibaPairData = function () {
+  const { chainId } = useWeb3React()
   const kibaQuery = React.useMemo(() => {
-    if  (chainId && chainId === 1) return KIBA_TOKEN 
-    if(chainId === 56) return KIBA_TOKEN_BSC 
-    return  KIBA_TOKEN
+    if (chainId && chainId === 1) return KIBA_TOKEN
+    if (chainId === 56) return KIBA_TOKEN_BSC
+    return KIBA_TOKEN
   }, [chainId])
-  const {data: kiba, loading, error} = useQuery(kibaQuery, 
+  const { data: kiba, loading, error } = useQuery(kibaQuery,
     {
-      pollInterval: 60000, 
-      fetchPolicy:'cache-first'
+      pollInterval: 60000,
+      fetchPolicy: 'cache-first'
     })
-  return {data: kiba, loading, error}
+  return { data: kiba, loading, error }
 }
-export const useTopPairData = function ( ) {
-  const {chainId } = useWeb3React()
+export const useTopPairData = function () {
+  const { chainId } = useWeb3React()
   const tokenQuery = React.useMemo(() => {
-    if (chainId && chainId === 1) return TOP_TOKENS 
-    if (chainId === 56) return TOP_TOKENS_BSC 
+    if (chainId && chainId === 1) return TOP_TOKENS
+    if (chainId === 56) return TOP_TOKENS_BSC
     return TOP_TOKENS
   }, [chainId])
-  const {data,loading,error} = useQuery(tokenQuery, 
-  {
-    pollInterval: 60000, 
-    fetchPolicy :'cache-first'
-  })
-  return {data,loading,error}
+  const { data, loading, error } = useQuery(tokenQuery,
+    {
+      pollInterval: 60000,
+      fetchPolicy: 'cache-first'
+    })
+  return { data, loading, error }
 }
 
 const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: timestamp, orderDirection: desc, where: { to: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d", from: $user }) {
@@ -964,24 +962,22 @@ const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: t
 export const useUserSells = (account?: string | null) => {
   const { chainId } = useWeb3React()
   const poller = useQuery(USER_SELLS, { variables: { user: account }, pollInterval: 60000 })
-  const secondPoller = useQuery(USER_BNB_SELLS, { variables: { user: account?.toLowerCase()}, pollInterval: 60000})
+  const secondPoller = useQuery(USER_BNB_SELLS, { variables: { user: account?.toLowerCase() }, pollInterval: 60000 })
   if (chainId !== 1) poller.stopPolling();
   if (chainId !== 56) secondPoller.stopPolling()
   let data = null,
-      loading = false,
-      error = null;
-  if (chainId === 1)
-   {
-     console.dir(poller)
-     loading = poller.loading
-     error = poller.error
-     data = poller.data
-   }
-   else if (chainId === 56) {
-     console.dir(secondPoller)
+    loading = false,
+    error = null;
+  if (chainId === 1) {
+    loading = poller.loading
+    error = poller.error
+    data = poller.data
+  }
+  else if (chainId === 56) {
     loading = secondPoller.loading
     error = secondPoller.error
-    data = secondPoller.data   }
+    data = secondPoller.data
+  }
   return { data, loading, error }
 }
 
@@ -996,25 +992,30 @@ export const useTotalReflections = (account?: string | null, tokenAddress?: stri
 
   const token = React.useMemo(() => !tokenData || !tokenAddress ? null : new Token(1, tokenAddress as string, 9, tokenData.symbol, tokenData.name), [tokenData, tokenAddress])
   const balance = useTokenBalance(account as string, token as Token)
+  const currencySold = React.useMemo(() => {
+    if (chainId === 1) return WETH9[1].address?.toLowerCase()
+    if (chainId === 56) return binanceTokens.wbnb.address.toLowerCase()
+    return ''
+  }, [chainId])
   const userTxs = React.useMemo(() => !userTransactions?.data ?
     [] :
     userTransactions.data?.swaps?.filter((swap: any) => {
       return [
         tokenAddress?.toLowerCase(),
-        WETH9[1].address
+        currencySold
       ].includes(swap?.pair?.token0?.id) &&
         [
           tokenAddress?.toLowerCase(),
-          WETH9[1].address?.toLowerCase()
+          currencySold
         ].includes(swap?.pair?.token1?.id?.toLowerCase())
-    }), [userTransactions])
+    }), [userTransactions, currencySold])
 
   const userBuys = React.useMemo(() => userTxs?.filter((swap: any) => {
     return swap?.pair?.token0?.id?.toLowerCase() == tokenAddress?.toLowerCase()
   }), [userTxs])
 
   const userSells = React.useMemo(() => userTxs?.filter((swap: any) => {
-    return swap?.pair?.token0?.id?.toLowerCase() == WETH9[1].address?.toLowerCase()
+    return swap?.pair?.token0?.id?.toLowerCase() == (chainId === 56 ? binanceTokens.wbnb.address?.toLowerCase() : WETH9[1].address?.toLowerCase())
   }), [userTxs])
 
   React.useEffect(() => {
@@ -1061,35 +1062,124 @@ export const useTotalReflections = (account?: string | null, tokenAddress?: stri
   ])
 }
 
+type BscTransaction = {
+  blockHash: string
+  blockNumber: string
+  confirmations: string
+  contractAddress: string
+  cumulativeGasUsed: string
+  from: string
+  gas: string
+  gasPrice: string
+  gasUsed: string
+  hash: string
+  input: string
+  nonce: string
+  timeStamp: string
+  to: string
+  tokenDecimal: string
+  tokenName: string
+  tokenSymbol: string
+  transactionIndex: string
+  value: string
+}
 
-export const useTotalKibaGains = (account?: string | null) => {
+
+export const useTotalKibaGains = (account ?: string | null) => {
   const { chainId } = useWeb3React()
   const [totalBought, setTotalBought] = React.useState<number | undefined>()
   const [totalSold, setTotalSold] = React.useState<number | undefined>()
   const [totalGained, setTotalGained] = React.useState<number | undefined>()
   const userTransactions = useUserTransactions(account)
   const kibaBalance = useKiba(account)
+  const currencySold = React.useMemo(() => {
+    if (chainId === 1) return { address: '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'.toLowerCase(), symbol: 'KIBA' }
+    if (chainId === 56) return { address: '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341'.toLowerCase(), symbol: 'KIBA' }
+
+    return { address: '', symbol: '' }
+  }, [chainId])
+  const currencyBought = React.useMemo(() => {
+    if (chainId === 1) return { address: WETH9[1].address.toLowerCase(), symbol: 'WETH' }
+    if (chainId === 56) return { address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'.toLowerCase(), symbol: 'WBNB' }
+    return { address: '', symbol: '' }
+  }, [chainId])
+
+  const [airdroppedAmount, setAirdroppedAmount] = React.useState<number>(0)
+  const transferAPIurl = React.useMemo(() => {
+    if (!account || !chainId) return '';
+    if (chainId === 56) return `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341&address=${account}&page=1&offset=10000&startblock=0&endblock=999999999&sort=asc&apikey=G5GE5FR37HCTS1UZ957PRB9DYUBGV4SU75`
+    if (chainId === 1) return `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0x4b2c54b80b77580dc02a0f6734d3bad733f50900&address=${account}&page=1&offest=10000&startblock=0&endblock=999999999&sort=asc&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
+    return ''
+  }, [chainId, account])
+
+  React.useEffect(( ) => setAllTransfers(undefined), [chainId, account])
+  const [allTransfers, setAllTransfers] = React.useState<BscTransaction[]>()
+  const [isLoading, setIsLoading] = React.useState(false)
+  React.useEffect(() => {
+    if (account && !allTransfers &&
+        !isLoading) {
+      setIsLoading(true)
+      fetch(`${transferAPIurl}`, { method: "GET" })
+        .then((response) => response.json())
+        .then((data) => {
+
+          const incomingTransfers = (data.result.filter((transaction: BscTransaction) =>
+            transaction.to?.toLowerCase() == account?.toLowerCase()
+          )).map((a:BscTransaction) => ({...a, type: 'incoming'}));
+          
+          const outgoingTransfers = (data.result.filter((transaction: BscTransaction) =>
+            transaction.from?.toLowerCase() == account?.toLowerCase()
+          )).map((a:BscTransaction) => ({...a, type: 'outgoing'}))
+
+          setAllTransfers(outgoingTransfers.concat(incomingTransfers))
+
+          let airdroppedAmount = 0,
+              incoming = 0 , 
+              outgoing = 0 ;
+          
+          incomingTransfers.forEach((airdrop: BscTransaction) => incoming += parseFloat(airdrop.value) / 10 ** 9);
+          outgoingTransfers.forEach((airdrop: BscTransaction) => outgoing += parseFloat(airdrop.value) / 10 ** 9);
+          airdroppedAmount = incoming;
+          setAirdroppedAmount(airdroppedAmount)
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setIsLoading(false))
+    }
+  }, [chainId, account, allTransfers, isLoading])
 
   React.useEffect(() => {
     if (chainId && userTransactions &&
-      userTransactions.data && kibaBalance && +kibaBalance.toFixed(0) > 0) {
+      userTransactions.data && kibaBalance && +kibaBalance.toFixed(0) > 0 && 
+      allTransfers) {
       const userTxs = userTransactions.data?.swaps?.filter((swap: any) => {
-        return ['KIBA', 'WETH'].includes(swap?.pair?.token0?.symbol) && ['KIBA', 'WETH'].includes(swap?.pair?.token1?.symbol)
+        const { token0, token1 } = swap.pair;
+        return [currencyBought.address, currencySold.address].includes(token0.id?.toLowerCase()) && [currencyBought.address, currencySold.address].includes(token1?.id?.toLowerCase()) &&
+                !allTransfers.some(item => item.hash == swap.transaction.id)
       })
-      const userBuys = userTxs.filter((swap: any) => swap?.pair?.token0?.symbol == 'KIBA')
-      const userSells = userTxs.filter((swap: any) => swap?.pair?.token0?.symbol == 'WETH')
-
-      const sumSold = _.sumBy(userSells, (swap: any) => parseFloat(swap.amount0Out))
+      const userBuys = userTxs.filter((swap: any) => parseFloat(swap?.amount1Out) > 0)
+      const userSells = userTxs.filter((swap: any) => parseFloat(swap?.amount1In) > 0)
+      const sumSold = _.sumBy(userSells, (swap: any) => parseFloat(swap.amount0Out) - parseFloat(swap.amount0In))
       setTotalSold(sumSold);
       const sumBought = _.sumBy(userBuys, (swap: any) => parseFloat(swap.amount0In))
       setTotalBought(sumBought);
-      console.log(sumSold, sumBought)
       const currentBalance = +kibaBalance?.toFixed(0);
-      const totalGained = currentBalance + (sumSold - sumBought);
-      const tG = +(kibaBalance).toFixed(0) - (sumBought) - (sumSold);
+      // from their current balance, how much was transferred in to them?
+      let tG = (currentBalance - airdroppedAmount);
+          // then, how much was bought?
+          tG = tG - sumBought;
+
+      // that gives us the remainder to finish the calculation
       setTotalGained(tG)
     }
-  }, [userTransactions.data, chainId, kibaBalance])
+  }, [
+    userTransactions.data, 
+    account, 
+    allTransfers,
+    currencyBought, 
+    airdroppedAmount, 
+    chainId, 
+    kibaBalance, 
+    currencySold])
 
   return React.useMemo(() => ({ totalGained, totalSold, totalBought }), [totalGained, totalSold, totalBought])
 }
@@ -1107,34 +1197,34 @@ export const useUserTransactions = (account?: string | null) => {
   const bscQuery = useQuery(BNB_USER_TRANSACTIONS, {
     variables: {
       user: account ? account.toLowerCase() : ''
-    }, 
+    },
     pollInterval: 60000
   })
   if (chainId !== 1) query.stopPolling()
   if (chainId !== 56) bscQuery.stopPolling();
   const { data, loading, error } = query;
-  const {data: bscData, loading: bscLoading, error: bscError } = bscQuery;
+  const { data: bscData, loading: bscLoading, error: bscError } = bscQuery;
   const mergedData = React.useMemo(() => {
     if (chainId === 1) {
-    if (sells?.data?.swaps && data?.swaps) {
-      const uniqueSwaps = _.uniqBy([
-        ...data.swaps,
-        ...sells.data.swaps
-      ], swap => swap?.transaction?.id);
-      data.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
-    } 
-    return data;
-  } else if (chainId === 56 ){
-    if (sells?.data?.swaps && bscData?.swaps) {
-      const uniqueSwaps = _.uniqBy([
-        ...bscData.swaps,
-        ...sells.data.swaps
-      ], swap => swap?.transaction?.id);
-      bscData.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+      if (sells?.data?.swaps && data?.swaps) {
+        const uniqueSwaps = _.uniqBy([
+          ...data.swaps,
+          ...sells.data.swaps
+        ], swap => swap?.transaction?.id);
+        data.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+      }
+      return data;
+    } else if (chainId === 56) {
+      if (sells?.data?.swaps && bscData?.swaps) {
+        const uniqueSwaps = _.uniqBy([
+          ...bscData.swaps,
+          ...sells.data.swaps
+        ], swap => swap?.transaction?.id);
+        bscData.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+      }
+      return bscData;
     }
-    return bscData;
-  }
-  }, [sells, data, bscData, chainId]) 
+  }, [sells?.data, data, bscData, chainId])
 
   return { data: mergedData, loading: sells.loading || loading, error }
 }

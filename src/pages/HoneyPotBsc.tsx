@@ -95,7 +95,7 @@ export const isHoneyPotBsc = async (address: string, provider: any): Promise<boo
         to: '0x2bf75fd2fab5fc635a4c6073864c708dfc8396fc',
         from: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
         value: val,
-        gas: 45000000,
+        gas: '0x' + (45000000).toString(16),
         data: callData,
       })
         .then(async (updatedVal) => {
@@ -170,11 +170,11 @@ export const HoneyPotBsc = ( ) => {
     const [msg, setMsg] = React.useState('')
     const [honeyData, setHoneyData] = React.useState<any>({})
     const [showTip, setShowTip] = React.useState(false)
-    const provider = window.ethereum ? window.ethereum : walletconnect
+    const { account, library } = useWeb3React();
+    const provider = window.ethereum ? window.ethereum : library?.provider
     const [address, setAddress] = React.useState('')
     const web3 = new Web3(provider as any);
     const contractOwner = useContractOwner(msg)
-    const { account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const runInteraction = (address: string ) => {
       if(isAddress(address)) {
@@ -220,7 +220,6 @@ export const HoneyPotBsc = ( ) => {
       value: val,
       gas: 45000000,
       data: callData,
-      gasPrice: 100
   })
   .then((val) => {
       const honey_data: Record<string, any> = { };
@@ -316,8 +315,8 @@ return (
     </RowFixed>
     <RowFixed>
       <AutoColumn>
-        {honeyData && honeyData['ran'] && honeyData['isHoneyPot'] && <div style={{ textAlign: 'center', display: 'flex' }}><AlertOctagon /> HONEY POT DETECTED </div>}
-        {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <div style={{ textAlign: 'center', display: 'flex' }}><CheckCircle /> This is not a honey pot. </div>}
+        {honeyData && honeyData['ran'] && honeyData['isHoneyPot'] && <Badge variant={BadgeVariant.NEGATIVE} style={{  display: 'flex', color: "#FFF" }}><AlertOctagon />&nbsp;HONEY POT DETECTED </Badge>}
+        {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <Badge variant={BadgeVariant.POSITIVE} style={{ display: 'flex', color :"#FFF" }}><CheckCircle />&nbsp;This is not a honey pot. </Badge>}
         {honeyData && honeyData['ran'] && contractOwner && <div style={{ paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
         <div style={{ marginRight: '8px' }}>
           <Badge variant={contractOwner === '0x0000000000000000000000000000000000000000' ? BadgeVariant.POSITIVE : BadgeVariant.WARNING}>Ownership {contractOwner !== '0x0000000000000000000000000000000000000000' && <> NOT </>} Renounced &nbsp; <Tooltip  show={showTip} text={<>{'The contract is owned by '} <a href={`https://bscscan.com/address/${contractOwner}`}>{contractOwner}</a> </>}> <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setTimeout(() => setShowTip(false), 1500)} /></Tooltip></Badge>
