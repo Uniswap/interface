@@ -255,6 +255,12 @@ const babyTrumpBalance = useTrumpBalance(account);
                    <Monitor opacity={0.6} size={16} />
                    </InternalLinkMenuItem>
                  )}
+                 <MenuItem href="#" onClick={() => window.location.href = 'https://stats.babytrumptoken.com'}>
+                     <div>
+                      <Trans>TrumpStats</Trans>
+                    </div>
+                    <BarChart2  opacity={0.6} size={16} />
+                 </MenuItem>
                   <MenuItem href="https://babytrumptoken.com/">
                     <div>
                       <Trans>About</Trans>
