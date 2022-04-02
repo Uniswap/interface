@@ -52,7 +52,7 @@ import {
 } from '../../state/swap/hooks'
 import logo from '../../assets/images/download.png'
 import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
-import { ExternalLinkIcon, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, ExternalLinkIcon, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { isTradeBetter } from '../../utils/isTradeBetter'
@@ -67,7 +67,7 @@ import { LimitOrders } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
 import Marquee from "react-marquee-slider";
 import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
-const CardWrapper = styled(StyledInternalLink)`
+export const CardWrapper = styled(ExternalLink)`
   min-width: 190px;
   width:100%;
   margin-right: 16px;
@@ -385,12 +385,20 @@ export default function Swap({ history }: RouteComponentProps) {
     [onCurrencySelection, tokenData]
   )
 
+  const floozUrl = React.useMemo(() => {
+    let retVal = 'https://www.flooz.trade/embedded/0x4b2c54b80b77580dc02a0f6734d3bad733f50900/?refId=I56v2c&backgroundColor=transparent&chainId=1'
+    if (chainId === 56) {
+      retVal = 'https://www.flooz.trade/embedded/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/?refId=I56v2c&backgroundColor=transparent'
+    } 
+    return retVal;
+  },[chainId])
+
   const kibaBalance = useKiba(account)
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-  const [view, setView] = React.useState<'bridge' | 'swap' |
+  const [view, setView] = React.useState<'bridge' | 'swap' | 'flooz' |
     'limit'
   >('swap')
   const StyledDiv = styled.div`
@@ -752,6 +760,10 @@ export default function Swap({ history }: RouteComponentProps) {
             </AutoColumn>
           </Wrapper>
         )}
+        {view === 'flooz' && <Wrapper>
+          <iframe style={{backgroundColor:'#222', display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={floozUrl} />
+            
+          </Wrapper>}
         {view === 'limit' &&
           <Wrapper>
             <LimitOrders />
@@ -759,58 +771,7 @@ export default function Swap({ history }: RouteComponentProps) {
         {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 500, width: '100%' }} src={binanceSwapURL} />}
       </AppBody>
 
-      <AppBody style={{ right: 0, position: 'relative', bottom: 0, padding: '9px 14px', justifyContent: 'end', background: 'radial-gradient(rgb(234 54 39), rgba(129, 3, 3, 0.95))', border: '1px solid red', height: 200, width: '100%' }}>
-        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Featured Sponsors
-          <span>
-            <img style={{ maxWidth: 100 }} src={logo} />
-          </span>
-        </StyledDiv>
-        <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => { return }} onFinish={() => { return }} key={"MARQUEE"} velocity={10}>
-          <></>
-          <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)', width: '100%' }} gap="xs">
-            <ScrollableRow ref={increaseRef}>
-              {[
-                {
-                  title: "Kiba Inu",
-                  img: logo,
-                  text: "Kiba Inu is a token infused with Kiba Swap",
-                  link: '#'
-                },
-                {
-                  title: "Swally Inu",
-                  img: logo,
-                  text: "Learn more",
-                  link: '#'
-                },
-                {
-                  title: "KIBA INU",
-                  img: logo,
-                  text: "Learn more",
-                  link: '#'
-                },
-                {
-                  title: "Jabba Inu",
-                  img: logo,
-                  text: "Jabba Inu is a meme coin offering culture to its holders.",
-                  link: '#'
-                }].map((sponsor) => (
-                  <CardWrapper key={sponsor.title} to='#'>
-                    <DarkGreyCard style={{ background: '#fff', border: `1px solid red`, padding: 3 }}>
-                      <Flex flexDirection="column" alignItems={'center'} justifyContent={'space-between'}>
-                        <Flex alignItems={'center'} flexDirection={'row'}>
-                          <TYPE.mediumHeader>{sponsor.title}</TYPE.mediumHeader>
-                          <img style={{ maxWidth: 60 }} src={sponsor.img} />
-                        </Flex>
-                        <TYPE.small alignItems={'center'} justifyContent={'center'}><ExternalLinkIcon href={sponsor.link} /></TYPE.small>
-                      </Flex>
-                    </DarkGreyCard>
-                  </CardWrapper>
-                ))}
-            </ScrollableRow>
-          </FixedContainer>
-        </Marquee>
-      </AppBody>
-
+      
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
