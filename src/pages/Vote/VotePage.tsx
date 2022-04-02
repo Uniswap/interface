@@ -151,7 +151,6 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
   const {library } = useWeb3React()
   const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState('')
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
-  
   const { routerADD, routerABI } = React.useMemo(() => {
     return isBinance ? {
       routerADD: pancakeAddress,
@@ -274,112 +273,9 @@ export default function VotePage() {
     ).fromNow();
   }, [localStorage.getItem(trackingSinceKey),moment(new Date(trackingSinceKey)).fromNow(), date]);
 
-  const stopTrackingGains = () => {
-    localStorage.setItem(gainsKey, "0");
-    localStorage.setItem("trackingSince", "");
-    setTrumpGainsUSD("");
-    setStimGainsUSD("");
-    setIsTrackingGains(false);
-  };
-
-  const trackGains = () => {
-    if (isTrackingGains) {
-      localStorage.setItem(gainsKey, "0");
-      localStorage.setItem(trackingSinceKey, "");
-      setIsTrackingGains(false);
-    } else if (!!kibaBalance) {
-      localStorage.setItem(gainsKey, (kibaBalance || 0)?.toFixed(2));
-      localStorage.setItem(trackingSinceKey, `${new Date()}`);
-      setIsTrackingGains(true);
-    } else {
-      setIsTrackingGains(false);
-      alert(`Cannot track gains!
-             Sorry, we had an issue with connecting to ${
-               account ? account : "your accounts"
-             } 
-             and retrieving your balance.`);
-    }
-  };
-
-  const { routerADD, routerABI } = React.useMemo(() => {
-    return isBinance ? {
-      routerADD: pancakeAddress,
-      routerABI: pancakeAbi
-    } : { routerADD: routerAddress, routerABI: routerAbi }
-  }, [isBinance])
-
-  const rawTrumpCurrency = useMemo(() => {
-    if (!storedKibaBalance || !kibaBalance) return null;
-    const calc = +Math.round(+kibaBalance?.toFixed(2) - +storedKibaBalance);
-    return calc;
-  }, [storedKibaBalance, kibaBalance, gainsKey, isTrackingGains]);
-
-  const [trumpGainsUSD, setTrumpGainsUSD] = React.useState("-");
-  const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
-
   const allTimeGains = useTotalKibaGains(account)
-  const [allTimeGainsUsd, setAllTimeGainsUsd] = React.useState('-');
 
-  useEffect(() => {
-    if (allTimeGains.totalGained && allTimeGains.totalGained >= 0) {
-      const provider = window.ethereum ? window.ethereum : library?.provider;
-      const w3 = new Web3(provider as any).eth;
-      const routerContr = new w3.Contract(routerABI as any, routerADD);
-      const ten9 =18;
-      const amount = +allTimeGains.totalGained.toFixed(0) * ten9;
-      if (amount > 0) {
-      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-        kibaCoin.address,
-        isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
-        isBinance ? binanceTokens.busd.address : USDC.address, 
-      ]);
-      amountsOut.call().then((response: any) => {
-        const usdc = response[response.length - 1];
-        const ten6 = 10 ** 6; 
-        let usdcValue = usdc / ten6;
-        if (isBinance) usdcValue = usdcValue / 10 ** 12;
-        const number = Number(usdcValue.toFixed(2));
-        setAllTimeGainsUsd(number.toLocaleString());
-      });
-    }
-    }
-  }, [allTimeGains, account, chainId, library?.provider])
-
-  useEffect(() => {
-    try {
-      if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) < 0) {
-        setTrumpGainsUSD("-");
-        return;
-      }
-      if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {  
-        const provider = window.ethereum ? window.ethereum : library?.provider
-        const w3 = new Web3(provider as any).eth;
-        const routerContr = new w3.Contract(routerABI as any, routerADD);
-        const ten9 = 10 ** 18;
-        const amount = +rawTrumpCurrency.toFixed(0) * ten9;
-        if (amount > 0) {
-        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          kibaCoin.address,
-          isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
-          isBinance ? binanceTokens.busd.address : USDC.address, 
-        ]);
-        amountsOut.call().then((response: any) => {
-          const usdc = response[response.length - 1];
-          const ten6 = 10 ** 6;
-          let usdcValue = usdc / ten6;
-          if (isBinance) usdcValue = usdcValue / 10 ** 12;
-          const number = Number(usdcValue.toFixed(2));
-          setTrumpGainsUSD(number.toLocaleString());
-        });
-      }
-        // pseudo code
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [rawTrumpCurrency,account, library?.provider, isBinance, kibaBalance, storedKibaBalance]);
-  const kibaBalanceUSD = useKibaBalanceUSD(account ?? undefined)
-const [darkMode] = useDarkModeManager()
+  const kibaBalanceUSD = useKibaBalanceUSD(account ?? undefined, chainId)
 console.log(allTimeGains)
   return (
     <>
