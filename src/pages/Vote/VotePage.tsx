@@ -183,10 +183,7 @@ export default function VotePage({
   const web3 = useActiveWeb3React();
   const { account } = web3;
   // get data for this specific proposal
-  const proposalData: ProposalData | undefined = useProposalData(
-    Number.parseInt(governorIndex),
-    id
-  );
+
   // update support based on button interactions
   const [support, setSupport] = useState<boolean>(true);
   // modal for casting votes
@@ -196,8 +193,7 @@ export default function VotePage({
   const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE);
   const toggleDelegateModal = useToggleDelegateModal();
   // only count available votes as of the proposal start block
-  const availableVotes: CurrencyAmount<Token> | undefined =
-    useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined);
+
   const trumpCoin = new Token(
     1,
     "0x99d36e97676A68313ffDc627fd6b56382a2a08B6",
@@ -369,17 +365,6 @@ export default function VotePage({
   return (
     <>
       <PageWrapper gap="lg" justify="center">
-        <VoteModal
-          isOpen={showVoteModal}
-          onDismiss={toggleVoteModal}
-          proposalId={proposalData?.id}
-          support={support}
-        />
-        <DelegateModal
-          isOpen={showDelegateModal}
-          onDismiss={toggleDelegateModal}
-          title={<Trans>Unlock Votes</Trans>}
-        />
         <ProposalInfo gap="lg" justify="space-between">
           <Card>
             <CardSection>
