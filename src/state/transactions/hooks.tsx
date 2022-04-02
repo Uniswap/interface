@@ -36,6 +36,7 @@ import useInterval from 'hooks/useInterval'
 import { useKiba } from 'pages/Vote/VotePage'
 import { useTokenHolderCount } from 'components/swap/ChartPage'
 import { useWeb3React } from '@web3-react/core'
+
 type SortStateKey = 'asc' | 'desc' | undefined;
   type SortState = {
     network: SortStateKey,
@@ -211,7 +212,8 @@ th {
 border-collapse: collapse;
 border: 1px solid 
 width:100%;
-tr:nth-child(even){background: #4F4F62}
+td { color: ${({theme}) => theme.text1 }; }
+tr:nth-child(even){background: ${({theme}) => theme.bg1 };}
 td, th {
   border: 1px solid #ddd;
   padding: 8px;
