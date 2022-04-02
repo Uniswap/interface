@@ -17,6 +17,8 @@ import { parseEther } from '@ethersproject/units';
 import { isMobile } from 'react-device-detect';
 import { useKiba } from 'pages/Vote/VotePage';
 import { binanceTokens } from 'utils/binance.tokens';
+import { useParams } from 'react-router';
+import { useETHBalances } from 'state/wallet/hooks';
 const StyledHeader = styled.div`
 font-size: ${isMobile ? '18px' : '32px'};
 font-family: "Bangers", cursive;
@@ -111,6 +113,81 @@ export const AccountPage = () => {
                 {hasAccess && (
                     <>
                         <Transactions loading={transactions.loading} error={transactions.error} transactions={formattedTxns} />
+                        <TotalRow totalGasETH={totalGasUsed} totalGasUSD={totalGasUSD} account={account} txCount={txCount} transactions={transactions?.data?.swaps} />
+                    </>
+                )}
+                {!hasAccess && <p style={{ height: 400, display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p>}
+            </Wrapper>
+        </DarkCard>
+    )
+}
+
+
+
+export const AccountPageWithAccount = () => {
+    const params = useParams<{account: string}>()
+    const {account} = params;
+    const {  library, chainId } = useWeb3React()
+    const transactions = useUserTransactions(account)
+    const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
+    const web3 = new Web3(library?.provider)
+    const hasAccess = useHasAccess()
+    const ethBalance = useETHBalances([account?.toLowerCase()])
+    console.log(ethBalance)
+    React.useEffect(() => {
+        if (transactions && transactions?.data && transactions?.data?.swaps && library?.provider) {
+            Promise.all(transactions?.data?.swaps?.map(async (item: any) => {
+                if (item) {
+                const tx = await web3.eth.getTransaction(item?.transaction?.id);
+                const txReceipt = await web3.eth.getTransactionReceipt(item?.transaction?.id)
+                const payload = {
+                    ...item,
+                    cost: (parseFloat(tx?.gasPrice) * txReceipt?.gasUsed) / 10 ** 18,
+                    gasUsed: txReceipt?.gasUsed,
+                    gasPrice: tx?.gasPrice
+                }
+                return payload
+            } else return {}
+            })).then(setFormattedTxns)
+        }
+    }, [transactions.data, library])
+
+    const totalGasUsed = React.useMemo(() => {
+        if (formattedTxns && formattedTxns.length) {
+            const totalGas = _.sumBy(formattedTxns, a => a.cost);
+            return +totalGas.toFixed(9);
+        }
+        return 0
+    }, [formattedTxns])
+
+
+    const totalGasUSD = useUSDCValue(CurrencyAmount.fromRawAmount(chainId === 56 ? binanceTokens.wbnb : WETH9[1], totalGasUsed > 0 ? parseEther(totalGasUsed.toString()).toHexString() : '0'))
+    const [txCount, setTxCount] = React.useState<number>(0)
+    React.useEffect(() => {
+        if (account) {
+            web3.eth.getTransactionCount(account).then(setTxCount)
+        }
+    }, [account])
+    if (!account) return null;
+
+    return (
+        <DarkCard style={{ maxWidth: 850, background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }}>
+            <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between',rowGap: 10, columnGap: 15 }}>
+                <Badge><StyledHeader>Transaction History </StyledHeader></Badge>
+                {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
+                    <ButtonPrimary> View on explorer
+                        <ExternalLinkIcon href={`https://etherscan.io/address/${account}`} />
+                    </ButtonPrimary>
+                </ExternalLink>}
+
+                <Badge variant={BadgeVariant.POSITIVE} color={"#FFF"}>{account}</Badge>
+                {ethBalance && ethBalance[account?.toLowerCase()] && <Badge variant={BadgeVariant.DEFAULT}>{ethBalance[account?.toLowerCase()]?.toSignificant(4)} ETH</Badge>}
+
+            </div>
+            <Wrapper style={{ background: '#222', padding: '9px 14px' }}>
+                {hasAccess && (
+                    <>
+                        <Transactions accountValue={account} loading={transactions.loading} error={transactions.error} transactions={formattedTxns} />
                         <TotalRow totalGasETH={totalGasUsed} totalGasUSD={totalGasUSD} account={account} txCount={txCount} transactions={transactions?.data?.swaps} />
                     </>
                 )}
