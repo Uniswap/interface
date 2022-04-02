@@ -31,6 +31,7 @@ export const TrumpVote = ( ) => {
     padding: 15px;
     margin-bottom:15px;
     font-size:12px;
+    overflow:scroll;
     width: 100%;
     `
     const isDark = useIsDarkMode()
