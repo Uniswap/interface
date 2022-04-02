@@ -28,6 +28,7 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { SupportedChainId } from 'constants/chains'
 import Swal from 'sweetalert2'
+import { useActiveWeb3React } from 'hooks/web3'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -264,7 +265,7 @@ export default function Web3Status() {
         variant={BadgeVariant.PRIMARY} 
         style={{background:"#222"}} 
         onClick={async () => {
-          await switchToNetwork({library, chainId: chainToSwitchTo})
+          await switchToNetwork({library, chainId: chainToSwitchTo, account: account as string})
         }}>
           {chainId === 1 ? 'ETH' : 'BSC'} 
           &nbsp; {chainId === 56 ? <ToggleRight/> : <ToggleLeft />} 
