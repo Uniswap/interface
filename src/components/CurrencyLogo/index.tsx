@@ -56,6 +56,7 @@ export default function CurrencyLogo({
 
   if (currency?.address?.toLowerCase() === '0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4'.toLowerCase())
   return <StyledLogo size={size} srcs={[squeezeLogo]} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-
+  if (currency?.address?.toLowerCase() === '0x724dd18be5de3ed3d6ad7bb46d7387d867cdbdcc'.toLowerCase())
+  return <StyledLogo size={size} srcs={['https://i.ibb.co/nsQDgkQ/567-ED8-AC-6026-4-F93-8-F2-C-0284-A697-F762.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 }
