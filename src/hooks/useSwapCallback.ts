@@ -1,23 +1,27 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { t } from '@lingui/macro'
-import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
-import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
-import { calculateGasMargin } from '../utils/calculateGasMargin'
-import approveAmountCalldata from '../utils/approveAmountCalldata'
-import { getTradeVersion } from '../utils/getTradeVersion'
-import { useTransactionAdder } from '../state/transactions/hooks'
+import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { SwapRouter, Trade as V3Trade, toHex } from '@uniswap/v3-sdk'
 import { isAddress, shortenAddress } from '../utils'
+
+import { BigNumber } from '@ethersproject/bignumber'
+import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
+import { SignatureData } from './useERC20Permit'
+import { Version } from './useToggledVersion'
+import approveAmountCalldata from '../utils/approveAmountCalldata'
+import axios from 'axios'
+import { calculateGasMargin } from '../utils/calculateGasMargin'
+import { getTradeVersion } from '../utils/getTradeVersion'
 import isZero from '../utils/isZero'
+import { t } from '@lingui/macro'
 import { useActiveWeb3React } from './web3'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useV2RouterContract } from './useContract'
-import { SignatureData } from './useERC20Permit'
-import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
-import { Version } from './useToggledVersion'
+import { useExpertModeManager } from 'state/user/hooks'
+import { useMemo } from 'react'
+import { useTransactionAdder } from '../state/transactions/hooks'
+import useTransactionDeadline from './useTransactionDeadline'
+import { useV2RouterContract } from './useContract'
+import { utils } from 'ethers'
 
 enum SwapCallbackState {
   INVALID,
@@ -146,6 +150,8 @@ function useSwapCallArguments(
             }
           : {}),
       })
+
+
       if (argentWalletContract && trade.inputAmount.currency.isToken) {
         return [
           {
@@ -242,7 +248,7 @@ export function useSwapCallback(
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
 
   const addTransaction = useTransactionAdder()
-
+  const [useExpertMode,] = useExpertModeManager()
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
@@ -285,7 +291,7 @@ export function useSwapCallback(
               })
               .catch((gasError) => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
-
+                
                 return library
                   .call(tx)
                   .then((result) => {
@@ -320,17 +326,44 @@ export function useSwapCallback(
         const {
           call: { address, calldata, value },
         } = bestCallOption
+        
+        const useDegenSlippage = true
+        async function getCurrentGasPrices() {
+          const response = await axios.get('https://ethgasstation.info/json/ethgasAPI.json');
+          const prices = {
+            low: response.data.safeLow/10,
+            medium: response.data.average/10,
+            high: response.data.fast/10
+          };
+          return prices;
+        }
+        const gasEstimate: {
+          gasLimit?: any, 
+          gasPrice?:any
+        } = ('gasEstimate' in bestCallOption
+        ? { 
+            gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate)
+            
+          }
+        : { })
 
-        return library
+        // for now automatically use fast gas for all trades on expert mode.
+        const useDegenMode = useExpertMode
+        if (useDegenMode) {
+          const gasPrices = await getCurrentGasPrices()
+          console.log('degen mode fast gas', gasPrices)
+          gasEstimate.gasPrice = toHex(gasPrices.high* 1e9)
+          console.log(gasEstimate)
+        }
+
+        return library  
           .getSigner()
           .sendTransaction({
             from: account,
             to: address,
             data: calldata,
             // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption
-              ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
-              : {}),
+           ...gasEstimate,
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
