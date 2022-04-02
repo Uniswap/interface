@@ -7,7 +7,7 @@ import { X } from 'react-feather';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components/macro';
-import { useHasAccess } from 'components/AccountPage/AccountPage';
+import { useHasAccess } from 'pages/Account/AccountPage';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useWeb3React } from '@web3-react/core';
 const FrameWrapper = styled.div`

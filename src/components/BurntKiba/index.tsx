@@ -5,7 +5,7 @@ import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import { CardBGImage, CardNoise, CardSection } from 'components/earn/styled'
 import { LinkStyledButton, StyledInternalLink } from 'theme'
 import { useKiba, useKibaBalanceUSD } from 'pages/Vote/VotePage'
-
+import _ from 'lodash'
 import { AutoColumn } from 'components/Column'
 import Confetti from 'components/Confetti'
 import { DarkCard } from 'components/Card'

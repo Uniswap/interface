@@ -1,6 +1,5 @@
 import { computePoolAddress } from '@uniswap/v3-sdk'
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
-import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 import { Token, Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from './web3'
@@ -10,7 +9,7 @@ import { Pool, FeeAmount } from '@uniswap/v3-sdk'
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Interface } from '@ethersproject/abi'
 
-const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface
+const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as any
 
 export enum PoolState {
   LOADING,

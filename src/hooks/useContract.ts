@@ -10,8 +10,6 @@ import {
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Weth } from '../abis/types'
-import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
@@ -31,7 +29,6 @@ import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
-import { V3Migrator } from 'types/v3/V3Migrator'
 import WETH_ABI from 'abis/weth.json'
 import { getContract } from 'utils'
 import { useActiveWeb3React } from './web3'
@@ -105,7 +102,7 @@ export function useV2RouterContract(): Contract | null {
 }
 
 export function useMulticall2Contract() {
-  return useContract<any>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
+  return useContract<any>(MULTICALL_ADDRESS, MulticallABI, false) as any
 }
 
 export function useMerkleDistributorContract() {
@@ -131,7 +128,7 @@ export function useStakingContract(stakingAddress?: string, withSignerIfPossible
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
 }
 
-export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
+export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): any | null {
   return useContract<any>(
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
     NFTPositionManagerABI,
@@ -146,5 +143,5 @@ export function useV3Quoter() {
 
 
 export function useInterfaceMulticall() {
-  return useContract<any>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
+  return useContract<any>(MULTICALL_ADDRESS, MulticallABI, false) as any
 }

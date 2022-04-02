@@ -1,4 +1,4 @@
-import { AccountPage, AccountPageWithAccount } from 'components/AccountPage/AccountPage'
+import { AccountPage, AccountPageWithAccount } from './Account/AccountPage'
 import { AlertCircle, AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Globe, Info } from 'react-feather'
 import {
   ApolloClient,
@@ -8,7 +8,7 @@ import {
 } from "@apollo/client";
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
-import { ExternalLinkIcon, TYPE } from 'theme'
+import { ExternalLinkIcon } from 'theme'
 
 import logo from '../assets/images/download.png'
 import btok from '../assets/sponsors/btok2.svg' 
@@ -69,6 +69,13 @@ import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
+import { HoneyPotBsc } from 'components/HoneyPotBSC';
+import { SelectiveChart } from './Swap/SelectiveCharting';
+import { Suite } from './Suite/Suite';
+import { CardSection } from 'components/earn/styled';
+import Header from 'components/Header';
+import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
+import Tooltip from 'components/Tooltip';
 
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
