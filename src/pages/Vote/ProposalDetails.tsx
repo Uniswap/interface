@@ -46,7 +46,7 @@ export const ProposalDetails = () => {
     `
 
     const { account } = useWeb3React()
-    const trumpBalance = useKiba(account)
+    const kibaBalance = useKiba(account)
     const trumpGoldBalacne = useTrumpGoldBalance(account)
     const stimulusBalnace =useStimulusBalance(account)
     const updateVoteIfApplicable = ( vote: boolean ) => {
@@ -55,7 +55,7 @@ export const ProposalDetails = () => {
             alert("Please connect a wallet first to vote.");
             return;
         }
-       if ([trumpBalance, trumpGoldBalacne, stimulusBalnace].every(a => !!a && +a?.toFixed(0) <= 0)) {
+       if ([kibaBalance, trumpGoldBalacne, stimulusBalnace].every(a => !!a && +a?.toFixed(0) <= 0)) {
            alert("Cannot vote unless you own Stimulus Check, Trump Gold, or Baby Trump tokens.");
            return;
        }

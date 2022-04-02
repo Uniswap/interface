@@ -45,6 +45,19 @@ export function filterToKey(filter: EventFilter): string {
     }`
 }
 
+const BscTokenFields = `
+  fragment TokenFields on Token {
+    id
+    name
+    symbol
+    derivedBNB
+    tradeVolume
+    tradeVolumeUSD
+    untrackedVolumeUSD
+    totalLiquidity
+    totalTransactions
+  } 
+`
 
 const TokenFields = `
   fragment TokenFields on Token {
@@ -61,7 +74,7 @@ const TokenFields = `
 `
 export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) => {
   const queryString = `
-    ${isBnb ? TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions') : TokenFields}
+    ${isBnb ? BscTokenFields : TokenFields}
     query tokens {
       tokens(${block && block !== null && typeof(block) === 'string' ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -86,9 +99,11 @@ export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        name
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        name
       }
     }
   `
@@ -105,12 +120,10 @@ export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string)
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
     }
   `
@@ -127,12 +140,10 @@ export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string)
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
     }`
   return gql(queryString)
