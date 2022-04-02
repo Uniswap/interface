@@ -12,7 +12,8 @@ export enum BadgeVariant {
   
   WARNING_OUTLINE = 'WARNING_OUTLINE',
   POSITIVE_OUTLINE = 'POSITIVE_OUTLINE',
-  NEGATIVE_OUTLINE = 'NEGATIVE_OUTLINE'
+  NEGATIVE_OUTLINE = 'NEGATIVE_OUTLINE',
+  RED_WHITE = 'RED_WHITE'
 }
 
 interface BadgeProps {
@@ -29,6 +30,7 @@ function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTh
       return theme.primary1
     case BadgeVariant.WARNING:
       return theme.warning
+    case BadgeVariant.RED_WHITE:
     case BadgeVariant.POSITIVE_OUTLINE:
     case BadgeVariant.NEGATIVE_OUTLINE:
     case BadgeVariant.WARNING_OUTLINE:
@@ -44,6 +46,7 @@ function pickBorder(variant: BadgeVariant | undefined, theme: DefaultTheme): str
       return `1px solid ${theme.primary1}`
     case BadgeVariant.POSITIVE_OUTLINE:
       return `1px solid ${theme.success}`
+      case BadgeVariant.RED_WHITE:
       case BadgeVariant.NEGATIVE_OUTLINE:
         return `1px solid ${theme.error}`
     default:
@@ -65,6 +68,8 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
       return readableColor(theme.warning)
     case BadgeVariant.WARNING_OUTLINE:
       return theme.warning
+    case BadgeVariant.RED_WHITE:
+      return '#FFF';
     default:
       return readableColor(theme.bg2)
   }
