@@ -676,7 +676,7 @@ export function useBscTokenTransactions(tokenAddress: string, interval: null | n
     pollInterval: 5000
   })
   if (chainId && chainId !== 56) query.stopPolling();
-  return React.useMemo(() => ({ data: query.data, lastFetched: new Date() }), [query]);
+  return React.useMemo(() => ({ data: query.data, lastFetched: new Date(), loading:query.loading }), [query]);
 }
 
 export function useBscPoocoinTransactions() {

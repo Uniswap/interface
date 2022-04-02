@@ -24,6 +24,7 @@ import axios from 'axios'
 import moment from 'moment';
 import _ from 'lodash'
 import { StyledInternalLink } from 'theme/components';
+import CreateProposal from 'pages/CreateProposal';
 export const useTrumpGoldBalance = (account?: string | null) => {
     const trumpCoin = new Token(
       1,
@@ -77,100 +78,4 @@ export const useProposalData =  () => {
 }
 
 
-export const AddProposal = () => {
-    const { account } = useWeb3React()
-    const {state: proposals} = useProposalData()
-
-    const lastProposal = React.useMemo(() => {
-        console.log('proposals', proposals)
-        if (!account || !proposals.length) return false;
-        const proposalData = proposals.filter(a => a.proposedBy === account);
-        
-        if (proposalData && proposalData.length) {
-            return moment(new Date()).diff((moment(new Date(proposalData[0].createdAt))), 'days') <= 7;
-        } else if (proposalData.length === 0 ) return false
-        return false;
-    }, [account, proposals])
-    
-    const trumpGoldBalance = useTrumpGoldBalance(account)
-    const [isDisabled, setIsDisabled] = React.useState(false)
-    React.useEffect(() => {
-        if (account && trumpGoldBalance && +trumpGoldBalance?.toFixed(0) < 2000) setIsDisabled(true)
-        if (!account) setIsDisabled(true)
-    }, [account, trumpGoldBalance])
-    
-    const [added, setAdded] = React.useState<Proposal>({
-        _id: '',
-        createdAt: new Date().toLocaleString(),
-        message: '',
-        proposedBy: account as string,
-        title: '',
-        proposedAmount: '', 
-        votes: []
-    })
-    const [useMarketingFund, setUseMarketingFund] = React.useState('')
-    const isDark = useIsDarkMode()
-    
-    const onSave = () => {
-        axios.put<Proposal>(`https://api.babytrumptoken.com/proposal`, added).then((response) => {
-           window.location.href = `https://exchange.babytrumptoken.com/#/proposal/details/${response.data._id}`
-        })
-    }
-    return (
-        <DarkCard style={{maxWidth: 800}}>
-            <OutlineCard style={{padding: "9px 14px"}}>
-
-            <StyledInternalLink style={{color: isDark? '#FFF' : '#222'}} to="/vote">
-                    <ChevronLeft />
-                    Back to proposals
-                </StyledInternalLink>
-                <Header>Add a proposal for members of the community to vote on</Header>
-                <form onSubmit={onSave}>
-                <Body>
-                    {isDisabled && 
-                    (
-                        <BlueCard><AlertCircle /> <TYPE.main>You cannot create a proposal without owning atleast 2000 TrumpGold tokens.</TYPE.main></BlueCard>
-                    )}
-                    
-                    <FormGroup>
-                        <label style={{marginBottom: 10}}>Proposer</label>
-                        <input disabled style={{borderRadius: 6, border: `1px solid gold`, color: isDark ? `#fff` : `#222`, background: isDark ? '#333' : '#fff', padding: '5px'}} type="text"  value={account ?? ''} />
-                    </FormGroup>
-
-                    <FormGroup>
-                        <label style={{marginBottom : 10}}>Create a title for your proposal</label>
-                        <input disabled={isDisabled} required onChange={e => setAdded({...added, title: e.target.value})} style={{borderRadius: 6, border: `1px solid gold`, color: isDark ? `#fff` : `#222`, background: isDark ? '#333' : '#fff', padding: '5px'}} type="text"  value={added.title ?? ''} />
-                    </FormGroup>
-
-                    <FormGroup>
-                        <label style={{marginBottom: 10}}>Explain your proposal</label>
-                        <textarea disabled={isDisabled} required style={{borderRadius: 6, border: `1px solid gold`, color: isDark ? `#fff` : `#222`, background: isDark ? '#333' : '#fff', padding: '5px'}} onChange={e => setAdded({...added, message: e.target.value})} rows={9} placeholder={"Explain to the community why this proposal is important and they should vote yes on your idea."} />
-                    </FormGroup>
-
-                    <FormGroup>
-                        <label style={{marginBottom: 10}}>Does your proposal include usage of marketing funds?</label>
-                        <select  style={{borderRadius: 6, border: `1px solid gold`, color: isDark ? `#fff` : `#222`, background: isDark ? '#333' : '#fff', padding: '5px'}} disabled={isDisabled} value={useMarketingFund} onChange={e => setUseMarketingFund(e.target.value)}>
-                            <option value={''}>Please select</option>
-                            <option value={'yes'}>Yes</option>
-                            <option value={'no'}>No</option>
-                        </select>
-                    </FormGroup>
-
-                    {useMarketingFund === 'yes' && (
-                        <FormGroup>
-                            <label>How much ETH do you propose is used?</label>
-                            <input disabled={isDisabled} required placeholder={"Enter the amount of funds you are proposing be used (IN ETH)"} onChange={e => setAdded({...added, proposedAmount: e.target.value })} style={{borderRadius: 6, border: `1px solid gold`, color: isDark ? `#fff` : `#222`, background: isDark ? '#333' : '#fff', padding: '5px'}} type="number"  value={added?.proposedAmount ? added.proposedAmount :  ''} />
-                        </FormGroup>
-                    )}
-                    <FormGroup>
-                        {lastProposal && <small style={{color:'#ff7676', textAlign: 'center', paddingLeft:15, marginBottom: 15}}>You cannot submit more than one proposal within a week.</small>}
-                        <ButtonPrimary type="submit" disabled={isDisabled || lastProposal || !account}>Add Proposal</ButtonPrimary>
-                    </FormGroup>
-                </Body>
-                </form>
-
-            </OutlineCard>
-        </DarkCard>
-    )
-        
-}
+export const AddProposal = () => <CreateProposal />
