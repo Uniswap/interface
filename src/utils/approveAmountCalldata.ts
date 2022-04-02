@@ -1,7 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
-import { Erc20Interface } from '../abis/types/Erc20'
 
 const ERC20_INTERFACE = new Interface([
   {
@@ -16,7 +15,7 @@ const ERC20_INTERFACE = new Interface([
     stateMutability: 'nonpayable',
     type: 'function',
   },
-]) as Erc20Interface
+]) as any
 
 export default function approveAmountCalldata(
   amount: CurrencyAmount<Currency>,

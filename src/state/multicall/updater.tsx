@@ -9,7 +9,6 @@ import { AppState } from '../index'
 import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Call, parseCallKey } from './utils'
-import { UniswapInterfaceMulticall } from 'types/v3'
 
 const DEFAULT_GAS_REQUIRED = 1_000_000
 
@@ -20,7 +19,7 @@ const DEFAULT_GAS_REQUIRED = 1_000_000
  * @param blockNumber block number passed as the block tag in the eth_call
  */
 async function fetchChunk(
-  multicall: UniswapInterfaceMulticall,
+  multicall: any,
   chunk: Call[],
   blockNumber: number
 ): Promise<{ success: boolean; returnData: string }[]> {
@@ -36,7 +35,7 @@ async function fetchChunk(
     )
 
     if (process.env.NODE_ENV === 'development') {
-      returnData.forEach(({ gasUsed, returnData, success }, i) => {
+      returnData.forEach(({ gasUsed, returnData, success }:any, i:number) => {
         if (
           !success &&
           returnData.length === 2 &&
