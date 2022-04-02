@@ -187,9 +187,8 @@ export const GainsTracker = () => {
   `
 
   const GainsWrapper = !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0) ? DisabledMask : React.Fragment
-  console.log(trumpBalance)
 
-  const total = useUSDCValue(selectedCurrencyBalance)
+  const total = useUSDCValue(selectedCurrencyBalance ? selectedCurrencyBalance : undefined)
   return (
     <GainsWrapper>
       <Card style={{ maxWidth: 600 }}>
