@@ -448,14 +448,26 @@ export default function Header() {
                   {gas?.fast / 10}
                 </span>
               )}
-
             </span>
-            {gas && Math.trunc(gas?.fast / 10) > 85 ? <AlertOctagon fill={showNotify ? 'green' : 'red'} color={'#fff'} onClick={onNotify} style={{ cursor: 'pointer', marginLeft: 5 }}
-              onMouseEnter={() => setShowGasTt(true)}
-              onMouseLeave={() => setShowGasTt(false)}
-            /> : <CheckCircle fill={showNotify ? 'green' : 'red'} color={'#fff'} onClick={onNotify} style={{ background: 'green', cursor: 'pointer', marginLeft: 5 }} />}
-
-
+            {gas && Math.trunc(gas?.fast / 10) > 85 ? 
+              <AlertOctagon fill={showNotify ? 'green' : 'red'} 
+                            color={'#fff'} 
+                            onClick={onNotify} 
+                            style={{ 
+                              cursor: 'pointer', 
+                              marginLeft: 5
+                            }}
+                            onMouseEnter={() => setShowGasTt(true)}
+                            onMouseLeave={() => setShowGasTt(false)}
+              /> : 
+            <CheckCircle fill={showNotify ? 'green' : 'red'} 
+                         color={'#fff'} 
+                         onClick={onNotify} 
+                         style={{
+                          cursor: 'pointer',
+                          marginLeft: 5 
+                        }} />
+              }
           </div>
 
         </HeaderLinks>
