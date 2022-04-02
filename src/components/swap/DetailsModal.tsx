@@ -1,21 +1,29 @@
+import { AlertTriangle, CheckCircle, Percent, X } from 'react-feather';
+import Badge, { BadgeVariant } from 'components/Badge';
+import { ExternalLink, ExternalLinkIcon } from 'theme';
+import { fetchBscTokenData, useBnbPrices } from 'state/logs/bscUtils';
+import { getTokenData, useEthPrice, useTokenData } from 'state/logs/utils';
+
 import { DarkCard } from 'components/Card';
+import { LoadingRows } from 'pages/Pool/styleds';
 import Modal from 'components/Modal';
 import React from 'react';
-import { getTokenData, useEthPrice, useTokenData } from 'state/logs/utils';
-import { useContractOwner } from './ConfirmSwapModal';
-import styled from 'styled-components/macro'
-import { X, Percent, CheckCircle, AlertTriangle } from 'react-feather';
-import Badge, { BadgeVariant } from 'components/Badge';
-import { fetchBscTokenData, useBnbPrices } from 'state/logs/bscUtils';
-import { LoadingRows } from 'pages/Pool/styleds';
-import moment from 'moment';
-import { ExternalLink, ExternalLinkIcon } from 'theme';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
+import _ from 'lodash'
+import moment from 'moment';
+import styled from 'styled-components/macro'
+import { useContractOwner } from './ConfirmSwapModal';
 import { useWeb3React } from '@web3-react/core';
+
 const StyledHeader = styled.div<{ size?: 'lg' }>`
     font-family: "Bangers", cursive;
     font-size:${(props) => props?.size ? '28px' : '20px'};
 `
+
+const RENOUNCED_ADDRESSES = [
+    '0x000000000000000000000000000000000000dEaD',
+    '0x0000000000000000000000000000000000000000'
+] 
 
 export const DetailsModal = ({
     network,
@@ -32,7 +40,11 @@ export const DetailsModal = ({
 }) => {
     const {chainId} = useWeb3React()
     const owner = useContractOwner(address, network.toLowerCase() as 'bsc' | 'eth' | undefined)
-    const isRenounced = React.useMemo(() => owner === '0x0000000000000000000000000000000000000000', [owner])
+    const isEqualShallow = React.useCallback(
+        (address: string) => _.isEqual(owner.toLowerCase(), address.toLowerCase()), 
+    [owner])
+
+    const isRenounced = React.useMemo(() => RENOUNCED_ADDRESSES.some(isEqualShallow), [owner, isEqualShallow])
     const [tokenData, setTokenData] = React.useState<any>()
     const bnbPrice = useBnbPrices()
     const [ethPrice, ethPriceOld] = useEthPrice()
@@ -52,6 +64,10 @@ export const DetailsModal = ({
 
     const LIQUIDITY_ENDPOINT = `https://team-finance-backend-origdfl2wq-uc.a.run.app/api/app/explorer/search?network=ethereum&chainId=0x1&input=${symbol}&skip=0&limit=15&order=4`
     const [lockedMap, setLockedMap] = React.useState<any>()
+    const CIRCULATING_SUPPLY = React.useMemo(() => {
+        if (!lockedMap?.token?.tokenCirculatingSupply) return undefined
+        return Number(lockedMap?.token?.tokenCirculatingSupply)
+    }, [lockedMap])
     React.useEffect(() => {
         fetch(LIQUIDITY_ENDPOINT, { method: "GET" })
             .then((response) => response.json())
@@ -60,6 +76,11 @@ export const DetailsModal = ({
                 if (tokenLock) setLockedMap(data?.data?.pagedData?.find((item: any) => item?.token?.tokenAddress?.toLowerCase() === address?.toLowerCase()))
             })
     }, [])
+
+    const MARKET_CAP = React.useMemo(() => {
+        if (!CIRCULATING_SUPPLY || !tokenData?.priceUSD) return undefined
+        return `$${(CIRCULATING_SUPPLY * Number(tokenData?.priceUSD)).toLocaleString()}`
+    }, [CIRCULATING_SUPPLY, tokenData])
    
     return (
         <Modal isOpen={isOpen} onDismiss={onDismiss}>
@@ -76,24 +97,27 @@ export const DetailsModal = ({
                     <>
                         <div style={{ display: 'flex', marginBottom: 15, justifyContent: 'space-between' }}>
                             <div><StyledHeader size='lg'>{tokenData?.name ?? 'N/A'} ({symbol}) Details</StyledHeader> <br/>
-                            <StyledHeader>Lock details are provided utilizing <a href={"https://team.finance"}>Team Finances</a> interface.</StyledHeader>
+                            <StyledHeader>Lock details are provided utilizing <a style={{color:'lightyellow'}} href={"https://team.finance"}>Team Finances</a> interface.</StyledHeader>
                          </div>
                             <X onClick={onDismiss} />
                         </div>
                         
                         <TopTokenHolders address={address} chainId={chainId} />
                         <div style={{ maxWidth: 600, padding: '9px 14px', display: 'flex', flexFlow: 'column wrap' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto',justifyContent: 'center' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', columnGap:35, justifyContent: 'center' }}>
                                 <ul style={{ listStyle: 'none', padding: 3 }}>
                                     {owner && owner !== '?' && <li style={{marginBottom:10}}>
-                                        <StyledHeader>Contract Owner &nbsp; <small>
-                                            <Badge style={{marginBottom:10}} variant={isRenounced ? BadgeVariant.POSITIVE_OUTLINE : BadgeVariant.WARNING_OUTLINE}>{isRenounced ? 'Renounced' : 'Not Renounced'}</Badge><Badge variant={BadgeVariant.DEFAULT}><ExternalLink style={{color:"#FFF"}} href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`}> {owner !== '?' && owner.substring(0, 8) + '...' + owner.substring(34, 42)} </ExternalLink>  <ExternalLinkIcon  href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`} style={{display: 'inline-block'}}/></Badge></small> </StyledHeader>
+                                        <StyledHeader style={{display:'flex', flexFlow: 'column wrap'}}>Contract Owner &nbsp; <small>
+                                            <Badge style={{marginBottom:10}} variant={isRenounced ? BadgeVariant.POSITIVE_OUTLINE : BadgeVariant.WARNING_OUTLINE}>{isRenounced ? 'Renounced' : 'Not Renounced'}</Badge>
+                                            <Badge variant={BadgeVariant.DEFAULT}><ExternalLink style={{color:"#FFF"}} href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`}> {owner !== '?' && owner.substring(0, 8) + '...' + owner.substring(34, 42)} </ExternalLink>  <ExternalLinkIcon  href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`} style={{display: 'inline-block'}}/></Badge></small> </StyledHeader>
 
                                     </li>}
                                     {!!tokenData?.totalLiquidityUSD && tokenData?.totalLiquidityUSD > 0 && <li style={{marginBottom:10}}>
                                         <StyledHeader>Liquidity (USD)</StyledHeader>
-                                        <Badge variant={BadgeVariant.HOLLOW}>{Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</Badge>
+                                        <Badge variant={BadgeVariant.HOLLOW}>${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</Badge>
                                     </li>}
+                                    {MARKET_CAP && <li style={{marginBottom:10}}><StyledHeader>MarketCap</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{MARKET_CAP}</Badge></li>}
+
                                     {lockedMap && <li style={{marginBottom:10}}><StyledHeader>Circulating Supply</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{Number(lockedMap?.token?.tokenCirculatingSupply).toLocaleString()}</Badge>
                                     </li>}
                                     {[NaN, 0].includes(Number(tokenData?.priceUSD))===false && <li style={{marginBottom:10}}>
