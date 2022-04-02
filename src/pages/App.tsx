@@ -163,8 +163,6 @@ const { account } = useWeb3React()
 
     const usdc = useUSDCValue(sqz ?? undefined);
     console.log(sqz, usdc, sq)
-  const [state, transactions] = useV2Pair(sq)
-  console.log(state, transactions)
 
   return (
     <ErrorBoundary>
@@ -179,9 +177,6 @@ const { account } = useWeb3React()
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
-            <p>{sqz?.toFixed(9)} </p>
-            <p>{usdc?.toFixed(9)}</p>
-
  <Popups />
             <Polling />
             <TopLevelModals />
