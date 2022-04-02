@@ -5,7 +5,7 @@ import { StackedContainer } from 'pages/AddLiquidity/styled'
 import { ResponsiveHeaderText, Wrapper } from 'pages/RemoveLiquidity/styled'
 import { useTrumpBalance } from 'pages/Vote/VotePage'
 import React from 'react'
-import { Check, DollarSign, List } from 'react-feather'
+import { Check, ChevronRight, DollarSign, List } from 'react-feather'
 import { Card } from 'rebass'
 import { TYPE } from 'theme'
 import { StyledInternalLink } from 'theme/components'
@@ -19,15 +19,15 @@ export const Suite = () => {
 
   const routes = [
     {
-      route: '/rug-checker',
+      route: '#rug-checker',
       label: 'Rug Checker',
       description:
         'The BabyTrump Rug Checker is designed to help all ranges of investors run checks on Smart Contracts that will process the contract and determine key details like if their liquidity is locked and ownership is renounced',
         icon: Check
     },
     {
-        route: '/gains',
-        label: "Gains Tracker",
+        route: '/gains-tracker',
+        label: "Universal Gains Tracker",
         description: 'Track gains from ANY redistribution token on the Ethereum blockchain',
         icon: DollarSign
     }
@@ -51,7 +51,7 @@ export const Suite = () => {
                     <div>
                     <h3><TYPE.main>{route.label} </TYPE.main></h3>
                     <small style={{marginBottom: 25, display: 'flex'}}><TYPE.blue>{route.description}</TYPE.blue></small>
-                    <StyledInternalLink to={route.route}>{route.label}</StyledInternalLink>
+                    <StyledInternalLink style={{alignItems:'center', display:'flex'}} to={route.route}>{route.label} <ChevronRight /></StyledInternalLink>
                     </div>
                 </Wrapper>
 
