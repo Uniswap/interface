@@ -248,13 +248,13 @@ const babyTrumpBalance = useTrumpBalance(account);
             default:
               return (
                 <MenuFlyout>
-                 {babyTrumpBalance && +babyTrumpBalance?.toFixed(2) >0 && (<InternalLinkMenuItem to="/suite">
+                 <InternalLinkMenuItem to="/suite">
                  <div>
                    <Trans>TrumpTools </Trans>
                    </div>
                    <Monitor opacity={0.6} size={16} />
                    </InternalLinkMenuItem>
-                 )}
+                 
                  <MenuItem href="https://stats.babytrumptoken.com">
                      <div>
                       <Trans>TrumpStats</Trans>
