@@ -50,7 +50,6 @@ const ProposalInfo = styled(AutoColumn)`
   width: 100%;
   min-width: 45%;
   max-width: 480px;
-  overflow:hidden;
 `;
 
 const ArrowWrapper = styled(StyledInternalLink)`
