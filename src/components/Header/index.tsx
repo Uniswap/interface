@@ -287,7 +287,7 @@ export default function Header() {
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard()
-  const href = 'https://www.dextools.io/app/uniswap/pair-explorer/https://www.dextools.io/app/ether/pair-explorer/0x506276d09f18db8d3ba93e39e9a1175fcc61c89d'
+  const href = 'https://www.dextools.io/app/ether/pair-explorer/0x506276d09f18db8d3ba93e39e9a1175fcc61c89d'
   const [width, setWidth] = useState<number>(window.innerWidth)
   function handleWindowSizeChange() {
     setWidth(window.innerWidth)
@@ -311,7 +311,7 @@ export default function Header() {
         <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
           <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
         </Modal>
-        <Title href="https://babytrumptoken.com">
+        <Title href="/">
           <UniIcon>
             <img
               width={isMobile ? '30px' : '100px'}

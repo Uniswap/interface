@@ -196,9 +196,9 @@ export default function Pool() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <TYPE.body fontSize={'20px'}>
+              <TYPE.white fontSize={'20px'}>
                 <Trans>Pools Overview</Trans>
-              </TYPE.body>
+              </TYPE.white>
               <ButtonRow>
                 {showV2Features && (
                   <Menu
@@ -214,7 +214,7 @@ export default function Pool() {
                     )}
                   />
                 )}
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
+                <ResponsiveButtonPrimary  id="join-pool-button" as={Link} to="/add/ETH">
                   + <Trans>New Position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -262,7 +262,7 @@ export default function Pool() {
             <ResponsiveRow>
               {showV2Features && (
                 <RowFixed>
-                  <ButtonOutlined
+                  <ButtonOutlined 
                     as={Link}
                     to="/pool/v2"
                     id="import-pool-link"
@@ -272,6 +272,7 @@ export default function Pool() {
                       borderRadius: '12px',
                       width: 'fit-content',
                       fontSize: '14px',
+                      background: "#FFF"
                     }}
                   >
                     <Layers size={14} style={{ marginRight: '8px' }} />

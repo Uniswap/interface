@@ -132,22 +132,22 @@ export default function CTACards() {
       <CTASection>
         <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
           <ResponsiveColumn>
-            <HeaderText>
+            <HeaderText style={{color: "#FFF"}}>
               <Trans>Learn about providing liquidity</Trans> ↗
             </HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
+            <TYPE.white fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
               <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-            </TYPE.body>
+            </TYPE.white>
           </ResponsiveColumn>
         </CTA1>
         <CTA2 href={infoLink + 'pools'}>
           <ResponsiveColumn>
-            <HeaderText style={{ alignSelf: 'flex-start' }}>
+            <HeaderText style={{ color: "#FFF", alignSelf: 'flex-start' }}>
               <Trans>Top pools</Trans> ↗
             </HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+            <TYPE.white fontWeight={300} style={{ alignSelf: 'flex-start' }}>
               <Trans>Explore popular pools on Uniswap Analytics.</Trans>
-            </TYPE.body>
+            </TYPE.white>
           </ResponsiveColumn>
         </CTA2>
       </CTASection>
