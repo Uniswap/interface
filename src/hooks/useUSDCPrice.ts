@@ -35,11 +35,11 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     }
 
     // handle usdc
-    if (currency?.wrapped.equals(stablecoin)) {
+    if (currency?.wrapped?.equals(stablecoin)) {
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    if (currency?.wrapped.equals(USDC)) {
+    if (currency?.wrapped?.equals(USDC)) {
       return new Price(USDC, USDC, '1', '1')
     }
 
