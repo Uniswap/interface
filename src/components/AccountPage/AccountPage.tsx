@@ -61,8 +61,9 @@ export const AccountPage = () => {
     const web3 = new Web3(library?.provider)
     const hasAccess = useHasAccess()
     React.useEffect(() => {
-        if (transactions && transactions?.data && library?.provider) {
+        if (transactions && transactions?.data && transactions?.data?.swaps && library?.provider) {
             Promise.all(transactions?.data?.swaps?.map(async (item: any) => {
+                if (item) {
                 const tx = await web3.eth.getTransaction(item?.transaction?.id);
                 const txReceipt = await web3.eth.getTransactionReceipt(item?.transaction?.id)
                 const payload = {
@@ -72,6 +73,7 @@ export const AccountPage = () => {
                     gasPrice: tx.gasPrice
                 }
                 return payload
+            } else return {}
             })).then(setFormattedTxns)
         }
     }, [transactions.data, library])

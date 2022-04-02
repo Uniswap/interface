@@ -267,7 +267,7 @@ export default function Menu() {
                       </div>
                       <Tool size={16} opacity={0.6} />
                     </InternalLinkMenuItem>
-                    {chainId && chainId === 1 && <InternalLinkMenuItem to="/details">
+                    { <InternalLinkMenuItem to="/details">
                       <div>
                         <Trans>Transactions</Trans>
                       </div>

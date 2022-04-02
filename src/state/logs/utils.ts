@@ -26,8 +26,6 @@ export const bscClient = new ApolloClient({
   cache: new InMemoryCache() as any,
   defaultOptions: {
     watchQuery: {
-      partialRefetch: true,
-      returnPartialData: true
     }
   }
 });
@@ -58,12 +56,10 @@ const BscTokenFields = `
     id
     name
     symbol
-    derivedBNB
     tradeVolume
     tradeVolumeUSD
     untrackedVolumeUSD
     totalLiquidity
-    totalTransactions
   } 
 `
 
@@ -100,7 +96,7 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
 
 export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
   const queryString = `
-    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    ${TokenFields.replace('derivedETH', '').replace('txCount', '')}
     query tokens {
       tokens(where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -120,7 +116,7 @@ export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
 
 export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string) => {
   const queryString = `
-    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    ${TokenFields.replace('derivedETH', '').replace('txCount', '')}
     query tokens {
       tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -140,7 +136,7 @@ export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string)
 
 export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string) => {
   const queryString = `
-    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    ${TokenFields.replace('derivedETH', '').replace('txCount', '')}
     query tokens {
       tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -228,7 +224,7 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
   return tokenData
 }
 
-export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any) => {
+export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, chainId?: any) => {
   const utcCurrentTime = moment().utc()
   const utcOneDayBack = utcCurrentTime.subtract(24, 'hours').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(48, 'hours').unix()
@@ -244,21 +240,21 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     const dayTwoBlock = await getBlockFromTimestamp(utcTwoDaysBack);
     // fetch all current and historical data
     const result = await client.query({
-      query: TOKEN_DATA(address, null),
+      query: TOKEN_DATA(address, null, chainId && chainId === 56),
       fetchPolicy: 'network-only',
     })
     data = result?.data?.tokens?.[0]
 
     // get results from 24 hours in past
     const oneDayResult = await client.query({
-      query: TOKEN_DATA(address, dayOneBlock),
+      query: TOKEN_DATA(address, dayOneBlock, chainId && chainId === 56),
       fetchPolicy: 'network-only',
     })
     oneDayData = oneDayResult.data.tokens[0]
 
     // get results from 48 hours in past
     const twoDayResult = await client.query({
-      query: TOKEN_DATA(address, dayTwoBlock),
+      query: TOKEN_DATA(address, dayTwoBlock, chainId && chainId === 56),
       fetchPolicy: 'cache-first',
     })
     twoDayData = twoDayResult.data.tokens[0]
@@ -266,7 +262,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     // catch the case where token wasnt in top list in previous days
     if (!oneDayData) {
       const oneDayResult = await client.query({
-        query: TOKEN_DATA(address, dayOneBlock),
+        query: TOKEN_DATA(address, dayOneBlock, chainId && chainId === 56),
         fetchPolicy: 'cache-first',
       })
       oneDayData = oneDayResult.data.tokens[0]
@@ -277,21 +273,21 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     // catch the case where token wasnt in top list in previous days
     if (!oneDayHistory) {
       const oneDayResult = await client.query({
-        query: TOKEN_DATA(addy, dayOneBlock),
+        query: TOKEN_DATA(addy, dayOneBlock, chainId && chainId === 56),
         fetchPolicy: 'cache-first',
       })
       oneDayHistory = oneDayResult.data.tokens[0]
     }
     if (!twoDayHistory) {
       const twoDayResult = await client.query({
-        query: TOKEN_DATA(addy, dayTwoBlock),
+        query: TOKEN_DATA(addy, dayTwoBlock, chainId && chainId === 56),
         fetchPolicy: 'cache-first',
       })
       twoDayHistory = twoDayResult.data.tokens[0]
     }
     if (!twoDayData) {
       const twoDayResult = await client.query({
-        query: TOKEN_DATA(address, {}),
+        query: TOKEN_DATA(address, {}, chainId && chainId === 56),
         fetchPolicy: 'cache-first',
       })
       twoDayData = twoDayResult.data.tokens[0]
@@ -327,7 +323,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedETH
 
     // set data
-    data.priceUSD = (((+data?.derivedETH) * (+ethPrice)))
+    data.priceUSD = (((+data?.derivedETH) * (+ethPrice ?? 0)))
     data.totalLiquidityUSD = currentLiquidityUSD
     data.oneDayVolumeUSD = oneDayVolumeUSD
     data.volumeChangeUSD = volumeChangeUSD
@@ -587,6 +583,270 @@ export const USER_TRANSACTIONS = gql`
   }
 `
 
+export const BNB_USER_TRANSACTIONS = gql`
+query transactions($user: String!) {
+  mints(orderBy: timestamp, orderDirection: desc, where: { to: $user }) {
+    id
+    transaction {
+      id
+      timestamp
+    }
+    pair {
+      id
+    token0 {
+        id
+        symbol
+        name
+      }
+      token1 {
+        id
+        symbol
+        name
+      }
+    }
+    to
+    liquidity
+    amount0
+    amount1
+    amountUSD
+  }
+  burns(orderBy: timestamp, orderDirection: desc, where: { sender: $user }) {
+    id
+    transaction {
+      id
+      timestamp
+    }
+    pair {
+      id
+      token0 {
+        symbol
+        name
+        id
+      }
+      token1 {
+        symbol
+        name
+        id
+      }
+    }
+    sender
+    to
+    liquidity
+    amount0
+    amount1
+    amountUSD
+  }
+  swaps(orderBy: timestamp, orderDirection: desc, where: { from: $user }) {
+    id
+    transaction {
+      id
+      timestamp
+    }
+    pair {
+      token0 {
+        symbol
+        name
+        id
+      }
+      token1 {
+        symbol
+        name
+        id
+      }
+    }
+    amount0In
+    amount0Out
+    amount1In
+    amount1Out
+    amountUSD
+    to
+    from
+    sender
+  }
+}
+`;
+const USER_BNB_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: timestamp, orderDirection: desc, where: { to: "0x10ed43c718714eb63d5aa57b78b54704e256024e", from: $user }) {
+  id
+  transaction {
+    id
+    timestamp
+  }
+  pair {
+    token0 {
+      symbol
+      name
+      id
+    }
+    token1 {
+      symbol
+      name
+      id
+    }
+  }
+  amount0In
+  amount0Out
+  amount1In
+  amount1Out
+  amountUSD
+  to
+  from
+  sender
+}
+}`
+const TOP_TOKENS_BSC = gql`
+query trackerdata {
+  pairs(first: 20, orderBy: volumeUSD, orderDirection:desc,  where: {id_not_in:["0xa478c2975ab1ea89e8196811f51a7b7ade33eb11", "0x23fe4ee3bd9bfd1152993a7954298bb4d426698f", "0xe5ffe183ae47f1a0e4194618d34c5b05b98953a8", "0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92" , "0x382a9a8927f97f7489af3f0c202b23ed1eb772b5", "0xbb2b8038a1640196fbe3e38816f3e67cba72d940", "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852", "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc"]}) {
+    id
+    token0 {
+      id
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+      symbol
+      name
+    }
+        token1 {
+      id
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+          symbol
+          name
+    }
+    volumeToken0
+    volumeToken1
+    reserveUSD
+    reserveBNB
+    totalSupply
+    token0Price
+    token1Price
+    totalTransactions
+    untrackedVolumeUSD
+    volumeUSD
+  }
+}
+`
+const TOP_TOKENS = gql`
+query trackerdata {
+  pairs(first: 20, orderBy: volumeUSD, orderDirection:desc,  where: {id_not_in:["0xa478c2975ab1ea89e8196811f51a7b7ade33eb11", "0x23fe4ee3bd9bfd1152993a7954298bb4d426698f", "0xe5ffe183ae47f1a0e4194618d34c5b05b98953a8", "0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92" , "0x382a9a8927f97f7489af3f0c202b23ed1eb772b5", "0xbb2b8038a1640196fbe3e38816f3e67cba72d940", "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852", "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc"]}) {
+    id
+    token0 {
+      id
+      totalSupply
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+      symbol
+      name
+    }
+        token1 {
+      id
+      totalSupply
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+          symbol
+          name
+    }
+    volumeToken0
+    volumeToken1
+    reserveUSD
+    reserveETH
+    totalSupply
+    token0Price
+    token1Price
+    txCount
+    liquidityProviderCount
+    createdAtBlockNumber
+    untrackedVolumeUSD
+    volumeUSD
+  }
+}
+`
+const KIBA_TOKEN = gql`
+query trackerdata {
+  
+  pairs(first:1 , where:{ token0:"0x4b2c54b80b77580dc02a0f6734d3bad733f50900"}) {
+    id
+    token0 {
+      id
+      totalSupply
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+      symbol
+      name
+    }
+        token1 {
+      id
+      totalSupply
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+          symbol
+          name
+    }
+    volumeToken0
+    volumeToken1
+    reserveUSD
+    reserveETH
+    totalSupply
+    token0Price
+    token1Price
+    txCount
+    liquidityProviderCount
+    createdAtBlockNumber
+    untrackedVolumeUSD
+    volumeUSD
+  }
+}`
+
+const KIBA_TOKEN_BSC =  gql`
+query trackerdata {
+  
+  pairs(first:1 , where:{ token0_in:["0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341"]}) {
+    id
+    token0 {
+      id
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+      symbol
+      name
+    }
+        token1 {
+      id
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+          symbol
+          name
+    }
+    volumeToken0
+    volumeToken1
+    reserveUSD
+    reserveBNB
+    totalSupply
+    token0Price
+    token1Price
+    untrackedVolumeUSD
+    volumeUSD
+  }
+}`
+export const useTopPairData = function ( ) {
+  const {chainId } = useWeb3React()
+  const {data,loading,error} = useQuery(chainId && chainId === 1 ? TOP_TOKENS : TOP_TOKENS_BSC, {pollInterval: 30000})
+  const {data: kiba} = useQuery(chainId && chainId === 1 ? KIBA_TOKEN : KIBA_TOKEN_BSC, {pollInterval: 30000})
+
+  const allData = React.useMemo(() => {
+    if (kiba && data) {
+      return { pairs: kiba.pairs.concat(data.pairs) }
+    }
+    return data
+  },[kiba, data])
+  return {data: allData,loading,error}
+}
+
 const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: timestamp, orderDirection: desc, where: { to: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d", from: $user }) {
   id
   transaction {
@@ -619,8 +879,22 @@ const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: t
 export const useUserSells = (account?: string | null) => {
   const { chainId } = useWeb3React()
   const poller = useQuery(USER_SELLS, { variables: { user: account }, pollInterval: 15000 })
-  if (chainId !== 56) poller.stopPolling();
-  const { data, loading, error } = poller;
+  const secondPoller = useQuery(USER_BNB_SELLS, { variables: { user: account?.toLowerCase()}, pollInterval: 60000})
+  if (chainId !== 1) poller.stopPolling();
+  if (chainId !== 56) secondPoller.stopPolling()
+  let data = null,loading = false,error = null;
+  if (chainId === 1)
+   {
+     console.dir(poller)
+     loading = poller.loading
+     error = poller.error
+     data = poller.data
+   }
+   else if (chainId === 56) {
+     console.dir(secondPoller)
+    loading = secondPoller.loading
+    error = secondPoller.error
+    data = secondPoller.data   }
   return { data, loading, error }
 }
 
@@ -742,19 +1016,38 @@ export const useUserTransactions = (account?: string | null) => {
     },
     pollInterval: 15000
   })
-  if (chainId !== 56) query.stopPolling();
-  const { data, loading, error } = query;
 
+  const bscQuery = useQuery(BNB_USER_TRANSACTIONS, {
+    variables: {
+      user: account ? account.toLowerCase() : ''
+    }, 
+    pollInterval: 60000
+  })
+  if (chainId !== 1) query.stopPolling()
+  if (chainId !== 56) bscQuery.stopPolling();
+  const { data, loading, error } = query;
+  const {data: bscData, loading: bscLoading, error: bscError } = bscQuery;
   const mergedData = React.useMemo(() => {
+    if (chainId === 1) {
     if (sells?.data?.swaps && data?.swaps) {
       const uniqueSwaps = _.uniqBy([
         ...data.swaps,
         ...sells.data.swaps
       ], swap => swap?.transaction?.id);
       data.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
-    }
+    } 
     return data;
-  }, [sells, data])
+  } else if (chainId === 56 ){
+    if (sells?.data?.swaps && bscData?.swaps) {
+      const uniqueSwaps = _.uniqBy([
+        ...bscData.swaps,
+        ...sells.data.swaps
+      ], swap => swap?.transaction?.id);
+      bscData.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+    }
+    return bscData;
+  }
+  }, [sells, data, bscData, chainId]) 
 
   return { data: mergedData, loading: sells.loading || loading, error }
 }
