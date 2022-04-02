@@ -49,6 +49,8 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { RowFixed } from 'components/Row'
 import Swal from 'sweetalert2'
+import SwapVolume from 'components/SwapVolume'
+import { TYPE } from 'theme'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
 import TopTokenMovers from 'components/swap/TopMovers'
@@ -510,6 +512,7 @@ export default function App() {
           <BodyWrapper>
             <Popups />
             <Polling />
+            <SwapVolume />
             <TopLevelModals />
             <Switch>
               <Route exact strict path="/reflections" component={LifetimeReflections} />
