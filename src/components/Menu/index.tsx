@@ -14,6 +14,8 @@ import {
   Twitter,
   Monitor,
   Image,
+  BarChart,
+  Tool,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -248,6 +250,8 @@ const babyTrumpBalance = useTrumpBalance(account);
     setMenu('main')
   }, [open])
 
+  const routeToGainsTracker = () => window.history.pushState(null, 'GainsTracker', '/gains-tracker');
+
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
@@ -264,13 +268,18 @@ const babyTrumpBalance = useTrumpBalance(account);
             default:
               return (
                 <MenuFlyout>
-                 <InternalLinkMenuItem to="#">
+                 <InternalLinkMenuItem style={{cursor:'not-allowed'}} to="#">
                  <div>
-                   <Trans>SqueezeTools (COMING SOON)</Trans>
+                   <Trans>SqueezeTools <small>COMING SOON</small></Trans>
                    </div>
-                   <Monitor opacity={0.6} size={16} />
-                   </InternalLinkMenuItem>
-                 
+                   <Tool style={{position:'relative', left: 5}} opacity={0.6} size={16} />
+                </InternalLinkMenuItem>
+                <InternalLinkMenuItem to="/gains-tracker">
+                   <div>
+                      <Trans>GainsTracker</Trans>
+                   </div>
+                   <PieChart style={{position:'relative', left: 10}} opacity={0.6} size={16} />
+                </InternalLinkMenuItem>
                  <MenuItem href="https://squeezestats.app">
                      <div>
                       <Trans>SqueezeStats</Trans>

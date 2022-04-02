@@ -23,6 +23,7 @@ import { TYPE } from 'theme'
 import { GreyCard } from 'components/Card'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { walletconnect } from 'connectors'
+import { DarkCard } from 'components/Card'
 const DisabledMask = styled.div`
   position: relative;
   pointer-events: none;
@@ -129,7 +130,7 @@ export const GainsTracker = () => {
     }
 
     return ''
-  }, [isTrackingGains, localStorage.getItem(CUSTOM_GAINS_KEY), startTrackingCustom, stopTrackingCustom])
+  }, [isTrackingGains, selectedCurrencyBalance, localStorage.getItem(CUSTOM_GAINS_KEY), startTrackingCustom, stopTrackingCustom])
 
   const startedTrackingAt = () => {
     if (!isTrackingGains) return ''
@@ -188,8 +189,31 @@ export const GainsTracker = () => {
   `
 
   const GainsWrapper = !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0) ? DisabledMask : React.Fragment
-
-  const total = useUSDCValue(selectedCurrencyBalance)
+  const [currencyValue, setCurrencyValue] = React.useState('')
+  React.useEffect(() => {
+    if (selectedCurrencyBalance && +selectedCurrencyBalance?.toFixed(2) > 0) {
+      const provider = window.ethereum ? window.ethereum : walletconnect
+      const w3 = new Web3(provider as any).eth;
+      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+      const ten9 = 10 ** 9;
+      const amount = +selectedCurrencyBalance.toFixed(0) * ten9;
+      const address = currency?.address ? currency.address : selectedCurrencyBalance?.currency?.wrapped?.address;
+      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+        address,
+        WETH9[1].address,
+        USDC.address,
+      ]);
+      amountsOut.call().then((response: any) => {
+        const usdc = response[response.length - 1];
+        const ten6 = 10 ** 6;
+        const usdcValue = usdc / ten6;
+        setCurrencyValue(usdcValue.toFixed(2));
+      });
+       
+      }
+    }, [selectedCurrencyBalance, account])
+  
+  
   return (
     <GainsWrapper>
       <Card style={{ maxWidth: 600 }}>
@@ -197,7 +221,7 @@ export const GainsTracker = () => {
           <CardSection>
             <div style={{ paddingLeft: 15, paddingRight: 15 }}>
               <div>
-                <h1 style={{color:'#fff'}}>GAINSTRACKER &trade;</h1>
+                <h1 style={{filter: 'drop-shadow(2px 4px 6px black)', color:'#fff'}}>GAINSTRACKER &trade;</h1>
                 {isTrackingCustom && (
                   <div>
                     <Badge>
@@ -207,7 +231,7 @@ export const GainsTracker = () => {
                   </div>
                 )}
               </div>
-              {!trumpBalance ||
+              {
                 (trumpBalance && +trumpBalance?.toFixed(2) <= 0 && (
                   <BlueCard>
                     <p>
@@ -216,13 +240,13 @@ export const GainsTracker = () => {
                     </p>
                   </BlueCard>
                 ))}
-             <TYPE.white><small >
-                Select a currency that you would like to track redistribution gains. &nbsp;
+             <DarkCard><TYPE.main><small >
+                Select a currency, or input the contract address of a project you own that you would like to track redistribution gains. &nbsp;
                 <Tooltip show={showTip} text={tipmessage}>
                   <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
                 </Tooltip>
               </small>
-              </TYPE.white> 
+              </TYPE.main> </DarkCard>
             </div>
           </CardSection>
           <CardSection>
@@ -231,15 +255,17 @@ export const GainsTracker = () => {
               label={'GAINS'}
               showMaxButton={false}
               value={gains()}
-              currency={currency}
+              currency={selectedCurrencyBalance?.currency}
               onUserInput={handleTypeInput}
-            showOnlyTrumpCoins={false}
+              showOnlyTrumpCoins={true}
               onMax={undefined}
               fiatValue={undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={gains() ? USDC : undefined}
               showCommonBases={false}
-              renderBalance={amt => `Balance: ${(amt.toFixed(0))} (${total?.toFixed(2)} USD)`}
+              renderBalance={amt => {
+                return `Balance: ${(amt.toFixed(0))} (${(+currencyValue).toFixed(2)} USD)`
+              }}
               id="swap-currency-input"
             />
           </CardSection>
