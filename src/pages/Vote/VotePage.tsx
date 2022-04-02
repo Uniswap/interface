@@ -126,7 +126,7 @@ export const useKiba = (account?: string | null) => {
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = React.useMemo(() => new Token(
     isBinance ? 56 : 1,
-    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
+    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
     18,
     "Kiba",
     "Kiba Inu"
@@ -148,7 +148,7 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
   const  isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin =React.useMemo(() =>  new Token(
     1,
-    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
+    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
     18,
     "Kiba",
     "Kiba Inu"
@@ -197,7 +197,7 @@ export default function VotePage() {
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
-    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
+    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
     9,
     "Kiba",
     "Kiba Inu"
