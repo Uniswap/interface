@@ -438,9 +438,9 @@ const [darkMode] = useDarkModeManager()
                     <TYPE.white>
                       <Trans>
                         {trumpBalance !== undefined
-                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {trumpBalance?.toFixed(
+                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(trumpBalance?.toFixed(
                               2
-                            )} (${(+trumpBalanceUSD)?.toFixed(2)} USD) </span></div>
+                            )).toLocaleString()} (${(+trumpBalanceUSD)?.toFixed(2)} USD) </span></div>
                           : null}
                       </Trans>
                     </TYPE.white>
@@ -454,9 +454,9 @@ const [darkMode] = useDarkModeManager()
                           account !== undefined && (
                             <React.Fragment>
                               <Trans>{`Kiba Gains`} </Trans> &nbsp;
-                              <span>{(
+                              <span>{Number((
                                 +trumpBalance?.toFixed(2) - +storedTrumpBalance
-                              ).toFixed(2)} </span>
+                              ).toFixed(2)).toLocaleString()} </span>
                               {isTrackingGains && trumpGainsUSD && (
                                 <Badge style={{ color:"#FFF",paddingTop: 5 }}>
                                   <small>
