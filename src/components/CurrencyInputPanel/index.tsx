@@ -262,7 +262,9 @@ export default function CurrencyInputPanel({
             </Aligner>
             
           </CurrencySelect>
-          {currency && <RowFixed>
+          {currency && <RowFixed style={{
+            marginRight:15
+          }}>
             <Tooltip placement={'top'}
               show={showMetaTip} 
               text={`Add ${currency?.name} (${currency?.symbol}) to Metamask`}>
