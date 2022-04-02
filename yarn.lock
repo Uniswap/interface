@@ -2454,22 +2454,22 @@
     "@ethersproject/properties" "^5.5.0"
     "@ethersproject/strings" "^5.5.0"
 
-"@gelatonetwork/limit-orders-lib@^2.4.2":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@gelatonetwork/limit-orders-lib/-/limit-orders-lib-2.4.2.tgz#ee9f440e088024e72695a770a5d7fafb2f4502b1"
-  integrity sha512-63gw6BqH4DjiLe9VJbzSUZjzmheWj+rXYiO7aAwjRr9znLvFjolVo7IasioUwFAx+/4OFnzNoR09X9iu/uXACA==
+"@gelatonetwork/limit-orders-lib@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@gelatonetwork/limit-orders-lib/-/limit-orders-lib-2.5.0.tgz#7e24de631c9cf0930ee71f4e16d0af212877aa02"
+  integrity sha512-oLIfdNjmBOHTQvbGfjW1DF8bzJ2EAncpGZJ19xursgqrZ0JIQESascrPHnNkW0yRLWmKkJgQyFHi1NoiFO35yA==
   dependencies:
     ethers "^5.4.6"
     graphql "^15.5.3"
     graphql-request "^3.5.0"
     tslib "^2.3.1"
 
-"@gelatonetwork/limit-orders-react@^1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@gelatonetwork/limit-orders-react/-/limit-orders-react-1.5.3.tgz#8406443129c8acfa0d0344a9c597486fe42039b0"
-  integrity sha512-Cl13/jPfbDnQXjqNJp6oNiQv/TBJjtosD0eOKz2UaUTmXcQeGzvgfhuwhKBcDvDSy0MQTGiKWhQZaEwt0wYjrw==
+"@gelatonetwork/limit-orders-react@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@gelatonetwork/limit-orders-react/-/limit-orders-react-1.6.0.tgz#f0b35ee7947722e772dc5f379b978993668c9dea"
+  integrity sha512-g7xg90h7f8nxDcuWOltsGA63rg0TNM78Fsb3HDj5mYoKpEtRQgk65MvRS9HVCIUpWdXz4zxVH3nK52kls8nzdg==
   dependencies:
-    "@gelatonetwork/limit-orders-lib" "^2.4.2"
+    "@gelatonetwork/limit-orders-lib" "^2.5.0"
     "@popperjs/core" "^2.9.2"
     "@reach/dialog" "^0.15.0"
     "@uniswap/default-token-list" "^2.0.0"
@@ -5976,6 +5976,13 @@ axios@^0.21.1:
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
+
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
+  dependencies:
+    follow-redirects "^1.14.4"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -11105,6 +11112,11 @@ follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.14.1"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.1.tgz"
   integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
+
+follow-redirects@^1.14.4:
+  version "1.14.5"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.5.tgz#f09a5848981d3c772b5392309778523f8d85c381"
+  integrity sha512-wtphSXy7d4/OR+MvIFbCVBDzZ5520qV8XfPklSN5QtxuMUJZ+b0Wnst1e1lCDocfzuCkHqj8k0FpZqO+UIaKNA==
 
 for-each@~0.3.3:
   version "0.3.3"

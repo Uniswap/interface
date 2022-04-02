@@ -77,6 +77,68 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
   return gql(queryString)
 }
 
+export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
+  const queryString = React.useMemo(() => `
+    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    query tokens {
+      tokens(where: {id:"${tokenAddress}"}) {
+        ...TokenFields
+      }
+      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+        id
+      }
+      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+        id
+      }
+    }
+  `, [block,tokenAddress])
+  return gql(queryString)
+}
+
+export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string) => {
+  const queryString = React.useMemo(() => `
+    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    query tokens {
+      tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
+        ...TokenFields
+      }
+      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+        id
+        name
+        symbol
+      }
+      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+        id
+        name
+        symbol
+      }
+    }
+  `, [block,tokenAddress])
+  return gql(queryString)
+}
+
+export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string) => {
+  const queryString = React.useMemo(() => `
+    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    query tokens {
+      tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
+        ...TokenFields
+      }
+      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+        id
+        name
+        symbol
+      }
+      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+        id
+        name
+        symbol
+      }
+    }
+  `, [block,tokenAddress])
+  return gql(queryString)
+}
+
 export const get2DayPercentChange = (valueNow: any, value24HoursAgo: any, value48HoursAgo: any) => {
   // get volume info for both 24 hour periods
   const currentChange = parseFloat(valueNow) - parseFloat(value24HoursAgo)
@@ -273,14 +335,22 @@ const getTokenTransactions = async (allPairsFormatted: any) => {
 }
 
 export function useTokenTransactions(tokenAddress: string, interval: null | number = null) {
+  const {chainId} = useWeb3React()
   const allPairsFormatted = usePairs(tokenAddress)
   const tokenTxns = useQuery(FILTERED_TRANSACTIONS, {
     variables: {
-      allPairs: allPairsFormatted ? [allPairsFormatted[0].id] : []
+      allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted[0].id] : []
     },
-    pollInterval: 2500
+    pollInterval: 10000
   })
+
+  React.useEffect(() => {
+    if (chainId && chainId !== 1) {
+      tokenTxns.stopPolling();
+    }
+  }, [chainId])
   const data = React.useMemo(() => tokenTxns, [tokenTxns])
+  if (chainId && chainId !== 1) tokenTxns.stopPolling()
   return { data: data.data, lastFetched: new Date() };
 }
 
@@ -424,13 +494,15 @@ export const USER_TRANSACTIONS = gql`
       }
       pair {
         id
-        token0 {
+      token0 {
           id
           symbol
+          name
         }
         token1 {
           id
           symbol
+          name
         }
       }
       to
@@ -449,9 +521,13 @@ export const USER_TRANSACTIONS = gql`
         id
         token0 {
           symbol
+          name
+          id
         }
         token1 {
           symbol
+          name
+          id
         }
       }
       sender
@@ -470,9 +546,13 @@ export const USER_TRANSACTIONS = gql`
       pair {
         token0 {
           symbol
+          name
+          id
         }
         token1 {
           symbol
+          name
+          id
         }
       }
       amount0In
@@ -481,9 +561,76 @@ export const USER_TRANSACTIONS = gql`
       amount1Out
       amountUSD
       to
+      from
+      sender
     }
+   
   }
 `
+
+const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: timestamp, orderDirection: desc, where: { to: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d", from: $user }) {
+  id
+  transaction {
+    id
+    timestamp
+  }
+  pair {
+    token0 {
+      symbol
+      name
+      id
+    }
+    token1 {
+      symbol
+      name
+      id
+    }
+  }
+  amount0In
+  amount0Out
+  amount1In
+  amount1Out
+  amountUSD
+  to
+  from
+  sender
+}
+}`
+
+export const useUserSells = (account?: string | null) => 
+{
+  const { chainId } = useWeb3React()
+  const poller = useQuery(USER_SELLS, {variables: {user: account},    pollInterval: 15000})
+  if (chainId !== 56) poller.stopPolling();
+  const {data,loading,error }= poller;
+  return {data,loading,error}
+}
+
+export const useUserTransactions = (account?: string | null) => {
+  const {chainId} = useWeb3React()
+  const sells = useUserSells(account)
+  const query = useQuery(USER_TRANSACTIONS, {
+    variables :{ 
+      user: account ? account : ''
+    },
+    pollInterval: 15000
+  })
+  if (chainId !== 56) query.stopPolling();
+  const {data,loading,error }= query;
+
+  const mergedData = React.useMemo(() => {
+    if (sells?.data?.swaps && data?.swaps) {
+      const uniqueSwaps = _.uniqBy([
+        ...data.swaps,
+        ...sells.data.swaps
+      ], swap => swap?.transaction?.id);
+      data.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+    }
+    return data;
+  }, [sells, data])
+
+  return { data: mergedData,loading: sells.loading || loading,error}
+}
 
 export const FILTERED_TRANSACTIONS = gql`
   query ($allPairs: [Bytes]!) {
@@ -495,11 +642,13 @@ export const FILTERED_TRANSACTIONS = gql`
       pair {
         token0 {
           id
+          name
           symbol
         }
         token1 {
           id
           symbol
+          name
         }
       }
       to
@@ -517,10 +666,12 @@ export const FILTERED_TRANSACTIONS = gql`
         token0 {
           id
           symbol
+          name
         }
         token1 {
           id
           symbol
+          name
         }
       }
       sender
@@ -529,20 +680,22 @@ export const FILTERED_TRANSACTIONS = gql`
       amount1
       amountUSD
     }
-    swaps(first: 200, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
+    swaps(orderBy: timestamp, orderDirection: desc, where: { pair_in: $allPairs }) {
+      id
       transaction {
         id
         timestamp
       }
-      id
       pair {
         token0 {
-          id
           symbol
+          name
+          id
         }
         token1 {
-          id
           symbol
+          name
+          id
         }
       }
       amount0In
@@ -551,8 +704,8 @@ export const FILTERED_TRANSACTIONS = gql`
       amount1Out
       amountUSD
       to
-      from
       sender
+      from
     }
   }
 `

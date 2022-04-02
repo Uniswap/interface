@@ -3,11 +3,12 @@ import gql from 'graphql-tag'
 import moment from 'moment'
 import React, { useCallback } from 'react'
 import { subDays, subWeeks, startOfMinute } from 'date-fns'
-import { bscClient, get2DayPercentChange, getPercentChange, TOKEN_DATA } from './utils'
+import { bscClient, BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, get2DayPercentChange, getPercentChange, TOKEN_DATA } from './utils'
 import { isEqual } from 'lodash'
 import useInterval from 'hooks/useInterval'
 import { useWeb3React } from '@web3-react/core';
 import { useQuery } from '@apollo/client'
+import { useBlockNumber } from 'state/application/hooks'
 export const INFO_CLIENT = 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2'
 export const BITQUERY_CLIENT = 'https://graphql.bitquery.io';
 
@@ -139,7 +140,7 @@ interface TransactionResults {
 const fetchPoolTransactions = async (address: string): Promise<{ data?: any[]; error: boolean }> => {
   try {
     const data = await request<TransactionResults>(INFO_CLIENT, POOL_TRANSACTIONS, {
-      address:'0x89e8c0ead11b783055282c9acebbaf2fe95d1180',
+      address: '0x89e8c0ead11b783055282c9acebbaf2fe95d1180',
     })
     const mints = data.mints.map(mapMints)
     const burns = data.burns.map(mapBurns)
@@ -164,7 +165,7 @@ const fetchBnbPrices = async (
       block48,
       blockWeek,
     }).catch(err => console.error("ERROR", err))
-    
+
     return {
       error: false,
       bnbPrices: data && data ? {
@@ -303,6 +304,7 @@ export const useBlocksFromTimestamps = (
   error: boolean
 } => {
   const [blocks, setBlocks] = React.useState<any[]>()
+
   const [error, setError] = React.useState(false)
 
   const timestampsString = JSON.stringify(timestamps)
@@ -312,6 +314,7 @@ export const useBlocksFromTimestamps = (
     const fetchData = async () => {
       const timestampsArray = JSON.parse(timestampsString)
       const result = await getBlocksFromTimestamps(timestampsArray, sortDirection, skipCount)
+
       if (result.length === 0) {
         setError(true)
       } else {
@@ -324,10 +327,10 @@ export const useBlocksFromTimestamps = (
     }
   }, [blocksString, error, skipCount, sortDirection, timestampsString])
 
-  return {
+  return React.useMemo(() => ({
     blocks,
     error,
-  }
+  }), [blocks, error])
 }
 
 /**
@@ -385,80 +388,104 @@ export const mapSwaps = (swap: any) => {
   return { ...swap, type: 'swap' }
 }
 
-export const useBscTokenData = (addy: any, price:any, price1: any) => {
- return useBscTokenDataHook(addy, price,price1)
+export const useBscTokenData = (addy: any, price: any, price1: any) => {
+  return useBscTokenDataHook(addy, price, price1)
 }
 
-export const useBscTokenDataHook =  (addy: string, ethPrice: any, ethPriceOld: any) => {
-  const utcCurrentTime = moment().utc()
-  const utcOneDayBack = utcCurrentTime.subtract(24, 'hours').unix()
-  const utcTwoDaysBack = utcCurrentTime.subtract(48, 'hours').unix()
+export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: any) => {
   const address = addy?.toLowerCase()
-  const { blocks } = useBlocksFromTimestamps([utcOneDayBack, utcTwoDaysBack])
+  const utcCurrentTime = moment().utc()
+  
+  const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
+  const utcTwoDaysBack = utcCurrentTime.subtract(2, 'days').unix()
+  const payload = useBlocksFromTimestamps([utcOneDayBack, utcTwoDaysBack])
+ 
+  const QUERY_ONE = BSC_TOKEN_DATA(address)
+  const QUERY_TWO = BSC_TOKEN_DATA_BY_BLOCK_ONE(address, payload.blocks?.[0]?.number?.toString())
+  const QUERY_THREE = BSC_TOKEN_DATA_BY_BLOCK_TWO(address, (payload.blocks?.[1]?.number?.toString()));
+
   // initialize data arrays
-  const {data: one,loading,error} = useQuery(TOKEN_DATA(address, null , true), {returnPartialData: true, partialRefetch:true,pollInterval: 2500});
-  const {data: two} = useQuery(TOKEN_DATA(address, blocks ? (blocks as Array<{number:number}>)[0]?.number?.toString() : null, true), {pollInterval: 2500});
-  const {data: three} = useQuery(TOKEN_DATA(address, blocks ? (blocks as Array<{number:number}>)[1]?.number?.toString() : null,  true), {pollInterval: 2500});
-  const data = one?.tokens[0];
-  const oneDayData = two?.tokens[0];
-  const twoDayData = three?.tokens[0]
-  try {
-    if (data && oneDayData && twoDayData) {
-    // calculate percentage changes and daily changes
-    const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
-      +data?.tradeVolumeUSD ?? 0,
-      +oneDayData['tradeVolumeUSD'] ?? 0,
-      +twoDayData['tradeVolumeUSD'] ?? 0
-    )
+  const queryOne = useQuery(QUERY_ONE, { pollInterval: 60000, fetchPolicy: 'network-only' });
+  const queryTwo = useQuery(QUERY_TWO, { pollInterval: 60000, fetchPolicy: 'network-only' });
+  const queryThree = useQuery(QUERY_THREE, { pollInterval: 60000, fetchPolicy: 'network-only' });
 
-    // calculate percentage changes and daily changes
-    const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
-      +data.untrackedVolumeUSD,
-      +oneDayData?.untrackedVolumeUSD ?? 0,
-      +twoDayData?.untrackedVolumeUSD ?? 0
-    )
+  const one = React.useMemo(() => queryOne.data, [queryOne.data]);
+  const two = React.useMemo(() => queryTwo.data, [queryTwo.data]);
+  const three = React.useMemo(() => queryThree.data, [queryThree.data]);
+  const { chainId } = useWeb3React();
 
-    // calculate percentage changes and daily changes
-    const [oneDayTxns, txnChange] = get2DayPercentChange(
-      +data.totalTransactions,
-      +oneDayData?.totalTransactions ?? 0,
-      +twoDayData?.totalTransactions ?? 0
-    )
-
-    const priceChangeUSD = getPercentChange(
-      +data?.derivedBNB * (+ethPrice),
-      oneDayData?.derivedBNB ? +oneDayData?.derivedBNB * +ethPriceOld : 0
-    )
-
-    const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedBNB
-    const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedBNB
-
-    // set data
-    data.txCount = +data.totalTransactions
-    data.priceUSD = (((+data?.derivedBNB) * (+ethPrice)))
-    data.totalLiquidityUSD = currentLiquidityUSD
-    data.oneDayVolumeUSD = oneDayVolumeUSD
-    data.volumeChangeUSD = volumeChangeUSD
-    data.priceChangeUSD = priceChangeUSD
-    data.oneDayVolumeUT = oneDayVolumeUT
-    data.volumeChangeUT = volumeChangeUT
-    const liquidityChangeUSD = getPercentChange(+currentLiquidityUSD ?? 0, +oldLiquidityUSD ?? 0)
-    data.liquidityChangeUSD = liquidityChangeUSD
-    data.oneDayTxns = oneDayTxns
-    data.txnChange = txnChange
-    data.oneDayData = oneDayData?.[address]
-    data.twoDayData = twoDayData?.[address]
-    data.isBSC = true;
-    // new tokens
-    if (!oneDayData && data) {
-      data.oneDayVolumeUSD = data?.tradeVolumeUSD
-      data.oneDayVolumeETH = +data?.tradeVolume * +data?.derivedBNB
-      data.oneDayTxns = data?.totalTransactions
-    }
+  if (chainId && chainId !== 56) {
+    queryOne.stopPolling();
+    queryTwo.stopPolling();
+    queryThree.stopPolling();
   }
+
+  const data = one?.tokens[0];
+  if (data) data.id = 1;
+
+  const oneDayData = two?.tokens[0];
+  if (oneDayData) oneDayData.id = 2;
+
+  const twoDayData = three?.tokens[0];
+  if (twoDayData) twoDayData.id = 3;
+
+  try {
+    if (data && oneDayData && twoDayData && payload.blocks?.length &&
+      [data, oneDayData, twoDayData].every(item => ![data, oneDayData, twoDayData].filter(a => a.id !== item.id).some(b => b.totalTransactions.toString() === item.totalTransactions.toString()))) {
+      // calculate percentage changes and daily changes
+      const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
+        +data?.tradeVolumeUSD ?? 0,
+        +oneDayData['tradeVolumeUSD'] ?? 0,
+        +twoDayData['tradeVolumeUSD'] ?? 0
+      )
+
+      // calculate percentage changes and daily changes
+      const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
+        +data?.untrackedVolumeUSD,
+        +oneDayData?.untrackedVolumeUSD ?? 0,
+        +twoDayData?.untrackedVolumeUSD ?? 0
+      )
+
+      // calculate percentage changes and daily changes
+      const [oneDayTxns, txnChange] = get2DayPercentChange(
+        +data?.totalTransactions,
+        +oneDayData?.totalTransactions ?? 0,
+        +twoDayData?.totalTransactions ?? 0
+      )
+
+      const priceChangeUSD = getPercentChange(
+        +data?.derivedBNB * (+ethPrice),
+        +oneDayData?.derivedBNB ? +oneDayData?.derivedBNB * +ethPrice : 0
+      )
+
+      const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedBNB
+      const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedBNB
+
+      // set data
+      data.txCount = +data.totalTransactions
+      data.priceUSD = (((+data?.derivedBNB) * (+ethPrice)))
+      data.totalLiquidityUSD = currentLiquidityUSD
+      data.oneDayVolumeUSD = oneDayVolumeUSD
+      data.volumeChangeUSD = volumeChangeUSD
+      data.priceChangeUSD = priceChangeUSD
+      data.oneDayVolumeUT = oneDayVolumeUT
+      data.volumeChangeUT = volumeChangeUT
+      const liquidityChangeUSD = getPercentChange(+currentLiquidityUSD ?? 0, +oldLiquidityUSD ?? 0)
+      data.liquidityChangeUSD = liquidityChangeUSD
+      data.oneDayTxns = oneDayTxns
+      data.txnChange = txnChange
+      data.oneDayData = oneDayData?.[address]
+      data.twoDayData = twoDayData?.[address]
+      data.isBSC = true;
+      // new tokens
+      if (!oneDayData && data) {
+        data.oneDayVolumeUSD = data?.tradeVolumeUSD
+        data.oneDayVolumeETH = +data?.tradeVolume * +data?.derivedBNB
+        data.oneDayTxns = data?.totalTransactions
+      }
+    }
   } catch (e) {
     console.error(e)
-  
   }
   return data
 }
@@ -510,10 +537,10 @@ interface TransactionResults {
 const fetchTokenTransactions = async (address: string): Promise<{ data?: any; error: boolean }> => {
   try {
     console.log("Fetching token transactions")
-    
+
     const data = await request<TransactionResults>(INFO_CLIENT, TOKEN_TRANSACTIONS, {
       address
-    }).catch(console.error) 
+    }).catch(console.error)
     console.log("Got token transactions")
 
     return { data, error: false }
@@ -527,57 +554,15 @@ const fetchTokenTransactions = async (address: string): Promise<{ data?: any; er
 
 
 export function useBscTokenTransactions(tokenAddress: string, interval: null | number = null) {
-  const TX_STORAGE_KEY = 'bsc_transactions';
-  const [state, updateTokenTxns] = React.useState<any>( 
-    {} 
-  )
-
-  const {loading, data: txs, error,networkStatus} = useQuery(TOKEN_TRANSACTIONS,{
+  const { chainId } = useWeb3React()
+  const query = useQuery(TOKEN_TRANSACTIONS, {
     variables: {
       address: tokenAddress
     },
-    pollInterval: 2500
-  } )
-
-  React.useEffect(( ) => {
-    console.dir(txs);
-    console.log(loading ,error);
-  }
-  , [txs, loading, error])
-  
-  const { chainId } = useWeb3React()
-  const tokenTxns = React.useMemo(() => state?.[tokenAddress], [state])
-
-  // const checkForTxns = React.useCallback(async () => {
-  //   if (chainId === 56) {
-  //     const transactions = await fetchTokenTransactions(tokenAddress)
-  //     if (!transactions?.error && !!transactions?.data &&
-  //         isEqual(transactions, tokenTxns?.txns) === false) {
-  //         console.log("Updating transaction data...")
-  //         console.log(transactions)
-  //         console.log("Time since last fetch, " + moment(new Date()).diff(moment(tokenTxns?.lastFetched), 'seconds') + " seconds");
-  //         localStorage.setItem(TX_STORAGE_KEY, JSON.stringify({[tokenAddress]: { txns: transactions, lastFetched: new Date() }}));
-  //         updateTokenTxns((state:any) => ({ ...state, [tokenAddress]: { txns: transactions, lastFetched: new Date() } }))
-  //     } 
-  //   }
-  // }, [chainId, tokenTxns, tokenAddress])
-
-  React.useEffect(() => {
-    if (chainId === 56) {
-      // checkForTxns();
-    }
-  }, [tokenAddress, chainId, tokenTxns, interval])
-
-  // useInterval(checkForTxns, interval, false)
-  const { txns: data, lastFetched } = React.useMemo(() => {
-    return txs ?
-     txs :
-      { 
-        txns: [], 
-        lastFetched: undefined 
-      }
-    }, [txs, tokenAddress])
-  return { data: data, lastFetched };
+    pollInterval: 5000
+  })
+  if (chainId && chainId !== 56) query.stopPolling();
+  return React.useMemo(() => ({ data: query.data, lastFetched: new Date() }), [query]);
 }
 
 /* eslint-disable no-param-reassign */
