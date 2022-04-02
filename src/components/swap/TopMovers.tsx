@@ -6,7 +6,7 @@ import { RowFixed, RowFlat } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { TYPE, StyledInternalLink, CustomLightSpinner } from 'theme'
 import HoverInlineText from 'components/HoverInlineText'
-import { getBlockFromTimestamp, getTokenData, useEthPrice, useTopPairData } from 'state/logs/utils'
+import { getBlockFromTimestamp, getTokenData, useEthPrice, useKibaPairData, useTopPairData } from 'state/logs/utils'
 import { useCurrency } from 'hooks/Tokens'
 import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
 import _ from 'lodash'
@@ -15,7 +15,7 @@ import { LoadingRows } from 'pages/Pool/styleds'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { useWeb3React } from '@web3-react/core'
 import { fetchBscTokenData, getBlocksFromTimestamps, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from 'state/logs/bscUtils'
-import Marquee from "react-marquee-slider";
+import Marquee, { Motion } from "react-marquee-slider";
 import useInterval from 'hooks/useInterval'
 
 const CardWrapper = styled(StyledInternalLink)`
@@ -84,65 +84,83 @@ export default function TopTokenMovers() {
   const bnbPrices = useBnbPrices()
   const [t24, t48, ,] = getDeltaTimestamps()
   const timestampsFromBlocks = useBlocksFromTimestamps([t24, t48])
-
+  const kibaPair = useKibaPairData()
   React.useEffect(() => {
     //clear out the tokens for refetch on network switch
     setAllTokens([])
+    setHasRan(false)
   }, [chainId])
-
+  const [hasRan, setHasRan] = React.useState(false)
   const fn = useCallback(async (isIntervalled: boolean) => {
     // validate the required parameters are all met before initializing a fetch
     const { blocks } = timestampsFromBlocks;
-    const isGood = ((!chainId || chainId === 1) &&
-      ethPriceOld &&
-      ethPrice)
-      || (chainId === 56 &&
-        bnbPrices?.current &&
-        bnbPrices?.oneDay)
-    if (isGood && blocks) {
-      if (allTokenData && allTokenData.data && (!allTokens.length || isIntervalled) && isGood) {
+    if (blocks && blocks[0] && blocks[1]) {
+      if (allTokenData &&
+        allTokenData.data &&
+        kibaPair.data &&
+        allTokenData.data.pairs &&
+        kibaPair.data.pairs &&
+        !hasRan) {
+        setHasRan(true)
         const blockOne: number = blocks[0].number, blockTwo: number = blocks[1].number;
-        const allTokens = await Promise.all(allTokenData.data.pairs.map(async (pair: any) => {
+        const allTokens = await Promise.all([...allTokenData.data.pairs, ...kibaPair.data.pairs].map(async (pair: any) => {
           const value = (!chainId || chainId === 1) ? await getTokenData(pair.token0.id, ethPrice, ethPriceOld, blockOne, blockTwo) as any : await fetchBscTokenData(pair.token0.id, bnbPrices?.current, bnbPrices?.oneDay, blockOne, blockTwo)
-          value.chainId = chainId;
+          value.chainId = chainId ?? 1;
           return value;
         }))
         setAllTokens(allTokens);
       }
     }
-  }, [ethPrice, ethPriceOld, timestampsFromBlocks, bnbPrices, allTokenData])
+  }, [timestampsFromBlocks, chainId, kibaPair, hasRan, allTokens, allTokenData])
 
   React.useEffect(() => {
-    fn(false);
+    let cancelled = false;
+    if (!cancelled && 
+      !hasRan &&
+      allTokenData &&
+      timestampsFromBlocks?.blocks &&
+      allTokenData?.data?.pairs &&
+      kibaPair?.data?.pairs &&
+      ((!chainId || chainId === 1) &&
+        ethPriceOld &&
+        ethPrice) ||
+      (chainId === 56 && bnbPrices?.current && bnbPrices?.oneDay)
+    ) {
+      fn(false)
+    }
+    return () => { cancelled = true; }
+    
   },
     [
       allTokenData,
       ethPrice,
       ethPriceOld,
-      bnbPrices
+      bnbPrices,
+      kibaPair,
+      timestampsFromBlocks,
+      chainId
     ])
 
   const topPriceIncrease = useMemo(() => {
     return [
-     // slot kiba at #1 always
+      // slot kiba at #1 always
       allTokens.find((a: any) => a?.symbol === 'KIBA'),
       ..._.uniqBy(allTokens, (i: any) => {
         return i?.id
       }).sort((a: any, b: any) => {
-      return a && b ? 
-              a?.priceChangeUSD && b?.priceChangeUSD ?
-              (Math.abs(a?.priceChangeUSD) > Math.abs(b?.priceChangeUSD) ? -1 : 1) :
-              a.tradeVolumeUSD > b.tradeVolumeUSD ? -1 : 1 
-              : -1
-    })
-      .slice(0, 12)
-      .filter((
-        a: {
-        symbol: string;
-         chainId?: number
-      }) => !!a?.symbol && a?.symbol !== 'KIBA' &&
-       a?.chainId === chainId)]
-
+        return a && b ?
+          a?.priceChangeUSD && b?.priceChangeUSD ?
+            (Math.abs(a?.priceChangeUSD) > Math.abs(b?.priceChangeUSD) ? -1 : 1) :
+            a.tradeVolumeUSD > b.tradeVolumeUSD ? -1 : 1
+          : -1
+      })
+        .slice(0, 12)
+        .filter((
+          a: {
+            symbol: string;
+            chainId?: number
+          }) => !!a?.symbol && a?.symbol !== 'KIBA' &&
+          (a?.chainId === chainId || !chainId))]
   }, [allTokens, chainId])
   const increaseRef = useRef<HTMLDivElement>(null)
   return (
