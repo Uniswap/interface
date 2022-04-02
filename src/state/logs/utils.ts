@@ -360,7 +360,6 @@ export function useTokenTransactions(tokenAddress: string, interval: null | numb
     }
   }, [chainId])
   const data = React.useMemo(() => tokenTxns, [tokenTxns])
-  if (chainId && chainId !== 1) tokenTxns.stopPolling()
   return { data: data.data, lastFetched: new Date() };
 }
 
@@ -440,9 +439,7 @@ const getEthPrice = async () => {
   return [ethPrice, ethPriceOneDay, priceChangeETH]
 }
 export function useTokenData(tokenAddress: string, interval: null | number = null) {
-  const [tokenData, setTokenData] = React.useState<{ [address: string]: any }>({
-
-  })
+  const [tokenData, setTokenData] = React.useState<{ [address: string]: any }>({})
   const [ethPrice, ethPriceOld, ethPricePercent] = useEthPrice()
   const intervalCallback = () => {
     console.log(`Running interval driven data fetch..`)
@@ -456,22 +453,7 @@ export function useTokenData(tokenAddress: string, interval: null | number = nul
       })
     }
   }
-  // React.useEffect(() => {
-  //   if (!tokenData?.[tokenAddress] && tokenAddress && ethPrice && ethPriceOld) {
-  //     getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
-  //       setTokenData({ ...tokenData, [tokenAddress]: data })
-  //     })
-  //   } else if (tokenData?.[tokenAddress] && tokenAddress && ethPrice && ethPriceOld) {  
-  //     getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
-  //       if (!isEqual(tokenData?.[tokenAddress]?.priceUSD, data?.priceUSD)) {
-  //         console.log("updating token data, price changed.")
-  //         setTokenData({ ...tokenData, [tokenAddress]: data })
-  //       }
-  //     })
-  //   }
-  // }, [tokenAddress, tokenData, ethPrice, ethPriceOld])
   useInterval(intervalCallback, interval, false)
-  if (!tokenAddress) return {}
   return tokenData?.[tokenAddress] || {}
 }
 /**
@@ -690,7 +672,7 @@ export const FILTERED_TRANSACTIONS = gql`
       amount1
       amountUSD
     }
-    swaps(orderBy: timestamp, orderDirection: desc, where: { pair_in: $allPairs }) {
+    swaps(first: 250, orderBy: timestamp, orderDirection: desc, where: { pair_in: $allPairs }) {
       id
       transaction {
         id
