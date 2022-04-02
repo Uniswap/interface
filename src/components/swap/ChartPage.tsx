@@ -30,6 +30,7 @@ font-size:25px;
 
 const StyledA = styled.a`
     font-family:'Inter var', sans-serif !important;
+    color: ${({ theme }) => theme.primary1};
 `
 export const useTokenHolderCount = (address: string) => {
     const [data, setData] = React.useState<any | undefined>()
@@ -315,10 +316,12 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                     </StyledA>
                                 </td>
                                 <td>
+                                    <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                                     <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/address/${item.account}`}>
                                         {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
                                     </StyledA>
                                     {item.account && <StyledInternalLink to={`/details/${item.account}`}><ChevronRight /></StyledInternalLink>}
+                                    </div>
                                 </td>
                                 <td >
                                     <div style={{
