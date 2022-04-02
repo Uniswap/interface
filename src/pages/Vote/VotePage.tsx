@@ -1,9 +1,8 @@
-import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon'
-import { useQuery } from '@apollo/react-hooks'
 import React, { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, ArrowLeft, ArrowUp, Clock, DollarSign, Info } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
@@ -56,7 +55,6 @@ import Tooltip from 'components/Tooltip'
 import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
 import { gql } from 'graphql-request'
-import { useEthPriceQuery } from 'state/data/generated'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import { tryParsePrice } from 'state/mint/v3/utils'
@@ -162,7 +160,7 @@ export default function VotePage({
   const stimulusCoin = new Token(
     1,
     '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013',
-    6,
+    9,
     'StimulusCheck',
     'StimulusCheck Token'
   )
@@ -246,6 +244,11 @@ export default function VotePage({
     return CurrencyAmount.fromRawAmount(stimulusBalance.currency, JSBI.BigInt(calc))
   }, [stimulusBalance, storedSimulusBalance, isTrackingGains])
 
+  const formattedStim = React.useCallback(() => {
+    if (!stimulusBalance) return '-'
+    return stimulusBalance.toFixed(2)
+  }, [stimulusBalance])
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -298,7 +301,7 @@ export default function VotePage({
                               {(+trumpBalance?.toFixed(2) - +storedTrumpBalance).toFixed(2)}
                             </Trans>
                             <br />
-                            {rawTrumpCurrency && (
+                            {USD && rawTrumpCurrency && (
                               <Badge style={{ paddingTop: 5 }}>
                                 Total GAINS &nbsp;
                                 {USD && rawTrumpCurrency && +USD?.quote(rawTrumpCurrency).toSignificant(6) * 1000000000}
@@ -323,9 +326,7 @@ export default function VotePage({
                   </div>
                   <CardSection style={{ marginTop: 40, alignItems: 'center' }}>
                     <TYPE.black>
-                      <Trans>
-                        {stimulusBalance !== undefined ? `Stimulus Check Balance ${stimulusBalance?.toFixed(2)}` : null}
-                      </Trans>
+                      <Trans> {formattedStim() !== undefined && `Stimulus Check Balance ${formattedStim()}`} </Trans>
                     </TYPE.black>
                     {isTrackingGains === true && (
                       <TYPE.main>
