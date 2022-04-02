@@ -415,7 +415,7 @@ export default function Header() {
         }} id={'contract-nav-link'} >
           
            <Tooltip text="Community members will be able to vote on propositions proposed by Trump Gold holders when Trump Gold is released" show={showTip} >
-            <small style={{cursor:'not-allowed', color:'#ccc'}}>vote</small><Info onMouseOver={() => setShowTip(true)}
+            <small style={{cursor:'not-allowed', color:'#ccc'}}>vote</small><Info style={{color:"#fff"}} onMouseOver={() => setShowTip(true)}
                      onMouseLeave={() => setShowTip(false) }/>
                      
               </Tooltip>
