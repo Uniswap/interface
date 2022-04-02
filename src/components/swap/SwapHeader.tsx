@@ -1,15 +1,16 @@
-import { Trans } from '@lingui/macro'
-import styled from 'styled-components/macro'
-import SettingsTab from '../Settings'
+import { RowBetween, RowFixed } from '../Row'
+
+import { Info } from 'react-feather'
 import { Percent } from '@uniswap/sdk-core'
 import React from 'react'
-import { RowBetween, RowFixed } from '../Row'
-import { TYPE } from '../../theme'
+import SettingsTab from '../Settings'
 import { ShowSellTaxComponent } from 'components/ShowSellTax'
-import { Info } from 'react-feather'
+import { TYPE } from '../../theme'
 import Tooltip from 'components/Tooltip'
-import { useWeb3React } from '@web3-react/core'
+import { Trans } from '@lingui/macro'
+import styled from 'styled-components/macro'
 import { useEthPrice } from 'state/logs/utils'
+import { useWeb3React } from '@web3-react/core'
 
 const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;
@@ -36,6 +37,8 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange }: { al
           <HeaderType  onClick={( ) => onViewChange('swap')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer', marginRight: '8px' }}>
             <Trans>Swap</Trans>
           </HeaderType>
+
+
         
           
           {<HeaderType  onClick={( ) => onViewChange('limit')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
@@ -43,7 +46,11 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange }: { al
           </HeaderType>}
           
                
-            
+                    
+          {<HeaderType  onClick={( ) => onViewChange('bridge')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
+            <Trans>Bridge</Trans>
+          </HeaderType>}
+          
           
     
         </RowFixed>

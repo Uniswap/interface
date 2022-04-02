@@ -1,5 +1,5 @@
-import { createAction } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
+import { createAction } from '@reduxjs/toolkit'
 
 export interface SerializedToken {
   chainId: number
@@ -26,6 +26,7 @@ export const updateHideClosedPositions = createAction<{ userHideClosedPositions:
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(
   'user/updateUserSlippageTolerance'
 )
+export const updateUseAutoSlippage = createAction<{ useAutoSlippage: boolean }>('user/updateUseAutoSlippage')
 export const updateUserDeadline = createAction<{ userDeadline: number }>('user/updateUserDeadline')
 export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
 export const removeSerializedToken = createAction<{ chainId: number; address: string }>('user/removeSerializedToken')
