@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonOutlined, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Menu, { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
@@ -21,11 +21,12 @@ import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 870px;
   width: 100%;
-  background: radial-gradient(#f5b642, rgba(129,3,3,.95));
-  padding:9px 14px;
-  border-radius:12px;
+  min-width: 45%;
+  max-width: 480px; 
+  background: #252632;
+  padding: 30px;
+  border-radius:30px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 800px;
@@ -75,7 +76,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   flex: 1 1 auto;
   padding: 6px 8px;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
   margin-right: 8px;
   z-index:9;
 `
@@ -90,6 +91,7 @@ const NoLiquidity = styled.div`
 `
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
+  background-color: ${({ theme }) => theme.bg2};
   padding: 6px 8px;
   width: fit-content;
   z-index:9;
@@ -252,9 +254,9 @@ export default function Pool() {
                     </div>
                   </TYPE.body>
                   {showConnectAWallet && (
-                    <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                    <ButtonLight style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
                       <Trans>Connect a wallet</Trans>
-                    </ButtonPrimary>
+                    </ButtonLight>
                   )}
                 </NoLiquidity>
               )}

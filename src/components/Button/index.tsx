@@ -20,7 +20,7 @@ const Base = styled(RebassButton)<
   width: ${({ width }) => width ?? '100%'};
   font-weight: 500;
   text-align: center;
-  border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
+  border-radius: ${({ $borderRadius }) => $borderRadius ?? '10px'};
   outline: none;
   border: 1px solid transparent;
   color: white;
