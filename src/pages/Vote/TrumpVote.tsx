@@ -39,7 +39,7 @@ export const TrumpVote = () => {
   const isDark = useIsDarkMode();
   const [show, setShow] = React.useState(false);
   const message =
-    "Proposals are created by members of the BabyTrump community who own atleast 200 Trumpgold. A proposal is then voted on by members of the community (Anyone who owns any of our tokens).";
+    "Proposals are created by members of the BabyTrump community who own atleast 2000 Trumpgold. A proposal is then voted on by members of the community (Anyone who owns any of our tokens).";
 
   return (
     <BlueCard style={{ maxWidth: 800 }}>
