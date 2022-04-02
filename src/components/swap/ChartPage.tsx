@@ -62,7 +62,6 @@ export const useHolderCount = (chainId: any) => {
 }
 
 const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { lastFetched: any, transactions: any, tokenData: any, chainId?: number }) => {
-    console.log(tokenData)
     const [filterAddress, setFilterAddress] = React.useState<string | undefined>()
     const chainLabel = React.useMemo(() => chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '', [chainId])
     const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [moment(lastFetched).fromNow()])
@@ -109,23 +108,26 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
     }, [formattedTransactions])
     const holdersCount = useHolderCount(chainId)
     const price = React.useMemo(() => tokenData?.priceUSD ?
-        parseFloat(tokenData?.priceUSD) : holdersCount && holdersCount?.price?.rate ?
-            parseFloat(holdersCount?.price?.rate) : NaN
+        parseFloat(tokenData?.priceUSD) : (tokenData?.derivedUSD ? parseFloat(tokenData?.derivedUSD) : holdersCount && holdersCount?.price?.rate ?
+            parseFloat(holdersCount?.price?.rate) : NaN)
         , [tokenData, holdersCount])
 
     const CIRCULATING_SUPPLY = 1000000000000;
     const marketCap = React.useMemo(() => {
-        if (!tokenData?.priceUSD) return;
-        return Number((parseFloat(tokenData.priceUSD) * CIRCULATING_SUPPLY).toFixed(0)).toLocaleString()
-    }, [tokenData])
+        if (!price) return;
+        return Number(((price) * CIRCULATING_SUPPLY).toFixed(0)).toLocaleString()
+    }, [price])
     const fromNow = React.useMemo(() => {
         return (transaction: any) =>
             moment(+transaction.timestamp * 1000).fromNow()
-
     }, [formattedTransactions])
     const [tooltipShown, setTooltipShown] = React.useState<any>()
     const [showRemoveFilter, setShowRemoveFilter] = React.useState<any>()
-    const locale =useUserLocale()
+    const totalTransactions = React.useMemo(() => {
+        if (tokenData && tokenData?.txCount) return tokenData?.txCount
+        if (tokenData && tokenData?.totalTransactions) return tokenData?.totalTransactions
+        return undefined
+    } ,[tokenData])
     return (
         <>
             <StyledDiv
@@ -147,13 +149,13 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                 <small style={{ display: 'block' }}>Price</small>
                                 <Badge variant={tokenData?.priceChangeUSD <= 0 ? BadgeVariant.NEGATIVE_OUTLINE : BadgeVariant.POSITIVE_OUTLINE}>{(+price?.toFixed(18))}</Badge>
                             </small>
-                            <small >
+                            {!!tokenData?.priceChangeUSD && <small >
                                 <small style={{ display: 'block', textAlign: 'left' }}>24hr %</small>
                                 <Badge variant={tokenData?.priceChangeUSD <= 0 ? BadgeVariant.NEGATIVE_OUTLINE : BadgeVariant.POSITIVE_OUTLINE} style={{ width: 'fit-content', display: 'flex', justifyContent: 'flex-end' }}>
                                     {tokenData?.priceChangeUSD && tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}
                                     {tokenData?.priceChangeUSD?.toFixed(2)}  <Percent />
                                 </Badge>
-                            </small>
+                            </small>}
                         </>}
                         {holdersCount && holdersCount?.holdersCount && (
                             <small>
@@ -172,6 +174,12 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                             <small>
                                 <small style={{ display: 'block' }}>Daily Volume</small>
                                 <Badge variant={BadgeVariant.WARNING_OUTLINE}>${Number(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(0)).toLocaleString()}</Badge>
+                            </small>
+                        )}
+                        {totalTransactions && (
+                            <small>
+                                <small style={{ display: 'block' }}>Total Txs</small>
+                                <Badge variant={BadgeVariant.WARNING_OUTLINE}>{Number(parseFloat(totalTransactions)?.toFixed(0)).toLocaleString()}</Badge>
                             </small>
                         )}
                         {tokenData?.totalLiquidityUSD && <small>
@@ -289,7 +297,6 @@ export const Chart = () => {
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const [ethPrice, ethPriceOld] = useEthPrice()
-    const [symbol, setSymbol] = React.useState('')
     const transactionData = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
     const binanceTransactionData = useBscTokenTransactions('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 60000)
@@ -300,8 +307,17 @@ export const Chart = () => {
         return chainId === 56 ?
             `PANCAKESWAP:KIBAWBNB` :
             `UNISWAP:KIBAWETH`
-    }, [symbol, chainId])
-    const tokenData = useTokenDataHook('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', ethPrice, ethPriceOld)
+    }, [ chainId])
+    const tokenDataAddress = React.useMemo(() => chainId === 1 ? 
+    '0x4b2c54b80b77580dc02a0f6734d3bad733f50900' 
+    : chainId === 56 ?
+     '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : '', [chainId])
+     const [tokenDataPriceParam,tokenDataPriceParamTwo] = React.useMemo(() => {
+        const valueOne = chainId === 56 ? prices?.current : ethPrice;
+        const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
+        return [valueOne, valueTwo]
+     }, [chainId, prices, ethPrice, ethPriceOld])
+    const tokenData = useTokenDataHook(tokenDataAddress,tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
     return (
         <FrameWrapper style={{
@@ -357,7 +373,7 @@ export const Chart = () => {
                         </div>
                         {view === 'chart' && <>
                             <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: '500px' }}>
-                                <TradingViewWidget locale={locale} theme={'dark'} symbol={frameURL} autosize />
+                                <TradingViewWidget locale={locale} theme={'Dark'} symbol={frameURL} autosize />
                             </div>
                             {(!isBinance && transactionData?.loading) || isBinance && binanceTransactionData.loading  && <LoadingRows>
                                 <div/>

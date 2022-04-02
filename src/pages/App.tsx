@@ -66,6 +66,7 @@ import { Transactions } from './Vote/TransactionsPage'
 import { LifetimeReflections } from './Swap/LifetimeReflections'
 import Vote from './Vote'
 import TopTokenMovers from 'components/swap/TopMovers'
+import AppBody from './AppBody'
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
@@ -405,6 +406,11 @@ const Fomo = () => {
   </DarkCard>)
 }
 
+const StyledDiv = styled.div`
+  font-family: "Bangers", cursive;
+  font-size:25px;
+`
+
 export default function App() {
   const [theme, setTheme] = React.useState('./squeeze2.mp4')
   const themeSource = React.useMemo(() => {
@@ -438,17 +444,15 @@ export default function App() {
   account={account ?? undefined} 
   useDefaultTheme={false}
   >
-        <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : new ApolloClient({
-          uri: '',
-          cache: new InMemoryCache() as any
-        })}>
+        <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : client}>
         <AppWrapper>
           {Video}
 
           <HeaderWrapper>
             <Header />
-
+    
           </HeaderWrapper>
+
           <TopTokenMovers />
 
           <BodyWrapper>
@@ -520,7 +524,6 @@ export default function App() {
 
             <Marginer />
           </BodyWrapper>
-
 
         </AppWrapper>
         </ApolloProvider>

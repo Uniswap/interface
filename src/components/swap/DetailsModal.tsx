@@ -41,7 +41,6 @@ export const DetailsModal = ({
                 const [price1, price2] = network?.toLowerCase() === 'bsc' ? [bnbPrice?.current, bnbPrice?.current] : [ethPrice, ethPriceOld]
                 const tokenData = await tokenDataFn(address, price1, price2);
                 setTokenData(tokenData);
-                console.log(tokenData)
                 setLoadedTokenData(true)
             }
         }
