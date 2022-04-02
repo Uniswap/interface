@@ -174,6 +174,7 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
       }
       if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
         const provider = window.ethereum ? window.ethereum : library?.provider
+        if (!provider) return;
         const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 18;
