@@ -41,7 +41,7 @@ export function unwrappedToken(token: Token): Currency {
 
 
 
-export const simpleRpcProvider = new ethers.providers.StaticJsonRpcProvider('https://https://bsc-dataseed1.binance.org')
+export const simpleRpcProvider = new ethers.providers.StaticJsonRpcProvider('https://bsc-dataseed1.binance.org')
 
 const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   const signerOrProvider = signer ?? simpleRpcProvider
