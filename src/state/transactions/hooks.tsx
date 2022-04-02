@@ -207,7 +207,7 @@ th {
 border-collapse: collapse;
 border: 1px solid 
 width:100%;
-tr:nth-child(even){background: radial-gradient(rgb(255 0 0 / 50%),rgb(136 24 5))}
+tr:nth-child(even){background: #4F4F62}
 td, th {
   border: 1px solid #ddd;
   padding: 8px;
@@ -500,10 +500,10 @@ export const FomoPage = () => {
   const infoTipText = `KibaFomo is auto-refreshing every 30 seconds to go and fetch the latest listed tokens. \r\n\r\nEvery token listed below has been ran through our smart-contract honey pot checks, to determine if it allows for buying and selling. \r\n\r\nThis is an experimental feature. Use at your own risk.`
   const [modalShowing, setModalShowing] = React.useState<any>()
   return (
-    <DarkCard style={{ maxWidth: 1200, background: 'radial-gradient(orange,rgba(129,3,3,.95))' }}>
+    <DarkCard style={{ maxWidth: 1200, background: '#252632' }}>
       <Wrapper style={{ overflow: 'auto', padding: '9px 14px' }}>
         <div style={{ marginBottom: 10 }}>
-          <h1>KibaFomo &nbsp;
+          <h1 style={{fontFamily: 'Bangers'}}>KibaFomo &nbsp;
             <Tooltip text={infoTipText} show={showInfo}>
               <Info onMouseEnter={() => setShowInfo(true)} onMouseLeave={() => setShowInfo(false)} />
             </Tooltip>
@@ -511,12 +511,12 @@ export const FomoPage = () => {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', marginBottom: 15, justifyContent: 'start', alignItems: 'center' }}>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('eth')} variant={network === 'eth' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>ETH</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('bsc')} variant={network === 'bsc' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>BSC</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('avax')} variant={network === 'avax' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>AVAX</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('ftm')} variant={network === 'ftm' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>FTM</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('poly')} variant={network === 'poly' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>POLY</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('kcc')} variant={network === 'kcc' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>KCC</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('eth')} variant={network === 'eth' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>ETH</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('bsc')} variant={network === 'bsc' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>BSC</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('avax')} variant={network === 'avax' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>AVAX</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('ftm')} variant={network === 'ftm' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>FTM</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('poly')} variant={network === 'poly' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>POLY</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('kcc')} variant={network === 'kcc' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>KCC</Badge>
           </div>
           {accessDenied === false && ['bsc', 'eth'].includes(network) && <div>
             <label>Only Show Safe Listings</label>
@@ -564,7 +564,7 @@ export const FomoPage = () => {
           <div />
         </LoadingRows>}
 
-        {!loading && accessDenied === false && <Table style={{ fontSize: 12, background: '#222', color: "#FFF", width: "100%" }}>
+        {!loading && accessDenied === false && <Table style={{ fontSize: 12, background: 'transparent', color: "#FFF", width: "100%" }}>
           <tr style={{ textAlign: 'left' }}>
             <th onClick={() => onSortClick('name')} style={{ width: '5%', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
               <div >
@@ -655,16 +655,16 @@ export const FomoPage = () => {
 
                     {/* Chart Link */}
                     {network === 'eth' && <StyledInternalLink to={`/selective-charts/${item.addr}/${item.symbol}`}>
-                      <BarChart2 />
+                      <BarChart2 style={{ color: '#F76C1D' }} />
                     </StyledInternalLink>}
 
                     {/* Buy Link */}
                     {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}>
-                      <DollarSign style={{ color: 'white' }} />
+                      <DollarSign style={{ color: '#779681' }} />
                     </StyledInternalLink>}
                     {network === 'bsc' && 
                     <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
-                      <DollarSign style={{ color: 'white' }} />
+                      <DollarSign style={{ color: '#779681' }} />
                     </ExternalLink>}
                   </div>
                 </td>
@@ -683,7 +683,7 @@ export const FomoPage = () => {
                   <td>
                     <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
                       <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
-                      {['bsc', 'eth'].includes(item.network.toLowerCase()) && <>{!modalShowing && <LinkStyledButton style={{ fontSize: 8 }} onClick={(e: any) => { e.stopPropagation(); e.preventDefault(); setModalShowing(item); }}>more</LinkStyledButton>}
+                      {['bsc', 'eth'].includes(item.network.toLowerCase()) && <>{!modalShowing && <LinkStyledButton style={{ fontSize: 10, fontFamily: 'Archivo Narrow', borderRadius: 10, fontWeight: 600, padding: 8, color: '#4F4F62' }} onClick={(e: any) => { e.stopPropagation(); e.preventDefault(); setModalShowing(item); }}>More</LinkStyledButton>}
                         {!!modalShowing && modalShowing?.addr === item.addr && <DetailsModal address={item.addr} isOpen={modalShowing} onDismiss={() => setModalShowing(undefined)} network={item.network.toLowerCase() as 'bsc' | 'eth'} symbol={item.symbol} />}</>}
                     </div>
                   </td>
@@ -753,7 +753,7 @@ const Liquidity = ({ addr, network, ethPrice, ethPriceOld, bnbPrice }: { addr: s
 
   return (
     <>
-      <Badge variant={BadgeVariant.DEFAULT}>{liquidity && liquidity !== '?' ? `$${liquidity}` : '?'}</Badge>
+      <Badge variant={BadgeVariant.HOLLOW}>{liquidity && liquidity !== '?' ? `$${liquidity}` : '?'}</Badge>
     </>)
 
 }
