@@ -27,6 +27,8 @@ const Popup = styled.div`
   overflow: hidden;
   border: 3px solid transparent;
   color:#fff;
+  position:relative;
+  top:50px;
   
   :before {
     content: '';

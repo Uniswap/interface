@@ -262,21 +262,21 @@ export default function VotePage() {
   const [allTimeGainsUsd, setAllTimeGainsUsd] = React.useState('-');
 
   useEffect(() => {
-    if (allTimeGains.totalGained && chainId && chainId === 1) {
+    if (allTimeGains.totalGained) {
       const provider = window.ethereum ? window.ethereum : walletconnect
       const w3 = new Web3(provider as any).eth;
       const routerContr = new w3.Contract(routerABI as any, routerADD);
       const ten9 = 10 ** 9;
       const amount = +allTimeGains.totalGained.toFixed(0) * ten9;
       if (amount > 0) {
-              const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
         kibaCoin.address,
         isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
         isBinance ? binanceTokens.busd.address : USDC.address, 
       ]);
       amountsOut.call().then((response: any) => {
         const usdc = response[response.length - 1];
-        const ten6 = 10 ** 6;
+        const ten6 = 10 ** 6; 
         let usdcValue = usdc / ten6;
         if (isBinance) usdcValue = usdcValue / 10 ** 12;
         const number = Number(usdcValue.toFixed(2));
