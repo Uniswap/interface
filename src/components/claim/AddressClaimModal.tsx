@@ -28,7 +28,7 @@ const ContentWrapper = styled(AutoColumn)`
 
 const ModalUpper = styled(DataCard)`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
+  background: #252632;
 `
 
 const ConfirmOrLoadingWrapper = styled.div<{ activeBG: boolean }>`
