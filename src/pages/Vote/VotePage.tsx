@@ -187,8 +187,9 @@ font-family:'Bangers', cursive;`
 
 export default function VotePage() {
   const {account,chainId} = useActiveWeb3React();
-  const gainsKey = React.useMemo(() => `kibaBalance_${account}`,[account])
+  const trackingSinceKey = React.useMemo(() => `tracking_since_${account}_${chainId}`,[account, chainId])
 
+  const gainsKey = React.useMemo(() => `kibaBalance_${account}_${chainId}`,[account, chainId])
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
@@ -200,7 +201,7 @@ export default function VotePage() {
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
   const storedKibaBalance = useMemo(() => {
     return localStorage.getItem(gainsKey) || undefined;
-  }, [localStorage.getItem(gainsKey)]);
+  }, [localStorage.getItem(gainsKey), gainsKey]);
 
   const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
     storedKibaBalance !== undefined && +storedKibaBalance > 0 && !!account
@@ -210,9 +211,9 @@ export default function VotePage() {
 
   const trackingSince = useMemo(() => {
     return moment(
-      new Date(localStorage.getItem("trackingSince") as string)
+      new Date(localStorage.getItem(trackingSinceKey) as string)
     ).fromNow();
-  }, [localStorage.getItem("trackingSince"), date]);
+  }, [localStorage.getItem(trackingSinceKey),moment(new Date(trackingSinceKey)).fromNow(), date]);
 
   const stopTrackingGains = () => {
     localStorage.setItem(gainsKey, "0");
@@ -225,11 +226,11 @@ export default function VotePage() {
   const trackGains = () => {
     if (isTrackingGains) {
       localStorage.setItem(gainsKey, "0");
-      localStorage.setItem("trackingSince", "");
+      localStorage.setItem(trackingSinceKey, "");
       setIsTrackingGains(false);
     } else if (!!kibaBalance) {
       localStorage.setItem(gainsKey, (kibaBalance || 0)?.toFixed(2));
-      localStorage.setItem("trackingSince", `${new Date()}`);
+      localStorage.setItem(trackingSinceKey, `${new Date()}`);
       setIsTrackingGains(true);
     } else {
       setIsTrackingGains(false);
@@ -248,22 +249,11 @@ export default function VotePage() {
     } : { routerADD: routerAddress, routerABI: routerAbi }
   }, [isBinance])
 
-  useEffect(() => {
-    if (storedKibaBalance && kibaBalance) {
-      if (
-        (+storedKibaBalance - +kibaBalance.toFixed(2)).toFixed(2) ===
-        kibaBalance.toFixed(2)
-      ) {
-      } else if (+storedKibaBalance - +kibaBalance.toFixed(2) < 0) {
-      }
-    } 
-  }, []);
-
   const rawTrumpCurrency = useMemo(() => {
     if (!storedKibaBalance || !kibaBalance) return null;
     const calc = +Math.round(+kibaBalance?.toFixed(2) - +storedKibaBalance);
     return calc;
-  }, [storedKibaBalance, kibaBalance, isTrackingGains]);
+  }, [storedKibaBalance, kibaBalance, gainsKey, isTrackingGains]);
 
   const [trumpGainsUSD, setTrumpGainsUSD] = React.useState("-");
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
@@ -278,7 +268,8 @@ export default function VotePage() {
       const routerContr = new w3.Contract(routerABI as any, routerADD);
       const ten9 = 10 ** 9;
       const amount = +allTimeGains.totalGained.toFixed(0) * ten9;
-      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+      if (amount > 0) {
+              const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
         kibaCoin.address,
         isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
         isBinance ? binanceTokens.busd.address : USDC.address, 
@@ -291,6 +282,7 @@ export default function VotePage() {
         const number = Number(usdcValue.toFixed(2));
         setAllTimeGainsUsd(number.toLocaleString());
       });
+    }
     }
   }, [allTimeGains, chainId])
 
@@ -306,6 +298,7 @@ export default function VotePage() {
         const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 9;
         const amount = +rawTrumpCurrency.toFixed(0) * ten9;
+        if (amount > 0) {
         const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
           kibaCoin.address,
           isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
@@ -319,6 +312,7 @@ export default function VotePage() {
           const number = Number(usdcValue.toFixed(2));
           setTrumpGainsUSD(number.toLocaleString());
         });
+      }
         // pseudo code
       }
     } catch (err) {
@@ -339,6 +333,7 @@ export default function VotePage() {
         const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 9;
         const amount =  +kibaBalance.toFixed(0) * ten9;
+        if (amount > 0) {
         const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
           kibaCoin.address,
           isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
@@ -352,6 +347,7 @@ export default function VotePage() {
           const number = Number(usdcValue.toFixed(2));
           setKibaBalanceUSD(number.toLocaleString());
         });
+      }
       }
     } catch (ex) {
       console.error(ex);
