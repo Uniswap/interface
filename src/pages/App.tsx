@@ -2,50 +2,37 @@ import { AccountPage, AccountPageWithAccount } from 'components/AccountPage/Acco
 import { AlertCircle, AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Globe, Info } from 'react-feather'
 import {
   ApolloClient,
-<<<<<<< HEAD
+
   ApolloProvider,
   InMemoryCache
 } from "@apollo/client";
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
-import { DarkCard, DarkGreyCard } from 'components/Card'
 import { ExternalLinkIcon, TYPE } from 'theme'
-import { FomoPage, LimitOrders } from 'state/transactions/hooks'
-=======
-  InMemoryCache,
-  ApolloProvider} from "@apollo/client";
+
 import logo from '../assets/images/download.png'
 import btok from '../assets/sponsors/btok2.svg' 
 import bg4 from '../assets/images/bg4.jpg' 
->>>>>>> refs/rewritten/origin-andy-branch
 import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { DarkCard, DarkGreyCard } from 'components/Card'
+import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import React, { useState } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
-import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
 import AddLiquidity from './AddLiquidity'
 import { AddProposal } from './Vote/AddProposal'
-import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import AppBody from './AppBody'
-import { ApplicationModal } from '../state/application/actions'
 import { AutoColumn } from 'components/Column'
-import { CardSection } from 'components/earn/styled'
 import CreateProposal from './CreateProposal'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
-import Earn from './Earn'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { FavoritesPanel } from 'components/FavoritesPanel'
 import { Flex } from 'rebass'
 import { GainsTracker } from './GainsTracker/GainsTracker'
-import Header from '../components/Header'
-import { HoneyPotBsc } from './HoneyPotBsc'
 import { LifetimeReflections } from './Swap/LifetimeReflections'
-import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -60,30 +47,9 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
-<<<<<<< HEAD
 import { RowFixed } from 'components/Row'
-=======
-import { Suite } from './Suite/Suite'
-import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import { AddProposal } from './Vote/AddProposal'
-import { ProposalDetails } from './Vote/ProposalDetails'
-import { TrumpVote } from './Vote/TrumpVote'
-import VotePage from './Vote/VotePage'
-import { useKiba } from './Vote/VotePage'
-import VotePageV2 from './Vote/VotePageV2'
-import cart from '../assets/sponsors/cryptocart.svg'
-import Swal from 'sweetalert2'
-import { bscClient, client, useTokenData } from 'state/logs/utils'
-import { DarkCard, DarkGreyCard } from 'components/Card'
-import { HoneyPotBsc} from './HoneyPotBsc'
-import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
->>>>>>> refs/rewritten/origin-andy-branch
-import { SelectiveChart } from './Swap/SelectiveCharting'
-import { Suite } from './Suite/Suite'
 import Swal from 'sweetalert2'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
-import Tooltip from 'components/Tooltip'
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
 import TopTokenMovers from 'components/swap/TopMovers'
 import { Transactions } from './Vote/TransactionsPage'
@@ -93,15 +59,14 @@ import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 import Web3 from 'web3'
 import Web3ReactManager from '../components/Web3ReactManager'
+import cart from '../assets/sponsors/cryptocart.svg'
 import { getTokenTaxes } from './HoneyUtils'
 import { isAddress } from 'utils'
-import logo from '../assets/images/download.png'
 import styled from 'styled-components/macro'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
-import { walletconnect } from 'connectors'
 
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
@@ -385,13 +350,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
     </div>
     <RowFixed style={{ maxWidth: 600, width: "100%", padding: 20 }} >
       {hasInvalidPermissions === false &&
-<<<<<<< HEAD
         <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
           <label>Input a contract address to check if its a honeypot <Badge variant={BadgeVariant.PRIMARY}>MUST BE ETH Contract Address</Badge></label>
-=======
-        <AutoColumn style={{ maxWidth: 600, width: "100%"}} gap={'md'}>
-          <label>Input a contract address to check if its a honeypot</label>
->>>>>>> refs/rewritten/origin-andy-branch
           <input style={{ padding: 8, width: '100%', marginBottom: 5 }} type={'search'} placeholder={"Input a contract address to check if a honeypot"} onChange={e => runCheck(e.target.value)} />
         </AutoColumn>
       }
