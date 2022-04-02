@@ -12,6 +12,7 @@ import { useKiba } from 'pages/Vote/VotePage'
 import { Token, WETH9 } from '@uniswap/sdk-core'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { binanceTokens } from 'utils/binance.tokens'
+import { V2_ROUTER_ADDRESS } from 'constants/addresses'
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -430,7 +431,7 @@ export function useTokenTransactions(tokenAddress: string, interval: null | numb
   return { data: data.data, lastFetched: new Date(), loading: tokenTxns.loading };
 }
 
-const usePairs = (tokenAddress: string) => {
+export const usePairs = (tokenAddress: string) => {
   const { data, loading, error } = useQuery(TOKEN_DATA(tokenAddress, null))
   return data?.['pairs0'].concat(data?.['pairs1'])
 }
@@ -487,7 +488,7 @@ const getEthPrice = async () => {
     const oneDayBlock = await getBlockFromTimestamp(timestamp);
     const result = await client.query({
       query: ETH_PRICE(),
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'network-only',
     })
     const resultOneDay = await client.query({
       query: ETH_PRICE(oneDayBlock),
@@ -1105,6 +1106,12 @@ export const useTotalKibaGains = (account ?: string | null) => {
     return { address: '', symbol: '' }
   }, [chainId])
 
+  const pair = React.useMemo(() => {
+    if (chainId === 1 ) return '0xac6776d1c8d455ad282c76eb4c2ade2b07170104';
+    if (chainId === 56) return  '0x89e8c0ead11b783055282c9acebbaf2fe95d1180'
+    return ''
+  }, [chainId])
+
   const [airdroppedAmount, setAirdroppedAmount] = React.useState<number>(0)
   const transferAPIurl = React.useMemo(() => {
     if (!account || !chainId) return '';
@@ -1117,7 +1124,7 @@ export const useTotalKibaGains = (account ?: string | null) => {
   const [allTransfers, setAllTransfers] = React.useState<BscTransaction[]>()
   const [isLoading, setIsLoading] = React.useState(false)
   React.useEffect(() => {
-    if (account && !allTransfers &&
+    if (account && chainId && !allTransfers &&
         !isLoading) {
       setIsLoading(true)
       fetch(`${transferAPIurl}`, { method: "GET" })
@@ -1125,22 +1132,26 @@ export const useTotalKibaGains = (account ?: string | null) => {
         .then((data) => {
 
           const incomingTransfers = (data.result.filter((transaction: BscTransaction) =>
-            transaction.to?.toLowerCase() == account?.toLowerCase()
+            transaction.to?.toLowerCase() == account?.toLowerCase() && transaction?.from?.toLowerCase() !== pair?.toLowerCase()
           )).map((a:BscTransaction) => ({...a, type: 'incoming'}));
-          
+
           const outgoingTransfers = (data.result.filter((transaction: BscTransaction) =>
-            transaction.from?.toLowerCase() == account?.toLowerCase()
+            transaction.from?.toLowerCase() == account?.toLowerCase() && transaction?.to?.toLowerCase() !== pair.toLowerCase()
           )).map((a:BscTransaction) => ({...a, type: 'outgoing'}))
 
           setAllTransfers(outgoingTransfers.concat(incomingTransfers))
+          const isNotRouterTx = (item: any) => {
+            return item.to.toLowerCase() !== V2_ROUTER_ADDRESS[chainId].toLowerCase() &&
+            item.to.toLowerCase() !== pair?.toLowerCase()
+          }
 
           let airdroppedAmount = 0,
               incoming = 0 , 
               outgoing = 0 ;
           
           incomingTransfers.forEach((airdrop: BscTransaction) => incoming += parseFloat(airdrop.value) / 10 ** 9);
-          outgoingTransfers.forEach((airdrop: BscTransaction) => outgoing += parseFloat(airdrop.value) / 10 ** 9);
-          airdroppedAmount = incoming;
+          outgoingTransfers.filter(isNotRouterTx).forEach((airdrop: BscTransaction) => outgoing += parseFloat(airdrop.value) / 10 ** 9);
+          (airdroppedAmount = incoming);
           setAirdroppedAmount(airdroppedAmount)
         })
         .catch((err) => console.error(err))
@@ -1165,7 +1176,7 @@ export const useTotalKibaGains = (account ?: string | null) => {
       setTotalBought(sumBought);
       const currentBalance = +kibaBalance?.toFixed(0);
       // from their current balance, how much was transferred in to them?
-      let tG = (currentBalance - airdroppedAmount);
+      let tG = (currentBalance - (airdroppedAmount));
           // then, how much was bought?
           tG = tG - sumBought;
 

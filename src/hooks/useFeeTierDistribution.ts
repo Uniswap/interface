@@ -20,6 +20,7 @@ interface FeeTierDistribution {
 
   // distributions as percentages of overall liquidity
   distributions?: {
+    [FeeAmount.LOWEST]: number | undefined
     [FeeAmount.LOW]: number | undefined
     [FeeAmount.MEDIUM]: number | undefined
     [FeeAmount.HIGH]: number | undefined
@@ -29,13 +30,14 @@ interface FeeTierDistribution {
 export function useFeeTierDistribution(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined
-): FeeTierDistribution {
+): any {
   const { isFetching, isLoading, isUninitialized, isError, distributions } = usePoolTVL(
     currencyA?.wrapped,
     currencyB?.wrapped
   )
 
   // fetch all pool states to determine pool state
+  const [poolStateLowest] = usePool(currencyA, currencyB, FeeAmount.LOWEST)
   const [poolStateLow] = usePool(currencyA, currencyB, FeeAmount.LOW)
   const [poolStateMedium] = usePool(currencyA, currencyB, FeeAmount.MEDIUM)
   const [poolStateHigh] = usePool(currencyA, currencyB, FeeAmount.HIGH)
@@ -49,10 +51,11 @@ export function useFeeTierDistribution(
       }
     }
 
+    const currentDistros = distributions as any;
     const largestUsageFeeTier = Object.keys(distributions)
       .map((d) => Number(d))
-      .filter((d: FeeAmount) => distributions[d] !== 0 && distributions[d] !== undefined)
-      .reduce((a: FeeAmount, b: FeeAmount) => ((distributions[a] ?? 0) > (distributions[b] ?? 0) ? a : b), -1)
+      .filter((d: FeeAmount) => currentDistros[d] !== 0 && currentDistros[d] !== undefined)
+      .reduce((a: FeeAmount, b: FeeAmount) => ((currentDistros[a] ?? 0) > (currentDistros[b] ?? 0) ? a : b), -1)
 
     const percentages =
       !isLoading &&
@@ -62,6 +65,7 @@ export function useFeeTierDistribution(
       poolStateMedium !== PoolState.LOADING &&
       poolStateHigh !== PoolState.LOADING
         ? {
+            [FeeAmount.LOWEST]: poolStateLowest === PoolState.EXISTS ? ((distributions as any)[FeeAmount.LOWEST] ?? 0) * 100 : undefined,
             [FeeAmount.LOW]: poolStateLow === PoolState.EXISTS ? (distributions[FeeAmount.LOW] ?? 0) * 100 : undefined,
             [FeeAmount.MEDIUM]:
               poolStateMedium === PoolState.EXISTS ? (distributions[FeeAmount.MEDIUM] ?? 0) * 100 : undefined,

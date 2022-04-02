@@ -74,6 +74,8 @@ import { getTokenTaxes } from './HoneyUtils'
 import Marquee from 'react-marquee-slider'
 import { Flex } from 'rebass'
 import { ExternalLinkIcon, TYPE } from 'theme'
+import { CardSection } from 'components/earn/styled'
+import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
@@ -366,7 +368,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
         <p>You must hold Kiba Inu tokens in order to use this feature.
         </p>} 
     </RowFixed>
-    <RowFixed>
+    {hasInvalidPermissions === false && <>
+     <RowFixed>
       <AutoColumn style={{
           display:'flex', 
           justifyContent:'space-between', 
@@ -407,7 +410,10 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
 
       </AutoColumn>
     </RowFixed>
-    {!!tokenInfo && typeof(tokenInfo.price) === 'object' && (
+    {msg && <CardSection>
+  <TopTokenHolders address={msg} chainId={chainId} />
+  </CardSection> }
+  {!!tokenInfo && typeof(tokenInfo.price) === 'object' && (
       <div style={{background: 'rgb(0 0 0 / 58%)', padding: 10}}>
         <StyledHeader onClick={() => setPriceDetailsOpen(!priceDetailsOpen)} style={{filter: priceDetailsOpen ? 'drop-shadow(2px 4px 6px black)' : 'none',cursor: 'pointer', width: '100%', display:'flex', justifyContent:'center'}}>Price Details {priceDetailsOpen ? <ChevronUp/> : <ChevronDown />} </StyledHeader>
       {priceDetailsOpen && <RowFixed style={{ paddingRight: '0.5rem', paddingLeft:'0.5rem', maxWidth: 600, width: "100%" }}>
@@ -438,6 +444,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
       </RowFixed>}
       </div>
     )}
+  </>
+  }
   </DarkCard>
   )
 }
@@ -477,26 +485,7 @@ export default function App() {
     )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
   const {chainId,account,library} = useWeb3React()
-  React.useEffect (() => {
-    if (window.location.href.endsWith('gains')) return;
-    const confirmPassword = async () => {
-    const { isConfirmed, value } = await Swal.fire({
-      input:'password',
-      allowEscapeKey: false,
-      title: "Enter the password to use the KibaSwap Beta",
-      icon: 'question',
-      showConfirmButton: true,
-      showCancelButton: false,
-    })
-    if (!isConfirmed || value !== 'k1ba') {
-      alert("You've entered an incorect password. Redirecting you back to where you came from.");
-      window.location.href = 'https://coinmarketcap.com'
-    } else {
-      // let them play..
-    }
-  }
-  confirmPassword()
-  }, [])
+  
   const GainsPage = (props:any) =>   <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
