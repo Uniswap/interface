@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import Card from 'components/Card'
+import { GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import Tooltip from 'components/Tooltip'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
@@ -296,6 +298,7 @@ export default function Header() {
   
   const isMobile: boolean = (width <= 768);
   const [showTip, setShowTip] = useState(false)
+  const [darkmode,] = useDarkModeManager()
   return (
    <>
    <HeaderFrame showBackground={scrollY > 45}>
@@ -349,7 +352,8 @@ export default function Header() {
      
       <HeaderControls>
 {showContracts && (
-          <Row style={{ padding:5, borderRadius:6, background:'#fff',display:'flex', flexFlow:'column wrap', position: 'absolute', width: 'auto', left: isMobile ? '40%' : '69%', top: isMobile ? '100%' :'25%'}}>
+        <Card style={{}}>
+          <Row style={{ padding:5, borderRadius:6, background: darkmode ? '#223569' : '#fff', display:'flex', flexFlow:'column wrap', position: 'absolute', width: 'auto', left: isMobile ? '40%' : '69%', top: isMobile ? '100%' :'25%'}}>
           <div onClick={() => {
             setClip('0x99d36e97676a68313ffdc627fd6b56382a2a08b6')
         }} style={{fontSize:12, display:'block', cursor: 'pointer'}}>
@@ -393,6 +397,7 @@ export default function Header() {
           </Row>
           </div>
           </Row>
+          </Card>
 )}
  <HeaderElement style={{marginRight:15}}>
         <IconWrapper  onClick={(e) => {
