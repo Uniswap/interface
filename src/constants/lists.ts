@@ -12,7 +12,7 @@ export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json
 const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
-
+const BINANCE_LIST = `https://tokens.pancakeswap.finance/pancakeswap-extended.json`
 // only load blocked list if on app url
 export const UNSUPPORTED_LIST_URLS: string[] = IS_ON_APP_URL ? [BA_LIST] : []
 
@@ -25,6 +25,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   WRAPPED_LIST,
   SET_LIST,
   ROLL_LIST,
+  BINANCE_LIST,
   COINGECKO_LIST,
   KLEROS_LIST,
   OPTIMISM_LIST,

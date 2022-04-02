@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import Badge, { BadgeVariant } from 'components/Badge'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -7,7 +8,7 @@ import { ArrowDownCircle, ChevronDown, ToggleLeft } from 'react-feather'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components/macro'
-import { ExternalLink } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 
@@ -170,7 +171,7 @@ export default function NetworkCard() {
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
 
 
-  if (!chainId || chainId === SupportedChainId.MAINNET || !info || !library) {
+  if (!chainId || !info || !library) {
     return null
   }
 
@@ -185,10 +186,19 @@ export default function NetworkCard() {
         {open && (
           <MenuFlyout>
             { (
-              <ButtonMenuItem onClick={() => switchToNetwork({ library, chainId: SupportedChainId.MAINNET })}>
+              <ButtonMenuItem onClick={() => {
+                let chainIdToSwitch = SupportedChainId.MAINNET;
+                if(chainId === 1) chainIdToSwitch = SupportedChainId.BINANCE;
+                switchToNetwork({ library, chainId: chainIdToSwitch })
+              }}>
                 <div>
-                  <Trans>Switch to ETH <small>(Mainnet)</small></Trans>
+                    {chainId === 56 ? <TYPE.small>Switch to ETH </TYPE.small> : null} 
+                    {chainId === 1 ? <TYPE.small>Switch to BSC </TYPE.small> : null}
                 </div>
+                <TYPE.small>
+                { chainId === 56 ? <Badge variant={BadgeVariant.GREY}>MAINNET</Badge> : null}
+                { chainId === 1 ? <Badge variant={BadgeVariant.WARNING}>BINANCE</Badge> : null}
+                </TYPE.small> 
                 <ToggleLeft opacity={0.6} size={16} />
               </ButtonMenuItem>
             )}
