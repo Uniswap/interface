@@ -421,6 +421,7 @@ export function useTokenTransactions(tokenAddress: string, interval: null | numb
   })
 
   React.useEffect(() => {
+    if (!chainId) return;
     if (chainId && chainId !== 1) {
       tokenTxns.stopPolling();
     }
@@ -827,7 +828,7 @@ query trackerdata {
 const KIBA_TOKEN = gql`
 query trackerdata {
   
-  pairs(first:1 , where:{ token0:"0x4b2c54b80b77580dc02a0f6734d3bad733f50900"}) {
+  pairs(first:2, where:{ token0_in:["0x4b2c54b80b77580dc02a0f6734d3bad733f50900", "0x612e1726435fe38dd49a0b35b4065b56f49c8f11"]}) {
     id
     token0 {
       id
@@ -865,7 +866,7 @@ query trackerdata {
 const KIBA_TOKEN_BSC = gql`
 query trackerdata {
   
-  pairs(first:1 , where:{ token0_in:["0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341"]}) {
+  pairs(first:2 , where:{ token0_in:["0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341", "0x612e1726435fe38dd49a0b35b4065b56f49c8f11"]}) {
     id
     token0 {
       id
@@ -993,7 +994,7 @@ export const useTotalReflections = (account?: string | null, tokenAddress?: stri
   const token = React.useMemo(() => !tokenData || !tokenAddress ? null : new Token(1, tokenAddress as string, 9, tokenData.symbol, tokenData.name), [tokenData, tokenAddress])
   const balance = useTokenBalance(account as string, token as Token)
   const currencySold = React.useMemo(() => {
-    if (chainId === 1) return WETH9[1].address?.toLowerCase()
+    if (chainId === 1 || !chainId) return WETH9[1].address?.toLowerCase()
     if (chainId === 56) return binanceTokens.wbnb.address.toLowerCase()
     return ''
   }, [chainId])

@@ -694,4 +694,4 @@ const Renounced = ({ address }: { address: any }) => {
   return (
     <Circle fill={isRenounced ? 'green' : 'red'} />
   )
-}
+} 

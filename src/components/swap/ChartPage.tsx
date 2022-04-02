@@ -20,6 +20,8 @@ import { useUserLocale } from 'state/user/hooks';
 import { isMobile } from 'react-device-detect';
 import { useHasAccess } from 'components/AccountPage/AccountPage';
 import BarChartLoaderSVG from './BarChartLoader';
+import { system } from 'styled-system';
+import { number } from '@lingui/core/cjs/formats';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -45,6 +47,71 @@ export const useTokenHolderCount = (address: string) => {
     return data;
 }
 
+type TokenInfo =
+    {
+        address: string,
+        totalSupply: number,
+        name: string,
+        symbol: string,
+        decimals: number,
+        price: {
+            rate: number,
+            currency: number,
+            diff: string | number,
+            diff7d: string | number,
+            diff30d: string | number,
+            marketCapUsd: string | number,
+            availableSupply: string | number,
+            volume24h: string | number,
+            ts: string | number,
+        } | false,
+        publicTags: string[]
+        owner: string,
+        countOps: number,
+        totalIn: number,
+        totalOut: number,
+        transfersCount: number,
+        ethTransfersCount: number,
+        holdersCount: number,
+        issuancesCount: number,
+        image: string,
+        description: string,
+        website: string,
+        lastUpdated: string | number
+    }
+
+export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: string | undefined) => {
+    if (!chainId || !tokenAddress) return
+
+    if (chainId === 1) {
+        return new Promise((resolve, reject) => {
+            fetch(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
+                .then((response) => response.json())
+                .then(tokenInfo => resolve(tokenInfo))
+                .catch((err) => reject(err))
+        })
+    }
+}
+
+export const useTokenInfo = (chainId: number | undefined, tokenAddress: string | undefined) => {
+
+    const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
+
+    function intervalCallback() {
+        if (chainId === 1 && tokenAddress) {
+            fetch(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
+                .then((response) => response.json())
+                .then(setTokenInfo)
+        }
+    }
+
+    React.useEffect(() => {
+        intervalCallback();
+    }, [chainId, tokenAddress])
+    if (!chainId || !tokenAddress) return
+
+    return tokenInfo
+}
 
 export const useHolderCount = (chainId: any) => {
     const [holdersCount, setHoldersCount] = React.useState<any | undefined>()
@@ -432,7 +499,7 @@ export const Chart = () => {
                             <React.Fragment>
                                 {/* Chart Component */}
                                 <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
-                                    {!isBinance && <TradingViewWidget  locale={locale} theme={'Dark'} symbol={frameURL} autosize /> }
+                                    {!isBinance && <TradingViewWidget locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
                                     {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
                                     {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
                                 </div>
@@ -440,8 +507,8 @@ export const Chart = () => {
                                 {/* Loading Transaction data for either chain */}
                                 {(!isBinance && transactionData?.loading) ||
                                     (isBinance && binanceTransactionData.loading) && (
-                                   <div style={{background:'#222', padding: '9px 14px', display:'flex', alignItems:'center'}}><BarChartLoaderSVG /></div>
-                                )}
+                                        <div style={{ background: '#222', padding: '9px 14px', display: 'flex', alignItems: 'center' }}><BarChartLoaderSVG /></div>
+                                    )}
 
                                 {/* ETH Transaction List */}
                                 {!isBinance &&
@@ -486,13 +553,13 @@ export const Chart = () => {
                     </React.Fragment>}
 
                 {/* Market View */}
-                {accessDenied === false && 
-                 view === 'market' && (
-                    <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
-                        <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid #222', borderRadius: 6, width: '100%', height: 500 }} />
-                        <iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid #222', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
-                    </div>
-                 )}
+                {accessDenied === false &&
+                    view === 'market' && (
+                        <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
+                            <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid #222', borderRadius: 6, width: '100%', height: 500 }} />
+                            <iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid #222', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
+                        </div>
+                    )}
             </div>
         </FrameWrapper>
     )
