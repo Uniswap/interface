@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 
 const TextWrapper = styled.span<{ margin: boolean; link?: boolean; fontSize?: string; adjustSize?: boolean }>`
   margin-left: ${({ margin }) => margin && '4px'};
-  color: ${({ theme, link }) => (link ? theme.blue1 : theme.text1)};
+  color: ${({ theme, link }) => (link ? theme.blue1 : '#FFF')};
   font-size: ${({ fontSize }) => fontSize ?? 'inherit'};
 
   @media screen and (max-width: 600px) {
