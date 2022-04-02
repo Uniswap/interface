@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@babytrump/interface",
+  "description": "BabyTrump Exchange",
   "homepage": ".",
   "private": true,
   "devDependencies": {
