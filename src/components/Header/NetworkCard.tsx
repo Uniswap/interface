@@ -175,7 +175,7 @@ export default function NetworkCard() {
     return null
   }
 
-    const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
+    const isBINANCE = [SupportedChainId.MAINNET, SupportedChainId.BINANCE].includes(chainId)
     return (
       <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle} chainId={chainId}>
@@ -186,21 +186,14 @@ export default function NetworkCard() {
         {open && (
           <MenuFlyout>
             { (
-              <ButtonMenuItem onClick={() => {
-                let chainIdToSwitch = SupportedChainId.MAINNET;
-                if(chainId === 1) chainIdToSwitch = SupportedChainId.BINANCE;
-                switchToNetwork({ library, chainId: chainIdToSwitch })
-              }}>
-                <div>
-                    {chainId === 56 ? <TYPE.small>Switch to ETH </TYPE.small> : null} 
-                    {chainId === 1 ? <TYPE.small>Switch to BSC </TYPE.small> : null}
-                </div>
-                <TYPE.small>
-                { chainId === 56 ? <Badge variant={BadgeVariant.GREY}>MAINNET</Badge> : null}
-                { chainId === 1 ? <Badge variant={BadgeVariant.WARNING}>BINANCE</Badge> : null}
-                </TYPE.small> 
-                <ToggleLeft opacity={0.6} size={16} />
-              </ButtonMenuItem>
+           
+            <TYPE.main fontSize={16}>
+              <Trans>
+              The Networks you are using is controlled by your wallet. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and re-connect to switch networks. You must select the network you want to use when you re-connect.{' '}
+                <ExternalLink style={{color:"#F8D9C8"}} href="https://kibainu.org/networkhelp/">Click here for help.</ExternalLink> 
+              </Trans>
+            </TYPE.main>
+          
             )}
           </MenuFlyout>
         )}
