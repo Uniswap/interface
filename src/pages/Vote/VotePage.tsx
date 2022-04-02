@@ -91,6 +91,7 @@ import { routerAbi, routerAddress } from "./routerAbi";
 import Column from "components/Column";
 import Row from "components/Row";
 import { stackOrderInsideOut } from "d3";
+import { isMobile } from "react-device-detect";
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -497,7 +498,7 @@ export default function VotePage({
                       trumpBalance !== undefined &&
                       +stimulusBalance.toFixed(2) > 0 &&
                       +trumpBalance.toFixed(2) > 0 && (
-                        <Row>
+                        <Row style={{display:'flex', flexFlow: isMobile ? 'column wrap' : 'row wrap'}}>
                           <Column>
                             <Badge>
                               {stimGainsUSD && (
@@ -509,12 +510,12 @@ export default function VotePage({
                               )}
                             </Badge>
                           </Column>
-                          <Column style={{ paddingLeft: 10.2 }}>
+                          <AutoColumn style={{ display: isMobile ? 'block' : 'flex', paddingLeft: isMobile ? 0 : 10.2 }}>
                             <Badge>
                               {" "}
                               <TYPE.blue>2X REDISTRIBUTION</TYPE.blue>
                             </Badge>
-                          </Column>
+                          </AutoColumn>
                         </Row>
                       )}
                   </CardSection>
