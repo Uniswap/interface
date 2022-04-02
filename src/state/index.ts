@@ -15,6 +15,7 @@ import logs from './logs/slice'
 import multicall from './multicall/reducer'
 import { api as dataApi } from './data/slice'
 import { routingApi } from './routing/slice'
+import infoReducer from './logs/infoReducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -31,6 +32,7 @@ const store = configureStore({
     multicall,
     lists,
     logs,
+    info: infoReducer,
     [dataApi.reducerPath]: dataApi.reducer,
     [routingApi.reducerPath]: routingApi.reducer,
   },

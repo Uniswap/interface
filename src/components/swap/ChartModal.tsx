@@ -1,6 +1,5 @@
 
 import Modal from 'components/Modal';
-import { NoFragmentCyclesRule } from 'graphql';
 import React from 'react'
 import { useTokenData, useTokenTransactions } from 'state/logs/utils';
 import styled from 'styled-components/macro';
@@ -8,40 +7,37 @@ import _ from 'lodash';
 import { X } from 'react-feather';
 import { useWeb3React } from '@web3-react/core';
 import { useKiba } from 'pages/Vote/VotePage';
-
-
+import { Dots } from 'pages/Pool/styleds';
+import moment from 'moment';
+const FrameWrapper = styled.div`
+    padding:9px 14px;
+    height:540px;
+    width:100%;
+`
+const StyledDiv = styled.div`
+    font-family: 'Bangers', cursive;
+    font-size:25px;
+`
 export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, onDismiss: () => void }) => {
     const web3Data = useWeb3React();
     const kibaBalance = useKiba(web3Data.account)
     const isBinance = web3Data.chainId && web3Data.chainId === 56
     const accessDenied = React.useMemo(() => !web3Data?.account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [web3Data.account, kibaBalance])
-
-    const StyledDiv = styled.div`
-        font-family: 'Bangers', cursive;
-        font-size:25px;
-    `
-
-    const Transactions = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900')
-    console.log(Transactions)
+    const transactionData = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
+    console.log(transactionData)
     const Frame = accessDenied ? null : (
         <iframe id={'tradingview_5aace'} src={`https://www.tradingview.com/widgetembed/?frameElementId=tradingview_5aace&symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`}
             style={{
-                height: 500, width:'100%', border:'1px solid #222'
+                height: 500, width: '100%', border: '1px solid #222'
             }}
 
         />
     );
     const tokenData = useTokenData(`0x4b2c54b80b77580dc02a0f6734d3bad733f50900`)
-    const FrameWrapper = styled.div`
-        padding:9px 14px;
-        height:540px;
-        width:100%;
-    `
-    const filterKeys = (key: string) => ['name', 'id', 'symbol', 'derivedETH', '__typename', 'totalLiquidityUSD', 'priceUSD', 'volumeChangeUT', 'liquidityChangeUSD', 'txnChange', 'oneDayData', 'twoDayData'].includes(key) === false;
 
     const [view, setView] = React.useState<'chart' | 'stats'>('chart')
-    const transactions = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900')
-    const formattedTransactions = React.useMemo(() => transactions?.swaps?.map((swap: any) => {
+    const transactions = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
+    const formattedTransactions = React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out
         const newTxn: Record<string, any> = {}
@@ -63,7 +59,7 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
         newTxn.amountUSD = swap.amountUSD
         newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.from : swap.to
         return newTxn;
-    }), [transactions]
+    }), [transactionData.data]
     )
     if (!isOpen) return null;
     return <Modal maxHeight={600} isOpen={isOpen} onDismiss={() => onDismiss()}>
@@ -110,38 +106,50 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
 
 
                     <div style={{ display: 'block', overflowY: 'auto', maxHeight: 600 }}>
-                        <small>Transactions are ETH only for now</small>
+                        <small>Transactions are ETH only for now. {transactionData?.data?.swaps && `Last updated ${moment(transactionData.lastFetched).fromNow()}`}</small>
                         <table>
-                            <thead style={{position:'sticky',top:0, background:"#222"}}>
-                                <th>
-                                    Tokens
-                                </th>
-                                <th>
-                                    Value
-                                </th>
-                                <th>
-                                    Price
-                                </th>
-                                <th>
-                                    Price/Tokens
-                                </th>
-                                <th>Time</th>
-                                <th>Tx</th>
+                            <thead style={{ textAlign: 'left', position: 'sticky', top: 0, background: '#222' }}>
+                                <tr>
+                                    <th>
+                                        Date
+                                    </th>
+                                    <th>Type</th>
+                                    <th style={{ whiteSpace: 'nowrap' }}>
+                                        Amt <small>ETH</small>
+                                    </th>
+                                    <th>
+                                        Amt <small>USD</small>
+                                    </th>
+                                    <th>Amt Tokens</th>
+                                    <th>Maker</th>
+                                    <th>Tx</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                {!formattedTransactions && <tr>
-                                    <td colSpan={5}>LOADING TRANSACTIONS</td>
-                                </tr>}
-                                {isOpen && formattedTransactions && formattedTransactions?.map((item: any) => (
-                                    <tr key={`${item.timestamp}${item?.transaction?.id ?? item?.hash}`}>
+                                {!formattedTransactions && (
+                                    <tr>
+                                        <td colSpan={5}> <Dots>Loading transactions</Dots></td>
+                                    </tr>
+                                )}
+                                {isOpen && formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
+                                    <tr key={`_${item.timestamp * 1000}_${item.hash}_${index}`}>
+                                        <td style={{ fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
                                         <td style={{ color: item.token0Symbol === 'WETH' ? 'red' : 'green' }}>{item.token0Symbol === 'WETH' ? 'SELL' : 'BUY'}</td>
-                                        <td>{Number(item.token0Amount)?.toFixed(2)?.toLocaleString()} {item.token0Symbol}</td>
-                                        <td> {Number(item.token1Amount)?.toFixed(2)?.toLocaleString()} {item.token1Symbol}</td>
+                                        <td>{item.token0Symbol === 'WETH' && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                            {item.token1Symbol === 'WETH' && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                        </td>
                                         <td>${Number(item.amountUSD).toFixed(2).toLocaleString()}</td>
-                                        <td>{new Date(item.timestamp * 1000).toLocaleString()}</td>
+                                        <td>{item.token0Symbol !== 'WETH' && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                            {item.token1Symbol !== 'WETH' && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                        </td>
                                         <td>
-                                            <a href={'https://etherscan.io/tx/' + item.hash}>
-                                                {item.hash && item.hash.slice(0, 6) + '...' + item.hash.slice(38, 42)}
+                                            <a href={'https://etherscan.io/address/' + item.account}>
+                                                {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href={'https://etherscan.io/tx/' + item?.hash}>
+                                                {item?.hash && item?.hash.slice(0, 6) + '...' + item?.hash.slice(38, 42)}
                                             </a>
                                         </td>
                                     </tr>

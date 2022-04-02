@@ -314,6 +314,7 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  const [ethPrice] = useEthPrice()
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard()
   const href = 'https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104'
@@ -354,7 +355,6 @@ export default function Header() {
           title: 'GWEI is currently at ' + Math.trunc(gas?.fast / 10)
         })
       }
-
     });  
       promise();
     return () => {
@@ -437,10 +437,7 @@ export default function Header() {
           <div
             style={{
               position: 'relative',
-              top: 6,
-              marginBottom: 15,
               justifyContent: 'center',
-              marginRight: 30,
               padding: 3,
               borderRadius: 12,
               display: 'flex',
@@ -448,8 +445,8 @@ export default function Header() {
             }}
           >
             {' '}
-            <span style={{ cursor: 'pointer', display: 'flex', alignItems: 'baseline' }}>
-              <img style={{ filter: 'sepia(1)', maxWidth: 20 }} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
+            <span style={{ cursor: 'pointer', display: 'flex', flexFlow:'row wrap', alignItems: 'center' }}>
+              <img style={{ filter: 'sepia(1)', maxWidth: 15 }} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
               />
               {gas && (
                 <span style={{ color: '#fff', marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>

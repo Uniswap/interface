@@ -1,4 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import { useWeb3React } from '@web3-react/core'
+import React from 'react'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
@@ -119,4 +121,13 @@ export function useUserHasSubmittedClaim(account?: string): {
   }, [account, allTransactions])
 
   return { claimSubmitted: Boolean(claimTxn), claimTxn }
+}
+
+
+export const LimitOrders = ( ) => {
+const { chainId } = useWeb3React();
+const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId]);
+const src = React.useMemo(() => 
+`https://app.1inch.io/#/1/classic/limit-order/${isBinance ? 'WBNB' : 'WETH'}/${isBinance ? `0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341` : `0x4b2c54b80b77580dc02a0f6734d3bad733f50900`}`, [isBinance])
+return  <iframe style={{width:'100%', height:500, border:'1px solid transparent', borderRadius:30}} src={src} />
 }
