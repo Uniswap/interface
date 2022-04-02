@@ -29,6 +29,8 @@ import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useWeb3React } from '@web3-react/core'
+import { useTrumpBalance } from 'pages/Vote/VotePage'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -308,6 +310,30 @@ const ExternalMenuItem = styled(MenuItem)`
   width: max-content;
   text-decoration: none;
 `
+
+export const GainsMenu = () => {
+  const node = useRef<HTMLDivElement>()
+  const { account } = useWeb3React()
+  const trumpBalance = useTrumpBalance(account)
+  const [show, setShow]  = React.useState(false)
+  const open = useModalOpen(ApplicationModal.GAINS)
+  const toggle = useToggleModal(ApplicationModal.GAINS)
+  useOnClickOutside(node, show ? () => setShow(false)  : undefined)
+  const ToggleElement = StyledMenuIcon
+  return (
+    <StyledMenu ref={node as any}>
+      <ToggleElement onClick={() => setShow(true)} />
+      {show && (
+        <NewMenuFlyout flyoutAlignment={FlyoutAlignment.RIGHT}>
+              <NewMenuItem to={"/gains"}>
+               TRUMPGAINS
+              </NewMenuItem>
+      <NewMenuItem  to={trumpBalance ? "/gains-tracker" : '#'}> UNIVERSAL GAINS TRACKER {!trumpBalance && <Info />}</NewMenuItem>
+        </NewMenuFlyout>
+      )}
+    </StyledMenu>
+  )
+}
 
 export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: NewMenuProps) => {
   const node = useRef<HTMLDivElement>()
