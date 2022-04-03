@@ -1,6 +1,7 @@
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ExternalLink, TYPE } from '../../theme'
+import { abbreviateNumber, useTotalSwapVolume } from 'components/BurntKiba'
 import styled, { keyframes } from 'styled-components/macro'
 import { useEffect, useState } from 'react'
 
@@ -10,14 +11,12 @@ import { Trans } from '@lingui/react'
 import _ from 'lodash'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../../state/application/hooks'
+import { useBnbPrices } from 'state/logs/bscUtils'
 import { useCurrency } from 'hooks/Tokens'
-import { useTotalSwapVolume } from 'components/BurntKiba'
+import { useEthPrice } from 'state/logs/utils'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { utils } from 'ethers'
-import { useEthPrice } from 'state/logs/utils'
-import { useBnbPrices } from 'state/logs/bscUtils'
-
 
 const StyledEthPolling = styled.div`
   display: flex;
@@ -141,7 +140,7 @@ export default function SwapVolume() {
       ) : (
         <>
           <StyledPollingNumber>
-            <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 'NaN' && <>(${(volumeInUsd)} USD)</>}
+            <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 'NaN' && <>(${(abbreviateNumber(+volumeInUsd))} USD)</>}
           </StyledPollingNumber>
           <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
         </>
