@@ -5,7 +5,7 @@ import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import { CardBGImage, CardNoise, CardSection } from 'components/earn/styled'
 import { LinkStyledButton, StyledInternalLink } from 'theme'
 import { useKiba, useKibaBalanceUSD } from 'pages/Vote/VotePage'
-import _ from 'lodash'
+
 import { AutoColumn } from 'components/Column'
 import Confetti from 'components/Confetti'
 import { DarkCard } from 'components/Card'
@@ -13,6 +13,7 @@ import React from 'react'
 import { SupportedChainId } from 'constants/chains'
 import { Wrapper } from 'pages/Pool/styleds'
 import {Zap} from 'react-feather'
+import _ from 'lodash'
 import styled from 'styled-components/macro'
 import { useBlockNumber } from 'state/application/hooks';
 import { useCurrency } from 'hooks/Tokens'
@@ -54,7 +55,7 @@ export const useTotalSwapVolume = () => {
     return { 
       volumeInEth: ethRelayed.formatted,
       volumeInEthBn: ethRelayed.value,
-      volumeInUsd: parseFloat(formattedUsdcValue).toLocaleString()
+      volumeInUsd: parseFloat(formattedUsdcValue)
     }
 }
 
@@ -63,7 +64,7 @@ const ContentWrapper = styled(AutoColumn)`
   padding: 1rem;
   overflow:hidden;
 `
-function abbreviateNumber(value: any) {
+export function abbreviateNumber(value: any) {
     return Intl.NumberFormat('en-US', {
         notation: "compact",
         maximumFractionDigits: 1
