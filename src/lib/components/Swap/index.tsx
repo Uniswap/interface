@@ -8,10 +8,10 @@ import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
 import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
-import useTokenList, { useSyncTokenList } from 'lib/hooks/useTokenList'
+import { useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
@@ -63,32 +63,26 @@ export default function Swap(props: SwapProps) {
   const pendingTxs = usePendingTransactions()
   const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
-  const tokenList = useTokenList()
   const onSupportedNetwork = useOnSupportedNetwork()
-  const isSwapSupported = useMemo(
-    () => Boolean(active && onSupportedNetwork && tokenList?.length),
-    [active, onSupportedNetwork, tokenList?.length]
-  )
+  const isSupported = Boolean(active && onSupportedNetwork)
 
   const focused = useHasFocus(wrapper)
-
-  const isInteractive = Boolean(active && onSupportedNetwork)
 
   return (
     <>
       <SwapPropValidator {...props} />
-      <Updaters {...props} disabled={!isSwapSupported} />
+      <Updaters {...props} disabled={!isSupported} />
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
-        <Settings disabled={!isInteractive} />
+        <Settings disabled={!isSupported} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={!isInteractive} focused={focused} />
-          <ReverseButton disabled={!isInteractive} />
-          <Output disabled={!isInteractive} focused={focused}>
+          <Input disabled={!isSupported} focused={focused} />
+          <ReverseButton disabled={!isSupported} />
+          <Output disabled={!isSupported} focused={focused}>
             <Toolbar disabled={!active} />
-            <SwapButton disabled={!isSwapSupported} />
+            <SwapButton disabled={!isSupported} />
           </Output>
         </BoundaryProvider>
       </div>
