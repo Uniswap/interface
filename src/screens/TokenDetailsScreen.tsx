@@ -2,8 +2,9 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import SendIcon from 'src/assets/icons/send.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -67,6 +68,7 @@ export function TokenDetailsScreen({
 
   const balance = useSingleBalance(currency)
 
+  const theme = useAppTheme()
   const { t } = useTranslation()
 
   const onPressBuy = () => {
@@ -94,6 +96,20 @@ export function TokenDetailsScreen({
     }
     navigation.push(Screens.Swap, { swapFormState })
   }
+
+  const onPressSend = () => {
+    const swapFormState: SwapFormState = {
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmount: '1',
+      [CurrencyField.INPUT]: {
+        currencyId: currencyId(currency),
+        chainId: currency.wrapped.chainId,
+      },
+      [CurrencyField.OUTPUT]: null,
+    }
+    navigation.push(Screens.Transfer, { swapFormState })
+  }
+
   return (
     <Screen>
       <TokenDetailsHeader currency={currency} />
@@ -109,11 +125,10 @@ export function TokenDetailsScreen({
                 <TokenBalanceItem balance={balance} />
               </>
             )}
-            <Box flexDirection="row" mx="lg" my="md">
+            <Flex flexDirection="row" gap="sm" mx="lg" my="md">
               <PrimaryButton
                 flex={1}
                 label={t('Buy')}
-                mr="sm"
                 name={ElementName.BuyToken}
                 textVariant="buttonLabelLg"
                 onPress={onPressBuy}
@@ -127,7 +142,23 @@ export function TokenDetailsScreen({
                 variant="gray"
                 onPress={onPressSell}
               />
-            </Box>
+              <IconButton
+                bg="gray100"
+                borderRadius="md"
+                disabled={!balance}
+                icon={
+                  <SendIcon
+                    height={20}
+                    stroke={theme.colors.textColor}
+                    strokeWidth={1.5}
+                    width={20}
+                  />
+                }
+                justifyContent="center"
+                px="md"
+                onPress={onPressSend}
+              />
+            </Flex>
           </Box>
         </Flex>
       </ScrollView>

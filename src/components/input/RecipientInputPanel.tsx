@@ -55,7 +55,7 @@ export function RecipientInputPanel({
           ) : (
             <RecipientInput />
           )}
-          <Chevron color={theme.colors.textColor} direction="e" height={8} width={12} />
+          <Chevron color={theme.colors.white} direction="e" height={8} width={12} />
         </Flex>
       </Button>
     </Flex>
@@ -66,7 +66,7 @@ function RecipientInput() {
   const { t } = useTranslation()
 
   return (
-    <Text color="mainForeground" variant="h3">
+    <Text color="white" variant="h3">
       {t('Select Recipient')}
     </Text>
   )
