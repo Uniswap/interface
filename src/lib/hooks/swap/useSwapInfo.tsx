@@ -31,8 +31,15 @@ interface SwapInfo {
   impact?: PriceImpact
 }
 
+const swapInfoAtom = atom<SwapInfo>({
+  [Field.INPUT]: {},
+  [Field.OUTPUT]: {},
+  trade: { state: TradeState.INVALID },
+  slippage: { auto: true, allowed: new Percent(0) },
+})
+
 // from the current swap inputs, compute the best trade and return it.
-function useComputeSwapInfo(): SwapInfo {
+function useUpdateSwapInfo() {
   const { account } = useActiveWeb3React()
   const { type: wrapType } = useWrapCallback()
   const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
@@ -67,24 +74,26 @@ function useComputeSwapInfo(): SwapInfo {
   const slippage = useSlippage(trade.trade)
   const { inputUSDC, outputUSDC, impact } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
 
-  return useMemo(
-    () => ({
-      [Field.INPUT]: {
-        currency: currencyIn,
-        amount: amountIn,
-        balance: balanceIn,
-        usdc: inputUSDC,
-      },
-      [Field.OUTPUT]: {
-        currency: currencyOut,
-        amount: amountOut,
-        balance: balanceOut,
-        usdc: outputUSDC,
-      },
-      trade,
-      slippage,
-      impact,
-    }),
+  const setSwapInfo = useUpdateAtom(swapInfoAtom)
+  useEffect(
+    () =>
+      setSwapInfo({
+        [Field.INPUT]: {
+          currency: currencyIn,
+          amount: amountIn,
+          balance: balanceIn,
+          usdc: inputUSDC,
+        },
+        [Field.OUTPUT]: {
+          currency: currencyOut,
+          amount: amountOut,
+          balance: balanceOut,
+          usdc: outputUSDC,
+        },
+        trade,
+        slippage,
+        impact,
+      }),
     [
       amountIn,
       amountOut,
@@ -95,23 +104,15 @@ function useComputeSwapInfo(): SwapInfo {
       impact,
       inputUSDC,
       outputUSDC,
+      setSwapInfo,
       slippage,
       trade,
     ]
   )
 }
 
-const swapInfoAtom = atom<SwapInfo>({
-  [Field.INPUT]: {},
-  [Field.OUTPUT]: {},
-  trade: { state: TradeState.INVALID },
-  slippage: { auto: true, allowed: new Percent(0) },
-})
-
 export function SwapInfoUpdater() {
-  const setSwapInfo = useUpdateAtom(swapInfoAtom)
-  const swapInfo = useComputeSwapInfo()
-  useEffect(() => setSwapInfo(swapInfo), [swapInfo, setSwapInfo])
+  useUpdateSwapInfo()
   return null
 }
 
