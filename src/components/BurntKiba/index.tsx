@@ -22,6 +22,10 @@ import useInterval from 'hooks/useInterval';
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
+import Lottie from 'react-lottie';
+import animationData from '../../../src/lotties/fire.json';
+import { alignItems } from 'styled-system';
+
 
 export const useTotalSwapVolume = () => {
   const relayer = useV2RouterContract()
@@ -58,6 +62,15 @@ export const useTotalSwapVolume = () => {
       volumeInUsd: parseFloat(formattedUsdcValue)
     }
 }
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice"
+  }
+}
+
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -85,6 +98,8 @@ export const BurntKiba = ({showDetails}:{showDetails?:boolean}) => {
     const currencyBalance =useCurrencyBalance('0x000000000000000000000000000000000000dead', kibaCurrency ?? undefined)
     const burntValue = useUSDCValue(currencyBalance)
     const bscBurntValue = useKibaBalanceUSD('0x000000000000000000000000000000000000dead', chainId)
+    
+    
     const {
 volumeInEth, 
 volumeInEthBn,
@@ -111,14 +126,18 @@ volumeInUsd
             {true && (
             <div>
               <h1>Total Swap Volume (in {isBinance ? "BSC" : "ETH"})</h1>
-              <p><Badge>{volumeInEth} {isBinance ? "BNB" :"ETH"} {volumeInUsd && volumeInUsd !== 'NaN' && <> (${volumeInUsd} USD)</>}</Badge></p>
+              <p><Badge>{volumeInEth} {isBinance ? "BNB" :"ETH"} {volumeInUsd && volumeInUsd !== 0 && <> (${volumeInUsd} USD)</>}</Badge></p>
             </div>
             )}
             </DarkCard> 
               </ContentWrapper>   :
             <StyledInternalLink to="/dashboard">
-                <Badge   style={{color: '#fff', background: 'url(https://bestanimations.com/media/flames/1396965048fire-flames-sparks-billowing-animated-gif-image.gif)', backgroundPosition: 'center center',backgroundSize: 'contain'}} variant={BadgeVariant.DEFAULT}> {abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</Badge>
-            </StyledInternalLink> : null
+            <Badge   style={{display: 'flex', color: '#fff', border:'transparent', fontFamily: 'Bangers'}} variant={BadgeVariant.HOLLOW}> <div style = {{marginBottom: 10 }}><Lottie 
+  options={defaultOptions}
+    height={28}
+    width={28}></Lottie></div>
+    {abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</Badge>
+        </StyledInternalLink> : null
          
     )
 }
