@@ -34,9 +34,12 @@ import Search from 'components/Icons/Search'
 import useDebounce from 'hooks/useDebounce'
 import { Farm } from 'state/farms/types'
 import { BigNumber } from 'ethers'
+import { ChainId } from '@dynamic-amm/sdk'
+import { useActiveWeb3React } from 'hooks'
 
 const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean }) => {
   const theme = useTheme()
+  const { chainId } = useActiveWeb3React()
   const above1000 = useMedia('(min-width: 1000px)')
   const { data: farmsByFairLaunch } = useFarmsData()
   const totalRewards = useFarmRewards(Object.values(farmsByFairLaunch).flat())
@@ -63,7 +66,9 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
     (farm: Farm) => {
       // TODO: hard code for SIPHER. Need to be remove later
       const isSipherFarm =
-        farm.fairLaunchAddress.toLowerCase() === '0xc0601973451d9369252Aee01397c0270CD2Ecd60'.toLowerCase()
+        farm.fairLaunchAddress.toLowerCase() === '0xc0601973451d9369252Aee01397c0270CD2Ecd60'.toLowerCase() &&
+        chainId === ChainId.MAINNET
+
       if (farm.rewardPerSeconds) {
         // for active/ended farms
         return (
