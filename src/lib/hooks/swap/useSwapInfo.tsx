@@ -52,8 +52,8 @@ function useUpdateSwapInfo() {
   )
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    parsedAmount,
-    (isExactIn ? currencyOut : currencyIn) ?? undefined
+    currencyIn && currencyOut && parsedAmount,
+    (currencyIn && currencyOut && (isExactIn ? currencyOut : currencyIn)) ?? undefined
   )
 
   const amountIn = useMemo(
