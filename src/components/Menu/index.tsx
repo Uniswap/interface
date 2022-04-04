@@ -285,13 +285,13 @@ export default function Menu() {
                       </div>
                       <BookOpen opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
+                    <MenuItem href="https://www.dextools.io/app/ether/pair-explorer/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48">
                       <div>
                         <Trans>Dextools</Trans>
                       </div>
                       <BarChart2 opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href={'https://twitter.com/kibainukiba'}>
+                    <MenuItem href={'https://twitter.com/KibaInuWorld'}>
                       <div>
                         <Trans>Twitter</Trans>
                       </div>
