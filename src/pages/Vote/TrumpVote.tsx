@@ -14,7 +14,7 @@ export const TrumpVote = ( ) => {
     const [proposals, setProposals] = React.useState<Proposal[]>([])
     React.useEffect (() => {
         // fetch proposal data
-        fetch(`http://localhost:7777/proposal`, {method: 'GET'}).then((res) => res.json())
+        fetch(`https://api.babytrumptoken.com/proposal`, {method: 'GET'}).then((res) => res.json())
             .then(setProposals)
     }, [])
 
