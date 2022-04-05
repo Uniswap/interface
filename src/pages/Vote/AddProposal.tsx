@@ -33,14 +33,14 @@ export const useTrumpGoldBalance = (account?: string | null) => {
       "TGOLD"
     );
   
-    const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+    const kibaBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
       account ?? undefined,
       trumpCoin
     );
   
     return React.useMemo(() => {
-      return trumpBalance;
-    }, [trumpBalance, trumpCoin]);
+      return kibaBalance;
+    }, [kibaBalance, trumpCoin]);
   };
   const Header = styled.div`
   display:flex;
