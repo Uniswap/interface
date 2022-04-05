@@ -1,14 +1,16 @@
-import gql from 'graphql-tag'
 import { ApolloClient, useQuery } from '@apollo/client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { HttpLink } from 'apollo-link-http'
-import moment from 'moment'
-import React from 'react'
-import useInterval from 'hooks/useInterval'
 import _, { isEqual } from 'lodash'
-import { request } from 'graphql-request'
+
+import { HttpLink } from 'apollo-link-http'
 import { INFO_CLIENT } from './bscUtils'
-import { useWeb3React  } from '@web3-react/core'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import React from 'react'
+import gql from 'graphql-tag'
+import moment from 'moment'
+import { request } from 'graphql-request'
+import useInterval from 'hooks/useInterval'
+import { useWeb3React } from '@web3-react/core'
+
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -45,6 +47,19 @@ export function filterToKey(filter: EventFilter): string {
     }`
 }
 
+const BscTokenFields = `
+  fragment TokenFields on Token {
+    id
+    name
+    symbol
+    derivedBNB
+    tradeVolume
+    tradeVolumeUSD
+    untrackedVolumeUSD
+    totalLiquidity
+    totalTransactions
+  } 
+`
 
 const TokenFields = `
   fragment TokenFields on Token {
@@ -61,7 +76,7 @@ const TokenFields = `
 `
 export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) => {
   const queryString = `
-    ${isBnb ? TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions') : TokenFields}
+    ${isBnb ? BscTokenFields : TokenFields}
     query tokens {
       tokens(${block && block !== null && typeof(block) === 'string' ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -86,9 +101,11 @@ export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        name
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        name
       }
     }
   `
@@ -105,12 +122,10 @@ export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string)
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
     }
   `
@@ -127,12 +142,10 @@ export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string)
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
     }`
   return gql(queryString)
