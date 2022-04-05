@@ -24,7 +24,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const chainId = currency?.chainId
 
-  const amountOut = currency && chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
+  const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
   // TODO(#2808): remove dependency on useBestV2Trade
