@@ -3,6 +3,8 @@ import Badge from 'components/Badge';
 import { DarkCard } from 'components/Card';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import { CardSection } from 'components/earn/styled';
+import moment from 'moment';
+import { Dots } from 'pages/Pool/styleds';
 import React from 'react'; import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
 import { getTokenData, useEthPrice, useTokenData, useTokenTransactions } from 'state/logs/utils';
 import styled from 'styled-components/macro'
@@ -24,8 +26,8 @@ export const SelectiveChart = () => {
             setAddress('')
         }   
     },[address, ethPrice, ethPriceOld])
-    const transactions = useTokenTransactions(address?.toLowerCase())
-    const formattedTransactions = transactions?.swaps?.map((swap: any) => {
+    const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
+    const formattedTransactions =  React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out
         const newTxn: Record<string, any> = {}
@@ -47,11 +49,11 @@ export const SelectiveChart = () => {
         newTxn.amountUSD = swap.amountUSD
         newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.from : swap.to
         return newTxn;
-    })
+    }), [transactionData])
     const StyledDiv = styled.div`
-font-family: 'Bangers', cursive;
-font-size:25px;
-`
+        font-family: 'Bangers', cursive;
+        font-size:25px;
+    `
     const frameURL = React.useMemo(() => `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:${tokenData.symbol}WETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`, [selectedCurrency, tokenData])
     return (
         <DarkCard style={{ maxWidth: 900, background: 'radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95))', display: 'flex', flexFlow: 'column wrap' }}>
@@ -63,7 +65,7 @@ font-size:25px;
             </CardSection>
             <CardSection>
                 {tokenData && tokenData?.priceUSD && <div style={{ marginBottom: 5 }}>
-
+                    
                     <div style={{ display: 'flex', flexFlow:'row wrap', justifyContent: 'space-between' }}>
                         <div style={{paddingBottom:5}}>
                             <StyledDiv>Price (USD)  <Badge style={{ color:"#fff", background:tokenData?.priceChangeUSD <= 0 ? "red" : 'green'}}><StyledDiv>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}{tokenData.priceChangeUSD.toFixed(2)}%</StyledDiv></Badge></StyledDiv>
@@ -113,6 +115,7 @@ font-size:25px;
 
             {tokenData && selectedCurrency && (
                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
+                    {transactionData?.lastFetched && <small>Data last updated {moment(transactionData.lastFetched).fromNow()}</small>}
                     <table style={{ background: '#222', width: '100%' }}>
                         <thead style={{ textAlign: 'left', position: 'sticky', top: 0, background: '#222', width: '100%' }}>
                             <tr style={{ borderBottom: '1px solid #fff' }}>
@@ -120,19 +123,15 @@ font-size:25px;
                                     Date
                                 </th>
                                 <th>Type</th>
-                                <th>
-                                    Amount ETH
-                                </th>
-                                <th>
-                                    Amount USD
-                                </th>
+                                <th>Amount ETH</th>
+                                <th>Amount USD</th>
                                 <th>Amount Tokens</th>
                                 <th>Maker</th>
                                 <th>Tx</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {(!formattedTransactions?.length || !formattedTransactions) && <tr><td colSpan={5}>Loading transaction data...</td></tr>}
+                            {(!formattedTransactions?.length || !formattedTransactions) && <tr><td colSpan={5}><Dots> Loading transaction data</Dots></td></tr>}
                             {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
                                 <tr style={{paddingBottom:5}}  key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                     <td style={{fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
