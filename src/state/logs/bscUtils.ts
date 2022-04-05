@@ -1,16 +1,17 @@
-import { rawRequest, request } from 'graphql-request'
-import gql from 'graphql-tag'
-import moment from 'moment'
+import { BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, TOKEN_DATA, bscClient, get2DayPercentChange, getBlockFromTimestamp, getPercentChange } from './utils'
 import React, { useCallback, useDebugValue } from 'react'
-import { subDays, subWeeks, startOfMinute } from 'date-fns'
-import { bscClient, BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, get2DayPercentChange, getBlockFromTimestamp, getPercentChange, TOKEN_DATA } from './utils'
-import { isEqual } from 'lodash'
-import useInterval from 'hooks/useInterval'
-import { useWeb3React } from '@web3-react/core';
-import { useQuery } from '@apollo/client'
-import { useBlockNumber } from 'state/application/hooks'
-import { useActiveWeb3React } from 'hooks/web3'
+import { rawRequest, request } from 'graphql-request'
+import { startOfMinute, subDays, subWeeks } from 'date-fns'
+
 import axios from 'axios'
+import gql from 'graphql-tag'
+import { isEqual } from 'lodash'
+import moment from 'moment'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useBlockNumber } from 'state/application/hooks'
+import useInterval from 'hooks/useInterval'
+import { useQuery } from '@apollo/client'
+import { useWeb3React } from '@web3-react/core';
 export const INFO_CLIENT = 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2'
 export const BITQUERY_CLIENT = 'https://graphql.bitquery.io';
 
@@ -25,7 +26,7 @@ const BINANCE_TRADES = gql`
   query trades {  ethereum(network: bsc) {
       dexTrades(options: {limit: 100, desc: "block.timestamp.unixtime"},
         exchangeName: {in: ["Pancake","Pancake v2"]},
-      baseCurrency: {is: "0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5"}) {
+      baseCurrency: {is: "0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5"}) {
         transaction {
           hash
           __typename
@@ -145,7 +146,7 @@ const QUERY_HOLDERS_BSC = gql`
 query MyQuery {
   ethereum(network: bsc) {
     transfers(
-      currency: {in: ["0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5"]}
+      currency: {in: ["0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5"]}
       options: { limitBy: { each: "currency.address", limit: 10 } }
     ) {
       currency {
@@ -704,7 +705,7 @@ export function useBscPoocoinTransactions() {
   const { chainId } = useActiveWeb3React()
   const fn = React.useCallback(async () => {
     if (chainId && chainId === 56) {
-      fetch('https://stg-api.unmarshal.io/v2/bsc/address/0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
+      fetch('https://stg-api.unmarshal.io/v2/bsc/address/0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
         .then(response => response.json())
         .then(setData)
     }
