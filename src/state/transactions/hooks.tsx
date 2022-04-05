@@ -1,38 +1,41 @@
-import { TransactionResponse } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
-import Badge, { BadgeVariant } from 'components/Badge'
-import { DarkCard } from 'components/Card'
-import { Wrapper } from 'components/swap/styleds'
-import moment from 'moment'
-import { isHoneyPot } from 'pages/App'
-import { LoadingRows } from 'pages/Pool/styleds'
-import { useKiba } from 'pages/Vote/VotePage'
-import React, { useDebugValue } from 'react'
-import { useCallback, useMemo } from 'react'
-import { AlertCircle, CheckCircle, ChevronDown, ChevronUp, DollarSign, HelpCircle, Info, Link, Loader, ExternalLink as ExLink, Circle, Lock, BarChart2 } from 'react-feather'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import styled from 'styled-components/macro'
-import ThemeProvider, { ExternalLink, ExternalLinkIcon, LinkStyledButton, StyledInternalLink } from 'theme'
-import { ButtonOutlined, ButtonPrimary } from 'components/Button'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { addTransaction } from './actions'
 import './limit.css'
-import { TransactionDetails } from './reducer'
-import { orderBy } from 'lodash'
-import useInterval from 'hooks/useInterval'
-import Tooltip from 'components/Tooltip'
-import { useContractOwner } from 'components/swap/ConfirmSwapModal'
-import { isHoneyPotBsc } from 'pages/HoneyPotBsc'
-import { GelatoLimitOrderPanel, GelatoLimitOrdersHistoryPanel, GelatoProvider } from '@gelatonetwork/limit-orders-react'
+
 import * as axios from 'axios'
-import { getTaxesForBscToken, getTokenTaxes } from 'pages/HoneyUtils'
-import Swal from 'sweetalert2'
+
+import { AlertCircle, BarChart2, CheckCircle, ChevronDown, ChevronUp, Circle, DollarSign, ExternalLink as ExLink, HelpCircle, Info, Link, Loader, Lock } from 'react-feather'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { GelatoLimitOrderPanel, GelatoLimitOrdersHistoryPanel, GelatoProvider } from '@gelatonetwork/limit-orders-react'
+import React, { useDebugValue } from 'react'
+import ThemeProvider, { ExternalLink, ExternalLinkIcon, LinkStyledButton, StyledInternalLink } from 'theme'
 import { fetchBscTokenData, useBnbPrices, useBscTokenData } from 'state/logs/bscUtils'
+import { getTaxesForBscToken, getTokenTaxes } from 'pages/HoneyUtils'
 import { getTokenData, useEthPrice } from 'state/logs/utils'
-import { useTokenHolderCount } from 'components/swap/ChartPage'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useCallback, useMemo } from 'react'
+
+import { DarkCard } from 'components/Card'
 import { DetailsModal } from 'components/swap/DetailsModal'
-import { useHasAccess } from 'components/AccountPage/AccountPage'
+import { LoadingRows } from 'pages/Pool/styleds'
+import Swal from 'sweetalert2'
+import Tooltip from 'components/Tooltip'
+import { TransactionDetails } from './reducer'
+import { TransactionResponse } from '@ethersproject/providers'
+import { Wrapper } from 'components/swap/styleds'
+import { addTransaction } from './actions'
+import { isHoneyPot } from 'pages/App'
+import { isHoneyPotBsc } from 'pages/HoneyPotBsc'
+import moment from 'moment'
 import { normalize } from 'path'
+import { orderBy } from 'lodash'
+import styled from 'styled-components/macro'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useContractOwner } from 'components/swap/ConfirmSwapModal'
+import { useHasAccess } from 'components/AccountPage/AccountPage'
+import useInterval from 'hooks/useInterval'
+import { useKiba } from 'pages/Vote/VotePage'
+import { useTokenHolderCount } from 'components/swap/ChartPage'
+import { useWeb3React } from '@web3-react/core'
 type SortStateKey = 'asc' | 'desc' | undefined;
   type SortState = {
     network: SortStateKey,
@@ -651,7 +654,7 @@ export const FomoPage = () => {
                     <small>{item.addr}</small>
                     {/* Etherscan / Explorer Link */}
                     <ExternalLinkIcon 
-                      style={{}} 
+                      style={{fill: '#fff'}} 
                       href={getNetworkLink(item)} />
 
                     {/* Chart Link */}

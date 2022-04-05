@@ -1,43 +1,34 @@
 import { AccountPage, AccountPageWithAccount } from 'components/AccountPage/AccountPage'
 import { AlertCircle, AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Globe, Info } from 'react-feather'
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache
-} from "@apollo/client";
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
 import { DarkCard, DarkGreyCard } from 'components/Card'
-import { ExternalLinkIcon, TYPE } from 'theme'
 import { FomoPage, LimitOrders } from 'state/transactions/hooks'
-import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { useState } from 'react'
+import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { Route, Switch } from 'react-router-dom'
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
-import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
 import AddLiquidity from './AddLiquidity'
 import { AddProposal } from './Vote/AddProposal'
-import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import {
+  ApolloProvider
+} from "@apollo/client";
 import AppBody from './AppBody'
-import { ApplicationModal } from '../state/application/actions'
 import { AutoColumn } from 'components/Column'
 import { CardSection } from 'components/earn/styled'
 import CreateProposal from './CreateProposal'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
-import Earn from './Earn'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { FavoritesPanel } from 'components/FavoritesPanel'
 import { Flex } from 'rebass'
 import { GainsTracker } from './GainsTracker/GainsTracker'
+import { GelatoProvider } from "@gelatonetwork/limit-orders-react";
 import Header from '../components/Header'
 import { HoneyPotBsc } from './HoneyPotBsc'
 import { LifetimeReflections } from './Swap/LifetimeReflections'
-import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -56,6 +47,7 @@ import { RowFixed } from 'components/Row'
 import { SelectiveChart } from './Swap/SelectiveCharting'
 import { Suite } from './Suite/Suite'
 import Swal from 'sweetalert2'
+import { TYPE } from 'theme'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import Tooltip from 'components/Tooltip'
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
@@ -67,6 +59,9 @@ import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 import Web3 from 'web3'
 import Web3ReactManager from '../components/Web3ReactManager'
+import bg4 from '../assets/images/bg4.jpg'
+import btok from '../assets/sponsors/btok2.svg'
+import cart from '../assets/sponsors/cryptocart.svg'
 import { getTokenTaxes } from './HoneyUtils'
 import { isAddress } from 'utils'
 import logo from '../assets/images/download.png'
@@ -75,7 +70,6 @@ import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
-import { walletconnect } from 'connectors'
 
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
