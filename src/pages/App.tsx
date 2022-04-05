@@ -81,7 +81,12 @@ const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
-  background:#000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  height: 150vh; 
+  width: 100vw;
+  background: url(${bg4}) ;
   align-items: flex-start;
   > * {
     font-family: 'Bangers', cursive !important;
@@ -128,14 +133,9 @@ function TopLevelModals() {
 }
 
 const VideoWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  min-width: 100%;
-  min-height:150vh;
-  background: url(${bg4}) center center !important;
-  background-size:contain;
-  background-position:center center;
-  background-repeat:no-repeat;
+  
+
+  
 `
 export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
@@ -352,21 +352,21 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
   const hasInvalidPermissions = !account || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0)
   if (chainId === 56) return <HoneyPotBsc />
   
-  return (<DarkCard style={{ background:'#252632', opacity: '.96', maxWidth: 600 }} id="honeypage">
+  return (<DarkCard style={{ background:'#252632', opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
     <div style={{ maxWidth: 600, display:'flex', flexFlow:'column wrap',margin: 'auto', paddingBottom: '1rem' }}>
-      <Badge style={{width:220}}><StyledHeader>Honeypot Checker (ETH)</StyledHeader></Badge>
-      <small style={{marginTop:3, paddingLeft:3}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
+      <StyledHeader style= {{ fontSize: 30, paddingBottom: 20, paddingTop: 20}}>Honeypot Checker (ETH)</StyledHeader>
+      <small style={{marginTop:3, paddingLeft:3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow'}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
     </div>
-    <RowFixed style={{ maxWidth: 600, width: "100%" }} >
+    <RowFixed style={{ maxWidth: 600, width: "100%", padding: 20 }} >
       {hasInvalidPermissions === false &&
-        <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
+        <AutoColumn style={{ maxWidth: 600, width: "100%"}} gap={'md'}>
           <label>Input a contract address to check if its a honeypot</label>
           <input style={{ padding: 8, width: '100%', marginBottom: 5 }} type={'search'} placeholder={"Input a contract address to check if a honeypot"} onChange={e => runCheck(e.target.value)} />
         </AutoColumn>
       }
 
       {hasInvalidPermissions &&
-        <p>You must hold Kiba Inu tokens in order to use this feature.
+        <p style={{display: 'flex', width: '100%', justifyContent: 'center' }}>You must hold Kiba Inu tokens in order to use this feature.
         </p>} 
     </RowFixed>
     {hasInvalidPermissions === false && <>
@@ -574,7 +574,7 @@ export default function App() {
 
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
-            <AppBody style={{ top:0, right: 0, position: 'relative', bottom: 0, padding: '9px 14px', justifyContent: 'end', backgroundColor: 'theme.bg0' , height: 'flex', width: 'flex', minWidth: '45%' }}>
+            <AppBody style={{ position: 'relative', padding: '9px 14px', justifyContent: 'end', backgroundColor: 'theme.bg0' , height: 'flex', width: 'flex', minWidth: '45%' }}>
         <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '10px', paddingTop: '10px' }}>Kibaswap Featured Sponsors
         </StyledDiv>
         <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => { return }} onFinish={() => { return }} key={"MARQUEE"} velocity={10}>

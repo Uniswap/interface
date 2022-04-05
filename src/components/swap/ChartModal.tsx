@@ -64,7 +64,7 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
     )
     if (!isOpen) return null;
     return <Modal maxHeight={600} isOpen={isOpen} onDismiss={() => onDismiss()}>
-        <FrameWrapper style={{ background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }} >
+        <FrameWrapper style={{ background: '#252632' }} >
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                 <X style={{ cursor: 'pointer' }} onClick={() => onDismiss()} />
             </div>

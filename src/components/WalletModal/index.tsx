@@ -22,6 +22,7 @@ import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
 import { LightCard } from '../Card'
+import { flex } from 'styled-system'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -57,6 +58,18 @@ const HeaderRow = styled.div`
     padding: 1rem;
   `};
 `
+
+const InternalHeaderRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  padding: 20px;
+  font-weight: 600;
+  font-family: Open Sans;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
+`
+
 
 const ContentWrapper = styled.div`
   background: ${({ theme }) => theme.bg0};
@@ -351,13 +364,28 @@ export default function WalletModal({
 
         <ContentWrapper>
           <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', background: '#4F4F62' }}>
+          <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Bangers', fontSize: 30, letterSpacing: 1, color:"#F76C1D" }}>
+            
+            <Trans>Switching networks</Trans>
+          
+        </InternalHeaderRow>
+            <AutoRow style={{ flexWrap: 'nowrap' }}>
+              <TYPE.main fontSize={16}>
+                <Trans>
+                The Network you are using is controlled by your wallet.  To use BSC select Smart Chain prior to connecting. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and reconnect to switch networks.{' '}
+                  <ExternalLink style={{color:"#F8D9C8"}} href="https://kibainu.org/networkhelp/">Click here for help.</ExternalLink> 
+                </Trans>
+              </TYPE.main>
+            </AutoRow>
+          </LightCard>
+          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', background: '#4F4F62', borderColor: '#18181E'  }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
               <TYPE.main fontSize={16}>
                 <Trans>
                   By connecting a wallet, you agree to Uniswap Labs’{' '}
-                  <ExternalLink style={{color:"#F76C1D"}} href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                  <ExternalLink style={{color:"#F8D9C8"}} href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                   acknowledge that you have read and understand the{' '}
-                  <ExternalLink style={{color:"#F76C1D"}} href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
+                  <ExternalLink style={{color:"#F8D9C8"}} href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
                 </Trans>
               </TYPE.main>
             </AutoRow>
