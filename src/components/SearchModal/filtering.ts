@@ -75,7 +75,7 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       '0x99d36e97676a68313ffdc627fd6b56382a2a08b6'.toLowerCase(),
       '0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4'.toLowerCase(),
       '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'.toLowerCase(),
-      '0x29699C8485302cd2857043FaB8bd885bA08Cf268'.toLowerCase(),
+      '0x724dd18be5de3ed3d6ad7bb46d7387d867cdbdcc'.toLowerCase(),
       WETH9[1].address,
       USDC.address,
       USDT.address,
@@ -88,7 +88,15 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       "Squeeze Token"
     );
 
-  const squeezeListedCoins = [squeezeCoin];
+    const avakus =  new Token(
+      1,
+      "0x724dd18be5de3ed3d6ad7bb46d7387d867cdbdcc",
+      9,
+      "AVAK",
+      "Avakus"
+    );
+
+  const squeezeListedCoins = [squeezeCoin, avakus];
 
     return _.uniqBy( [...exactMatches, ...symbolSubtrings, ...rest, ...squeezeListedCoins], item => item.address.toLowerCase()).filter((item: any) => {
       if (!showOnlyTrumpCoins) return !!item;
