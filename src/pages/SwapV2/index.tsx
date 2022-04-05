@@ -309,12 +309,14 @@ export default function Swap({ history }: RouteComponentProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpertMode])
+
   useEffect(() => {
     if (allowedSlippage !== 50) {
       mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: allowedSlippage / 100 })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedSlippage])
+
   const shareUrl =
     currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]
       ? window.location.origin +
@@ -548,8 +550,8 @@ export default function Swap({ history }: RouteComponentProps) {
                           <Trans>Connect Wallet</Trans>
                         </ButtonLight>
                       ) : isLoading ? (
-                        <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px' }}>
-                          <TYPE.main mb="4px">
+                        <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px', padding: '18px' }}>
+                          <TYPE.main>
                             <Dots>
                               <Trans>Calculating best route</Trans>
                             </Dots>
@@ -561,7 +563,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                         </ButtonPrimary>
                       ) : noRoute && userHasSpecifiedInputOutput ? (
-                        <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px' }}>
+                        <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px', padding: '18px' }}>
                           <TYPE.main>
                             <Trans>Insufficient liquidity for this trade.</Trans>
                           </TYPE.main>

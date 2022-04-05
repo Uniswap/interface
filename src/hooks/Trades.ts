@@ -229,7 +229,7 @@ export function useTradeExactInV2(
 
   const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
   const onUpdateCallback = useCallback(
-    async (resetRoute = true) => {
+    async (resetRoute = false) => {
       if (
         debounceCurrencyAmountIn &&
         currencyOut &&
@@ -241,7 +241,11 @@ export function useTradeExactInV2(
         controller = new AbortController()
         const signal = controller.signal
 
-        setLoading(true)
+        let isCancelSetLoading = false
+
+        setTimeout(() => {
+          if (!isCancelSetLoading) setLoading(true)
+        }, 1000)
 
         const [state, comparedResult] = await Promise.all([
           Aggregator.bestTradeExactIn(
@@ -255,8 +259,11 @@ export function useTradeExactInV2(
           ),
           Aggregator.compareDex(routerApi, debounceCurrencyAmountIn, currencyOut, signal),
         ])
-        setTrade(state)
-        setComparer(comparedResult)
+        if (!signal.aborted) {
+          setTrade(state)
+          setComparer(comparedResult)
+        }
+        isCancelSetLoading = true
         setLoading(false)
       } else {
         setTrade(null)
