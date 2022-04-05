@@ -21,6 +21,7 @@ import Web3 from 'web3'
 import { BlueCard } from 'components/Card'
 import { TYPE } from 'theme'
 import { GreyCard } from 'components/Card'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 const DisabledMask = styled.div`
   position: relative;
   pointer-events: none;
@@ -187,6 +188,8 @@ export const GainsTracker = () => {
 
   const GainsWrapper = !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0) ? DisabledMask : React.Fragment
   console.log(trumpBalance)
+
+  const total = useUSDCValue(selectedCurrencyBalance)
   return (
     <GainsWrapper>
       <Card style={{ maxWidth: 600 }}>
@@ -230,11 +233,13 @@ export const GainsTracker = () => {
               value={gains()}
               currency={currency}
               onUserInput={handleTypeInput}
+
               onMax={undefined}
               fiatValue={undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={gains() ? USDC : undefined}
               showCommonBases={false}
+              renderBalance={amt => `Balance: ${(amt.toFixed(0))} (${total?.toFixed(2)} USD)`}
               id="swap-currency-input"
             />
           </CardSection>
