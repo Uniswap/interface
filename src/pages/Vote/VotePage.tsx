@@ -126,7 +126,7 @@ export const useKiba = (account?: string | null) => {
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = React.useMemo(() => new Token(
     isBinance ? 56 : 1,
-    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
+    isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
     18,
     "Kiba",
     "Kiba Inu"
@@ -137,18 +137,72 @@ export const useKiba = (account?: string | null) => {
     kibaCoin
   );
   
-  const bKiba =  useBinanceTokenBalance('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', account, chainId)
+  const bKiba =  useBinanceTokenBalance('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', account, chainId)
   
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
   }, [kiba, account, isBinance, bKiba.balance]);
 };
 
+export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
+  const kibaBalance = useKiba(account)
+  const {library } = useWeb3React()
+  const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState('')
+  const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
+  
+  const { routerADD, routerABI } = React.useMemo(() => {
+    return isBinance ? {
+      routerADD: pancakeAddress,
+      routerABI: pancakeAbi
+    } : { routerADD: routerAddress, routerABI: routerAbi }
+  }, [isBinance])
+  const kibaCoin = new Token(
+    isBinance ? 56 : 1,
+    isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
+    9,
+    "Kiba",
+    "Kiba Inu"
+  );
+  React.useEffect(() => {
+    try {
+      if (kibaBalance && +kibaBalance < 0) {
+        setKibaBalanceUSD("-");
+        return;
+      }
+      if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
+        const provider = window.ethereum ? window.ethereum : library?.provider
+        const w3 = new Web3(provider as any).eth;
+        const routerContr = new w3.Contract(routerABI as any, routerADD);
+        const ten9 = 10 ** 18;
+        const amount =  +kibaBalance.toFixed(0) * ten9;
+        if (amount > 0) {
+        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+          kibaCoin.address,
+          isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
+          isBinance ? binanceTokens.busd.address : USDC.address, 
+        ]);
+        amountsOut.call().then((response: any) => {
+          const usdc = response[response.length - 1];
+          const ten6 = 10 ** 6;
+          let usdcValue = usdc / ten6;
+          if (isBinance) usdcValue = usdcValue / 10 ** 12;
+          const number = Number(usdcValue.toFixed(2));
+          setKibaBalanceUSD(number.toLocaleString());
+        });
+      }
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  }, [kibaBalance, account, library?.provider, isBinance]);
+  return kibaBalanceUSD
+}
+
 export const useKibaRefreshedBinance = (account?: string | null, chainId?: number) => {
   const  isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin =React.useMemo(() =>  new Token(
     1,
-    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
+    isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
     18,
     "Kiba",
     "Kiba Inu"
@@ -159,7 +213,7 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
     kibaCoin
   );  
 
-  const bKiba =  useBinanceTokenBalance('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', account, chainId)
+  const bKiba =  useBinanceTokenBalance('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', account, chainId)
   
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
@@ -197,7 +251,7 @@ export default function VotePage() {
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
-    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
+    isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
     9,
     "Kiba",
     "Kiba Inu"
