@@ -51,6 +51,7 @@ import Badge from 'components/Badge'
 import { mnemonicToEntropy } from 'ethers/lib/utils'
 import moment from 'moment'
 import { BlueCard } from 'components/Card'
+import Tooltip from 'components/Tooltip'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -153,7 +154,10 @@ export default function VotePage({
     account ?? undefined,
     new Token(1, '0x99d36e97676A68313ffDc627fd6b56382a2a08B6', 9, 'BabyTrump', 'BabyTrump Token')
   )
-  const stimulusBalance = 0
+  const stimulusBalance = useTokenBalance(
+    account ?? undefined,
+    new Token(1, '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013', 9, 'StimulusCheck', 'StimulusCheck Token')
+  )
   const storedSimulusBalance = useMemo(() => {
     return localStorage.getItem('stimulusBalance') || undefined
   }, [localStorage.getItem('stimulusBalance')])
@@ -186,6 +190,8 @@ export default function VotePage({
       alert(`Cannot track gains because you hold no baby trump token or stimulus token`)
     }
   }
+  const [showTool, setShowTool] = useState<boolean>(false)
+  const tiptext = `Holding Stimulus Token and Baby Trump at the same time allow for 16% redistribution`
 
   const trackingLabel = useMemo(() => {
     return isTrackingGains ? 'Stop Tracking Gains' : 'Start Tracking Gains'
@@ -274,6 +280,11 @@ export default function VotePage({
                               {`STIMULUSGAINS`} &nbsp;
                               {`${(+stimulusBalance.toFixed(2) - +storedSimulusBalance).toFixed(2)}`}
                             </Trans>
+                            <span style={{ marginLeft: 50 }}>
+                              <Tooltip text={tiptext} show={showTool}>
+                                <Info onMouseEnter={() => setShowTool(true)} onMouseLeave={() => setShowTool(false)} />
+                              </Tooltip>
+                            </span>
                           </React.Fragment>
                         )}
                       </TYPE.main>
