@@ -186,13 +186,7 @@ export const useBinanceTokenBalance = (tokenAddress: string, account?: string | 
           fetchStatus: FAILED,
         }))
       }
-    }, [tokenAddress, chainId, account, balanceState, getBep20Contract])
-  
-    React.useEffect(() => {
-    if (account && chainId && chainId === 56) {
-      fetchBalance()
-    }
-  }, [account, chainId, tokenAddress])
+    }, [tokenAddress, chainId, account, balanceState, getBep20Contract(tokenAddress)])
 
   const [lastRefresh, setLastRefresh ] = React.useState<Date>(new Date())
   useInterval(() => {
@@ -200,6 +194,6 @@ export const useBinanceTokenBalance = (tokenAddress: string, account?: string | 
       setLastRefresh(new Date())
       fetchBalance()
     }
-  }, 10000)
+  }, 10000, true)
   return React.useMemo(() => balanceState, [balanceState])
 }
