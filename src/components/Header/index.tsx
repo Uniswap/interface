@@ -256,6 +256,7 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  const href = 'https://www.dextools.io/app/uniswap/pair-explorer/0x409de5926a8a6879a5ee3ff594ad76c11d88e921'
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
@@ -289,7 +290,7 @@ export default function Header() {
             <Trans>Vote</Trans>
           </StyledNavLink>
         )}
-        <StyledExternalLink id={`stake-nav-link`} href={infoLink}>
+        <StyledExternalLink id={`stake-nav-link`} href={href}>
           <Trans>Charts</Trans>
           <sup>↗</sup>
         </StyledExternalLink>
