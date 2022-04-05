@@ -9,7 +9,7 @@ import { Trans } from '@lingui/macro'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
-  background:radial-gradient(#eb5b2c,rgba(129,3,3,.95));
+  background: #252632;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -54,7 +54,7 @@ const ErrorButton = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.bg1};
+    background-color: ${({ theme }) => theme.bg0};
   }
 `
 

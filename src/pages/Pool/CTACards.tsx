@@ -22,12 +22,7 @@ const CTASection = styled.section`
 
 const CTA1 = styled(ExternalLink)`
   background-color: ${({ theme }) => theme.bg2};
-  background: radial-gradient(
-      92.78% 103.09% at 50.06% 7.22%,
-      rgba(255, 58, 212, 0.072) 0%,
-      rgba(255, 255, 255, 0.042) 100%
-    ),
-    radial-gradient(100% 97.16% at 0% 12.22%, rgba(235, 0, 255, 0.2) 0%, rgba(243, 19, 19, 0.2) 100%);
+  background: #18181E;
   padding: 2rem;
   border-radius: 20px;
   display: flex;

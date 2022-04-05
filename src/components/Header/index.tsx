@@ -33,7 +33,7 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
-import logo from '../../assets/images/download.png'
+import logo from '../../assets/svg/logo.svg'
 import Swal from 'sweetalert2'
 import { ChartModal } from 'components/swap/ChartModal'
 import { useEthPrice } from 'state/logs/utils'
@@ -96,7 +96,8 @@ const HeaderElement = styled.div`
 
 const HeaderLinks = styled(Row)`
   justify-self: center;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg1};
   width: fit-content;
   padding: 4px;
   border-radius: 16px;
@@ -130,7 +131,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg0)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -147,7 +148,7 @@ const UNIAmount = styled(AccountElement)`
   height: 36px;
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+  background: #252632;
 `
 
 const UNIWrapper = styled.span`
@@ -187,7 +188,7 @@ const Title = styled.a`
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
   :hover {
-    transform: rotate(-5deg);
+    transform: scale(1.1);
   }
 `
 
@@ -242,7 +243,7 @@ const StyledNavLink = styled(NavLink).attrs({
     font-weight: 600;
     justify-content: center;
     color: ${({ theme }) => theme.text1};
-    background-color: radial-gradient(#f5b642, rgba(129,3,3,.95));
+    background-color: ${({ theme }) => theme.bg0};
   }
 
   :hover,
@@ -391,7 +392,7 @@ export default function Header() {
         <Title style={{textDecoration:"none"}} href="/">
           <UniIcon>
             <img
-              width={isMobile ? '100px' : '100px'}
+              width={isMobile ? '50px' : '70px'}
               src={logo}
               alt="logo"
             />
@@ -475,7 +476,7 @@ export default function Header() {
         <HeaderControls>
 
 
-          <NetworkCard />
+        {!!account ? <NetworkCard /> : ''} 
 
           <HeaderElement>
             {availableClaim && !showClaimPopup && (

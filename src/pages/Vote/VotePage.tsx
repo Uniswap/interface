@@ -41,11 +41,12 @@ const PageWrapper = styled(AutoColumn)`
 
 const ProposalInfo = styled(AutoColumn)`
   background: ${({ theme }) => theme.bg0};
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 30px;
+  padding: 30px;
   position: relative;
-  max-width: 640px;
   width: 100%;
+  min-width: 45%;
+  max-width: 480px;
 `;
 
 const ArrowWrapper = styled(StyledInternalLink)`
@@ -369,7 +370,7 @@ console.log(allTimeGains)
 
             <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains <Badge variant={BadgeVariant.DEFAULT}><GainsText>Beta</GainsText></Badge></GainsText></div>
               {isTrackingGains && kibaBalance && +kibaBalance?.toFixed(0) > 0 && (
-                 <GreyCard style={{flexFlow: 'row nowrap', background:'#222',opacity:'.95',display:'inline-block', justifyContent:'center',marginBottom:15}}> <TYPE.main>
+                 <GreyCard style={{flexFlow: 'row nowrap', background:'transparent',opacity:'.95',display:'inline-block', justifyContent:'center', width: '100%', marginBottom:15}}> <TYPE.main>
                       <GainsText style={{display:'inline'}}>
                       <Clock style={{marginRight:5}} />
                         STARTED {trackingSince} </GainsText>
@@ -388,7 +389,7 @@ console.log(allTimeGains)
                
                {(kibaBalance  === undefined || +kibaBalance?.toFixed(0) <= 0) && (
                     <TYPE.white>
-                      <GainsText>
+                      <GainsText style={{ display: 'flex', width: '100%', justifyContent: 'center', paddingTop: 30, paddingBottom: 20, fontFamily: 'Open Sans', fontSize: 16 }}>
                         You must own Kiba Inu tokens to use this feature.
                       </GainsText>
                     </TYPE.white>
@@ -402,7 +403,7 @@ console.log(allTimeGains)
                       <Trans>
                         {kibaBalance !== undefined 
                         && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0 )
-                          ? <div style={{alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.DEFAULT}>(${(kibaBalanceUSD)} USD) </Badge></span></div>
+                          ? <div style={{alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.POSITIVE}>(${(kibaBalanceUSD)} USD) </Badge></span></div>
                           : null}
                       </Trans>
                 
@@ -423,7 +424,7 @@ console.log(allTimeGains)
                                 +kibaBalance?.toFixed(2) - +storedKibaBalance
                               ).toFixed(2)).toLocaleString()} </span>
                               {isTrackingGains && trumpGainsUSD && (
-                                <Badge style={{ marginTop: 5, color:"#FFF",paddingTop: 5 }}>
+                                <Badge style={{ marginTop: 5, paddingBottom: 60, color:"#FFF",paddingTop: 5, backgroundColor: 'transparent' }}>
                                   <small>
                                     <GainsText>Total Reflections</GainsText>
                                   </small>
