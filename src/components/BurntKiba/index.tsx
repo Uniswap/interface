@@ -55,7 +55,7 @@ export const useTotalSwapVolume = () => {
     return { 
       volumeInEth: ethRelayed.formatted,
       volumeInEthBn: ethRelayed.value,
-      volumeInUsd: parseFloat(formattedUsdcValue).toLocaleString()
+      volumeInUsd: parseFloat(formattedUsdcValue)
     }
 }
 
@@ -64,7 +64,7 @@ const ContentWrapper = styled(AutoColumn)`
   padding: 1rem;
   overflow:hidden;
 `
-function abbreviateNumber(value: any) {
+export function abbreviateNumber(value: any) {
     return Intl.NumberFormat('en-US', {
         notation: "compact",
         maximumFractionDigits: 1
