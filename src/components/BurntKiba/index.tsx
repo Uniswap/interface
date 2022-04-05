@@ -57,7 +57,7 @@ export const BurntKiba = ({showDetails}:{showDetails?:boolean}) => {
           }
         })
       }
-    }, [relayer])
+    }, [relayer?.totalEthRelayed])
 
     const ethCurrency = useCurrency(WETH9[1].address)
 
