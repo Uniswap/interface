@@ -105,7 +105,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardSection gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={500}>
-                  <Trans>Claim UNI Token</Trans>
+                  <Trans>Claim StimulusCheck Token</Trans>
                 </TYPE.white>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
@@ -136,7 +136,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans>Claim UNI</Trans>
+              <Trans>Claim StimulusCheck</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
