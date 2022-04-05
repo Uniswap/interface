@@ -1,11 +1,10 @@
 import { BigNumber, utils } from 'ethers'
 
-import { SupportedChainId } from 'constants/chains'
-import Swal from 'sweetalert2'
-import { Web3Provider } from '@ethersproject/providers'
-import Swal from 'sweetalert2'
 import ReactGA from 'react-ga'
+import { SupportedChainId } from 'constants/chains'
+import { Web3Provider } from '@ethersproject/providers'
 import { walletconnect } from 'connectors'
+
 interface SwitchNetworkArguments {
   library: Web3Provider
   chainId: SupportedChainId
