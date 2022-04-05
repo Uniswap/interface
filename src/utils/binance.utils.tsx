@@ -18,6 +18,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import useInterval from 'hooks/useInterval'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
 import { useWeb3React } from '@web3-react/core'
+
 const BUSD_MAINNET = binanceTokens.busd
 const WBNB = binanceTokens.wbnb;
 export function wrappedCurrency(currency: Currency | undefined, chainId: number | undefined): Token | undefined {
@@ -40,7 +41,7 @@ export function unwrappedToken(token: Token): Currency {
 
 
 
-export const simpleRpcProvider = new ethers.providers.StaticJsonRpcProvider('https://nodes.pancakeswap.com')
+export const simpleRpcProvider = new ethers.providers.StaticJsonRpcProvider('https://https://bsc-dataseed1.binance.org')
 
 const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   const signerOrProvider = signer ?? simpleRpcProvider
