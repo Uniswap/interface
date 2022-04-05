@@ -35,7 +35,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-  background:radial-gradient(#eb5b2c,rgba(129,3,3,.95));
+  background: ${({ theme }) => theme.bg0};
 
   h5 {
     margin: 0;
@@ -315,11 +315,7 @@ export default function AccountDetails({
                     <WalletAction
                       style={{ fontSize: '.825rem', color:"#fff", fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        ;(deactivate());
-                        if(window.ethereum) 
-                          (window?.ethereum as any)?.eth?.currentProvider.disconnect();
-                        if (connector === walletconnect) 
-                          walletconnect.walletConnectProvider?.();
+                        ;(connector as any).close()
                       }}
                     >
                       <Trans>Disconnect</Trans>

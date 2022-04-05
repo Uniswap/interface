@@ -81,7 +81,12 @@ const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
-  background:#000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  height: 150vh; 
+  width: 100vw;
+  background: url(${bg4}) ;
   align-items: flex-start;
   > * {
     font-family: 'Bangers', cursive !important;
@@ -128,14 +133,9 @@ function TopLevelModals() {
 }
 
 const VideoWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  min-width: 100%;
-  min-height:120vh;
-  background: url(https://i.gyazo.com/27d5b738ac3276e87c1daafe803e2af8.png)  center center !important;
-  background-size:cover;
-  background-position:center center;
-  background-repeat:no-repeat;
+  
+
+  
 `
 export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
@@ -352,12 +352,12 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
   const hasInvalidPermissions = !account || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0)
   if (chainId === 56) return <HoneyPotBsc />
   
-  return (<DarkCard style={{ background:'radial-gradient(#f5b642, rgba(129,3,3,.99))', opacity: '.96', maxWidth: 600 }} id="honeypage">
+  return (<DarkCard style={{ background:'#252632', opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
     <div style={{ maxWidth: 600, display:'flex', flexFlow:'column wrap',margin: 'auto', paddingBottom: '1rem' }}>
-      <Badge style={{width:220}}><StyledHeader>Honeypot Checker (ETH)</StyledHeader></Badge>
-      <small style={{marginTop:3, paddingLeft:3}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
+      <StyledHeader style= {{ fontSize: 30, paddingBottom: 20, paddingTop: 20}}>Honeypot Checker (ETH)</StyledHeader>
+      <small style={{marginTop:3, paddingLeft:3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow'}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
     </div>
-    <RowFixed style={{ maxWidth: 600, width: "100%" }} >
+    <RowFixed style={{ maxWidth: 600, width: "100%", padding: 20 }} >
       {hasInvalidPermissions === false &&
         <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
           <label>Input a contract address to check if its a honeypot <Badge variant={BadgeVariant.PRIMARY}>MUST BE ETH Contract Address</Badge></label>
@@ -366,7 +366,7 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
       }
 
       {hasInvalidPermissions &&
-        <p>You must hold Kiba Inu tokens in order to use this feature.
+        <p style={{display: 'flex', width: '100%', justifyContent: 'center' }}>You must hold Kiba Inu tokens in order to use this feature.
         </p>} 
     </RowFixed>
     {hasInvalidPermissions === false && <>
@@ -452,7 +452,7 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
 }
 
 const Fomo = () => {
-  return (<DarkCard style={{maxWidth:800,background:'radial-gradient(#eb5b2c,rgba(129,3,3,.95))  '}}>
+  return (<DarkCard style={{maxWidth:800,background:'#252632'}}>
     <div style={{ padding: '9px 14px' }}>
       <StyledHeader>KibaFOMO <br /><small style={{ fontSize: 12 }}>Powered by tokenfomo.io</small></StyledHeader>
       <iframe src={'https://tokenfomo.io/?f=ethereum'} style={{ width:'100%', maxWidth: '800px', height: '65vh', borderRadius: 6 }} />
@@ -574,15 +574,12 @@ export default function App() {
 
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
-            <AppBody style={{ top:20, right: 0, position: 'relative', bottom: 0, padding: '9px 14px', justifyContent: 'end', background: 'radial-gradient(rgb(234 54 39), rgba(129, 3, 3, 0.95))', border: '1px solid red', height: 200, width: '100%' }}>
-        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Featured Sponsors
-          <span>
-            <img style={{ maxWidth: 100 }} src={logo} />
-          </span>
+            <AppBody style={{ position: 'relative', padding: '9px 14px', justifyContent: 'end', backgroundColor: 'theme.bg0' , height: 'flex', width: 'flex', minWidth: '45%' }}>
+        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '10px', paddingTop: '10px' }}>Kibaswap Featured Sponsors
         </StyledDiv>
         <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => { return }} onFinish={() => { return }} key={"MARQUEE"} velocity={10}>
           <></>
-          <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)', width: '100%' }} gap="xs">
+          <FixedContainer style={{ backgroundColor: 'transparent', width: '100%', paddingBottom: '10px' }} gap="xs">
             <ScrollableRow>
               {[
                 {
@@ -594,10 +591,10 @@ export default function App() {
                 },
                 {
                   title: "CryptoCart",
-                  img: 'https://s2.coinmarketcap.com/static/img/coins/64x64/15891.png',
+                  img: cart,
                   text: "Learn more",
                   link: 'https://cryptocart.cc/',
-                  style: { height: 32, maxWidth: 32 }
+                  style: {}
                 },
                 {
                   title: "KIBA INU",
@@ -608,20 +605,22 @@ export default function App() {
                 },
                 {
                   title: "Btok",
-                  img: 'data:image/png;base64,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',
+                  img: btok,
                   text: "Jabba Inu is a meme coin offering culture to its holders.",
                   link: 'https://www.btok.com/',
                   style: {}
                 }].map((sponsor) => (
                   <CardWrapper key={sponsor.title} href={sponsor.link}>
-                    <DarkGreyCard style={{ background: '#fff', border: `1px solid red`, padding: 3 }}>
+                    <DarkGreyCard style={{  padding: 3 }}>
                       <Flex flexDirection="column" alignItems={'center'} justifyContent={'center'}>
                         <Flex alignItems={'center'} flexDirection={'row'}>
-                          <TYPE.mediumHeader>{sponsor.title}</TYPE.mediumHeader>
+                          
                         </Flex>
-                        <Flex style={{ height: 60, padding: '10'}} alignItems={'center'} justifyContent={'space-between'}>
-                            <img style={{ maxWidth: 60, ...sponsor?.style }} src={sponsor.img} />
-                            <TYPE.small alignItems={'center'} justifyContent={'center'}><ExternalLinkIcon href={sponsor.link} /></TYPE.small>
+                        <Flex style={{ height: 'flex', padding: '5'}} alignItems={'center'} justifyContent={'space-between'}>
+                            <a href={sponsor.link}>
+                            <img style={{ maxWidth: 80, ...sponsor?.style }} src={sponsor.img} />
+                            </a>
+                            <TYPE.small alignItems={'center'} justifyContent={'center'}></TYPE.small>
                           </Flex>
                       </Flex>
                     </DarkGreyCard>
