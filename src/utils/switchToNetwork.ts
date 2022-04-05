@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 interface SwitchNetworkArguments {
   library: Web3Provider
   chainId: SupportedChainId
-  account?:string
+  account?: string
 }
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
@@ -16,34 +16,11 @@ export async function switchToNetwork({ library, chainId, account }: SwitchNetwo
     if (!library?.provider?.request) {
       return
     }
-    localStorage.removeItem('kibaBalance_' + account);
     const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
     return library?.provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: formattedChainId }],
     }).then(() => window.location.reload())
   }
-
-  const trackedValue = localStorage.getItem('kibaBalance_' + account);
-  if (trackedValue) {
-    const trackedValueParsed = parseFloat(trackedValue);
-    if (trackedValueParsed > 0) {
-      const { isConfirmed } = await Swal.fire({
-        title: "Are you sure?",
-        text: "Switching networks will stop your current gains tracking session.",
-        confirmButtonText: "Okay",  
-        cancelButtonText: "Cancel",
-        confirmButtonColor: '#991816',
-        cancelButtonColor: '#444',
-        showCancelButton: true,
-        icon: "question",
-      })
-
-      if (isConfirmed) await switchFn()
-      return;
-    } 
-    else await switchFn()
-  } 
-  else await switchFn()
-
+  await switchFn()
 }
