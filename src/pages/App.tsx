@@ -212,62 +212,7 @@ export default function App() {
           </BodyWrapper>
         </AppWrapper>
       </Web3ReactManager>
-      {showContracts && (
-        <Row style={{ display: 'flex', flexFlow: 'column', position: 'fixed', bottom: '10%', right: '0%' }}>
-          <div
-            onClick={() => {
-              setClip('0x99d36e97676a68313ffdc627fd6b56382a2a08b6')
-            }}
-            style={{ fontSize: 12, cursor: 'pointer' }}
-          >
-            <img width={'30px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
-            <Row>
-              <AutoColumn>
-                <TYPE.main>Baby Trump</TYPE.main>
-                <StyledInput value={'0x99d36e97676a68313ffdc627fd6b56382a2a08b6'} />
-              </AutoColumn>
-              <AutoColumn>
-                <Clipboard style={{ marginTop: 13 }} />
-              </AutoColumn>
-            </Row>
-          </div>
-          <div
-            onClick={() => {
-              setClip('0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013')
-              alert(`Successfully copied Stimulus Check (0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013) to clipboard`)
-            }}
-            style={{ fontSize: 12, paddingTop: 5, cursor: 'pointer' }}
-          >
-            <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
-            <Row>
-              <AutoColumn>
-                <TYPE.main>Stimulus Check</TYPE.main>
-                <StyledInput value={'0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'} />
-              </AutoColumn>
-              <AutoColumn>
-                <Clipboard style={{ marginTop: 13 }} />
-              </AutoColumn>
-            </Row>
-          </div>
-          <div
-            onClick={() => {
-              alert(`Trump Gold is coming soon to a place near you.`)
-            }}
-            style={{ fontSize: 12, paddingTop: 5, cursor: 'not-allowed' }}
-          >
-            <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
-            <Row>
-              <AutoColumn>
-                <TYPE.main>Trump Gold</TYPE.main>
-                <StyledInput value={'COMING SOON'} />
-              </AutoColumn>
-              <AutoColumn>
-                <Clipboard style={{ marginTop: 13 }} />
-              </AutoColumn>
-            </Row>
-          </div>
-        </Row>
-      )}
+   
     </ErrorBoundary>
   )
 }
