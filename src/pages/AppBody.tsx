@@ -12,6 +12,9 @@ export const BodyWrapper = styled.div<{ margin?: string; maxWidth?: string }>`
   border-radius: 24px;
   margin-top: 1rem;
   opacity:.95;
+  .eRvDHB, .jwZvNA {
+    color:#fff !important;
+  }
 `
 
 /**

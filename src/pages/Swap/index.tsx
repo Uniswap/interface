@@ -109,7 +109,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const { account, chainId } = useActiveWeb3React()
   const isBinance = React.useMemo(() => chainId === 56, [chainId]);
   const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
-  const binanceSwapURL = React.useMemo(() => isBinance ? `https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
+  const binanceSwapURL = React.useMemo(() => isBinance ? `https://kibaswapbsc.app/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -770,7 +770,7 @@ export default function Swap({ history }: RouteComponentProps) {
           <Wrapper>
             <LimitOrders />
           </Wrapper>}
-        {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 500, width: '100%' }} src={binanceSwapURL} />}
+        {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={binanceSwapURL} />}
       </AppBody>
 
       
