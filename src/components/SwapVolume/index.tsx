@@ -11,6 +11,7 @@ import _ from 'lodash'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../../state/application/hooks'
 import { useCurrency } from 'hooks/Tokens'
+import { useTotalSwapVolume } from 'components/BurntKiba'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { utils } from 'ethers'
@@ -83,38 +84,16 @@ const StyledLoader = styled(Loader)`
 `
 
 export default function SwapVolume () {
-    const relayer = useV2RouterContract()
-    const [ethRelayed, setEthRelayed] = React.useState({formatted:'0', value: 0})
-    const [isMounting, setIsMounting] = useState(false)
-
-    React.useEffect(() => {
-      if (relayer) {
-          setIsMounting(ethRelayed.formatted == '0')
-          relayer.totalEthRelayed().then((response:any) => {
-          if (!_.isEqual(ethRelayed.value, response)) {
-            const formattedEth = parseFloat(utils.formatEther(response)).toFixed(6);
-            setEthRelayed({formatted: formattedEth, value: response})
-            setIsMounting(false)
-          }
-        })
-      }
-    }, [relayer?.totalEthRelayed])
-
-    const ethCurrency = useCurrency(WETH9[1].address)
-
-    const rawCurrencyAmount = React.useMemo(() => {
-      if (!ethRelayed.value || ethRelayed.formatted === '0' || !ethCurrency)
-      return undefined
-
-      return CurrencyAmount.fromRawAmount(ethCurrency ?? undefined, ethRelayed.value)
-    }, [ethRelayed, ethCurrency])
-
-    const usdcValue = useUSDCValue(rawCurrencyAmount)
+    const {
+        volumeInEth, 
+        volumeInEthBn,
+        volumeInUsd
+            } = useTotalSwapVolume()
  
     return (
         <StyledPolling >
 
-        {ethRelayed.value == 0 ?  (
+        {volumeInEthBn == 0 ?  (
             <>
         <StyledPollingNumber>
             Loading..
@@ -126,9 +105,9 @@ export default function SwapVolume () {
      ) : (
          <>
          <StyledPollingNumber>         
-          <span style={{color:'#F76C1D'}}>Total Swap Volume</span> <br/> {ethRelayed.formatted} Ξ {usdcValue && <>(${parseFloat(usdcValue.toFixed(2)).toLocaleString()} USD)</>}
+          <span style={{color:'#F76C1D'}}>Total Swap Volume</span> <br/> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 'NaN' && <>(${(volumeInUsd)} USD)</>}
         </StyledPollingNumber>
-        <StyledPollingDot>{isMounting && <Spinner />}</StyledPollingDot>
+        <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
       </>
       
      )}

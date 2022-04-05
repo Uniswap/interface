@@ -20,6 +20,38 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
 
+export const useTotalSwapVolume = () => {
+  const relayer = useV2RouterContract()
+    const [ethRelayed, setEthRelayed] = React.useState({formatted:'0', value: 0})
+
+    React.useEffect(() => {
+      if (relayer) {
+          relayer.totalEthRelayed().then((response:any) => {
+          if (!_.isEqual(ethRelayed.value, response)) {
+            const formattedEth = parseFloat(utils.utils.formatEther(response)).toFixed(6);
+            setEthRelayed({formatted: formattedEth, value: response})
+          }
+        })
+      }
+    }, [relayer?.totalEthRelayed])
+
+    const ethCurrency = useCurrency(WETH9[1].address)
+
+    const rawCurrencyAmount = React.useMemo(() => {
+      if (!ethRelayed.value || ethRelayed.formatted === '0' || !ethCurrency)
+      return undefined
+
+      return CurrencyAmount.fromRawAmount(ethCurrency ?? undefined, ethRelayed.value)
+    }, [ethRelayed, ethCurrency])
+
+    const usdcValue = useUSDCValue(rawCurrencyAmount)
+    return { 
+      volumeInEth: ethRelayed.formatted,
+      volumeInEthBn: ethRelayed.value,
+      volumeInUsd: parseFloat(usdcValue?.toFixed(6)).toLocaleString()
+    }
+}
+
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 1rem;
@@ -47,28 +79,11 @@ export const BurntKiba = ({showDetails}:{showDetails?:boolean}) => {
     console.log(deadWalletKibaBalance?.toFixed(18))
     const burntValue = useUSDCValue(currencyBalance)
     const bscBurntValue = useKibaBalanceUSD('0x000000000000000000000000000000000000dead', chainId)
-    const relayer = useV2RouterContract()
-    const [ethRelayed, setEthRelayed] = React.useState({formatted:'0', value: 0})
-    React.useEffect(() => {
-      if (relayer) {
-        relayer.totalEthRelayed().then((response:any) => {
-          if (!_.isEqual(ethRelayed.value, response)) {
-            setEthRelayed({formatted: utils.utils.formatEther(response), value: response})
-          }
-        })
-      }
-    }, [relayer?.totalEthRelayed])
-
-    const ethCurrency = useCurrency(WETH9[1].address)
-
-    const rawCurrencyAmount = React.useMemo(() => {
-      if (!ethRelayed.value || ethRelayed.formatted === '0' || !ethCurrency)
-      return undefined
-
-      return CurrencyAmount.fromRawAmount(ethCurrency ?? undefined, ethRelayed.value)
-    }, [ethRelayed, ethCurrency])
-
-    const usdcValue = useUSDCValue(rawCurrencyAmount)
+    const {
+volumeInEth, 
+volumeInEthBn,
+volumeInUsd
+    } = useTotalSwapVolume()
     return (
         deadWalletKibaBalance ? 
         showDetails ? 
@@ -90,7 +105,7 @@ export const BurntKiba = ({showDetails}:{showDetails?:boolean}) => {
             {!isBinance && (
             <div>
               <h1>Total Kibaswap Volume (in ETH)</h1>
-              <p><Badge>{ethRelayed.formatted} ETH {usdcValue &&<> (${parseFloat(usdcValue?.toFixed(2)).toLocaleString()} USD)</>}</Badge></p>
+              <p><Badge>{volumeInEth} ETH {volumeInUsd && volumeInUsd !== 'NaN' && <> (${volumeInUsd} USD)</>}</Badge></p>
             </div>
             )}
             </DarkCard> 
