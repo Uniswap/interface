@@ -1,8 +1,9 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon'
+import { useQuery } from '@apollo/react-hooks'
 import React, { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, ArrowLeft, ArrowUp, Clock, DollarSign, Info } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
@@ -23,7 +24,7 @@ import {
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
-import { UNI, USDT } from '../../constants/tokens'
+import { UNI, USDC, USDT } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ApplicationModal } from '../../state/application/actions'
 import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
@@ -34,7 +35,7 @@ import {
   useUserDelegatee,
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
-import { useTokenBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalance, useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -52,6 +53,13 @@ import { mnemonicToEntropy } from 'ethers/lib/utils'
 import moment from 'moment'
 import { BlueCard } from 'components/Card'
 import Tooltip from 'components/Tooltip'
+import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
+import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
+import { gql } from 'graphql-request'
+import { useEthPriceQuery } from 'state/data/generated'
+import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
+import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import { tryParsePrice } from 'state/mint/v3/utils'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -150,14 +158,17 @@ export default function VotePage({
   const toggleDelegateModal = useToggleDelegateModal()
   // only count available votes as of the proposal start block
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
-  const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
-    account ?? undefined,
-    new Token(1, '0x99d36e97676A68313ffDc627fd6b56382a2a08B6', 9, 'BabyTrump', 'BabyTrump Token')
+  const trumpCoin = new Token(1, '0x99d36e97676A68313ffDc627fd6b56382a2a08B6', 9, 'BabyTrump', 'BabyTrump Token')
+  const stimulusCoin = new Token(
+    1,
+    '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013',
+    6,
+    'StimulusCheck',
+    'StimulusCheck Token'
   )
-  const stimulusBalance = useTokenBalance(
-    account ?? undefined,
-    new Token(1, '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013', 9, 'StimulusCheck', 'StimulusCheck Token')
-  )
+
+  const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(account ?? undefined, trumpCoin)
+  const stimulusBalance = useTokenBalance(account ?? undefined, stimulusCoin)
   const storedSimulusBalance = useMemo(() => {
     return localStorage.getItem('stimulusBalance') || undefined
   }, [localStorage.getItem('stimulusBalance')])
@@ -218,6 +229,23 @@ export default function VotePage({
     }
   }, [])
 
+  const USD = useUSDCPrice(trumpBalance?.currency)
+  const SUSD = useUSDCPrice(stimulusBalance?.currency)
+
+  const stimulusBalanceFull = useCurrencyBalance(account ?? undefined, stimulusCoin)
+
+  const rawTrumpCurrency = useMemo(() => {
+    if (!storedTrumpBalance || !trumpBalance) return null
+    const calc = +Math.round(+trumpBalance?.toFixed(2) - +storedTrumpBalance)
+    return CurrencyAmount.fromRawAmount(trumpBalance.currency, JSBI.BigInt(calc))
+  }, [storedTrumpBalance, trumpBalance, isTrackingGains])
+
+  const rawStimulusCurrency = useMemo(() => {
+    if (!storedSimulusBalance || !stimulusBalance) return null
+    const calc = (+stimulusBalance.toFixed(2) - +storedSimulusBalance).toFixed(0)
+    return CurrencyAmount.fromRawAmount(stimulusBalance.currency, JSBI.BigInt(calc))
+  }, [stimulusBalance, storedSimulusBalance, isTrackingGains])
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -267,9 +295,16 @@ export default function VotePage({
                             <Trans>
                               <ArrowUp /> &nbsp;
                               {`TRUMPGAINS`} &nbsp;
-                              {`${(+trumpBalance.toFixed(2) - +storedTrumpBalance).toFixed(2)}`}
+                              {(+trumpBalance?.toFixed(2) - +storedTrumpBalance).toFixed(2)}
                             </Trans>
                             <br />
+                            {rawTrumpCurrency && (
+                              <Badge style={{ paddingTop: 5 }}>
+                                Total GAINS &nbsp;
+                                {USD && rawTrumpCurrency && +USD?.quote(rawTrumpCurrency).toSignificant(6) * 1000000000}
+                                <small>&nbsp;USD</small>
+                              </Badge>
+                            )}
                           </React.Fragment>
                         )}
                       </TYPE.main>
@@ -310,11 +345,24 @@ export default function VotePage({
                         )}
                       </TYPE.main>
                     )}
-
                     {stimulusBalance !== undefined &&
                       trumpBalance !== undefined &&
                       +stimulusBalance.toFixed(2) > 0 &&
-                      +trumpBalance.toFixed(2) > 0 && <Badge>2X REDISTRIBUTION</Badge>}
+                      +trumpBalance.toFixed(2) > 0 && (
+                        <React.Fragment>
+                          <Badge>
+                            {SUSD && rawStimulusCurrency && stimulusBalanceFull && (
+                              <Badge>
+                                <small>Total GAINS</small>
+                                {'$'}
+                                {(+SUSD?.quote(rawStimulusCurrency).toSignificant(6) * 1000000000).toFixed(2)}
+                                <small>USD</small>
+                              </Badge>
+                            )}
+                            2X REDISTRIBUTION
+                          </Badge>
+                        </React.Fragment>
+                      )}
                   </CardSection>
                 </div>
               </GreyCard>
