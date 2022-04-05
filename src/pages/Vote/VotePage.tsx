@@ -601,12 +601,12 @@ const [darkMode] = useDarkModeManager()
             </AutoColumn>
          
             <AutoColumn gap="50px">
-              <ButtonPrimary style={{marginTop:15}} onClick={trackGains}>
+              <ButtonPrimary style={{background: darkMode ? '#fff ' : 'inherit', color: darkMode ? '#222' : '#fff', marginTop:15}} onClick={trackGains}>
                 {isTrackingGains && <Trans>Stop tracking Gains</Trans>}
                 {!isTrackingGains && <Trans>Start Tracking Gains</Trans>}
               </ButtonPrimary>
             </AutoColumn>
-           
+          
           </Card>
         </ProposalInfo>
       </PageWrapper>
