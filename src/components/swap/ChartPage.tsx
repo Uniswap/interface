@@ -124,7 +124,7 @@ export const useHolderCount = (chainId: any) => {
             fetch('https://api.ethplorer.io/getTokenInfo/0x005d1123878fc55fbd56b54c73963b234a64af3c?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
                 .then(res => res.json())
                 .then(setHoldersCount);
-        if (chainId === 56) fetchBscHolders().then((response: any) => {
+        if (chainId === 56) fetchBscHolders('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5').then((response: any) => {
             setHoldersCount({ holdersCount: response })
         })
     }
