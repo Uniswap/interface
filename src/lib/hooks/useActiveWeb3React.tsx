@@ -73,8 +73,10 @@ export function ActiveWeb3Provider({
     if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) return JsonRpcConnector
     return Url
   }, [jsonRpcEndpoint]) as { new (actions: Actions, initializer: typeof jsonRpcEndpoint): Connector }
-  const urlConnector = useConnector(jsonRpcConnectorAtom, JsonRpc, jsonRpcEndpoint)
-  const [connector, hooks] = injectedConnector[1].useIsActive() ? injectedConnector : urlConnector ?? EMPTY_CONNECTOR
+  const jsonRpcConnector = useConnector(jsonRpcConnectorAtom, JsonRpc, jsonRpcEndpoint)
+  const [connector, hooks] = injectedConnector[1].useIsActive()
+    ? injectedConnector
+    : jsonRpcConnector ?? EMPTY_CONNECTOR
 
   const library = hooks.useProvider()
 
