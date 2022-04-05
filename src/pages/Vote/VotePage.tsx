@@ -252,11 +252,11 @@ export default function VotePage() {
 
   return (
     <>
-      <PageWrapper gap="lg" justify="center">
+      <PageWrapper gap="lg" justify="center"> 
         <ProposalInfo>
-          <div style={{ display: 'block', width: '100%', marginBottom: '2rem' }}>
-            <GainsText style={{ fontSize: 32 }}>KibaStats 
-              <Badge variant={BadgeVariant.DEFAULT}>
+          <div style={{ display: 'flex', alignItems:'center', width: '100%', marginBottom: '2rem' }}>
+            <GainsText style={{ display:'flex', alignItems:'center', fontSize: 32 }}>KibaStats 
+              <Badge style={{marginLeft:10, marginTop: -2}} variant={BadgeVariant.DEFAULT}>
                 <GainsText>Beta</GainsText>
               </Badge>
             </GainsText>
