@@ -1,10 +1,10 @@
-import { useWeb3React } from '@web3-react/core';
 import Badge from 'components/Badge';
-import Tooltip from 'components/Tooltip';
-import moment from 'moment';
-import React from 'react'
 import { Info } from 'react-feather';
+import React from 'react'
+import Tooltip from 'components/Tooltip';
 import Web3 from 'web3';
+import moment from 'moment';
+import { useWeb3React } from '@web3-react/core';
 
 export const kibaAbi = [
 	{
@@ -419,7 +419,7 @@ export const ShowSellTaxComponent = () => {
 			if (account) {
 				const provider = window.ethereum ? window.ethereum : library?.provider
 				const w3 = new Web3(provider as any).eth;
-				const routerContr = new w3.Contract(kibaAbi as any, '0x005D1123878Fc55fbd56b54C73963b234a64af3c');
+				const routerContr = new w3.Contract(kibaAbi as any, '0x005d1123878fc55fbd56b54c73963b234a64af3c');
 				const ten9 = 10 ** 9;
 				const amountsOut = routerContr.methods.originalPurchase(account)
 				amountsOut.call().then((response: any) => {

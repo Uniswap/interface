@@ -1,9 +1,10 @@
-import { TokenInfo } from '@uniswap/token-lists'
-import { useMemo } from 'react'
-import { isAddress } from '../../utils'
 import { Token, WETH9 } from '@uniswap/sdk-core'
 import { USDC, USDT } from 'constants/tokens'
+
+import { TokenInfo } from '@uniswap/token-lists'
 import _ from 'lodash'
+import { isAddress } from '../../utils'
+import { useMemo } from 'react'
 const alwaysTrue = () => true
 
 /**
@@ -61,7 +62,7 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
     const rest: Token[] = []
     const kibaCoin = new Token(
       1,
-      "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
+      "0x005d1123878fc55fbd56b54c73963b234a64af3c",
       9,
       "Kiba",
       "Kiba Inu"
