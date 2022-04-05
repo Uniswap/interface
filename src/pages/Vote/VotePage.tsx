@@ -89,7 +89,9 @@ const ProgressWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg3};
   position: relative;
 `;
-
+const ContentWrapper = styled(AutoColumn)`
+  width: 100%;
+`
 const Progress = styled.div<{
   status: "for" | "against";
   percentageString?: string;
@@ -159,7 +161,7 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
     isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
-    9,
+    isBinance ? 18 : 9,
     "Kiba",
     "Kiba Inu"
   );
@@ -183,9 +185,8 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
         ]);
         amountsOut.call().then((response: any) => {
           const usdc = response[response.length - 1];
-          const ten6 = 10 ** 6;
-          let usdcValue = usdc / ten6;
-          if (isBinance) usdcValue = usdcValue / 10 ** 12;
+          const ten6 =  isBinance ? 10 ** 18 : 10 ** 6;
+          const usdcValue = usdc / ten6;
           const number = Number(usdcValue.toFixed(2));
           setKibaBalanceUSD(number.toLocaleString());
         });
@@ -251,7 +252,7 @@ export default function VotePage() {
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
     isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
-    9,
+    isBinance ? 18 : 9,
     "Kiba",
     "Kiba Inu"
   );
@@ -385,38 +386,7 @@ export default function VotePage() {
       console.error(err);
     }
   }, [rawTrumpCurrency,account, library?.provider, isBinance, kibaBalance, storedKibaBalance]);
-
-  const [kibaBalanceUSD, setkibaBalanceUSD] = React.useState("");
-  React.useEffect(() => {
-    try {
-      if (kibaBalance && +kibaBalance < 0) {
-        setkibaBalanceUSD("-");
-        return;
-      }
-      if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
-        const provider = window.ethereum ? window.ethereum : library?.provider
-        const w3 = new Web3(provider as any).eth;
-        const routerContr = new w3.Contract(routerABI as any, routerADD);
-        const ten9 = 10 ** 18;
-        const amount =  +kibaBalance.toFixed(0) * ten9;
-        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          kibaCoin.address,
-          isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
-          isBinance ? binanceTokens.busd.address : USDC.address, 
-        ]);
-        amountsOut.call().then((response: any) => {
-          const usdc = response[response.length - 1];
-          const ten6 = 10 ** 6;
-          let usdcValue = usdc / ten6;
-          if (isBinance) usdcValue = usdcValue / 10 ** 12;
-          const number = Number(usdcValue.toFixed(2));
-          setkibaBalanceUSD(number.toLocaleString());
-        });
-      }
-    } catch (ex) {
-      console.error(ex);
-    }
-  }, [kibaBalance, account, library?.provider, isBinance]);
+  const kibaBalanceUSD = useKibaBalanceUSD(account ?? undefined)
 const [darkMode] = useDarkModeManager()
 console.log(allTimeGains)
   return (
