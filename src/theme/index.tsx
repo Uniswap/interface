@@ -36,14 +36,14 @@ const white = '#FFFFFF'
 const black = '#000000'
 
 function colors(darkMode: boolean): Colors {
-  const newLocal = '#FDB414'
+  const newLocal = '#252632'
   return {
     // base
     white,
     black,
 
     // text
-    text1: darkMode ? '#fff' : '#d9dc51',
+    text1: darkMode ? '#fff' : '#18181E',
     text2: darkMode ? '#fff' : '#565A69',
     text3: darkMode ? '#fff' : '#6E727D',
     text4: darkMode ? '#fff' : '#F76C1D',
@@ -79,7 +79,7 @@ function colors(darkMode: boolean): Colors {
 
     // other
     red1: darkMode ? '#FF4343' : '#DA2D2B',
-    red2: darkMode ? '#F82D3A' : '#DF1F38',
+    red2: darkMode ? '#971B1C' : '#DF1F38',
     red3: '#D60000',
     green1: darkMode ? '#27AE60' : '#007D35',
     yellow1: '#E3A507',
