@@ -1167,8 +1167,8 @@ export const useTotalKibaGains = (account ?: string | null) => {
               incoming = 0 , 
               outgoing = 0 ;
           
-          incomingTransfers.forEach((airdrop: BscTransaction) => incoming += parseFloat(airdrop.value) / 10 ** 9);
-          outgoingTransfers.filter(isNotRouterTx).forEach((airdrop: BscTransaction) => outgoing += parseFloat(airdrop.value) / 10 ** 9);
+          incomingTransfers.forEach((airdrop: BscTransaction) => incoming += parseFloat(airdrop.value) / 10 ** 18);
+          outgoingTransfers.filter(isNotRouterTx).forEach((airdrop: BscTransaction) => outgoing += parseFloat(airdrop.value) / 10 ** 18);
           (airdroppedAmount = incoming);
           setAirdroppedAmount(airdroppedAmount)
         })

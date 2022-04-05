@@ -1,3 +1,4 @@
+import Badge, { BadgeVariant } from "components/Badge";
 import {
   CurrencyAmount,
   Token,
@@ -8,7 +9,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { pancakeAbi, pancakeAddress, routerAbi, routerAddress } from "./routerAbi";
 
 import { AutoColumn } from "../../components/Column";
-import Badge from "components/Badge";
+import { BurntKiba } from "components/BurntKiba";
 import { ButtonLight } from "../../components/Button";
 import {
   Clock,
@@ -21,16 +22,9 @@ import { RowBetween } from "../../components/Row";
 import { SupportedChainId } from "constants/chains";
 import { SwitchLocaleLink } from "../../components/SwitchLocaleLink";
 import { Trans } from "@lingui/macro";
-import Badge, { BadgeVariant } from "components/Badge";
-import moment from "moment";
+import { Transactions } from "./TransactionsPage";
+import { USDC } from "../../constants/tokens";
 import Web3 from "web3";
-import { routerAbi, routerAddress, pancakeAbi, pancakeAddress } from "./routerAbi";
-import { walletconnect } from "connectors";
-import { useDarkModeManager } from "state/user/hooks";
-import { useWeb3React } from "@web3-react/core";
-import { SupportedChainId } from "constants/chains";
-import { useBinanceTokenBalance } from "utils/binance.utils";
-import { useTotalKibaGains } from '../../state/logs/utils'
 import { binanceTokens } from "utils/binance.tokens";
 import moment from "moment";
 import styled from "styled-components/macro";
@@ -38,6 +32,7 @@ import { useActiveWeb3React } from "../../hooks/web3";
 import { useBinanceTokenBalance } from "utils/binance.utils";
 import { useDarkModeManager } from "state/user/hooks";
 import { useTokenBalance } from "../../state/wallet/hooks";
+import { useTotalKibaGains } from '../../state/logs/utils'
 import { useUserTransactions } from "state/logs/utils";
 import { useWeb3React } from "@web3-react/core";
 import { walletconnect } from "connectors";
@@ -132,7 +127,7 @@ export const useKiba = (account?: string | null) => {
   const kibaCoin = React.useMemo(() => new Token(
     isBinance ? 56 : 1,
     isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
-    9,
+    18,
     "Kiba",
     "Kiba Inu"
   ), [isBinance])
@@ -154,7 +149,7 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
   const kibaCoin =React.useMemo(() =>  new Token(
     1,
     isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
-    9,
+    18,
     "Kiba",
     "Kiba Inu"
   ), [isBinance])
@@ -275,7 +270,7 @@ export default function VotePage() {
       const provider = window.ethereum ? window.ethereum : library?.provider;
       const w3 = new Web3(provider as any).eth;
       const routerContr = new w3.Contract(routerABI as any, routerADD);
-      const ten9 = 10 ** 9;
+      const ten9 =18;
       const amount = +allTimeGains.totalGained.toFixed(0) * ten9;
       if (amount > 0) {
       const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
@@ -305,7 +300,7 @@ export default function VotePage() {
         const provider = window.ethereum ? window.ethereum : library?.provider
         const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerABI as any, routerADD);
-        const ten9 = 10 ** 9;
+        const ten9 = 10 ** 18;
         const amount = +rawTrumpCurrency.toFixed(0) * ten9;
         if (amount > 0) {
         const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
@@ -340,7 +335,7 @@ export default function VotePage() {
         const provider = window.ethereum ? window.ethereum : library?.provider
         const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerABI as any, routerADD);
-        const ten9 = 10 ** 9;
+        const ten9 = 10 ** 18;
         const amount =  +kibaBalance.toFixed(0) * ten9;
         if (amount > 0) {
         const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
@@ -369,7 +364,7 @@ console.log(allTimeGains)
       <PageWrapper gap="lg" justify="center">
         <ProposalInfo>
 
-            <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains <Badge variant={BadgeVariant.DEFAULT}><GainsText>Beta</GainsText></Badge></GainsText></div>
+            <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaStats <Badge variant={BadgeVariant.DEFAULT}><GainsText>Beta</GainsText></Badge></GainsText></div>
               {isTrackingGains && kibaBalance && +kibaBalance?.toFixed(0) > 0 && (
                  <GreyCard style={{flexFlow: 'row nowrap', background:'transparent',opacity:'.95',display:'inline-block', justifyContent:'center', width: '100%', marginBottom:15}}> <TYPE.main>
                       <GainsText style={{display:'inline'}}>
@@ -383,18 +378,12 @@ console.log(allTimeGains)
                   {!account && (
                     <TYPE.white>
                       <Trans>
-                        Please connect wallet to start tracking gains.
+                        Please connect wallet to start tracking your account.
                       </Trans>
                     </TYPE.white>
                   )}
                
-               {(kibaBalance  === undefined || +kibaBalance?.toFixed(0) <= 0) && (
-                    <TYPE.white>
-                      <GainsText style={{ display: 'flex', width: '100%', justifyContent: 'center', paddingTop: 30, paddingBottom: 20, fontFamily: 'Open Sans', fontSize: 16 }}>
-                        You must own Kiba Inu tokens to use this feature.
-                      </GainsText>
-                    </TYPE.white>
-                  )}
+
               
                   <div style={{ display:'flex', flexFlow:'column wrap', alignItems: "center" }}>
 
@@ -404,7 +393,7 @@ console.log(allTimeGains)
                       <Trans>
                         {kibaBalance !== undefined 
                         && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0 )
-                          ? <div style={{alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.POSITIVE}>(${(kibaBalanceUSD)} USD) </Badge></span></div>
+                          ? <div style={{alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight:10}}>Your Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.POSITIVE}>(${(kibaBalanceUSD)} USD) </Badge></span></div>
                           : null}
                       </Trans>
                 
@@ -412,58 +401,14 @@ console.log(allTimeGains)
                       </div>
                       <div style={{display:'block', width:'100%'}}>
 
-                      {isTrackingGains === true && (
-                        <>
-                      <GainsText  className="d-flex">
-                        {storedKibaBalance !== undefined &&
-                          kibaBalance !== undefined &&
-                          +kibaBalance?.toFixed(0) > 0 &&
-                          account !== undefined && (
-                            <React.Fragment>
-                              <Trans>{`Kiba Gains`} </Trans> &nbsp;
-                              <span>{Number((
-                                +kibaBalance?.toFixed(2) - +storedKibaBalance
-                              ).toFixed(2)).toLocaleString()} </span>
-                              {isTrackingGains && trumpGainsUSD && (
-                                <Badge style={{ marginTop: 5, paddingBottom: 60, color:"#FFF",paddingTop: 5, backgroundColor: 'transparent' }}>
-                                  <small>
-                                    <GainsText>Total Reflections</GainsText>
-                                  </small>
-                                  &nbsp;
-                                  {rawTrumpCurrency &&
-                                  +rawTrumpCurrency?.toFixed(0) > 0
-                                    ? <> {'$'}{trumpGainsUSD}</>
-                                    : "-"}
-                                    &nbsp;<Trans>USD</Trans>
-                                </Badge>
-                              )}
-                            </React.Fragment>
-                          )}
-                      </GainsText>
-  
-                      </>
-                    )}
+                    <BurntKiba showDetails />
                       </div>
 
                   </div>
                 </div>
                
             </AutoColumn>
-
-            {!!allTimeGainsUsd && allTimeGainsUsd !== '-' &&<AutoColumn gap="50px" style={{marginTop:10}}>
-    <div style={{ alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight: 10}}>Lifetime Reflections</GainsText> <span style={{fontSize:18}}>{Number(allTimeGains.totalGained?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.DEFAULT} style={{color:"#FFF", fontSize:18}}> (${(allTimeGainsUsd)} USD) </Badge></span></div>
-</AutoColumn>}
-            { !!kibaBalance && +kibaBalance?.toFixed(0) > 0 &&
-            <AutoColumn gap="50px" >
-              <ButtonLight style={{background: darkMode ? '#fff ' : 'inherit', color: darkMode ? '#222' : '#fff', marginTop:15}} onClick={trackGains}>
-                {isTrackingGains && <Trans>Stop Tracking</Trans>}
-                {!isTrackingGains&& <Trans>Start Tracking</Trans>}
-              </ButtonLight>
-            </AutoColumn>
-}
             <br/>
-            <small style={{marginTop:2, marginBottom:2}}>When switching networks, you need to restart tracking (stop and start tracking again).</small>
-         
           </ProposalInfo>
       </PageWrapper>
       <SwitchLocaleLink />

@@ -9,6 +9,7 @@ import Tooltip from 'components/Tooltip'
 import _ from 'lodash'
 import { isMobile } from 'react-device-detect';
 import { usePairs } from 'state/logs/utils';
+import { useTokenInfo } from 'components/swap/ChartPage';
 
 type Props = {
     address: string;
@@ -32,7 +33,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
         if (chainId === 56) return `https://api.covalenthq.com/v1/56/tokens/${address}/token_holders/?&key=ckey_3e8b37ddebbf418d9f829e4dddb&page-size=2199&page-number=1`;
         return ``
     }, [props])
-
+    const tokenInfo = useTokenInfo(chainId,address)
     const deadAddresses = ['0xdEAD000000000000000042069420694206942069'?.toLowerCase(), '0x000000000000000000000000000000000000dead'?.toLowerCase()]
 
     useEffect(() => {
@@ -122,7 +123,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                                     style={{maxWidth:30}} />
                                 </Tooltip>}
                         </a>
-                        <Badge>{Number(holder.balance / 10 ** 9).toLocaleString()}</Badge>
+                        {tokenInfo && tokenInfo.decimals && <Badge>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</Badge>}
                         <Badge variant={BadgeVariant.POSITIVE}>{holder.share}%</Badge>
 
                     </div>
