@@ -9,8 +9,10 @@ import { useUserTransactions } from 'state/logs/utils';
 import Web3 from 'web3'
 import {saveAs} from 'file-saver';
 
-export const Transactions = ({transactions, loading, error}:{transactions?: any[], loading?:boolean, error?:any}) => {
-    const { account, chainId, library } = useWeb3React()
+export const Transactions = ({transactions, loading, error, accountValue}:{transactions?: any[], loading?:boolean, error?:any, accountValue?: string | null | undefined}) => {
+    let account = accountValue;
+    const { account: secondary, chainId, library } = useWeb3React()
+    if (!account) account = secondary;
     const chainLabel = React.useMemo(() => chainId && chainId === 1 ? 'ETH' : chainId && chainId === 56 ? 'BNB' : '', [chainId])
     const formattedTransactions = React.useMemo( () => {
             return transactions?.map((swap: any) => {
