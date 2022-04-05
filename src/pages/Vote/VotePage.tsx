@@ -415,11 +415,12 @@ export default function VotePage({
   const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
   React.useEffect(() => {
     try {
+      console.log(trumpBalance?.toFixed(0))
       if (trumpBalance && +trumpBalance < 0) {
         setTrumpBalanceUSD("-");
         return;
       }
-      if (trumpBalance && +trumpBalance > 0) {
+      if (trumpBalance && +trumpBalance.toFixed(0) > 0) {
         const provider = window.ethereum ? window.ethereum : walletconnect
         const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerAbi as any, routerAddress);
