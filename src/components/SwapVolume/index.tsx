@@ -94,7 +94,7 @@ export default function SwapVolume () {
           if (!_.isEqual(ethRelayed.value, response)) {
             const formattedEth = parseFloat(utils.formatEther(response)).toFixed(6);
             setEthRelayed({formatted: formattedEth, value: response})
-            setIsMounting(utils.formatEther(response) != '0')
+            setIsMounting(false)
           }
         })
       }
