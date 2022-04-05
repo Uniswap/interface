@@ -1,27 +1,27 @@
-import { useWeb3React } from '@web3-react/core';
 import Badge, { BadgeVariant } from 'components/Badge';
-import _ from 'lodash';
-import moment from 'moment';
-import { useKiba } from 'pages/Vote/VotePage';
+import { BarChart, ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
+import TradingViewWidget, { Themes } from 'react-tradingview-widget';
+import { fetchBscHolders, fetchBscTokenData, useBnbPrices, useBscPoocoinTransactions, useBscTokenData, useBscTokenTransactions } from 'state/logs/bscUtils';
+import { getTokenData, useEthPrice, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
+
+import BarChartLoaderSVG from './BarChartLoader';
+import { Dots } from './styleds';
+import { LoadingRows } from 'pages/Pool/styleds';
 import React from 'react';
 import ReactGA from 'react-ga'
-
-import { BarChart, ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
-import { useBscTokenData, useBnbPrices, useBscTokenTransactions, fetchBscTokenData, fetchBscHolders, useBscPoocoinTransactions } from 'state/logs/bscUtils';
-import { useTokenTransactions, useTokenData, useEthPrice, getTokenData, useTokenDataHook } from 'state/logs/utils';
-import styled from 'styled-components/macro';
 import { StyledInternalLink } from 'theme';
-import { Dots } from './styleds';
-import useInterval from 'hooks/useInterval';
 import Tooltip from 'components/Tooltip';
-import { LoadingRows } from 'pages/Pool/styleds';
-import TradingViewWidget, { Themes } from 'react-tradingview-widget';
-import { useUserLocale } from 'state/user/hooks';
+import _ from 'lodash';
 import { isMobile } from 'react-device-detect';
-import { useHasAccess } from 'components/AccountPage/AccountPage';
-import BarChartLoaderSVG from './BarChartLoader';
-import { system } from 'styled-system';
+import moment from 'moment';
 import { number } from '@lingui/core/cjs/formats';
+import styled from 'styled-components/macro';
+import { system } from 'styled-system';
+import { useHasAccess } from 'components/AccountPage/AccountPage';
+import useInterval from 'hooks/useInterval';
+import { useKiba } from 'pages/Vote/VotePage';
+import { useUserLocale } from 'state/user/hooks';
+import { useWeb3React } from '@web3-react/core';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -503,7 +503,7 @@ export const Chart = () => {
                             <React.Fragment>
                                 {/* Chart Component */}
                                 <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
-                                    {!isBinance && <TradingViewWidget locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
+                                    {!isBinance && <TradingViewWidget hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
                                     {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
                                     {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
                                 </div>
