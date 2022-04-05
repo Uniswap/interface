@@ -149,7 +149,7 @@ export default function Pool() {
 
   const menuItems = [
     {
-      content: (
+    content: (
         <MenuItem>
           <Trans>Create a pool</Trans>
           <PlusCircle size={16} />
@@ -185,7 +185,7 @@ export default function Pool() {
           <BookOpen size={16} />
         </MenuItem>
       ),
-      link: 'https://kibainu.space/',
+      link: 'https://kibainu.org/',
       external: true,
     },
   ]
