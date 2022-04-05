@@ -1,108 +1,36 @@
 import {
-  BigintIsh,
-  Currency,
   CurrencyAmount,
-  Price,
-  Rounding,
   Token,
   WETH9,
 } from "@uniswap/sdk-core";
-import { BigNumber } from "ethers";
-import useCurrentBlockTimestamp from "hooks/useCurrentBlockTimestamp";
-import JSBI from "jsbi";
-import { DateTime } from "luxon";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  AlertCircle,
-  ArrowLeft,
-  ArrowUp,
   Clock,
-  DollarSign,
-  Info,
-  Type,
 } from "react-feather";
-import ReactMarkdown from "react-markdown";
-import { Link, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components/macro";
-import { ButtonPrimary,ButtonLight } from "../../components/Button";
+import { ButtonLight } from "../../components/Button";
 import { GreyCard } from "../../components/Card";
 import { AutoColumn } from "../../components/Column";
 import {
-  CardBGImage,
-  CardBGImageSmaller,
-  CardSection,
   DataCard,
 } from "../../components/earn/styled";
-import { RowBetween, RowFixed } from "../../components/Row";
+import { RowBetween } from "../../components/Row";
 import { SwitchLocaleLink } from "../../components/SwitchLocaleLink";
-import DelegateModal from "../../components/vote/DelegateModal";
-import VoteModal from "../../components/vote/VoteModal";
-import {
-  AVERAGE_BLOCK_TIME_IN_SECS,
-  COMMON_CONTRACT_NAMES,
-  DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-} from "../../constants/governance";
-import { ZERO_ADDRESS } from "../../constants/misc";
-import { UNI, USDC, USDT } from "../../constants/tokens";
+import { USDC } from "../../constants/tokens";
 import { useActiveWeb3React } from "../../hooks/web3";
-import { ApplicationModal } from "../../state/application/actions";
-import {
-  useBlockNumber,
-  useModalOpen,
-  useToggleDelegateModal,
-  useToggleVoteModal,
-} from "../../state/application/hooks";
-import {
-  ProposalData,
-  ProposalState,
-  useProposalData,
-  useUserDelegatee,
-  useUserVotesAsOfBlock,
-} from "../../state/governance/hooks";
-import { useCurrencyBalance, useTokenBalance } from "../../state/wallet/hooks";
+import { useTokenBalance } from "../../state/wallet/hooks";
 import { ExternalLink, StyledInternalLink, TYPE } from "../../theme";
-import { isAddress } from "../../utils";
-import { ExplorerDataType, getExplorerLink } from "../../utils/getExplorerLink";
-import { ProposalStatus } from "./styled";
-import { t, Trans } from "@lingui/macro";
-import { useTokenComparator } from "components/SearchModal/sorting";
-import Card from "components/Card";
-import { useAllTokens, useToken } from "hooks/Tokens";
-import { computeFiatValuePriceImpact } from "utils/computeFiatValuePriceImpact";
-import Header from "components/Header";
-import { relative } from "path";
-import { DialogOverlay } from "@reach/dialog";
+import { Trans } from "@lingui/macro";
 import Badge from "components/Badge";
-import { mnemonicToEntropy } from "ethers/lib/utils";
 import moment from "moment";
-import { BlueCard } from "components/Card";
-import Tooltip from "components/Tooltip";
-import { FiatValue } from "components/CurrencyInputPanel/FiatValue";
-import useUSDCPrice, { useUSDCValue } from "hooks/useUSDCPrice";
-import { gql } from "graphql-request";
-import { formatCurrencyAmount, formatPrice } from "utils/formatCurrencyAmount";
-import FormattedCurrencyAmount from "components/FormattedCurrencyAmount";
-import { tryParsePrice } from "state/mint/v3/utils";
-import { useV2TradeExactIn, useV2TradeExactOut } from "hooks/useV2Trade";
-import { usePool } from "hooks/usePools";
-import { usePoolActiveLiquidity } from "hooks/usePoolTickData";
 import Web3 from "web3";
-import { abi } from "./abi";
 import { routerAbi, routerAddress, pancakeAbi, pancakeAddress } from "./routerAbi";
-import Column from "components/Column";
-import Row from "components/Row";
-import { stackOrderInsideOut } from "d3";
-import { isMobile } from "react-device-detect";
-import { useTrumpGoldBalance } from "./AddProposal";
 import { walletconnect } from "connectors";
-import squeezeLogo from '../../assets/images/squeeze.png'
 import { useDarkModeManager } from "state/user/hooks";
-import { kibaAbi } from "components/ShowSellTax";
 import { useWeb3React } from "@web3-react/core";
 import { SupportedChainId } from "constants/chains";
-import { useBinanceTokenBalance, useBinanceTokenBalanceRefreshed } from "utils/binance.utils";
+import { useBinanceTokenBalance } from "utils/binance.utils";
 import { binanceTokens } from "utils/binance.tokens";
-import { useAllTransactions } from "state/transactions/hooks";
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -190,7 +118,7 @@ export const useKiba = (account?: string | null) => {
   const { chainId } = useWeb3React()
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = React.useMemo(() => new Token(
-    1,
+    isBinance ? 56 : 1,
     isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
     9,
     "Kiba",
@@ -201,11 +129,12 @@ export const useKiba = (account?: string | null) => {
     account ?? undefined,
     kibaCoin
   );
+  
   const bKiba =  useBinanceTokenBalance('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', account, chainId)
   
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
-  }, [kiba, account, isBinance, bKiba.balance]);;
+  }, [kiba, account, isBinance, bKiba.balance]);
 };
 
 export const useKibaRefreshedBinance = (account?: string | null, chainId?: number) => {
@@ -227,7 +156,7 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
   
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
-  }, [kiba, isBinance, bKiba.balance  ]);
+  }, [kiba,  isBinance, bKiba.balance  ]);
 };
 export const useStimulusBalance = (account?: string | null) => {
   const stimulusCoin = new Token(
