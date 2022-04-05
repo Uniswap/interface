@@ -15,16 +15,25 @@ import { useTotalSwapVolume } from 'components/BurntKiba'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { utils } from 'ethers'
+import { useEthPrice } from 'state/logs/utils'
+import { useBnbPrices } from 'state/logs/bscUtils'
 
-const StyledPolling = styled.div`
-  position: fixed;
+
+const StyledEthPolling = styled.div`
   display: flex;
   align-items: center;
-  left: 0;
-  bottom: 0;
   padding: 1rem;
   color: ${({ theme }) => theme.green1};
 
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `}
+`
+const StyledPolling = styled.div`
+  display:flex;
+  padding: 1rem;
+  color: ${({ theme }) => theme.green1};
+  align-items:center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `}
@@ -76,42 +85,69 @@ const Spinner = styled.div`
 `
 
 
-
+const PollContainer = styled.div`
+position: fixed;
+display: block;
+align-items: center;
+left: 0;
+bottom: 0;
+`
 
 
 const StyledLoader = styled(Loader)`
   margin-right: 1rem;
 `
 
-export default function SwapVolume () {
-    const {
-        volumeInEth, 
-        volumeInEthBn,
-        volumeInUsd
-            } = useTotalSwapVolume()
- 
-    return (
-        <StyledPolling >
-
-        {volumeInEthBn == 0 ?  (
-            <>
-        <StyledPollingNumber>
+export default function SwapVolume() {
+  const {
+    volumeInEth,
+    volumeInEthBn,
+    volumeInUsd
+  } = useTotalSwapVolume()
+  const prices = useBnbPrices()
+  const [ethPrice,,] = useEthPrice()
+  return (
+    <PollContainer>
+    <StyledEthPolling>
+    {!ethPrice || isNaN(+ethPrice) ? (
+        <>
+          <StyledPollingNumber>
             Loading..
-        </StyledPollingNumber>
-        <StyledPollingDot>
+          </StyledPollingNumber>
+          <StyledPollingDot>
             <Spinner />
-        </StyledPollingDot>
+          </StyledPollingDot>
         </>
-     ) : (
-         <>
-         <StyledPollingNumber>         
-          <span style={{color:'#F76C1D'}}>Total Swap Volume</span> <br/> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 'NaN' && <>(${(volumeInUsd)} USD)</>}
-        </StyledPollingNumber>
-        <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
-      </>
-      
-     )}
-     </StyledPolling>
+      ) : (
+        <>
+          <StyledPollingNumber>
+            <span style={{ color: '#F76C1D' }}>ETH</span> {ethPrice && volumeInUsd !== 'NaN' && <>(${(parseFloat(ethPrice.toString()).toFixed(2))} USD)</>}
+          </StyledPollingNumber>
+          <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
+        </>
+      )}
+    </StyledEthPolling>
+    
+    <StyledPolling >
+      {volumeInEthBn == 0 ? (
+        <>
+          <StyledPollingNumber>
+            Loading..
+          </StyledPollingNumber>
+          <StyledPollingDot>
+            <Spinner />
+          </StyledPollingDot>
+        </>
+      ) : (
+        <>
+          <StyledPollingNumber>
+            <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 'NaN' && <>(${(volumeInUsd)} USD)</>}
+          </StyledPollingNumber>
+          <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
+        </>
+      )}
+    </StyledPolling>
+    </PollContainer>
 
-    )
+  )
 }
