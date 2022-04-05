@@ -231,11 +231,13 @@ export default function VotePage({
     storedTrumpBalance !== undefined && +storedTrumpBalance > 0 && !!account
   );
 
+  const date = new Date();
+
   const trackingSince = useMemo(() => {
     return moment(
       new Date(localStorage.getItem("trackingSince") as string)
     ).fromNow();
-  }, [localStorage.getItem("trackingSince")]);
+  }, [localStorage.getItem("trackingSince"), date]);
 
   const stopTrackingGains = () => {
     localStorage.setItem("trumpBalance", "0");
