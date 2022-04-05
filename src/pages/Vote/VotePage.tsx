@@ -278,17 +278,18 @@ export default function VotePage({
         (+storedTrumpBalance - +trumpBalance.toFixed(2)).toFixed(2) ===
         trumpBalance.toFixed(2)
       ) {
-        stopTrackingGains();
-      } else if (+storedTrumpBalance - +trumpBalance.toFixed(2) < 0)
-        stopTrackingGains();
+      } else if (+storedTrumpBalance - +trumpBalance.toFixed(2) < 0) {
+        alert("We have calculated negative gains meaning you have probably sold. It would be wise to restart the tracker, for proper gains tracking and numbers.")
+      }
     } else if (storedSimulusBalance && stimulusBalance) {
       if (
         (+storedSimulusBalance - +stimulusBalance.toFixed(2)).toFixed(2) ===
         stimulusBalance.toFixed(2)
       ) {
         stopTrackingGains();
-      } else if (+storedSimulusBalance - +stimulusBalance.toFixed(2) < 0)
-      stopTrackingGains();
+      } else if (+storedSimulusBalance - +stimulusBalance.toFixed(2) < 0){
+        alert("We have calculated negative gains meaning you have probably sold. It would be wise to restart the tracker, for proper gains tracking and numbers.")
+      }
     }
   }, []);
 
@@ -315,7 +316,7 @@ export default function VotePage({
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
 
   useEffect(() => {
-    if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) <= 0) {
+    if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) < 0) {
       setTrumpGainsUSD("-");
       return;
     }
@@ -339,7 +340,7 @@ export default function VotePage({
   }, [rawTrumpCurrency, trumpBalance, storedTrumpBalance]);
 
   useEffect(() => {
-    if (rawStimulusCurrency && +rawStimulusCurrency <= 0) {
+    if (rawStimulusCurrency && +rawStimulusCurrency < 0) {
       setStimGainsUSD("-");
       return;
     }
