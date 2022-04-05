@@ -9,6 +9,7 @@ import { Trans } from '@lingui/macro'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
+  background:radial-gradient(#eb5b2c,rgba(129,3,3,.95));
   align-items: center;
   justify-content: center;
   width: 100%;
