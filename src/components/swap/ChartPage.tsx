@@ -5,7 +5,7 @@ import moment from 'moment';
 import { useKiba } from 'pages/Vote/VotePage';
 import React from 'react';
 import { ChevronDown, ChevronRight, ChevronUp, X } from 'react-feather';
-import { useBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
+import { useBscTokenData, useBnbPrices, useBscTokenTransactions, fetchBscTokenData } from 'state/logs/bscUtils';
 import { useTokenTransactions, useTokenData, useEthPrice, getTokenData } from 'state/logs/utils';
 import styled from 'styled-components/macro';
 import { StyledInternalLink } from 'theme';
@@ -155,7 +155,6 @@ export const Chart = () => {
     const binanceTransactionData = useBscTokenTransactions('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 60000)
     console.log(binanceTransactionData)
     const prices = useBnbPrices()
-    const bscTokenData = useBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices?.current, prices?.oneDay);
     const accessDenied = React.useMemo(() => !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
     const [view, setView] = React.useState<'chart' | 'market'>('chart')
     const frameURL = React.useMemo(() => chainId === 56 ? `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180` : `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`, [symbol, chainId])
@@ -170,9 +169,11 @@ export const Chart = () => {
     }, [chainId, tokenData, ethPrice, ethPriceOld])
 
     React.useEffect(() => {
-        if (isBinance && !tokenData?.isBSC) {
+        if (isBinance && !tokenData?.isBSC && prices) {
+            fetchBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices?.current, prices?.current).then((bscTokenData) => {
             setTokenData(bscTokenData)
             setSymbol(bscTokenData?.symbol)
+            });
         }
     }, [isBinance, tokenData, prices])
 

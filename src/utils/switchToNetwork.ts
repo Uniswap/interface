@@ -15,22 +15,22 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
     if (!library?.provider?.request) {
       return
     }
-    localStorage.removeItem('trumpBalance');
+    localStorage.removeItem('kibaBalance');
     const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
     return library?.provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: formattedChainId }],
-    })
+    }).then(() => window.location.reload())
   }
 
-  const trackedValue = localStorage.getItem('trumpBalance');
+  const trackedValue = localStorage.getItem('kibaBalance');
   if (trackedValue) {
     const trackedValueParsed = parseFloat(trackedValue);
     if (trackedValueParsed > 0) {
       const { isConfirmed } = await Swal.fire({
         title: "Are you sure?",
         text: "Switching networks will stop your current gains tracking session.",
-        confirmButtonText: "Okay",
+        confirmButtonText: "Okay",  
         cancelButtonText: "Cancel",
         confirmButtonColor: '#991816',
         cancelButtonColor: '#444',
