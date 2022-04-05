@@ -32,7 +32,7 @@ interface SwapInfo {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-function useComputeSwapInfo() {
+function useComputeSwapInfo(): SwapInfo {
   const { account } = useActiveWeb3React()
   const { type: wrapType } = useWrapCallback()
   const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
