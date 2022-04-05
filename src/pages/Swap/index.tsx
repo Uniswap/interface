@@ -51,6 +51,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
+import logo from '../../assets/images/download.png'
 import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
 import { ExternalLinkIcon, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
@@ -66,6 +67,7 @@ import { ChartModal } from 'components/swap/ChartModal'
 import { LimitOrders } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
 import Marquee from "react-marquee-slider";
+import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
 const CardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
   width:100%;
@@ -104,11 +106,11 @@ export const ScrollableRow = styled.div`
 
 
 export default function Swap({ history }: RouteComponentProps) {
-  const params = useParams<{tokenAddress?: string}>()
+  const params = useParams<{ tokenAddress?: string }>()
   const { account, chainId } = useActiveWeb3React()
   const isBinance = React.useMemo(() => chainId === 56, [chainId]);
   const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
-  const binanceSwapURL = React.useMemo(() => isBinance ? `https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${tokenAddress}` : undefined,[tokenAddress, isBinance])
+  const binanceSwapURL = React.useMemo(() => isBinance ? `https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -238,7 +240,6 @@ export default function Swap({ history }: RouteComponentProps) {
     signatureData,
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage)
-
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
       try {
@@ -402,7 +403,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // const [pauseAnimation, setPauseAnimation] = useState(false)
   // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
 
-const items = [{title: "Kiba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Kiba Inu is a token infused with Kiba Swap"},{title: "Swally Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "KIBA INU", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "Jabba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Jabba Inu is a meme coin offering culture to its holders."}];
+  const items = [{ title: "Kiba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Kiba Inu is a token infused with Kiba Swap" }, { title: "Swally Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Learn more" }, { title: "KIBA INU", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Learn more" }, { title: "Jabba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Jabba Inu is a meme coin offering culture to its holders." }];
   return (
     <>
       <TokenWarningModal
@@ -411,263 +412,299 @@ const items = [{title: "Kiba Inu", img: "https://kiba.app/static/media/download.
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-     
-     <AppBody style={{marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, maxWidth: view === 'bridge' ? 690 : 480}}>
-      <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
+
+      <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, maxWidth: view === 'bridge' ? 690 : 480 }}>
+        <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
 
         {!isBinance && (
           <>
-        {view === 'swap' && <Wrapper id="swap-page">
-          <ConfirmSwapModal
-            isOpen={showConfirm}
-            trade={trade}
-            originalTrade={tradeToConfirm}
-            onAcceptChanges={handleAcceptChanges}
-            attemptingTxn={attemptingTxn}
-            txHash={txHash}
-            recipient={recipient}
-            allowedSlippage={allowedSlippage}
-            onConfirm={handleSwap}
-            swapErrorMessage={swapErrorMessage}
-            onDismiss={handleConfirmDismiss}
-          />
-
-          <AutoColumn gap={'xs'}>
-            <div style={{ display: 'relative' }}>
-              <CurrencyInputPanel
-                label={
-                  independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
-                }
-                value={formattedAmounts[Field.INPUT]}
-                showMaxButton={showMaxButton}
-                currency={currencies[Field.INPUT]}
-                onUserInput={handleTypeInput}
-                onMax={handleMaxInput}
-                fiatValue={fiatValueInput ?? undefined}
-                onCurrencySelect={handleInputSelect}
-                otherCurrency={currencies[Field.OUTPUT]}
-                showOnlyTrumpCoins={true}
-                showCommonBases={true}
-                
-                id="swap-currency-input"
+            {view === 'swap' && <Wrapper id="swap-page">
+              <ConfirmSwapModal
+                isOpen={showConfirm}
+                trade={trade}
+                originalTrade={tradeToConfirm}
+                onAcceptChanges={handleAcceptChanges}
+                attemptingTxn={attemptingTxn}
+                txHash={txHash}
+                recipient={recipient}
+                allowedSlippage={allowedSlippage}
+                onConfirm={handleSwap}
+                swapErrorMessage={swapErrorMessage}
+                onDismiss={handleConfirmDismiss}
               />
-              <ArrowWrapper clickable>
-                <ArrowDown
-                  size="16"
-                  onClick={() => {
-                    setApprovalSubmitted(false) // reset 2 step UI for approvals
-                    onSwitchTokens()
-                  }}
-                  color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
-                />
-              </ArrowWrapper>
-              <CurrencyInputPanel
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
-                showMaxButton={false}
-                hideBalance={false}
-                showOnlyTrumpCoins={true}
-                fiatValue={fiatValueOutput ?? undefined}
-                priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={handleOutputSelect}
-                otherCurrency={currencies[Field.INPUT]}
-                showCommonBases={true}
-                id="swap-currency-output"
-              />
-            </div>
 
-            {!cannotUseFeature && useOtherAddress && !showWrap ? (
-              <>
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.text2} />
+              <AutoColumn gap={'xs'}>
+                <div style={{ display: 'relative' }}>
+                  <CurrencyInputPanel
+                    label={
+                      independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
+                    }
+                    value={formattedAmounts[Field.INPUT]}
+                    showMaxButton={showMaxButton}
+                    currency={currencies[Field.INPUT]}
+                    onUserInput={handleTypeInput}
+                    onMax={handleMaxInput}
+                    fiatValue={fiatValueInput ?? undefined}
+                    onCurrencySelect={handleInputSelect}
+                    otherCurrency={currencies[Field.OUTPUT]}
+                    showOnlyTrumpCoins={true}
+                    showCommonBases={true}
+
+                    id="swap-currency-input"
+                  />
+                  <ArrowWrapper clickable>
+                    <ArrowDown
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
+                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                    />
                   </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => {
-                    onChangeRecipient('')
-                    onSwitchUseChangeRecipient(false)
-                  }}>
-                    <Trans>- Remove send</Trans>
-                  </LinkStyledButton>
-                </AutoRow>
-                <AddressInputPanel id="recipient" value={recipient as string} onChange={onChangeRecipient} />
-              </>
-            ) : null}
+                  <CurrencyInputPanel
+                    value={formattedAmounts[Field.OUTPUT]}
+                    onUserInput={handleTypeOutput}
+                    label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
+                    showMaxButton={false}
+                    hideBalance={false}
+                    showOnlyTrumpCoins={true}
+                    fiatValue={fiatValueOutput ?? undefined}
+                    priceImpact={priceImpact}
+                    currency={currencies[Field.OUTPUT]}
+                    onCurrencySelect={handleOutputSelect}
+                    otherCurrency={currencies[Field.INPUT]}
+                    showCommonBases={true}
+                    id="swap-currency-output"
+                  />
+                </div>
 
-            {!!cannotUseFeature && useOtherAddress && !showWrap &&     (
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <p>You must own Kiba Inu tokens to use the <Badge>Swap to Receiver</Badge> feature.</p>
-                </AutoRow>
-            )}
+                {!cannotUseFeature && useOtherAddress && !showWrap ? (
+                  <>
+                    <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                      <ArrowWrapper clickable={false}>
+                        <ArrowDown size="16" color={theme.text2} />
+                      </ArrowWrapper>
+                      <LinkStyledButton id="remove-recipient-button" onClick={() => {
+                        onChangeRecipient('')
+                        onSwitchUseChangeRecipient(false)
+                      }}>
+                        <Trans>- Remove send</Trans>
+                      </LinkStyledButton>
+                    </AutoRow>
+                    <AddressInputPanel id="recipient" value={recipient as string} onChange={onChangeRecipient} />
+                  </>
+                ) : null}
 
-            {showWrap ? null : (
-              <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
-                <RowFixed style={{padding:'5px 0px'}}>
-                  {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
-                    (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
-                      <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
-                    ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
-                      <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
-                    ) : (
-                      toggledVersion === Version.v2 && (
+                {!!cannotUseFeature && useOtherAddress && !showWrap && (
+                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                    <p>You must own Kiba Inu tokens to use the <Badge>Swap to Receiver</Badge> feature.</p>
+                  </AutoRow>
+                )}
+
+                {showWrap ? null : (
+                  <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+                    <RowFixed style={{ padding: '5px 0px' }}>
+                      {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
+                        (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+                          <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
+                        ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+                          <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
+                        ) : (
+                          toggledVersion === Version.v2 && (
+                            <ButtonGray
+                              width="fit-content"
+                              padding="0.1rem 0.5rem 0.1rem 0.35rem"
+                              as={Link}
+                              to="/swap"
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                height: '24px',
+                                lineHeight: '120%',
+                                marginLeft: '0.75rem',
+                              }}
+                            >
+                              <ArrowLeft color={theme.text3} size={12} /> &nbsp;
+                              <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
+                                <Trans>
+                                  <HideSmall>Back to </HideSmall>
+                                  V3
+                                </Trans>
+                              </TYPE.main>
+                            </ButtonGray>
+                          )
+                        ))}
+
+                      {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
                         <ButtonGray
                           width="fit-content"
-                          padding="0.1rem 0.5rem 0.1rem 0.35rem"
-                          as={Link}
-                          to="/swap"
+                          padding="0.1rem 0.5rem"
+                          disabled
                           style={{
                             display: 'flex',
                             justifyContent: 'space-between',
-                            alignItems: 'center',
                             height: '24px',
-                            lineHeight: '120%',
-                            marginLeft: '0.75rem',
+                            opacity: 0.8,
+                            marginLeft: '0.25rem',
                           }}
                         >
-                          <ArrowLeft color={theme.text3} size={12} /> &nbsp;
-                          <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
-                            <Trans>
-                              <HideSmall>Back to </HideSmall>
-                              V3
-                            </Trans>
-                          </TYPE.main>
+                          <TYPE.black fontSize={12}>
+                            <Trans>V3</Trans>
+                          </TYPE.black>
                         </ButtonGray>
-                      )
-                    ))}
+                      )}
+                    </RowFixed>
+                    {trade ? (
+                      <RowFixed>
+                        <TradePrice
+                          price={trade.executionPrice}
+                          showInverted={showInverted}
+                          setShowInverted={setShowInverted}
+                        />
+                        <MouseoverTooltipContent
+                          content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
+                        >
+                          <StyledInfo />
+                        </MouseoverTooltipContent>
+                      </RowFixed>
+                    ) : null}
+                  </Row>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && window.location.href.includes('swap') && <p style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
+                  <Modal onDismiss={() => setShowChart(false)} isOpen={showChart && !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'}>
+                    {!cannotUseFeature && <ChartModal onDismiss={() => setShowChart(false)} isOpen={showChart && !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'} />}
+                    {cannotUseFeature && <div style={{ padding: '3rem 6rem', display: 'flex', flexFlow: 'row wrap' }}>
+                      <AlertOctagon /> You must hold Kiba Inu tokens to use this feature.
+                    </div>}
+                  </Modal>
+                  {[currencies[Field.OUTPUT], currencies[Field.INPUT]].some(curr => curr?.name === 'Kiba Inu') && <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <ShowSellTaxComponent />
+                  </div>}
+                </div>
 
-                  {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
-                    <ButtonGray
-                      width="fit-content"
-                      padding="0.1rem 0.5rem"
-                      disabled
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        height: '24px',
-                        opacity: 0.8,
-                        marginLeft: '0.25rem',
-                      }}
-                    >
-                      <TYPE.black fontSize={12}>
-                        <Trans>V3</Trans>
-                      </TYPE.black>
-                    </ButtonGray>
-                  )}
-                </RowFixed>
-                {trade ? (
-                  <RowFixed>
-                    <TradePrice
-                      price={trade.executionPrice}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                    />
-                    <MouseoverTooltipContent
-                      content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
-                    >
-                      <StyledInfo />
-                    </MouseoverTooltipContent>
-                  </RowFixed>
-                ) : null}
-              </Row>
-            )}
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && window.location.href.includes('swap') && <p style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
-              <Modal onDismiss={() => setShowChart(false)} isOpen={showChart &&  !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'}>
-                {!cannotUseFeature && <ChartModal onDismiss={() => setShowChart(false)} isOpen={showChart &&  !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'} />}
-                {cannotUseFeature && <div style={{ padding: '3rem 6rem', display: 'flex', flexFlow: 'row wrap' }}>
-                  <AlertOctagon /> You must hold Kiba Inu tokens to use this feature.
-                </div>}
-              </Modal>
-              {[currencies[Field.OUTPUT], currencies[Field.INPUT]].some(curr => curr?.name === 'Kiba Inu') && <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <ShowSellTaxComponent />
-              </div>}
-            </div>
-
-            <div>
-              {swapIsUnsupported ? (
-                <ButtonPrimary style={{ marginTop: 15 }} disabled={true}>
-                  <TYPE.main mb="4px">
-                    <Trans>Unsupported Asset</Trans>
-                  </TYPE.main>
-                </ButtonPrimary>
-              ) : !account ? (
-                <ButtonLight style={{ marginTop: 15 }} onClick={toggleWalletModal}>
-                  <Trans>Connect Wallet</Trans>
-                </ButtonLight>
-              ) : showWrap ? (
-                <ButtonPrimary style={{ marginTop: 15 }} disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                  {wrapInputError ??
-                    (wrapType === WrapType.WRAP ? (
-                      <Trans>Wrap</Trans>
-                    ) : wrapType === WrapType.UNWRAP ? (
-                      <Trans>Unwrap</Trans>
-                    ) : null)}
-                </ButtonPrimary>
-              ) : routeNotFound && userHasSpecifiedInputOutput ? (
-                <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">
-                    {isLoadingRoute ? (
-                      <Dots>
-                        <Trans>Loading</Trans>
-                      </Dots>
-                    ) : singleHopOnly ? (
-                      <Trans>Insufficient liquidity for this trade. Try enabling multi-hop trades.</Trans>
-                    ) : (
-                      <Trans>Insufficient liquidity for this trade.</Trans>
-                    )}
-                  </TYPE.main>
-                </GreyCard>
-              ) : showApproveFlow ? (
-                <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                  <AutoColumn style={{ width: '100%' }} gap="12px">
-                    <ButtonConfirmed
-                      style={{ marginTop: 15 }}
-                      onClick={handleApprove}
-                      disabled={
-                        approvalState !== ApprovalState.NOT_APPROVED ||
-                        approvalSubmitted ||
-                        signatureState === UseERC20PermitState.SIGNED
-                      }
-                      width="100%"
-                      altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={
-                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                      }
-                    >
-                      <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <CurrencyLogo
-                            currency={currencies[Field.INPUT]}
-                            size={'20px'}
-                            style={{ marginRight: '8px', flexShrink: 0 }}
-                          />
-                          {/* we need to shorten this string on mobile */}
-                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
-                            <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                          ) : (
-                            <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                          )}
-                        </span>
-                        {approvalState === ApprovalState.PENDING ? (
-                          <Loader stroke="white" />
-                        ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                          signatureState === UseERC20PermitState.SIGNED ? (
-                          <CheckCircle size="20" color={theme.green1} />
+                <div>
+                  {swapIsUnsupported ? (
+                    <ButtonPrimary style={{ marginTop: 15 }} disabled={true}>
+                      <TYPE.main mb="4px">
+                        <Trans>Unsupported Asset</Trans>
+                      </TYPE.main>
+                    </ButtonPrimary>
+                  ) : !account ? (
+                    <ButtonLight style={{ marginTop: 15 }} onClick={toggleWalletModal}>
+                      <Trans>Connect Wallet</Trans>
+                    </ButtonLight>
+                  ) : showWrap ? (
+                    <ButtonPrimary style={{ marginTop: 15 }} disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                      {wrapInputError ??
+                        (wrapType === WrapType.WRAP ? (
+                          <Trans>Wrap</Trans>
+                        ) : wrapType === WrapType.UNWRAP ? (
+                          <Trans>Unwrap</Trans>
+                        ) : null)}
+                    </ButtonPrimary>
+                  ) : routeNotFound && userHasSpecifiedInputOutput ? (
+                    <GreyCard style={{ textAlign: 'center' }}>
+                      <TYPE.main mb="4px">
+                        {isLoadingRoute ? (
+                          <Dots>
+                            <Trans>Loading</Trans>
+                          </Dots>
+                        ) : singleHopOnly ? (
+                          <Trans>Insufficient liquidity for this trade. Try enabling multi-hop trades.</Trans>
                         ) : (
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                You must give the Uniswap smart contracts permission to use your{' '}
-                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                              </Trans>
-                            }
-                          >
-                            <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                          </MouseoverTooltip>
+                          <Trans>Insufficient liquidity for this trade.</Trans>
                         )}
-                      </AutoRow>
-                    </ButtonConfirmed>
+                      </TYPE.main>
+                    </GreyCard>
+                  ) : showApproveFlow ? (
+                    <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
+                      <AutoColumn style={{ width: '100%' }} gap="12px">
+                        <ButtonConfirmed
+                          style={{ marginTop: 15 }}
+                          onClick={handleApprove}
+                          disabled={
+                            approvalState !== ApprovalState.NOT_APPROVED ||
+                            approvalSubmitted ||
+                            signatureState === UseERC20PermitState.SIGNED
+                          }
+                          width="100%"
+                          altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
+                          confirmed={
+                            approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                          }
+                        >
+                          <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                              <CurrencyLogo
+                                currency={currencies[Field.INPUT]}
+                                size={'20px'}
+                                style={{ marginRight: '8px', flexShrink: 0 }}
+                              />
+                              {/* we need to shorten this string on mobile */}
+                              {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
+                                <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
+                              ) : (
+                                <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                              )}
+                            </span>
+                            {approvalState === ApprovalState.PENDING ? (
+                              <Loader stroke="white" />
+                            ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
+                              signatureState === UseERC20PermitState.SIGNED ? (
+                              <CheckCircle size="20" color={theme.green1} />
+                            ) : (
+                              <MouseoverTooltip
+                                text={
+                                  <Trans>
+                                    You must give the Uniswap smart contracts permission to use your{' '}
+                                    {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                                  </Trans>
+                                }
+                              >
+                                <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                              </MouseoverTooltip>
+                            )}
+                          </AutoRow>
+                        </ButtonConfirmed>
+                        <ButtonError style={{ marginTop: 15 }}
+                          onClick={() => {
+                            if (isExpertMode) {
+                              handleSwap()
+                            } else {
+                              setSwapState({
+                                tradeToConfirm: trade,
+                                attemptingTxn: false,
+                                swapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined,
+                              })
+                            }
+                          }}
+                          width="100%"
+                          id="swap-button"
+                          disabled={
+                            !isValid ||
+                            (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
+                            priceImpactTooHigh
+                          }
+                          error={isValid && priceImpactSeverity > 2}
+                        >
+                          <Text fontSize={16} fontWeight={500}>
+                            {priceImpactTooHigh ? (
+                              <Trans>High Price Impact</Trans>
+                            ) : priceImpactSeverity > 2 ? (
+                              <Trans>Swap Anyway</Trans>
+                            ) : (
+                              <Trans>Swap</Trans>
+                            )}
+                          </Text>
+                        </ButtonError>
+                      </AutoColumn>
+                    </AutoRow>
+                  ) : (
                     <ButtonError style={{ marginTop: 15 }}
                       onClick={() => {
                         if (isExpertMode) {
@@ -682,18 +719,15 @@ const items = [{title: "Kiba Inu", img: "https://kiba.app/static/media/download.
                           })
                         }
                       }}
-                      width="100%"
                       id="swap-button"
-                      disabled={
-                        !isValid ||
-                        (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
-                        priceImpactTooHigh
-                      }
-                      error={isValid && priceImpactSeverity > 2}
+                      disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
+                      error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                     >
-                      <Text fontSize={16} fontWeight={500}>
-                        {priceImpactTooHigh ? (
-                          <Trans>High Price Impact</Trans>
+                      <Text fontSize={20} fontWeight={500}>
+                        {swapInputError ? (
+                          swapInputError
+                        ) : priceImpactTooHigh ? (
+                          <Trans>Price Impact Too High</Trans>
                         ) : priceImpactSeverity > 2 ? (
                           <Trans>Swap Anyway</Trans>
                         ) : (
@@ -701,50 +735,17 @@ const items = [{title: "Kiba Inu", img: "https://kiba.app/static/media/download.
                         )}
                       </Text>
                     </ButtonError>
-                  </AutoColumn>
-                </AutoRow>
-              ) : (
-                <ButtonError style={{ marginTop: 15 }}
-                  onClick={() => {
-                    if (isExpertMode) {
-                      handleSwap()
-                    } else {
-                      setSwapState({
-                        tradeToConfirm: trade,
-                        attemptingTxn: false,
-                        swapErrorMessage: undefined,
-                        showConfirm: true,
-                        txHash: undefined,
-                      })
-                    }
-                  }}
-                  id="swap-button"
-                  disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
-                  error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                >
-                  <Text fontSize={20} fontWeight={500}>
-                    {swapInputError ? (
-                      swapInputError
-                    ) : priceImpactTooHigh ? (
-                      <Trans>Price Impact Too High</Trans>
-                    ) : priceImpactSeverity > 2 ? (
-                      <Trans>Swap Anyway</Trans>
-                    ) : (
-                      <Trans>Swap</Trans>
-                    )}
-                  </Text>
-                </ButtonError>
-              )}
-              {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                  )}
+                  {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
 
-            </div>
-          </AutoColumn>
-        </Wrapper>}
+                </div>
+              </AutoColumn>
+            </Wrapper>}
 
-      
-        </>
+
+          </>
         )
-      }
+        }
         {view === 'bridge' && (
           <Wrapper id="bridgepage">
             <AutoColumn>
@@ -752,41 +753,65 @@ const items = [{title: "Kiba Inu", img: "https://kiba.app/static/media/download.
             </AutoColumn>
           </Wrapper>
         )}
-        {view === 'limit' && 
-        <Wrapper>
+        {view === 'limit' &&
+          <Wrapper>
             <LimitOrders />
-            </Wrapper>}
-      {!!isBinance && view === 'swap' && binanceSwapURL && <iframe  style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src={binanceSwapURL} />}
+          </Wrapper>}
+        {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 500, width: '100%' }} src={binanceSwapURL} />}
       </AppBody>
 
-      <AppBody style={{right:0 ,position:'relative',bottom:0,padding:'9px 14px', justifyContent:'end', background:'radial-gradient(rgb(234 54 39), rgba(129, 3, 3, 0.95))', border:'1px solid red', height:200, width: '100%'}}>
-        <StyledDiv style={{display:'flex', alignItems:'center', justifyContent:'center'}}>Featured Sponsors
-        <span>
-        <img style={{maxWidth: 100}}  src={'https://kiba.app/static/media/download.cfc6b4d1.png'} />
+      <AppBody style={{ right: 0, position: 'relative', bottom: 0, padding: '9px 14px', justifyContent: 'end', background: 'radial-gradient(rgb(234 54 39), rgba(129, 3, 3, 0.95))', border: '1px solid red', height: 200, width: '100%' }}>
+        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Featured Sponsors
+          <span>
+            <img style={{ maxWidth: 100 }} src={logo} />
           </span>
-      </StyledDiv>
-      <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => {return}}  onFinish={() => {return}} key={"MARQUEE"} velocity={10}>
+        </StyledDiv>
+        <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => { return }} onFinish={() => { return }} key={"MARQUEE"} velocity={10}>
           <></>
-          <FixedContainer style={{background:'rgb(0 0 1 / 50%)', width: '100%'}} gap="xs">
-      <ScrollableRow ref={increaseRef}>         
-         {[{title: "Kiba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Kiba Inu is a token infused with Kiba Swap"},{title: "Swally Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "KIBA INU", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "Jabba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Jabba Inu is a meme coin offering culture to its holders."}].map((sponsor) => (
-             <CardWrapper  key={sponsor.title} to='#'> 
-             <DarkGreyCard style={{background: '#fff', border: `1px solid red`, padding:3}}>
-                <Flex flexDirection="column" alignItems={'center'} justifyContent={'space-between'}>
-                <Flex  alignItems={'center'} flexDirection={'row'}>
-                <TYPE.mediumHeader>{sponsor.title}</TYPE.mediumHeader>
-                <img style={{maxWidth: 60}} src={sponsor.img} />
-                </Flex>
-                <TYPE.small alignItems={'center'} justifyContent={'center'}><ExternalLinkIcon href='#' /></TYPE.small>
-                </Flex>
-              </DarkGreyCard>
-              </CardWrapper>
-            ))}
-  </ScrollableRow>
+          <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)', width: '100%' }} gap="xs">
+            <ScrollableRow ref={increaseRef}>
+              {[
+                {
+                  title: "Kiba Inu",
+                  img: logo,
+                  text: "Kiba Inu is a token infused with Kiba Swap",
+                  link: '#'
+                },
+                {
+                  title: "Swally Inu",
+                  img: logo,
+                  text: "Learn more",
+                  link: '#'
+                },
+                {
+                  title: "KIBA INU",
+                  img: logo,
+                  text: "Learn more",
+                  link: '#'
+                },
+                {
+                  title: "Jabba Inu",
+                  img: logo,
+                  text: "Jabba Inu is a meme coin offering culture to its holders.",
+                  link: '#'
+                }].map((sponsor) => (
+                  <CardWrapper key={sponsor.title} to='#'>
+                    <DarkGreyCard style={{ background: '#fff', border: `1px solid red`, padding: 3 }}>
+                      <Flex flexDirection="column" alignItems={'center'} justifyContent={'space-between'}>
+                        <Flex alignItems={'center'} flexDirection={'row'}>
+                          <TYPE.mediumHeader>{sponsor.title}</TYPE.mediumHeader>
+                          <img style={{ maxWidth: 60 }} src={sponsor.img} />
+                        </Flex>
+                        <TYPE.small alignItems={'center'} justifyContent={'center'}><ExternalLinkIcon href={sponsor.link} /></TYPE.small>
+                      </Flex>
+                    </DarkGreyCard>
+                  </CardWrapper>
+                ))}
+            </ScrollableRow>
           </FixedContainer>
-          </Marquee>
+        </Marquee>
       </AppBody>
- 
+
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
