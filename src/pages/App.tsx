@@ -60,9 +60,8 @@ import { TYPE } from 'theme'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import Tooltip from 'components/Tooltip';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
-import TopTokenMovers from 'components/swap/TopMovers'
+import {TopTokenMovers} from 'components/swap/TopMovers'
 import { Transactions } from './Vote/TransactionsPage'
-import { TrumpVote } from './Vote/TrumpVote'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
@@ -542,7 +541,7 @@ export default function App() {
               <Route exact strict path="/transactions" component={Transactions} />
               <Route exact strict path="/gains" component={GainsPage} />
               <Route exact strict path="/honeypot-checker" component={HoneyPotDetector} />
-              <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
+              <Route exact strict path="/dashboard" component={VotePage} />
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/vote/:id" component={VotePageV2} />
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />

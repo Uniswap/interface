@@ -120,7 +120,7 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
 DataCard.displayName = 'DataCard';
 
 
-export default function TopTokenMovers() {
+ const  _TopTokenMovers = React.memo(({children}:any) => {
   const allTokenData = useTopPairData()
   const { chainId } = useWeb3React()
   const [allTokens, setAllTokens] = React.useState<any>([])
@@ -237,7 +237,6 @@ export default function TopTokenMovers() {
           }) => !!a?.symbol && a?.symbol !== 'KIBA' &&
           (a?.chainId === chainId || !chainId))], a=> a.symbol)
   }, [allTokens, chainId])
-  const increaseRef = useRef<HTMLDivElement>(null)
   return (
     <DarkGreyCard style={{ zIndex: 3, padding: "0px", background: 'transparent', position: 'fixed', top: 0, margin: 0 }}>
       {(allTokens.length > 0) &&
@@ -250,11 +249,11 @@ export default function TopTokenMovers() {
             velocity={11}
             key={'TOPMOVER'}
           >
-            <></>
+            <React.Fragment />
             <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)' }} gap="xs">
-              <ScrollableRow ref={increaseRef}>
+              <ScrollableRow>
                 {topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass')).map((entry, i) =>
-                  entry ? <DataCard index={i} key={'top-card-token-' + entry.id} tokenData={entry} /> : null
+                  entry ? <DataCard index={i} key={entry.symbol + entry.address} tokenData={entry} /> : null
                 )}
               </ScrollableRow>
             </FixedContainer>
@@ -263,4 +262,6 @@ export default function TopTokenMovers() {
       }
     </DarkGreyCard>
   )
-}
+}, _.isEqual)
+_TopTokenMovers.displayName = 'topMovers'
+export const TopTokenMovers = _TopTokenMovers

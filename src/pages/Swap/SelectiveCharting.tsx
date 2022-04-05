@@ -204,7 +204,7 @@ export const SelectiveChart = ({history}:{history:History}) => {
                                 {PanelMemo}
                             </div>
                             <div style={{ height: '500px' }}>
-                                {(selectedCurrency as any)?.address  && <TradingViewWidget symbol={(!chainId || chainId === 1) ? 'UNISWAP:' + (tokenData?.symbol === "WETH" ? "WETHUSDT" : `${tokenData?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"} autosize={true} />}
+                                {(selectedCurrency as any)?.address  && <TradingViewWidget symbol={(!chainId || chainId === 1) ? 'UNISWAP:' + (selectedCurrency?.symbol === "WETH" ? "WETHUSDT" : `${selectedCurrency?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"} autosize={true} />}
                             </div>
                             {(selectedCurrency || !!prebuilt?.symbol) && (
                                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>

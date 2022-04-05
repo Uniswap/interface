@@ -149,7 +149,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                     </thead>
                     <tbody>
                         {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
-                            <tr key={`_${item.timestamp * 1000}_${item.hash}_${index}`}>
+                            <tr key={`${item.timestamp}${item.hash}${index}`}>
                                 <td style={{ fontSize: 12 }}>{moment(item.timestamp * 1000).toDate().toLocaleString()}</td>
                                 <td style={{color: item.token0Symbol === `W${chainLabel}` ? 'red' : item.isTransfer ? 'yellow' : 'green' }}>
                                     { item.token0Symbol === `W${chainLabel}` ? 'Sell' : 'Buy'} {item.isTransfer && 'Transfer'}
