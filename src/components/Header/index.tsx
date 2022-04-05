@@ -17,6 +17,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
+import { CloseIcon } from 'theme/components'
 import { IconWrapper } from 'theme/components'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
@@ -353,6 +354,12 @@ export default function Header() {
       <HeaderControls>
 {showContracts && (
         <Card style={{}}>
+          {isMobile && <div style={{position:'relative', top: 60, left: 130, color: '#222', zIndex: 2}}>
+            <CloseIcon onClick={() => setShowContracts(false)} />
+          </div>}
+          {!isMobile && <div style={{position:'relative', top: 0, left: 0, color: '#222', zIndex: 2}}>
+            <CloseIcon onClick={() => setShowContracts(false)} />
+          </div>}
           <Row style={{ padding:5, borderRadius:6, background: darkmode ? '#223569' : '#fff', display:'flex', flexFlow:'column wrap', position: 'absolute', width: 'auto', left: isMobile ? '40%' : '69%', top: isMobile ? '100%' :'25%'}}>
           <div onClick={() => {
             setClip('0x99d36e97676a68313ffdc627fd6b56382a2a08b6')
@@ -396,6 +403,7 @@ export default function Header() {
             </AutoColumn>
           </Row>
           </div>
+          <TYPE.main style={{fontSize: 9, marginTop: 5}}><Trans>Click the clipboard to copy</Trans></TYPE.main>
           </Row>
           </Card>
 )}
