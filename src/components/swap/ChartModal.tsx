@@ -25,7 +25,7 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
     const isBinance = web3Data.chainId && web3Data.chainId === 56
     const hasAccess = useHasAccess()
     const accessDenied = !hasAccess
-    const transactionData = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
+    const transactionData = useTokenTransactions('0x005D1123878Fc55fbd56b54C73963b234a64af3c', 60000)
     const Frame = accessDenied ? null : (
         <iframe id={'tradingview_5aace'} src={`https://www.tradingview.com/widgetembed/?frameElementId=tradingview_5aace&symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`}
             style={{
@@ -34,10 +34,10 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
 
         />
     );
-    const tokenData = useTokenData(`0x4b2c54b80b77580dc02a0f6734d3bad733f50900`)
+    const tokenData = useTokenData(`0x005D1123878Fc55fbd56b54C73963b234a64af3c`)
 
     const [view, setView] = React.useState<'chart' | 'stats'>('chart')
-    const transactions = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
+    const transactions = useTokenTransactions('0x005D1123878Fc55fbd56b54C73963b234a64af3c', 60000)
     const formattedTransactions = React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out

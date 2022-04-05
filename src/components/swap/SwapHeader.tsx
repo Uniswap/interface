@@ -36,19 +36,15 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange }: { al
           <HeaderType  onClick={( ) => onViewChange('swap')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer', marginRight: '8px' }}>
             <Trans>Swap</Trans>
           </HeaderType>
-          {<HeaderType  onClick={( ) => onViewChange('flooz')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'flooz' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
-            <Trans>Flooz</Trans>
-          </HeaderType>}
+        
+          
           {<HeaderType  onClick={( ) => onViewChange('limit')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
             <Trans>Limit</Trans>
           </HeaderType>}
-          <HeaderType onClick={( ) => onViewChange('bridge')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer', marginLeft: '8px' }}>
-            <Trans>Bridge   
-               <Tooltip show={showBridgeTip} text={tipMessage}>
-              <Info style={{height:20,marginLeft:5}} onMouseEnter={() => setShowBridgeTip(true)} onMouseLeave={() => setShowBridgeTip(false)} />
-              </Tooltip>
-            </Trans>
-          </HeaderType>
+          
+               
+            
+          
     
         </RowFixed>
         {chainId === 1 && (
