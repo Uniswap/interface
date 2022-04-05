@@ -14,26 +14,31 @@ import { SupportedChainId } from 'constants/chains'
 import { Wrapper } from 'pages/Pool/styleds'
 import {Zap} from 'react-feather'
 import styled from 'styled-components/macro'
+import { useBlockNumber } from 'state/application/hooks';
 import { useCurrency } from 'hooks/Tokens'
 import { useCurrencyBalance } from 'state/wallet/hooks'
+import useInterval from 'hooks/useInterval';
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
 
 export const useTotalSwapVolume = () => {
   const relayer = useV2RouterContract()
+  const blockNumber = useBlockNumber()
     const [ethRelayed, setEthRelayed] = React.useState({formatted:'0', value: 0})
-
-    React.useEffect(() => {
+    const intervalFn = React.useCallback( async () => {
+      console.log('interval function->totalSwapVolume->', ethRelayed.formatted)
       if (relayer) {
-          relayer.totalEthRelayed().then((response:any) => {
-          if (!_.isEqual(ethRelayed.value, response)) {
-            const formattedEth = parseFloat(utils.utils.formatEther(response)).toFixed(6);
-            setEthRelayed({formatted: formattedEth, value: response})
-          }
-        })
-      }
-    }, [relayer?.totalEthRelayed])
+        relayer.totalEthRelayed().then((response:any) => {
+        if (!_.isEqual(ethRelayed.value, response)) {
+          const formattedEth = parseFloat(utils.utils.formatEther(response)).toFixed(6);
+          setEthRelayed({formatted: formattedEth, value: response})
+        }
+      })
+    }
+    }, [blockNumber, relayer, ethRelayed])
+    
+    useInterval(async () => await intervalFn(), 15000, true)
 
     const ethCurrency = useCurrency(WETH9[1].address)
 
@@ -76,7 +81,6 @@ export const BurntKiba = ({showDetails}:{showDetails?:boolean}) => {
     ), [isBinance])
     const kibaCurrency = useCurrency(kibaCoin.address)
     const currencyBalance =useCurrencyBalance('0x000000000000000000000000000000000000dead', kibaCurrency ?? undefined)
-    console.log(deadWalletKibaBalance?.toFixed(18))
     const burntValue = useUSDCValue(currencyBalance)
     const bscBurntValue = useKibaBalanceUSD('0x000000000000000000000000000000000000dead', chainId)
     const {
