@@ -1,6 +1,5 @@
+import { OPTIMISM_LIST } from './lists'
 import ms from 'ms.macro'
-
-import {  OPTIMISM_LIST } from './lists'
 
 /**
  * List of all the networks supported by the Uniswap Interface
@@ -134,7 +133,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://binance.org',
     explorer: 'https://bscscan.io',
     infoLink: 'https://binance.org',
-    label: 'Binance',
+    label: 'BSC',
     logoUrl: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
     addNetworkInfo: {
       nativeCurrency: {name: "Binance Token", symbol: "BNB", decimals: 18},
@@ -146,7 +145,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ethereum',
+    label: 'ETH',
     logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png',
     addNetworkInfo: {
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
