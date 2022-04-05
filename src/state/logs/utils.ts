@@ -45,6 +45,19 @@ export function filterToKey(filter: EventFilter): string {
     }`
 }
 
+const BscTokenFields = `
+  fragment TokenFields on Token {
+    id
+    name
+    symbol
+    derivedBNB
+    tradeVolume
+    tradeVolumeUSD
+    untrackedVolumeUSD
+    totalLiquidity
+    totalTransactions
+  } 
+`
 
 const TokenFields = `
   fragment TokenFields on Token {
@@ -61,7 +74,7 @@ const TokenFields = `
 `
 export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) => {
   const queryString = `
-    ${isBnb ? TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions') : TokenFields}
+    ${isBnb ? BscTokenFields : TokenFields}
     query tokens {
       tokens(${block && block !== null && typeof(block) === 'string' ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -79,16 +92,18 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
 
 export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
   const queryString = React.useMemo(() => `
-    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    ${BscTokenFields}
     query tokens {
       tokens(where: {id:"${tokenAddress}"}) {
         ...TokenFields
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        name
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        name
       }
     }
   `, [block,tokenAddress])
@@ -97,7 +112,7 @@ export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
 
 export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string) => {
   const queryString = React.useMemo(() => `
-    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    ${BscTokenFields}
     query tokens {
       tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -105,12 +120,10 @@ export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string)
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
     }
   `, [block,tokenAddress])
@@ -119,7 +132,7 @@ export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string)
 
 export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string) => {
   const queryString = React.useMemo(() => `
-    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
+    ${BscTokenFields}
     query tokens {
       tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
         ...TokenFields
@@ -127,12 +140,10 @@ export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string)
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
         name
-        symbol
       }
     }
   `, [block,tokenAddress])
