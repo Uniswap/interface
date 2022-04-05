@@ -329,11 +329,12 @@ export function useSwapCallback(
         
         const useDegenSlippage = true
         async function getCurrentGasPrices() {
-          const response = await axios.get('https://ethgasstation.info/json/ethgasAPI.json');
+          const fetchEndpoint = `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
+          const response = await axios.get(fetchEndpoint);
           const prices = {
-            low: response.data.safeLow/10,
-            medium: response.data.average/10,
-            high: response.data.fast/10
+            low: response.data.result.SafeGasPrice,
+            medium: response.data.result.ProposeGasPrice,
+            high: response.data.result.FastGasPrice
           };
           return prices;
         }
@@ -352,7 +353,9 @@ export function useSwapCallback(
         if (useDegenMode) {
           const gasPrices = await getCurrentGasPrices()
           console.log('degen mode fast gas', gasPrices)
-          gasEstimate.gasPrice = toHex(gasPrices.high* 1e9)
+          // allocate an additional +26 gwei to account for any changes that may have occurred
+          // since this is expert mode the idea is to get the swap off as fast as possible
+          gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
           console.log(gasEstimate)
         }
 

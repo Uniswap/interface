@@ -338,7 +338,7 @@ export default function Header() {
   const [gas, setGas] = React.useState<any>()
   const [showNotify, setShowNotify] = React.useState(!!localStorage.getItem('subscribed') && localStorage.getItem('subscribed') !== 'false');
   React.useEffect(() => {
-      if (showNotify && Math.trunc(gas?.fast / 10) <= 85) {
+      if (showNotify && Math.trunc(gas?.FastGasPrice) <= 85) {
         Swal.fire({
           toast: true,
           position: 'bottom-end',
@@ -346,17 +346,17 @@ export default function Header() {
           showConfirmButton: false,
           timerProgressBar: true,
           icon: 'success',
-          title: 'GWEI is currently at ' + Math.trunc(gas?.fast / 10)
+          title: 'GWEI is currently at ' + Math.trunc(gas?.FastGasPrice )
         })
       } 
   }, [gas, showNotify])
   const promise = () => {
     const error = (e:unknown) => console.error(e)
     console.log(`fetching gas prices`)
-    fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
+    fetch(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`, { method: 'GET' })
     .then((res) => res.json())
     .then((response) => {
-      setGas(response)
+      setGas(response.result)
     }).catch(error)
   } 
   const onNotify = React.useCallback(() => {
@@ -449,11 +449,11 @@ export default function Header() {
               />
               {gas && (
                 <span style={{ color: '#fff', marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>
-                  {gas?.fast / 10}
+                  {gas?.FastGasPrice}
                 </span>
               )}
             </span>
-            {gas && Math.trunc(gas?.fast / 10) > 85 ? 
+            {gas && Math.trunc(gas?.FastGasPrice) > 85 ? 
               <AlertOctagon fill={showNotify ? 'green' : 'red'} 
                             color={'#fff'} 
                             onClick={onNotify} 
