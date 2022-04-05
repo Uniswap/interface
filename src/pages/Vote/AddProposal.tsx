@@ -96,6 +96,7 @@ export const AddProposal = () => {
     const [isDisabled, setIsDisabled] = React.useState(false)
     React.useEffect(() => {
     if (account && trumpGoldBalance && +trumpGoldBalance?.toFixed(0) < 200) setIsDisabled(true)
+    if (!account) setIsDisabled(true)
     }, [account, trumpGoldBalance])
     
     const [added, setAdded] = React.useState<Proposal>({
@@ -112,7 +113,7 @@ export const AddProposal = () => {
     
     const onSave = () => {
         axios.put<Proposal>(`http://localhost:7777/proposal`, added).then((response) => {
-            window.location.href = window.location.href.replace("/create", "/details/" + response.data._id)
+           window.location.href = `https://exchange.babytrumptoken.com/#/proposal/details/${response.data._id}`
         })
     }
     return (
