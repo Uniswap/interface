@@ -795,11 +795,50 @@ query trackerdata {
     ...TokenFields
   }`
 
-
+const CULTURE_TOKENS = gql`
+query culturetokens {
+  pairs(first: 2, orderBy: volumeUSD, orderDirection:desc,  where: {token0_in:[
+    "0x06fcbf38e823efc1e609b9491aab546334c6ee69",
+    "0x55509c29853405d819ba611c393ce920bcca2c0b",
+  ]}) {
+    id
+    token0 {
+      id
+      totalSupply
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+      symbol
+      name
+    }
+        token1 {
+      id
+      totalSupply
+      totalLiquidity
+      tradeVolume
+      tradeVolumeUSD
+          symbol
+          name
+    }
+    volumeToken0
+    volumeToken1
+    reserveUSD
+    reserveETH
+    totalSupply
+    token0Price
+    token1Price
+    txCount
+    liquidityProviderCount
+    createdAtBlockNumber
+    untrackedVolumeUSD
+    volumeUSD
+  }
+}
+`
 
 const TOP_TOKENS = gql`
 query trackerdata {
-  pairs(first: 12, orderBy: volumeUSD, orderDirection:desc,  where: {id_not_in:[
+  pairs(first: 10, orderBy: volumeUSD, orderDirection:desc,  where: {id_not_in:[
     "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11", 
     "0x23fe4ee3bd9bfd1152993a7954298bb4d426698f", 
     "0xe5ffe183ae47f1a0e4194618d34c5b05b98953a8", 
@@ -847,7 +886,7 @@ query trackerdata {
 const KIBA_TOKEN = gql`
 query trackerdata {
   
-  pairs(first:2, where:{ token0_in:["0x005D1123878Fc55fbd56b54C73963b234a64af3c", "0x612e1726435fe38dd49a0b35b4065b56f49c8f11"]}) {
+  pairs(first:2, where:{ token0_in:["0x005d1123878fc55fbd56b54c73963b234a64af3c", "0x612e1726435fe38dd49a0b35b4065b56f49c8f11"]}) {
     id
     token0 {
       id
@@ -934,6 +973,21 @@ export const useKibaPairData = function () {
       fetchPolicy: 'cache-first'
     })
   return { data: kiba, loading, error }
+}
+export const useCulturePairData = function () {
+  const { chainId } = useWeb3React()
+  const tokenQuery = React.useMemo(() => {
+    if (chainId && chainId === 1) return CULTURE_TOKENS
+    if (chainId === 56) return TOP_TOKENS_BSC
+    return CULTURE_TOKENS
+  }, [chainId])
+  
+  const { data, loading, error } = useQuery(tokenQuery,
+    {
+      pollInterval: 60000,
+      fetchPolicy: 'network-only'
+    })
+  return { data, loading, error }
 }
 export const useTopPairData = function () {
   const { chainId } = useWeb3React()
@@ -1113,7 +1167,7 @@ export const useTotalKibaGains = (account ?: string | null) => {
   const userTransactions = useUserTransactions(account)
   const kibaBalance = useKiba(account)
   const currencySold = React.useMemo(() => {
-    if (chainId === 1) return { address: '0x005D1123878Fc55fbd56b54C73963b234a64af3c'.toLowerCase(), symbol: 'KIBA' }
+    if (chainId === 1) return { address: '0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), symbol: 'KIBA' }
     if (chainId === 56) return { address: '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase(), symbol: 'KIBA' }
 
     return { address: '', symbol: '' }
@@ -1134,7 +1188,7 @@ export const useTotalKibaGains = (account ?: string | null) => {
   const transferAPIurl = React.useMemo(() => {
     if (!account || !chainId) return '';
     if (chainId === 56) return `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5&address=${account}&page=1&offset=10000&startblock=0&endblock=999999999&sort=asc&apikey=G5GE5FR37HCTS1UZ957PRB9DYUBGV4SU75`
-    if (chainId === 1) return `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0x005D1123878Fc55fbd56b54C73963b234a64af3c&address=${account}&page=1&offest=10000&startblock=0&endblock=999999999&sort=asc&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
+    if (chainId === 1) return `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0x005d1123878fc55fbd56b54c73963b234a64af3c&address=${account}&page=1&offest=10000&startblock=0&endblock=999999999&sort=asc&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
     return ''
   }, [chainId, account])
 

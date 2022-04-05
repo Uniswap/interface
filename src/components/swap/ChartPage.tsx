@@ -119,7 +119,7 @@ export const useHolderCount = (chainId: any) => {
     function intervalCallback() {
         if (!chainId) return;
         if (chainId === 1)
-            fetch('https://api.ethplorer.io/getTokenInfo/0x005D1123878Fc55fbd56b54C73963b234a64af3c?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
+            fetch('https://api.ethplorer.io/getTokenInfo/0x005d1123878fc55fbd56b54c73963b234a64af3c?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
                 .then(res => res.json())
                 .then(setHoldersCount);
         if (chainId === 56) fetchBscHolders().then((response: any) => {
@@ -383,7 +383,7 @@ export const Chart = () => {
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const [ethPrice, ethPriceOld] = useEthPrice()
-    const transactionData = useTokenTransactions('0x005D1123878Fc55fbd56b54C73963b234a64af3c'.toLowerCase(), 60000)
+    const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
     const binanceTransactionData = useBscTokenTransactions('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase(), 60000)
     const prices = useBnbPrices()
@@ -396,7 +396,7 @@ export const Chart = () => {
             `UNISWAP:KIBAWETH`
     }, [chainId])
     const tokenDataAddress = React.useMemo(() => chainId === 1 ?
-        '0x005D1123878Fc55fbd56b54C73963b234a64af3c'.toLowerCase()
+        '0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase()
         : chainId === 56 ?
             '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase() : '', [chainId])
     const [tokenDataPriceParam, tokenDataPriceParamTwo] = React.useMemo(() => {
