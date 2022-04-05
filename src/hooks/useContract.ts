@@ -22,8 +22,8 @@ import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import { abi as IKibaSwapRelayerABI } from '../IKibaSwapRelayerABI.json'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
@@ -101,7 +101,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 export function useV2RouterContract(): Contract | null {
   const {chainId} = useWeb3React()
   const routerAddress = chainId ? V2_ROUTER_ADDRESS[chainId] : V2_ROUTER_ADDRESS[1];
-  return useContract(routerAddress.toLowerCase(), IUniswapV2Router02ABI, true)
+  return useContract(routerAddress.toLowerCase(), IKibaSwapRelayerABI, true)
 }
 
 export function useMulticall2Contract() {
