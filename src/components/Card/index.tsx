@@ -4,7 +4,7 @@ import { Box } from 'rebass/styled-components'
 const Card = styled(Box)<{ width?: string; padding?: string; border?: string; $borderRadius?: string }>`
   width: ${({ width }) => width ?? '100%'};
   padding: ${({ padding }) => padding ?? '1rem'};
-  border-radius: ${({ $borderRadius }) => $borderRadius ?? '16px'};
+  border-radius: ${({ $borderRadius }) => $borderRadius ?? '10px'};
   border: ${({ border }) => border};
 `
 export default Card
@@ -23,7 +23,7 @@ export const GreyCard = styled(Card)`
 `
 
 export const DarkGreyCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg0};
 `
 
 export const DarkCard = styled(Card)`

@@ -45,17 +45,17 @@ function colors(darkMode: boolean): Colors {
     text1: darkMode ? '#fff' : '#d9dc51',
     text2: darkMode ? '#fff' : '#565A69',
     text3: darkMode ? '#fff' : '#6E727D',
-    text4: darkMode ? '#fff ' : '#C3C5CB',
+    text4: darkMode ? '#fff' : '#F76C1D',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? 'radial-gradient(rgb(239 146 56),rgba(129,3,3,.95))' : '#FFF',
-    bg1: darkMode ? '#222' : '#F7F8FA',
-    bg2: darkMode ? 'rgba(129,3,3,.95)' : '#EDEEF2',
+    bg0: darkMode ? '#252632' : '#252632',
+    bg1: darkMode ? '#18181E' : '#18181E',
+    bg2: darkMode ? '#F76C1D' : '#F76C1D',
     bg3: darkMode ? '#40444F' : '#CED0D9',
-    bg4: darkMode ? '#565A69' : '#888D9B',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
-    bg6: darkMode ? '#1A2028' : '#6C7284',
+    bg4: darkMode ? '#C8C8CB' : '#C8C8CB',
+    bg5: darkMode ? '#4F4F62' : '#4F4F62',
+    bg6: darkMode ? '#30313D' : '#30313D',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
@@ -69,7 +69,7 @@ function colors(darkMode: boolean): Colors {
     primary5: darkMode ? '#FFF' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? 'green' : '#d51909',
+    primaryText1: darkMode ? '#252632' : '#252632', 
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#00203d',
@@ -84,7 +84,7 @@ function colors(darkMode: boolean): Colors {
     yellow1: '#E3A507',
     yellow2: '#FF8F00',
     yellow3: '#F3B71E',
-    blue1: darkMode ? '#FF8CC3' : '#0068FC',
+    blue1: darkMode ? '#FDB414' : '#0068FC',
     blue2: darkMode ? '#5199FF' : '#0068FC',
     error: darkMode ? '#FD4040' : '#DF1F38',
     success: darkMode ? '#27AE60' : '#007D35',
