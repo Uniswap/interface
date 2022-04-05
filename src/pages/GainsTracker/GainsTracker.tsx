@@ -232,7 +232,7 @@ export const GainsTracker = () => {
               value={gains()}
               currency={currency}
               onUserInput={handleTypeInput}
-
+            showOnlyTrumpCoins={false}
               onMax={undefined}
               fiatValue={undefined}
               onCurrencySelect={handleInputSelect}
