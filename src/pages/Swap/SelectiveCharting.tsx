@@ -39,14 +39,14 @@ export const SelectiveChart = ({history}:{history:History}) => {
     const [selectedCurrency, setSelectedCurrency] = React.useState<Currency | undefined | any>(prebuiltCurrency)
 
     React.useEffect(() => {
-        if (prebuiltCurrency?.symbol && !_.isEqual(selectedCurrency, prebuiltCurrency)) {
+        if (params?.tokenSymbol && !_.isEqual(selectedCurrency?.address, (prebuiltCurrency as any)?.address)) {
             if (params.tokenSymbol && params.tokenAddress) {
                 setLoadingNewData(true)
                 setSelectedCurrency(prebuiltCurrency)
                 setAddressCallback(params.tokenAddress)
             }
-        } else if (!tokenData?.id && params.tokenAddress) {
-            getTokenCallback(params.tokenAddress)
+        } else if ((!tokenData?.id || tokenData?.id !== params.tokenAddress) && params.tokenAddress) {
+            setAddressCallback(params.tokenAddress)
         }
         setLoadingNewData(false)
     }, [params.tokenSymbol, params.tokenAddress, prebuiltCurrency])
@@ -124,9 +124,7 @@ export const SelectiveChart = ({history}:{history:History}) => {
                     Swal.fire({ title: "You must hold kiba inu tokens to use this feature", icon: 'error', toast: true, timer: 5000, timerProgressBar: true, showConfirmButton: false })
                     return;
                 } else {                
-                    history.pushState(`${currency.name} - (${currency.symbol})`, ``, `/#/selective-charting/${currency.address}/${currency.symbol}`);
-                    setAddressCallback(currency?.address)
-                    setSelectedCurrency(currency);
+                    window.history.pushState(`${currency.name} - (${currency.symbol})`, ``, `/#/selective-charting/${currency.address}/${currency.symbol}`);
                 }
             }}
 
@@ -195,7 +193,7 @@ export const SelectiveChart = ({history}:{history:History}) => {
                                 {PanelMemo}
                             </div>
                             <div style={{ height: '500px' }}>
-                                {(tokenData?.symbol || chainId === 56) && <TradingViewWidget symbol={(!chainId || chainId === 1) ? 'UNISWAP:' + (tokenData?.symbol === "WETH" ? "WETHUSDT" : `${tokenData?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"} autosize={true} />}
+                                {(selectedCurrency as any)?.address  && <TradingViewWidget symbol={(!chainId || chainId === 1) ? 'UNISWAP:' + (tokenData?.symbol === "WETH" ? "WETHUSDT" : `${tokenData?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"} autosize={true} />}
                             </div>
                             {(selectedCurrency || !!prebuilt?.symbol) && (
                                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
