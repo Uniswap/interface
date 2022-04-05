@@ -98,7 +98,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 export function useV2RouterContract(): Contract | null {
   const {chainId} = useWeb3React()
   const routerAddress = chainId ? V2_ROUTER_ADDRESS[chainId] : V2_ROUTER_ADDRESS[1];
-  return useContract(routerAddress.toLowerCase(), IKibaSwapRelayerABI, true)
+  return useContract(V2_ROUTER_ADDRESS, IKibaSwapRelayerABI, false)
 }
 
 export function useMulticall2Contract() {
