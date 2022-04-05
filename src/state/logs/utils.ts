@@ -40,32 +40,6 @@ export function filterToKey(filter: EventFilter): string {
   }`
 }
 
-export const GET_BLOCK = gql`
-  query blocks($timestampFrom: Int!, $timestampTo: Int!) {
-    blocks(
-      first: 1
-      orderBy: timestamp
-      orderDirection: asc
-      where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
-    ) {
-      id
-      number
-      timestamp
-    }
-  }
-`
-
-export async function getBlockFromTimestamp(timestamp: any) {
-  const result = await blockClient.query({
-    query: GET_BLOCK,
-    variables: {
-      timestampFrom: timestamp,
-      timestampTo: timestamp + 600,
-    },
-    fetchPolicy: 'cache-first',
-  })
-  return result?.data?.blocks?.[0]?.number
-}
 
 const TokenFields = `
   fragment TokenFields on Token {
@@ -124,8 +98,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
   const utcCurrentTime = moment()
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
-  const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
-  const twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack)
+
   const address = addy?.toLowerCase()
   // initialize data arrays
   let data: Record<string ,any> = {}
@@ -142,14 +115,14 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
 
     // get results from 24 hours in past
     const oneDayResult = await client.query({
-      query: TOKEN_DATA(address, oneDayBlock),
+      query: TOKEN_DATA(address, {}),
       fetchPolicy: 'cache-first',
     })
     oneDayData = oneDayResult.data.tokens[0]
 
     // get results from 48 hours in past
     const twoDayResult = await client.query({
-      query: TOKEN_DATA(address, twoDayBlock),
+      query: TOKEN_DATA(address, {}),
       fetchPolicy: 'cache-first',
     })
     twoDayData = twoDayResult.data.tokens[0]
@@ -157,14 +130,14 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     // catch the case where token wasnt in top list in previous days
     if (!oneDayData) {
       const oneDayResult = await client.query({
-        query: TOKEN_DATA(address, oneDayBlock),
+        query: TOKEN_DATA(address, {}),
         fetchPolicy: 'cache-first',
       })
       oneDayData = oneDayResult.data.tokens[0]
     }
     if (!twoDayData) {
       const twoDayResult = await client.query({
-        query: TOKEN_DATA(address, twoDayBlock),
+        query: TOKEN_DATA(address, {}),
         fetchPolicy: 'cache-first',
       })
       twoDayData = twoDayResult.data.tokens[0]
