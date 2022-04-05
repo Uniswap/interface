@@ -36,6 +36,7 @@ import WETH_ABI from 'abis/weth.json'
 import { getContract } from 'utils'
 import { useActiveWeb3React } from './web3'
 import { useMemo } from 'react'
+import { useWeb3React } from '@web3-react/core'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
@@ -98,7 +99,9 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useV2RouterContract(): Contract | null {
-  return useContract('0x25553828f22bdd19a20e4f12f052903cb474a335'.toLowerCase(), IUniswapV2Router02ABI, true)
+  const {chainId} = useWeb3React()
+  const routerAddress = chainId ? V2_ROUTER_ADDRESS[chainId] : V2_ROUTER_ADDRESS[1];
+  return useContract(routerAddress.toLowerCase(), IUniswapV2Router02ABI, true)
 }
 
 export function useMulticall2Contract() {
