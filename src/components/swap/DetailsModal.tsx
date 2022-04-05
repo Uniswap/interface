@@ -10,6 +10,8 @@ import { fetchBscTokenData, useBnbPrices } from 'state/logs/bscUtils';
 import { LoadingRows } from 'pages/Pool/styleds';
 import moment from 'moment';
 import { ExternalLink, ExternalLinkIcon } from 'theme';
+import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
+import { useWeb3React } from '@web3-react/core';
 const StyledHeader = styled.div<{ size?: 'lg' }>`
     font-family: "Bangers", cursive;
     font-size:${(props) => props?.size ? '28px' : '20px'};
@@ -28,6 +30,7 @@ export const DetailsModal = ({
     isOpen: boolean,
     onDismiss: () => void
 }) => {
+    const {chainId} = useWeb3React()
     const owner = useContractOwner(address, network.toLowerCase() as 'bsc' | 'eth' | undefined)
     const isRenounced = React.useMemo(() => owner === '0x0000000000000000000000000000000000000000', [owner])
     const [tokenData, setTokenData] = React.useState<any>()
@@ -77,9 +80,10 @@ export const DetailsModal = ({
                          </div>
                             <X onClick={onDismiss} />
                         </div>
-
+                        
+                        <TopTokenHolders address={address} chainId={chainId} />
                         <div style={{ maxWidth: 600, padding: '9px 14px', display: 'flex', flexFlow: 'column wrap' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: 150, justifyContent: 'center' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto',justifyContent: 'center' }}>
                                 <ul style={{ listStyle: 'none', padding: 3 }}>
                                     {owner && owner !== '?' && <li style={{marginBottom:10}}>
                                         <StyledHeader>Contract Owner &nbsp; <small>

@@ -19,10 +19,15 @@ const StyledSwapHeader = styled.div`
 
 const HeaderType = styled(TYPE.black)`
 
-font-family:'Bangers', cursive !important;`
+font-family:'Bangers', cursive !important;
+&:hover {
+  transition: all ease 0.2s;
+  color:pink;
+}`
 
 export default function SwapHeader({ allowedSlippage, view, onViewChange }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'flooz', onViewChange: (view: "bridge"  | "swap" | 'limit' | 'flooz') => void }) {
-  const [showBridgeTip, setShowBridgeTip] = React.useState(false)
+   const [showBridgeTip, setShowBridgeTip] = React.useState(false)
+   const {chainId} = useWeb3React()
   const tipMessage = `Contract interaction fees will still occur when using the bridge, just like any other transactions (buys, transfers, sells). Redistribution fees will still occur.`
   return (
     <StyledSwapHeader>
@@ -46,9 +51,11 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange }: { al
           </HeaderType>
     
         </RowFixed>
+        {chainId === 1 && (
         <RowFixed>
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
+        )}
       </RowBetween>
   </StyledSwapHeader>
   )
