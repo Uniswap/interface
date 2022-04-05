@@ -137,9 +137,10 @@ const [theme, setTheme] = React.useState('./squeeze2.mp4')
       localStorage.setItem("hasOverride", "1");
     }  
   }, [value])
+  const [style, setStyle ] = useState({background: '#333'})
   const Video = React.useMemo(() => {
     return (
-    <VideoWrapper key={themeSource} loop autoPlay muted>
+    <VideoWrapper style={style} onLoad={e => setStyle({background: ''})} key={themeSource} loop autoPlay muted>
       <source src={themeSource} type={'video/mp4'}></source>
     </VideoWrapper>
   )
