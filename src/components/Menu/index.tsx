@@ -120,6 +120,21 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   `};
 `
 
+export const InternalMenuItemTwo = styled(Link)`
+display: flex;
+flex: 1;
+flex-direction: row;
+align-items: center;
+padding: 0.5rem 0.5rem;
+justify-content: space-between;
+color: ${({ theme }) => theme.text2};
+:hover {
+  color: ${({ theme }) => theme.text1};
+  cursor: pointer;
+  text-decoration: none;
+}
+`
+
 const MenuItem = styled(ExternalLink)`
   display: flex;
   flex: 1;
@@ -262,12 +277,12 @@ const babyTrumpBalance = useTrumpBalance(account);
                     </div> 
                     <BarChart2  opacity={0.6} size={16} />
                  </MenuItem>
-                 <MenuItem href="/themed-background">
+                 <InternalMenuItemTwo to="/themed-background">
                     <div>
                       <Trans>Edit background</Trans>
                     </div>
                     <Image opacity={0.6} size={16} />
-                  </MenuItem>
+                  </InternalMenuItemTwo>
                   <MenuItem href="https://babytrumptoken.com/">
                     <div>
                       <Trans>About</Trans>
