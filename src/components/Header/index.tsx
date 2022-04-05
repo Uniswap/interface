@@ -33,7 +33,7 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
-import logo from '../../assets/images/download.png'
+import logo from '../../assets/svg/logo.svg'
 import Swal from 'sweetalert2'
 import { ChartModal } from 'components/swap/ChartModal'
 import { useEthPrice } from 'state/logs/utils'
@@ -96,7 +96,7 @@ const HeaderElement = styled.div`
 
 const HeaderLinks = styled(Row)`
   justify-self: center;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
   padding: 4px;
   border-radius: 16px;
@@ -187,7 +187,7 @@ const Title = styled.a`
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
   :hover {
-    transform: rotate(-5deg);
+    transform: scale(1.1);
   }
 `
 
@@ -391,7 +391,7 @@ export default function Header() {
         <Title style={{textDecoration:"none"}} href="/">
           <UniIcon>
             <img
-              width={isMobile ? '100px' : '100px'}
+              width={isMobile ? '50px' : '70px'}
               src={logo}
               alt="logo"
             />
