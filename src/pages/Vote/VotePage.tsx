@@ -45,6 +45,7 @@ const PageWrapper = styled(AutoColumn)`
 const ProposalInfo = styled(AutoColumn)`
   background: ${({ theme }) => theme.bg0};
   border-radius: 30px;
+  overflow:hidden;
   padding: 30px;
   position: relative;
   width: 100%;
