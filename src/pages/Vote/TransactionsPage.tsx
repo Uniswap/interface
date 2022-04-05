@@ -7,6 +7,8 @@ import React from 'react';
 import { AlertCircle, FilePlus } from 'react-feather';
 import { useUserTransactions } from 'state/logs/utils';
 import Web3 from 'web3'
+import {saveAs} from 'file-saver';
+
 export const Transactions = ({transactions, loading, error}:{transactions?: any[], loading?:boolean, error?:any}) => {
     const { account, chainId, library } = useWeb3React()
     const chainLabel = React.useMemo(() => chainId && chainId === 1 ? 'ETH' : chainId && chainId === 56 ? 'BNB' : '', [chainId])
@@ -52,22 +54,8 @@ export const Transactions = ({transactions, loading, error}:{transactions?: any[
     if (!formattedTransactions?.length || !formattedTransactions) return;
     // The download function takes a CSV string, the filename and mimeType as parameters
     // Scroll/look down at the bottom of this snippet to see how download is called
-    const downloadCsvFileToClient = function (content: any, fileName: any, mimeType: any) {
-        const a = document.createElement('a');
-        mimeType = mimeType || 'application/octet-stream';
+        const downloadCsvFileToClient =  (content: any, fileName: any, mimeType: any) => saveAs(new Blob([content]), fileName)
 
-        if (URL && 'download' in a) { //html5 A[download]
-            a.href = URL.createObjectURL(new Blob([content], {
-                type: mimeType
-            }));
-            a.setAttribute('download', fileName);
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        } else {
-            window.open('data:application/octet-stream,' + encodeURIComponent(content), '_blank'); // only this mime type is supported
-        }
-    }
         const formattedData = (formattedTransactions ?? [])?.map((tx: any) => {
             const type = tx.token0Symbol === `W${chainLabel}` ? 'Sell' : 'Buy' 
             const date = new Date(+tx.timestamp * 1000).toLocaleString()
@@ -115,7 +103,7 @@ export const Transactions = ({transactions, loading, error}:{transactions?: any[
         }
         downloadCsvFileToClient(
             csvString, 
-            `${account}_export_${moment().unix()}.csv`, 
+        `${account}_export_${moment().unix()}.csv`, 
             'text/csv;encoding:utf-8'
         )
     }, [formattedTransactions])
