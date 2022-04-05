@@ -5,12 +5,12 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle, ChevronDown, ToggleLeft } from 'react-feather'
-import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const BaseWrapper = css`
   position: relative;

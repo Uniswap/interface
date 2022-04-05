@@ -10,6 +10,7 @@ import styled from 'styled-components/macro';
 import { useHasAccess } from 'pages/Account/AccountPage';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useWeb3React } from '@web3-react/core';
+
 const FrameWrapper = styled.div`
     padding:9px 14px;
     height:540px;
