@@ -283,7 +283,7 @@ const babyTrumpBalance = useTrumpBalance(account);
                     </div>
                     <Image opacity={0.6} size={16} />
                   </InternalMenuItemTwo>
-                  <MenuItem href="https://twitter.com/SqueezeToken">
+                  <MenuItem href="https://squeezetoken.finance">
                     <div>
                       <Trans>About</Trans>
                     </div>
