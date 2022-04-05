@@ -38,7 +38,7 @@ export const useTotalSwapVolume = () => {
     }
     }, [blockNumber, relayer, ethRelayed])
     
-    useInterval(async () => await intervalFn(), 15000, true)
+    useInterval(async () => await intervalFn(), 20000, true)
 
     const ethCurrency = useCurrency(WETH9[1].address)
 
