@@ -94,7 +94,7 @@ import { stackOrderInsideOut } from "d3";
 import { isMobile } from "react-device-detect";
 import { useTrumpGoldBalance } from "./AddProposal";
 import { walletconnect } from "connectors";
-
+import squeezeLogo from '../../assets/images/squeeze.png'
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -237,10 +237,10 @@ export default function VotePage({
 
   const trumpCoin = new Token(
     1,
-    "0x99d36e97676A68313ffDc627fd6b56382a2a08B6",
+    "0xabd4dc8fde9848cbc4ff2c0ee81d4a49f4803da4",
     9,
-    "BabyTrump",
-    "BabyTrump Token"
+    "Squeeze",
+    "Squeeze Token"
   );
   const stimulusCoin = new Token(
     1,
@@ -278,7 +278,6 @@ export default function VotePage({
 
   const stopTrackingGains = () => {
     localStorage.setItem("trumpBalance", "0");
-    localStorage.setItem("stimulusBalance", "0");
     localStorage.setItem("trackingSince", "");
     setTrumpGainsUSD("");
     setStimGainsUSD("");
@@ -288,7 +287,6 @@ export default function VotePage({
   const trackGains = () => {
     if (isTrackingGains) {
       localStorage.setItem("trumpBalance", "0");
-      localStorage.setItem("stimulusBalance", "0");
       localStorage.setItem("trackingSince", "");
       setIsTrackingGains(false);
     } else if (!!trumpBalance || !!stimulusBalance) {
@@ -518,7 +516,7 @@ export default function VotePage({
                 <small>
                   <Info />
                   <Trans>
-                    {`NOTE: Trump GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
+                    {`NOTE: Squeeze GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
                      In the future, we plan to build the ability to filter out transactions that are sells / transfers.`}
                   </Trans>
                   &nbsp;
@@ -549,7 +547,7 @@ export default function VotePage({
                   )}
                   <img
                     src={
-                      "https://babytrumptoken.com/images/Trump_Open_Eyes.png"
+                     squeezeLogo
                     }
                     width="100px"
                   />
@@ -557,9 +555,9 @@ export default function VotePage({
                     <TYPE.black className="d-flex">
                       <Trans>
                         {trumpBalance !== undefined
-                          ? `Trump Balance ${trumpBalance?.toFixed(
+                          ? `Squeeze Balance ${trumpBalance?.toFixed(
                               2
-                            )} (${trumpValue?.toFixed(2)} USD)`
+                            )} (${(+trumpBalanceUSD)?.toFixed(2)} USD)`
                           : null}
                       </Trans>
                     </TYPE.black>
@@ -571,7 +569,7 @@ export default function VotePage({
                             <React.Fragment>
                               <ArrowUp />
                               &nbsp;
-                              <Trans>{`TRUMPGAINS`} </Trans> &nbsp;
+                              <Trans>{`SqueezeGains`} </Trans> &nbsp;
                               {(
                                 +trumpBalance?.toFixed(2) - +storedTrumpBalance
                               ).toFixed(2)}
@@ -599,191 +597,14 @@ export default function VotePage({
                 </div>
               </GreyCard>
             </AutoColumn>
-            <br />
-            <AutoColumn gap="2em">
-              <GreyCard>
-                <div style={{ display: "flex", flexFlow: "row wrap" }}>
-                  {!account && (
-                    <Trans>{`Connect your wallet to start tracking gains`}</Trans>
-                  )}
-                  {!account && <h1>YOUR GAINS</h1>}
-                  <div>
-                    <img
-                      src={
-                        "https://babytrumptoken.com/images/Untitled_Artwork-9.png"
-                      }
-                      width="100px"
-                    />
-                  </div>
-                  <CardSection style={{ marginTop: 40, alignItems: "center" }}>
-                    <TYPE.black>
-                      <Trans>
-                        {" "}
-                        {formattedStim() !== undefined &&
-                          `Stimulus Check Balance ${formattedStim()} (${
-                            (stimulusBalanceUSD !== null ? +stimulusBalanceUSD :  0)?.toFixed(2) || ""
-                          } USD)`}
-                      </Trans>
-                    </TYPE.black>
-                    {isTrackingGains === true && (
-                      <TYPE.main>
-                        {storedSimulusBalance !== undefined &&
-                          stimulusBalance !== undefined &&
-                          account !== undefined && (
-                            <React.Fragment>
-                              <ArrowUp /> &nbsp;
-                              <Trans>{`STIMULUSGAINS`}</Trans>
-                              &nbsp;
-                              {`${(
-                                +stimulusBalance.toFixed(2) -
-                                +storedSimulusBalance
-                              ).toFixed(2)}`}
-                              <span style={{ marginLeft: 50 }}>
-                                <Tooltip text={tiptext} show={showTool}>
-                                  <Info
-                                    onMouseEnter={() => setShowTool(true)}
-                                    onMouseLeave={() => setShowTool(false)}
-                                  />
-                                </Tooltip>
-                              </span>
-                            </React.Fragment>
-                          )}
-                      </TYPE.main>
-                    )}
-                    {isTrackingGains &&
-                      stimulusBalance !== undefined &&
-                      trumpBalance !== undefined &&
-                      +stimulusBalance.toFixed(2) > 0 &&
-                      +trumpBalance.toFixed(2) > 0 && (
-                        <Row
-                          style={{
-                            display: "flex",
-                            flexFlow: isMobile ? "column wrap" : "row wrap",
-                          }}
-                        >
-                          <Column>
-                            <Badge>
-                              {stimGainsUSD && rawStimulusCurrency && (
-                                <TYPE.black>
-                                  <small>Total GAINS</small>&nbsp;
-                                  {+rawStimulusCurrency > 0
-                                    ? stimGainsUSD
-                                    : "-"}
-                                  <small>&nbsp;USD</small>
-                                </TYPE.black>
-                              )}
-                            </Badge>
-                          </Column>
-                          <AutoColumn
-                            style={{
-                              display: isMobile ? "block" : "flex",
-                              paddingLeft: isMobile ? 0 : 10.2,
-                            }}
-                          >
-                            <Badge>
-                              {" "}
-                              <TYPE.blue>
-                                <Trans>2X REDISTRIBUTION</Trans>
-                              </TYPE.blue>
-                            </Badge>
-                          </AutoColumn>
-                        </Row>
-                      )}
-                  </CardSection>
-                </div>
-              </GreyCard>
-            </AutoColumn>
-            <br />
-
-            <AutoColumn style={{ marginBottom: 15 }} gap="2em">
-              <GreyCard>
-                <div style={{ display: "flex", flexFlow: "row wrap" }}>
-                  {!account && (
-                    <Trans>{`Connect your wallet to start tracking gains`}</Trans>
-                  )}
-                  {!account && <h1>YOUR GAINS</h1>}
-                  <div>
-                    <img
-                      src={
-                        "https://babytrumptoken.com/images/Trump_Gold_Coin_Gecko.png"
-                      }
-                      width="100px"
-                    />
-                  </div>
-                  <CardSection style={{ marginTop: 40, alignItems: "center" }}>
-                    <TYPE.black>
-                      <Trans>
-                        {" "}
-                        {goldBalance !== undefined &&
-                          `Trump Gold Balance ${+goldBalance.toFixed(2)}`} {`(${goldBalanceUSD|| '0.00'} USD)`}
-                      </Trans>
-                      {isTrackingGains === true && (
-                      <TYPE.main style={{display:'inline'}}>
-                        {goldBalance !== undefined &&
-                          account !== undefined && (
-                            <React.Fragment>
-                              <span style={{ marginLeft: 50 }}>
-                                <Tooltip
-                                  text={
-                                    "Trump Gold is a governance token that allows holders to create propositions community members can vote on"
-                                  }
-                                  show={showTGoldTool}
-                                >
-                                  <Info
-                                    onMouseEnter={() => setShowTGoldTool(true)}
-                                    onMouseLeave={() => setShowTGoldTool(false)}
-                                  />
-                                </Tooltip>
-                              </span>
-                            </React.Fragment>
-                          )}
-                      </TYPE.main>
-                    )}
-                    </TYPE.black>
-                   
-                    {isTrackingGains &&
-                      goldBalance !== undefined &&
-                      +goldBalance.toFixed(2) > 200 &&
-                       (
-                        <Row>
-                          <Column>
-                            <Badge>
-                              <TYPE.black>
-                                <small>
-                                  <Trans>You own enough gold to <Link to="/proposal/create"> create a proposal</Link></Trans>
-                                </small>
-                                <small>
-                                </small>
-                              </TYPE.black>
-                            </Badge>
-                          </Column>
-                        </Row>
-                      )}
-                  </CardSection>
-                </div>
-              </GreyCard>
-            </AutoColumn>
+         
             <AutoColumn gap="50px">
-              <ButtonPrimary onClick={trackGains}>
+              <ButtonPrimary style={{marginTop:15}} onClick={trackGains}>
                 {isTrackingGains && <Trans>Stop tracking Gains</Trans>}
                 {!isTrackingGains && <Trans>Start Tracking Gains</Trans>}
               </ButtonPrimary>
             </AutoColumn>
-            <CardSection>
-              <TYPE.blue>
-                <div className="d-flex align-items-center">
-                  <AlertCircle /> <Trans>WANTING MORE GAINS?</Trans> <br />
-                </div>
-                <small>
-                  <Trans>
-                    Holding stimulus check while holding baby trump provides a
-                    total of
-                  </Trans>{" "}
-                  &nbsp;
-                  <Badge>16%</Badge> <Trans>redistribution</Trans>
-                </small>
-              </TYPE.blue>
-            </CardSection>
+           
           </Card>
         </ProposalInfo>
       </PageWrapper>
