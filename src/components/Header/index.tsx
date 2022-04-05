@@ -3,13 +3,12 @@ import useScrollPosition from '@react-hook/window-scroll'
 import Card from 'components/Card'
 import { GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { GainsMenu } from 'components/Menu'
 import Tooltip from 'components/Tooltip'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { darken } from 'polished'
 import React, { useState } from 'react'
-import { ChevronDown, ChevronUp, Clipboard, Info } from 'react-feather'
+import { AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Circle, Clipboard, Info, Link, Settings } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
@@ -35,6 +34,8 @@ import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
 import logo from '../../assets/images/squeeze.png'
+import Swal from 'sweetalert2'
+
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
   grid-template-columns: 120px 1fr 120px;
@@ -287,7 +288,7 @@ export default function Header() {
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard()
-  const href = 'https://www.dextools.io/app/ether/pair-explorer/0x506276d09f18db8d3ba93e39e9a1175fcc61c89d'
+  const href = 'https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104'
   const [width, setWidth] = useState<number>(window.innerWidth)
   function handleWindowSizeChange() {
     setWidth(window.innerWidth)
@@ -302,8 +303,66 @@ export default function Header() {
   const isMobile: boolean = width <= 768
   const [showTip, setShowTip] = useState(false)
   const [darkmode] = useDarkModeManager()
+  const [gas, setGas] = React.useState<any>()
+  const [showNotify, setShowNotify] = React.useState(!!localStorage.getItem('subscribed') && localStorage.getItem('subscribed') !== 'false');
 
+  let interval = null
+  const [isOpen, setIsOpen] = React.useState(false)
+  React.useEffect(() => {
+    fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
+      .then((res) => res.json())
+      .then((response) => {
+        setGas(response)
+      }).then(() => {
+        interval = setInterval(() => {
+    if (!isOpen && showNotify) {
 
+          fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
+            .then((res) => res.json())
+            .then((response) => {
+              setGas(response)
+              if (!isOpen && showNotify && Math.trunc(response?.fast / 10) >= 85) {
+                Swal.fire({
+                  toast:true,
+                  position: 'bottom-end',
+                  timer: 5000,
+                  showConfirmButton:false,
+
+                  timerProgressBar: true,
+                  icon: 'success',
+                  title: 'GWEI is currently at ' + Math.trunc(response?.fast / 10)
+                })  
+              } 
+            })
+          }
+        }, 300000)
+      })
+    return () => {
+      interval = null;
+    }
+  }, [isOpen, showNotify])
+
+  const onNotify =  React.useCallback( () => {
+    setIsOpen(true);
+    Swal.fire({
+      title: showNotify ? "Cancel notifications" : 'Subscribe to notifications',
+      text: showNotify ? "Cancelling notifications will no longer alert you when GWEI is in optimal conditions ( GWEI < 85 )." : 'Subscribing to notifications will alert you in app when GWEI is in optimal conditions (GWEI < 85).',
+      showConfirmButton: true,
+      confirmButtonText: showNotify ? 'Unsubscribe' : "Subscribe",
+      showCancelButton: true,
+      icon: 'question',
+    }).then(({isConfirmed}) => {
+    setIsOpen(false)
+    if (showNotify && isConfirmed) {
+      setShowNotify(() => false)
+      localStorage.setItem('subscribed', 'false')
+    } else if (!showNotify && isConfirmed) {
+      setShowNotify(true)
+      localStorage.setItem('subscribed', 'true')
+    } 
+  })
+}, [showNotify, isOpen])
+  const [showGasTt, setShowGasTt] = React.useState(false)
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
@@ -315,7 +374,7 @@ export default function Header() {
           <UniIcon>
             <img
               width={isMobile ? '30px' : '100px'}
-              src={logo}
+              src={'https://kibainu.space/wp-content/uploads/2021/10/photo_2021-10-30-06.48.25-204x300.jpeg'}
               alt="logo"
             />
           </UniIcon>
@@ -346,6 +405,37 @@ export default function Header() {
             <Trans>Charts</Trans>
             <sup>↗</sup>
           </StyledExternalLink>
+          <div
+              style={{
+                position:'relative',
+                top:6,
+                marginBottom: 15,
+                justifyContent: 'center',
+                marginRight: 30,
+                padding: 3,
+                borderRadius: 12,
+                display: 'flex',
+                color: 'rgb(168,228,44)',
+              }}
+            >
+              {' '}
+                <span  style={{ cursor:'pointer', display: 'flex',  alignItems: 'baseline' }}>
+                <img style={{filter:'sepia(1)', maxWidth:20}} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
+                  />
+                  {gas && (
+                    <span style={{ color: '#fff', marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>
+                      {gas?.fast / 10}
+                    </span>
+                  )}
+                 
+                </span> 
+                      {gas && Math.trunc(gas?.fast / 10) > 85 ? <AlertOctagon fill={showNotify ? 'green' : 'red'} color={'#fff'}onClick={onNotify} style={{cursor:'pointer',marginLeft:5}}
+                            onMouseEnter={() => setShowGasTt(true)}
+                            onMouseLeave={() => setShowGasTt(false)}
+                            /> : <CheckCircle   fill={showNotify ? 'green' : 'red'} color={'#fff'}onClick={onNotify} style={{background:'green',cursor:'pointer',marginLeft:5}} />}
+
+
+            </div>
 
         </HeaderLinks>
 

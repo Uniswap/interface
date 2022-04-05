@@ -12,7 +12,7 @@ import { IconWrapper } from 'theme/components'
 import { useWeb3React } from '@web3-react/core'
 import { useStimulusBalance } from './VotePage'
 import { useTrumpGoldBalance } from './AddProposal'
-import { useTrumpBalance } from './VotePage'
+import { useKiba } from './VotePage'
 import moment from 'moment'
 import { BlueCard } from 'components/Card'
 import { StyledInternalLink } from 'theme/components'
@@ -46,7 +46,7 @@ export const ProposalDetails = () => {
     `
 
     const { account } = useWeb3React()
-    const trumpBalance = useTrumpBalance(account)
+    const trumpBalance = useKiba(account)
     const trumpGoldBalacne = useTrumpGoldBalance(account)
     const stimulusBalnace =useStimulusBalance(account)
     const updateVoteIfApplicable = ( vote: boolean ) => {

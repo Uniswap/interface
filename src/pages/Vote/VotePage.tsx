@@ -23,7 +23,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import { Link, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components/macro";
-import { ButtonPrimary } from "../../components/Button";
+import { ButtonPrimary,ButtonLight } from "../../components/Button";
 import { GreyCard } from "../../components/Card";
 import { AutoColumn } from "../../components/Column";
 import {
@@ -96,6 +96,7 @@ import { useTrumpGoldBalance } from "./AddProposal";
 import { walletconnect } from "connectors";
 import squeezeLogo from '../../assets/images/squeeze.png'
 import { useDarkModeManager } from "state/user/hooks";
+import { kibaAbi } from "components/ShowSellTax";
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -179,23 +180,23 @@ const ProposerAddressLink = styled(ExternalLink)`
   word-break: break-all;
 `;
 
-export const useTrumpBalance = (account?: string | null) => {
-  const trumpCoin = new Token(
+export const useKiba = (account?: string | null) => {
+  const kibaCoin = new Token(
     1,
-    "0xabd4dc8fde9848cbc4ff2c0ee81d4a49f4803da4",
+    "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
     9,
-    "Squeeze",
-    "Squeeze Token"
+    "Kiba",
+    "Kiba Inu"
   );
 
-  const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+  const kiba: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
-    trumpCoin
+    kibaCoin
   );
 
   return React.useMemo(() => {
-    return trumpBalance;
-  }, [trumpBalance, trumpCoin]);
+    return kiba;
+  }, [kiba, kibaCoin]);
 };
 
 export const useStimulusBalance = (account?: string | null) => {
@@ -224,24 +225,13 @@ export default function VotePage({
 }: RouteComponentProps<{ governorIndex: string; id: string }>) {
   const web3 = useActiveWeb3React();
   const { account } = web3;
-  // get data for this specific proposal
-
-  // update support based on button interactions
-  const [support, setSupport] = useState<boolean>(true);
-  // modal for casting votes
-  const showVoteModal = useModalOpen(ApplicationModal.VOTE);
-  const toggleVoteModal = useToggleVoteModal();
-  // toggle for showing delegation modal
-  const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE);
-  const toggleDelegateModal = useToggleDelegateModal();
-  // only count available votes as of the proposal start block
 
   const trumpCoin = new Token(
     1,
-    "0xabd4dc8fde9848cbc4ff2c0ee81d4a49f4803da4",
+    "0x4B2C54b80B77580dc02A0f6734d3BAD733F50900",
     9,
-    "Squeeze",
-    "Squeeze Token"
+    "Kiba",
+    "Kiba Inu"
   );
   const stimulusCoin = new Token(
     1,
@@ -250,7 +240,6 @@ export default function VotePage({
     "StimulusCheck",
     "StimulusCheck Token"
   );
-  const defaultTokens = useAllTokens();
 
   const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
@@ -307,8 +296,6 @@ export default function VotePage({
              and retrieving your balance.`);
     }
   };
-  const [showTool, setShowTool] = useState<boolean>(false);
-  const tiptext = `Holding Stimulus Token and Baby Trump at the same time allow for 16% redistribution`;
 
   useEffect(() => {
     if (storedTrumpBalance && trumpBalance) {
@@ -351,6 +338,7 @@ export default function VotePage({
   const [trumpGainsUSD, setTrumpGainsUSD] = React.useState("-");
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
 
+
   useEffect(() => {
     try {
       if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) < 0) {
@@ -380,37 +368,6 @@ export default function VotePage({
       console.error(err);
     }
   }, [rawTrumpCurrency, trumpCoin.address, trumpBalance, storedTrumpBalance]);
-
-  useEffect(() => {
-    try {
-      if (rawStimulusCurrency && +rawStimulusCurrency < 0) {
-        setStimGainsUSD("-");
-        return;
-      }
-      if (rawStimulusCurrency && +rawStimulusCurrency > 0) {
-        const provider = window.ethereum ? window.ethereum : walletconnect
-
-        const w3 = new Web3(provider as any).eth;
-        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-        const ten9 = 10 ** 9;
-        const amount = +rawStimulusCurrency * ten9;
-        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          stimulusCoin.address,
-          WETH9[1].address,
-          USDC.address,
-        ]);
-        amountsOut.call().then((response: any) => {
-          console.log(response);
-          const usdc = response[response.length - 1];
-          const ten6 = 10 ** 6;
-          const usdcValue = usdc / ten6;
-          setStimGainsUSD(usdcValue.toFixed(2));
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [rawStimulusCurrency, stimulusCoin.address, stimulusBalance, storedSimulusBalance]);
 
   const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
   React.useEffect(() => {
@@ -444,102 +401,29 @@ export default function VotePage({
     }
   }, [trumpBalance, trumpCoin.address]);
 const [darkMode] = useDarkModeManager()
-  const [stimulusBalanceUSD, setStimulusBalanceUSD] = React.useState("");
-  React.useEffect(() => {
-    try {
-      if (stimulusBalance && +stimulusBalance < 0) {
-        setStimulusBalanceUSD("-");
-        return;
-      }
-      if (stimulusBalance) {
-        const w3 = new Web3(window.ethereum as any).eth;
-        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-        const ten9 = 10 ** 9;
-        const amount = +stimulusBalance?.toFixed(0) * ten9;
-        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          stimulusCoin.address,
-          WETH9[1].address,
-          USDC.address,
-        ]);
-        amountsOut.call().then((response: any) => {
-          console.log(response);
-          const usdc = response[response.length - 1];
-          const ten6 = 10 ** 6;
-          const usdcValue = usdc / ten6;
-          setStimulusBalanceUSD(usdcValue.toFixed(2));
-        });
-      }
-    } catch (ex) {
-      console.error(ex);
-    }
-  }, [stimulusBalance, stimulusCoin.address]);
-
+ 
   const goldBalance = useTrumpGoldBalance(account)
-  const [goldBalanceUSD, setGoldBalanceUSD] = React.useState("");
-  React.useEffect(() => {
-    try {
-      if (goldBalance && +goldBalance < 0) {
-        setGoldBalanceUSD("-");
-        return;
-      }
-      if (goldBalance) {
-        const w3 = new Web3(window.ethereum as any).eth;
-        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-        const ten9 = 10 ** 9;
-        const amount = +goldBalance?.toFixed(0) * ten9;
-        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          '0x29699C8485302cd2857043FaB8bd885bA08Cf268',
-          WETH9[1].address,
-          USDC.address,
-        ]);
-        amountsOut.call().then((response: any) => {
-          console.log(response);
-          const usdc = response[response.length - 1];
-          const ten6 = 10 ** 6;
-          const usdcValue = usdc / ten6;
-          setGoldBalanceUSD(usdcValue.toFixed(2));
-        });
-      }
-    } catch (ex) {
-      console.error(ex);
-    }
-  }, [goldBalance]);
-  const [showTGoldTool, setShowTGoldTool] = useState(false);
-  const trumpValue = useUSDCValue(trumpBalance);
-  const stimulusValue = useUSDCValue(stimulusBalance);
-  const goldValue = useUSDCValue(goldBalance)
+  
+  const GainsText = styled(TYPE.white)`
+  font-size:22px;
+  font-family:'Bangers', cursive;`
   return (
     <>
       <PageWrapper gap="lg" justify="center">
-        <ProposalInfo gap="lg" justify="space-between">
-          <Card>
-            <CardSection>
-              <TYPE.black>
-                <small>
-                  <Info />
-                  <Trans>
-                    {`NOTE: Squeeze GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
-                     In the future, we plan to build the ability to filter out transactions that are sells / transfers.`}
-                  </Trans>
-                  &nbsp;
-                </small>
-              </TYPE.black>
-              <br />
+        <ProposalInfo>
+    
+
+            <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains</GainsText></div>
               {isTrackingGains && (
-                <BlueCard>
-                  <TYPE.main>
-                    <small>
-                      <Clock />
-                      &nbsp;{" "}
-                      <Trans>Started tracking gains {trackingSince} </Trans>
-                    </small>
+                 <GreyCard style={{flexFlow: 'row nowrap', display:'inline-block', justifyContent:'center',marginBottom:15}}> <TYPE.main>
+                      <GainsText style={{display:'inline'}}>
+                      <Clock style={{marginRight:5}} />
+                        STARTED {trackingSince} </GainsText>
                   </TYPE.main>
-                </BlueCard>
+                 </GreyCard>
               )}
-            </CardSection>
             <AutoColumn gap="50px">
-              <GreyCard justifyContent="center">
-                <div style={{ display: "flex", flexFlow: "row wrap" }}>
+                <div style={{ display: "flex",alignItems:'center', flexFlow: "row wrap" }}>
                   {!account && (
                     <TYPE.white>
                       <Trans>
@@ -547,68 +431,64 @@ const [darkMode] = useDarkModeManager()
                       </Trans>
                     </TYPE.white>
                   )}
-                  <img
-                    src={
-                     squeezeLogo
-                    }
-                    width="100px"
-                  />
-                  <div style={{ marginTop: 40, alignItems: "baseline" }}>
-                    <TYPE.white className="d-flex">
+              
+                  <div style={{ display:'flex', flexFlow:'column wrap', alignItems: "center" }}>
+                 
+                    <div style={{display:'block', width:'100%'}}>
+                    <TYPE.white>
                       <Trans>
                         {trumpBalance !== undefined
-                          ? `Squeeze Balance ${trumpBalance?.toFixed(
+                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {trumpBalance?.toFixed(
                               2
-                            )} (${(+trumpBalanceUSD)?.toFixed(2)} USD)`
+                            )} (${(+trumpBalanceUSD)?.toFixed(2)} USD) </span></div>
                           : null}
                       </Trans>
                     </TYPE.white>
-                    {isTrackingGains === true && (
-                      <TYPE.main style={{color: darkMode ? '#fff' : '#222'}}  className="d-flex">
+                      </div>
+                      <div style={{display:'block', width:'100%', marginTop:15}}>
+
+                      {isTrackingGains === true && (
+                      <GainsText  className="d-flex">
                         {storedTrumpBalance !== undefined &&
                           trumpBalance !== undefined &&
                           account !== undefined && (
                             <React.Fragment>
-                              <ArrowUp />
-                              &nbsp;
-                              <Trans>{`SqueezeGains`} </Trans> &nbsp;
-                              {(
+                              <Trans>{`Kiba Gains`} </Trans> &nbsp;
+                              <span>{(
                                 +trumpBalance?.toFixed(2) - +storedTrumpBalance
-                              ).toFixed(2)}
-                              <br />
+                              ).toFixed(2)} </span>
                               {isTrackingGains && trumpGainsUSD && (
-                                <Badge style={{ paddingTop: 5 }}>
+                                <Badge style={{ color:"#FFF",paddingTop: 5 }}>
                                   <small>
-                                    <Trans>Total GAINS</Trans>
+                                    <GainsText>Total Reflections</GainsText>
                                   </small>
                                   &nbsp;
                                   {rawTrumpCurrency &&
                                   +rawTrumpCurrency?.toFixed(0) > 0
-                                    ? trumpGainsUSD
+                                    ? <> {'$'}{trumpGainsUSD}</>
                                     : "-"}
-                                  <small>
                                     &nbsp;<Trans>USD</Trans>
-                                  </small>
                                 </Badge>
                               )}
                             </React.Fragment>
                           )}
-                      </TYPE.main>
+                      </GainsText>
                     )}
+                      </div>
+
                   </div>
                 </div>
-              </GreyCard>
+                
             </AutoColumn>
-         
+            
             <AutoColumn gap="50px">
-              <ButtonPrimary style={{background: darkMode ? '#fff ' : 'inherit', color: darkMode ? '#222' : '#fff', marginTop:15}} onClick={trackGains}>
-                {isTrackingGains && <Trans>Stop tracking Gains</Trans>}
-                {!isTrackingGains && <Trans>Start Tracking Gains</Trans>}
-              </ButtonPrimary>
+              <ButtonLight style={{background: darkMode ? '#fff ' : 'inherit', color: darkMode ? '#222' : '#fff', marginTop:15}} onClick={trackGains}>
+                {isTrackingGains && <Trans>Stop Tracking</Trans>}
+                {!isTrackingGains && <Trans>Start Tracking</Trans>}
+              </ButtonLight>
             </AutoColumn>
           
-          </Card>
-        </ProposalInfo>
+          </ProposalInfo>
       </PageWrapper>
       <SwitchLocaleLink />
     </>
