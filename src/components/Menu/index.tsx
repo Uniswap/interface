@@ -242,15 +242,15 @@ export default function Menu() {
             default:
               return (
                 <MenuFlyout>
-                  <MenuItem href="https://uniswap.org/">
+                  <MenuItem href="https://babytrumptoken.com/">
                     <div>
                       <Trans>About</Trans>
                     </div>
                     <Info opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://docs.uniswap.org/">
+                  <MenuItem href="https://t.me/BabyTrumpETH/">
                     <div>
-                      <Trans>Docs</Trans>
+                      <Trans>Telegram</Trans>
                     </div>
                     <BookOpen opacity={0.6} size={16} />
                   </MenuItem>
