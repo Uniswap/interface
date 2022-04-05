@@ -227,11 +227,11 @@ export function useBscToken(tokenAddress?: string): Token | undefined | null {
 }
 export function useBinanceCurrency(currencyId: string | undefined): Currency | null | undefined {
   const isBNB = currencyId?.toUpperCase() === 'BNB'
-  const isKiba = currencyId?.toLowerCase() === '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341'.toLowerCase()
+  const isKiba = currencyId?.toLowerCase() === '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase()
   const token = useBscToken(isBNB || isKiba ? undefined : currencyId)
   if (!currencyId) return
   return isBNB ? binanceTokens.bnb
-    : isKiba ? new Token(56, '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 9, 'KIBA', 'Kiba Inu') : token
+    : isKiba ? new Token(56, '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', 9, 'KIBA', 'Kiba Inu') : token
 }
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()

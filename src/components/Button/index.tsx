@@ -20,7 +20,7 @@ const Base = styled(RebassButton)<
   width: ${({ width }) => width ?? '100%'};
   font-weight: 500;
   text-align: center;
-  border-radius: ${({ $borderRadius }) => $borderRadius ?? '10px'};
+  border-radius: ${({ $borderRadius }) => $borderRadius ?? '30px'};
   outline: none;
   border: 1px solid transparent;
   color: white;
@@ -51,26 +51,26 @@ const Base = styled(RebassButton)<
 `
 
 export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme }) => theme.bg2};
+  font-family: 'Inter Var';
+  font-size: 18px;
+  font-weight: 600;
   color: white;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.bg3)};
+    background-color: ${({ theme }) => darken(0.05, theme.bg2)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    border: 1px solid #B0B0B3;
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.bg3)};
+    background-color: ${({ theme }) => darken(0.1, theme.bg3)};
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.primary1 : theme.bg5) : theme.bg5};
+      altDisabledStyle ? (disabled ? theme.bg2 : theme.bg5) : theme.bg5};
     color: ${({ theme }) => theme.text2};
-    font-family: 'Archivo Narrow';
-    font-size: 20px;
-    font-weight: 700;
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
@@ -244,7 +244,7 @@ const ButtonConfirmedStyle = styled(Base)`
   color: ${({ theme }) => theme.text1};
   font-family: 'Archivo Narrow';
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 400;
   /* border: 1px solid ${({ theme }) => theme.green1}; */
 
   &:disabled {
@@ -257,7 +257,7 @@ const ButtonConfirmedStyle = styled(Base)`
 
 const ButtonErrorStyle = styled(Base)`
   background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
+  
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};
@@ -274,8 +274,8 @@ const ButtonErrorStyle = styled(Base)`
     opacity: 50%;
     cursor: auto;
     box-shadow: none;
-    background-color: ${({ theme }) => theme.red1};
-    border: 1px solid ${({ theme }) => theme.red1};
+    background-color: #121213;
+    color: #777778;
   }
 `
 
@@ -295,7 +295,7 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {
-    return <ButtonPrimary {...rest} />
+    return <ButtonErrorStyle {...rest} />
   }
 }
 
