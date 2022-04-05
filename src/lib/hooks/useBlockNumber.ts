@@ -1,32 +1,38 @@
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 
-function useBlock() {
+interface ChainBlock {
+  chainId?: number
+  block?: number
+}
+const chainBlockAtom = atom<ChainBlock>({})
+
+function useUpdateChainBlock() {
   const { chainId, library } = useActiveWeb3React()
   const windowVisible = useIsWindowVisible()
-  const [state, setState] = useState<{ chainId?: number; block?: number }>({ chainId })
+  const setChainBlock = useUpdateAtom(chainBlockAtom)
 
   const onBlock = useCallback(
     (block: number) => {
-      setState((state) => {
-        if (state.chainId === chainId) {
-          if (typeof state.block !== 'number') return { chainId, block }
-          return { chainId, block: Math.max(block, state.block) }
+      setChainBlock((chainBlock) => {
+        if (chainBlock.chainId === chainId) {
+          if (chainBlock.block === block) return chainBlock
+          if (typeof chainBlock.block !== 'number') return { chainId, block }
+          return { chainId, block: Math.max(block, chainBlock.block) }
         }
-        return state
+        return chainBlock
       })
     },
-    [chainId]
+    [chainId, setChainBlock]
   )
 
   useEffect(() => {
     if (library && chainId && windowVisible) {
       // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
-      setState((state) => (state.chainId === chainId ? state : { chainId }))
+      setChainBlock((chainBlock) => (chainBlock.chainId === chainId ? chainBlock : { chainId }))
 
       library
         .getBlockNumber()
@@ -41,30 +47,23 @@ function useBlock() {
       }
     }
     return undefined
-  }, [chainId, library, onBlock, windowVisible])
-
-  const debouncedBlock = useDebounce(state.block, 100)
-  return state.block ? debouncedBlock : undefined
+  }, [chainId, library, onBlock, setChainBlock, windowVisible])
 }
 
-const blockAtom = atom<number | undefined>(undefined)
-
 export function BlockUpdater() {
-  const setBlock = useUpdateAtom(blockAtom)
-  const block = useBlock()
-  useEffect(() => {
-    setBlock(block)
-  }, [block, setBlock])
+  useUpdateChainBlock()
   return null
 }
 
 /** Requires that BlockUpdater be installed in the DOM tree. */
 export default function useBlockNumber(): number | undefined {
-  const { chainId } = useActiveWeb3React()
-  const block = useAtomValue(blockAtom)
-  return chainId ? block : undefined
+  const { chainId: activeChainId } = useActiveWeb3React()
+  const { chainId, block } = useAtomValue(chainBlockAtom)
+  return activeChainId === chainId ? block : undefined
 }
 
 export function useFastForwardBlockNumber(): (block: number) => void {
-  return useUpdateAtom(blockAtom)
+  const { chainId } = useActiveWeb3React()
+  const setChainBlock = useUpdateAtom(chainBlockAtom)
+  return useCallback((block: number) => setChainBlock({ chainId, block }), [chainId, setChainBlock])
 }

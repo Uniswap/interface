@@ -43,10 +43,11 @@ function useComputeSwapInfo(): SwapInfo {
     () => tryParseCurrencyAmount(amount, (isExactIn ? currencyIn : currencyOut) ?? undefined),
     [amount, isExactIn, currencyIn, currencyOut]
   )
+  const hasAmounts = currencyIn && currencyOut && parsedAmount
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    parsedAmount,
-    (isExactIn ? currencyOut : currencyIn) ?? undefined
+    hasAmounts ? parsedAmount : undefined,
+    hasAmounts ? (isExactIn ? currencyOut : currencyIn) : undefined
   )
 
   const amountIn = useMemo(
@@ -111,7 +112,7 @@ const swapInfoAtom = atom<SwapInfo>({
 export function SwapInfoUpdater() {
   const setSwapInfo = useUpdateAtom(swapInfoAtom)
   const swapInfo = useComputeSwapInfo()
-  useEffect(() => setSwapInfo(swapInfo), [swapInfo, setSwapInfo])
+  useEffect(() => setSwapInfo(swapInfo), [setSwapInfo, swapInfo])
   return null
 }
 
