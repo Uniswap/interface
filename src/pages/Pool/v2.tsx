@@ -29,13 +29,13 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
-  background: radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95));
+  background: #18181E;
   padding:9px 14px;
   border-radius:30px;
 `
 
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  background: #18181E;
   overflow: hidden;
 `
 

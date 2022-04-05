@@ -9,7 +9,7 @@ import styled from 'styled-components/macro';
 import _ from 'lodash'
 import Web3 from 'web3';
 import { ExternalLink, ExternalLinkIcon } from 'theme';
-import { ButtonPrimary } from 'components/Button';
+import { ButtonPrimary, ButtonGray } from 'components/Button';
 import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import JSBI from 'jsbi'
@@ -100,13 +100,13 @@ export const AccountPage = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }}>
+        <DarkCard style={{ maxWidth: 850, background: '#252632', padding: 20 }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between' }}>
-                <Badge><StyledHeader>Transaction History</StyledHeader></Badge>
+                <StyledHeader style= {{fontSize:30, paddingTop: 20, paddingBottom: 20 }}>Transaction History</StyledHeader>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
-                    <ButtonPrimary> View on explorer
+                    <ButtonGray> View on explorer
                         <ExternalLinkIcon href={`https://etherscan.io/address/${account}`} />
-                    </ButtonPrimary>
+                    </ButtonGray>
                 </ExternalLink>}
             </div>
             <Wrapper style={{ background: '#222', padding: '9px 14px' }}>
@@ -171,7 +171,7 @@ export const AccountPageWithAccount = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }}>
+        <DarkCard style={{ maxWidth: 850, background: '#252632' }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between',rowGap: 10, columnGap: 15 }}>
                 <Badge><StyledHeader>Transaction History </StyledHeader></Badge>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
