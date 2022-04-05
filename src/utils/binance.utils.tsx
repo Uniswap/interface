@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react'
-import { ethers } from 'ethers'
-import React from 'react'
-import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
-import bep20Abi from './bep20abi.json';
-import { BIG_INT_ZERO } from 'constants/misc';
-import { useActiveWeb3React } from 'hooks/web3'
 import { Currency, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core'
-import { Price } from '@uniswap/sdk-core'
-import { binanceTokens } from './binance.tokens'
-import IuniswapV2PairABI from './pairInterface.json'
-import _ from 'lodash';
-import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { useEffect, useState } from 'react'
+
+import { BIG_INT_ZERO } from 'constants/misc';
+import BigNumber from 'bignumber.js'
 import { Interface } from '@ethersproject/abi'
+import IuniswapV2PairABI from './pairInterface.json'
 import { Pair } from '@uniswap/v2-sdk'
+import { Price } from '@uniswap/sdk-core'
+import React from 'react'
+import _ from 'lodash';
+import bep20Abi from './bep20abi.json';
+import { binanceTokens } from './binance.tokens'
+import { ethers } from 'ethers'
 import { isEqual } from 'lodash'
-import useInterval from 'hooks/useInterval'
 import moment from 'moment'
+import { useActiveWeb3React } from 'hooks/web3'
+import useInterval from 'hooks/useInterval'
+import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { useWeb3React } from '@web3-react/core'
 const BUSD_MAINNET = binanceTokens.busd
 const WBNB = binanceTokens.wbnb;
 export function wrappedCurrency(currency: Currency | undefined, chainId: number | undefined): Token | undefined {
@@ -139,7 +140,8 @@ export const useBinanceTokenBalanceRefreshed = (tokenAddress: string, account?: 
       try {
         console.dir(contract)
         const res = await contract.balanceOf(account)
-        setBalance({ balance: +new BigNumber(res.toString()).toFixed(0) / 10 ** 9, fetchStatus: SUCCESS })
+        const decimals = await contract.decimals();
+        setBalance({ balance: +new BigNumber(res.toString()).toFixed(0) / 10 ** decimals, fetchStatus: SUCCESS })
       } catch (e) {
         console.error(e)
         setBalance((prev: any) => ({
@@ -173,11 +175,12 @@ export const useBinanceTokenBalance = (tokenAddress: string, account?: string | 
       const contract = getBep20Contract(tokenAddress)
       try {
         const res = await contract.balanceOf(account)
-        if (!isEqual(+new BigNumber(res.toString()).toFixed(0) / 10 ** 9, balanceState.balance)) {
+        const decimals = await contract.decimals();
+        if (!isEqual(+new BigNumber(res.toString()).toFixed(0) / 10 ** decimals, balanceState.balance)) {
           console.log(`Time since last refresh: ${moment(new Date()).diff(lastRefresh, 'seconds')} seconds`);
-          setBalanceState({ balance: +new BigNumber(res.toString()).toFixed(0) / 10 ** 9, fetchStatus: SUCCESS })
-          console.log(`updated ${+new BigNumber(res.toString()).toFixed(0) / 10 ** 9} current ${balanceState.balance}`)
-          localStorage.setItem(previousStoredAccountKey, (+new BigNumber(res.toString()).toFixed(0) / 10 ** 9).toString());
+          setBalanceState({ balance: +new BigNumber(res.toString()).toFixed(0) / 10 ** decimals, fetchStatus: SUCCESS })
+          console.log(`updated ${+new BigNumber(res.toString()).toFixed(0) / 10 ** decimals} current ${balanceState.balance}`)
+          localStorage.setItem(previousStoredAccountKey, (+new BigNumber(res.toString()).toFixed(0) / 10 ** decimals).toString());
         }
       } catch (e) {
         console.error(e)

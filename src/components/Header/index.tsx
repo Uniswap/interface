@@ -423,8 +423,8 @@ export default function Header() {
             <Trans>Pool</Trans>
           </StyledNavLink>
           {chainId && [SupportedChainId.MAINNET, SupportedChainId.BINANCE].includes(chainId) && (
-            <StyledNavLink id={`stake-nav-link`} to={'/gains'}>
-              <Trans>Gains</Trans>
+            <StyledNavLink id={`stake-nav-link`} to={'/dashboard'}>
+              <Trans>Stats</Trans>
             </StyledNavLink>
           )}
 
