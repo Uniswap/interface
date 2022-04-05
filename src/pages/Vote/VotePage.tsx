@@ -1,4 +1,5 @@
 import Badge, { BadgeVariant } from "components/Badge";
+import { BurntKiba, useTotalSwapVolume } from "components/BurntKiba";
 import {
   CurrencyAmount,
   Token,
@@ -9,7 +10,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { pancakeAbi, pancakeAddress, routerAbi, routerAddress } from "./routerAbi";
 
 import { AutoColumn } from "../../components/Column";
-import { BurntKiba } from "components/BurntKiba";
 import { ButtonLight } from "../../components/Button";
 import {
   Clock,
@@ -204,6 +204,54 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
     }
   }, [kibaBalance, account, library?.provider, isBinance]);
   return kibaBalanceUSD
+}
+
+export const useTotalSwapVolumeBnbToUsd = function() {
+  const {
+    volumeInEth
+  } = useTotalSwapVolume()
+  const {
+    library
+  } = useWeb3React()
+  const { routerADD, routerABI } = React.useMemo(() => {
+    return {
+      routerADD: pancakeAddress,
+      routerABI: pancakeAbi
+    }
+  }, [])
+  const [volumeInUsd, setVolumeInUsd] = React.useState('0')
+  React.useEffect(() => {
+    try {
+      if (volumeInEth && +volumeInEth < 0) {
+        return;
+      }
+      if (volumeInEth && parseFloat(volumeInEth) > 0) {
+        const provider = window.ethereum ? window.ethereum : library?.provider
+        if (!provider) return;
+        const w3 = new Web3(provider as any).eth;
+        const routerContr = new w3.Contract(routerABI as any, routerADD);
+        const ten9 = 10 ** 18;
+        const amount = parseFloat((parseFloat(volumeInEth) * ten9).toFixed(0))
+        if (amount > 0) {
+          const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+            binanceTokens.wbnb.address, 
+            binanceTokens.busd.address,
+          ]);
+          amountsOut.call().then((response: any) => {
+            const usdc = response[response.length - 1];
+            const ten6 =  10 ** 18;
+            const usdcValue = usdc / ten6;
+            const number = Number(usdcValue.toFixed(2));
+            if (volumeInUsd !== number.toLocaleString())
+              setVolumeInUsd(number.toLocaleString());
+          });
+        }
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  }, [library, volumeInEth]);
+  return [volumeInUsd, setVolumeInUsd]
 }
 
 export const useKibaRefreshedBinance = (account?: string | null, chainId?: number) => {

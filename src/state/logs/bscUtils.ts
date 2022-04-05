@@ -12,6 +12,7 @@ import { useBlockNumber } from 'state/application/hooks'
 import useInterval from 'hooks/useInterval'
 import { useQuery } from '@apollo/client'
 import { useWeb3React } from '@web3-react/core';
+
 export const INFO_CLIENT = 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2'
 export const BITQUERY_CLIENT = 'https://graphql.bitquery.io';
 
@@ -377,21 +378,22 @@ export const useBlocksFromTimestamps = (
  * Returns BNB prices at current, 24h, 48h, and 7d intervals
  */
 export const useBnbPrices = (): BnbPrices | undefined => {
-  const [t24h, t48h, t7d, t14d] = getDeltaTimestamps()
-  const { blocks, error: blockError } = useBlocksFromTimestamps([t24h, t48h, t7d, t14d])
-  const [blockCurrent, block24h, block48h, block7d] = blocks ?? []
-  const q = useQuery(BNB_PRICES, {
-    variables: {
-    "block24": block24h?.number,
-    "block48": block48h?.number,
-    "blockWeek": block7d?.number
+  const [data,setData] = React.useState<any>()
+  const [ttl, setTtl] = React.useState<number>(-1)
+  React.useEffect(() => {
+    if (!data || ttl < new Date().valueOf()) {
+      fetch('https://api1.binance.com/api/v3/ticker/price?symbol=BNBUSDT')
+      .then((res) => res.json())
+      .then((response) => {
+        setData(response.price)
+      })
     }
-  })
+  }, [data])
   return {
-    current: q?.data?.current?.bnbPrice,
-    oneDay: q?.data?.oneDay?.bnbPrice,
-    twoDay: q?.data?.twoDay?.bnbPrice,
-    week: q?.data?.week?.bnbPrice
+    current: data,
+    oneDay: data,
+    twoDay: data,
+    week: data
   }
 }
 export const mapMints = (mint: any) => {
