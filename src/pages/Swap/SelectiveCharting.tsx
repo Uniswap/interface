@@ -70,7 +70,17 @@ export const SelectiveChart = ({history}:{history:History}) => {
         } else {
             setAddress('')
         }
-    }, [address, ethPrice, ethPriceOld, bnbPrices, chainId])
+    }, [
+        address, 
+        setTokenData,
+        ethPrice, 
+        ethPriceOld, 
+        bnbPrices, 
+        chainId, 
+        tokenData, 
+        selectedCurrency,
+        mainnetCurrency
+    ])
     const [loadingNewData, setLoadingNewData] = React.useState(false)
     const bscTransactionData = useBscTokenTransactions(address?.toLowerCase(), 60000)
     const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
@@ -116,7 +126,6 @@ export const SelectiveChart = ({history}:{history:History}) => {
             onUserInput={(value) => {
                 console.log(value)
             }}
-            showOnlyTrumpCoins={false}
             onMax={undefined}
             fiatValue={undefined}
             onCurrencySelect={(currency: any) => {
@@ -124,6 +133,8 @@ export const SelectiveChart = ({history}:{history:History}) => {
                     Swal.fire({ title: "You must hold kiba inu tokens to use this feature", icon: 'error', toast: true, timer: 5000, timerProgressBar: true, showConfirmButton: false })
                     return;
                 } else {                
+                    setAddressCallback(currency?.address)
+                    setSelectedCurrency(currency)
                     window.history.pushState(`${currency.name} - (${currency.symbol})`, ``, `/#/selective-charting/${currency.address}/${currency.symbol}`);
                 }
             }}
