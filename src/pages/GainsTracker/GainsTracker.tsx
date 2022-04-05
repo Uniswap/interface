@@ -193,7 +193,7 @@ export const GainsTracker = () => {
     font-size: 12px;
   `
 
-  const GainsWrapper = !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0) ? DisabledMask : React.Fragment
+  const GainsWrapper = (!!account && !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0)) ? DisabledMask : React.Fragment
   const [currencyValue, setCurrencyValue] = React.useState('')
   const total = useUSDCValue(selectedCurrencyBalance ?? undefined)
   React.useEffect(() => {
