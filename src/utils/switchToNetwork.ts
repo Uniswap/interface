@@ -21,7 +21,7 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
     return library?.provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: formattedChainId }],
-    })
+    }).then(() => window.location.reload())
   }
 
   const trackedValue = localStorage.getItem('kibaBalance');
@@ -31,7 +31,7 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
       const { isConfirmed } = await Swal.fire({
         title: "Are you sure?",
         text: "Switching networks will stop your current gains tracking session.",
-        confirmButtonText: "Okay",
+        confirmButtonText: "Okay",  
         cancelButtonText: "Cancel",
         confirmButtonColor: '#991816',
         cancelButtonColor: '#444',
