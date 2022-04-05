@@ -7,11 +7,12 @@ import { CheckCircle, Copy } from 'react-feather'
 import { Trans } from '@lingui/macro'
 
 const CopyIcon = styled(LinkStyledButton)`
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.text1};
   flex-shrink: 0;
   display: flex;
   text-decoration: none;
   font-size: 0.825rem;
+  background:transparent;
   :hover,
   :active,
   :focus {

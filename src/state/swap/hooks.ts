@@ -17,7 +17,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient,setUseOtherAddress, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -31,6 +31,7 @@ export function useSwapActionHandlers(): {
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
+  onSwitchUseChangeRecipient: (val: boolean) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -63,11 +64,19 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onSwitchUseChangeRecipient = useCallback(
+    (on: boolean) => { 
+      dispatch(setUseOtherAddress({on}))
+    }, 
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
+    onSwitchUseChangeRecipient
   }
 }
 
@@ -122,7 +131,8 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
   toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
-  allowedSlippage: Percent
+  allowedSlippage: Percent;
+  useOtherAddress: boolean;
 } {
   const { account } = useActiveWeb3React()
 
@@ -134,6 +144,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
+    useOtherAddress
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
@@ -217,6 +228,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     v3TradeState: v3Trade,
     toggledTrade,
     allowedSlippage,
+    useOtherAddress
   }
 }
 
@@ -260,7 +272,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   }
 
   const recipient = validatedRecipient(parsedQs.recipient)
-
+  const useOtherAddress = !!parsedQs.useOtherAddress;
   return {
     [Field.INPUT]: {
       currencyId: inputCurrency,
@@ -271,6 +283,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
+    useOtherAddress
   }
 }
 
@@ -295,6 +308,7 @@ export function useDefaultsFromURLSearch():
         inputCurrencyId: parsed[Field.INPUT].currencyId,
         outputCurrencyId: parsed[Field.OUTPUT].currencyId,
         recipient: parsed.recipient,
+        useOtherAddress: parsed.useOtherAddress
       })
     )
 
