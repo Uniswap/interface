@@ -271,9 +271,6 @@ export default function VotePage({
   const [showTool, setShowTool] = useState<boolean>(false);
   const tiptext = `Holding Stimulus Token and Baby Trump at the same time allow for 16% redistribution`;
 
-  const trackingLabel = useMemo(() => {
-    return isTrackingGains ? "Stop Tracking Gains" : "Start Tracking Gains";
-  }, [isTrackingGains]);
 
   useEffect(() => {
     if (storedTrumpBalance && trumpBalance) {
@@ -604,13 +601,14 @@ export default function VotePage({
             </AutoColumn>
             <AutoColumn gap="50px">
               <ButtonPrimary onClick={trackGains}>
-                <Trans>{trackingLabel}</Trans>
+                {isTrackingGains && <Trans>Stop tracking Gains</Trans>}
+                {!isTrackingGains && <Trans>Start Tracking Gains</Trans>}
               </ButtonPrimary>
             </AutoColumn>
             <CardSection>
               <TYPE.blue>
                 <div className="d-flex align-items-center">
-                  <AlertCircle /> WANTING MORE GAINS? <br />
+                  <AlertCircle /> <Trans>WANTING MORE GAINS?</Trans> <br />
                 </div>
                 <small>
                   <Trans>Holding stimulus check while holding baby trump provides a
