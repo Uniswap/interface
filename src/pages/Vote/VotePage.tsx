@@ -583,7 +583,7 @@ export default function VotePage({
                         {" "}
                         {formattedStim() !== undefined &&
                           `Stimulus Check Balance ${formattedStim()} (${
-                            (+stimulusBalanceUSD)?.toFixed(2) || ""
+                            (+stimulusValue)?.toFixed(2) || ""
                           } USD)`}
                       </Trans>
                     </TYPE.black>
