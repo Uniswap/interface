@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import styled, { keyframes } from 'styled-components/macro'
-import { useActiveWeb3React } from '../../hooks/web3'
-
-import { useBlockNumber } from '../../state/application/hooks'
-import { ExternalLink, TYPE } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { ExternalLink, TYPE } from '../../theme'
+import styled, { keyframes } from 'styled-components/macro'
+import { useEffect, useState } from 'react'
+
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useBlockNumber } from '../../state/application/hooks'
 
 const StyledPolling = styled.div`
   position: fixed;
@@ -95,7 +95,8 @@ export default function Polling() {
       href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''}
     >
       <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
-        <StyledPollingNumber breathe={isMounting} hovering={isHover}>
+        <StyledPollingNumber breathe={false} hovering={isHover}>
+        <span style={{zIndex: 99, color:'#F76C1D'}}>Last Synced Block &nbsp;</span>
           {blockNumber}
         </StyledPollingNumber>
         <StyledPollingDot>{isMounting && <Spinner />}</StyledPollingDot>
