@@ -2,7 +2,7 @@ import { SupportedChainId } from 'constants/chains'
 import { BigNumber, utils } from 'ethers'
 import { Web3Provider } from '@ethersproject/providers'
 import Swal from 'sweetalert2'
-
+import ReactGA from 'react-ga'
 interface SwitchNetworkArguments {
   library: Web3Provider
   chainId: SupportedChainId
@@ -17,6 +17,14 @@ export async function switchToNetwork({ library, chainId, account }: SwitchNetwo
       return
     }
     const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
+    ReactGA.event({
+      category: 'Network',
+      action: 'Switch Network ' + (chainId === 1 ?
+        'to Ethereum from Binance Smart Chain'
+        : chainId === 56 ?
+          'to Binance Smart Chain from Ethereum'
+          : ''),
+    })
     return library?.provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: formattedChainId }],
