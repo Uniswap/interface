@@ -248,6 +248,7 @@ export default function CurrencyInputPanel({
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
+            
           </CurrencySelect>
           {!hideInput && (
             <>
