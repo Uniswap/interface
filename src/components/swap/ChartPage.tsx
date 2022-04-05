@@ -1,27 +1,53 @@
 import { useWeb3React } from '@web3-react/core';
-import Badge from 'components/Badge';
+import Badge, { BadgeVariant } from 'components/Badge';
 import _ from 'lodash';
 import moment from 'moment';
 import { useKiba } from 'pages/Vote/VotePage';
 import React from 'react';
-import { ChevronDown, ChevronRight, ChevronUp, X } from 'react-feather';
-import { useBscTokenData, useBnbPrices, useBscTokenTransactions, fetchBscTokenData } from 'state/logs/bscUtils';
-import { useTokenTransactions, useTokenData, useEthPrice, getTokenData } from 'state/logs/utils';
+import { ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
+import { useBscTokenData, useBnbPrices, useBscTokenTransactions, fetchBscTokenData, fetchBscHolders, useBscPoocoinTransactions } from 'state/logs/bscUtils';
+import { useTokenTransactions, useTokenData, useEthPrice, getTokenData, useTokenDataHook } from 'state/logs/utils';
 import styled from 'styled-components/macro';
 import { StyledInternalLink } from 'theme';
 import { Dots } from './styleds';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
+import useInterval from 'hooks/useInterval';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
 font-size:25px;
 `
+
+const StyledA = styled.a`
+    font-family:'Inter var', sans-serif !important;
+`
+
+export const useHolderCount = (chainId: any) => {
+    const [holdersCount, setHoldersCount] = React.useState<any | undefined>()
+    function intervalCallback() {
+        if (!chainId) return;
+        if (chainId === 1)
+            fetch('https://api.ethplorer.io/getTokenInfo/0x4b2c54b80b77580dc02a0f6734d3bad733f50900?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
+                .then(res => res.json())
+                .then(setHoldersCount);
+        if (chainId === 56) fetchBscHolders().then((response: any) => {
+            setHoldersCount({holdersCount:response})
+        })
+    }
+    React.useEffect(() => {
+        intervalCallback()
+    }, [chainId])
+
+    useInterval(intervalCallback, 30000)
+    return holdersCount;
+}
+
 const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { lastFetched: any, transactions: any, tokenData: any, chainId?: number }) => {
     console.log(tokenData)
+    const [filterAddress, setFilterAddress] = React.useState<string | undefined>()
     const chainLabel = React.useMemo(() => chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '', [chainId])
     const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [moment(lastFetched).fromNow()])
-    const price = React.useMemo(() => parseFloat(tokenData?.priceUSD), [tokenData])
-    const formattedTransactions = transactions?.swaps?.map((swap: any) => {
+    const formattedTransactions = React.useMemo(() => transactions?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out
         const newTxn: Record<string, any> = {}
@@ -43,41 +69,85 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         newTxn.amountUSD = swap.amountUSD;
         newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.from : swap.to
         return newTxn;
-    })
+    }).filter((newTxn: any) => !filterAddress ? true : newTxn.account === filterAddress), [transactions, filterAddress])
+
+    const holdersCount = useHolderCount(chainId)
+    const price = React.useMemo(() => tokenData?.priceUSD ?
+        parseFloat(tokenData?.priceUSD) : holdersCount && holdersCount?.price?.rate ?
+            parseFloat(holdersCount?.price?.rate) : NaN
+        , [tokenData, holdersCount])
+
+    const CIRCULATING_SUPPLY = 1000000000000;
+    const marketCap = React.useMemo(() => {
+        if (!tokenData?.priceUSD) return;
+        return Number((parseFloat(tokenData.priceUSD) * CIRCULATING_SUPPLY).toFixed(0)).toLocaleString()
+    }, [tokenData])
     const fromNow = React.useMemo(() => {
-        return (transaction:any) => 
+        return (transaction: any) =>
             moment(+transaction.timestamp * 1000).fromNow()
-        
+
     }, [formattedTransactions])
     return (
         <>
-            <StyledDiv style={{ alignItems: 'center', width: '100%', display: 'flex', flexFlow: 'row wrap', justifyContent: 'space-between' }}>
-                {tokenData && tokenData?.name &&
+            <StyledDiv
+                style={{
+                    alignItems: 'center',
+                    width: '100%',
+                    display: 'flex',
+                    flexFlow: 'row wrap',
+                    justifyContent: 'stretch',
+                    gap: '1.5px 10.5px',
+                    flex: '1 1',
+                    flexGrow: 1
+                }}>
+                {
                     <>
-                        {tokenData?.name} ({tokenData?.symbol})
-                        <br />
-                        {!isNaN(price) && +price >=0 && <span style={{
-                            display: 'inline-flex',
-                            flexFlow: 'row wrap',
-                            alignItems: 'center'
-                        }}>
-                            {(+price?.toFixed(18))} &nbsp;
-                            <Badge style={{ width: 'fit-content', display: 'flex', justifyContent: 'flex-end', color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? "red" : 'green' }}>
-                                <StyledDiv>{tokenData?.priceChangeUSD && tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}
-                                    {tokenData?.priceChangeUSD?.toFixed(2)}%
-                                </StyledDiv>
-                            </Badge>
-                        </span>}
+
+                        {!isNaN(price) && +price >= 0 && <>
+                            <small>
+                                <small style={{ display: 'block' }}>Price</small>
+                                <Badge variant={tokenData?.priceChangeUSD <= 0 ? BadgeVariant.NEGATIVE_OUTLINE : BadgeVariant.POSITIVE_OUTLINE}>{(+price?.toFixed(18))}</Badge>
+                            </small>
+                            <small >
+                                <small style={{ display: 'block', textAlign: 'left' }}>24hr %</small>
+                                <Badge variant={tokenData?.priceChangeUSD <= 0 ? BadgeVariant.NEGATIVE_OUTLINE : BadgeVariant.POSITIVE_OUTLINE} style={{ width: 'fit-content', display: 'flex', justifyContent: 'flex-end' }}>
+                                    {tokenData?.priceChangeUSD && tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}
+                                    {tokenData?.priceChangeUSD?.toFixed(2)}  <Percent />
+                                </Badge>
+                            </small>
+                        </>}
+                        {holdersCount && holdersCount?.holdersCount && (
+                            <small>
+                                <small style={{ display: 'block' }}>Holders</small>
+                                <Badge variant={BadgeVariant.WARNING_OUTLINE}>{holdersCount.holdersCount}</Badge>
+                            </small>
+                        )}
+                        {marketCap && (
+                            <small>
+                                <small style={{ display: 'block' }}>Market Cap</small>
+                                <Badge variant={BadgeVariant.WARNING_OUTLINE}>${marketCap}</Badge>
+                            </small>
+                        )}
+
+                        {tokenData?.oneDayVolumeUSD && (
+                            <small>
+                                <small style={{ display: 'block' }}>Daily Volume</small>
+                                <Badge variant={BadgeVariant.WARNING_OUTLINE}>${Number(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(0)).toLocaleString()}</Badge>
+                            </small>
+                        )}
                         {tokenData?.totalLiquidityUSD && <small>
-                            (Total Liquidity ${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()})
-                        </small>}
+                            <small style={{ display: 'block' }}>Total Liquidity</small>
+                            <Badge variant={BadgeVariant.WARNING_OUTLINE}>
+                                ${Number((tokenData?.totalLiquidityUSD * 2).toFixed(0)).toLocaleString()}
+                            </Badge></small>}
                     </>
                 }
             </StyledDiv>
             {lastUpdated && (
-                <small style={{ textAlign: 'right' }}>
-                    {`Last updated ${lastUpdated}`} {chainId && chainId === 56 && <><br /><small></small></>}
-                </small>
+                <span style={{ display: 'flex', marginTop: 3, justifyContent: 'space-between', textAlign: 'right' }}>
+                    {filterAddress !== undefined && <small>Filtering transactions by <Badge><small>{filterAddress.slice(0, 6) + '...' + filterAddress.slice(38, 42)}</small></Badge> &nbsp;</small>}
+                    <small>{`Last updated ${lastUpdated}`} {chainId && chainId === 56 && <><br /><small></small></>}</small>
+                </span>
             )}
             <div style={{
                 display: 'block',
@@ -90,7 +160,8 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                         textAlign: 'left',
                         position: 'sticky',
                         top: 0,
-                        background: '#222'
+                        background: '#222',
+                        fontWeight: 200
                     }}>
                         <tr>
                             <th>Date</th>
@@ -98,8 +169,9 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                             <th>Amt {chainLabel}</th>
                             <th>Amt USD</th>
                             <th>Amt Tokens</th>
-                            <th>Maker</th>
                             <th>Tx</th>
+                            <th>Maker</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,19 +183,25 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                 <td>{item.token0Symbol === `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                     {item.token1Symbol === `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                 </td>
-                                <td>${Number(item.amountUSD).toFixed(2).toLocaleString()}</td>
+                                <td>${Number(parseFloat(item.amountUSD).toFixed(2)).toLocaleString()}</td>
                                 <td>{item.token0Symbol !== `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                     {item.token1Symbol !== `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                 </td>
                                 <td>
-                                    <a href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/address/${item.account}`}>
-                                        {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
-                                    </a>
+                                    <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
+                                        {item?.hash && item?.transaction?.id.slice(0, 6) + '...' + item?.transaction?.id.slice(38, 42)}
+                                    </StyledA>
                                 </td>
                                 <td>
-                                    <a href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
-                                        {item?.hash && item?.transaction?.id.slice(0, 6) + '...' + item?.transaction?.id.slice(38, 42)}
-                                    </a>
+                                    <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/address/${item.account}`}>
+                                        {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
+                                    </StyledA>
+                                </td>
+                                <td title={`Filter transactions by ${item.account}`}>
+                                    <Filter style={{ cursor: 'pointer' }} fill={filterAddress ? 'purple' : 'gray'} onClick={() => {
+                                        if (filterAddress) setFilterAddress(undefined)
+                                        if (!filterAddress) setFilterAddress(item.account)
+                                    }} />
                                 </td>
                             </tr>
                         ))}
@@ -136,7 +214,6 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
 
 
 const FrameWrapper = styled.div`
-padding:9px 14px;
 width:100%;
 display:flex;
 flex-flow:column wrap;
@@ -147,39 +224,31 @@ overflow-y:auto;
 export const Chart = () => {
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
-    const [tokenData, setTokenData] = React.useState<any>({})
     const [ethPrice, ethPriceOld] = useEthPrice()
     const [symbol, setSymbol] = React.useState('')
     const transactionData = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
     const binanceTransactionData = useBscTokenTransactions('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 60000)
-    console.log(binanceTransactionData)
     const prices = useBnbPrices()
     const accessDenied = React.useMemo(() => !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
     const [view, setView] = React.useState<'chart' | 'market'>('chart')
-    const frameURL = React.useMemo(() => chainId === 56 ? `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180` : `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`, [symbol, chainId])
-   
-    React.useEffect(() => {
-        if (chainId === 1 && ethPrice && ethPriceOld && (tokenData?.isBSC || !tokenData?.totalLiquidityUSD)) {
-            getTokenData('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', ethPrice, ethPriceOld).then((data) => {
-                setTokenData(data)
-                setSymbol(data?.symbol)
-            })
-        }
-    }, [chainId, tokenData, ethPrice, ethPriceOld])
-
-    React.useEffect(() => {
-        if (isBinance && !tokenData?.isBSC && prices) {
-            fetchBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices?.current, prices?.current).then((bscTokenData) => {
-            setTokenData(bscTokenData)
-            setSymbol(bscTokenData?.symbol)
-            });
-        }
-    }, [isBinance, tokenData, prices])
+    const frameURL = React.useMemo(() => {
+        return chainId === 56 ?
+        `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180` :
+        `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`
+    }, [symbol, chainId])
+    const tokenData = useTokenDataHook('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', ethPrice, ethPriceOld)
 
     return (
-        <FrameWrapper style={{ background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }} >
-            <div style={{ display: 'block', marginBottom: 5, width: '100%', padding: "9px 14px" }}>
+        <FrameWrapper style={{ 
+            background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))'
+            }} >
+            <div style={{ 
+                    display: 'block', 
+                    marginBottom: 5, 
+                    width: '100%', 
+                    padding: "9px 14px" 
+                }}>
                 <div style={{ display: 'flex', marginBottom: 5, alignItems: 'center', flexFlow: "row wrap" }}>
                     <a style={{ marginRight: 15 }} href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
                         <img src={'https://miro.medium.com/max/663/1*eV5_P4s2WQkgzVM_XdgWSw.png'}
@@ -199,7 +268,6 @@ export const Chart = () => {
                     </a>
                     {!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>ETH: ${ethPrice && (+ethPrice)?.toFixed(2)}</Badge>}
                     {!!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>BNB: ${prices && (+prices?.current)?.toFixed(2)}</Badge>}
-
                 </div>
                 {accessDenied && <div style={{ width: '100%', padding: '9px 14px', height: 400, display: 'flex', justifyContent: 'center', alignItems: 'center' }}><StyledDiv style={{ color: "#222" }}>You must own Kiba Inu tokens to use this feature.</StyledDiv></div>}
                 {accessDenied === false &&
@@ -241,13 +309,12 @@ export const Chart = () => {
                                     color: '#fff',
                                     borderRadius: 6,
                                     flexFlow: 'column wrap',
-                                    gridColumnGap: 50
                                 }}>
                                     <TransactionList chainId={chainId} lastFetched={transactionData.lastFetched} transactions={transactionData.data} tokenData={tokenData} />
                                 </div>}
                             {!isBinance && !transactionData?.data?.swaps?.length && <Dots>Loading transactions..</Dots>}
                             {isBinance && !binanceTransactionData?.data?.swaps?.length && <Dots>Loading transactions..</Dots>}
-                            {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && <div style={{  width: '100%', overflowY: 'auto', padding: '9px 14px', background: 'rgb(22, 22, 22)', color: '#fff', borderRadius: 6, flexFlow: 'column wrap', gridColumnGap: 50 }}>
+                            {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && <div style={{ width: '100%', overflowY: 'auto', padding: '9px 14px', background: 'rgb(22, 22, 22)', color: '#fff', borderRadius: 6, flexFlow: 'column wrap', gridColumnGap: 50 }}>
                                 <TransactionList chainId={chainId} lastFetched={binanceTransactionData.lastFetched} transactions={binanceTransactionData.data} tokenData={tokenData} />
                             </div>}
                         </>}
