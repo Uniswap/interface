@@ -21,7 +21,7 @@ import {
   Type,
 } from "react-feather";
 import ReactMarkdown from "react-markdown";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components/macro";
 import { ButtonPrimary } from "../../components/Button";
 import { GreyCard } from "../../components/Card";
@@ -92,6 +92,7 @@ import Column from "components/Column";
 import Row from "components/Row";
 import { stackOrderInsideOut } from "d3";
 import { isMobile } from "react-device-detect";
+import { useTrumpGoldBalance } from "./AddProposal";
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -372,11 +373,12 @@ export default function VotePage({
           const usdcValue = usdc / ten6;
           setTrumpGainsUSD(usdcValue.toFixed(2));
         });
+        // pseudo code
       }
     } catch (err) {
       console.error(err);
     }
-  }, [rawTrumpCurrency, trumpBalance, storedTrumpBalance]);
+  }, [rawTrumpCurrency, trumpCoin.address, trumpBalance, storedTrumpBalance]);
 
   useEffect(() => {
     try {
@@ -405,7 +407,7 @@ export default function VotePage({
     } catch (err) {
       console.error(err);
     }
-  }, [rawStimulusCurrency, stimulusBalance, storedSimulusBalance]);
+  }, [rawStimulusCurrency, stimulusCoin.address, stimulusBalance, storedSimulusBalance]);
 
   const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
   React.useEffect(() => {
@@ -435,7 +437,7 @@ export default function VotePage({
     } catch (ex) {
       console.error(ex);
     }
-  }, [trumpBalance]);
+  }, [trumpBalance, trumpCoin.address]);
 
   const [stimulusBalanceUSD, setStimulusBalanceUSD] = React.useState("");
   React.useEffect(() => {
@@ -465,11 +467,42 @@ export default function VotePage({
     } catch (ex) {
       console.error(ex);
     }
-  }, [stimulusBalance]);
+  }, [stimulusBalance, stimulusCoin.address]);
 
+  const goldBalance = useTrumpGoldBalance(account)
+  const [goldBalanceUSD, setGoldBalanceUSD] = React.useState("");
+  React.useEffect(() => {
+    try {
+      if (goldBalance && +goldBalance < 0) {
+        setGoldBalanceUSD("-");
+        return;
+      }
+      if (goldBalance) {
+        const w3 = new Web3(window.ethereum as any).eth;
+        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+        const ten9 = 10 ** 9;
+        const amount = +goldBalance?.toFixed(0) * ten9;
+        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+          '0x29699C8485302cd2857043FaB8bd885bA08Cf268',
+          WETH9[1].address,
+          USDC.address,
+        ]);
+        amountsOut.call().then((response: any) => {
+          console.log(response);
+          const usdc = response[response.length - 1];
+          const ten6 = 10 ** 6;
+          const usdcValue = usdc / ten6;
+          setGoldBalanceUSD(usdcValue.toFixed(2));
+        });
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  }, [goldBalance]);
   const [showTGoldTool, setShowTGoldTool] = useState(false);
   const trumpValue = useUSDCValue(trumpBalance);
   const stimulusValue = useUSDCValue(stimulusBalance);
+  const goldValue = useUSDCValue(goldBalance)
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -665,10 +698,6 @@ export default function VotePage({
                   )}
                   {!account && <h1>YOUR GAINS</h1>}
                   <div>
-                    <h1 style={{ textAlign: "center", width: "100%" }}>
-                      COMING SOON
-                    </h1>
-
                     <img
                       src={
                         "https://babytrumptoken.com/images/Trump_Gold_Coin_Gecko.png"
@@ -680,21 +709,14 @@ export default function VotePage({
                     <TYPE.black>
                       <Trans>
                         {" "}
-                        {formattedStim() !== undefined &&
-                          `Trump Gold Balance -`}{" "}
+                        {goldBalance !== undefined &&
+                          `Trump Gold Balance ${+goldBalance.toFixed(2)}`} {`(${goldBalanceUSD|| '0.00'} USD)`}
                       </Trans>
-                    </TYPE.black>
-                    {isTrackingGains === true && (
-                      <TYPE.main>
-                        {storedSimulusBalance !== undefined &&
-                          stimulusBalance !== undefined &&
+                      {isTrackingGains === true && (
+                      <TYPE.main style={{display:'inline'}}>
+                        {goldBalance !== undefined &&
                           account !== undefined && (
                             <React.Fragment>
-                              <ArrowUp /> &nbsp;
-                              <Trans>
-                                {`TGOLDGAINS`} &nbsp;
-                                {`-`}
-                              </Trans>
                               <span style={{ marginLeft: 50 }}>
                                 <Tooltip
                                   text={
@@ -712,21 +734,20 @@ export default function VotePage({
                           )}
                       </TYPE.main>
                     )}
+                    </TYPE.black>
+                   
                     {isTrackingGains &&
-                      stimulusBalance !== undefined &&
-                      trumpBalance !== undefined &&
-                      +stimulusBalance.toFixed(2) > 0 &&
-                      +trumpBalance.toFixed(2) > 0 && (
+                      goldBalance !== undefined &&
+                      +goldBalance.toFixed(2) > 200 &&
+                       (
                         <Row>
                           <Column>
                             <Badge>
                               <TYPE.black>
                                 <small>
-                                  <Trans>Total GAINS</Trans>
+                                  <Trans>You own enough gold to <Link to="/proposal/create"> create a proposal</Link></Trans>
                                 </small>
-                                &nbsp; -
                                 <small>
-                                  &nbsp;<Trans>USD</Trans>
                                 </small>
                               </TYPE.black>
                             </Badge>
