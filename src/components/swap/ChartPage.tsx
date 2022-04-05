@@ -32,17 +32,20 @@ const StyledA = styled.a`
     font-family:'Inter var', sans-serif !important;
     color: ${({ theme }) => theme.primary1};
 `
-export const useTokenHolderCount = (address: string) => {
+export const useTokenHolderCount = (address: string, chainId?:number) => {
     const [data, setData] = React.useState<any | undefined>()
     function intervalCallback() {
         if (!address) return;
+        if (chainId && chainId === 1 || !chainId)
         fetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=EK-htz4u-dfTvjqu-7YmJq`, { method: 'get' })
             .then(res => res.json())
             .then(setData);
+        else if (chainId && chainId === 56 ) 
+            fetchBscHolders(address).then((response) => setData({holdersCount: response}));
     }
     React.useEffect(() => {
         intervalCallback()
-    }, [address])
+    }, [address, chainId])
 
     useInterval(intervalCallback, 30000)
     return data;

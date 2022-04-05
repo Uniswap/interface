@@ -143,11 +143,11 @@ interface TransactionResults {
 
 const BIT_QUERY_CLIENT = 'https://graphql.bitquery.io';
 
-const QUERY_HOLDERS_BSC = gql`
+const QUERY_HOLDERS_BSC = (address: string) => gql`
 query MyQuery {
   ethereum(network: bsc) {
     transfers(
-      currency: {in: ["0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5"]}
+      currency: {in: ["${address}"]}
       options: { limitBy: { each: "currency.address", limit: 10 } }
     ) {
       currency {
@@ -159,8 +159,8 @@ query MyQuery {
 }
 `
 
-export const fetchBscHolders = async () => {
-  const response = await request(BIT_QUERY_CLIENT, QUERY_HOLDERS_BSC);
+export const fetchBscHolders = async (address: string) => {
+  const response = await request(BIT_QUERY_CLIENT, QUERY_HOLDERS_BSC(address));
   console.dir(response)
   return response?.data?.ethereum?.transfers?.find((x: any) => x.count)?.count;
 }

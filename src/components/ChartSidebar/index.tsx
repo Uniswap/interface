@@ -4,7 +4,7 @@ import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, D
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
 import { StyledInternalLink, TYPE, } from 'theme';
 import styled, { keyframes } from 'styled-components/macro'
-import { useHolderCount, useTokenInfo } from 'components/swap/ChartPage'
+import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
 import { BurntKiba } from 'components/BurntKiba';
 import React from 'react';
@@ -59,7 +59,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const tokenInfo = useTokenInfo(chainId, token.address)
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
-    const holderCount = useHolderCount(chainId)
+    const holderCount = useTokenHolderCount(token.address, chainId)
     console.log('chartSidebar -> tokenInfo', tokenInfo, holderCount)
     //create a custom function that will change menucollapse state from false to true and true to false
     const menuIconClick = () => {
@@ -101,14 +101,26 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                         title={`${tokenData?.name ? tokenData?.name : ''} Stats`}>
                         {hasData &&
                             <>
-                                <MenuItem>
+                                {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
                                     <TYPE.subHeader>Price</TYPE.subHeader>
-                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenData.priceUSD.toFixed(18)}</TYPE.black>
+                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{(tokenData?.priceUSD)?.toString()}</TYPE.black>
                                 </MenuItem>
                                 <MenuItem>
                                     <TYPE.subHeader>Market Cap</TYPE.subHeader>
                                     <TYPE.black>${Number(tokenData?.priceUSD * 1000000000000).toLocaleString()}</TYPE.black>
+                                </MenuItem></>}
+
+                                {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate &&  _.isNumber(tokenInfo.price.rate) && <>
+                                    <MenuItem>
+                                    <TYPE.subHeader>Price</TYPE.subHeader>
+                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{(tokenInfo?.price?.rate?.toString()).toString()}</TYPE.black>
                                 </MenuItem>
+                                <MenuItem>
+                                    <TYPE.subHeader>Market Cap</TYPE.subHeader>
+                                    <TYPE.black>${Number(parseFloat(tokenInfo?.price?.rate?.toString()) * 1000000000000).toLocaleString()}</TYPE.black>
+                                </MenuItem>
+                                    </>
+                                }
                                 <MenuItem>
                                     <TYPE.subHeader>Total Burnt</TYPE.subHeader>
                                     <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
@@ -133,14 +145,14 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                 </MenuItem>}
                                 {!tokenInfo?.price && <MenuItem>
                                     <TYPE.subHeader>Price Change 24Hr (%) </TYPE.subHeader>
-                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {tokenData.priceChangeUSD.toFixed(2)}%</TYPE.black>
+                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {tokenData?.priceChangeUSD?.toFixed(2)}%</TYPE.black>
                                 </MenuItem>}
 
-                                {tokenInfo && tokenInfo.price && tokenInfo.price.diff && <MenuItem>
+                                {tokenInfo && tokenInfo.price && tokenInfo?.price?.diff && <MenuItem>
                                     <TYPE.subHeader>Price Change 24Hr (%) </TYPE.subHeader>
                                     <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenInfo?.price.diff < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {parseFloat(tokenInfo.price.diff.toString()).toFixed(2)}%</TYPE.black>
                                 </MenuItem>}
-                                {tokenInfo && tokenInfo.price && tokenInfo.price.rate && <MenuItem>
+                                {tokenInfo && tokenInfo.price && tokenInfo?.price?.rate && <MenuItem>
                                     <TYPE.subHeader>Price Change 1 Week (%) </TYPE.subHeader>
                                     <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenInfo.price.diff7d < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {parseFloat(tokenInfo.price.diff7d.toString()).toFixed(2)}%</TYPE.black>
                                 </MenuItem>}
