@@ -52,17 +52,23 @@ type StoredAndTrackedGains = {
   trackingSince: string
 }
 
-const CUSTOM_GAINS_KEY = 'custom_gains'
 
 export const GainsTracker = () => {
-  const { account } = useWeb3React()
+  const { account, library,chainId } = useWeb3React()
   const kibaBalance = useKiba(account)
+const CUSTOM_GAINS_KEY = React.useMemo(() => {
+ let gainsKey = `custom_gains`
+ if (chainId) gainsKey += `_${chainId}`;
+ if (account) gainsKey += `_${account}`;
+ return gainsKey;
+}, [account,chainId])
+
   const [currency, setCurrency] = React.useState<any>(undefined)
   const onUserInput = (value: any) => {
-    setCurrency(value)
+    console.log(value)
   }
   const handleInputSelect = useCallback((currency: Currency) => {
-    onUserInput(currency)
+    setCurrency(currency)
   }, [])
 
   const handleTypeInput = (val: any) => {
@@ -77,7 +83,7 @@ export const GainsTracker = () => {
     } else {
       return false
     }
-  }, [localStorage.getItem(CUSTOM_GAINS_KEY)])
+  }, [ CUSTOM_GAINS_KEY,localStorage.getItem(CUSTOM_GAINS_KEY)])
 
   const [isTrackingGains, setIsTracking] = React.useState(isTrackingCustom)
 
@@ -87,6 +93,7 @@ export const GainsTracker = () => {
   const tipmessage = `NOTE: The GainsTracker has no way to validate that the token you are selecting is a valid redistribution token. If you select a token that does not give redistribution, and start tracking, no gains will ever be tracked.`
 
   const startTrackingCustom = useCallback(() => {
+    if (isTrackingGains) return;
     if (selectedCurrencyBalance) {
       const payload: StoredAndTrackedGains = {
         selectedCurrency: currency,
@@ -96,9 +103,10 @@ export const GainsTracker = () => {
       localStorage.setItem(CUSTOM_GAINS_KEY, JSON.stringify(payload))
       setIsTracking(true)
     }
-  }, [selectedCurrencyBalance, currency])
+  }, [selectedCurrencyBalance, isTrackingGains, CUSTOM_GAINS_KEY, currency])
 
   React.useEffect(() => {
+    if (isTrackingGains) return;
     if (account) {
       const trackingCustom = JSON.parse(localStorage.getItem(CUSTOM_GAINS_KEY)!) as StoredAndTrackedGains
       if (trackingCustom) {
@@ -112,13 +120,13 @@ export const GainsTracker = () => {
         setIsTracking(false)
       }
     }
-  }, [account, localStorage.getItem(CUSTOM_GAINS_KEY)])
-
+  }, [account, isTrackingGains, CUSTOM_GAINS_KEY, localStorage.getItem(CUSTOM_GAINS_KEY)])
+ 
   const stopTrackingCustom = useCallback(() => {
     localStorage.removeItem(CUSTOM_GAINS_KEY)
     setCurrency(undefined)
     setIsTracking(false)
-  }, [currency, isTrackingGains])
+  }, [currency, CUSTOM_GAINS_KEY, isTrackingGains])
 
   const gains = useCallback(() => {
     if (isTrackingGains && selectedCurrencyBalance) {
@@ -127,9 +135,9 @@ export const GainsTracker = () => {
       const stored = +trackingCustom.storedBalance
       return (currencyBalance - stored).toFixed(2)
     }
-
     return ''
-  }, [
+  }, [ 
+    CUSTOM_GAINS_KEY,
     isTrackingGains,
     selectedCurrencyBalance,
     localStorage.getItem(CUSTOM_GAINS_KEY),
@@ -158,7 +166,7 @@ export const GainsTracker = () => {
       const gains = localStorage.getItem(CUSTOM_GAINS_KEY)
       if (gains) {
         const model = JSON.parse(gains) as StoredAndTrackedGains
-        const provider = window.ethereum ? window.ethereum : walletconnect
+        const provider = library?.provider
         const w3 = new Web3(provider as any).eth
         const calc = +(+selectedCurrencyBalance.toFixed(2) - +model.storedBalance).toFixed(0)
         const routerContr = new w3.Contract(routerAbi as any, routerAddress)
@@ -181,7 +189,8 @@ export const GainsTracker = () => {
     } else {
       setGainsUSD('0.00')
     }
-  }, [selectedCurrencyBalance, localStorage.getItem(CUSTOM_GAINS_KEY), isTrackingGains])
+  }, [selectedCurrencyBalance, CUSTOM_GAINS_KEY, library?.provider, localStorage.getItem(CUSTOM_GAINS_KEY), isTrackingGains])
+  
 
   const GainsLabel = styled.label`
     position: absolute;
@@ -193,7 +202,7 @@ export const GainsTracker = () => {
 
   const GainsWrapper = (!!account && !kibaBalance || (kibaBalance && +kibaBalance.toFixed(2) <= 0)) ? DisabledMask : React.Fragment
   const [currencyValue, setCurrencyValue] = React.useState('')
-  const total = useUSDCValue(selectedCurrencyBalance ?? undefined)
+  const total = useUSDCValue(selectedCurrencyBalance)
   React.useEffect(() => {
     if (selectedCurrencyBalance && +selectedCurrencyBalance?.toFixed(2) > 0) {
       if (currency?.wrapped?.address === WETH9[1].address) {
@@ -201,27 +210,8 @@ export const GainsTracker = () => {
         else setCurrencyValue('0.00')
         return
       }
-      const provider = window.ethereum ? window.ethereum : walletconnect
-      if (provider === walletconnect) {
-        walletconnect.activate().then(() => {
-          const w3 = new Web3(provider as any).eth
-          const routerContr = new w3.Contract(routerAbi as any, routerAddress)
-          const ten9 = 10 ** 9
-          const amount = +selectedCurrencyBalance.toFixed(0) * ten9
-          const address = currency?.address ? currency.address : selectedCurrencyBalance?.currency?.wrapped?.address
-          const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-            address,
-            WETH9[1].address,
-            USDC.address,
-          ])
-          amountsOut.call().then((response: any) => {
-            const usdc = response[response.length - 1]
-            const ten6 = 10 ** 6
-            const usdcValue = usdc / ten6
-            setCurrencyValue(usdcValue.toFixed(2))
-          })
-        })
-      } else {
+      const provider = library?.provider
+      
         const w3 = new Web3(provider as any).eth
         const routerContr = new w3.Contract(routerAbi as any, routerAddress)
         const ten9 = 10 ** 9
@@ -234,10 +224,9 @@ export const GainsTracker = () => {
           const usdcValue = usdc / ten6
           setCurrencyValue(usdcValue.toFixed(2))
         })
-      }
-    } else {
-    }
-  }, [selectedCurrencyBalance, total, currency, account])
+     
+  }
+}, [selectedCurrencyBalance,  library?.provider, total, currency, account])
 
   const showWarning = React.useMemo(() => {
     const showWarning = !!account && (!kibaBalance || +kibaBalance?.toFixed(2) <= 0)
@@ -245,8 +234,11 @@ export const GainsTracker = () => {
   }, [kibaBalance, account])
 
   return (
-    <GainsWrapper>
-      <Card style={{ maxWidth: 600 }}>
+    <GainsWrapper  >
+      <Card style={{ background: 'rgba(0,0,0,.75)',
+    border: '1px solid #881512',
+    borderRadius: 42,
+     maxWidth: 600 }}>
         <Wrapper>
           <CardSection>
             <div style={{ paddingLeft: 15, paddingRight: 15 }}>
@@ -279,8 +271,8 @@ export const GainsTracker = () => {
                   <React.Fragment>
                     <AlertCircle />
                     <small>
-                      This feature is only avaialable to current holders of Squeeze Token. Please check again at a
-                      future date or acquire some Squeeze Token to use the universal gains tracking functionality.
+                      This feature is only avaialable if you own Kiba Inu tokens. Please check again at a
+                      future date or acquire some Kiba Inu to use the universal gains tracking functionality.
                     </small>
                   </React.Fragment>
                 </BlueCard>
@@ -308,7 +300,7 @@ export const GainsTracker = () => {
               otherCurrency={gains() ? USDC : undefined}
               showCommonBases={false}
               renderBalance={(amt) => {
-                return `Balance: ${amt.toFixed(2)} (${(+currencyValue ?? total).toFixed(2)} USD)`
+                return `Balance: ${amt.toFixed(2)} (${currencyValue ? parseFloat((currencyValue)).toFixed(2) : total?.toFixed(2)}  USD)`
               }}
               id="swap-currency-input"
             />
