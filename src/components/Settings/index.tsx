@@ -17,6 +17,7 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import { Percent } from '@uniswap/sdk-core'
+import { useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -114,11 +115,12 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
+export default function  SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
-
+  const { onSwitchUseChangeRecipient } = useSwapActionHandlers()
+  const { useOtherAddress } = useSwapState()
   const theme = useContext(ThemeContext)
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
@@ -236,6 +238,21 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                     action: singleHopOnly ? 'disable single hop' : 'enable single hop',
                   })
                   setSingleHopOnly(!singleHopOnly)
+                }}
+              />
+            </RowBetween>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Specify Reciever</Trans>
+                </TYPE.black>
+                <QuestionHelper text={<Trans>Enables the feature to allow you to specify a receiving address for your swaps.</Trans>} />
+              </RowFixed>
+              <Toggle
+                id="toggle-disable-multihop-button"
+                isActive={useOtherAddress}
+                toggle={() => {
+                  onSwitchUseChangeRecipient(!useOtherAddress)
                 }}
               />
             </RowBetween>

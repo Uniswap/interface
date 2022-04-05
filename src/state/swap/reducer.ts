@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, setUseOtherAddress, switchCurrencies, typeInput } from './actions'
 
 export interface SwapState {
+  readonly useOtherAddress: boolean
   readonly independentField: Field
   readonly typedValue: string
   readonly [Field.INPUT]: {
@@ -15,6 +16,7 @@ export interface SwapState {
 }
 
 const initialState: SwapState = {
+  useOtherAddress: false,
   independentField: Field.INPUT,
   typedValue: '',
   [Field.INPUT]: {
@@ -30,7 +32,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, useOtherAddress } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId,
@@ -41,6 +43,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
           independentField: field,
           typedValue: typedValue,
           recipient,
+          useOtherAddress: useOtherAddress as boolean
         }
       }
     )
@@ -79,5 +82,8 @@ export default createReducer<SwapState>(initialState, (builder) =>
     })
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
       state.recipient = recipient
+    })
+    .addCase(setUseOtherAddress, (state, {payload: { on }}) => {
+      state.useOtherAddress = on;
     })
 )

@@ -45,7 +45,11 @@ export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRi
 export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   border: none;
   text-decoration: none;
-  background: none;
+  background: #fff;
+  padding:9px 14px;
+  border-radius:50px;
+  margin-top:3px;
+  margin-bottom:3px;
 
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.primary1)};

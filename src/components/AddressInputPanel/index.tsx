@@ -97,7 +97,7 @@ export default function AddressInputPanel({
     [onChange]
   )
 
-  const error = Boolean(value.length > 0 && !loading && !address)
+  const error = Boolean(value?.length > 0 && !loading && !address)
 
   return (
     <InputPanel id={id}>
