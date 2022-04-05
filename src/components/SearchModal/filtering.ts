@@ -1,7 +1,8 @@
 import { TokenInfo } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { isAddress } from '../../utils'
-import { Token } from '@uniswap/sdk-core'
+import { Token, WETH9 } from '@uniswap/sdk-core'
+import { USDC, USDT } from 'constants/tokens'
 
 const alwaysTrue = () => true
 
@@ -70,6 +71,17 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       }
     })
 
-    return [...exactMatches, ...symbolSubtrings, ...rest]
+    const allowedContracts = [
+      '0x99d36e97676a68313ffdc627fd6b56382a2a08b6',
+      '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013',
+      WETH9[1].address,
+      USDC.address,
+      USDT.address,
+    ]
+
+    return [...exactMatches, ...symbolSubtrings, ...rest].filter((item: any) => {
+      const isTrumpApproved = allowedContracts.includes(item.address.toLowerCase())
+      return isTrumpApproved
+    })
   }, [tokens, searchQuery])
 }
