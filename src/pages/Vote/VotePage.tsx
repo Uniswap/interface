@@ -4,7 +4,7 @@ import {
   Price,
   Rounding,
   Token,
-  WETH9,
+  WETH9
 } from "@uniswap/sdk-core";
 import { BigNumber } from "ethers";
 import useCurrentBlockTimestamp from "hooks/useCurrentBlockTimestamp";
