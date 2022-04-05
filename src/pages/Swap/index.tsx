@@ -456,7 +456,9 @@ export default function Swap({ history }: RouteComponentProps) {
                     otherCurrency={currencies[Field.OUTPUT]}
                     showOnlyTrumpCoins={true}
                     showCommonBases={true}
-
+                    hideBalance={false}
+                    hideInput={false}
+                    
                     id="swap-currency-input"
                   />
                   <ArrowWrapper clickable>
