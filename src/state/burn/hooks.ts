@@ -2,19 +2,88 @@ import { t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { Token, Currency, Percent, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useCallback } from 'react'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
-
-import { useActiveWeb3React } from '../../hooks/web3'
+import { useCallback, useState } from "react";
+import { BigNumber } from "@ethersproject/bignumber";
+import { parseUnits } from "@ethersproject/units";
+import { isEthereumChain } from "@gelatonetwork/limit-orders-lib/dist/utils";
 import { AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
 import { Field, typeInput } from './actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useWeb3React } from '@web3-react/core'
+import useInterval from 'hooks/useInterval'
+import { useActiveWeb3React } from 'hooks/web3'
 
 export function useBurnState(): AppState['burn'] {
   return useAppSelector((state) => state.burn)
+}
+
+export enum ChainId {
+  MAINNET = 1,
+  ROPSTEN = 3,
+  MATIC = 137,
+  FANTOM = 250,
+}
+
+const GAS_STATION = {
+  [ChainId.MAINNET]: "https://www.gasnow.org/api/v3/gas/price",
+  [ChainId.ROPSTEN]: undefined,
+  [ChainId.MATIC]: "https://gasstation-mainnet.matic.network",
+  [ChainId.FANTOM]: undefined,
+};
+
+const ADD_BUFFER = {
+  [ChainId.MAINNET]: true,
+  [ChainId.ROPSTEN]: false,
+  [ChainId.MATIC]: false,
+  [ChainId.FANTOM]: false,
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parseGasPrice = (data: any, chainId: ChainId): BigNumber => {
+  const buffer = ADD_BUFFER[chainId]
+    ? parseUnits("5", "gwei")
+    : parseUnits("0", "gwei");
+  const gasPriceWithBuffer = data.fast
+    ? parseUnits(data.fast.toString(), "gwei")
+    : BigNumber.from(data.data.fast).add(buffer);
+  return gasPriceWithBuffer;
+};
+
+export default function useGasPrice(): number | undefined {
+  const { chainId } = useActiveWeb3React();
+  const [gasPrice, setGasPrice] = useState<number>();
+
+  const gasPriceCallback = useCallback(() => {
+    if (chainId && GAS_STATION[chainId as ChainId]) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      fetch(GAS_STATION[chainId as ChainId]!)
+        .then((res) => {
+          res.json().then((gasInfo) => {
+            setGasPrice(parseGasPrice(gasInfo, chainId).toNumber());
+          });
+        })
+        .catch((error) =>
+          console.error(
+            `Failed to get gas price for chainId: ${chainId}`,
+            error
+          )
+        );
+    }
+  }, [chainId, setGasPrice]);
+
+  useInterval(
+    gasPriceCallback,
+    chainId && isEthereumChain(chainId)
+      ? 15000
+      : chainId && GAS_STATION[chainId as ChainId]
+      ? 60000
+      : null)
+
+  return gasPrice;
 }
 
 export function useDerivedBurnInfo(

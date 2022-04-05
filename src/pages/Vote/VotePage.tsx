@@ -31,6 +31,8 @@ import { useWeb3React } from "@web3-react/core";
 import { SupportedChainId } from "constants/chains";
 import { useBinanceTokenBalance } from "utils/binance.utils";
 import { binanceTokens } from "utils/binance.tokens";
+import { useUserTransactions } from "state/logs/utils";
+import { Transactions } from "./TransactionsPage";
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -193,6 +195,7 @@ export default function VotePage() {
     "Kiba Inu"
   );
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
+  const transactions = useUserTransactions(account ? account : undefined)
   const storedKibaBalance = useMemo(() => {
     return localStorage.getItem("trumpBalance") || undefined;
   }, [localStorage.getItem("trumpBalance")]);
@@ -333,7 +336,6 @@ const [darkMode] = useDarkModeManager()
     <>
       <PageWrapper gap="lg" justify="center">
         <ProposalInfo>
-    
 
             <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains</GainsText></div>
               {isTrackingGains && kibaBalance && +kibaBalance?.toFixed(0) > 0 && (
