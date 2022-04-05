@@ -96,7 +96,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
 
     const getHolderLink = (holder: { address: string }) => {
-        if (chainId === 1) return `https://etherscan.io/address/${holder.address}`
+        if (chainId === 1 || !chainId) return `https://etherscan.io/address/${holder.address}`
         if (chainId === 56) return `https://bscscan.com/address/${holder.address}`;
         return ``
     }

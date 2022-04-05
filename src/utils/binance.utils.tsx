@@ -119,7 +119,7 @@ export const TokenBalanceContextProvider = ({ children }: { children: any }) => 
   const { chainId } = useWeb3React()
 
   const [balance, setBalance] = React.useState({ fetchStatus: NOT_FETCHED, balance: BigInt('0') as any })
-  return chainId && chainId === 1 ? <>{children}</> : (
+  return !chainId || chainId && chainId === 1 ? <>{children}</> : (
     <TokenBalanceContext.Provider value={{ balance: balance.balance, fetchStatus: balance?.fetchStatus, setBalance: (b: any) => setBalance(b) }}>
       {children}
     </TokenBalanceContext.Provider>

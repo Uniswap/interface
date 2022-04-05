@@ -493,7 +493,7 @@ export default function AppLite() {
         useDefaultTheme={false}
         useDarkMode
         >
-        <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : client}>
+        <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
         <AppWrapper>
           {Video}
           <BodyWrapper>
