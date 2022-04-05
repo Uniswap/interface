@@ -15,16 +15,20 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
 import { Route, Switch } from 'react-router-dom'
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
+import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
 import AddLiquidity from './AddLiquidity'
 import { AddProposal } from './Vote/AddProposal'
+import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import AppBody from './AppBody'
+import { ApplicationModal } from '../state/application/actions'
 import { AutoColumn } from 'components/Column'
 import { CardSection } from 'components/earn/styled';
 import CreateProposal from './CreateProposal'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
+import Earn from './Earn'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { ExternalLinkIcon } from 'theme'
 import { Flex } from 'rebass'
@@ -32,6 +36,7 @@ import { GainsTracker } from './GainsTracker/GainsTracker'
 import Header from 'components/Header';
 import { HoneyPotBsc } from 'components/HoneyPotBSC';
 import { LifetimeReflections } from './Swap/LifetimeReflections'
+import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -138,7 +143,7 @@ const VideoWrapper = styled.div`
 export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
 
-    if (!address || address?.toLowerCase() === '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'.toLowerCase()) {
+    if (!address) {
       return Promise.resolve(false);
     }
 
@@ -357,8 +362,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
     </div>
     <RowFixed style={{ maxWidth: 600, width: "100%", padding: 20 }} >
       {hasInvalidPermissions === false &&
-        <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
-          <label>Input a contract address to check if its a honeypot <Badge variant={BadgeVariant.PRIMARY}>MUST BE ETH Contract Address</Badge></label>
+        <AutoColumn style={{ maxWidth: 600, width: "100%"}} gap={'md'}>
+          <label>Input a contract address to check if its a honeypot</label>
           <input style={{ padding: 8, width: '100%', marginBottom: 5 }} type={'search'} placeholder={"Input a contract address to check if a honeypot"} onChange={e => runCheck(e.target.value)} />
         </AutoColumn>
       }
@@ -430,8 +435,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
                     <>
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.rate.toFixed(12)}</Badge></div>
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Volume (24h)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.volume24h.toLocaleString()}</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Total Supply</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{(tokenInfo.totalSupply / 10 ** tokenInfo.decimals).toLocaleString()}</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Market Cap</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${((tokenInfo.totalSupply / 10 ** tokenInfo.decimals) * tokenInfo.price.rate).toLocaleString()}  </Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Total Supply</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{(tokenInfo.totalSupply / 10 ** 9).toLocaleString()}</Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Market Cap</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${((tokenInfo.totalSupply / 10 ** 9) * tokenInfo.price.rate).toLocaleString()}  </Badge></div>
 
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (24hr)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff}%</Badge></div>
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (1 week)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff7d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff7d}%</Badge></div>
@@ -535,7 +540,7 @@ export default function App() {
               <Route exact strict path="/tracker" component={GainsTracker} />
               <Route exact strict path="/suite" component={Suite} />
               <Route exact strict path="/transactions" component={Transactions} />
-              <Route exact strict path="/dashboard" component={GainsPage} />
+              <Route exact strict path="/gains" component={GainsPage} />
               <Route exact strict path="/honeypot-checker" component={HoneyPotDetector} />
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
               <Route exact strict path="/vote" component={Vote} />
