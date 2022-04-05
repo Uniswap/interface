@@ -1,5 +1,11 @@
-import { Text } from 'rebass'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 import styled, { keyframes } from 'styled-components/macro'
+
+import { CardWrapper } from 'pages/Swap'
+import Skeleton from 'react-loading-skeleton'
+import { Text } from 'rebass'
+import done from './done.json'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -35,6 +41,17 @@ export const MaxButton = styled.button<{ width: string }>`
   }
 `
 
+
+
+const Loading = ({count}:any) => {
+  return (
+    <Skeleton wrapper={({children}: any) => <Wrapper style={{padding:15}}>{children}</Wrapper>} height={30}  enableAnimation baseColor="#202020" highlightColor="#444" count={count} />
+  )
+}
+
+export const LoadingSkeleton = (props: any  ) =>  (
+<Loading count={props.count} borderRadius={10} />
+)
 export const Dots = styled.span`
   &::after {
     display: inline-block;
@@ -59,9 +76,11 @@ export const Dots = styled.span`
 const loadingAnimation = keyframes`
   0% {
     background-position: 100% 50%;
+    opacity:0.8;
   }
   100% {
     background-position: 0% 50%;
+    opacity:0.5;
   }
 `
 
@@ -75,9 +94,8 @@ export const LoadingRows = styled.div`
   & > div {
     animation: ${loadingAnimation} 1.5s infinite;
     animation-fill-mode: both;
-    background: ${({ theme }) => theme.bg0},
-      
-    ;
+    background: ${({ theme }) => theme.bg0};
+    opacity:0.8;
     background-size: 400%;
     border-radius: 12px;
     height: 2.4em;
