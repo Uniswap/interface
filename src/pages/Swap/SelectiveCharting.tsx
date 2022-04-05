@@ -132,7 +132,7 @@ export const SelectiveChart = () => {
     const accessDenied = false;
     const chainLabel = React.useMemo(() => chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
     return (
-        <DarkCard style={{ maxWidth: 900, background: 'radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95))', display: 'flex', flexFlow: 'column wrap' }}>
+        <DarkCard style={{ maxWidth: 900, background: '#252632', display: 'flex', flexFlow: 'column wrap', borderRadius: 30 }}>
             <CardSection>
                 <StyledDiv style={{ marginBottom: 20, cursor: 'pointer' }} onClick={() => window.history.back()}><ChevronLeft /> Back</StyledDiv>
                 <StyledDiv>KibaCharts <BarChart /></StyledDiv>
@@ -152,7 +152,7 @@ export const SelectiveChart = () => {
 
                         <div style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'space-between' }}>
                             <div style={{ paddingBottom: 5 }}>
-                                <StyledDiv>Price (USD)  <Badge style={{ color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? "red" : 'green' }}><StyledDiv>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}{tokenData.priceChangeUSD.toFixed(2)}%</StyledDiv></Badge></StyledDiv>
+                                <StyledDiv>Price (USD)  <Badge style={{ color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? '#971B1C' : '#779681' }}><StyledDiv>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}{tokenData.priceChangeUSD.toFixed(2)}%</StyledDiv></Badge></StyledDiv>
                                 <div style={{ display: "flex", flexFlow: 'row wrap' }}> ${(tokenData?.priceUSD).toFixed(18)}</div>
                             </div>
                             <div style={{ paddingBottom: 5 }}>
@@ -178,8 +178,8 @@ export const SelectiveChart = () => {
                     {(selectedCurrency || !!prebuilt?.symbol) && (
                         <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
                             {transactionData?.lastFetched && <small>Data last updated {moment(transactionData.lastFetched).fromNow()}</small>}
-                            <table style={{ background: '#222', width: '100%' }}>
-                                <thead style={{ textAlign: 'left', position: 'sticky', top: 0, background: '#222', width: '100%' }}>
+                            <table style={{ background: '#18181E', width: '100%', padding: 20, borderRadius: 20 }}>
+                                <thead style={{ textAlign: 'left', position: 'sticky', top: 0, background: '#18181E', width: '100%' }}>
                                     <tr style={{ borderBottom: '1px solid #fff' }}>
                                         <th>
                                             Date
@@ -197,8 +197,8 @@ export const SelectiveChart = () => {
                                     {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
                                         <tr style={{ paddingBottom: 5 }} key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                             <td style={{ fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
-                                            {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol === chainLabel ? 'red' : 'green' }}>{item.token0Symbol === chainLabel ? 'SELL' : 'BUY'}</td>}
-                                            {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== tokenData?.symbol ? 'red' : 'green' }}>{item.token0Symbol === tokenData?.symbol ? 'BUY' : 'SELL'}</td>}
+                                            {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol === chainLabel ? '#971B1C' : '#779681' }}>{item.token0Symbol === chainLabel ? 'SELL' : 'BUY'}</td>}
+                                            {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== tokenData?.symbol ? '#971B1C' : '#779681' }}>{item.token0Symbol === tokenData?.symbol ? 'BUY' : 'SELL'}</td>}
                                             {[item.token0Symbol, item.token1Symbol].includes(chainLabel) &&
                                                 <>
                                                     <td>{item.token0Symbol === chainLabel && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
@@ -220,12 +220,12 @@ export const SelectiveChart = () => {
                                                     </td>
                                                 </>}
                                             <td>
-                                                <a href={'https://etherscan.io/address/' + item.account}>
+                                                <a style={{ color: '#D57A47' }} href={'https://etherscan.io/address/' + item.account}>
                                                     {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href={'https://etherscan.io/tx/' + item?.hash}>
+                                                <a style={{ color: '#D57A47' }} href={'https://etherscan.io/tx/' + item?.hash}>
                                                     {item?.hash && item?.transaction?.id.slice(0, 6) + '...' + item?.transaction?.id.slice(38, 42)}
                                                 </a>
                                             </td>
