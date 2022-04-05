@@ -10,7 +10,7 @@ import { getBlockFromTimestamp, getTokenData, useEthPrice, useKibaPairData, useT
 import { useCurrency } from 'hooks/Tokens'
 import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
 import _ from 'lodash'
-import { ChevronUp, ChevronDown } from 'react-feather'
+import { TrendingUp as ChevronUp, TrendingDown as  ChevronDown } from 'react-feather'
 import { LoadingRows } from 'pages/Pool/styleds'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { useWeb3React } from '@web3-react/core'
@@ -102,7 +102,7 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
                 <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 5 ? 5 : tokenData.symbol.length)} />
                 {!!tokenData?.priceChangeUSD && (
                   <>
-                    {tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}
+                    {tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp;
                     {parseFloat(tokenData?.priceChangeUSD).toFixed(2)}%
                   </>
                 )}
@@ -145,7 +145,16 @@ export default function TopTokenMovers() {
         allTokenData.data &&
         kibaPair.data &&
         allTokenData.data.pairs &&
-        kibaPair.data.pairs) {
+        kibaPair.data.pairs && 
+        ((chainId === 1 && 
+          ethPrice &&
+          ethPriceOld || 
+          chainId === 56 && 
+          bnbPrices && 
+          bnbPrices?.current && 
+          bnbPrices?.oneDay) 
+          || 
+          !chainId)) {
         setHasEffectRan(true);
         const blockOne: number = blocks[0].number, blockTwo: number = blocks[1].number;
         const allTokens = await Promise.all(
@@ -161,7 +170,7 @@ export default function TopTokenMovers() {
         setAllTokens(allTokens);
       }
     }
-  }, [timestampsFromBlocks, hasEffectRan, chainId, kibaPair, allTokens, allTokenData])
+  }, [timestampsFromBlocks, ethPrice, ethPriceOld, bnbPrices, hasEffectRan, chainId, kibaPair, allTokens, allTokenData])
 
   React.useEffect(() => {
     let cancelled = false;
@@ -195,9 +204,9 @@ export default function TopTokenMovers() {
     ])
 
   const topPriceIncrease = useMemo(() => {
-    return [
-      // slot kiba at #1 always
-      allTokens.find((a: any) => a?.symbol === 'KIBA'),
+    return _.uniqBy([
+      // slot kiba and any paying / partnerships at #1 always
+      ...allTokens.filter((a: any) => ["KIBA", "CCv2"].includes(a?.symbol) || a?.name === 'CryptoCart V2'),
       ..._.uniqBy(allTokens, (i: any) => {
         return i?.id
       }).sort((a: any, b: any) => {
@@ -213,7 +222,7 @@ export default function TopTokenMovers() {
             symbol: string;
             chainId?: number
           }) => !!a?.symbol && a?.symbol !== 'KIBA' &&
-          (a?.chainId === chainId || !chainId))]
+          (a?.chainId === chainId || !chainId))], a=> a.symbol)
   }, [allTokens, chainId])
   const increaseRef = useRef<HTMLDivElement>(null)
   return (
