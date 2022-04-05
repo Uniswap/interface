@@ -13,6 +13,7 @@ import {
   BarChart2,
   Twitter,
   Monitor,
+  Image,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -261,6 +262,12 @@ const babyTrumpBalance = useTrumpBalance(account);
                     </div> 
                     <BarChart2  opacity={0.6} size={16} />
                  </MenuItem>
+                 <MenuItem href="/themed-background">
+                    <div>
+                      <Trans>Edit background</Trans>
+                    </div>
+                    <Image opacity={0.6} size={16} />
+                  </MenuItem>
                   <MenuItem href="https://babytrumptoken.com/">
                     <div>
                       <Trans>About</Trans>
