@@ -120,8 +120,8 @@ export const ProposalDetails = () => {
 
 
                     <div style={{pointerEvents: proposalExpired ? 'none' : 'all', display:'flex', alignItems:'center', flexFlow: 'row wrap'}}>
-                       <IconWrapper onClick={() => updateVoteIfApplicable(false)}  style={{cursor:'pointer',margin:1, width: 50, height: 50}}><ThumbsUp style={{color: accountVotedYes ? 'green' : 'inherit'}} size={'30px'} /> {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !a.vote).length}</IconWrapper>
-                       <IconWrapper onClick={() => updateVoteIfApplicable(true)} style={{cursor:'pointer', width: 50, height: 50,  }}><ThumbsDown style={{color: accountVotedNo ? 'red' : 'inherit'}} size={'30px'}></ThumbsDown> {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !!a.vote).length}</IconWrapper>
+                       <IconWrapper onClick={() => updateVoteIfApplicable(true)}  style={{cursor:'pointer',margin:1, width: 50, height: 50}}><ThumbsUp style={{color: accountVotedYes ? 'green' : 'inherit'}} size={'30px'} /> {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !!a.vote).length}</IconWrapper>
+                       <IconWrapper onClick={() => updateVoteIfApplicable(false)} style={{cursor:'pointer', width: 50, height: 50,  }}><ThumbsDown style={{color: accountVotedNo ? 'red' : 'inherit'}} size={'30px'}></ThumbsDown> {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !a.vote).length}</IconWrapper>
                     </div>
 
                     {proposalExpired && <div style={{display:'block', width:'100%'}}>
