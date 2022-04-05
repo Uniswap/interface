@@ -553,7 +553,7 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
     blocks = await getBlocksFromTimestamps([t24h, t48h]);
   }
   const QUERY = BSC_TOKEN_DATA(address)
-  const QUERY_ONE = BSC_TOKEN_DATA_BY_BLOCK_ONE(address, blocks[0].number)
+  const QUERY_ONE = BSC_TOKEN_DATA_BY_BLOCK_ONE(address, blocks[0]?.number)
   // initialize data arrays
   const [queryOne, queryTwo] = await Promise.all(
     [

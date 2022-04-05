@@ -9,7 +9,7 @@ import { LoadingRows } from 'pages/Pool/styleds'
 import { useKiba } from 'pages/Vote/VotePage'
 import React, { useDebugValue } from 'react'
 import { useCallback, useMemo } from 'react'
-import { AlertCircle, CheckCircle, ChevronDown, ChevronUp, DollarSign, HelpCircle, Info, Link, Loader, ExternalLink as ExLink, Circle, Lock } from 'react-feather'
+import { AlertCircle, CheckCircle, ChevronDown, ChevronUp, DollarSign, HelpCircle, Info, Link, Loader, ExternalLink as ExLink, Circle, Lock, BarChart2 } from 'react-feather'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import ThemeProvider, { ExternalLink, ExternalLinkIcon, LinkStyledButton, StyledInternalLink } from 'theme'
@@ -250,8 +250,14 @@ export const FomoPage = () => {
   }, [flagSafe, network, chainId])
   const pagedData = React.useMemo(() => {
     if (!data) return [];
-    let sorted = data?.filter(a => searchValue ? a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) || a.name?.toLowerCase().includes(searchValue?.toLowerCase()) || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase()) : true)
-    if (shouldFlagSafe) sorted = sorted.filter(i => !!i.safe)
+    let sorted = data?.filter(a => {
+      if (searchValue) return a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) 
+                            || a.name?.toLowerCase().includes(searchValue?.toLowerCase()) 
+                            || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase());
+      return true;
+    });
+    if (shouldFlagSafe) 
+      sorted = sorted.filter(i => !!i.safe)
     const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
     const endIndex = startIndex + AMT_PER_PAGE;
     return sorted.slice(startIndex, endIndex);
@@ -316,7 +322,11 @@ export const FomoPage = () => {
           }
         })) as Array<NewToken>;
         setData(data =>
-          data?.map((item => safe?.some(a => a.addr === item.addr) ? safe.find(i => i.addr === item.addr) : item))
+                data?.map((item => 
+                      safe?.some(a => a.addr === item.addr) 
+                      ? safe.find(i => i.addr === item.addr) 
+                      : item)
+                    )
         )
       }
     } catch (err) {
@@ -325,57 +335,78 @@ export const FomoPage = () => {
   }, [network, data, ethPrice, ethPriceOld, bnbPrice, chainId, library, shouldFlagSafe, flagSafe])
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(false)
-
-  const getData = React.useCallback(() => {
+  const [retryCount, setRetryCount] = React.useState(0);
+  const getData = React.useCallback((networkPassed?: string) => {
+    const networkChanged = !!networkPassed;
+    const loading =  !data;
+    setLoading(loading);
+    let networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = network;
+    //reset retry count on network change
+    if (networkChanged && networkPassed) { 
+      setRetryCount(0); 
+      setData(undefined); 
+      setPage(1); 
+      setLoading(true); 
+      networkString = networkPassed as "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax"; 
+    }
     const finallyClause = () => {
       setLastFetched(new Date())
+      setTimeout(() => setLoading(false), 1000)
     }
-    const finallyErrorClause = () => setError(true)
-    return axios.default.get(`https://tokenfomo.io/api/tokens/${network}?limit=500`, { method: "GET", headers: authHeader.headers })
-      .then(async (response) => {
-        const json = response.data;
-        const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
-        const sorted = orderBy(data, i => new Date(+i.timestamp * 1000), 'desc')
-        const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
-        const endIndex = startIndex + AMT_PER_PAGE;
-        const pagedSet = sorted.slice(startIndex, endIndex);
-        const activeSort = getActiveSort();
-        const shouldFlagCallback = data && data.length;
-        setData(current => [
-          ... (current as NewToken[] && current?.length ? current : []),
-          ...dataNew.filter((item: any) => !current?.some(i => item?.addr === i?.addr))
-        ])
-        if (shouldFlagCallback) {
-          await flagAllCallback(
-            orderBy(
-              data,
-              i => activeSort && activeSort?.key ? i[activeSort.key as keyof NewToken] : new Date(+i.timestamp * 1000),
-              activeSort && activeSort.direction ? activeSort.direction : 'desc'
-            )
-          )
-        }
+    const finallyErrorClause = (err:any) => {
+      console.error(err)
+      const newRetryCount = retryCount + 1;
 
-      }).finally(finallyClause)
-      .catch(finallyErrorClause)
-  }, [network, page, library])
+      if (newRetryCount >= 3) {
+        setError(true)
+      } else {
+        const retryCt = retryCount <= 0 ? 0 : retryCount - 1;
+        setRetryCount(retryCt);
+        setTimeout(() => getData(), 100);
+      }
+    }
+    return axios.default.get(`https://tokenfomo.io/api/tokens/${networkString}?limit=500`, 
+                  { method: "GET", headers: authHeader.headers }
+           )
+          .then(async (response) => {
+            const json = response.data;
+            const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
+            const sorted = orderBy(data, i => new Date(+i.timestamp * 1000), 'desc')
+            const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
+            const endIndex = startIndex + AMT_PER_PAGE;
+            const pagedSet = sorted.slice(startIndex, endIndex);
+            const activeSort = getActiveSort();
+            const shouldFlagCallback = data && data.length;
+            const newDataValue = orderBy(
+              [
+                ...(data ? data : [])?.filter((item) => item?.network?.toLowerCase() === networkString?.toLowerCase()),
+                ...dataNew.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some(i => item?.addr === i?.addr))
+              ], 
+              item => new Date(+item.timestamp * 1000), 
+              'desc'
+            );
+            setData(newDataValue)
+            if (shouldFlagCallback) {
+              await flagAllCallback(
+                orderBy(
+                  newDataValue,
+                  i => activeSort && activeSort?.key ? i[activeSort.key as keyof NewToken] : new Date(+i.timestamp * 1000),
+                  activeSort && activeSort.direction ? activeSort.direction : 'desc'
+                )
+              )
+            }
+          })
+          .finally(finallyClause)
+          .catch(finallyErrorClause)
+  }, [network, page, data, library, flagAllCallback])
 
   useInterval(async () => {
-    await getData()
+    if (!data) await getData('eth')
+    else await getData();
   }, 30000, false)
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
-  React.useEffect(() => {
-    setLoading(true)
-    setPage(1)
-    setSortState(initialSortState)
-    setFlagSafe(false)
-    setData(undefined)
-    getData().finally(() => setLoading(false));
-  }, [network, account, chainId])
-
-  const [showInfo, setShowInfo] = React.useState(false)
-  const kibaBalance = useKiba(account)
-  
+ 
   const initialSortState = {
     'network': undefined,
     'symbol': undefined,
@@ -387,8 +418,19 @@ export const FomoPage = () => {
     'sellTax': undefined,
     'liquidity': undefined
   } as SortState
+
   const [sortState, setSortState] = React.useState<SortState>(initialSortState)
 
+  React.useEffect(() => {
+    setPage(1)
+    setSortState(initialSortState)
+    setFlagSafe(false)
+    getData(network)
+  }, [network, account, chainId])
+
+  const [showInfo, setShowInfo] = React.useState(false)
+  const kibaBalance = useKiba(account)
+  
   const getActiveSort = () => {
     return accessDenied ? undefined : Object.keys(sortState).map(key => {
       const isKey = (sortState as any)[key] !== undefined
@@ -598,10 +640,33 @@ export const FomoPage = () => {
                   <span>{item.name}</span>
                 </td>
                 <td style={{ width: '3%' }}>{item.symbol}</td>
-                <td><div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><small>{item.addr}</small><ExternalLinkIcon style={{}} href={getNetworkLink(item)} />
-                  {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></StyledInternalLink>}
-                  {network === 'bsc' && <ExternalLink href={`https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></ExternalLink>}
-                </div>
+                {/* CONTRACT ADDRESS AND LINKS */}
+                <td>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between'
+                  }}>
+                    <small>{item.addr}</small>
+                    {/* Etherscan / Explorer Link */}
+                    <ExternalLinkIcon 
+                      style={{}} 
+                      href={getNetworkLink(item)} />
+
+                    {/* Chart Link */}
+                    {network === 'eth' && <StyledInternalLink to={`/selective-charts/${item.addr}/${item.symbol}`}>
+                      <BarChart2 />
+                    </StyledInternalLink>}
+
+                    {/* Buy Link */}
+                    {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}>
+                      <DollarSign style={{ color: 'white' }} />
+                    </StyledInternalLink>}
+                    {network === 'bsc' && 
+                    <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
+                      <DollarSign style={{ color: 'white' }} />
+                    </ExternalLink>}
+                  </div>
                 </td>
 
                 {['eth'].includes(network) && item?.liquidity && <td>
@@ -614,28 +679,34 @@ export const FomoPage = () => {
                   </>}
                   {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
                 </td>)}
-                {accessDenied === false && network === 'eth' && <td>
-                  <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-                    <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
-                    {['bsc', 'eth'].includes(item.network.toLowerCase()) && <>{!modalShowing && <LinkStyledButton style={{ fontSize: 8 }} onClick={(e: any) => { e.stopPropagation(); e.preventDefault(); setModalShowing(item); }}>more</LinkStyledButton>}
-                      {!!modalShowing && modalShowing?.addr === item.addr && <DetailsModal address={item.addr} isOpen={modalShowing} onDismiss={() => setModalShowing(undefined)} network={item.network.toLowerCase() as 'bsc' | 'eth'} symbol={item.symbol} />}</>}
-                  </div>
-                </td>}
-                {['bsc', 'eth'].includes(network) && (<td>
-                  {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
+                {accessDenied === false && network === 'eth' && (
+                  <td>
+                    <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
+                      <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
+                      {['bsc', 'eth'].includes(item.network.toLowerCase()) && <>{!modalShowing && <LinkStyledButton style={{ fontSize: 8 }} onClick={(e: any) => { e.stopPropagation(); e.preventDefault(); setModalShowing(item); }}>more</LinkStyledButton>}
+                        {!!modalShowing && modalShowing?.addr === item.addr && <DetailsModal address={item.addr} isOpen={modalShowing} onDismiss={() => setModalShowing(undefined)} network={item.network.toLowerCase() as 'bsc' | 'eth'} symbol={item.symbol} />}</>}
+                    </div>
+                  </td>
+                )}
+                {['bsc', 'eth'].includes(network) && (
+                  <td>
+                    {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
 
-                    {<small>{item.buyTax}% buy</small>}
-                  </Badge>}
-                  {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
-                </td>)}
-                {['bsc', 'eth'].includes(network) && (<td>
-                  {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: '#fff' }} color={'white'} variant={BadgeVariant.NEGATIVE}>
+                      {<small>{item.buyTax}% buy</small>}
+                    </Badge>}
+                    {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
+                  </td>
+                )}
+                {['bsc', 'eth'].includes(network) && (
+                  <td>
+                    {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: '#fff' }} color={'white'} variant={BadgeVariant.NEGATIVE}>
 
-                    {<small>{item.sellTax}% sell</small>}
+                      {<small>{item.sellTax}% sell</small>}
 
-                  </Badge>}
-                  {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
-                </td>)}
+                    </Badge>}
+                    {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
+                  </td>
+                )}
                 <td>{moment(+item.timestamp * 1000).fromNow()}</td>
               </tr>
             ))}
