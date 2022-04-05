@@ -205,7 +205,7 @@ export default function Swap({ history }: RouteComponentProps) {
                        ''
         console.log(address)
         getTokenTaxes(address, library?.provider).then((taxes) => {
-        const value:number | null = parsedAmounts?.INPUT?.currency.isNative ? 
+          let value:number | null = parsedAmounts?.INPUT?.currency.isNative ? 
           ((taxes?.buy ?? 0) + 1) : parsedAmounts?.OUTPUT?.currency.isNative ? 
           taxes.sell : 0;
           if (value) value += 3

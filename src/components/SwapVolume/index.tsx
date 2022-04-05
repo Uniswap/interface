@@ -120,7 +120,7 @@ export default function SwapVolume() {
       ) : (
         <>
           <StyledPollingNumber>
-            <span style={{ color: '#F76C1D' }}>ETH</span> {ethPrice && volumeInUsd !== 'NaN' && <>(${(parseFloat(ethPrice.toString()).toFixed(2))} USD)</>}
+            <span style={{ color: '#F76C1D' }}>ETH</span> {ethPrice && volumeInUsd !== 0 && <>(${(parseFloat(ethPrice.toString()).toFixed(2))} USD)</>}
           </StyledPollingNumber>
           <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
         </>
@@ -140,7 +140,7 @@ export default function SwapVolume() {
       ) : (
         <>
           <StyledPollingNumber>
-            <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 'NaN' && <>(${(abbreviateNumber(+volumeInUsd))} USD)</>}
+            <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 0 && <>(${(abbreviateNumber(+volumeInUsd))} USD)</>}
           </StyledPollingNumber>
           <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
         </>
