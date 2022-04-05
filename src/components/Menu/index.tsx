@@ -277,12 +277,12 @@ const babyTrumpBalance = useTrumpBalance(account);
                     </div> 
                     <BarChart2  opacity={0.6} size={16} />
                  </MenuItem>
-                 <InternalMenuItemTwo to="/themed-background">
+                 {/* <InternalMenuItemTwo to="/themed-background">
                     <div>
                       <Trans>Edit background</Trans>
                     </div>
                     <Image opacity={0.6} size={16} />
-                  </InternalMenuItemTwo>
+                  </InternalMenuItemTwo> */}
                   <MenuItem href="https://squeezetoken.finance">
                     <div>
                       <Trans>About</Trans>
