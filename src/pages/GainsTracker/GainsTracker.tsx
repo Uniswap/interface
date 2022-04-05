@@ -9,7 +9,7 @@ import { CardSection } from 'components/earn/styled'
 import Tooltip from 'components/Tooltip'
 import moment from 'moment'
 import { Wrapper } from 'pages/RemoveLiquidity/styled'
-import { useTrumpBalance } from 'pages/Vote/VotePage'
+import { useKiba } from 'pages/Vote/VotePage'
 import React, { useCallback } from 'react'
 import { AlertCircle, Calendar, ChevronDown, Info } from 'react-feather'
 import { useCurrencyBalance, useTokenBalance } from 'state/wallet/hooks'
@@ -56,7 +56,7 @@ const CUSTOM_GAINS_KEY = 'custom_gains'
 
 export const GainsTracker = () => {
   const { account } = useWeb3React()
-  const trumpBalance = useTrumpBalance(account)
+  const trumpBalance = useKiba(account)
   const [currency, setCurrency] = React.useState<any>(undefined)
   const onUserInput = (value: any) => {
     setCurrency(value)
