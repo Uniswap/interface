@@ -444,11 +444,11 @@ export default function VotePage({
         setStimulusBalanceUSD("-");
         return;
       }
-      if (stimulusBalance && +stimulusBalance > 0) {
+      if (stimulusBalance) {
         const w3 = new Web3(window.ethereum as any).eth;
         const routerContr = new w3.Contract(routerAbi as any, routerAddress);
         const ten9 = 10 ** 9;
-        const amount = +stimulusBalance * ten9;
+        const amount = +stimulusBalance?.toFixed(0) * ten9;
         const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
           stimulusCoin.address,
           WETH9[1].address,
@@ -583,7 +583,7 @@ export default function VotePage({
                         {" "}
                         {formattedStim() !== undefined &&
                           `Stimulus Check Balance ${formattedStim()} (${
-                            (+stimulusValue)?.toFixed(2) || ""
+                            (stimulusBalanceUSD !== null ? +stimulusBalanceUSD :  0)?.toFixed(2) || ""
                           } USD)`}
                       </Trans>
                     </TYPE.black>
