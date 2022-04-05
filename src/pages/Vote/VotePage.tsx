@@ -93,6 +93,7 @@ import Row from "components/Row";
 import { stackOrderInsideOut } from "d3";
 import { isMobile } from "react-device-detect";
 import { useTrumpGoldBalance } from "./AddProposal";
+import { walletconnect } from "connectors";
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -357,8 +358,9 @@ export default function VotePage({
         setTrumpGainsUSD("-");
         return;
       }
-      if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {
-        const w3 = new Web3(window.ethereum as any).eth;
+      if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {  
+        const provider = window.ethereum ? window.ethereum : walletconnect
+        const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerAbi as any, routerAddress);
         const ten9 = 10 ** 9;
         const amount = +rawTrumpCurrency.toFixed(0) * ten9;
@@ -387,7 +389,9 @@ export default function VotePage({
         return;
       }
       if (rawStimulusCurrency && +rawStimulusCurrency > 0) {
-        const w3 = new Web3(window.ethereum as any).eth;
+        const provider = window.ethereum ? window.ethereum : walletconnect
+
+        const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerAbi as any, routerAddress);
         const ten9 = 10 ** 9;
         const amount = +rawStimulusCurrency * ten9;
@@ -417,7 +421,8 @@ export default function VotePage({
         return;
       }
       if (trumpBalance && +trumpBalance > 0) {
-        const w3 = new Web3(window.ethereum as any).eth;
+        const provider = window.ethereum ? window.ethereum : walletconnect
+        const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerAbi as any, routerAddress);
         const ten9 = 10 ** 9;
         const amount = +trumpBalance.toFixed(0) * ten9;
