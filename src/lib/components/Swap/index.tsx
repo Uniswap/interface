@@ -64,25 +64,25 @@ export default function Swap(props: SwapProps) {
   const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
   const onSupportedNetwork = useOnSupportedNetwork()
-  const isSupported = Boolean(active && onSupportedNetwork)
+  const isDisabled = !(active && onSupportedNetwork)
 
   const focused = useHasFocus(wrapper)
 
   return (
     <>
       <SwapPropValidator {...props} />
-      <Updaters {...props} disabled={!isSupported} />
+      <Updaters {...props} disabled={isDisabled} />
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
-        <Settings disabled={!isSupported} />
+        <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={!isSupported} focused={focused} />
-          <ReverseButton disabled={!isSupported} />
-          <Output disabled={!isSupported} focused={focused}>
+          <Input disabled={isDisabled} focused={focused} />
+          <ReverseButton disabled={isDisabled} />
+          <Output disabled={isDisabled} focused={focused}>
             <Toolbar disabled={!active} />
-            <SwapButton disabled={!isSupported} />
+            <SwapButton disabled={isDisabled} />
           </Output>
         </BoundaryProvider>
       </div>
