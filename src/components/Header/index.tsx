@@ -1,44 +1,47 @@
-import { Trans } from '@lingui/macro'
-import useScrollPosition from '@react-hook/window-scroll'
-import Card from 'components/Card'
-import { GreyCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import Tooltip from 'components/Tooltip'
+import { AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Circle, Clipboard, Eye, EyeOff, Info, Link, Settings } from 'react-feather'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import { darken } from 'polished'
+import { ExternalLink, TYPE } from '../../theme'
 import React, { useState } from 'react'
-import { AlertOctagon, CheckCircle, Eye, EyeOff, ChevronDown, ChevronUp, Circle, Clipboard, Info, Link, Settings } from 'react-feather'
-import { NavLink } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
-import { useUserHasAvailableClaim } from 'state/claim/hooks'
-import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
-import { useDarkModeManager } from 'state/user/hooks'
-import { useETHBalances } from 'state/wallet/hooks'
-import styled from 'styled-components/macro'
+
+import { AutoColumn } from 'components/Column'
+import Badge from 'components/Badge'
+import { BurntKiba } from 'components/BurntKiba'
+import Card from 'components/Card'
+import { CardNoise } from '../earn/styled'
+import { ChartModal } from 'components/swap/ChartModal'
+import ClaimModal from '../claim/ClaimModal'
 import { CloseIcon } from 'theme/components'
-import { StyledInternalLink } from 'theme/components'
+import { Dots } from '../swap/styleds'
+import { GreyCard } from 'components/Card'
 import { IconWrapper } from 'theme/components'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, TYPE } from '../../theme'
-import ClaimModal from '../claim/ClaimModal'
-import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
 import Modal from '../Modal'
-import Row from '../Row'
-import { Dots } from '../swap/styleds'
-import Web3Status from '../Web3Status'
+import { NavLink } from 'react-router-dom'
 import NetworkCard from './NetworkCard'
-import UniBalanceContent from './UniBalanceContent'
-import logo from '../../assets/svg/logo.svg'
+import Row from '../Row'
+import { StyledInternalLink } from 'theme/components'
 import Swal from 'sweetalert2'
-import { ChartModal } from 'components/swap/ChartModal'
+import { Text } from 'rebass'
+import Tooltip from 'components/Tooltip'
+import { Trans } from '@lingui/macro'
+import UniBalanceContent from './UniBalanceContent'
+import Web3Status from '../Web3Status'
+import { darken } from 'polished'
+import logo from '../../assets/svg/logo.svg'
+import styled from 'styled-components/macro'
+import { useActiveWeb3React } from '../../hooks/web3'
+import useCopyClipboard from 'hooks/useCopyClipboard'
+import { useDarkModeManager } from 'state/user/hooks'
+import { useETHBalances } from 'state/wallet/hooks'
 import { useEthPrice } from 'state/logs/utils'
-import Badge from 'components/Badge'
 import useInterval from 'hooks/useInterval'
+import useScrollPosition from '@react-hook/window-scroll'
+import { useUserHasAvailableClaim } from 'state/claim/hooks'
+import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
+
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
   grid-template-columns: 150px 1fr 120px;
@@ -473,12 +476,14 @@ export default function Header() {
 
         </HeaderLinks>
 
+            
         <HeaderControls>
 
 
         {!!account ? <NetworkCard /> : ''} 
 
           <HeaderElement>
+            <BurntKiba />
             {availableClaim && !showClaimPopup && (
               <UNIWrapper onClick={toggleClaimModal}>
                 <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>

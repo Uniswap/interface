@@ -1,23 +1,24 @@
-import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
-import Badge, { BadgeVariant } from 'components/Badge'
-import Loader from 'components/Loader'
-import { useContract } from 'hooks/useContract'
-import { isHoneyPot } from 'pages/App'
-import { useKiba } from 'pages/Vote/VotePage'
-import React from 'react'
-import { ReactNode, useCallback, useMemo } from 'react'
 import { AlertCircle, AlertTriangle, CheckSquare, Info } from 'react-feather'
-import { getBep20Contract } from 'utils/binance.utils'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { ReactNode, useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
+
+import Loader from 'components/Loader'
+import React from 'react'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
+import { Trans } from '@lingui/macro'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { getBep20Contract } from 'utils/binance.utils'
+import { isHoneyPot } from 'pages/App'
+import { useContract } from 'hooks/useContract'
+import { useKiba } from 'pages/Vote/VotePage'
+import { useWeb3React } from '@web3-react/core'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
@@ -125,7 +126,7 @@ export default function ConfirmSwapModal({
   
   React.useEffect(() => {
     const runCheck = async () => {
-      if (trade && (trade?.inputAmount?.currency as any)?.address) {      
+      if (trade && (trade?.inputAmount?.currency as any)?.address && trade?.outputAmount?.currency?.wrapped?.address) {      
         const isBadTrade = await Promise.all([isHoneyPot((trade?.inputAmount?.currency as any)?.address), isHoneyPot((trade?.outputAmount?.currency as any)?.address)]);
         setIsBad(isBadTrade?.some((b:boolean | undefined) =>!!b));
       }
