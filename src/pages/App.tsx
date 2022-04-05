@@ -78,7 +78,7 @@ const AppWrapper = styled.div`
   background-repeat: no-repeat;
   position: absolute;
   height: 150vh; 
-  width: 100vw;
+  width: 100%;
   background: url(${bg4}) ;
   align-items: flex-start;
   > * {
