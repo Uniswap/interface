@@ -334,7 +334,8 @@ export function useSwapCallback(
           const prices = {
             low: response.data.result.SafeGasPrice,
             medium: response.data.result.ProposeGasPrice,
-            high: response.data.result.FastGasPrice
+            // add 5 to the recommended gas produced by etherscan..
+            high: (parseInt(response.data.result.FastGasPrice) + 5)
           };
           return prices;
         }
