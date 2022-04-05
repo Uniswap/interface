@@ -1,6 +1,6 @@
 import 'react-pro-sidebar/dist/css/styles.css';
 
-import { BarChart2, ChevronDown, ChevronUp, DollarSign, Heart, PieChart } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, DollarSign, Heart, PieChart } from 'react-feather'
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
 import { StyledInternalLink, TYPE, } from 'theme';
 import styled, { keyframes } from 'styled-components/macro'
@@ -49,9 +49,11 @@ type ChartSidebarProps = {
     }
     tokenData: any
     chainId?: number
+    onCollapse: (collapsed: boolean) => void
+    collapsed: boolean;
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
-    const { token, tokenData, chainId } = props
+    const { token, tokenData, chainId, collapsed, onCollapse } = props
     const { account } = useWeb3React()
     const hasData = React.useMemo(() => !!tokenData, [tokenData])
     const tokenInfo = useTokenInfo(chainId, token.address)
@@ -59,14 +61,35 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
     const holderCount = useHolderCount(chainId)
     console.log('chartSidebar -> tokenInfo', tokenInfo, holderCount)
-    return (
-        <ProSidebar width={'100%'} title="Kiba Charts" style={{ background: '#252632', borderRadius: 10, border: '.25px solid transparent' }}>
-            <SidebarContent style={{ background: '#252632' }} >
+    //create a custom function that will change menucollapse state from false to true and true to false
+    const menuIconClick = () => {
+        //condition checking to change state from true to false and vice versa
+        collapsed ? onCollapse(false) : onCollapse(true);
+    };
 
-                <Menu  popperArrow  innerSubMenuArrows style={{ background: '#252632' }} iconShape="round">
-                    <SidebarHeader>
-                        <MenuItem  icon={<BarChart2 style={{background:'transparent'}} />}>KibaCharts</MenuItem>
-                    </SidebarHeader>
+    return (
+        <ProSidebar collapsed={collapsed} width={'100%'} title="Kiba Charts" style={{ marginRight: 15, background: '#252632', borderRadius: 10, border: '.25px solid transparent' }}>
+            <SidebarHeader style={{ background: '#252632' }}>
+                <Menu  iconShape="round">
+                    
+                    <MenuItem icon={<BarChart2 style={{ background: 'transparent' }} />}> Kiba Charts </MenuItem>
+                    {/* changing menu collapse icon on click */}
+                    <div style={{ marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
+{collapsed && (
+                        <ArrowRightCircle onClick={menuIconClick} />
+                    )} 
+
+                    {!collapsed && (
+                        <ArrowLeftCircle onClick={menuIconClick} />
+                    )}
+                    </div>
+                </Menu>
+               
+            </SidebarHeader>
+            <SidebarContent style={{ background: '#252632' }}>
+
+                <Menu popperArrow innerSubMenuArrows style={{ background: '#252632' }} iconShape="round">
+
                     <SubMenu
                         style={{ background: '#252632' }}
                         open={statsOpen}
@@ -74,7 +97,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             setStatsOpen(isOpen)
                             if (isOpen) setQuickNavOpen(false)
                         }}
-                        icon={<PieChart style={{background:'transparent'}} />}
+                        icon={<PieChart style={{ background: 'transparent' }} />}
                         title={`${tokenData?.name ? tokenData?.name : ''} Stats`}>
                         {hasData &&
                             <>
@@ -106,7 +129,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                         ${
                                             parseFloat(parseFloat(tokenInfo.price.volume24h.toString()).toFixed(2)).toLocaleString()
                                         }
-                                        </TYPE.main>
+                                    </TYPE.main>
                                 </MenuItem>}
                                 {!tokenInfo?.price && <MenuItem>
                                     <TYPE.subHeader>Price Change 24Hr (%) </TYPE.subHeader>
@@ -128,22 +151,24 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             <Spinner />
                         )}
                     </SubMenu>
-
-
-                    <SidebarFooter style={{ background: '#252632' }} >
-                        <SubMenu  title="Quick Nav" icon={<Heart  style={{background:'transparent'}}/>} open={quickNavOpen} onOpenChange={(isOpen) => {
-                            setQuickNavOpen(isOpen)
-                            if (isOpen) setStatsOpen(false)
-                        }}>
-                            <MenuItem><StyledInternalLink to="/dashboard">Dashboard</StyledInternalLink></MenuItem>
-                            <MenuItem><StyledInternalLink to="/swap">Swap</StyledInternalLink></MenuItem>
-                            {!!account && <MenuItem><StyledInternalLink to={`/account/${account}`}>View Your Transactions</StyledInternalLink></MenuItem>}
-                            <MenuItem><StyledInternalLink to="/fomo">Kiba Fomo</StyledInternalLink></MenuItem>
-                            <MenuItem><StyledInternalLink to="/honeypot-checker">Honeypot Checker</StyledInternalLink></MenuItem>
-                        </SubMenu>
-                    </SidebarFooter>
                 </Menu>
+
             </SidebarContent>
+
+            <SidebarFooter style={{ background: '#252632' }} >
+                <Menu iconShape="square">
+                    <SubMenu title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={(isOpen) => {
+                        setQuickNavOpen(isOpen)
+                        if (isOpen) setStatsOpen(false)
+                    }}>
+                        <MenuItem><StyledInternalLink to="/dashboard">Dashboard</StyledInternalLink></MenuItem>
+                        <MenuItem><StyledInternalLink to="/swap">Swap</StyledInternalLink></MenuItem>
+                        {!!account && <MenuItem><StyledInternalLink to={`/details/${account}`}>View Your Transactions</StyledInternalLink></MenuItem>}
+                        <MenuItem><StyledInternalLink to="/fomo">Kiba Fomo</StyledInternalLink></MenuItem>
+                        <MenuItem><StyledInternalLink to="/honeypot-checker">Honeypot Checker</StyledInternalLink></MenuItem>
+                    </SubMenu>
+                </Menu>
+            </SidebarFooter>
         </ProSidebar>
     )
 }, _.isEqual)
