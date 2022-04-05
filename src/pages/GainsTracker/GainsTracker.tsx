@@ -182,6 +182,7 @@ export const GainsTracker = () => {
     right: 50px;
     z-index: 9;
     margin-top: 5px;
+    font-size:12px;
   `
 
   const GainsWrapper = !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0) ? DisabledMask : React.Fragment
