@@ -67,6 +67,8 @@ import { LimitOrders } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
 import Marquee from "react-marquee-slider";
 import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
+import { borderRadius } from 'polished'
+import { ReactComponent as Majgic } from '../../assets/svg/arrows.svg'
 export const CardWrapper = styled(ExternalLink)`
   min-width: 190px;
   width:100%;
@@ -386,9 +388,9 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const floozUrl = React.useMemo(() => {
-    let retVal = 'https://www.flooz.trade/embedded/0x4b2c54b80b77580dc02a0f6734d3bad733f50900/?refId=I56v2c&backgroundColor=transparent&chainId=1'
+    let retVal = 'https://www.flooz.trade/embedded/0x4b2c54b80b77580dc02a0f6734d3bad733f50900/?backgroundColor=transparent&refId=I56v2c&chainId=1'
     if (chainId === 56) {
-      retVal = 'https://www.flooz.trade/embedded/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/?refId=I56v2c&backgroundColor=transparent'
+      retVal = 'https://www.flooz.trade/embedded/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/?backgroundColor=transparent&refId=I56v2c'
     } 
     return retVal;
   },[chainId])
@@ -420,7 +422,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
 
-      <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, maxWidth: view === 'bridge' ? 690 : 480 }}>
+      <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
         <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
 
         {!isBinance && (
@@ -462,13 +464,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     id="swap-currency-input"
                   />
                   <ArrowWrapper clickable>
-                    <ArrowDown
-                      size="16"
+                    < Majgic 
+                      
                       onClick={() => {
                         setApprovalSubmitted(false) // reset 2 step UI for approvals
                         onSwitchTokens()
-                      }}
-                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                      }
+                      }  
                     />
                   </ArrowWrapper>
                   <CurrencyInputPanel
@@ -602,11 +604,11 @@ export default function Swap({ history }: RouteComponentProps) {
                       </TYPE.main>
                     </ButtonPrimary>
                   ) : !account ? (
-                    <ButtonLight style={{ marginTop: 15 }} onClick={toggleWalletModal}>
+                    <ButtonLight style={{ marginTop: 20 }} onClick={toggleWalletModal}>
                       <Trans>Connect Wallet</Trans>
                     </ButtonLight>
                   ) : showWrap ? (
-                    <ButtonPrimary style={{ marginTop: 15 }} disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                    <ButtonPrimary style={{ marginTop: 20 }} disabled={Boolean(wrapInputError)} onClick={onWrap}>
                       {wrapInputError ??
                         (wrapType === WrapType.WRAP ? (
                           <Trans>Wrap</Trans>
@@ -763,7 +765,7 @@ export default function Swap({ history }: RouteComponentProps) {
           </Wrapper>
         )}
         {view === 'flooz' && <Wrapper>
-          <iframe style={{backgroundColor:'#222', display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={floozUrl} />
+          <iframe style={{backgroundColor:'bg0', display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={floozUrl} />
             
           </Wrapper>}
         {view === 'limit' &&
