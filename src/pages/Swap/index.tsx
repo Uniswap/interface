@@ -188,34 +188,43 @@ export default function Swap({ history }: RouteComponentProps) {
   const setSlippage = useSetUserSlippageTolerance()
   React.useEffect(() => {
     const test = async () => {
-    if (parsedAmounts.INPUT && parsedAmounts.INPUT?.currency &&  
+    if (parsedAmounts.INPUT && 
+        parsedAmounts.INPUT?.currency &&  
         parsedAmounts.OUTPUT && 
         useAutoSlippage && 
         parsedAmounts.OUTPUT?.currency && 
         library?.provider) {
         const address = !parsedAmounts?.OUTPUT?.currency?.isNative ? 
-                      ((parsedAmounts.OUTPUT.currency as any).address ? (parsedAmounts?.OUTPUT?.currency as any).address : (parsedAmounts.OUTPUT.currency.wrapped).address) as string
+                      ((parsedAmounts.OUTPUT.currency as any).address ? 
+                      (parsedAmounts?.OUTPUT?.currency as any).address : 
+                      (parsedAmounts.OUTPUT.currency.wrapped).address) as string
                        : !parsedAmounts?.INPUT?.currency?.isNative ? 
-                       ((parsedAmounts?.INPUT?.currency as any).address ? (parsedAmounts?.INPUT?.currency as any).address : (parsedAmounts.INPUT.currency.wrapped).address) as string : 
+                       ((parsedAmounts?.INPUT?.currency as any).address ? 
+                       (parsedAmounts?.INPUT?.currency as any).address :
+                        (parsedAmounts.INPUT.currency.wrapped).address) as string : 
                        ''
-console.log(address)
-                  getTokenTaxes(address, library?.provider).then((taxes) => {
-          const value:number | null = parsedAmounts?.INPUT?.currency.isNative ? 
+        console.log(address)
+        getTokenTaxes(address, library?.provider).then((taxes) => {
+        const value:number | null = parsedAmounts?.INPUT?.currency.isNative ? 
           ((taxes?.buy ?? 0) + 1) : parsedAmounts?.OUTPUT?.currency.isNative ? 
           taxes.sell : 0;
-          // add 3% to the slippage calculated to account for any current volume
-          value += 3;
-const parsed = Math.floor(Number.parseFloat((value ?? '0').toString()) * 100)
-console.log(parsed)
-
-setSlippage(new Percent(parsed, 10_000))
-setAutomaticCalculatedSlippage(value as number)
-
-        })
+          if (value) value += 3
+        const parsed = Math.floor(Number.parseFloat((value ?? '0').toString()) * 100)
+        console.log('auto calculated and parsed', parsed)
+        if (automaticCalculatedSlippage !== parsed) {
+          setSlippage(new Percent(parsed, 10_000))
+          setAutomaticCalculatedSlippage(value as number)
+        }
+      })
     }
   }
   test()
-  }, [parsedAmounts.OUTPUT, parsedAmounts.INPUT, library, useAutoSlippage])
+  }, [
+    parsedAmounts.OUTPUT, 
+    parsedAmounts.INPUT, 
+    library, 
+    useAutoSlippage
+  ])
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
   const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
