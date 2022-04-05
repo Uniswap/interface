@@ -63,7 +63,7 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import Tooltip from 'components/Tooltip'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
-import { AccountPage } from 'components/AccountPage/AccountPage'
+import { AccountPage,AccountPageWithAccount } from 'components/AccountPage/AccountPage'
 import { Transactions } from './Vote/TransactionsPage'
 import { LifetimeReflections } from './Swap/LifetimeReflections'
 import Vote from './Vote'
@@ -533,6 +533,7 @@ export default function App() {
             <Switch>
               <Route exact strict path="/reflections" component={LifetimeReflections} />
               <Route exact strict path="/details" component={AccountPage} />
+              <Route exact strict path="/details/:account" component={AccountPageWithAccount} />
               <Route exact strict path="/limit" component={LimitOrders} />
               <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart}/>
 
