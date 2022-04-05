@@ -3,10 +3,10 @@ import Badge from 'components/Badge';
 import { DarkCard } from 'components/Card';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import { CardSection } from 'components/earn/styled';
-import { useCurrency } from 'hooks/Tokens';
+import { useAllTokens, useCurrency } from 'hooks/Tokens';
 import moment from 'moment';
 import { Dots } from 'pages/Pool/styleds';
-import React from 'react'; import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
+import React, { useCallback } from 'react'; import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
 import { useParams } from 'react-router';
 import { getTokenData, useEthPrice, useTokenData, useTokenTransactions } from 'state/logs/utils';
 import styled from 'styled-components/macro'
@@ -29,18 +29,27 @@ export const SelectiveChart = () => {
     const prebuiltCurrency = useCurrency(tokenAddressSupplied)
     const [selectedCurrency, setSelectedCurrency] = React.useState<Currency | undefined | any>(prebuiltCurrency)
     React.useEffect(() => {
-        if (prebuiltCurrency && !_.isEqual(selectedCurrency, prebuiltCurrency)) setSelectedCurrency(prebuiltCurrency)
-    }, [prebuiltCurrency, selectedCurrency])
+        if (prebuiltCurrency) {
+        if (params.tokenSymbol && params.tokenAddress) {
+            setSelectedCurrency(prebuiltCurrency)
+            getTokenCallback(params.tokenAddress)
+        }
+    }
+    }, [params.tokenSymbol, params.tokenAddress, prebuiltCurrency])
     const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
     const [tokenData,setTokenData] = React.useState<any>({})
     const bnbPrices = useBnbPrices()
+    const getTokenCallback = useCallback((address: string) => {
+        if (chainId === 1 )  getTokenData(address, ethPrice, ethPriceOld).then((data) => {
+            setTokenData(data)
+          })
+        else if (chainId === 56) fetchBscTokenData(address, bnbPrices?.current, bnbPrices?.oneDay).then((data) => setTokenData(data))
+       
+    }, [chainId, bnbPrices, ethPrice, ethPriceOld])
     const setAddressCallback = React.useCallback((address?: string) => {
         if (address) {
             setAddress(address)
-            if (chainId === 1 )getTokenData(address, ethPrice, ethPriceOld).then((data) => {
-                setTokenData(data)
-              })
-              else if (chainId === 56) fetchBscTokenData(address, bnbPrices?.current, bnbPrices?.oneDay).then((data) => setTokenData(data))
+            getTokenCallback(address)
         } else {
             setAddress('')
         }   
@@ -52,7 +61,6 @@ export const SelectiveChart = () => {
     let retVal: any;
     if (chainId && chainId === 1) retVal = transactionData;
     if (chainId && chainId === 56) retVal = bscTransactionData;
-    console.log(retVal)
    return retVal?.data?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out
@@ -76,7 +84,7 @@ export const SelectiveChart = () => {
         newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.from : swap.to
         return newTxn;
     })
-    }, [transactionData, chainId])
+    }, [transactionData, bscTransactionData, chainId])
 
     const PanelMemo = React.useMemo(() => {
 return  chainId && chainId === 1 ? <CurrencyInputPanel
@@ -111,7 +119,6 @@ id="swap-currency-input"
 
     const kibaBalance = useKiba(account)
     const accessDenied = React.useMemo(() => !account || !kibaBalance || +kibaBalance.toFixed(0) <= 0 ,[account, kibaBalance])
-    const frameURL = React.useMemo(() => chainId === 1 ? `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:${tokenData.symbol}WETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en` : undefined, [chainId ,selectedCurrency, tokenData])
     const chainLabel = React.useMemo (( ) => chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
     return (
         <DarkCard style={{ maxWidth: 900, background: 'radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95))', display: 'flex', flexFlow: 'column wrap' }}>
@@ -150,7 +157,7 @@ id="swap-currency-input"
                     {PanelMemo}
                 </div>
                 <div style={{height: '500px'}}>
-                {(tokenData?.symbol || chainId === 56)  && <TradingViewWidget symbol={chainId === 1 ? 'UNISWAP:' + tokenData?.symbol + "WETH" : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'dark'} locale={"en"}  autosize={true} />}
+                {(tokenData?.symbol || chainId === 56)  && <TradingViewWidget symbol={chainId === 1 ? 'UNISWAP:' + (tokenData?.symbol ===  "WETH" ? "WETHUSDT" : `${tokenData?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"}  autosize={true} />}
             </div>
             {selectedCurrency && (
                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
@@ -174,14 +181,29 @@ id="swap-currency-input"
                             {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
                                 <tr style={{paddingBottom:5}}  key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                     <td style={{fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
-                                    <td style={{ color: item.token0Symbol === chainLabel ? 'red' : 'green' }}>{item.token0Symbol === chainLabel ? 'SELL' : 'BUY'}</td>
+                                    {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol === chainLabel ? 'red' : 'green' }}>{item.token0Symbol === chainLabel ? 'SELL' : 'BUY'}</td>}
+                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== tokenData?.symbol ? 'red' : 'green' }}>{item.token0Symbol === tokenData?.symbol ? 'BUY' : 'SELL'}</td>}
+                                    {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && 
+                                    <>
                                     <td>{item.token0Symbol === chainLabel && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                         {item.token1Symbol ===chainLabel && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                     </td>
                                     <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
                                     <td>{item.token0Symbol !== chainLabel && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                         {item.token1Symbol !== chainLabel && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
-                                    </td>  <td>
+                                    </td>  
+                                    </>}
+                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && 
+                                    <>
+                                    <td>{item.token0Symbol === tokenData?.symbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                        {item.token1Symbol ===tokenData?.symbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                    </td>
+                                    <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
+                                    <td>{item.token0Symbol !== tokenData?.symbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                        {item.token1Symbol !== tokenData?.symbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                    </td>  
+                                    </>}
+                                    <td>
                                         <a href={'https://etherscan.io/address/' + item.account}>
                                             {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
                                         </a>
