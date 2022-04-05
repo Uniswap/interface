@@ -23,7 +23,7 @@ type Web3ContextType = {
 
 const EMPTY_CONNECTOR = initializeConnector(() => EMPTY)
 const EMPTY_CONTEXT: Web3ContextType = { connector: EMPTY }
-const urlConnectorAtom = atom<[Connector, Web3ReactHooks, Web3ReactStore]>(EMPTY_CONNECTOR)
+const jsonRpcConnectorAtom = atom<[Connector, Web3ReactHooks, Web3ReactStore]>(EMPTY_CONNECTOR)
 const injectedConnectorAtom = atom<[Connector, Web3ReactHooks, Web3ReactStore]>(EMPTY_CONNECTOR)
 const Web3Context = createContext(EMPTY_CONTEXT)
 
@@ -69,8 +69,14 @@ export function ActiveWeb3Provider({
     return EIP1193
   }, [provider]) as { new (actions: Actions, initializer: typeof provider): Connector }
   const injectedConnector = useConnector(injectedConnectorAtom, Injected, provider)
-  const urlConnector = useConnector(urlConnectorAtom, Url, jsonRpcEndpoint)
-  const [connector, hooks] = injectedConnector[1].useIsActive() ? injectedConnector : urlConnector ?? EMPTY_CONNECTOR
+  const JsonRpc = useMemo(() => {
+    if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) return JsonRpcConnector
+    return Url
+  }, [jsonRpcEndpoint]) as { new (actions: Actions, initializer: typeof jsonRpcEndpoint): Connector }
+  const jsonRpcConnector = useConnector(jsonRpcConnectorAtom, JsonRpc, jsonRpcEndpoint)
+  const [connector, hooks] = injectedConnector[1].useIsActive()
+    ? injectedConnector
+    : jsonRpcConnector ?? EMPTY_CONNECTOR
 
   const library = hooks.useProvider()
 
