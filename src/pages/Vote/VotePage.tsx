@@ -374,7 +374,7 @@ export default function VotePage({
           <Card>
             <CardSection>
               <TYPE.black>
-                <Trans>
+                <Trans> 
                   <Info /> &nbsp;
                   <small>
                     {`NOTE: Trump GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
