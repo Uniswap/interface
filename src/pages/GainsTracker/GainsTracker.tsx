@@ -214,9 +214,9 @@ export const GainsTracker = () => {
     }, [selectedCurrencyBalance, account])
   
   const showWarning = React.useMemo(() => {
-   const showWarning = (!trumpBalance || +trumpBalance?.toFixed(2) <= 0);
+   const showWarning = !!account && (!trumpBalance || +trumpBalance?.toFixed(2) <= 0);
  return showWarning;
-  }, [trumpBalance])
+  }, [trumpBalance, account])
       
 
   return (
@@ -237,23 +237,22 @@ export const GainsTracker = () => {
                   </div>
                 )}
               </div>
-           <DarkCard>
-             {!!account && !showWarning && <TYPE.main><small >
+              {!!account && !showWarning && <DarkCard style={{marginBottom: 30, marginTop: 30}}>
+ <TYPE.main><small >
                 Select a currency, or input the contract address of a project you own that you would like to track redistribution gains. &nbsp;
                 <Tooltip show={showTip} text={tipmessage}>
                   <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
                 </Tooltip>
               </small>
               </TYPE.main>
-
+</DarkCard>
              } 
-             {showWarning && (<React.Fragment>
+             {showWarning && (<BlueCard><React.Fragment>
       <AlertCircle />
       <small>This feature is only avaialable to current holders of Squeeze Token. Please check again at a future
       date or acquire some Squeeze Token to use the universal gains tracking functionality.</small>
-    </React.Fragment>)}
+    </React.Fragment></BlueCard>)}
              
-                </DarkCard>
           {!account &&  <DarkCard><TYPE.main>Connect your wallet to track gains</TYPE.main></DarkCard>}
 
             </div>
