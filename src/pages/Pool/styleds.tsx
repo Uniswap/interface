@@ -49,8 +49,12 @@ const Loading = ({count}:any) => {
   )
 }
 
-export const LoadingSkeleton = (props: any  ) =>  (
-<Loading count={props.count} borderRadius={10} />
+type LoadingSkelProps = {
+  count: number;
+  borderRadius?:number
+}
+export const LoadingSkeleton = (props: LoadingSkelProps  ) =>  (
+<Loading count={props.count} borderRadius={props.borderRadius ? props.borderRadius : 10} />
 )
 export const Dots = styled.span`
   &::after {

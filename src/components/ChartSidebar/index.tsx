@@ -8,7 +8,9 @@ import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/sw
 
 import { BurntKiba } from 'components/BurntKiba';
 import React from 'react';
+import { Token } from '@uniswap/sdk-core';
 import _ from 'lodash'
+import { useTotalSupply } from 'hooks/useTotalSupply';
 import { useWeb3React } from '@web3-react/core';
 
 const rotate360 = keyframes`
@@ -60,13 +62,23 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
     const holderCount = useTokenHolderCount(token.address, chainId)
+    const tokenCurrency = token && token.decimals ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : { } as Token
     console.log('chartSidebar -> tokenInfo', tokenInfo, holderCount)
     //create a custom function that will change menucollapse state from false to true and true to false
     const menuIconClick = () => {
         //condition checking to change state from true to false and vice versa
         collapsed ? onCollapse(false) : onCollapse(true);
     };
-
+    const totalSupply = useTotalSupply(tokenCurrency)
+    const totalSupplyInt = React.useMemo(() =>  {
+        if (tokenInfo && tokenInfo?.totalSupply && tokenInfo.totalSupply.valueOf() && _.isNumber(tokenInfo?.totalSupply))
+        return parseFloat(tokenInfo?.totalSupply?.toFixed(0));
+        if (totalSupply) {
+            return parseFloat(totalSupply.toFixed(0)) 
+        }
+        return 0
+     } ,[tokenInfo?.totalSupply, totalSupply])
+     console.log(totalSupplyInt, totalSupply, tokenInfo?.totalSupply)
     return (
         <ProSidebar collapsed={collapsed} width={'100%'} title="Kiba Charts" style={{ marginRight: 15, background: '#252632', borderRadius: 10, border: '.25px solid transparent' }}>
             <SidebarHeader style={{ background: '#252632' }}>
@@ -97,37 +109,39 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             setStatsOpen(isOpen)
                             if (isOpen) setQuickNavOpen(false)
                         }}
+                        popperarrow
+                        placeholder={'loader'}
                         icon={<PieChart style={{ background: 'transparent' }} />}
                         title={`${tokenData?.name ? tokenData?.name : ''} Stats`}>
                         {hasData &&
                             <>
                                 {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
                                     <TYPE.subHeader>Price</TYPE.subHeader>
-                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{(tokenData?.priceUSD)?.toString()}</TYPE.black>
+                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{(tokenData?.priceUSD)?.toFixed(18)}</TYPE.black>
                                 </MenuItem>
                                 <MenuItem>
                                     <TYPE.subHeader>Market Cap</TYPE.subHeader>
-                                    <TYPE.black>${Number(tokenData?.priceUSD * 1000000000000).toLocaleString()}</TYPE.black>
+                                    <TYPE.black>${Number(parseFloat(tokenData?.priceUSD?.toFixed(18)) * (totalSupplyInt)).toLocaleString()}</TYPE.black>
                                 </MenuItem></>}
 
                                 {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate &&  _.isNumber(tokenInfo.price.rate) && <>
                                     <MenuItem>
                                     <TYPE.subHeader>Price</TYPE.subHeader>
-                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{(tokenInfo?.price?.rate?.toString()).toString()}</TYPE.black>
+                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{(tokenInfo?.price?.rate?.toFixed(18)).toString()}</TYPE.black>
                                 </MenuItem>
                                 <MenuItem>
                                     <TYPE.subHeader>Market Cap</TYPE.subHeader>
-                                    <TYPE.black>${Number(parseFloat(tokenInfo?.price?.rate?.toString()) * 1000000000000).toLocaleString()}</TYPE.black>
+                                    <TYPE.black>${Number(parseFloat(tokenInfo?.price?.rate?.toFixed(18)) * totalSupplyInt).toLocaleString()}</TYPE.black>
                                 </MenuItem>
                                     </>
                                 }
-                                <MenuItem>
+                               {token?.symbol?.toLowerCase().includes('kiba') &&  <MenuItem>
                                     <TYPE.subHeader>Total Burnt</TYPE.subHeader>
                                     <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
-                                </MenuItem>
+                                </MenuItem>}
                                 {holderCount && holderCount?.holdersCount && <MenuItem>
                                     <TYPE.subHeader># Holders</TYPE.subHeader>
-                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{holderCount?.holdersCount}</TYPE.black>
+                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{parseFloat(holderCount?.holdersCount).toLocaleString()   }</TYPE.black>
                                 </MenuItem>}
                                 {!tokenInfo || !tokenInfo?.price && <MenuItem>
                                     <TYPE.subHeader>24hr Volume</TYPE.subHeader>
