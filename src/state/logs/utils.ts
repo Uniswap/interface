@@ -4,16 +4,17 @@ import React, { useCallback } from 'react'
 import { Token, WETH9 } from '@uniswap/sdk-core'
 import _, { isEqual } from 'lodash'
 
-import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { V2_ROUTER_ADDRESS } from 'constants/addresses'
 import { binanceTokens } from 'utils/binance.tokens'
+import gql from 'graphql-tag'
 import moment from 'moment'
 import { useActiveWeb3React } from 'hooks/web3'
 import useInterval from 'hooks/useInterval'
 import { useKiba } from 'pages/Vote/VotePage'
 import { useTokenBalance } from 'state/wallet/hooks'
-import { binanceTokens } from 'utils/binance.tokens'
-import { V2_ROUTER_ADDRESS } from 'constants/addresses'
+import { useWeb3React } from '@web3-react/core'
+
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -138,9 +139,25 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          id
+          symbol
+        }
       }
       pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          id
+          symbol
+        }
       }
     }
   `

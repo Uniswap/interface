@@ -1,11 +1,15 @@
-import React, { FC, useEffect, useState, useMemo } from 'react';
 import * as axios from 'axios'
-import _ from 'lodash'
+
 import Badge, { BadgeVariant } from 'components/Badge';
-import { DarkCard } from 'components/Card';
 import { ChevronDown, ChevronUp } from 'react-feather';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+
+import { DarkCard } from 'components/Card';
+import Tooltip from 'components/Tooltip'
+import _ from 'lodash'
 import { isMobile } from 'react-device-detect';
 import { usePairs } from 'state/logs/utils';
+
 type Props = {
     address: string;
     chainId?: number;
@@ -76,6 +80,16 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
 
         return _.sumBy(holders.filter(holder => !deadAddresses.includes(holder.address) && !pairs?.some((pair: { id: string }) => holder?.address?.toLowerCase() === pair?.id?.toLowerCase())), holders => holders?.share || 0).toFixed(2);
     }, [holders, pairs])
+
+    const [showUniTooltip, setShowUniTooltip] = React.useState(false)
+    const isUniswapPair = React.useMemo(() => (address: string) => !!pairs.some((pair: {id: string}) => pair.id.toLowerCase() === address.toLowerCase()) ,[pairs])
+    const PairTooltipText = React.useMemo(() => (address: string) => {
+        if (!isUniswapPair(address)) return ''
+        const pair: {token0: {symbol: string;}, token1: { symbol:string; }} = pairs?.find((pair: {id: string; symbol: string;}) => pair.id.toLowerCase() === address.toLowerCase());
+        return pair?.token0 && pair?.token1 ?
+         `${pair?.token0?.symbol}/${pair?.token1?.symbol} Uniswap Pair`:
+         ''
+    }, [pairs])
     const [sliceCount, setSliceCount] = React.useState({ start: 0, end: 10 });
 
     const [isOpen, setIsOpen] = useState(false)
@@ -101,6 +115,12 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                     <div key={holder.address} style={{ rowGap: 3, alignItems: 'center', padding: '1px 0px', marginBottom: 1, display: 'flex', justifyContent: 'space-between', flexFlow: 'row wrap' }}>
                         <a style={{ color: "#fff" }} href={getHolderLink(holder)}>
                             <span style={{ marginRight: 3, color: '#FFF', background: "#222", borderRadius: 15, padding: 3 }}>{i + 1}</span> {holder?.address.substring(0, 8) + '...' + holder?.address.substring(holder?.address.length - 8, holder?.address.length)}
+                            {isUniswapPair(holder.address) && <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
+                                <img onMouseEnter={() => setShowUniTooltip(true)}
+                                    onMouseLeave={() => setShowUniTooltip(false)} 
+                                    src={'https://i2.wp.com/fastandclean.org/wp-content/uploads/2021/01/UniSwap-logo.png?ssl=1'} 
+                                    style={{maxWidth:30}} />
+                                </Tooltip>}
                         </a>
                         <Badge>{Number(holder.balance / 10 ** 9).toLocaleString()}</Badge>
                         <Badge variant={BadgeVariant.POSITIVE}>{holder.share}%</Badge>
