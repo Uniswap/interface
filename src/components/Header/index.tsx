@@ -310,7 +310,7 @@ export default function Header() {
       </Modal>
       <Title href="https://babytrumptoken.com">
         <UniIcon>
-          <img width={'30px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
+          <img width={isMobile ? '30px' : '100px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
         </UniIcon>
       </Title>
       <HeaderLinks>
