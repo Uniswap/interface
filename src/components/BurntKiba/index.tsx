@@ -50,10 +50,11 @@ export const useTotalSwapVolume = () => {
     }, [ethRelayed, ethCurrency])
 
     const usdcValue = useUSDCValue(rawCurrencyAmount)
+    const formattedUsdcValue = usdcValue ? usdcValue?.toFixed(6) : '0';
     return { 
       volumeInEth: ethRelayed.formatted,
       volumeInEthBn: ethRelayed.value,
-      volumeInUsd: parseFloat(usdcValue?.toFixed(6)).toLocaleString()
+      volumeInUsd: parseFloat(formattedUsdcValue).toLocaleString()
     }
 }
 
@@ -106,10 +107,10 @@ volumeInUsd
                 Value includes price impact
             </small>
             </div>
-            {!isBinance && (
+            {true && (
             <div>
-              <h1>Total Swap Volume (in ETH)</h1>
-              <p><Badge>{volumeInEth} ETH {volumeInUsd && volumeInUsd !== 'NaN' && <> (${volumeInUsd} USD)</>}</Badge></p>
+              <h1>Total Swap Volume (in {isBinance ? "BSC" : "ETH"})</h1>
+              <p><Badge>{volumeInEth} {isBinance ? "BNB" :"ETH"} {volumeInUsd && volumeInUsd !== 'NaN' && <> (${volumeInUsd} USD)</>}</Badge></p>
             </div>
             )}
             </DarkCard> 
