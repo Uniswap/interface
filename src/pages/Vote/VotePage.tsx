@@ -95,6 +95,7 @@ import { isMobile } from "react-device-detect";
 import { useTrumpGoldBalance } from "./AddProposal";
 import { walletconnect } from "connectors";
 import squeezeLogo from '../../assets/images/squeeze.png'
+import { useDarkModeManager } from "state/user/hooks";
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -441,7 +442,7 @@ export default function VotePage({
       console.error(ex);
     }
   }, [trumpBalance, trumpCoin.address]);
-
+const [darkMode] = useDarkModeManager()
   const [stimulusBalanceUSD, setStimulusBalanceUSD] = React.useState("");
   React.useEffect(() => {
     try {
@@ -539,11 +540,11 @@ export default function VotePage({
               <GreyCard justifyContent="center">
                 <div style={{ display: "flex", flexFlow: "row wrap" }}>
                   {!account && (
-                    <TYPE.black>
+                    <TYPE.white>
                       <Trans>
                         Please connect wallet to start tracking gains.
                       </Trans>
-                    </TYPE.black>
+                    </TYPE.white>
                   )}
                   <img
                     src={
@@ -552,7 +553,7 @@ export default function VotePage({
                     width="100px"
                   />
                   <div style={{ marginTop: 40, alignItems: "baseline" }}>
-                    <TYPE.black className="d-flex">
+                    <TYPE.white className="d-flex">
                       <Trans>
                         {trumpBalance !== undefined
                           ? `Squeeze Balance ${trumpBalance?.toFixed(
@@ -560,9 +561,9 @@ export default function VotePage({
                             )} (${(+trumpBalanceUSD)?.toFixed(2)} USD)`
                           : null}
                       </Trans>
-                    </TYPE.black>
+                    </TYPE.white>
                     {isTrackingGains === true && (
-                      <TYPE.main className="d-flex">
+                      <TYPE.main style={{color: darkMode ? '#fff' : '#222'}}  className="d-flex">
                         {storedTrumpBalance !== undefined &&
                           trumpBalance !== undefined &&
                           account !== undefined && (
