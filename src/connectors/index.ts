@@ -66,11 +66,11 @@ export const portis = new PortisConnector({
   networks: [1],
 })
 
-export const UNISWAP_LOGO_URL = 'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'
+export const UNISWAP_LOGO_URL = 'https://i.imgur.com/od70ynH.jpeg'
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URLS[SupportedChainId.MAINNET],
-  appName: 'TrumpSwap',
+  appName: 'Squeezeswap',
   appLogoUrl: UNISWAP_LOGO_URL,
 })
