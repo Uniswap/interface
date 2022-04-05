@@ -53,6 +53,9 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />
   }
 
+
+  if (currency?.address?.toLowerCase() === '0xff69e48af1174da7f15d0c771861c33d3f19ed8a'.toLowerCase()) 
+  return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/17468/small/400_filter_nobg_60c70a3c5aae1.jpg?1628214173']} alt={`${currency.symbol ?? 'token'} logo`} style={style} {...rest} />
   if (currency?.address?.toLowerCase() === '0x99d36e97676a68313ffdc627fd6b56382a2a08b6'.toLowerCase())
   return <StyledLogo size={size} srcs={['https://babytrumptoken.com/images/Baby_Trump_Transpa.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 
