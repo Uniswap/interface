@@ -2,7 +2,6 @@ import 'setimmediate'
 
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { Header as DialogHeader } from 'lib/components/Dialog'
 import TokenSelect from 'lib/components/TokenSelect'
 import { loadingTransitionCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
@@ -121,7 +120,6 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
-        <DialogHeader title={<Trans>Select a token</Trans>} />
         <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onSelect} />
       </TokenInputRow>
       {children}

@@ -1,5 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { Header as DialogHeader } from 'lib/components/Dialog'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -69,7 +70,11 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
-  const listHasTokens = useMemo(() => {}, [])
+  const { chainId } = useActiveWeb3React()
+  const list = useTokenList()
+  const listHasTokens = useMemo(() => {
+    return Boolean(list.find((token) => token.chainId === chainId && !token.isNative))
+  }, [chainId, list])
 
   if (listHasTokens || !isLoaded) {
     return (
@@ -134,6 +139,7 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
       <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
+          <DialogHeader title={<Trans>Select a token</Trans>} />
           <TokenSelectDialog value={value} onSelect={selectAndClose} />
         </Dialog>
       )}
