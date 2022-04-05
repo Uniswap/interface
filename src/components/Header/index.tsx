@@ -33,12 +33,14 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
-import logo from '../../assets/images/squeeze.png'
+import logo from '../../assets/images/kiba.jpeg'
 import Swal from 'sweetalert2'
-
+import { ChartModal } from 'components/swap/ChartModal'
+import { useEthPrice } from 'state/logs/utils'
+import Badge from 'components/Badge'
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
+  grid-template-columns: 150px 1fr 120px;
   align-items: center;
   justify-content: space-between;
   align-items: center;
@@ -50,10 +52,8 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   z-index: 21;
   position: relative;
   /* Background slide effect on scroll. */
-  background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.bg0} 50% )}}`};
   background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
   background-size: 100% 200%;
-  box-shadow: 0px 0px 0px 1px ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'transparent;')};
   transition: background-position 0.1s, box-shadow 0.1s;
   background-blend-mode: hard-light;
 
@@ -95,7 +95,7 @@ const HeaderElement = styled.div`
 
 const HeaderLinks = styled(Row)`
   justify-self: center;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg2};
   width: fit-content;
   padding: 4px;
   border-radius: 16px;
@@ -191,7 +191,35 @@ const UniIcon = styled.div`
 `
 
 const activeClassName = 'ACTIVE'
+export const StyledAnchorLink = styled.a`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: left;
+  border-radius: 3rem;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  font-size: 1rem;
+  width: fit-content;
+  margin: 0 12px;
+  font-weight: 500;
 
+  &.${activeClassName} {
+    border-radius: 12px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.text1};
+  }
+
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
+  }
+
+:hover,
+:focus {
+  color: ${({ theme }) => darken(0.1, theme.text1)};
+}`
 const StyledNavLink = styled(NavLink).attrs({
   activeClassName,
 })`
@@ -213,7 +241,7 @@ const StyledNavLink = styled(NavLink).attrs({
     font-weight: 600;
     justify-content: center;
     color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: radial-gradient(#f5b642, rgba(129,3,3,.95));
   }
 
   :hover,
@@ -243,7 +271,7 @@ const StyledInput = styled.input`
 
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName,
-})<{ isActive?: boolean }>`
+}) <{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -299,7 +327,8 @@ export default function Header() {
       window.removeEventListener('resize', handleWindowSizeChange)
     }
   }, [])
-
+  const ChartModalElm = React.memo(() => <ChartModal isOpen={chartOpen} onDismiss={() => setChartOpen(false)} />);
+  ChartModalElm.displayName = 'CHART_MODAL_ELEMENT';
   const isMobile: boolean = width <= 768
   const [showTip, setShowTip] = useState(false)
   const [darkmode] = useDarkModeManager()
@@ -309,40 +338,31 @@ export default function Header() {
   let interval = null
   const [isOpen, setIsOpen] = React.useState(false)
   React.useEffect(() => {
-    fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
-      .then((res) => res.json())
-      .then((response) => {
-        setGas(response)
-      }).then(() => {
-        interval = setInterval(() => {
-    if (!isOpen && showNotify) {
+    const promise = () => fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
+    .then((res) => res.json())
+    .then((response) => {
+      setGas(response)
+    }).then(() => {
+      if (!isOpen && showNotify && Math.trunc(gas?.fast / 10) <= 85) {
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          timer: 10000,
+          showConfirmButton: false,
+          timerProgressBar: true,
+          icon: 'success',
+          title: 'GWEI is currently at ' + Math.trunc(gas?.fast / 10)
+        })
+      }
 
-          fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
-            .then((res) => res.json())
-            .then((response) => {
-              setGas(response)
-              if (!isOpen && showNotify && Math.trunc(response?.fast / 10) >= 85) {
-                Swal.fire({
-                  toast:true,
-                  position: 'bottom-end',
-                  timer: 5000,
-                  showConfirmButton:false,
-
-                  timerProgressBar: true,
-                  icon: 'success',
-                  title: 'GWEI is currently at ' + Math.trunc(response?.fast / 10)
-                })  
-              } 
-            })
-          }
-        }, 300000)
-      })
+    });  
+      promise();
     return () => {
       interval = null;
     }
   }, [isOpen, showNotify])
 
-  const onNotify =  React.useCallback( () => {
+  const onNotify = React.useCallback(() => {
     setIsOpen(true);
     Swal.fire({
       title: showNotify ? "Cancel notifications" : 'Subscribe to notifications',
@@ -351,35 +371,42 @@ export default function Header() {
       confirmButtonText: showNotify ? 'Unsubscribe' : "Subscribe",
       showCancelButton: true,
       icon: 'question',
-    }).then(({isConfirmed}) => {
-    setIsOpen(false)
-    if (showNotify && isConfirmed) {
-      setShowNotify(() => false)
-      localStorage.setItem('subscribed', 'false')
-    } else if (!showNotify && isConfirmed) {
-      setShowNotify(true)
-      localStorage.setItem('subscribed', 'true')
-    } 
-  })
-}, [showNotify, isOpen])
+    }).then(({ isConfirmed }) => {
+      setIsOpen(false)
+      if (showNotify && isConfirmed) {
+        setShowNotify(() => false)
+        localStorage.setItem('subscribed', 'false')
+      } else if (!showNotify && isConfirmed) {
+        setShowNotify(true)
+        localStorage.setItem('subscribed', 'true')
+      }
+    })
+  }, [showNotify, isOpen])
+
+  const [chartOpen, setChartOpen] = React.useState(false)
   const [showGasTt, setShowGasTt] = React.useState(false)
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
+        {isOpen && <ChartModalElm />}
         <ClaimModal />
         <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
           <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
         </Modal>
-        <Title href="/">
+        <Title style={{textDecoration:"'none"}} href="/">
           <UniIcon>
             <img
               width={isMobile ? '30px' : '100px'}
-              src={'https://kibainu.space/wp-content/uploads/2021/10/photo_2021-10-30-06.48.25-204x300.jpeg'}
+              src={logo}
               alt="logo"
             />
+
           </UniIcon>
+
         </Title>
+        
         <HeaderLinks>
+          
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>
           </StyledNavLink>
@@ -396,54 +423,54 @@ export default function Header() {
           >
             <Trans>Pool</Trans>
           </StyledNavLink>
-          {chainId && chainId === SupportedChainId.MAINNET && (
+          {chainId && [SupportedChainId.MAINNET, SupportedChainId.BINANCE].includes(chainId) && (
             <StyledNavLink id={`stake-nav-link`} to={'/gains'}>
               <Trans>Gains</Trans>
             </StyledNavLink>
           )}
-          
-          <StyledExternalLink id={`stake-nav-link`} href={href}>
+
+          <StyledNavLink id={`chart-nav-link`} to={'/charts'}>
             <Trans>Charts</Trans>
             <sup>↗</sup>
-          </StyledExternalLink>
-       
+          </StyledNavLink>
+
           <div
-              style={{
-                position:'relative',
-                top:6,
-                marginBottom: 15,
-                justifyContent: 'center',
-                marginRight: 30,
-                padding: 3,
-                borderRadius: 12,
-                display: 'flex',
-                color: 'rgb(168,228,44)',
-              }}
-            >
-              {' '}
-                <span  style={{ cursor:'pointer', display: 'flex',  alignItems: 'baseline' }}>
-                <img style={{filter:'sepia(1)', maxWidth:20}} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
-                  />
-                  {gas && (
-                    <span style={{ color: '#fff', marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>
-                      {gas?.fast / 10}
-                    </span>
-                  )}
-                 
-                </span> 
-                      {gas && Math.trunc(gas?.fast / 10) > 85 ? <AlertOctagon fill={showNotify ? 'green' : 'red'} color={'#fff'}onClick={onNotify} style={{cursor:'pointer',marginLeft:5}}
-                            onMouseEnter={() => setShowGasTt(true)}
-                            onMouseLeave={() => setShowGasTt(false)}
-                            /> : <CheckCircle   fill={showNotify ? 'green' : 'red'} color={'#fff'}onClick={onNotify} style={{background:'green',cursor:'pointer',marginLeft:5}} />}
+            style={{
+              position: 'relative',
+              top: 6,
+              marginBottom: 15,
+              justifyContent: 'center',
+              marginRight: 30,
+              padding: 3,
+              borderRadius: 12,
+              display: 'flex',
+              color: 'rgb(168,228,44)',
+            }}
+          >
+            {' '}
+            <span style={{ cursor: 'pointer', display: 'flex', alignItems: 'baseline' }}>
+              <img style={{ filter: 'sepia(1)', maxWidth: 20 }} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
+              />
+              {gas && (
+                <span style={{ color: '#fff', marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>
+                  {gas?.fast / 10}
+                </span>
+              )}
+
+            </span>
+            {gas && Math.trunc(gas?.fast / 10) > 85 ? <AlertOctagon fill={showNotify ? 'green' : 'red'} color={'#fff'} onClick={onNotify} style={{ cursor: 'pointer', marginLeft: 5 }}
+              onMouseEnter={() => setShowGasTt(true)}
+              onMouseLeave={() => setShowGasTt(false)}
+            /> : <CheckCircle fill={showNotify ? 'green' : 'red'} color={'#fff'} onClick={onNotify} style={{ background: 'green', cursor: 'pointer', marginLeft: 5 }} />}
 
 
-            </div>
+          </div>
 
         </HeaderLinks>
 
         <HeaderControls>
-          
-  
+
+
           <NetworkCard />
 
           <HeaderElement>
