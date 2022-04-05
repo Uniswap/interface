@@ -287,7 +287,7 @@ export default function Header() {
         </StyledNavLink>
         {chainId && chainId === SupportedChainId.MAINNET && (
           <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            <Trans>Vote</Trans>
+            <Trans>TRUMPGAINS</Trans>
           </StyledNavLink>
         )}
         <StyledExternalLink id={`stake-nav-link`} href={href}>
