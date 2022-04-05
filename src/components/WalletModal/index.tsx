@@ -44,21 +44,23 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   width: 100%;
+  background: #252632;
 `
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1rem 1rem;
-  font-weight: 500;
-  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+  padding: 20px 30px 10px 30px;
+  font-weight: 600;
+  font-family: Open Sans;
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg0};
-  padding: 0 1rem 1rem 1rem;
+  background: ${({ theme }) => theme.bg0};
+  padding: 30px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -79,8 +81,6 @@ const UpperSection = styled.div`
     margin-bottom: 0px;
   }
 
-  background:radial-gradient(#f5b642, rgba(129,3,3,.95));
-
   h4 {
     margin-top: 0;
     font-weight: 500;
@@ -88,6 +88,7 @@ const UpperSection = styled.div`
 `
 
 const OptionGrid = styled.div`
+  padding: 20px 0px 0px 0px;
   display: grid;
   grid-gap: 10px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -123,58 +124,61 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
-  // important that these are destructed from the account-specific web3-react context
-  const { active, account, connector, activate, error } = useWeb3React()
+   // important that these are destructed from the account-specific web3-react context
+   const { active, account, connector, activate, error } = useWeb3React()
 
-  const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
-
-  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
-
-  const [pendingError, setPendingError] = useState<boolean>()
-
-  const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
-  const toggleWalletModal = useWalletModalToggle()
-
-  const previousAccount = usePrevious(account)
-
-  // close on connection, when logged out before
-  useEffect(() => {
-    if (account && !previousAccount && walletModalOpen) {
-      toggleWalletModal()
-    }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
-
-  // always reset to account view
-  useEffect(() => {
-    if (walletModalOpen) {
-      setPendingError(false)
-      setWalletView(WALLET_VIEWS.ACCOUNT)
-    }
-  }, [walletModalOpen])
-
-  // close modal when a connection is successful
-  const activePrevious = usePrevious(active)
-  const connectorPrevious = usePrevious(connector)
-  useEffect(() => {
-    if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
-      setWalletView(WALLET_VIEWS.ACCOUNT)
-    }
-  }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
-
-  const tryActivation = async (connector: AbstractConnector | undefined) => {
-    let name = ''
-    Object.keys(SUPPORTED_WALLETS).map((key) => {
-      if (connector === SUPPORTED_WALLETS[key].connector) {
-        return (name = SUPPORTED_WALLETS[key].name)
-      }
-      return true
-    })
-    // log selected wallet
-    ReactGA.event({
-      category: 'Wallet',
-      action: 'Change Wallet',
-      label: name,
-    })
+   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+   const previousWalletView = usePrevious(walletView)
+ 
+   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
+ 
+   const [pendingError, setPendingError] = useState<boolean>()
+ 
+   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
+   const toggleWalletModal = useWalletModalToggle()
+ 
+   const previousAccount = usePrevious(account)
+ 
+  
+   // close on connection, when logged out before
+   useEffect(() => {
+     if (account && !previousAccount && walletModalOpen) {
+       toggleWalletModal()
+     }
+   }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+ 
+   // always reset to account view
+   useEffect(() => {
+     if (walletModalOpen) {
+       setPendingError(false)
+       setWalletView(WALLET_VIEWS.ACCOUNT)
+     }
+   }, [walletModalOpen])
+ 
+   // close modal when a connection is successful
+   const activePrevious = usePrevious(active)
+   const connectorPrevious = usePrevious(connector)
+   useEffect(() => {
+     if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
+       setWalletView(WALLET_VIEWS.ACCOUNT)
+     }
+   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
+ 
+   const tryActivation = async (connector: AbstractConnector | undefined) => {
+     let name = ''
+     Object.keys(SUPPORTED_WALLETS).map((key) => {
+       if (connector === SUPPORTED_WALLETS[key].connector) {
+         return (name = SUPPORTED_WALLETS[key].name)
+       }
+       return true
+     })
+     // log selected wallet
+     ReactGA.event({
+       category: 'Wallet',
+       action: 'Change Wallet',
+       label: name,
+     })
+  
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
@@ -327,7 +331,7 @@ export default function WalletModal({
           <CloseColor />
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
-          <HeaderRow color="blue">
+          <HeaderRow>
             <HoverText
               onClick={() => {
                 setPendingError(false)
@@ -338,22 +342,22 @@ export default function WalletModal({
             </HoverText>
           </HeaderRow>
         ) : (
-          <HeaderRow>
-            <HoverText>
+          <HeaderRow style={{ fontFamily: 'Bangers', fontSize: 24, letterSpacing: 2 }}>
+            
               <Trans>Connect to a wallet</Trans>
-            </HoverText>
+            
           </HeaderRow>
         )}
 
         <ContentWrapper>
-          <LightCard style={{ marginBottom: '16px' }}>
+          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', background: '#4F4F62' }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
-              <TYPE.main fontSize={14}>
+              <TYPE.main fontSize={16}>
                 <Trans>
                   By connecting a wallet, you agree to Uniswap Labs’{' '}
-                  <ExternalLink style={{color:"#FF8CC3"}} href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                  <ExternalLink style={{color:"#F76C1D"}} href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                   acknowledge that you have read and understand the{' '}
-                  <ExternalLink style={{color:"#FF8CC3"}} href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
+                  <ExternalLink style={{color:"#F76C1D"}} href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
                 </Trans>
               </TYPE.main>
             </AutoRow>

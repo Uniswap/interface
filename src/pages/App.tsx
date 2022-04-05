@@ -352,7 +352,7 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
   const hasInvalidPermissions = !account || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0)
   if (chainId === 56) return <HoneyPotBsc />
   
-  return (<DarkCard style={{ background:'radial-gradient(#f5b642, rgba(129,3,3,.99))', opacity: '.96', maxWidth: 600 }} id="honeypage">
+  return (<DarkCard style={{ background:'#252632', opacity: '.96', maxWidth: 600 }} id="honeypage">
     <div style={{ maxWidth: 600, display:'flex', flexFlow:'column wrap',margin: 'auto', paddingBottom: '1rem' }}>
       <Badge style={{width:220}}><StyledHeader>Honeypot Checker (ETH)</StyledHeader></Badge>
       <small style={{marginTop:3, paddingLeft:3}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
@@ -452,7 +452,7 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
 }
 
 const Fomo = () => {
-  return (<DarkCard style={{maxWidth:800,background:'radial-gradient(#eb5b2c,rgba(129,3,3,.95))  '}}>
+  return (<DarkCard style={{maxWidth:800,background:'#252632'}}>
     <div style={{ padding: '9px 14px' }}>
       <StyledHeader>KibaFOMO <br /><small style={{ fontSize: 12 }}>Powered by tokenfomo.io</small></StyledHeader>
       <iframe src={'https://tokenfomo.io/?f=ethereum'} style={{ width:'100%', maxWidth: '800px', height: '65vh', borderRadius: 6 }} />
