@@ -41,7 +41,7 @@ export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: s
   return tokens.filter(createTokenFilterFunction(search))
 }
 
-export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string): Token[] {
+export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string, showOnlyTrumpCoins?:boolean): Token[] {
   return useMemo(() => {
     if (!tokens) {
       return []
@@ -80,8 +80,9 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
     ]
 
     return [...exactMatches, ...symbolSubtrings, ...rest].filter((item: any) => {
+      if (!showOnlyTrumpCoins) return !!item;
       const isTrumpApproved = allowedContracts.includes(item.address.toLowerCase())
       return isTrumpApproved
     })
-  }, [tokens, searchQuery])
+  }, [tokens, searchQuery, showOnlyTrumpCoins])
 }
