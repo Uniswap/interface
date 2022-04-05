@@ -7,6 +7,7 @@ import _, { isEqual } from 'lodash'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { V2_ROUTER_ADDRESS } from 'constants/addresses'
 import { binanceTokens } from 'utils/binance.tokens'
+import cultureTokens from '../../../src/trending.json'
 import gql from 'graphql-tag'
 import moment from 'moment'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -795,11 +796,18 @@ query trackerdata {
     ...TokenFields
   }`
 
+  const makeCultureString =() => {
+    let string = '';
+    cultureTokens.forEach((token) => {
+      string += cultureTokens[0].address === token.address || cultureTokens[cultureTokens.length - 1].address === token.address ? `"${token.address.toLowerCase()}"` : `"${token.address.toLowerCase()}",`;
+    })
+    return string;
+  }
+
 const CULTURE_TOKENS = gql`
 query culturetokens {
-  pairs(first: 2, orderBy: volumeUSD, orderDirection:desc,  where: {token0_in:[
-    "0x06fcbf38e823efc1e609b9491aab546334c6ee69",
-    "0x55509c29853405d819ba611c393ce920bcca2c0b",
+  pairs(first: 5, orderBy: volumeUSD, orderDirection:desc,  where: {token0_in:[
+    ${makeCultureString()}
   ]}) {
     id
     token0 {

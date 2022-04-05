@@ -34,6 +34,7 @@ import { useDarkModeManager } from "state/user/hooks";
 import { useTokenBalance } from "../../state/wallet/hooks";
 import { useTotalKibaGains } from '../../state/logs/utils'
 import { useUserTransactions } from "state/logs/utils";
+import { useV2RouterContract } from "hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
 import { walletconnect } from "connectors";
 
@@ -49,6 +50,7 @@ const ProposalInfo = styled(AutoColumn)`
   width: 100%;
   min-width: 45%;
   max-width: 480px;
+  overflow:hidden;
 `;
 
 const ArrowWrapper = styled(StyledInternalLink)`
@@ -275,7 +277,7 @@ export default function VotePage() {
   const allTimeGains = useTotalKibaGains(account)
 
   const kibaBalanceUSD = useKibaBalanceUSD(account ?? undefined, chainId)
-console.log(allTimeGains)
+  
   return (
     <>
       <PageWrapper gap="lg" justify="center">
