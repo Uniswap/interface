@@ -401,10 +401,12 @@ export default function Header() {
               <Trans>Gains</Trans>
             </StyledNavLink>
           )}
+          
           <StyledExternalLink id={`stake-nav-link`} href={href}>
             <Trans>Charts</Trans>
             <sup>↗</sup>
           </StyledExternalLink>
+       
           <div
               style={{
                 position:'relative',
@@ -440,88 +442,7 @@ export default function Header() {
         </HeaderLinks>
 
         <HeaderControls>
-          {showContracts && (
-            <Card style={{}}>
-              {isMobile && (
-                <div style={{ position: 'relative', top: 60, left: 130, color: '#222', zIndex: 2 }}>
-                  <CloseIcon onClick={() => setShowContracts(false)} />
-                </div>
-              )}
-              {!isMobile && (
-                <div style={{ position: 'relative', top: 0, left: 0, color: '#222', zIndex: 2 }}>
-                  <CloseIcon  onClick={() => setShowContracts(false)} />
-                </div>
-              )}
-              <Row
-                style={{
-                  padding: 5,
-                  borderRadius: 6,
-                  background: darkmode ? '#223569' : '#fff',
-                  display: 'flex',
-                  flexFlow: 'column wrap',
-                  position: 'absolute',
-                  width: 'auto',
-                  left: isMobile ? '40%' : '69%',
-                  top: isMobile ? '100%' : '25%',
-                }}
-              >
-                <div
-                  onClick={() => {
-                    setClip('0x99d36e97676a68313ffdc627fd6b56382a2a08b6')
-                  }}
-                  style={{ fontSize: 12, display: 'block', cursor: 'pointer' }}
-                >
-                  <img width={'40px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
-                  <Row>
-                    <AutoColumn>
-                      <TYPE.main>Baby Trump</TYPE.main>
-                      <StyledInput value={'0x99d36e97676a68313ffdc627fd6b56382a2a08b6'} />
-                    </AutoColumn>
-                    <AutoColumn>
-                      <Clipboard style={{ marginTop: 13 }} />
-                    </AutoColumn>
-                  </Row>
-                </div>
-                <div
-                  onClick={() => {
-                    setClip('0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013')
-                  }}
-                  style={{ fontSize: 12, paddingTop: 5, cursor: 'pointer' }}
-                >
-                  <img width={'40px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
-                  <Row>
-                    <AutoColumn>
-                      <TYPE.main>Stimulus Check</TYPE.main>
-                      <StyledInput value={'0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'} />
-                    </AutoColumn>
-                    <AutoColumn>
-                      <Clipboard style={{ marginTop: 13 }} />
-                    </AutoColumn>
-                  </Row>
-                </div>
-                <div
-                  onClick={() => {
-                    setClip('0x29699C8485302cd2857043FaB8bd885bA08Cf268')
-                  }}
-                  style={{ fontSize: 12, paddingTop: 5, cursor: 'not-allowed' }}
-                >
-                  <img width={'40px'} src={'https://babytrumptoken.com/images/Trump_Gold_Coin_Gecko.png'} alt="logo" />
-                  <Row>
-                    <AutoColumn>
-                      <TYPE.main>Trump Gold</TYPE.main>
-                      <StyledInput value={'0x29699C8485302cd2857043FaB8bd885bA08Cf268'} />
-                    </AutoColumn>
-                    <AutoColumn>
-                      <Clipboard style={{ marginTop: 13 }} />
-                    </AutoColumn>
-                  </Row>
-                </div>
-                <TYPE.main style={{ fontSize: 9, marginTop: 5 }}>
-                  <Trans>Click the clipboard to copy</Trans>
-                </TYPE.main>
-              </Row>
-            </Card>
-          )}
+          
   
           <NetworkCard />
 
