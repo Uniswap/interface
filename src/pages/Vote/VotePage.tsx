@@ -3,36 +3,38 @@ import {
   Token,
   WETH9,
 } from "@uniswap/sdk-core";
+import { ExternalLink, StyledInternalLink, TYPE } from "../../theme";
 import React, { useEffect, useMemo, useState } from "react";
+import { pancakeAbi, pancakeAddress, routerAbi, routerAddress } from "./routerAbi";
+
+import { AutoColumn } from "../../components/Column";
+import Badge from "components/Badge";
+import { ButtonLight } from "../../components/Button";
 import {
   Clock,
 } from "react-feather";
-import styled from "styled-components/macro";
-import { ButtonLight } from "../../components/Button";
-import { GreyCard } from "../../components/Card";
-import { AutoColumn } from "../../components/Column";
 import {
   DataCard,
 } from "../../components/earn/styled";
+import { GreyCard } from "../../components/Card";
 import { RowBetween } from "../../components/Row";
-import { SwitchLocaleLink } from "../../components/SwitchLocaleLink";
-import { USDC } from "../../constants/tokens";
-import { useActiveWeb3React } from "../../hooks/web3";
-import { useTokenBalance } from "../../state/wallet/hooks";
-import { ExternalLink, StyledInternalLink, TYPE } from "../../theme";
-import { Trans } from "@lingui/macro";
-import Badge from "components/Badge";
-import moment from "moment";
-import Web3 from "web3";
-import { routerAbi, routerAddress, pancakeAbi, pancakeAddress } from "./routerAbi";
-import { walletconnect } from "connectors";
-import { useDarkModeManager } from "state/user/hooks";
-import { useWeb3React } from "@web3-react/core";
 import { SupportedChainId } from "constants/chains";
-import { useBinanceTokenBalance } from "utils/binance.utils";
-import { binanceTokens } from "utils/binance.tokens";
-import { useUserTransactions } from "state/logs/utils";
+import { SwitchLocaleLink } from "../../components/SwitchLocaleLink";
+import { Trans } from "@lingui/macro";
 import { Transactions } from "./TransactionsPage";
+import { USDC } from "../../constants/tokens";
+import Web3 from "web3";
+import { binanceTokens } from "utils/binance.tokens";
+import moment from "moment";
+import styled from "styled-components/macro";
+import { useActiveWeb3React } from "../../hooks/web3";
+import { useBinanceTokenBalance } from "utils/binance.utils";
+import { useDarkModeManager } from "state/user/hooks";
+import { useTokenBalance } from "../../state/wallet/hooks";
+import { useUserTransactions } from "state/logs/utils";
+import { useWeb3React } from "@web3-react/core";
+import { walletconnect } from "connectors";
+
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -196,8 +198,8 @@ export default function VotePage() {
   );
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
   const storedKibaBalance = useMemo(() => {
-    return localStorage.getItem("trumpBalance") || undefined;
-  }, [localStorage.getItem("trumpBalance")]);
+    return localStorage.getItem("kibaBalance") || undefined;
+  }, [localStorage.getItem("kibaBalance")]);
 
   const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
     storedKibaBalance !== undefined && +storedKibaBalance > 0 && !!account
@@ -212,7 +214,7 @@ export default function VotePage() {
   }, [localStorage.getItem("trackingSince"), date]);
 
   const stopTrackingGains = () => {
-    localStorage.setItem("trumpBalance", "0");
+    localStorage.setItem("kibaBalance", "0");
     localStorage.setItem("trackingSince", "");
     setTrumpGainsUSD("");
     setStimGainsUSD("");
@@ -221,11 +223,11 @@ export default function VotePage() {
 
   const trackGains = () => {
     if (isTrackingGains) {
-      localStorage.setItem("trumpBalance", "0");
+      localStorage.setItem("kibaBalance", "0");
       localStorage.setItem("trackingSince", "");
       setIsTrackingGains(false);
     } else if (!!kibaBalance) {
-      localStorage.setItem("trumpBalance", (kibaBalance || 0)?.toFixed(2));
+      localStorage.setItem("kibaBalance", (kibaBalance || 0)?.toFixed(2));
       localStorage.setItem("trackingSince", `${new Date()}`);
       setIsTrackingGains(true);
     } else {
@@ -389,7 +391,7 @@ const [darkMode] = useDarkModeManager()
                                 +kibaBalance?.toFixed(2) - +storedKibaBalance
                               ).toFixed(2)).toLocaleString()} </span>
                               {isTrackingGains && trumpGainsUSD && (
-                                <Badge style={{ color:"#FFF",paddingTop: 5 }}>
+                                <Badge style={{ marginTop: 5, color:"#FFF",paddingTop: 5 }}>
                                   <small>
                                     <GainsText>Total Reflections</GainsText>
                                   </small>

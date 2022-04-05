@@ -395,7 +395,7 @@ export const useBscTokenData = (addy: any, price: any, price1: any) => {
 export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: any) => {
   const address = addy?.toLowerCase()
   const utcCurrentTime = moment().utc()
-  
+  const [isPolling, setIsPolling] = React.useState(false)
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(2, 'days').unix()
   const payload = useBlocksFromTimestamps([utcOneDayBack, utcTwoDaysBack])
@@ -405,9 +405,9 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
   const QUERY_THREE = BSC_TOKEN_DATA_BY_BLOCK_TWO(address, (payload.blocks?.[1]?.number?.toString()));
 
   // initialize data arrays
-  const queryOne = useQuery(QUERY_ONE, { pollInterval: 60000, fetchPolicy: 'network-only' });
-  const queryTwo = useQuery(QUERY_TWO, { pollInterval: 60000, fetchPolicy: 'network-only' });
-  const queryThree = useQuery(QUERY_THREE, { pollInterval: 60000, fetchPolicy: 'network-only' });
+  const queryOne = useQuery(QUERY_ONE, {  fetchPolicy: 'network-only' });
+  const queryTwo = useQuery(QUERY_TWO, { fetchPolicy: 'network-only' });
+  const queryThree = useQuery(QUERY_THREE, { fetchPolicy: 'network-only' });
 
   const one = React.useMemo(() => queryOne.data, [queryOne.data]);
   const two = React.useMemo(() => queryTwo.data, [queryTwo.data]);
@@ -418,6 +418,17 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
     queryOne.stopPolling();
     queryTwo.stopPolling();
     queryThree.stopPolling();
+    setIsPolling(false)
+  } else if (chainId && 
+    chainId === 56 && 
+    !isPolling && 
+    queryOne.data && 
+    queryTwo.data && 
+    queryThree.data) {
+    setIsPolling(true)
+    queryOne.startPolling(15000)
+    queryTwo.startPolling(15000);
+    queryThree.startPolling(15000)
   }
 
   const data = one?.tokens[0];
