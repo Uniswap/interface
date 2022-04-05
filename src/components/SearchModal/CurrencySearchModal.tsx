@@ -19,6 +19,7 @@ interface CurrencySearchModalProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
+  showOnlyTrumpCoins?:boolean
 }
 
 export enum CurrencyModalView {
@@ -37,6 +38,7 @@ export default function CurrencySearchModal({
   showCommonBases = false,
   showCurrencyAmount = true,
   disableNonToken = false,
+  showOnlyTrumpCoins = false
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
@@ -72,6 +74,7 @@ export default function CurrencySearchModal({
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
       {modalView === CurrencyModalView.search ? (
         <CurrencySearch
+        showOnlyTrumpCoins={showOnlyTrumpCoins}
           isOpen={isOpen}
           onDismiss={onDismiss}
           onCurrencySelect={handleCurrencySelect}
