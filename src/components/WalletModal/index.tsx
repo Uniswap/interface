@@ -79,6 +79,8 @@ const UpperSection = styled.div`
     margin-bottom: 0px;
   }
 
+  background:radial-gradient(#f5b642, rgba(129,3,3,.95));
+
   h4 {
     margin-top: 0;
     font-weight: 500;
@@ -347,9 +349,9 @@ export default function WalletModal({
               <TYPE.main fontSize={14}>
                 <Trans>
                   By connecting a wallet, you agree to Uniswap Labs’{' '}
-                  <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                  <ExternalLink style={{color:"#FF8CC3"}} href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                   acknowledge that you have read and understand the{' '}
-                  <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
+                  <ExternalLink style={{color:"#FF8CC3"}} href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
                 </Trans>
               </TYPE.main>
             </AutoRow>

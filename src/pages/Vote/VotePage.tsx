@@ -1,4 +1,5 @@
 import {
+  BigintIsh,
   Currency,
   CurrencyAmount,
   Price,
@@ -87,7 +88,7 @@ import { usePool } from "hooks/usePools";
 import { usePoolActiveLiquidity } from "hooks/usePoolTickData";
 import Web3 from "web3";
 import { abi } from "./abi";
-import { routerAbi, routerAddress } from "./routerAbi";
+import { routerAbi, routerAddress, pancakeAbi, pancakeAddress } from "./routerAbi";
 import Column from "components/Column";
 import Row from "components/Row";
 import { stackOrderInsideOut } from "d3";
@@ -97,6 +98,10 @@ import { walletconnect } from "connectors";
 import squeezeLogo from '../../assets/images/squeeze.png'
 import { useDarkModeManager } from "state/user/hooks";
 import { kibaAbi } from "components/ShowSellTax";
+import { useWeb3React } from "@web3-react/core";
+import { SupportedChainId } from "constants/chains";
+import useBUSDPrice, { useBinanceTokenBalance } from "utils/binance.utils";
+import { binanceTokens } from "utils/binance.tokens";
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -181,9 +186,11 @@ const ProposerAddressLink = styled(ExternalLink)`
 `;
 
 export const useKiba = (account?: string | null) => {
+  const { chainId } = useWeb3React()
+  const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = new Token(
     1,
-    "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
+    isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
     9,
     "Kiba",
     "Kiba Inu"
@@ -194,9 +201,11 @@ export const useKiba = (account?: string | null) => {
     kibaCoin
   );
 
+  const bKiba =  useBinanceTokenBalance('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341')
+  
   return React.useMemo(() => {
-    return kiba;
-  }, [kiba, kibaCoin]);
+    return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
+  }, [kiba, isBinance, bKiba.balance, account, chainId]);
 };
 
 export const useStimulusBalance = (account?: string | null) => {
@@ -224,32 +233,22 @@ export default function VotePage({
   },
 }: RouteComponentProps<{ governorIndex: string; id: string }>) {
   const web3 = useActiveWeb3React();
-  const { account } = web3;
-
-  const trumpCoin = new Token(
-    1,
-    "0x4B2C54b80B77580dc02A0f6734d3BAD733F50900",
+  const { account, chainId } = web3;
+  const isBinance = chainId === SupportedChainId.BINANCE;
+  const kibaCoin = new Token(
+    isBinance ? 56 : 1,
+    isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
     9,
     "Kiba",
     "Kiba Inu"
   );
-  const stimulusCoin = new Token(
-    1,
-    "0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013",
-    9,
-    "StimulusCheck",
-    "StimulusCheck Token"
-  );
 
-  const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+  const kiba: CurrencyAmount<Token>| any | undefined = useTokenBalance(
     account ?? undefined,
-    trumpCoin
+    kibaCoin
   );
-  const stimulusBalance = useTokenBalance(account ?? undefined, stimulusCoin);
-  const storedSimulusBalance = useMemo(() => {
-    return localStorage.getItem("stimulusBalance") || undefined;
-  }, [localStorage.getItem("stimulusBalance")]);
 
+  const kibaBalance = useKiba(account)
   const storedTrumpBalance = useMemo(() => {
     return localStorage.getItem("trumpBalance") || undefined;
   }, [localStorage.getItem("trumpBalance")]);
@@ -279,12 +278,8 @@ export default function VotePage({
       localStorage.setItem("trumpBalance", "0");
       localStorage.setItem("trackingSince", "");
       setIsTrackingGains(false);
-    } else if (!!trumpBalance || !!stimulusBalance) {
-      localStorage.setItem("trumpBalance", (trumpBalance || 0)?.toFixed(2));
-      localStorage.setItem(
-        "stimulusBalance",
-        (stimulusBalance || 0)?.toFixed(2)
-      );
+    } else if (!!kibaBalance) {
+      localStorage.setItem("trumpBalance", (kibaBalance || 0)?.toFixed(2));
       localStorage.setItem("trackingSince", `${new Date()}`);
       setIsTrackingGains(true);
     } else {
@@ -297,43 +292,29 @@ export default function VotePage({
     }
   };
 
+  const {routerADD, routerABI } = React.useMemo(() => {
+    return isBinance ? {
+      routerADD: pancakeAddress,
+      routerABI: pancakeAbi
+    } : { routerADD: routerAddress, routerABI: routerAbi }
+  }, [isBinance])
+
   useEffect(() => {
-    if (storedTrumpBalance && trumpBalance) {
+    if (storedTrumpBalance && kibaBalance) {
       if (
-        (+storedTrumpBalance - +trumpBalance.toFixed(2)).toFixed(2) ===
-        trumpBalance.toFixed(2)
+        (+storedTrumpBalance - +kibaBalance.toFixed(2)).toFixed(2) ===
+        kibaBalance.toFixed(2)
       ) {
-      } else if (+storedTrumpBalance - +trumpBalance.toFixed(2) < 0) {
+      } else if (+storedTrumpBalance - +kibaBalance.toFixed(2) < 0) {
       }
-    } else if (storedSimulusBalance && stimulusBalance) {
-      if (
-        (+storedSimulusBalance - +stimulusBalance.toFixed(2)).toFixed(2) ===
-        stimulusBalance.toFixed(2)
-      ) {
-        stopTrackingGains();
-      } else if (+storedSimulusBalance - +stimulusBalance.toFixed(2) < 0) {
-      }
-    }
+    } 
   }, []);
 
   const rawTrumpCurrency = useMemo(() => {
-    if (!storedTrumpBalance || !trumpBalance) return null;
-    const calc = +Math.round(+trumpBalance?.toFixed(2) - +storedTrumpBalance);
+    if (!storedTrumpBalance || !kibaBalance) return null;
+    const calc = +Math.round(+kibaBalance?.toFixed(2) - +storedTrumpBalance);
     return calc;
-  }, [storedTrumpBalance, trumpBalance, isTrackingGains]);
-
-  const rawStimulusCurrency = useMemo(() => {
-    if (!storedSimulusBalance || !stimulusBalance) return null;
-    const calc = (+stimulusBalance.toFixed(2) - +storedSimulusBalance).toFixed(
-      0
-    );
-    return calc;
-  }, [stimulusBalance, storedSimulusBalance, isTrackingGains]);
-
-  const formattedStim = React.useCallback(() => {
-    if (!stimulusBalance) return "-";
-    return stimulusBalance.toFixed(2);
-  }, [stimulusBalance]);
+  }, [storedTrumpBalance, kibaBalance, isTrackingGains]);
 
   const [trumpGainsUSD, setTrumpGainsUSD] = React.useState("-");
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
@@ -348,58 +329,60 @@ export default function VotePage({
       if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {  
         const provider = window.ethereum ? window.ethereum : walletconnect
         const w3 = new Web3(provider as any).eth;
-        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+        const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 9;
         const amount = +rawTrumpCurrency.toFixed(0) * ten9;
         const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          trumpCoin.address,
-          WETH9[1].address,
-          USDC.address,
+          kibaCoin.address,
+          isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
+          isBinance ? binanceTokens.busd.address : USDC.address, 
         ]);
         amountsOut.call().then((response: any) => {
           const usdc = response[response.length - 1];
           const ten6 = 10 ** 6;
-          const usdcValue = usdc / ten6;
-          setTrumpGainsUSD(usdcValue.toFixed(2));
+          let usdcValue = usdc / ten6;
+          if (isBinance) usdcValue = usdcValue / 10 ** 12;
+          const number = Number(usdcValue.toFixed(2));
+          setTrumpGainsUSD(number.toLocaleString());
         });
         // pseudo code
       }
     } catch (err) {
       console.error(err);
     }
-  }, [rawTrumpCurrency, trumpCoin.address, trumpBalance, storedTrumpBalance]);
+  }, [rawTrumpCurrency, isBinance, kibaBalance, storedTrumpBalance]);
 
   const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
   React.useEffect(() => {
     try {
-      console.log(trumpBalance?.toFixed(0))
-      if (trumpBalance && +trumpBalance < 0) {
+      if (kibaBalance && +kibaBalance < 0) {
         setTrumpBalanceUSD("-");
         return;
       }
-      if (trumpBalance && +trumpBalance.toFixed(0) > 0) {
+      if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
         const provider = window.ethereum ? window.ethereum : walletconnect
         const w3 = new Web3(provider as any).eth;
-        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+        const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 9;
-        const amount = +trumpBalance.toFixed(0) * ten9;
+        const amount =  +kibaBalance.toFixed(0) * ten9;
         const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          trumpCoin.address,
-          WETH9[1].address,
-          USDC.address,
+          kibaCoin.address,
+          isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
+          isBinance ? binanceTokens.busd.address : USDC.address, 
         ]);
         amountsOut.call().then((response: any) => {
-          console.log(response);
           const usdc = response[response.length - 1];
           const ten6 = 10 ** 6;
-          const usdcValue = usdc / ten6;
-          setTrumpBalanceUSD(usdcValue.toFixed(2));
+          let usdcValue = usdc / ten6;
+          if (isBinance) usdcValue = usdcValue / 10 ** 12;
+          const number = Number(usdcValue.toFixed(2));
+          setTrumpBalanceUSD(number.toLocaleString());
         });
       }
     } catch (ex) {
       console.error(ex);
     }
-  }, [trumpBalance, trumpCoin.address]);
+  }, [kibaBalance,  isBinance]);
 const [darkMode] = useDarkModeManager()
  
   const goldBalance = useTrumpGoldBalance(account)
@@ -415,7 +398,7 @@ const [darkMode] = useDarkModeManager()
 
             <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains</GainsText></div>
               {isTrackingGains && (
-                 <GreyCard style={{flexFlow: 'row nowrap', display:'inline-block', justifyContent:'center',marginBottom:15}}> <TYPE.main>
+                 <GreyCard style={{flexFlow: 'row nowrap', background:'#222',opacity:'.95',display:'inline-block', justifyContent:'center',marginBottom:15}}> <TYPE.main>
                       <GainsText style={{display:'inline'}}>
                       <Clock style={{marginRight:5}} />
                         STARTED {trackingSince} </GainsText>
@@ -431,16 +414,23 @@ const [darkMode] = useDarkModeManager()
                       </Trans>
                     </TYPE.white>
                   )}
+               
+               {(kibaBalance  === undefined || +kibaBalance?.toFixed(0) <= 0) && (
+                    <TYPE.white>
+                      <GainsText>
+                        You must own Kiba Inu tokens to use this feature.
+                      </GainsText>
+                    </TYPE.white>
+                  )}
               
                   <div style={{ display:'flex', flexFlow:'column wrap', alignItems: "center" }}>
                  
                     <div style={{display:'block', width:'100%'}}>
                     <TYPE.white>
                       <Trans>
-                        {trumpBalance !== undefined
-                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(trumpBalance?.toFixed(
-                              2
-                            )).toLocaleString()} (${(+trumpBalanceUSD)?.toFixed(2)} USD) </span></div>
+                        {kibaBalance !== undefined 
+                        && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0 )
+                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} (${(trumpBalanceUSD)} USD) </span></div>
                           : null}
                       </Trans>
                     </TYPE.white>
@@ -450,12 +440,13 @@ const [darkMode] = useDarkModeManager()
                       {isTrackingGains === true && (
                       <GainsText  className="d-flex">
                         {storedTrumpBalance !== undefined &&
-                          trumpBalance !== undefined &&
+                          kibaBalance !== undefined &&
+                          kibaBalance?.toFixed(0) &&
                           account !== undefined && (
                             <React.Fragment>
                               <Trans>{`Kiba Gains`} </Trans> &nbsp;
                               <span>{Number((
-                                +trumpBalance?.toFixed(2) - +storedTrumpBalance
+                                +kibaBalance?.toFixed(2) - +storedTrumpBalance
                               ).toFixed(2)).toLocaleString()} </span>
                               {isTrackingGains && trumpGainsUSD && (
                                 <Badge style={{ color:"#FFF",paddingTop: 5 }}>
@@ -480,14 +471,16 @@ const [darkMode] = useDarkModeManager()
                 </div>
                 
             </AutoColumn>
-            
+            { !!kibaBalance && +kibaBalance?.toFixed(0) > 0 &&
             <AutoColumn gap="50px">
               <ButtonLight style={{background: darkMode ? '#fff ' : 'inherit', color: darkMode ? '#222' : '#fff', marginTop:15}} onClick={trackGains}>
                 {isTrackingGains && <Trans>Stop Tracking</Trans>}
-                {!isTrackingGains && <Trans>Start Tracking</Trans>}
+                {!isTrackingGains&& <Trans>Start Tracking</Trans>}
               </ButtonLight>
             </AutoColumn>
-          
+}
+            <br/>
+            <small style={{marginTop:2, marginBottom:2}}>When switching networks, you need to restart tracking (stop and start tracking again).</small>
           </ProposalInfo>
       </PageWrapper>
       <SwitchLocaleLink />
