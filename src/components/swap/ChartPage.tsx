@@ -420,11 +420,11 @@ export const Chart = () => {
                 padding: "9px 6px"
             }}>
                 <div style={{ display: 'flex', marginBottom: 5, alignItems: 'center', flexFlow: "row wrap" }}>
-                    <a style={{ marginRight: 15 }} href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
+                    <a style={{ marginRight: 15 }} href="https://www.dextools.io/app/ether/pair-explorer/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48">
                         <img src={'https://miro.medium.com/max/663/1*eV5_P4s2WQkgzVM_XdgWSw.png'}
                             style={{ maxWidth: 100 }} />
                     </a>
-                    <a href={'https://app.moontools.io/pairs/uniswap/0xac6776d1c8d455ad282c76eb4c2ade2b07170104'} style={{ marginRight: 15 }}>
+                    <a href={'https://app.moontools.io/pairs/uniswap/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48'} style={{ marginRight: 15 }}>
                         <img src={'https://miro.medium.com/max/440/1*rtdc0fgltZdBep3miLuSuQ.png'}
                             style={{ maxWidth: 100 }} />
                     </a>
@@ -508,7 +508,7 @@ export const Chart = () => {
                                 <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
                                     {!isBinance && <TradingViewWidget hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
                                     {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
-                                    {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
+                                    {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x6499b4f8263fc3be2d4577fffcee87c972a07be9'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
                                 </div>
 
                                 {/* Loading Transaction data for either chain */}
