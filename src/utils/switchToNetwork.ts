@@ -15,17 +15,6 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
     if (!library?.provider?.request) {
       return
     }
-    localStorage.removeItem('kibaBalance');
-    const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
-    return library?.provider.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: formattedChainId }],
-    })
-  }
-  const switchFn = async () => {
-    if (!library?.provider?.request) {
-      return
-    }
     localStorage.removeItem('trumpBalance');
     const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
     return library?.provider.request({
