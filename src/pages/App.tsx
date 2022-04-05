@@ -493,12 +493,12 @@ export default function App() {
       <Web3ReactManager>
       <GelatoProvider
         library={library}
-        chainId={chainId}
+        chainId={chainId ? chainId : 1}
         account={account ?? undefined} 
         useDefaultTheme={false}
         useDarkMode
         >
-        <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : client}>
+        <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
         <AppWrapper>
           {Video}
           <HeaderWrapper>
