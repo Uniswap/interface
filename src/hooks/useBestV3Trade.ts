@@ -43,7 +43,7 @@ export function useBestV3TradeExactIn(
     ])
   }, [amountIn, routes])
 
-  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs, {
+  const quotesResults = useSingleContractMultipleData(quoter as any, 'quoteExactInput', quoteExactInInputs, {
     gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
@@ -127,7 +127,7 @@ export function useBestV3TradeExactOut(
     ])
   }, [amountOut, routes])
 
-  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs, {
+  const quotesResults = useSingleContractMultipleData(quoter as any, 'quoteExactOutput', quoteExactOutInputs, {
     gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 

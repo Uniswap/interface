@@ -12,7 +12,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { AlertOctagon, ArrowDown, ArrowLeft, CheckCircle, ChevronRight, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import React from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -77,8 +77,11 @@ const StyledInfo = styled(Info)`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
+  const params = useParams<{tokenAddress?: string}>()
   const { account, chainId } = useActiveWeb3React()
   const isBinance = React.useMemo(() => chainId === 56, [chainId]);
+  const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
+  const binanceSwapURL = React.useMemo(() => isBinance ? `https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${tokenAddress}` : undefined,[tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -379,7 +382,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
 
-      <AppBody style={{maxWidth: view === 'bridge' ? 690 : 480}}>
+      <AppBody style={{marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, maxWidth: view === 'bridge' ? 690 : 480}}>
       <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
 
         {!isBinance && (
@@ -723,7 +726,7 @@ export default function Swap({ history }: RouteComponentProps) {
         <Wrapper>
             <LimitOrders />
             </Wrapper>}
-      {!!isBinance && view === 'swap' && <iframe  style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src="https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341" />}
+      {!!isBinance && view === 'swap' && binanceSwapURL && <iframe  style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src={binanceSwapURL} />}
       </AppBody>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (

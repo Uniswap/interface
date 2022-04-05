@@ -10,10 +10,11 @@ import { useTokenTransactions, useTokenData, useEthPrice, getTokenData, useToken
 import styled from 'styled-components/macro';
 import { StyledInternalLink } from 'theme';
 import { Dots } from './styleds';
-import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import useInterval from 'hooks/useInterval';
 import Tooltip from 'components/Tooltip';
 import { LoadingRows } from 'pages/Pool/styleds';
+import TradingViewWidget, { Themes } from 'react-tradingview-widget';
+import { useUserLocale } from 'state/user/hooks';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -85,7 +86,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         newTxn.timestamp = swap?.timestamp ? swap?.timestamp : swap.transaction.timestamp
         newTxn.type = 'swap'
         newTxn.amountUSD = swap.amountUSD;
-        newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.from : swap.to
+        newTxn.account = ["0x10ed43c718714eb63d5aa57b78b54704e256024e", "0x7a250d5ss630b4cf539739df2c5dacb4c659f2488d"].includes(swap.to) ? swap.from : swap.to
         newTxn.count = transactions?.swaps?.filter((x: any) => (x.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? x.from : x.to) === newTxn.account).length;
         return newTxn;
     }).filter((newTxn: any) => !filterAddress ? true : newTxn.account === filterAddress), [transactions, filterAddress])
@@ -124,6 +125,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
     }, [formattedTransactions])
     const [tooltipShown, setTooltipShown] = React.useState<any>()
     const [showRemoveFilter, setShowRemoveFilter] = React.useState<any>()
+    const locale =useUserLocale()
     return (
         <>
             <StyledDiv
@@ -296,11 +298,11 @@ export const Chart = () => {
     const [view, setView] = React.useState<'chart' | 'market'>('chart')
     const frameURL = React.useMemo(() => {
         return chainId === 56 ?
-            `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180` :
-            `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`
+            `PANCAKESWAP:KIBAWBNB` :
+            `UNISWAP:KIBAWETH`
     }, [symbol, chainId])
     const tokenData = useTokenDataHook('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', ethPrice, ethPriceOld)
-
+    const locale = useUserLocale()
     return (
         <FrameWrapper style={{
             background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))'
@@ -354,12 +356,8 @@ export const Chart = () => {
                             </StyledDiv>}
                         </div>
                         {view === 'chart' && <>
-                            <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem' }}>
-                                <iframe src={frameURL} style={{
-                                    height: chainId === 1 ? 471 : `100vh`,
-                                    width: '100%',
-                                    border: '1px solid #222'
-                                }} />
+                            <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: '500px' }}>
+                                <TradingViewWidget locale={locale} theme={'dark'} symbol={frameURL} autosize />
                             </div>
                             {(!isBinance && transactionData?.loading) || isBinance && binanceTransactionData.loading  && <LoadingRows>
                                 <div/>

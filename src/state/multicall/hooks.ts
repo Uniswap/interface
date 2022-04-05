@@ -155,7 +155,7 @@ function toCallState(
 }
 
 export function useSingleContractMultipleData(
-  contract: Contract | null | undefined,
+  contract: Contract | null | undefined | any,
   methodName: string,
   callInputs: OptionalMethodInputs[],
   options: Partial<ListenerOptions> & { gasRequired?: number } = {}
@@ -234,7 +234,7 @@ export function useMultipleContractSingleData(
 }
 
 export function useSingleCallResult(
-  contract: Contract | null | undefined,
+  contract: Contract | null | undefined | any,
   methodName: string,
   inputs?: OptionalMethodInputs,
   options?: Partial<ListenerOptions> & { gasRequired?: number }
