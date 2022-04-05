@@ -124,7 +124,7 @@ export const useKiba = (account?: string | null) => {
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = React.useMemo(() => new Token(
     isBinance ? 56 : 1,
-    isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
+    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
     9,
     "Kiba",
     "Kiba Inu"
@@ -135,7 +135,7 @@ export const useKiba = (account?: string | null) => {
     kibaCoin
   );
   
-  const bKiba =  useBinanceTokenBalance('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', account, chainId)
+  const bKiba =  useBinanceTokenBalance('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', account, chainId)
   
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
@@ -146,7 +146,7 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
   const  isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin =React.useMemo(() =>  new Token(
     1,
-    isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
+    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
     9,
     "Kiba",
     "Kiba Inu"
@@ -157,7 +157,7 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
     kibaCoin
   );  
 
-  const bKiba =  useBinanceTokenBalance('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', account, chainId)
+  const bKiba =  useBinanceTokenBalance('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', account, chainId)
   
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
@@ -194,7 +194,7 @@ export default function VotePage() {
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
-    isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
+    isBinance ? '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : "0x005D1123878Fc55fbd56b54C73963b234a64af3c",
     9,
     "Kiba",
     "Kiba Inu"

@@ -419,7 +419,7 @@ export const ShowSellTaxComponent = () => {
 			if (account) {
 				const provider = window.ethereum ? window.ethereum : library?.provider
 				const w3 = new Web3(provider as any).eth;
-				const routerContr = new w3.Contract(kibaAbi as any, '0x4B2C54b80B77580dc02A0f6734d3BAD733F50900');
+				const routerContr = new w3.Contract(kibaAbi as any, '0x005D1123878Fc55fbd56b54C73963b234a64af3c');
 				const ten9 = 10 ** 9;
 				const amountsOut = routerContr.methods.originalPurchase(account)
 				amountsOut.call().then((response: any) => {
