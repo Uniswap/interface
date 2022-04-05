@@ -88,14 +88,14 @@ volumeInUsd
         deadWalletKibaBalance ? 
         showDetails ? 
         <ContentWrapper gap="lg" style={{overflow: 'hidden'}}>
-            <Confetti start={true} variant={'bottom'} />
+            <Confetti start={false} variant={'bottom'} />
             <CardBGImage desaturate />
             <CardNoise />
             <DarkCard>
               <div>
                 <h1>Burnt Kiba {isBinance ? "(BSC)" : "(ETH)"}</h1>
                 
-                <p style={{color: '#F76C1D'}}>{abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}   <small>({(Number(+deadWalletKibaBalance.toFixed(18)).toLocaleString())}) Tokens</small></p>
+                <p style={{color: '#F76C1D'}}><h1 style={{display:'block', margin: 0, color: '#F76C1D', fontWeight: 'bold'}}>{abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</h1>   <small>({(Number(+deadWalletKibaBalance.toFixed(18)).toLocaleString())}) Tokens</small></p>
                {burntValue && isBinance === false && <p style={{color: '#F76C1D'}}><Badge>Burnt Value ${Number(burntValue?.toFixed(2)).toLocaleString()} USD</Badge></p>}
                {bscBurntValue && isBinance === true && <p style={{color: '#F76C1D'}}><Badge>Burnt Value ${bscBurntValue} USD</Badge></p>}
             <small style={{marginTop: 5}}>
@@ -104,7 +104,7 @@ volumeInUsd
             </div>
             {!isBinance && (
             <div>
-              <h1>Total Kibaswap Volume (in ETH)</h1>
+              <h1>Total Swap Volume (in ETH)</h1>
               <p><Badge>{volumeInEth} ETH {volumeInUsd && volumeInUsd !== 'NaN' && <> (${volumeInUsd} USD)</>}</Badge></p>
             </div>
             )}
