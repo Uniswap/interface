@@ -223,6 +223,7 @@
     "@web3-react/walletconnect-connector": "^6.2.0",
     "@web3-react/walletlink-connector": "^6.2.3",
     "ajv": "^6.12.3",
+    "axios": "^0.21.1",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.2",

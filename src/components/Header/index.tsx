@@ -19,6 +19,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 import { CloseIcon } from 'theme/components'
+import { StyledInternalLink } from 'theme/components'
 import { IconWrapper } from 'theme/components'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
@@ -482,7 +483,7 @@ export default function Header() {
                 text="Community members will be able to vote on propositions proposed by Trump Gold holders when Trump Gold is released"
                 show={showTip}
               >
-                <small style={{ cursor: 'not-allowed', color: '#ccc' }}>vote</small>
+                <StyledInternalLink to="/vote">Vote</StyledInternalLink>
                 <Info
                   style={{ color: '#fff' }}
                   onMouseOver={() => setShowTip(true)}
