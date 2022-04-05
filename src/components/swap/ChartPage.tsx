@@ -5,21 +5,21 @@ import moment from 'moment';
 import { useKiba } from 'pages/Vote/VotePage';
 import React from 'react';
 import { ChevronDown, ChevronRight, ChevronUp, X } from 'react-feather';
-import { getBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
+import { useBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
 import { useTokenTransactions, useTokenData, useEthPrice, getTokenData } from 'state/logs/utils';
 import styled from 'styled-components/macro';
 import { StyledInternalLink } from 'theme';
 import { Dots } from './styleds';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
- 
+
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
 font-size:25px;
 `
-const TransactionList = ({  lastFetched, transactions, tokenData, chainId }: { lastFetched: any, transactions: any, tokenData: any, chainId?: number }) => {
-    const chainLabel = React.useMemo (() => chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '', [chainId])
-    const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [lastFetched])
-    const price = React.useMemo(() => tokenData?.priceUSD, [tokenData?.priceUSD])
+const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { lastFetched: any, transactions: any, tokenData: any, chainId?: number }) => {
+    const chainLabel = React.useMemo(() => chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '', [chainId])
+    const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [moment(lastFetched).fromNow()])
+    const price = React.useMemo(() => parseFloat(tokenData?.priceUSD), [tokenData.priceUSD])
     const formattedTransactions = transactions?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out
@@ -37,7 +37,7 @@ const TransactionList = ({  lastFetched, transactions, tokenData, chainId }: { l
         }
         newTxn.transaction = swap.transaction;
         newTxn.hash = swap.transaction.id
-        newTxn.timestamp = swap?.timestamp ? swap?.timestamp :  swap.transaction.timestamp
+        newTxn.timestamp = swap?.timestamp ? swap?.timestamp : swap.transaction.timestamp
         newTxn.type = 'swap'
         newTxn.amountUSD = swap.amountUSD;
         newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.from : swap.to
@@ -48,44 +48,44 @@ const TransactionList = ({  lastFetched, transactions, tokenData, chainId }: { l
             <StyledDiv style={{ alignItems: 'center', width: '100%', display: 'flex', flexFlow: 'row wrap', justifyContent: 'space-between' }}>
                 {tokenData && tokenData?.name &&
                     <>
-                        {tokenData?.name} ({tokenData?.symbol}) 
+                        {tokenData?.name} ({tokenData?.symbol})
                         <br />
-                        <span style={{ 
-                            display: 'inline-flex', 
-                            flexFlow: 'row wrap', 
-                            alignItems: 'center' 
+                        <span style={{
+                            display: 'inline-flex',
+                            flexFlow: 'row wrap',
+                            alignItems: 'center'
                         }}>
                             {(+price?.toFixed(18))} &nbsp;
                             <Badge style={{ width: 'fit-content', display: 'flex', justifyContent: 'flex-end', color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? "red" : 'green' }}>
                                 <StyledDiv>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}
-                                    {tokenData.priceChangeUSD.toFixed(2)}%
+                                    {tokenData?.priceChangeUSD?.toFixed(2)}%
                                 </StyledDiv>
                             </Badge>
                         </span>
                         {tokenData?.totalLiquidityUSD && <small>
-                            (Total Liquidity ${Number(tokenData.totalLiquidityUSD * 2).toLocaleString()})
+                            (Total Liquidity ${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()})
                         </small>}
                     </>
                 }
             </StyledDiv>
             {lastUpdated && (
                 <small style={{ textAlign: 'right' }}>
-                    {`Last updated ${lastUpdated}`} {chainId && chainId === 56 && <><br/><small>Binance data syncing is sometimes slow (5-6 hours behind)</small></>}
+                    {`Last updated ${lastUpdated}`} {chainId && chainId === 56 && <><br /><small></small></>}
                 </small>
             )}
-            <div style={{ 
-                display: 'block', 
-                width: '100%', 
-                overflowY: 'auto', 
-                maxHeight: 500 
+            <div style={{
+                display: 'block',
+                width: '100%',
+                overflowY: 'auto',
+                maxHeight: 500
             }}>
                 <table style={{ width: '100%' }}>
-                    <thead style={{ 
-                        textAlign: 'left', 
-                        position: 'sticky', 
-                        top: 0, 
+                    <thead style={{
+                        textAlign: 'left',
+                        position: 'sticky',
+                        top: 0,
                         background: '#222'
-                     }}>
+                    }}>
                         <tr>
                             <th>Date</th>
                             <th>Type</th>
@@ -101,7 +101,7 @@ const TransactionList = ({  lastFetched, transactions, tokenData, chainId }: { l
                         {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
                             <tr key={`_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                 <td style={{ fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
-                                <td style={{ color: item.token0Symbol ===`W${chainLabel}` ? 'red' : 'green' }}>{item.token0Symbol === `W${chainLabel}` ? 'SELL' : 'BUY'}</td>
+                                <td style={{ color: item.token0Symbol === `W${chainLabel}` ? 'red' : 'green' }}>{item.token0Symbol === `W${chainLabel}` ? 'SELL' : 'BUY'}</td>
                                 <td>{item.token0Symbol === `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                     {item.token1Symbol === `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                 </td>
@@ -148,29 +148,28 @@ export const Chart = () => {
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
     const binanceTransactionData = useBscTokenTransactions('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 60000)
     const prices = useBnbPrices()
-    React.useEffect(() => {
-        if (isBinance) {
-            if (prices && prices.current) {
-                getBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices.current, prices.oneDay).then((data) => {
-                    setTokenData(data)
-                    setSymbol(data?.symbol)
-                    console.log(data)
-                })
-            }
-        }
-    }, [isBinance, prices])
-    const accessDenied = React.useMemo(() => !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
-    const [view, setView] = React.useState<'chart'>('chart')
-    const frameURL = React.useMemo(() => chainId === 56 ? `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180`: `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:${symbol}WETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`, [symbol, chainId])
+    const bscTokenData = useBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices?.current, prices?.oneDay);
 
     React.useEffect(() => {
-        if (chainId === 1 && ethPrice && ethPriceOld) {
+        if (isBinance && !tokenData?.isBSC) {
+            setTokenData(bscTokenData)
+            setSymbol(bscTokenData?.symbol)
+        }
+    }, [isBinance, tokenData, prices])
+
+    const accessDenied = React.useMemo(() => !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
+    const [view, setView] = React.useState<'chart' | 'market'>('chart')
+    const frameURL = React.useMemo(() => chainId === 56 ? `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180` : `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`, [symbol, chainId])
+    React.useEffect(() => {
+        if (chainId === 1 && ethPrice && ethPriceOld && (tokenData?.isBSC || !tokenData?.totalLiquidityUSD)) {
             getTokenData('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', ethPrice, ethPriceOld).then((data) => {
                 setTokenData(data)
                 setSymbol(data?.symbol)
             })
-        } 
-    }, [chainId, tokenData, symbol, ethPrice, ethPriceOld])
+        }
+    }, [chainId, tokenData, ethPrice, ethPriceOld])
+
+    console.log(binanceTransactionData)
 
     return (
         <FrameWrapper style={{ background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }} >
@@ -193,51 +192,67 @@ export const Chart = () => {
                             style={{ maxWidth: 30 }} />
                     </a>
                     {!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>ETH: ${ethPrice && (+ethPrice)?.toFixed(2)}</Badge>}
-                    {!!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>BNB: ${prices && (+prices.current)?.toFixed(2)}</Badge>}
+                    {!!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>BNB: ${prices && (+prices?.current)?.toFixed(2)}</Badge>}
 
                 </div>
                 {accessDenied && <div style={{ width: '100%', padding: '9px 14px', height: 400, display: 'flex', justifyContent: 'center', alignItems: 'center' }}><StyledDiv style={{ color: "#222" }}>You must own Kiba Inu tokens to use this feature.</StyledDiv></div>}
                 {accessDenied === false &&
-                    <> <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15, flexFlow: 'row wrap' }}>
-                        <StyledDiv onClick={() => setView('chart')} style={{
-                            cursor: 'pointer',
-                            marginRight: 10,
-                            textDecoration: view === 'chart' ? 'underline' : ''
-                        }}>KibaCharts</StyledDiv>
-                        {isBinance && <StyledDiv>Binance</StyledDiv>}
-                        {!isBinance && <StyledDiv style={{ alignItems: 'center', display: 'flex', color: "#FFF" }}>
-                            <StyledInternalLink style={{ fontSize: 25, color: "#FFF" }} to="/selective-charts">View Charts for Other Tokens </StyledInternalLink><ChevronRight /> <Badge>Beta</Badge>
-                        </StyledDiv>}
-                    </div>
-                        
-                        {symbol && <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem' }}>
-                            <iframe src={frameURL} style={{ 
-                                height: chainId === 1 ? 471 : `100vh`, 
-                                width: '100%', 
-                                border: '1px solid #222' 
+                    <>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15, flexFlow: 'row wrap' }}>
+                            <div style={{ alignItems: 'center', flexFlow: 'row wrap', display: 'flex' }}>
+                                <StyledDiv onClick={() => setView('chart')} style={{
+                                    cursor: 'pointer',
+                                    marginRight: 10,
+                                    textDecoration: view === 'chart' ? 'underline' : ''
+                                }}>KibaCharts</StyledDiv>
+                                <StyledDiv style={{
+                                    cursor: 'pointer',
+                                    marginRight: 10,
+                                    textDecoration: view === 'market' ? 'underline' : ''
+                                }} onClick={() => setView('market')}>MarketView</StyledDiv>
+                            </div>
+                            {isBinance && <StyledDiv>Binance</StyledDiv>}
+
+                            {!isBinance && <StyledDiv style={{ alignItems: 'center', display: 'flex', color: "#FFF" }}>
+                                <StyledInternalLink style={{ fontSize: 25, color: "#FFF" }} to="/selective-charts">View Charts for Other Tokens </StyledInternalLink><ChevronRight /> <Badge>Beta</Badge>
+                            </StyledDiv>}
+                        </div>
+                        {view === 'chart' && <>
+                            <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem' }}>
+                                <iframe src={frameURL} style={{
+                                    height: chainId === 1 ? 471 : `100vh`,
+                                    width: '100%',
+                                    border: '1px solid #222'
                                 }} />
-                        </div>}
-                        {!isBinance && transactionData?.data?.swaps?.length && 
-                            tokenData && tokenData?.priceUSD && symbol && 
-                            <div style={{ 
-                                height: 500, 
-                                width: '100%', 
-                                overflowY: 'auto', 
-                                padding: '9px 14px', 
-                                background: '#222', 
-                                color: '#fff', 
-                                borderRadius: 6, 
-                                display: 'table', 
-                                flexFlow: 'column wrap', 
-                                gridColumnGap: 50 
+                            </div>
+                            {!isBinance && transactionData?.data?.swaps?.length &&
+                                tokenData && tokenData?.priceUSD &&
+                                <div style={{
+                                    height: 500,
+                                    width: '100%',
+                                    overflowY: 'auto',
+                                    padding: '9px 14px',
+                                    background: 'rgb(22, 22, 22)',
+                                    color: '#fff',
+                                    borderRadius: 6,
+                                    flexFlow: 'column wrap',
+                                    gridColumnGap: 50
                                 }}>
-                            <TransactionList chainId={chainId} lastFetched={transactionData.lastFetched} transactions={transactionData.data} tokenData={tokenData} />
-                        </div>}
-                        {isBinance && !binanceTransactionData?.data?.swaps?.length && <Dots>Loading transactions..</Dots>}
-                        {isBinance && binanceTransactionData?.data?.swaps?.length && tokenData && tokenData?.priceUSD && symbol && <div style={{ height: 500, width: '100%', overflowY: 'auto', padding: '9px 14px', background: '#222', color: '#fff', borderRadius: 6, display: 'table', flexFlow: 'column wrap', gridColumnGap: 50 }}>
-                            <TransactionList chainId={chainId}  lastFetched={binanceTransactionData.lastFetched} transactions={binanceTransactionData.data} tokenData={tokenData} />
-                        </div>}
+                                    <TransactionList chainId={chainId} lastFetched={transactionData.lastFetched} transactions={transactionData.data} tokenData={tokenData} />
+                                </div>}
+                            {!isBinance && !transactionData?.data?.swaps?.length && <Dots>Loading transactions..</Dots>}
+                            {isBinance && !binanceTransactionData?.data?.swaps?.length && <Dots>Loading transactions..</Dots>}
+                            {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && <div style={{ height: 500, width: '100%', overflowY: 'auto', padding: '9px 14px', background: 'rgb(22, 22, 22)', color: '#fff', borderRadius: 6, flexFlow: 'column wrap', gridColumnGap: 50 }}>
+                                <TransactionList chainId={chainId} lastFetched={binanceTransactionData.lastFetched} transactions={binanceTransactionData.data} tokenData={tokenData} />
+                            </div>}
+                        </>}
                     </>}
+                {accessDenied === false && view === 'market' &&
+                    <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
+                        <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid #222', borderRadius: 6, width: '100%', height: 500 }} />
+                        <iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid #222', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
+                    </div>
+                }
             </div>
 
         </FrameWrapper>
