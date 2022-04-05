@@ -1,25 +1,27 @@
+import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core';
-import Badge from 'components/Badge';
-import { DarkCard } from 'components/Card';
-import CurrencyInputPanel from 'components/CurrencyInputPanel';
-import { CardSection } from 'components/earn/styled';
-import { useAllTokens, useCurrency } from 'hooks/Tokens';
-import moment from 'moment';
-import { Dots } from 'pages/Pool/styleds';
-import React, { useCallback } from 'react'; import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
-import { useParams } from 'react-router';
-import { getTokenData, useEthPrice, useTokenData, useTokenTransactions } from 'state/logs/utils';
-import styled from 'styled-components/macro'
-import { TYPE } from 'theme';
-import _ from 'lodash'
-import { useWeb3React } from '@web3-react/core';
-import { useKiba } from 'pages/Vote/VotePage';
-import { fetchBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
+import React, { useCallback } from 'react';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
-import { useHasAccess } from 'components/AccountPage/AccountPage';
-import { TopHolders } from './TopHolders';
+import { fetchBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
+import { getTokenData, useEthPrice, useTokenData, useTokenTransactions } from 'state/logs/utils';
+import { useAllTokens, useCurrency } from 'hooks/Tokens';
+
+import Badge from 'components/Badge';
+import { CardSection } from 'components/earn/styled';
+import CurrencyInputPanel from 'components/CurrencyInputPanel';
+import { DarkCard } from 'components/Card';
+import { Dots } from 'pages/Pool/styleds';
 import Swal from 'sweetalert2';
+import { TYPE } from 'theme';
+import { TopHolders } from './TopHolders';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
+import _ from 'lodash'
+import moment from 'moment';
+import styled from 'styled-components/macro'
+import { useHasAccess } from 'components/AccountPage/AccountPage';
+import { useKiba } from 'pages/Vote/VotePage';
+import { useParams } from 'react-router';
+import { useWeb3React } from '@web3-react/core';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -127,7 +129,7 @@ export const SelectiveChart = () => {
             id="swap-currency-input"
         /> : undefined
     }, [selectedCurrency, chainId, hasAccess])
-    const kibaBalance = useKiba(account)
+    const kibaBalance = useKiba(account )
     // this page will not use access denied, all users can view top token charts
     const accessDenied = false;
     const chainLabel = React.useMemo(() => chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
