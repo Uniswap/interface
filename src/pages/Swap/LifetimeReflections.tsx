@@ -1,17 +1,18 @@
-import { WETH9 } from '@uniswap/sdk-core';
-import { useWeb3React } from '@web3-react/core';
 import Badge, { BadgeVariant } from 'components/Badge';
-import { DarkGreyCard } from 'components/Card';
-import CurrencyInputPanel from 'components/CurrencyInputPanel';
-import { USDC } from 'constants/tokens';
-import { LoadingRows } from 'pages/Pool/styleds';
-import { routerAbi, routerAddress } from 'pages/Vote/routerAbi';
-import { useKiba } from 'pages/Vote/VotePage';
-import React from 'react';
 import { BarChart2, Minus, Plus } from 'react-feather';
-import { useTotalReflections } from 'state/logs/utils';
-import styled from 'styled-components/macro'
+import { routerAbi, routerAddress } from 'pages/Vote/routerAbi';
+
+import CurrencyInputPanel from 'components/CurrencyInputPanel';
+import { DarkGreyCard } from 'components/Card';
+import { LoadingRows } from 'pages/Pool/styleds';
+import React from 'react';
+import { USDC } from 'constants/tokens';
+import { WETH9 } from '@uniswap/sdk-core';
 import Web3 from 'web3'
+import styled from 'styled-components/macro'
+import { useKiba } from 'pages/Vote/VotePage';
+import { useTotalReflections } from 'state/logs/utils';
+import { useWeb3React } from '@web3-react/core';
 const PanelHeader = styled.div`
     display:flex;
     justify-content:space-between;
@@ -46,7 +47,7 @@ export const LifetimeReflections = () => {
             const provider = library.provider;
             const w3 = new Web3(provider as any).eth;
             const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-            const ten9 = 10 ** 9;
+            const ten9 = 10 ** 18;
             const amount = +totalReflections.totalGained.toFixed(0) * ten9;
             const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
               address,
@@ -68,7 +69,7 @@ export const LifetimeReflections = () => {
             const provider = library.provider;
             const w3 = new Web3(provider as any).eth;
             const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-            const ten9 = 10 ** 9;
+            const ten9 = 10 ** 18;
             const amount = +totalReflections.balance.toFixed(0) * ten9;
             const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
               address,

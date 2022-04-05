@@ -1,8 +1,9 @@
-import { useWeb3React } from '@web3-react/core';
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
+
+import { ExternalLinkIcon } from 'theme';
 import { LoadingRows } from 'pages/Pool/styleds';
 import React from 'react';
-import { ExternalLinkIcon } from 'theme';
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
+import { useWeb3React } from '@web3-react/core';
 
 type Props = {
     contractAddress: string;
@@ -56,7 +57,7 @@ export const TopHolders = (props: Props) => {
                 {!!holders && !!holders.length && holders.map((holder) => (
                     <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} key={holder.address}>
                             <p>{holder.address}</p>
-                            <small style={{display:'flex'}}>{parseFloat((holder.balance / 10 ** 9).toFixed(0)).toLocaleString()} ({holder.share}%) &nbsp;                             <ExternalLinkIcon href={`${getExplorerLink(chainId as number, holder.address, ExplorerDataType.ADDRESS)}`} />
+                            <small style={{display:'flex'}}>{parseFloat((holder.balance / 10 ** 18).toFixed(0)).toLocaleString()} ({holder.share}%) &nbsp;                             <ExternalLinkIcon href={`${getExplorerLink(chainId as number, holder.address, ExplorerDataType.ADDRESS)}`} />
 </small>
                         </div>
                 ))}
