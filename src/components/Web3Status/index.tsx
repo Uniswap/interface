@@ -2,7 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken } from 'polished'
 import { useMemo } from 'react'
-import { Activity } from 'react-feather'
+import { Activity, ToggleLeft, ToggleRight } from 'react-feather'
 import { t, Trans } from '@lingui/macro'
 import styled, { css } from 'styled-components/macro'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
@@ -24,7 +24,7 @@ import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-import Badge from 'components/Badge'
+import Badge, { BadgeVariant } from 'components/Badge'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -246,13 +246,11 @@ export default function Web3Status() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
   const { library, chainId } = useWeb3React()
-
   const [isSwitching, setIsSwitching] = React.useState(false)
-  if (!contextNetwork.active && !active) {
-    return null
-  }
-  const switchNetwork = async () => {
+
+  const switchNetwork = React.useCallback(async () => {
     if (library && library.provider && !isSwitching) {
+      console.log('switch request')
       setIsSwitching(true)
       try {
         library.provider
@@ -261,14 +259,15 @@ export default function Web3Status() {
             params: [{
               //@ts-ignore // need this for incorrect ethers provider type
               chainId: chainId === 56 ? '0x1' : `0x38`
-            }],
+            }]
           }).finally(() => setIsSwitching(false))
       } catch (switchError: any) {
+        console.log('switch error' ,switchError)
         if (switchError.code === 4902) {
           try {
             await library.provider.request({
               method: 'wallet_addEthereumChain',
-              params: [{ chainId: chainId === 56 ? '0x1' : `0x38`, rpcUrl: 'https://bsc-dataseed1.ninicoin.io' }],
+              params: [{ chainId: chainId === 56 ? '0x1' : `0x38` }],
             }).finally(() => setIsSwitching(false));
           } catch (addError) {
             // handle "add" error
@@ -281,12 +280,16 @@ export default function Web3Status() {
       alert("No provider");
       setIsSwitching(false)
     }
-  }
+  }, [chainId])
 
+  if (!contextNetwork.active && !active) {
+    return null
+  }
+  
   return (
     <>
       <Web3StatusInner />
-      <Badge style={{background:"#222"}} onClick={async () => await switchNetwork()}>{chainId === 1 ? 'ETH' : 'BSC'}</Badge>
+      <Badge variant={BadgeVariant.PRIMARY} style={{background:"#222"}} onClick={async () => await switchNetwork()}>{chainId === 1 ? 'ETH' : 'BSC'} &nbsp; {chainId === 56 ? <ToggleRight/> : <ToggleLeft />} </Badge>
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )
