@@ -39,7 +39,7 @@ export function useV3PositionFees(
           },
           { from: owner } // need to simulate the call as the owner
         )
-        .then((results) => {
+        .then((results:any) => {
           if (!stale) setAmounts([results.amount0, results.amount1])
         })
     }
