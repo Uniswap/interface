@@ -48,7 +48,7 @@ const DisabledMask = styled.div`
 
 type StoredAndTrackedGains = {
   storedBalance: string
-  selectedCurrency: Currency
+  selectedCurrency: any
   trackingSince: string
 }
 
@@ -99,12 +99,11 @@ export const GainsTracker = () => {
   }, [selectedCurrencyBalance, currency])
 
   React.useEffect(() => {
-    if (!trumpBalance || (trumpBalance && +trumpBalance?.toFixed(2) <= 0)) stopTrackingCustom()
-
+    if (account) {
     const trackingCustom = JSON.parse(localStorage.getItem(CUSTOM_GAINS_KEY)!) as StoredAndTrackedGains
+    console.log(trackingCustom)
     if (trackingCustom) {
       setIsTracking(true)
-
       const currency = {
         ...trackingCustom.selectedCurrency,
         equals: (val: any) => _.isEqual(trackingCustom.selectedCurrency, val),
@@ -113,7 +112,8 @@ export const GainsTracker = () => {
     } else {
       setIsTracking(false)
     }
-  }, [])
+  }
+  }, [account, localStorage.getItem(CUSTOM_GAINS_KEY)])
 
   const stopTrackingCustom = useCallback(() => {
     localStorage.removeItem(CUSTOM_GAINS_KEY)
@@ -149,7 +149,6 @@ export const GainsTracker = () => {
   const [gainsUSD, setGainsUSD] = React.useState('-')
 
   React.useEffect(() => {
-    console.log(selectedCurrencyBalance, isTrackingCustom, isTrackingGains)
     if (selectedCurrencyBalance && isTrackingGains) {
       const gains = localStorage.getItem(CUSTOM_GAINS_KEY)
       if (gains) {
@@ -265,7 +264,7 @@ export const GainsTracker = () => {
               value={gains()}
               currency={selectedCurrencyBalance?.currency}
               onUserInput={handleTypeInput}
-              showOnlyTrumpCoins={true}
+              showOnlyTrumpCoins={false}
               onMax={undefined}
               fiatValue={undefined}
               onCurrencySelect={handleInputSelect}
