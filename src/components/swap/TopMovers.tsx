@@ -1,20 +1,23 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react'
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { DarkGreyCard, GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { RowFixed, RowFlat } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { TYPE, StyledInternalLink } from 'theme'
+import { TYPE, StyledInternalLink, CustomLightSpinner } from 'theme'
 import HoverInlineText from 'components/HoverInlineText'
-import { getTokenData, useEthPrice, useTopPairData } from 'state/logs/utils'
+import { getBlockFromTimestamp, getTokenData, useEthPrice, useTopPairData } from 'state/logs/utils'
 import { useCurrency } from 'hooks/Tokens'
 import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
 import _ from 'lodash'
-import {ChevronUp, ChevronDown} from 'react-feather'
+import { ChevronUp, ChevronDown } from 'react-feather'
 import { LoadingRows } from 'pages/Pool/styleds'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { useWeb3React } from '@web3-react/core'
-import { fetchBscTokenData, useBnbPrices } from 'state/logs/bscUtils'
+import { fetchBscTokenData, getBlocksFromTimestamps, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from 'state/logs/bscUtils'
+import Marquee from "react-marquee-slider";
+import useInterval from 'hooks/useInterval'
+
 const CardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
   width:100%;
@@ -26,7 +29,7 @@ const CardWrapper = styled(StyledInternalLink)`
   }
 `
 
-const FixedContainer = styled(AutoColumn)``
+export const FixedContainer = styled(AutoColumn)``
 
 export const ScrollableRow = styled.div`
   display: flex;
@@ -41,25 +44,29 @@ export const ScrollableRow = styled.div`
 `
 
 const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: number }) => {
-    const token =useCurrency(tokenData.id);
-    const {chainId } = useWeb3React()
+  const token = useCurrency(tokenData.id);
+  const { chainId } = useWeb3React()
   return (
-    <CardWrapper to={ '/selective-charts/' + tokenData.id + '/' + tokenData.symbol}>
-      <GreyCard  padding="3px">
+    <CardWrapper to={'/selective-charts/' + tokenData.id + '/' + tokenData.symbol}>
+      <GreyCard padding="3px">
         <RowFixed>
           <AutoColumn gap="3px" style={{ marginLeft: '12px' }}>
             <TYPE.label fontSize="13px">
 
-              <div style={{display:'flex', flexFlow:'row', alignItems:'center', justifyContent:'space-between'}}>
-              <small><Badge style={{marginRight :"2px"}} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
+              <div style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <small><Badge style={{ marginRight: "2px" }} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
 
-              <CurrencyLogo style={{marginRight :"2px"}} currency={chainId === 1 ? token as any : tokenData as any} size="20px" />
-              <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 5 ? 5 : tokenData.symbol.length)} />
-             {!!tokenData?.priceChangeUSD && <>{tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}
-              {parseFloat(tokenData?.priceChangeUSD).toFixed(2)}%</>}
+                <CurrencyLogo style={{ marginRight: "2px" }} currency={(chainId === 1 || !chainId) ? token : tokenData} size="20px" />
+                <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 5 ? 5 : tokenData.symbol.length)} />
+                {!!tokenData?.priceChangeUSD && (
+                  <>
+                    {tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}
+                    {parseFloat(tokenData?.priceChangeUSD).toFixed(2)}%
+                  </>
+                )}
               </div>
             </TYPE.label>
-        
+
           </AutoColumn>
         </RowFixed>
       </GreyCard>
@@ -71,73 +78,96 @@ DataCard.displayName = 'DataCard';
 
 export default function TopTokenMovers() {
   const allTokenData = useTopPairData()
-  const {chainId } = useWeb3React()
-  const [allTokens ,setAllTokens] = React.useState<any[]>([])
+  const { chainId } = useWeb3React()
+  const [allTokens, setAllTokens] = React.useState<any>([])
   const [ethPrice, ethPriceOld] = useEthPrice()
   const bnbPrices = useBnbPrices()
+  const [t24, t48, ,] = getDeltaTimestamps()
+  const timestampsFromBlocks = useBlocksFromTimestamps([t24, t48])
+
   React.useEffect(() => {
-      const fn = async () => {
-    if (allTokenData && allTokenData.data && !allTokens.length) {
-        const allTokens = await Promise.all(allTokenData.data.pairs.map(async (pair:any) => {
-            const value = chainId === 1 ?  await getTokenData(pair.token0.id, ethPrice, ethPriceOld) as any : pair.token0
-            return value;
+    //clear out the tokens for refetch on network switch
+    setAllTokens([])
+  }, [chainId])
+
+  const fn = useCallback(async (isIntervalled: boolean) => {
+    // validate the required parameters are all met before initializing a fetch
+    const { blocks } = timestampsFromBlocks;
+    const isGood = ((!chainId || chainId === 1) &&
+      ethPriceOld &&
+      ethPrice)
+      || (chainId === 56 &&
+        bnbPrices?.current &&
+        bnbPrices?.oneDay)
+    if (isGood && blocks) {
+      if (allTokenData && allTokenData.data && (!allTokens.length || isIntervalled) && isGood) {
+        const blockOne: number = blocks[0].number, blockTwo: number = blocks[1].number;
+        const allTokens = await Promise.all(allTokenData.data.pairs.map(async (pair: any) => {
+          const value = (!chainId || chainId === 1) ? await getTokenData(pair.token0.id, ethPrice, ethPriceOld, blockOne, blockTwo) as any : await fetchBscTokenData(pair.token0.id, bnbPrices?.current, bnbPrices?.oneDay, blockOne, blockTwo)
+          value.chainId = chainId;
+          return value;
         }))
-        setAllTokens(allTokens as any[]);
+        setAllTokens(allTokens);
+      }
     }
-}   
-fn();
-  }, [allTokenData, chainId])
+  }, [ethPrice, ethPriceOld, timestampsFromBlocks, bnbPrices, allTokenData])
+
+  React.useEffect(() => {
+    fn(false);
+  },
+    [
+      allTokenData,
+      ethPrice,
+      ethPriceOld,
+      bnbPrices
+    ])
+
   const topPriceIncrease = useMemo(() => {
-    return [allTokens.find(a => a?.symbol === 'KIBA'),
-    ..._.uniqBy(allTokens, i => {
-         return i?.id
+    return [
+     // slot kiba at #1 always
+      allTokens.find((a: any) => a?.symbol === 'KIBA'),
+      ..._.uniqBy(allTokens, (i: any) => {
+        return i?.id
+      }).sort((a: any, b: any) => {
+      return a && b ? 
+              a?.priceChangeUSD && b?.priceChangeUSD ?
+              (Math.abs(a?.priceChangeUSD) > Math.abs(b?.priceChangeUSD) ? -1 : 1) :
+              a.tradeVolumeUSD > b.tradeVolumeUSD ? -1 : 1 
+              : -1
     })
-      .sort((a, b) => {
-        return a && b ? a?.priceChangeUSD && b?.priceChangeUSD ? (Math.abs(a?.priceChangeUSD) > Math.abs(b?.priceChangeUSD) ? -1 : 1) : a.tradeVolumeUSD > b.tradeVolumeUSD ? -1 : 1 : -1
-      })
-      .slice(0, 20)
-      .filter((a:any) =>!!a?.symbol && a?.symbol !== 'KIBA')]
+      .slice(0, 12)
+      .filter((
+        a: {
+        symbol: string;
+         chainId?: number
+      }) => !!a?.symbol && a?.symbol !== 'KIBA' &&
+       a?.chainId === chainId)]
 
-  }, [allTokens])
+  }, [allTokens, chainId])
   const increaseRef = useRef<HTMLDivElement>(null)
-  // const [pauseAnimation, setPauseAnimation] = useState(false)
-  // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
-
-  useEffect(() => {
-      let leftValue = 0;
-      let operation = 'plus';
-      if (increaseRef.current) {
-      setInterval(() => {
-        if (increaseRef.current) {
-          const newLeftValue = increaseRef.current.scrollLeft;
-          if (newLeftValue === leftValue && newLeftValue > 0) operation = 'minus';
-          if (newLeftValue === leftValue && newLeftValue <= 0) operation = 'plus';
-          leftValue = increaseRef.current.scrollLeft;
-          const operator = operation === 'plus' ? leftValue + 1 : leftValue - 1;
-          increaseRef.current.scrollTo(newLeftValue === 0 ? operator : operator, 0)
-        }
-      }, 35)
-    }
-  }, [increaseRef.current])
-
-  // function handleHover() {
-  //   if (resetInterval) {
-  //     resetInterval()
-  //   }
-  //   setPauseAnimation(true)
-  // }
-
   return (
-    <DarkGreyCard style={{ zIndex: 3, padding: "0px", background:'transparent',position:'fixed', top:0, margin:0 }}>
-      {(allTokens.length > 0 )&& 
-    <FixedContainer style={{background:'rgb(0 0 1 / 50%)'}} gap="xs">
-      <ScrollableRow ref={increaseRef}>
-        {topPriceIncrease.filter((a:any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass')).map((entry, i) =>
-          entry ? <DataCard index={i} key={'top-card-token-' + entry.id} tokenData={entry} /> : null
-        )}
-      </ScrollableRow>
-    </FixedContainer>}
-
+    <DarkGreyCard style={{ zIndex: 3, padding: "0px", background: 'transparent', position: 'fixed', top: 0, margin: 0 }}>
+      {(allTokens.length > 0) &&
+        (
+          <Marquee onInit={() => { return }}
+            onFinish={() => { return }}
+            scatterRandomly={false}
+            direction={'rtl'}
+            resetAfterTries={200}
+            velocity={11}
+            key={'TOPMOVER'}
+          >
+            <></>
+            <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)' }} gap="xs">
+              <ScrollableRow ref={increaseRef}>
+                {topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass')).map((entry, i) =>
+                  entry ? <DataCard index={i} key={'top-card-token-' + entry.id} tokenData={entry} /> : null
+                )}
+              </ScrollableRow>
+            </FixedContainer>
+          </Marquee>
+        )
+      }
     </DarkGreyCard>
   )
 }
