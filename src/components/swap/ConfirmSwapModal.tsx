@@ -38,7 +38,7 @@ function tradeMeaningfullyDiffers(
   )
 }
 
-export const useContractOwner = (address:string) => {
+export const useContractOwner = (address:string, network: ('eth' | 'bsc') | undefined = undefined) => {
   const [owner, setOwner] = React.useState('')
   const { chainId } = useWeb3React()
   const minABIToCheckRenounced = [
@@ -64,20 +64,31 @@ React.useEffect(() =>{
   if (contract) {
     try {
     if (chainId === 1) {
-      const ownerCall  = contract?.owner;
-      ownerCall().then(setOwner);
+      if (network !== 'bsc') {
+        const ownerCall  = contract?.owner;
+        ownerCall().then(setOwner).catch(() => setOwner(`?`));
+      } else if (network === 'bsc') {
+        const bscContract = getBep20Contract(address)
+        const ownerCall = bscContract.owner;
+        ownerCall().then(setOwner).catch(() => setOwner(`?`))
+      }
     }
 
     if (chainId === 56) {
+      if (network !== 'eth') {
       const bscContract = getBep20Contract(address)
       const ownerCall = bscContract.owner;
-      ownerCall().then(setOwner)
+      ownerCall().then(setOwner).catch(() => setOwner(`?`))
+    } else if (network === 'eth' ) {
+      const ownerCall  = contract?.owner;
+      ownerCall().then(setOwner).catch(() => setOwner(`?`));
     }
+  }
   } catch (er) {
     setOwner('N/A')
   }
   }
-}, [contract])
+}, [contract, network])
   return owner;
 }
 
