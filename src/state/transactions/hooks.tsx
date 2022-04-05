@@ -165,7 +165,7 @@ interface NewToken {
   safe?: boolean;
   buyTax?: number | null;
   sellTax?: number | null;
-  liquidity?:any;
+  liquidity?: any;
 }
 
 const StyledDiv = styled.div`
@@ -218,19 +218,25 @@ export const FomoPage = () => {
       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic3BhY2VtYW5fbGl2ZXMiLCJpYXQiOjE2Mzc1NDg1NTUsImV4cCI6MTY3NDcwMDU1NX0.b_O-i7Srfv1tEYOMGiea9DQ7S9x9tq7Azq1LSwylHUY`
     }
   }
+  const networkMap: Record<number, string> = {
+    1: 'eth',
+    56: 'bsc'
+  }
   const [page, setPage] = React.useState(1);
   const AMT_PER_PAGE = 25;
   const [searchValue, setSearchValue] = React.useState('')
   const [flagSafe, setFlagSafe] = React.useState(false)
-
+  const shouldFlagSafe = React.useMemo(() => {
+    return flagSafe && chainId && network === networkMap[chainId]
+  }, [flagSafe, network, chainId])
   const pagedData = React.useMemo(() => {
     if (!data) return [];
     let sorted = data?.filter(a => searchValue ? a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) || a.name?.toLowerCase().includes(searchValue?.toLowerCase()) || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase()) : true)
-    if (flagSafe) sorted = sorted.filter(i => !!i.safe)
+    if (shouldFlagSafe) sorted = sorted.filter(i => !!i.safe)
     const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
     const endIndex = startIndex + AMT_PER_PAGE;
     return sorted.slice(startIndex, endIndex);
-  }, [page, data, searchValue, flagSafe])
+  }, [page, data, searchValue, shouldFlagSafe])
 
   React.useEffect(() => {
     if (data?.length && pagedData.some(i => i.safe === undefined))
@@ -242,7 +248,7 @@ export const FomoPage = () => {
   const getPaginationGroup = () => {
     if (!data?.length) return []
     let sorted = data?.filter(a => searchValue ? a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) || a.name?.toLowerCase().includes(searchValue?.toLowerCase()) || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase()) : true)
-    if (flagSafe) sorted = sorted?.filter(item => item?.safe === true)
+    if (shouldFlagSafe) sorted = sorted?.filter(item => item?.safe === true)
     const start = Math.floor((page - 1) / AMT_PER_PAGE) * AMT_PER_PAGE;
     const pages = sorted.length / AMT_PER_PAGE;
     const retVal = [];
@@ -252,51 +258,42 @@ export const FomoPage = () => {
     return retVal.length === 0 ? [1] : retVal;
   };
 
-React.useEffect(() => {
-  if (data && 
+  React.useEffect(() => {
+    if (data &&
       !data?.every(a => a.safe !== undefined)
-    ) 
-    flagAllCallback(data?.filter(a => a?.safe === undefined))
-}, [data])
+    )
+      flagAllCallback(data?.filter(a => a?.safe === undefined))
+  }, [data])
 
   const [ethPrice, ethPriceOld] = useEthPrice()
   const [lastFetched, setLastFetched] = React.useState<Date | undefined>()
+
   const flagAllCallback = React.useCallback(async (items: any[]) => {
     try {
       if (!items?.length || !library?.provider) return;
       let safe: any[] = [];
-      if (flagSafe) {
-          safe = await Promise.all((data ?? [])?.filter(item => item.safe === undefined).map(async item => {
-            const isHoneyPotFn = network === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
-            const isSafe = await isHoneyPotFn(item.addr, library?.provider)
-           
-            return {
+      if (shouldFlagSafe) {
+        safe = await Promise.all((data ?? [])?.filter(item => item.safe === undefined).map(async item => {
+          const isHoneyPotFn = network === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
+          const isSafe = await isHoneyPotFn(item.addr, library?.provider)
+          return {
             ...item,
             safe: !isSafe.honeypot,
             buyTax: isSafe?.buy,
             sellTax: isSafe?.sell,
           }
         })) as Array<NewToken>;
-
         const alreadyFlagged = data?.filter(i => i.safe !== undefined);
         setData([...safe.concat(alreadyFlagged)])
       } else {
         safe = await Promise.all(items?.map(async item => {
-          console.log(item.network)
-          //const tokenDataFn = item.network?.toLowerCase() === 'bsc' ? fetchBscTokenData : item?.network?.toLowerCase() === 'eth' ?  getTokenData : (add: string, p1: any, p2:any) => ({totalLiquidity: undefined});
           const isHoneyPotFn = network === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
           const isSafe = await isHoneyPotFn(item.addr, library?.provider)
-          // const [price1, price2] = item.network?.toLowerCase() === 'bsc' ? [bnbPrice?.current, bnbPrice?.current] : [ethPrice, ethPriceOld]//
-
-          // const tokenData = await tokenDataFn(item.addr, price1, price2);
-          // const liquidity = tokenData?.totalLiquidityUSD && !isNaN(tokenData?.totalLiquidityUSD) ? Number(+tokenData?.totalLiquidityUSD * 2).toLocaleString() : '?';
-          // 
           return {
             ...item,
             safe: !isSafe.honeypot,
             buyTax: isSafe?.buy,
             sellTax: isSafe?.sell,
-           // liquidity
           }
         })) as Array<NewToken>;
         setData(data =>
@@ -313,20 +310,30 @@ React.useEffect(() => {
     const finallyClause = () => {
       setLastFetched(new Date())
     }
-     return  axios.default.get(`https://tokenfomo.io/api/tokens/${network}?limit=500`, { method: "GET", headers: authHeader.headers })
+    return axios.default.get(`https://tokenfomo.io/api/tokens/${network}?limit=500`, { method: "GET", headers: authHeader.headers })
       .then(async (response) => {
-        const json =   response.data;
-        const data = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
+        const json = response.data;
+        const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
         const sorted = orderBy(data, i => new Date(+i.timestamp * 1000), 'desc')
         const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
         const endIndex = startIndex + AMT_PER_PAGE;
         const pagedSet = sorted.slice(startIndex, endIndex);
+        const activeSort = getActiveSort();
+        const shouldFlagCallback = data && data.length;
         setData(current => [
           ... (current as NewToken[] && current?.length ? current : []),
-          ...data.filter((item: any) => !current?.some(i => item?.addr === i?.addr))
+          ...dataNew.filter((item: any) => !current?.some(i => item?.addr === i?.addr))
         ])
-        if (chainId &&
-          network === networkMap[chainId]) await flagAllCallback(orderBy(pagedSet, i => new Date(+i.timestamp * 1000), 'desc'))
+        if (shouldFlagCallback) {
+            await flagAllCallback(
+              orderBy(
+                data,
+                i => activeSort && activeSort?.key ? i[activeSort.key as keyof NewToken] : new Date(+i.timestamp * 1000),
+                activeSort && activeSort.direction ? activeSort.direction : 'desc'
+              )
+            )
+          }
+
       }).finally(finallyClause)
       .catch(finallyClause)
   }, [network, page, library])
@@ -337,22 +344,19 @@ React.useEffect(() => {
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
   React.useEffect(() => {
-      setLoading(true)
-      setPage(1)
-      setData(undefined)
-      getData().finally(() => setLoading(false));
+    setLoading(true)
+    setPage(1)
+    setSortState(initialSortState)
+    setFlagSafe(false)
+    setData(undefined)
+    getData().finally(() => setLoading(false));
   }, [network, account, chainId])
 
   const [showInfo, setShowInfo] = React.useState(false)
   const kibaBalance = useKiba(account)
-  const networkMap: Record<number, string> = {
-    1: 'eth',
-    56: 'bsc'
-  }
-
-  type SortStateKey =  'asc' | 'desc' | undefined;
+  type SortStateKey = 'asc' | 'desc' | undefined;
   type SortState = {
-    network:SortStateKey,
+    network: SortStateKey,
     symbol: SortStateKey
     name: SortStateKey,
     addr: SortStateKey,
@@ -362,8 +366,8 @@ React.useEffect(() => {
     sellTax?: SortStateKey
     liquidity?: SortStateKey
   }
-  const [sortState, setSortState] = React.useState<SortState>({
-    'network':undefined,
+  const initialSortState = {
+    'network': undefined,
     'symbol': undefined,
     'name': undefined,
     'addr': undefined,
@@ -372,7 +376,8 @@ React.useEffect(() => {
     'buyTax': undefined,
     'sellTax': undefined,
     'liquidity': undefined
-  })
+  } as SortState
+  const [sortState, setSortState] = React.useState<SortState>(initialSortState)
 
   const getActiveSort = () => {
     return accessDenied ? undefined : Object.keys(sortState).map(key => {
@@ -384,33 +389,45 @@ React.useEffect(() => {
     }).find(a => a?.key && a?.direction);
   }
 
-  const onSortClick = ( key: keyof NewToken ) => {
+  const onSortClick = (key: keyof NewToken) => {
     if (accessDenied) {
       Swal.fire({
-        icon:"warning",
+        icon: "warning",
         toast: true,
         timerProgressBar: true,
         timer: 5000,
         position: 'bottom-end',
         text: "You cannot sort or filter the table unless you own Kiba Tokens",
         showConfirmButton: false,
-        showCancelButton:false
+        showCancelButton: false
       });
       return;
     };
     const activeKey = getActiveSort();
     if (activeKey && activeKey?.key !== key) {
-    setSortState({
-      ...sortState,
-      [key]: sortState[key] !== undefined && sortState[key] === 'asc' ? 'desc' : 'asc',
-      [activeKey.key]: undefined
-    })
-  } else {
-    setSortState({
-      ...sortState,
-      [key]: sortState[key] !== undefined && sortState[key] === 'asc' ? 'desc' : 'asc',
-    })
+      setSortState({
+        ...sortState,
+        [key]: sortState[key] !== undefined && sortState[key] === 'asc' ? 'desc' : 'asc',
+        [activeKey.key]: undefined
+      })
+    } else {
+      setSortState({
+        ...sortState,
+        [key]: sortState[key] !== undefined && sortState[key] === 'asc' ? 'desc' : 'asc',
+      })
+    }
   }
+
+  const getNetworkLink = function (item: NewToken) {
+    switch (item.network.toLowerCase()) {
+      case 'eth': return `https://etherscan.io/token/${item.addr}`
+      case 'bsc': return `https://bscscan.com/token/${item.addr}`
+      case 'poly': return `https://polygonscan.com/token/${item.addr}`
+      case 'kcc': return `https://explorer.kcc.io/en/token/${item.addr}`
+      case 'avax': return `https://avascan.info/blockchain/c/address/${item.addr}`
+      case 'ftm': return `https://ftmscan.com/token/${item.addr}`
+      default: return ``;
+    }
   }
 
   React.useEffect(() => {
@@ -420,7 +437,7 @@ React.useEffect(() => {
     }
   }, [sortState])
 
-  const orderByCallback = React.useCallback((key:string | keyof NewToken, direction: 'asc' | 'desc') => {
+  const orderByCallback = React.useCallback((key: string | keyof NewToken, direction: 'asc' | 'desc') => {
     setData(orderBy(data, item => item[key as keyof NewToken], direction))
   }, [data, sortState])
   const [showHpInfo, setShowHpInfo] = React.useState(false)
@@ -450,27 +467,37 @@ React.useEffect(() => {
           <label>Only Show Safe Listings</label>
           <input type="checkbox" checked={flagSafe} onChange={e => {
             setFlagSafe(e.target.checked)
+            setPage(1)
           }} />
         </div>}
       </div>
-      <div style={{ width: '100%', marginBottom: 5, marginTop: 10 }}>
+      <div style={{ 
+        width: '100%',
+        marginBottom: 5, 
+        marginTop: 15 }}>
         <small>KibaFomo only displays tokens that were listed within the last 24 hours.</small>
-        {accessDenied === false && <> <br/><small>Buy tax, sell tax, and honey pot options will show for the current connected network.</small> </>}
-        <input style={{
-          width: '100%',
-          padding: 13,
-          margin: '5px 0px',
-          border: '1px solid #eee',
-          borderRadius: 12,
-        }}
+        {accessDenied === false && (
+          <>
+            <br />
+            <small>Buy tax, sell tax, and honey pot options will show for the current connected network.</small>
+          </>
+        )}
+        <input
+          style={{
+            width: '100%',
+            padding: 13,
+            margin: '5px 0px',
+            border: '1px solid #eee',
+            borderRadius: 12,
+          }}
           placeholder={"Search for a specific newly listed token by symbol, name, or contract"}
-
           onChange={e => setSearchValue(e.target.value)}
           type={'search'}
         />
       </div>
 
       {fetchedText && <small>Last updated {fetchedText}</small>}
+
       {accessDenied === false && !!loading && <LoadingRows>
         <div />
         <div />
@@ -480,36 +507,38 @@ React.useEffect(() => {
         <div />
         <div />
       </LoadingRows>}
-      {!loading && accessDenied === false && <Table style={{  fontSize: 12,background: '#222', color: "#FFF", width: "100%" }}>
+
+      {!loading && accessDenied === false && <Table style={{ fontSize: 12, background: '#222', color: "#FFF", width: "100%" }}>
         <tr style={{ textAlign: 'left' }}>
-          <th onClick={() => onSortClick('name')} style={{ display:'table-cell', justifyContent:'space-between', cursor: 'pointer', textAlign: 'left' }}>
-            Name
+          <th onClick={() => onSortClick('name')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
+            <div >
+            <div>Name</div>
             {getActiveSort()?.key === 'name' && <>
               {getActiveSort()?.direction === 'asc' && <ChevronUp />}
               {getActiveSort()?.direction === 'desc' && <ChevronDown />}
             </>}
+            </div>
+          
           </th>
-          <th onClick={() => onSortClick('symbol')} style={{ display:'table-cell', justifyContent:'space-between', cursor: 'pointer',textAlign: 'left' }}>
-            Symbol
+          <th onClick={() => onSortClick('symbol')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
+            <div >
+            <div>Symbol</div>
             {getActiveSort()?.key === 'symbol' && <>
               {getActiveSort()?.direction === 'asc' && <ChevronUp />}
               {getActiveSort()?.direction === 'desc' && <ChevronDown />}
             </>}
+            </div>
+          
           </th>
-          <th onClick={() => onSortClick('addr')} style={{ display:'table-cell', justifyContent:'space-between', cursor: 'pointer',textAlign: 'left' }}>
+          <th onClick={() => onSortClick('addr')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
             Contract Address
             {getActiveSort()?.key === 'addr' && <>
               {getActiveSort()?.direction === 'asc' && <ChevronUp />}
               {getActiveSort()?.direction === 'desc' && <ChevronDown />}
             </>}
-            </th>
-          {['bsc', 'eth'].includes(network) && <th style={{ display:'table-cell', justifyContent:'space-between', textAlign: 'left' }}>
-            Buy
-            </th>}
-          {['bsc', 'eth'].includes(network) && <th style={{  display:'table-cell', justifyContent:'space-between',textAlign: 'left' }}>
-            Link
-            </th>}
-          {chainId && network === networkMap[chainId] && <th style={{ display:'table-cell', justifyContent:'space-between', textAlign: 'left'}}>
+          </th>
+
+          {chainId && network === networkMap[chainId] && <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>
             HP Check&nbsp;
             <Tooltip text={helpTipText} show={showHpInfo}>
               <Info onMouseEnter={() => setShowHpInfo(true)} onMouseLeave={() => setShowHpInfo(false)} />
@@ -517,45 +546,47 @@ React.useEffect(() => {
           </th>}
           {chainId && network === networkMap[chainId] && (
             <>
-             {network === 'eth' && <th style={{  display:'table-cell', justifyContent:'space-between',textAlign: 'left' }}>Liquidity
-              {getActiveSort()?.key === 'liquidity' && <>
-              {getActiveSort()?.direction === 'asc' && <ChevronUp />}
-              {getActiveSort()?.direction === 'desc' && <ChevronDown />}
-            </>}</th>}
-              <th onClick={() => onSortClick('buyTax')} style={{  display:'table-cell', justifyContent:'space-between',cursor: 'pointer',textAlign: 'left' }}>Buy
-              {getActiveSort()?.key === 'buyTax' && <>
-              {getActiveSort()?.direction === 'asc' && <ChevronUp />}
-              {getActiveSort()?.direction === 'desc' && <ChevronDown />}
-            </>}</th>
-              <th onClick={() => onSortClick('sellTax')} style={{ display:'table-cell', justifyContent:'space-between',cursor: 'pointer', textAlign: 'left' }}>
+              {network === 'eth' && <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
+                {getActiveSort()?.key === 'liquidity' && <>
+                  {getActiveSort()?.direction === 'asc' && <ChevronUp />}
+                  {getActiveSort()?.direction === 'desc' && <ChevronDown />}
+                </>}</th>}
+              <th onClick={() => onSortClick('buyTax')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>Buy
+                {getActiveSort()?.key === 'buyTax' && <>
+                  {getActiveSort()?.direction === 'asc' && <ChevronUp />}
+                  {getActiveSort()?.direction === 'desc' && <ChevronDown />}
+                </>}</th>
+              <th onClick={() => onSortClick('sellTax')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
                 Sell
                 {getActiveSort()?.key === 'sellTax' && <>
-              {getActiveSort()?.direction === 'asc' && <ChevronUp />}
-              {getActiveSort()?.direction === 'desc' && <ChevronDown />}
-            </>}
-                </th>
-              </>
-         )}
-          <th onClick={() => onSortClick('timestamp')} style={{ display:'table-cell', justifyContent:'space-between',cursor: 'pointer', textAlign: 'left' }}>Time
-          
-          {getActiveSort()?.key === 'timestamp' && <>
+                  {getActiveSort()?.direction === 'asc' && <ChevronUp />}
+                  {getActiveSort()?.direction === 'desc' && <ChevronDown />}
+                </>}
+              </th>
+            </>
+          )}
+          <th onClick={() => onSortClick('timestamp')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>Time
+            {getActiveSort()?.key === 'timestamp' && <>
               {getActiveSort()?.direction === 'asc' && <ChevronUp />}
               {getActiveSort()?.direction === 'desc' && <ChevronDown />}
             </>}</th>
         </tr>
         <tbody>
-
+          {pagedData.length === 0 && !loading && <tr><td colSpan={6}>No data available at this time.</td></tr>}
           {!loading && !!pagedData?.length && pagedData.map((item) => (
             <tr key={item.addr}>
-              <td style={{ fontSize: 12 }}>{item.name}</td>
-              <td>{item.symbol}</td>
-              <td><small>{item.addr}</small> </td>
-              {['eth'].includes(network) && item?.liquidity && <td>
-                <Badge variant={BadgeVariant.PRIMARY}>{`${item.liquidity !== '?' ? `$${item.liquidity}`:  '?'}`}</Badge></td>}
-              {['bsc', 'eth'].includes(network) && <td>{network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></StyledInternalLink>}
+              <td style={{ fontSize: 12 }}>
+                <div style={{display:'flex', justifyContent: 'space-between', alignItems:'center'}}> 
+                  <span>{item.name}</span>
+                </div>
+              </td>
+              <td style={{width:'5%'}}>{item.symbol}</td>
+              <td><div style={{ display: 'flex', justifyContent: 'space-between' }}><small>{item.addr}</small><ExternalLinkIcon style={{}} href={getNetworkLink(item)} />
+                {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></StyledInternalLink>}
                 {network === 'bsc' && <ExternalLink href={`https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></ExternalLink>}
-              </td>}
-              {['bsc', 'eth'].includes(network) && <td><ExternalLinkIcon style={{ display: 'inline' }} href={`${network === 'eth' ? `https://etherscan.io/address/${item.addr}` : `https://bscscan.com/address/${item.addr}`}`} /></td>}
+              </div> </td>
+              {['eth'].includes(network) && item?.liquidity && <td>
+                <Badge variant={BadgeVariant.PRIMARY}>{`${item.liquidity !== '?' ? `$${item.liquidity}` : '?'}`}</Badge></td>}
               {chainId && network === networkMap[chainId] && (<td>
                 {['bsc', 'eth'].includes(network) && <>
                   {item?.safe === undefined && <Loader />}
@@ -564,20 +595,23 @@ React.useEffect(() => {
                 </>}
                 {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
               </td>)}
-              {chainId && network === networkMap[chainId] && network === 'eth' &&  <td>
-                <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld ={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
-                </td>}
+              {chainId && network === networkMap[chainId] && network === 'eth' && <td>
+                <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
+              </td>}
               {chainId && network === networkMap[chainId] && ['bsc', 'eth'].includes(network) && (<td>
-                {(item?.buyTax || item?.buyTax === 0) && <Badge style={{fontSize:14}} variant={BadgeVariant.POSITIVE}>
+                {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
 
                   {<small>{item.buyTax}% buy</small>}
                 </Badge>}
+                {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
               </td>)}
               {chainId && network === networkMap[chainId] && ['bsc', 'eth'].includes(network) && (<td>
-                {(item?.sellTax || item?.sellTax === 0) && <Badge style={{fontSize:14, color:'#fff'}} color={'white'} variant={BadgeVariant.NEGATIVE}>
+                {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: '#fff' }} color={'white'} variant={BadgeVariant.NEGATIVE}>
 
                   {<small>{item.sellTax}% sell</small>}
+
                 </Badge>}
+                {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
               </td>)}
               <td>{moment(new Date(+item.timestamp * 1000)).fromNow()}</td>
             </tr>
@@ -587,7 +621,13 @@ React.useEffect(() => {
 
       {accessDenied === false && <ul style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
         {getPaginationGroup().map((number) => (
-          <li style={{ fontWeight: number === page ? 600 : 500, cursor: 'pointer', marginRight: 10, fontSize: 24 }} key={number} onClick={() => {
+          <li style={{
+            textDecoration: number === page ? 600 : 500,
+            fontWeight: number === page ? 600 : 500,
+            cursor: 'pointer',
+            marginRight: 10,
+            fontSize: 24
+          }} key={number} onClick={() => {
             {
               setPage(number)
             }
@@ -603,19 +643,19 @@ React.useEffect(() => {
   </DarkCard >
 }
 
-const Liquidity = ({addr, network, ethPrice, ethPriceOld, bnbPrice}:{addr: string, network: string, ethPrice: any, ethPriceOld: any, bnbPrice:any}) => {
+const Liquidity = ({ addr, network, ethPrice, ethPriceOld, bnbPrice }: { addr: string, network: string, ethPrice: any, ethPriceOld: any, bnbPrice: any }) => {
   const [liquidity, setLiquidity] = React.useState<any>()
   React.useEffect(() => {
     const func = async () => {
-      const tokenDataFn = network?.toLowerCase() === 'bsc' ? fetchBscTokenData : network?.toLowerCase() === 'eth' ?  getTokenData : (add: string, p1: any, p2:any) => ({totalLiquidity: undefined});
+      const tokenDataFn = network?.toLowerCase() === 'bsc' ? fetchBscTokenData : network?.toLowerCase() === 'eth' ? getTokenData : (add: string, p1: any, p2: any) => ({ totalLiquidity: undefined });
       const [price1, price2] = network?.toLowerCase() === 'bsc' ? [bnbPrice?.current, bnbPrice?.current] : [ethPrice, ethPriceOld]
-      const tokenData = await tokenDataFn(addr, price1,price2);
+      const tokenData = await tokenDataFn(addr, price1, price2);
       const liquidity = tokenData?.totalLiquidityUSD && !isNaN(tokenData?.totalLiquidityUSD) ? Number(+tokenData?.totalLiquidityUSD * 2).toLocaleString() : '?';
       setLiquidity(liquidity)
     }
     func();
   }, [])
 
-  return  <Badge variant={BadgeVariant.DEFAULT}>{liquidity ? liquidity : '?'}</Badge> 
+  return <Badge variant={BadgeVariant.DEFAULT}>{liquidity && liquidity !== '?' ? `$${liquidity}` : '?'}</Badge>
 
 }
