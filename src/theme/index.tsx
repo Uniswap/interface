@@ -49,9 +49,9 @@ function colors(darkMode: boolean): Colors {
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? 'rgb(138,182,47)' : '#FFF',
-    bg1: darkMode ? 'rgb(138,182,47)' : '#F7F8FA',
-    bg2: darkMode ? 'green' : '#EDEEF2',
+    bg0: darkMode ? 'rgb(168, 228, 44)' : '#FFF',
+    bg1: darkMode ? 'rgb(168, 228, 44)' : '#F7F8FA',
+    bg2: darkMode ? '#5fafaf' : '#EDEEF2',
     bg3: darkMode ? '#40444F' : '#CED0D9',
     bg4: darkMode ? '#565A69' : '#888D9B',
     bg5: darkMode ? '#6C7284' : '#888D9B',
@@ -66,7 +66,7 @@ function colors(darkMode: boolean): Colors {
     primary2: darkMode ? '#222' : '#d9dc51',
     primary3: darkMode ? '#eee' : '#d9dc51',
     primary4: darkMode ? 'rgb(139, 197, 63)' : '#F6DDE8',
-    primary5: darkMode ? 'rgb(138,182,47)' : '#FDEAF1',
+    primary5: darkMode ? '#5fafaf' : '#FDEAF1',
 
     // color text
     primaryText1: darkMode ? 'green' : '#d51909',
