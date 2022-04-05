@@ -1,7 +1,7 @@
 import { AlertCircle, FilePlus } from 'react-feather';
+import { LoadingRows, LoadingSkeleton } from 'pages/Pool/styleds';
 
 import { ButtonOutlined } from 'components/Button';
-import { LoadingRows } from 'pages/Pool/styleds';
 import React from 'react';
 import Web3 from 'web3'
 import { Wrapper } from 'components/swap/styleds';
@@ -17,8 +17,9 @@ const StyledA =styled.a`
 export const Transactions = ({transactions, loading, error, accountValue}:{transactions?: any[], loading?:boolean, error?:any, accountValue?: string | null | undefined}) => {
     let account = accountValue;
     const { account: secondary, chainId, library } = useWeb3React()
-    if (!account) account = secondary;
-    const chainLabel = React.useMemo(() => chainId && chainId === 1 ? 'ETH' : chainId && chainId === 56 ? 'BNB' : '', [chainId])
+    if (!account) 
+        account = secondary;
+    const chainLabel = React.useMemo(() => (!chainId || chainId && chainId === 1) ? 'ETH' : chainId && chainId === 56 ? 'BNB' : '', [chainId])
     const formattedTransactions = React.useMemo( () => {
             return transactions?.map((swap: any) => {
             const netToken0 = swap.amount0In - swap.amount0Out
@@ -121,16 +122,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                 </ButtonOutlined>
             </div>
             {!account && <p style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Please connect your wallet.</p>}
-            { !formattedTransactions?.length && <LoadingRows>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-            </LoadingRows>}
+            { (!formattedTransactions?.length || loading) && <LoadingSkeleton  count={5} />}
 
             {error && <p style={{ height: 400, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}><AlertCircle /> &nbsp; An error occurred fetching your transactions</p>}
 
