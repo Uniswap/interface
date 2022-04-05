@@ -29,6 +29,48 @@ const CardWrapper = styled(StyledInternalLink)`
   }
 `
 
+type TopMover = {
+  id: number,
+  name: string,
+  symbol: string,
+  slug: string,
+  num_market_pairs: number,
+  date_added: string,
+  tags: string[],
+  max_supply: number,
+  circulating_supply: number,
+  total_supply: number,
+  platform: {
+    id: number,
+    name: string,
+    symbol: string,
+    slug: string,
+    token_address: string,
+  },
+  is_active: number,
+  cmc_rank: number,
+  is_fiat: number,
+  last_updated: string,
+  quote: {
+    USD:
+    {
+      price: number,
+      volume_24h: number,
+      volume_change_24h: number,
+      percent_change_1h: number,
+      percent_change_24h: number,
+      percent_change_7d: number,
+      percent_change_30d: number,
+      percent_change_60d: number,
+      percent_change_90d: number,
+      market_cap: number,
+      market_cap_dominance: number,
+      fully_diluted_market_cap: string,
+      last_updated: string
+    }
+  }
+}
+
 export const FixedContainer = styled(AutoColumn)``
 
 export const ScrollableRow = styled.div`
@@ -85,38 +127,48 @@ export default function TopTokenMovers() {
   const [t24, t48, ,] = getDeltaTimestamps()
   const timestampsFromBlocks = useBlocksFromTimestamps([t24, t48])
   const kibaPair = useKibaPairData()
+  const [hasEffectRan, setHasEffectRan] = React.useState(false);
   React.useEffect(() => {
     //clear out the tokens for refetch on network switch
+    setHasEffectRan(false)
     setAllTokens([])
-    setHasRan(false)
   }, [chainId])
-  const [hasRan, setHasRan] = React.useState(false)
   const fn = useCallback(async (isIntervalled: boolean) => {
     // validate the required parameters are all met before initializing a fetch
     const { blocks } = timestampsFromBlocks;
-    if (blocks && blocks[0] && blocks[1]) {
+    const shouldEffectRun = !hasEffectRan || isIntervalled;
+    if (shouldEffectRun &&
+      blocks &&
+      blocks[0] &&
+      blocks[1]) {
       if (allTokenData &&
         allTokenData.data &&
         kibaPair.data &&
         allTokenData.data.pairs &&
-        kibaPair.data.pairs &&
-        !hasRan) {
-        setHasRan(true)
+        kibaPair.data.pairs) {
+        setHasEffectRan(true);
         const blockOne: number = blocks[0].number, blockTwo: number = blocks[1].number;
-        const allTokens = await Promise.all([...allTokenData.data.pairs, ...kibaPair.data.pairs].map(async (pair: any) => {
-          const value = (!chainId || chainId === 1) ? await getTokenData(pair.token0.id, ethPrice, ethPriceOld, blockOne, blockTwo) as any : await fetchBscTokenData(pair.token0.id, bnbPrices?.current, bnbPrices?.oneDay, blockOne, blockTwo)
-          value.chainId = chainId ?? 1;
-          return value;
-        }))
+        const allTokens = await Promise.all(
+          [
+            ...allTokenData.data.pairs,
+            ...kibaPair.data.pairs
+          ].map(async (pair: any) => {
+            const value = (!chainId || chainId === 1) ? await getTokenData(pair.token0.id, ethPrice, ethPriceOld, blockOne, blockTwo) as any : await fetchBscTokenData(pair.token0.id, bnbPrices?.current, bnbPrices?.oneDay, blockOne, blockTwo)
+            value.chainId = chainId ?? 1;
+            return value;
+          })
+        );
         setAllTokens(allTokens);
       }
     }
-  }, [timestampsFromBlocks, chainId, kibaPair, hasRan, allTokens, allTokenData])
+  }, [timestampsFromBlocks, hasEffectRan, chainId, kibaPair, allTokens, allTokenData])
 
   React.useEffect(() => {
     let cancelled = false;
-    if (!cancelled && 
-      !hasRan &&
+    if (allTokenData.loading) return;
+    if (kibaPair.loading) return;
+    if (!hasEffectRan &&
+      !cancelled &&
       allTokenData &&
       timestampsFromBlocks?.blocks &&
       allTokenData?.data?.pairs &&
@@ -129,9 +181,10 @@ export default function TopTokenMovers() {
       fn(false)
     }
     return () => { cancelled = true; }
-    
+
   },
     [
+      hasEffectRan,
       allTokenData,
       ethPrice,
       ethPriceOld,

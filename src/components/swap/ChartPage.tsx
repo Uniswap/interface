@@ -6,7 +6,7 @@ import { useKiba } from 'pages/Vote/VotePage';
 import React from 'react';
 import ReactGA from 'react-ga'
 
-import { ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
+import { BarChart, ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
 import { useBscTokenData, useBnbPrices, useBscTokenTransactions, fetchBscTokenData, fetchBscHolders, useBscPoocoinTransactions } from 'state/logs/bscUtils';
 import { useTokenTransactions, useTokenData, useEthPrice, getTokenData, useTokenDataHook } from 'state/logs/utils';
 import styled from 'styled-components/macro';
@@ -18,6 +18,8 @@ import { LoadingRows } from 'pages/Pool/styleds';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { useUserLocale } from 'state/user/hooks';
 import { isMobile } from 'react-device-detect';
+import { useHasAccess } from 'components/AccountPage/AccountPage';
+import BarChartLoaderSVG from './BarChartLoader';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -91,7 +93,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         newTxn.account = ["0x10ed43c718714eb63d5aa57b78b54704e256024e".toLowerCase(), "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase()].includes(swap.to.toLowerCase()) ? swap.from : swap.to
         newTxn.count = transactions?.swaps?.filter((x: any) => (["0x10ed43c718714eb63d5aa57b78b54704e256024e", "0x7a250d5630b4cf539739df2c5dacb4c659f2488d".toLowerCase()].includes(x.to.toLowerCase()) ? x.from : x.to) === newTxn.account).length;
         return newTxn;
-    }).filter((newTxn: any) => !filterAddress ? true : newTxn.account === filterAddress), [transactions])
+    }).filter((newTxn: any) => !filterAddress ? true : newTxn.account === filterAddress), [transactions, filterAddress])
 
     const tooltipContent = React.useMemo(() => {
         return (item: any) => {
@@ -263,21 +265,17 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                             {!isMobile && (
                                                 <React.Fragment>
                                                     {!!filterAddress && (
-                                                        <Tooltip show={showRemoveFilter &&
-                                                            showRemoveFilter?.amountUSD === item?.amountUSD &&
-                                                            showRemoveFilter?.transaction?.id === item?.transaction?.id
-                                                        }
-                                                            text={`Remove filter for ${filterAddress}`}>
-                                                            <X fill={'red'}
-                                                                style={{ cursor: 'pointer' }}
-                                                                onClick={() => setFilterAddress(undefined)}
-                                                                onMouseEnter={() => setShowRemoveFilter(item)}
-                                                                onMouseLeave={() => setShowRemoveFilter(undefined)} />
-                                                        </Tooltip>)}
+
+                                                        <X fill={'red'}
+                                                            style={{ cursor: 'pointer' }}
+                                                            onClick={() => setFilterAddress(undefined)}
+                                                            onMouseEnter={() => setShowRemoveFilter(item)}
+                                                            onMouseLeave={() => setShowRemoveFilter(undefined)} />
+                                                    )}
                                                 </React.Fragment>
                                             )}
                                         </span>
-                                        {!isMobile && item.count > 1 && (<Tooltip placement={'auto-end'}
+                                        {!isMobile && item.count > 2 && (<Tooltip placement={'auto-end'}
                                             text={tooltipContent(item)}
                                             show={tooltipShown &&
                                                 tooltipShown?.amountUSD === item?.amountUSD &&
@@ -310,6 +308,7 @@ overflow-y:auto;
 `
 
 export const Chart = () => {
+
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const [ethPrice, ethPriceOld] = useEthPrice()
@@ -317,7 +316,8 @@ export const Chart = () => {
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
     const binanceTransactionData = useBscTokenTransactions('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 60000)
     const prices = useBnbPrices()
-    const accessDenied = React.useMemo(() => !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
+    const hasAccess = useHasAccess()
+    const accessDenied = !hasAccess
     const [view, setView] = React.useState<'chart' | 'market'>('chart')
     const frameURL = React.useMemo(() => {
         return chainId === 56 ?
@@ -333,6 +333,7 @@ export const Chart = () => {
         const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
         return [valueOne, valueTwo]
     }, [chainId, prices, ethPrice, ethPriceOld])
+
     const tokenData = useTokenDataHook(tokenDataAddress, tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
     return (
@@ -365,72 +366,134 @@ export const Chart = () => {
                     {!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>ETH: ${ethPrice && (+ethPrice)?.toFixed(2)}</Badge>}
                     {!!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>BNB: ${prices && (+prices?.current)?.toFixed(2)}</Badge>}
                 </div>
-                {accessDenied && <div style={{ width: '100%', padding: '9px 14px', height: 400, display: 'flex', justifyContent: 'center', alignItems: 'center' }}><StyledDiv style={{ color: "#222" }}>You must own Kiba Inu tokens to use this feature.</StyledDiv></div>}
+
+                {/* Message if the connected wallet is not authorized to view charting.*/}
+                {accessDenied && <div style={{
+                    width: '100%',
+                    padding: '9px 14px',
+                    height: 400,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <StyledDiv style={{ color: "#222" }}>
+                        You must own Kiba Inu tokens to use this feature.
+                    </StyledDiv>
+                </div>}
+
                 {accessDenied === false &&
-                    <>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15, flexFlow: 'row wrap' }}>
-                            <div style={{ alignItems: 'center', flexFlow: 'row wrap', display: 'flex' }}>
+                    <React.Fragment>
+                        {/* Chart Navigation Row */}
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            marginBottom: 15,
+                            flexFlow: 'row wrap'
+                        }}>
+                            <div style={{
+                                alignItems: 'center',
+                                flexFlow: 'row wrap',
+                                display: 'flex'
+                            }}>
+                                {/* Nav Items */}
                                 <StyledDiv onClick={() => setView('chart')} style={{
                                     cursor: 'pointer',
                                     marginRight: 10,
                                     textDecoration: view === 'chart' ? 'underline' : ''
-                                }}>KibaCharts</StyledDiv>
+                                }}>
+                                    KibaCharts
+                                </StyledDiv>
+
                                 <StyledDiv style={{
                                     cursor: 'pointer',
                                     marginRight: 10,
                                     textDecoration: view === 'market' ? 'underline' : ''
-                                }} onClick={() => setView('market')}>MarketView</StyledDiv>
+                                }} onClick={() => setView('market')}>
+                                    MarketView
+                                </StyledDiv>
                             </div>
-                            {isBinance && <StyledDiv>Binance</StyledDiv>}
 
-                            {!isBinance && <StyledDiv style={{ alignItems: 'center', display: 'flex', color: "#FFF" }}>
-                                <StyledInternalLink style={{ fontSize: 25, color: "#FFF" }} to="/selective-charts">View Charts for Other Tokens </StyledInternalLink><ChevronRight /> <Badge>Beta</Badge>
-                            </StyledDiv>}
+                            {isBinance && <StyledDiv>Binance</StyledDiv>}
+                            {!isBinance && (
+                                <StyledDiv style={{ alignItems: 'center', display: 'flex', color: "#FFF" }}>
+                                    <StyledInternalLink style={{
+                                        fontSize: 25,
+                                        color: "#FFF"
+                                    }} to="/selective-charts">
+                                        View Charts for Other Tokens
+                                    </StyledInternalLink>
+                                    <ChevronRight />
+                                    <Badge>Beta</Badge>
+                                </StyledDiv>
+                            )}
                         </div>
-                        {view === 'chart' && <>
-                            <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
-                                {!isBinance && <TradingViewWidget locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
-                                {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
-                                {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
-                            </div>
-                            {(!isBinance && transactionData?.loading) || isBinance && binanceTransactionData.loading && <LoadingRows>
-                                <div />
-                                <div />
-                                <div />
-                                <div />
-                                <div />
-                                <div />
-                                <div />
-                                <div />
-                            </LoadingRows>}
-                            {!isBinance && transactionData?.data?.swaps?.length &&
-                                tokenData && tokenData?.priceUSD &&
-                                <div style={{
-                                    width: '100%',
-                                    overflowY: 'auto',
-                                    padding: '9px 14px',
-                                    background: 'rgb(22, 22, 22)',
-                                    color: '#fff',
-                                    borderRadius: 6,
-                                    flexFlow: 'column wrap',
-                                }}>
-                                    <TransactionList chainId={chainId} lastFetched={transactionData.lastFetched} transactions={transactionData.data} tokenData={tokenData} />
-                                </div>}
-                            {!isBinance && transactionData?.data?.swaps?.length === 0 && <Dots>Loading transactions..</Dots>}
-                            {isBinance && binanceTransactionData?.data?.swaps?.length === 0 && <Dots>Loading transactions..</Dots>}
-                            {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && <div style={{ width: '100%', overflowY: 'auto', padding: '9px 14px', background: 'rgb(22, 22, 22)', color: '#fff', borderRadius: 6, flexFlow: 'column wrap', gridColumnGap: 50 }}>
-                                <TransactionList chainId={chainId} lastFetched={binanceTransactionData.lastFetched} transactions={binanceTransactionData.data} tokenData={tokenData} />
-                            </div>}
-                        </>}
-                    </>}
-                {accessDenied === false && view === 'market' &&
+
+                        {view === 'chart' && (
+                            <React.Fragment>
+                                {/* Chart Component */}
+                                <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
+                                    {!isBinance && <TradingViewWidget  locale={locale} theme={'Dark'} symbol={frameURL} autosize /> }
+                                    {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
+                                    {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
+                                </div>
+
+                                {/* Loading Transaction data for either chain */}
+                                {(!isBinance && transactionData?.loading) ||
+                                    (isBinance && binanceTransactionData.loading) && (
+                                   <div style={{background:'#222', padding: '9px 14px', display:'flex', alignItems:'center'}}><BarChartLoaderSVG /></div>
+                                )}
+
+                                {/* ETH Transaction List */}
+                                {!isBinance &&
+                                    transactionData?.data?.swaps?.length &&
+                                    tokenData &&
+                                    tokenData?.priceUSD &&
+                                    <div style={{
+                                        width: '100%',
+                                        overflowY: 'auto',
+                                        padding: '9px 14px',
+                                        background: 'rgb(22, 22, 22)',
+                                        color: '#fff',
+                                        borderRadius: 6,
+                                        flexFlow: 'column wrap',
+                                    }}>
+                                        <TransactionList chainId={chainId}
+                                            lastFetched={transactionData.lastFetched}
+                                            transactions={transactionData.data}
+                                            tokenData={tokenData} />
+                                    </div>
+                                }
+                                {/* Binance Smart Chain Transaction List */}
+                                {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && (
+                                    <div style={{
+                                        width: '100%',
+                                        overflowY: 'auto',
+                                        padding: '9px 14px',
+                                        background: 'rgb(22, 22, 22)',
+                                        color: '#fff',
+                                        borderRadius: 6,
+                                        flexFlow: 'column wrap',
+                                        gridColumnGap: 50
+                                    }}>
+                                        <TransactionList chainId={chainId}
+                                            lastFetched={binanceTransactionData.lastFetched}
+                                            transactions={binanceTransactionData.data}
+                                            tokenData={tokenData} />
+                                    </div>
+                                )}
+                            </React.Fragment>
+                        )}
+                    </React.Fragment>}
+
+                {/* Market View */}
+                {accessDenied === false && 
+                 view === 'market' && (
                     <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
                         <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid #222', borderRadius: 6, width: '100%', height: 500 }} />
                         <iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid #222', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
                     </div>
-                }
+                 )}
             </div>
-
         </FrameWrapper>
     )
 }
