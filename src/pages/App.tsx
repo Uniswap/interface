@@ -120,7 +120,7 @@ export default function App() {
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard(undefined)
   
-  const [theme, setTheme] = React.useState('./squeeze.mp4')
+const [theme, setTheme] = React.useState('./squeeze2.mp4')
   
   const setThemeCb = (newTheme: string) => {
       localStorage.setItem(THEME_BG_KEY, newTheme)
