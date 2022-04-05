@@ -291,7 +291,7 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
   const blocks = useBlocksFromTimestamps([t24h, t48h])
   const func = useCallback(async () => {
     if (address && ethPrice && ethPriceOld && blocks?.blocks &&
-      chainId === 1) {
+      (chainId === 1 || !chainId)) {
       await getTokenData(address, ethPrice, ethPriceOld).then(setTokenData)
     } else if (address && chainId === 56 && blocks?.blocks &&
       prices?.current && prices?.oneDay) {
@@ -301,7 +301,7 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
 
   React.useEffect(() => {
     let cancelled = false;
-    if (!tokenData && !cancelled) func()
+    if ((!tokenData || !tokenData?.priceUSD) && !cancelled) func()
     return () => {
       cancelled = true;
     }

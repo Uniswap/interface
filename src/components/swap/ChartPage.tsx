@@ -5,6 +5,7 @@ import { fetchBscHolders, fetchBscTokenData, useBnbPrices, useBscPoocoinTransact
 import { getTokenData, useEthPrice, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
 
 import BarChartLoaderSVG from './BarChartLoader';
+import { ChartSidebar } from 'components/ChartSidebar';
 import { Dots } from './styleds';
 import { LoadingRows } from 'pages/Pool/styleds';
 import React from 'react';
@@ -12,7 +13,6 @@ import ReactGA from 'react-ga'
 import { StyledInternalLink } from 'theme';
 import Tooltip from 'components/Tooltip';
 import _ from 'lodash';
-import { isMobile } from 'react-device-detect';
 import moment from 'moment';
 import { number } from '@lingui/core/cjs/formats';
 import styled from 'styled-components/macro';
@@ -84,7 +84,7 @@ type TokenInfo =
 export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: string | undefined) => {
     if (!chainId || !tokenAddress) return
 
-    if (chainId === 1) {
+    if (chainId === 1 || !chainId) {
         return new Promise((resolve, reject) => {
             fetch(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
                 .then((response) => response.json())
@@ -99,7 +99,7 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
 
     function intervalCallback() {
-        if (chainId === 1 && tokenAddress) {
+        if ((chainId === 1 || !chainId )&& tokenAddress) {
             fetch(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
                 .then((response) => response.json())
                 .then(setTokenInfo)
@@ -117,8 +117,7 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
 export const useHolderCount = (chainId: any) => {
     const [holdersCount, setHoldersCount] = React.useState<any | undefined>()
     function intervalCallback() {
-        if (!chainId) return;
-        if (chainId === 1)
+        if (chainId === 1 || !chainId)
             fetch('https://api.ethplorer.io/getTokenInfo/0x005d1123878fc55fbd56b54c73963b234a64af3c?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
                 .then(res => res.json())
                 .then(setHoldersCount);
@@ -136,8 +135,14 @@ export const useHolderCount = (chainId: any) => {
 
 const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { lastFetched: any, transactions: any, tokenData: any, chainId?: number }) => {
     const [filterAddress, setFilterAddress] = React.useState<string | undefined>()
+    
+    const windowInnerWidth = window.innerWidth
+
+    const isMobile = React.useMemo(() => windowInnerWidth <= 768 , [windowInnerWidth])
     const chainLabel = chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '';
     const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [moment(lastFetched).fromNow()])
+    
+
     const formattedTransactions = React.useMemo(() => transactions?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out
@@ -311,16 +316,16 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                     {item.token1Symbol !== `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                 </td>
                                 <td>
-                                    <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
+                                    <StyledA href={`https://${(!chainId || chainId === 1) ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
                                         {item?.hash && item?.transaction?.id.slice(0, 6) + '...' + item?.transaction?.id.slice(38, 42)}
                                     </StyledA>
                                 </td>
                                 <td>
-                                    <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-                                    <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/address/${item.account}`}>
-                                        {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
-                                    </StyledA>
-                                    {item.account && <StyledInternalLink to={`/details/${item.account}`}><ChevronRight /></StyledInternalLink>}
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <StyledA href={`https://${(!chainId || chainId === 1) ? 'etherscan.io' : 'bscscan.com'}/address/${item.account}`}>
+                                            {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
+                                        </StyledA>
+                                        {item.account && <StyledInternalLink to={`/details/${item.account}`}><ChevronRight /></StyledInternalLink>}
                                     </div>
                                 </td>
                                 <td >
@@ -374,12 +379,14 @@ const FrameWrapper = styled.div`
 width:100%;
 display:flex;
 flex-flow:column wrap;
-max-width:1000px;
+max-width:100%;
 overflow-y:auto;
 `
 
 export const Chart = () => {
+    const windowInnerWidth = window.innerWidth
 
+    const isMobile = React.useMemo(() => windowInnerWidth <= 768 , [windowInnerWidth])
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const [ethPrice, ethPriceOld] = useEthPrice()
@@ -395,7 +402,7 @@ export const Chart = () => {
             `PANCAKESWAP:KIBAWBNB` :
             `UNISWAP:KIBAWETH`
     }, [chainId])
-    const tokenDataAddress = React.useMemo(() => chainId === 1 ?
+    const tokenDataAddress = React.useMemo(() => (!chainId || chainId === 1) ?
         '0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase()
         : chainId === 56 ?
             '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase() : '', [chainId])
@@ -404,170 +411,187 @@ export const Chart = () => {
         const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
         return [valueOne, valueTwo]
     }, [chainId, prices, ethPrice, ethPriceOld])
-
+    const gridTemplateStyle = React.useMemo(() => isMobile ? '100%' : '25% 75%', [isMobile])
     const tokenData = useTokenDataHook(tokenDataAddress, tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
+   
     return (
         <FrameWrapper style={{
             background: '#252632',
             borderRadius: 30,
-            padding: 10
+            padding: 10,
+
         }} >
             <div style={{
-                display: 'block',
-                marginBottom: 5,
-                width: '100%',
-                padding: "9px 6px"
+                display: 'grid',
+                gridTemplateColumns: gridTemplateStyle
             }}>
-                <div style={{ display: 'flex', marginBottom: 5, alignItems: 'center', flexFlow: "row wrap" }}>
-                    <a style={{ marginRight: 15 }} href="https://www.dextools.io/app/ether/pair-explorer/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48">
-                        <img src={'https://miro.medium.com/max/663/1*eV5_P4s2WQkgzVM_XdgWSw.png'}
-                            style={{ maxWidth: 100 }} />
-                    </a>
-                    <a href={'https://app.moontools.io/pairs/uniswap/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48'} style={{ marginRight: 15 }}>
-                        <img src={'https://miro.medium.com/max/440/1*rtdc0fgltZdBep3miLuSuQ.png'}
-                            style={{ maxWidth: 100 }} />
-                    </a>
-                    <a href={'https://coingecko.com/en/coins/kiba-inu'} style={{ marginRight: 15 }}>
-                        <img src={'https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou'}
-                            style={{ maxWidth: 30 }} />
-                    </a>
-                    <a href={'https://coinmarketcap.com/en/currencies/kiba-inu'} style={{ marginRight: 15 }}>
-                        <img src={'https://doostoken.com/assets/images/site/brand/new/png/coinmarketcap.png'}
-                            style={{ maxWidth: 30 }} />
-                    </a>
-                    {!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>ETH: ${ethPrice && (+ethPrice)?.toFixed(2)}</Badge>}
-                    {!!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>BNB: ${prices && (+prices?.current)?.toFixed(2)}</Badge>}
-                </div>
-
-                {/* Message if the connected wallet is not authorized to view charting.*/}
-                {accessDenied && <div style={{
+                <ChartSidebar token={{
+                    address: tokenDataAddress,
+                    decimals: '18',
+                    name: 'Kiba Inu',
+                    symbol: 'KIBA'
+                }} tokenData={tokenData} chainId={chainId} />
+                <div style={{
+                    display: 'block',
+                    marginBottom: 5,
                     width: '100%',
-                    padding: '9px 14px',
-                    height: 400,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
+                    padding: "9px 6px"
                 }}>
-                          
-                    <StyledDiv style={{ color: "#fff", display: 'flex', width: '100%', justifyContent: 'center'  }}>
-                        You must own Kiba Inu tokens to use this feature!
-                    </StyledDiv>
-                </div>}
+                    <div style={{ display: 'flex', marginBottom: 5, alignItems: 'center', flexFlow: "row wrap" }}>
+                        <a style={{ marginRight: 15 }} href="https://www.dextools.io/app/ether/pair-explorer/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48">
+                            <img src={'https://miro.medium.com/max/663/1*eV5_P4s2WQkgzVM_XdgWSw.png'}
+                                style={{ maxWidth: 100 }} />
+                        </a>
+                        <a href={'https://app.moontools.io/pairs/uniswap/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48'} style={{ marginRight: 15 }}>
+                            <img src={'https://miro.medium.com/max/440/1*rtdc0fgltZdBep3miLuSuQ.png'}
+                                style={{ maxWidth: 100 }} />
+                        </a>
+                        <a href={'https://coingecko.com/en/coins/kiba-inu'} style={{ marginRight: 15 }}>
+                            <img src={'https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou'}
+                                style={{ maxWidth: 30 }} />
+                        </a>
+                        <a href={'https://coinmarketcap.com/en/currencies/kiba-inu'} style={{ marginRight: 15 }}>
+                            <img src={'https://doostoken.com/assets/images/site/brand/new/png/coinmarketcap.png'}
+                                style={{ maxWidth: 30 }} />
+                        </a>
+                        {!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>ETH: ${ethPrice && (+ethPrice)?.toFixed(2)}</Badge>}
+                        {!!isBinance && <Badge style={{ color: "#fff", textDecoration: 'none' }}>BNB: ${prices && (+prices?.current)?.toFixed(2)}</Badge>}
+                    </div>
 
-                {accessDenied === false &&
-                    <React.Fragment>
-                        {/* Chart Navigation Row */}
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginBottom: 15,
-                            flexFlow: 'row wrap'
-                        }}>
+                    {/* Message if the connected wallet is not authorized to view charting.*/}
+                    {accessDenied && <div style={{
+                        width: '100%',
+                        padding: '9px 14px',
+                        height: 400,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+
+                        <StyledDiv style={{ color: "#fff", display: 'flex', width: '100%', justifyContent: 'center' }}>
+                            You must own Kiba Inu tokens to use this feature!
+                        </StyledDiv>
+                    </div>}
+
+                    {accessDenied === false &&
+                        <React.Fragment>
+                            {/* Chart Navigation Row */}
                             <div style={{
-                                alignItems: 'center',
-                                flexFlow: 'row wrap',
-                                display: 'flex'
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginBottom: 15,
+                                flexFlow: 'row wrap'
                             }}>
-                                {/* Nav Items */}
-                                <StyledDiv onClick={() => setView('chart')} style={{
-                                    cursor: 'pointer',
-                                    marginRight: 10,
-                                    textDecoration: view === 'chart' ? 'underline' : ''
+                                <div style={{
+                                    alignItems: 'center',
+                                    flexFlow: 'row wrap',
+                                    display: 'flex'
                                 }}>
-                                    KibaCharts
-                                </StyledDiv>
+                                    {/* Nav Items */}
+                                    <StyledDiv onClick={() => setView('chart')} style={{
+                                        cursor: 'pointer',
+                                        marginRight: 10,
+                                        textDecoration: view === 'chart' ? 'underline' : ''
+                                    }}>
+                                        KibaCharts
+                                    </StyledDiv>
 
-                                <StyledDiv style={{
-                                    cursor: 'pointer',
-                                    marginRight: 10,
-                                    textDecoration: view === 'market' ? 'underline' : ''
-                                }} onClick={() => setView('market')}>
-                                    MarketView
-                                </StyledDiv>
-                            </div>
-
-                            {isBinance && <StyledDiv>Binance</StyledDiv>}
-                            {!isBinance && (
-                                <StyledDiv style={{ alignItems: 'center', display: 'flex', color: "#FFF" }}>
-                                    <StyledInternalLink style={{
-                                        fontSize: 25,
-                                        color: "#FFF"
-                                    }} to="/selective-charts">
-                                        View Charts for Other Tokens
-                                    </StyledInternalLink>
-                                    <ChevronRight />
-                                    <Badge>Beta</Badge>
-                                </StyledDiv>
-                            )}
-                        </div>
-
-                        {view === 'chart' && (
-                            <React.Fragment>
-                                {/* Chart Component */}
-                                <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
-                                    {!isBinance && <TradingViewWidget hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
-                                    {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
-                                    {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x6499b4f8263fc3be2d4577fffcee87c972a07be9'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
+                                    <StyledDiv style={{
+                                        cursor: 'pointer',
+                                        marginRight: 10,
+                                        textDecoration: view === 'market' ? 'underline' : ''
+                                    }} onClick={() => setView('market')}>
+                                        MarketView
+                                    </StyledDiv>
                                 </div>
 
-                                {/* Loading Transaction data for either chain */}
-                                {(!isBinance && transactionData?.loading) ||
-                                    (isBinance && binanceTransactionData.loading) && (
-                                        <div style={{ background: '#222', padding: '9px 14px', display: 'flex', alignItems: 'center' }}><BarChartLoaderSVG /></div>
-                                    )}
-
-                                {/* ETH Transaction List */}
-                                {!isBinance &&
-                                    transactionData?.data?.swaps?.length &&
-                                    tokenData &&
-                                    tokenData?.priceUSD &&
-                                    <div style={{
-                                        width: '100%',
-                                        overflowY: 'auto',
-                                        padding: '9px 14px',
-                                        background: 'rgb(22, 22, 22)',
-                                        color: '#fff',
-                                        borderRadius: 6,
-                                        flexFlow: 'column wrap',
-                                    }}>
-                                        <TransactionList chainId={chainId}
-                                            lastFetched={transactionData.lastFetched}
-                                            transactions={transactionData.data}
-                                            tokenData={tokenData} />
-                                    </div>
-                                }
-                                {/* Binance Smart Chain Transaction List */}
-                                {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && (
-                                    <div style={{
-                                        width: '100%',
-                                        overflowY: 'auto',
-                                        padding: '9px 14px',
-                                        background: 'rgb(22, 22, 22)',
-                                        color: '#fff',
-                                        borderRadius: 6,
-                                        flexFlow: 'column wrap',
-                                        gridColumnGap: 50
-                                    }}>
-                                        <TransactionList chainId={chainId}
-                                            lastFetched={binanceTransactionData.lastFetched}
-                                            transactions={binanceTransactionData.data}
-                                            tokenData={tokenData} />
-                                    </div>
+                                {isBinance && <StyledDiv>Binance</StyledDiv>}
+                                {!isBinance && (
+                                    <StyledDiv style={{ alignItems: 'center', display: 'flex', color: "#FFF" }}>
+                                        <StyledInternalLink style={{
+                                            fontSize: 25,
+                                            color: "#FFF"
+                                        }} to="/selective-charts">
+                                            View Charts for Other Tokens
+                                        </StyledInternalLink>
+                                        <ChevronRight />
+                                        <Badge>Beta</Badge>
+                                    </StyledDiv>
                                 )}
-                            </React.Fragment>
-                        )}
-                    </React.Fragment>}
+                            </div>
+                        </React.Fragment>}
 
-                {/* Market View */}
-                {accessDenied === false &&
-                    view === 'market' && (
-                        <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
-                            <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid #222', borderRadius: 6, width: '100%', height: 500 }} />
-                            <iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid #222', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
+                    {/* Market View */}
+                    {accessDenied === false &&
+                        view === 'market' && (
+                            <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
+                                <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid #222', borderRadius: 6, width: '100%', height: 500 }} />
+                            </div>
+                        )}
+
+                    {view === 'chart' && accessDenied === false && <>
+                        {/* Chart Component */}
+                        <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
+                            {!isBinance && <TradingViewWidget hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
+                            {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
+                            {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x6499b4f8263fc3be2d4577fffcee87c972a07be9'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
+                        </div>
+                    </>}
+                </div>
+            </div>
+            {accessDenied === false && view === 'chart' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
+                    {/* Loading Transaction data for either chain */}
+                    {(!isBinance && transactionData?.loading) ||
+                        (isBinance && binanceTransactionData.loading) && (
+                            <div style={{ background: '#222', padding: '9px 14px', display: 'flex', alignItems: 'center' }}><BarChartLoaderSVG /></div>
+                        )}
+
+                    {/* ETH Transaction List */}
+                    {!isBinance &&
+                        transactionData?.data?.swaps?.length &&
+                        tokenData &&
+                        tokenData?.priceUSD &&
+                        <div style={{
+                            width: '100%',
+                            overflowY: 'auto',
+                            padding: '9px 14px',
+                            background: 'rgb(22, 22, 22)',
+                            color: '#fff',
+                            borderRadius: 6,
+                            flexFlow: 'column wrap',
+                        }}>
+                            <TransactionList chainId={chainId}
+                                lastFetched={transactionData.lastFetched}
+                                transactions={transactionData.data}
+                                tokenData={tokenData} />
+                        </div>
+                    }
+                    {/* Binance Smart Chain Transaction List */}
+                    {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && (
+                        <div style={{
+                            width: '100%',
+                            overflowY: 'auto',
+                            padding: '9px 14px',
+                            background: 'rgb(22, 22, 22)',
+                            color: '#fff',
+                            borderRadius: 6,
+                            flexFlow: 'column wrap',
+                            gridColumnGap: 50
+                        }}>
+                            <TransactionList chainId={chainId}
+                                lastFetched={binanceTransactionData.lastFetched}
+                                transactions={binanceTransactionData.data}
+                                tokenData={tokenData} />
                         </div>
                     )}
-            </div>
+                </div>
+            )}
+            {accessDenied === false && view==='market' &&                 <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
+
+                                            <iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid #222', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
+                                    </div>    }
         </FrameWrapper>
     )
 }

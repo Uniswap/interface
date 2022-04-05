@@ -11,6 +11,7 @@ import Confetti from 'components/Confetti'
 import { DarkCard } from 'components/Card'
 import Lottie from 'react-lottie';
 import React from 'react'
+import { Style } from 'util';
 import { SupportedChainId } from 'constants/chains'
 import { Wrapper } from 'pages/Pool/styleds'
 import {Zap} from 'react-feather'
@@ -82,7 +83,7 @@ export function abbreviateNumber(value: any) {
         maximumFractionDigits: 1
       }).format(value)
 }
-export const BurntKiba = ({showDetails}:{showDetails?:boolean}) => {
+export const BurntKiba = ({showDetails, style}:{showDetails?:boolean, style?: Record<string, string> }) => {
     const deadWalletKibaBalance = useKiba('0x000000000000000000000000000000000000dead')
     const { chainId} = useWeb3React()
     const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
@@ -136,8 +137,8 @@ volumeInUsd
             )}
             </DarkCard> 
               </ContentWrapper>   :
-            <StyledInternalLink to="/dashboard">
-            <Badge   style={{display: 'flex', color: '#fff', border:'transparent', fontFamily: 'Bangers'}} variant={BadgeVariant.HOLLOW}> <div style = {{marginBottom: 10 }}><Lottie 
+            <StyledInternalLink style={{...style}} to="/dashboard">
+            <Badge   style={{display: 'flex', justifyContent: style && style.justifyContent ? style.justifyContent : 'center', color: '#fff', border:'transparent', fontFamily: 'Bangers'}} variant={BadgeVariant.HOLLOW}> <div style = {{marginBottom: 10 }}><Lottie 
   options={defaultOptions}
     height={28}
     width={28}></Lottie></div>

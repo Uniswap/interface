@@ -2,14 +2,16 @@ import { AccountPage, AccountPageWithAccount } from 'components/AccountPage/Acco
 import { AlertCircle, AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Globe, Info } from 'react-feather'
 import {
   ApolloClient,
-  InMemoryCache,
-  ApolloProvider} from "@apollo/client";
-import logo from '../assets/images/download.png'
-import btok from '../assets/sponsors/btok2.svg' 
-import bg4 from '../assets/images/bg4.jpg' 
+  ApolloProvider,
+  InMemoryCache
+} from "@apollo/client";
+import Badge, { BadgeVariant } from 'components/Badge'
+import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
+import { DarkCard, DarkGreyCard } from 'components/Card'
+import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { useState } from 'react'
+import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
 import { Route, Switch } from 'react-router-dom'
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
@@ -22,17 +24,17 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import AppBody from './AppBody'
 import { ApplicationModal } from '../state/application/actions'
 import { AutoColumn } from 'components/Column'
-import { CardSection } from 'components/earn/styled'
+import { CardSection } from 'components/earn/styled';
 import CreateProposal from './CreateProposal'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
 import Earn from './Earn'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { FavoritesPanel } from 'components/FavoritesPanel'
+import { ExternalLinkIcon } from 'theme'
 import { Flex } from 'rebass'
 import { GainsTracker } from './GainsTracker/GainsTracker'
-import Header from '../components/Header'
-import { HoneyPotBsc } from './HoneyPotBsc'
+import Header from 'components/Header';
+import { HoneyPotBsc } from 'components/HoneyPotBSC';
 import { LifetimeReflections } from './Swap/LifetimeReflections'
 import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
@@ -50,20 +52,11 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { RowFixed } from 'components/Row'
-import { SelectiveChart } from './Swap/SelectiveCharting'
-import { Suite } from './Suite/Suite'
-import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import { AddProposal } from './Vote/AddProposal'
-import { ProposalDetails } from './Vote/ProposalDetails'
-import { TrumpVote } from './Vote/TrumpVote'
-import VotePage from './Vote/VotePage'
-import { useKiba } from './Vote/VotePage'
-import VotePageV2 from './Vote/VotePageV2'
-import cart from '../assets/sponsors/cryptocart.svg'
+import { SelectiveChart } from './Swap/SelectiveCharting';
+import { Suite } from './Suite/Suite';
 import Swal from 'sweetalert2'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
-import Tooltip from 'components/Tooltip'
+import Tooltip from 'components/Tooltip';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
 import TopTokenMovers from 'components/swap/TopMovers'
 import { Transactions } from './Vote/TransactionsPage'
@@ -73,6 +66,9 @@ import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 import Web3 from 'web3'
 import Web3ReactManager from '../components/Web3ReactManager'
+import bg4 from '../assets/images/bg4.jpg'
+import btok from '../assets/sponsors/btok2.svg'
+import cart from '../assets/sponsors/cryptocart.svg'
 import { getTokenTaxes } from './HoneyUtils'
 import { isAddress } from 'utils'
 import logo from '../assets/images/download.png'
@@ -81,7 +77,6 @@ import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
-import { walletconnect } from 'connectors'
 
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
@@ -501,12 +496,12 @@ export default function App() {
       <Web3ReactManager>
       <GelatoProvider
         library={library}
-        chainId={chainId}
+        chainId={chainId ? chainId : 1}
         account={account ?? undefined} 
         useDefaultTheme={false}
         useDarkMode
         >
-        <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : client}>
+        <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
         <AppWrapper>
           {Video}
           <HeaderWrapper>

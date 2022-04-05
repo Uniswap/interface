@@ -1,24 +1,25 @@
-import { useWeb3React } from '@web3-react/core';
 import Badge, { BadgeVariant } from 'components/Badge';
-import { DarkCard } from 'components/Card';
-import { Wrapper } from 'pages/Pool/styleds';
-import { Transactions } from 'pages/Vote/TransactionsPage';
-import React from 'react';
-import { useEthPrice, useUserTransactions } from 'state/logs/utils';
-import styled from 'styled-components/macro';
-import _ from 'lodash'
-import Web3 from 'web3';
-import { ExternalLink, ExternalLinkIcon } from 'theme';
-import { ButtonPrimary, ButtonGray } from 'components/Button';
-import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
+import { ButtonGray, ButtonPrimary } from 'components/Button';
+import { ExternalLink, ExternalLinkIcon } from 'theme';
+import { useEthPrice, useUserTransactions } from 'state/logs/utils';
+
+import { DarkCard } from 'components/Card';
 import JSBI from 'jsbi'
-import { parseEther } from '@ethersproject/units';
-import { isMobile } from 'react-device-detect';
-import { useKiba } from 'pages/Vote/VotePage';
+import React from 'react';
+import { Transactions } from 'pages/Vote/TransactionsPage';
+import Web3 from 'web3';
+import { Wrapper } from 'pages/Pool/styleds';
+import _ from 'lodash'
 import { binanceTokens } from 'utils/binance.tokens';
-import { useParams } from 'react-router';
+import { isMobile } from 'react-device-detect';
+import { parseEther } from '@ethersproject/units';
+import styled from 'styled-components/macro';
 import { useETHBalances } from 'state/wallet/hooks';
+import { useKiba } from 'pages/Vote/VotePage';
+import { useParams } from 'react-router';
+import { useUSDCValue } from 'hooks/useUSDCPrice';
+import { useWeb3React } from '@web3-react/core';
 const StyledHeader = styled.div`
 font-size: ${isMobile ? '18px' : '32px'};
 font-family: "Bangers", cursive;
@@ -187,7 +188,7 @@ export const AccountPageWithAccount = () => {
             <Wrapper style={{ background: '#222', padding: '9px 14px' }}>
                 {hasAccess && (
                     <>
-                        <Transactions accountValue={account} loading={transactions.loading} error={transactions.error} transactions={formattedTxns} />
+                        <Transactions accountValue={account?.toLowerCase()} loading={transactions.loading} error={transactions.error} transactions={formattedTxns} />
                         <TotalRow totalGasETH={totalGasUsed} totalGasUSD={totalGasUSD} account={account} txCount={txCount} transactions={transactions?.data?.swaps} />
                     </>
                 )}
