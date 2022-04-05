@@ -117,6 +117,8 @@ align-items: center;
 left: 0;
 bottom: 0;
 z-index:1111;  
+background: rgba(37, 38, 50,0.7);
+border-right-radius:50px;
 `
 
   return (

@@ -411,10 +411,11 @@ export const Chart = () => {
         const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
         return [valueOne, valueTwo]
     }, [chainId, prices, ethPrice, ethPriceOld])
-    const gridTemplateStyle = React.useMemo(() => isMobile ? '100%' : '25% 75%', [isMobile])
     const tokenData = useTokenDataHook(tokenDataAddress, tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
-   
+    const [collapsed, setCollapsed] = React.useState(false)
+    const gridTemplateStyle = React.useMemo(() => isMobile ? '100%' : (collapsed ? '5% 95%' : '25% 75%'), [isMobile, collapsed])
+    const gridColumnGap = 10
     return (
         <FrameWrapper style={{
             background: '#252632',
@@ -424,14 +425,19 @@ export const Chart = () => {
         }} >
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: gridTemplateStyle
+                gridTemplateColumns: gridTemplateStyle,
+                columnGap: gridColumnGap
             }}>
                 <ChartSidebar token={{
                     address: tokenDataAddress,
                     decimals: '18',
                     name: 'Kiba Inu',
                     symbol: 'KIBA'
-                }} tokenData={tokenData} chainId={chainId} />
+                }} 
+                tokenData={tokenData} 
+                chainId={chainId} 
+                collapsed={collapsed} 
+                onCollapse={(collapsed) => setCollapsed(collapsed)} />
                 <div style={{
                     display: 'block',
                     marginBottom: 5,
@@ -533,7 +539,7 @@ export const Chart = () => {
                     {view === 'chart' && accessDenied === false && <>
                         {/* Chart Component */}
                         <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
-                            {!isBinance && <TradingViewWidget hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
+                            {!isBinance && <TradingViewWidget  hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
                             {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
                             {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x6499b4f8263fc3be2d4577fffcee87c972a07be9'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
                         </div>
