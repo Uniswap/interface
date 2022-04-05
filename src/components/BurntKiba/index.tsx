@@ -14,6 +14,6 @@ export const BurntKiba = () => {
     const deadWalletKibaBalance = useKiba('0x000000000000000000000000000000000000dead')
 
     return (
-        deadWalletKibaBalance ? <Badge style={{background: 'url(https://media.istockphoto.com/photos/fire-flame-on-white-picture-id157379217?b=1&k=20&m=157379217&s=170667a&w=0&h=foQWGUhPBK9pKldhiy_U5k3S6hdqRuZTMYQg9t5wWCY=)', backgroundPosition: 'center center',backgroundSize: 'contain'}} variant={BadgeVariant.PRIMARY}> <Zap /> {abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</Badge> : null
+        deadWalletKibaBalance ? <Badge style={{backgroundPosition: 'center center',backgroundSize: 'contain'}} variant={BadgeVariant.DEFAULT}> <Zap /> {abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</Badge> : null
     )
 }

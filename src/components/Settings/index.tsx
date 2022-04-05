@@ -1,23 +1,24 @@
-import { t, Trans } from '@lingui/macro'
-import { useContext, useRef, useState } from 'react'
-import { Settings, X } from 'react-feather'
-import ReactGA from 'react-ga'
-import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
-import { ButtonError } from '../Button'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
+import { Settings, X } from 'react-feather'
+import { Trans, t } from '@lingui/macro'
+import styled, { ThemeContext } from 'styled-components/macro'
+import { useContext, useRef, useState } from 'react'
+import { useExpertModeManager, useSetAutoSlippage, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
+import { useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
+
+import { ApplicationModal } from '../../state/application/actions'
+import { AutoColumn } from '../Column'
+import { ButtonError } from '../Button'
+import Modal from '../Modal'
+import { Percent } from '@uniswap/sdk-core'
+import QuestionHelper from '../QuestionHelper'
+import ReactGA from 'react-ga'
+import { TYPE } from '../../theme'
+import { Text } from 'rebass'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import { Percent } from '@uniswap/sdk-core'
-import { useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -126,6 +127,8 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
   const [singleHopOnly, setSingleHopOnly] = useUserSingleHopOnly()
+  const [useAutoSlippage, setUseAutoSlippage] = useSetAutoSlippage()
+
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -206,6 +209,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
                   }
                 />
               </RowFixed>
+             
               <Toggle
                 id="toggle-expert-mode-button"
                 isActive={expertMode}
@@ -223,6 +227,29 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
               />
             </RowBetween>
             <RowBetween>
+            <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Use Auto Slippage</Trans>
+                </TYPE.black>
+                <QuestionHelper
+                  text={
+                    <Trans>Automatically calculate the lowest possible slippage on every swap you do. This is based on the token your trading and the smart contracts taxes.</Trans>
+                  }
+                />
+              </RowFixed>
+              <Toggle
+                id="toggle-auto-slippage"
+                isActive={useAutoSlippage}
+                toggle={() => {
+                  ReactGA.event({
+                    category: 'Routing',
+                    action: useAutoSlippage ? 'disable auto slippage' : 'enable auto slippage',
+                  })
+                  setUseAutoSlippage(!useAutoSlippage)
+                }}
+              />
+              </RowBetween>
+                <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Disable Multihops</Trans>
