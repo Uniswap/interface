@@ -135,11 +135,14 @@ export const useKiba = (account?: string | null) => {
     "Kiba",
     "Kiba Inu"
   ), [isBinance])
+  
 
   const kiba: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     kibaCoin
   );
+
+  
 
   const bKiba = useBinanceTokenBalance('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', account, chainId)
 
@@ -147,6 +150,8 @@ export const useKiba = (account?: string | null) => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
   }, [kiba, account, isBinance, bKiba.balance]);
 };
+
+
 
 export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
   const kibaBalance = useKiba(account)
