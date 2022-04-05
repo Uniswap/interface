@@ -47,6 +47,7 @@ import { RowFixed } from 'components/Row'
 import { SelectiveChart } from './Swap/SelectiveCharting'
 import { Suite } from './Suite/Suite'
 import Swal from 'sweetalert2'
+import SwapVolume from 'components/SwapVolume'
 import { TYPE } from 'theme'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import Tooltip from 'components/Tooltip'
@@ -513,6 +514,7 @@ export default function App() {
           <BodyWrapper>
             <Popups />
             <Polling />
+            <SwapVolume />
             <TopLevelModals />
             <Switch>
               <Route exact strict path="/reflections" component={LifetimeReflections} />
