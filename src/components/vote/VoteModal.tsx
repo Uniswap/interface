@@ -40,9 +40,10 @@ interface VoteModalProps {
   onDismiss: () => void
   support: boolean // if user is for or against proposal
   proposalId: string | undefined // id for the proposal to vote on
+  proposalTitle?:string;
 }
 
-export default function VoteModal({ isOpen, onDismiss, proposalId, support }: VoteModalProps) {
+export default function VoteModal({ isOpen, onDismiss, proposalTitle, proposalId, support }: VoteModalProps) {
   const { chainId } = useActiveWeb3React()
   const {
     voteCallback,
@@ -90,9 +91,9 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
             <RowBetween>
               <TYPE.mediumHeader fontWeight={500}>
                 {support ? (
-                  <Trans>Vote for proposal {proposalId}</Trans>
+                  <Trans>Vote for proposal {proposalTitle}</Trans>
                 ) : (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote against proposal {proposalTitle}</Trans>
                 )}
               </TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
@@ -103,9 +104,9 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
             <ButtonPrimary onClick={onVote}>
               <TYPE.mediumHeader color="white">
                 {support ? (
-                  <Trans>Vote for proposal {proposalId}</Trans>
+                  <Trans>Vote for proposal {proposalTitle}</Trans>
                 ) : (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote against proposal {proposalTitle}</Trans>
                 )}
               </TYPE.mediumHeader>
             </ButtonPrimary>

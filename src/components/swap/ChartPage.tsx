@@ -13,6 +13,7 @@ import { Dots } from './styleds';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import useInterval from 'hooks/useInterval';
 import Tooltip from 'components/Tooltip';
+import { LoadingRows } from 'pages/Pool/styleds';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -360,6 +361,16 @@ export const Chart = () => {
                                     border: '1px solid #222'
                                 }} />
                             </div>
+                            {(!isBinance && transactionData?.loading) || isBinance && binanceTransactionData.loading  && <LoadingRows>
+                                <div/>
+                                <div/>
+                                <div/>
+                                <div/>
+                                <div/>
+                                <div/>
+                                <div/>
+                                <div/>
+                                </LoadingRows>}
                             {!isBinance && transactionData?.data?.swaps?.length &&
                                 tokenData && tokenData?.priceUSD &&
                                 <div style={{
