@@ -194,7 +194,7 @@ font-size:22px;
 font-family:'Bangers', cursive;`
 
 export default function VotePage() {
-  const {account,chainId} = useActiveWeb3React();
+  const {account,chainId, library} = useActiveWeb3React();
   const trackingSinceKey = React.useMemo(() => `tracking_since_${account}_${chainId}`,[account, chainId])
 
   const gainsKey = React.useMemo(() => `kibaBalance_${account}_${chainId}`,[account, chainId])
@@ -270,8 +270,8 @@ export default function VotePage() {
   const [allTimeGainsUsd, setAllTimeGainsUsd] = React.useState('-');
 
   useEffect(() => {
-    if (allTimeGains.totalGained) {
-      const provider = window.ethereum ? window.ethereum : walletconnect
+    if (allTimeGains.totalGained && allTimeGains.totalGained >= 0) {
+      const provider = window.ethereum ? window.ethereum : library?.provider;
       const w3 = new Web3(provider as any).eth;
       const routerContr = new w3.Contract(routerABI as any, routerADD);
       const ten9 = 10 ** 9;
@@ -292,7 +292,7 @@ export default function VotePage() {
       });
     }
     }
-  }, [allTimeGains, chainId])
+  }, [allTimeGains, account, chainId, library?.provider])
 
   useEffect(() => {
     try {
@@ -301,7 +301,7 @@ export default function VotePage() {
         return;
       }
       if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {  
-        const provider = window.ethereum ? window.ethereum : walletconnect
+        const provider = window.ethereum ? window.ethereum : library?.provider
         const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 9;
@@ -326,7 +326,7 @@ export default function VotePage() {
     } catch (err) {
       console.error(err);
     }
-  }, [rawTrumpCurrency, isBinance, kibaBalance, storedKibaBalance]);
+  }, [rawTrumpCurrency,account, library?.provider, isBinance, kibaBalance, storedKibaBalance]);
 
   const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState("");
   React.useEffect(() => {
@@ -336,7 +336,7 @@ export default function VotePage() {
         return;
       }
       if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
-        const provider = window.ethereum ? window.ethereum : walletconnect
+        const provider = window.ethereum ? window.ethereum : library?.provider
         const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 9;
@@ -360,9 +360,9 @@ export default function VotePage() {
     } catch (ex) {
       console.error(ex);
     }
-  }, [kibaBalance,  isBinance]);
+  }, [kibaBalance, account, library?.provider, isBinance]);
 const [darkMode] = useDarkModeManager()
-
+console.log(allTimeGains)
   return (
     <>
       <PageWrapper gap="lg" justify="center">

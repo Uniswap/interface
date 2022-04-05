@@ -555,11 +555,16 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
   const QUERY = BSC_TOKEN_DATA(address)
   const QUERY_ONE = BSC_TOKEN_DATA_BY_BLOCK_ONE(address, blocks[0].number)
   // initialize data arrays
-  const queryOne = await request(INFO_CLIENT, QUERY)
-  const queryTwo = await request(INFO_CLIENT, QUERY_ONE)
+  const [queryOne, queryTwo] = await Promise.all(
+    [
+      request(INFO_CLIENT, QUERY),
+      request(INFO_CLIENT, QUERY_ONE)
+    ]
+  );
 
   const data = queryOne?.tokens[0]
   const oneDayData = queryTwo?.tokens[0];
+
   try {
     if (data
     ) {
@@ -617,7 +622,6 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
   } catch (e) {
     console.error(e)
   }
-  console.log(data)
   return data;
 }
 

@@ -17186,6 +17186,11 @@ react-marquee-slider@^1.1.5:
   resolved "https://registry.yarnpkg.com/react-marquee-slider/-/react-marquee-slider-1.1.5.tgz#5dc34c259071e513eb7c4084c405823233b28bb9"
   integrity sha512-eta0DSKMu8F+82O3zF4jlWdTTlsmJg3h8n12trqCndBYo5DAc07odVlfxSfSsEGcBEHYli12RehrK3EYc4LwrQ==
 
+react-onesignal@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-onesignal/-/react-onesignal-2.0.2.tgz#b6f5ecf4ef64589b77289678df629a2ac712168c"
+  integrity sha512-jirsWxaKkfoHN3OWNO1462jcWb+8GkIw1zpll7ErYhaYTsLaE789bsx2ZRfmS9bqabi6Of5U0xKdKlIwEfuzzg==
+
 react-popper@^2.2.3, react-popper@^2.2.5:
   version "2.2.5"
   resolved "https://registry.npmjs.org/react-popper/-/react-popper-2.2.5.tgz"

@@ -7,6 +7,7 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider} from "@apollo/client";
+
 import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import React, { useState } from 'react'
@@ -227,11 +228,11 @@ export const isHoneyPot =  (address:string, provider?: any)  => {
 }
 
 const HoneyPotDetector = () => {
-  const { account, chainId } = useWeb3React();
+  const { account, chainId, library } = useWeb3React();
   const kibaBalance = useKiba(account)
   const [msg, setMsg] = useState('')
   const [honeyData, setHoneyData] = React.useState<any>({})
-  const provider = window.ethereum ? window.ethereum : walletconnect
+  const provider = window.ethereum ? window.ethereum : library?.provider
   const web3 = new Web3(provider as any);
   const tokenData = useTokenData(msg)
   const [showTip, setShowTip] = React.useState(false)
@@ -270,7 +271,6 @@ const HoneyPotDetector = () => {
         from: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
         value: '0x' + val.toString(16),
         gas: '0x' + (45000000).toString(16),
-        gasPrice: 100,
         data: callData,
       }, 'latest', {
         '0x5bf62ec82af715ca7aa365634fab0e8fd7bf92c7': {
@@ -324,7 +324,7 @@ const HoneyPotDetector = () => {
         })
         .catch((err: any) => {
           if (err == 'Error: Returned error: execution reverted') {
-
+            
             return;
           }
           setHoneyData({ isHoneyPot: true, ran: true })
@@ -364,7 +364,7 @@ const HoneyPotDetector = () => {
           flexFlow:'row wrap'
         }}>
         {honeyData && honeyData['ran'] && honeyData['isHoneyPot'] && <div style={{ flexFlow:'row wrap',  display: 'flex' }}><Badge><AlertOctagon style={{color:'#FFF'}} /> &nbsp;HONEY POT DETECTED! {tokenData?.symbol && <>{tokenData?.name}({tokenData?.symbol}) is not safe.</>}</Badge> </div>}
-        {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <div style={{ textAlign: 'center', display: 'flex' }}><CheckCircle /> This is not a honey pot. </div>}
+        {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <Badge variant={BadgeVariant.POSITIVE} style={{ textAlign: 'center', display: 'flex' }}><CheckCircle /> This is not a honey pot. </Badge>}
         {honeyData && honeyData['ran'] && contractOwner && <div style={{ paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
         <div style={{ marginRight: '8px' }}>
           <Badge variant={contractOwner === '0x0000000000000000000000000000000000000000' ? BadgeVariant.POSITIVE : BadgeVariant.WARNING}>Ownership {contractOwner !== '0x0000000000000000000000000000000000000000' && <> NOT </>} Renounced &nbsp; <Tooltip show={showTip} text={<>{'The contract is owned by '} <a href={`https://etherscan.io/address/${contractOwner}`}>{contractOwner}</a> </>}> <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setTimeout(() => setShowTip(false), 1500)} /></Tooltip></Badge>
@@ -430,6 +430,25 @@ export default function App() {
     )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
   const {chainId,account,library} = useWeb3React()
+  React.useEffect (() => {
+    const confirmPassword = async () => {
+    const { isConfirmed, value } = await Swal.fire({
+      input:'password',
+      allowEscapeKey: false,
+      title: "Enter the password to use the KibaSwap Beta",
+      icon: 'question',
+      showConfirmButton: true,
+      showCancelButton: false,
+    })
+    if (!isConfirmed || value !== 'k1ba') {
+      alert("You've entered an incorect password. Redirecting you back to where you came from.");
+      window.location.href = 'https://coinmarketcap.com'
+    } else {
+      // let them play..
+    }
+  }
+  confirmPassword()
+  }, [])
   const GainsPage = (props:any) =>   <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>

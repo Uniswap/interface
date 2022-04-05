@@ -117,7 +117,6 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
       setUserSlippageTolerance('auto')
     } else {
       const parsed = Math.floor(Number.parseFloat(value) * 100)
-      console.log(parsed)
       if (!Number.isInteger(parsed) || parsed < 0 || parsed > 90000) {
         setUserSlippageTolerance('auto')
         if (value !== '.') {

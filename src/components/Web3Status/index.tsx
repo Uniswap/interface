@@ -267,7 +267,7 @@ export default function Web3Status() {
         onClick={async () => {
           await switchToNetwork({library, chainId: chainToSwitchTo, account: account as string})
         }}>
-          {chainId === 1 ? 'ETH' : 'BSC'} 
+          {[1, undefined].includes(chainId) ? 'ETH' : !!chainId && [56].includes(chainId)? 'BSC':'Connect'} 
           &nbsp; {chainId === 56 ? <ToggleRight/> : <ToggleLeft />} 
       </Badge>
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />

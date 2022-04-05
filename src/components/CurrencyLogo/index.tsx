@@ -39,20 +39,31 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const {chainId} = useWeb3React()
   const srcs: string[] = useMemo(() => {
-    console.log(currency)
     if (!currency || currency.isNative) return []
-
-    if (currency.isToken || (currency as any)?.id) {
-      let tokenAdd = currency?.address
-      if((currency as any)?.id && !currency?.address) tokenAdd = (currency as any)?.id
-      const defaultURL = [getTokenLogoURL(tokenAdd)] ;
-      const defaultUrls = chainId === 56 ? [`https://pancakeswap.finance/images/tokens/${tokenAdd}.png`] : defaultURL
-      if (currency instanceof WrappedTokenInfo) {
-        return [...uriLocations, ...defaultUrls]
+    const currencyObject = (currency as any);
+    if (currency.isToken || currencyObject?.id) {
+      let tokenAddress = (currency?.address);
+      if (currencyObject?.id && !tokenAddress) {
+        tokenAddress = currencyObject?.id
       }
-      return defaultUrls
+      const defaultURLs = [getTokenLogoURL(tokenAddress)];
+      const defaultUrls = chainId === 56 ? 
+        [ 
+          currency?.symbol?.toLowerCase()?.includes('safemoon') ?
+          `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLbVfJ-h_05UBkdvKyegU_KhVSmXiE9fzWpZLreSXBTmGHL4O7JmXqY0yw9rTweJDjGl8&usqp=CAU` : 
+          `https://pancakeswap.finance/images/tokens/${tokenAddress}.png`
+        ] : 
+        defaultURLs;
+
+      if (currency instanceof WrappedTokenInfo) {
+        return [
+          ...uriLocations, 
+          ...defaultUrls
+        ];
+      }
+      return defaultUrls;
     }
-    return []
+    return [];
   }, [currency, chainId, uriLocations])
 
   if (currency?.isNative) {
