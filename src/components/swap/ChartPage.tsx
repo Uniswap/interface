@@ -17,7 +17,7 @@ import moment from 'moment';
 import { number } from '@lingui/core/cjs/formats';
 import styled from 'styled-components/macro';
 import { system } from 'styled-system';
-import { useHasAccess } from 'components/AccountPage/AccountPage';
+import { useHasAccess } from 'pages/Account/AccountPage';
 import useInterval from 'hooks/useInterval';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useUserLocale } from 'state/user/hooks';
