@@ -203,6 +203,8 @@ console.log(address)
           const value:number | null = parsedAmounts?.INPUT?.currency.isNative ? 
           ((taxes?.buy ?? 0) + 1) : parsedAmounts?.OUTPUT?.currency.isNative ? 
           taxes.sell : 0;
+          // add 3% to the slippage calculated to account for any current volume
+          value += 3;
 const parsed = Math.floor(Number.parseFloat((value ?? '0').toString()) * 100)
 console.log(parsed)
 
