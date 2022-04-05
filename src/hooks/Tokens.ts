@@ -13,6 +13,7 @@ import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks
 
 import { useActiveWeb3React } from './web3'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { binanceTokens } from 'utils/binance.tokens'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -76,7 +77,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
       if (!list) continue
       for (const tokenInfo of list.tokens) {
         if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
-          const wrapped:any = new WrappedTokenInfo(tokenInfo, list)
+          const wrapped: any = new WrappedTokenInfo(tokenInfo, list)
           if (!(wrapped.address in activeTokens) && !addressSet[wrapped.address]) {
             addressSet[wrapped.address] = true
             result.push(wrapped)
@@ -118,8 +119,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
     ? str
     : // need to check for proper bytes string and valid terminator
     bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
-    ? parseBytes32String(bytes32)
-    : defaultValue
+      ? parseBytes32String(bytes32)
+      : defaultValue
 }
 
 // undefined if invalid or does not exist
@@ -175,11 +176,71 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
   ])
 }
 
+export function useBscToken(tokenAddress?: string): Token | undefined | null {
+  const { chainId } = useActiveWeb3React()
+  const tokens = useAllTokens()
+
+  const address = isAddress(tokenAddress)
+
+  const tokenContract = useTokenContract(address || undefined, false)
+  const tokenContractBytes32 = useBytes32TokenContract(address || undefined, false)
+  const token: Token | undefined = address ? tokens[address] : undefined
+
+  const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
+  const tokenNameBytes32 = useSingleCallResult(
+    token ? undefined : tokenContractBytes32,
+    'name',
+    undefined,
+    NEVER_RELOAD,
+  )
+  const symbol = useSingleCallResult(token ? undefined : tokenContract, 'symbol', undefined, NEVER_RELOAD)
+  const symbolBytes32 = useSingleCallResult(token ? undefined : tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
+  const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
+
+  return useMemo(() => {
+    if (token) return token
+    if (!chainId || !address) return undefined
+    if (decimals.loading || symbol.loading || tokenName.loading) return null
+    if (decimals.result) {
+      return new Token(
+        chainId,
+        address,
+        decimals.result[0],
+        parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
+        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token'),
+      )
+    }
+    return undefined
+  }, [
+    address,
+    chainId,
+    decimals.loading,
+    decimals.result,
+    symbol.loading,
+    symbol.result,
+    symbolBytes32.result,
+    token,
+    tokenName.loading,
+    tokenName.result,
+    tokenNameBytes32.result,
+  ])
+}
+export function useBinanceCurrency(currencyId: string | undefined): Currency | null | undefined {
+  const isBNB = currencyId?.toUpperCase() === 'BNB'
+  const isKiba = currencyId?.toLowerCase() === '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341'.toLowerCase()
+  const token = useBscToken(isBNB || isKiba ? undefined : currencyId)
+  if (!currencyId) return
+  return isBNB ? binanceTokens.bnb
+    : isKiba ? new Token(56, '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 9, 'KIBA', 'Kiba Inu') : token
+}
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'ETH'
-  const token = useToken(isETH ? undefined : currencyId)
+  const token = useToken(chainId === 1 ? (isETH ? undefined : currencyId) : undefined )
+  const binanceCurrency = useBinanceCurrency(chainId === 56 ? currencyId : undefined)
   const extendedEther = useMemo(() => (chainId ? ExtendedEther.onChain(chainId) : undefined), [chainId])
+  
+  if (chainId === 56) return binanceCurrency
   const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
   if (weth?.address?.toLowerCase() === currencyId?.toLowerCase()) return weth
   return isETH ? extendedEther : token
