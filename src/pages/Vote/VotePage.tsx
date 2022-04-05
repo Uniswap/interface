@@ -21,16 +21,9 @@ import { RowBetween } from "../../components/Row";
 import { SupportedChainId } from "constants/chains";
 import { SwitchLocaleLink } from "../../components/SwitchLocaleLink";
 import { Trans } from "@lingui/macro";
-import Badge, { BadgeVariant } from "components/Badge";
-import moment from "moment";
+import { Transactions } from "./TransactionsPage";
+import { USDC } from "../../constants/tokens";
 import Web3 from "web3";
-import { routerAbi, routerAddress, pancakeAbi, pancakeAddress } from "./routerAbi";
-import { walletconnect } from "connectors";
-import { useDarkModeManager } from "state/user/hooks";
-import { useWeb3React } from "@web3-react/core";
-import { SupportedChainId } from "constants/chains";
-import { useBinanceTokenBalance } from "utils/binance.utils";
-import { useTotalKibaGains } from '../../state/logs/utils'
 import { binanceTokens } from "utils/binance.tokens";
 import moment from "moment";
 import styled from "styled-components/macro";
