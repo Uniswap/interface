@@ -134,7 +134,7 @@ const VideoWrapper = styled.div`
 export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
 
-    if (!address) {
+    if (!address || address?.toLowerCase() === '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'.toLowerCase()) {
       return Promise.resolve(false);
     }
 
