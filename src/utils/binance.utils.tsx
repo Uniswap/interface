@@ -14,6 +14,7 @@ import _ from 'lodash';
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
 import { Interface } from '@ethersproject/abi'
 import { Pair } from '@uniswap/v2-sdk'
+import { gql, request } from 'graphql-request'
 const BUSD_MAINNET = binanceTokens.busd
 const WBNB = binanceTokens.wbnb;
 export function wrappedCurrency(currency: Currency | undefined, chainId: number | undefined): Token | undefined {
@@ -106,100 +107,86 @@ type UseTokenBalanceState = {
     }, [results, tokens])
   }
 
-/**
- * Returns the price in BUSD of the input currency
- * @param currency currency to compute the BUSD price of
- */
- export default function useBUSDPrice(currency?: Currency): Price<any, any> | undefined {
-    const { chainId } = useActiveWeb3React()
-    const wrapped = wrappedCurrency(currency, chainId)
-    const tokenPairs: [Currency | undefined, Currency | undefined][] = React.useMemo(
-      () => [
-        [chainId && wrapped && _.isEqual(WBNB, wrapped) ? undefined : currency, chainId ? WBNB : undefined],
-        [wrapped?.equals(BUSD_MAINNET) ? undefined : wrapped, chainId === 56 ? BUSD_MAINNET : undefined],
-        [chainId ? WBNB : undefined, chainId === 56 ? BUSD_MAINNET : undefined],
-      ],
-      [chainId, currency, wrapped],
-    )
-    const [[ethPairState, ethPair], [busdPairState, busdPair], [busdEthPairState, busdEthPair]] = usePairs(tokenPairs)
-  
-    return React.useMemo(() => {
-      if (!currency || !wrapped || !chainId) {
-        return undefined
-      }
-      // handle weth/eth
-      if (wrapped.equals(WBNB)) {
-        if (busdPair) {
-          const price = busdPair.priceOf(WBNB)
-          return new Price(currency, BUSD_MAINNET, price.denominator, price.numerator)
-        }
-        return undefined
-      }
-      // handle busd
-      if (wrapped.equals(BUSD_MAINNET)) {
-        return new Price(BUSD_MAINNET, BUSD_MAINNET, '1', '1')
-      }
-  
-      const ethPairETHAmount = ethPair?.reserveOf(WBNB)
-      const ethPairETHBUSDValue: any =
-        ethPairETHAmount && busdEthPair ? busdEthPair.priceOf(WBNB).quote(ethPairETHAmount).toFixed(0) : BigInt(0)
-  
-      // all other tokens
-      // first try the busd pair
-      if (
-        busdPairState === PairState.EXISTS &&
-        busdPair &&
-        busdPair.reserveOf(BUSD_MAINNET).greaterThan(ethPairETHBUSDValue)
-      ) {
-        const price = busdPair.priceOf(wrapped)
-        return new Price(currency, BUSD_MAINNET, price.denominator, price.numerator)
-      }
-      if (ethPairState === PairState.EXISTS && ethPair && busdEthPairState === PairState.EXISTS && busdEthPair) {
-        if (busdEthPair.reserveOf(BUSD_MAINNET).greaterThan('0') && ethPair.reserveOf(WBNB).greaterThan('0')) {
-          const ethBusdPrice = busdEthPair.priceOf(BUSD_MAINNET)
-          const currencyEthPrice = ethPair.priceOf(WBNB)
-          const busdPrice = ethBusdPrice.multiply(currencyEthPrice).invert()
-          return new Price(currency, BUSD_MAINNET, busdPrice.denominator, busdPrice.numerator)
-        }
-      }
-  
-      return undefined
-    }, [chainId, currency, ethPair, ethPairState, busdEthPair, busdEthPairState, busdPair, busdPairState, wrapped])
-  }
-export const useBinanceTokenBalance = (tokenAddress: string) => {
-    let interval:any = null;
+
+ const TokenBalanceContext = React.createContext({balance: 0, fetchStatus: 'not-fetched', setBalance: (balance: any ) => {return }})
+
+ export const TokenBalanceContextProvider = ({children}:{children:any}) => {
+  const { NOT_FETCHED, SUCCESS, FAILED } = FetchStatus
+   const {chainId} = useWeb3React()
+   
+   const [balance, setBalance] = React.useState({fetchStatus: NOT_FETCHED, balance: BigInt('0') as any})
+  return chainId && chainId === 1 ? <>{children}</> : (
+    <TokenBalanceContext.Provider value={{balance: balance.balance, fetchStatus: balance?.fetchStatus, setBalance: (b: any) => setBalance(b)}}>
+    {children}
+    </TokenBalanceContext.Provider>
+
+  )
+ }
+
+ export const useTokenBalanceContext = () => {
+   const context = React.useContext(TokenBalanceContext)
+   return context
+ }
+
+export const useBinanceTokenBalanceRefreshed = (tokenAddress: string, account?:string | null, chainId?: number) => {
     const { NOT_FETCHED, SUCCESS, FAILED } = FetchStatus
-    const [balanceState, setBalanceState] = React.useState<UseTokenBalanceState>({
-      balance: BigInt('0') as any,
-      fetchStatus: NOT_FETCHED,
-    })
-    const { account, chainId } = useWeb3React()
-  
+    const {balance, fetchStatus, setBalance} =useTokenBalanceContext()
     React.useEffect(() => {
       const fetchBalance = async () => {
         const contract = getBep20Contract(tokenAddress)
         try {
           const res = await contract.balanceOf(account)
-          setBalanceState({ balance: +new BigNumber(res.toString()).toFixed(0) / 10 ** 9, fetchStatus: SUCCESS })
+          setBalance({ balance: +new BigNumber(res.toString()).toFixed(0) / 10 ** 9, fetchStatus: SUCCESS })
         } catch (e) {
           console.error(e)
-          setBalanceState((prev) => ({
+          setBalance((prev:any) => ({
             ...prev,
             fetchStatus: FAILED,
           }))
         }
       }
-  
       if (account && chainId && chainId === 56) {
         fetchBalance()
-        if (null === interval) {
-          interval = setInterval(() => fetchBalance(), 60000)
-        }
       } 
-      return () => {
-        interval = null;
-      }
     }, [account, chainId, tokenAddress])
-    return balanceState
+    
+    return {
+      balance,
+      fetchStatus
+    }
   }
   
+
+export const useBinanceTokenBalance = (tokenAddress: string, account?: string | null, chainId?: number) => {
+  const { NOT_FETCHED, SUCCESS, FAILED } = FetchStatus
+  const previousStoredAccountKey = React.useMemo(() => 'previous_binance_' + account, [account])
+  const previousBalance = React.useMemo(() => localStorage.getItem(previousStoredAccountKey), [previousStoredAccountKey]);
+
+  const [balanceState, setBalanceState] = React.useState<UseTokenBalanceState>({
+    balance: previousBalance ? +previousBalance : BigInt('0') as any,
+    fetchStatus: NOT_FETCHED,
+  })
+
+  React.useEffect(() => {
+    const fetchBalance = async () => {
+      const contract = getBep20Contract(tokenAddress)
+      try {
+        const res = await contract.balanceOf(account)
+        setBalanceState({ balance: +new BigNumber(res.toString()).toFixed(0) / 10 ** 9, fetchStatus: SUCCESS })
+        localStorage.setItem(previousStoredAccountKey,(+new BigNumber(res.toString()).toFixed(0) / 10 ** 9).toString());
+      } catch (e) {
+        console.error(e)
+        setBalanceState((prev) => ({
+          ...prev,
+          fetchStatus: FAILED,
+        }))
+      }
+    }
+
+    if (account && chainId && chainId === 56) {
+      fetchBalance()
+    } 
+   
+  }, [account, chainId, tokenAddress])
+  return balanceState
+}
