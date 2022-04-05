@@ -424,7 +424,6 @@ export const ShowSellTaxComponent = () => {
 				const ten9 = 10 ** 9;
 				const amountsOut = routerContr.methods.originalPurchase(account)
 				amountsOut.call().then((response: any) => {
-					console.log(response)
 					setOriginalPurchaseDate(response);
 				});
 				// pseudo code

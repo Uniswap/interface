@@ -18,7 +18,6 @@ export const Suite = React.memo(() => {
   const { account } = useWeb3React()
   const kibaBalance = useKiba(account)
   const isHolder = React.useMemo(() => {
-    console.log(kibaBalance)
     return kibaBalance !== undefined ?  +kibaBalance?.toFixed(0) > 0 : false
   }, [kibaBalance])
 
