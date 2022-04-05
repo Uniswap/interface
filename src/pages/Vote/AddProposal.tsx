@@ -70,7 +70,7 @@ export const useProposalData =  () => {
     const [state, setState] = React.useState<Proposal[]>([])
 
     React.useEffect(() => {
-        axios.get<Proposal[]>(`http://localhost:7777/proposal`).then((res) => setState(res.data))
+        axios.get<Proposal[]>(`https://api.babytrumptoken.com/proposal`).then((res) => setState(res.data))
     }, [])
 
     return {state,setState}
@@ -112,7 +112,7 @@ export const AddProposal = () => {
     const isDark = useIsDarkMode()
     
     const onSave = () => {
-        axios.put<Proposal>(`http://localhost:7777/proposal`, added).then((response) => {
+        axios.put<Proposal>(`https://api.babytrumptoken.com/proposal`, added).then((response) => {
            window.location.href = `https://exchange.babytrumptoken.com/#/proposal/details/${response.data._id}`
         })
     }
