@@ -8,6 +8,7 @@ import { useAllTokens, useCurrency } from 'hooks/Tokens';
 
 import Badge from 'components/Badge';
 import { CardSection } from 'components/earn/styled';
+import { ChartSidebar } from 'components/ChartSidebar';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import { DarkCard } from 'components/Card';
 import { Dots } from 'pages/Pool/styleds';
@@ -133,8 +134,22 @@ export const SelectiveChart = () => {
     // this page will not use access denied, all users can view top token charts
     const accessDenied = false;
     const chainLabel = React.useMemo(() => chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
+    const [collapsed, setCollapsed] = React.useState(false)
     return (
-        <DarkCard style={{ maxWidth: 900, background: '#252632', display: 'flex', flexFlow: 'column wrap', borderRadius: 30 }}>
+        <DarkCard style={{ maxWidth: '100%', display:"grid", background: '#252632', gridTemplateColumns: (window.innerWidth <= 768) ? '100%' : collapsed ? '10% 90%' : '25% 75%',   borderRadius: 30 }}>
+            <div><ChartSidebar  collapsed={collapsed}
+                          onCollapse={setCollapsed}
+                          token={{
+                             name: (selectedCurrency as Currency).name as string,
+                             symbol: (selectedCurrency as Currency).symbol as string,
+                             decimals: (selectedCurrency as Currency).decimals.toString(),
+                             address: (selectedCurrency as Currency).wrapped.address
+                          }}
+                          tokenData={tokenData}
+                          chainId={chainId}
+                           />
+                           </div>
+            <div>
             <CardSection>
                 <StyledDiv style={{ marginBottom: 20, cursor: 'pointer' }} onClick={() => window.history.back()}><ChevronLeft /> Back</StyledDiv>
                 <StyledDiv>KibaCharts <BarChart /></StyledDiv>
@@ -242,6 +257,8 @@ export const SelectiveChart = () => {
                 </>)}
             {!!accessDenied && <CardSection>
                 <p style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p></CardSection>}
+                </div>
+
         </DarkCard>
     )
 }
