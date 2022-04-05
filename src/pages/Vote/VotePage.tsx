@@ -438,7 +438,7 @@ export default function VotePage({
                               {isTrackingGains && trumpGainsUSD && (
                                 <Badge style={{ paddingTop: 5 }}>
                                   <small>
-                                       <Trans>Total GAINS </Trans>
+                                       <Trans>Total GAINS</Trans>
                                   </small>&nbsp;
                                   {rawTrumpCurrency && +rawTrumpCurrency?.toFixed(0) > 0 ? trumpGainsUSD : '-'}
                                   <small>&nbsp;<Trans>USD</Trans></small>
