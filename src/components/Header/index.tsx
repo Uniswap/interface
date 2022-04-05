@@ -34,7 +34,7 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
-
+import logo from '../../assets/images/squeeze.png'
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
   grid-template-columns: 120px 1fr 120px;
@@ -287,7 +287,7 @@ export default function Header() {
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard()
-  const href = 'https://www.dextools.io/app/uniswap/pair-explorer/0x409de5926a8a6879a5ee3ff594ad76c11d88e921'
+  const href = 'https://www.dextools.io/app/uniswap/pair-explorer/https://www.dextools.io/app/ether/pair-explorer/0x506276d09f18db8d3ba93e39e9a1175fcc61c89d'
   const [width, setWidth] = useState<number>(window.innerWidth)
   function handleWindowSizeChange() {
     setWidth(window.innerWidth)
@@ -303,11 +303,7 @@ export default function Header() {
   const [showTip, setShowTip] = useState(false)
   const [darkmode] = useDarkModeManager()
 
-  const [coinGeckoData, setCGData] = React.useState<any>({})
-  React.useEffect(() => {
-      fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=baby-trump&order=market_cap_desc&per_page=100&page=1&sparkline=false`, {method: "GET"}).then((res) => res.json()) 
-      .then(response => setCGData(response[0]))
-  }, [])
+
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
@@ -319,7 +315,7 @@ export default function Header() {
           <UniIcon>
             <img
               width={isMobile ? '30px' : '100px'}
-              src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'}
+              src={logo}
               alt="logo"
             />
           </UniIcon>
@@ -351,20 +347,6 @@ export default function Header() {
             <sup>↗</sup>
           </StyledExternalLink>
 
-          <StyledNavLink
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setShowContracts(!showContracts)
-            }}
-            id={'contract-nav-link'}
-            to="//"
-          >
-            <small style={{ fontSize: 10, display: 'flex', alignItems: 'center' }}>
-              <Trans> Contracts </Trans>
-              {showContracts ? <ChevronUp /> : <ChevronDown />}
-            </small>
-          </StyledNavLink>
         </HeaderLinks>
 
         <HeaderControls>
@@ -450,27 +432,7 @@ export default function Header() {
               </Row>
             </Card>
           )}
-        {!isMobile &&   <HeaderElement style={{position:'fixed', bottom:10, left :'1%'}}>
-            <div style={{display:'flex', alignItems:'center'}}>
-            <img width="40px" src="https://babytrumptoken.com/images/Baby_Trump_Transpa.png" alt="logo" />
-                  {coinGeckoData && coinGeckoData?.price_change_percentage_24h > 0 && (
-                    <>
-                    <div style={{color:'green', display:'flex'}}>
-                        <ChevronUp style={{color:'#fff', fontSize:32}} />
-                    </div>
-                    {coinGeckoData.price_change_percentage_24h}% (24hrs)
-                  </>
-                  )}
-                  {coinGeckoData && coinGeckoData?.price_change_percentage_24h < 0 && (
-                    <>
-                    <div style={{color:'green', display:'flex'}}>
-                        <ChevronDown style={{color:'#fff', fontSize:32}} />
-                    </div>
-                    {coinGeckoData.price_change_percentage_24h}%
-                  </>
-                  )}
-                  </div>
-                 </HeaderElement>}
+  
           <HeaderElement style={{ marginRight: 15 }}>
             <IconWrapper
               onClick={(e) => {
