@@ -271,9 +271,9 @@ const babyTrumpBalance = useTrumpBalance(account);
                    <Monitor opacity={0.6} size={16} />
                    </InternalLinkMenuItem>
                  
-                 <MenuItem href="#">
+                 <MenuItem href="https://squeezestats.app">
                      <div>
-                      <Trans>SqueezeStats (COMING SOON)</Trans>
+                      <Trans>SqueezeStats</Trans>
                     </div> 
                     <BarChart2  opacity={0.6} size={16} />
                  </MenuItem>
