@@ -174,6 +174,13 @@ export default function VotePage({
     return moment(new Date(localStorage.getItem('trackingSince') as string)).fromNow()
   }, [localStorage.getItem('trackingSince')])
 
+  const stopTrackingGains = () => {
+    localStorage.setItem('trumpBalance', '0')
+    localStorage.setItem('stimulusBalance', '0')
+    localStorage.setItem('trackingSince', '')
+    setIsTrackingGains(false)
+  }
+
   const trackGains = () => {
     if (isTrackingGains) {
       localStorage.setItem('trumpBalance', '0')
@@ -187,7 +194,9 @@ export default function VotePage({
       setIsTrackingGains(true)
     } else {
       setIsTrackingGains(false)
-      alert(`Cannot track gains because you hold no baby trump token or stimulus token`)
+      alert(`Cannot track gains!
+             Sorry, we had an issue with connecting to ${account ? account : 'your accounts'} 
+             and retrieving your balance.`)
     }
   }
   const [showTool, setShowTool] = useState<boolean>(false)
@@ -196,6 +205,18 @@ export default function VotePage({
   const trackingLabel = useMemo(() => {
     return isTrackingGains ? 'Stop Tracking Gains' : 'Start Tracking Gains'
   }, [isTrackingGains])
+
+  useEffect(() => {
+    if (storedTrumpBalance && trumpBalance) {
+      if ((+storedTrumpBalance - +trumpBalance.toFixed(2)).toFixed(2) === trumpBalance.toFixed(2)) {
+        stopTrackingGains()
+      }
+    } else if (storedSimulusBalance && stimulusBalance) {
+      if ((+storedSimulusBalance - +stimulusBalance.toFixed(2)).toFixed(2) === stimulusBalance.toFixed(2)) {
+        stopTrackingGains()
+      }
+    }
+  }, [])
 
   return (
     <>
