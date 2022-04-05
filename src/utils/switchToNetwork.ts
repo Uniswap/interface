@@ -6,16 +6,17 @@ import Swal from 'sweetalert2'
 interface SwitchNetworkArguments {
   library: Web3Provider
   chainId: SupportedChainId
+  account?:string
 }
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
 // see https://github.com/rekmarks/EIPs/blob/3326-create/EIPS/eip-3326.md for more info on wallet_switchEthereumChain
-export async function switchToNetwork({ library, chainId }: SwitchNetworkArguments): Promise<null | void> {
+export async function switchToNetwork({ library, chainId, account }: SwitchNetworkArguments): Promise<null | void> {
   const switchFn = async () => {
     if (!library?.provider?.request) {
       return
     }
-    localStorage.removeItem('kibaBalance');
+    localStorage.removeItem('kibaBalance_' + account);
     const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
     return library?.provider.request({
       method: 'wallet_switchEthereumChain',
@@ -23,7 +24,7 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
     }).then(() => window.location.reload())
   }
 
-  const trackedValue = localStorage.getItem('kibaBalance');
+  const trackedValue = localStorage.getItem('kibaBalance_' + account);
   if (trackedValue) {
     const trackedValueParsed = parseFloat(trackedValue);
     if (trackedValueParsed > 0) {

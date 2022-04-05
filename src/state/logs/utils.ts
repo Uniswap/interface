@@ -202,6 +202,26 @@ export async function getBlockFromTimestamp(timestamp: number) {
   return result?.data?.blocks?.[0]?.number
 }
 
+
+export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceOld: any) {
+  const { chainId } = useActiveWeb3React()
+  const [tokenData, setTokenData] = React.useState<any>()
+  const prices = useBnbPrices()
+  const func = async ( ) => {
+     if (address && ethPrice && ethPriceOld && 
+      chainId === 1) {
+     await getTokenData(address, ethPrice, ethPriceOld).then(setTokenData)
+      } else if (address && chainId && chainId === 56) {
+        fetchBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices?.current, prices?.current).then(setTokenData)
+      }
+  }
+  React.useEffect(() => {
+    func()
+  }, [chainId, ethPriceOld, ethPrice, prices])
+  useInterval(func, 30000, false);
+  return tokenData
+}
+
 export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any) => {
   const utcCurrentTime = moment().utc()
   const utcOneDayBack = utcCurrentTime.subtract(24, 'hours').unix()
