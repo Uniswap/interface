@@ -383,9 +383,9 @@ export const Chart = () => {
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const [ethPrice, ethPriceOld] = useEthPrice()
-    const transactionData = useTokenTransactions('0x005D1123878Fc55fbd56b54C73963b234a64af3c', 60000)
+    const transactionData = useTokenTransactions('0x005D1123878Fc55fbd56b54C73963b234a64af3c'.toLowerCase(), 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
-    const binanceTransactionData = useBscTokenTransactions('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', 60000)
+    const binanceTransactionData = useBscTokenTransactions('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase(), 60000)
     const prices = useBnbPrices()
     const hasAccess = useHasAccess()
     const accessDenied = !hasAccess
@@ -396,9 +396,9 @@ export const Chart = () => {
             `UNISWAP:KIBAWETH`
     }, [chainId])
     const tokenDataAddress = React.useMemo(() => chainId === 1 ?
-        '0x005D1123878Fc55fbd56b54C73963b234a64af3c'
+        '0x005D1123878Fc55fbd56b54C73963b234a64af3c'.toLowerCase()
         : chainId === 56 ?
-            '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : '', [chainId])
+            '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase() : '', [chainId])
     const [tokenDataPriceParam, tokenDataPriceParamTwo] = React.useMemo(() => {
         const valueOne = chainId === 56 ? prices?.current : ethPrice;
         const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
