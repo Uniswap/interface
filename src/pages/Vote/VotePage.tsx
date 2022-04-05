@@ -219,9 +219,13 @@ export default function VotePage({
     if (storedTrumpBalance && trumpBalance) {
       if ((+storedTrumpBalance - +trumpBalance.toFixed(2)).toFixed(2) === trumpBalance.toFixed(2)) {
         stopTrackingGains()
+      } else if (+(+storedTrumpBalance - +trumpBalance.toFixed(2)).toFixed(2) < 0) {
+        stopTrackingGains()
       }
     } else if (storedSimulusBalance && stimulusBalance) {
       if ((+storedSimulusBalance - +stimulusBalance.toFixed(2)).toFixed(2) === stimulusBalance.toFixed(2)) {
+        stopTrackingGains()
+      } else if (+(+storedSimulusBalance - +stimulusBalance.toFixed(2)).toFixed(2) < 0) {
         stopTrackingGains()
       }
     }
@@ -260,6 +264,7 @@ export default function VotePage({
               <TYPE.black>
                 <Trans>
                   <Info /> &nbsp;
+                  
                   <small>
                     {`NOTE: Trump GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
                      In the future, we plan to build the ability to filter out transactions that are sells / transfers.`}
