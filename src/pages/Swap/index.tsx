@@ -390,6 +390,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 fiatValue={fiatValueInput ?? undefined}
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
+                showOnlyTrumpCoins={true}
                 showCommonBases={true}
                 id="swap-currency-input"
               />
@@ -409,6 +410,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
+                showOnlyTrumpCoins={true}
                 fiatValue={fiatValueOutput ?? undefined}
                 priceImpact={priceImpact}
                 currency={currencies[Field.OUTPUT]}
