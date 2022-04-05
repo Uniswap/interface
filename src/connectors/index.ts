@@ -53,6 +53,7 @@ export const walletconnect = new WalletConnectConnector({
   bridge: WALLETCONNECT_BRIDGE_URL,
   qrcode: true,
   pollingInterval: 15000,
+  infuraId: INFURA_KEY,
 })
 
 // mainnet only
@@ -67,10 +68,11 @@ export const portis = new PortisConnector({
   networks: [1],
 })
 
-export const UNISWAP_LOGO_URL = 'https://i.imgur.com/od70ynH.jpeg'
+export const UNISWAP_LOGO_URL = 'https://kiba.app/static/media/download.e893807d.png'
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
+ supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
   url: NETWORK_URLS[SupportedChainId.MAINNET],
   appName: 'KibaSwap',
   appLogoUrl: UNISWAP_LOGO_URL,
