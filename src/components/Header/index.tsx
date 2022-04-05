@@ -8,7 +8,7 @@ import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { darken } from 'polished'
 import React, { useState } from 'react'
-import { AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Circle, Clipboard, Info, Link, Settings } from 'react-feather'
+import { AlertOctagon, CheckCircle, Eye, EyeOff, ChevronDown, ChevronUp, Circle, Clipboard, Info, Link, Settings } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
@@ -330,7 +330,7 @@ export default function Header() {
     }
   }, [])
   const isMobile: boolean = width <= 768
-
+  const [showETHValue, setShowETHValue] = React.useState(!!localStorage.getItem('show_balance'))
   const [gas, setGas] = React.useState<any>()
   const [showNotify, setShowNotify] = React.useState(!!localStorage.getItem('subscribed') && localStorage.getItem('subscribed') !== 'false');
   React.useEffect(() => {
@@ -347,12 +347,13 @@ export default function Header() {
       } 
   }, [gas, showNotify])
   const promise = () => {
+    const error = (e:unknown) => console.error(e)
     console.log(`fetching gas prices`)
     fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
     .then((res) => res.json())
     .then((response) => {
       setGas(response)
-    })
+    }).catch(error)
   } 
   const onNotify = React.useCallback(() => {
     Swal.fire({
@@ -373,12 +374,17 @@ export default function Header() {
     })
   }, [showNotify])
 
+  const setEthBalanceVisisbleCallback = (visible: boolean ) => {
+    if (!visible) localStorage.removeItem('show_balance')
+    else localStorage.setItem('show_balance', visible.toString());
+    setShowETHValue(visible);
+  }
+
   const [showGasTt, setShowGasTt] = React.useState(false)
   useInterval(promise, 15000, true)
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
-        <ClaimModal />
         <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
           <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
         </Modal>
@@ -477,9 +483,14 @@ export default function Header() {
               </UNIWrapper>
             )}
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+            {!isMobile && (account && userEthBalance ? <small style={{position:'relative', left:5, cursor: 'pointer'}}> 
+              {showETHValue && <Eye style={{width: 19, height: 19}} onClick={() => setEthBalanceVisisbleCallback(!showETHValue)}  />}
+              {!showETHValue && <EyeOff style={{width: 19, height: 19}}  onClick={() => setEthBalanceVisisbleCallback(!showETHValue)} />}
+              </small> : null)}
               {account && userEthBalance ? (
                 <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                  <Trans>{userEthBalance?.toSignificant(3)} ETH</Trans>
+                  <Trans>{showETHValue ? userEthBalance?.toSignificant(3) : '...'} ETH</Trans>
+  
                 </BalanceText>
               ) : null}
               <Web3Status />
