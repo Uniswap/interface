@@ -264,16 +264,16 @@ const babyTrumpBalance = useTrumpBalance(account);
             default:
               return (
                 <MenuFlyout>
-                 <InternalLinkMenuItem to="/suite">
+                 <InternalLinkMenuItem to="#">
                  <div>
-                   <Trans>TrumpTools </Trans>
+                   <Trans>SqueezeTools (COMING SOON)</Trans>
                    </div>
                    <Monitor opacity={0.6} size={16} />
                    </InternalLinkMenuItem>
                  
-                 <MenuItem href="https://stats.babytrumptoken.com">
+                 <MenuItem href="#">
                      <div>
-                      <Trans>TrumpStats</Trans>
+                      <Trans>SqueezeStats (COMING SOON)</Trans>
                     </div> 
                     <BarChart2  opacity={0.6} size={16} />
                  </MenuItem>
@@ -283,25 +283,25 @@ const babyTrumpBalance = useTrumpBalance(account);
                     </div>
                     <Image opacity={0.6} size={16} />
                   </InternalMenuItemTwo>
-                  <MenuItem href="https://babytrumptoken.com/">
+                  <MenuItem href="https://twitter.com/SqueezeToken">
                     <div>
                       <Trans>About</Trans>
                     </div>
                     <Info opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://t.me/BabyTrumpETH/">
+                  <MenuItem href="https://t.me/squeezetoken/">
                     <div>
                       <Trans>Telegram</Trans>
                     </div>
                     <BookOpen opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://www.dextools.io/app/uniswap/pair-explorer/0x409de5926a8a6879a5ee3ff594ad76c11d88e921">
+                  <MenuItem href="https://www.dextools.io/app/uniswap/pair-explorer/0x506276d09f18db8d3ba93e39e9a1175fcc61c89d">
                     <div>
                       <Trans>Dextools</Trans>
                     </div>
                     <BarChart2 opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href={'https://twitter.com/BabyTrumpETH'}>
+                  <MenuItem href={'https://twitter.com/SqueezeToken'}>
                     <div>
                       <Trans>Twitter</Trans>
                     </div>
