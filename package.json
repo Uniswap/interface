@@ -1,6 +1,6 @@
 {
   "name": "@babytrump/interface",
-  "description": "BabyTrump Exchange",
+  "description": "Squeeze Exchange",
   "homepage": ".",
   "private": true,
   "devDependencies": {
