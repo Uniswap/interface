@@ -43,7 +43,10 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { ThemedBg } from './ThemedBg/ThemedBg'
 import Vote from './Vote'
+import { AddProposal } from './Vote/AddProposal'
+import { ProposalDetails } from './Vote/ProposalDetails'
 import { routerAbi, routerAddress } from './Vote/routerAbi'
+import { TrumpVote } from './Vote/TrumpVote'
 import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 const THEME_BG_KEY = 'themedBG';
@@ -160,11 +163,13 @@ export default function App() {
               <Route exact strict path="/themed-background" render={(props) => (
                 <ThemedBg theme={theme} setTheme={setThemeCb} />
               )} />
+              <Route exact strict path="/proposal/create" component={AddProposal} />
+              <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
               <Route exact strict path="/gains-tracker" component={GainsTracker} />
               <Route exact strict path="/suite" component={Suite} />
               <Route exact strict path="/gains" component={VotePage} />
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
-              <Route exact strict path="/vote" component={Vote} />
+              <Route exact strict path="/vote" component={TrumpVote} />
               <Route exact strict path="/vote/:governorIndex/:id" component={VotePageV2} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/uni" component={Earn} />
