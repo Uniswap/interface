@@ -1,3 +1,4 @@
+import { BnbPrices, useBnbPrices } from 'state/logs/bscUtils'
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ExternalLink, TYPE } from '../../theme'
@@ -11,11 +12,12 @@ import { Trans } from '@lingui/react'
 import _ from 'lodash'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../../state/application/hooks'
-import { useBnbPrices } from 'state/logs/bscUtils'
 import { useCurrency } from 'hooks/Tokens'
 import { useEthPrice } from 'state/logs/utils'
+import { useTotalSwapVolumeBnbToUsd } from 'pages/Vote/VotePage'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
+import { useWeb3React } from '@web3-react/core'
 import { utils } from 'ethers'
 
 const StyledEthPolling = styled.div`
@@ -103,12 +105,21 @@ export default function SwapVolume() {
     volumeInEthBn,
     volumeInUsd
   } = useTotalSwapVolume()
-  const prices = useBnbPrices()
-  const [ethPrice,,] = useEthPrice()
+  const {
+    chainId
+  } = useWeb3React()
+  const ethPrices=  useEthPrice()
+  const bnbPrices = useBnbPrices()
+  const prices = (chainId && chainId == 1 || !chainId) ? ethPrices: bnbPrices
+  const [swapVolumeInBUSD,setSwapVolumeInBusd] = useTotalSwapVolumeBnbToUsd()
+  const ethPrice = React.useMemo(() => chainId && chainId === 56 ? 
+  (bnbPrices as BnbPrices).current :
+  prices && Array.isArray(prices) ? prices[0] as any : undefined , [prices, bnbPrices, ethPrices, chainId])
+  console.log(bnbPrices, prices)
   return (
     <PollContainer>
     <StyledEthPolling>
-    {!ethPrice || isNaN(+ethPrice) ? (
+    {!prices || isNaN(+ethPrice) ? (
         <>
           <StyledPollingNumber>
             Loading..
@@ -120,7 +131,9 @@ export default function SwapVolume() {
       ) : (
         <>
           <StyledPollingNumber>
-            <span style={{ color: '#F76C1D' }}>ETH</span> {ethPrice && volumeInUsd !== 0 && <>(${(parseFloat(ethPrice.toString()).toFixed(2))} USD)</>}
+            {(chainId && chainId === 1 || (!chainId)) && <span style={{ color: '#F76C1D' }}>ETH</span>}
+            {(chainId && chainId === 56)  && <span style={{ color: '#F76C1D' }}>BNB</span>}
+             {(ethPrice || Number.isFinite(bnbPrices?.current)) &&  <>&nbsp; ${bnbPrices?.current !== undefined && !isNaN(bnbPrices?.current)? `${parseFloat(bnbPrices?.current?.toString()).toFixed(2)} USD` : `${parseFloat(ethPrice).toFixed(2)} USD`}</>}
           </StyledPollingNumber>
           <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
         </>
@@ -140,7 +153,14 @@ export default function SwapVolume() {
       ) : (
         <>
           <StyledPollingNumber>
-            <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ {volumeInUsd && volumeInUsd !== 0 && <>(${(abbreviateNumber(+volumeInUsd))} USD)</>}
+            <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ 
+            {chainId  && (chainId === 1 || !chainId) && <>
+              {volumeInUsd && volumeInUsd !== 0 && <>(${(abbreviateNumber(+volumeInUsd))} USD)</>}
+            </>}
+
+            {chainId  && (chainId === 56) && <>
+              {(swapVolumeInBUSD && swapVolumeInBUSD !== '0') && <>(${(((swapVolumeInBUSD as string)))} USD)</>}
+            </>}
           </StyledPollingNumber>
           <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
         </>
