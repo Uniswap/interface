@@ -140,9 +140,9 @@ export const useKiba = (account?: string | null) => {
     account ?? undefined,
     kibaCoin
   );
-  
-  const bKiba =  useBinanceTokenBalance('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', account, chainId)
-  
+
+  const bKiba = useBinanceTokenBalance('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', account, chainId)
+
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
   }, [kiba, account, isBinance, bKiba.balance]);
@@ -150,7 +150,7 @@ export const useKiba = (account?: string | null) => {
 
 export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
   const kibaBalance = useKiba(account)
-  const {library } = useWeb3React()
+  const { library } = useWeb3React()
   const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState('')
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const { routerADD, routerABI } = React.useMemo(() => {
@@ -177,21 +177,21 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
         const w3 = new Web3(provider as any).eth;
         const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 18;
-        const amount =  +kibaBalance.toFixed(0) * ten9;
+        const amount = +kibaBalance.toFixed(0) * ten9;
         if (amount > 0) {
-        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-          kibaCoin.address,
-          isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
-          isBinance ? binanceTokens.busd.address : USDC.address, 
-        ]);
-        amountsOut.call().then((response: any) => {
-          const usdc = response[response.length - 1];
-          const ten6 =  isBinance ? 10 ** 18 : 10 ** 6;
-          const usdcValue = usdc / ten6;
-          const number = Number(usdcValue.toFixed(2));
-          setKibaBalanceUSD(number.toLocaleString());
-        });
-      }
+          const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+            kibaCoin.address,
+            isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
+            isBinance ? binanceTokens.busd.address : USDC.address,
+          ]);
+          amountsOut.call().then((response: any) => {
+            const usdc = response[response.length - 1];
+            const ten6 = isBinance ? 10 ** 18 : 10 ** 6;
+            const usdcValue = usdc / ten6;
+            const number = Number(usdcValue.toFixed(2));
+            setKibaBalanceUSD(number.toLocaleString());
+          });
+        }
       }
     } catch (ex) {
       console.error(ex);
@@ -201,8 +201,8 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
 }
 
 export const useKibaRefreshedBinance = (account?: string | null, chainId?: number) => {
-  const  isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
-  const kibaCoin =React.useMemo(() =>  new Token(
+  const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
+  const kibaCoin = React.useMemo(() => new Token(
     1,
     isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
     18,
@@ -213,13 +213,13 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
   const kiba: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     kibaCoin
-  );  
+  );
 
-  const bKiba =  useBinanceTokenBalance('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', account, chainId)
-  
+  const bKiba = useBinanceTokenBalance('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', account, chainId)
+
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
-  }, [kiba,  isBinance, bKiba.balance  ]);
+  }, [kiba, isBinance, bKiba.balance]);
 };
 export const useStimulusBalance = (account?: string | null) => {
   const stimulusCoin = new Token(
@@ -246,89 +246,49 @@ font-size:22px;
 font-family:'Bangers', cursive;`
 
 export default function VotePage() {
-  const {account,chainId, library} = useActiveWeb3React();
-  const trackingSinceKey = React.useMemo(() => `tracking_since_${account}_${chainId}`,[account, chainId])
-
-  const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
-  const kibaCoin = new Token(
-    isBinance ? 56 : 1,
-    isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
-    isBinance ? 18 : 9,
-    "Kiba",
-    "Kiba Inu"
-  );
+  const { account, chainId } = useActiveWeb3React();
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
-  const storedKibaBalance = useMemo(() => {
-    return localStorage.getItem(gainsKey) || undefined;
-  }, [localStorage.getItem(gainsKey)]);
-
-  const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
-    storedKibaBalance !== undefined && +storedKibaBalance > 0 && !!account
-  );
-
-  const date = new Date();
-
-  const trackingSince = useMemo(() => {
-    return moment(
-      new Date(localStorage.getItem("trackingSince") as string)
-    ).fromNow();
-  }, [localStorage.getItem("trackingSince"), date]);
-
-  const allTimeGains = useTotalKibaGains(account)
-
   const kibaBalanceUSD = useKibaBalanceUSD(account ?? undefined, chainId)
-  
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
         <ProposalInfo>
-
-            <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaStats <Badge variant={BadgeVariant.DEFAULT}><GainsText>Beta</GainsText></Badge></GainsText></div>
-              {isTrackingGains && kibaBalance && +kibaBalance?.toFixed(0) > 0 && (
-                 <GreyCard style={{flexFlow: 'row nowrap', background:'transparent',opacity:'.95',display:'inline-block', justifyContent:'center', width: '100%', marginBottom:15}}> <TYPE.main>
-                      <GainsText style={{display:'inline'}}>
-                      <Clock style={{marginRight:5}} />
-                        STARTED {trackingSince} </GainsText>
-                  </TYPE.main>
-                 </GreyCard>
+          <div style={{ display: 'block', width: '100%', marginBottom: '2rem' }}>
+            <GainsText style={{ fontSize: 32 }}>KibaStats 
+              <Badge variant={BadgeVariant.DEFAULT}>
+                <GainsText>Beta</GainsText>
+              </Badge>
+            </GainsText>
+          </div>
+          <AutoColumn gap="50px">
+            <div style={{ display: "flex", alignItems: 'center', flexFlow: "row wrap" }}>
+              {!account && (
+                <TYPE.white>
+                  <Trans>
+                    Please connect wallet to start tracking your account.
+                  </Trans>
+                </TYPE.white>
               )}
-            <AutoColumn gap="50px">
-                <div style={{ display: "flex",alignItems:'center', flexFlow: "row wrap" }}>
-                  {!account && (
-                    <TYPE.white>
-                      <Trans>
-                        Please connect wallet to start tracking your account.
-                      </Trans>
-                    </TYPE.white>
-                  )}
-               
-
-              
-                  <div style={{ display:'flex', flexFlow:'column wrap', alignItems: "center" }}>
-
-                    <div style={{ alignItems: 'center', display:'flex', justifyContent:'space-between', width:'100%'}}>
-                    <TYPE.white>
-                
-                      <Trans>
-                        {kibaBalance !== undefined 
-                        && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0 )
-                          ? <div style={{alignItems:'center', marginBottom: 10, display:'flex'}}><GainsText style={{marginRight:10}}>Your Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.POSITIVE}>(${(kibaBalanceUSD)} USD) </Badge></span></div>
-                          : null}
-                      </Trans>
-                
-                    </TYPE.white>
-                      </div>
-                      <div style={{display:'block', width:'100%'}}>
-
-                    <BurntKiba showDetails />
-                      </div>
-
-                  </div>
+              <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: "center" }}>
+                <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <TYPE.white>
+                    <Trans>
+                      {kibaBalance !== undefined
+                        && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0)
+                        ? <div style={{ alignItems: 'center', marginBottom: 10, display: 'flex' }}><GainsText style={{ marginRight: 10 }}>Your Kiba Balance</GainsText> <span style={{ fontSize: 18 }}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} <Badge variant={BadgeVariant.POSITIVE}>(${(kibaBalanceUSD)} USD) </Badge></span></div>
+                        : null}
+                    </Trans>
+                  </TYPE.white>
                 </div>
-               
-            </AutoColumn>
-            <br/>
-          </ProposalInfo>
+                <div style={{ display: 'block', width: '100%' }}>
+                  <BurntKiba showDetails />
+                </div>
+              </div>
+            </div>
+          </AutoColumn>
+          <br />
+        </ProposalInfo>
       </PageWrapper>
       <SwitchLocaleLink />
     </>
