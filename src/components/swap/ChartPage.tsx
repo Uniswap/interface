@@ -446,7 +446,8 @@ export const Chart = () => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <StyledDiv style={{ color: "#fff" }}>
+                          
+                    <StyledDiv style={{ color: "#fff", display: 'flex', width: '100%', justifyContent: 'center'  }}>
                         You must own Kiba Inu tokens to use this feature!
                     </StyledDiv>
                 </div>}
