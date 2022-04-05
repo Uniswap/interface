@@ -1,15 +1,16 @@
-import { Web3Provider } from '@ethersproject/providers'
-import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from '../constants/chains'
+
+import { FortmaticConnector } from './Fortmatic'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { NetworkConnector } from './NetworkConnector'
 import { PortisConnector } from '@web3-react/portis-connector'
+import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from '../constants/chains'
+import { Web3Provider } from '@ethersproject/providers'
 import getLibrary from '../utils/getLibrary'
-import { FortmaticConnector } from './Fortmatic'
-import { NetworkConnector } from './NetworkConnector'
 
-const INFURA_KEY = 'd2fa5c13a5614503a43a8ca751e8a9d6'
+const INFURA_KEY = '0dc1a08777d746ff8af552d13ce42451'
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
