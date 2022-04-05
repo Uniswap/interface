@@ -9,7 +9,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { AlertOctagon, ArrowDown, ArrowLeft, CheckCircle, ChevronRight, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import React from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -59,6 +59,9 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { useTokenData } from 'state/logs/utils'
+import Modal from 'components/Modal'
+import { useKiba } from 'pages/Vote/VotePage'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -119,7 +122,6 @@ export default function Swap({ history }: RouteComponentProps) {
     currencies,
     inputError: swapInputError,
   } = useDerivedSwapInfo(toggledVersion)
-
   const {
     wrapType,
     execute: onWrap,
@@ -338,15 +340,21 @@ export default function Swap({ history }: RouteComponentProps) {
     },
     [onCurrencySelection]
   )
-
+  const [showChart, setShowChart] = React.useState(false)
+  const tokenData = useTokenData((currencies[Field.OUTPUT] as any)?.address ?? '')
+  
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
-    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
-    [onCurrencySelection]
+    (outputCurrency) => {
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+    },
+    [onCurrencySelection, tokenData]
   )
+
+  const kibaBalance = useKiba(account)
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
@@ -359,6 +367,8 @@ export default function Swap({ history }: RouteComponentProps) {
   font-family: 'Bangers', cursive;
   font-size:25px;
   `
+  const cannotUseFeature = !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0)
+  const filterKeys = (key:string)=> ['name', 'symbol', 'derivedETH', '__typename', 'totalLiquidityUSD', 'priceUSD', 'volumeChangeUT', 'liquidityChangeUSD', 'txnChange', 'oneDayData', 'twoDayData'].includes(key) === false;
  return (
     <>
       <TokenWarningModal
@@ -514,10 +524,32 @@ export default function Swap({ history }: RouteComponentProps) {
                 ) : null}
               </Row>
             )}
+            <div style={{display:'flex',justifyContent:'space-between'}}>
+            {tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu'  && window.location.href.includes('swap') && <p style={{cursor:'pointer',display:'flex', alignItems:'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
+                <Modal  onDismiss={() => setShowChart(false)} isOpen={showChart && tokenData && tokenData?.symbol &&  currencies[Field.OUTPUT]  && currencies[Field.OUTPUT]?.name === 'Kiba Inu' }> 
+              {!cannotUseFeature && <div style={{padding:15, display: 'grid', gridTemplateColumns: '575px 250px', gridColumnGap: 20, width: '100%' }}>
+                  <iframe src={`https://www.chartex.pro/?symbol=UNISWAP%3A${tokenData?.symbol}&interval=240&theme=dark`} style={{ display: 'block', border: '1px solid rgb(34, 34, 34)', width: '575px', height: 670, position: 'relative', top: 0 }}></iframe>
+                  <div style={{padding:'9px 14px',background:'#222', color:'#fff', borderRadius:6,display:'flex', flexFlow:'column wrap', gridColumnGap:50}}>
+                  <StyledDiv style={{width:'100%', display:'block', paddingTop:15, paddingBottom:5}}>{tokenData?.name} ({tokenData?.symbol})</StyledDiv>
 
+                    {Object.keys(tokenData).filter(filterKeys).map(key => (<StyledDiv key={key}>
+                      <small style={{fontSize:14,width:'100%', paddingBottom:5}}>{key}</small>
+                      <p style={{fontSize:12}}>{!isNaN(tokenData[key]) && +tokenData[key] >0   && Number(tokenData[key]).toLocaleString()}</p>
+                    </StyledDiv>))}
+                  </div>
+              </div>
+
+                  }
+
+                  {cannotUseFeature && <div style={{display:'flex', flexFlow:'row wrap'}}>
+                    <AlertOctagon /> You must hold Kiba Inu tokens to use this feature.
+                    </div>}
+             </Modal>
             {[currencies[Field.OUTPUT], currencies[Field.INPUT]].some(curr => curr?.name === 'Kiba Inu') && <div style={{display: 'flex', justifyContent: 'flex-end'}}>
             <ShowSellTaxComponent />
-</div>}
+            </div>}
+            </div>
+
             <div>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
