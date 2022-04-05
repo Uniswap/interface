@@ -268,6 +268,7 @@
     "react-is": "^17.0.2",
     "react-markdown": "^4.3.1",
     "react-marquee-slider": "^1.1.5",
+    "react-onesignal": "^2.0.2",
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.0.0",

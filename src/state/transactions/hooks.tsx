@@ -31,6 +31,7 @@ import { fetchBscTokenData, useBnbPrices, useBscTokenData } from 'state/logs/bsc
 import { getTokenData, useEthPrice } from 'state/logs/utils'
 import { useTokenHolderCount } from 'components/swap/ChartPage'
 import { DetailsModal } from 'components/swap/DetailsModal'
+import { useHasAccess } from 'components/AccountPage/AccountPage'
 type SortStateKey = 'asc' | 'desc' | undefined;
   type SortState = {
     network: SortStateKey,
@@ -451,7 +452,8 @@ export const FomoPage = () => {
   }, [data, sortState])
 
   const [showHpInfo, setShowHpInfo] = React.useState(false)
-  const accessDenied = React.useMemo(() => !account || !kibaBalance || +kibaBalance?.toFixed(0) <= 0, [kibaBalance, account])
+  const hasAccess = useHasAccess()
+  const accessDenied = !hasAccess
   const helpTipText = `The honeypot checker will automatically run for the tokens listed to the current connected network. Currently connected to ${chainId && chainId === 1 ? 'Ethereum Mainnet' : chainId && chainId === 56 ? 'Binance Smart Chain' : ''}`;
   const infoTipText = `KibaFomo is auto-refreshing every 30 seconds to go and fetch the latest listed tokens. \r\n\r\nEvery token listed below has been ran through our smart-contract honey pot checks, to determine if it allows for buying and selling. \r\n\r\nThis is an experimental feature. Use at your own risk.`
   const [modalShowing, setModalShowing] = React.useState<any>()
