@@ -2,6 +2,8 @@ import 'setimmediate'
 
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { Header as DialogHeader } from 'lib/components/Dialog'
+import TokenSelect from 'lib/components/TokenSelect'
 import { loadingTransitionCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -10,7 +12,6 @@ import Button from '../Button'
 import Column from '../Column'
 import { DecimalInput } from '../Input'
 import Row from '../Row'
-import TokenSelect from '../TokenSelect'
 
 const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
@@ -120,6 +121,7 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
+        <DialogHeader title={<Trans>Select a token</Trans>} />
         <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onSelect} />
       </TokenInputRow>
       {children}

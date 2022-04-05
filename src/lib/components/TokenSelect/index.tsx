@@ -8,7 +8,7 @@ import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import Column from '../Column'
-import Dialog, { Header } from '../Dialog'
+import Dialog from '../Dialog'
 import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
@@ -69,57 +69,45 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
-  const listHasTokens = useMemo(() => {
-    const filteredList = tokens.filter((token) => !token.isNative)
-    return filteredList.length > 0 && !query
-  }, [query, tokens])
+  const listHasTokens = useMemo(() => {}, [])
 
-  const Body = useCallback(() => {
-    if (listHasTokens || !isLoaded) {
-      return (
-        <>
-          <Column gap={0.75}>
-            <Row pad={0.75} grow>
-              <ThemedText.Body1>
-                <SearchInput
-                  value={query}
-                  onChange={setQuery}
-                  placeholder={t`Search by token name or address`}
-                  onKeyDown={options?.onKeyDown}
-                  onBlur={options?.blur}
-                  ref={input}
-                />
-              </ThemedText.Body1>
-            </Row>
-            <Rule padded />
-          </Column>
-          {isLoaded ? (
-            tokens.length ? (
-              <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
-            ) : (
-              <Column padded>
-                <Row justify="center">
-                  <ThemedText.Body1 color="secondary">
-                    <Trans>No results found.</Trans>
-                  </ThemedText.Body1>
-                </Row>
-              </Column>
-            )
+  if (listHasTokens || !isLoaded) {
+    return (
+      <>
+        <Column gap={0.75}>
+          <Row pad={0.75} grow>
+            <ThemedText.Body1>
+              <SearchInput
+                value={query}
+                onChange={setQuery}
+                placeholder={t`Search by token name or address`}
+                onKeyDown={options?.onKeyDown}
+                onBlur={options?.blur}
+                ref={input}
+              />
+            </ThemedText.Body1>
+          </Row>
+          <Rule padded />
+        </Column>
+        {isLoaded ? (
+          tokens.length ? (
+            <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
           ) : (
-            <TokenOptionsSkeleton />
-          )}
-        </>
-      )
-    }
-    return <NoTokensAvailableOnNetwork />
-  }, [isLoaded, listHasTokens, onSelect, options?.blur, options?.onKeyDown, query, tokens])
-
-  return (
-    <>
-      <Header title={<Trans>Select a token</Trans>} />
-      <Body />
-    </>
-  )
+            <Column padded>
+              <Row justify="center">
+                <ThemedText.Body1 color="secondary">
+                  <Trans>No results found.</Trans>
+                </ThemedText.Body1>
+              </Row>
+            </Column>
+          )
+        ) : (
+          <TokenOptionsSkeleton />
+        )}
+      </>
+    )
+  }
+  return <NoTokensAvailableOnNetwork />
 }
 
 interface TokenSelectProps {
