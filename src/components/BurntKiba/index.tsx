@@ -4,16 +4,19 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import { CardBGImage, CardNoise, CardSection } from 'components/earn/styled'
 import { LinkStyledButton, StyledInternalLink } from 'theme'
-import { useKiba, useKibaBalanceUSD } from 'pages/Vote/VotePage'
+import { useKiba, useKibaBalanceUSD, useTotalSwapVolumeBnbToUsd } from 'pages/Vote/VotePage'
 
 import { AutoColumn } from 'components/Column'
 import Confetti from 'components/Confetti'
 import { DarkCard } from 'components/Card'
+import Lottie from 'react-lottie';
 import React from 'react'
 import { SupportedChainId } from 'constants/chains'
 import { Wrapper } from 'pages/Pool/styleds'
 import {Zap} from 'react-feather'
 import _ from 'lodash'
+import { alignItems } from 'styled-system';
+import animationData from '../../../src/lotties/fire.json';
 import styled from 'styled-components/macro'
 import { useBlockNumber } from 'state/application/hooks';
 import { useCurrency } from 'hooks/Tokens'
@@ -22,10 +25,6 @@ import useInterval from 'hooks/useInterval';
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
-import Lottie from 'react-lottie';
-import animationData from '../../../src/lotties/fire.json';
-import { alignItems } from 'styled-system';
-
 
 export const useTotalSwapVolume = () => {
   const relayer = useV2RouterContract()
@@ -105,6 +104,7 @@ volumeInEth,
 volumeInEthBn,
 volumeInUsd
     } = useTotalSwapVolume()
+    const [volume, setVolume] = useTotalSwapVolumeBnbToUsd()
     return (
         deadWalletKibaBalance ? 
         showDetails ? 
@@ -125,8 +125,13 @@ volumeInUsd
             </div>
             {true && (
             <div>
-              <h1>Total Swap Volume (in {isBinance ? "BSC" : "ETH"})</h1>
-              <p><Badge>{volumeInEth} {isBinance ? "BNB" :"ETH"} {volumeInUsd && volumeInUsd !== 0 && <> (${volumeInUsd} USD)</>}</Badge></p>
+              <h1>Total Swap Volume (in {isBinance ? "BNB" : "ETH"})</h1>
+              <p><Badge>{volumeInEth} {isBinance ? "BNB" :"ETH"} 
+              {!isBinance && <>{volumeInUsd && volumeInUsd !== 0 && <> (${volumeInUsd} USD)</>}</>}
+              {isBinance && <>{volume && volume !== '0' && <> (${volume} USD)</>}</>}
+
+              </Badge>
+              </p>
             </div>
             )}
             </DarkCard> 
