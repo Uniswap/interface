@@ -5,7 +5,6 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
-import squeezeLogo from '../../assets/images/logo.png'
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
@@ -52,10 +51,10 @@ export default function CurrencyLogo({
   if (currency?.isNative) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />
   }
-
+  
 
   if (currency?.address?.toLowerCase() === '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'.toLowerCase())
-  return <StyledLogo size={size} srcs={['https://i.gyazo.com/27d5b738ac3276e87c1daafe803e2af8.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+  return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/19525/large/2021-11-13-18-11-18-removebg-preview.png?1636989110']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
   
   
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
