@@ -35,9 +35,7 @@ const ConfirmOrLoadingWrapper = styled.div<{ activeBG: boolean }>`
   width: 100%;
   padding: 24px;
   position: relative;
-  background: ${({ activeBG }) =>
-    activeBG &&
-    'radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(255, 0, 122, 0.2) 0%, rgba(33, 114, 229, 0.2) 100%), #FFFFFF;'};
+  background: #252632;
 `
 
 const ConfirmedIcon = styled(ColumnCenter)`
