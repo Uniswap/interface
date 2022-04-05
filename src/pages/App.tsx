@@ -1,38 +1,40 @@
-import { AccountPage, AccountPageWithAccount } from './Account/AccountPage'
+import { AccountPage, AccountPageWithAccount } from 'components/AccountPage/AccountPage'
 import { AlertCircle, AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Globe, Info } from 'react-feather'
 import {
   ApolloClient,
-
-  ApolloProvider,
-  InMemoryCache
-} from "@apollo/client";
-import Badge, { BadgeVariant } from 'components/Badge'
-import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
-import { ExternalLinkIcon } from 'theme'
-
+  InMemoryCache,
+  ApolloProvider} from "@apollo/client";
 import logo from '../assets/images/download.png'
 import btok from '../assets/sponsors/btok2.svg' 
 import bg4 from '../assets/images/bg4.jpg' 
 import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
-import { DarkCard, DarkGreyCard } from 'components/Card'
-import { FomoPage, LimitOrders } from 'state/transactions/hooks'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { useState } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
+import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
 import AddLiquidity from './AddLiquidity'
 import { AddProposal } from './Vote/AddProposal'
+import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import AppBody from './AppBody'
+import { ApplicationModal } from '../state/application/actions'
 import { AutoColumn } from 'components/Column'
+import { CardSection } from 'components/earn/styled'
 import CreateProposal from './CreateProposal'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
+import Earn from './Earn'
 import ErrorBoundary from '../components/ErrorBoundary'
+import { FavoritesPanel } from 'components/FavoritesPanel'
 import { Flex } from 'rebass'
 import { GainsTracker } from './GainsTracker/GainsTracker'
+import Header from '../components/Header'
+import { HoneyPotBsc } from './HoneyPotBsc'
 import { LifetimeReflections } from './Swap/LifetimeReflections'
+import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -48,10 +50,20 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { RowFixed } from 'components/Row'
+import { SelectiveChart } from './Swap/SelectiveCharting'
+import { Suite } from './Suite/Suite'
+import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { AddProposal } from './Vote/AddProposal'
+import { ProposalDetails } from './Vote/ProposalDetails'
+import { TrumpVote } from './Vote/TrumpVote'
+import VotePage from './Vote/VotePage'
+import { useKiba } from './Vote/VotePage'
+import VotePageV2 from './Vote/VotePageV2'
+import cart from '../assets/sponsors/cryptocart.svg'
 import Swal from 'sweetalert2'
-import SwapVolume from 'components/SwapVolume'
-import { TYPE } from 'theme'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
+import Tooltip from 'components/Tooltip'
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
 import TopTokenMovers from 'components/swap/TopMovers'
 import { Transactions } from './Vote/TransactionsPage'
@@ -61,21 +73,15 @@ import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 import Web3 from 'web3'
 import Web3ReactManager from '../components/Web3ReactManager'
-import cart from '../assets/sponsors/cryptocart.svg'
 import { getTokenTaxes } from './HoneyUtils'
 import { isAddress } from 'utils'
+import logo from '../assets/images/download.png'
 import styled from 'styled-components/macro'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
-import { HoneyPotBsc } from 'components/HoneyPotBSC';
-import { SelectiveChart } from './Swap/SelectiveCharting';
-import { Suite } from './Suite/Suite';
-import { CardSection } from 'components/earn/styled';
-import Header from 'components/Header';
-import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
-import Tooltip from 'components/Tooltip';
+import { walletconnect } from 'connectors'
 
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
@@ -85,7 +91,7 @@ const AppWrapper = styled.div`
   background-repeat: no-repeat;
   position: absolute;
   height: 150vh; 
-  width: 100%;
+  width: 100vw;
   background: url(${bg4}) ;
   align-items: flex-start;
   > * {
@@ -140,7 +146,7 @@ const VideoWrapper = styled.div`
 export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
 
-    if (!address || address?.toLowerCase() === '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'.toLowerCase()) {
+    if (!address) {
       return Promise.resolve(false);
     }
 
@@ -359,8 +365,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
     </div>
     <RowFixed style={{ maxWidth: 600, width: "100%", padding: 20 }} >
       {hasInvalidPermissions === false &&
-        <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
-          <label>Input a contract address to check if its a honeypot <Badge variant={BadgeVariant.PRIMARY}>MUST BE ETH Contract Address</Badge></label>
+        <AutoColumn style={{ maxWidth: 600, width: "100%"}} gap={'md'}>
+          <label>Input a contract address to check if its a honeypot</label>
           <input style={{ padding: 8, width: '100%', marginBottom: 5 }} type={'search'} placeholder={"Input a contract address to check if a honeypot"} onChange={e => runCheck(e.target.value)} />
         </AutoColumn>
       }
@@ -432,8 +438,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
                     <>
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.rate.toFixed(12)}</Badge></div>
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Volume (24h)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.volume24h.toLocaleString()}</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Total Supply</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{(tokenInfo.totalSupply / 10 ** tokenInfo.decimals).toLocaleString()}</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Market Cap</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${((tokenInfo.totalSupply / 10 ** tokenInfo.decimals) * tokenInfo.price.rate).toLocaleString()}  </Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Total Supply</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{(tokenInfo.totalSupply / 10 ** 9).toLocaleString()}</Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Market Cap</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${((tokenInfo.totalSupply / 10 ** 9) * tokenInfo.price.rate).toLocaleString()}  </Badge></div>
 
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (24hr)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff}%</Badge></div>
                     <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (1 week)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff7d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff7d}%</Badge></div>
@@ -519,7 +525,6 @@ export default function App() {
           <BodyWrapper>
             <Popups />
             <Polling />
-            <SwapVolume />
             <TopLevelModals />
             <Switch>
               <Route exact strict path="/reflections" component={LifetimeReflections} />
@@ -537,7 +542,7 @@ export default function App() {
               <Route exact strict path="/tracker" component={GainsTracker} />
               <Route exact strict path="/suite" component={Suite} />
               <Route exact strict path="/transactions" component={Transactions} />
-              <Route exact strict path="/dashboard" component={GainsPage} />
+              <Route exact strict path="/gains" component={GainsPage} />
               <Route exact strict path="/honeypot-checker" component={HoneyPotDetector} />
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
               <Route exact strict path="/vote" component={Vote} />

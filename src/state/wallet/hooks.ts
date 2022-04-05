@@ -1,19 +1,21 @@
-import { Currency, Token, CurrencyAmount, Ether } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
+
+import ERC20ABI from 'abis/erc20.json'
+import { Interface } from '@ethersproject/abi'
 import JSBI from 'jsbi'
-import { useMemo } from 'react'
+import React from 'react'
+import { SupportedChainId } from 'constants/chains'
 import { UNI } from '../../constants/tokens'
+import bep20abi from '../../utils/bep20abi.json'
+import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens } from '../../hooks/Tokens'
+import { useMemo } from 'react'
 import { useMulticall2Contract } from '../../hooks/useContract'
-import { isAddress } from '../../utils'
-import { useUserUnclaimedAmount } from '../claim/hooks'
-import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
-import { Interface } from '@ethersproject/abi'
-import ERC20ABI from 'abis/erc20.json'
-import { SupportedChainId } from 'constants/chains'
-import bep20abi from '../../utils/bep20abi.json'
-import React from 'react'
+import { useUserUnclaimedAmount } from '../claim/hooks'
+
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
