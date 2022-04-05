@@ -1,19 +1,19 @@
-import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { arrayify } from 'ethers/lib/utils'
-import { useMemo } from 'react'
-import { createTokenFilterFunction } from '../components/SearchModal/filtering'
 import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
-import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
-import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { useUserAddedTokens } from '../state/user/hooks'
-import { isAddress } from '../utils'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
-
-import { useActiveWeb3React } from './web3'
+import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
+
+import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
+import { arrayify } from 'ethers/lib/utils'
 import { binanceTokens } from 'utils/binance.tokens'
+import { createTokenFilterFunction } from '../components/SearchModal/filtering'
+import { isAddress } from '../utils'
+import { parseBytes32String } from '@ethersproject/strings'
+import { useActiveWeb3React } from './web3'
+import { useMemo } from 'react'
+import { useUserAddedTokens } from '../state/user/hooks'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -227,11 +227,11 @@ export function useBscToken(tokenAddress?: string): Token | undefined | null {
 }
 export function useBinanceCurrency(currencyId: string | undefined): Currency | null | undefined {
   const isBNB = currencyId?.toUpperCase() === 'BNB'
-  const isKiba = currencyId?.toLowerCase() === '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5'.toLowerCase()
+  const isKiba = currencyId?.toLowerCase() === '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase()
   const token = useBscToken(isBNB || isKiba ? undefined : currencyId)
   if (!currencyId) return
   return isBNB ? binanceTokens.bnb
-    : isKiba ? new Token(56, '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', 9, 'KIBA', 'Kiba Inu') : token
+    : isKiba ? new Token(56, '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5', 9, 'KIBA', 'Kiba Inu') : token
 }
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
