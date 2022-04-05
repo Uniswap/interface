@@ -364,6 +364,8 @@ export default function VotePage({
       });
     }
   }, [rawStimulusCurrency, stimulusBalance, storedSimulusBalance]);
+
+  const [showTGoldTool, setShowTGoldTool] = useState(false)
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -535,6 +537,76 @@ export default function VotePage({
               </GreyCard>
             </AutoColumn>
             <br />
+
+            <AutoColumn style={{marginBottom:15}} gap="2em">
+              <GreyCard>
+                
+                <div style={{ display: "flex", flexFlow: "row wrap" }}>
+                  {!account && (
+                    <Trans>{`Connect your wallet to start tracking gains`}</Trans>
+                  )}
+                  {!account && <h1>YOUR GAINS</h1>}
+                  <div>
+                  <h1 style={{textAlign:'center', width:'100%'}}>COMING SOON</h1>
+
+                    <img
+                      src={
+                        "https://babytrumptoken.com/images/Trump_Gold_Coin_Gecko.png"
+                      }
+                      width="100px"
+                    />
+                  </div>
+                  <CardSection style={{ marginTop: 40, alignItems: "center" }}>
+                    <TYPE.black>
+                      <Trans>
+                        {" "}
+                        {formattedStim() !== undefined &&
+                          `Trump Gold Balance -`}{" "}
+                      </Trans>
+                    </TYPE.black>
+                    {isTrackingGains === true && (
+                      <TYPE.main>
+                        {storedSimulusBalance !== undefined &&
+                          stimulusBalance !== undefined &&
+                          account !== undefined && (
+                            <React.Fragment>
+                              <ArrowUp /> &nbsp;
+                              <Trans>
+                                {`TGOLDGAINS`} &nbsp;
+                                {`-`}
+                              </Trans>
+                              <span style={{ marginLeft: 50 }}>
+                                <Tooltip text={"Trump Gold is a governance token that allows holders to create propositions community members can vote on"} show={showTGoldTool}>
+                                  <Info
+                                    onMouseEnter={() => setShowTGoldTool(true)}
+                                    onMouseLeave={() => setShowTGoldTool(false)}
+                                  />
+                                </Tooltip>
+                              </span>
+                            </React.Fragment>
+                          )}
+                      </TYPE.main>
+                    )}
+                    {stimulusBalance !== undefined &&
+                      trumpBalance !== undefined &&
+                      +stimulusBalance.toFixed(2) > 0 &&
+                      +trumpBalance.toFixed(2) > 0 && (
+                        <Row>
+                          <Column>
+                            <Badge>
+                                <TYPE.black>
+                                  <small>Total GAINS</small>&nbsp;
+                                  -
+                                  <small>&nbsp;USD</small>
+                                </TYPE.black>
+                            </Badge>
+                          </Column>
+                        </Row>
+                      )}
+                  </CardSection>
+                </div>
+              </GreyCard>
+            </AutoColumn>
             <AutoColumn gap="50px">
               <ButtonPrimary onClick={trackGains}>
                 {trackingLabel}
