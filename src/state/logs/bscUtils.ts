@@ -349,7 +349,7 @@ export const useBnbPrices = (): BnbPrices | undefined => {
     });
   }, [prices])
 
-  useInterval(fetch, 15000, true)
+  useInterval(fetch, 60000, true)
   return prices
 }
 export const mapMints = (mint: any) => {
@@ -489,6 +489,85 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
   }
   return data
 }
+
+
+export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld: any) => {
+  const address = addy?.toLowerCase()
+  const utcCurrentTime = moment().utc()
+  
+  const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
+  const utcTwoDaysBack = utcCurrentTime.subtract(2, 'days').unix()
+ 
+  const QUERY_ONE = BSC_TOKEN_DATA(address)
+
+  // initialize data arrays
+  const queryOne = await request(INFO_CLIENT, QUERY_ONE)
+
+  const one =  queryOne.data
+  const data = one?.tokens[0];
+
+
+  try {
+    if (data
+      ) {
+      // calculate percentage changes and daily changes
+      const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
+        +data?.tradeVolumeUSD ?? 0,
+         0,
+         0
+      )
+
+      // calculate percentage changes and daily changes
+      const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
+        +data?.untrackedVolumeUSD,
+         0,
+         0
+      )
+
+      // calculate percentage changes and daily changes
+      const [oneDayTxns, txnChange] = get2DayPercentChange(
+        +data?.totalTransactions,
+        0,
+         0
+      )
+
+      const priceChangeUSD = getPercentChange(
+        +data?.derivedBNB * (+ethPrice),
+        0
+      )
+
+      const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedBNB
+      const oldLiquidityUSD = 0
+
+      // set data
+      data.txCount = +data.totalTransactions
+      data.priceUSD = (((+data?.derivedBNB) * (+ethPrice)))
+      data.totalLiquidityUSD = currentLiquidityUSD
+      data.oneDayVolumeUSD = oneDayVolumeUSD
+      data.volumeChangeUSD = volumeChangeUSD
+      data.priceChangeUSD = priceChangeUSD
+      data.oneDayVolumeUT = oneDayVolumeUT
+      data.volumeChangeUT = volumeChangeUT
+      const liquidityChangeUSD = getPercentChange(+currentLiquidityUSD ?? 0, +oldLiquidityUSD ?? 0)
+      data.liquidityChangeUSD = liquidityChangeUSD
+      data.oneDayTxns = oneDayTxns
+      data.txnChange = txnChange
+      data.oneDayData = undefined
+      data.twoDayData = undefined
+      data.isBSC = true;
+      // new tokens
+      if (data) {
+        data.oneDayVolumeUSD = data?.tradeVolumeUSD
+        data.oneDayVolumeETH = +data?.tradeVolume * +data?.derivedBNB
+        data.oneDayTxns = data?.totalTransactions
+      }
+    }
+  } catch (e) {
+    console.error(e)
+  }
+  return data
+}
+
 
 
 /**

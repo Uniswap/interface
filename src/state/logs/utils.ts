@@ -20,7 +20,7 @@ export interface Log {
 }
 
 export const bscClient = new ApolloClient({
-  uri: INFO_CLIENT,
+  uri: 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2',
   cache: new InMemoryCache() as any
 });
 
@@ -78,7 +78,7 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
 }
 
 export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
-  const queryString = React.useMemo(() => `
+  const queryString = `
     ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
     query tokens {
       tokens(where: {id:"${tokenAddress}"}) {
@@ -91,12 +91,12 @@ export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
         id
       }
     }
-  `, [block,tokenAddress])
+  `
   return gql(queryString)
 }
 
 export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string) => {
-  const queryString = React.useMemo(() => `
+  const queryString =`
     ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
     query tokens {
       tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
@@ -113,12 +113,12 @@ export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string)
         symbol
       }
     }
-  `, [block,tokenAddress])
+  `
   return gql(queryString)
 }
 
 export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string) => {
-  const queryString = React.useMemo(() => `
+  const queryString = `
     ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions')}
     query tokens {
       tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
@@ -134,8 +134,7 @@ export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string)
         name
         symbol
       }
-    }
-  `, [block,tokenAddress])
+    }`
   return gql(queryString)
 }
 
@@ -261,21 +260,21 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
 
     // calculate percentage changes and daily changes
     const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
-      +data['tradeVolumeUSD'] ?? 0,
-      +oneDayData['tradeVolumeUSD'] ?? 0,
-      +twoDayData['tradeVolumeUSD'] ?? 0
+      +data?.tradeVolumeUSD ?? 0,
+      +oneDayData?.tradeVolumeUSD ?? 0,
+      +twoDayData?.tradeVolumeUSD ?? 0
     )
 
     // calculate percentage changes and daily changes
     const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
-      +data.untrackedVolumeUSD,
+      +data?.untrackedVolumeUSD,
       +oneDayData?.untrackedVolumeUSD ?? 0,
       +twoDayData?.untrackedVolumeUSD ?? 0
     )
 
     // calculate percentage changes and daily changes
     const [oneDayTxns, txnChange] = get2DayPercentChange(
-      +data.txCount,
+      +data?.txCount,
       +oneDayData?.txCount ?? 0,
       +twoDayData?.txCount ?? 0
     )
