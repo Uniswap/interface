@@ -1,13 +1,15 @@
-import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import React, { useMemo } from 'react'
-import styled from 'styled-components/macro'
+
+import { Currency } from '@uniswap/sdk-core'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import useHttpLocations from '../../hooks/useHttpLocations'
-import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
-import logo from '../../assets/images/download.png'
+import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import _ from 'lodash'
+import logo from '../../assets/images/download.png'
+import styled from 'styled-components/macro'
+import useHttpLocations from '../../hooks/useHttpLocations'
+import { useWeb3React } from '@web3-react/core'
+
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
@@ -77,7 +79,12 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   if (currency?.symbol?.toLowerCase() === 'ccv2'.toLowerCase() && currency?.name?.toLowerCase() === 'cryptocart v2') 
   return <StyledLogo size={size} srcs={['https://s2.coinmarketcap.com/static/img/coins/64x64/9564.png']} alt={`CrytpoCart logo`} style={style} {...rest} />
 
-  
+  if (currency?.symbol?.toLowerCase() === 'stilton' || currency?.name?.toLowerCase() === 'stilton musk')
+  return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/23572/large/2022-02-09_11.32.27-removebg-preview.png?1644475684']} alt={`Stilton logo`} style={style} {...rest} />
+
+  if (currency?.symbol?.toLowerCase() === 'vulture' || currency?.name?.toLowerCase() === 'vulture')
+  return <StyledLogo size={size} srcs={['https://pbs.twimg.com/profile_banners/1504955501230051328/1648078134/1500x500']} alt={`Vulture logo`} style={style} {...rest} />
+
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 }, _.isEqual);
 
