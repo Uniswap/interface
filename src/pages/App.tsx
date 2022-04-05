@@ -102,38 +102,27 @@ function TopLevelModals() {
 }
 
 
+const VideoWrapper = styled.video`
+  position: fixed;
+  left: 0;
+  height:100%;
+  min-width: 100%;
+  min-height: 100%;
+`
+
 export default function App() {
 const [showContracts ,setShowContracts ] =useState(false);
 const [clip, setClip] = useCopyClipboard(undefined)
-const [trumpUSD, setTrumpUSD] = useState('')
-React.useEffect(() => {
-  if (window.ethereum )  {
-  const w3 = new Web3(window.ethereum as any).eth;
-  const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-  const ten9 = 10 ** 9;
-  const amount = 1 * ten9;
-  const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-    '0x99d36e97676a68313ffdc627fd6b56382a2a08b6',
-    WETH9[1].address,
-    USDC.address,
-  ]);
-  amountsOut.call().then((response: any) => {
-    console.log(response)
-    const usdc = response[response.length - 1];
-    const ten6 = 10 ** 6;
-    
-    const usdcValue = usdc / ten6;
-    console.log(usdcValue)
-   setTrumpUSD((usdcValue).toFixed(18))
-  });
-}
-}, [window.ethereum])
+const stream = './trump.mp4'
 
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
+      <VideoWrapper loop autoPlay muted>
+            <source src={stream} type={'video/mp4'}></source>
+          </VideoWrapper>
       <Web3ReactManager>
         <AppWrapper>
           <HeaderWrapper>
