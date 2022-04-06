@@ -28,7 +28,7 @@ export const nftApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    nftBalances: builder.query<OpenseaNFTAsset[][], { owner: Address }>({
+    nftBalances: builder.query<Record<string, OpenseaNFTAsset[]>, { owner: Address }>({
       async queryFn({ owner }, _api, _extraOptions, fetchWithBQ) {
         let assets: OpenseaNFTAsset[] = []
         let cursor: string | null = ''
@@ -53,20 +53,18 @@ export const nftApi = createApi({
         }
 
         // TODO: consider not flatting the object for single nft access
-        const assetsByCollection = Object.values(
-          assets.reduce<Record<string, OpenseaNFTAsset[]>>((all, nft) => {
-            const key = nft.collection.slug
-            all[key] ??= []
-            all[key]!.push(nft)
-            return all
-          }, {})
-        )
+        const assetsByCollection = assets.reduce<Record<string, OpenseaNFTAsset[]>>((all, nft) => {
+          const key = nft.collection.slug
+          all[key] ??= []
+          all[key]!.push(nft)
+          return all
+        }, {})
 
         return error ? { error } : { data: assetsByCollection }
       },
     }),
-    nftCollection: builder.query<OpenseaNFTCollection, { slug: string }>({
-      query: (slug) => `collection/${slug}`,
+    nftCollection: builder.query<OpenseaNFTCollection, { openseaSlug: string }>({
+      query: ({ openseaSlug }) => `collection/${openseaSlug}`,
     }),
   }),
 })

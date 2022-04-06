@@ -138,16 +138,19 @@ export function useSingleBalance(currency: Currency): PortfolioBalance | null {
       : skipToken,
     {
       // selectFromResult allows for performant re-renders
-      selectFromResult: ({ data }): PortfolioBalance | null => {
-        const cacheEntry = data?.[currencyId(currency)]
-        if (!cacheEntry) return null
-        return {
-          amount: CurrencyAmount.fromRawAmount(currency, cacheEntry.balance),
-          balanceUSD: cacheEntry.balanceUSD,
-          relativeChange24: percentDifference(cacheEntry.quote_rate, cacheEntry.quote_rate_24h),
-        }
-      },
+      selectFromResult: ({ data }) => data?.[currencyId(currency)],
     }
   )
-  return balance
+
+  return useMemo(
+    () =>
+      balance
+        ? {
+            amount: CurrencyAmount.fromRawAmount(currency, balance.balance),
+            balanceUSD: balance.balanceUSD,
+            relativeChange24: percentDifference(balance.quote_rate, balance.quote_rate_24h),
+          }
+        : null,
+    [balance, currency]
+  )
 }

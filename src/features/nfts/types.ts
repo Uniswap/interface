@@ -38,6 +38,7 @@ export interface OpenseaNFTAsset {
       trait_count: string
     }
   ]
+  token_id: number
   collection: {
     banner_image_url: string
     chat_url?: string

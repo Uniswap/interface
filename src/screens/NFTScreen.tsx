@@ -69,7 +69,7 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
               <Inset all="md" />
             </Inset>
           }
-          data={nftsByCollection}
+          data={Object.values(nftsByCollection ?? {})}
           keyExtractor={key}
           renderItem={renderItem}
         />
