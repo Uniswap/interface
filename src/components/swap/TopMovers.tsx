@@ -2,21 +2,21 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { TrendingDown as ChevronDown, TrendingUp as ChevronUp } from 'react-feather'
 import { CustomLightSpinner, StyledInternalLink, TYPE } from 'theme'
 import { DarkGreyCard, GreyCard } from 'components/Card'
-import Marquee, { Motion } from "react-marquee-slider";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { RowFixed, RowFlat } from 'components/Row'
 import { fetchBscTokenData, getBlocksFromTimestamps, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from 'state/logs/bscUtils'
 import { getBlockFromTimestamp, getTokenData, useCulturePairData, useEthPrice, useKibaPairData, useTopPairData } from 'state/logs/utils'
+import { useCurrency, useToken } from 'hooks/Tokens'
 
 import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import { LoadingRows } from 'pages/Pool/styleds'
+import Marquee from "react-fast-marquee";
 import _ from 'lodash'
 import cultureTokens from '../../../src/trending.json'
 import styled from 'styled-components/macro'
-import { useCurrency } from 'hooks/Tokens'
 import useInterval from 'hooks/useInterval'
 import { useWeb3React } from '@web3-react/core'
 
@@ -88,10 +88,10 @@ export const ScrollableRow = styled.div`
 `
 
 const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: number }) => {
-  const token = useCurrency(tokenData.id);
+  const token = useToken(tokenData.id.toLowerCase());
   const { chainId } = useWeb3React()
   return (
-    <CardWrapper to={'/selective-charts/' + tokenData.id + '/' + tokenData.symbol}>
+    <CardWrapper to={'/selective-charts/' + tokenData.id + '/' + tokenData.symbol + '/' + tokenData.name + '/' + token?.decimals ?? tokenData?.decimals}>
       <GreyCard padding="3px">
         <RowFixed>
           <AutoColumn gap="3px" style={{ marginLeft: '3px' }}>
@@ -238,16 +238,11 @@ DataCard.displayName = 'DataCard';
           (a?.chainId === chainId || !chainId))], a=> a.symbol)
   }, [allTokens, chainId])
   return (
-    <DarkGreyCard style={{ zIndex: 3, padding: "0px", background: 'transparent', position: 'fixed', top: 0, margin: 0 }}>
+    <DarkGreyCard style={{ marginBottom:10, zIndex: 3, padding: "0px", background: 'transparent',top: 0, margin: 0 }}>
       {(allTokens.length > 0) &&
         (
-          <Marquee onInit={() => { return }}
-            onFinish={() => { return }}
-            scatterRandomly={false}
-            direction={'rtl'}
-            resetAfterTries={200}
-            velocity={11}
-            key={'TOPMOVER'}
+          <Marquee gradient={false} pauseOnHover
+            
           >
             <React.Fragment />
             <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)' }} gap="xs">

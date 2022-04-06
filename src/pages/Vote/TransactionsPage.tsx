@@ -130,6 +130,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                 display: 'block',
                 width: '100%',
                 overflowY: 'auto',
+                scrollBehavior:'smooth',
             }}>
                 <table style={{ width: '100%' }}>
                     <thead style={{

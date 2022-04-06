@@ -60,6 +60,9 @@ export const SelectiveChart = () => {
             
             const newAddress = location.pathname.split('/')[2]
             const newSymbol = location.pathname.split('/')[3]
+            const newName = location.pathname.split('/')[4]
+            const newDecimals = location.pathname.split('/')[5]
+
             if (newAddress && newSymbol) {
                 setLoadingNewData(true)
                 setAddressCallback(newAddress)
@@ -71,6 +74,24 @@ export const SelectiveChart = () => {
                 if (ref.current) {
                     ref.current.address = newAddress;
                     ref.current.symbol = newSymbol;
+                    if (newName) 
+                        ref.current.name = newName;
+                    if (newDecimals) 
+                        ref.current.decimals = +newDecimals;
+                } else {
+                    ref.current = mainnetCurrency ?? {};
+                    ref.current.address = newAddress;
+                    ref.current.symbol = newSymbol;
+                    if (newName) 
+                        ref.current.name = newName;
+                    if (newDecimals) 
+                        ref.current.decimals = +newDecimals;
+
+                }
+
+                setSelectedCurrency({type:"update", payload: ref.current })
+                if (tokenData?.id !== newAddress) { 
+                    setAddressCallback(newAddress)
                 }
             }
 
@@ -165,7 +186,7 @@ export const SelectiveChart = () => {
                 } else {
                     ref.current = currency;
                     setSelectedCurrency({type: 'update', payload: currency})
-                    history.push(`/selective-charts/${currency?.address}/${currency?.symbol}`);
+                    history.push(`/selective-charts/${currency?.address}/${currency?.symbol}/${currency.name}/${currency.decimals}`);
                     setAddressCallback(currency?.address)
                 }
             }}

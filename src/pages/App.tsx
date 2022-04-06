@@ -506,10 +506,11 @@ export default function App() {
         <AppWrapper>
           {Video}
           <HeaderWrapper>
+          <TopTokenMovers />
+
             <Header />
     
           </HeaderWrapper>
-          <TopTokenMovers />
 
 
           {/* <div style={{position:'absolute', top:'25%', left:'5%'}}>
@@ -528,12 +529,19 @@ export default function App() {
               <Route exact strict path="/details" component={AccountPage} />
               <Route exact strict path="/details/:account" component={AccountPageWithAccount} />
               <Route exact strict path="/limit" component={LimitOrders} />
+              {/* Chart page can allow for different entry points hence multiple routes */}
               <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart}/>
               <Route exact strict path="/selective-charting/:tokenAddress" component={SelectiveChart}/>
               <Route exact strict path="/selective-charting" component={SelectiveChart}/>
-
+              <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart}/>
+              <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart}/>
+              <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart}/>
+              <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart}/>
+              <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart}/>
               <Route exact strict path="/selective-charts/:tokenAddress" component={SelectiveChart}/>
               <Route exact strict path="/selective-charts" component={SelectiveChart}/>
+            
+            
               <Route exact strict path="/fomo" component={FomoPage} />
               <Route exact strict path="/donation-tracker" component={DonationTracker} />
               <Route exact strict path="/proposal/create" component={AddProposal} />

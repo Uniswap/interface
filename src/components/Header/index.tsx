@@ -44,6 +44,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
+  background: radial-gradient( #0000004a,transparent);
   grid-template-columns: 150px 1fr 120px;
   align-items: center;
   justify-content: space-between;
@@ -55,12 +56,12 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   padding: 1rem;
   z-index: 21;
   position: relative;
+  padding-top:10px;
   /* Background slide effect on scroll. */
   background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
   background-size: 100% 200%;
   transition: background-position 0.1s, box-shadow 0.1s;
   background-blend-mode: hard-light;
-  margin-top:20px;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-template-columns: 48px 1fr 1fr;
   `};

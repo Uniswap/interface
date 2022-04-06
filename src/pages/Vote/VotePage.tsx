@@ -167,7 +167,7 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
     isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
-    isBinance ? 18 : 9,
+    isBinance ? 18 : 18,
     "Kiba",
     "Kiba Inu"
   );
