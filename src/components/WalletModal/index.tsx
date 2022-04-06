@@ -233,6 +233,10 @@ export default function WalletModal({
           return null
         }
 
+        if (option.desktopOnly) {
+          return null
+        }
+
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
@@ -250,7 +254,6 @@ export default function WalletModal({
             />
           )
         }
-        return null
       }
 
       // overwrite injected when needed
@@ -285,8 +288,7 @@ export default function WalletModal({
 
       // return rest of options
       return (
-        !isMobile &&
-        !option.mobileOnly && (
+        !(!isMobile && option.mobileOnly) && (
           <Option
             id={`connect-${key}`}
             onClick={() => {
