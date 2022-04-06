@@ -245,7 +245,7 @@ DataCard.displayName = 'DataCard';
             
           >
             <React.Fragment />
-            <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)' }} gap="xs">
+            <FixedContainer style={{ background: 'rgb(0 0 0 / 0%)' }} gap="xs">
               <ScrollableRow>
                 {topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass')).map((entry, i) =>
                   entry ? <DataCard index={i} key={entry.symbol + entry.address} tokenData={entry} /> : null

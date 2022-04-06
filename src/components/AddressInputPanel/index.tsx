@@ -1,12 +1,13 @@
-import { t, Trans } from '@lingui/macro'
-import { useContext, useCallback, ReactNode } from 'react'
-import styled, { ThemeContext } from 'styled-components/macro'
-import useENS from '../../hooks/useENS'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, TYPE } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { ExternalLink, TYPE } from '../../theme'
+import { ReactNode, useCallback, useContext } from 'react'
+import { Trans, t } from '@lingui/macro'
+import styled, { ThemeContext } from 'styled-components/macro'
+
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
+import { useActiveWeb3React } from '../../hooks/web3'
+import useENS from '../../hooks/useENS'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}

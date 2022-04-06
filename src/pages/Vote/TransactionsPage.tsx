@@ -10,11 +10,13 @@ import {saveAs} from 'file-saver';
 import styled from 'styled-components/macro'
 import { useUserTransactions } from 'state/logs/utils';
 import { useWeb3React } from '@web3-react/core';
+import useWebSocket from 'react-use-websocket'
 
 const StyledA =styled.a`
     color: ${({theme}) => theme.primary1};
 `
 export const Transactions = ({transactions, loading, error, accountValue}:{transactions?: any[], loading?:boolean, error?:any, accountValue?: string | null | undefined}) => {
+  
     let account = accountValue;
     const { account: secondary, chainId, library } = useWeb3React()
     if (!account) 

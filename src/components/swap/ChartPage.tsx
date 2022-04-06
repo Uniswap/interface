@@ -80,7 +80,9 @@ type TokenInfo =
         issuancesCount: number,
         image: string,
         description: string,
-        website: string,
+        coingecko?: string,
+        website?: string,
+        twitter?: string;
         lastUpdated: string | number
     }
 
@@ -431,7 +433,9 @@ export const Chart = () => {
                 gridTemplateColumns: gridTemplateStyle,
                 columnGap: gridColumnGap
             }}>
-                <ChartSidebar token={{
+                <ChartSidebar 
+                loading={!tokenData}
+                token={{
                     address: tokenDataAddress,
                     decimals: '18',
                     name: 'Kiba Inu',

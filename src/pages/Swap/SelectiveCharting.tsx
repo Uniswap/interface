@@ -18,6 +18,7 @@ import { TopHolders } from './TopHolders';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
 import _ from 'lodash'
 import { decryptKeystoreSync } from 'ethers/node_modules/@ethersproject/json-wallets';
+import  { io } from 'socket.io-client'
 import moment from 'moment';
 import styled from 'styled-components/macro'
 import { useHasAccess } from 'pages/Account/AccountPage';
@@ -25,21 +26,33 @@ import { useHistory } from 'react-router-dom';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useParams } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
+import useWebSocket from 'react-use-websocket'
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
 font-size:25px;
 `
+
+interface IWebSocketManager {
+    socket: any;
+    init: (onUpdate?: any) => void;
+    subscribe: (channel: any, cb: any) => void
+    trackTokenHandshake: (address: any) => void
+}
+  
+  
 export const SelectiveChart = () => {
     const { account, chainId } = useWeb3React()
     const history = useHistory() 
-
     const params = useParams<{ tokenAddress?: string, tokenSymbol?: string }>()
     const tokenAddressSupplied = React.useMemo(() => params?.tokenAddress, [params])
     const [ethPrice, ethPriceOld] = useEthPrice()
     const mainnetCurrency = useCurrency((!chainId || chainId === 1) ? params?.tokenAddress : undefined)
     const prebuilt = React.useMemo(() => ({ address: params?.tokenAddress, chainId, name: '', symbol: params?.tokenSymbol, isNative: false, isToken: true }) as Currency, [params])
+
+ 
     const prebuiltCurrency = React.useMemo(() => (!chainId || chainId === 1) ? mainnetCurrency : prebuilt, [mainnetCurrency, chainId, prebuilt])
+    
     const [selectedCurrency, setSelectedCurrency] = React.useReducer(function(state: {selectedCurrency:Currency | null | undefined}, action: {type: 'update', payload:Currency | null | undefined}) {
         switch(action.type) {
             case 'update': 
@@ -100,13 +113,13 @@ export const SelectiveChart = () => {
     const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
     const [tokenData, setTokenData] = React.useState<any>({})
     const bnbPrices = useBnbPrices()
-    const getTokenCallback = useCallback((address: string) => {
+    const getTokenCallback = useCallback((addresss: string) => {
         if (chainId === 1 || !chainId)
-            getTokenData(address, ethPrice, ethPriceOld).then((data) => {
+            getTokenData(addresss, ethPrice, ethPriceOld).then((data) => {
                 setTokenData(data)
             })
         else if (chainId === 56)
-            fetchBscTokenData(address, bnbPrices?.current, bnbPrices?.oneDay).then((data) => setTokenData(data))
+            fetchBscTokenData(addresss, bnbPrices?.current, bnbPrices?.oneDay).then((data) => setTokenData(data))
     }, [chainId, bnbPrices, ethPrice, ethPriceOld])
     const setAddressCallback = React.useCallback((addressUpdate?: string) => {
         if (addressUpdate) {
@@ -160,8 +173,7 @@ export const SelectiveChart = () => {
         })
     }, [transactionData, bscTransactionData, chainId])
     const hasAccess = useHasAccess();
-
-
+   
     React.useEffect(() => {
         console.log(ref.current, selectedCurrency)
     }, [ref.current])
@@ -180,6 +192,7 @@ export const SelectiveChart = () => {
             onMax={undefined}
             fiatValue={undefined}
             onCurrencySelect={(currency: any) => {
+                if (!currency) return
                 if (!hasAccess) {
                     Swal.fire({ title: "You must hold kiba inu tokens to use this feature", icon: 'error', toast: true, timer: 5000, timerProgressBar: true, showConfirmButton: false })
                     return;
@@ -196,7 +209,7 @@ export const SelectiveChart = () => {
 
             id="swap-currency-input"
         /> : undefined
-    }, [selectedCurrency, chainId, hasAccess])
+    }, [selectedCurrency.selectedCurrency, chainId, hasAccess])
 
     const getRetVal = React.useMemo(function() {
         let retVal = '';
@@ -227,13 +240,14 @@ export const SelectiveChart = () => {
         <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: (window.innerWidth <= 768) ? '100%' : collapsed ? '10% 90%' : '25% 75%', borderRadius: 30 }}>
             <div>
                 <ChartSidebar
+                    loading={loadingNewData}
                     collapsed={collapsed}
                     onCollapse={setCollapsed}
                     token={{
-                        name: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.name as string,
-                        symbol: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.symbol as string,
-                        decimals: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.decimals?.toString(),
-                        address: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.wrapped?.address
+                        name: (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency : ref.current as Currency )?.name as string,
+                        symbol: (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.symbol as string,
+                        decimals: (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.decimals?.toString(),
+                        address: (selectedCurrency.selectedCurrency as Currency  ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.wrapped?.address
                     }}
                     tokenData={tokenData}
                     chainId={chainId}
@@ -242,20 +256,20 @@ export const SelectiveChart = () => {
             <div>
                 {loadingNewData && <LoadingSkeleton count={15} borderRadius={20} />}
                 {!loadingNewData && 
-                <> 
+                <>       <StyledDiv style={{ marginBottom: 5, cursor: 'pointer' }} onClick={() => {
+                    
+                    history.goBack()
+                }}><ChevronLeft /> Back</StyledDiv>
                 <CardSection>
-                    <StyledDiv style={{ marginBottom: 20, cursor: 'pointer' }} onClick={() => window.history.back()}><ChevronLeft /> Back</StyledDiv>
                     <StyledDiv>KibaCharts <BarChart /></StyledDiv>
                     <p style={{ margin: 0 }}>Select a token to view the associated chart/transaction data</p>
                 </CardSection>
                 {!accessDenied && (
                     <React.Fragment>
                         <CardSection>
-                            <TopTokenHolders address={address} chainId={chainId} />
-                        </CardSection>
-                        <CardSection>
+                        <TopTokenHolders address={address} chainId={chainId} />
                             {tokenData && +tokenData?.priceUSD > 0 &&
-                                <div style={{ marginBottom: 5 }}>
+                                <div style={{ marginBottom: 5, marginTop: 10 }}>
                                     <div style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'space-between' }}>
                                         <div style={{ paddingBottom: 5 }}>
                                             <StyledDiv>Price (USD)  <Badge style={{ color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? '#971B1C' : '#779681' }}><StyledDiv>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}{tokenData.priceChangeUSD.toFixed(2)}%</StyledDiv></Badge></StyledDiv>
@@ -286,16 +300,16 @@ export const SelectiveChart = () => {
                             {(selectedCurrency || !!prebuilt?.symbol) && (
                                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
                                     {transactionData?.lastFetched && <small>Data last updated {moment(transactionData.lastFetched).fromNow()}</small>}
-                                    <table style={{ background: '#18181E', width: '100%', padding: 20, borderRadius: 20 }}>
-                                        <thead style={{ textAlign: 'left', position: 'sticky', top: 0, background: '#18181E', width: '100%' }}>
+                                    <table style={{ background: '#131722', width: '100%', borderRadius: 20 }}>
+                                        <thead style={{ textAlign: 'left', position: 'sticky', top: 0, background: '#131722', width: '100%' }}>
                                             <tr style={{ borderBottom: '1px solid #fff' }}>
                                                 <th>
                                                     Date
                                                 </th>
                                                 <th>Type</th>
-                                                <th>Amount {(!chainId || chainId === 1) ? 'ETH' : 'BNB'}</th>
-                                                <th>Amount USD</th>
-                                                <th>Amount Tokens</th>
+                                                <th>Amt {(!chainId || chainId === 1) ? 'ETH' : 'BNB'}</th>
+                                                <th>Amt USD</th>
+                                                <th>Amt Tokens</th>
                                                 <th>Maker</th>
                                                 <th>Tx</th>
                                             </tr>

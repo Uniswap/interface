@@ -1,30 +1,32 @@
-import { Pair } from '@uniswap/v2-sdk'
+import { BarChart2, Lock } from 'react-feather'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { useState, useCallback, ReactNode } from 'react'
-import styled from 'styled-components/macro'
-import { darken, lighten, opacify } from 'polished'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
-import CurrencyLogo from '../CurrencyLogo'
-import DoubleCurrencyLogo from '../DoubleLogo'
-import { ButtonGray } from '../Button'
+import { ReactNode, useCallback, useState } from 'react'
 import { RowBetween, RowFixed } from '../Row'
-import { TYPE } from '../../theme'
-import { Input as NumericalInput } from '../NumericalInput'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { Trans } from '@lingui/macro'
-import useTheme from '../../hooks/useTheme'
-import { Lock } from 'react-feather'
+import { StyledInternalLink, TYPE } from '../../theme'
+import { darken, lighten, opacify } from 'polished'
+
 import { AutoColumn } from 'components/Column'
+import { ButtonGray } from '../Button'
+import CurrencyLogo from '../CurrencyLogo'
+import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import DoubleCurrencyLogo from '../DoubleLogo'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { FiatValue } from './FiatValue'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import MetaMaskLogo from '../../assets/images/metamask.png'
-import Tooltip from 'components/Tooltip'
+import { Input as NumericalInput } from '../NumericalInput'
+import { Pair } from '@uniswap/v2-sdk'
 import React from 'react'
-import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import Swal from 'sweetalert2'
+import Tooltip from 'components/Tooltip'
+import { Trans } from '@lingui/macro'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { opacity } from 'styled-system'
+import styled from 'styled-components/macro'
+import { useActiveWeb3React } from '../../hooks/web3'
+import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
+import useTheme from '../../hooks/useTheme'
+
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
@@ -259,7 +261,7 @@ export default function CurrencyInputPanel({
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
              
-
+              {!!currency && !currency.isNative &&  <StyledInternalLink style={{marginLeft: 5, cursor:'pointer'}} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 /> </StyledInternalLink>}
             </Aligner>
             
           </CurrencySelect>
