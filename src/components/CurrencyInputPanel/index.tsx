@@ -261,9 +261,8 @@ export default function CurrencyInputPanel({
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
              
-              {!!currency && !currency.isNative &&  <StyledInternalLink style={{marginLeft: 5, cursor:'pointer'}} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 /> </StyledInternalLink>}
             </Aligner>
-            
+            {!!currency && !currency.isNative &&  <StyledInternalLink style={{marginLeft: 5, cursor:'pointer'}} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 /> </StyledInternalLink>}
           </CurrencySelect>
           {currency && <RowFixed style={{
             marginRight:15
