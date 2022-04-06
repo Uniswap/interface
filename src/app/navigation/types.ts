@@ -8,7 +8,7 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
-import { OpenseaNFTAsset } from 'src/features/nfts/types'
+import { NFTAsset } from 'src/features/nfts/types'
 import { SwapFormState } from 'src/features/swap/swapFormSlice'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
@@ -50,7 +50,7 @@ export type AppStackParamList = {
   }
   [Screens.Notifications]: undefined
   [Screens.NFTCollection]: {
-    nftAssets: OpenseaNFTAsset[]
+    nftAssets: NFTAsset.Asset[]
   }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.RecipientSelector]: {

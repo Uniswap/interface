@@ -2,9 +2,9 @@ import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { config } from 'src/config'
 import {
-  OpenseaNFTAsset,
+  NFTAsset,
   OpenseaNFTAssetResponse,
-  OpenseaNFTCollection,
+  OpenseaNFTCollectionResponse,
 } from 'src/features/nfts/types'
 import { serializeQueryParams } from 'src/features/swap/utils'
 
@@ -28,9 +28,9 @@ export const nftApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    nftBalances: builder.query<OpenseaNFTAsset[][], { owner: Address }>({
+    nftBalances: builder.query<Record<string, NFTAsset.Asset[]>, { owner: Address }>({
       async queryFn({ owner }, _api, _extraOptions, fetchWithBQ) {
-        let assets: OpenseaNFTAsset[] = []
+        let assets: NFTAsset.Asset[] = []
         let cursor: string | null = ''
         let error: FetchBaseQueryError | null = null
 
@@ -53,20 +53,19 @@ export const nftApi = createApi({
         }
 
         // TODO: consider not flatting the object for single nft access
-        const assetsByCollection = Object.values(
-          assets.reduce<Record<string, OpenseaNFTAsset[]>>((all, nft) => {
-            const key = nft.collection.slug
-            all[key] ??= []
-            all[key]!.push(nft)
-            return all
-          }, {})
-        )
+        const assetsByCollection = assets.reduce<Record<string, NFTAsset.Asset[]>>((all, nft) => {
+          const key = nft.collection.slug
+          all[key] ??= []
+          all[key]!.push(nft)
+          return all
+        }, {})
 
         return error ? { error } : { data: assetsByCollection }
       },
     }),
-    nftCollection: builder.query<OpenseaNFTCollection, { slug: string }>({
-      query: (slug) => `collection/${slug}`,
+    nftCollection: builder.query<NFTAsset.Collection, { openseaSlug: string }>({
+      query: ({ openseaSlug }) => `collection/${openseaSlug}`,
+      transformResponse: (response: OpenseaNFTCollectionResponse) => response.collection,
     }),
   }),
 })
