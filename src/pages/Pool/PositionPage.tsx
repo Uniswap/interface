@@ -336,10 +336,10 @@ export function PositionPage({
 
   const removed = liquidity?.eq(0)
 
+  const metadata = usePositionTokenURI(parsedTokenId)
+
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
-
-  const metadata = usePositionTokenURI(parsedTokenId)
 
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
@@ -389,6 +389,10 @@ export function PositionPage({
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails?.tokenId, receiveWETH)
 
+  // these currencies will match the feeValue{0,1} currencies for the purposes of fee collection
+  const currency0ForFeeCollectionPurposes = pool ? (receiveWETH ? pool.token0 : unwrappedToken(pool.token0)) : undefined
+  const currency1ForFeeCollectionPurposes = pool ? (receiveWETH ? pool.token1 : unwrappedToken(pool.token1)) : undefined
+
   const [collecting, setCollecting] = useState<boolean>(false)
   const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
   const isCollectPending = useIsTransactionPending(collectMigrationHash ?? undefined)
@@ -422,14 +426,25 @@ export function PositionPage({
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const collect = useCallback(() => {
-    if (!chainId || !feeValue0 || !feeValue1 || !positionManager || !account || !tokenId || !library) return
+    if (
+      !currency0ForFeeCollectionPurposes ||
+      !currency1ForFeeCollectionPurposes ||
+      !chainId ||
+      !positionManager ||
+      !account ||
+      !tokenId ||
+      !library
+    )
+      return
 
     setCollecting(true)
 
+    // we fall back to expecting 0 fees in case the fetch fails, which is safe in the
+    // vast majority of cases
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: feeValue0,
-      expectedCurrencyOwed1: feeValue1,
+      expectedCurrencyOwed0: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
+      expectedCurrencyOwed1: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
       recipient: account,
     })
 
@@ -458,13 +473,13 @@ export function PositionPage({
             ReactGA.event({
               category: 'Liquidity',
               action: 'CollectV3',
-              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+              label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
             })
 
             addTransaction(response, {
               type: TransactionType.COLLECT_FEES,
-              currencyId0: currencyId(feeValue0.currency),
-              currencyId1: currencyId(feeValue1.currency),
+              currencyId0: currencyId(currency0ForFeeCollectionPurposes),
+              currencyId1: currencyId(currency1ForFeeCollectionPurposes),
             })
           })
       })
@@ -472,7 +487,18 @@ export function PositionPage({
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
+  }, [
+    chainId,
+    feeValue0,
+    feeValue1,
+    currency0ForFeeCollectionPurposes,
+    currency1ForFeeCollectionPurposes,
+    positionManager,
+    account,
+    tokenId,
+    addTransaction,
+    library,
+  ])
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
