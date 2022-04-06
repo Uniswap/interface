@@ -92,7 +92,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const getIsValidBlock = useGetIsValidBlock()
   const { data: quoteResult, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), {
     debounce: isDebouncing,
-    staleCallback: useCallback(({ data }) => !getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
+    isStale: useCallback(({ data }) => !getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
   }) ?? {
     error: undefined,
   }
