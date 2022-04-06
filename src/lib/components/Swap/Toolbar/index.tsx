@@ -37,7 +37,7 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (wrapType === WrapType.NONE && (state === TradeState.SYNCING || state === TradeState.LOADING)) {
+      if (state === TradeState.SYNCING || state === TradeState.LOADING) {
         return <Caption.LoadingTrade />
       }
       if (inputBalance && inputAmount?.greaterThan(inputBalance)) {

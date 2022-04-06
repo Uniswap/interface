@@ -43,7 +43,7 @@ function useComputeSwapInfo(): SwapInfo {
     () => tryParseCurrencyAmount(amount, (isExactIn ? currencyIn : currencyOut) ?? undefined),
     [amount, isExactIn, currencyIn, currencyOut]
   )
-  const hasAmounts = currencyIn && currencyOut && parsedAmount
+  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrapping
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     hasAmounts ? parsedAmount : undefined,
