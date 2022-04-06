@@ -233,6 +233,10 @@ export default function WalletModal({
           return null
         }
 
+        if (option.desktopOnly) {
+          return null
+        }
+
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option

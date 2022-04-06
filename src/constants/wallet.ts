@@ -18,6 +18,7 @@ interface WalletInfo {
   primary?: true
   mobile?: true
   mobileOnly?: true
+  desktopOnly?: true
 }
 
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
@@ -37,6 +38,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Easy-to-use browser extension.',
     href: null,
     color: '#E8831D',
+    desktopOnly: true,
   },
   WALLET_CONNECT: {
     connector: walletconnect,
@@ -54,6 +56,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Use Coinbase Wallet app on mobile device',
     href: null,
     color: '#315CF5',
+    desktopOnly: true,
   },
   COINBASE_LINK: {
     name: 'Open in Coinbase Wallet',
