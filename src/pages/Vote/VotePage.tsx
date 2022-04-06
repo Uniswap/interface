@@ -202,7 +202,7 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
     } catch (ex) {
       console.error(ex);
     }
-  }, [kibaBalance, account, library?.provider, routerABI, routerADD, kibaCoin.addresss, isBinance]);
+  }, [kibaBalance, account, library?.provider, routerABI, routerADD, kibaCoin.address, isBinance]);
   return kibaBalanceUSD
 }
 

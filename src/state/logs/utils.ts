@@ -379,7 +379,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
 
     const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedETH
     const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedETH
-
+    if (data) {
     // set data
     data.priceUSD = (((parseFloat(data?.derivedETH)) * (parseFloat(ethPrice))))
     data.totalLiquidityUSD = currentLiquidityUSD
@@ -405,6 +405,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
       data.oneDayVolumeETH = parseFloat(data.tradeVolume) * parseFloat(data.derivedETH)
       data.oneDayTxns = data.txCount
     }
+  }
   } catch (e) {
     console.error(e)
   }

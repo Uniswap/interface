@@ -58,11 +58,11 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const { token, tokenData, chainId, collapsed, onCollapse } = props
     const { account } = useWeb3React()
     const hasData = React.useMemo(() => !!tokenData, [tokenData])
-    const tokenInfo = useTokenInfo(chainId, token.address)
+    const tokenInfo = useTokenInfo(chainId ?? 1, token.address)
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
     const holderCount = useTokenHolderCount(token.address, chainId)
-    const tokenCurrency = token && token.decimals ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : { } as Token
+    const tokenCurrency = token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : { } as Token
     console.log('chartSidebar -> tokenInfo', tokenInfo, holderCount)
     //create a custom function that will change menucollapse state from false to true and true to false
     const menuIconClick = () => {

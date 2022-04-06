@@ -17,9 +17,11 @@ import { TYPE } from 'theme';
 import { TopHolders } from './TopHolders';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
 import _ from 'lodash'
+import { decryptKeystoreSync } from 'ethers/node_modules/@ethersproject/json-wallets';
 import moment from 'moment';
 import styled from 'styled-components/macro'
 import { useHasAccess } from 'pages/Account/AccountPage';
+import { useHistory } from 'react-router-dom';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useParams } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
@@ -28,28 +30,52 @@ const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
 font-size:25px;
 `
-export const SelectiveChart = ({history}:{history:History}) => {
+export const SelectiveChart = () => {
     const { account, chainId } = useWeb3React()
+    const history = useHistory() 
+
     const params = useParams<{ tokenAddress?: string, tokenSymbol?: string }>()
     const tokenAddressSupplied = React.useMemo(() => params?.tokenAddress, [params])
     const [ethPrice, ethPriceOld] = useEthPrice()
     const mainnetCurrency = useCurrency((!chainId || chainId === 1) ? params?.tokenAddress : undefined)
-    const prebuilt = { address: params?.tokenAddress, chainId, name: '', symbol: params?.tokenSymbol, isNative: false, isToken: true } as Currency
-    const prebuiltCurrency = (!chainId || chainId === 1) ? mainnetCurrency : prebuilt
-    const [selectedCurrency, setSelectedCurrency] = React.useState<Currency | undefined | any>(prebuiltCurrency)
-
-    React.useEffect(() => {
-        if (params?.tokenSymbol && !_.isEqual(selectedCurrency?.address, (prebuiltCurrency as any)?.address)) {
-            if (params.tokenSymbol && params.tokenAddress) {
-                setLoadingNewData(true)
-                setSelectedCurrency(prebuiltCurrency)
-                setAddressCallback(params.tokenAddress)
+    const prebuilt = React.useMemo(() => ({ address: params?.tokenAddress, chainId, name: '', symbol: params?.tokenSymbol, isNative: false, isToken: true }) as Currency, [params])
+    const prebuiltCurrency = React.useMemo(() => (!chainId || chainId === 1) ? mainnetCurrency : prebuilt, [mainnetCurrency, chainId, prebuilt])
+    const [selectedCurrency, setSelectedCurrency] = React.useReducer(function(state: {selectedCurrency:Currency | null | undefined}, action: {type: 'update', payload:Currency | null | undefined}) {
+        switch(action.type) {
+            case 'update': 
+                return ({
+                    ...state,
+                    selectedCurrency: action.payload
+                })
+            default: 
+                return state
             }
-        } else if ((!tokenData?.id || tokenData?.id !== params.tokenAddress) && params.tokenAddress) {
-            setAddressCallback(params.tokenAddress)
-        }
-        setLoadingNewData(false)
-    }, [params.tokenSymbol, params.tokenAddress, prebuiltCurrency])
+        }, {
+            selectedCurrency: prebuiltCurrency
+        })
+
+    const ref = React.useRef<any>()
+    React.useEffect(() => {
+        return history.listen((location) => {
+            
+            const newAddress = location.pathname.split('/')[2]
+            const newSymbol = location.pathname.split('/')[3]
+            if (newAddress && newSymbol) {
+                setLoadingNewData(true)
+                setAddressCallback(newAddress)
+                getTokenCallback(newAddress)
+                setTimeout(() => {
+                    setLoadingNewData(false)
+                }, 1000)
+                
+                if (ref.current) {
+                    ref.current.address = newAddress;
+                    ref.current.symbol = newSymbol;
+                }
+            }
+
+        })
+    }, [history, mainnetCurrency])
     const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
     const [tokenData, setTokenData] = React.useState<any>({})
     const bnbPrices = useBnbPrices()
@@ -71,13 +97,13 @@ export const SelectiveChart = ({history}:{history:History}) => {
             setAddress('')
         }
     }, [
-        address, 
+        address,
         setTokenData,
-        ethPrice, 
-        ethPriceOld, 
-        bnbPrices, 
-        chainId, 
-        tokenData, 
+        ethPrice,
+        ethPriceOld,
+        bnbPrices,
+        chainId,
+        tokenData,
         selectedCurrency,
         mainnetCurrency
     ])
@@ -114,15 +140,19 @@ export const SelectiveChart = ({history}:{history:History}) => {
     }, [transactionData, bscTransactionData, chainId])
     const hasAccess = useHasAccess();
 
+
+    React.useEffect(() => {
+        console.log(ref.current, selectedCurrency)
+    }, [ref.current])
     const PanelMemo = React.useMemo(() => {
-        return chainId && chainId === 1 ? <CurrencyInputPanel
+        return (!chainId || chainId && chainId === 1) ? <CurrencyInputPanel
             label={'GAINS'}
             showMaxButton={false}
             value={''}
             showCurrencyAmount={false}
             hideBalance={true}
             hideInput={true}
-            currency={selectedCurrency}
+            currency={selectedCurrency.selectedCurrency}
             onUserInput={(value) => {
                 console.log(value)
             }}
@@ -132,10 +162,11 @@ export const SelectiveChart = ({history}:{history:History}) => {
                 if (!hasAccess) {
                     Swal.fire({ title: "You must hold kiba inu tokens to use this feature", icon: 'error', toast: true, timer: 5000, timerProgressBar: true, showConfirmButton: false })
                     return;
-                } else {                
+                } else {
+                    ref.current = currency;
+                    setSelectedCurrency({type: 'update', payload: currency})
+                    history.push(`/selective-charts/${currency?.address}/${currency?.symbol}`);
                     setAddressCallback(currency?.address)
-                    setSelectedCurrency(currency)
-                    window.history.pushState(`${currency.name} - (${currency.symbol})`, ``, `/#/selective-charting/${currency.address}/${currency.symbol}`);
                 }
             }}
 
@@ -145,9 +176,31 @@ export const SelectiveChart = ({history}:{history:History}) => {
             id="swap-currency-input"
         /> : undefined
     }, [selectedCurrency, chainId, hasAccess])
+
+    const getRetVal = React.useMemo(function() {
+        let retVal = '';
+        const {selectedCurrency:currency}=selectedCurrency
+        if (chainId === 1 || !chainId) {
+            retVal = 'UNISWAP:'
+            if (params.tokenAddress && params.tokenSymbol && params.tokenSymbol !== 'WETH')
+                retVal = `${retVal}${params.tokenSymbol}WETH`;
+            else if (currency && currency.symbol && currency.symbol !== 'WETH') retVal = `UNISWAP:${currency.symbol}WETH`;
+            else if (currency && currency.symbol && currency.symbol === 'WETH') retVal = "UNISWAP:WETHUSDT";   
+
+            if (retVal == 'UNISWAP:' && params?.tokenSymbol || prebuilt?.symbol) {
+                retVal = `UNISWAP:${params?.tokenSymbol ? params?.tokenSymbol : prebuilt?.symbol}WETH`
+            }
+        }
+        else if (chainId && chainId === 56) {
+            retVal = 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" 
+        }
+        return retVal;
+    }, [params?.tokenSymbol, selectedCurrency.selectedCurrency, params?.tokenAddress, selectedCurrency, prebuilt])
     // this page will not use access denied, all users can view top token charts
     const accessDenied = false;
-    const chainLabel = React.useMemo(() => chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
+    const deps = [selectedCurrency, getRetVal, params?.tokenSymbol, prebuilt?.symbol, chainId];
+    const tokenSymbolForChart = React.useMemo(() => getRetVal, deps)
+    const chainLabel = React.useMemo(() => !chainId || chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
     const [collapsed, setCollapsed] = React.useState(false)
     return (
         <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: (window.innerWidth <= 768) ? '100%' : collapsed ? '10% 90%' : '25% 75%', borderRadius: 30 }}>
@@ -156,17 +209,19 @@ export const SelectiveChart = ({history}:{history:History}) => {
                     collapsed={collapsed}
                     onCollapse={setCollapsed}
                     token={{
-                        name: (selectedCurrency as Currency)?.name as string,
-                        symbol: (selectedCurrency as Currency)?.symbol as string,
-                        decimals: (selectedCurrency as Currency)?.decimals?.toString(),
-                        address: (selectedCurrency as Currency)?.wrapped?.address
+                        name: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.name as string,
+                        symbol: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.symbol as string,
+                        decimals: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.decimals?.toString(),
+                        address: (ref.current as Currency ? ref.current as Currency : selectedCurrency.selectedCurrency as Currency)?.wrapped?.address
                     }}
                     tokenData={tokenData}
                     chainId={chainId}
                 />
             </div>
             <div>
-                {loadingNewData && <LoadingSkeleton count={20} borderRadius={20} />}
+                {loadingNewData && <LoadingSkeleton count={15} borderRadius={20} />}
+                {!loadingNewData && 
+                <> 
                 <CardSection>
                     <StyledDiv style={{ marginBottom: 20, cursor: 'pointer' }} onClick={() => window.history.back()}><ChevronLeft /> Back</StyledDiv>
                     <StyledDiv>KibaCharts <BarChart /></StyledDiv>
@@ -178,7 +233,7 @@ export const SelectiveChart = ({history}:{history:History}) => {
                             <TopTokenHolders address={address} chainId={chainId} />
                         </CardSection>
                         <CardSection>
-                            {tokenData && +tokenData?.priceUSD > 0 && 
+                            {tokenData && +tokenData?.priceUSD > 0 &&
                                 <div style={{ marginBottom: 5 }}>
                                     <div style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'space-between' }}>
                                         <div style={{ paddingBottom: 5 }}>
@@ -204,7 +259,8 @@ export const SelectiveChart = ({history}:{history:History}) => {
                                 {PanelMemo}
                             </div>
                             <div style={{ height: '500px' }}>
-                                {(selectedCurrency as any)?.address  && <TradingViewWidget symbol={(!chainId || chainId === 1) ? 'UNISWAP:' + (selectedCurrency?.symbol === "WETH" ? "WETHUSDT" : `${selectedCurrency?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"} autosize={true} />}
+                                {tokenSymbolForChart && <TradingViewWidget hide_side_toolbar={false} symbol={
+                                tokenSymbolForChart} theme={'Dark'} locale={"en"} autosize={true} />}
                             </div>
                             {(selectedCurrency || !!prebuilt?.symbol) && (
                                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
@@ -269,11 +325,12 @@ export const SelectiveChart = ({history}:{history:History}) => {
 
                         </CardSection>
                     </React.Fragment>)}
-                    {!!accessDenied &&
-                        <CardSection>
-                            <p style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p>
-                        </CardSection>
-                    }
+                    </>}
+                {!!accessDenied &&
+                    <CardSection>
+                        <p style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p>
+                    </CardSection>
+                }
             </div>
         </DarkCard>
     )

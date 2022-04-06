@@ -142,7 +142,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
     const windowInnerWidth = window.innerWidth
 
     const isMobile = React.useMemo(() => windowInnerWidth <= 768 , [windowInnerWidth])
-    const chainLabel = chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '';
+    const chainLabel = (!chainId || chainId && chainId === 1) ? `ETH` : chainId && chainId === 56 ? 'BNB' : 'ETH';
     const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [moment(lastFetched).fromNow()])
     
 

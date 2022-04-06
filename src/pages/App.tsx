@@ -529,6 +529,8 @@ export default function App() {
               <Route exact strict path="/details/:account" component={AccountPageWithAccount} />
               <Route exact strict path="/limit" component={LimitOrders} />
               <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart}/>
+              <Route exact strict path="/selective-charting/:tokenAddress" component={SelectiveChart}/>
+              <Route exact strict path="/selective-charting" component={SelectiveChart}/>
 
               <Route exact strict path="/selective-charts/:tokenAddress" component={SelectiveChart}/>
               <Route exact strict path="/selective-charts" component={SelectiveChart}/>

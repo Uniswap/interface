@@ -5,6 +5,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import _ from 'lodash'
 import { isAddress } from '../../utils'
 import { useMemo } from 'react'
+
 const alwaysTrue = () => true
 
 /**
@@ -78,6 +79,6 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       }
     })
 
-    return [kibaCoin, ...exactMatches, ...symbolSubtrings, ...rest]
+    return  _.uniqBy([kibaCoin, ...exactMatches, ...symbolSubtrings, ...rest], a => a.address)
   }, [tokens, searchQuery, showOnlyTrumpCoins])
 }

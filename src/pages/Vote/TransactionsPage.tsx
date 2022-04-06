@@ -56,7 +56,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
             newTxn.gasPaid = swap.cost;
             return newTxn;
         })
-    }, [transactions, account])
+    }, [transactions, account, chainId])
 
     const exportToCsv = React.useCallback(() => {
     if (!formattedTransactions?.length || !formattedTransactions) return;
@@ -160,10 +160,11 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                                 <td>{item.token0Symbol !== `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                     {item.token1Symbol !== `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                 </td>
+                                <td>{item.token1Symbol} {item.token0Symbol}</td>
                                 <td>${Number(item.amountUSD).toFixed(2).toLocaleString()}</td>
                             
                                 <td>
-                                    <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
+                                    <StyledA href={`https://${!chainId || chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
                                         {item?.hash && item?.transaction?.id.slice(0, 6) + '...' + item?.transaction?.id.slice(38, 42)}
                                     </StyledA>
                                 </td>
