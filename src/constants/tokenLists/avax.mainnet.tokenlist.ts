@@ -284,9 +284,9 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       chainId: 43114,
       address: '0x3B55E45fD6bd7d4724F5c47E0d1bCaEdd059263e',
       decimals: 18,
-      name: 'MIMATIC',
+      name: 'miMATIC',
       symbol: 'MAI',
-      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/10238.png',
+      logoURI: 'https://assets.spookyswap.finance/tokens/MAI.png',
     },
   ],
   version: {
