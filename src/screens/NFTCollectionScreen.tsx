@@ -15,8 +15,8 @@ import { Screen } from 'src/components/layout/Screen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { Text } from 'src/components/Text'
+import { useNftCollectionQuery } from 'src/features/nfts/api'
 import { OpenseaNFTAsset, OpenseaNFTCollection } from 'src/features/nfts/types'
-import { useNFTCollection } from 'src/features/nfts/useNfts'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { Screens } from 'src/screens/Screens'
@@ -175,7 +175,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   const { nftAssets } = route.params
 
   // Use nftAssets[0] to have prefilled collection info while waiting for new collection info from API
-  const { collection } = useNFTCollection(nftAssets[0].collection.slug)
+  const { currentData: collection } = useNftCollectionQuery({ slug: nftAssets[0].collection.slug })
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<OpenseaNFTAsset>) => (

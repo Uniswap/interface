@@ -1,3 +1,4 @@
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, ListRenderItemInfo } from 'react-native'
@@ -9,8 +10,8 @@ import { Screen } from 'src/components/layout/Screen'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { NFTCollectionItem } from 'src/components/NFT/NFTCollectionItem'
 import { Text } from 'src/components/Text'
+import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { OpenseaNFTAsset } from 'src/features/nfts/types'
-import { useAllNFTs } from 'src/features/nfts/useNfts'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
@@ -22,7 +23,9 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
   const { t } = useTranslation()
   const activeAccount = useActiveAccount()
 
-  const { nftsByCollection, loading } = useAllNFTs(activeAccount?.address)
+  const { currentData: nftsByCollection, isLoading } = useNftBalancesQuery(
+    activeAccount ? { owner: activeAccount?.address } : skipToken
+  )
 
   const onPressNFT = (nftAsset: OpenseaNFTAsset) => {
     setSelectedNFTAsset(nftAsset)
@@ -50,7 +53,7 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
       <Box mb="sm" mt="lg" mx="lg">
         <Text variant="h3">{t('Collectibles')}</Text>
       </Box>
-      {loading ? (
+      {isLoading ? (
         <ActivityIndicator color={theme.colors.gray100} size={25} />
       ) : (
         <FlatList

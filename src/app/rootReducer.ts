@@ -6,6 +6,7 @@ import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { dataApi } from 'src/features/dataApi/slice'
 import { favoritesReducer } from 'src/features/favorites/slice'
 import { multicall } from 'src/features/multicall'
+import { nftApi } from 'src/features/nfts/api'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
 import { tokenListsReducer } from 'src/features/tokenLists/reducer'
@@ -29,6 +30,7 @@ export const rootReducer = combineReducers({
   [multicall.reducerPath]: multicall.reducer,
   saga: monitoredSagaReducers,
   [dataApi.reducerPath]: dataApi.reducer,
+  [nftApi.reducerPath]: nftApi.reducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

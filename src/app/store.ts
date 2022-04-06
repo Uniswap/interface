@@ -16,6 +16,7 @@ import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { dataApi } from 'src/features/dataApi/slice'
+import { nftApi } from 'src/features/nfts/api'
 import { swapActions } from 'src/features/swap/swapSaga'
 import { tokenWrapActions } from 'src/features/swap/wrapSaga'
 
@@ -64,6 +65,7 @@ export const store = configureStore({
       }),
       sagaMiddleware,
       dataApi.middleware,
+      nftApi.middleware,
     ]
 
     return middleware
