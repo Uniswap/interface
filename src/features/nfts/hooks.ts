@@ -1,7 +1,7 @@
 import { nftApi } from 'src/features/nfts/api'
 
 // TODO: key by contract address when available
-export function useNFT(owner: Address, openseaSlug: string, tokenId: number) {
+export function useNFT(owner: Address, openseaSlug: string, tokenId: string) {
   return nftApi.useNftBalancesQuery(
     { owner },
     {

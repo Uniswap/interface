@@ -5,12 +5,12 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import MagicWand from 'src/assets/icons/magic-wand.svg'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { Box, Flex, Inset } from 'src/components/layout'
-import { OpenseaNFTAsset } from 'src/features/nfts/types'
+import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setUserPalette, setUserPfp } from 'src/features/user/slice'
 import { extractColors, opacify } from 'src/utils/colors'
 
-function useNFTColors(asset: OpenseaNFTAsset | undefined) {
+function useNFTColors(asset: NFTAsset.Asset | undefined) {
   const [loading, setLoading] = useState<boolean>(false)
   const [colors, setColors] = useState<ImageColorsResult | null>(null)
 
@@ -29,7 +29,7 @@ function useNFTColors(asset: OpenseaNFTAsset | undefined) {
   return { loading, colors }
 }
 
-export function ApplyNFTPaletteButton({ asset }: { asset: OpenseaNFTAsset }) {
+export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
 
@@ -59,7 +59,7 @@ export function ApplyNFTPaletteButton({ asset }: { asset: OpenseaNFTAsset }) {
   ) : null
 }
 
-export function NFTPalette({ asset }: { asset: OpenseaNFTAsset }) {
+export function NFTPalette({ asset }: { asset: NFTAsset.Asset }) {
   const theme = useAppTheme()
 
   const { colors } = useNFTColors(asset)

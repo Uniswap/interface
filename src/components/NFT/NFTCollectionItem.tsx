@@ -9,20 +9,20 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
-import { OpenseaNFTAsset } from 'src/features/nfts/types'
+import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 
 interface Props {
-  nftAssets: OpenseaNFTAsset[]
-  onPressCollection: (nftAssets: OpenseaNFTAsset[]) => void
-  onPressNFT: (nftAsset: OpenseaNFTAsset) => void
+  nftAssets: NFTAsset.Asset[]
+  onPressCollection: (nftAssets: NFTAsset.Asset[]) => void
+  onPressNFT: (nftAsset: NFTAsset.Asset) => void
 }
 
 export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: Props) {
-  const renderItem = ({ item }: ListRenderItemInfo<OpenseaNFTAsset>) => (
+  const renderItem = ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
     <NFTAssetItem
       mx="sm"
       nft={item}
@@ -82,6 +82,6 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
   )
 }
 
-function key(nft: OpenseaNFTAsset) {
+function key(nft: NFTAsset.Asset) {
   return nft.id.toString()
 }

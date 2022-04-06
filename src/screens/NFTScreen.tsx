@@ -11,14 +11,14 @@ import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { NFTCollectionItem } from 'src/components/NFT/NFTCollectionItem'
 import { Text } from 'src/components/Text'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
-import { OpenseaNFTAsset } from 'src/features/nfts/types'
+import { NFTAsset } from 'src/features/nfts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
 
 export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
   const [showNFTModal, setShowNFTModal] = useState(false)
-  const [selectedNFTAsset, setSelectedNFTAsset] = useState<OpenseaNFTAsset>()
+  const [selectedNFTAsset, setSelectedNFTAsset] = useState<NFTAsset.Asset>()
 
   const { t } = useTranslation()
   const activeAccount = useActiveAccount()
@@ -27,13 +27,13 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
     activeAccount ? { owner: activeAccount?.address } : skipToken
   )
 
-  const onPressNFT = (nftAsset: OpenseaNFTAsset) => {
+  const onPressNFT = (nftAsset: NFTAsset.Asset) => {
     setSelectedNFTAsset(nftAsset)
     setShowNFTModal(true)
   }
 
-  const renderItem = ({ item }: ListRenderItemInfo<OpenseaNFTAsset[]>) => {
-    const onPressCollection = (nftAssets: OpenseaNFTAsset[]) => {
+  const renderItem = ({ item }: ListRenderItemInfo<NFTAsset.Asset[]>) => {
+    const onPressCollection = (nftAssets: NFTAsset.Asset[]) => {
       if (nftAssets.length > 0) {
         navigation.navigate(Screens.NFTCollection, { nftAssets: nftAssets })
       }
@@ -83,6 +83,6 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
   )
 }
 
-function key(nftAssets: OpenseaNFTAsset[]) {
+function key(nftAssets: NFTAsset.Asset[]) {
   return nftAssets[0].collection.slug
 }

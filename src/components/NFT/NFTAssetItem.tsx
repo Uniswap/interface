@@ -4,14 +4,14 @@ import { Button } from 'src/components/buttons/Button'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { OpenseaNFTAsset } from 'src/features/nfts/types'
+import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { theme, Theme } from 'src/styles/theme'
 
 type Props = {
-  nft: OpenseaNFTAsset
+  nft: NFTAsset.Asset
   size: number
-  onPress: (nft: OpenseaNFTAsset) => void
+  onPress: (nft: NFTAsset.Asset) => void
 } & SpacingShorthandProps<Theme>
 
 export function NFTAssetItem({ nft, size, onPress, ...rest }: Props) {

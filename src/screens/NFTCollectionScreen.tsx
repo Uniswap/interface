@@ -16,7 +16,7 @@ import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { Text } from 'src/components/Text'
 import { useNftCollectionQuery } from 'src/features/nfts/api'
-import { OpenseaNFTAsset, OpenseaNFTCollection } from 'src/features/nfts/types'
+import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { Screens } from 'src/screens/Screens'
@@ -28,7 +28,7 @@ import { openUri } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 
 interface Props {
-  collection?: OpenseaNFTCollection
+  collection?: NFTAsset.Collection
   collectionName: string
 }
 
@@ -79,12 +79,12 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               </Text>
             )}
             <Flex flexDirection="row" gap="md">
-              {collection?.external_link && (
+              {collection?.external_url && (
                 <Button
                   borderRadius="md"
                   name={ElementName.NFTCollectionWebsite}
                   testID={ElementName.NFTCollectionWebsite}
-                  onPress={() => collection?.external_link && openUri(collection?.external_link)}>
+                  onPress={() => collection?.external_url && openUri(collection?.external_url)}>
                   <Text fontWeight="600" variant="bodySm">
                     {t('Website ↗')}
                   </Text>
@@ -171,14 +171,16 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
 
 export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCollection>) {
   const [showNFTModal, setShowNFTModal] = useState(false)
-  const [selectedNFTAsset, setSelectedNFTAsset] = useState<OpenseaNFTAsset>()
+  const [selectedNFTAsset, setSelectedNFTAsset] = useState<NFTAsset.Asset>()
   const { nftAssets } = route.params
 
   // Use nftAssets[0] to have prefilled collection info while waiting for new collection info from API
-  const { currentData: collection } = useNftCollectionQuery({ slug: nftAssets[0].collection.slug })
+  const { currentData: collection } = useNftCollectionQuery({
+    openseaSlug: nftAssets[0].collection.slug,
+  })
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<OpenseaNFTAsset>) => (
+    ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
       <NFTAssetItem
         mx="sm"
         my="sm"
@@ -190,7 +192,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
     []
   )
 
-  const onPressNFT = (nftAsset: OpenseaNFTAsset) => {
+  const onPressNFT = (nftAsset: NFTAsset.Asset) => {
     setSelectedNFTAsset(nftAsset)
     setShowNFTModal(true)
   }
@@ -243,6 +245,6 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   )
 }
 
-function key(nft: OpenseaNFTAsset) {
+function key(nft: NFTAsset.Asset) {
   return nft.id.toString()
 }

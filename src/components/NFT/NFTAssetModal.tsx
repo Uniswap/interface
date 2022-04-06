@@ -12,7 +12,7 @@ import { Box } from 'src/components/layout/Box'
 import { BottomSheetScrollModal } from 'src/components/modals/BottomSheetModal'
 import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette'
 import { Text } from 'src/components/Text'
-import { OpenseaNFTAsset } from 'src/features/nfts/types'
+import { NFTAsset } from 'src/features/nfts/types'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -24,7 +24,7 @@ import { openUri } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 
 interface Props {
-  nftAsset?: OpenseaNFTAsset
+  nftAsset?: NFTAsset.Asset
   isVisible: boolean
   onClose: () => void
 }
