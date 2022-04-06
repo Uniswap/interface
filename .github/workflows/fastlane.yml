@@ -9,9 +9,9 @@ on:
 jobs:
   ios:
     name: iOS
-    runs-on: macos-11
+    runs-on: macos-latest
     # TODO matrix across APIs, at least 11 and 15 (lowest to highest)
-    timeout-minutes: 40
+    timeout-minutes: 50
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
@@ -24,7 +24,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '13.0'
+          xcode-version: 'latest-stable'
 
       - uses: actions/checkout@v2
         with:
@@ -55,7 +55,7 @@ jobs:
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 10
-          retry_wait_seconds: 60
+          retry_wait_seconds: 2
           max_attempts: 3
           command: yarn
 
@@ -63,7 +63,7 @@ jobs:
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 2
-          retry_wait_seconds: 60
+          retry_wait_seconds: 2
           max_attempts: 3
           command: gem update cocoapods xcodeproj
 
@@ -79,7 +79,7 @@ jobs:
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 10
-          retry_wait_seconds: 30
+          retry_wait_seconds: 2
           max_attempts: 3
           command: cd ios && pod install && cd ..
 
@@ -104,7 +104,7 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           CI: true
-          CI_KEYCHAIN_NAME: "CI_KEYCHAIN"
+          CI_KEYCHAIN_NAME: 'CI_KEYCHAIN'
           CI_KEYCHAIN_PASSWORD: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
           GIT_BRANCH_NAME: ${{ github.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -114,5 +114,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-          
-
