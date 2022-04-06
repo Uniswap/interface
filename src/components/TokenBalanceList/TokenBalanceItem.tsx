@@ -30,16 +30,18 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
       px="lg"
       py="sm"
       onPress={onPress}>
-      <Flex centered row gap="sm">
+      <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
         <CurrencyLogo currency={currency} size={40} />
-        <Flex alignItems="flex-start" gap="xxs">
-          <Text variant="h4">{currency.name}</Text>
+        <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
+          <Text ellipsizeMode="tail" numberOfLines={1} variant="h4">
+            {currency.name}
+          </Text>
           <Text color="gray600" variant="bodySm">{`${formatCurrencyAmount(amount)} ${
             currency.symbol
           }`}</Text>
         </Flex>
       </Flex>
-      <Box alignItems="flex-end">
+      <Box alignItems="flex-end" flexBasis="auto">
         <Text variant="h4">{formatUSDPrice(balance.balanceUSD)}</Text>
         <RelativeChange change={relativeChange24} />
       </Box>

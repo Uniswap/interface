@@ -352,6 +352,7 @@ exports[`renders text with few matches 1`] = `
 
 exports[`renders text without matches 1`] = `
 <Text
+  numberOfLines={1}
   style={
     Array [
       Object {

@@ -35,18 +35,13 @@ export function Option({
   return (
     <Pressable testID={`currency-option-${currency.chainId}-${currency.symbol}`} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="sm">
-        <Flex centered row gap="xs">
-          <Flex centered row gap="sm">
-            <CurrencyLogo currency={currency} size={40} />
-            <Flex alignItems="flex-start" gap="xs">
-              <Flex centered row>
-                <TextWithFuseMatches
-                  matches={nameMatches}
-                  text={currency.name ?? ''}
-                  variant="h4"
-                />
-              </Flex>
-
+        <Flex row flexShrink={1} gap="xs" overflow="hidden">
+          <CurrencyLogo currency={currency} size={40} />
+          <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
+            <Flex row>
+              <TextWithFuseMatches matches={nameMatches} text={currency.name ?? ''} variant="h4" />
+            </Flex>
+            <Flex row>
               <TextWithFuseMatches
                 matches={symbolMatches}
                 text={currency.symbol ?? ''}
@@ -55,18 +50,20 @@ export function Option({
             </Flex>
           </Flex>
         </Flex>
-        {metadataType === 'price' ? (
-          <TokenMetadata
-            main={formatUSDPrice(currencyPrice?.price)}
-            pre={<InlinePriceChart currency={currency} />}
-            sub={<RelativeChange change={currencyPrice?.relativeChange24} />}
-          />
-        ) : balance?.amount && !balance.amount.equalTo(0) ? (
-          <TokenMetadata
-            main={formatCurrencyAmount(balance.amount)}
-            sub={formatUSDPrice(balance.balanceUSD)}
-          />
-        ) : null}
+        <Flex row justifyContent="flex-end">
+          {metadataType === 'price' ? (
+            <TokenMetadata
+              main={formatUSDPrice(currencyPrice?.price)}
+              pre={<InlinePriceChart currency={currency} />}
+              sub={<RelativeChange change={currencyPrice?.relativeChange24} />}
+            />
+          ) : balance?.amount && !balance.amount.equalTo(0) ? (
+            <TokenMetadata
+              main={formatCurrencyAmount(balance.amount)}
+              sub={formatUSDPrice(balance.balanceUSD)}
+            />
+          ) : null}
+        </Flex>
       </Flex>
     </Pressable>
   )

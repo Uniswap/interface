@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js'
 import React from 'react'
+import { TextProps } from 'react-native'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 import { Flex } from '../layout'
@@ -8,12 +9,18 @@ interface TextWithFuseMatchesProps {
   text: string
   matches?: readonly Fuse.FuseResultMatch[]
   variant?: keyof Theme['textVariants']
+  numberOfLines?: TextProps['numberOfLines']
 }
 
-export function TextWithFuseMatches({ matches, text, variant = 'body' }: TextWithFuseMatchesProps) {
+export function TextWithFuseMatches({
+  matches,
+  text,
+  variant = 'body',
+  numberOfLines = 1,
+}: TextWithFuseMatchesProps & TextProps) {
   if (!matches || matches.length === 0) {
     return (
-      <Text color="textColor" variant={variant}>
+      <Text color="textColor" numberOfLines={numberOfLines} variant={variant}>
         {text}
       </Text>
     )
