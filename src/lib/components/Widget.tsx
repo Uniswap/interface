@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
 import { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
@@ -9,12 +9,11 @@ import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { UNMOUNTING } from 'lib/utils/animations'
-import { PropsWithChildren, StrictMode, useState } from 'react'
+import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
-import WidgetPropValidator from './Error/WidgetsPropsValidator'
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -103,17 +102,22 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const {
-    children,
-    theme,
-    locale = DEFAULT_LOCALE,
-    provider,
-    jsonRpcEndpoint,
-    width = 360,
-    dialog: userDialog,
-    className,
-    onError,
-  } = props
+  const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
+  const width = useMemo(() => {
+    if (props.width && props.width < 300) {
+      console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
+      return 300
+    }
+    return props.width ?? 360
+  }, [props.width])
+  const locale = useMemo(() => {
+    if (props.locale && ![...SUPPORTED_LOCALES, 'pseudo'].includes(props.locale)) {
+      console.warn(`Unsupported locale: ${props.locale}. Falling back to ${DEFAULT_LOCALE}.`)
+      return DEFAULT_LOCALE
+    }
+    return props.locale ?? DEFAULT_LOCALE
+  }, [props.locale])
+
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
@@ -123,7 +127,6 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={userDialog || dialog}>
               <ErrorBoundary onError={onError}>
-                <WidgetPropValidator {...props} />
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
                     <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>

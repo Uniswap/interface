@@ -18,12 +18,12 @@ function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
 
 type ValidatorProps = PropsWithChildren<TokenDefaults & FeeOptions>
 
-export default function SwapPropValidator(props: ValidatorProps) {
+export default function useValidate(props: ValidatorProps) {
   const { convenienceFee, convenienceFeeRecipient } = props
   useEffect(() => {
     if (convenienceFee) {
       if (convenienceFee > 100 || convenienceFee < 0) {
-        throw new IntegrationError(`convenienceFee must be between 0 and 100. (You set it to ${convenienceFee})`)
+        throw new IntegrationError(`convenienceFee must be between 0 and 100 (you set it to ${convenienceFee}).`)
       }
       if (!convenienceFeeRecipient) {
         throw new IntegrationError('convenienceFeeRecipient is required when convenienceFee is set.')
@@ -32,7 +32,7 @@ export default function SwapPropValidator(props: ValidatorProps) {
       if (typeof convenienceFeeRecipient === 'string') {
         if (!isAddress(convenienceFeeRecipient)) {
           throw new IntegrationError(
-            `convenienceFeeRecipient must be a valid address. (You set it to ${convenienceFeeRecipient}.)`
+            `convenienceFeeRecipient must be a valid address (you set it to ${convenienceFeeRecipient}).`
           )
         }
       } else if (typeof convenienceFeeRecipient === 'object') {
@@ -40,7 +40,7 @@ export default function SwapPropValidator(props: ValidatorProps) {
           if (!isAddress(recipient)) {
             const values = Object.values(convenienceFeeRecipient).join(', ')
             throw new IntegrationError(
-              `All values in convenienceFeeRecipient object must be valid addresses. (You used ${values}.)`
+              `All values in convenienceFeeRecipient object must be valid addresses (you used ${values}).`
             )
           }
         })
@@ -54,11 +54,11 @@ export default function SwapPropValidator(props: ValidatorProps) {
       throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
     }
     if (defaultInputAmount && BigNumber.from(defaultInputAmount).lt(0)) {
-      throw new IntegrationError(`defaultInputAmount must be a positive number. (You set it to ${defaultInputAmount})`)
+      throw new IntegrationError(`defaultInputAmount must be a positive number (you set it to ${defaultInputAmount})`)
     }
     if (defaultOutputAmount && BigNumber.from(defaultOutputAmount).lt(0)) {
       throw new IntegrationError(
-        `defaultOutputAmount must be a positive number. (You set it to ${defaultOutputAmount})`
+        `defaultOutputAmount must be a positive number (you set it to ${defaultOutputAmount}).`
       )
     }
     if (
@@ -67,7 +67,7 @@ export default function SwapPropValidator(props: ValidatorProps) {
       defaultInputTokenAddress !== 'NATIVE'
     ) {
       throw new IntegrationError(
-        `defaultInputTokenAddress(es) must be a valid address or "NATIVE". (You set it to ${defaultInputTokenAddress}`
+        `defaultInputTokenAddress must be a valid address or "NATIVE" (you set it to ${defaultInputTokenAddress}).`
       )
     }
     if (
@@ -76,10 +76,8 @@ export default function SwapPropValidator(props: ValidatorProps) {
       defaultOutputTokenAddress !== 'NATIVE'
     ) {
       throw new IntegrationError(
-        `defaultOutputTokenAddress(es) must be a valid address or "NATIVE". (You set it to ${defaultOutputTokenAddress}`
+        `defaultOutputTokenAddress must be a valid address or "NATIVE" (you set it to ${defaultOutputTokenAddress}).`
       )
     }
   }, [defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount])
-
-  return null
 }
