@@ -84,7 +84,8 @@ platform :ios do
       export_options: {
         method: export_options_method,
         provisioningProfiles: {
-          options[:app_identifier] => ENV["sigh_#{options[:app_identifier]}_#{match_type}_profile-name"],
+          options[:app_identifier][0] => ENV["sigh_#{options[:app_identifier]}_#{match_type}_profile-name"],
+          options[:app_identifier][1] + ".OneSignalNotificationServiceExtension" => ENV["sigh_#{options[:app_identifier]}.OneSignalNotificationServiceExtension_#{match_type}_profile-name"]
         }
       },
     )
