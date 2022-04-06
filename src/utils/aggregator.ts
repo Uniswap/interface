@@ -125,15 +125,10 @@ function encodeBalancerSwap(data: any) {
 export function isEncodeUniswapCallback(chainId: ChainId): (swap: any) => boolean {
   return swap => {
     const dex = getExchangeConfig(swap.exchange, chainId)
-    if (dex.type === 1 || dex.type === 4) {
+    if ([1, 4, 2, 6, 5].includes(dex.type)) {
       return false
-    } else if (dex.type === 2) {
-      return false
-    } else if (dex.type === 6) {
-      return false
-    } else {
-      return true
     }
+    return true
   }
 }
 
