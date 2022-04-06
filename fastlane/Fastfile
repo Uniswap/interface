@@ -128,6 +128,7 @@ platform :ios do
 
     commit_version_bump(
       xcodeproj: XCODE_PROJECT,
+      force: true
     )
 
     # pushChangesBack(options)
