@@ -56,6 +56,7 @@ export default function usePoll<T>(
 
     return () => {
       clearTimeout(timeout)
+      timeout = 0
     }
 
     async function poll(ttl = Date.now() + pollingInterval) {
@@ -65,7 +66,7 @@ export default function usePoll<T>(
       // Always set the result in the cache, but only set it as data if the key is still being queried.
       const result = await fetch()
       cache.set(key, { ttl, result })
-      setData((data) => (data.key === key ? { key, result } : data))
+      if (timeout) setData((data) => (data.key === key ? { key, result } : data))
     }
   }, [cache, debounce, fetch, isStale, keepUnusedDataFor, key, pollingInterval])
 
