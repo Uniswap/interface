@@ -23,8 +23,8 @@ import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
 import SwapButton from './SwapButton'
-import SwapPropValidator from './SwapPropValidator'
 import Toolbar from './Toolbar'
+import useValidate from './useValidate'
 
 function getTransactionFromMap(
   txs: { [hash: string]: Transaction },
@@ -56,6 +56,8 @@ function Updaters(props: SwapProps & { disabled: boolean }) {
 }
 
 export default function Swap(props: SwapProps) {
+  useValidate(props)
+
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -70,7 +72,6 @@ export default function Swap(props: SwapProps) {
 
   return (
     <>
-      <SwapPropValidator {...props} />
       <Updaters {...props} disabled={isDisabled} />
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
