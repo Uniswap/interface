@@ -32,7 +32,7 @@ export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
 
-export const injected = new InjectedConnector({
+const injectedConnectorParam = {
   supportedChainIds: [
     1,
     3,
@@ -55,7 +55,10 @@ export const injected = new InjectedConnector({
     ChainId.VELAS,
     ChainId.OASIS,
   ],
-})
+}
+export const injected = new InjectedConnector(injectedConnectorParam)
+
+export const coin98InjectedConnector = new InjectedConnector(injectedConnectorParam)
 
 const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,

@@ -1,6 +1,6 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@dynamic-amm/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { injected, ledger, walletconnect, walletlink } from '../connectors'
+import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
 import { t } from '@lingui/macro'
 import { uuid } from 'uuidv4'
@@ -836,6 +836,14 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Easy-to-use browser extension.',
     href: null,
     color: '#E8831D',
+  },
+  COIN98: {
+    connector: coin98InjectedConnector,
+    name: 'Coin98',
+    iconName: 'coin98.svg',
+    description: 'The Leading Multi-chain Wallet & DeFi Gateway',
+    href: null,
+    color: 'e6c959',
   },
   WALLET_CONNECT: {
     connector: walletconnect,

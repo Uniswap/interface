@@ -8,6 +8,7 @@ import { injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
 import { useIsDarkMode } from '../../state/user/hooks'
+import { WarningBox } from './WarningBox'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -31,7 +32,7 @@ const LoadingMessage = styled.div<{ error?: boolean }>`
   margin-bottom: 20px;
   color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
   border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text4)};
-
+  width: 100%;
   & > * {
     padding: 1rem;
   }
@@ -40,14 +41,16 @@ const LoadingMessage = styled.div<{ error?: boolean }>`
 const ErrorGroup = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
 `
 
 const ErrorButton = styled.div`
   border-radius: 8px;
   font-size: 12px;
-  color: ${({ theme }) => theme.text};
-  background-color: ${({ theme }) => theme.bg4};
+  color: ${({ theme }) => theme.primary};
+  background-color: rgba(49, 203, 158, 0.2);
   margin-left: 1rem;
   padding: 0.5rem;
   font-weight: 600;
@@ -55,14 +58,14 @@ const ErrorButton = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ theme }) => darken(0.1, theme.text4)};
+    background-color: ${({ theme }) => darken(0.1, theme.bg7)};
   }
 `
 
 const LoadingWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  justify-content: center;
+  width: 100%;
 `
 
 export default function PendingView({
@@ -77,7 +80,15 @@ export default function PendingView({
   tryActivation: (connector: AbstractConnector) => void
 }) {
   const isMetamask = window?.ethereum?.isMetaMask
+  const isCoin98 = window?.ethereum?.isCoin98 || !!window.coin98
   const isDarkMode = useIsDarkMode()
+
+  const option = Object.keys(SUPPORTED_WALLETS).find(key => {
+    const wallet = SUPPORTED_WALLETS[key]
+    return wallet.connector === connector
+  })
+
+  const isInjected = option === 'INJECTED' || option === 'COIN98'
 
   return (
     <PendingSection>
@@ -105,31 +116,7 @@ export default function PendingView({
           )}
         </LoadingWrapper>
       </LoadingMessage>
-      {Object.keys(SUPPORTED_WALLETS).map(key => {
-        const option = SUPPORTED_WALLETS[key]
-        if (option.connector === connector) {
-          if (option.connector === injected) {
-            if (isMetamask && option.name !== 'MetaMask') {
-              return null
-            }
-            if (!isMetamask && option.name === 'MetaMask') {
-              return null
-            }
-          }
-          return (
-            <Option
-              id={`connect-${key}`}
-              key={key}
-              clickable={false}
-              color={option.color}
-              header={option.name}
-              subheader={option.description}
-              icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`)}
-            />
-          )
-        }
-        return null
-      })}
+      {isMetamask && isCoin98 && isInjected && <WarningBox option={option} />}
     </PendingSection>
   )
 }

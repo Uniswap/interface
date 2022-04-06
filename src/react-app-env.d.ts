@@ -9,12 +9,14 @@ declare module 'fortmatic'
 interface Window {
   ethereum?: {
     isMetaMask?: true
+    isCoin98?: boolean
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     request: (params: { method: string; params?: any }) => Promise
   }
   web3?: {}
   version?: string
+  coin98?: any
 }
 
 declare module 'content-hash' {

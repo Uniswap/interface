@@ -1,14 +1,13 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory, useLocation } from 'react-router'
 import { stringify } from 'qs'
 
-import { SupportedNetwork, SUPPORTED_NETWORKS } from 'constants/networks'
+import { SUPPORTED_NETWORKS, SupportedNetwork } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useParsedQueryString from './useParsedQueryString'
 import { ChainId } from '@dynamic-amm/sdk'
 import { useAppDispatch } from 'state/hooks'
 import { updateChainIdWhenNotConnected } from 'state/application/actions'
-import { isMobile } from 'react-device-detect'
 import { UnsupportedChainIdError } from '@web3-react/core'
 
 export const SWITCH_NETWORK_PARAMS: {
@@ -197,69 +196,56 @@ function parseNetworkId(maybeSupportedNetwork: string): SupportedNetwork | undef
 }
 
 export function useActiveNetwork() {
-  const { chainId, library, connector, error } = useActiveWeb3React()
+  const { chainId, library, error } = useActiveWeb3React()
   const history = useHistory()
   const location = useLocation()
   const qs = useParsedQueryString()
   const dispatch = useAppDispatch()
 
-  // Delete networkId from qs object
-  const { networkId, ...qsWithoutNetworkId } = qs
+  const locationWithoutNetworkId = useMemo(() => {
+    // Delete networkId from qs object
+    const { networkId, ...qsWithoutNetworkId } = qs
 
-  const target = {
-    ...location,
-    search: stringify({ ...qsWithoutNetworkId }),
-  }
-  const targetRef = useRef(target)
-  useEffect(() => {
-    targetRef.current = target
-  }, [target])
+    return { ...location, search: stringify({ ...qsWithoutNetworkId }) }
+  }, [location])
 
   const changeNetwork = useCallback(
     async (chainId: ChainId) => {
-      // Disconnect wallet on mobile when switch chain
-      if (isMobile && (connector as any)?.close) {
-        await (connector as any).close()
-        dispatch(updateChainIdWhenNotConnected(chainId))
-        return
-      }
-
       const switchNetworkParams = SWITCH_NETWORK_PARAMS[chainId]
       const addNetworkParams = ADD_NETWORK_PARAMS[chainId]
 
-      const isNotConnected = !(library && library.provider && library.provider.isMetaMask)
+      const isNotConnected = !(library && library.provider)
       const isWrongNetwork = error instanceof UnsupportedChainIdError
       if (isNotConnected && !isWrongNetwork) {
         dispatch(updateChainIdWhenNotConnected(chainId))
-
-        setTimeout(() => {
-          history.push(targetRef.current)
-        }, 3000)
-        return
       }
 
-      try {
-        await window.ethereum?.request({
-          method: 'wallet_switchEthereumChain',
-          params: [switchNetworkParams],
-        })
-        history.push(target)
-      } catch (switchError) {
-        // This error code indicates that the chain has not been added to MetaMask.
-        if (switchError.code === 4902 || switchError.code === -32603) {
-          try {
-            await window.ethereum?.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
-            history.push(target)
-          } catch (addError) {
-            console.error(addError)
+      if (library && library.provider && library.provider.request) {
+        history.push(locationWithoutNetworkId)
+
+        try {
+          await library.provider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [switchNetworkParams],
+          })
+        } catch (switchError) {
+          // This is a workaround solution for Coin98
+          const isSwitcherror = typeof switchError === 'object' && Object.keys(switchError)?.length === 0
+          // This error code indicates that the chain has not been added to MetaMask.
+          if (switchError.code === 4902 || switchError.code === -32603 || isSwitcherror) {
+            try {
+              await library.provider.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
+            } catch (addError) {
+              console.error(addError)
+            }
+          } else {
+            // handle other "switch" errors
+            console.error(switchError)
           }
-        } else {
-          // handle other "switch" errors
-          console.error(switchError)
         }
       }
     },
-    [dispatch, history, library, target, connector, error],
+    [dispatch, history, library, locationWithoutNetworkId, error],
   )
 
   useEffect(() => {

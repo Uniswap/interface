@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis } from '../../connectors'
+import { coin98InjectedConnector, fortmatic, injected, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
@@ -64,14 +64,15 @@ const ContentWrapper = styled.div<{ padding?: string }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
-const FooterRow = styled.div`
+const TermAndCondition = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 0 2rem 40px 2rem;
+  padding: 32px 2rem 0px 2rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
+  accent-color: ${({ theme }) => theme.primary};
 `
 
 const UpperSection = styled.div`
@@ -107,6 +108,7 @@ const OptionGrid = styled.div`
 `
 
 const HoverText = styled.div`
+  font-size: 18px;
   :hover {
     cursor: pointer;
   }
@@ -237,11 +239,10 @@ export default function WalletModal({
         }
         return null
       }
-
       // overwrite injected when needed
       if (option.connector === injected) {
         // don't show injected if there's no injected provider
-        if (!(window.web3 || window.ethereum)) {
+        if (!(window.web3 || window.ethereum?.isMetaMask)) {
           if (option.name === 'MetaMask') {
             return (
               <Option
@@ -251,7 +252,7 @@ export default function WalletModal({
                 header={'Install Metamask'}
                 subheader={null}
                 link={'https://metamask.io/'}
-                icon={MetamaskIcon}
+                icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`)}
               />
             )
           } else {
@@ -265,6 +266,21 @@ export default function WalletModal({
         // likewise for generic
         else if (option.name === 'Injected' && isMetamask) {
           return null
+        }
+      }
+
+      if (option.connector === coin98InjectedConnector) {
+        if (!(window.web3 || window.ethereum?.isCoin98)) {
+          return (
+            <Option
+              id={`connect-${key}`}
+              key={key}
+              color={'#E8831D'}
+              header={'Install Coin98'}
+              link={'https://coin98.com/'}
+              icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`)}
+            />
+          )
         }
       }
 
@@ -343,10 +359,23 @@ export default function WalletModal({
         ) : (
           <HeaderRow>
             <HoverText>
-              <Trans>Import your Wallet</Trans>
+              <Trans>Connect your Wallet</Trans>
             </HoverText>
           </HeaderRow>
         )}
+        <TermAndCondition>
+          <input type="checkbox" checked={isAccepted} onChange={handleAccept} style={{ marginRight: '12px' }} />
+          <ToSText>
+            <Trans>Accept</Trans>{' '}
+            <ExternalLink href="/15022022KyberSwapTermsofUse.pdf">
+              <Trans>Terms of Use</Trans>
+            </ExternalLink>{' '}
+            <Trans>and</Trans>{' '}
+            <ExternalLink href="http://files.dmm.exchange/privacy.pdf">
+              <Trans>Privacy Policy</Trans>
+            </ExternalLink>
+          </ToSText>
+        </TermAndCondition>
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
@@ -359,19 +388,6 @@ export default function WalletModal({
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
         </ContentWrapper>
-        <FooterRow>
-          <input type="checkbox" checked={isAccepted} onChange={handleAccept} style={{ marginRight: '12px' }} />
-          <ToSText>
-            <Trans>Accept</Trans>{' '}
-            <ExternalLink href="/15022022KyberSwapTermsofUse.pdf">
-              <Trans>Terms of Use</Trans>
-            </ExternalLink>{' '}
-            <Trans>and</Trans>{' '}
-            <ExternalLink href="http://files.dmm.exchange/privacy.pdf">
-              <Trans>Privacy Policy</Trans>
-            </ExternalLink>
-          </ToSText>
-        </FooterRow>
       </UpperSection>
     )
   }
@@ -382,7 +398,7 @@ export default function WalletModal({
       onDismiss={toggleWalletModal}
       minHeight={false}
       maxHeight={90}
-      maxWidth={account && walletView === WALLET_VIEWS.ACCOUNT ? 420 : 612}
+      maxWidth={account && walletView === WALLET_VIEWS.ACCOUNT ? 420 : 512}
     >
       <Wrapper>{getModalContent()}</Wrapper>
     </Modal>

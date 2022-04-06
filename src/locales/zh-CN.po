@@ -384,6 +384,10 @@ msgstr ""
 msgid "Clear all"
 msgstr "全部清除"
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Click on the Settings icon"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "关闭"
@@ -474,6 +478,10 @@ msgstr "连接钱包以查看您的流动性。"
 #: src/state/swap/useAggregator.ts
 msgid "Connect wallet"
 msgstr "连接钱包"
+
+#: src/components/WalletModal/index.tsx
+msgid "Connect your Wallet"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -579,13 +587,13 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Disable Metamask in C98"
+msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Disclaimer: The information here should not be treated as any form of financial advice"
 msgstr ""
-
-#: src/components/AccountDetails/index.tsx
-msgid "Disconnect"
-msgstr "断开"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -648,6 +656,10 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Earn more with your crypto assets"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Enable Metamask in C98"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
@@ -887,6 +899,14 @@ msgstr ""
 msgid "I understand"
 msgstr "我知道"
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "If C98 wallet opens instead of Metamask, please close the C98 popup then follow the steps below to disable C98 Wallet:"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "If Metamask wallet opens instead of C98, please close the Metamask popup then follow the steps below to disable Metamask Wallet:"
+msgstr ""
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "如果您从此列表中购买了代币，则可能无法将其卖回。"
@@ -929,10 +949,6 @@ msgstr "导入的风险自负"
 #: src/pages/Pool/lp.tsx
 msgid "Import it."
 msgstr "导入它。"
-
-#: src/components/WalletModal/index.tsx
-msgid "Import your Wallet"
-msgstr "导入您的钱包"
 
 #: src/pages/CreateReferral/index.tsx
 msgid "Include Chain"
@@ -1377,6 +1393,10 @@ msgstr "一个代币在池中的比例接近0%时，池可能会变得不活跃�
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "哎呀！ 出现未知错误。 请刷新页面，或从其他浏览器或设备访问。"
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Open C98 Browser Extension"
+msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
 msgstr ""
@@ -1609,6 +1629,14 @@ msgstr ""
 msgid "Referral Fee"
 msgstr ""
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Refresh the page then try to connect to C98 again"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Refresh the page then try to connect to Metamask again"
+msgstr ""
+
 #: src/components/PositionCard/V1.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1693,6 +1721,10 @@ msgstr "搜索名称或粘贴地址"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
 msgstr "选择最大值"
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Select Override Wallets"
+msgstr ""
 
 #: src/components/NetworkModal/index.tsx
 msgid "Select a Network"

@@ -384,6 +384,10 @@ msgstr ""
 msgid "Clear all"
 msgstr "Hepsini temizle"
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Click on the Settings icon"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Kapat"
@@ -474,6 +478,10 @@ msgstr "Likiditenizi görüntülemek için bir cüzdana bağlanın."
 #: src/state/swap/useAggregator.ts
 msgid "Connect wallet"
 msgstr "Cüzdanı bağla"
+
+#: src/components/WalletModal/index.tsx
+msgid "Connect your Wallet"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -579,13 +587,13 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Disable Metamask in C98"
+msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Disclaimer: The information here should not be treated as any form of financial advice"
 msgstr ""
-
-#: src/components/AccountDetails/index.tsx
-msgid "Disconnect"
-msgstr "Bağlantıyı Kes"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -648,6 +656,10 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Earn more with your crypto assets"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Enable Metamask in C98"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
@@ -887,6 +899,14 @@ msgstr ""
 msgid "I understand"
 msgstr "Anladım"
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "If C98 wallet opens instead of Metamask, please close the C98 popup then follow the steps below to disable C98 Wallet:"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "If Metamask wallet opens instead of C98, please close the Metamask popup then follow the steps below to disable Metamask Wallet:"
+msgstr ""
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Bu listeden bir token satın alırsanız, onu geri satamayabilirsiniz."
@@ -929,10 +949,6 @@ msgstr "Kendi sorumluluğunuzda içe aktarınız"
 #: src/pages/Pool/lp.tsx
 msgid "Import it."
 msgstr "İçe aktar."
-
-#: src/components/WalletModal/index.tsx
-msgid "Import your Wallet"
-msgstr "Cüzdanını içe aktar"
 
 #: src/pages/CreateReferral/index.tsx
 msgid "Include Chain"
@@ -1377,6 +1393,10 @@ msgstr "Bir token için havuz oranı %0’a yakındır. Havuz devre dışı kala
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Hay aksi! Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin ya da başka bir tarayıcı veya cihazdan ziyaret edin."
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Open C98 Browser Extension"
+msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
 msgstr ""
@@ -1609,6 +1629,14 @@ msgstr ""
 msgid "Referral Fee"
 msgstr ""
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Refresh the page then try to connect to C98 again"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Refresh the page then try to connect to Metamask again"
+msgstr ""
+
 #: src/components/PositionCard/V1.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1693,6 +1721,10 @@ msgstr "Adı arayın veya adresi yapıştırın"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
 msgstr "Maksimumu Seç"
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Select Override Wallets"
+msgstr ""
 
 #: src/components/NetworkModal/index.tsx
 msgid "Select a Network"

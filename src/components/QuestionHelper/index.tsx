@@ -56,7 +56,7 @@ export default function QuestionHelper({ text }: { text: string }) {
     <Flex as="span" marginLeft="0.25rem" alignItems="center">
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Info size={16} />
+          <Info size={12} />
         </QuestionWrapper>
       </Tooltip>
     </Flex>

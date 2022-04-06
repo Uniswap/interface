@@ -384,6 +384,10 @@ msgstr ""
 msgid "Clear all"
 msgstr "초기화"
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Click on the Settings icon"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "닫기"
@@ -474,6 +478,10 @@ msgstr "지갑에 연결하여 유동성을 확인하세요."
 #: src/state/swap/useAggregator.ts
 msgid "Connect wallet"
 msgstr "지갑 연결"
+
+#: src/components/WalletModal/index.tsx
+msgid "Connect your Wallet"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -579,13 +587,13 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Disable Metamask in C98"
+msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Disclaimer: The information here should not be treated as any form of financial advice"
 msgstr ""
-
-#: src/components/AccountDetails/index.tsx
-msgid "Disconnect"
-msgstr "연결 해제"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -648,6 +656,10 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Earn more with your crypto assets"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Enable Metamask in C98"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
@@ -887,6 +899,14 @@ msgstr ""
 msgid "I understand"
 msgstr "이해했습니다"
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "If C98 wallet opens instead of Metamask, please close the C98 popup then follow the steps below to disable C98 Wallet:"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "If Metamask wallet opens instead of C98, please close the Metamask popup then follow the steps below to disable Metamask Wallet:"
+msgstr ""
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "이 목록에서 구매된 토큰은 되팔지 못할 수도 있습니다."
@@ -929,10 +949,6 @@ msgstr "자신의 책임하에 가져오기"
 #: src/pages/Pool/lp.tsx
 msgid "Import it."
 msgstr "가져오기."
-
-#: src/components/WalletModal/index.tsx
-msgid "Import your Wallet"
-msgstr "지갑 가져오기"
 
 #: src/pages/CreateReferral/index.tsx
 msgid "Include Chain"
@@ -1377,6 +1393,10 @@ msgstr "하나의 토큰은 풀 비율이 0% i에 가깝습니다. 풀이 비활
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "앗! 알 수없는 오류가 발생했습니다. 페이지를 새로고침하거나 다른 브라우저나 기기에서 방문하세요."
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Open C98 Browser Extension"
+msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
 msgstr ""
@@ -1609,6 +1629,14 @@ msgstr ""
 msgid "Referral Fee"
 msgstr ""
 
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Refresh the page then try to connect to C98 again"
+msgstr ""
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Refresh the page then try to connect to Metamask again"
+msgstr ""
+
 #: src/components/PositionCard/V1.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1693,6 +1721,10 @@ msgstr "이름 검색 또는 주소 붙여넣기"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
 msgstr "맥스"
+
+#: src/components/WalletModal/WarningBox.tsx
+msgid "Select Override Wallets"
+msgstr ""
 
 #: src/components/NetworkModal/index.tsx
 msgid "Select a Network"
