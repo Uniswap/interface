@@ -19,9 +19,9 @@ function useUpdateChainBlock() {
     (block: number) => {
       setChainBlock((chainBlock) => {
         if (chainBlock.chainId === chainId) {
-          if (chainBlock.block === block) return chainBlock
-          if (typeof chainBlock.block !== 'number') return { chainId, block }
-          return { chainId, block: Math.max(block, chainBlock.block) }
+          if (!chainBlock.block || chainBlock.block < block) {
+            return { chainId, block }
+          }
         }
         return chainBlock
       })
