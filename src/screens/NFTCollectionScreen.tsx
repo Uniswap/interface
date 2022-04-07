@@ -174,7 +174,6 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   const [selectedNFTAsset, setSelectedNFTAsset] = useState<NFTAsset.Asset>()
   const { nftAssets } = route.params
 
-  // Use nftAssets[0] to have prefilled collection info while waiting for new collection info from API
   const { currentData: collection } = useNftCollectionQuery({
     openseaSlug: nftAssets[0].collection.slug,
   })

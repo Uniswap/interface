@@ -28,7 +28,7 @@ export const nftApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    nftBalances: builder.query<Record<string, NFTAsset.Asset[]>, { owner: Address }>({
+    nftBalances: builder.query<Record<Address, NFTAsset.Asset[]>, { owner: Address }>({
       async queryFn({ owner }, _api, _extraOptions, fetchWithBQ) {
         let assets: NFTAsset.Asset[] = []
         let cursor: string | null = ''
@@ -52,9 +52,8 @@ export const nftApi = createApi({
           }
         }
 
-        // TODO: consider not flatting the object for single nft access
-        const assetsByCollection = assets.reduce<Record<string, NFTAsset.Asset[]>>((all, nft) => {
-          const key = nft.collection.slug
+        const assetsByCollection = assets.reduce<Record<Address, NFTAsset.Asset[]>>((all, nft) => {
+          const key = nft.asset_contract.address
           all[key] ??= []
           all[key]!.push(nft)
           return all
