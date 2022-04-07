@@ -484,7 +484,7 @@ msgid "Connect your Wallet"
 msgstr ""
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
+msgid "Connected"
 msgstr ""
 
 #: src/components/Menu/index.tsx
@@ -1718,6 +1718,10 @@ msgstr ""
 msgid "Search name or paste address"
 msgstr ""
 
+#: src/components/TrendingSoonTokenBanner/index.tsx
+msgid "See"
+msgstr ""
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
 msgstr ""
@@ -2275,6 +2279,10 @@ msgstr ""
 msgid "We discovered this on"
 msgstr ""
 
+#: src/components/TrendingSoonTokenBanner/index.tsx
+msgid "We think"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
 msgstr ""
@@ -2296,10 +2304,6 @@ msgstr ""
 #: src/components/Web3Status/index.tsx
 #: src/components/WrongNetworkModal/index.tsx
 msgid "Wrong Network"
-msgstr ""
-
-#: src/pages/SwapV2/index.tsx
-msgid "You Save"
 msgstr ""
 
 #: src/pages/CreatePool/index.tsx
@@ -2340,6 +2344,10 @@ msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "You save"
 msgstr ""
 
 #: src/pages/AddLiquidity/TokenPair.tsx
@@ -2445,16 +2453,22 @@ msgstr ""
 msgid "Your wallet address *"
 msgstr ""
 
+#: src/components/TrendingSoonTokenBanner/index.tsx
 #: src/components/WalletModal/index.tsx
 msgid "and"
 msgstr ""
 
+#: src/components/TrendingSoonTokenBanner/index.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "here"
 msgstr ""
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
+msgstr ""
+
+#: src/components/TrendingSoonTokenBanner/index.tsx
+msgid "might be trending soon!"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx

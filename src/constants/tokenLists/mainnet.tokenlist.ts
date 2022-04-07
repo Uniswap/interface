@@ -227,6 +227,14 @@ export const MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/18876.png',
     },
+    {
+      chainId: 1,
+      address: '0xb620be8a1949aa9532e6a3510132864ef9bc3f82',
+      symbol: 'LFT',
+      name: 'Lend Flare Dao Token',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/19189.png',
+    },
   ],
   version: {
     major: 0,
