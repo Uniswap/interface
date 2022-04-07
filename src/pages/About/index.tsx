@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React from 'react'
 import { Text, Flex } from 'rebass'
 import { Link } from 'react-router-dom'
 import useTheme from 'hooks/useTheme'
@@ -40,16 +40,11 @@ import { ExternalLink } from 'theme'
 import { useDarkModeManager } from 'state/user/hooks'
 import githubImg from 'assets/svg/about_icon_github.png'
 import githubImgLight from 'assets/svg/about_icon_github_light.png'
-import { KNC, MAX_ALLOW_APY } from 'constants/index'
-import { ChainId, ETHER, Fraction, JSBI } from '@dynamic-amm/sdk'
-import { convertToNativeTokenFromETH, getTradingFeeAPR, useFarmApr, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
+import { KNC } from 'constants/index'
+import { ChainId, ETHER } from '@dynamic-amm/sdk'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { useActiveWeb3React } from 'hooks'
-import { useFarmsData } from 'state/farms/hooks'
 import { useGlobalData } from 'state/about/hooks'
-import { Farm } from 'state/farms/types'
-import { isAddressString } from 'utils'
-import useTokenBalance from 'hooks/useTokenBalance'
-import { ethers } from 'ethers'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import {
   Footer,
@@ -114,33 +109,16 @@ function About() {
   const globalData = data && data.dmmFactories[0]
   const aggregatorData = data?.aggregatorData
 
-  const { data: farms } = useFarmsData()
-  const totalRewards = useFarmRewards(Object.values(farms).flat(), false)
-  const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
-
-  const [maxApr, setMaxApr] = useState<{ [key: string]: number }>({
-    [chainId as ChainId]: -1,
-  })
-  const [indexx, setIndexx] = useState<number>(0)
   const { mixpanelHandler } = useMixpanel()
 
-  useEffect(() => {
-    setIndexx(0)
-  }, [farms])
-
-  const handleAprUpdate = useCallback(
-    (value: number) => {
-      const max = maxApr[chainId as ChainId] || -1
-      if (value > max) {
-        setMaxApr(prev => ({
-          ...prev,
-          [chainId as ChainId]: value,
-        }))
-      }
-      setIndexx(prev => prev + 1)
-    },
-    [maxApr, chainId],
-  )
+  const dataToShow = {
+    totalTradingVolume: aggregatorData?.totalVolume,
+    '24hTradingVolume': aggregatorData?.last24hVolume,
+    totalValueLocked: globalData?.totalLiquidityUSD,
+    totalAMPLiquidity: globalData?.totalAmplifiedLiquidityUSD,
+    totalEarnings: aggregatorData?.totalEarnings || 0,
+    maxAPRAvailable: aggregatorData?.maxApr,
+  }
 
   const ForLPLowerSlippage = ({ width }: { width?: string }) => (
     <ForLiquidityProviderItem
@@ -344,7 +322,11 @@ function About() {
               <Flex sx={{ gap: '16px' }} flex={2}>
                 <StatisticItem>
                   <Text fontSize={['24px', '28px']} fontWeight={600}>
-                    {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
+                    {dataToShow.totalTradingVolume ? (
+                      formatBigLiquidity(dataToShow.totalTradingVolume, 2, true)
+                    ) : (
+                      <Loader />
+                    )}
                   </Text>
                   <Text color={theme.subText} marginTop="8px">
                     <Trans>Total Trading Volume</Trans>*
@@ -352,8 +334,8 @@ function About() {
                 </StatisticItem>
                 <StatisticItem>
                   <Text fontSize={['24px', '28px']} fontWeight={600}>
-                    {aggregatorData?.last24hVolume ? (
-                      formatBigLiquidity(aggregatorData.last24hVolume, 2, true)
+                    {dataToShow['24hTradingVolume'] ? (
+                      formatBigLiquidity(dataToShow['24hTradingVolume'], 2, true)
                     ) : (
                       <Loader />
                     )}
@@ -366,7 +348,11 @@ function About() {
               <Flex sx={{ gap: '16px' }} flex={2}>
                 <StatisticItem>
                   <Text fontSize={['24px', '28px']} fontWeight={600}>
-                    {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
+                    {dataToShow.totalValueLocked ? (
+                      formatBigLiquidity(dataToShow.totalValueLocked, 2, true)
+                    ) : (
+                      <Loader />
+                    )}
                   </Text>
                   <Text color={theme.subText} marginTop="8px">
                     <Trans>Total Value Locked</Trans>
@@ -374,32 +360,46 @@ function About() {
                 </StatisticItem>
                 <StatisticItem>
                   <Text fontSize={['24px', '28px']} fontWeight={600}>
-                    {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
+                    {dataToShow.totalAMPLiquidity ? (
+                      formatBigLiquidity(dataToShow.totalAMPLiquidity, 2, true)
+                    ) : (
+                      <Loader />
+                    )}
                   </Text>
                   <Text color={theme.subText} marginTop="8px">
                     <Trans>Total AMP Liquidity</Trans>**
                   </Text>
                 </StatisticItem>
               </Flex>
-              {(maxApr[chainId as ChainId] >= 0 || totalRewardsUSD > 0) && (
-                <Flex sx={{ gap: '16px' }} flex={maxApr[chainId as ChainId] >= 0 && totalRewardsUSD > 0 ? 2 : 1}>
-                  {totalRewardsUSD > 0 && (
+              {(dataToShow.totalEarnings > 0 || (dataToShow.maxAPRAvailable?.value ?? 0) > 0) && (
+                <Flex
+                  sx={{ gap: '16px' }}
+                  flex={dataToShow.totalEarnings > 0 && (dataToShow.maxAPRAvailable?.value ?? 0) > 0 ? 2 : 1}
+                >
+                  {dataToShow.totalEarnings > 0 && (
                     <StatisticItem>
                       <Text fontSize={['24px', '28px']} fontWeight={600}>
-                        {formatBigLiquidity(totalRewardsUSD.toString(), 2, true)}
+                        {formatBigLiquidity(dataToShow.totalEarnings.toString() ?? 0, 2, true)}
                       </Text>
                       <Text color={theme.subText} marginTop="8px">
                         <Trans>Total Earnings</Trans>
                       </Text>
                     </StatisticItem>
                   )}
-                  {maxApr[chainId as ChainId] >= 0 && (
+                  {dataToShow.maxAPRAvailable && (dataToShow.maxAPRAvailable.value || 0) > 0 && (
                     <StatisticItem>
                       <Text fontSize={['24px', '28px']} fontWeight={600}>
-                        {maxApr[chainId as ChainId] >= 0 ? maxApr[chainId as ChainId].toFixed(2) + '%' : <Loader />}
+                        {dataToShow.maxAPRAvailable.value.toFixed(2) + '%'}
                       </Text>
                       <Text color={theme.subText} marginTop="8px">
-                        <Trans>Max APR Available</Trans>
+                        <Link
+                          to={`/${dataToShow.maxAPRAvailable.is_farm ? 'farms' : 'pools'}?networkId=${
+                            dataToShow.maxAPRAvailable.chain_id
+                          }&search=${dataToShow.maxAPRAvailable.id}`}
+                          style={{ textDecorationLine: 'none' }}
+                        >
+                          <Trans>Max APR Available ↗️</Trans>
+                        </Link>
                       </Text>
                     </StatisticItem>
                   )}
@@ -823,9 +823,6 @@ function About() {
             </Powered>
           </Text>
         </Wrapper>
-        {Object.values(farms)
-          .flat()
-          .map((farm, index) => index === indexx && <Apr key={farm.id} farm={farm} onAprUpdate={handleAprUpdate} />)}
       </AboutPage>
       <Footer background={isDarkMode ? theme.background : theme.white}>
         <FooterContainer>
@@ -856,31 +853,3 @@ function About() {
 }
 
 export default About
-
-function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
-  const poolAddressChecksum = isAddressString(farm.id)
-  const { decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
-  // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
-  const lpTokenRatio = new Fraction(
-    farm.totalStake.toString(),
-    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
-  ).divide(
-    new Fraction(
-      ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
-      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
-    ),
-  )
-  const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
-
-  // const farmAPR = 0
-  const farmAPR = useFarmApr(farm, liquidity.toString())
-  const tradingFee = farm?.oneDayFeeUSD ? farm?.oneDayFeeUSD : farm?.oneDayFeeUntracked
-
-  const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
-  const apr = farmAPR + (tradingFeeAPR < MAX_ALLOW_APY ? tradingFeeAPR : 0)
-
-  useEffect(() => {
-    if (farmAPR > 0) onAprUpdate(apr)
-  }, [apr, onAprUpdate, farmAPR])
-  return <></>
-}

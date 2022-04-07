@@ -8,6 +8,7 @@ import { getExchangeSubgraphUrls } from 'apollo/manager'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
 import { SUPPORTED_NETWORKS } from 'constants/networks'
+import useAggregatorAPR from 'hooks/useAggregatorAPR'
 
 interface GlobalData {
   dmmFactories: {
@@ -25,6 +26,13 @@ interface GlobalData {
   aggregatorData?: {
     totalVolume?: string
     last24hVolume?: string
+    maxApr?: {
+      value: number
+      id: string
+      chain_id: number
+      is_farm: boolean
+    }
+    totalEarnings?: number
   }
 }
 
@@ -34,6 +42,7 @@ export function useGlobalData() {
   const apolloClient = useExchangeClient()
   const [globalData, setGlobalData] = useState<GlobalData>()
   const aggregatorData = useAggregatorVolume()
+  const aggregatorAPR = useAggregatorAPR()
 
   useEffect(() => {
     const getSumValues = (results: { data: GlobalData }[], field: string) => {
@@ -86,12 +95,14 @@ export function useGlobalData() {
         aggregatorData: {
           totalVolume: aggregatorData?.totalVolume,
           last24hVolume: aggregatorData?.last24hVolume,
+          maxApr: aggregatorAPR?.max_apr,
+          totalEarnings: aggregatorAPR?.total_earnings,
         },
       })
     }
 
     getGlobalData()
-  }, [chainId, blockNumber, apolloClient, aggregatorData])
+  }, [chainId, blockNumber, apolloClient, aggregatorData, aggregatorAPR])
 
   return globalData
 }
