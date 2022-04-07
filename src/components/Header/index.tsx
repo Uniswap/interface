@@ -13,6 +13,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
+import ComingSoon from '../../../src/assets/images/coming-soon.png'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
@@ -36,7 +37,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   width: 100%;
   top: 0;
   position: relative;
-  padding: 1rem;
+  padding: 0.5rem;
   z-index: 21;
   position: relative;
   /* Background slide effect on scroll. */
@@ -60,6 +61,15 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
     padding:  1rem;
     grid-template-columns: 36px 1fr;
   `};
+`
+
+const StyledImage = styled.img`
+  height: 15px;
+  width: 40px;
+  tranform: rotate(20deg);
+  position: relative;
+  left: -20px;
+  top: -10px;
 `
 
 const HeaderControls = styled.div`
@@ -263,14 +273,22 @@ export default function Header() {
 
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
-    <HeaderFrame showBackground={scrollY > 45}>
+    <HeaderFrame showBackground={true}>
       <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
       <Title href=".">
         <UniIcon>
-          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <Logo
+            fill={darkMode ? white : black}
+            transform="scale(9)"
+            width="100px"
+            height="35px"
+            title="logo"
+            z-index="1"
+            viewBox="0 0 350 840"
+          />
         </UniIcon>
       </Title>
       <HeaderLinks>
@@ -287,9 +305,13 @@ export default function Header() {
         >
           <Trans>Dashboard</Trans>
         </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Trade</Trans>
+        <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
+          <Trans>Limit Order</Trans>
         </StyledNavLink>
+        <StyledNavLink id={`swap-nav-link`} to={'/stake'}>
+          <Trans>Stake </Trans>
+        </StyledNavLink>
+        <StyledImage src={ComingSoon}></StyledImage>
       </HeaderLinks>
 
       <HeaderControls>

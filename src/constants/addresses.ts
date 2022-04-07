@@ -35,6 +35,22 @@ export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x408ED6354d4973f66138C91495F2f2FCbd8724C3',
 }
 
+export const TREASURY_FEE_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0x9aE8F90f58a6bc41B469b386a0A49eBb94897fAE',
+}
+
+export const SKROMATIKA_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0xEcf12A780a922A8963A8f044e489F499Bf6494e7',
+}
+
+export const STAKING_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0x24C2F4d4e81620dBbC46E02d3DAc9A9c095DcF8C',
+}
+
+export const STAKING_DISTRIBUTOR_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0xa6b19D85a221d5C063b62570457c1171068ba9fd',
+}
+
 export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC')
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
@@ -88,7 +104,7 @@ export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0xD1fDF0144be118C30a53E1d08Cc1E61d600E508e',
 }
 export const KROM_TOKEN_ADDRESSES: AddressMap = {
-  [SupportedChainId.KOVAN]: '0x0B1a06B31b1680519Ea56B38e0dAddC3DA3cA0E5',
+  [SupportedChainId.KOVAN]: '0x4cEbC301Cd0E8AD64dE6B19576de7dd0B0140a1f',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '0x0f747ed5De34aaDc17E39368b7d90da2D0545319',
   [SupportedChainId.OPTIMISM]: '0xF98dCd95217E15E05d8638da4c91125E59590B07',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0x4f1BB8FD099170714AC6F756966616fCc39ae867',

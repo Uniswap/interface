@@ -17,6 +17,10 @@ import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import LIMIT_ORDER_MANAGER_ABI from 'abis/limit-order-manager.json'
+import SKROMATIKA_ABI from 'abis/sKromatika.json'
+import STAKING_ABI from 'abis/Staking.json'
+import STAKING_DISTRIBUTOR_ABI from 'abis/Staking-Distributor.json'
+import TREASURY_FEE_ABI from 'abis/treasury-fee.json'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
@@ -29,6 +33,10 @@ import {
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
+  SKROMATIKA_ADDRESS,
+  STAKING_ADDRESS,
+  STAKING_DISTRIBUTOR_ADDRESS,
+  TREASURY_FEE_ADDRESS,
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
@@ -37,7 +45,18 @@ import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 't
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, LimitOrderManager, Weth } from '../abis/types'
+import {
+  ArgentWalletDetector,
+  EnsPublicResolver,
+  EnsRegistrar,
+  Erc20,
+  LimitOrderManager,
+  SKromatika,
+  Staking,
+  StakingDistributor,
+  TreasuryFee,
+  Weth,
+} from '../abis/types'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 
@@ -64,8 +83,20 @@ export function useContract<T extends Contract = Contract>(
   }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T
 }
 
-export function useV2MigratorContract() {
-  return useContract<V3Migrator>(V3_MIGRATOR_ADDRESSES, V2MigratorABI, true)
+export function useSKromatikaContract() {
+  return useContract<SKromatika>(SKROMATIKA_ADDRESS, SKROMATIKA_ABI, true)
+}
+
+export function useNewStakingContract() {
+  return useContract<Staking>(STAKING_ADDRESS, STAKING_ABI, true)
+}
+
+export function useStakingDistributorContract() {
+  return useContract<StakingDistributor>(STAKING_DISTRIBUTOR_ADDRESS, STAKING_DISTRIBUTOR_ABI, true)
+}
+
+export function useTreasuryFeeContract() {
+  return useContract<TreasuryFee>(TREASURY_FEE_ADDRESS, TREASURY_FEE_ABI, true)
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {

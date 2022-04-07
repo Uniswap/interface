@@ -246,7 +246,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-export default function Swap({ history }: RouteComponentProps) {
+export default function LimitOrder({ history }: RouteComponentProps) {
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
@@ -499,7 +499,7 @@ export default function Swap({ history }: RouteComponentProps) {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      history.push('/#/limitorder/')
+      history.push('/#/limitorder/') // limit order
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 

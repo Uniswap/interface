@@ -8,21 +8,18 @@ import { KROM } from 'constants/tokens'
 import { formatUnits } from 'ethers/lib/utils'
 import { useNewStakingContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
+import { transparentize } from 'polished'
 import { useState } from 'react'
 import { AlertCircle, ChevronDown, ChevronUp, HelpCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import { TransactionType } from 'state/transactions/actions'
 import styled from 'styled-components/macro'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
-import Web3 from 'web3-utils'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -174,174 +171,15 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     </>
   )
 }
-
-export default function FullPositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
+export default function StakePositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
   const showMore = true
-  const backgroundColor = useColor(fundingBalance?.currency)
-
   const { chainId } = useActiveWeb3React()
   const kromToken = chainId ? KROM[chainId] : undefined
 
-  const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
+  const stake = useNewStakingContract()
 
-  return (
-    <VoteCard>
-      <CardBGImage />
-      <CardNoise />
-      <CardSection>
-        <AutoColumn gap="md">
-          <FixedHeightRow>
-            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
-          </FixedHeightRow>
-
-          {showMore && (
-            <AutoColumn gap="8px">
-              <FixedHeightRow>
-                <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
-                    <TYPE.white>
-                      <Trans>Account Status:</Trans>
-                    </TYPE.white>
-                  </Text>
-                </RowFixed>
-
-                {isUnderfunded ? (
-                  <MouseoverTooltip
-                    text={
-                      <Trans>
-                        Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the
-                        minimum balance.
-                      </Trans>
-                    }
-                  >
-                    <Badge variant={BadgeVariant.NEGATIVE}>
-                      <AlertCircle width={14} height={14} />
-                      &nbsp;
-                      <BadgeText>
-                        <Trans>Underfunded</Trans>
-                      </BadgeText>
-                    </Badge>
-                  </MouseoverTooltip>
-                ) : (
-                  <MouseoverTooltip
-                    text={
-                      <Trans>
-                        Your account is actively processing trades. Recommendation is to deposit at least twice the
-                        minimum balance.
-                      </Trans>
-                    }
-                  >
-                    <Badge variant={BadgeVariant.POSITIVE}>
-                      <AlertCircle width={14} height={14} />
-                      &nbsp;
-                      <BadgeText>
-                        <Trans>Active</Trans>
-                      </BadgeText>
-                    </Badge>
-                  </MouseoverTooltip>
-                )}
-              </FixedHeightRow>
-              <FixedHeightRow>
-                <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
-                    <TYPE.white>
-                      <Trans>Deposit Balance:</Trans>
-                    </TYPE.white>
-                  </Text>
-                </RowFixed>
-                {fundingBalance ? (
-                  <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>
-                        {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
-                      </TYPE.white>
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-              <FixedHeightRow>
-                <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
-                    <TYPE.white>
-                      <Trans>Minimum Balance:</Trans>
-                    </TYPE.white>
-                  </Text>
-                </RowFixed>
-                {minBalance ? (
-                  <RowFixed>
-                    <MouseoverTooltip
-                      text={
-                        <Trans>
-                          You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation
-                          is to deposit at least twice the minimum balance.
-                        </Trans>
-                      }
-                    >
-                      <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                    </MouseoverTooltip>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>
-                        {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
-                      </TYPE.white>
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-
-              <ButtonSecondary padding="8px" $borderRadius="8px">
-                <ExternalLink
-                  style={{ width: '100%', textAlign: 'center' }}
-                  href={`https://app.uniswap.org/#/limitorder?inputCurrency=ETH&outputCurrency=${kromToken?.address}`}
-                >
-                  <Trans>
-                    Get KROM tokens here<span style={{ fontSize: '11px' }}>↗</span>
-                  </Trans>
-                </ExternalLink>
-              </ButtonSecondary>
-            </AutoColumn>
-          )}
-        </AutoColumn>
-      </CardSection>
-    </VoteCard>
-  )
-}
-
-export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
-  const stakeManager = useNewStakingContract()
-  const addTransaction = useTransactionAdder()
-  const showMore = true
-  const backgroundColor = useColor(fundingBalance?.currency)
-
-  const { account, chainId, library } = useActiveWeb3React()
-  const kromToken = chainId ? KROM[chainId] : undefined
-
-  let result = useSingleCallResult(stakeManager, 'getEarnedSKrom', [account?.toString()])
-  const earnedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
-
-  result = useSingleCallResult(stakeManager, 'getDepositedAmount', [account?.toString()])
-  const stakedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
-
-  result = useSingleCallResult(stakeManager, 'supplyInWarmup', [])
-  const totalValueLocked = result.result ? Web3.fromWei(result.result.toString()) : ''
-  const amountToStake = 100
-  if (stakeManager && account && library && chainId) {
-    const calldata = stakeManager.interface.encodeFunctionData('stake', [
-      account.toString(),
-      amountToStake,
-      false,
-      false,
-    ])
-
-    const txn = {
-      to: stakeManager.address,
-      data: calldata,
-      value: '0x0',
-    }
-  }
+  const result = useSingleCallResult(stake, 'getEarnedSKrom', ['0xc150a57b053fe5dcD83104F69585a282Ea048AC3'])
+  const earnedBalance = result.result ? result.result.toString() : ''
 
   return (
     <VoteCard>
@@ -363,14 +201,18 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                     </TYPE.white>
                   </Text>
                 </RowFixed>
-                {stakedBalance != null ? (
+                {earnedBalance != null ? (
                   <RowFixed>
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>{stakedBalance} KROM</TYPE.white>
+                      <TYPE.white>{{ earnedBalance }}</TYPE.white>
                     </Text>
                   </RowFixed>
                 ) : (
-                  '-'
+                  <RowFixed>
+                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      <TYPE.white>{{ earnedBalance }}</TYPE.white>
+                    </Text>
+                  </RowFixed>
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
@@ -381,10 +223,12 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                     </TYPE.white>
                   </Text>
                 </RowFixed>
-                {earnedBalance ? (
+                {minBalance ? (
                   <RowFixed>
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>{earnedBalance} KROM </TYPE.white>
+                      <TYPE.white>
+                        {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
+                      </TYPE.white>
                     </Text>
                   </RowFixed>
                 ) : (
@@ -401,43 +245,21 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
                   <MouseoverTooltip
                     text={
                       <Trans>
-                        APY is calculated as participating percentage in the total value staked. The APY percentage is
-                        therefore applied on total amount collected in the Fee Treasury.
+                        APY is calculated as a participation percentage in relation to the overall staked balance
+                        pool.It is updated every 2 weeks.
                       </Trans>
                     }
                   >
                     <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
                   </MouseoverTooltip>
                 </RowFixed>
-                {fundingBalance ? (
-                  <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>
-                        {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
-                      </TYPE.white>
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-              <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                     <TYPE.white>
-                      <Trans>Total Value Locked:</Trans>
+                      <p>10 KROM</p>
                     </TYPE.white>
                   </Text>
                 </RowFixed>
-                {totalValueLocked != null ? (
-                  <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      <TYPE.white>{totalValueLocked} KROM</TYPE.white>
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
               </FixedHeightRow>
             </AutoColumn>
           )}
@@ -445,10 +267,4 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
       </CardSection>
     </VoteCard>
   )
-}
-function setCollectMigrationHash(hash: any) {
-  throw new Error('Function not implemented.')
-}
-function setCollecting(arg0: boolean) {
-  throw new Error('Function not implemented.')
 }

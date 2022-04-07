@@ -10,6 +10,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useV3DerivedMintInfo, useV3MintActionHandlers, useV3MintState } from 'state/mint/v3/hooks'
+import { useSingleCallResult } from 'state/multicall/hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import Web3 from 'web3-utils'
 
@@ -38,39 +39,46 @@ import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { DynamicSection, PageWrapper, ScrollablePage, Wrapper } from '../AddLiquidity/styled'
 import { Dots } from '../Pool/styleds'
-import { DynamicSection, PageWrapper, ScrollablePage, Wrapper } from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
-
-export default function AddLiquidity({
+export default function StakingModal({
   match: {
-    params: { currencyIdA },
+    params: { tokenId: tokenIdFromUrl },
   },
   history,
-}: RouteComponentProps<{ currencyIdA?: string }>) {
+}: RouteComponentProps<{ tokenId?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const location = useLocation()
+  const currencyIdA = tokenIdFromUrl
+
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const stake = useNewStakingContract()
-  //currencyIdA = window.location.hash.substring(8)
 
   const baseCurrency = useCurrency(currencyIdA)
   const withdraw = location.pathname.includes('/unstake')
   const { fundingBalance } = useV3Positions(account)
 
-  const { parsedAmounts, currencyBalances, currencies, errorMessage, depositADisabled } = useV3DerivedMintInfo(
+  const result = useSingleCallResult(stake, 'getDepositedAmount', [account?.toString()])
+  let stakedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
+  stakedBalance = Number(stakedBalance).toFixed(2)
+
+  const { parsedAmounts, currencyBalances, errorMessage, currencies, depositADisabled } = useV3DerivedMintInfo(
     baseCurrency ?? undefined,
     baseCurrency ?? undefined,
-    withdraw ? fundingBalance : undefined
+    withdraw ? fundingBalance : undefined,
+    withdraw,
+    stakedBalance
   )
 
   const { independentField, typedValue } = useV3MintState()
 
   const { onFieldAInput } = useV3MintActionHandlers(true)
   const isValid = !errorMessage
+
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
@@ -118,44 +126,28 @@ export default function AddLiquidity({
   async function onAdd() {
     if (!chainId || !library || !account) return
 
-    if (!limitManager || !baseCurrency) {
+    if (!stake || !baseCurrency) {
       return
     }
 
+    // this should be redefined
     const amount0 = parsedAmounts?.[Field.CURRENCY_A]?.quotient
     const calldatas: string[] = []
 
-    if (account && amount0) {
-      calldatas.push(
-        limitManager.interface.encodeFunctionData(withdraw ? 'withdrawFunding' : 'addFunding', [toHex(amount0)])
-      )
-      const calldata =
-        calldatas.length === 1 ? calldatas[0] : limitManager.interface.encodeFunctionData('multicall', [calldatas])
+    // todo - review the unstake call
+    if (account && amount0 && stake) {
+      withdraw
+        ? calldatas.push(stake.interface.encodeFunctionData('unstake', [account, toHex(amount0), false, false]))
+        : calldatas.push(
+            stake ? stake.interface.encodeFunctionData('stake', [account, toHex(amount0), false, false]) : ''
+          )
 
-      let txn: { to: string; data: string; value: string } = {
-        to: LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+      const calldata = calldatas.length === 1 ? calldatas[0] : ''
+
+      const txn: { to: string; data: string; value: string } = {
+        to: STAKING_ADDRESS[chainId],
         data: calldata,
         value: '0x0',
-      }
-
-      if (argentWalletContract) {
-        const amountA = parsedAmounts[Field.CURRENCY_A]
-        const batch = [
-          ...(amountA && amountA.currency.isToken
-            ? [approveAmountCalldata(amountA, LIMIT_ORDER_MANAGER_ADDRESSES[chainId])]
-            : []),
-          {
-            to: txn.to,
-            data: txn.data,
-            value: txn.value,
-          },
-        ]
-        const data = argentWalletContract.interface.encodeFunctionData('wc_multiCall', [batch])
-        txn = {
-          to: argentWalletContract.address,
-          data,
-          value: '0x0',
-        }
       }
 
       setAttemptingTxn(true)
@@ -174,9 +166,9 @@ export default function AddLiquidity({
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
-                type: withdraw ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
-                baseCurrencyId: currencyId(baseCurrency),
-                expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
+                type: withdraw ? TransactionType.UNSTAKE : TransactionType.STAKE,
+                account,
+                amount: amount0.toString(),
               })
               setTxHash(response.hash)
               ReactGA.event({
@@ -219,13 +211,13 @@ export default function AddLiquidity({
         </LightCard>
         <TYPE.italic>
           {withdraw ? (
-            <Trans>Withdrawing KROM may prevent the system to automatically processing trades</Trans>
+            <Trans>Unstaking KROM may prevent the system to calculate rewards</Trans>
           ) : (
-            <Trans>Depositing KROM will allow the system to automatically process trades</Trans>
+            <Trans>Staking KROM will allow the system to automatically process trades</Trans>
           )}
         </TYPE.italic>
         <ButtonPrimary onClick={onAdd}>
-          <Trans>{withdraw ? 'Withdraw' : 'Add'}</Trans>
+          <Trans>{withdraw ? 'Unstake' : 'Stake'}</Trans>
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -235,7 +227,6 @@ export default function AddLiquidity({
     setShowConfirm(false)
     if (txHash) {
       onFieldAInput('')
-      // todo - checkin here
       history.push('/stake')
     }
     setTxHash('')
@@ -246,10 +237,10 @@ export default function AddLiquidity({
     !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
 
   const pendingText = withdraw
-    ? `Withdraw ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
+    ? `Unstake ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
         !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
       }`
-    : `Deposit ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
+    : `Stake ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
         !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
       }`
 
@@ -298,7 +289,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={withdraw ? <Trans>Withdraw</Trans> : <Trans>Deposit</Trans>}
+              title={withdraw ? <Trans>Unstake</Trans> : <Trans>Stake</Trans>}
               onDismiss={() => setShowConfirm(false)}
               topContent={modalHeader}
             />
@@ -325,11 +316,9 @@ export default function AddLiquidity({
                     value={formattedAmounts[Field.CURRENCY_A]}
                     onUserInput={onFieldAInput}
                     onMax={() => {
-                      onFieldAInput(
-                        withdraw ? fundingBalance?.toExact() ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? ''
-                      )
+                      onFieldAInput(withdraw ? stakedBalance ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                     }}
-                    showMaxButton={!(withdraw ? fundingBalance : atMaxAmounts[Field.CURRENCY_A])}
+                    showMaxButton={!(withdraw ? stakedBalance : atMaxAmounts[Field.CURRENCY_A])}
                     currency={currencies[Field.CURRENCY_A] ?? null}
                     id="add-liquidity-input-tokena"
                     fiatValue={usdcValues[Field.CURRENCY_A]}
@@ -337,7 +326,7 @@ export default function AddLiquidity({
                     locked={depositADisabled}
                     renderBalance={(amount) => (
                       <Trans>
-                        Wallet: {formatCurrencyAmount(amount, 4)}, Balance: {formatCurrencyAmount(fundingBalance, 4)}
+                        Wallet: {formatCurrencyAmount(amount, 4)}, Staked: {stakedBalance}
                       </Trans>
                     )}
                   />

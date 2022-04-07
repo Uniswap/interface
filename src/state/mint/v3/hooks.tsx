@@ -95,7 +95,9 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
 export function useV3DerivedMintInfo(
   currencyA?: Currency,
   baseCurrency?: Currency,
-  maxAmount?: CurrencyAmount<Token> | undefined
+  maxAmount?: CurrencyAmount<Token> | undefined,
+  withdraw?: boolean,
+  stakedBalance?: string
 ): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }

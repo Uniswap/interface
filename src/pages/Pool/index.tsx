@@ -158,7 +158,7 @@ export default function Pool() {
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'10'}>
+            <TitleRow style={{ marginTop: '4rem' }} padding={'10'}>
               <TYPE.body fontSize={'20px'}>
                 <Trans>Account</Trans>
               </TYPE.body>
@@ -181,7 +181,7 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/swap`}>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/limitorder`}>
                   + <Trans>New Trade</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>

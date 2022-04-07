@@ -1,13 +1,16 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
+import { HelpCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router-dom'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import styled from 'styled-components/macro'
 import { CountUp } from 'use-count-up'
+import { unwrappedToken } from 'utils/unwrappedToken'
 import Web3 from 'web3-utils'
 
 import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
@@ -22,10 +25,10 @@ import { RowBetween } from '../../components/Row'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants/misc'
 import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
-import { useNewStakingContract } from '../../hooks/useContract'
+import { useNewStakingContract, useSKromatikaContract } from '../../hooks/useContract'
 import usePrevious from '../../hooks/usePrevious'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
-import useUSDCPrice from '../../hooks/useUSDCPrice'
+import useUSDCPrice, { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -123,6 +126,10 @@ const DataRow = styled(RowBetween)`
   `};
 `
 
+function commafy(x: string | number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
 export default function Manage({
   match: {
     params: { currencyIdA, currencyIdB },
@@ -130,16 +137,35 @@ export default function Manage({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const { account, chainId } = useActiveWeb3React()
   const stake = useNewStakingContract()
+  const sKrom = useSKromatikaContract()
   const kromToken = chainId ? KROM[chainId] : undefined
+
+  const currency0 = kromToken ? unwrappedToken(kromToken) : undefined
+  const price0 = useUSDCPrice(currency0 ?? undefined)
 
   let result = useSingleCallResult(stake, 'getDepositedAmount', [account?.toString()])
   let stakedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
-  stakedBalance = Number(stakedBalance).toFixed(4)
+  stakedBalance = commafy(Number(stakedBalance).toFixed(2))
 
   result = useSingleCallResult(stake, 'getEarnedSKrom', [account?.toString()])
-  //let earnedSKrom = result.result ? Web3.fromWei(result.result.toString()) : ''
-  //earnedSKrom = Number(earnedSKrom).toFixed(4)
-  const earnedSKrom = 123
+  let earnedSKrom = result.result ? Web3.fromWei(result.result.toString()) : ''
+  earnedSKrom = Number(earnedSKrom).toFixed(2)
+  earnedSKrom = commafy(earnedSKrom)
+
+  result = useSingleCallResult(stake, 'getTotalKromBalance', [])
+  let totalKromLocked = result.result ? Web3.fromWei(result.result.toString()) : 0
+  const tokenPrice = price0 ? Number(price0) : 0.048
+  totalKromLocked = tokenPrice * Number(totalKromLocked) + ''
+  totalKromLocked = commafy(Number(totalKromLocked).toFixed(2))
+
+  const epoch = useSingleCallResult(stake, 'epoch()', [])
+  const stakingReward = epoch && epoch.result ? Web3.fromWei(epoch.result.distribute.toString()) : ''
+
+  result = useSingleCallResult(sKrom, 'circulatingSupply', [])
+  const circulatingSupply = result && result.result ? Web3.fromWei(result.result.toString()) : ''
+  const stakingRebase = Number(stakingReward?.toString()) / Number(circulatingSupply.toString())
+  const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1 // 3 epochs per day
+  const twoWeeksRate = Math.pow(1 + stakingRebase, 14 * 3) - 1
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
@@ -204,7 +230,7 @@ export default function Manage({
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          <Trans>Staking - make it bigger, maybe positioned at the centre</Trans>
+          <Trans>Staking - style it. Commafy values.</Trans>
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
@@ -225,10 +251,10 @@ export default function Manage({
         <PoolData>
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>
-              <Trans>Total Value Staked</Trans>
+              <Trans>Total Value Locked </Trans>
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              888888 KROM
+              {totalKromLocked} $
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -301,12 +327,22 @@ export default function Manage({
               <AutoColumn gap="md">
                 <RowBetween>
                   <TYPE.white fontWeight={600}>
-                    <Trans>APY - add explanational tooltip</Trans>
+                    <Trans>APY</Trans>
+                    <MouseoverTooltip
+                      text={
+                        <Trans>
+                          APY is calculated as a participation percentage compared to the overall staked balance.It is
+                          updated every 2 weeks.
+                        </Trans>
+                      }
+                    >
+                      <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                    </MouseoverTooltip>
                   </TYPE.white>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
                   <TYPE.white fontSize={36} fontWeight={600}>
-                    100%
+                    {stakingAPY.toString() == 'Infinity' ? '100%' : stakingAPY}
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -322,35 +358,11 @@ export default function Manage({
                     <Trans>Earned sKrom</Trans>
                   </TYPE.black>
                 </div>
-                {/* {earnedSKrom && 0 < +earnedSKrom && (
-                  <ButtonEmpty
-                    padding="8px"
-                    $borderRadius="8px"
-                    width="fit-content"
-                    onClick={() => setShowClaimRewardModal(true)}
-                  >
-                    <Trans>Claim - maybe should be deleted</Trans>
-                  </ButtonEmpty> 
-                )} */}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
                 <TYPE.largeHeader fontSize={36} fontWeight={600}>
-                  {earnedSKrom}
+                  {earnedSKrom} sKrom
                 </TYPE.largeHeader>
-                <TYPE.black fontSize={16} fontWeight={500}>
-                  <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
-                    ⚡
-                  </span>
-
-                  {stakingInfo?.active ? (
-                    <Trans>
-                      {stakingInfo.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
-                      sKrom / week
-                    </Trans>
-                  ) : (
-                    <Trans>0 sKrom / week</Trans>
-                  )}
-                </TYPE.black>
               </RowBetween>
             </AutoColumn>
           </StyledBottomCard>
@@ -364,9 +376,6 @@ export default function Manage({
                 </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/unstake/${kromToken?.address}/remove`}>
                   - <Trans>Unstake KROM</Trans>
-                </ResponsiveButtonPrimary>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/unstake/${kromToken?.address}/remove`}>
-                  - <Trans>Claim KROM</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>

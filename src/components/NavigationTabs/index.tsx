@@ -68,10 +68,10 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
+export function SwapPoolTabs({ active }: { active: 'limitorder' | 'pool' }) {
   return (
     <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
-      <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
+      <StyledNavLink id={`swap-nav-link`} to={'/#/limitorder'} isActive={() => active === 'limitorder'}>
         <Trans>Swap</Trans>
       </StyledNavLink>
       <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
@@ -126,7 +126,7 @@ export function AddRemoveTabs({
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <StyledHistoryLink
-          to={poolLink}
+          to={'/stake'}
           onClick={() => {
             if (adding) {
               // not 100% sure both of these are needed
@@ -143,13 +143,7 @@ export function AddRemoveTabs({
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
         >
-          {creating ? (
-            <Trans>Create a pair</Trans>
-          ) : remove ? (
-            <Trans>Withdraw KROM</Trans>
-          ) : (
-            <Trans>Deposit KROM</Trans>
-          )}
+          {creating ? <Trans>Create a pair</Trans> : remove ? <Trans>Unstake KROM</Trans> : <Trans>Stake KROM</Trans>}
         </TYPE.mediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
       </RowBetween>

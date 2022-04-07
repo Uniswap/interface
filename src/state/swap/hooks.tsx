@@ -4,16 +4,20 @@ import { Currency, CurrencyAmount, Ether, NativeCurrency, Price, Token, TradeTyp
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import {
   encodeSqrtRatioX96,
+  FeeAmount,
   nearestUsableTick,
+  Pool,
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
   Trade as V3Trade,
 } from '@uniswap/v3-sdk'
+import { ChainName } from 'constants/chains'
 import { KROM } from 'constants/tokens'
 import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { PoolState, usePools } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -184,6 +188,7 @@ export function useDerivedSwapInfo(): {
 
   const {
     independentField,
+    inputValue,
     typedValue,
     inputValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
@@ -400,6 +405,89 @@ export function useDerivedSwapInfo(): {
     formattedAmounts,
     rawAmounts,
   }
+}
+
+function useExisitingPool(
+  aToken: Token | Currency | undefined | null,
+  bToken: Token | Currency | undefined | null
+): FeeAmount | undefined {
+  aToken ? aToken : (aToken = undefined)
+  bToken ? bToken : (bToken = undefined)
+
+  bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
+  aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
+
+  const pools = usePools([
+    [aToken, bToken, FeeAmount.LOW],
+    [aToken, bToken, FeeAmount.MEDIUM],
+    [aToken, bToken, FeeAmount.HIGH],
+  ])
+
+  const poolsByFeeTier = useMemo(
+    () =>
+      pools.reduce(
+        (acc, [curPoolState, curPool]) => {
+          acc = {
+            ...acc,
+            ...{ [curPool?.fee as FeeAmount]: curPoolState },
+          }
+          return acc
+        },
+        {
+          // default all states to NOT_EXISTS
+          [FeeAmount.LOWEST]: PoolState.NOT_EXISTS,
+          [FeeAmount.LOW]: PoolState.NOT_EXISTS,
+          [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
+          [FeeAmount.HIGH]: PoolState.NOT_EXISTS,
+        }
+      ),
+    [pools]
+  )
+
+  if (poolsByFeeTier[FeeAmount.MEDIUM] == PoolState.EXISTS) return FeeAmount.MEDIUM
+  if (poolsByFeeTier[FeeAmount.LOW] == PoolState.EXISTS) return FeeAmount.LOW
+  if (poolsByFeeTier[FeeAmount.HIGH] == PoolState.EXISTS) return FeeAmount.HIGH
+
+  return undefined
+}
+
+export function usePoolAddress(
+  aToken: Token | Currency | undefined | null,
+  bToken: Token | Currency | undefined | null,
+  fee: FeeAmount | undefined
+): { poolAddress: string; networkName: string } {
+  let poolAddress = ''
+  let networkName = ''
+  let nameOfNetwork = ''
+  let address = ''
+  const existingPoolFee = useExisitingPool(aToken, bToken)
+
+  if (aToken && bToken) {
+    bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
+    aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
+
+    if (aToken.isToken && bToken.isToken && existingPoolFee) {
+      address = Pool.getAddress(aToken, bToken, existingPoolFee)
+      nameOfNetwork = ChainName[aToken?.chainId]
+    }
+  } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
+    nameOfNetwork = ChainName[aToken?.chainId]
+    address = aToken.address
+  }
+
+  if (address == '' || address == undefined || address == null) {
+    poolAddress = '0x6ae0cdc5d2b89a8dcb99ad6b3435b3e7f7290077'
+  } else if (address != poolAddress) {
+    poolAddress = address
+  }
+
+  if (nameOfNetwork == '' || nameOfNetwork == undefined || nameOfNetwork == null) {
+    networkName = 'ethereum'
+  } else if (nameOfNetwork != networkName) {
+    networkName = nameOfNetwork
+  }
+
+  return { poolAddress, networkName }
 }
 
 function parseCurrencyFromURLParameter(urlParam: any): string {
