@@ -66,6 +66,8 @@ function* removeAccount(params: RemoveParams) {
   logger.info('editAccountSaga', 'removeAccount', 'Removing account', address)
   // TODO cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
+
+  // TODO: remove walletconnect client and sessions in native
 }
 
 export const {

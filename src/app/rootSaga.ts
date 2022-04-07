@@ -47,10 +47,17 @@ import {
   ledgerSaga,
   ledgerSagaName,
 } from 'src/features/wallet/ledgerSaga'
+import { watchWalletConnectEvents } from 'src/features/walletConnect/saga'
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
-const sagas: any[] = [initProviders, initFirebase, transactionWatcher, firebaseDataWatcher]
+const sagas: any[] = [
+  initProviders,
+  initFirebase,
+  transactionWatcher,
+  firebaseDataWatcher,
+  watchWalletConnectEvents,
+]
 
 interface MonitoredSaga {
   name: string

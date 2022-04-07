@@ -12,6 +12,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { dimensions } from 'src/styles/sizing'
 
 type Props = {
   children: PropsWithChildren<any>
@@ -43,6 +44,7 @@ const Backdrop = (props: BottomSheetBackdropProps) => {
 }
 
 const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']
+const FULL_HEIGHT = 0.93
 const FULL_HEIGHT_SNAP_POINTS = ['93%']
 
 export function BottomSheetModal({
@@ -56,7 +58,7 @@ export function BottomSheetModal({
 }: Props) {
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
-    useBottomSheetDynamicSnapPoints(fullScreen ? FULL_HEIGHT_SNAP_POINTS : snapPoints)
+    useBottomSheetDynamicSnapPoints(snapPoints)
   const theme = useAppTheme()
 
   useEffect(() => {
@@ -67,18 +69,26 @@ export function BottomSheetModal({
     }
   }, [isVisible])
 
+  if (!isVisible) return null
+
+  const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
   return (
     <BaseModal
       ref={modalRef}
       backdropComponent={Backdrop}
       backgroundStyle={{ backgroundColor: theme.colors.mainBackground }}
-      contentHeight={fullScreen ? undefined : animatedContentHeight}
+      contentHeight={animatedContentHeight}
       handleComponent={hideHandlebar ? null : HandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       onDismiss={onClose}>
       <Trace logImpression section={name}>
-        <BottomSheetView style={BottomSheetStyle.view} onLayout={handleContentLayout}>
+        <BottomSheetView
+          style={[
+            { height: fullScreen ? fullScreenContentHeight : undefined },
+            BottomSheetStyle.view,
+          ]}
+          onLayout={handleContentLayout}>
           {children}
         </BottomSheetView>
       </Trace>

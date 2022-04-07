@@ -14,6 +14,7 @@ import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
 import { userReducer } from 'src/features/user/slice'
 import { walletReducer } from 'src/features/wallet/walletSlice'
+import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 
 export const rootReducer = combineReducers({
   balances: balancesReducer,
@@ -31,6 +32,7 @@ export const rootReducer = combineReducers({
   saga: monitoredSagaReducers,
   [dataApi.reducerPath]: dataApi.reducer,
   [nftApi.reducerPath]: nftApi.reducer,
+  walletConnect: walletConnectReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

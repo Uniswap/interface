@@ -56,7 +56,6 @@ export function QRCodeScanner({ onScanCode, ...rest }: QRCodeScannerProps) {
     getPermissionStatuses()
   }, [])
 
-  // TODO: connect to walletconnect
   useEffect(() => {
     if (!data) return
 
@@ -72,7 +71,12 @@ export function QRCodeScanner({ onScanCode, ...rest }: QRCodeScannerProps) {
 
   if (permission === 'authorized' && backCamera) {
     return (
-      <Box borderTopLeftRadius="md" borderTopRightRadius="md" overflow="hidden" {...rest}>
+      <Box
+        borderTopLeftRadius="md"
+        borderTopRightRadius="md"
+        flexGrow={1}
+        overflow="hidden"
+        {...rest}>
         <Camera
           isActive
           device={backCamera}

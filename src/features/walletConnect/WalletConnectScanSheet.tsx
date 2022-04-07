@@ -13,6 +13,7 @@ import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { QRCodeScanner } from 'src/features/walletConnect/QRCodeScanner'
+import { connectToApp } from 'src/features/walletConnect/WalletConnect'
 import { dimensions } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -24,11 +25,18 @@ type Props = {
 export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
   const { t } = useTranslation()
   const activeAccount = useActiveAccount()
+  const [showQRModal, setShowQRModal] = useState(false)
 
   const onPressQRCode = () => setShowQRModal(true)
   const onCloseQrCode = () => setShowQRModal(false)
-  const [showQRModal, setShowQRModal] = useState(false)
   const theme = useAppTheme()
+
+  const onScanCode = (uri: string) => {
+    if (!activeAccount) return
+
+    connectToApp(uri, activeAccount.address)
+    onClose()
+  }
 
   if (!activeAccount) return null
 
@@ -39,7 +47,11 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
       isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
-      <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
+      <WalletQRCode
+        address={activeAccount.address}
+        isVisible={showQRModal}
+        onClose={onCloseQrCode}
+      />
       <Box flex={1}>
         <Flex
           row
@@ -60,7 +72,7 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
           {/* Render empty box here so second component can be centered */}
           <Box width={18} />
         </Flex>
-        <QRCodeScanner onScanCode={() => {}} />
+        <QRCodeScanner onScanCode={onScanCode} />
       </Box>
       <Box paddingBottom="xl">
         <Button

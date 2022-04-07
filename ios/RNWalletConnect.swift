@@ -11,7 +11,11 @@ import WalletConnectSwift
 @objc(RNWalletConnect)
 class RNWalletConnect: RCTEventEmitter {
   private var accountToWcServer: [String: WalletConnectAccountServer]! = [:]
-
+  
+  @objc override static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
+  
   func getServer(_ account: String) -> WalletConnectAccountServer {
     guard self.accountToWcServer[account] == nil else { return self.accountToWcServer[account]! }
     
@@ -119,4 +123,24 @@ enum ErrorType: String {
   case wcInvalidUrl = "wc_invalid_url"
   case wcDisconnectError = "wc_disconnect_error"
   case wcConnectError = "wc_connect_error"
+}
+
+
+class WalletConnectRequestHandler: RequestHandler {
+    weak var server: Server!
+    weak var eventEmitter: RCTEventEmitter!
+    
+   init(eventEmitter: RCTEventEmitter, server: Server) {
+      self.eventEmitter = eventEmitter
+      self.server = server
+    }
+
+    func canHandle(request: Request) -> Bool {
+        return true
+    }
+
+    func handle(request: Request) {
+      self.eventEmitter.sendEvent(withName: request.method, body: ["request": request.jsonString])
+      self.server.send(try! Response(request: request, error: .requestRejected))
+    }
 }
