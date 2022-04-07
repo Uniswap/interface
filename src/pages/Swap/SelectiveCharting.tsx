@@ -1,5 +1,5 @@
 import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core';
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
 import React, { useCallback } from 'react';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
@@ -83,14 +83,9 @@ export const SelectiveChart = () => {
                 setTimeout(() => {
                     setLoadingNewData(false)
                 }, 1000)
-                
+                const newToken = new Token(chainId ?? 1, newAddress, parseInt(newDecimals) ?? 18, newSymbol, newName ?? '');
                 if (ref.current) {
-                    ref.current.address = newAddress;
-                    ref.current.symbol = newSymbol;
-                    if (newName) 
-                        ref.current.name = newName;
-                    if (newDecimals) 
-                        ref.current.decimals = +newDecimals;
+                    ref.current = newToken;
                 } else {
                     ref.current = mainnetCurrency ?? {};
                     ref.current.address = newAddress;

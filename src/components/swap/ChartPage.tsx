@@ -102,7 +102,7 @@ export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: 
 export const useTokenInfo = (chainId: number | undefined, tokenAddress: string | undefined) => {
 
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
-
+    const [etherscanTokeninfo, setEtherscanTokeninfo] = React.useState<any>({})
     function intervalCallback() {
         if ((chainId === 1 || !chainId )&& tokenAddress) {
             fetch(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
@@ -110,13 +110,12 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
                 .then(setTokenInfo)
         }
     }
-
     React.useEffect(() => {
         intervalCallback();
     }, [chainId, tokenAddress])
-    if (!chainId || !tokenAddress) return
-
-    return tokenInfo
+    
+    if (!tokenAddress) return
+    return { ...tokenInfo, ...etherscanTokeninfo}
 }
 
 export const useHolderCount = (chainId: any) => {

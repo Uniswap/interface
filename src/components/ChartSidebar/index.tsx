@@ -93,7 +93,17 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         }
         return 0
     }, [tokenInfo?.totalSupply, totalSupply])
+    const formattedPrice = React.useMemo (() => {
+        console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
+        if (tokenInfo && tokenInfo.price && tokenInfo.price.rate) {
+            return `$${tokenInfo.price.rate}`
+        }
 
+        if (tokenData && tokenData.priceUSD) {
+            return `$${parseFloat(parseFloat(tokenData.priceUSD).toFixed(18)).toLocaleString()}`
+        }
+        return `-`
+    }, [tokenInfo?.price, token, tokenData])
     const _token = useToken(token.address)
     const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', _token ?? undefined)
     const marketCap = React.useMemo(() => {
@@ -109,7 +119,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
     const currency = useCurrency(token.address ? token.address : tokenData?.id)
     console.log('chartSidebar -> tokenInfo', marketCap)
-    
+   
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
@@ -196,7 +206,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
                                         {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
                                             <TYPE.subHeader>Price</TYPE.subHeader>
-                                            <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>${Number((tokenData?.priceUSD)?.toFixed(18)).toLocaleString()}</TYPE.black>
+                                            <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>${formattedPrice}</TYPE.black>
                                         </MenuItem>
                                         {!!marketCap &&
                                             <MenuItem>
@@ -211,7 +221,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                         {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
                                             <MenuItem>
                                                 <TYPE.subHeader>Price</TYPE.subHeader>
-                                                <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{Number(tokenInfo?.price?.rate?.toFixed(18)).toLocaleString()}</TYPE.black>
+                                                <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
                                             </MenuItem>
                                             {!!marketCap &&
                                             <MenuItem>
