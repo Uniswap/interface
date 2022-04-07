@@ -18,8 +18,10 @@ function useUpdateChainBlock() {
   const onBlock = useCallback(
     (block: number) => {
       setChainBlock((chainBlock) => {
-        if (chainBlock.chainId === chainId && chainBlock.block && chainBlock.block < block) {
-          return { chainId, block }
+        if (chainBlock.chainId === chainId) {
+          if (!chainBlock.block || chainBlock.block < block) {
+            return { chainId, block }
+          }
         }
         return chainBlock
       })
