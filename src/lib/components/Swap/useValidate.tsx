@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { IntegrationError } from 'lib/errors'
 import { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
 import { DefaultAddress, TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
@@ -48,19 +47,23 @@ export default function useValidate(props: ValidatorProps) {
     }
   }, [convenienceFee, convenienceFeeRecipient])
 
-  const { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount } = props
+  const { defaultInputAmount, defaultOutputAmount } = props
   useEffect(() => {
     if (defaultOutputAmount && defaultInputAmount) {
       throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
     }
-    if (defaultInputAmount && BigNumber.from(defaultInputAmount).lt(0)) {
+    if (defaultInputAmount && (isNaN(+defaultInputAmount) || defaultInputAmount < 0)) {
       throw new IntegrationError(`defaultInputAmount must be a positive number (you set it to ${defaultInputAmount})`)
     }
-    if (defaultOutputAmount && BigNumber.from(defaultOutputAmount).lt(0)) {
+    if (defaultOutputAmount && (isNaN(+defaultOutputAmount) || defaultOutputAmount < 0)) {
       throw new IntegrationError(
         `defaultOutputAmount must be a positive number (you set it to ${defaultOutputAmount}).`
       )
     }
+  }, [defaultInputAmount, defaultOutputAmount])
+
+  const { defaultInputTokenAddress, defaultOutputTokenAddress } = props
+  useEffect(() => {
     if (
       defaultInputTokenAddress &&
       !isAddressOrAddressMap(defaultInputTokenAddress) &&
@@ -79,5 +82,5 @@ export default function useValidate(props: ValidatorProps) {
         `defaultOutputTokenAddress must be a valid address or "NATIVE" (you set it to ${defaultOutputTokenAddress}).`
       )
     }
-  }, [defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount])
+  }, [defaultInputTokenAddress, defaultOutputTokenAddress])
 }
