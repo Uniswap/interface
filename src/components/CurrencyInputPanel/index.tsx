@@ -216,7 +216,7 @@ export default function CurrencyInputPanel({
   }, [setModalOpen])
 
   const [showInverted, setShowInverted] = useState<boolean>(true)
-  
+
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
       {locked && (

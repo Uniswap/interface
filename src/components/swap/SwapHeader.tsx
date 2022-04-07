@@ -42,9 +42,6 @@ export default function SwapHeader() {
             </Box>
           </HoverText>
         </RowFixed>
-        {/* <RowFixed>
-          <SettingsTab />
-        </RowFixed> */}
       </RowBetween>
     </StyledSwapHeader>
   )

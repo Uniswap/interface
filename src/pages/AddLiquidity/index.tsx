@@ -11,7 +11,6 @@ import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useV3DerivedMintInfo, useV3MintActionHandlers, useV3MintState } from 'state/mint/v3/hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import Web3 from 'web3-utils'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { LightCard } from '../../components/Card'
@@ -21,11 +20,11 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { LIMIT_ORDER_MANAGER_ADDRESSES, STAKING_ADDRESS } from '../../constants/addresses'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../../constants/addresses'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
-import { useLimitOrderManager, useNewStakingContract } from '../../hooks/useContract'
+import { useLimitOrderManager } from '../../hooks/useContract'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -54,11 +53,10 @@ export default function AddLiquidity({
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
-  const stake = useNewStakingContract()
-  //currencyIdA = window.location.hash.substring(8)
+  const limitManager = useLimitOrderManager()
 
   const baseCurrency = useCurrency(currencyIdA)
-  const withdraw = location.pathname.includes('/unstake')
+  const withdraw = location.pathname.includes('/remove')
   const { fundingBalance } = useV3Positions(account)
 
   const { parsedAmounts, currencyBalances, currencies, errorMessage, depositADisabled } = useV3DerivedMintInfo(
@@ -70,7 +68,9 @@ export default function AddLiquidity({
   const { independentField, typedValue } = useV3MintState()
 
   const { onFieldAInput } = useV3MintActionHandlers(true)
+
   const isValid = !errorMessage
+
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
@@ -112,7 +112,7 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
-    chainId ? STAKING_ADDRESS[chainId] : undefined
+    chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
   )
 
   async function onAdd() {
@@ -233,10 +233,11 @@ export default function AddLiquidity({
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
+    // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
-      // todo - checkin here
-      history.push('/stake')
+      // dont jump to pool page if creating
+      history.push('/pool')
     }
     setTxHash('')
   }, [history, onFieldAInput, txHash])

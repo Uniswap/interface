@@ -190,7 +190,6 @@ export function useDerivedSwapInfo(): {
     independentField,
     inputValue,
     typedValue,
-    inputValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
