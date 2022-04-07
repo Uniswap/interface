@@ -7,7 +7,7 @@ import { useTokenContract } from './useContract'
 // returns undefined if input token is undefined, or fails to get token contract,
 // or contract total supply cannot be fetched
 export function useTotalSupply(token?: Currency): CurrencyAmount<Token> | undefined {
-  const contract = useTokenContract(token?.wrapped?.addressaddress, false)
+  const contract = useTokenContract(token?.wrapped?.address ?? (token as any).address, false)
 
   const totalSupply: BigNumber = useSingleCallResult(contract, 'totalSupply')?.result?.[0]
 

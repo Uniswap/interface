@@ -206,7 +206,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
                                         {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
                                             <TYPE.subHeader>Price</TYPE.subHeader>
-                                            <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>${formattedPrice}</TYPE.black>
+                                            <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
                                         </MenuItem>
                                         {!!marketCap &&
                                             <MenuItem>
