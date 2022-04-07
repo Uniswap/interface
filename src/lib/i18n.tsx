@@ -34,7 +34,7 @@ import {
   zh,
 } from 'make-plural/plurals'
 import { PluralCategory } from 'make-plural/plurals'
-import { ReactNode, useEffect, useRef } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -102,18 +102,14 @@ export function Provider({ locale, forceRenderAfterLocaleChange = true, onActiva
       })
   }, [locale, onActivate])
 
-  // Initialize the locale immediately if it is DEFAULT_LOCALE, so that keys are shown while loading the translation messages.
+  // Initialize the locale immediately if it is DEFAULT_LOCALE, so that keys are shown while the translation messages load.
   // This renders the translation _keys_, not the translation _messages_, which is only acceptable while loading the DEFAULT_LOCALE,
   // as [there are no "default" messages](https://github.com/lingui/js-lingui/issues/388#issuecomment-497779030).
   // See https://github.com/lingui/js-lingui/issues/1194#issuecomment-1068488619.
-  const isInitialized = useRef(false)
-  if (!isInitialized.current) {
-    isInitialized.current = true
-    if (locale === DEFAULT_LOCALE) {
-      i18n.loadLocaleData(DEFAULT_LOCALE, { plurals: () => plurals[DEFAULT_LOCALE] })
-      i18n.load(DEFAULT_LOCALE, {})
-      i18n.activate(DEFAULT_LOCALE)
-    }
+  if (i18n.locale === undefined && locale === DEFAULT_LOCALE) {
+    i18n.loadLocaleData(DEFAULT_LOCALE, { plurals: () => plurals[DEFAULT_LOCALE] })
+    i18n.load(DEFAULT_LOCALE, {})
+    i18n.activate(DEFAULT_LOCALE)
   }
 
   return (
