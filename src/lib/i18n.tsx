@@ -1,6 +1,6 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import {
   af,
   ar,
@@ -34,7 +34,7 @@ import {
   zh,
 } from 'make-plural/plurals'
 import { PluralCategory } from 'make-plural/plurals'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -79,8 +79,6 @@ const plurals: LocalePlural = {
 export async function dynamicActivate(locale: SupportedLocale) {
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
   try {
-    // There are no default messages in production,
-    // see https://github.com/lingui/js-lingui/issues/388#issuecomment-497779030
     const catalog = await import(`${process.env.REACT_APP_LOCALES}/${locale}.js`)
     // Bundlers will either export it as default or as a named export named default.
     i18n.load(locale, catalog.messages || catalog.default.messages)
@@ -103,6 +101,20 @@ export function Provider({ locale, forceRenderAfterLocaleChange = true, onActiva
         console.error('Failed to activate locale', locale, error)
       })
   }, [locale, onActivate])
+
+  // Initialize the locale immediately if it is DEFAULT_LOCALE, so that keys are shown while loading the translation messages.
+  // This renders the translation _keys_, not the translation _messages_, which is only acceptable while loading the DEFAULT_LOCALE,
+  // as [there are no "default" messages](https://github.com/lingui/js-lingui/issues/388#issuecomment-497779030).
+  // See https://github.com/lingui/js-lingui/issues/1194#issuecomment-1068488619.
+  const isInitialized = useRef(false)
+  if (!isInitialized.current) {
+    isInitialized.current = true
+    if (locale === DEFAULT_LOCALE) {
+      i18n.loadLocaleData(DEFAULT_LOCALE, { plurals: () => plurals[DEFAULT_LOCALE] })
+      i18n.load(DEFAULT_LOCALE, {})
+      i18n.activate(DEFAULT_LOCALE)
+    }
+  }
 
   return (
     <I18nProvider forceRenderOnLocaleChange={forceRenderAfterLocaleChange} i18n={i18n}>
