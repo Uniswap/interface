@@ -115,6 +115,7 @@ const BscTokenFields = `
     totalTransactions
     derivedBNB
     derivedUSD
+    decimals
   } 
 `
 
@@ -129,6 +130,7 @@ const TokenFields = `
     untrackedVolumeUSD
     totalLiquidity
     txCount
+    decimals
   } 
 `
 export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) => {
@@ -867,15 +869,17 @@ query trackerdata {
       tradeVolumeUSD
       symbol
       name
+      decimals
     }
-        token1 {
+    token1 {
       id
       totalSupply
       totalLiquidity
       tradeVolume
       tradeVolumeUSD
-          symbol
-          name
+      symbol
+      name
+      decimals
     }
     volumeToken0
     volumeToken1
@@ -905,6 +909,7 @@ query trackerdata {
       tradeVolumeUSD
       symbol
       name
+      decimals
     }
         token1 {
       id
@@ -914,6 +919,7 @@ query trackerdata {
       tradeVolumeUSD
           symbol
           name
+          decimals
     }
     volumeToken0
     volumeToken1
@@ -945,6 +951,7 @@ query trackerdata {
       tradeVolumeUSD
       symbol
       name
+      decimals
     }
     token1 {
       id
@@ -956,6 +963,7 @@ query trackerdata {
       tradeVolumeUSD
       symbol
       name
+      decimals
     }
     volumeToken0
     volumeToken1
@@ -1024,11 +1032,13 @@ const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: t
       symbol
       name
       id
+      decimals
     }
     token1 {
       symbol
       name
       id
+      decimals
     }
   }
   amount0In

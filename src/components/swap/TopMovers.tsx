@@ -90,8 +90,9 @@ export const ScrollableRow = styled.div`
 const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: number }) => {
   const token = useToken(tokenData.id.toLowerCase());
   const { chainId } = useWeb3React()
+  const route = '/selective-charts/' + tokenData.id + '/' + tokenData.symbol + '/' + tokenData.name + '/' + tokenData?.decimals
   return (
-    <CardWrapper to={'/selective-charts/' + tokenData.id + '/' + tokenData.symbol + '/' + tokenData.name + '/' + token?.decimals ?? tokenData?.decimals}>
+    <CardWrapper to={route}>
       <GreyCard padding="3px">
         <RowFixed>
           <AutoColumn gap="3px" style={{ marginLeft: '3px' }}>
@@ -248,7 +249,7 @@ DataCard.displayName = 'DataCard';
             <FixedContainer style={{ background: 'rgb(0 0 0 / 0%)' }} gap="xs">
               <ScrollableRow>
                 {topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass')).map((entry, i) =>
-                  entry ? <DataCard index={i} key={entry.symbol + entry.address} tokenData={entry} /> : null
+                  entry ? <DataCard index={i} key={`${i}.${entry.symbol}.${entry.address}`} tokenData={entry} /> : null
                 )}
               </ScrollableRow>
             </FixedContainer>

@@ -77,6 +77,12 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const tokenInfo = useTokenInfo(chainId ?? 1, token.address)
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
+    const oneDayVolume = React.useMemo(() => {
+        return tokenData && tokenData.oneDayVolumeUSD ? `$${parseFloat(tokenData?.oneDayVolumeUSD).toLocaleString()}` : undefined
+    }, [tokenData])
+    const transactionCount = React.useMemo(() => {
+        return tokenData && tokenData?.txCount ? tokenData?.txCount : undefined
+    }, [tokenData])
     const holderCount = useTokenHolderCount(token.address, chainId)
     const tokenCurrency = token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
     //create a custom function that will change menucollapse state from false to true and true to false
@@ -96,11 +102,11 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const formattedPrice = React.useMemo (() => {
         console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
         if (tokenInfo && tokenInfo.price && tokenInfo.price.rate) {
-            return `$${tokenInfo.price.rate}`
+            return `$${tokenInfo.price.rate.toFixed(18)}`
         }
 
         if (tokenData && tokenData.priceUSD) {
-            return `$${parseFloat(parseFloat(tokenData.priceUSD).toFixed(18)).toLocaleString()}`
+            return `$${parseFloat(parseFloat(tokenData.priceUSD).toFixed(18)).toFixed(18)}`
         }
         return `-`
     }, [tokenInfo?.price, token, tokenData])
@@ -234,6 +240,11 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             </MenuItem>
                                         </>
                                         }
+
+                                        {oneDayVolume && <MenuItem>
+                                            <TYPE.subHeader>24 Hour Volume</TYPE.subHeader>
+                                            <TYPE.black>{(oneDayVolume)}</TYPE.black>
+                                        </MenuItem>}
                                         {token?.symbol?.toLowerCase().includes('kiba') && <MenuItem>
                                             <TYPE.subHeader>Total Burnt</TYPE.subHeader>
                                             <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
@@ -241,6 +252,10 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                         {!!totalSupplyInt && totalSupplyInt > 0 && <MenuItem>
                                             <TYPE.subHeader>Total Supply</TYPE.subHeader>
                                             <TYPE.black>{totalSupplyInt.toLocaleString()}</TYPE.black>
+                                        </MenuItem>}
+                                        {transactionCount && <MenuItem>
+                                            <TYPE.subHeader>Total Transactions</TYPE.subHeader>
+                                            <TYPE.black>{transactionCount.toLocaleString()}</TYPE.black>
                                         </MenuItem>}
                                         {holderCount && holderCount?.holdersCount && <MenuItem>
                                             <TYPE.subHeader># Holders</TYPE.subHeader>

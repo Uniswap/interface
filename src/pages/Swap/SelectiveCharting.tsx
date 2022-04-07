@@ -44,7 +44,7 @@ interface IWebSocketManager {
 export const SelectiveChart = () => {
     const { account, chainId } = useWeb3React()
     const history = useHistory() 
-    const params = useParams<{ tokenAddress?: string, tokenSymbol?: string }>()
+    const params = useParams<{ tokenAddress?: string, tokenSymbol?: string, name?:string, decimals?: string }>()
     const tokenAddressSupplied = React.useMemo(() => params?.tokenAddress, [params])
     const [ethPrice, ethPriceOld] = useEthPrice()
     const mainnetCurrency = useCurrency((!chainId || chainId === 1) ? params?.tokenAddress : undefined)
@@ -239,10 +239,10 @@ export const SelectiveChart = () => {
                     collapsed={collapsed}
                     onCollapse={setCollapsed}
                     token={{
-                        name: (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency : ref.current as Currency )?.name as string,
-                        symbol: (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.symbol as string,
-                        decimals: (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.decimals?.toString(),
-                        address: (selectedCurrency.selectedCurrency as Currency  ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.wrapped?.address
+                        name:  params?.name ?? (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency : ref.current as Currency )?.name as string,
+                        symbol: params?.tokenSymbol ?? (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.symbol as string,
+                        decimals: params?.decimals ?? (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.decimals?.toString(),
+                        address: params?.tokenAddress ?? (selectedCurrency.selectedCurrency as Currency  ? selectedCurrency.selectedCurrency as Currency :  ref.current as Currency)?.wrapped?.address
                     }}
                     tokenData={tokenData}
                     chainId={chainId}
