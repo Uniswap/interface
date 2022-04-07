@@ -28,6 +28,7 @@ import Tooltip from 'components/Tooltip'
 import MenuFlyout from 'components/MenuFlyout'
 import { isMobile } from 'react-device-detect'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import CustomToggle from 'components/Toggle/CustomToggle'
 enum SlippageError {
   InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',

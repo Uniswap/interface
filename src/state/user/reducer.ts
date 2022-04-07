@@ -18,6 +18,7 @@ import {
   toggleRebrandingAnnouncement,
   toggleLiveChart,
   toggleTradeRoutes,
+  toggleProLiveChart,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 import { isMobile } from 'react-device-detect'
@@ -60,6 +61,7 @@ export interface UserState {
   showLiveCharts: {
     [chainId: number]: boolean
   }
+  showProLiveChart: boolean
   showTradeRoutes: boolean
 }
 
@@ -104,6 +106,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   rebrandingAnnouncement: true,
   showLiveCharts: defaultShowLiveCharts,
+  showProLiveChart: false,
   showTradeRoutes: isMobile ? false : true,
 }
 
@@ -188,6 +191,9 @@ export default createReducer(initialState, builder =>
         state.showLiveCharts = defaultShowLiveCharts
       }
       state.showLiveCharts[chainId] = !state.showLiveCharts[chainId]
+    })
+    .addCase(toggleProLiveChart, state => {
+      state.showProLiveChart = !state.showProLiveChart
     })
     .addCase(toggleTradeRoutes, state => {
       state.showTradeRoutes = !state.showTradeRoutes

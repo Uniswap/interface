@@ -152,6 +152,7 @@
     "react-helmet": "^6.1.0",
     "react-indiana-drag-scroll": "^2.0.1",
     "react-player": "^2.9.0",
+    "react-tradingview-embed": "^3.0.6",
     "react-use": "^15.3.4",
     "recharts": "^2.1.6",
     "swiper": "^8.0.7",

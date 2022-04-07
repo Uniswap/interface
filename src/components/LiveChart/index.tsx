@@ -16,6 +16,9 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 import Loader from 'components/LocalLoader'
 import CircleInfoIcon from './CircleInfoIcon'
 import { Trans } from '@lingui/macro'
+import ProLiveChart from 'components/ProLiveChart'
+import CustomToggle from 'components/Toggle/CustomToggle'
+import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
@@ -24,7 +27,7 @@ const LiveChartWrapper = styled.div`
   flex-direction: column;
   ${!isMobile &&
     `@media only screen and (min-width: 768px) {
-    width: 580px;
+    width: 772px;
     height: auto;
   }`}
 `
@@ -43,7 +46,7 @@ const TimeFrameButton = styled.div<{ active?: boolean }>`
   transition: all 0.2s ease;
   ${({ theme, active }) =>
     active
-      ? `background-color: ${theme.primary}; color: ${theme.white};`
+      ? `background-color: ${theme.primary}; color: ${theme.textReverse};`
       : `
     &:hover {
       background-color: ${theme.buttonGray};
@@ -120,7 +123,9 @@ function LiveChart({
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
   const { data: chartData, error, loading } = useLiveChartData(tokens, timeFrame)
-
+  const showProLiveChart = useShowProLiveChart()
+  console.log('🚀 ~ file: index.tsx ~ line 127 ~ showProLiveChart', showProLiveChart)
+  const toggleProLiveChart = useToggleProLiveChart()
   useEffect(() => {
     if (hoverValue !== null) {
       setHoverValue(null)
@@ -134,7 +139,7 @@ function LiveChart({
 
   const renderTimeframes = () => {
     return (
-      <Flex>
+      <Flex marginTop={'5px'}>
         {[...Object.values(LiveDataTimeframeEnum)].map(item => {
           return (
             <TimeFrameButton key={item} onClick={() => setTimeFrame(item)} active={timeFrame === item}>
@@ -187,64 +192,89 @@ function LiveChart({
                 </SwitchButtonWrapper>
               </Flex>
             </Flex>
+            <Flex>
+              <CustomToggle
+                activeName={showProLiveChart ? 'pro' : 'basic'}
+                toggle={() => {
+                  toggleProLiveChart()
+                }}
+                buttons={[
+                  { name: 'basic', title: 'Basic' },
+                  { name: 'pro', title: 'Pro' },
+                ]}
+              />
+            </Flex>
             {isMobile && renderTimeframes()}
           </Flex>
-          <Flex justifyContent="space-between" alignItems="flex-start" marginTop={'5px'}>
-            <Flex flexDirection="column" alignItems="flex-start">
-              {showingValue === 0 || error ? (
-                <Text fontSize={28} color={theme.subText}>
-                  --
-                </Text>
-              ) : (
-                <AnimatingNumber
-                  value={showingValue}
-                  symbol={nativeOutputCurrency?.symbol}
-                  fontSize={isMobile ? 24 : 28}
-                />
-              )}
-              <Flex marginTop="2px">
-                {showingValue === 0 || error ? (
-                  <Text fontSize={12} color={theme.disableText}>
-                    --
-                  </Text>
+
+          {showProLiveChart ? (
+            <ProLiveChart />
+          ) : (
+            <>
+              <Flex justifyContent="space-between" alignItems="flex-start" marginTop={'5px'}>
+                <Flex flexDirection="column" alignItems="flex-start">
+                  {showingValue === 0 || error ? (
+                    <Text fontSize={28} color={theme.subText}>
+                      --
+                    </Text>
+                  ) : (
+                    <AnimatingNumber
+                      value={showingValue}
+                      symbol={nativeOutputCurrency?.symbol}
+                      fontSize={isMobile ? 24 : 28}
+                    />
+                  )}
+                  <Flex marginTop="2px">
+                    {showingValue === 0 || error ? (
+                      <Text fontSize={12} color={theme.disableText}>
+                        --
+                      </Text>
+                    ) : (
+                      <>
+                        <Text fontSize={12} color={different >= 0 ? '#31CB9E' : '#FF537B'} marginRight="5px">
+                          {different} ({differentPercent}%)
+                        </Text>
+                        <Text fontSize={12} color={theme.disableText}>
+                          {getTimeFrameText(timeFrame)}
+                        </Text>
+                      </>
+                    )}
+                  </Flex>
+                </Flex>
+                {!isMobile && renderTimeframes()}
+              </Flex>
+              <div style={{ flex: 1, marginTop: '12px' }}>
+                {loading || error ? (
+                  <Flex
+                    minHeight={isMobile ? '240px' : '370px'}
+                    flexDirection={'column'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    color={theme.disableText}
+                    style={{ gap: '16px' }}
+                  >
+                    {loading && <Loader />}
+                    {error && (
+                      <>
+                        <WarningIcon />
+                        <Text fontSize={16}>
+                          <Trans>Chart is unavailable</Trans>
+                        </Text>
+                      </>
+                    )}
+                  </Flex>
                 ) : (
-                  <>
-                    <Text fontSize={12} color={different >= 0 ? '#31CB9E' : '#FF537B'} marginRight="5px">
-                      {different} ({differentPercent}%)
-                    </Text>
-                    <Text fontSize={12} color={theme.disableText}>
-                      {getTimeFrameText(timeFrame)}
-                    </Text>
-                  </>
+                  <LineChart
+                    data={chartData}
+                    setHoverValue={setHoverValue}
+                    color={chartColor}
+                    timeFrame={timeFrame}
+                    minHeight={370}
+                  />
                 )}
-              </Flex>
-            </Flex>
-            {!isMobile && renderTimeframes()}
-          </Flex>
-          <div style={{ flex: 1, marginTop: '12px' }}>
-            {loading || error ? (
-              <Flex
-                minHeight={isMobile ? '240px' : '292px'}
-                flexDirection={'column'}
-                alignItems={'center'}
-                justifyContent={'center'}
-                color={theme.disableText}
-                style={{ gap: '16px' }}
-              >
-                {loading && <Loader />}
-                {error && (
-                  <>
-                    <WarningIcon />
-                    <Text fontSize={16}>
-                      <Trans>Chart is unavailable</Trans>
-                    </Text>
-                  </>
-                )}
-              </Flex>
-            ) : (
-              <LineChart data={chartData} setHoverValue={setHoverValue} color={chartColor} timeFrame={timeFrame} />
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </>
       )}
     </LiveChartWrapper>
