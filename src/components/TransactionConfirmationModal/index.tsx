@@ -7,7 +7,6 @@ import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import MetaMaskLogo from '../../assets/images/metamask.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
@@ -32,12 +31,6 @@ const BottomSection = styled(Section)`
 
 const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
   padding: ${({ inline }) => (inline ? '20px 0' : '32px 0;')};
-`
-
-const StyledLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  margin-left: 6px;
 `
 
 function ConfirmationPendingContent({
@@ -123,7 +116,7 @@ function TransactionSubmittedContent({
               {!success ? (
                 <RowFixed>
                   <Trans>
-                    Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+                    Add {currencyToAdd.symbol} to your Wallet
                   </Trans>
                 </RowFixed>
               ) : (
