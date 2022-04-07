@@ -3,7 +3,7 @@ import { SupportedChainId } from 'constants/chains'
 import uriToHttp from 'lib/utils/uriToHttp'
 import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { hex } from 'wcag-contrast'
 
@@ -64,7 +64,7 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 export function useColor(token?: Token) {
   const [color, setColor] = useState('#2172E5')
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let stale = false
 
     if (token) {
@@ -87,7 +87,7 @@ export function useColor(token?: Token) {
 export function useListColor(listImageUri?: string) {
   const [color, setColor] = useState('#2172E5')
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let stale = false
 
     if (listImageUri) {
