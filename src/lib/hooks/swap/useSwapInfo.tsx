@@ -102,10 +102,11 @@ export default function useSwapInfo(): SwapInfo {
   const { [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const tradeState = useMemo(() => {
     const { trade } = swapInfo
-    if (trade.state === TradeState.VALID) {
+    if (trade.state === TradeState.VALID && trade.trade) {
       const isTradeStale =
-        (currencyIn && !trade.trade?.inputAmount?.currency?.equals(currencyIn)) ||
-        (currencyOut && !trade.trade?.outputAmount?.currency?.equals(currencyOut))
+        (currencyIn && !trade.trade.inputAmount.currency.equals(currencyIn)) ||
+        (currencyOut && !trade.trade.outputAmount.currency.equals(currencyOut))
+      // swapInfo has not yet caught up to swapAtom.
       if (isTradeStale) return TradeState.LOADING
     }
     return trade.state
@@ -117,7 +118,7 @@ export default function useSwapInfo(): SwapInfo {
     useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
   )
 
-  // swapInfo will lag behind swapAtom by a frame, because its update is triggered by swapAtom;
+  // swapInfo will lag behind swapAtom by a frame, because its update is triggered by swapAtom
   // so a swap must be marked as loading, with up-to-date currencies, during that update.
   // In other words, swapInfo is derived from swapAtom, so it must be used as the source of truth.
   return useMemo(
