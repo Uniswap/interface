@@ -1,4 +1,3 @@
-import { utils } from 'ethers'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { batch } from 'react-redux'
@@ -13,7 +12,6 @@ import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
-import { useGasFee } from 'src/features/gas/useGasFee'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { NotificationSeverity } from 'src/features/notifications/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
@@ -49,21 +47,6 @@ export function DevScreen({ navigation }: any) {
   }
 
   const blockTimestamp = useCurrentBlockTimestamp(currentChain)
-
-  const [fakeTx, setFakeTx] = useState<any>(undefined)
-  const {
-    isLoading: gasIsLoading,
-    isError: gasIsError,
-    data: gasInfo,
-  } = useGasFee(ChainId.Rinkeby, fakeTx)
-  const gasInfoReady = !gasIsLoading && !gasIsError && gasInfo
-  const onPressComputeFee = () => {
-    setFakeTx({
-      to: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // Wrapped ETH address
-      data: '0xd0e30db0', // `function deposit() payable`
-      value: utils.parseEther('1.0'), // 1 ether
-    })
-  }
 
   const onPressShowError = () => {
     dispatch(
@@ -112,9 +95,6 @@ export function DevScreen({ navigation }: any) {
           <TextButton mt="sm" name="DEBUG_ToggleTestnets" onPress={onPressToggleTestnets}>
             Toggle Testnets
           </TextButton>
-          <TextButton mt="sm" name="DEBUG_Computefee" onPress={onPressComputeFee}>
-            Compute fee
-          </TextButton>
           <TextButton mt="sm" name="DEBUG_ShowError" onPress={onPressShowError}>
             Show global error
           </TextButton>
@@ -127,11 +107,6 @@ export function DevScreen({ navigation }: any) {
           <Text mt="sm" textAlign="center">
             {`Block Timestamp: ${blockTimestamp}`}
           </Text>
-          {gasInfoReady && (
-            <Text mt="sm" textAlign="center">
-              {`Normal fee: ${gasInfo.fee.normal}`}
-            </Text>
-          )}
         </Box>
       </ScrollView>
     </SheetScreen>

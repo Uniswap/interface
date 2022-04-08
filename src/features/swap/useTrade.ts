@@ -3,9 +3,8 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { QueryStatus } from 'react-query'
-import { QuoteResult } from 'src/features/prices/types'
-import { useQuote } from 'src/features/prices/useQuote'
+import { useRouterQuote } from 'src/features/routing/hooks'
+import { QuoteResult } from 'src/features/routing/types'
 import { transformQuoteToTrade } from 'src/features/swap/routeUtils'
 import { useDebounceWithStatus } from 'src/utils/timing'
 
@@ -46,7 +45,11 @@ export function useTrade(
 ) {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
-  const { status, error, data } = useQuote({
+  const {
+    isLoading,
+    error,
+    currentData: data,
+  } = useRouterQuote({
     amountSpecified: debouncedAmountSpecified,
     otherCurrency,
     tradeType,
@@ -57,16 +60,15 @@ export function useTrade(
   const currencyOut =
     tradeType === TradeType.EXACT_OUTPUT ? debouncedAmountSpecified?.currency : otherCurrency
 
-  // TODO: also return status
   return useMemo(() => {
     if (!currencyIn || !currencyOut || !data) {
-      return { status, error, trade: null }
+      return { loading: isLoading, error, trade: null }
     }
 
     return {
-      status: (isDebouncing ? 'loading' : status) as QueryStatus,
+      loading: isDebouncing || isLoading,
       error,
       trade: transformQuoteToTrade(currencyIn, currencyOut, tradeType, data),
     }
-  }, [currencyIn, currencyOut, data, error, status, tradeType, isDebouncing])
+  }, [currencyIn, currencyOut, data, isDebouncing, isLoading, error, tradeType])
 }

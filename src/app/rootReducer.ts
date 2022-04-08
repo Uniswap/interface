@@ -9,6 +9,7 @@ import { multicall } from 'src/features/multicall'
 import { nftApi } from 'src/features/nfts/api'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
+import { routingApi } from 'src/features/routing/routingApi'
 import { tokenListsReducer } from 'src/features/tokenLists/reducer'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
@@ -32,6 +33,7 @@ export const rootReducer = combineReducers({
   saga: monitoredSagaReducers,
   [dataApi.reducerPath]: dataApi.reducer,
   [nftApi.reducerPath]: nftApi.reducer,
+  [routingApi.reducerPath]: routingApi.reducer,
   walletConnect: walletConnectReducer,
 })
 

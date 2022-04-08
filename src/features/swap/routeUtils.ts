@@ -3,7 +3,7 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Trade } from 'src/features/swap/useTrade'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from '../prices/types'
+import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from '../routing/types'
 
 export function transformQuoteToTrade(
   currencyIn: Currency | null | undefined,

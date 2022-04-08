@@ -58,7 +58,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
     currencyBalances,
     exactCurrencyField,
     formattedAmounts,
-    trade: { trade: trade, status: quoteStatus },
+    trade: { trade: trade, loading, error },
     wrapType,
   } = derivedSwapInfo
 
@@ -70,6 +70,8 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
 
   const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
   const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
+
+  const quoteSuccess = !loading && !error
 
   return (
     <Box flex={1} justifyContent="space-between" px="md">
@@ -138,7 +140,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
         </Trace>
       </Box>
       <Flex flexGrow={1} gap="md" justifyContent="space-between" my="xs">
-        {showDetails && !isWrapAction(wrapType) && trade && quoteStatus === 'success' && (
+        {showDetails && !isWrapAction(wrapType) && trade && quoteSuccess && (
           <SwapDetails
             currencyIn={currencyAmounts[CurrencyField.INPUT]}
             currencyOut={currencyAmounts[CurrencyField.OUTPUT]}
@@ -169,7 +171,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
               ? t('Hold to unwrap')
               : t('Hold to swap')
           }
-          loading={quoteStatus === 'loading'}
+          loading={loading}
           name={
             wrapType === WrapType.Wrap
               ? ElementName.Wrap

@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { DAI_OPTIMISM, DAI_RINKEBY, USDC, USDC_ARBITRUM } from 'src/constants/tokens'
-import { useQuote } from 'src/features/prices/useQuote'
+import { useRouterQuote } from 'src/features/routing/hooks'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -27,7 +27,7 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
   const currencyIsStablecoin = Boolean(stablecoin && currency?.wrapped.equals(stablecoin))
   const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
-  const { data } = useQuote({
+  const { data } = useRouterQuote({
     amountSpecified,
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,

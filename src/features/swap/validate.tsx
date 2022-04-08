@@ -1,5 +1,4 @@
 import { TFunction } from 'i18next'
-import { UseQueryResult } from 'react-query'
 import { DerivedSwapInfo } from 'src/features/swap/hooks'
 import { CurrencyField } from 'src/features/swap/swapFormSlice'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
@@ -23,7 +22,7 @@ export function getHumanReadableSwapInputStatus(
   return (
     getHumanReadableInputError(validateSwapInfo(derivedSwapInfo), t) ??
     getHumanReadbleContextError(activeAccount, t) ??
-    getHumanReadableQuoteStatus(derivedSwapInfo.trade.status, t)
+    getHumanReadableQuoteStatus(derivedSwapInfo.trade, t)
   )
 }
 
@@ -35,13 +34,9 @@ function getHumanReadbleContextError(activeAccount: Account | null, t: TFunction
   return null
 }
 
-function getHumanReadableQuoteStatus(status: UseQueryResult['status'], t: TFunction) {
-  switch (status) {
-    case 'error':
-      return t('Failed to fetch a quote')
-    case 'loading':
-      return t('Fetching best price...')
-  }
+function getHumanReadableQuoteStatus(trade: DerivedSwapInfo['trade'], t: TFunction) {
+  if (trade.loading) return t('Fetching best price...')
+  else if (trade.error) return t('Failed to fetch a quote')
 
   return null
 }

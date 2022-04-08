@@ -8,7 +8,7 @@ import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-import { useUSDCPrice } from 'src/features/prices/useUSDCPrice'
+import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
 

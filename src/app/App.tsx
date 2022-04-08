@@ -4,13 +4,11 @@ import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { enableLayoutAnimations } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { setLogger } from 'react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { DrawerNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
-import { QueryProvider } from 'src/app/QueryProvider'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
@@ -27,18 +25,6 @@ if (!__DEV__) {
     dsn: config.sentryDsn,
   })
 }
-
-setLogger({
-  log: (message) => {
-    Sentry.captureMessage(message)
-  },
-  warn: (message) => {
-    Sentry.captureMessage(message)
-  },
-  error: (error) => {
-    Sentry.captureException(error)
-  },
-})
 
 initializeRemoteConfig()
 enableAnalytics()
@@ -57,13 +43,11 @@ export function App() {
               <ErrorBoundary>
                 <WalletContextProvider>
                   <DataUpdaters />
-                  <QueryProvider>
-                    <BottomSheetModalProvider>
-                      <NotificationBannerWrapper>
-                        <NavStack isDarkMode={isDarkMode} />
-                      </NotificationBannerWrapper>
-                    </BottomSheetModalProvider>
-                  </QueryProvider>
+                  <BottomSheetModalProvider>
+                    <NotificationBannerWrapper>
+                      <NavStack isDarkMode={isDarkMode} />
+                    </NotificationBannerWrapper>
+                  </BottomSheetModalProvider>
                 </WalletContextProvider>
               </ErrorBoundary>
             </DynamicThemeProvider>
