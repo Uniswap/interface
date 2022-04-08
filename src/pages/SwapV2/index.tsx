@@ -68,6 +68,7 @@ import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { currencyId } from 'utils/currencyId'
 import Banner from 'components/Banner'
+import {clientData} from 'constants/clientData'
 
 enum ACTIVE_TAB {
   SWAP,
@@ -233,7 +234,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(trade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(trade, allowedSlippage, recipient, clientData)
 
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
