@@ -1,5 +1,8 @@
 import { RootState } from 'src/app/rootReducer'
-import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  WalletConnectRequest,
+  WalletConnectSession,
+} from 'src/features/walletConnect/walletConnectSlice'
 
 export const selectSessions =
   (account?: string) =>
@@ -8,3 +11,7 @@ export const selectSessions =
 
     return Object.values(state.walletConnect.byAccount[account].sessions)
   }
+
+export const selectPendingRequests = (state: RootState): WalletConnectRequest[] => {
+  return state.walletConnect.pendingRequests
+}

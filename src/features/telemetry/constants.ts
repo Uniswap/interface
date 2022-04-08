@@ -30,6 +30,7 @@ export const enum ModalName {
   WalletQRCode = 'wallet-qr-code-modal',
   NFTAsset = 'nft-asset',
   WalletConnectScan = 'wallet-connect-scan-modal',
+  WCSignRequest = 'wc-sign-request-modal',
 }
 
 /**

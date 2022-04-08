@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { EthMethod } from 'src/features/walletConnect/types'
 
 export interface WalletConnectSession {
   id: string
@@ -9,18 +10,32 @@ interface SessionMapping {
   [sessionId: string]: WalletConnectSession
 }
 
+interface SignRequest {
+  type: EthMethod
+  message: string
+  internalId: string
+  account: string
+}
+
+export type WalletConnectRequest = SignRequest
+
 export interface WalletConnectState {
   byAccount: {
     [accountId: string]: {
       sessions: SessionMapping
     }
   }
+
+  pendingRequests: WalletConnectRequest[]
 }
 
-const initialWalletConnectState: Readonly<WalletConnectState> = { byAccount: {} }
+const initialWalletConnectState: Readonly<WalletConnectState> = {
+  byAccount: {},
+  pendingRequests: [],
+}
 
 const slice = createSlice({
-  name: 'walletconnect',
+  name: 'walletConnect',
   initialState: initialWalletConnectState,
   reducers: {
     addSession: (
@@ -38,8 +53,26 @@ const slice = createSlice({
         delete state.byAccount[account].sessions[sessionId]
       }
     },
+
+    addRequest: (
+      state,
+      action: PayloadAction<{ request: WalletConnectRequest; account: string }>
+    ) => {
+      const { request } = action.payload
+      state.pendingRequests.push(request)
+    },
+
+    removeRequest: (
+      state,
+      action: PayloadAction<{ requestInternalId: string; account: string }>
+    ) => {
+      const { requestInternalId } = action.payload
+      state.pendingRequests = state.pendingRequests.filter(
+        (req) => req.internalId !== requestInternalId
+      )
+    },
   },
 })
 
-export const { addSession, removeSession } = slice.actions
+export const { addSession, removeSession, addRequest, removeRequest } = slice.actions
 export const { reducer: walletConnectReducer, actions: walletConnectActions } = slice

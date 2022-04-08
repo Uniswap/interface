@@ -18,6 +18,7 @@ import { NotificationBannerWrapper } from 'src/features/notifications/Notificati
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { enableAnalytics } from 'src/features/telemetry'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
+import { WalletConnectWrapper } from 'src/features/walletConnect/WalletConnectWrapper'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 
 if (!__DEV__) {
@@ -44,9 +45,11 @@ export function App() {
                 <WalletContextProvider>
                   <DataUpdaters />
                   <BottomSheetModalProvider>
-                    <NotificationBannerWrapper>
-                      <NavStack isDarkMode={isDarkMode} />
-                    </NotificationBannerWrapper>
+                    <WalletConnectWrapper>
+                      <NotificationBannerWrapper>
+                        <NavStack isDarkMode={isDarkMode} />
+                      </NotificationBannerWrapper>
+                    </WalletConnectWrapper>
                   </BottomSheetModalProvider>
                 </WalletContextProvider>
               </ErrorBoundary>

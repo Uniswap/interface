@@ -9,3 +9,11 @@ export const connectToApp = (uri: string, account: string) => {
 export const disconnectFromApp = (sessionId: string, account: string) => {
   RNWalletConnect.disconnect(sessionId, account)
 }
+
+export const rejectRequest = (requestInternalId: string, account: string) => {
+  RNWalletConnect.rejectRequest(requestInternalId, account)
+}
+
+export const sendSignature = (requestInternalId: string, signature: string, account: string) => {
+  RNWalletConnect.sendSignature(requestInternalId, signature, account)
+}

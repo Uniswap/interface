@@ -12,5 +12,10 @@
 
 RCT_EXTERN_METHOD(connect: (NSString *)url account: (NSString *) account)
 RCT_EXTERN_METHOD(disconnect: (NSString *)topic account: (NSString *) account)
+RCT_EXTERN_METHOD(sendSignature: (NSString *)requestInternalId
+                  signature: (NSString *)signature
+                  account: (NSString *)account)
+RCT_EXTERN_METHOD(rejectRequest: (NSString* )requestInternalId
+                  account: (NSString *)account)
 
 @end

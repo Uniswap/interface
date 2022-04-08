@@ -10,7 +10,7 @@ import { errorToString } from 'src/utils/validation'
  * Use to create simple sagas, for more complex ones use createMonitoredSaga.
  * Note: the wrapped saga this returns must be added to rootSaga.ts
  */
-export function createSaga<SagaParams = void>(saga: (...args: any[]) => any, name: string) {
+export function createSaga<SagaParams = void>(saga: (params: SagaParams) => any, name: string) {
   const triggerAction = createAction<SagaParams>(`${name}/trigger`)
 
   const wrappedSaga = function* () {
