@@ -338,10 +338,6 @@ msgstr "Chains"
 msgid "Change"
 msgstr "Change"
 
-#: src/components/LiveChart/index.tsx
-msgid "Chart is unavailable"
-msgstr "Chart is unavailable"
-
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
@@ -2301,10 +2297,6 @@ msgstr "You can manually import your pool"
 #: src/pages/CreatePool/index.tsx
 msgid "You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee."
 msgstr "You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee."
-
-#: src/components/LiveChart/index.tsx
-msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
-msgstr "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."

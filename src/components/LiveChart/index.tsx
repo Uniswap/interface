@@ -16,9 +16,9 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 import Loader from 'components/LocalLoader'
 import CircleInfoIcon from './CircleInfoIcon'
 import { Trans } from '@lingui/macro'
-import ProLiveChart from 'components/ProLiveChart'
 import CustomToggle from 'components/Toggle/CustomToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
+import { ProLiveChart } from 'components/TradingViewChart'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
