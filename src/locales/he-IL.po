@@ -1659,10 +1659,6 @@ msgstr "נתח המאגר"
 msgid "Share of Pool:"
 msgstr "נתח המאגר:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "הראה את פורטיס"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "הראה עמדות סגורות"

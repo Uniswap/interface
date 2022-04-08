@@ -1659,10 +1659,6 @@ msgstr "Deel van die swembad"
 msgid "Share of Pool:"
 msgstr "Aandeel van die poel:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Wys Portis"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Toon geslote posisies"

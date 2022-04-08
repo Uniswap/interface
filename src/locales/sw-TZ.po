@@ -1659,10 +1659,6 @@ msgstr "Sehemu ya Dimbwi"
 msgid "Share of Pool:"
 msgstr "Shiriki la Dimbwi:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Onyesha Portis"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Onyesha nafasi zilizofungwa"

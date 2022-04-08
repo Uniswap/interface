@@ -1660,10 +1660,6 @@ msgstr "Pool részesedése"
 msgid "Share of Pool:"
 msgstr "Pool részesedése:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Portis megjelenítése"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Zárt pozíciók megjelenítése"

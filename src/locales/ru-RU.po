@@ -1659,10 +1659,6 @@ msgstr "Доля в пуле"
 msgid "Share of Pool:"
 msgstr "Доля в пуле:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Показать Portis"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Показать закрытые позиции"

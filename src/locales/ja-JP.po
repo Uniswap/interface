@@ -1659,10 +1659,6 @@ msgstr "プールのシェア"
 msgid "Share of Pool:"
 msgstr "プールのシェア:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Portisを表示"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "決済したポジションを表示"

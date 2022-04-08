@@ -1659,10 +1659,6 @@ msgstr "Delež v skladu"
 msgid "Share of Pool:"
 msgstr "Delež sklada:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Prikaži Portis"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Pokaži zaprte položaje"

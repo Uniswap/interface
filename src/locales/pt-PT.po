@@ -1659,10 +1659,6 @@ msgstr "Parcela da Pool"
 msgid "Share of Pool:"
 msgstr "Parcela da Pool:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Apresentar Portis"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Mostrar posições fechadas"

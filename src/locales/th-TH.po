@@ -1659,10 +1659,6 @@ msgstr "ส่วนแบ่งของพูล"
 msgid "Share of Pool:"
 msgstr "ส่วนแบ่งของพูล:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "โชว์ปอร์ติส"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "แสดงตำแหน่งที่ปิด"

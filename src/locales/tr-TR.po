@@ -1659,10 +1659,6 @@ msgstr "Havuz Payı"
 msgid "Share of Pool:"
 msgstr "Havuz Payı:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Portis'i göster"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Kapalı pozisyonları göster"

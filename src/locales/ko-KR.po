@@ -1659,10 +1659,6 @@ msgstr "풀 쉐어"
 msgid "Share of Pool:"
 msgstr "풀 쉐어:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Portis 표시"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "마감된 위치 표시"
