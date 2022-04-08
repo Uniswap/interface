@@ -3,7 +3,7 @@ import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
-import useActiveWeb3React, { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
+import { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
@@ -130,7 +130,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
                     <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                      {useActiveWeb3React().active && <Updaters />}
+                      <Updaters />
                       {children}
                     </ActiveWeb3Provider>
                   </AtomProvider>
