@@ -8,7 +8,7 @@ import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
 import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
-import { useSyncTokenList } from 'lib/hooks/useTokenList'
+import { useIsTokenListLoaded, useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
 import { useState } from 'react'
@@ -47,12 +47,11 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
   onConnectWallet?: () => void
 }
 
-function Updaters(props: SwapProps & { disabled: boolean }) {
-  useSyncTokenList(props.tokenList)
+function Updaters(props: SwapProps) {
   useSyncTokenDefaults(props)
   useSyncConvenienceFee(props)
 
-  return props.disabled ? null : <SwapInfoUpdater />
+  return <SwapInfoUpdater />
 }
 
 export default function Swap(props: SwapProps) {
@@ -68,11 +67,14 @@ export default function Swap(props: SwapProps) {
   const onSupportedNetwork = useOnSupportedNetwork()
   const isDisabled = !(active && onSupportedNetwork)
 
+  useSyncTokenList(props.tokenList)
+  const isUpdateable = useIsTokenListLoaded() && !isDisabled
+
   const focused = useHasFocus(wrapper)
 
   return (
     <>
-      <Updaters {...props} disabled={isDisabled} />
+      {isUpdateable && <Updaters {...props} />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={isDisabled} />

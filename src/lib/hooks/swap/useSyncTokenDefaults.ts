@@ -5,7 +5,7 @@ import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useToken } from 'lib/hooks/useCurrency'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { Field, Swap, swapAtom } from 'lib/state/swap'
-import { useCallback, useLayoutEffect, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 
 import useOnSupportedNetwork from '../useOnSupportedNetwork'
 
@@ -71,13 +71,11 @@ export default function useSyncTokenDefaults({
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
   }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
 
-  const [previousChainId, setPreviousChainId] = useState(chainId)
+  const lastChainId = useRef<number | undefined>(undefined)
   useLayoutEffect(() => {
-    setPreviousChainId(chainId)
-  }, [chainId])
-  useLayoutEffect(() => {
-    if (chainId && chainId !== previousChainId) {
+    if (chainId && chainId !== lastChainId.current) {
       setToDefaults()
     }
-  }, [chainId, previousChainId, setToDefaults])
+    lastChainId.current = chainId
+  }, [chainId, setToDefaults])
 }
