@@ -1659,10 +1659,6 @@ msgstr "Μερίδιο από τη Δεξαμενή"
 msgid "Share of Pool:"
 msgstr "Μερίδιο από τη Δεξαμενή:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Εμφάνιση Portis"
-
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Εμφάνιση κλειστών θέσεων"
