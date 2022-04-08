@@ -1196,7 +1196,7 @@ msgid "Max"
 msgstr "최대"
 
 #: src/pages/About/index.tsx
-msgid "Max APR Available"
+msgid "Max APR Available ↗️"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
@@ -1717,10 +1717,6 @@ msgstr ""
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "이름 검색 또는 주소 붙여넣기"
-
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "See"
-msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
@@ -2279,10 +2275,6 @@ msgstr ""
 msgid "We discovered this on"
 msgstr ""
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "We think"
-msgstr ""
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
 msgstr "한번의 트랙잭션으로 유동성 풀을 제거하고 원하는 단일 토큰으로 유동성을  출금할 수 있습니다. "
@@ -2453,12 +2445,10 @@ msgstr ""
 msgid "Your wallet address *"
 msgstr ""
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
 #: src/components/WalletModal/index.tsx
 msgid "and"
 msgstr "그리고"
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "here"
 msgstr "여기"
@@ -2466,10 +2456,6 @@ msgstr "여기"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// 또는 ipfs:// 또는 ENS 이름"
-
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "might be trending soon!"
-msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"

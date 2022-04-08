@@ -1196,7 +1196,7 @@ msgid "Max"
 msgstr ""
 
 #: src/pages/About/index.tsx
-msgid "Max APR Available"
+msgid "Max APR Available ↗️"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
@@ -1716,10 +1716,6 @@ msgstr ""
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr ""
-
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "See"
 msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
@@ -2279,10 +2275,6 @@ msgstr ""
 msgid "We discovered this on"
 msgstr ""
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "We think"
-msgstr ""
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
 msgstr ""
@@ -2453,22 +2445,16 @@ msgstr ""
 msgid "Your wallet address *"
 msgstr ""
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
 #: src/components/WalletModal/index.tsx
 msgid "and"
 msgstr ""
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "here"
 msgstr ""
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr ""
-
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "might be trending soon!"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
