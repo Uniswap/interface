@@ -109,6 +109,27 @@ const MainContentWrapper = styled.main`
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 500px;
+  padding: 15px;
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 10px;
+  }
 `
 
 const ShowInactiveToggle = styled.div`

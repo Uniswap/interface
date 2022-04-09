@@ -6,7 +6,7 @@ import { ApplicationModal, setOpenModal } from '../../state/application/reducer'
 
 // Redirects to swap but only replace the pathname
 export function RedirectPathToLimitOrderOnly({ location }: RouteComponentProps) {
-  return <Redirect to={{ ...location, pathname: '/pool' }} />
+  return <Redirect to={{ ...location, pathname: '/limitorder' }} />
 }
 
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format

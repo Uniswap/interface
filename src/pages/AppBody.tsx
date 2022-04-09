@@ -7,16 +7,15 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   margin-top: ${({ margin }) => margin ?? '0px'};
   max-height: 100%;
   width: 100%;
-  max-width: 100%;
+  max-width: 531px;
   background: ${({ theme }) => theme.bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
-  margin-top: 1.1rem;
   z-index: ${Z_INDEX.deprecated_content};
   flex-grow: 0;
-  overflow: hidden !important;
   overflow-x: hidden;
+  overflow-y: hidden;
   flex: 1;
 
   @media screen and (max-width: 1592px) {
@@ -24,6 +23,14 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
     gap: 0rem;
     height: 100%;
     margin-top: 0rem;
+  }
+
+  @media screen and (max-width: 1000px) {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 900px) {
+    max-width: 100%;
   }
 `
 

@@ -12,13 +12,16 @@ const StyledIframe = styled.iframe`
   border: none;
   min-width: 100%;
   border-radius: 24px;
-  min-height: 92vh;
+  height: 100%;
+  max-height: 100%;
   loading: lazy;
 `
 
 const StyledIframeComponent = styled.div`
   flex-grow: 1;
   width: 100%;
+  height: 100%;
+  max-height: 100%;
 `
 
 export function CandleSticks(props: { networkName: string; poolAddress: string; children?: React.ReactNode }) {
@@ -26,7 +29,6 @@ export function CandleSticks(props: { networkName: string; poolAddress: string; 
 
   return (
     <StyledIframeComponent>
-      <Skeleton height="100%">Loading ... </Skeleton>
       <StyledIframe
         loading="lazy"
         src={`https://dexscreener.com/${props.networkName}/${props.poolAddress}?embed=1&theme=${

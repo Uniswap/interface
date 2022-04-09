@@ -97,15 +97,24 @@ const StyledSwap = styled.div`
   flex-grow: 1;
   max-width: 100%;
   width: 100%;
+
+  @media screen and (max-width: 1592px) {
+    flex: 0 0 480px;
+  }
 `
 
 const StyledSwapNoPro = styled.div`
   flex-grow: 1;
-  max-width: 100%;
+  max-width: 480px;
   width: 100%;
 
   @media screen and (max-width: 1592px) {
     width: 50%;
+  }
+  flex-direction: row-reverse;
+
+  @media screen and (max-width: 900px) {
+    width: 95%;
   }
 `
 
@@ -115,21 +124,29 @@ const DivWrapper = styled.div`
 `
 
 const DivWrapperNoPro = styled.div`
-  margin-top: 25px;
   max-height: 100%;
-  width: 95%;
+  margin-top: 160px;
+  width: 60%;
   gap: 0.8rem;
   display: flex;
   align-items: flex-start;
-  jusify-content: flex-start;
+  justify-content: center;
   flex-direction: row;
 
   @media screen and (max-width: 1000px) {
-    width: 85%;
+    width: 100%;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     jusify-content: flex-start;
     flex-direction: column-reverse;
+  }
+
+  @media screen and (max-width: 1440px) {
+    width: 90%;
+  }
+
+  @media screen and (max-width: 960px) {
+    margin-top: 30px;
   }
 `
 
@@ -146,36 +163,67 @@ const MainContentWrapper = styled.main`
   height: 100%;
   max-height: 100%;
   flex-grow: 0;
+  overflow-x: hidden;
 
   @media screen and (max-width: 1592px) {
     gap: 0rem;
     height: 420px;
     margin-top: 0rem;
+    flex: 1;
   }
 
-  &::-webkit-scrollbar {
+  /* width */
+  ::-webkit-scrollbar {
     width: 10px;
-    border: 1px solid dark-gray;
   }
 
-  &::-webkit-thumb {
-    background-color: red;
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 10px;
   }
 `
 
-const MainContentWrapperNoPro = styled.main`
-  width: 65%;
+const MainContentWrapperNoPro = styled.div`
+  width: 50%;
+  max-width: 480px;
+  overflow: scroll;
+  max-height: 800px;
   overflow-x: hidden;
-  margin-top: 16px;
+  padding: 15px;
+
   background-color: ${({ theme }) => theme.bg0};
   border-radius: 20px;
 
   @media screen and (max-width: 1000px) {
-    width: 100%;
+    width: 95%;
+    margin-left: 20px;
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 10px;
   }
 `
 
 const StyledNoProDiv = styled.div`
+  overflow-y: auto;
   @media screen and (max-width: 1000px) {
     width: 100%;
   }
@@ -204,7 +252,7 @@ export const FlexContainer = styled.div`
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
-  margin-top: 7px;
+  margin-top: 20px;
   gap: 0.2rem;
   width: 100%;
   min-height: 94vh;
@@ -239,6 +287,12 @@ export const FlexItemRight = styled.div`
     flex-direction: row-reverse;
     gap: 0.5rem;
     width: 100%;
+  }
+
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+    width: 95%;
+    margin-left: 20px;
   }
 `
 // we want the latest one to come first, so return negative if a is after b
@@ -499,7 +553,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      history.push('/#/limitorder/') // limit order
+      history.push('/#/pool/') // limit order
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 

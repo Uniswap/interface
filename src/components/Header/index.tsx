@@ -14,7 +14,9 @@ import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
 import ComingSoon from '../../../src/assets/images/coming-soon.png'
+import ComingSoonLight from '../../../src/assets/images/coming-soon-light.png'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import { ReactComponent as PhoneScreenLogo } from '../../assets/svg/phone-logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
@@ -49,7 +51,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-blend-mode: hard-light;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 48px 1fr 1fr;
+    grid-template-columns: 175px 1fr 1fr;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -61,6 +63,18 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
     padding:  1rem;
     grid-template-columns: 36px 1fr;
   `};
+`
+
+const MainLogo = styled.div`
+  @media screen and (max-width: 550px) {
+    display: none;
+  }
+`
+
+const PhoneLogo = styled.div`
+  @media screen and (min-width: 550px) {
+    display: none;
+  }
 `
 
 const StyledImage = styled.img`
@@ -188,8 +202,14 @@ const Title = styled.a`
 
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
+  overflow: hidden;
+  width: 200px;
   :hover {
     transform: rotate(-5deg);
+  }
+
+  @media screen and (max-width: 720px) {
+    margin-left: 130px;
   }
 `
 
@@ -280,15 +300,20 @@ export default function Header() {
       </Modal>
       <Title href=".">
         <UniIcon>
-          <Logo
-            fill={darkMode ? white : black}
-            transform="scale(9)"
-            width="100px"
-            height="35px"
-            title="logo"
-            z-index="1"
-            viewBox="0 0 350 840"
-          />
+          <MainLogo>
+            <Logo
+              fill={darkMode ? white : black}
+              transform="scale(9)"
+              width="100px"
+              height="35px"
+              title="logo"
+              z-index="1"
+              viewBox="0 0 350 840"
+            />
+          </MainLogo>
+          <PhoneLogo>
+            <PhoneScreenLogo fill={darkMode ? white : black} width="100px" height="35px" title="logo" z-index="1" />
+          </PhoneLogo>
         </UniIcon>
       </Title>
       <HeaderLinks>
@@ -311,7 +336,7 @@ export default function Header() {
         <StyledNavLink id={`swap-nav-link`} to={'/stake'}>
           <Trans>Stake </Trans>
         </StyledNavLink>
-        <StyledImage src={ComingSoon}></StyledImage>
+        <StyledImage src={darkMode ? ComingSoon : ComingSoonLight}></StyledImage>
       </HeaderLinks>
 
       <HeaderControls>
