@@ -2,14 +2,13 @@ import { Trans } from '@lingui/macro'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { useCloseModal, useModalOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
@@ -242,11 +241,11 @@ export default function NetworkSelector() {
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
   const prevChainId = usePrevious(chainId)
-  const node = useRef<HTMLDivElement>()
+  const node = useRef<HTMLDivElement>(null)
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
-  useOnClickOutside(node, open ? toggle : undefined)
-
+  const openModal = useOpenModal(ApplicationModal.NETWORK_SELECTOR)
+  const closeModal = useCloseModal(ApplicationModal.NETWORK_SELECTOR)
   const history = useHistory()
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
@@ -308,7 +307,7 @@ export default function NetworkSelector() {
   }
 
   return (
-    <SelectorWrapper ref={node as any} onMouseEnter={toggle} onMouseLeave={toggle}>
+    <SelectorWrapper ref={node} onMouseEnter={openModal} onMouseLeave={closeModal} onClick={toggle}>
       <SelectorControls interactive>
         <SelectorLogo interactive src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
