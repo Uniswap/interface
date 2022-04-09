@@ -65,10 +65,6 @@ const StyledPolling = styled.div`
   align-items: center;
   color: ${({ theme }) => theme.text1};
   transition: 250ms ease color;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
-  `}
 `
 
 const StyledPollingDot = styled.div`
