@@ -91,8 +91,9 @@ const HeaderRow = styled(RowFixed)`
 const HeaderLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
-    justify-content: flex-end;
+    padding: 1rem 0 1rem 0;
+    justify-content: flex-start;
+    overflow: auto;
   `};
 `
 
