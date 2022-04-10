@@ -16,7 +16,7 @@ import { computeUniCirculation } from '../../utils/computeUniCirculation'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
+import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../farm/styled'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

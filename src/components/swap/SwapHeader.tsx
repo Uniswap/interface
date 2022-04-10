@@ -5,6 +5,7 @@ import { Percent } from '@uniswap/sdk-core'
 
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
+import { PotionIcon4 } from '../Potions/Potions'
 
 const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;
@@ -17,7 +18,8 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
+          <PotionIcon4 width={40} height={40} />
+          <TYPE.black fontWeight={500} fontSize={24} style={{ marginRight: '8px' }}>
             Swap{' '}
           </TYPE.black>
         </RowFixed>

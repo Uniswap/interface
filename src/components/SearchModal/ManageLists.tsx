@@ -45,8 +45,8 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
-  background: ${({ theme }) => theme.bg2};
-  border: 1px solid ${({ theme }) => theme.bg3};
+  background: ${({ theme }) => theme.darkTransparent};
+  border: 1px solid ${({ theme }) => theme.primary1_30};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   color: ${({ theme }) => theme.text2};
@@ -336,7 +336,7 @@ export function ManageLists({
       </PaddedColumn>
       {tempList && (
         <PaddedColumn style={{ paddingTop: 0 }}>
-          <Card backgroundColor={theme.bg2} padding="12px 20px">
+          <Card backgroundColor={theme.darkTransparent} padding="12px 20px">
             <RowBetween>
               <RowFixed>
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}

@@ -6,7 +6,8 @@ import { getCreate2Address } from '@ethersproject/address'
 
 import { INIT_CODE_HASH, MINIMUM_LIQUIDITY, FIVE, _997, _1000, ONE, ZERO } from '../constants'
 import { InsufficientReservesError, InsufficientInputAmountError } from '../errors'
-import { FACTORY_ADDRESS } from 'constants/addresses'
+import { V2_FATORY_ADDRESS } from 'constants/addresses'
+import { ChainId } from 'constants/chains'
 
 export const computePairAddress = ({
   factoryAddress,
@@ -30,7 +31,8 @@ export class Pair {
   private readonly tokenAmounts: [CurrencyAmount<Token>, CurrencyAmount<Token>]
 
   public static getAddress(tokenA: Token, tokenB: Token): string {
-    return computePairAddress({ factoryAddress: FACTORY_ADDRESS, tokenA, tokenB })
+    const factoryAddress = V2_FATORY_ADDRESS[tokenA.chainId as ChainId]
+    return computePairAddress({ factoryAddress, tokenA, tokenB })
   }
 
   public constructor(currencyAmountA: CurrencyAmount<Token>, tokenAmountB: CurrencyAmount<Token>) {
@@ -220,13 +222,13 @@ export class Pair {
 
 declare global {
   interface Window {
-    $getPairAddress: (a: string, b: string) => string
+    $getPairAddress: (chainId: ChainId, a: string, b: string) => string
   }
 }
-window.$getPairAddress = (a: string, b: string) => {
+window.$getPairAddress = (chainId: ChainId, a: string, b: string) => {
   const [token0, token1] = a.toLowerCase() < b.toLowerCase() ? [a, b] : [b, a] // does safety checks
   return getCreate2Address(
-    FACTORY_ADDRESS,
+    V2_FATORY_ADDRESS[chainId],
     keccak256(['bytes'], [pack(['address', 'address'], [token0, token1])]),
     INIT_CODE_HASH
   )

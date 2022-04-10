@@ -29,6 +29,8 @@ const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
   background-color: ${({ theme, highWarning }) =>
     highWarning ? transparentize(0.8, theme.red1) : transparentize(0.8, theme.yellow2)};
   width: fit-content;
+  border: 1px solid transparent;
+  box-shadow: 0px 0px transparent;
 `
 
 const AddressText = styled(TYPE.blue)`
@@ -76,7 +78,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
         {tokens.map((token) => {
           return (
             <Card
-              backgroundColor={theme.bg2}
+              backgroundColor={theme.darkTransparent}
               key={'import' + token.address}
               className=".token-warning-container"
               padding="2rem"
@@ -121,7 +123,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
 
         <ButtonPrimary
           altDisabledStyle={true}
-          borderRadius="20px"
+          borderRadius="8px"
           padding="10px 1rem"
           onClick={() => {
             tokens.map((token) => addToken(token))

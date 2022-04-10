@@ -3,29 +3,37 @@ import { Box } from 'rebass/styled-components'
 
 const Card = styled(Box)<{ width?: string; padding?: string; border?: string; borderRadius?: string }>`
   width: ${({ width }) => width ?? '100%'};
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 1rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
+  border: 1px solid rgba(12, 92, 146, 0.7);
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.1);
 `
 export default Card
 
 export const LightCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: rgba(34, 36, 41, 0.5); //${({ theme }) => theme.bg1};
+  border: 1px solid rgba(12, 92, 146, 0.7);
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.1);
+  background-color: ${({ theme }) => theme.darkTransparent};
 `
 
 export const LightGreyCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg2};
+  border: 1px solid rgba(12, 92, 146, 0);
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0), 0 0 7px rgba(39, 210, 234, 0);
+  background-color: ${({ theme }) => theme.darkTransparent};
 `
 
 export const GreyCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg3};
+  border: 1px solid rgba(12, 92, 146, 0.7);
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.1);
+  background: ${({ theme }) => `linear-gradient(90deg, ${theme.dark0} 0%, ${theme.dark2} 35%, ${theme.dark0} 100%);`};
+  z-index: 3;
 `
 
 export const DarkGreyCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.darkTransparent};
 `
 
 export const DarkCard = styled(Card)`
@@ -37,8 +45,9 @@ export const OutlineCard = styled(Card)`
 `
 
 export const YellowCard = styled(Card)`
-  background-color: rgba(243, 132, 30, 0.05);
-  color: ${({ theme }) => theme.yellow3};
+  background: ${({ theme }) =>
+    `linear-gradient(90deg, ${theme.darkTransparent2} 0%, ${theme.dark5} 35%, ${theme.darkTransparent2} 100%);`};
+  color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
 `
 
@@ -49,7 +58,7 @@ export const PinkCard = styled(Card)`
 `
 
 export const BlueCard = styled(Card)`
-  background-color: ${({ theme }) => theme.primary5};
+  background-color: ${({ theme }) => theme.secondary1_30};
   color: ${({ theme }) => theme.blue2};
   border-radius: 12px;
 `

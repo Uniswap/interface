@@ -384,7 +384,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     setApprovalSubmitted(false) // reset 2 step UI for approvals
                     onSwitchTokens()
                   }}
-                  color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                  color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.primary3}
                 />
               </ArrowWrapper>
               <CurrencyInputPanel

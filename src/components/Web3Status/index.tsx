@@ -44,7 +44,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
   user-select: none;
   :focus {
@@ -63,7 +63,8 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
+  background-color: ${({ theme }) =>
+    `linear-gradient(90deg, ${theme.dark0} 0%, ${theme.dark2} 35%, ${theme.dark0} 100%);`};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
@@ -77,7 +78,9 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
+      //box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.1);
+      background: ${({ theme }) =>
+        `linear-gradient(90deg, ${theme.dark0} 0%, ${theme.dark2} 35%, ${theme.dark0} 100%);`};
       border: 1px solid ${({ theme }) => theme.primary5};
       color: ${({ theme }) => theme.primaryText1};
 
@@ -90,16 +93,19 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
+  background-color: ${({ pending }) => (pending ? 'rgba(39, 210, 234, 0.25)' : `rgba(39, 210, 234, 0.05)`)};
+  border: 1px double ${({ pending, theme }) => (pending ? theme.primary1 : `rgba(39, 210, 234, 0.08)`)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.primary1) : lighten(0.05, theme.bg1))};
+    background-color: ${({ pending, theme }) =>
+      pending ? darken(0.05, theme.darkTransparent) : lighten(0.05, theme.darkTransparent)};
 
     :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg2))};
+      border: 1px solid
+        ${({ pending, theme }) =>
+          pending ? darken(0.1, theme.primaryTransparent) : darken(0.1, theme.primaryTransparent)};
     }
   }
 `

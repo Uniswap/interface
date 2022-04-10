@@ -17,7 +17,7 @@ const Base = styled(RebassButton)<{
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
   text-align: center;
-  border-radius: 12px;
+  border-radius: 8px;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid ${({ theme }) => theme.secondary1};
@@ -53,14 +53,17 @@ const Base = styled(RebassButton)<{
 `
 
 export const ButtonPrimary = styled(Base)`
-  background: ${({ theme }) => `linear-gradient(264deg, ${theme.primary1} 0%, ${theme.secondary1} 100%)`};
+  background: ${({ theme }) =>
+    `linear-gradient(264deg, ${theme.secondary1_30} 0%, ${theme.darkTransparent} 33%),  ${theme.secondary1_30} 66%`};
+  border: 1px solid ${({ theme }) => theme.primary1};
   color: white;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    background: ${({ theme }) =>
+      `linear-gradient(264deg, ${theme.primary1_30} 0%, ${theme.darkTransparent} 50%),  ${theme.primary1_30} 100%`};
   }
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
@@ -68,7 +71,7 @@ export const ButtonPrimary = styled(Base)`
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.primary1 : theme.primary1) : theme.primary1};
+      altDisabledStyle ? (disabled ? theme.primary1 : theme.primary1) : theme.secondary1_30};
     color: white;
     cursor: auto;
     box-shadow: none;
@@ -131,7 +134,7 @@ export const ButtonSecondary = styled(Base)`
   color: ${({ theme }) => theme.white};
   background-color: transparent;
   font-size: 16px;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
@@ -140,6 +143,7 @@ export const ButtonSecondary = styled(Base)`
   }
   &:hover {
     border: 1px solid ${({ theme }) => theme.primary3};
+    background-color: ${({ theme }) => theme.primary1_30};
   }
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
@@ -197,18 +201,19 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
 `
 
 export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border: 1px solid rgba(12, 92, 146, 0.7);
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.3);
   background-color: transparent;
   color: ${({ theme }) => theme.text1};
 
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 5px rgba(39, 210, 234, 0.5), 0 0 7px rgba(39, 210, 234, 0.8);
   }
   &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 5px rgba(39, 210, 234, 0.5), 0 0 7px rgba(39, 210, 234, 0.8);
   }
   &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 5px rgba(39, 210, 234, 0.5), 0 0 7px rgba(39, 210, 234, 0.8);
   }
   &:disabled {
     opacity: 50%;

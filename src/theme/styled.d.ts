@@ -6,6 +6,16 @@ export interface Colors {
   white: Color
   black: Color
 
+  dark0: Color
+  dark1: Color
+  dark2: Color
+  dark3: Color
+  dark4: Color
+  dark5: Color
+  darkTransparent: Color
+  darkTransparent2: Color
+  darkTransparent3: Color
+
   // text
   text1: Color
   text2: Color
@@ -14,6 +24,7 @@ export interface Colors {
   text5: Color
 
   // backgrounds / greys
+  bg01: Color
   bg0: Color
   bg1: Color
   bg2: Color
@@ -21,6 +32,8 @@ export interface Colors {
   bg4: Color
   bg5: Color
   bg6: Color
+
+  bgGradient: Color
 
   modalBG: Color
   advancedBG: Color
@@ -33,6 +46,7 @@ export interface Colors {
   primary5: Color
 
   primary1_30: Color
+  primaryTransparent: Color
 
   primaryText1: Color
 
@@ -42,6 +56,7 @@ export interface Colors {
   secondary3: Color
 
   secondary1_30: Color
+  secondary1_10: Color
 
   // other
   red1: Color

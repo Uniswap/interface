@@ -42,6 +42,7 @@ const PERMITTABLE_TOKENS: {
     // ['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
     // [UNI[ChainId.TESTNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
+  [ChainId.RINKEBY]: {},
 }
 
 export enum UseERC20PermitState {

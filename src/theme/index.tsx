@@ -47,8 +47,9 @@ export function colors(darkMode: boolean): Colors {
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? '#191B1F' : '#FFF',
-    bg1: darkMode ? '#212429' : '#F7F8FA',
+    bg01: 'black',
+    bg0: darkMode ? 'rgba(16, 16, 18, 0.9)' : 'rgba(16, 16, 18, 0.9)',
+    bg1: darkMode ? 'rgba(16, 16, 18, 0.9)' : 'rgba(16, 16, 18, 0.9)',
     bg2: darkMode ? '#191B1F' : '#EDEEF2',
     bg3: darkMode ? '#40444F' : '#CED0D9',
     bg4: darkMode ? '#565A69' : '#888D9B',
@@ -66,7 +67,8 @@ export function colors(darkMode: boolean): Colors {
     primary4: darkMode ? '#2a8d9c' : '#2a8d9c',
     primary5: darkMode ? '#22646eae' : '#22646eae',
 
-    primary1_30: 'rgba(39, 210, 234, 0.3)',
+    primary1_30: 'rgba(39, 210, 234, 0.5)',
+    primaryTransparent: 'rgba(39, 210, 234, 0.2)',
 
     // color text
     primaryText1: darkMode ? '#27D2EA' : '#27D2EA',
@@ -77,6 +79,20 @@ export function colors(darkMode: boolean): Colors {
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
     secondary1_30: 'rgba(12, 92, 146, 0.3)',
+    secondary1_10: 'rgba(12, 92, 146, 0.1)',
+
+    dark0: 'rgba(16, 16, 18, 0.9)',
+    dark1: 'rgba(12,26,35,0.9)',
+    //dark2: 'rgba(10,14,36, 0.9)',
+    dark2: 'rgba(9, 41, 70, 0.9)',
+    dark3: 'rgba(10,19,51, 1)',
+    dark4: 'rgba(14,28,67,1)',
+    dark5: 'transparent',
+    darkTransparent: 'rgba(16, 16, 18, 0.12)',
+    darkTransparent2: 'rgba(16, 16, 18, 0.32)',
+    darkTransparent3: 'rgba(16, 16, 18, 0.8)',
+
+    bgGradient: `linear-gradient(90deg, rgba(16, 16, 18, 0.9) 0%, rgba(10,14,36, 0.9) 35%, rgba(16, 16, 18, 0.9) 100%)`,
 
     // other
     red1: 'rgba(242,65,65,0.3)',
@@ -257,7 +273,7 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg01};
 }
 
 body {

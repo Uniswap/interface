@@ -7,6 +7,10 @@ const TooltipContainer = styled.div`
   padding: 0.6rem 1rem;
   font-weight: 400;
   word-break: break-word;
+  background: ${({ theme }) => `linear-gradient(90deg, ${theme.dark0} 0%, ${theme.dark2} 35%, ${theme.dark0} 100%);`};
+  border: 1px solid rgba(12, 92, 146, 0.7);
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.1);
+  border-radius: 8px;
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {

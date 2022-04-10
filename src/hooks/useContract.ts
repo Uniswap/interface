@@ -21,6 +21,7 @@ import UNISOCKS_ABI from 'abis/unisocks.json'
 import WETH_ABI from 'abis/weth.json'
 import EIP_2612 from 'abis/eip_2612.json'
 import { abi as MINICHEF_V2_ABI } from 'abis/MiniChefV2.json'
+import { abi as COMPLEX_REWARDER_TIME_ABI } from 'abis/ComplexRewarderTime.json'
 
 import { ChainId } from 'constants/chains'
 import { WEVMOS, DIFFUSION } from 'constants/tokens'
@@ -53,6 +54,7 @@ import {
   MiniChefV2,
   Multicall2,
   Weth,
+  ComplexRewarderTime,
 } from '../abis/types'
 
 import { useActiveWeb3React } from './web3'
@@ -131,6 +133,9 @@ export function useMerkleDistributorContract() {
 
 export function useMiniChef() {
   return useContract<MiniChefV2>(MINICHEF_V2_ADDRESS, MINICHEF_V2_ABI, true)
+}
+export function useComplexRewarderTime(address?: string) {
+  return useContract<ComplexRewarderTime>(address, COMPLEX_REWARDER_TIME_ABI, true)
 }
 
 export function useGovernanceContract() {

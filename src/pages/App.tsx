@@ -8,20 +8,15 @@ import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import ErrorBoundary from '../components/ErrorBoundary'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-// import Earn from './Earn'
-// import { Playground } from './Earn/Play'
-// import Manage from './Earn/Manage'
-// import MigrateV2 from './MigrateV2'
-// import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
+import { FarmListPage } from './Farm/FarmList'
+import Farm from './Farm/Farm'
 
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
-// import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
-// import AddLiquidity from './AddLiquidity'
 import { ThemedBackground } from '../theme'
 
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
@@ -77,10 +72,8 @@ export default function App() {
             <Polling />
             <Web3ReactManager>
               <Switch>
-                {/* <Route exact strict path="/play" component={Playground} /> */}
-                {/* <Route exact strict path="/farm" component={Earn} /> */}
-
-                {/* <Route exact strict path="/farm/:currencyIdA/:currencyIdB" component={Manage} /> */}
+                <Route exact strict path="/farm" component={FarmListPage} />
+                <Route exact strict path="/farm/:poolId" component={Farm} />
 
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />

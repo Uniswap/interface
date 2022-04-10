@@ -1,24 +1,46 @@
 import { ChainId } from 'constants/chains'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
+import { TESTNET } from './periphery'
 
 // Actively Deployed by us
-export const FACTORY_ADDRESS = '0xBB86C1332f54afb6509CB599BF88980f7b389403'
-export const V2_FATORY_ADDRESS = constructSameAddressMap(FACTORY_ADDRESS)
-export const MULTICALL2_ADDRESSES = constructSameAddressMap('0xb65823dAdB4EA34C4779F937339C34B6775Ed4E1')
-export const V2_ROUTER_ADDRESS = constructSameAddressMap('0x638771E1eE3c85242D811e9eEd89C71A4F8F4F73')
 
-export const MINICHEF_V2_ADDRESS = constructSameAddressMap('0xC3D57AB51DD9C2bc926F33f49E61a156df3bb383')
+export const V2_FATORY_ADDRESS = {
+  // Unit Tests
+  [1]: '0xBB86C1332f54afb6509CB599BF88980f7b389403',
+  [ChainId.MAINNET]: '',
+  [ChainId.TESTNET]: TESTNET.factory,
+  [ChainId.RINKEBY]: '0xcF5ef8d007a616066e5eaEa0916592374a0F478D',
+}
+export const MULTICALL2_ADDRESSES = {
+  [ChainId.MAINNET]: '',
+  [ChainId.TESTNET]: TESTNET.multicall2,
+  [ChainId.RINKEBY]: '0xb65823dAdB4EA34C4779F937339C34B6775Ed4E1',
+}
+
+export const V2_ROUTER_ADDRESS = {
+  [ChainId.MAINNET]: '',
+  [ChainId.TESTNET]: TESTNET.router,
+  [ChainId.RINKEBY]: '0x638771E1eE3c85242D811e9eEd89C71A4F8F4F73',
+}
+
+export const MINICHEF_V2_ADDRESS = {
+  [ChainId.MAINNET]: '',
+  [ChainId.TESTNET]: TESTNET.miniChef,
+  [ChainId.RINKEBY]: '0xFCd2Ce20ef8ed3D43Ab4f8C2dA13bbF1C6d9512F',
+}
 
 // Used but ultimately not ours
-export const WETH9_ADDRESS = '0xcF5ef8d007a616066e5eaEa0916592374a0F478D'
-/*
-    weth9: "0xcF5ef8d007a616066e5eaEa0916592374a0F478D",
-    mockUSDC: "0x6aBdDa34Fb225be4610a2d153845e09429523Cd2",
-    mockEVMOS: "0xFCd2Ce20ef8ed3D43Ab4f8C2dA13bbF1C6d9512F",
-    mockATOM: "0x2764b262E60D3Ac96999F7e73b0628B09CbB367E",
-    mockOSMOSIS: "0x067eC87844fBD73eDa4a1059F30039584586e09d",
-    leftHandSideToken: "0xD6C474447cA995219B52E5c018665eCAfEB772e4",
-    rightHandSideToken: "0x16bc4f17071A27Ebe6Af44e90bac6349057646a5",
+export const WETH9_ADDRESS = {
+  //@TODO: FIX MAINNET
+  [ChainId.MAINNET]: '0xcF5ef8d007a616066e5eaEa0916592374a0F478D',
+  [ChainId.TESTNET]: TESTNET.weth9,
+  [ChainId.RINKEBY]: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+}
+
+/**
+ * ------------------------------------------------------------------------------------
+ * Not sure if these are used in the diffusion codebase
+ * @TODO: cleanup
  */
 
 export const GOVERNANCE_ADDRESS = constructSameAddressMap('0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F')

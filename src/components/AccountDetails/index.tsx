@@ -54,8 +54,8 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.primaryTransparent};
+  border-radius: 8px;
   position: relative;
   display: grid;
   grid-row-gap: 12px;
@@ -97,7 +97,7 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.modalBG};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 

@@ -19,7 +19,7 @@ const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
 //   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 // }
 
-const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.TESTNET]
+const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.TESTNET, ChainId.RINKEBY]
 
 /**
  * @TODO: Crypzoh: This is to enable the other connectors temporarily without removing them from the code

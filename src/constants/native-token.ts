@@ -6,17 +6,12 @@ import { WETH9_ADDRESS } from './addresses'
 
 export const WEVMOS = {
   // Mainly for unit tests
-  1: new Token(1, WETH9_ADDRESS, 18, 'WEVMOS', 'Wrapped Evmos'),
-  ...makeToken('Wrapped Evmos', 'WEVMOS', 18, WETH9_ADDRESS),
+  1: new Token(1, WETH9_ADDRESS[4], 18, 'WEVMOS', 'Wrapped Evmos'),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, WETH9_ADDRESS[ChainId.MAINNET], 18, 'WEVMOS', 'Wrapped Evmos'),
+  [ChainId.TESTNET]: new Token(ChainId.TESTNET, WETH9_ADDRESS[ChainId.TESTNET], 18, 'WEVMOS', 'Wrapped Evmos'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, WETH9_ADDRESS[ChainId.RINKEBY], 18, 'WEVMOS', 'Wrapped Evmos'),
 }
 export const WETH9 = WEVMOS
-
-function makeToken(name: string, symbol: string, decimals: number, mainAddress: string, testNetAddress?: string) {
-  return {
-    [ChainId.MAINNET]: new Token(ChainId.MAINNET, mainAddress, decimals, symbol, name),
-    [ChainId.TESTNET]: new Token(ChainId.TESTNET, testNetAddress || mainAddress, decimals, symbol, name),
-  }
-}
 
 export class Evmos extends NativeCurrency {
   protected constructor(chainId: number) {

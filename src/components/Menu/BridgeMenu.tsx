@@ -15,7 +15,7 @@ const StyledBridgeButton = styled.div<{ isActive?: boolean }>`
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text3};
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
@@ -24,8 +24,8 @@ const StyledBridgeButton = styled.div<{ isActive?: boolean }>`
   ${({ isActive }) =>
     isActive &&
     css`
-      border-radius: 12px;
-      color: ${({ theme }) => theme.text1};
+      border-radius: 8px;
+      color: ${({ theme }) => theme.text3};
       background-color: ${({ theme }) => theme.bg3};
     `}
 
@@ -37,10 +37,11 @@ const StyledBridgeButton = styled.div<{ isActive?: boolean }>`
 
 const Menu = styled.div`
   min-width: 8.125rem;
-  background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  background: ${({ theme }) => `linear-gradient(90deg, ${theme.dark0} 0%, ${theme.dark2} 35%, ${theme.dark0} 100%);`};
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0.2), 0 0 7px rgba(39, 210, 234, 0.2);
+  border: 1px solid rgba(12, 92, 146, 0.7);
+  border-radius: 8px;
+  backdrop-filter: blur(4px) brightness(50%) saturate(150%);
 `
 
 export function BridgeMenu() {

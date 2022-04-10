@@ -23,7 +23,7 @@ import TradePrice from '../swap/TradePrice'
 
 export const ArrowWrapper = styled.div`
   padding: 4px;
-  border-radius: 12px;
+  border-radius: 6px;
   height: 32px;
   width: 32px;
   position: relative;
@@ -33,7 +33,9 @@ export const ArrowWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.dark0};
+  border: 4px solid ${({ theme }) => theme.darkTransparent};
+  box-shadow: 0 0 2px rgba(39, 210, 234, 0.2), 0 0 5px rgba(39, 210, 234, 0.3);
   z-index: 2;
 `
 

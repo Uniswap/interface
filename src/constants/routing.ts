@@ -10,6 +10,7 @@ type ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.MAINNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.MAINNET),
   [ChainId.TESTNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.TESTNET),
+  [ChainId.RINKEBY]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.RINKEBY),
 }
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {}
 
@@ -29,6 +30,7 @@ export const SUGGESTED_BASES: Partial<ChainTokenList> = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.MAINNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.MAINNET),
   [ChainId.TESTNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.TESTNET),
+  [ChainId.RINKEBY]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.RINKEBY),
 }
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   //@TODO: Check where this is used

@@ -17,7 +17,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/farm/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { Pair } from '@uniswap/v2-sdk'
@@ -30,6 +30,8 @@ const PageWrapper = styled(AutoColumn)`
 const VoteCard = styled(DataCard)`
   /* background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%); */
   overflow: hidden;
+  border: 1px solid rgba(12, 92, 146, 0.7);
+  box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.3);
 `
 
 const TitleRow = styled(RowBetween)`
@@ -169,7 +171,7 @@ export default function Pool() {
                   id="find-pool-button"
                   as={Link}
                   padding="6px 8px"
-                  borderRadius="12px"
+                  borderRadius="8px"
                   to="/pool/import"
                 >
                   <Text fontWeight={500} fontSize={16}>
@@ -180,7 +182,7 @@ export default function Pool() {
                   id="join-pool-button"
                   as={Link}
                   padding="6px 8px"
-                  borderRadius="12px"
+                  borderRadius="8px"
                   to="/add/v2/EVMOS"
                 >
                   <Text fontWeight={500} fontSize={16}>

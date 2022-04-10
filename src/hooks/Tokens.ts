@@ -172,7 +172,6 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     tokenNameBytes32.result,
   ])
 }
-
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'EVMOS'

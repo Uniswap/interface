@@ -12,15 +12,15 @@ import CurrencyLogo from '../CurrencyLogo'
 import { Evmos, EVMOS } from '../../constants/tokens'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
-  border-radius: 10px;
+  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.primaryTransparent)};
+  border-radius: 8px;
   display: flex;
   padding: 6px;
 
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
+    background-color: ${({ theme, disable }) => !disable && theme.secondary1_30};
   }
 
   background-color: ${({ theme, disable }) => disable && theme.bg3};
