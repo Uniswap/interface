@@ -13,6 +13,7 @@ const StyledIframe = styled.iframe`
   min-width: 100%;
   border-radius: 24px;
   height: 100%;
+  min-height: 92vh;
   max-height: 100%;
   loading: lazy;
 `

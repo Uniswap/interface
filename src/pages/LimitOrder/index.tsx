@@ -81,6 +81,7 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
+import AppBodyNoPro from '../AppBodyNoPro'
 import { CandleSticks, MemoizedCandleSticks } from './CandleSticks'
 
 const NoLiquidity = styled.div`
@@ -172,6 +173,10 @@ const MainContentWrapper = styled.main`
     flex: 1;
   }
 
+  @media screen and (max-width: 900px) {
+    margin-bottom: 80px;
+  }
+
   /* width */
   ::-webkit-scrollbar {
     width: 10px;
@@ -201,8 +206,8 @@ const MainContentWrapperNoPro = styled.div`
   border-radius: 20px;
 
   @media screen and (max-width: 1000px) {
-    width: 95%;
-    margin-left: 20px;
+    width: 100%;
+    max-width: 100%;
   }
 
   /* width */
@@ -1020,7 +1025,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           </NoLiquidity>
         )}
       </MainContentWrapperNoPro>
-      <AppBody>
+      <AppBodyNoPro>
         <StyledNoProDiv>
           <SwapHeader />
           <Wrapper id="swap-page">
@@ -1340,7 +1345,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
             </AutoColumn>
           </Wrapper>
         </StyledNoProDiv>
-      </AppBody>
+      </AppBodyNoPro>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter
