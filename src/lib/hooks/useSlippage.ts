@@ -1,5 +1,5 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
+import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useAtomValue } from 'jotai/utils'
 import { autoSlippageAtom, maxSlippageAtom } from 'lib/state/settings'
 import { useMemo } from 'react'
@@ -17,6 +17,8 @@ export interface Slippage {
   warning?: 'warning' | 'error'
 }
 
+export const DEFAULT_SLIPPAGE = { auto: true, allowed: DEFAULT_AUTO_SLIPPAGE }
+
 /** Returns the allowed slippage, and whether it is auto-slippage. */
 export default function useSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Slippage {
   const shouldUseAutoSlippage = useAtomValue(autoSlippageAtom)
@@ -27,6 +29,9 @@ export default function useSlippage(trade: InterfaceTrade<Currency, Currency, Tr
     const auto = shouldUseAutoSlippage || !maxSlippage
     const allowed = shouldUseAutoSlippage ? autoSlippage : maxSlippage ?? autoSlippage
     const warning = auto ? undefined : getSlippageWarning(allowed)
+    if (auto && allowed === DEFAULT_AUTO_SLIPPAGE) {
+      return DEFAULT_SLIPPAGE
+    }
     return { auto, allowed, warning }
   }, [autoSlippage, maxSlippage, shouldUseAutoSlippage])
 }
