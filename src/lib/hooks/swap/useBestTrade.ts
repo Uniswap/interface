@@ -6,6 +6,8 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import useClientSideSmartOrderRouterTrade from '../routing/useClientSideSmartOrderRouterTrade'
 
+export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
+
 /**
  * Returns the best v2+v3 trade for a desired swap.
  * @param tradeType whether the swap is an exact in/out
@@ -39,6 +41,7 @@ export function useBestTrade(
   return useMemo(() => {
     const { state, trade } = tradeObject
     // If the trade is in a settled state, return it.
+    if (state === TradeState.INVALID) return INVALID_TRADE
     if ((state !== TradeState.LOADING && state !== TradeState.SYNCING) || trade) return tradeObject
 
     const [currencyIn, currencyOut] =
