@@ -127,8 +127,8 @@ const DivWrapper = styled.div`
 const DivWrapperNoPro = styled.div`
   max-height: 100%;
   margin-top: 160px;
-  width: 60%;
-  gap: 0.8rem;
+  width: 75%;
+  gap: 1.5rem;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -196,9 +196,9 @@ const MainContentWrapper = styled.main`
 
 const MainContentWrapperNoPro = styled.div`
   width: 50%;
-  max-width: 480px;
+  max-width: 800px;
   overflow: scroll;
-  max-height: 800px;
+  max-height: 532px;
   overflow-x: hidden;
   padding: 15px;
 
@@ -225,6 +225,10 @@ const MainContentWrapperNoPro = styled.div`
     background: grey;
     border-radius: 10px;
   }
+`
+
+const ButtonStyle = styled.div`
+  margin-top: 0px;
 `
 
 const StyledNoProDiv = styled.div`
@@ -558,7 +562,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      history.push('/#/pool/') // limit order
+      history.push('/limitorder/')
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
@@ -965,7 +969,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   <TYPE.body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans>Your trade will appear here.</Trans>
+                      <Trans>Your limit orders will appear here.</Trans>
                     </div>
                   </TYPE.body>
                   {showConnectAWallet && (
@@ -1014,7 +1018,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
             <TYPE.body color={theme.text3} textAlign="center">
               <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
               <div>
-                <Trans>Your trade will appear here.</Trans>
+                <Trans>Your limit orders will appear here.</Trans>
               </div>
             </TYPE.body>
             {showConnectAWallet && (
@@ -1172,6 +1176,11 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           setShowInverted={setShowInverted}
                         />
                       </LoadingOpacityContainer>
+                    </RowFixed>
+                  </Row>
+                  <Row justify={!trade ? 'center' : 'space-between'}>
+                    <RowFixed style={{ position: 'relative' }}>
+                      {' '}
                       <MouseoverTooltipContent
                         wrap={false}
                         content={
@@ -1196,9 +1205,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         <StyledInfo />
                       </MouseoverTooltipContent>
                     </RowFixed>
-                  </Row>
-                  <Row justify={!trade ? 'center' : 'space-between'}>
-                    <RowFixed style={{ position: 'relative' }}></RowFixed>
                     <RowFixed style={{ position: 'relative' }}>
                       <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
                         <Trans>Min Price</Trans>
@@ -1212,7 +1218,38 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   </Row>
                 </>
               )}
-              <div>
+              {!trade && !minPrice && (
+                <>
+                  <Row justify={'end'}>
+                    <RowFixed style={{ position: 'relative' }}>
+                      <MouseoverTooltipContent
+                        wrap={false}
+                        content={<ResponsiveTooltipContainer>-</ResponsiveTooltipContainer>}
+                        placement="bottom"
+                      >
+                        <AutoRow gap="4px" width="auto">
+                          <AutoRouterLogo />
+                        </AutoRow>
+                      </MouseoverTooltipContent>
+                    </RowFixed>
+                    <RowFixed style={{ position: 'relative' }}>
+                      <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                        <Trans>Current Price</Trans> -
+                      </TYPE.body>
+                    </RowFixed>
+                  </Row>
+                  <Row justify={'end'}>
+                    <RowFixed style={{ position: 'relative' }}></RowFixed>
+                    <RowFixed style={{ position: 'relative' }}>
+                      <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                        <Trans>Min Price</Trans> -
+                      </TYPE.body>
+                    </RowFixed>
+                  </Row>
+                </>
+              )}
+
+              <ButtonStyle>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>
                     <TYPE.main mb="4px">
@@ -1341,7 +1378,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   </ButtonError>
                 )}
                 {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-              </div>
+              </ButtonStyle>
             </AutoColumn>
           </Wrapper>
         </StyledNoProDiv>

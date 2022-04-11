@@ -647,7 +647,7 @@ export function PositionPage({
               currencyId0: currencyId(feeValue0.currency),
               currencyId1: currencyId(feeValue1.currency),
             })
-            history.push('/pool/')
+            history.push('/limitorder/')
           })
       })
       .catch((error) => {

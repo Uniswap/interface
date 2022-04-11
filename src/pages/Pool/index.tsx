@@ -198,12 +198,12 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  <Trans>Trades</Trans>
+                  <Trans>Limit Orders</Trans>
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/limitorder`}>
-                  + <Trans>New Trade</Trans>
+                  + <Trans>New Limit Order</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>

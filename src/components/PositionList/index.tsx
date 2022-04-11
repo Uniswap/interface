@@ -57,7 +57,7 @@ export default function PositionList({ positions, fundingBalance, minBalance }: 
     <>
       <DesktopHeader>
         <div>
-          <Trans>My trades</Trans>
+          <Trans>My limit orders</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
         <div>
@@ -68,7 +68,7 @@ export default function PositionList({ positions, fundingBalance, minBalance }: 
             defaultChecked
             checked={filterProcessed}
           />
-          <span>Filter processed trades </span>
+          <span>Filter processed limit orders </span>
         </div>
         <div>
           <Trans>Status</Trans>
@@ -77,10 +77,10 @@ export default function PositionList({ positions, fundingBalance, minBalance }: 
       <MobileHeader>
         <div>
           {' '}
-          <Trans>My trades</Trans>
+          <Trans>My limit orders</Trans>
         </div>
         <div>
-          Filter processed trades
+          Filter processed limit orders
           <input type="checkbox" checked={filterProcessed} onChange={handleChange} />
         </div>
       </MobileHeader>
