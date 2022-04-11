@@ -1,6 +1,6 @@
 import { TFunction } from 'i18next'
-import { DerivedSwapInfo } from 'src/features/swap/hooks'
-import { CurrencyField } from 'src/features/swap/swapFormSlice'
+import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
 enum FieldError {

@@ -18,8 +18,8 @@ import { config } from 'src/config'
 import { dataApi } from 'src/features/dataApi/slice'
 import { nftApi } from 'src/features/nfts/api'
 import { routingApi } from 'src/features/routing/routingApi'
-import { swapActions } from 'src/features/swap/swapSaga'
-import { tokenWrapActions } from 'src/features/swap/wrapSaga'
+import { swapActions } from 'src/features/transactions/swap/swapSaga'
+import { tokenWrapActions } from 'src/features/transactions/swap/wrapSaga'
 
 const sagaMiddleware = createSagaMiddleware({
   context: {

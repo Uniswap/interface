@@ -101,14 +101,19 @@ export interface WrapTransactionInfo {
   currencyAmountRaw: string
 }
 
-export interface SendTransactionInfo extends BaseTransactionInfo {
+export interface SendTokenTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Send
+  currencyAmountRaw: string
+  // TODO: track recipient for recent
+}
+
+export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Receive
   currencyAmountRaw: string
 }
 
-export interface ReceiveTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.Receive
-  currencyAmountRaw: string
+export interface SendNFTTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Send
 }
 
 export type TransactionTypeInfo =
@@ -116,5 +121,6 @@ export type TransactionTypeInfo =
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | WrapTransactionInfo
-  | SendTransactionInfo
-  | ReceiveTransactionInfo
+  | SendTokenTransactionInfo
+  | ReceiveTokenTransactionInfo
+  | SendNFTTransactionInfo

@@ -9,16 +9,18 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { theme, Theme } from 'src/styles/theme'
 
 type Props = {
-  nft: NFTAsset.Asset
+  nft?: NFTAsset.Asset
   size: number
-  onPress: (nft: NFTAsset.Asset) => void
+  onPress?: (nft: NFTAsset.Asset) => void
 } & SpacingShorthandProps<Theme>
 
 export function NFTAssetItem({ nft, size, onPress, ...rest }: Props) {
+  if (!nft) return null
+
   const { name, image_url: imageUrl } = nft
 
   return (
-    <Button name={ElementName.NFTAssetItem} onPress={() => onPress(nft)}>
+    <Button name={ElementName.NFTAssetItem} onPress={() => onPress?.(nft)}>
       <Flex flexDirection="column" gap="md" justifyContent="space-between" width={size} {...rest}>
         <RemoteImage
           borderRadius={theme.borderRadii.md}

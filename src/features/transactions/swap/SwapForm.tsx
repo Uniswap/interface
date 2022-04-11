@@ -14,24 +14,27 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { ElementName, SectionName } from 'src/features/telemetry/constants'
+import { Trace } from 'src/features/telemetry/Trace'
 import {
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapCallback,
   useWrapCallback,
-} from 'src/features/swap/hooks'
-import { QuickDetails } from 'src/features/swap/QuickDetails'
-import { SwapDetails } from 'src/features/swap/SwapDetails'
-import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
-import { isWrapAction } from 'src/features/swap/utils'
-import { getHumanReadableSwapInputStatus } from 'src/features/swap/validate'
-import { WrapType } from 'src/features/swap/wrapSaga'
-import { ElementName, SectionName } from 'src/features/telemetry/constants'
-import { Trace } from 'src/features/telemetry/Trace'
+} from 'src/features/transactions/swap/hooks'
+import { QuickDetails } from 'src/features/transactions/swap/QuickDetails'
+import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
+import { isWrapAction } from 'src/features/transactions/swap/utils'
+import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/validate'
+import { WrapType } from 'src/features/transactions/swap/wrapSaga'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
-  state: SwapFormState
+  state: TransactionState
   dispatch: React.Dispatch<AnyAction>
 }
 

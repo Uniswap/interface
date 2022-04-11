@@ -1,8 +1,8 @@
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-import { getWrapType, serializeQueryParams } from 'src/features/swap/utils'
-import { WrapType } from 'src/features/swap/wrapSaga'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { getWrapType, serializeQueryParams } from 'src/features/transactions/swap/utils'
+import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 
 describe(serializeQueryParams, () => {
   it('handles the correct types', () => {

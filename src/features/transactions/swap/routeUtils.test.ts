@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Token, TradeType } from '@uniswap/sdk-core'
-import { computeRoutes } from 'src/features/swap/routeUtils'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { computeRoutes } from 'src/features/transactions/swap/routeUtils'
 
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
 const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI')

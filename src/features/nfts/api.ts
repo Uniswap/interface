@@ -6,7 +6,7 @@ import {
   OpenseaNFTAssetResponse,
   OpenseaNFTCollectionResponse,
 } from 'src/features/nfts/types'
-import { serializeQueryParams } from 'src/features/swap/utils'
+import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 
 const CURSOR_LIMIT = 50
 const OPENSEA_BASE_URL = 'https://api.opensea.io/api/v1/'

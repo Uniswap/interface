@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { QuoteResult } from 'src/features/routing/types'
-import { serializeQueryParams } from 'src/features/swap/utils'
+import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 
 const ROUTING_API_BASE_URL = 'https://api.uniswap.org/v1'
 

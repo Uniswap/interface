@@ -17,13 +17,17 @@ import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
-import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { ElementName } from 'src/features/telemetry/constants'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import { currencyId } from 'src/utils/currencyId'
+import { currencyAddress, currencyId } from 'src/utils/currencyId'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -72,25 +76,27 @@ export function TokenDetailsScreen({
   const { t } = useTranslation()
 
   const onPressBuy = () => {
-    const swapFormState: SwapFormState = {
+    const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.OUTPUT,
       exactAmount: '0',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        currencyId: currencyId(currency),
+        address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,
+        type: AssetType.Currency,
       },
     }
     navigation.push(Screens.Swap, { swapFormState })
   }
 
   const onPressSell = () => {
-    const swapFormState: SwapFormState = {
+    const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
       exactAmount: '0',
       [CurrencyField.INPUT]: {
-        currencyId: currencyId(currency),
+        address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,
+        type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,
     }
@@ -98,16 +104,17 @@ export function TokenDetailsScreen({
   }
 
   const onPressSend = () => {
-    const swapFormState: SwapFormState = {
+    const transferFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
       exactAmount: '1',
       [CurrencyField.INPUT]: {
-        currencyId: currencyId(currency),
+        address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,
+        type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,
     }
-    navigation.push(Screens.Transfer, { swapFormState })
+    navigation.push(Screens.Transfer, { transferFormState })
   }
 
   return (

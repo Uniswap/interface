@@ -9,12 +9,12 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
-import { SwapFormState } from 'src/features/swap/swapFormSlice'
+import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
 export type TabParamList = {
   [Tabs.Home]: undefined
-  [Tabs.Swap]: { swapFormState?: SwapFormState } | undefined
+  [Tabs.Swap]: { swapFormState?: TransactionState } | undefined
   [Tabs.Explore]: undefined
   [Tabs.NFT]: undefined
 }
@@ -58,10 +58,10 @@ export type AppStackParamList = {
     setSelectedRecipient: (newRecipient: string) => void
   }
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
-  [Screens.Swap]: { swapFormState?: SwapFormState } | undefined
+  [Screens.Swap]: { swapFormState?: TransactionState } | undefined
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
-  [Screens.Transfer]: { swapFormState?: SwapFormState } | undefined
+  [Screens.Transfer]: { transferFormState?: TransactionState } | undefined
   [Screens.TokenDetails]: { currency: Currency }
 }
 

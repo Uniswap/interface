@@ -1,9 +1,9 @@
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { Trade } from 'src/features/swap/useTrade'
+import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'src/features/routing/types'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from '../routing/types'
+import { Trade } from 'src/features/transactions/swap/useTrade'
 
 export function transformQuoteToTrade(
   currencyIn: Currency | null | undefined,

@@ -5,7 +5,7 @@ import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { useRouterQuote } from 'src/features/routing/hooks'
 import { QuoteResult } from 'src/features/routing/types'
-import { transformQuoteToTrade } from 'src/features/swap/routeUtils'
+import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { useDebounceWithStatus } from 'src/utils/timing'
 
 // TODO: use composition instead of inheritance

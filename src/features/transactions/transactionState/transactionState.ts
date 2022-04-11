@@ -1,31 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ChainId } from 'src/constants/chains'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { currencyId } from 'src/utils/currencyId'
+import { shallowEqual } from 'react-redux'
+import { TradeableAsset } from 'src/entities/assets'
 
 export enum CurrencyField {
   INPUT,
   OUTPUT,
 }
 
-type TradeableAsset = {
-  currencyId: string
-  chainId: number
-}
-
-export interface SwapFormState {
+export interface TransactionState {
   [CurrencyField.INPUT]: TradeableAsset | null
   [CurrencyField.OUTPUT]: TradeableAsset | null
   exactCurrencyField: CurrencyField
   exactAmount: string
-  recipient?: Address
+  recipient?: string
 }
 
-export const initialSwapFormState: Readonly<SwapFormState> = {
-  [CurrencyField.INPUT]: {
-    currencyId: currencyId(NativeCurrency.onChain(ChainId.Rinkeby)),
-    chainId: ChainId.Rinkeby,
-  },
+export const initialState: Readonly<TransactionState> = {
+  [CurrencyField.INPUT]: null,
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
   exactAmount: '',
@@ -33,8 +24,8 @@ export const initialSwapFormState: Readonly<SwapFormState> = {
 
 // using `createSlice` for convenience -- slice is not added to root reducer
 const slice = createSlice({
-  name: 'swap',
-  initialState: initialSwapFormState,
+  name: 'TransactionState',
+  initialState,
   reducers: {
     /**
      * Sets currency at `field` to the given currency
@@ -43,29 +34,26 @@ const slice = createSlice({
      */
     selectCurrency: (
       state,
-      action: PayloadAction<{ field: CurrencyField; currencyId: string; chainId: number }>
+      action: PayloadAction<{ field: CurrencyField; tradeableAsset: TradeableAsset }>
     ) => {
-      const { field, chainId } = action.payload
+      const { field, tradeableAsset } = action.payload
 
       const nonExactField =
         field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
       // swap order if tokens are the same
-      if (action.payload.currencyId === state[nonExactField]?.currencyId) {
+      if (shallowEqual(tradeableAsset, state[nonExactField])) {
         state.exactCurrencyField = field
         state[nonExactField] = state[field]
       }
 
       // change independent field if network changed
-      if (chainId !== state[nonExactField]?.chainId) {
+      if (tradeableAsset.chainId !== state[nonExactField]?.chainId) {
         state.exactCurrencyField = field
         state[nonExactField] = null
       }
 
-      state[field] = {
-        currencyId: action.payload.currencyId,
-        chainId,
-      }
+      state[field] = tradeableAsset
     },
     /** Switches input and output currencies */
     switchCurrencySides: (state) => {
@@ -97,4 +85,4 @@ const slice = createSlice({
 
 export const { selectCurrency, switchCurrencySides, enterExactAmount, selectRecipient } =
   slice.actions
-export const { reducer: swapFormReducer, actions: swapFormActions } = slice
+export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice

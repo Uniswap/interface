@@ -15,20 +15,25 @@ import {
   importAccountSagaName,
 } from 'src/features/import/importAccountSaga'
 import { initProviders } from 'src/features/providers/providerSaga'
-import { swapActions, swapReducer, swapSaga, swapSagaName } from 'src/features/swap/swapSaga'
+import {
+  swapActions,
+  swapReducer,
+  swapSaga,
+  swapSagaName,
+} from 'src/features/transactions/swap/swapSaga'
 import {
   tokenWrapActions,
   tokenWrapReducer,
   tokenWrapSaga,
   tokenWrapSagaName,
-} from 'src/features/swap/wrapSaga'
+} from 'src/features/transactions/swap/wrapSaga'
 import { transactionWatcher } from 'src/features/transactions/transactionWatcherSaga'
 import {
   transferTokenActions,
   transferTokenReducer,
   transferTokenSaga,
   transferTokenSagaName,
-} from 'src/features/transfer/transferTokenSaga'
+} from 'src/features/transactions/transfer/transferTokenSaga'
 import {
   createAccountActions,
   createAccountReducer,

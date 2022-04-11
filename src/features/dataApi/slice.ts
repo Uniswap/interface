@@ -15,7 +15,7 @@ import {
   SerializablePortfolioBalance,
   SpotPrices,
 } from 'src/features/dataApi/types'
-import { serializeQueryParams } from 'src/features/swap/utils'
+import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
 import { percentDifference } from 'src/utils/statistics'
 

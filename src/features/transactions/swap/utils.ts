@@ -1,6 +1,6 @@
 import { Currency, Price } from '@uniswap/sdk-core'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-import { WrapType } from 'src/features/swap/wrapSaga'
+import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { formatPrice } from 'src/utils/format'
 
 export function serializeQueryParams(

@@ -63,6 +63,7 @@ export const enum ElementName {
   Reset = 'reset',
   SelectRecipient = 'select-recipient',
   SellToken = 'sell-token',
+  Send = 'send',
   Settings = 'settings',
   Submit = 'submit',
   Swap = 'swap',

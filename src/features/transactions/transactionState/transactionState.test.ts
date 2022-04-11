@@ -1,124 +1,129 @@
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { currencyId } from 'src/utils/currencyId'
+import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import {
   CurrencyField,
   enterExactAmount,
-  initialSwapFormState,
+  initialState,
   selectCurrency,
-  swapFormReducer,
   switchCurrencySides,
-} from './swapFormSlice'
+  TransactionState,
+  transactionStateReducer,
+} from './transactionState'
 
 const chainId = ChainId.Rinkeby
-const ethAddress = currencyId(NativeCurrency.onChain(ChainId.Rinkeby))
+const ethAddress = NATIVE_ADDRESS
+const daiTradeableAsset: CurrencyAsset = { address: 'DAI', chainId, type: AssetType.Currency }
+const ethTradeableAsset: CurrencyAsset = { address: ethAddress, chainId, type: AssetType.Currency }
+
+const testInitialState: Readonly<TransactionState> = {
+  [CurrencyField.INPUT]: {
+    address: NATIVE_ADDRESS,
+    chainId: ChainId.Rinkeby,
+    type: AssetType.Currency,
+  },
+  [CurrencyField.OUTPUT]: null,
+  exactCurrencyField: CurrencyField.INPUT,
+  exactAmount: '',
+}
 
 test('should return the initial state', () => {
-  expect(swapFormReducer(undefined, {} as any)).toEqual(initialSwapFormState)
+  expect(transactionStateReducer(undefined, {} as any)).toEqual(initialState)
 })
 
 describe(selectCurrency, () => {
   test('should handle a selected input currency', () => {
-    const previousState = { ...initialSwapFormState }
+    const previousState = { ...testInitialState }
     expect(
-      swapFormReducer(
+      transactionStateReducer(
         previousState,
         selectCurrency({
           field: CurrencyField.INPUT,
-          currencyId: ethAddress,
-          chainId,
+          tradeableAsset: ethTradeableAsset,
         })
       )
     ).toEqual({
       ...previousState,
-      [CurrencyField.INPUT]: {
-        currencyId: ethAddress,
-        chainId,
-      },
+      [CurrencyField.INPUT]: ethTradeableAsset,
     })
   })
 
   test('should handle a selected output currency', () => {
-    const previousState = { ...initialSwapFormState }
+    const previousState = { ...testInitialState }
     expect(
-      swapFormReducer(
+      transactionStateReducer(
         previousState,
-        selectCurrency({ field: CurrencyField.OUTPUT, currencyId: 'DAI', chainId })
+        selectCurrency({
+          field: CurrencyField.OUTPUT,
+          tradeableAsset: daiTradeableAsset,
+        })
       )
     ).toEqual({
       ...previousState,
-      [CurrencyField.OUTPUT]: {
-        currencyId: 'DAI',
-        chainId,
-      },
+      [CurrencyField.OUTPUT]: daiTradeableAsset,
     })
   })
 
   test('should set other currency to null when selecting the other one', () => {
     const previousState = {
-      ...initialSwapFormState,
-      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
+      ...testInitialState,
+      [CurrencyField.INPUT]: ethTradeableAsset,
     }
     expect(
-      swapFormReducer(
+      transactionStateReducer(
         previousState,
         selectCurrency({
           field: CurrencyField.OUTPUT,
-          currencyId: ethAddress,
-          chainId,
+          tradeableAsset: ethTradeableAsset,
         })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: null,
-      [CurrencyField.OUTPUT]: {
-        currencyId: ethAddress,
-        chainId,
-      },
+      [CurrencyField.OUTPUT]: ethTradeableAsset,
     })
   })
 
   test('should swap currencies when selecting the other one', () => {
     const previousState = {
-      ...initialSwapFormState,
-      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
-      [CurrencyField.OUTPUT]: { currencyId: 'DAI', chainId },
+      ...testInitialState,
+      [CurrencyField.INPUT]: ethTradeableAsset,
+      [CurrencyField.OUTPUT]: daiTradeableAsset,
     }
     expect(
-      swapFormReducer(
+      transactionStateReducer(
         previousState,
         selectCurrency({
           field: CurrencyField.OUTPUT,
-          currencyId: ethAddress,
-          chainId,
+          tradeableAsset: ethTradeableAsset,
         })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
-      [CurrencyField.INPUT]: { currencyId: 'DAI', chainId },
-      [CurrencyField.OUTPUT]: {
-        currencyId: ethAddress,
-        chainId,
-      },
+      [CurrencyField.INPUT]: daiTradeableAsset,
+      [CurrencyField.OUTPUT]: ethTradeableAsset,
     })
   })
 
   test('should reset other currency when network changes', () => {
     const otherChainId = chainId + 1
     const previousState = {
-      ...initialSwapFormState,
-      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
-      [CurrencyField.OUTPUT]: { currencyId: 'DAI', chainId },
+      ...testInitialState,
+      [CurrencyField.INPUT]: ethTradeableAsset,
+      [CurrencyField.OUTPUT]: daiTradeableAsset,
     }
     expect(
-      swapFormReducer(
+      transactionStateReducer(
         previousState,
         selectCurrency({
           field: CurrencyField.OUTPUT,
-          currencyId: ethAddress,
-          chainId: otherChainId,
+          tradeableAsset: {
+            address: ethAddress,
+            chainId: otherChainId,
+            type: AssetType.Currency,
+          },
         })
       )
     ).toEqual({
@@ -126,8 +131,9 @@ describe(selectCurrency, () => {
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        currencyId: ethAddress,
+        address: ethAddress,
         chainId: otherChainId,
+        type: AssetType.Currency,
       },
     })
   })
@@ -136,27 +142,27 @@ describe(selectCurrency, () => {
 describe(switchCurrencySides, () => {
   it('should switch currencies', () => {
     const previousState = {
-      ...initialSwapFormState,
+      ...testInitialState,
       exactCurrencyField: CurrencyField.INPUT,
-      [CurrencyField.INPUT]: { currencyId: 'DAI', chainId },
-      [CurrencyField.OUTPUT]: { currencyId: ethAddress, chainId },
+      [CurrencyField.INPUT]: daiTradeableAsset,
+      [CurrencyField.OUTPUT]: ethTradeableAsset,
     }
 
-    expect(swapFormReducer(previousState, switchCurrencySides())).toEqual({
+    expect(transactionStateReducer(previousState, switchCurrencySides())).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
-      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
-      [CurrencyField.OUTPUT]: { currencyId: 'DAI', chainId },
+      [CurrencyField.INPUT]: ethTradeableAsset,
+      [CurrencyField.OUTPUT]: daiTradeableAsset,
     })
   })
 })
 
 describe(enterExactAmount, () => {
   it('should set typed value', () => {
-    const previousState = { ...initialSwapFormState }
+    const previousState = { ...testInitialState }
 
     expect(
-      swapFormReducer(
+      transactionStateReducer(
         previousState,
         enterExactAmount({ field: CurrencyField.INPUT, exactAmount: '1' })
       )
@@ -168,10 +174,10 @@ describe(enterExactAmount, () => {
   })
 
   it('should set independent field when dependent receives typed input', () => {
-    const previousState = { ...initialSwapFormState }
+    const previousState = { ...testInitialState }
 
     expect(
-      swapFormReducer(
+      transactionStateReducer(
         previousState,
         enterExactAmount({ field: CurrencyField.OUTPUT, exactAmount: '5' })
       )

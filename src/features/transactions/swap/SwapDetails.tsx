@@ -12,7 +12,7 @@ import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
-import { Trade } from 'src/features/swap/useTrade'
+import { Trade } from 'src/features/transactions/swap/useTrade'
 import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
 
 interface SwapDetailsProps {

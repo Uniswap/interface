@@ -2,7 +2,7 @@ import { MethodParameters } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import { Erc20 } from 'src/abis/types'
 import { ChainId } from 'src/constants/chains'
-import { maybeApprove } from 'src/features/approve/approveSaga'
+import { maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
   ExactInputSwapTransactionInfo,

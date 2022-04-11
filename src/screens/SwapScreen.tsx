@@ -10,24 +10,24 @@ import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { SwapNetworkModal } from 'src/components/swap/SwapNetworkModal'
 import { ChainId } from 'src/constants/chains'
-import { HeaderWithNetworkSelector } from 'src/features/swap/HeaderWithNetworkSelector'
-import { useSwapActionHandlers } from 'src/features/swap/hooks'
-import { SwapForm } from 'src/features/swap/SwapForm'
-import {
-  CurrencyField,
-  initialSwapFormState,
-  swapFormReducer,
-  SwapFormState,
-} from 'src/features/swap/swapFormSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { HeaderWithNetworkSelector } from 'src/features/transactions/swap/HeaderWithNetworkSelector'
+import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
+import { SwapForm } from 'src/features/transactions/swap/SwapForm'
+import {
+  CurrencyField,
+  initialState,
+  TransactionState,
+  transactionStateReducer,
+} from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 
 export function SwapScreen({ route }: AppStackScreenProp<Screens.Swap>) {
   const [state, dispatch] = useReducer(
-    swapFormReducer,
-    route.params?.swapFormState || initialSwapFormState
+    transactionStateReducer,
+    route.params?.swapFormState || initialState
   )
 
   const { t } = useTranslation()
@@ -42,7 +42,7 @@ export function SwapScreen({ route }: AppStackScreenProp<Screens.Swap>) {
 interface SheetWithNetworkSelectorProps {
   dispatch: React.Dispatch<AnyAction>
   label: string
-  state: Readonly<SwapFormState>
+  state: Readonly<TransactionState>
 }
 
 // TODO: export to new file once swapform reducer is finalized

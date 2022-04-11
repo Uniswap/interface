@@ -2,29 +2,34 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
-import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
+import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
+import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
-import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
-import { swapActions, swapSagaName } from 'src/features/swap/swapSaga'
-import { Trade, useTrade } from 'src/features/swap/useTrade'
-import { getWrapType, isWrapAction } from 'src/features/swap/utils'
-import { tokenWrapActions, tokenWrapSagaName, WrapType } from 'src/features/swap/wrapSaga'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import { swapActions, swapSagaName } from 'src/features/transactions/swap/swapSaga'
+import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
+import { getWrapType, isWrapAction } from 'src/features/transactions/swap/utils'
+import {
+  tokenWrapActions,
+  tokenWrapSagaName,
+  WrapType,
+} from 'src/features/transactions/swap/wrapSaga'
+import {
+  CurrencyField,
+  TransactionState,
+  transactionStateActions,
+} from 'src/features/transactions/transactionState/transactionState'
+import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'src/features/transactions/types'
-import {
-  transferTokenActions,
-  transferTokenSagaName,
-} from 'src/features/transfer/transferTokenSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { currencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
 import { tryParseAmount } from 'src/utils/tryParseAmount'
@@ -32,46 +37,50 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 
-export interface DerivedSwapInfo {
-  currencies: {
-    [CurrencyField.INPUT]: Currency | null | undefined
-    [CurrencyField.OUTPUT]: Currency | null | undefined
+export type DerivedSwapInfo<
+  TInput = Currency,
+  TOutput extends Currency = Currency
+> = BaseDerivedInfo<TInput> & {
+  currencies: BaseDerivedInfo<TInput>['currencies'] & {
+    [CurrencyField.OUTPUT]: Nullable<TOutput>
   }
-  currencyAmounts: {
-    [CurrencyField.INPUT]: CurrencyAmount<Currency> | null | undefined
-    [CurrencyField.OUTPUT]: CurrencyAmount<Currency> | null | undefined
+  currencyAmounts: BaseDerivedInfo<TInput>['currencyAmounts'] & {
+    [CurrencyField.OUTPUT]: Nullable<CurrencyAmount<TOutput>>
   }
-  currencyBalances: {
-    [CurrencyField.INPUT]: CurrencyAmount<Currency> | null | undefined
-    [CurrencyField.OUTPUT]: CurrencyAmount<Currency> | null | undefined
+  currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
+    [CurrencyField.OUTPUT]: Nullable<CurrencyAmount<TOutput>>
   }
-  exactAmount: string
-  exactCurrencyField: CurrencyField
-  formattedAmounts: {
-    [CurrencyField.INPUT]: string
+  formattedAmounts: BaseDerivedInfo<TInput>['formattedAmounts'] & {
     [CurrencyField.OUTPUT]: string
   }
-  recipient: Address | undefined
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
 }
 
 /** Returns information derived from the current swap state */
-export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
+export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const {
-    [CurrencyField.INPUT]: partialCurrencyIn,
-    [CurrencyField.OUTPUT]: partialCurrencyOut,
+    [CurrencyField.INPUT]: currencyAssetIn,
+    [CurrencyField.OUTPUT]: currencyAssetOut,
     exactAmount,
     exactCurrencyField,
-    recipient,
   } = state
 
   const activeAccount = useActiveAccount()
 
-  const currencyIn = useCurrency(partialCurrencyIn?.currencyId)
-  const currencyOut = useCurrency(partialCurrencyOut?.currencyId)
+  const currencyIn = useCurrency(
+    currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn?.address) : undefined
+  )
+  const currencyOut = useCurrency(
+    currencyAssetOut
+      ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut?.address)
+      : undefined
+  )
 
-  const currencies = { [CurrencyField.INPUT]: currencyIn, [CurrencyField.OUTPUT]: currencyOut }
+  const currencies = {
+    [CurrencyField.INPUT]: currencyIn,
+    [CurrencyField.OUTPUT]: currencyOut,
+  }
 
   const { balance: tokenInBalance } = useTokenBalance(
     currencyIn?.isToken ? currencyIn : undefined,
@@ -136,7 +145,6 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
         ? (currencyAmounts[CurrencyField.OUTPUT]?.toExact() ?? '').toString()
         : exactAmount,
     },
-    recipient,
     trade,
     wrapType,
   }
@@ -146,19 +154,20 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
 export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   const onSelectCurrency = (field: CurrencyField, currency: Currency) =>
     dispatch(
-      swapFormActions.selectCurrency({
+      transactionStateActions.selectCurrency({
         field,
-        currencyId: currency.isToken
-          ? currencyId(currency)
-          : currencyId(NativeCurrency.onChain(currency.chainId)),
-        chainId: currency.chainId,
+        tradeableAsset: {
+          address: currency.isToken ? currency.wrapped.address : NATIVE_ADDRESS,
+          chainId: currency.chainId,
+          type: AssetType.Currency,
+        },
       })
     )
-  const onSwitchCurrencies = () => dispatch(swapFormActions.switchCurrencySides())
+  const onSwitchCurrencies = () => dispatch(transactionStateActions.switchCurrencySides())
   const onEnterExactAmount = (field: CurrencyField, exactAmount: string) =>
-    dispatch(swapFormActions.enterExactAmount({ field, exactAmount }))
+    dispatch(transactionStateActions.enterExactAmount({ field, exactAmount }))
   const onSelectRecipient = (recipient: Address) =>
-    dispatch(swapFormActions.selectRecipient({ recipient }))
+    dispatch(transactionStateActions.selectRecipient({ recipient }))
 
   return {
     onEnterExactAmount,
@@ -166,53 +175,6 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     onSelectRecipient,
     onSwitchCurrencies,
   }
-}
-
-export function useSendCallback(
-  tokenAddress: Nullable<Address>,
-  chainId: Nullable<ChainId>,
-  amountInWei: Nullable<string>,
-  toAddress: Nullable<Address>,
-  onSubmit: () => void
-) {
-  const dispatch = useAppDispatch()
-  const account = useActiveAccount()
-
-  const transferState = useSagaStatus(transferTokenSagaName, undefined, true)
-
-  useEffect(() => {
-    if (transferState.status === SagaStatus.Started) {
-      onSubmit()
-    }
-  })
-
-  return useMemo(() => {
-    if (!account || !tokenAddress || !chainId || !amountInWei || !toAddress) {
-      return {
-        sendCallback: () => {
-          logger.error(
-            'hooks',
-            'useSendCallback',
-            'Missing sendCallback params. Is the provider enabled?'
-          )
-        },
-      }
-    }
-
-    return {
-      sendCallback: () => {
-        dispatch(
-          transferTokenActions.trigger({
-            account,
-            toAddress,
-            amountInWei,
-            tokenAddress,
-            chainId,
-          })
-        )
-      },
-    }
-  }, [account, amountInWei, chainId, dispatch, toAddress, tokenAddress])
 }
 
 /** Callback to submit trades and track progress */
