@@ -26,16 +26,17 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
     setAttempt((attempt) => ++attempt)
   }, [])
 
-  return useMemo(() => {
+  const src = useMemo(() => {
     // Trigger a re-render when an error occurs.
     void attempt
 
-    const src = srcs.find((src) => !badSrcs.has(src))
-    if (!src) return <MissingToken color="secondary" {...rest} />
+    return srcs.find((src) => !badSrcs.has(src))
+  }, [attempt, srcs])
 
-    const alt = tokenInfo.name || tokenInfo.symbol
-    return <img src={src} alt={alt} key={alt} onError={onError} {...rest} />
-  }, [attempt, onError, rest, srcs, tokenInfo.name, tokenInfo.symbol])
+  if (!src) return <MissingToken color="secondary" {...rest} />
+
+  const alt = tokenInfo.name || tokenInfo.symbol
+  return <img src={src} alt={alt} key={alt} onError={onError} {...rest} />
 }
 
 export default styled(TokenImg)<{ size?: number }>`
