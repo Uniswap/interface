@@ -11,12 +11,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
-import {
-  useDerivedLimitOrderInfo,
-  useLimitOrderActionHandlers,
-  useLimitOrderState,
-  useMarketPriceDiff,
-} from 'state/limit/hooks'
+import { useDerivedLimitOrderInfo, useLimitOrderActionHandlers, useLimitOrderState } from 'state/limit/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { ThemeContext } from 'styled-components'
 
@@ -71,6 +66,8 @@ export default function LimitOrder() {
     inputError: limitOrderInputError,
     showRamp,
     buying,
+    marketPriceDiffIndicator,
+    aboveMarketPrice,
   } = useDerivedLimitOrderInfo()
   const { address: recipientAddress } = useENS(recipient)
 
@@ -138,8 +135,6 @@ export default function LimitOrder() {
           JSBI.divide(JSBI.multiply(parsedInputTotal.raw, JSBI.BigInt(orderBookFee.toString())), BPS_DENOMINATOR)
         )
       : undefined
-
-  const { aboveMarketPrice, marketPriceDiffIndicator } = useMarketPriceDiff()
 
   const reward =
     parsedInputTotal && rewardCurrency && rewardRate

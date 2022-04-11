@@ -43,6 +43,8 @@ export function useDerivedLimitOrderInfo(): {
   inputError?: string
   showRamp: boolean
   buying: boolean
+  marketPriceDiffIndicator: Fraction | undefined
+  aboveMarketPrice: boolean | undefined
 } {
   const { address: account, network } = useContractKit()
 
@@ -146,35 +148,12 @@ export function useDerivedLimitOrderInfo(): {
     inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
   }
 
-  return {
-    currencies,
-    currencyBalances,
-    parsedInputTotal,
-    parsedOutputTotal,
-    v2Trade: v2Trade ?? undefined,
-    showRamp,
-    inputError,
-    buying,
-  }
-}
-
-export function useMarketPriceDiff(): {
-  marketPriceDiffIndicator: Fraction | undefined
-  aboveMarketPrice: boolean | undefined
-} {
-  const {
-    priceTypedValue,
-    [Field.PRICE]: { currencyId: priceCurrencyId },
-  } = useLimitOrderState()
-  const { v2Trade: trade, buying } = useDerivedLimitOrderInfo()
-
-  const priceCurrency = useCurrency(priceCurrencyId)
-  const parsedPrice = tryParseAmount(priceTypedValue, priceCurrency ?? undefined)
+  //calculate difference between market price and limit order price for display
   const marketDiffFraction =
-    trade && parsedPrice
+    v2Trade && parsedPrice
       ? new Fraction(
           parsedPrice?.numerator,
-          buying ? trade.executionPrice.invert().numerator : trade.executionPrice.invert().denominator
+          buying ? v2Trade.executionPrice.invert().numerator : v2Trade.executionPrice.invert().denominator
         )
       : undefined
   const aboveMarketPrice = marketDiffFraction && marketDiffFraction.lessThan('1')
@@ -185,6 +164,14 @@ export function useMarketPriceDiff(): {
     : undefined
 
   return {
+    currencies,
+    currencyBalances,
+    parsedInputTotal,
+    parsedOutputTotal,
+    v2Trade: v2Trade ?? undefined,
+    showRamp,
+    inputError,
+    buying,
     marketPriceDiffIndicator,
     aboveMarketPrice,
   }
