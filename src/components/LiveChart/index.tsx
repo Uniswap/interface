@@ -18,7 +18,7 @@ import CircleInfoIcon from './CircleInfoIcon'
 import { Trans } from '@lingui/macro'
 import CustomToggle from 'components/Toggle/CustomToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
-import { ProLiveChart } from 'components/TradingViewChart'
+import ProLiveChart from 'components/TradingViewChart'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
@@ -124,7 +124,6 @@ function LiveChart({
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
   const { data: chartData, error, loading } = useLiveChartData(tokens, timeFrame)
   const showProLiveChart = useShowProLiveChart()
-  console.log('🚀 ~ file: index.tsx ~ line 127 ~ showProLiveChart', showProLiveChart)
   const toggleProLiveChart = useToggleProLiveChart()
   useEffect(() => {
     if (hoverValue !== null) {
@@ -202,13 +201,14 @@ function LiveChart({
                   { name: 'basic', title: 'Basic' },
                   { name: 'pro', title: 'Pro' },
                 ]}
+                bgColor={isMobile ? 'buttonBlack' : 'background'}
               />
             </Flex>
-            {isMobile && renderTimeframes()}
           </Flex>
-
           {showProLiveChart ? (
-            <ProLiveChart />
+            <div style={{ margin: isMobile ? '0 -20px -20px -20px' : '10px 0' }}>
+              <ProLiveChart />
+            </div>
           ) : (
             <>
               <Flex justifyContent="space-between" alignItems="flex-start" marginTop={'5px'}>
@@ -243,10 +243,11 @@ function LiveChart({
                 </Flex>
                 {!isMobile && renderTimeframes()}
               </Flex>
+              {isMobile && !showProLiveChart && renderTimeframes()}
               <div style={{ flex: 1, marginTop: '12px' }}>
                 {loading || error ? (
                   <Flex
-                    minHeight={isMobile ? '240px' : '370px'}
+                    minHeight={isMobile ? '300px' : '370px'}
                     flexDirection={'column'}
                     alignItems={'center'}
                     justifyContent={'center'}

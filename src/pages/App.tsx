@@ -94,7 +94,6 @@ const BodyWrapper = styled.div<{ isAboutPage?: boolean }>`
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 1;
 `
 
 export default function App() {

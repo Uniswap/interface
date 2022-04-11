@@ -16,7 +16,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; size?: string; border?: 
   font-size: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   font-weight: 500;
   height: ${({ size, border }) => (size === 'md' ? 32 : 20) + (border ? 0 : 2) + 'px'};
-  padding: 5px 12px;
+  padding: 6px 12px;
   display: flex;
   align-items: center;
   justify-content: center;

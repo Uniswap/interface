@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import {
   widget,
   ChartingLibraryWidgetOptions,
@@ -7,10 +7,43 @@ import {
   ResolutionString,
 } from './charting_library'
 import styled from 'styled-components'
+import AnimatedLoader from 'components/Loader/AnimatedLoader'
+import useTheme from 'hooks/useTheme'
+import { useUserLocale } from 'state/user/hooks'
+import { ReactComponent as FullscreenOn } from 'assets/svg/fullscreen_on.svg'
+import { ReactComponent as FullscreenOff } from 'assets/svg/fullscreen_off.svg'
+import * as ReactDOMServer from 'react-dom/server'
 
-const ProLiveChartWrapper = styled.div`
+const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
   margin-top: 10px;
-  min-height: 600px;
+  height: 500px;
+  width: 100%;
+  border-radius: 10px;
+  ${({ theme }) => `border: 1px solid ${theme.background};`}
+  overflow: hidden;
+  box-shadow: 0px 4px 16px rgb(0 0 0 / 4%);
+
+  ${({ fullscreen }) =>
+    fullscreen &&
+    `
+    background-color: rgb(0,0,0,0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    padding-top: 84px;
+    height: 100%!important;
+    width: 100%!important;
+    border-radius: 0;
+    margin:0;
+  `}
+`
+const Loader = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export interface ChartContainerProps {
@@ -28,92 +61,91 @@ export interface ChartContainerProps {
   autosize: ChartingLibraryWidgetOptions['autosize']
   studiesOverrides: ChartingLibraryWidgetOptions['studies_overrides']
   container: ChartingLibraryWidgetOptions['container']
+  onReady: () => void
 }
 
 export interface ChartContainerState {}
 
-export class ProLiveChart extends React.PureComponent<Partial<ChartContainerProps>, ChartContainerState> {
-  public static defaultProps: Omit<ChartContainerProps, 'container'> = {
-    symbol: 'AAPL',
-    interval: 'D' as ResolutionString,
-    datafeedUrl: 'https://demo_feed.tradingview.com',
-    libraryPath: '/charting_library/',
-    chartsStorageUrl: 'https://saveload.tradingview.com',
-    chartsStorageApiVersion: '1.1',
-    clientId: 'tradingview.com',
-    userId: 'public_user_id',
-    fullscreen: false,
-    autosize: false,
-    studiesOverrides: {},
-  }
+function ProLiveChart({ onReady = () => {} }: any) {
+  const ref = useRef<HTMLDivElement>()
+  const [loading, setLoading] = useState(true)
+  const [fullscreen, setFullscreen] = useState(false)
 
-  private tvWidget: IChartingLibraryWidget | null = null
-  private ref: React.RefObject<HTMLDivElement> = React.createRef()
-
-  public componentDidMount(): void {
-    if (!this.ref.current) {
+  const theme = useTheme()
+  const userLocale = useUserLocale()
+  useEffect(() => {
+    if (!ref.current) {
       return
     }
+    setLoading(true)
     const widgetOptions: ChartingLibraryWidgetOptions = {
-      symbol: this.props.symbol as string,
-      // BEWARE: no trailing slash is expected in feed URL
-      // tslint:disable-next-line:no-any
-      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(this.props.datafeedUrl),
-      interval: this.props.interval as ChartingLibraryWidgetOptions['interval'],
-      container: this.ref.current,
-      library_path: this.props.libraryPath as string,
-
-      locale: 'en',
-      disabled_features: ['use_localstorage_for_settings', 'header_symbol_search'],
+      symbol: 'AAPL',
+      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed('https://demo_feed.tradingview.com'),
+      interval: 'D' as ResolutionString,
+      container: ref.current,
+      library_path: '/charting_library/',
+      locale: (userLocale ? userLocale.slice(0, 2) : 'en') as LanguageCode,
+      disabled_features: [
+        'use_localstorage_for_settings',
+        'header_symbol_search',
+        'header_fullscreen_button',
+        'header_compare',
+        'header_saveload',
+        'drawing_templates',
+      ],
       enabled_features: ['study_templates'],
-      charts_storage_url: this.props.chartsStorageUrl,
-      charts_storage_api_version: this.props.chartsStorageApiVersion,
-      client_id: this.props.clientId,
-      user_id: this.props.userId,
-      fullscreen: this.props.fullscreen,
-      autosize: this.props.autosize,
-      studies_overrides: this.props.studiesOverrides,
-      theme: 'Dark',
-      height: 600,
+      charts_storage_url: 'https://saveload.tradingview.com',
+      charts_storage_api_version: '1.1',
+      client_id: 'tradingview.com',
+      user_id: 'public_user_id',
+      fullscreen: false,
+      autosize: true,
+      studies_overrides: {},
+      theme: theme.darkMode ? 'Dark' : 'Light',
       custom_css_url: '/charting_library/style.css',
     }
-
     const tvWidget = new widget(widgetOptions)
-    this.tvWidget = tvWidget
     tvWidget.applyOverrides({
       'paneProperties.backgroundType': 'solid',
-      'paneProperties.background': '#11171a',
-      'mainSeriesProperties.candleStyle.upColor': '#31cb9e',
-      'mainSeriesProperties.candleStyle.borderUpColor': '#31cb9e',
-      'mainSeriesProperties.candleStyle.wickUpColor': '#31cb9e',
+      'paneProperties.background': theme.buttonBlack,
+      'mainSeriesProperties.candleStyle.upColor': theme.primary,
+      'mainSeriesProperties.candleStyle.borderUpColor': theme.primary,
+      'mainSeriesProperties.candleStyle.wickUpColor': theme.primary,
     })
-    // tvWidget.onChartReady(() => {
-    //   tvWidget.headerReady().then(() => {
-    //     const button = tvWidget.createButton()
-    //     button.setAttribute('title', 'Click to show a notification popup')
-    //     button.classList.add('apply-common-tooltip')
-    //     button.addEventListener('click', () =>
-    //       tvWidget.showNoticeDialog({
-    //         title: 'Notification',
-    //         body: 'TradingView Charting Library API works correctly',
-    //         callback: () => {
-    //           console.log('Noticed!')
-    //         },
-    //       }),
-    //     )
-    //     button.innerHTML = 'Check API'
-    //   })
-    // })
-  }
+    tvWidget.onChartReady(() => {
+      onReady && onReady()
+      setLoading(false)
+      tvWidget.headerReady().then(() => {
+        const fullscreenOn = tvWidget.createButton()
+        fullscreenOn.setAttribute('title', 'Fullscreen on')
+        fullscreenOn.addEventListener('click', () => {
+          setFullscreen(fs => {
+            fullscreenOn.innerHTML = ReactDOMServer.renderToStaticMarkup(fs ? <FullscreenOn /> : <FullscreenOff />)
+            return !fs
+          })
+        })
+        fullscreenOn.innerHTML = ReactDOMServer.renderToStaticMarkup(<FullscreenOn />)
+      })
+    })
 
-  public componentWillUnmount(): void {
-    if (this.tvWidget !== null) {
-      this.tvWidget.remove()
-      this.tvWidget = null
+    return () => {
+      if (tvWidget !== null) {
+        tvWidget.remove()
+      }
     }
-  }
+  }, [theme, userLocale])
 
-  public render(): JSX.Element {
-    return <ProLiveChartWrapper ref={this.ref} />
-  }
+  useEffect(() => {}, [fullscreen])
+  return (
+    <ProLiveChartWrapper fullscreen={fullscreen} onClick={()=>setFullscreen(false)}>
+      {loading && (
+        <Loader>
+          <AnimatedLoader />
+        </Loader>
+      )}
+      <div ref={ref as any} style={{ height: '100%', width: '100%', display: loading ? 'none' : 'block' }} onClick={(e:any)=>{e.stopPropagation()}}></div>
+    </ProLiveChartWrapper>
+  )
 }
+
+export default ProLiveChart
