@@ -13,7 +13,7 @@ import { WalletConnectConnector } from 'web3-react-walletconnect-connector'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected} from '../../connectors'
+import { fortmatic, injected } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
