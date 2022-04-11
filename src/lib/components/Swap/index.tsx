@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useAtom } from 'jotai'
-import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
+import { SwapInfoProvider } from 'lib/hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
@@ -50,8 +50,7 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
 function Updaters(props: SwapProps) {
   useSyncTokenDefaults(props)
   useSyncConvenienceFee(props)
-
-  return <SwapInfoUpdater />
+  return null
 }
 
 export default function Swap(props: SwapProps) {
@@ -68,25 +67,27 @@ export default function Swap(props: SwapProps) {
   const isDisabled = !(active && onSupportedNetwork)
 
   useSyncTokenList(props.tokenList)
-  const isUpdateable = useIsTokenListLoaded() && !isDisabled
+  const isTokenListLoaded = useIsTokenListLoaded()
 
   const focused = useHasFocus(wrapper)
 
   return (
     <>
-      {isUpdateable && <Updaters {...props} />}
+      {isTokenListLoaded && <Updaters {...props} />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={isDisabled} focused={focused} />
-          <ReverseButton disabled={isDisabled} />
-          <Output disabled={isDisabled} focused={focused}>
-            <Toolbar disabled={!active} />
-            <SwapButton disabled={isDisabled} />
-          </Output>
+          <SwapInfoProvider disabled={isDisabled}>
+            <Input disabled={isDisabled} focused={focused} />
+            <ReverseButton disabled={isDisabled} />
+            <Output disabled={isDisabled} focused={focused}>
+              <Toolbar disabled={!active} />
+              <SwapButton disabled={isDisabled} />
+            </Output>
+          </SwapInfoProvider>
         </BoundaryProvider>
       </div>
       {displayTx && (
