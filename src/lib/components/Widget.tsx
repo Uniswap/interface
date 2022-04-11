@@ -4,7 +4,7 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/lo
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
 import { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
-import { BlockUpdater } from 'lib/hooks/useBlockNumber'
+import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
@@ -83,7 +83,6 @@ const DialogWrapper = styled.div`
 function Updaters() {
   return (
     <>
-      <BlockUpdater />
       <MulticallUpdater />
       <TransactionsUpdater />
     </>
@@ -130,8 +129,10 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
                     <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                      <Updaters />
-                      {children}
+                      <BlockNumberProvider>
+                        <Updaters />
+                        {children}
+                      </BlockNumberProvider>
                     </ActiveWeb3Provider>
                   </AtomProvider>
                 </ReduxProvider>
