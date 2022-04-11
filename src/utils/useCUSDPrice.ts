@@ -1,7 +1,10 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { CELO, ChainId as UbeswapChainId, currencyEquals, cUSD, Price, Token } from '@ubeswap/sdk'
+import { CELO, ChainId as UbeswapChainId, currencyEquals, cUSD, JSBI, Pair, Price, Token } from '@ubeswap/sdk'
+import { useTotalSupply } from 'data/TotalSupply'
+import { useToken } from 'hooks/Tokens'
 import { useMemo } from 'react'
 
+import { MCUSD } from '../constants/index'
 import { usePairs } from '../data/Reserves'
 
 type TokenPair = [Token | undefined, Token | undefined]
@@ -59,7 +62,7 @@ export function useCUSDPrices(tokens?: Token[]): (Price | undefined)[] | undefin
 
 /**
  * Returns the price in cUSD of the input currency
- * @param currency currency to compute the cUSD price of
+ * @param token the token to get the cUSD price of
  */
 export function useCUSDPrice(token?: Token): Price | undefined {
   const {
@@ -67,15 +70,21 @@ export function useCUSDPrice(token?: Token): Price | undefined {
   } = useContractKit()
   const CUSD = cUSD[chainId as unknown as UbeswapChainId]
   const celo = CELO[chainId as unknown as UbeswapChainId]
+  const mcUSD = MCUSD[chainId as unknown as UbeswapChainId]
   const tokenPairs: [Token | undefined, Token | undefined][] = useMemo(
     () => [
       [token && currencyEquals(token, CUSD) ? undefined : token, CUSD],
       [token && currencyEquals(token, celo) ? undefined : token, celo],
+      [token && mcUSD && currencyEquals(token, mcUSD) ? undefined : token, mcUSD ? mcUSD : undefined],
       [celo, CUSD],
     ],
-    [CUSD, celo, token]
+    [CUSD, celo, mcUSD, token]
   )
-  const [[, cUSDPair], [, celoPair], [, celoCUSDPair]] = usePairs(tokenPairs)
+  const [[, cUSDPair], [, celoPair], [, mcUSDPair], [, celoCUSDPair]] = usePairs(tokenPairs)
+  const cusdPairAddr = token ? Pair.getAddress(token, CUSD) : undefined
+  const cusdPairTotalSupply = useTotalSupply(useToken(cusdPairAddr) || undefined)
+  const mcusdPairAddr = token && mcUSD && token.address !== mcUSD.address ? Pair.getAddress(token, mcUSD) : undefined
+  const mcusdPairTotalSupply = useTotalSupply(useToken(mcusdPairAddr) || undefined)
 
   return useMemo(() => {
     if (!token || !chainId) {
@@ -87,6 +96,23 @@ export function useCUSDPrice(token?: Token): Price | undefined {
       return new Price(CUSD, CUSD, '1', '1')
     }
 
+    if (mcUSDPair && cUSDPair && cusdPairTotalSupply && mcusdPairTotalSupply) {
+      try {
+        if (
+          JSBI.greaterThan(
+            mcUSDPair.getLiquidityMinted(mcusdPairTotalSupply, mcUSDPair.reserve0, mcUSDPair.reserve1).raw,
+            cUSDPair.getLiquidityMinted(cusdPairTotalSupply, cUSDPair.reserve0, cUSDPair.reserve1).raw
+          )
+        ) {
+          return mcUSDPair.priceOf(token)
+        }
+      } catch (e: any) {
+        if (e.message != 'Invariant failed: LIQUIDITY') {
+          console.log(e)
+        }
+      }
+    }
+
     if (cUSDPair) {
       return cUSDPair.priceOf(token)
     }
@@ -96,5 +122,16 @@ export function useCUSDPrice(token?: Token): Price | undefined {
     }
 
     return undefined
-  }, [chainId, token, CUSD, cUSDPair, celo, celoCUSDPair, celoPair])
+  }, [
+    chainId,
+    token,
+    CUSD,
+    cUSDPair,
+    celo,
+    celoCUSDPair,
+    celoPair,
+    mcUSDPair,
+    cusdPairTotalSupply,
+    mcusdPairTotalSupply,
+  ])
 }

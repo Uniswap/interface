@@ -82,6 +82,7 @@ export const MCUSD = {
     'mCUSD',
     'Moola cUSD'
   ),
+  [ChainId.BAKLAVA]: null,
 }
 
 export const MCELO = {
