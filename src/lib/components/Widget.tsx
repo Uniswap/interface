@@ -1,10 +1,12 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
 import { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
+import { TokenListProvider } from 'lib/hooks/useTokenList'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
@@ -80,20 +82,12 @@ const DialogWrapper = styled.div`
   }
 `
 
-function Updaters() {
-  return (
-    <>
-      <MulticallUpdater />
-      <TransactionsUpdater />
-    </>
-  )
-}
-
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcEndpoint?: string | JsonRpcProvider
+  tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
   className?: string
@@ -130,8 +124,9 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                   <AtomProvider>
                     <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                       <BlockNumberProvider>
-                        <Updaters />
-                        {children}
+                        <MulticallUpdater />
+                        <TransactionsUpdater />
+                        <TokenListProvider list={props.tokenList}>{children}</TokenListProvider>
                       </BlockNumberProvider>
                     </ActiveWeb3Provider>
                   </AtomProvider>

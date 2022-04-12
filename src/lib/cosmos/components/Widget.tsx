@@ -1,3 +1,4 @@
+import { tokens } from '@uniswap/default-token-list'
 import { initializeConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector } from '@web3-react/types'
@@ -75,6 +76,7 @@ export default function Wrapper({ children }: { children: ReactNode }) {
       locale={locale}
       jsonRpcEndpoint={jsonRpcEndpoint === NO_JSON_RPC ? undefined : jsonRpcEndpoint}
       provider={connector?.provider}
+      tokenList={tokens}
     >
       {children}
     </Widget>
