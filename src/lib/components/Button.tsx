@@ -1,5 +1,5 @@
 import { Icon } from 'lib/icons'
-import styled, { Color } from 'lib/theme'
+import styled, { Color, css, keyframes } from 'lib/theme'
 import { ComponentProps, forwardRef } from 'react'
 
 export const BaseButton = styled.button`
@@ -21,11 +21,31 @@ export const BaseButton = styled.button`
   }
 `
 
-export default styled(BaseButton)<{ color?: Color }>`
+const bleedIn = (outline: string, color: string) => keyframes`
+  from {
+    border-color: ${color};
+    background-color: transparent;
+  }
+  to {
+    border-color: transparent
+    background-color: ${color};
+  }
+`
+
+const bleedInCss = css<{ color?: Color }>`
+  :enabled {
+    animation: ${({ color = 'interactive', theme }) => bleedIn(theme.outline, theme[color])} 0.125s linear;
+    will-change: border-color, background-color;
+  }
+`
+
+export default styled(BaseButton)<{ color?: Color; bleedIn?: boolean }>`
+  border: 1px solid transparent;
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
 
   :enabled {
     background-color: ${({ color = 'interactive', theme }) => theme[color]};
+    ${({ bleedIn }) => bleedIn && bleedInCss}
   }
 
   :enabled:hover {
@@ -33,9 +53,8 @@ export default styled(BaseButton)<{ color?: Color }>`
   }
 
   :disabled {
-    border: 1px solid ${({ theme }) => theme.outline};
+    border-color: ${({ theme }) => theme.outline};
     color: ${({ theme }) => theme.secondary};
-    cursor: initial;
   }
 `
 

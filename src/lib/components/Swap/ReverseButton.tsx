@@ -55,7 +55,7 @@ export default function ReverseButton({ disabled }: { disabled?: boolean }) {
   return (
     <ReverseRow justify="center">
       <Overlay>
-        <StyledReverseButton disabled={disabled} onClick={onClick} turns={turns}>
+        <StyledReverseButton disabled={disabled} onClick={onClick} turns={turns} bleedIn>
           <div>
             <ArrowUp strokeWidth={3} />
             <ArrowDown strokeWidth={3} />
