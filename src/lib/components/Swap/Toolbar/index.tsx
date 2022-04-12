@@ -28,11 +28,11 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
-    if (disabled) {
+    if (disabled || !chainId) {
       return <Caption.ConnectWallet />
     }
 
-    if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
+    if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
       return <Caption.UnsupportedNetwork />
     }
 
