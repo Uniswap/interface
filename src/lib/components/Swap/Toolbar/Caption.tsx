@@ -38,7 +38,7 @@ export function ConnectingWallet() {
       icon={InlineSpinner}
       caption={
         <Loading>
-          <Trans>Connecting wallet</Trans>
+          <Trans>Connecting…</Trans>
         </Loading>
       }
     />
