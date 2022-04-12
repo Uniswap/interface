@@ -29,7 +29,7 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
   const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
     if (!active || !chainId) {
-      if (activating) return <Caption.ConnectingWallet />
+      if (activating) return <Caption.Connecting />
       return <Caption.ConnectWallet />
     }
 
@@ -60,8 +60,9 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
 
     return <Caption.Empty />
   }, [
+    activating,
+    active,
     chainId,
-    disabled,
     impact,
     inputAmount,
     inputBalance,

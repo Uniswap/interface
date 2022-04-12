@@ -32,7 +32,7 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   )
 }
 
-export function ConnectingWallet() {
+export function Connecting() {
   return (
     <Caption
       icon={InlineSpinner}
