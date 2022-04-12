@@ -146,7 +146,7 @@ const DivWrapperNoPro = styled.div`
     width: 90%;
   }
 
-  @media screen and (max-width: 960px) {
+  @media screen and (max-width: 1000px) {
     margin-top: 30px;
   }
 `
@@ -168,7 +168,7 @@ const MainContentWrapper = styled.main`
 
   @media screen and (max-width: 1592px) {
     gap: 0rem;
-    height: 420px;
+    height: 530px;
     margin-top: 0rem;
     flex: 1;
   }
@@ -283,6 +283,11 @@ export const FlexItemLeft = styled.div`
     flex-direction: row;
     gap: 1rem;
   }
+
+  @media screen and (max-width: 900px) {
+    width: 95%;
+    margin-left: 10px;
+  }
 `
 
 export const FlexItemRight = styled.div`
@@ -301,7 +306,7 @@ export const FlexItemRight = styled.div`
   @media screen and (max-width: 900px) {
     flex-direction: column;
     width: 95%;
-    margin-left: 20px;
+    margin-left: 10px;
   }
 `
 // we want the latest one to come first, so return negative if a is after b
@@ -759,6 +764,11 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                                 setShowInverted={setShowInverted}
                               />
                             </LoadingOpacityContainer>
+                          </RowFixed>
+                        </Row>
+                        <Row justify={!trade ? 'center' : 'space-between'}>
+                          <RowFixed style={{ position: 'relative' }}>
+                            {' '}
                             <MouseoverTooltipContent
                               wrap={false}
                               content={
@@ -783,9 +793,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                               <StyledInfo />
                             </MouseoverTooltipContent>
                           </RowFixed>
-                        </Row>
-                        <Row justify={!trade ? 'center' : 'space-between'}>
-                          <RowFixed style={{ position: 'relative' }}></RowFixed>
                           <RowFixed style={{ position: 'relative' }}>
                             <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
                               <Trans>Min Price</Trans>
@@ -803,7 +810,28 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         </Row>
                       </>
                     )}
-                    <div>
+                    {!trade && !minPrice && (
+                      <>
+                        <Row justify={'end'} style={{ height: '24px' }}>
+                          <RowFixed style={{ position: 'relative' }}></RowFixed>
+                          <RowFixed style={{ position: 'relative' }}>
+                            <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                              <Trans>Current Price: 0</Trans>
+                            </TYPE.body>
+                          </RowFixed>
+                        </Row>
+                        <Row justify={'end'} style={{ height: '24px' }}>
+                          <RowFixed style={{ position: 'relative' }}></RowFixed>
+                          <RowFixed style={{ position: 'relative' }}>
+                            <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                              <Trans>Min Price: 0</Trans>
+                            </TYPE.body>
+                          </RowFixed>
+                        </Row>
+                      </>
+                    )}
+
+                    <ButtonStyle>
                       {swapIsUnsupported ? (
                         <ButtonPrimary disabled={true}>
                           <TYPE.main mb="4px">
@@ -934,7 +962,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         </ButtonError>
                       )}
                       {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-                    </div>
+                    </ButtonStyle>
                   </AutoColumn>
                 </Wrapper>
               </AppBody>
@@ -1220,29 +1248,19 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               )}
               {!trade && !minPrice && (
                 <>
-                  <Row justify={'end'}>
-                    <RowFixed style={{ position: 'relative' }}>
-                      <MouseoverTooltipContent
-                        wrap={false}
-                        content={<ResponsiveTooltipContainer>-</ResponsiveTooltipContainer>}
-                        placement="bottom"
-                      >
-                        <AutoRow gap="4px" width="auto">
-                          <AutoRouterLogo />
-                        </AutoRow>
-                      </MouseoverTooltipContent>
-                    </RowFixed>
-                    <RowFixed style={{ position: 'relative' }}>
-                      <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                        <Trans>Current Price</Trans> -
-                      </TYPE.body>
-                    </RowFixed>
-                  </Row>
-                  <Row justify={'end'}>
+                  <Row justify={'end'} style={{ height: '24px' }}>
                     <RowFixed style={{ position: 'relative' }}></RowFixed>
                     <RowFixed style={{ position: 'relative' }}>
                       <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                        <Trans>Min Price</Trans> -
+                        <Trans>Current Price: 0</Trans>
+                      </TYPE.body>
+                    </RowFixed>
+                  </Row>
+                  <Row justify={'end'} style={{ height: '24px' }}>
+                    <RowFixed style={{ position: 'relative' }}></RowFixed>
+                    <RowFixed style={{ position: 'relative' }}>
+                      <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                        <Trans>Min Price: 0</Trans>
                       </TYPE.body>
                     </RowFixed>
                   </Row>
