@@ -49,6 +49,13 @@ type ErrorBoundaryState = {
 
 const IS_UNISWAP = window.location.hostname === 'app.uniswap.org'
 
+async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
+  const ready = await navigator.serviceWorker.ready
+  // the return type of update is incorrectly indicated as Promise<void>
+  // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/update
+  return ready.update() as unknown as Promise<ServiceWorkerRegistration>
+}
+
 export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
   constructor(props: unknown) {
     super(props)
@@ -56,6 +63,26 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    updateServiceWorker()
+      .then(async (registration) => {
+        // We want to refresh only if we detect a new service worker is
+        // waiting to be activated.
+        // Details about it: https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle
+        if (registration?.waiting) {
+          await registration.unregister()
+
+          // Makes Workbox call skipWaiting()
+          registration.waiting.postMessage({ type: 'SKIP_WAITING' })
+
+          // Once the service worker is unregistered, we can reload the page to let
+          // the browser download a fresh copy of our app (invalidating the cache)
+          console.log('reloading waiting', registration)
+          window.location.reload()
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to update service worker', error)
+      })
     return { error }
   }
 
