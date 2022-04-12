@@ -76,7 +76,6 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
 
           // Once the service worker is unregistered, we can reload the page to let
           // the browser download a fresh copy of our app (invalidating the cache)
-          console.log('reloading waiting', registration)
           window.location.reload()
         }
       })
