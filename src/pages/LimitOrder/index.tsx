@@ -160,7 +160,7 @@ const MainContentWrapper = styled.main`
   max-width: 100%;
   width: 100%;
   margin-top: 0.5rem;
-  overflow: scroll;
+  overflow: auto;
   height: 100%;
   max-height: 100%;
   flex-grow: 0;
@@ -197,7 +197,7 @@ const MainContentWrapper = styled.main`
 const MainContentWrapperNoPro = styled.div`
   width: 50%;
   max-width: 800px;
-  overflow: scroll;
+  overflow: auto;
   max-height: 532px;
   overflow-x: hidden;
   padding: 15px;

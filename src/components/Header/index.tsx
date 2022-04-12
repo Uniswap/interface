@@ -56,6 +56,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  0.5rem;
+    background-color: yellow;
     grid-template-columns: 1fr 1fr;
   `};
 
