@@ -55,7 +55,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding:  1rem;
+    padding:  0.5rem;
     grid-template-columns: 1fr 1fr;
   `};
 
@@ -209,7 +209,7 @@ const UniIcon = styled.div`
   }
 
   @media screen and (max-width: 720px) {
-    margin-left: 130px;
+    margin-left: 150px;
   }
 `
 
