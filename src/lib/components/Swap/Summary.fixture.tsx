@@ -3,7 +3,7 @@ import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
-import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
+import { SwapInfoProvider } from 'lib/hooks/swap/useSwapInfo'
 import { Field, swapAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -54,7 +54,8 @@ function Fixture() {
 
 export default (
   <>
-    <SwapInfoUpdater />
-    <Fixture />
+    <SwapInfoProvider>
+      <Fixture />
+    </SwapInfoProvider>
   </>
 )

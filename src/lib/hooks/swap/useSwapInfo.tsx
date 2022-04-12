@@ -1,13 +1,12 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useAtomValue } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'lib/hooks/useSlippage'
 import useUSDCPriceImpact, { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useEffect, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { INVALID_TRADE, useBestTrade } from './useBestTrade'
@@ -58,6 +57,12 @@ function useComputeSwapInfo(): SwapInfo {
     [isExactIn, isWrapping, parsedAmount, trade.trade?.outputAmount]
   )
 
+  const { account } = useActiveWeb3React()
+  const [balanceIn, balanceOut] = useCurrencyBalances(
+    account,
+    useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
+  )
+
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
@@ -66,73 +71,55 @@ function useComputeSwapInfo(): SwapInfo {
   return useMemo(
     () => ({
       [Field.INPUT]: {
+        currency: currencyIn,
         amount: amountIn,
+        balance: balanceIn,
         usdc: inputUSDC,
       },
       [Field.OUTPUT]: {
+        currency: currencyOut,
         amount: amountOut,
+        balance: balanceOut,
         usdc: outputUSDC,
       },
       trade,
       slippage,
       impact,
     }),
-    [amountIn, amountOut, impact, inputUSDC, outputUSDC, slippage, trade]
+    [
+      amountIn,
+      amountOut,
+      balanceIn,
+      balanceOut,
+      currencyIn,
+      currencyOut,
+      impact,
+      inputUSDC,
+      outputUSDC,
+      slippage,
+      trade,
+    ]
   )
 }
 
-const swapInfoAtom = atom<SwapInfo>({
+const DEFAULT_SWAP_INFO: SwapInfo = {
   [Field.INPUT]: {},
   [Field.OUTPUT]: {},
   trade: INVALID_TRADE,
   slippage: DEFAULT_SLIPPAGE,
-})
+}
 
-export function SwapInfoUpdater() {
-  const setSwapInfo = useUpdateAtom(swapInfoAtom)
+const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
+
+export function SwapInfoProvider({ children, disabled }: PropsWithChildren<{ disabled?: boolean }>) {
   const swapInfo = useComputeSwapInfo()
-  useEffect(() => setSwapInfo(swapInfo), [setSwapInfo, swapInfo])
-  return null
+  if (disabled) {
+    return <SwapInfoContext.Provider value={DEFAULT_SWAP_INFO}>{children}</SwapInfoContext.Provider>
+  }
+  return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }
 
 /** Requires that SwapInfoUpdater be installed in the DOM tree. **/
 export default function useSwapInfo(): SwapInfo {
-  const swapInfo = useAtomValue(swapInfoAtom)
-
-  const { [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
-  const trade = useMemo(() => {
-    const trade = swapInfo.trade
-    if (trade.state === TradeState.VALID && trade.trade) {
-      if (
-        (currencyIn && !trade.trade.inputAmount.currency.equals(currencyIn)) ||
-        (currencyOut && !trade.trade.outputAmount.currency.equals(currencyOut))
-      ) {
-        // swapInfo has not yet caught up to swapAtom.
-        return { ...trade, state: TradeState.LOADING }
-      }
-    }
-    return trade
-  }, [currencyIn, currencyOut, swapInfo.trade])
-
-  const { account } = useActiveWeb3React()
-  const [balanceIn, balanceOut] = useCurrencyBalances(
-    account,
-    useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
-  )
-
-  // swapInfo will lag behind swapAtom by a frame, because its update is triggered by swapAtom
-  // so a swap must be marked as loading, with up-to-date currencies, during that update.
-  // In other words, swapInfo is derived from swapAtom, so it must be used as the source of truth.
-  const input = useMemo(
-    () => ({ ...swapInfo[Field.INPUT], currency: currencyIn, balance: balanceIn }),
-    [balanceIn, currencyIn, swapInfo]
-  )
-  const output = useMemo(
-    () => ({ ...swapInfo[Field.OUTPUT], currency: currencyOut, balance: balanceOut }),
-    [balanceOut, currencyOut, swapInfo]
-  )
-  return useMemo(
-    () => ({ ...swapInfo, trade, [Field.INPUT]: input, [Field.OUTPUT]: output }),
-    [input, output, swapInfo, trade]
-  )
+  return useContext(SwapInfoContext)
 }
