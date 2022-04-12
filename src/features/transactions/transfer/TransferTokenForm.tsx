@@ -11,7 +11,6 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { Flex } from 'src/components/layout'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
-import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -67,7 +66,7 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
   )
   // TODO: if readonly account, not sendable
   const transferNFTCallback = useTransferNFTCallback(
-    ChainId.Mainnet,
+    nftIn?.chainId,
     recipient,
     nftIn?.asset_contract.address,
     nftIn?.token_id,

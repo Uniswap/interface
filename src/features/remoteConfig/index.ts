@@ -1,5 +1,7 @@
 import remoteConfig, { FirebaseRemoteConfigTypes } from '@react-native-firebase/remote-config'
 import { useCallback, useState } from 'react'
+import { useAppDispatch } from 'src/app/hooks'
+import { nftApi } from 'src/features/nfts/api'
 import { TestConfigValues } from 'src/features/remoteConfig/testConfigs'
 import { printDebugLogs } from 'src/features/remoteConfig/utils'
 
@@ -18,12 +20,21 @@ export function useTestConfigManager(): [
   typeof toggleLocalConfig
 ] {
   const [testConfigs, setTestConfigs] = useState(remoteConfig().getAll())
+  const dispatch = useAppDispatch()
 
-  const _toggleLocalConfig = useCallback(async (args: any) => {
-    await toggleLocalConfig(args)
+  const _toggleLocalConfig = useCallback(
+    async (args: any) => {
+      await toggleLocalConfig(args)
 
-    setTestConfigs(remoteConfig().getAll())
-  }, [])
+      setTestConfigs(remoteConfig().getAll())
+
+      // HACK: nft api reads test config internally, rtk-query is not aware of
+      //       value change. Long-term should make `chainId` a query key to
+      //       automatically invalidate on change.
+      dispatch(nftApi.util.resetApiState())
+    },
+    [dispatch]
+  )
 
   return [Object.entries(testConfigs), _toggleLocalConfig]
 }

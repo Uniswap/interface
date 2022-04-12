@@ -33,6 +33,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const { [CurrencyField.INPUT]: tradeableAsset, exactAmount, recipient } = state
 
   const activeAccount = useActiveAccount()
+  const chainId = tradeableAsset?.chainId ?? ChainId.Mainnet
 
   const currencyIn = useCurrency(
     tradeableAsset?.type === AssetType.Currency
@@ -53,10 +54,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     currencyIn?.isToken ? currencyIn : undefined,
     activeAccount?.address
   )
-  const { balance: nativeInBalance } = useNativeCurrencyBalance(
-    currencyIn?.chainId ?? ChainId.Mainnet,
-    activeAccount?.address
-  )
+  const { balance: nativeInBalance } = useNativeCurrencyBalance(chainId, activeAccount?.address)
 
   const amountSpecified = useMemo(
     () => tryParseAmount(exactAmount, currencyIn),

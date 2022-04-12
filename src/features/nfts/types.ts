@@ -1,3 +1,5 @@
+import { ChainId } from 'src/constants/chains'
+
 export interface OpenseaNFTAssetResponse {
   next: string
   previous: string
@@ -202,6 +204,9 @@ export module NFTAsset {
     transfer_fee_payment_token?: any
     transfer_fee?: any
     token_id: string
+
+    // manually added for convenience
+    chainId: ChainId
   }
 
   export interface RootObject {

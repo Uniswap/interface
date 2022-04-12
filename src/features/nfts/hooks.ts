@@ -9,12 +9,13 @@ export function useNFT(
   return nftApi.useNftBalancesQuery(
     { owner },
     {
-      selectFromResult: ({ data }) =>
-        address && tokenId
-          ? {
-              asset: data?.[address]?.find((asset) => asset.token_id === tokenId),
-            }
-          : {},
+      selectFromResult: ({ data }) => {
+        if (!address || !tokenId) return {}
+
+        const asset = data?.[address]?.find((a) => a.token_id === tokenId)
+        return { asset }
+      },
+      refetchOnMountOrArgChange: true,
     }
   )
 }

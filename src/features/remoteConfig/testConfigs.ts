@@ -16,9 +16,11 @@ type ConfigValue = 'disabled' | 'enabled'
 export enum TestConfig {
   BiometricPrompt = 'Biometric Prompt (__DEV__)',
   DisplayExtractedNFTColors = 'extract-nft-colors',
+  RinkebyNFTs = 'rinkeby-nfts',
 }
 
 export const TestConfigValues: Record<TestConfig, ConfigValue> = {
   [TestConfig.BiometricPrompt]: __DEV__ ? 'disabled' : 'enabled',
   [TestConfig.DisplayExtractedNFTColors]: __DEV__ ? 'enabled' : 'disabled',
+  [TestConfig.RinkebyNFTs]: 'disabled',
 }
