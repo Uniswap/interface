@@ -262,7 +262,10 @@ export function useCalculateAPR(poolEmission?: CurrencyAmount<Token>, totalPoolS
   )
 
   const apr =
-    usdValueOfStakedLP && hypotheticalEmissionPerYear && emissionTokenPrice
+    usdValueOfStakedLP &&
+    hypotheticalEmissionPerYear &&
+    emissionTokenPrice &&
+    usdValueOfStakedLP.greaterThan(JSBI.BigInt(0))
       ? JSBI.divide(emissionTokenPrice?.quote(hypotheticalEmissionPerYear).quotient, usdValueOfStakedLP.quotient)
       : JSBI.BigInt(0)
 
