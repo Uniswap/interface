@@ -1,4 +1,3 @@
-import { tokens } from '@uniswap/default-token-list'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -65,7 +64,6 @@ function Fixture() {
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={optionsToAddressMap[defaultOutputToken]}
       defaultOutputAmount={defaultOutputAmount}
-      tokenList={tokens}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
     />
   )
