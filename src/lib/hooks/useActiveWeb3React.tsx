@@ -16,6 +16,7 @@ type Web3ContextType = {
   accounts?: ReturnType<Web3ReactHooks['useAccounts']>
   account?: ReturnType<Web3ReactHooks['useAccount']>
   active?: ReturnType<Web3ReactHooks['useIsActive']>
+  activating?: ReturnType<Web3ReactHooks['useIsActivating']>
   error?: ReturnType<Web3ReactHooks['useError']>
   ensNames?: ReturnType<Web3ReactHooks['useENSNames']>
   ensName?: ReturnType<Web3ReactHooks['useENSName']>
@@ -82,17 +83,18 @@ export function ActiveWeb3Provider({
 
   const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
+  const activating = hooks.useIsActivating()
   const active = hooks.useIsActive()
   const chainId = hooks.useChainId()
   const ensNames = hooks.useENSNames()
   const ensName = hooks.useENSName()
   const error = hooks.useError()
   const web3 = useMemo(() => {
-    if (connector === EMPTY || !active) {
+    if (connector === EMPTY || !(active || activating)) {
       return EMPTY_CONTEXT
     }
-    return { connector, library, chainId, accounts, account, active, error, ensNames, ensName }
-  }, [account, accounts, active, chainId, connector, ensName, ensNames, error, library])
+    return { connector, library, chainId, accounts, account, active, activating, error, ensNames, ensName }
+  }, [account, accounts, activating, active, chainId, connector, ensName, ensNames, error, library])
 
   // Log web3 errors to facilitate debugging.
   useEffect(() => {

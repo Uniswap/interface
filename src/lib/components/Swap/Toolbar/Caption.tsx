@@ -32,6 +32,19 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   )
 }
 
+export function ConnectingWallet() {
+  return (
+    <Caption
+      icon={InlineSpinner}
+      caption={
+        <Loading>
+          <Trans>Connecting wallet</Trans>
+        </Loading>
+      }
+    />
+  )
+}
+
 export function ConnectWallet() {
   return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
