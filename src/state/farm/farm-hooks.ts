@@ -13,8 +13,6 @@ import { useSingleCallResult, useSingleContractMultipleData } from 'state/multic
 import { useTokenBalance } from 'state/wallet/hooks'
 import { isTruthy } from 'utils/isTruthy'
 
-const hardcodedPoolIndexes = [0]
-
 export function usePairTokens(pairAddress?: string) {
   const { account } = useActiveWeb3React()
 
@@ -42,27 +40,33 @@ export function usePairTokens(pairAddress?: string) {
 export function usePools() {
   const { account, chainId } = useActiveWeb3React()
   const minichefContract = useMiniChef()
+
+  const poolLength = useSingleCallResult(minichefContract, 'poolLength')
+
+  const poolLengthAmount = (poolLength?.result?.pools as BigNumber) || BigNumber.from(0)
+  const poolIndizes = new Array(poolLengthAmount.toNumber()).fill('').map((_, id) => id)
+
   const poolInfos = useSingleContractMultipleData(
     minichefContract,
     'poolInfo',
-    hardcodedPoolIndexes.map((id) => [id])
+    poolIndizes.map((id) => [id])
   )
   const lpTokens = useSingleContractMultipleData(
     minichefContract,
     'lpToken',
-    hardcodedPoolIndexes.map((id) => [id])
+    poolIndizes.map((id) => [id])
   )
 
   const rewarders = useSingleContractMultipleData(
     minichefContract,
     'rewarder',
-    hardcodedPoolIndexes.map((id) => [id])
+    poolIndizes.map((id) => [id])
   )
 
   const userInfos = useSingleContractMultipleData(
     minichefContract,
     'userInfo',
-    hardcodedPoolIndexes.map((id) => [id, account ?? undefined])
+    poolIndizes.map((id) => [id, account ?? undefined])
   )
 
   const diffusionPerSecondResponse = useSingleCallResult(minichefContract, 'diffusionPerSecond')
@@ -73,11 +77,11 @@ export function usePools() {
   const totalAllocationResponse = useSingleCallResult(minichefContract, 'totalAllocPoint')
   const totalAllocation = totalAllocationResponse.result?.[0] as BigNumber | undefined
 
-  const pendingArguments = account ? hardcodedPoolIndexes.map((pid) => [pid, account]) : []
+  const pendingArguments = account ? poolIndizes.map((pid) => [pid, account]) : []
   const pendingDiffusions = useSingleContractMultipleData(minichefContract, 'pendingDiffusion', pendingArguments)
 
   const pools: MinichefRawPoolInfo[] = useMemo(() => {
-    return hardcodedPoolIndexes
+    return poolIndizes
       .map((poolId, idx) => {
         const lpTokenAddress = lpTokens[idx]?.result?.[0] as string | undefined
         const rewarderAddress = rewarders[idx]?.result?.[0] as string | undefined
@@ -131,6 +135,7 @@ export function usePools() {
     rewarders,
     totalAllocation,
     userInfos,
+    poolIndizes,
   ])
   return pools.filter((pool) => pool.lpTokenAddress)
 }
