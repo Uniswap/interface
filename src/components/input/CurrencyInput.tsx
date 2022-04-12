@@ -28,6 +28,7 @@ type CurrencyInputProps = {
   value?: string
 } & RestyleProps
 
+// TODO: deprecate with simplified swap
 export function CurrencyInput(props: CurrencyInputProps) {
   const {
     autofocus,
