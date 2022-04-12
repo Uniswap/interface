@@ -1,10 +1,8 @@
 import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import { atom, useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import fetchTokenList from './fetchTokenList'
@@ -14,19 +12,61 @@ import { validateTokens } from './validateTokenList'
 
 export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 
-const chainTokenMapAtom = atom<ChainTokenMap | null>(null)
+const MISSING_PROVIDER = Symbol()
+const ChainTokenMapContext = createContext<ChainTokenMap | undefined | typeof MISSING_PROVIDER>(MISSING_PROVIDER)
 
-export function useIsTokenListLoaded() {
-  return Boolean(useAtomValue(chainTokenMapAtom))
+function useChainTokenMapContext() {
+  const chainTokenMap = useContext(ChainTokenMapContext)
+  if (chainTokenMap === MISSING_PROVIDER) {
+    throw new Error('TokenList hooks must be wrapped in a <TokenListProvider>')
+  }
+  return chainTokenMap
 }
 
-export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST): void {
+export function useIsTokenListLoaded() {
+  return Boolean(useChainTokenMapContext())
+}
+
+export default function useTokenList(): WrappedTokenInfo[] {
+  const { chainId } = useActiveWeb3React()
+  const chainTokenMap = useChainTokenMapContext()
+  const tokenMap = chainId && chainTokenMap?.[chainId]
+  return useMemo(() => {
+    if (!tokenMap) return []
+    return Object.values(tokenMap).map(({ token }) => token)
+  }, [tokenMap])
+}
+
+export type TokenMap = { [address: string]: Token }
+
+export function useTokenMap(): TokenMap {
+  const { chainId } = useActiveWeb3React()
+  const chainTokenMap = useChainTokenMapContext()
+  const tokenMap = chainId && chainTokenMap?.[chainId]
+  return useMemo(() => {
+    if (!tokenMap) return {}
+    return Object.entries(tokenMap).reduce((map, [address, { token }]) => {
+      map[address] = token
+      return map
+    }, {} as TokenMap)
+  }, [tokenMap])
+}
+
+export function useQueryCurrencies(query = ''): (WrappedTokenInfo | NativeCurrency)[] {
+  return useQueryTokens(query, useTokenList())
+}
+
+export function TokenListProvider({
+  list = DEFAULT_TOKEN_LIST,
+  children,
+}: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
   // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
   const [error, setError] = useState<Error>()
   if (error) throw error
 
-  const [chainTokenMap, setChainTokenMap] = useAtom(chainTokenMapAtom)
-  useEffect(() => setChainTokenMap(null), [list, setChainTokenMap])
+  const [chainTokenMap, setChainTokenMap] = useState<ChainTokenMap>()
+
+  useEffect(() => setChainTokenMap(undefined), [list])
 
   const { chainId, library } = useActiveWeb3React()
   const resolver = useCallback(
@@ -70,34 +110,7 @@ export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST
         }
       }
     }
-  }, [chainTokenMap, list, resolver, setChainTokenMap])
-}
+  }, [chainTokenMap, list, resolver])
 
-export default function useTokenList(): WrappedTokenInfo[] {
-  const { chainId } = useActiveWeb3React()
-  const chainTokenMap = useAtomValue(chainTokenMapAtom)
-  const tokenMap = chainId && chainTokenMap?.[chainId]
-  return useMemo(() => {
-    if (!tokenMap) return []
-    return Object.values(tokenMap).map(({ token }) => token)
-  }, [tokenMap])
-}
-
-export type TokenMap = { [address: string]: Token }
-
-export function useTokenMap(): TokenMap {
-  const { chainId } = useActiveWeb3React()
-  const chainTokenMap = useAtomValue(chainTokenMapAtom)
-  const tokenMap = chainId && chainTokenMap?.[chainId]
-  return useMemo(() => {
-    if (!tokenMap) return {}
-    return Object.entries(tokenMap).reduce((map, [address, { token }]) => {
-      map[address] = token
-      return map
-    }, {} as TokenMap)
-  }, [tokenMap])
-}
-
-export function useQueryCurrencies(query = ''): (WrappedTokenInfo | NativeCurrency)[] {
-  return useQueryTokens(query, useTokenList())
+  return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
 }

@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { TokenInfo } from '@uniswap/token-lists'
 import { useAtom } from 'jotai'
 import { SwapInfoProvider } from 'lib/hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
@@ -8,7 +7,6 @@ import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
 import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
-import { useIsTokenListLoaded, useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
 import { useState } from 'react'
@@ -43,18 +41,13 @@ function getTransactionFromMap(
 }
 
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  tokenList?: string | TokenInfo[]
   onConnectWallet?: () => void
-}
-
-function Updaters(props: SwapProps) {
-  useSyncTokenDefaults(props)
-  useSyncConvenienceFee(props)
-  return null
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
+  useSyncConvenienceFee(props)
+  useSyncTokenDefaults(props)
 
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
@@ -66,14 +59,10 @@ export default function Swap(props: SwapProps) {
   const onSupportedNetwork = useOnSupportedNetwork()
   const isDisabled = !(active && onSupportedNetwork)
 
-  useSyncTokenList(props.tokenList)
-  const isTokenListLoaded = useIsTokenListLoaded()
-
   const focused = useHasFocus(wrapper)
 
   return (
     <>
-      {isTokenListLoaded && <Updaters {...props} />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={isDisabled} />

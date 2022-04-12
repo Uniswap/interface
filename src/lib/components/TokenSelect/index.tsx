@@ -25,9 +25,9 @@ const SearchInput = styled(StringInput)`
 function usePrefetchBalances() {
   const { account } = useActiveWeb3React()
   const tokenList = useTokenList()
-  const [prefetchedTokenList, setPrefetchedTokenList] = useState(tokenList)
-  useEffect(() => setPrefetchedTokenList(tokenList), [tokenList])
-  useCurrencyBalances(account, tokenList !== prefetchedTokenList ? tokenList : undefined)
+  const prefetchedTokenList = useRef<typeof tokenList>()
+  useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
+  prefetchedTokenList.current = tokenList
 }
 
 function useAreBalancesLoaded(): boolean {
