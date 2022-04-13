@@ -73,7 +73,7 @@ export default function Swap(props: SwapProps) {
             <Input disabled={isDisabled} focused={focused} />
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
-              <Toolbar disabled={!active} />
+              <Toolbar />
               <SwapButton disabled={isDisabled} />
             </Output>
           </SwapInfoProvider>
