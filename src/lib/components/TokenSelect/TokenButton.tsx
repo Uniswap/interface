@@ -46,24 +46,21 @@ interface TokenButtonProps {
 export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
   const buttonBackgroundColor = useMemo(() => (value ? 'interactive' : 'accent'), [value])
   const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccent'), [value, disabled])
-  const isEmpty = !value
 
   // Transition the button only if transitioning from a disabled state.
   // This makes initialization cleaner without adding distracting UX to normal swap flows.
-  const [shouldTransition, setShouldTransition] = useState(true)
+  const [shouldTransition, setShouldTransition] = useState(disabled)
   useEffect(() => {
     if (disabled) {
       setShouldTransition(true)
-    } else if (isEmpty) {
-      setShouldTransition(false)
     }
-  }, [disabled, isEmpty])
+  }, [disabled])
 
   // width must have an absolute value in order to transition, so it is taken from the row ref.
   const [row, setRow] = useState<HTMLDivElement | null>(null)
   const style = useMemo(() => {
-    const width = row?.clientWidth
-    return { width: shouldTransition && width ? width + 10 : undefined }
+    if (!shouldTransition) return
+    return { width: row ? row.clientWidth + /* padding= */ 8 + /* border= */ 2 : undefined }
   }, [row, shouldTransition])
 
   return (
@@ -78,7 +75,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
       <ThemedText.ButtonLarge color={contentColor}>
         <TokenButtonRow
           gap={0.4}
-          empty={isEmpty}
+          empty={!value}
           collapsed={collapsed}
           // ref is used to set an absolute width, so it must be reset for each value passed.
           // To force this, value?.symbol is passed as a key.
