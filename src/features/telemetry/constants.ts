@@ -42,6 +42,7 @@ export const enum ElementName {
   ApplyThemeFromNFT = 'apply-theme-from-nft',
   Back = 'back',
   BuyToken = 'buy-token',
+  Cancel = 'cancel',
   ClearSearch = 'clear-search',
   Confirm = 'confirm',
   Copy = 'copy',

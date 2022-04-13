@@ -3,7 +3,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { removeRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { WCRequestModal } from 'src/features/walletConnect/WCRequestModal'
+import { WCRequestModal } from 'src/features/walletConnect/WCRequestModal/WCRequestModal'
 
 export function WalletConnectWrapper({ children }: PropsWithChildren<any>) {
   const activeAccount = useActiveAccount()

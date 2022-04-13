@@ -189,6 +189,14 @@ class WalletConnectAccountServer: ServerDelegate {
   func server(_ server: Server, didUpdate session: Session) {
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }
+  
+  func getSessionFromTopic(_ topic: String) throws -> Session {
+    guard let session = self.topicToSession[topic] else {
+      throw WCSwiftError.invalidSessionTopic
+    }
+    
+    return session
+  }
 }
 
 enum EthMethod: String {
@@ -212,6 +220,9 @@ enum ErrorType: String {
   case invalidAccount = "invalid_account"
 }
 
+enum WCSwiftError: Error {
+  case invalidSessionTopic
+}
 
 class WalletConnectSignRequestHandler: RequestHandler {
     var accountServer: WalletConnectAccountServer!
@@ -235,8 +246,11 @@ class WalletConnectSignRequestHandler: RequestHandler {
       // guaranteed to be a string
       let internalId = UUID().uuidString
       self.accountServer.setPendingRequest(request: request, internalId: internalId)
-      
+
       do {
+        let session = try self.accountServer.getSessionFromTopic(request.url.topic)
+        let icons = session.dAppInfo.peerMeta.icons
+        
         let messageBytes = try request.parameter(of: String.self, at: 0)
         self.eventEmitter.sendEvent(
           withName: EventType.signRequest.rawValue, body: [
@@ -244,7 +258,12 @@ class WalletConnectSignRequestHandler: RequestHandler {
             "request": request.jsonString,
             "message": String(data: Data(hex: messageBytes), encoding: .utf8) ?? messageBytes,
             "request_internal_id": internalId,
-            "account": self.account,
+            "account": self.account!,
+            "dapp": [
+              "name": session.dAppInfo.peerMeta.name,
+              "url": session.dAppInfo.peerMeta.url.absoluteString,
+              "icon": icons.isEmpty ? "" : icons[0].absoluteString
+            ]
           ]
         )
       } catch {

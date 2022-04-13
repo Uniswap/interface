@@ -45,6 +45,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
             message: req.message,
             internalId: req.request_internal_id,
             account: req.account,
+            dapp: req.dapp,
           },
         })
       )

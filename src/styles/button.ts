@@ -24,9 +24,13 @@ export const primaryButtonVariants = {
     backgroundColor: 'paleOrange',
     color: 'orange',
   },
-  blue: {
+  paleBlue: {
     backgroundColor: 'paleBlue',
     color: 'blue',
+  },
+  blue: {
+    backgroundColor: 'blue',
+    color: 'white',
   },
 }
 

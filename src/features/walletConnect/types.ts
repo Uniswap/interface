@@ -16,11 +16,18 @@ export type SessionDisconnectedEvent = {
   account: string
 }
 
+export type DappInfo = {
+  name: string
+  url: string
+  icon: string
+}
+
 export type SignRequestEvent = {
   account: string
   type: EthMethod
   message: string
   request_internal_id: string
+  dapp: DappInfo
 }
 
 export type WCError = {

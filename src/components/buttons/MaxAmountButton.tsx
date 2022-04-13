@@ -38,7 +38,7 @@ export function MaxAmountButton({
       px="xs"
       py="xs"
       textVariant="bodyBold"
-      variant="blue"
+      variant="paleBlue"
       onPress={() => onSetAmount(maxInputAmount.toSignificant())}
     />
   )
