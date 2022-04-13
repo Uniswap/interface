@@ -32,11 +32,11 @@ Parameters:
 Example (swap 100 Ethereum mainnet DAI for Ethereum mainnet UNI):
 
 ```
-uniswap://?screen=swap&userAddress=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&inputCurrency=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrency=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100
+uniswap://?screen=swap&userAddress=0x123...789&inputCurrency=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrency=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100
 ```
 
 Example (swap Polygon DAI for 100 Polygon UNI):
 
 ```
-uniswap://?screen=swap&userAddress=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&inputCurrency=137-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrency=137-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=output&amount=100
+uniswap://?screen=swap&userAddress=0x123...789&inputCurrency=137-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrency=137-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=output&amount=100
 ```
