@@ -33,6 +33,7 @@ const Overlay = styled.div`
 
 const StyledReverseButton = styled(Button)<{ turns: number }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  color: ${({ theme }) => theme.primary};
   height: 2.5em;
   position: relative;
   width: 2.5em;

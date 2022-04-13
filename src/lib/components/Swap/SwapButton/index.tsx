@@ -14,6 +14,7 @@ import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
 import { isAnimating } from 'lib/utils/animations'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { TradeState } from 'state/routing/types'
 import invariant from 'tiny-invariant'
 
 import ActionButton, { ActionButtonProps } from '../../ActionButton'
@@ -152,13 +153,17 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     if (disableSwap) {
       return { disabled: true }
     } else if (wrapType === WrapType.NONE) {
-      return approvalAction ? { action: approvalAction } : { onClick: () => setOpen(true) }
+      return approvalAction
+        ? { action: approvalAction }
+        : trade.state === TradeState.VALID
+        ? { onClick: () => setOpen(true) }
+        : { disabled: true }
     } else {
       return isPending
         ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
         : { onClick: onWrap }
     }
-  }, [approvalAction, disableSwap, isPending, onWrap, wrapType])
+  }, [approvalAction, disableSwap, isPending, onWrap, trade.state, wrapType])
   const Label = useCallback(() => {
     switch (wrapType) {
       case WrapType.UNWRAP:
