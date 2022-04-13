@@ -10,8 +10,8 @@ import TokenImg from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
-  padding: calc(0.25em - 1px); // 1px accounts for the border
-  padding-left: calc(${({ empty }) => (empty ? 0.75 : 0.25)}em - 1px);
+  padding: 0.25em;
+  padding-left: ${({ empty }) => (empty ? 0.75 : 0.25)}em;
 `
 
 const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
