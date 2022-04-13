@@ -1,5 +1,6 @@
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
+import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -10,6 +11,9 @@ export default function TopLevelModals() {
 
   const blockedAccountModalOpen = useModalOpen(ApplicationModal.BLOCKED_ACCOUNT)
   const { account } = useActiveWeb3React()
+
+  useAccountRiskCheck(account)
+
   return (
     <>
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
