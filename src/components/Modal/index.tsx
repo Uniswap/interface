@@ -81,6 +81,7 @@ interface ModalProps {
   initialFocusRef?: React.RefObject<any>
   className?: string
   children?: React.ReactNode
+  transition?: boolean
 }
 
 export default function Modal({
@@ -92,9 +93,10 @@ export default function Modal({
   initialFocusRef,
   className,
   children,
+  transition = true,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, null, {
-    config: { duration: 200 },
+    config: { duration: transition ? 200 : 0 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },

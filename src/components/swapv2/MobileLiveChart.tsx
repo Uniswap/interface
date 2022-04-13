@@ -24,7 +24,7 @@ function MobileLiveChart({
 
   return (
     <MobileView>
-      <MobileModalWrapper isOpen={isOpen} onDismiss={toggle}>
+      <MobileModalWrapper isOpen={isOpen} onDismiss={toggle} transition={false}>
         <Flex flexDirection="column" padding="20px" alignItems={'center'} width="100%">
           <ButtonText onClick={toggle} style={{ alignSelf: 'flex-end' }}>
             <X color={theme.text} />

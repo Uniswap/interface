@@ -377,6 +377,10 @@ body {
   cursor: pointer;
 }
 
+.tf-v1-popover{
+  z-index:1 !important;
+}
+
 .tf-v1-popover-button {
   width: 48px !important;
   height: 48px !important;
