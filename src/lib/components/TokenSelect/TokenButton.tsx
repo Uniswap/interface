@@ -8,16 +8,19 @@ import Button from '../Button'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
 
-const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
+const StyledTokenButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   padding: 0.25em;
-  padding-left: ${({ empty }) => (empty ? 0.75 : 0.25)}em;
+  transition: width 0.125s ease-out;
 `
 
-const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
+const TokenButtonRow = styled(Row)<{ empty: boolean; collapsed: boolean }>`
+  float: right;
   height: 1.2em;
   // max-width must have an absolute value in order to transition.
   max-width: ${({ collapsed }) => (collapsed ? '1.2em' : '12em')};
+  padding-left: ${({ empty }) => empty && 0.5}em;
+  width: fit-content;
   overflow: hidden;
   transition: max-width 0.25s linear;
 
@@ -37,29 +40,36 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
   const buttonBackgroundColor = useMemo(() => (value ? 'interactive' : 'accent'), [value])
   const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccent'), [value, disabled])
 
+  // Transition the button if transitioning from a disabled state. This makes initialization cleaner.
   const button = useRef<HTMLButtonElement>(null)
+  const [row, setRow] = useState<HTMLDivElement | null>(null)
   const empty = !value
-  const [bleedIn, setBleedIn] = useState(true)
+  const [shouldTransition, setShouldTransition] = useState(true)
   useEffect(() => {
     if (disabled) {
-      setBleedIn(true)
+      setShouldTransition(true)
     } else if (empty) {
-      setBleedIn(false)
+      setShouldTransition(false)
     }
   }, [disabled, empty])
+  const style = useMemo(() => {
+    // Widths may only be transitioned using absolute values, so we must compute it.
+    const width = row?.clientWidth
+    return { width: shouldTransition && width ? width + 10 : undefined }
+  }, [row, shouldTransition])
 
   return (
     <StyledTokenButton
       onClick={onClick}
-      empty={empty}
       color={buttonBackgroundColor}
       disabled={disabled}
-      bleedIn={bleedIn}
-      onAnimationEnd={() => setBleedIn(false)}
+      bleedIn={shouldTransition}
+      onAnimationEnd={() => setShouldTransition(false)}
       ref={button}
+      style={style}
     >
       <ThemedText.ButtonLarge color={contentColor}>
-        <TokenButtonRow gap={0.4} collapsed={!empty && collapsed}>
+        <TokenButtonRow gap={0.4} empty={empty} collapsed={collapsed} ref={setRow} key={value?.symbol}>
           {value ? (
             <>
               <TokenImg token={value} size={1.2} />
