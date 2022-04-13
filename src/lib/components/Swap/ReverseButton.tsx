@@ -33,6 +33,7 @@ const Overlay = styled.div`
 
 const StyledReverseButton = styled(Button)<{ turns: number }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  color: ${({ theme }) => theme.primary};
   height: 2.5em;
   position: relative;
   width: 2.5em;
@@ -55,7 +56,7 @@ export default function ReverseButton({ disabled }: { disabled?: boolean }) {
   return (
     <ReverseRow justify="center">
       <Overlay>
-        <StyledReverseButton disabled={disabled} onClick={onClick} turns={turns} bleedIn>
+        <StyledReverseButton disabled={disabled} onClick={onClick} turns={turns} animate>
           <div>
             <ArrowUp strokeWidth={3} />
             <ArrowDown strokeWidth={3} />

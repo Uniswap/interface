@@ -14,10 +14,12 @@ export const BaseButton = styled.button`
   line-height: inherit;
   margin: 0;
   padding: 0;
+  transition: filter 0.125s linear;
 
   :disabled {
     cursor: initial;
     filter: saturate(0) opacity(0.4);
+    transition: none;
   }
 `
 
@@ -25,10 +27,7 @@ const bleedIn = (outline: string, color: string) => keyframes`
   from {
     border-color: ${color};
     background-color: transparent;
-  }
-  to {
-    border-color: transparent
-    background-color: ${color};
+    filter: saturate(0) opacity(0.4);
   }
 `
 
@@ -39,13 +38,13 @@ const bleedInCss = css<{ color?: Color }>`
   }
 `
 
-export default styled(BaseButton)<{ color?: Color; bleedIn?: boolean }>`
+export default styled(BaseButton)<{ color?: Color; animate?: boolean }>`
   border: 1px solid transparent;
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
 
   :enabled {
     background-color: ${({ color = 'interactive', theme }) => theme[color]};
-    ${({ bleedIn }) => bleedIn && bleedInCss}
+    ${({ animate }) => animate && bleedInCss}
   }
 
   :enabled:hover {

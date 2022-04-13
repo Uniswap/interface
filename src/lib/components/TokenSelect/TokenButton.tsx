@@ -63,7 +63,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
       onClick={onClick}
       color={buttonBackgroundColor}
       disabled={disabled}
-      bleedIn={shouldTransition}
+      animate={shouldTransition}
       onAnimationEnd={() => setShouldTransition(false)}
       ref={button}
       style={style}
