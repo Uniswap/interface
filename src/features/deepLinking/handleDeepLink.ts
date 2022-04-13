@@ -1,0 +1,66 @@
+import { createAction } from '@reduxjs/toolkit'
+import { URL } from 'react-native-url-polyfill'
+import { appSelect } from 'src/app/hooks'
+import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
+import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
+import { logEvent } from 'src/features/telemetry'
+import { accountsSelector, activateAccount } from 'src/features/wallet/walletSlice'
+import { logger } from 'src/utils/logger'
+import { call, put, takeLatest } from 'typed-redux-saga'
+
+export interface DeepLink {
+  url: string
+  coldStart: boolean
+}
+
+export const openDeepLink = createAction<DeepLink>('deeplink/open')
+
+export function* deepLinkWatcher() {
+  yield* takeLatest(openDeepLink.type, handleDeepLink)
+}
+
+export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
+  const { coldStart } = action.payload
+  try {
+    const url = new URL(action.payload.url)
+    const screen = url.searchParams.get('screen')
+    const userAddress = url.searchParams.get('userAddress')
+
+    const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
+    yield* put(activateAccount(validUserAddress))
+
+    switch (screen) {
+      case 'transaction':
+        yield* call(handleTransactionLink, url)
+        break
+      case 'swap':
+        yield* call(handleSwapLink, url)
+        break
+      default:
+        throw new Error('Invalid or unsupported screen')
+    }
+
+    yield* call(logEvent, 'deeplink', { coldStart, success: true })
+  } catch (error: any) {
+    const errorMessage = error?.message
+    logger.info('handleDeepLink', 'handleDeepLink', errorMessage)
+    yield* call(logEvent, 'deeplink', { coldStart, success: false, error: errorMessage })
+  }
+}
+
+export function* parseAndValidateUserAddress(userAddress: string | null) {
+  if (!userAddress) {
+    throw new Error('No `userAddress` provided')
+  }
+
+  const userAccounts = yield* appSelect(accountsSelector)
+  const matchingAccount = Object.values(userAccounts).find(
+    (account) => account.address.toLowerCase() === userAddress.toLowerCase()
+  )
+
+  if (!matchingAccount) {
+    throw new Error('User address supplied in path does not exist in wallet')
+  }
+
+  return matchingAccount.address
+}

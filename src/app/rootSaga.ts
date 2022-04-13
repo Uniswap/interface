@@ -6,6 +6,7 @@ import {
   fetchBalancesSaga,
   fetchBalancesSagaName,
 } from 'src/features/balances/fetchBalances'
+import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLink'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
 import {
@@ -59,6 +60,7 @@ import { SagaActions, SagaState } from 'src/utils/saga'
 const sagas: any[] = [
   initProviders,
   initFirebase,
+  deepLinkWatcher,
   transactionWatcher,
   firebaseDataWatcher,
   watchWalletConnectEvents,

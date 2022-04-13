@@ -48,7 +48,7 @@ export type AppStackParamList = {
     selectedCurrencyAddress?: string
     selectedCurrencyChainId?: ChainId
   }
-  [Screens.Notifications]: undefined
+  [Screens.Notifications]: undefined | { txHash: string }
   [Screens.NFTCollection]: {
     nftAssets: NFTAsset.Asset[]
   }
@@ -96,6 +96,12 @@ export type SettingsStackNavigationProp = CompositeNavigationProp<
 
 export type SettingsStackScreenProp<Screen extends keyof SettingsStackParamList> =
   CompositeScreenProps<NativeStackScreenProps<SettingsStackParamList, Screen>, AppStackScreenProps>
+
+export type RootParamList = TabParamList &
+  AccountStackParamList &
+  SettingsStackParamList &
+  OnboardingStackParamList &
+  AppStackParamList
 
 export const useAppStackNavigation = () => useNavigation<AppStackNavigationProp>()
 export const useAccountStackNavigation = () => useNavigation<AccountStackNavigationProp>()

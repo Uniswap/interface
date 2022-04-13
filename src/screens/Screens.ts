@@ -6,7 +6,6 @@ export enum Screens {
   CurrencySelector = 'CurrencySelector',
   Dev = 'Dev',
   Explore = 'Explore',
-  Home = 'Home',
   ImportAccount = 'ImportAccount',
   Ledger = 'Ledger',
   Notifications = 'Notifications',
