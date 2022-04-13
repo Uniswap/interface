@@ -56,7 +56,7 @@ export const getExchangeConfig = (exchange: string, chainId: ChainId): ExchangeC
   }
 }
 
-function encodeParameters(types: any[], values: any[]): string {
+export function encodeParameters(types: any[], values: any[]): string {
   const abi = new ethers.utils.AbiCoder()
   return abi.encode(types, values)
 }
