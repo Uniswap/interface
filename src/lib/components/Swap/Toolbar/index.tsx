@@ -17,7 +17,7 @@ const ToolbarRow = styled(Row)`
   ${largeIconCss}
 `
 
-export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
+export default memo(function Toolbar() {
   const { active, activating, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
