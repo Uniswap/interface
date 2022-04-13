@@ -1,5 +1,5 @@
 import { Icon } from 'lib/icons'
-import styled, { Color, css, keyframes } from 'lib/theme'
+import styled, { Color, css } from 'lib/theme'
 import { ComponentProps, forwardRef } from 'react'
 
 export const BaseButton = styled.button`
@@ -14,37 +14,27 @@ export const BaseButton = styled.button`
   line-height: inherit;
   margin: 0;
   padding: 0;
-  transition: filter 0.125s linear;
+
+  :enabled {
+    transition: filter 0.125s linear;
+  }
 
   :disabled {
     cursor: initial;
     filter: saturate(0) opacity(0.4);
-    transition: none;
   }
 `
-
-const bleedIn = (outline: string, color: string) => keyframes`
-  from {
-    border-color: ${color};
-    background-color: transparent;
-    filter: saturate(0) opacity(0.4);
-  }
+const transitionCss = css`
+  transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear;
 `
 
-const bleedInCss = css<{ color?: Color }>`
-  :enabled {
-    animation: ${({ color = 'interactive', theme }) => bleedIn(theme.outline, theme[color])} 0.125s linear;
-    will-change: border-color, background-color;
-  }
-`
-
-export default styled(BaseButton)<{ color?: Color; animate?: boolean }>`
+export default styled(BaseButton)<{ color?: Color; transition?: boolean }>`
   border: 1px solid transparent;
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
 
   :enabled {
     background-color: ${({ color = 'interactive', theme }) => theme[color]};
-    ${({ animate }) => animate && bleedInCss}
+    ${({ transition = true }) => transition && transitionCss};
   }
 
   :enabled:hover {

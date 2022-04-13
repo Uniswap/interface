@@ -1,17 +1,24 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { ChevronDown } from 'lib/icons'
-import styled, { ThemedText } from 'lib/theme'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import styled, { css, ThemedText } from 'lib/theme'
+import { useEffect, useMemo, useState } from 'react'
 
 import Button from '../Button'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
 
+const transitionCss = css`
+  transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear, width 0.125s ease-out;
+`
+
 const StyledTokenButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   padding: 0.25em;
-  transition: width 0.125s ease-out;
+
+  :enabled {
+    ${({ transition }) => transition && transitionCss};
+  }
 `
 
 const TokenButtonRow = styled(Row)<{ empty: boolean; collapsed: boolean }>`
@@ -39,21 +46,22 @@ interface TokenButtonProps {
 export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
   const buttonBackgroundColor = useMemo(() => (value ? 'interactive' : 'accent'), [value])
   const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccent'), [value, disabled])
+  const isEmpty = !value
 
-  // Transition the button if transitioning from a disabled state. This makes initialization cleaner.
-  const button = useRef<HTMLButtonElement>(null)
-  const [row, setRow] = useState<HTMLDivElement | null>(null)
-  const empty = !value
+  // Transition the button only if transitioning from a disabled state.
+  // This makes initialization cleaner without adding distracting UX to normal swap flows.
   const [shouldTransition, setShouldTransition] = useState(true)
   useEffect(() => {
     if (disabled) {
       setShouldTransition(true)
-    } else if (empty) {
+    } else if (isEmpty) {
       setShouldTransition(false)
     }
-  }, [disabled, empty])
+  }, [disabled, isEmpty])
+
+  // width must have an absolute value in order to transition, so it is taken from the row ref.
+  const [row, setRow] = useState<HTMLDivElement | null>(null)
   const style = useMemo(() => {
-    // Widths may only be transitioned using absolute values, so we must compute it.
     const width = row?.clientWidth
     return { width: shouldTransition && width ? width + 10 : undefined }
   }, [row, shouldTransition])
@@ -63,13 +71,20 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
       onClick={onClick}
       color={buttonBackgroundColor}
       disabled={disabled}
-      animate={shouldTransition}
-      onAnimationEnd={() => setShouldTransition(false)}
-      ref={button}
       style={style}
+      transition={shouldTransition}
+      onTransitionEnd={() => setShouldTransition(false)}
     >
       <ThemedText.ButtonLarge color={contentColor}>
-        <TokenButtonRow gap={0.4} empty={empty} collapsed={collapsed} ref={setRow} key={value?.symbol}>
+        <TokenButtonRow
+          gap={0.4}
+          empty={isEmpty}
+          collapsed={collapsed}
+          // ref is used to set an absolute width, so it must be reset for each value passed.
+          // To force this, value?.symbol is passed as a key.
+          ref={setRow}
+          key={value?.symbol}
+        >
           {value ? (
             <>
               <TokenImg token={value} size={1.2} />
