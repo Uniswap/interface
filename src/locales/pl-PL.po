@@ -1659,6 +1659,10 @@ msgstr "Udział puli"
 msgid "Share of Pool:"
 msgstr "Udział w puli:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Show Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Pokaż zamknięte pozycje"

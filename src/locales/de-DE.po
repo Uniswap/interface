@@ -1659,6 +1659,10 @@ msgstr "Anteil am Pool"
 msgid "Share of Pool:"
 msgstr "Anteil am Pool:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Portis anzeigen"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Geschlossene Positionen anzeigen"

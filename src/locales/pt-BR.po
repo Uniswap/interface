@@ -1659,6 +1659,10 @@ msgstr "Compartilhamento de Lotes"
 msgid "Share of Pool:"
 msgstr "Compartilhamento do Lote:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Exibir Portas"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Mostrar posições fechadas"

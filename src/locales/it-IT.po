@@ -1659,6 +1659,10 @@ msgstr "Quota del pool"
 msgid "Share of Pool:"
 msgstr "Quota del pool:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Show Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Mostra posizioni chiuse"

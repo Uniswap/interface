@@ -1659,6 +1659,10 @@ msgstr "Bagian dari Pool"
 msgid "Share of Pool:"
 msgstr "Bagian dari Pool:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Tampilkan Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Tampilkan posisi tertutup"

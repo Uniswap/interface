@@ -1659,6 +1659,10 @@ msgstr "Частка пулу"
 msgid "Share of Pool:"
 msgstr "Частка пулу:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Показати Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Показати закриті позиції"

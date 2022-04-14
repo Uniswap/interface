@@ -1659,6 +1659,10 @@ msgstr "流動池份額"
 msgid "Share of Pool:"
 msgstr "流動池份額："
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "顯示 Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "顯示已關閉的倉位"

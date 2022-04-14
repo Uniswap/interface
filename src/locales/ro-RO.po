@@ -1659,6 +1659,10 @@ msgstr "Cota de Grup"
 msgid "Share of Pool:"
 msgstr "Cota de Grup:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Arată Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Afișați pozițiile închise"

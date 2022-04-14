@@ -1659,6 +1659,10 @@ msgstr "Chia sẻ của Pool"
 msgid "Share of Pool:"
 msgstr "Chia sẻ của Pool:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Hiển thị Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Hiển thị các vị trí đã đóng"

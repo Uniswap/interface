@@ -1659,6 +1659,10 @@ msgstr "Participación del fondo común"
 msgid "Share of Pool:"
 msgstr "Participación del fondo común:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Mostrar Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Mostrar posiciones cerradas"

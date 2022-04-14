@@ -1659,6 +1659,10 @@ msgstr "Andel av pott"
 msgid "Share of Pool:"
 msgstr "Deling av pott:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Vis portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Vis lukkede stillinger"

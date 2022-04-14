@@ -1659,6 +1659,10 @@ msgstr "Podíl na fondu"
 msgid "Share of Pool:"
 msgstr "Podíl na fondu:"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Zobrazit Portis"
+
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Zobrazit uzavřené pozice"
