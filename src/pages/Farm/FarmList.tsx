@@ -36,7 +36,7 @@ export function FarmListPage() {
       <FarmTable>
         {pools.map((pool) => (
           <>
-            <HRDark />
+            <HRDark key={`hr-${pool.poolId}`} />
             <PoolRow key={pool.poolId} {...pool} />
           </>
         ))}

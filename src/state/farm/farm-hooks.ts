@@ -165,7 +165,7 @@ export function usePool(poolId: number) {
   const userInfo = userInfos?.result as unknown as { amount: BigNumber; rewardDebt: BigNumber } | undefined
 
   const poolEmissionPerSecond =
-    poolInfo?.allocPoint && totalAllocation
+    poolInfo?.allocPoint && totalAllocation && totalAllocation.gt(0)
       ? JSBI.divide(
           JSBI.multiply(diffusionPerSecond, JSBI.BigInt(poolInfo.allocPoint.toString())),
           JSBI.BigInt(totalAllocation.toString())
@@ -196,6 +196,7 @@ export function usePool(poolId: number) {
     poolEmissionAmount,
     poolId,
   }
+  console.log(rawInfo)
   return rawInfo
 }
 
@@ -247,7 +248,9 @@ export function useOwnWeeklyEmission(
 ) {
   return useMemo(() => {
     const poolShare =
-      totalPoolStaked && stakedLPAmount ? stakedLPAmount.divide(totalPoolStaked.quotient).quotient : JSBI.BigInt(0)
+      totalPoolStaked && stakedLPAmount && totalPoolStaked.greaterThan(0)
+        ? stakedLPAmount.divide(totalPoolStaked.quotient).quotient
+        : JSBI.BigInt(0)
     const hypotheticalEmissionPerWeek = poolEmission?.multiply(poolShare).multiply(JSBI.BigInt(60 * 60 * 24 * 7))
     return hypotheticalEmissionPerWeek
   }, [poolEmission, stakedLPAmount, totalPoolStaked])
