@@ -207,7 +207,7 @@ function LiveChart({
           </Flex>
           {showProLiveChart ? (
             <div style={{ margin: isMobile ? '0 -20px -20px -20px' : '10px 0' }}>
-              <ProLiveChart />
+              <ProLiveChart tokens={tokens}/>
             </div>
           ) : (
             <>
