@@ -4,7 +4,7 @@ The Swap Widget bundles the whole swapping experience into a single React compon
 
 ![swap widget screenshot](https://raw.githubusercontent.com/Uniswap/interface/main/src/assets/images/widget-screenshot.png)
 
-You can customize the theme (colors, font, border radius, and more) to match the style of your application. You can also configure your own default token list and optionally set a convenience fee on swaps executed through the widget on your site.
+You can customize the theme (colors, fonts, border radius, and more) to match the style of your application. You can also configure your own default token list and optionally set a convenience fee on swaps executed through the widget on your site.
 
 ## Installation
 
