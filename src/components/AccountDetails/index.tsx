@@ -201,10 +201,6 @@ const WalletAction = styled(ButtonSecondary)`
   }
 `
 
-const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.primary1};
-`
-
 function renderTransactions(transactions: string[]) {
   return (
     <TransactionListWrapper>
