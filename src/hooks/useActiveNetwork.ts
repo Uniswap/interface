@@ -9,6 +9,8 @@ import { ChainId } from '@dynamic-amm/sdk'
 import { useAppDispatch } from 'state/hooks'
 import { updateChainIdWhenNotConnected } from 'state/application/actions'
 import { UnsupportedChainIdError } from '@web3-react/core'
+import { NETWORK_URLS } from 'connectors'
+import { getExplorerUrl } from 'utils'
 
 export const SWITCH_NETWORK_PARAMS: {
   [chainId in ChainId]?: {
@@ -72,7 +74,7 @@ export const ADD_NETWORK_PARAMS: {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: ['https://etherscan.com'],
+    blockExplorerUrls: [getExplorerUrl(ChainId.MAINNET)],
   },
   [ChainId.MATIC]: {
     chainId: '0x89',
@@ -82,8 +84,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'MATIC',
       decimals: 18,
     },
-    rpcUrls: ['https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
-    blockExplorerUrls: ['https://polygonscan.com'],
+    rpcUrls: [NETWORK_URLS[ChainId.MATIC]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.MATIC)],
   },
   [ChainId.BSCMAINNET]: {
     chainId: '0x38',
@@ -93,8 +95,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'BNB',
       decimals: 18,
     },
-    rpcUrls: ['https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface'],
-    blockExplorerUrls: ['https://bscscan.com'],
+    rpcUrls: [NETWORK_URLS[ChainId.BSCMAINNET]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.BSCMAINNET)],
   },
   [ChainId.AVAXMAINNET]: {
     chainId: '0xA86A',
@@ -104,8 +106,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'AVAX',
       decimals: 18,
     },
-    rpcUrls: ['https://avalanche.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
-    blockExplorerUrls: ['https://snowtrace.io'],
+    rpcUrls: [NETWORK_URLS[ChainId.AVAXMAINNET]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.AVAXMAINNET)],
   },
   [ChainId.FANTOM]: {
     chainId: '0xFA',
@@ -115,8 +117,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'FTM',
       decimals: 18,
     },
-    rpcUrls: ['https://rpc.ftm.tools'],
-    blockExplorerUrls: ['https://ftmscan.com'],
+    rpcUrls: [NETWORK_URLS[ChainId.FANTOM]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.FANTOM)],
   },
   [ChainId.CRONOS]: {
     chainId: '0x19',
@@ -126,8 +128,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'CRO',
       decimals: 18,
     },
-    rpcUrls: ['https://evm-cronos.crypto.org'],
-    blockExplorerUrls: ['https://cronoscan.com'],
+    rpcUrls: [NETWORK_URLS[ChainId.CRONOS]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.CRONOS)],
   },
   [ChainId.AURORA]: {
     chainId: '0x4e454152',
@@ -137,8 +139,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'ETH',
       decimals: 18,
     },
-    rpcUrls: ['https://mainnet.aurora.dev/GvfzNcGULXzWqaVahC8WPTdqEuSmwNCu3Nu3rtcVv9MD'],
-    blockExplorerUrls: ['https://aurorascan.dev'],
+    rpcUrls: [NETWORK_URLS[ChainId.AURORA]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.AURORA)],
   },
 
   [ChainId.ARBITRUM]: {
@@ -149,8 +151,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'ETH',
       decimals: 18,
     },
-    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://arbiscan.io'],
+    rpcUrls: [NETWORK_URLS[ChainId.ARBITRUM]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.ARBITRUM)],
   },
   [ChainId.BTTC]: {
     chainId: '0xc7',
@@ -160,8 +162,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'BTT',
       decimals: 18,
     },
-    rpcUrls: ['https://bttc.dev.kyberengineering.io'],
-    blockExplorerUrls: ['https://bttcscan.com'],
+    rpcUrls: [NETWORK_URLS[ChainId.BTTC]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.BTTC)],
   },
   [ChainId.VELAS]: {
     chainId: '0x6a',
@@ -171,8 +173,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'VLX',
       decimals: 18,
     },
-    rpcUrls: ['https://evmexplorer.velas.com/rpc'],
-    blockExplorerUrls: ['https://evmexplorer.velas.com'],
+    rpcUrls: [NETWORK_URLS[ChainId.VELAS]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.VELAS)],
   },
   [ChainId.OASIS]: {
     chainId: '0xa516',
@@ -182,8 +184,8 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'ROSE',
       decimals: 18,
     },
-    rpcUrls: ['https://emerald.oasis.dev'],
-    blockExplorerUrls: ['https://explorer.emerald.oasis.dev'],
+    rpcUrls: [NETWORK_URLS[ChainId.OASIS]],
+    blockExplorerUrls: [getExplorerUrl(ChainId.OASIS)],
   },
 }
 

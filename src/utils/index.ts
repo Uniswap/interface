@@ -67,7 +67,7 @@ export function isAddressString(value: any): string {
   }
 }
 
-function getEtherscanDomain(chainId: ChainId): string {
+export function getExplorerUrl(chainId: ChainId): string {
   switch (chainId) {
     case ChainId.MAINNET:
       return 'https://etherscan.io'
@@ -119,7 +119,7 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block',
 ): string {
-  const prefix = getEtherscanDomain(chainId)
+  const prefix = getExplorerUrl(chainId)
 
   switch (type) {
     case 'transaction': {
