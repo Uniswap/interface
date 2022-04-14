@@ -68,7 +68,7 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.BSCTESTNET,
   ChainId.BSCMAINNET,
   ChainId.AVAXTESTNET,
-  ChainId.AVAXTESTNET,
+  ChainId.AVAXMAINNET,
   ChainId.FANTOM,
   ChainId.CRONOSTESTNET,
   ChainId.CRONOS,
