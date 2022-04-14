@@ -1,10 +1,12 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
 import { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
-import { BlockUpdater } from 'lib/hooks/useBlockNumber'
+import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
+import { TokenListProvider } from 'lib/hooks/useTokenList'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
@@ -29,7 +31,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
-  height: 356px;
+  height: 360px;
   min-width: 300px;
   padding: 0.25em;
   position: relative;
@@ -80,21 +82,12 @@ const DialogWrapper = styled.div`
   }
 `
 
-function Updaters() {
-  return (
-    <>
-      <BlockUpdater />
-      <MulticallUpdater />
-      <TransactionsUpdater />
-    </>
-  )
-}
-
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcEndpoint?: string | JsonRpcProvider
+  tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
   className?: string
@@ -130,8 +123,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
                     <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                      <Updaters />
-                      {children}
+                      <BlockNumberProvider>
+                        <MulticallUpdater />
+                        <TransactionsUpdater />
+                        <TokenListProvider list={props.tokenList}>{children}</TokenListProvider>
+                      </BlockNumberProvider>
                     </ActiveWeb3Provider>
                   </AtomProvider>
                 </ReduxProvider>

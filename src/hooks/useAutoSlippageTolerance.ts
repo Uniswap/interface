@@ -13,6 +13,7 @@ import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
 
 const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
+export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
 
 /**
  * Return a guess of the gas cost used in computing slippage tolerance for a given trade
@@ -44,7 +45,7 @@ export default function useAutoSlippageTolerance(
   const nativeCurrencyPrice = useUSDCPrice((trade && nativeCurrency) ?? undefined)
 
   return useMemo(() => {
-    if (!trade || onL2) return ONE_TENTHS_PERCENT
+    if (!trade || onL2) return DEFAULT_AUTO_SLIPPAGE
 
     const nativeGasCost =
       nativeGasPrice && typeof gasEstimate === 'number'

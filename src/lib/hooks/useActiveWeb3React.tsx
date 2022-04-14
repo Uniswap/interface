@@ -7,7 +7,7 @@ import { Url } from '@web3-react/url'
 import { useAtom, WritableAtom } from 'jotai'
 import { atom } from 'jotai'
 import JsonRpcConnector from 'lib/utils/JsonRpcConnector'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 
 type Web3ContextType = {
   connector: Connector
@@ -16,6 +16,7 @@ type Web3ContextType = {
   accounts?: ReturnType<Web3ReactHooks['useAccounts']>
   account?: ReturnType<Web3ReactHooks['useAccount']>
   active?: ReturnType<Web3ReactHooks['useIsActive']>
+  activating?: ReturnType<Web3ReactHooks['useIsActivating']>
   error?: ReturnType<Web3ReactHooks['useError']>
   ensNames?: ReturnType<Web3ReactHooks['useENSNames']>
   ensName?: ReturnType<Web3ReactHooks['useENSName']>
@@ -80,32 +81,20 @@ export function ActiveWeb3Provider({
 
   const library = hooks.useProvider()
 
-  // TODO(zzmp): walletconnect returns chainId as a number, so web3-react incorrectly parses it as hex.
-  const [chainId, setChainId] = useState(hooks.useChainId())
-  useEffect(() => {
-    let stale = false
-    library?.getNetwork().then(({ chainId }) => {
-      if (!stale) {
-        setChainId(chainId)
-      }
-    })
-    return () => {
-      stale = true
-    }
-  }, [library])
-
   const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
+  const activating = hooks.useIsActivating()
   const active = hooks.useIsActive()
-  const error = hooks.useError()
+  const chainId = hooks.useChainId()
   const ensNames = hooks.useENSNames()
   const ensName = hooks.useENSName()
+  const error = hooks.useError()
   const web3 = useMemo(() => {
-    if (connector === EMPTY || !active) {
+    if (connector === EMPTY || !(active || activating)) {
       return EMPTY_CONTEXT
     }
-    return { connector, library, chainId, accounts, account, active, error, ensNames, ensName }
-  }, [account, accounts, active, chainId, connector, ensName, ensNames, error, library])
+    return { connector, library, chainId, accounts, account, active, activating, error, ensNames, ensName }
+  }, [account, accounts, activating, active, chainId, connector, ensName, ensNames, error, library])
 
   // Log web3 errors to facilitate debugging.
   useEffect(() => {
