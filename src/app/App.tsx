@@ -15,6 +15,7 @@ import { config } from 'src/config'
 import { BiometricCheck } from 'src/features/biometrics'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationBannerWrapper } from 'src/features/notifications/NotificationBanner'
+import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { enableAnalytics } from 'src/features/telemetry'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
@@ -28,6 +29,7 @@ if (!__DEV__) {
 }
 
 initializeRemoteConfig()
+initOneSignal()
 enableAnalytics()
 // https://github.com/software-mansion/react-native-reanimated/issues/2758
 enableLayoutAnimations(true)

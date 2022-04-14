@@ -1,7 +1,7 @@
 import { DrawerActions } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
@@ -19,6 +19,7 @@ import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceLi
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -29,9 +30,13 @@ import { sleep } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
+// TODO: move to appropriate screen in the onboarding flow
+const usePromptPushNotificationPermission = () => useEffect(() => promptPushPermission(), [])
+
 export function HomeScreen({ navigation }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
+  usePromptPushNotificationPermission()
 
   const { t } = useTranslation()
 
