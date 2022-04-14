@@ -158,10 +158,6 @@ export default function Menu() {
             <MessageCircle size={14} />
             <div>Discord</div>
           </MenuItem>
-          {/* <MenuItem href="https://info.uniswap.org/">
-            <PieChart size={14} />
-            <div>Analytics</div>
-          </MenuItem> */}
         </MenuFlyout>
       )}
     </StyledMenu>

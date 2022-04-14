@@ -120,6 +120,7 @@ const StyledImage = styled.img`
 export default function CTACards() {
   const { t } = useTranslation()
 
+  return null
   return (
     <CTASection>
       <CTA1 href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}>
