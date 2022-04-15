@@ -1,4 +1,5 @@
 import { Action } from '@reduxjs/toolkit'
+import { arrayify, isHexString } from 'ethers/lib/utils'
 import { NativeEventEmitter, NativeModules } from 'react-native'
 import { eventChannel } from 'redux-saga'
 import { getSignerManager } from 'src/app/walletContext'
@@ -17,6 +18,7 @@ import {
   addSession,
   removeSession,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { ensureLeading0x } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { createSaga } from 'src/utils/saga'
 import { call, put, take } from 'typed-redux-saga'
@@ -102,10 +104,19 @@ export function* signWcMessage(params: SignMessageParams) {
   }
 }
 
+// If the message to be signed is a hex string, it must be converted to an array:
+// https://docs.ethers.io/v5/api/signer/#Signer--signing-methods
 async function signMessage(message: string, account: Account, signerManager: SignerManager) {
   const signer = await signerManager.getSignerForAccount(account)
-  const signature = await signer.signMessage(message)
-  return signature
+
+  let signature
+  if (isHexString(ensureLeading0x(message))) {
+    signature = await signer.signMessage(arrayify(ensureLeading0x(message)))
+  } else {
+    signature = await signer.signMessage(message)
+  }
+
+  return ensureLeading0x(signature)
 }
 
 export const { wrappedSaga: signMessageSaga, actions: signMessageActions } = createSaga(

@@ -24,7 +24,9 @@ export function ClientDetails({ dapp, method }: { dapp: DappInfo; method: EthMet
       <Image source={{ uri: dapp.icon, height: DAPP_IMAGE_SIZE, width: DAPP_IMAGE_SIZE }} />
       <Flex centered gap="none">
         <Text variant="bodyLg">{getReadableMethodName(method)}</Text>
-        <Text variant="bodyLgBold">{dapp.name}</Text>
+        <Text textAlign="center" variant="bodyLgBold">
+          {dapp.name}
+        </Text>
         <LinkButton mt="xs" textColor="blue" url={dapp.url}>
           {dapp.url}
         </LinkButton>
