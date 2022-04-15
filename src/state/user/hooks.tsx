@@ -469,7 +469,7 @@ export function useShowTradeRoutes(): boolean {
 
 export function useShowTopTrendingSoonTokens(): boolean {
   const showTrendingSoon = useSelector((state: AppState) => state.user.showTopTrendingSoonTokens)
-  return showTrendingSoon
+  return showTrendingSoon ?? true
 }
 
 export function useToggleLiveChart(): () => void {
