@@ -21,18 +21,21 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
   const srcs = useCurrencyLogoURIs(tokenInfo)
 
   const [attempt, setAttempt] = useState(0)
-  const onError = useCallback((e) => {
-    if (e.target.src) badSrcs.add(e.target.src)
-    setAttempt((attempt) => ++attempt)
-  }, [])
-
   const src = useMemo(() => {
     // Trigger a re-render when an error occurs.
     void attempt
 
     return srcs.find((src) => !badSrcs.has(src))
   }, [attempt, srcs])
+  const onError = useCallback(
+    (e) => {
+      if (src) badSrcs.add(src)
+      setAttempt((attempt) => ++attempt)
+    },
+    [src]
+  )
 
+  console.log('zzmp', tokenInfo.symbol, src)
   if (!src) return <MissingToken color="secondary" {...rest} />
 
   const alt = tokenInfo.name || tokenInfo.symbol
