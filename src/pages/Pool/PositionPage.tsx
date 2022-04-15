@@ -14,10 +14,13 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { KROM } from 'constants/tokens'
+import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useGaslessCallback, useGaslessProvider } from 'hooks/useGaslessCallback'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
@@ -32,6 +35,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
+import { useIsExpertMode, useIsGaslessMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
 import { MEDIA_WIDTHS } from 'theme'
@@ -367,6 +371,12 @@ export function PositionPage({
 
   const removed = liquidity?.eq(0)
 
+  const { gaslessCallback } = useGaslessCallback()
+
+  const kromatikaRouter = useKromatikaRouter()
+
+  const isExpertMode = useIsGaslessMode()
+
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
@@ -416,7 +426,7 @@ export function PositionPage({
     // if there was a tx hash, we want to clear the input
     if (collectMigrationHash) {
       // dont jump to pool page if creating
-      history.push('/pool/')
+      history.push('/swap/')
     }
     //setCollectMigrationHash('')
   }, [history, collectMigrationHash])
@@ -629,32 +639,99 @@ export function PositionPage({
           gasLimit: calculateGasMargin(chainId, estimate),
         }
 
-        return library
-          .getSigner()
-          .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
-            setCollectMigrationHash(response.hash)
-            setCollecting(false)
+        if (isExpertMode && kromatikaRouter) {
+          const routerCalldata = kromatikaRouter.interface.encodeFunctionData('execute', [
+            LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+            calldata,
+          ])
 
-            ReactGA.event({
-              category: 'Liquidity',
-              action: 'Cancel',
-              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
-            })
+          const txParams = {
+            data: routerCalldata,
+            to: kromatikaRouter.address,
+            from: account,
+            gasLimit: calculateGasMargin(chainId, estimate).add(100000).toHexString(),
+            signatureType: 'EIP712_SIGN',
+          }
 
-            addTransaction(response, {
-              type: TransactionType.COLLECT_FEES,
-              currencyId0: currencyId(feeValue0.currency),
-              currencyId1: currencyId(feeValue1.currency),
+          return gaslessCallback().then((gaslessProvider) => {
+            if (!gaslessProvider) return
+            return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
+              console.log(response)
+
+              const txResponse = await poll(
+                async () => {
+                  const tx = await gaslessProvider.getTransaction(response)
+                  if (tx === null) {
+                    return undefined
+                  }
+                  const blockNumber = await gaslessProvider._getInternalBlockNumber(
+                    100 + 2 * gaslessProvider.pollingInterval
+                  )
+                  return gaslessProvider._wrapTransaction(tx, response, blockNumber)
+                },
+                { oncePoll: gaslessProvider }
+              )
+
+              setCollectMigrationHash(response)
+              setCollecting(false)
+
+              ReactGA.event({
+                category: 'Liquidity',
+                action: 'Cancel',
+                label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+              })
+
+              if (txResponse) {
+                addTransaction(txResponse, {
+                  type: TransactionType.COLLECT_FEES,
+                  currencyId0: currencyId(feeValue0.currency),
+                  currencyId1: currencyId(feeValue1.currency),
+                })
+              }
+              history.push('/limitorder/')
             })
-            history.push('/limitorder/')
           })
+        } else {
+          return library
+            .getSigner()
+            .sendTransaction(newTxn)
+            .then((response: TransactionResponse) => {
+              setCollectMigrationHash(response.hash)
+              setCollecting(false)
+
+              ReactGA.event({
+                category: 'Liquidity',
+                action: 'Cancel',
+                label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+              })
+
+              addTransaction(response, {
+                type: TransactionType.COLLECT_FEES,
+                currencyId0: currencyId(feeValue0.currency),
+                currencyId1: currencyId(feeValue1.currency),
+              })
+              history.push('/swap/')
+            })
+        }
       })
       .catch((error) => {
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, limitManager, account, tokenId, addTransaction, library])
+  }, [
+    chainId,
+    feeValue0,
+    feeValue1,
+    limitManager,
+    account,
+    tokenId,
+    library,
+    isExpertMode,
+    kromatikaRouter,
+    gaslessCallback,
+    history,
+    addTransaction,
+  ])
 
   const ownsNFT = owner === account
 
@@ -691,11 +768,11 @@ export function PositionPage({
           {isClosed ? (
             <Trans>Collecting amounts will withdraw currently available amounts for you.</Trans>
           ) : (
-            <Trans>Canceling the trade will withdraw available amounts for you.</Trans>
+            <Trans>Canceling the limit order will withdraw available amounts for you.</Trans>
           )}
         </TYPE.italic>
         <ButtonPrimary onClick={isClosed ? collect : cancel}>
-          {isClosed ? <Trans>Collect</Trans> : <Trans>Cancel Trade</Trans>}
+          {isClosed ? <Trans>Collect</Trans> : <Trans>Cancel</Trans>}
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -733,13 +810,13 @@ export function PositionPage({
               topContent={modalHeader}
             />
           )}
-          pendingText={isClosed ? <Trans>Collecting tokens</Trans> : <Trans>Cancelling trade</Trans>}
+          pendingText={isClosed ? <Trans>Collecting tokens</Trans> : <Trans>Cancelling limit order</Trans>}
         />
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
-            <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
+            <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/swap">
               <HoverText>
-                <Trans>← Back to Dashboard</Trans>
+                <Trans>← Back to Trade</Trans>
               </HoverText>
             </Link>
             <ResponsiveRow>
@@ -780,7 +857,7 @@ export function PositionPage({
                       ) : (
                         <>
                           <TYPE.main color={theme.white}>
-                            <Trans>Cancel Trade</Trans>
+                            <Trans>Cancel</Trans>
                           </TYPE.main>
                         </>
                       )}
@@ -904,7 +981,7 @@ export function PositionPage({
                 <RowBetween style={{ alignItems: 'flex-start' }}>
                   <AutoColumn gap="2px">
                     <Label>
-                      <Trans>Trade History</Trans>
+                      <Trans>Limit Order History</Trans>
                     </Label>
                   </AutoColumn>
                 </RowBetween>
@@ -921,7 +998,7 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Created Limit Trade {currencyCreatedEventAmount?.toSignificant(4)}{' '}
+                        Created Limit Order {currencyCreatedEventAmount?.toSignificant(4)}{' '}
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}{' '}

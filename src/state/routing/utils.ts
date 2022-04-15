@@ -1,7 +1,8 @@
-import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Ether, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
+import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 
-import { GetQuoteResult } from './types'
+import { GetSwapInchResult, TokenInRoute } from './types'
 
 /**
  * Transforms a Routing API quote into an array of routes that
@@ -10,42 +11,57 @@ import { GetQuoteResult } from './types'
 export function computeRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
-  quoteResult: Pick<GetQuoteResult, 'route'> | undefined
-):
-  | {
-      route: Route<Currency, Currency>
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
-  | undefined {
-  if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
+  fromToken: TokenInRoute | undefined,
+  toToken: TokenInRoute | undefined,
+  quoteResult: Pick<GetSwapInchResult, 'protocols'> | undefined,
+  inAmount: string | undefined,
+  outAmount: string | undefined
+) {
+  if (
+    !quoteResult ||
+    !quoteResult.protocols ||
+    !currencyIn ||
+    !currencyOut ||
+    !inAmount ||
+    !outAmount ||
+    !fromToken ||
+    !toToken
+  )
+    return undefined
 
-  if (quoteResult.route.length === 0) return []
+  if (quoteResult.protocols.length === 0) return []
 
-  const parsedCurrencyIn = currencyIn.isNative
-    ? Ether.onChain(currencyIn.chainId)
-    : parseToken(quoteResult.route[0][0].tokenIn)
+  const parsedTokenIn = parseToken(fromToken, currencyIn.chainId)
+  const parsedTokenOut = parseToken(toToken, currencyOut.chainId)
 
-  const parsedCurrencyOut = currencyOut.isNative
-    ? Ether.onChain(currencyOut.chainId)
-    : parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
+  if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
+  if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
+
+  const parsedCurrencyIn = currencyIn.isNative ? Ether.onChain(currencyIn.chainId) : parsedTokenIn
+  const parsedCurrencyOut = currencyOut.isNative ? Ether.onChain(currencyOut.chainId) : parsedTokenOut
 
   try {
-    return quoteResult.route.map((route) => {
-      const rawAmountIn = route[0].amountIn
-      const rawAmountOut = route[route.length - 1].amountOut
+    // take the first route
+    const bestProtocol = quoteResult.protocols[0]
+    if (bestProtocol.length === 0) return []
+    return bestProtocol.map((route) => {
+      return route.map((r) => {
+        const part = new Percent(parseFloat(r.part) * 100, 10000)
 
-      if (!rawAmountIn || !rawAmountOut) {
-        throw new Error('Expected both amountIn and amountOut to be present')
-      }
+        const rawAmountIn = part.multiply(inAmount)
+        const rawAmountOut = part.multiply(outAmount).multiply(JSBI.BigInt(2))
+        if (!rawAmountIn || !rawAmountOut) {
+          throw new Error('Expected both amountIn and amountOut to be present')
+        }
 
-      return {
-        route: new Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut),
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
-      }
+        return new Pair(
+          CurrencyAmount.fromRawAmount(parseToken(fromToken, currencyIn.chainId), rawAmountIn.quotient),
+          CurrencyAmount.fromRawAmount(parseToken(toToken, currencyOut.chainId), rawAmountOut.quotient)
+        )
+      })
     })
   } catch (e) {
+    console.log(e)
     // `Route` constructor may throw if inputs/outputs are temporarily out of sync
     // (RTK-Query always returns the latest data which may not be the right inputs/outputs)
     // This is not fatal and will fix itself in future render cycles
@@ -53,23 +69,12 @@ export function computeRoutes(
   }
 }
 
-const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Token => {
-  return new Token(chainId, address, parseInt(decimals.toString()), symbol)
-}
-
-const parsePool = ({
-  fee,
-  sqrtRatioX96,
-  liquidity,
-  tickCurrent,
-  tokenIn,
-  tokenOut,
-}: GetQuoteResult['route'][0][0]): Pool =>
-  new Pool(
-    parseToken(tokenIn),
-    parseToken(tokenOut),
-    parseInt(fee) as FeeAmount,
-    sqrtRatioX96,
-    liquidity,
-    parseInt(tickCurrent)
+const parseToken = ({ address, decimals, symbol, name }: TokenInRoute, chainId: number): Token => {
+  return new Token(
+    chainId,
+    address == '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' ? WETH9[chainId].address : address,
+    parseInt(decimals.toString()),
+    symbol,
+    name
   )
+}

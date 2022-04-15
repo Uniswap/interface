@@ -12,7 +12,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
+import { useClientSideRouter, useExpertModeManager, useGaslessModeManager } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -118,7 +118,7 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-export default function SettingsTab() {
+export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
   const { chainId } = useActiveWeb3React()
 
   const node = useRef<HTMLDivElement>()
@@ -127,7 +127,9 @@ export default function SettingsTab() {
 
   const theme = useContext(ThemeContext)
 
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const [expertMode, toggleExpertMode] = useGaslessModeManager()
+
+  const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -190,7 +192,11 @@ export default function SettingsTab() {
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14}>
-              <Trans>Kromatika Settings</Trans>
+              <Trans>Transaction Settings</Trans>
+            </Text>
+            <TransactionSettings placeholderSlippage={placeholderSlippage} />
+            {/* <Text fontWeight={600} fontSize={14}>
+              <Trans>Interface Settings</Trans>
             </Text>
             <RowBetween>
               <RowFixed>
@@ -214,7 +220,7 @@ export default function SettingsTab() {
                       }
                 }
               />
-            </RowBetween>
+            </RowBetween> */}
           </AutoColumn>
         </MenuFlyout>
       )}

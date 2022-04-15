@@ -12,7 +12,6 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
-import { ChainName, SupportedChainId } from 'constants/chains'
 import { KROM } from 'constants/tokens'
 import { useV3Positions } from 'hooks/useV3Positions'
 import JSBI from 'jsbi'
@@ -466,8 +465,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
   )
 
   // check whether the user has approved the router on the input token
-  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade)
-  const { state: signatureState, signatureData, gatherPermitSignature } = useERC20PermitFromTrade(trade)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, undefined, undefined)
+  const { state: signatureState, signatureData, gatherPermitSignature } = useERC20PermitFromTrade(trade, undefined)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {

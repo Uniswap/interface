@@ -2,13 +2,26 @@ import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { BigintIsh, Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { encodeSqrtRatioX96, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { computePoolAddress, encodeSqrtRatioX96, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { toHex } from '@uniswap/v3-sdk'
 import { useTokenComparator } from 'components/SearchModal/sorting'
+import {
+  KROM_TOKEN_ADDRESSES,
+  KROMATIKA_ROUTER_ADDRESSES,
+  LIMIT_ORDER_MANAGER_ADDRESSES,
+  V3_CORE_FACTORY_ADDRESSES,
+} from 'constants/addresses'
 import { WETH9_EXTENDED } from 'constants/tokens'
+import { poll } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { ReactNode, useMemo } from 'react'
-import { useIsExpertMode, useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import {
+  useIsExpertMode,
+  useIsGaslessMode,
+  useUserSlippageToleranceWithDefault,
+  useUserTickSize,
+} from 'state/user/hooks'
 import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
 import { TransactionType } from '../state/transactions/actions'
@@ -18,9 +31,10 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useLimitOrderManager } from './useContract'
+import { useKromatikaRouter, useLimitOrderManager, useUniswapUtils } from './useContract'
 import useENS from './useENS'
-import { SignatureData } from './useERC20Permit'
+import { SignatureData, UseERC20PermitState } from './useERC20Permit'
+import { useGaslessCallback, useGaslessProvider } from './useGaslessCallback'
 import { useActiveWeb3React } from './web3'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
@@ -72,9 +86,68 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const limitOrderManager = useLimitOrderManager()
+  const uniswapUtils = useUniswapUtils()
   const argentWalletContract = useArgentWalletContract()
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
+
+  const priceInfo = useMemo(() => {
+    if (!chainId || !priceAmount || !parsedAmount) return undefined
+
+    const value = parsedAmount.currency.isNative ? toHex(parsedAmount.quotient) : toHex('0')
+
+    const weth = WETH9_EXTENDED[chainId]
+
+    const token0: Token = parsedAmount.currency.isToken ? parsedAmount.currency.wrapped : weth
+    const token1: Token = priceAmount.quoteCurrency.isToken ? priceAmount.quoteCurrency.wrapped : weth
+    let amount0: CurrencyAmount<Currency> = parsedAmount
+    let amount1: CurrencyAmount<Currency> = CurrencyAmount.fromRawAmount(priceAmount.quoteCurrency, 0)
+
+    // sort tokens
+    const sortedTokens: Token[] = token0.sortsBefore(token1) ? [token0, token1] : [token1, token0]
+
+    let targetPrice = priceAmount
+
+    if (sortedTokens[1] == token0) {
+      // invert
+      ;[amount0, amount1] = [amount1, amount0]
+      targetPrice = priceAmount.invert()
+    }
+
+    const amount0Min = calculateSlippageAmount(amount0, allowedSlippage)[0]
+    const amount1Min = calculateSlippageAmount(amount1, allowedSlippage)[0]
+    const sqrtPriceX96 = encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString()
+
+    return {
+      sqrtPriceX96,
+      sortedTokens,
+      amount0: toHex(amount0?.quotient),
+      amount1: toHex(amount1?.quotient),
+      amount0Min: toHex(amount0Min),
+      amount1Min: toHex(amount1Min),
+    }
+  }, [allowedSlippage, chainId, parsedAmount, priceAmount])
+
+  // const [userTickSize, setUserTickSize] = useUserTickSize()
+
+  // const poolAddress = useMemo(() => {
+  //   const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
+  //   if (!v3CoreFactoryAddress || !priceInfo || !trade) return undefined
+  //   return computePoolAddress({
+  //     factoryAddress: v3CoreFactoryAddress,
+  //     tokenA: priceInfo?.sortedTokens[0],
+  //     tokenB: priceInfo?.sortedTokens[1],
+  //     fee: trade?.route.pools[0].fee,
+  //   })
+  // }, [chainId, priceInfo, trade])
+
+  // const { result: estimatedTicks } = useSingleCallResult(uniswapUtils, 'calculateLimitTicks', [
+  //   poolAddress?.toString() ?? undefined,
+  //   priceInfo?.sqrtPriceX96 ?? undefined,
+  //   priceInfo?.amount0 ?? undefined,
+  //   priceInfo?.amount1 ?? undefined,
+  //   userTickSize,
+  // ])
 
   return useMemo(() => {
     if (
@@ -86,7 +159,7 @@ function useSwapCallArguments(
       !limitOrderManager ||
       !parsedAmount ||
       !priceAmount ||
-      !serviceFee ||
+      !priceInfo ||
       !gasAmount
     )
       return []
@@ -142,44 +215,20 @@ function useSwapCallArguments(
 
     const value = parsedAmount.currency.isNative ? toHex(parsedAmount.quotient) : toHex('0')
 
-    const weth = WETH9_EXTENDED[chainId]
-
-    const token0: Token = parsedAmount.currency.isToken ? parsedAmount.currency.wrapped : weth
-    const token1: Token = priceAmount.quoteCurrency.isToken ? priceAmount.quoteCurrency.wrapped : weth
-    let amount0: CurrencyAmount<Currency> = parsedAmount
-    let amount1: CurrencyAmount<Currency> = CurrencyAmount.fromRawAmount(priceAmount.quoteCurrency, 0)
-
-    // sort tokens
-    const sortedTokens: Token[] = token0.sortsBefore(token1) ? [token0, token1] : [token1, token0]
-
-    let targetPrice = priceAmount
-
-    if (sortedTokens[1] == token0) {
-      // invert
-      ;[amount0, amount1] = [amount1, amount0]
-      targetPrice = priceAmount.invert()
-    }
-
-    const amount0Min = calculateSlippageAmount(amount0, allowedSlippage)[0]
-
-    const amount1Min = calculateSlippageAmount(amount1, allowedSlippage)[0]
-
-    if (targetPrice && sortedTokens) {
-      calldatas.push(
-        limitOrderManager.interface.encodeFunctionData('placeLimitOrder', [
-          {
-            _token0: sortedTokens[0].address,
-            _token1: sortedTokens[1].address,
-            _fee: trade.route.pools[0].fee.toString(),
-            _sqrtPriceX96: encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString(),
-            _amount0: toHex(amount0?.quotient),
-            _amount1: toHex(amount1?.quotient),
-            _amount0Min: toHex(amount0Min),
-            _amount1Min: toHex(amount1Min),
-          },
-        ])
-      )
-    }
+    calldatas.push(
+      limitOrderManager.interface.encodeFunctionData('placeLimitOrder', [
+        {
+          _token0: priceInfo?.sortedTokens[0].address,
+          _token1: priceInfo?.sortedTokens[1].address,
+          _fee: trade.route.pools[0].fee.toString(),
+          _sqrtPriceX96: priceInfo?.sqrtPriceX96,
+          _amount0: priceInfo?.amount0,
+          _amount1: priceInfo?.amount1,
+          _amount0Min: priceInfo?.amount0Min,
+          _amount1Min: priceInfo?.amount1Min,
+        },
+      ])
+    )
 
     const calldata =
       calldatas.length === 1 ? calldatas[0] : limitOrderManager.interface.encodeFunctionData('multicall', [calldatas])
@@ -218,7 +267,7 @@ function useSwapCallArguments(
     limitOrderManager,
     parsedAmount,
     priceAmount,
-    serviceFee,
+    priceInfo,
     gasAmount,
     signatureData,
     argentWalletContract,
@@ -315,7 +364,11 @@ export function useSwapCallback(
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const expertMode = useIsExpertMode()
+  const { gaslessCallback } = useGaslessCallback()
+
+  const isExpertMode = useIsGaslessMode()
+
+  const kromatikaRouter = useKromatikaRouter()
 
   const swapCalls = useSwapCallArguments(
     trade,
@@ -408,55 +461,126 @@ export function useSwapCallback(
           call: { address, calldata, value },
         } = bestCallOption
 
-        return library
-          .getSigner()
-          .sendTransaction({
+        if (isExpertMode && kromatikaRouter) {
+          const routerCalldata = kromatikaRouter.interface.encodeFunctionData('execute', [
+            LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+            calldata,
+          ])
+
+          const gasLimit =
+            'gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) } : {}
+          const txParams = {
+            data: routerCalldata,
+            to: kromatikaRouter.address,
             from: account,
-            to: address,
-            data: calldata,
-            // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption
-              ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
-              : {}),
+            gasLimit: gasLimit ? gasLimit?.gasLimit?.add(100000).toHexString() : 700000,
+            signatureType: 'EIP712_SIGN',
             ...(value && !isZero(value) ? { value } : {}),
-          })
-          .then((response) => {
-            addTransaction(
-              response,
-              trade.tradeType === TradeType.EXACT_INPUT
-                ? {
-                    type: TransactionType.SWAP,
-                    tradeType: TradeType.EXACT_INPUT,
-                    inputCurrencyId: currencyId(trade.inputAmount.currency),
-                    inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                    expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                    outputCurrencyId: currencyId(trade.outputAmount.currency),
-                    minimumOutputCurrencyAmountRaw: '',
-                  }
-                : {
-                    type: TransactionType.SWAP,
-                    tradeType: TradeType.EXACT_OUTPUT,
-                    inputCurrencyId: currencyId(trade.inputAmount.currency),
-                    maximumInputCurrencyAmountRaw: '',
-                    outputCurrencyId: currencyId(trade.outputAmount.currency),
-                    outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                    expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                  }
-            )
+          }
+          console.log(txParams)
+          // sending gasless txn
+          return gaslessCallback()
+            .then((gaslessProvider) => {
+              if (!gaslessProvider) return
+              return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
+                console.log(response)
 
-            return response.hash
-          })
-          .catch((error) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error(t`Transaction rejected.`)
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
+                const txResponse = await poll(
+                  async () => {
+                    const tx = await gaslessProvider.getTransaction(response)
+                    if (tx === null) {
+                      return undefined
+                    }
+                    const blockNumber = await gaslessProvider._getInternalBlockNumber(
+                      100 + 2 * gaslessProvider.pollingInterval
+                    )
+                    return gaslessProvider._wrapTransaction(tx, response, blockNumber)
+                  },
+                  { oncePoll: gaslessProvider }
+                )
+                if (txResponse) {
+                  addTransaction(
+                    txResponse,
+                    trade.tradeType === TradeType.EXACT_INPUT
+                      ? {
+                          type: TransactionType.SWAP,
+                          tradeType: TradeType.EXACT_INPUT,
+                          inputCurrencyId: currencyId(trade.inputAmount.currency),
+                          inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                          expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                          outputCurrencyId: currencyId(trade.outputAmount.currency),
+                          minimumOutputCurrencyAmountRaw: '',
+                        }
+                      : {
+                          type: TransactionType.SWAP,
+                          tradeType: TradeType.EXACT_OUTPUT,
+                          inputCurrencyId: currencyId(trade.inputAmount.currency),
+                          maximumInputCurrencyAmountRaw: '',
+                          outputCurrencyId: currencyId(trade.outputAmount.currency),
+                          outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                          expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                        }
+                  )
+                }
 
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
-            }
-          })
+                return response
+              })
+            })
+            .catch((error) => {
+              // TODO
+              console.log(error)
+            })
+        } else {
+          return library
+            .getSigner()
+            .sendTransaction({
+              from: account,
+              to: address,
+              data: calldata,
+              // let the wallet try if we can't estimate the gas
+              ...('gasEstimate' in bestCallOption
+                ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
+                : {}),
+              ...(value && !isZero(value) ? { value } : {}),
+            })
+            .then((response) => {
+              addTransaction(
+                response,
+                trade.tradeType === TradeType.EXACT_INPUT
+                  ? {
+                      type: TransactionType.SWAP,
+                      tradeType: TradeType.EXACT_INPUT,
+                      inputCurrencyId: currencyId(trade.inputAmount.currency),
+                      inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                      expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                      outputCurrencyId: currencyId(trade.outputAmount.currency),
+                      minimumOutputCurrencyAmountRaw: '',
+                    }
+                  : {
+                      type: TransactionType.SWAP,
+                      tradeType: TradeType.EXACT_OUTPUT,
+                      inputCurrencyId: currencyId(trade.inputAmount.currency),
+                      maximumInputCurrencyAmountRaw: '',
+                      outputCurrencyId: currencyId(trade.outputAmount.currency),
+                      outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                      expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                    }
+              )
+
+              return response.hash
+            })
+            .catch((error) => {
+              // if the user rejected the tx, pass this along
+              if (error?.code === 4001) {
+                throw new Error(t`Transaction rejected.`)
+              } else {
+                // otherwise, the error was unexpected and we need to convey that
+                console.error(`Swap failed`, error, address, calldata, value)
+
+                throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+              }
+            })
+        }
       },
       error: null,
     }
@@ -470,6 +594,9 @@ export function useSwapCallback(
     recipient,
     recipientAddressOrName,
     swapCalls,
+    isExpertMode,
+    kromatikaRouter,
+    gaslessCallback,
     addTransaction,
   ])
 }

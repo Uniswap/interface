@@ -23,6 +23,8 @@ import {
   RedirectPathToLimitOrderOnly,
   RedirectToLimitOrder,
 } from './LimitOrder/redirects'
+import Market from './Market'
+import { RedirectToMarket } from './Market/redirects'
 import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
@@ -99,8 +101,9 @@ export default function App() {
             <Switch>
               <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
               <Route exact strict path="/limitorder" component={LimitOrder} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/swap" component={Swap} />
+              <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
+              <Route exact strict path="/swap" component={Market} />
+
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/pool/:tokenId" component={PositionPage} />
               <Route exact strict path="/stake/:tokenId" component={StakingModal} />

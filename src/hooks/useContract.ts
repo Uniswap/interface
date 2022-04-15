@@ -16,11 +16,13 @@ import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
+import KROMATIKA_ROUTER_ABI from 'abis/kromatika-router.json'
 import LIMIT_ORDER_MANAGER_ABI from 'abis/limit-order-manager.json'
 import SKROMATIKA_ABI from 'abis/sKromatika.json'
 import STAKING_ABI from 'abis/Staking.json'
 import STAKING_DISTRIBUTOR_ABI from 'abis/Staking-Distributor.json'
 import TREASURY_FEE_ABI from 'abis/treasury-fee.json'
+import UNISWAP_UTILS_ABI from 'abis/uniswap-utils.json'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
@@ -28,6 +30,7 @@ import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
+  KROMATIKA_ROUTER_ADDRESSES,
   LIMIT_ORDER_MANAGER_ADDRESSES,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MULTICALL_ADDRESS,
@@ -37,8 +40,8 @@ import {
   STAKING_ADDRESS,
   STAKING_DISTRIBUTOR_ADDRESS,
   TREASURY_FEE_ADDRESS,
+  UNISWAP_UTILS_ADDRESSES,
   V2_ROUTER_ADDRESS,
-  V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
@@ -50,11 +53,13 @@ import {
   EnsPublicResolver,
   EnsRegistrar,
   Erc20,
+  KromatikaRouter,
   LimitOrderManager,
   SKromatika,
   Staking,
   StakingDistributor,
   TreasuryFee,
+  UniswapUtils,
   Weth,
 } from '../abis/types'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
@@ -181,4 +186,12 @@ export function useV3Quoter() {
 
 export function useLimitOrderManager(): Contract | null {
   return useContract<LimitOrderManager>(LIMIT_ORDER_MANAGER_ADDRESSES, LIMIT_ORDER_MANAGER_ABI, true)
+}
+
+export function useUniswapUtils(): Contract | null {
+  return useContract<UniswapUtils>(UNISWAP_UTILS_ADDRESSES, UNISWAP_UTILS_ABI, false)
+}
+
+export function useKromatikaRouter(): Contract | null {
+  return useContract<KromatikaRouter>(KROMATIKA_ROUTER_ADDRESSES, KROMATIKA_ROUTER_ABI, false)
 }

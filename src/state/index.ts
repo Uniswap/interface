@@ -9,10 +9,12 @@ import { api as dataApi } from './data/slice'
 import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
 import logs from './logs/slice'
+import market from './market/reducer'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
 import multicall from './multicall/reducer'
-import { routingApi } from './routing/slice'
+import { routingApi0x } from './quote/slice'
+import { routingApiInch } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
@@ -25,6 +27,7 @@ const store = configureStore({
     user,
     transactions,
     swap,
+    market,
     mint,
     mintV3,
     burn,
@@ -33,12 +36,14 @@ const store = configureStore({
     lists,
     logs,
     [dataApi.reducerPath]: dataApi.reducer,
-    [routingApi.reducerPath]: routingApi.reducer,
+    [routingApi0x.reducerPath]: routingApi0x.reducer,
+    [routingApiInch.reducerPath]: routingApiInch.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
       .concat(dataApi.middleware)
-      .concat(routingApi.middleware)
+      .concat(routingApi0x.middleware)
+      .concat(routingApiInch.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: process.env.NODE_ENV === 'test' }),
 })

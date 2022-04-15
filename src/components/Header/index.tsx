@@ -332,12 +332,12 @@ export default function Header() {
           <Trans>Dashboard</Trans>
         </StyledNavLink>
         <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
-          <Trans>Limit Order</Trans>
+          <Trans>Limit</Trans>
         </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/stake'}>
-          <Trans>Stake </Trans>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <Trans>Swap</Trans>
         </StyledNavLink>
-        <StyledImage src={darkMode ? ComingSoon : ComingSoonLight}></StyledImage>
+        {/* <StyledImage src={darkMode ? ComingSoon : ComingSoonLight}></StyledImage> */}
       </HeaderLinks>
 
       <HeaderControls>

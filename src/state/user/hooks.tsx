@@ -29,9 +29,12 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserGaslessMode,
   updateUserGasPrice,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateUserTickOffset,
+  updateUserTickSize,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -110,6 +113,21 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
+export function useIsGaslessMode(): boolean {
+  return useAppSelector((state) => state.user.userGaslessMode)
+}
+
+export function useGaslessModeManager(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const gaslessMode = useIsGaslessMode()
+
+  const toggleSetGaslessMode = useCallback(() => {
+    dispatch(updateUserGaslessMode({ userGaslessMode: !gaslessMode }))
+  }, [gaslessMode, dispatch])
+
+  return [gaslessMode, toggleSetGaslessMode]
+}
+
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
   const dispatch = useAppDispatch()
 
@@ -126,7 +144,7 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
 }
 
 export function useRoutingAPIEnabled(): boolean {
-  return false
+  return true
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {
@@ -163,6 +181,36 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
     () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
     [userSlippageTolerance]
   )
+}
+
+export function useUserTickOffset(): [number, (newTickOffset: number) => void] {
+  const dispatch = useAppDispatch()
+
+  const userTickOffset = useAppSelector((state) => state.user.userTickOffset)
+
+  const setUserTickOffset = useCallback(
+    (newTickOffset: number) => {
+      dispatch(updateUserTickOffset({ userTickOffset: newTickOffset }))
+    },
+    [dispatch]
+  )
+
+  return [userTickOffset, setUserTickOffset]
+}
+
+export function useUserTickSize(): [number, (newTickSize: number) => void] {
+  const dispatch = useAppDispatch()
+
+  const userTickSize = useAppSelector((state) => state.user.userTickSize)
+
+  const setUserTickSize = useCallback(
+    (newTickSize: number) => {
+      dispatch(updateUserTickSize({ userTickSize: newTickSize }))
+    },
+    [dispatch]
+  )
+
+  return [userTickSize, setUserTickSize]
 }
 
 export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions: boolean) => void] {

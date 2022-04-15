@@ -1,9 +1,11 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import { ConnectionInfo, fetchJson, poll } from '@ethersproject/web'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DowntimeWarning from 'components/DowntimeWarning'
+import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
 import ReactGA from 'react-ga'
@@ -11,6 +13,7 @@ import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useV3DerivedMintInfo, useV3MintActionHandlers, useV3MintState } from 'state/mint/v3/hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import isZero from 'utils/isZero'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { LightCard } from '../../components/Card'
@@ -24,14 +27,14 @@ import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../../constants/addresses'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
-import { useLimitOrderManager } from '../../hooks/useContract'
+import { useKromatikaRouter, useLimitOrderManager } from '../../hooks/useContract'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/v3/actions'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode } from '../../state/user/hooks'
+import { useIsExpertMode, useIsGaslessMode } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -51,7 +54,6 @@ export default function AddLiquidity({
   const { account, chainId, library } = useActiveWeb3React()
   const location = useLocation()
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
-  const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const limitManager = useLimitOrderManager()
 
@@ -67,7 +69,13 @@ export default function AddLiquidity({
 
   const { independentField, typedValue } = useV3MintState()
 
+  const { gaslessCallback } = useGaslessCallback()
+
+  const kromatikaRouter = useKromatikaRouter()
+
   const { onFieldAInput } = useV3MintActionHandlers(true)
+
+  const isExpertMode = useIsGaslessMode()
 
   const isValid = !errorMessage
 
@@ -168,23 +176,77 @@ export default function AddLiquidity({
             ...txn,
             gasLimit: calculateGasMargin(chainId, estimate),
           }
-          return library
-            .getSigner()
-            .sendTransaction(newTxn)
-            .then((response: TransactionResponse) => {
-              setAttemptingTxn(false)
-              addTransaction(response, {
-                type: withdraw ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
-                baseCurrencyId: currencyId(baseCurrency),
-                expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
-              })
-              setTxHash(response.hash)
-              ReactGA.event({
-                category: 'Liquidity',
-                action: withdraw ? 'Remove' : 'Add',
-                label: [currencies[Field.CURRENCY_A]?.symbol].join('/'),
+
+          if (isExpertMode && kromatikaRouter) {
+            const routerCalldata = kromatikaRouter.interface.encodeFunctionData('execute', [
+              LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+              txn.data,
+            ])
+            const txParams = {
+              data: routerCalldata,
+              to: kromatikaRouter.address,
+              from: account,
+              gasLimit: calculateGasMargin(chainId, estimate).add(100000).toHexString(),
+              signatureType: 'EIP712_SIGN',
+              ...(txn.value && !isZero(txn.value) ? { value: txn.value } : {}),
+            }
+            return gaslessCallback().then((gaslessProvider) => {
+              if (!gaslessProvider) return
+              return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
+                console.log(response)
+
+                const txResponse = await poll(
+                  async () => {
+                    const tx = await gaslessProvider.getTransaction(response)
+                    if (tx === null) {
+                      return undefined
+                    }
+                    const blockNumber = await gaslessProvider._getInternalBlockNumber(
+                      100 + 2 * gaslessProvider.pollingInterval
+                    )
+                    return gaslessProvider._wrapTransaction(tx, response, blockNumber)
+                  },
+                  { oncePoll: gaslessProvider }
+                )
+                console.log(txResponse)
+                setAttemptingTxn(false)
+
+                if (txResponse) {
+                  addTransaction(txResponse, {
+                    type: withdraw ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
+                    baseCurrencyId: currencyId(baseCurrency),
+                    expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
+                  })
+
+                  setTxHash(response)
+                }
+
+                ReactGA.event({
+                  category: 'Liquidity',
+                  action: withdraw ? 'Remove' : 'Add',
+                  label: [currencies[Field.CURRENCY_A]?.symbol].join('/'),
+                })
               })
             })
+          } else {
+            return library
+              .getSigner()
+              .sendTransaction(newTxn)
+              .then((response: TransactionResponse) => {
+                setAttemptingTxn(false)
+                addTransaction(response, {
+                  type: withdraw ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
+                  baseCurrencyId: currencyId(baseCurrency),
+                  expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
+                })
+                setTxHash(response.hash)
+                ReactGA.event({
+                  category: 'Liquidity',
+                  action: withdraw ? 'Remove' : 'Add',
+                  label: [currencies[Field.CURRENCY_A]?.symbol].join('/'),
+                })
+              })
+          }
         })
         .catch((error) => {
           console.error('Failed to send transaction', error)
@@ -279,7 +341,7 @@ export default function AddLiquidity({
         <ButtonError
           style={{ marginTop: '8px' }}
           onClick={() => {
-            expertMode ? onAdd() : setShowConfirm(true)
+            setShowConfirm(true)
           }}
           disabled={!isValid || (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled)}
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A]}

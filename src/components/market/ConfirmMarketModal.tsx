@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { SignatureData, UseERC20PermitState } from 'hooks/useERC20Permit'
 import { ReactNode, useCallback, useMemo } from 'react'
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter from './SwapModalFooter'
-import SwapModalHeader from './SwapModalHeader'
+import MarketModalFooter from './MarketModalFooter'
+import MarketModalHeader from './MarketModalHeader'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
@@ -31,12 +30,11 @@ function tradeMeaningfullyDiffers(
   )
 }
 
-export default function ConfirmSwapModal({
+export default function ConfirmMarketModal({
   trade,
   originalTrade,
   onAcceptChanges,
-  serviceFee,
-  priceAmount,
+  allowedSlippage,
   onConfirm,
   onDismiss,
   recipient,
@@ -44,8 +42,6 @@ export default function ConfirmSwapModal({
   isOpen,
   attemptingTxn,
   txHash,
-  inputAmount,
-  outputAmount,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -53,14 +49,11 @@ export default function ConfirmSwapModal({
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
-  serviceFee: CurrencyAmount<Currency> | undefined
-  priceAmount: Price<Currency, Currency> | undefined
+  allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
-  inputAmount: CurrencyAmount<Currency> | undefined
-  outputAmount: CurrencyAmount<Currency> | undefined
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -77,22 +70,19 @@ export default function ConfirmSwapModal({
 
   const modalHeader = useCallback(() => {
     return trade ? (
-      <SwapModalHeader
+      <MarketModalHeader
         trade={trade}
-        serviceFee={serviceFee}
-        priceAmount={priceAmount}
-        inputAmount={inputAmount}
-        outputAmount={outputAmount}
+        allowedSlippage={allowedSlippage}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [trade, serviceFee, priceAmount, inputAmount, outputAmount, recipient, showAcceptChanges, onAcceptChanges])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
 
   const modalBottom = useCallback(() => {
     return trade ? (
-      <SwapModalFooter
+      <MarketModalFooter
         onConfirm={onConfirm}
         trade={trade}
         disabledConfirm={showAcceptChanges}
@@ -102,12 +92,12 @@ export default function ConfirmSwapModal({
   }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
-  const pendingText = trade ? (
+  const pendingText = (
     <Trans>
-      Trading {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for {priceAmount?.toSignificant(6)}{' '}
-      {outputAmount?.currency?.symbol}
+      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
+      {trade?.outputAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol}
     </Trans>
-  ) : null
+  )
 
   const confirmationContent = useCallback(
     () =>
@@ -115,7 +105,7 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={<Trans>Confirm Limit Order</Trans>}
+          title={<Trans>Confirm Swap</Trans>}
           onDismiss={onDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

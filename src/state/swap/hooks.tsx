@@ -3,6 +3,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Ether, NativeCurrency, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import {
+  computePoolAddress,
   encodeSqrtRatioX96,
   FeeAmount,
   nearestUsableTick,
@@ -10,10 +11,12 @@ import {
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
+  toHex,
   Trade as V3Trade,
 } from '@uniswap/v3-sdk'
+import { KROMATIKA_ROUTER_ADDRESSES, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { ChainName } from 'constants/chains'
-import { KROM } from 'constants/tokens'
+import { KROM, WETH9_EXTENDED } from 'constants/tokens'
 import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -25,10 +28,10 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { tryParseTick } from 'state/mint/v3/utils'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
-import { useNetworkGasPrice } from 'state/user/hooks'
+import { useNetworkGasPrice, useUserTickOffset, useUserTickSize } from 'state/user/hooks'
 
 import { useCurrency } from '../../hooks/Tokens'
-import { useLimitOrderManager } from '../../hooks/useContract'
+import { useLimitOrderManager, useUniswapUtils } from '../../hooks/useContract'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
@@ -157,6 +160,27 @@ export function applyExchangeRateTo(
   }
 }
 
+export function useKromatikaRouterInfo(): {
+  estimateAmountToApprove: CurrencyAmount<Currency> | undefined
+  spender: string | undefined
+} {
+  const { chainId } = useActiveWeb3React()
+  const estimateAmountToApprove = useMemo(() => {
+    if (!chainId) return undefined
+    return CurrencyAmount.fromRawAmount(KROM[chainId], 100000)
+  }, [chainId])
+
+  const spender = useMemo(() => {
+    if (!chainId) return undefined
+    return KROMATIKA_ROUTER_ADDRESSES[chainId]
+  }, [chainId])
+
+  return {
+    estimateAmountToApprove,
+    spender,
+  }
+}
+
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | null }
@@ -225,6 +249,8 @@ export function useDerivedSwapInfo(): {
 
   const gasAmount = useNetworkGasPrice()
 
+  const [userTickOffset, setUserTickOffset] = useUserTickOffset()
+
   // get quotes
   const v3Trade = useBestV3Trade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
@@ -260,9 +286,10 @@ export function useDerivedSwapInfo(): {
       : encodeSqrtRatioX96(price.denominator, price.numerator)
 
     let tick = TickMath.getTickAtSqrtRatio(sqrtRatioX96)
+    const tickOffset = userTickOffset ?? 1
     const nextTick = sorted
-      ? tick + 3 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
-      : tick - 3 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+      ? tick + tickOffset * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+      : tick - tickOffset * TICK_SPACINGS[bestTrade.route.pools[0].fee]
     const nextTickPrice = tickToPrice(price.baseCurrency.wrapped, price.quoteCurrency.wrapped, nextTick)
     if (!nextTickPrice.lessThan(price)) {
       tick = nextTick
@@ -278,7 +305,7 @@ export function useDerivedSwapInfo(): {
       : new Price(inputCurrency, outputCurrency, ratioX192, Q192)
 
     //return bestTrade.route.midPrice
-  }, [bestTrade, inputCurrency, outputCurrency])
+  }, [bestTrade, inputCurrency, outputCurrency, userTickOffset])
 
   const marketPrice = useMemo(() => {
     const priceTmp =
@@ -358,7 +385,7 @@ export function useDerivedSwapInfo(): {
   }, [parsedAmounts.input, parsedAmounts.output])
 
   if (price && minPrice && bestTrade?.route && price?.lessThan(minPrice)) {
-    inputError = inputError ?? <Trans>Please trade above the minimum price</Trans>
+    inputError = inputError ?? <Trans>Place limit order above the minimum price</Trans>
   }
 
   // compare input balance to max input based on version

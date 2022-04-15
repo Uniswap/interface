@@ -14,7 +14,13 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
+export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d')
+export const INCH_ROUTER_ADDRESS: AddressMap = {
+  ...constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d', [SupportedChainId.OPTIMISTIC_KOVAN]),
+  [SupportedChainId.OPTIMISM]: '0x1111111254760f7ab3f16433eea9304126dcd199',
+  [SupportedChainId.ARBITRUM_ONE]: '0x1111111254fb6c44bac0bed2854e76f90643097d',
+  [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
+}
 
 /**
  * The oldest V0 governance address
@@ -96,7 +102,7 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0xE592
   SupportedChainId.ARBITRUM_RINKEBY,
 ])
 export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
-  [SupportedChainId.KOVAN]: '0xec32237Be47D08F2C7B1a46D6F01f65c90Bf64e4',
+  [SupportedChainId.KOVAN]: '0x66E15bb53c9C5fB1B9Aa19D84920A3965cEad8a7',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '0x6bC9BFfF3CD847Fd1e061E3B275901b930872B4B',
   [SupportedChainId.OPTIMISM]: '0x7314Af7D05e054E96c44D7923E68d66475FfaAb8',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xf10A3841bc1ccEAe1DC162e66e615D2416A3adac',
@@ -110,6 +116,12 @@ export const KROM_TOKEN_ADDRESSES: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0x4f1BB8FD099170714AC6F756966616fCc39ae867',
   [SupportedChainId.ARBITRUM_ONE]: '0x55fF62567f09906A85183b866dF84bf599a4bf70',
   [SupportedChainId.MAINNET]: '0x3af33bef05c2dcb3c7288b77fe1c8d2aeba4d789',
+}
+export const UNISWAP_UTILS_ADDRESSES: AddressMap = {
+  [SupportedChainId.KOVAN]: '0x9E1E4f041877f1aB604E5B109Cf699545e20E4bC',
+}
+export const KROMATIKA_ROUTER_ADDRESSES: AddressMap = {
+  [SupportedChainId.KOVAN]: '0xDC994168F48ab7AC511Cb3729239f75B5c8267c0',
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
   SupportedChainId.ARBITRUM_ONE,

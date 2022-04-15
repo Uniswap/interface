@@ -31,6 +31,9 @@ export const updateHideClosedPositions = createAction<{ userHideClosedPositions:
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(
   'user/updateUserSlippageTolerance'
 )
+export const updateUserGaslessMode = createAction<{ userGaslessMode: boolean }>('user/updateUserGaslessMode')
+export const updateUserTickOffset = createAction<{ userTickOffset: number }>('user/updateUserTickOffset')
+export const updateUserTickSize = createAction<{ userTickSize: number }>('user/updateUserTickSize')
 export const updateUserGasPrice = createAction<{ userGasPrice: string }>('user/updateUserGasPrice')
 export const updateUserDeadline = createAction<{ userDeadline: number }>('user/updateUserDeadline')
 export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
