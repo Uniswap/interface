@@ -11,7 +11,7 @@ import VELAS from '../assets/networks/velas-network.png'
 import OASIS from '../assets/networks/oasis-network.svg'
 import BTT from '../assets/networks/bttc.png'
 
-export const SUPPORTED_NETWORKS = [
+export const SUPPORTED_NETWORKS: ChainId[] = [
   ChainId.MAINNET,
   ChainId.MATIC,
   ChainId.BSCMAINNET,
@@ -27,7 +27,8 @@ export const SUPPORTED_NETWORKS = [
   ...(process.env.REACT_APP_MAINNET_ENV === 'staging'
     ? [ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.BSCTESTNET, ChainId.AVAXTESTNET, ChainId.FANTOM, ChainId.CRONOSTESTNET]
     : []),
-] as const
+]
+
 export type SupportedNetwork = typeof SUPPORTED_NETWORKS[number]
 
 export const NETWORK_ICON = {

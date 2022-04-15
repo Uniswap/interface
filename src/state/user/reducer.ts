@@ -1,4 +1,4 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from 'constants/index'
 import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
 import {
@@ -18,6 +18,7 @@ import {
   toggleRebrandingAnnouncement,
   toggleLiveChart,
   toggleTradeRoutes,
+  toggleTopTrendingTokens,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 import { isMobile } from 'react-device-detect'
@@ -61,6 +62,7 @@ export interface UserState {
     [chainId: number]: boolean
   }
   showTradeRoutes: boolean
+  showTopTrendingSoonTokens: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -104,7 +106,8 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   rebrandingAnnouncement: true,
   showLiveCharts: defaultShowLiveCharts,
-  showTradeRoutes: isMobile ? false : true,
+  showTradeRoutes: !isMobile,
+  showTopTrendingSoonTokens: true,
 }
 
 export default createReducer(initialState, builder =>
@@ -191,5 +194,8 @@ export default createReducer(initialState, builder =>
     })
     .addCase(toggleTradeRoutes, state => {
       state.showTradeRoutes = !state.showTradeRoutes
+    })
+    .addCase(toggleTopTrendingTokens, state => {
+      state.showTopTrendingSoonTokens = !state.showTopTrendingSoonTokens
     }),
 )

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
-export default function useGetTagsFromSearchText(searchText: string) {
+export default function useGetTagsForSearchBox(searchText: string) {
   const [data, setData] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error>()

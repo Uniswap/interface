@@ -16,6 +16,8 @@ import {
   useShowTradeRoutes,
   useToggleLiveChart,
   useToggleTradeRoutes,
+  useToggleTopTrendingTokens,
+  useShowTopTrendingSoonTokens,
 } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useModalOpen, useToggleTransactionSettingsMenu, useToggleModal } from 'state/application/hooks'
@@ -28,6 +30,7 @@ import Tooltip from 'components/Tooltip'
 import MenuFlyout from 'components/MenuFlyout'
 import { isMobile } from 'react-device-detect'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
 enum SlippageError {
   InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',
@@ -403,7 +406,12 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
   const toggleMobileLiveChart = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
   const toggleTradeRoutes = useToggleTradeRoutes()
   const toggleMobileTradeRoutes = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
+  const isShowTrendingSoonTokens = useShowTopTrendingSoonTokens()
+  const toggleTopTrendingTokens = useToggleTopTrendingTokens()
   const { mixpanelHandler } = useMixpanel()
+
+  const topTrendingSoonTokens = useTopTrendingSoonTokensInCurrentNetwork()
+  const isShowTrendingSoonSetting = topTrendingSoonTokens.length > 0
   return (
     <>
       <Modal
@@ -535,6 +543,21 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
                   <Trans>Display Settings</Trans>
                 </StyledTitle>
                 <AutoColumn gap="md">
+                  {isShowTrendingSoonSetting && (
+                    <RowBetween>
+                      <RowFixed>
+                        <StyledLabel>Trending Soon</StyledLabel>
+                        <QuestionHelper text={t`Turn on to display tokens that could be trending soon.`} />
+                      </RowFixed>
+                      <Toggle
+                        isActive={isShowTrendingSoonTokens}
+                        toggle={() => {
+                          toggleTopTrendingTokens()
+                        }}
+                        size={isMobile ? 'md' : 'sm'}
+                      />
+                    </RowBetween>
+                  )}
                   <RowBetween>
                     <RowFixed>
                       <StyledLabel>Live Chart</StyledLabel>

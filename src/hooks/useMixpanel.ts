@@ -57,7 +57,7 @@ export enum MIXPANEL_TYPE {
   DISCOVER_SWAP_INITIATED,
 }
 
-const nativeNameFromETH = (chainId: any) => {
+export const nativeNameFromETH = (chainId: any) => {
   if (!chainId) return 'ETH'
   return [137, 80001].includes(chainId)
     ? 'MATIC'

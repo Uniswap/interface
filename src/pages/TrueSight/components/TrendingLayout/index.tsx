@@ -14,7 +14,7 @@ import LocalLoader from 'components/LocalLoader'
 import WarningIcon from 'components/LiveChart/WarningIcon'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
-import SwapButtonWithOptions from 'pages/TrueSight/components/SwapButtonWithOptions'
+import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import { ButtonEmpty } from 'components/Button'
 import { ChevronDown } from 'react-feather'
 import { TruncatedText } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
@@ -32,9 +32,7 @@ import Chart from 'pages/TrueSight/components/Chart'
 import dayjs from 'dayjs'
 import Divider from 'components/Divider'
 import getFormattedNumLongDiscoveredDetails from 'pages/TrueSight/utils/getFormattedNumLongDiscoveredDetails'
-
-const ITEM_PER_PAGE = 25
-const MAX_ITEM = 50
+import { TRENDING_ITEM_PER_PAGE, TRENDING_MAX_ITEM } from 'constants/index'
 
 const TrendingLayout = ({
   filter,
@@ -52,12 +50,12 @@ const TrendingLayout = ({
     data: trendingSoonData,
     isLoading: isLoadingTrendingSoonTokens,
     error: errorWhenLoadingTrendingSoonData,
-  } = useGetTrendingData(filter, currentPage, ITEM_PER_PAGE)
+  } = useGetTrendingData(filter, currentPage, TRENDING_ITEM_PER_PAGE)
   const trendingSoonTokens = trendingSoonData?.tokens ?? []
 
   const maxPage = Math.min(
-    Math.ceil((trendingSoonData?.total_number_tokens ?? 1) / ITEM_PER_PAGE),
-    MAX_ITEM / ITEM_PER_PAGE,
+    Math.ceil((trendingSoonData?.total_number_tokens ?? 1) / TRENDING_ITEM_PER_PAGE),
+    TRENDING_MAX_ITEM / TRENDING_ITEM_PER_PAGE,
   )
 
   useEffect(() => {
@@ -67,9 +65,12 @@ const TrendingLayout = ({
 
   const [chartTimeframe, setChartTimeframe] = useState<TrueSightTimeframe>(TrueSightTimeframe.ONE_DAY)
   const [chartCategory, setChartCategory] = useState<TrueSightChartCategory>(TrueSightChartCategory.TRADING_VOLUME)
-  const tokenNetwork = useMemo(() => (selectedToken ? selectedToken.present_on_chains[0] : undefined), [selectedToken])
+  const tokenNetwork = useMemo(
+    () => (selectedToken ? selectedToken.platforms.keys().next().value ?? undefined : undefined),
+    [selectedToken],
+  )
   const tokenAddress = useMemo(
-    () => (selectedToken && tokenNetwork ? selectedToken.platforms[tokenNetwork] : undefined),
+    () => (selectedToken && tokenNetwork ? selectedToken.platforms.get(tokenNetwork) : undefined),
     [selectedToken, tokenNetwork],
   )
   const { data: chartData, isLoading: isChartDataLoading } = useGetCoinGeckoChartData(
@@ -149,7 +150,7 @@ const TrendingLayout = ({
             {tokenData.number_holders <= 0 ? '--' : formattedNumLong(tokenData.number_holders, false)}
           </TableBodyItem>
           <TableBodyItem align="right" style={{ overflow: 'visible' }}>
-            <SwapButtonWithOptions
+            <ButtonWithOptions
               platforms={tokenData.platforms}
               style={{
                 minWidth: 'fit-content',

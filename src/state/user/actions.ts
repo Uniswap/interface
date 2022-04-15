@@ -31,7 +31,8 @@ export const addSerializedPair = createAction<{ serializedPair: SerializedPair }
 export const removeSerializedPair = createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>(
   'user/removeSerializedPair',
 )
-export const toggleURLWarning = createAction<void>('app/toggleURLWarning')
-export const toggleRebrandingAnnouncement = createAction<void>('app/toggleRebrandingAnnouncement')
-export const toggleLiveChart = createAction<{ chainId: number }>('application/toggleLiveChart')
-export const toggleTradeRoutes = createAction<void>('application/toggleTradeRoutes')
+export const toggleURLWarning = createAction<void>('user/toggleURLWarning')
+export const toggleRebrandingAnnouncement = createAction<void>('user/toggleRebrandingAnnouncement')
+export const toggleLiveChart = createAction<{ chainId: number }>('user/toggleLiveChart')
+export const toggleTradeRoutes = createAction<void>('user/toggleTradeRoutes')
+export const toggleTopTrendingTokens = createAction<void>('user/toggleTopTrendingTokens')

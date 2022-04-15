@@ -11,6 +11,7 @@ import FilterBar from 'pages/TrueSight/components/FilterBar'
 import TrendingSoonLayout from 'pages/TrueSight/components/TrendingSoonLayout'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import TrendingLayout from 'pages/TrueSight/components/TrendingLayout'
+import { ChainId } from '@dynamic-amm/sdk'
 
 export enum TrueSightTabs {
   TRENDING_SOON = 'trending_soon',
@@ -32,6 +33,12 @@ export interface TrueSightFilter {
   timeframe: TrueSightTimeframe
   selectedTag: string | undefined
   selectedTokenData: TrueSightTokenData | undefined
+  selectedNetwork: ChainId | undefined
+}
+
+export interface TrueSightSortSettings {
+  sortBy: 'rank' | 'name' | 'discovered_on'
+  sortDirection: 'asc' | 'desc'
 }
 
 export default function TrueSight({ history }: RouteComponentProps) {
@@ -42,7 +49,9 @@ export default function TrueSight({ history }: RouteComponentProps) {
     timeframe: TrueSightTimeframe.ONE_DAY,
     selectedTag: undefined,
     selectedTokenData: undefined,
+    selectedNetwork: undefined,
   })
+  const [sortSettings, setSortSettings] = useState<TrueSightSortSettings>({ sortBy: 'rank', sortDirection: 'asc' })
 
   useEffect(() => {
     if (tab === undefined) {
@@ -54,7 +63,9 @@ export default function TrueSight({ history }: RouteComponentProps) {
         timeframe: TrueSightTimeframe.ONE_DAY,
         selectedTag: undefined,
         selectedTokenData: undefined,
+        selectedNetwork: undefined,
       })
+      setSortSettings({ sortBy: 'rank', sortDirection: 'asc' })
     }
   }, [history, tab])
 
@@ -65,8 +76,19 @@ export default function TrueSight({ history }: RouteComponentProps) {
         <>
           <TrendingSoonHero />
           <Flex flexDirection="column" style={{ gap: '16px' }}>
-            <FilterBar activeTab={TrueSightTabs.TRENDING_SOON} filter={filter} setFilter={setFilter} />
-            <TrendingSoonLayout filter={filter} setFilter={setFilter} />
+            <FilterBar
+              activeTab={TrueSightTabs.TRENDING_SOON}
+              filter={filter}
+              setFilter={setFilter}
+              sortSettings={sortSettings}
+              setSortSettings={setSortSettings}
+            />
+            <TrendingSoonLayout
+              filter={filter}
+              setFilter={setFilter}
+              sortSettings={sortSettings}
+              setSortSettings={setSortSettings}
+            />
           </Flex>
         </>
       )}
@@ -74,7 +96,13 @@ export default function TrueSight({ history }: RouteComponentProps) {
         <>
           <TrendingHero />
           <Flex flexDirection="column" style={{ gap: '16px' }}>
-            <FilterBar activeTab={TrueSightTabs.TRENDING} filter={filter} setFilter={setFilter} />
+            <FilterBar
+              activeTab={TrueSightTabs.TRENDING}
+              filter={filter}
+              setFilter={setFilter}
+              sortSettings={sortSettings}
+              setSortSettings={setSortSettings}
+            />
             <TrendingLayout filter={filter} setFilter={setFilter} />
           </Flex>
         </>

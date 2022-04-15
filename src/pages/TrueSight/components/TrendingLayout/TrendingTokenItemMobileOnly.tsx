@@ -13,7 +13,7 @@ import Divider from 'components/Divider'
 import { ExternalLink } from 'theme'
 import AddressButton from 'pages/TrueSight/components/AddressButton'
 import CommunityButton from 'pages/TrueSight/components/CommunityButton'
-import SwapButtonWithOptions from 'pages/TrueSight/components/SwapButtonWithOptions'
+import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import { ReactComponent as BarChartIcon } from 'assets/svg/bar_chart_icon.svg'
 import { formattedNumLong } from 'utils'
 import {
@@ -107,7 +107,7 @@ const TrendingTokenItemMobileOnly = ({
                 <Trans>View chart</Trans>
               </span>
             </ButtonOutlined>
-            <SwapButtonWithOptions
+            <ButtonWithOptions
               platforms={tokenData.platforms}
               style={{ flex: 1, padding: 0, minWidth: 'unset' }}
               tokenData={tokenData}

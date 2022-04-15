@@ -148,6 +148,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://i.imgur.com/nQryhVr.jpg',
     },
+    {
+      chainId: 56,
+      address: '0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1',
+      symbol: 'GMT',
+      name: 'STEPN',
+      decimals: 8,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/18069.png',
+    },
   ],
   version: {
     major: 0,

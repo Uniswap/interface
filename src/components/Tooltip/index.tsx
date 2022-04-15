@@ -2,6 +2,7 @@ import React, { useCallback, useState, ReactNode } from 'react'
 import styled from 'styled-components'
 import Popover, { PopoverProps } from '../Popover'
 import { Flex } from 'rebass'
+import { isMobile } from 'react-device-detect'
 
 const TooltipContainer = styled.div<{ width?: string; size?: number }>`
   width: ${({ width }) => width || '228px'};
@@ -41,4 +42,10 @@ export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show
       </Flex>
     </Tooltip>
   )
+}
+
+export function MouseoverTooltipDesktopOnly(props: Omit<TooltipProps, 'show'>) {
+  if (isMobile) return <>{props.children}</>
+
+  return <MouseoverTooltip {...props} />
 }

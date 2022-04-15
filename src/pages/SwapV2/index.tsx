@@ -1,14 +1,14 @@
 import { Currency, CurrencyAmount, JSBI, Token } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, AlertTriangle } from 'react-feather'
-import { Text, Flex, Box } from 'rebass'
+import { AlertTriangle, ArrowDown } from 'react-feather'
+import { Box, Flex, Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { BrowserView } from 'react-device-detect'
 
 import AddressInputPanel from 'components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from 'components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import Card, { GreyCard } from 'components/Card/index'
 import Column, { AutoColumn } from 'components/Column/index'
 import ConfirmSwapModal from 'components/swapv2/ConfirmSwapModal'
@@ -16,34 +16,36 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { AutoRow, RowBetween } from 'components/Row'
 import AdvancedSwapDetailsDropdown from 'components/swapv2/AdvancedSwapDetailsDropdown'
 import {
-  TabContainer,
-  TabWrapper,
-  Tab,
   ArrowWrapper,
   BottomGrouping,
+  Container,
   Dots,
-  SwapCallbackError,
-  SwapFormActions,
-  Wrapper,
   KyberTag,
-  PriceImpactHigh,
   LiveChartWrapper,
+  PageWrapper,
+  PriceImpactHigh,
   RoutesWrapper,
   StyledFlex,
+  SwapCallbackError,
+  SwapFormActions,
+  Tab,
+  TabContainer,
+  TabWrapper,
+  Wrapper,
 } from 'components/swapv2/styleds'
 import TokenWarningModal from 'components/TokenWarningModal'
 import ProgressSteps from 'components/ProgressSteps'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
-import { useCurrency, useAllTokens } from 'hooks/Tokens'
+import { useAllTokens, useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTradeV2 } from 'hooks/useApproveCallback'
 import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
-import { useWalletModalToggle, useToggleTransactionSettingsMenu } from 'state/application/hooks'
+import { useToggleTransactionSettingsMenu, useWalletModalToggle } from 'state/application/hooks'
 import { Field } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 import { useDerivedSwapInfoV2 } from 'state/swap/useAggregator'
-import { useExpertModeManager, useUserSlippageTolerance, useShowLiveChart, useShowTradeRoutes } from 'state/user/hooks'
+import { useExpertModeManager, useShowLiveChart, useShowTradeRoutes, useUserSlippageTolerance } from 'state/user/hooks'
 import { LinkStyledButton, TYPE } from 'theme'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import AppBody from 'pages/AppBody'
@@ -54,7 +56,6 @@ import { useSwapV2Callback } from 'hooks/useSwapV2Callback'
 import Routing from 'components/swapv2/Routing'
 import RefreshButton from 'components/swapv2/RefreshButton'
 import TradeTypeSelection from 'components/swapv2/TradeTypeSelection'
-import { PageWrapper, Container } from 'components/swapv2/styleds'
 import { formattedNum } from 'utils'
 import TransactionSettings from 'components/TransactionSettings'
 import { Swap as SwapIcon } from 'components/Icons'
@@ -68,7 +69,9 @@ import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { currencyId } from 'utils/currencyId'
 import Banner from 'components/Banner'
-import {clientData} from 'constants/clientData'
+import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
+import TopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork'
+import { clientData } from 'constants/clientData'
 
 enum ACTIVE_TAB {
   SWAP,
@@ -234,7 +237,12 @@ export default function Swap({ history }: RouteComponentProps) {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(trade, allowedSlippage, recipient, clientData)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(
+    trade,
+    allowedSlippage,
+    recipient,
+    clientData,
+  )
 
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
@@ -339,6 +347,7 @@ export default function Swap({ history }: RouteComponentProps) {
       />
       <PageWrapper>
         <Banner />
+        <TopTrendingSoonTokensInCurrentNetwork />
         <Container>
           <StyledFlex justifyContent={'center'} alignItems={'flex-start'}>
             <AppBodyWrapped>
@@ -517,6 +526,12 @@ export default function Swap({ history }: RouteComponentProps) {
                     </Flex>
 
                     <TradeTypeSelection />
+
+                    <TrendingSoonTokenBanner
+                      currency0={currencies[Field.INPUT]}
+                      currency1={currencies[Field.OUTPUT]}
+                      style={{ marginTop: '24px' }}
+                    />
 
                     {trade?.priceImpact === -1 ? (
                       <PriceImpactHigh>

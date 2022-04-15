@@ -239,172 +239,177 @@ export const TYPE = {
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
-html, input, textarea, button {
-  font-family: 'Work Sans', 'Inter', sans-serif;
-  font-display: fallback;
-}
-@supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Work Sans', 'Inter var', sans-serif;
+    font-family: 'Work Sans', 'Inter', sans-serif;
+    font-display: fallback;
   }
-}
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+  @supports (font-variation-settings: normal) {
+    html, input, textarea, button {
+      font-family: 'Work Sans', 'Inter var', sans-serif;
+    }
+  }
 
- a {
-   color: ${colors(false).blue1};
- }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
-* {
-  box-sizing: border-box;
-}
+  a {
+    color: ${colors(false).blue1};
+  }
 
-button {
-  user-select: none;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-html {
-  font-size: 16px;
-  font-variant: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+  button {
+    user-select: none;
+  }
 
-}
+  html {
+    font-size: 16px;
+    font-variant: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+
+  }
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`
-html {
-  color: ${({ theme }) => theme.text};
-  background-color: ${({ theme }) => theme.bg2};
-}
-
-body {
-  min-height: 100vh;
-  background: ${({ theme }) => theme.bg12};
-}
-
-.staked-only-switch[aria-checked="false"] {
-  background: ${({ theme }) => theme.bg14} !important;
-}
-
-.staked-only-switch[aria-checked="false"] div {
-  background: ${({ theme }) => theme.bg12} !important;
-}
-
-.staked-only-switch div {
-  background:  ${({ theme }) => theme.primary};
-}
-
-#language-selector {
-  &:focus-visible {
-    outline-width: 0;
-  }
-
-}
-
-
-.tf-v1-sidetab {
-  z-index: 1 !important
-}
-
-.tf-v1-sidetab.open {
-  .tf-v1-sidetab-button  {
+  ::-webkit-scrollbar {
     display: none;
   }
-}
 
-.tf-v1-sidetab-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 100%;
-  width: 100%;
-}
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  
+  html {
+    color: ${({ theme }) => theme.text};
+    background-color: ${({ theme }) => theme.bg2};
+  }
 
-.tf-v1-sidetab-button {
-  height: 44px !important;
-  left: -44px !important;
-  border-radius: 4px 4px 0 0 !important;
-  color: ${({ theme }) => theme.textReverse} !important;
-}
+  body {
+    min-height: 100vh;
+    background: ${({ theme }) => theme.bg12};
+  }
+
+  .staked-only-switch[aria-checked="false"] {
+    background: ${({ theme }) => theme.bg14} !important;
+  }
+
+  .staked-only-switch[aria-checked="false"] div {
+    background: ${({ theme }) => theme.bg12} !important;
+  }
+
+  .staked-only-switch div {
+    background: ${({ theme }) => theme.primary};
+  }
+
+  #language-selector {
+    &:focus-visible {
+      outline-width: 0;
+    }
+  }
 
 
-.tf-v1-sidetab-button-icon {
-  > svg {
-    width: 24px;
-    height: 24px;
+  .tf-v1-sidetab {
+    z-index: 1 !important
+  }
 
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+  .tf-v1-sidetab.open {
+    .tf-v1-sidetab-button {
+      display: none;
+    }
+  }
+
+  .tf-v1-sidetab-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100%;
+    width: 100%;
+  }
+
+  .tf-v1-sidetab-button {
+    height: 44px !important;
+    left: -44px !important;
+    border-radius: 4px 4px 0 0 !important;
+    color: ${({ theme }) => theme.textReverse} !important;
+  }
+
+
+  .tf-v1-sidetab-button-icon {
+    > svg {
+      width: 24px;
+      height: 24px;
+
+      ${({ theme }) => theme.mediaWidth.upToSmall`
       width: 24px;
       height: 24px;
     `}
+      > path {
 
-
-    > path {
-
-    fill: ${({ theme }) => theme.textReverse} !important;
+        fill: ${({ theme }) => theme.textReverse} !important;
+      }
     }
   }
-}
 
 
-.tf-v1-popover {
-  z-index: 99 !important;
-}
-
-.tf-v1-popover-button-icon {
-  > img {
-    width: 24px !important;
-    height: 24px !important;
-    object-fit: contain !important;
-    border-radius: 0 !important;
+  .tf-v1-popover {
+    z-index: 99 !important;
   }
-}
 
-.tf-v1-sidetab-close {
-  position: absolute !important;
-  font-size: 32px !important;
-  line-height: 24px !important;
-  padding: 1rem;
-  width: max-content !important;
-  height: max-content !important;
-  right: 0 !important;
-  color: ${({ theme }) => theme.subText} !important;
-  display: block !important;
-  z-index: 1;
-  cursor: pointer;
-}
+  .tf-v1-popover-button-icon {
+    > img {
+      width: 24px !important;
+      height: 24px !important;
+      object-fit: contain !important;
+      border-radius: 0 !important;
+    }
+  }
 
-.tf-v1-popover-button {
-  width: 48px !important;
-  height: 48px !important;
-  bottom: 84px !important;
-  right: 16px !important;
-  background-color: ${({ theme }) => theme.primary} !important;
-}
+  .tf-v1-sidetab-close {
+    position: absolute !important;
+    font-size: 32px !important;
+    line-height: 24px !important;
+    padding: 1rem;
+    width: max-content !important;
+    height: max-content !important;
+    right: 0 !important;
+    color: ${({ theme }) => theme.subText} !important;
+    display: block !important;
+    z-index: 1;
+    cursor: pointer;
+  }
 
-.tf-v1-popover-close {
-  position: absolute !important;
-  font-size: 32px !important;
-  line-height: 24px !important;
-  padding: 1rem;
-  width: max-content !important;
-  height: max-content !important;
-  right: 0 !important;
-  color: ${({ theme }) => theme.subText} !important;
-  z-index: 1;
-  cursor: pointer;
+  .tf-v1-popover-button {
+    width: 48px !important;
+    height: 48px !important;
+    bottom: 84px !important;
+    right: 16px !important;
+    background-color: ${({ theme }) => theme.primary} !important;
+  }
 
-}
+  .tf-v1-popover-close {
+    position: absolute !important;
+    font-size: 32px !important;
+    line-height: 24px !important;
+    padding: 1rem;
+    width: max-content !important;
+    height: max-content !important;
+    right: 0 !important;
+    color: ${({ theme }) => theme.subText} !important;
+    z-index: 1;
+    cursor: pointer;
 
-.tf-v1-sidetab-button-text {
-  font-family: 'Work Sans','Inter',sans-serif !important;
-}
+  }
+
+  .tf-v1-sidetab-button-text {
+    font-family: 'Work Sans', 'Inter', sans-serif !important;
+  }
 `

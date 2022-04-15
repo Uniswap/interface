@@ -39,6 +39,11 @@ export enum ApplicationModal {
   MOBILE_TRADE_ROUTES,
   REFERRAL_NETWORK,
   SHARE,
+  TRENDING_SOON_SORTING,
+  TRUESIGHT_NETWORK,
+  TRENDING_SOON_TOKEN_DETAIL,
+  COMMUNITY,
+  CONTRACT_ADDRESS,
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')

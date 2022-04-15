@@ -15,6 +15,41 @@ import { useLocalStorage } from 'react-use'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
+const BannerWrapper = styled(Flex)`
+  --swiper-navigation-size: 12px;
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.25);
+    width: 32px;
+    height: 32px;
+    margin-top: 0;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    visibility: hidden;
+  }
+
+  .swiper-pagination-bullet {
+    height: 5px;
+    width: 5px;
+    background: #d5dbde;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 20px;
+    border-radius: 4px;
+    background: #ffffff;
+  }
+
+  &:hover {
+    .swiper-button-prev,
+    .swiper-button-next {
+      visibility: visible;
+    }
+  }
+`
+
 const Wrapper = styled.div`
   margin: auto;
   position: relative;
@@ -85,38 +120,3 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
 }
 
 export default memo(Banner)
-
-const BannerWrapper = styled(Flex)`
-  --swiper-navigation-size: 12px;
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.25);
-    width: 32px;
-    height: 32px;
-    margin-top: 0;
-    border-radius: 50%;
-    transform: translateY(-50%);
-    visibility: hidden;
-  }
-
-  .swiper-pagination-bullet {
-    height: 5px;
-    width: 5px;
-    background: #d5dbde;
-  }
-
-  .swiper-pagination-bullet-active {
-    width: 20px;
-    border-radius: 4px;
-    background: #ffffff;
-  }
-
-  &:hover {
-    .swiper-button-prev,
-    .swiper-button-next {
-      visibility: visible;
-    }
-  }
-`
