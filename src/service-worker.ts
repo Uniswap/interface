@@ -87,7 +87,28 @@ async function handleDocument({ event }: RouteHandlerCallbackOptions) {
     controller.abort()
     return cached.clone()
   } else {
-    cache.put(DOCUMENT_HTML, response.clone())
+    cache.put(DOCUMENT_HTML, responseForCache(response.clone()))
     return response
   }
+}
+
+// Prepare a response for the cache by having it set a local __isDocumentCached variable.
+// TODO(leggechr): Send a GA beacon to record cache usage / metrics.
+function responseForCache(response: Response) {
+  const reader = response.body?.getReader()
+  const stream = new ReadableStream({
+    async start(controller) {
+      let done = false
+      while (!done) {
+        const result = await reader?.read()
+        done = !result || result.done
+        if (result?.value) {
+          controller.enqueue(result.value)
+        }
+      }
+      controller.enqueue(new TextEncoder().encode('\n<script>__isDocumentCached = true</script>\n'))
+      controller.close()
+    },
+  })
+  return new Response(stream, response)
 }
