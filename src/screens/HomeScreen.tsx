@@ -27,6 +27,7 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { WalletConnectScanSheet } from 'src/features/walletConnect/WalletConnectScanSheet'
 import { Screens } from 'src/screens/Screens'
 import { sleep } from 'src/utils/timing'
+import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
@@ -88,9 +89,11 @@ export function HomeScreen({ navigation }: Props) {
         <Box alignItems="center" flexDirection="row" justifyContent="space-between">
           <AccountHeader onPress={onPressAccountHeader} />
           <Flex centered row>
-            <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-              <Scan height={20} stroke="gray100" width={20} />
-            </Button>
+            {isWalletConnectSupportedAccount(activeAccount) && (
+              <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+                <Scan height={20} stroke="gray100" width={20} />
+              </Button>
+            )}
             <Button name={ElementName.Settings} onPress={onPressSettings}>
               <Settings height={24} stroke="gray100" width={24} />
             </Button>
