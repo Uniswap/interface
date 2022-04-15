@@ -274,6 +274,12 @@ export default function Header() {
         </UniIcon>
       </Title>
       <HeaderLinks>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <Trans>Limit</Trans>
+        </StyledNavLink>
+        <StyledNavLink id={`market-nav-link`} to={'/market'}>
+          <Trans>Swap</Trans>
+        </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
           to={'/pool'}
@@ -285,10 +291,7 @@ export default function Header() {
             pathname.startsWith('/find')
           }
         >
-          <Trans>Dashboard</Trans>
-        </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Trade</Trans>
+          <Trans>Dashboard (V1)</Trans>
         </StyledNavLink>
       </HeaderLinks>
 

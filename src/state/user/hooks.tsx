@@ -32,6 +32,8 @@ import {
   updateUserGasPrice,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateUserTickOffset,
+  updateUserTickSize,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -126,7 +128,7 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
 }
 
 export function useRoutingAPIEnabled(): boolean {
-  return false
+  return true
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {
@@ -163,6 +165,36 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
     () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
     [userSlippageTolerance]
   )
+}
+
+export function useUserTickOffset(): [number, (newTickOffset: number) => void] {
+  const dispatch = useAppDispatch()
+
+  const userTickOffset = useAppSelector((state) => state.user.userTickOffset)
+
+  const setUserTickOffset = useCallback(
+    (newTickOffset: number) => {
+      dispatch(updateUserTickOffset({ userTickOffset: newTickOffset }))
+    },
+    [dispatch]
+  )
+
+  return [userTickOffset, setUserTickOffset]
+}
+
+export function useUserTickSize(): [number, (newTickSize: number) => void] {
+  const dispatch = useAppDispatch()
+
+  const userTickSize = useAppSelector((state) => state.user.userTickSize)
+
+  const setUserTickSize = useCallback(
+    (newTickSize: number) => {
+      dispatch(updateUserTickSize({ userTickSize: newTickSize }))
+    },
+    [dispatch]
+  )
+
+  return [userTickSize, setUserTickSize]
 }
 
 export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions: boolean) => void] {

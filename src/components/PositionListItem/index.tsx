@@ -104,9 +104,6 @@ const ExtentsText = styled.span`
   color: ${({ theme }) => theme.text3};
   font-size: 14px;
   margin-right: 4px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
 `
 
 const PrimaryPositionIdData = styled.div`
@@ -259,57 +256,55 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </DataText>
           &nbsp;
-          <Badge>
-            <BadgeText>
-              {!closedOrder ? (
-                <Trans>
-                  Trade {currencyAmount?.toSignificant(6)}{' '}
-                  {currencyAmount?.currency ? unwrappedToken(currencyAmount?.currency)?.symbol : ''} for{' '}
-                  {currencyAmount ? targetPrice?.quote(currencyAmount).toSignificant(6) : ''}{' '}
-                  {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
-                </Trans>
-              ) : (
-                <Trans>
-                  Collected {currencyAmount?.toSignificant(6)}{' '}
-                  {currencyAmount?.currency ? unwrappedToken(currencyAmount?.currency)?.symbol : ''}
-                </Trans>
-              )}
-            </BadgeText>
-          </Badge>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} closed={closedOrder} isUnderfunded={isUnderfunded} />
       </RowBetween>
 
-      {targetPrice ? (
-        <RangeLineItem>
-          <RangeText>
-            <ExtentsText>
-              <Trans>Current Price: </Trans>
-            </ExtentsText>
-            <Trans>
-              {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}{' '}
-              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
-            </Trans>
-          </RangeText>{' '}
-          <HideSmall>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
-          </HideSmall>
-          <SmallOnly>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
-          </SmallOnly>
-          <RangeText>
-            <ExtentsText>
-              <Trans>Target Price:</Trans>
-            </ExtentsText>
-            <Trans>
-              {priceUpper?.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
-            </Trans>
-          </RangeText>
-        </RangeLineItem>
-      ) : (
-        <Loader />
-      )}
+      <RowBetween>
+        <Badge>
+          <BadgeText>
+            {!closedOrder ? (
+              <Trans>
+                Trade {currencyAmount?.toSignificant(6)}{' '}
+                {currencyAmount?.currency ? unwrappedToken(currencyAmount?.currency)?.symbol : ''} for{' '}
+                {currencyAmount ? targetPrice?.quote(currencyAmount).toSignificant(6) : ''}{' '}
+                {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
+              </Trans>
+            ) : (
+              <Trans>
+                Collected {currencyAmount?.toSignificant(6)}{' '}
+                {currencyAmount?.currency ? unwrappedToken(currencyAmount?.currency)?.symbol : ''}
+              </Trans>
+            )}
+          </BadgeText>
+        </Badge>
+      </RowBetween>
+      <RowBetween>
+        <RangeText>
+          <ExtentsText>
+            <Trans>Current Price: </Trans>
+          </ExtentsText>
+        </RangeText>{' '}
+        <RangeText>
+          <Trans>
+            {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}{' '}
+            <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
+          </Trans>
+        </RangeText>{' '}
+      </RowBetween>
+      <RowBetween>
+        <RangeText>
+          <ExtentsText>
+            <Trans>Target Price:</Trans>
+          </ExtentsText>
+        </RangeText>
+        <RangeText>
+          <Trans>
+            {priceUpper?.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+            <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+          </Trans>
+        </RangeText>
+      </RowBetween>
     </LinkRow>
   )
 }

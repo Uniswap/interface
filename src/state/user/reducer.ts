@@ -21,6 +21,8 @@ import {
   updateUserGasPrice,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateUserTickOffset,
+  updateUserTickSize,
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -52,6 +54,12 @@ export interface UserState {
   userDeadline: number
 
   userGasPrice: string
+
+  // offset for starting tick
+  userTickOffset: number
+
+  // size, length of the order
+  userTickSize: number
 
   tokens: {
     [chainId: number]: {
@@ -87,6 +95,8 @@ export const initialState: UserState = {
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   userGasPrice: '',
+  userTickOffset: 2,
+  userTickSize: 2,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
@@ -160,6 +170,14 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserGasPrice, (state, action) => {
       state.userGasPrice = action.payload.userGasPrice
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserTickOffset, (state, action) => {
+      state.userTickOffset = action.payload.userTickOffset
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserTickSize, (state, action) => {
+      state.userTickSize = action.payload.userTickSize
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserClientSideRouter, (state, action) => {

@@ -47,7 +47,7 @@ export default memo(function SwapRoute({
         ) : (
           <Badge>
             <TYPE.black fontSize={12}>
-              {getTradeVersion(trade) === Version.v2 ? <Trans>V2</Trans> : <Trans>V3</Trans>}
+              {getTradeVersion(trade) === Version.v2 ? <Trans>Smart Route</Trans> : <Trans>V3</Trans>}
             </TYPE.black>
           </Badge>
         )}

@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -13,29 +12,18 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-const HoverText = styled(TYPE.main)`
-  text-decoration: none;
-  color: ${({ theme }) => theme.text3};
-  :hover {
-    color: ${({ theme }) => theme.text1};
-    text-decoration: none;
-  }
-`
-
-export default function SwapHeader() {
+export default function MarketHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
   return (
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed>
-          <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/swap">
-            <HoverText>
-              <Trans>Limit Order</Trans>
-            </HoverText>
-          </Link>
+          <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
+            <Trans>Swap</Trans>
+          </TYPE.black>
         </RowFixed>
         <RowFixed>
           <SettingsTab />
-        </RowFixed>{' '}
+        </RowFixed>
       </RowBetween>
     </StyledSwapHeader>
   )

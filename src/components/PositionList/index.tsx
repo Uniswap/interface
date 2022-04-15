@@ -48,7 +48,7 @@ export default function PositionList({ positions, fundingBalance, minBalance }: 
     <>
       <DesktopHeader>
         <div>
-          <Trans>My trades</Trans>
+          <Trans>Limit Orders</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
         <div>
@@ -56,7 +56,7 @@ export default function PositionList({ positions, fundingBalance, minBalance }: 
         </div>
       </DesktopHeader>
       <MobileHeader>
-        <Trans>My trades</Trans>
+        <Trans>Limit Orders</Trans>
       </MobileHeader>
       {positions.map((p) => {
         return <PositionListItem key={p.tokenId.toString()} positionDetails={p} isUnderfunded={isUnderfunded} />

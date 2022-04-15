@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 
 export enum V3TradeState {
   LOADING,
@@ -8,36 +8,38 @@ export enum V3TradeState {
   SYNCING,
 }
 
-export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+export type TokenInRoute = Pick<Token, 'address' | 'name' | 'symbol' | 'decimals'>
 
-export type PoolInRoute = {
-  type: 'v3-pool'
-  address: string
-  tokenIn: TokenInRoute
-  tokenOut: TokenInRoute
-  sqrtRatioX96: string
-  liquidity: string
-  tickCurrent: string
-  fee: string
-  amountIn?: string
-  amountOut?: string
+export type SwapTransaction = {
+  from: string
+  to: string
+  data: string
+  value: string
+  gas: string
+  type: number
 }
 
-export interface GetQuoteResult {
-  quoteId?: string
-  blockNumber: string
-  amount: string
-  amountDecimals: string
-  gasPriceWei: string
-  gasUseEstimate: string
-  gasUseEstimateQuote: string
-  gasUseEstimateQuoteDecimals: string
-  gasUseEstimateUSD: string
-  methodParameters?: { calldata: string; value: string }
-  quote: string
-  quoteDecimals: string
-  quoteGasAdjusted: string
-  quoteGasAdjustedDecimals: string
-  route: PoolInRoute[][]
-  routeString: string
+export type PoolInRoute = {
+  name: string
+  part: string
+  fromTokenAddress: string
+  toTokenAddress: string
+}
+
+export interface GetSwapInchResult {
+  fromToken: TokenInRoute
+  fromTokenAmount: string
+  toToken: TokenInRoute
+  toTokenAmount: string
+  protocols: PoolInRoute[][][]
+  tx: SwapTransaction
+}
+
+export interface GetQuoteInchResult {
+  fromToken: TokenInRoute
+  fromTokenAmount: string
+  toToken: TokenInRoute
+  toTokenAmount: string
+  protocols: PoolInRoute[][][]
+  estimatedGas: string
 }
