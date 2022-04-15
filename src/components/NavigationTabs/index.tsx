@@ -126,7 +126,7 @@ export function AddRemoveTabs({
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <StyledHistoryLink
-          to={'/stake'}
+          to={poolLink}
           onClick={() => {
             if (adding) {
               // not 100% sure both of these are needed
@@ -143,7 +143,13 @@ export function AddRemoveTabs({
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
         >
-          {creating ? <Trans>Create a pair</Trans> : remove ? <Trans>Unstake KROM</Trans> : <Trans>Stake KROM</Trans>}
+          {creating ? (
+            <Trans>Create a pair</Trans>
+          ) : remove ? (
+            <Trans>Withdraw KROM</Trans>
+          ) : (
+            <Trans>Deposit KROM</Trans>
+          )}
         </TYPE.mediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
       </RowBetween>

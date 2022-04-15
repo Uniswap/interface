@@ -21,7 +21,6 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   @media screen and (max-width: 1592px) {
     flex-direction: row;
     gap: 0rem;
-    height: 100%;
     margin-top: 0rem;
   }
 

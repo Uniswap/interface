@@ -387,11 +387,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
 
   const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
 
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currencies[Field.INPUT] ?? undefined)
-  let initialNumber = Number(formatCurrencyAmount(selectedCurrencyBalance, 4)) * 0.8 + ''
-  initialNumber = initialNumber != 'NaN' ? initialNumber.substring(0, 9) : '0'
-  formattedAmounts.input == '' ? (formattedAmounts.input = initialNumber) : ''
-
   const gasAmount = useNetworkGasPrice()
 
   const {

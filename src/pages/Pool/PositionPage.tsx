@@ -814,9 +814,9 @@ export function PositionPage({
         />
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
-            <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/swap">
+            <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/limitorder">
               <HoverText>
-                <Trans>← Back to Trade</Trans>
+                <Trans>← Back to Limit Order</Trans>
               </HoverText>
             </Link>
             <ResponsiveRow>

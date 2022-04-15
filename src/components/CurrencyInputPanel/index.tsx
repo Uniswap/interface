@@ -326,7 +326,7 @@ export default function CurrencyInputPanel({
                   ) : null}
                 </RowFixed>
               ) : (
-                <span />
+                <FiatRow />
               )}
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
