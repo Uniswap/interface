@@ -18,13 +18,12 @@ export const Wrapper = styled.div`
 
 export const SupportedChain = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
-  margin-top: 24px;
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    gap: 12px
-  `}
+  gap: 20px;
+  margin: auto;
+  margin-top: 24px;
 `
 
 export const BtnOutlined = styled(ButtonOutlined)`
@@ -199,7 +198,7 @@ export const FooterContainer = styled.div`
 
 export const Powered = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin-top: 48px;
   gap: 52px;
   align-items: center;

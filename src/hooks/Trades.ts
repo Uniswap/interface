@@ -64,6 +64,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
         : [],
     [bases, tokenA, tokenB],
   )
+
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
       tokenA && tokenB
@@ -135,6 +136,7 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
           if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
             console.log('trade amount: ', currencyAmountIn.toSignificant(10))
           }
+
           setTrade(
             Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
               maxHops: 3,

@@ -21,6 +21,14 @@ export const BTTC_TOKEN_LIST = {
     },
     {
       chainId: 199,
+      address: '0xE887512ab8BC60BcC9224e1c3b5Be68E26048B8B',
+      symbol: 'USDT_e',
+      name: 'Tether USD_Ethereum',
+      decimals: 6,
+      logoURI: 'https://coin.top/production/logo/usdtlogo.png',
+    },
+    {
+      chainId: 199,
       address: '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100',
       symbol: 'DAI_e',
       name: 'Dai Stablecoin_Ethereum',

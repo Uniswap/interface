@@ -84,12 +84,12 @@ const arbitrumTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new A
 })
 
 const arbitrumExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-arbitrum',
+  uri: 'https://arbitrum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-arbitrum',
   cache: new InMemoryCache(),
 })
 
 const bttcExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/kyberswap-bttc',
+  uri: 'https://bttc-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-bttc',
   cache: new InMemoryCache(),
 })
 
