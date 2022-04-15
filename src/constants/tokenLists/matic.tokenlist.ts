@@ -184,6 +184,14 @@ export const MATIC_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7841.png',
     },
+    {
+      chainId: 137,
+      address: '0xFbBd93fC3BE8B048c007666AF4846e4A36BACC95',
+      symbol: 'RIKEN',
+      name: 'RIKEN',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/o914JpY.jpg',
+    },
   ],
   version: {
     major: 0,
