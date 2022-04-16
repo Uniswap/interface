@@ -193,8 +193,6 @@ export default function AddLiquidity({
             return gaslessCallback().then((gaslessProvider) => {
               if (!gaslessProvider) return
               return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
-                console.log(response)
-
                 const txResponse = await poll(
                   async () => {
                     const tx = await gaslessProvider.getTransaction(response)
@@ -208,7 +206,6 @@ export default function AddLiquidity({
                   },
                   { oncePoll: gaslessProvider }
                 )
-                console.log(txResponse)
                 setAttemptingTxn(false)
 
                 if (txResponse) {

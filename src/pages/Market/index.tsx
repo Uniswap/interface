@@ -99,6 +99,8 @@ const MarketContainer = styled.div`
 
 const ClassicModeContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 
   @media screen and (max-width: 900px) {
@@ -109,6 +111,9 @@ const ClassicModeContainer = styled.div`
   @media screen and (max-width: 600px) {
     width: 98%;
     margin-left: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 `
 
@@ -139,9 +144,6 @@ export const FlexItemLeft = styled.div`
   @media screen and (max-width: 1592px) {
     flex-direction: row;
     gap: 1rem;
-  }
-
-  @media screen and (max-width: 900px) {
     width: 95%;
     margin-left: 10px;
   }
@@ -448,19 +450,11 @@ export default function Market({ history }: RouteComponentProps) {
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
-  console.log('trade')
-  console.log(trade)
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
   const aToken = currencies && currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined
   const bToken = currencies && currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined
   const fee = undefined
   const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee)
-
-  /* const fee = trade?.route.pools[0].fee
-
-  const aToken = currencies && currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined
-  const bToken = currencies && currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined
-  const { poolAddress, networkName } = usePoolAddress(aToken, bToken, fee) */
 
   if (expertMode) {
     return (

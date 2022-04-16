@@ -79,16 +79,6 @@ interface StakingModalProps {
 }
 
 export default function StakingModals({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
-  const { library } = useActiveWeb3React()
-
-  const [typedValue, setTypedValue] = useState('')
-  console.log(stakingInfo)
-  console.log(userLiquidityUnstaked)
-
-  const wrappedOnDismiss = useCallback(() => {
-    console.log('hello world')
-  }, [onDismiss])
-
   return (
     <VoteCard>
       <CardBGImage />
@@ -99,7 +89,7 @@ export default function StakingModals({ isOpen, onDismiss, stakingInfo, userLiqu
             <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
           </FixedHeightRow>
           <FixedHeightRow>
-            <Text>Hello Stefan</Text>
+            <Text></Text>
           </FixedHeightRow>
         </AutoColumn>
       </CardSection>

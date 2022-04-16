@@ -75,6 +75,11 @@ const PhoneLogo = styled.div`
   @media screen and (min-width: 550px) {
     display: none;
   }
+
+  @media screen and (max-width: 380px) {
+    position: relative;
+    left: -15px;
+  }
 `
 
 const StyledImage = styled.img`

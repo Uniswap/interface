@@ -417,7 +417,6 @@ export function useSwapCallback(
             return library
               .estimateGas(tx)
               .then((gasEstimate) => {
-                console.log(gasEstimate.toString())
                 return {
                   call,
                   gasEstimate,
@@ -477,14 +476,11 @@ export function useSwapCallback(
             signatureType: 'EIP712_SIGN',
             ...(value && !isZero(value) ? { value } : {}),
           }
-          console.log(txParams)
           // sending gasless txn
           return gaslessCallback()
             .then((gaslessProvider) => {
               if (!gaslessProvider) return
               return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
-                console.log(response)
-
                 const txResponse = await poll(
                   async () => {
                     const tx = await gaslessProvider.getTransaction(response)

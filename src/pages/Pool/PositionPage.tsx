@@ -656,8 +656,6 @@ export function PositionPage({
           return gaslessCallback().then((gaslessProvider) => {
             if (!gaslessProvider) return
             return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
-              console.log(response)
-
               const txResponse = await poll(
                 async () => {
                   const tx = await gaslessProvider.getTransaction(response)

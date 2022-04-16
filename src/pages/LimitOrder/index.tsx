@@ -194,7 +194,7 @@ const MainContentWrapper = styled.main`
 `
 
 const MainContentWrapperNoPro = styled.div`
-  width: 50%;
+  width: 100%;
   max-width: 800px;
   overflow: auto;
   max-height: 532px;
@@ -268,6 +268,7 @@ export const FlexContainer = styled.div`
 
   @media screen and (max-width: 1600px) {
     flex-direction: column;
+    width: 95%;
   }
 `
 
@@ -308,6 +309,35 @@ export const FlexItemRight = styled.div`
     margin-left: 10px;
   }
 `
+
+const LimitOrderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+
+  @media screen and (max-width: 1000px) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 10px;
+  }
+`
+
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -1016,41 +1046,44 @@ export default function LimitOrder({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
+      <LimitOrderContainer>
+        <MainContentWrapperNoPro>
+          {positionsLoading ? (
+            <LoadingRows>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRows>
+          ) : filteredPositions && filteredPositions.length > 0 ? (
+            <PositionList positions={filteredPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+          ) : (
+            <NoLiquidity>
+              <TYPE.body color={theme.text3} textAlign="center">
+                <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
+                <div>
+                  <Trans>Your limit orders will appear here.</Trans>
+                </div>
+              </TYPE.body>
+              {showConnectAWallet && (
+                <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                  <Trans>Connect a wallet</Trans>
+                </ButtonPrimary>
+              )}
+            </NoLiquidity>
+          )}
+        </MainContentWrapperNoPro>
+        <SwitchLocaleLink />
+      </LimitOrderContainer>
 
-      <MainContentWrapperNoPro>
-        {positionsLoading ? (
-          <LoadingRows>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </LoadingRows>
-        ) : filteredPositions && filteredPositions.length > 0 ? (
-          <PositionList positions={filteredPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
-        ) : (
-          <NoLiquidity>
-            <TYPE.body color={theme.text3} textAlign="center">
-              <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
-              <div>
-                <Trans>Your limit orders will appear here.</Trans>
-              </div>
-            </TYPE.body>
-            {showConnectAWallet && (
-              <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                <Trans>Connect a wallet</Trans>
-              </ButtonPrimary>
-            )}
-          </NoLiquidity>
-        )}
-      </MainContentWrapperNoPro>
       <AppBodyNoPro>
         <StyledNoProDiv>
           <SwapHeader />
@@ -1395,7 +1428,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           </Wrapper>
         </StyledNoProDiv>
       </AppBodyNoPro>
-      <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter
           show={swapIsUnsupported}
