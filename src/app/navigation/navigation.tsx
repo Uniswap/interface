@@ -13,7 +13,7 @@ import {
   SettingsStackParamList,
   TabParamList,
 } from 'src/app/navigation/types'
-import { selectFinishedOnboarding } from 'src/features/user/slice'
+import { selectFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'

@@ -14,7 +14,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
-import { setFinishedOnboarding } from 'src/features/user/slice'
+import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
 

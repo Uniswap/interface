@@ -1,3 +1,5 @@
+import { Palette } from 'src/styles/color'
+
 export enum AccountType {
   Ledger = 'ledger',
   Local = 'local', // Key lives in JS, essentially just a normal ethers Wallet
@@ -6,10 +8,18 @@ export enum AccountType {
   Readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
 }
 
+type DynamicPalette = Pick<Palette, 'primary1' | 'secondary1' | 'background1' | 'textColor'>
+
+export type AccountCustomizations = {
+  palette?: DynamicPalette
+  localPfp?: string
+}
+
 export interface AccountBase {
   type: AccountType
   address: Address
   name?: string
+  customizations?: AccountCustomizations
 }
 
 export interface LocalAccount extends AccountBase {

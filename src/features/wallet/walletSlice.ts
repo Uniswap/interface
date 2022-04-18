@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { Account } from 'src/features/wallet/accounts/types'
 import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
@@ -13,19 +13,20 @@ interface HardwareDevice {
 }
 
 interface Wallet {
-  isUnlocked: boolean
   accounts: Record<Address, Account>
   activeAccount: Account | null
-  hardwareDevices: HardwareDevice[]
   bluetooth: boolean
+  finishedOnboarding?: boolean
+  hardwareDevices: HardwareDevice[]
+  isUnlocked: boolean
 }
 
 const initialState: Wallet = {
-  isUnlocked: false,
   accounts: {},
   activeAccount: null,
-  hardwareDevices: [],
   bluetooth: false,
+  hardwareDevices: [],
+  isUnlocked: false,
 }
 
 const slice = createSlice({
@@ -63,7 +64,6 @@ const slice = createSlice({
     unlockWallet: (state) => {
       state.isUnlocked = true
     },
-    resetWallet: () => initialState,
     addHardwareDevice: (state, action: PayloadAction<HardwareDevice>) => {
       state.hardwareDevices ??= []
       state.hardwareDevices.push(action.payload)
@@ -71,11 +71,28 @@ const slice = createSlice({
     toggleBluetooth: (state, action: PayloadAction<boolean>) => {
       state.bluetooth = action.payload
     },
+    setFinishedOnboarding: (
+      state,
+      { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>
+    ) => {
+      state.finishedOnboarding = finishedOnboarding
+    },
+    resetWallet: () => initialState,
   },
 })
 
 export const accountsSelector = (state: RootState) => state.wallet.accounts
 export const activeAccountSelector = (state: RootState) => state.wallet.activeAccount
+
+export const selectUserPalette = createSelector(
+  activeAccountSelector,
+  (activeAccount) => activeAccount?.customizations?.palette
+)
+export const selectUserLocalPfp = createSelector(
+  activeAccountSelector,
+  (activeAccount) => activeAccount?.customizations?.localPfp
+)
+export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
 
 export const {
   addAccount,
@@ -86,6 +103,7 @@ export const {
   resetWallet,
   addHardwareDevice,
   toggleBluetooth,
+  setFinishedOnboarding,
 } = slice.actions
 
 export const walletReducer = slice.reducer

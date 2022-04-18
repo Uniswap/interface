@@ -7,7 +7,8 @@ import { IconButton } from 'src/components/buttons/IconButton'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
-import { setUserPalette, setUserPfp } from 'src/features/user/slice'
+import { useActiveAccount } from 'src/features/wallet/hooks'
+import { editAccount } from 'src/features/wallet/walletSlice'
 import { extractColors, opacify } from 'src/utils/colors'
 
 function useNFTColors(asset: NFTAsset.Asset | undefined) {
@@ -32,6 +33,7 @@ function useNFTColors(asset: NFTAsset.Asset | undefined) {
 export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
+  const activeAccount = useActiveAccount()
 
   const { dismissAll } = useBottomSheetModal()
 
@@ -45,14 +47,25 @@ export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
       name={ElementName.ApplyThemeFromNFT}
       variant="transparent"
       onPress={() => {
+        if (!activeAccount) return
+
         const palette = (({ primary, secondary, background, detail }: IOSImageColors) => ({
           primary1: secondary,
           secondary1: detail,
           background1: background,
           textColor: primary,
         }))(colors)
-        dispatch(setUserPalette({ newPalette: palette }))
-        dispatch(setUserPfp({ newPfp: asset.image_url }))
+        const updatedAccount = {
+          ...activeAccount,
+          customizations: { ...activeAccount.customizations, palette, localPfp: asset.image_url },
+        }
+
+        dispatch(
+          editAccount({
+            address: activeAccount.address,
+            updatedAccount,
+          })
+        )
         dismissAll()
       }}
     />

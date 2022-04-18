@@ -3,8 +3,8 @@ import React, { PropsWithChildren, useMemo } from 'react'
 import { useColorScheme } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { useAddressColor } from 'src/components/accounts/Identicon'
-import { selectUserPalette } from 'src/features/user/slice'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { selectUserPalette } from 'src/features/wallet/walletSlice'
 import { darkTheme, theme as lightTheme, Theme } from './theme'
 
 /** Provides app theme based on active account */
