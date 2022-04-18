@@ -55,6 +55,11 @@ export enum MIXPANEL_TYPE {
   DISCOVER_TRENDING_SOON_CLICKED,
   DISCOVER_TRENDING_CLICKED,
   DISCOVER_SWAP_INITIATED,
+  DISCOVER_SWAP_DISCOVER_MORE_CLICKED,
+  DISCOVER_SWAP_SEE_HERE_CLICKED,
+  DISCOVER_SWAP_BUY_NOW_CLICKED,
+  DISCOVER_SWAP_MORE_INFO_CLICKED,
+  DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED,
 }
 
 export const nativeNameFromETH = (chainId: any) => {
@@ -377,7 +382,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.DISCOVER_TRENDING_CLICKED: {
           mixpanel.track('Discover - Trending Tab Clicked', { network })
-
           break
         }
         case MIXPANEL_TYPE.DISCOVER_SWAP_INITIATED: {
@@ -389,6 +393,33 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             token_contract_address,
           })
 
+          break
+        }
+        case MIXPANEL_TYPE.DISCOVER_SWAP_DISCOVER_MORE_CLICKED: {
+          mixpanel.track('Discover - "Discover more" clicked from Swap Page', { network })
+          break
+        }
+        case MIXPANEL_TYPE.DISCOVER_SWAP_SEE_HERE_CLICKED: {
+          const { trending_token } = payload
+          mixpanel.track('Discover - "See here" clicked from Swap page', { network, trending_token })
+          break
+        }
+        case MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_CLICKED: {
+          const { trending_token } = payload
+          mixpanel.track('Discover - "Buy Now" clicked on Swap Page', { network, trending_token })
+          break
+        }
+        case MIXPANEL_TYPE.DISCOVER_SWAP_MORE_INFO_CLICKED: {
+          const { trending_token } = payload
+          mixpanel.track('Discover - "More info" clicked on Swap Page', { network, trending_token })
+          break
+        }
+        case MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED: {
+          const { trending_token } = payload
+          mixpanel.track('Discover - "Buy Now" clicked in pop-up after \'More Info\' on Swap page', {
+            network,
+            trending_token,
+          })
           break
         }
       }
@@ -408,7 +439,7 @@ export const useGlobalMixpanelEvents = () => {
   useEffect(() => {
     if (account && isAddress(account)) {
       mixpanel.init(process.env.REACT_APP_MIXPANEL_PROJECT_TOKEN || '', {
-        debug: process.env.REACT_APP_MAINNET_ENV === 'staging',
+        debug: true,
       })
       mixpanel.identify(account)
       mixpanel.people.set({})

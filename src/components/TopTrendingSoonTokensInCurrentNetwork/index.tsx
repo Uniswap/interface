@@ -25,9 +25,11 @@ import useGetCoinGeckoChartData from 'pages/TrueSight/hooks/useGetCoinGeckoChart
 import { TrueSightChartCategory, TrueSightTimeframe } from 'pages/TrueSight'
 import MobileChartModal from 'pages/TrueSight/components/TrendingSoonLayout/MobileChartModal'
 import TrendingSoonTokenItem from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const TopTrendingSoonTokensInCurrentNetwork = () => {
   const theme = useTheme()
+  const { mixpanelHandler } = useMixpanel()
   const topTrendingSoonTokens = useTopTrendingSoonTokensInCurrentNetwork()
   const above768 = useMedia('(min-width: 768px)')
   const isShowTopTrendingTokens = useShowTopTrendingSoonTokens()
@@ -105,6 +107,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                 href={window.location.origin + '/#/discover?tab=trending_soon'}
                 target="_blank"
                 style={{ fontSize: '10px', fontWeight: 500, display: 'flex', alignItems: 'center' }}
+                onClickCapture={() => mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_DISCOVER_MORE_CLICKED)}
               >
                 <Trans>Discover more</Trans>
                 <ChevronRight color={theme.primary} size={16} />

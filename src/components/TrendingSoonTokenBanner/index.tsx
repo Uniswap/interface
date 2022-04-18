@@ -10,7 +10,7 @@ import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import useGetTrendingSoonTokenId from 'pages/TrueSight/hooks/useGetTrendingSoonTokenId'
 import useTheme from 'hooks/useTheme'
 import { rgba } from 'polished'
-import { nativeNameFromETH } from 'hooks/useMixpanel'
+import useMixpanel, { MIXPANEL_TYPE, nativeNameFromETH } from 'hooks/useMixpanel'
 import { Flex } from 'rebass'
 
 const TrendingSoonTokenBanner = ({
@@ -24,6 +24,7 @@ const TrendingSoonTokenBanner = ({
 }) => {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
+  const { mixpanelHandler } = useMixpanel()
 
   const token0 = wrappedCurrency(currency0, chainId)
   const token1 = wrappedCurrency(currency1, chainId)
@@ -36,6 +37,9 @@ const TrendingSoonTokenBanner = ({
 
   if (trendingSoonCurrency === undefined) return null
 
+  const currencySymbol =
+    trendingSoonCurrency instanceof Token ? trendingSoonCurrency.symbol : nativeNameFromETH(chainId)
+
   return (
     <Container style={style}>
       <DiscoverIconWrapper>
@@ -44,8 +48,7 @@ const TrendingSoonTokenBanner = ({
       <Flex alignItems="center">
         <CurrencyLogo currency={trendingSoonCurrency} size="16px" style={{ marginRight: '4px' }} />
         <BannerText>
-          {trendingSoonCurrency instanceof Token ? trendingSoonCurrency.symbol : nativeNameFromETH(chainId)}{' '}
-          <Trans>could be trending very soon!</Trans> <Trans>See</Trans>{' '}
+          {currencySymbol} <Trans>could be trending very soon!</Trans> <Trans>See</Trans>{' '}
           <ExternalLink
             href={
               window.location.origin +
@@ -53,6 +56,9 @@ const TrendingSoonTokenBanner = ({
               (trendingToken0Id ?? trendingToken1Id)
             }
             target="_blank"
+            onClickCapture={() => {
+              mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_SEE_HERE_CLICKED, { trending_token: currencySymbol })
+            }}
           >
             <Trans>here</Trans>
           </ExternalLink>
