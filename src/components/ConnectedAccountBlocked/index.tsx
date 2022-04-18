@@ -43,7 +43,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
           </ExternalLink>
           .
         </ThemedText.Main>
-        <ThemedText.Main fontSize={14}>
+        <ThemedText.Main fontSize={12}>
           <Trans>If you believe this is an error, please email: </Trans>{' '}
         </ThemedText.Main>
         <CopyHelper toCopy="compliance@uniswap.org" color={theme.primary1}>

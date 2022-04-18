@@ -10,7 +10,7 @@ const CopyIcon = styled(LinkStyledButton)`
   flex-shrink: 0;
   display: flex;
   text-decoration: none;
-  font-size: 0.825rem;
+  font-size: 12px;
   :hover,
   :active,
   :focus {
@@ -20,7 +20,7 @@ const CopyIcon = styled(LinkStyledButton)`
 `
 const TransactionStatusText = styled.span`
   margin-left: 0.25rem;
-  font-size: 0.825rem;
+  font-size: 12px;
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
 `
@@ -41,14 +41,14 @@ export default function CopyHelper({ color, toCopy, children }: CopyHelperProps)
     <CopyIcon onClick={copy} color={color}>
       {isCopied ? (
         <TransactionStatusText>
-          <CheckCircle size={'13'} />
+          <CheckCircle size={'12'} />
           <TransactionStatusText>
             <Trans>Copied</Trans>
           </TransactionStatusText>
         </TransactionStatusText>
       ) : (
         <TransactionStatusText>
-          <Copy size={'13'} />
+          <Copy size={'12'} />
         </TransactionStatusText>
       )}
       &nbsp;
