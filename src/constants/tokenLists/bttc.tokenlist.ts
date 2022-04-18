@@ -150,6 +150,15 @@ export const BTTC_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png',
     },
+    {
+      chainId: 199,
+      address: '0x1249C65AfB11D179FFB3CE7D4eEDd1D9b98AD006',
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0x2170Ed0880ac9A755fd29B2688956BD959F933F8/logo.png',
+    },
   ],
   version: {
     major: 0,

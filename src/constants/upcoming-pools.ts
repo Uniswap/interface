@@ -18,9 +18,9 @@ export interface UpcomingPool {
 
 export const UPCOMING_POOLS: UpcomingPool[] = [
   {
-    poolToken1Symbol: 'KNC.b',
+    poolToken1Symbol: 'KNC_b',
     poolToken1Logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png',
-    poolToken2Symbol: 'USDT.b',
+    poolToken2Symbol: 'USDT_b',
     poolToken2Logo: 'https://coin.top/production/logo/usdtlogo.png',
     startingIn: 'Thursday, April 21, 2022 7:00:00 PM GMT+07:00',
     network: ChainId.BTTC,
@@ -34,7 +34,7 @@ export const UPCOMING_POOLS: UpcomingPool[] = [
   },
 
   {
-    poolToken1Symbol: 'KNC',
+    poolToken1Symbol: 'KNC_e',
     poolToken1Logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png',
     poolToken2Symbol: 'ETH',
     poolToken2Logo:
@@ -133,7 +133,7 @@ export const UPCOMING_POOLS: UpcomingPool[] = [
   {
     poolToken1Symbol: 'WBTT',
     poolToken1Logo: 'https://coin.top/production/logo/1002000.png',
-    poolToken2Symbol: 'USDT.t',
+    poolToken2Symbol: 'USDT_t',
     poolToken2Logo: 'https://coin.top/production/logo/usdtlogo.png',
     startingIn: 'Thursday, April 21, 2022 7:00:00 PM GMT+07:00',
     network: ChainId.BTTC,
@@ -149,7 +149,7 @@ export const UPCOMING_POOLS: UpcomingPool[] = [
   {
     poolToken1Symbol: 'TRX',
     poolToken1Logo: 'https://coin.top/production/upload/logo/TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR.png',
-    poolToken2Symbol: 'USDT.t',
+    poolToken2Symbol: 'USDT_t',
     poolToken2Logo: 'https://coin.top/production/logo/usdtlogo.png',
     startingIn: 'Thursday, April 21, 2022 7:00:00 PM GMT+07:00',
     network: ChainId.BTTC,
@@ -163,9 +163,9 @@ export const UPCOMING_POOLS: UpcomingPool[] = [
   },
 
   {
-    poolToken1Symbol: 'USDT.t',
+    poolToken1Symbol: 'USDT_t',
     poolToken1Logo: 'https://coin.top/production/logo/usdtlogo.png',
-    poolToken2Symbol: 'USDT.e',
+    poolToken2Symbol: 'USDT_e',
     poolToken2Logo: 'https://coin.top/production/logo/usdtlogo.png',
     startingIn: 'Thursday, April 21, 2022 7:00:00 PM GMT+07:00',
     network: ChainId.BTTC,
@@ -179,9 +179,9 @@ export const UPCOMING_POOLS: UpcomingPool[] = [
   },
 
   {
-    poolToken1Symbol: 'USDT.t',
+    poolToken1Symbol: 'USDT_t',
     poolToken1Logo: 'https://coin.top/production/logo/usdtlogo.png',
-    poolToken2Symbol: 'USDT.b',
+    poolToken2Symbol: 'USDT_b',
     poolToken2Logo: 'https://coin.top/production/logo/usdtlogo.png',
     startingIn: 'Thursday, April 21, 2022 7:00:00 PM GMT+07:00',
     network: ChainId.BTTC,
