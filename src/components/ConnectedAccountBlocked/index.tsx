@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import CopyHelper from 'components/AccountDetails/Copy'
 import Column from 'components/Column'
+import useTheme from 'hooks/useTheme'
 import { AlertOctagon } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
@@ -23,6 +25,7 @@ interface ConnectedAccountBlockedProps {
 }
 
 export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedProps) {
+  const theme = useTheme()
   return (
     <Modal isOpen={props.isOpen} onDismiss={Function.prototype()}>
       <ContentWrapper>
@@ -35,14 +38,17 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
         </ThemedText.DarkGray>
         <ThemedText.Main fontSize={14} marginBottom={12}>
           <Trans>This address is blocked on the Uniswap Labs interface because it is associated with one or more</Trans>{' '}
-          <ExternalLink href="">
+          <ExternalLink href="https://help.uniswap.org/en/articles/6149816">
             <Trans>blocked activities</Trans>
           </ExternalLink>
           .
         </ThemedText.Main>
         <ThemedText.Main fontSize={14}>
-          <Trans>If you believe this is an error, please email compliance@uniswap.org.</Trans>
+          <Trans>If you believe this is an error, please email: </Trans>{' '}
         </ThemedText.Main>
+        <CopyHelper toCopy="compliance@uniswap.org" color={theme.primary1}>
+          compliance@uniswap.org.
+        </CopyHelper>
       </ContentWrapper>
     </Modal>
   )
