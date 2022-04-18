@@ -21,7 +21,7 @@ function listToTokenMap(list: TokenList): ChainIdToListedTokens {
   const map = list.tokens.reduce<ChainIdToListedTokens>((tokenMap, tokenInfo) => {
     const token = new WrappedTokenInfo(tokenInfo, list)
     if (tokenMap[token.chainId]?.[token.address] !== undefined) {
-      logger.error('tokenLists/hooks', 'listToTokenMap', `Duplicate token! ${token.address}`)
+      logger.debug('tokenLists/hooks', 'listToTokenMap', `Duplicate token! ${token.address}`)
       return tokenMap
     }
     if (!tokenMap[token.chainId]) tokenMap[token.chainId] = {}
