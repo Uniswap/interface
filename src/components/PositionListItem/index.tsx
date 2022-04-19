@@ -10,10 +10,12 @@ import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
+import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
 import { PositionDetails } from 'types/position'
 import { formatTickPrice } from 'utils/formatTickPrice'
@@ -127,6 +129,14 @@ const DataText = styled.div`
 interface PositionListItemProps {
   positionDetails: PositionDetails
   isUnderfunded: boolean
+}
+
+function commafy(num: number | string) {
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
 }
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
@@ -247,6 +257,11 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
 
   const removed = liquidity?.eq(0)
 
+  const token0USDPrice = useUSDCPrice(token0 ?? undefined)
+
+  const targetPriceUSD = priceUpper && Number(priceUpper?.toSignificant(6)) * Number(token0USDPrice)
+  const priceUpperUSD = Number(pool?.token1Price.toSignificant(6)) * Number(token0USDPrice)
+
   return (
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
@@ -267,8 +282,11 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         </RangeText>{' '}
         <RangeText>
           <Trans>
-            {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}{' '}
-            <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
+            {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}
+            <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />{' '}
+            <ExtentsText>
+              <Trans> {priceUpperUSD ? <span>($ commafy(priceUpperUSD))</span> : ''}</Trans>
+            </ExtentsText>
           </Trans>
         </RangeText>{' '}
       </RowBetween>
@@ -281,7 +299,10 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         <RangeText>
           <Trans>
             {priceUpper?.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-            <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+            <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />{' '}
+            <ExtentsText>
+              <Trans> {targetPriceUSD ? <span> ($ commafy(targetPriceUSD))</span> : ''}</Trans>
+            </ExtentsText>
           </Trans>
         </RangeText>
       </RowBetween>

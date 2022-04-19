@@ -285,8 +285,28 @@ function getRatio(
   }
 }
 
-function commafy(x: string | number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+function countZeroes(x: string | number) {
+  let counter = 0
+  for (let i = 2; i < x.toString().length; i++) {
+    if (x.toString().charAt(i) != '0') return counter
+
+    counter++
+  }
+  return counter
+}
+
+function commafy(num: number | string) {
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
+function shouldntUseCommafy(x: string | number) {
+  const number = x.toString()
+  if (number.charAt(0) == '0' && number.charAt(1) == '.') return true
+  return false
 }
 
 // snapshots a src img into a canvas
@@ -744,7 +764,7 @@ export function PositionPage({
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0
 
-  const [invert, setInvert] = useState(false)
+  const [invert, setInvert] = useState(true)
 
   // check if price is within range
   const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
@@ -754,7 +774,9 @@ export function PositionPage({
   const token0USD = Number(price0?.toFixed(10))
   const token1USD = Number(price1?.toFixed(10))
 
-  const feePaidUSD = Number(serviceFeePaidKrom?.toSignificant(2)) * token0USD
+  const kromToken = (chainId && KROM[chainId]) || undefined
+  const kromPriceUSD = useUSDCPrice(kromToken)
+  const feePaidUSD = Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(5))
   const collectedAmount0USD = Number(collectedValue0?.toSignificant(6)) * token0USD
   const collectedAmount1USD = Number(collectedValue1?.toSignificant(6)) * token1USD
 
@@ -769,14 +791,20 @@ export function PositionPage({
   const invertedToken0Price = pool?.token0Price.invert().toFixed(10)
   const invertedToken1Price = pool?.token1Price.invert().toFixed(10)
 
-  const currentPriceInUSD = (token1USD / Number(pool?.token1Price.toSignificant(10))).toFixed(3)
-  const targetPriceInUSD = (token1USD / Number(priceUpper?.toSignificant(10))).toFixed(3)
-  const token1PriceUSD = Number(price1?.toFixed(2)) * Number(feeValue1?.toSignificant(1))
+  const currentPriceInUSD = token1USD / Number(pool?.token1Price.toSignificant(10))
+  const targetPriceInUSD = token1USD / Number(priceUpper?.toSignificant(4))
+  const token1PriceUSD = Number(price1?.toFixed(2)) * Number(feeValue1?.toSignificant(1)) // target value in usd
+
   const feeValue0USD = (Number(feeValue0?.toSignificant(6)) * Number(currentPriceInUSD)).toFixed(1)
   const currencyCreatedEventAmountUSD = (Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD).toFixed(1)
   const targetPriceLimitOrder =
     currencyCreatedEventAmount &&
-    (Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * Number(token1PriceUSD)).toFixed(1)
+    (Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * Number(token1USD)).toFixed(1)
+
+  const numberOfZeroes = countZeroes(currentPriceInUSD.toFixed(10))
+  const leftover = currentPriceInUSD.toFixed(10).substring(2 + numberOfZeroes)
+  const numberOfZeroesTargetPrice = countZeroes(targetPriceInUSD.toFixed(10))
+  const leftoverTargetPrice = targetPriceInUSD.toFixed(10).substring(2 + numberOfZeroes)
 
   function modalHeader() {
     return (
@@ -939,9 +967,15 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                         <RowFixed>
-                          <TYPE.main>{inverted ? feeValue0?.toSignificant(6) : feeValue1?.toSignificant(6)}</TYPE.main>
+                          <TYPE.main>
+                            {inverted
+                              ? feeValue0 && commafy(feeValue0?.toSignificant(6))
+                              : feeValue1 && feeValue1?.toSignificant(6)}
+                          </TYPE.main>
                           <TYPE.darkGray marginLeft={'5px'}>
-                            {feeValue0USD && inverted ? ` (${feeValue0USD}$)` : '(${token1PriceUSD}$)'}
+                            {feeValue0USD && inverted
+                              ? ` ($${commafy(feeValue0USD)})`
+                              : `($${commafy(token1PriceUSD)})`}
                           </TYPE.darkGray>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
@@ -957,7 +991,9 @@ export function PositionPage({
                         <RowFixed>
                           <TYPE.main>{inverted ? feeValue1?.toSignificant(6) : feeValue0?.toSignificant(6)}</TYPE.main>
                           <TYPE.darkGray marginLeft={'5px'}>
-                            {token1PriceUSD && inverted ? `(${token1PriceUSD}$)` : '(${feeValue0USD}$)'}
+                            {token1PriceUSD && inverted
+                              ? `($${commafy(token1PriceUSD)})`
+                              : `($${commafy(feeValue0USD)})`}
                           </TYPE.darkGray>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
@@ -983,14 +1019,34 @@ export function PositionPage({
                 <LightCard padding="12px" width="100%">
                   <AutoColumn gap="8px" justify="center">
                     <ExtentsText>
-                      <Trans>Current price</Trans>
+                      <Trans>Current price </Trans>
                     </ExtentsText>
                     <TYPE.mediumHeader textAlign="center">
                       <span onClick={() => setInvert(!invert)}>
                         {inverted &&
                           pool &&
                           commafy((inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6))}{' '}
-                        <StyledUSD> {currentPriceInUSD ? `(${commafy(currentPriceInUSD)}$)` : ''} </StyledUSD>
+                        <StyledUSD>
+                          {' '}
+                          {currentPriceInUSD && !shouldntUseCommafy(currentPriceInUSD) && numberOfZeroes < 3 ? (
+                            <span> (${commafy(currentPriceInUSD.toFixed(2))})</span>
+                          ) : (
+                            ''
+                          )}
+                          {currentPriceInUSD && shouldntUseCommafy(currentPriceInUSD) && numberOfZeroes < 3 ? (
+                            <span> (${commafy(currentPriceInUSD.toFixed(3))}) </span>
+                          ) : (
+                            ''
+                          )}
+                          {currentPriceInUSD && numberOfZeroes > 3 ? (
+                            <span>
+                              ($0.0<sub>{numberOfZeroes}</sub>
+                              {leftover})
+                            </span>
+                          ) : (
+                            ''
+                          )}
+                        </StyledUSD>
                       </span>
                     </TYPE.mediumHeader>
                     <ExtentsText>
@@ -1013,7 +1069,28 @@ export function PositionPage({
                     </ExtentsText>
                     <TYPE.mediumHeader textAlign="center">
                       {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
-                      {''} <StyledUSD> {targetPriceInUSD ? `(${targetPriceInUSD}$)` : ''}</StyledUSD>
+                      {''}{' '}
+                      <StyledUSD>
+                        {' '}
+                        {targetPriceInUSD && !shouldntUseCommafy(targetPriceInUSD) && numberOfZeroes < 3 ? (
+                          <span> (${commafy(targetPriceInUSD.toFixed(2))})</span>
+                        ) : (
+                          ''
+                        )}
+                        {targetPriceInUSD && shouldntUseCommafy(targetPriceInUSD) && numberOfZeroes < 3 ? (
+                          <span> (${commafy(targetPriceInUSD.toFixed(3))}) </span>
+                        ) : (
+                          ''
+                        )}
+                        {targetPriceInUSD && numberOfZeroes > 3 ? (
+                          <span>
+                            ($0.0<sub>{numberOfZeroesTargetPrice}</sub>
+                            {leftoverTargetPrice})
+                          </span>
+                        ) : (
+                          ''
+                        )}
+                      </StyledUSD>
                     </TYPE.mediumHeader>
 
                     <ExtentsText>
@@ -1058,12 +1135,12 @@ export function PositionPage({
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}
-                        {currencyCreatedEventAmountUSD ? ` (${commafy(currencyCreatedEventAmountUSD)}$)` : ''} for{' '}
+                        {currencyCreatedEventAmountUSD ? ` ($${commafy(currencyCreatedEventAmountUSD)})` : ''} for{' '}
                         {targetPrice && currencyCreatedEventAmount
                           ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2))
                           : ''}
                         {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
-                        {targetPriceLimitOrder && ` (${commafy(targetPriceLimitOrder)}$)`}↗
+                        {targetPriceLimitOrder && ` ($${commafy(targetPriceLimitOrder)})`}↗
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -1084,10 +1161,10 @@ export function PositionPage({
                       <Trans>
                         Collected {collectedValue0 ? commafy(collectedValue0?.toSignificant(3)) : ''}{' '}
                         {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''}
-                        {collectedAmount0USD ? ` (${commafy(collectedAmount0USD.toFixed(2))}$) ` : ' '}
+                        {collectedAmount0USD ? ` ($${commafy(collectedAmount0USD.toFixed(2))}) ` : ' '}
                         and {collectedValue1 ? commafy(collectedValue1?.toFixed(6)) : ''}{' '}
                         {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''}
-                        {collectedAmount0USD ? ` (${commafy(collectedAmount1USD.toFixed(2))}$) ` : ''}↗
+                        {collectedAmount0USD ? ` ($${commafy(collectedAmount1USD.toFixed(2))}) ` : ''}↗
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -1109,7 +1186,7 @@ export function PositionPage({
                       <Trans>
                         Paid {serviceFeePaidKrom?.toSignificant(2)}{' '}
                         {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
-                        {feePaidUSD ? ` (${commafy(feePaidUSD.toFixed(2))}$) ` : ''}
+                        {feePaidUSD ? ` ($${commafy(feePaidUSD.toFixed(2))}) ` : ''}
                         service fees ↗
                       </Trans>
                     </TYPE.subHeader>

@@ -1,7 +1,8 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Ether, NativeCurrency, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { FACTORY_ADDRESS, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import {
   computePoolAddress,
   encodeSqrtRatioX96,
@@ -21,6 +22,7 @@ import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { PoolState, usePools } from 'hooks/usePools'
+import { useV2Pair, useV2Pairs } from 'hooks/useV2Pairs'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -30,6 +32,7 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
 import { useNetworkGasPrice, useUserTickOffset, useUserTickSize } from 'state/user/hooks'
 
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useCurrency } from '../../hooks/Tokens'
 import { useLimitOrderManager, useUniswapUtils } from '../../hooks/useContract'
 import useENS from '../../hooks/useENS'
@@ -488,14 +491,23 @@ export function usePoolAddress(
   let address = ''
   const existingPoolFee = useExisitingPool(aToken, bToken)
 
-  if (aToken && bToken) {
+  if (aToken && bToken && existingPoolFee) {
     bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
     aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
 
     if (aToken.isToken && bToken.isToken && existingPoolFee) {
       address = Pool.getAddress(aToken, bToken, existingPoolFee)
+      console.log('address')
+      console.log(address)
       nameOfNetwork = ChainName[aToken?.chainId]
     }
+  } else if ((address == '' || address == undefined || address == null) && aToken && bToken) {
+    address = computePairAddress({
+      factoryAddress: V2_FACTORY_ADDRESSES[aToken.chainId],
+      tokenA: aToken.wrapped,
+      tokenB: bToken.wrapped,
+    })
+    nameOfNetwork = ChainName[aToken?.chainId]
   } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
     nameOfNetwork = ChainName[aToken?.chainId]
     address = aToken.address
