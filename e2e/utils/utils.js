@@ -20,7 +20,4 @@ export async function quickOnboarding() {
   // enter account name
   await element(by.id('import_account_form/input')).typeText(Accounts.managed.name)
   await element(by.id(ElementName.Submit)).tap()
-
-  // Back to home
-  await element(by.id(ElementName.Back)).tap()
 }
