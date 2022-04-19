@@ -57,6 +57,8 @@ export const routingApi0x = createApi({
           sellAmount: string | null
           buyAmount: string | null
           slippagePercentage: string
+          takerAddress: string | null
+          skipValidation: boolean
         }
       }
     >({

@@ -5,6 +5,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useMemo } from 'react'
+import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
 import { SwapTransaction, V3TradeState } from 'state/routing/types'
 import { useInchSwapAPITrade } from 'state/routing/useRoutingAPITrade'
 
@@ -16,7 +17,7 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useV2RouterContract } from './useContract'
+import { useKromatikaRouter, useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
@@ -65,7 +66,7 @@ function useMarketCallArguments(
   showConfirm: boolean
 ): {
   state: V3TradeState
-  trade: V2Trade<Currency, Currency, TradeType> | null
+  trade: V2Trade<Currency, Currency, TradeType> | null | undefined
   tx: SwapTransaction | undefined
   marketcall: MarketCall[]
 } {
@@ -76,22 +77,32 @@ function useMarketCallArguments(
   const deadline = useTransactionDeadline()
   const argentWalletContract = useArgentWalletContract()
 
+  // 1 - 0xProtocol ; 2-1inch
+
   const swapAPITrade = useInchSwapAPITrade(
     swapTransaction,
     swapTransaction?.type == 1 ? TradeType.EXACT_OUTPUT : trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
-    showConfirm,
+    recipient,
     trade?.inputAmount,
     trade?.outputAmount.currency
   )
 
-  const updatedSwapTxn = useMemo(() => {
-    if (swapTransaction?.type == 1) return swapTransaction
+  const routingAPITrade = use0xQuoteAPITrade(
+    trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
+    recipient,
+    true,
+    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
+    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency
+  )
 
-    return swapAPITrade.tx
-  }, [swapAPITrade, swapTransaction])
+  const updatedSwapTxn = useMemo(() => {
+    if (swapTransaction?.type == 1) return routingAPITrade
+
+    return swapAPITrade
+  }, [routingAPITrade, swapAPITrade, swapTransaction?.type])
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline || !updatedSwapTxn || !swapAPITrade)
+    if (!trade || !recipient || !library || !account || !chainId || !deadline || !updatedSwapTxn || !updatedSwapTxn.tx)
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -99,12 +110,12 @@ function useMarketCallArguments(
         marketcall: [],
       }
     // trade is V3Trade
-    const swapRouterAddress = updatedSwapTxn.to
+    const swapRouterAddress = updatedSwapTxn.tx?.to
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return {
-        state: swapAPITrade.state,
-        trade: swapAPITrade.trade,
-        tx: swapAPITrade.tx,
+        state: updatedSwapTxn.state,
+        trade: updatedSwapTxn.trade,
+        tx: updatedSwapTxn.tx,
         marketcall: [
           {
             address: argentWalletContract.address,
@@ -113,42 +124,31 @@ function useMarketCallArguments(
                 approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
                 {
                   to: swapRouterAddress,
-                  value: updatedSwapTxn.value,
-                  data: updatedSwapTxn.data,
+                  value: updatedSwapTxn.tx.value,
+                  data: updatedSwapTxn.tx.data,
                 },
               ],
             ]),
             value: '0x0',
-            gas: updatedSwapTxn.gas,
+            gas: updatedSwapTxn.tx.gas,
           },
         ],
       }
     }
     return {
-      state: swapAPITrade.state,
-      trade: swapAPITrade.trade,
-      tx: swapAPITrade.tx,
+      state: updatedSwapTxn.state,
+      trade: updatedSwapTxn.trade,
+      tx: updatedSwapTxn.tx,
       marketcall: [
         {
           address: swapRouterAddress,
-          value: toHex(updatedSwapTxn.value),
-          calldata: updatedSwapTxn.data,
-          gas: updatedSwapTxn.gas,
+          value: toHex(updatedSwapTxn.tx.value),
+          calldata: updatedSwapTxn.tx.data,
+          gas: updatedSwapTxn.tx.gas,
         },
       ],
     }
-  }, [
-    trade,
-    recipient,
-    library,
-    account,
-    chainId,
-    deadline,
-    updatedSwapTxn,
-    swapAPITrade,
-    argentWalletContract,
-    allowedSlippage,
-  ])
+  }, [trade, recipient, library, account, chainId, deadline, updatedSwapTxn, argentWalletContract, allowedSlippage])
 }
 
 /**

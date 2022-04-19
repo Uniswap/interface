@@ -29,6 +29,8 @@ export function useBestMarketTrade(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const routingAPITrade = use0xQuoteAPITrade(
     tradeType,
+    null,
+    true,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
     otherCurrency
   )

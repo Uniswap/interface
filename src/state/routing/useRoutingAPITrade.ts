@@ -49,7 +49,7 @@ function useQuoteAPIArguments({
     chainId: chainId.toString(),
     queryArg: {
       fromTokenAddress: tokenIn.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenIn.wrapped.address,
-      toTokenAddress: tokenOut.wrapped.address,
+      toTokenAddress: tokenOut.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenOut.wrapped.address,
       amount: amount.quotient.toString(),
     },
   }
@@ -65,12 +65,14 @@ function useSwapAPIArguments({
   tokenOut,
   amount,
   tradeType,
+  recipient,
 }: {
   swapTransaction: SwapTransaction | null | undefined
   tokenIn: Currency | undefined
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
+  recipient: string | null | undefined
 }) {
   const { chainId, account } = useActiveWeb3React()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
@@ -93,11 +95,11 @@ function useSwapAPIArguments({
     chainId: chainId.toString(),
     queryArg: {
       fromTokenAddress: tokenIn.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenIn.wrapped.address,
-      toTokenAddress: tokenOut.wrapped.address,
+      toTokenAddress: tokenOut.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenOut.wrapped.address,
       amount: amount.quotient.toString(),
       fromAddress: account.toString(),
       slippage: allowedSlippage.toSignificant(6),
-      destReceiver: account.toString(),
+      destReceiver: recipient ? recipient : account.toString(),
       disableEstimate: false,
     },
   }
@@ -219,7 +221,7 @@ export function useInchQuoteAPITrade(
 export function useInchSwapAPITrade(
   swapTransaction: SwapTransaction | null | undefined,
   tradeType: TradeType,
-  showConfirm: boolean,
+  recipient: string | null | undefined,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
@@ -241,6 +243,7 @@ export function useInchSwapAPITrade(
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
+    recipient,
   })
 
   const { isLoading, isError, data } = useGetSwapInchQuery(queryArgs ?? skipToken, {

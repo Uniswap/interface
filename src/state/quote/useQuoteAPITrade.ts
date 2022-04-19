@@ -25,11 +25,15 @@ function useRoutingAPIArguments({
   tokenOut,
   amount,
   tradeType,
+  recipient,
+  skipValidation,
 }: {
   tokenIn: Currency | undefined
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
+  recipient: string | null | undefined
+  skipValidation: boolean
 }) {
   const { chainId, account } = useActiveWeb3React()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
@@ -42,10 +46,12 @@ function useRoutingAPIArguments({
     chainId: chainId.toString(),
     queryArg: {
       sellToken: tokenIn.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenIn.wrapped.address,
-      buyToken: tokenOut.wrapped.address,
+      buyToken: tokenOut.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenOut.wrapped.address,
       sellAmount: tradeType == TradeType.EXACT_INPUT ? amount.quotient.toString() : null,
       buyAmount: tradeType == TradeType.EXACT_OUTPUT ? amount.quotient.toString() : null,
       slippagePercentage: allowedSlippage.divide(1_000).toSignificant(6),
+      takerAddress: recipient ? recipient : account.toString(),
+      skipValidation,
     },
   }
 }
@@ -58,6 +64,8 @@ function useRoutingAPIArguments({
  */
 export function use0xQuoteAPITrade(
   tradeType: TradeType,
+  recipient: string | null | undefined,
+  skipValidation: boolean,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
@@ -79,6 +87,8 @@ export function use0xQuoteAPITrade(
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
+    recipient,
+    skipValidation,
   })
 
   const { isLoading, isError, data } = useGetSwap0xQuery(queryArgs ?? skipToken, {
