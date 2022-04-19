@@ -105,7 +105,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.WALLET_CONNECTED:
-          mixpanel.register({ wallet_address: account, platform: isMobile ? 'Mobile' : 'Web' })
+          mixpanel.register({ wallet_address: account, platform: isMobile ? 'Mobile' : 'Web', network })
           mixpanel.track('Wallet Connected')
           break
         case MIXPANEL_TYPE.SWAP_INITIATED: {
@@ -114,7 +114,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             output_token: outputSymbol,
             estimated_gas: trade?.gasUsd.toFixed(4),
             max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
-            network,
             trade_amount: trade?.inputAmount.toExact(),
           })
           break
@@ -134,7 +133,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
                 parseFloat(ethPrice.currentPrice)
               ).toFixed(4),
             max_return_or_low_gas: arbitrary.saveGas ? 'Lowest Gas' : 'Maximum Return',
-            network,
             trade_amount: arbitrary.inputAmount,
           })
           break
@@ -143,7 +141,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Advanced Mode Switched On', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            network,
           })
           break
         }
@@ -153,14 +150,12 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             input_token: inputSymbol,
             output_token: outputSymbol,
             new_slippage,
-            network,
           })
           break
         }
         case MIXPANEL_TYPE.LIVE_CHART_ON_OFF: {
           const { live_chart_on_or_off } = payload
           mixpanel.track('Live Chart Turned On/Off (Desktop)', {
-            network,
             live_chart_on_or_off: live_chart_on_or_off ? 'On' : 'Off',
           })
           break
@@ -168,28 +163,22 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         case MIXPANEL_TYPE.TRADING_ROUTE_ON_OFF: {
           const { trading_route_on_or_off } = payload
           mixpanel.track('Trading Route Turned On/Off (Desktop)', {
-            network,
             trading_route_on_or_off: trading_route_on_or_off ? 'On' : 'Off',
           })
           break
         }
         case MIXPANEL_TYPE.LIVE_CHART_ON_MOBILE: {
-          mixpanel.track('Live Chart Turned On (Mobile)', {
-            network,
-          })
+          mixpanel.track('Live Chart Turned On (Mobile)')
           break
         }
         case MIXPANEL_TYPE.TRADING_ROUTE_ON_MOBILE: {
-          mixpanel.track('Trading Route Turned On (Mobile)', {
-            network,
-          })
+          mixpanel.track('Trading Route Turned On (Mobile)')
           break
         }
         case MIXPANEL_TYPE.TOKEN_INFO_CHECKED: {
           mixpanel.track('Token information viewed in Info tab (Swap Page)', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            network,
           })
           break
         }
@@ -197,7 +186,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Token Swap Link Shared', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            network,
           })
           break
         }
@@ -210,9 +198,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.CREATE_POOL_INITITATED: {
-          mixpanel.track('Create New Pool Initiated', {
-            network,
-          })
+          mixpanel.track('Create New Pool Initiated')
           break
         }
         case MIXPANEL_TYPE.CREATE_POOL_COMPLETED: {
@@ -229,7 +215,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Create New Pool Link Shared', {
             token_1,
             token_2,
-            network,
           })
           break
         }
@@ -238,7 +223,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Add Liquidity Initiated', {
             token_1,
             token_2,
-            network,
           })
           break
         }
@@ -248,122 +232,111 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             token_1,
             token_2,
             add_liquidity_method,
-            network,
           })
           break
         }
         case MIXPANEL_TYPE.REMOVE_LIQUIDITY_COMPLETED: {
           const { token_1, token_2, remove_liquidity_method } = payload
-
           mixpanel.track('Remove Liquidity Completed', {
             token_1,
             token_2,
             remove_liquidity_method,
-            network,
           })
-
           break
         }
         case MIXPANEL_TYPE.REMOVE_LIQUIDITY_INITIATED: {
           const { token_1, token_2 } = payload
-
           mixpanel.track('Remove Liquidity Initiated', {
             token_1,
             token_2,
-            network,
           })
 
           break
         }
         case MIXPANEL_TYPE.MIGRATE_LIQUIDITY_INITIATED: {
-          mixpanel.track('Migrate Liquidity Initiated', {
-            network,
-          })
-
+          mixpanel.track('Migrate Liquidity Initiated')
           break
         }
         case MIXPANEL_TYPE.CLAIM_REWARDS_INITIATED: {
-          mixpanel.track('Claim Rewards Initiated', { network })
+          mixpanel.track('Claim Rewards Initiated')
 
           break
         }
         case MIXPANEL_TYPE.IMPORT_POOL_INITIATED: {
-          mixpanel.track('Import Pool Initiated', { network })
+          mixpanel.track('Import Pool Initiated')
 
           break
         }
         case MIXPANEL_TYPE.MYPOOLS_STAKED_VIEWED: {
-          mixpanel.track(`My Pools - 'Staked Pools' Tab Viewed`, {
-            network,
-          })
+          mixpanel.track(`My Pools - 'Staked Pools' Tab Viewed`, {})
 
           break
         }
         case MIXPANEL_TYPE.MYPOOLS_POOLS_VIEWED: {
-          mixpanel.track(`My Pools - 'Pools' Tab Viewed`, { network })
+          mixpanel.track(`My Pools - 'Pools' Tab Viewed`)
 
           break
         }
         case MIXPANEL_TYPE.FARMS_ACTIVE_VIEWED: {
-          mixpanel.track(`Farms - 'Active' Tab Viewed`, { network })
+          mixpanel.track(`Farms - 'Active' Tab Viewed`)
 
           break
         }
         case MIXPANEL_TYPE.FARMS_ENDING_VIEWED: {
-          mixpanel.track(`Farms - 'Ending' Tab Viewed`, { network })
+          mixpanel.track(`Farms - 'Ending' Tab Viewed`)
 
           break
         }
         case MIXPANEL_TYPE.FARMS_UPCOMING_VIEWED: {
-          mixpanel.track(`Farms - 'Upcoming' Tab Viewed`, { network })
+          mixpanel.track(`Farms - 'Upcoming' Tab Viewed`)
 
           break
         }
         case MIXPANEL_TYPE.FARMS_MYVESTING_VIEWED: {
-          mixpanel.track(`Farms - 'My Vesting' Tab Viewed`, { network })
+          mixpanel.track(`Farms - 'My Vesting' Tab Viewed`)
 
           break
         }
         case MIXPANEL_TYPE.INDIVIDUAL_REWARD_HARVESTED: {
           const { reward_tokens_and_amounts } = payload
-          mixpanel.track('Individual Reward Harvested', { network, reward_tokens_and_amounts })
+          mixpanel.track('Individual Reward Harvested', { reward_tokens_and_amounts })
 
           break
         }
         case MIXPANEL_TYPE.ALL_REWARDS_HARVESTED: {
           const { reward_tokens_and_amounts } = payload
 
-          mixpanel.track('All Rewards Harvested', { network, reward_tokens_and_amounts })
+          mixpanel.track('All Rewards Harvested', { reward_tokens_and_amounts })
 
           break
         }
         case MIXPANEL_TYPE.SINGLE_REWARD_CLAIMED: {
           const { reward_token, reward_amount } = payload
 
-          mixpanel.track('Single Reward Claimed', { network, reward_token, reward_amount })
+          mixpanel.track('Single Reward Claimed', { reward_token, reward_amount })
 
           break
         }
         case MIXPANEL_TYPE.ALL_REWARDS_CLAIMED: {
           const { reward_tokens_and_amounts } = payload
 
-          mixpanel.track('All Rewards Claimed', { network, reward_tokens_and_amounts })
+          mixpanel.track('All Rewards Claimed', { reward_tokens_and_amounts })
           break
         }
         case MIXPANEL_TYPE.ABOUT_SWAP_CLICKED: {
-          mixpanel.track('About - Swap Clicked', { network })
+          mixpanel.track('About - Swap Clicked')
           break
         }
         case MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED: {
-          mixpanel.track('About - Start Earning Clicked', { network })
+          mixpanel.track('About - Start Earning Clicked')
           break
         }
         case MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED: {
-          mixpanel.track('About - View Farms Clicked', { network })
+          mixpanel.track('About - View Farms Clicked')
           break
         }
         case MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED: {
-          mixpanel.track('About - Create New Pool Clicked', { network })
+          mixpanel.track('About - Create New Pool Clicked')
           break
         }
         case MIXPANEL_TYPE.CREATE_REFERRAL_CLICKED: {
@@ -377,11 +350,11 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.DISCOVER_TRENDING_SOON_CLICKED: {
-          mixpanel.track('Discover - Trending Soon Tab Clicked', { network })
+          mixpanel.track('Discover - Trending Soon Tab Clicked')
           break
         }
         case MIXPANEL_TYPE.DISCOVER_TRENDING_CLICKED: {
-          mixpanel.track('Discover - Trending Tab Clicked', { network })
+          mixpanel.track('Discover - Trending Tab Clicked')
           break
         }
         case MIXPANEL_TYPE.DISCOVER_SWAP_INITIATED: {
@@ -396,28 +369,27 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.DISCOVER_SWAP_DISCOVER_MORE_CLICKED: {
-          mixpanel.track('Discover - "Discover more" clicked from Swap Page', { network })
+          mixpanel.track('Discover - "Discover more" clicked from Swap Page')
           break
         }
         case MIXPANEL_TYPE.DISCOVER_SWAP_SEE_HERE_CLICKED: {
           const { trending_token } = payload
-          mixpanel.track('Discover - "See here" clicked from Swap page', { network, trending_token })
+          mixpanel.track('Discover - "See here" clicked from Swap page', { trending_token })
           break
         }
         case MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_CLICKED: {
           const { trending_token } = payload
-          mixpanel.track('Discover - "Buy Now" clicked on Swap Page', { network, trending_token })
+          mixpanel.track('Discover - "Buy Now" clicked on Swap Page', { trending_token })
           break
         }
         case MIXPANEL_TYPE.DISCOVER_SWAP_MORE_INFO_CLICKED: {
           const { trending_token } = payload
-          mixpanel.track('Discover - "More info" clicked on Swap Page', { network, trending_token })
+          mixpanel.track('Discover - "More info" clicked on Swap Page', { trending_token })
           break
         }
         case MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED: {
           const { trending_token } = payload
           mixpanel.track('Discover - "Buy Now" clicked in pop-up after \'More Info\' on Swap page', {
-            network,
             trending_token,
           })
           break
@@ -439,7 +411,7 @@ export const useGlobalMixpanelEvents = () => {
   useEffect(() => {
     if (account && isAddress(account)) {
       mixpanel.init(process.env.REACT_APP_MIXPANEL_PROJECT_TOKEN || '', {
-        debug: true,
+        debug: process.env.REACT_APP_MAINNET_ENV === 'staging',
       })
       mixpanel.identify(account)
       mixpanel.people.set({})
