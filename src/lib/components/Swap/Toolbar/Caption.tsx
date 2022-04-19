@@ -86,7 +86,7 @@ export function WrapCurrency({ inputCurrency, outputCurrency }: { inputCurrency:
   const Text = useCallback(
     () => (
       <Trans>
-        Convert {inputCurrency.symbol} to {outputCurrency.symbol} with no slippage
+        Convert {inputCurrency.symbol} to {outputCurrency.symbol}
       </Trans>
     ),
     [inputCurrency.symbol, outputCurrency.symbol]
