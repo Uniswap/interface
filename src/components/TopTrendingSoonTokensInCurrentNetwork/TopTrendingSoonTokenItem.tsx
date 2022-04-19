@@ -19,6 +19,7 @@ import { useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { MouseoverTooltipDesktopOnly } from 'components/Tooltip'
 import { t } from '@lingui/macro'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const TopTrendingSoonTokenItem = ({
   tokenData,
@@ -30,7 +31,7 @@ const TopTrendingSoonTokenItem = ({
   setSelectedToken: React.Dispatch<React.SetStateAction<TrueSightTokenData | undefined>>
 }) => {
   const theme = useTheme()
-
+  const { mixpanelHandler } = useMixpanel()
   const { chainId = ChainId.MAINNET } = useActiveWeb3React()
   const currentNetworkIndex = Object.values(TRUESIGHT_NETWORK_TO_CHAINID).indexOf(chainId)
   const currentNetwork = Object.keys(TRUESIGHT_NETWORK_TO_CHAINID)[currentNetworkIndex]
@@ -39,6 +40,7 @@ const TopTrendingSoonTokenItem = ({
   const onSelectToken = () => {
     setSelectedToken(tokenData)
     toggleTrendingSoonTokenDetailModal()
+    mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_MORE_INFO_CLICKED, { trending_token: tokenData.symbol })
   }
 
   return (
@@ -97,6 +99,9 @@ const TopTrendingSoonTokenItem = ({
                 width: '20px',
                 height: '20px',
               }}
+              onClick={() =>
+                mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_CLICKED, { trending_token: tokenData.symbol })
+              }
             >
               <MoneyBag color={theme.primary} size={12} />
             </ButtonEmpty>

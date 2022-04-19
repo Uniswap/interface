@@ -78,13 +78,15 @@ const ButtonWithOptions = ({
                     key={platform}
                     alignItems="center"
                     onClick={() => {
-                      triggerDiscoverSwapInitiated(platform)
                       toggleTrendingSoonTokenDetailModal()
                       history.push(
                         `/swap?inputCurrency=ETH&outputCurrency=${getAddress(
                           platforms.get(platform) ?? '',
                         )}&networkId=${mappedChainId}`,
                       )
+                      mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED, {
+                        trending_token: tokenData.symbol,
+                      })
                     }}
                   >
                     <img src={NETWORK_ICON[mappedChainId]} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
