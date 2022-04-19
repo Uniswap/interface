@@ -20,6 +20,7 @@ import { ChainName } from 'constants/chains'
 import { KROM, WETH9_EXTENDED } from 'constants/tokens'
 import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
+import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { PoolState, usePools } from 'hooks/usePools'
 import { useV2Pair, useV2Pairs } from 'hooks/useV2Pairs'
@@ -490,16 +491,21 @@ export function usePoolAddress(
   let nameOfNetwork = ''
   let address = ''
   const existingPoolFee = useExisitingPool(aToken, bToken)
+  const { chainId } = useActiveWeb3React()
 
-  if (aToken && bToken && existingPoolFee) {
+  // v2 pair address
+  const [state, pair] = useV2Pair(aToken as Currency, bToken as Currency)
+
+  if (aToken && bToken) {
     bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
     aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
 
     if (aToken.isToken && bToken.isToken && existingPoolFee) {
       address = Pool.getAddress(aToken, bToken, existingPoolFee)
-      console.log('address')
-      console.log(address)
-      nameOfNetwork = ChainName[aToken?.chainId]
+      nameOfNetwork = ChainName[aToken?.chainId] || ''
+    } else if (state == 3) {
+      address = Pair.getAddress(aToken, bToken)
+      nameOfNetwork = (pair && pair.chainId && ChainName[pair?.chainId]) || ''
     }
   } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
     nameOfNetwork = ChainName[aToken?.chainId]
@@ -507,13 +513,13 @@ export function usePoolAddress(
   }
 
   if (address == '' || address == undefined || address == null) {
-    poolAddress = '0x6ae0cdc5d2b89a8dcb99ad6b3435b3e7f7290077'
+    poolAddress = (chainId && KROM[chainId].address) || ''
   } else if (address != poolAddress) {
     poolAddress = address
   }
 
   if (nameOfNetwork == '' || nameOfNetwork == undefined || nameOfNetwork == null) {
-    networkName = 'ethereum'
+    networkName = (chainId && ChainName[chainId]) || ''
   } else if (nameOfNetwork != networkName) {
     networkName = nameOfNetwork
   }
