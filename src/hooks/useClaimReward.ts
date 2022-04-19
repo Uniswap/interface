@@ -18,7 +18,7 @@ export default function useClaimReward() {
   const [rewardAmounts, setRewardAmounts] = useState('0')
   const [error, setError] = useState<string | null>(null)
   const { data } = useSWR(
-    isValid ? (chainId === ChainId.ROPSTEN ? 'claim-reward-data.json' : CLAIM_REWARDS_DATA_URL) : '',
+    isValid ? CLAIM_REWARDS_DATA_URL[chainId] : '',
     (url: string) => fetch(url).then(r => r.json()),
   )
   const userReward = data && account && data.userRewards[account]

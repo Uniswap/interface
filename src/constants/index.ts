@@ -179,7 +179,7 @@ export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSCTESTNET]: '',
   [ChainId.BSCMAINNET]: '',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: '',
+  [ChainId.AVAXMAINNET]: '0x610A05127d51dd42031A39c25aF951a8e77cDDf7',
   [ChainId.FANTOM]: '',
   [ChainId.CRONOSTESTNET]: '',
   [ChainId.CRONOS]: '',
@@ -1365,9 +1365,13 @@ export const CREATE_POOL_AMP_HINT = t`Stands for amplification factor. Pools wit
 export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'
 
-export const CLAIM_REWARDS_DATA_URL =
-  'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json'
+export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
+    [ChainId.ROPSTEN]: 'claim-reward-data.json',
+    [ChainId.AVAXMAINNET]: 'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/add-reward-data/results/phase_0/proofData.json',
+    [ChainId.BSCMAINNET]: 'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
+}
 
+  
 export const sentryRequestId = uuid()
 
 // Fee options instead of dynamic fee
