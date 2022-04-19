@@ -1367,7 +1367,7 @@ export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
 
 export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
     [ChainId.ROPSTEN]: 'claim-reward-data.json',
-    [ChainId.AVAXMAINNET]: 'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/add-reward-data/results/phase_0/proofData.json',
+    [ChainId.AVAXMAINNET]: 'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/add-reward-data/results/phase_0/reward_proof.json',
     [ChainId.BSCMAINNET]: 'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
 }
 
