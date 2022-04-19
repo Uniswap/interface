@@ -791,9 +791,9 @@ export function PositionPage({
   const invertedToken0Price = pool?.token0Price.invert().toFixed(10)
   const invertedToken1Price = pool?.token1Price.invert().toFixed(10)
 
-  const currentPriceInUSD = token1USD / Number(pool?.token1Price.toSignificant(10))
+  const currentPriceInUSD = token1USD && token1USD / Number(pool?.token1Price.toSignificant(10))
   const targetPriceInUSD = token1USD / Number(priceUpper?.toSignificant(4))
-  const token1PriceUSD = Number(price1?.toFixed(2)) * Number(feeValue1?.toSignificant(1)) // target value in usd
+  const token1PriceUSD = (Number(price1?.toFixed(2)) * Number(feeValue1?.toSignificant(1))).toString() // target value in usd
 
   const feeValue0USD = (Number(feeValue0?.toSignificant(6)) * Number(currentPriceInUSD)).toFixed(1)
   const currencyCreatedEventAmountUSD = (Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD).toFixed(1)
@@ -973,9 +973,7 @@ export function PositionPage({
                               : feeValue1 && feeValue1?.toSignificant(6)}
                           </TYPE.main>
                           <TYPE.darkGray marginLeft={'5px'}>
-                            {feeValue0USD && inverted
-                              ? ` ($${commafy(feeValue0USD)})`
-                              : `($${commafy(token1PriceUSD)})`}
+                            {feeValue0USD && feeValue0USD != 'NaN' ? ` ($${commafy(feeValue0USD)})` : '($-)'}
                           </TYPE.darkGray>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
@@ -991,9 +989,7 @@ export function PositionPage({
                         <RowFixed>
                           <TYPE.main>{inverted ? feeValue1?.toSignificant(6) : feeValue0?.toSignificant(6)}</TYPE.main>
                           <TYPE.darkGray marginLeft={'5px'}>
-                            {token1PriceUSD && inverted
-                              ? `($${commafy(token1PriceUSD)})`
-                              : `($${commafy(feeValue0USD)})`}
+                            {token1PriceUSD && token1PriceUSD != 'NaN' ? `($${commafy(token1PriceUSD)})` : '($-)'}
                           </TYPE.darkGray>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
@@ -1138,7 +1134,7 @@ export function PositionPage({
                         {currencyCreatedEventAmountUSD ? ` ($${commafy(currencyCreatedEventAmountUSD)})` : ''} for{' '}
                         {targetPrice && currencyCreatedEventAmount
                           ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2))
-                          : ''}
+                          : ''}{' '}
                         {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
                         {targetPriceLimitOrder && ` ($${commafy(targetPriceLimitOrder)})`}↗
                       </Trans>

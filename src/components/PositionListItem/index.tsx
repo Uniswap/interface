@@ -126,6 +126,22 @@ const DataText = styled.div`
   `};
 `
 
+function countZeroes(x: string | number) {
+  let counter = 0
+  for (let i = 2; i < x.toString().length; i++) {
+    if (x.toString().charAt(i) != '0') return counter
+
+    counter++
+  }
+  return counter
+}
+
+function shouldntUseCommafy(x: string | number) {
+  const number = x.toString()
+  if (number.charAt(0) == '0' && number.charAt(1) == '.') return true
+  return false
+}
+
 interface PositionListItemProps {
   positionDetails: PositionDetails
   isUnderfunded: boolean
@@ -257,10 +273,34 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
 
   const removed = liquidity?.eq(0)
 
-  const token0USDPrice = useUSDCPrice(token0 ?? undefined)
+  const token0USDPrice = useUSDCPrice(token1 ?? undefined)
 
-  const targetPriceUSD = priceUpper && Number(priceUpper?.toSignificant(6)) * Number(token0USDPrice)
-  const priceUpperUSD = Number(pool?.token1Price.toSignificant(6)) * Number(token0USDPrice)
+  // =============================== PAIR VALUE  ====================================================
+
+  const pairUpperNumberOfZeroes = priceUpper && countZeroes(priceUpper.toSignificant(10))
+  const pairUpperLeftover =
+    pairUpperNumberOfZeroes && pairUpperNumberOfZeroes > 0 && priceUpper.toSignificant(10).toString().substring(2)
+
+  const targetPriceNumberOfZeroes = targetPrice && countZeroes(targetPrice.toSignificant(10))
+  const targetPriceLeftover =
+    targetPriceNumberOfZeroes && targetPriceNumberOfZeroes > 0 && targetPrice.toSignificant(10).toString().substring(2)
+
+  // =============================== USD ====================================================
+  const targetPriceUSD =
+    priceUpper && (Number(token0USDPrice?.toSignificant(6)) / Number(priceUpper?.toSignificant(6))).toFixed(2)
+  const priceUpperUSD =
+    token0USDPrice && (Number(token0USDPrice?.toSignificant(6)) / Number(pool?.token1Price.toSignificant(6))).toFixed(2)
+
+  const numberOfZeroes = targetPriceUSD && countZeroes(targetPriceUSD)
+  const leftover =
+    numberOfZeroes &&
+    Number(numberOfZeroes) > 0 &&
+    targetPriceUSD &&
+    targetPriceUSD.substring(2 + Number(numberOfZeroes))
+
+  const numberOfZeroesCurrentPrice = priceUpperUSD && countZeroes(priceUpperUSD)
+  const leftoverTargetPrice =
+    Number(numberOfZeroesCurrentPrice) > 0 && priceUpperUSD && priceUpperUSD.substring(2 + Number(numberOfZeroes))
 
   return (
     <LinkRow to={positionSummaryLink}>
@@ -282,10 +322,32 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         </RangeText>{' '}
         <RangeText>
           <Trans>
-            {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}
+            {pool && pool.token1Price ? pool?.token1Price.toSignificant(2) : ' '}{' '}
             <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />{' '}
             <ExtentsText>
-              <Trans> {priceUpperUSD ? <span>($ commafy(priceUpperUSD))</span> : ''}</Trans>
+              <Trans>
+                {priceUpperUSD && !shouldntUseCommafy(priceUpperUSD) ? (
+                  <span>(${commafy(Number(priceUpperUSD).toFixed(1))})</span>
+                ) : (
+                  ''
+                )}
+                {priceUpperUSD && shouldntUseCommafy(priceUpperUSD) && numberOfZeroes && numberOfZeroes < 3 ? (
+                  <span>${Number(commafy(priceUpperUSD)).toFixed(1)}</span>
+                ) : (
+                  ''
+                )}
+                {priceUpperUSD &&
+                shouldntUseCommafy(priceUpperUSD) &&
+                numberOfZeroesCurrentPrice &&
+                numberOfZeroesCurrentPrice > 3 ? (
+                  <span>
+                    {' '}
+                    ($ 0.0<sub>{numberOfZeroesCurrentPrice}</sub> {leftoverTargetPrice}){' '}
+                  </span>
+                ) : (
+                  ''
+                )}
+              </Trans>
             </ExtentsText>
           </Trans>
         </RangeText>{' '}
@@ -298,10 +360,37 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         </RangeText>
         <RangeText>
           <Trans>
-            {priceUpper?.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+            {priceUpper?.toSignificant(2)} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}
             <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />{' '}
             <ExtentsText>
-              <Trans> {targetPriceUSD ? <span> ($ commafy(targetPriceUSD))</span> : ''}</Trans>
+              <Trans>
+                {targetPriceUSD && targetPriceUSD != 'NaN' && !shouldntUseCommafy(targetPriceUSD) ? (
+                  <span>(${commafy(Number(targetPriceUSD).toFixed(1))})</span>
+                ) : (
+                  ''
+                )}
+                {targetPriceUSD &&
+                targetPriceUSD != 'NaN' &&
+                shouldntUseCommafy(targetPriceUSD) &&
+                numberOfZeroes &&
+                numberOfZeroes < 3 ? (
+                  <span>${Number(commafy(targetPriceUSD)).toFixed(1)}</span>
+                ) : (
+                  ''
+                )}
+                {targetPriceUSD &&
+                targetPriceUSD != 'NaN' &&
+                shouldntUseCommafy(targetPriceUSD) &&
+                numberOfZeroes &&
+                numberOfZeroes > 3 ? (
+                  <span>
+                    {' '}
+                    ($ 0.0<sub>{numberOfZeroes}</sub> {leftover}){' '}
+                  </span>
+                ) : (
+                  ''
+                )}
+              </Trans>
             </ExtentsText>
           </Trans>
         </RangeText>

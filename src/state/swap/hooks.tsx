@@ -501,13 +501,6 @@ export function usePoolAddress(
       console.log(address)
       nameOfNetwork = ChainName[aToken?.chainId]
     }
-  } else if ((address == '' || address == undefined || address == null) && aToken && bToken) {
-    address = computePairAddress({
-      factoryAddress: V2_FACTORY_ADDRESSES[aToken.chainId],
-      tokenA: aToken.wrapped,
-      tokenB: bToken.wrapped,
-    })
-    nameOfNetwork = ChainName[aToken?.chainId]
   } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
     nameOfNetwork = ChainName[aToken?.chainId]
     address = aToken.address
