@@ -53,7 +53,7 @@ import {
   ledgerSaga,
   ledgerSagaName,
 } from 'src/features/wallet/ledgerSaga'
-import { signMessageSaga, watchWalletConnectEvents } from 'src/features/walletConnect/saga'
+import { signMessageSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
@@ -63,7 +63,7 @@ const sagas: any[] = [
   deepLinkWatcher,
   transactionWatcher,
   firebaseDataWatcher,
-  watchWalletConnectEvents,
+  walletConnectSaga,
   signMessageSaga,
 ]
 

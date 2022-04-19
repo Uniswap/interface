@@ -11,15 +11,17 @@ import WalletConnectSwift
 @objc(RNWalletConnect)
 class RNWalletConnect: RCTEventEmitter {
   private var accountToWcServer: [String: WalletConnectAccountServer]! = [:]
+  var supportedChainIds: [Int] = []
   
-  @objc override static func requiresMainQueueSetup() -> Bool {
-    return false
+  @objc
+  func initialize(_ supportedChainIds: [Int]) {
+    self.supportedChainIds = supportedChainIds
   }
-  
+ 
   func getServer(_ account: String) -> WalletConnectAccountServer {
     guard self.accountToWcServer[account] == nil else { return self.accountToWcServer[account]! }
     
-    let accountServer = WalletConnectAccountServer(eventEmitter: self, account: account)
+    let accountServer = WalletConnectAccountServer(eventEmitter: self, account: account, supportedChainIds: supportedChainIds)
     self.accountToWcServer.updateValue(accountServer, forKey: account)
     
     return accountServer
@@ -63,24 +65,31 @@ class RNWalletConnect: RCTEventEmitter {
 
     accountServer.rejectRequest(requestInternalId: requestInternalId)
   }
+  
+  @objc override static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
 }
 
 class WalletConnectAccountServer: ServerDelegate {
   var eventEmitter: RCTEventEmitter!
   var account: String!
   var server: Server!
+  var supportedChainIds: [Int]!
   
   private var topicToSession: [String: Session]! = [:]
 
   // mapping of internal id (uuid) => request
   private var pendingRequests: [String: Request]! = [:]
 
-  init(eventEmitter: RCTEventEmitter, account: String) {
+  init(eventEmitter: RCTEventEmitter, account: String, supportedChainIds: [Int]) {
     self.server = Server(delegate: self)
     self.eventEmitter = eventEmitter
     self.account = account
+    self.supportedChainIds = supportedChainIds
     
     self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
+    self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
   }
   
   func disconnect(_ topic: String) {
@@ -124,6 +133,40 @@ class WalletConnectAccountServer: ServerDelegate {
     }
     
     self.pendingRequests.removeValue(forKey: requestInternalId)
+  }
+  
+  func switchChainId(request: Request, chainId: Int) {
+    guard let session: Session = self.topicToSession[request.url.topic] else { return }
+    
+    guard supportedChainIds.contains(chainId) else {
+      do {
+        try self.server.send(Response(request: request, error: .requestRejected))
+      } catch {
+        self.eventEmitter.sendEvent(
+          withName: EventType.error.rawValue,
+          body: [
+            "type": ErrorType.wcRejectRequestError.rawValue
+          ]
+        )
+      }
+      
+      return
+    }
+    
+    let w = session.walletInfo!
+    let newWalletInfo = Session.WalletInfo(
+      approved: w.approved, accounts: w.accounts, chainId: chainId, peerId: w.peerId, peerMeta: w.peerMeta)
+    
+    do {
+      try self.server.updateSession(session, with: newWalletInfo)
+    } catch {
+      self.eventEmitter.sendEvent(
+        withName: EventType.error.rawValue,
+        body: [
+          "type": ErrorType.wcSwitchChainError.rawValue
+        ]
+      )
+    }
   }
   
   func rejectRequest(requestInternalId: String) {
@@ -201,6 +244,7 @@ class WalletConnectAccountServer: ServerDelegate {
 
 enum EthMethod: String {
   case personalSign = "personal_sign"
+  case switchChain = "wallet_switchEthereumChain"
 }
 
 enum EventType: String, CaseIterable {
@@ -216,12 +260,41 @@ enum ErrorType: String {
   case wcConnectError = "wc_connect_error"
   case wcRejectRequestError = "wc_reject_request_error"
   case wcSendSignatureError = "wc_send_signature_error"
+  case wcSwitchChainError = "wc_switch_chain_error"
   case invalidRequestId = "invalid_request_id"
   case invalidAccount = "invalid_account"
 }
 
 enum WCSwiftError: Error {
+  case invalidChainId
   case invalidSessionTopic
+}
+
+class WalletConnectSwitchChainHandler: RequestHandler {
+  var accountServer: WalletConnectAccountServer!
+  var eventEmitter: RCTEventEmitter!
+
+  private var account: String!
+  
+  init(eventEmitter: RCTEventEmitter, accountServer: WalletConnectAccountServer, account: String) {
+    self.eventEmitter = eventEmitter
+    self.accountServer = accountServer
+    self.account = account
+  }
+  
+  func canHandle(request: Request) -> Bool {
+    return request.method == EthMethod.switchChain.rawValue
+  }
+  
+  func handle(request: Request) {
+    do {
+      let chainIdRequest = try request.parameter(of: WalletSwitchEthereumChainObject.self, at: 0)
+      let chainIdInt = try chainIdRequest.toInt()
+      self.accountServer.switchChainId(request: request, chainId: chainIdInt)
+    } catch {
+      self.accountServer.server.send(.invalid(request))
+    }
+  }
 }
 
 class WalletConnectSignRequestHandler: RequestHandler {
@@ -270,4 +343,17 @@ class WalletConnectSignRequestHandler: RequestHandler {
         self.accountServer.server.send(.invalid(request))
       }
     }
+}
+
+struct WalletSwitchEthereumChainObject: Decodable {
+  let chainId: String
+  
+  // chainIds should be hex strings prefixed with 0x: https://docs.metamask.io/guide/rpc-api.html#wallet-switchethereumchain
+  public func toInt() throws -> Int {
+    guard chainId.hasPrefix("0x"), let chainIdInt = Int(chainId.dropFirst(2), radix: 16) else {
+      throw WCSwiftError.invalidChainId
+    }
+    
+    return chainIdInt
+  }
 }

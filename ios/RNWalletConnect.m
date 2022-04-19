@@ -10,6 +10,7 @@
 
 @interface RCT_EXTERN_MODULE(RNWalletConnect, RCTEventEmitter)
 
+RCT_EXTERN_METHOD(initialize: (NSArray *)supportedChainIds)
 RCT_EXTERN_METHOD(connect: (NSString *)url account: (NSString *) account)
 RCT_EXTERN_METHOD(disconnect: (NSString *)topic account: (NSString *) account)
 RCT_EXTERN_METHOD(sendSignature: (NSString *)requestInternalId

@@ -1,6 +1,11 @@
 import { NativeModules } from 'react-native'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'src/constants/chains'
 
 const { RNWalletConnect } = NativeModules
+
+export const initializeWalletConnect = () => {
+  RNWalletConnect.initialize(ALL_SUPPORTED_CHAIN_IDS)
+}
 
 export const connectToApp = (uri: string, account: string) => {
   RNWalletConnect.connect(uri, account)

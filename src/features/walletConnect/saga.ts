@@ -12,7 +12,7 @@ import {
   WCError,
   WCEventType,
 } from 'src/features/walletConnect/types'
-import { sendSignature } from 'src/features/walletConnect/WalletConnect'
+import { initializeWalletConnect, sendSignature } from 'src/features/walletConnect/WalletConnect'
 import {
   addRequest,
   addSession,
@@ -21,7 +21,7 @@ import {
 import { ensureLeading0x } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { createSaga } from 'src/utils/saga'
-import { call, put, take } from 'typed-redux-saga'
+import { call, put, take, fork } from 'typed-redux-saga'
 
 function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {
@@ -71,6 +71,11 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
 
     return unsubscribe
   })
+}
+
+export function* walletConnectSaga() {
+  yield* call(initializeWalletConnect)
+  yield* fork(watchWalletConnectEvents)
 }
 
 export function* watchWalletConnectEvents() {
