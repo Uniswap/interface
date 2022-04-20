@@ -486,45 +486,47 @@ export function usePoolAddress(
   bToken: Token | Currency | undefined | null,
   fee: FeeAmount | undefined
 ): { poolAddress: string; networkName: string } {
-  let poolAddress = ''
-  let networkName = ''
-  let nameOfNetwork = ''
-  let address = ''
   const existingPoolFee = useExisitingPool(aToken, bToken)
   const { chainId } = useActiveWeb3React()
 
   // v2 pair address
   const [state, pair] = useV2Pair(aToken as Currency, bToken as Currency)
 
-  if (aToken && bToken) {
-    bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
-    aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
+  return useMemo(() => {
+    let poolAddress = ''
+    let networkName = ''
+    let nameOfNetwork = ''
+    let address = ''
+    if (aToken && bToken) {
+      bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
+      aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
 
-    if (aToken.isToken && bToken.isToken && existingPoolFee) {
-      address = Pool.getAddress(aToken, bToken, existingPoolFee)
-      nameOfNetwork = ChainName[aToken?.chainId] || ''
-    } else if (state == 3) {
-      address = Pair.getAddress(aToken, bToken)
-      nameOfNetwork = (pair && pair.chainId && ChainName[pair?.chainId]) || ''
+      if (aToken.isToken && bToken.isToken && existingPoolFee) {
+        address = Pool.getAddress(aToken, bToken, existingPoolFee)
+        nameOfNetwork = ChainName[aToken?.chainId] || ''
+      } else if (state == 3) {
+        address = Pair.getAddress(aToken, bToken)
+        nameOfNetwork = (pair && pair.chainId && ChainName[pair?.chainId]) || ''
+      }
+    } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
+      nameOfNetwork = ChainName[aToken?.chainId]
+      address = aToken.address
     }
-  } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
-    nameOfNetwork = ChainName[aToken?.chainId]
-    address = aToken.address
-  }
 
-  if (address == '' || address == undefined || address == null) {
-    poolAddress = (chainId && KROM[chainId].address) || ''
-  } else if (address != poolAddress) {
-    poolAddress = address
-  }
+    if (address == '' || address == undefined || address == null) {
+      poolAddress = (chainId && KROM[chainId].address) || '0x3af33bEF05C2dCb3C7288b77fe1C8d2AeBA4d789'
+    } else if (address != poolAddress) {
+      poolAddress = address
+    }
 
-  if (nameOfNetwork == '' || nameOfNetwork == undefined || nameOfNetwork == null) {
-    networkName = (chainId && ChainName[chainId]) || ''
-  } else if (nameOfNetwork != networkName) {
-    networkName = nameOfNetwork
-  }
+    if (nameOfNetwork == '' || nameOfNetwork == undefined || nameOfNetwork == null) {
+      networkName = (chainId && ChainName[chainId]) || 'ethereum'
+    } else if (nameOfNetwork != networkName) {
+      networkName = nameOfNetwork
+    }
 
-  return { poolAddress, networkName }
+    return { poolAddress, networkName }
+  }, [chainId, aToken, bToken, state, pair, existingPoolFee])
 }
 
 function parseCurrencyFromURLParameter(urlParam: any): string {
