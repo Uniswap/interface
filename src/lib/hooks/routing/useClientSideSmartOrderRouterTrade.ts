@@ -1,14 +1,18 @@
+import 'setimmediate'
+
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
+import { SupportedChainId } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
+import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
-import { getClientSideQuote } from './clientSideSmartOrderRouter'
+import { useGetIsValidBlock } from '../useIsValidBlock'
+import usePoll from '../usePoll'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -16,20 +20,17 @@ import { useRoutingAPIArguments } from './useRoutingAPIArguments'
  * Defaults are defined in https://github.com/Uniswap/smart-order-router/blob/309e6f6603984d3b5aef0733b0cfaf129c29f602/src/routers/alpha-router/config.ts#L83.
  */
 const DistributionPercents: { [key: number]: number } = {
-  [ChainId.MAINNET]: 10,
-  [ChainId.OPTIMISM]: 10,
-  [ChainId.OPTIMISTIC_KOVAN]: 10,
-  [ChainId.ARBITRUM_ONE]: 25,
-  [ChainId.ARBITRUM_RINKEBY]: 25,
+  [SupportedChainId.MAINNET]: 10,
+  [SupportedChainId.OPTIMISM]: 10,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 10,
+  [SupportedChainId.ARBITRUM_ONE]: 25,
+  [SupportedChainId.ARBITRUM_RINKEBY]: 25,
 }
-
 const DEFAULT_DISTRIBUTION_PERCENT = 10
-
-function getConfig(chainId: ChainId | undefined) {
+function getConfig(chainId: SupportedChainId | undefined) {
   return {
     // Limit to only V2 and V3.
     protocols: [Protocol.V2, Protocol.V3],
-
     distributionPercent: (chainId && DistributionPercents[chainId]) ?? DEFAULT_DISTRIBUTION_PERCENT,
   }
 }
@@ -42,22 +43,20 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
+  const amount = useMemo(() => amountSpecified?.asFraction, [amountSpecified])
+  const [currencyIn, currencyOut] =
+    tradeType === TradeType.EXACT_INPUT
+      ? [amountSpecified?.currency, otherCurrency]
+      : [otherCurrency, amountSpecified?.currency]
+
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
-  // This helps provide a "syncing" state the UI can reference for loading animations.
-  const inputs = useMemo(() => [tradeType, amountSpecified, otherCurrency], [tradeType, amountSpecified, otherCurrency])
-  const debouncedInputs = useDebounce(inputs, 200)
-  const isDebouncing = inputs !== debouncedInputs
-
-  const chainId = amountSpecified?.currency.chainId
-  const { library } = useActiveWeb3React()
-
-  const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
-    () =>
-      tradeType === TradeType.EXACT_INPUT
-        ? [amountSpecified?.currency, otherCurrency]
-        : [otherCurrency, amountSpecified?.currency],
-    [amountSpecified, otherCurrency, tradeType]
+  // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
+  const [debouncedAmount, debouncedCurrencyIn, debouncedCurrencyOut] = useDebounce(
+    useMemo(() => [amount, currencyIn, currencyOut], [amount, currencyIn, currencyOut]),
+    200
   )
+  const isDebouncing =
+    amount !== debouncedAmount && currencyIn === debouncedCurrencyIn && currencyOut === debouncedCurrencyOut
 
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
@@ -66,42 +65,38 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     tradeType,
     useClientSideRouter: true,
   })
+  const chainId = amountSpecified?.currency.chainId
+  const { library } = useActiveWeb3React()
   const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
-
-  const [loading, setLoading] = useState(false)
-  const [{ data: quoteResult, error }, setResult] = useState<{
-    data?: GetQuoteResult
-    error?: unknown
-  }>({ error: undefined })
   const config = useMemo(() => getConfig(chainId), [chainId])
+  const { type: wrapType } = useWrapCallback()
 
-  // When arguments update, make a new call to SOR for updated quote
-  useEffect(() => {
-    setLoading(true)
-    if (isDebouncing) return
+  const getQuoteResult = useCallback(async (): Promise<{ data?: GetQuoteResult; error?: unknown }> => {
+    if (wrapType !== WrapType.NONE) return { error: undefined }
+    if (!queryArgs || !params) return { error: undefined }
+    try {
+      // Lazy-load the smart order router to improve initial pageload times.
+      const quoteResult = await (
+        await import('./clientSideSmartOrderRouter')
+      ).getClientSideQuote(queryArgs, params, config)
 
-    let stale = false
-    fetchQuote()
-    return () => {
-      stale = true
-      setLoading(false)
+      // There is significant post-fetch processing, so delay a tick to prevent dropped frames.
+      // This is only important in the context of integrations - if we control the whole site,
+      // then we can afford to drop a few frames.
+      return new Promise((resolve) => setImmediate(() => resolve(quoteResult)))
+    } catch {
+      return { error: true }
     }
+  }, [config, params, queryArgs, wrapType])
 
-    async function fetchQuote() {
-      if (queryArgs && params) {
-        let result
-        try {
-          result = await getClientSideQuote(queryArgs, params, config)
-        } catch {
-          result = { error: true }
-        }
-        if (!stale) {
-          setResult(result)
-          setLoading(false)
-        }
-      }
-    }
-  }, [queryArgs, params, config, isDebouncing])
+  const getIsValidBlock = useGetIsValidBlock()
+  const { data: quoteResult, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), {
+    debounce: isDebouncing,
+    isStale: useCallback(({ data }) => !getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
+  }) ?? {
+    error: undefined,
+  }
+  const isValid = getIsValidBlock(Number(quoteResult?.blockNumber) || 0)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -124,11 +119,12 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.INVALID, trade: undefined }
     }
 
-    // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
-    if (isDebouncing) {
-      return { state: TradeState.SYNCING, trade }
-    } else if (loading) {
-      return { state: TradeState.LOADING, trade }
+    if (!trade && !error) {
+      if (isDebouncing) {
+        return { state: TradeState.SYNCING, trade: undefined }
+      } else if (!isValid) {
+        return { state: TradeState.LOADING, trade: undefined }
+      }
     }
 
     let otherAmount = undefined
@@ -143,7 +139,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       }
     }
 
-    if (error || !otherAmount || !route || route.length === 0 || !queryArgs) {
+    if (error || !otherAmount || !route || route.length === 0) {
       return { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
     }
 
@@ -151,5 +147,5 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, isDebouncing, loading, quoteResult, error, route, queryArgs, trade, tradeType])
+  }, [currencyIn, currencyOut, trade, error, isValid, quoteResult, route, isDebouncing, tradeType])
 }

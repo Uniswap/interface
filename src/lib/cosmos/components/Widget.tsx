@@ -1,3 +1,4 @@
+import { tokens } from '@uniswap/default-token-list'
 import { initializeConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector } from '@web3-react/types'
@@ -17,14 +18,15 @@ const [walletConnect] = initializeConnector<WalletConnect>(
 
 export default function Wrapper({ children }: { children: ReactNode }) {
   const [width] = useValue('width', { defaultValue: 360 })
-  const [locale] = useSelect('locale', { defaultValue: DEFAULT_LOCALE, options: ['pseudo', ...SUPPORTED_LOCALES] })
+  const [locale] = useSelect('locale', {
+    defaultValue: DEFAULT_LOCALE,
+    options: ['fa-KE (unsupported)', 'pseudo', ...SUPPORTED_LOCALES],
+  })
   const [darkMode] = useValue('dark mode', { defaultValue: false })
   const [theme, setTheme] = useValue('theme', { defaultValue: { ...defaultTheme, ...lightTheme } })
   useEffect(() => {
     setTheme({ ...defaultTheme, ...(darkMode ? darkTheme : lightTheme) })
-    // cosmos does not maintain referential equality for setters
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [darkMode])
+  }, [darkMode, setTheme])
 
   const NO_JSON_RPC = 'None'
   const [jsonRpcEndpoint] = useSelect('JSON-RPC', {
@@ -74,6 +76,7 @@ export default function Wrapper({ children }: { children: ReactNode }) {
       locale={locale}
       jsonRpcEndpoint={jsonRpcEndpoint === NO_JSON_RPC ? undefined : jsonRpcEndpoint}
       provider={connector?.provider}
+      tokenList={tokens}
     >
       {children}
     </Widget>

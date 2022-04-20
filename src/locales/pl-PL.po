@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-23 23:06\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -192,6 +192,10 @@ msgstr "Adres nie posiada dostępnych włości"
 msgid "Against"
 msgstr "Przeciwko"
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow"
+msgstr "Dopuszczać"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Zezwalaj na migrację tokenu LP"
@@ -200,9 +204,21 @@ msgstr "Zezwalaj na migrację tokenu LP"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Pozwól na transakcje o wysokim wpływie cenowym i pominąć ekran potwierdzający. Używaj na własne ryzyko."
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "Pozwól w swoim portfelu"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Zezwól protokołowi Uniswap na używanie {0}"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow {0} first"
+msgstr "Zezwól najpierw na {0}"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "Oczekiwanie na zasiłek"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -216,13 +232,12 @@ msgstr "Kwota"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Wystąpił błąd podczas próby wykonania tej wymiany. Może być konieczne zwiększenie tolerancji na poślizg. Jeśli to nie zadziała, może występować niezgodność z tokenem, którym handlujesz. Uwaga: opłata za transfer i rebase tokeny są niezgodne z Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Oczekuje na zatwierdzenie"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Zatwierdź"
@@ -230,6 +245,10 @@ msgstr "Zatwierdź"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Zatwierdź token"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "Zatwierdź w swoim portfelu"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -239,7 +258,7 @@ msgstr "Zatwierdź token"
 msgid "Approve {0}"
 msgstr "Zatwierdź {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Najpierw zatwierdź {0}"
 
@@ -450,8 +469,8 @@ msgstr "Zbierz"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Collect as WETH"
-msgstr "Zbierz jako WETH"
+msgid "Collect as {nativeWrappedSymbol}"
+msgstr "Zbierz jako {nativeWrappedSymbol}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -491,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "Potwierdź zamianę"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "Potwierdź w swoim portfelu"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "Potwierdź zamianę"
 
@@ -508,7 +532,6 @@ msgstr "Potwierdź transakcję w portfelu"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -551,6 +574,10 @@ msgstr "Połącz swój portfel"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Połączony z {name}"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Konwertuj {0} na {1} bez poślizgu"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -716,7 +743,6 @@ msgstr "Porównanie wydajności"
 msgid "Enter a percent"
 msgstr "Wpisz procent"
 
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Wprowadź odbiorcę"
@@ -732,7 +758,6 @@ msgstr "Wprowadź adres do uruchomienia UNI. Jeśli adres ma jakiekolwiek roszcz
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -772,6 +797,10 @@ msgstr "Błąd połączenia. Spróbuj odświeżyć stronę."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Szczegóły błędu"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Błąd podczas pobierania transakcji"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -884,8 +913,13 @@ msgid "High Price Impact"
 msgstr "Wpływ Wysokiej Ceny"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "High price impact"
 msgstr "Wysoki wpływ na cenę"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High slippage"
+msgstr "Wysoki poślizg"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -963,7 +997,6 @@ msgstr "Niewystarczająca płynność w puli dla Twojej transakcji"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -995,7 +1028,6 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Wybrano nieprawidłowy zakres. Minimalna cena musi być niższa niż maksymalna cena."
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Nieprawidłowy odbiorca"
@@ -1227,6 +1259,7 @@ msgid "No proposals found."
 msgstr "Nie znaleziono propozycji."
 
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "Nie znaleziono wyników."
 
@@ -1284,10 +1317,6 @@ msgstr "Optymistyczny Etherscan"
 msgid "Out of range"
 msgstr "Poza zasięgiem"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "Produkcja jest szacowana."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1296,6 +1325,14 @@ msgstr "Wyjście jest szacowane. Jeśli cena zmieni się o ponad {0}%, Twoja tra
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Wartość wyjściowa jest szacowana. Otrzymasz co najmniej <0>{0} {1}</0> lub transakcja zostanie przywrócona."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "Produkcja jest szacowana. Otrzymasz co najmniej {0} {1} lub transakcja zostanie cofnięta."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "Produkcja jest szacowana. Wyślesz maksymalnie {0} {1} lub transakcja zostanie cofnięta."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1550,7 +1587,7 @@ msgstr "Resetowanie"
 msgid "Return"
 msgstr "Powrót"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Przejrzyj zamianę"
 
@@ -1574,7 +1611,6 @@ msgstr "Wybierz sieć"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1704,6 +1740,10 @@ msgstr "Zamień <0/> na dokładnie <1/>"
 msgid "Swap Anyway"
 msgstr "Zamień mimo to"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "Zamiana potwierdzona"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Zamień szczegóły"
@@ -1716,6 +1756,10 @@ msgstr "Zamień dokładnie <0/> na <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Zamiana nie powiodła się: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Zamiana w toku"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1910,6 +1954,10 @@ msgstr "Transakcja przesłana"
 msgid "Transaction completed in"
 msgstr "Transakcja zakończona w"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Transakcja potwierdzona"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1923,10 +1971,6 @@ msgstr "Transakcja w toku"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Transakcja odrzucona."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Transakcja przesłana"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2041,8 +2085,8 @@ msgid "Unsupported Assets"
 msgstr "Nieobsługiwane zasoby"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Nieobsługiwana sieć - przełącz się na inną, aby handlować."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Nieobsługiwana sieć - przełącz się na inną, aby handlować"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
@@ -2055,6 +2099,18 @@ msgstr "Unwrap"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Rozpakuj od <0/> do {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Potwierdzone rozpakowanie"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Oczekiwanie na rozpakowanie"
+
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "Rozpakuj {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2232,6 +2288,18 @@ msgstr "Zawijanie"
 msgid "Wrap <0/> to {0}"
 msgstr "Zawijaj od <0/> do {0}"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Zawinięcie potwierdzone"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Oczekiwanie na zawijanie"
+
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "Zawijaj {0}"
+
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
@@ -2305,14 +2373,6 @@ msgstr "Będziesz również pobierać opłaty zarobione na tej pozycji."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Otrzymasz"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Otrzymasz co najmniej {0} {1} lub transakcja zostanie cofnięta."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Wyślesz maksymalnie {0} {1} lub transakcja zostanie cofnięta."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2452,8 +2512,8 @@ msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
 msgstr "{0, plural, =1 {Najlepsza trasa przez 1 przeskok} other {Najlepsza trasa przez # przeskoków}}"
 
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Importuj token} other {Importuj tokeny}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Importuj token} other {Importuj tokeny}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2461,8 +2521,6 @@ msgid "{0}"
 msgstr "{0}"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/VotePage.tsx
 msgid "{0} %"
 msgstr "{0} %"
 

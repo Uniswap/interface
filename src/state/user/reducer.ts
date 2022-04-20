@@ -12,6 +12,7 @@ import {
   SerializedToken,
   updateHideClosedPositions,
   updateMatchesDarkMode,
+  updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -64,6 +65,8 @@ export interface UserState {
 
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
+
+  showDonationLink: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -85,6 +88,7 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
   showSurveyPopup: undefined,
+  showDonationLink: true,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -154,6 +158,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateShowSurveyPopup, (state, action) => {
       state.showSurveyPopup = action.payload.showSurveyPopup
+    })
+    .addCase(updateShowDonationLink, (state, action) => {
+      state.showDonationLink = action.payload.showDonationLink
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
       if (!state.tokens) {

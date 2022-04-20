@@ -1,21 +1,21 @@
-import { Provider as EthersProvider } from '@ethersproject/abstract-provider'
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
-import { BlockUpdater } from 'lib/hooks/useBlockNumber'
-import useEip1193Provider from 'lib/hooks/useEip1193Provider'
-import { UNMOUNTING } from 'lib/hooks/useUnmount'
+import { ActiveWeb3Provider } from 'lib/hooks/useActiveWeb3React'
+import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
+import { TokenListProvider } from 'lib/hooks/useTokenList'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { PropsWithChildren, StrictMode, useState } from 'react'
+import { UNMOUNTING } from 'lib/utils/animations'
+import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
-import WidgetPropValidator from './Error/WidgetsPropsValidator'
-import Web3Provider from './Web3Provider'
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -23,6 +23,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
+  box-sizing: border-box;
   color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
@@ -30,7 +31,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
-  height: 348px;
+  height: 360px;
   min-width: 300px;
   padding: 0.25em;
   position: relative;
@@ -39,26 +40,27 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
 
   * {
     box-sizing: border-box;
-    font-family: ${({ theme }) => theme.fontFamily};
+    font-family: ${({ theme }) => (typeof theme.fontFamily === 'string' ? theme.fontFamily : theme.fontFamily.font)};
 
     @supports (font-variation-settings: normal) {
-      font-family: ${({ theme }) => theme.fontFamilyVariable};
+      font-family: ${({ theme }) => (typeof theme.fontFamily === 'string' ? undefined : theme.fontFamily.variable)};
     }
   }
 `
 
-const slideDown = keyframes`
-  to {
+const slideIn = keyframes`
+  from {
     transform: translateY(calc(100% - 0.25em));
   }
 `
-const slideUp = keyframes`
-  from {
+const slideOut = keyframes`
+  to {
     transform: translateY(calc(100% - 0.25em));
   }
 `
 
 const DialogWrapper = styled.div`
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: calc(100% - 0.5em);
   left: 0;
   margin: 0.25em;
@@ -72,29 +74,20 @@ const DialogWrapper = styled.div`
   }
 
   ${Modal} {
-    animation: ${slideUp} 0.25s ease-in-out;
-  }
+    animation: ${slideIn} 0.25s ease-in;
 
-  ${Modal}.${UNMOUNTING} {
-    animation: ${slideDown} 0.25s ease-in-out;
+    &.${UNMOUNTING} {
+      animation: ${slideOut} 0.25s ease-out;
+    }
   }
 `
-
-function Updaters() {
-  return (
-    <>
-      <BlockUpdater />
-      <MulticallUpdater />
-      <TransactionsUpdater />
-    </>
-  )
-}
 
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: Eip1193Provider | EthersProvider
-  jsonRpcEndpoint?: string
+  provider?: Eip1193Provider | JsonRpcProvider
+  jsonRpcEndpoint?: string | JsonRpcProvider
+  tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
   className?: string
@@ -102,42 +95,47 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const {
-    children,
-    theme,
-    locale = DEFAULT_LOCALE,
-    provider,
-    jsonRpcEndpoint,
-    width = 360,
-    dialog: userDialog,
-    className,
-    onError,
-  } = props
-  const eip1193 = useEip1193Provider(provider)
+  const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
+  const width = useMemo(() => {
+    if (props.width && props.width < 300) {
+      console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
+      return 300
+    }
+    return props.width ?? 360
+  }, [props.width])
+  const locale = useMemo(() => {
+    if (props.locale && ![...SUPPORTED_LOCALES, 'pseudo'].includes(props.locale)) {
+      console.warn(`Unsupported locale: ${props.locale}. Falling back to ${DEFAULT_LOCALE}.`)
+      return DEFAULT_LOCALE
+    }
+    return props.locale ?? DEFAULT_LOCALE
+  }, [props.locale])
+
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
-      <I18nProvider locale={locale}>
-        <ThemeProvider theme={theme}>
-          <WidgetWrapper width={width} className={className}>
+      <ThemeProvider theme={theme}>
+        <WidgetWrapper width={width} className={className}>
+          <I18nProvider locale={locale}>
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={userDialog || dialog}>
               <ErrorBoundary onError={onError}>
-                <WidgetPropValidator {...props}>
-                  <ReduxProvider store={multicallStore}>
-                    <AtomProvider>
-                      <Web3Provider provider={eip1193} jsonRpcEndpoint={jsonRpcEndpoint}>
-                        <Updaters />
-                        {children}
-                      </Web3Provider>
-                    </AtomProvider>
-                  </ReduxProvider>
-                </WidgetPropValidator>
+                <ReduxProvider store={multicallStore}>
+                  <AtomProvider>
+                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                      <BlockNumberProvider>
+                        <MulticallUpdater />
+                        <TransactionsUpdater />
+                        <TokenListProvider list={props.tokenList}>{children}</TokenListProvider>
+                      </BlockNumberProvider>
+                    </ActiveWeb3Provider>
+                  </AtomProvider>
+                </ReduxProvider>
               </ErrorBoundary>
             </DialogProvider>
-          </WidgetWrapper>
-        </ThemeProvider>
-      </I18nProvider>
+          </I18nProvider>
+        </WidgetWrapper>
+      </ThemeProvider>
     </StrictMode>
   )
 }

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-24 09:06\n"
+"PO-Revision-Date: 2022-03-25 07:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -192,6 +192,10 @@ msgstr "Ta naslov nima terjatve"
 msgid "Against"
 msgstr "Proti"
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow"
+msgstr "Dovoli"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Dovoli migracijo likvidnostnih (LP) žetonov"
@@ -200,9 +204,21 @@ msgstr "Dovoli migracijo likvidnostnih (LP) žetonov"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Dovolite trgovanje z visokim vplivom na ceno in preskočite zaslon za potrditev. Uporabljajte na lastno odgovornost."
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "Dovolite v svoji denarnici"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Dovoli protokolu Uniswap, da uporabi vaše {0}"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow {0} first"
+msgstr "Najprej dovoli {0}"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "Izdaja dovoljenja v teku"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -216,13 +232,12 @@ msgstr "Znesek"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Pri poskusu izvedbe te zamenjave je prišlo do napake. Morda boste morali povečati toleranco do zdrsa. Če to ne deluje, je morda težava v nezdružljivosti z žetonom, s katerim trgujete. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Odobritev je v teku"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Odobri"
@@ -230,6 +245,10 @@ msgstr "Odobri"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Odobri žeton"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "Odobrite v svoji denarnici"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -239,7 +258,7 @@ msgstr "Odobri žeton"
 msgid "Approve {0}"
 msgstr "Odobri {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Najprej odobrite {0}"
 
@@ -450,8 +469,8 @@ msgstr "Prevzemi"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Collect as WETH"
-msgstr "Prevzemi kot WETH"
+msgid "Collect as {nativeWrappedSymbol}"
+msgstr "Zberi kot {nativeWrappedSymbol}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -491,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "Potrdi menjavo"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "Potrdite v svoji denarnici"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "Potrdi menjavo"
 
@@ -508,7 +532,6 @@ msgstr "V denarnici potrdite transakcijo"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -551,6 +574,10 @@ msgstr "Povežite svojo denarnico"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Povezano z: {name}"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Pretvorite {0} v {1} brez zdrsa"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -716,7 +743,6 @@ msgstr "Primerjava učinkovitosti"
 msgid "Enter a percent"
 msgstr "Vnesite odstotek"
 
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Vnesite prejemnika"
@@ -732,7 +758,6 @@ msgstr "Vnesite naslov za prevzem UNI. Če ima naslov pravico do prevzema žeton
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -773,6 +798,10 @@ msgstr "Napaka pri povezovanju. Poskusite osvežiti stran."
 msgid "Error details"
 msgstr "Podrobnosti o napaki"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Napaka pri pridobivanju posla"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Napaka pri uvozu seznama"
@@ -799,7 +828,7 @@ msgstr "Razširjeni rezultati z onemogočenih seznamov žetonov"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
-msgstr "Pričakovani rezultat"
+msgstr "Pričakovani izhodni znesek"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -884,8 +913,13 @@ msgid "High Price Impact"
 msgstr "Visok vpliv na ceno"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "High price impact"
 msgstr "Visok vpliv na ceno"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High slippage"
+msgstr "Visok zdrs"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -963,7 +997,6 @@ msgstr "Sklad ima prenizko likvidnost za ta posel."
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -995,7 +1028,6 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Razpon ni veljaven. Najnižja cena mora biti nižja od najvišje."
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Neveljaven prejemnik"
@@ -1227,6 +1259,7 @@ msgid "No proposals found."
 msgstr "Ni predlogov."
 
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "Ni rezultatov."
 
@@ -1284,10 +1317,6 @@ msgstr "Optimistic Etherscan"
 msgid "Out of range"
 msgstr "Zunaj razpona"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "Končni znesek je ocenjen."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1295,11 +1324,19 @@ msgstr "Izhodni znesek je ocenjen. Če se cena spremeni za več kot {0} %, bo tr
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "Rezultat je ocenjen. Prejeli boste vsaj <0>{0} {1}</0> ali pa bo transakcija stornirana."
+msgstr "Izhodni znesek je ocenjen. Prejeli boste vsaj <0>{0} {1}</0> ali pa bo transakcija stornirana."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "Izhodni znesek je ocenjen. Prejeli boste vsaj {0} {1} ali pa bo transakcija stornirana."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "Izhodni znesek je ocenjen. Poslali boste največ {0} {1} ali pa bo transakcija stornirana."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "Izhod bo poslan na <0>{0}</0>"
+msgstr "Izhodni znesek bo poslan na <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
@@ -1550,7 +1587,7 @@ msgstr "Ponastavi"
 msgid "Return"
 msgstr "Nazaj"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Preglej menjavo"
 
@@ -1574,7 +1611,6 @@ msgstr "Izberite omrežje"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1704,6 +1740,10 @@ msgstr "Menjaj <0/> za natanko <1/>"
 msgid "Swap Anyway"
 msgstr "Vseeno zamenjaj"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "Menjava potrjena"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Podrobnosti menjave"
@@ -1716,6 +1756,10 @@ msgstr "Menjaj natanko <0/> za <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Menjava je spodletela: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Menjava v teku"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1771,7 +1815,7 @@ msgstr "Strošek pošiljanja te transakcije presega polovico vrednosti vhodnega 
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "Trenutna količina plina za hitro pošiljanje transakcije na L1. Provizije za plin se plačajo v valuti ether (ETH), domači valuti omrežja Ethereum, in so denominirane v enoti Gwei."
+msgstr "Trenutna količina plina za hitro pošiljanje transakcije na L1. Provizije za plin se plačajo v valuti ether (ETH), avtohtoni valuti omrežja Ethereum, in so denominirane v enoti Gwei."
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1910,6 +1954,10 @@ msgstr "Transakcija oddana"
 msgid "Transaction completed in"
 msgstr "Transakcija je bila zaključena v "
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Transakcija potrjena"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1923,10 +1971,6 @@ msgstr "Transakcija v teku"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Transakcija zavrnjena."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Transakcija oddana"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2041,8 +2085,8 @@ msgid "Unsupported Assets"
 msgstr "Nepodprta sredstva"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "To omrežje ni podprto – za trgovanje preklopite na drugo omrežje."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Nepodprto omrežje - za trgovanje preklopite na drugo omrežje"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
@@ -2055,6 +2099,18 @@ msgstr "Odvij"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Odvijte <0/> v {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Odvijanje potrjeno"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Odvijanje v teku"
+
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "Odvij {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2232,6 +2288,18 @@ msgstr "Ovij"
 msgid "Wrap <0/> to {0}"
 msgstr "Ovijte <0/> v {0}"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Ovijanje potrjeno"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Ovijanje v teku"
+
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "Ovij {0}"
+
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
@@ -2305,14 +2373,6 @@ msgstr "Ta pozicija vam bo tudi služila provizije."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Prejeli boste"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Prejeli boste vsaj {0} {1} ali pa bo transakcija stornirana."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Poslali boste največ {0} {1} ali pa bo transakcija stornirana."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2452,8 +2512,8 @@ msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
 msgstr "{0, plural, =1 {Najboljša pot preko 1 skoka} other {Najboljša pot prek # skokov}}"
 
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Uvozi žeton} other {Uvozi žetone}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Uvozi žeton} other {Uvozi žetone}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2461,8 +2521,6 @@ msgid "{0}"
 msgstr "{0}"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/VotePage.tsx
 msgid "{0} %"
 msgstr "{0} %"
 

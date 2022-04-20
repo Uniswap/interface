@@ -1,9 +1,12 @@
+import MissingTokenIcon from 'lib/assets/missing-token-image.png'
 import { ReactComponent as RouterIcon } from 'lib/assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'lib/assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'lib/assets/svg/expando.svg'
+import { ReactComponent as InlineSpinnerIcon } from 'lib/assets/svg/inline_spinner.svg'
 import { ReactComponent as LogoIcon } from 'lib/assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'lib/assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'lib/assets/svg/wallet.svg'
+import { loadingCss } from 'lib/css/loading'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
 /* eslint-disable no-restricted-imports */
@@ -30,6 +33,10 @@ import {
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
+const StyledImage = styled.img`
+  height: 1em;
+  width: 1em;
+`
 function icon(Icon: FeatherIcon | SVGIcon) {
   return styled(Icon)<{ color?: Color }>`
     clip-path: stroke-box;
@@ -90,6 +97,9 @@ export const Trash2 = icon(Trash2Icon)
 export const Wallet = icon(WalletIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
+export const MissingToken = (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  <StyledImage src={MissingTokenIcon} alt="Missing token" {...props} />
+)
 
 export const Check = styled(icon(CheckIcon))`
   circle {
@@ -99,17 +109,18 @@ export const Check = styled(icon(CheckIcon))`
 `
 
 export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
-  path {
+  .left,
+  .right {
     transition: transform 0.25s ease-in-out;
     will-change: transform;
+  }
 
-    &:first-child {
-      transform: ${({ open }) => open && 'translateX(-25%)'};
-    }
+  .left {
+    transform: ${({ open }) => (open ? undefined : 'translateX(-25%)')};
+  }
 
-    &:last-child {
-      transform: ${({ open }) => open && 'translateX(25%)'};
-    }
+  .right {
+    transform: ${({ open }) => (open ? undefined : 'translateX(25%)')};
   }
 `
 
@@ -132,4 +143,15 @@ export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
   stroke: ${({ color = 'active', theme }) => theme[color]};
   stroke-linecap: round;
   stroke-width: 2;
+`
+
+export const InlineSpinner = styled(icon(InlineSpinnerIcon))<{ color?: Color }>`
+  animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
+  color: ${({ color = 'active', theme }) => theme[color]};
+  fill: ${({ color = 'active', theme }) => theme[color]};
+
+  #track {
+    stroke: ${({ theme }) => theme.secondary};
+    ${loadingCss};
+  }
 `

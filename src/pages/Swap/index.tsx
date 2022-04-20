@@ -13,7 +13,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { TradeState } from 'state/routing/types'
@@ -33,6 +33,7 @@ import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
+import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -54,6 +55,7 @@ import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
+import { supportedChainId } from '../../utils/supportedChainId'
 import AppBody from '../AppBody'
 
 const AlertWrapper = styled.div`
@@ -62,13 +64,13 @@ const AlertWrapper = styled.div`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
-    useCurrency(loadedUrlParams?.outputCurrencyId),
+    useCurrency(loadedUrlParams?.[Field.INPUT]?.currencyId),
+    useCurrency(loadedUrlParams?.[Field.OUTPUT]?.currencyId),
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
@@ -84,10 +86,20 @@ export default function Swap({ history }: RouteComponentProps) {
   const importTokensNotInDefault = useMemo(
     () =>
       urlLoadedTokens &&
-      urlLoadedTokens.filter((token: Token) => {
-        return !Boolean(token.address in defaultTokens)
-      }),
-    [defaultTokens, urlLoadedTokens]
+      urlLoadedTokens
+        .filter((token: Token) => {
+          return !Boolean(token.address in defaultTokens)
+        })
+        .filter((token: Token) => {
+          // Any token addresses that are loaded from the shorthands map do not need to show the import URL
+          const supported = supportedChainId(chainId)
+          if (!supported) return true
+          return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
+            const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
+            return shorthandTokenAddress && shorthandTokenAddress === token.address
+          })
+        }),
+    [chainId, defaultTokens, urlLoadedTokens]
   )
 
   const theme = useContext(ThemeContext)
@@ -136,8 +148,8 @@ export default function Swap({ history }: RouteComponentProps) {
     [trade, tradeState]
   )
 
-  const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
+  const fiatValueInput = useUSDCValue(trade?.inputAmount)
+  const fiatValueOutput = useUSDCValue(trade?.outputAmount)
   const priceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]

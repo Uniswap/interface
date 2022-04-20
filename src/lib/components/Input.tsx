@@ -1,6 +1,7 @@
-import JSBI from 'jsbi'
+import { loadingOpacity } from 'lib/css/loading'
 import styled, { css } from 'lib/theme'
-import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
+import { transparentize } from 'polished'
+import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
 
 const Input = styled.input`
   -webkit-appearance: textfield;
@@ -34,6 +35,16 @@ const Input = styled.input`
 
   ::placeholder {
     color: ${({ theme }) => theme.secondary};
+  }
+
+  :enabled {
+    transition: color 0.125s linear;
+  }
+
+  :disabled {
+    // Overrides WebKit's override of input:disabled color.
+    -webkit-text-fill-color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
+    color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
   }
 `
 
@@ -77,42 +88,23 @@ interface EnforcedNumericInputProps extends NumericInputProps {
   enforcer: (nextUserInput: string) => string | null
 }
 
-function isNumericallyEqual(a: string, b: string) {
-  const [aInteger, aDecimal] = a.split('.')
-  const [bInteger, bDecimal] = b.split('.')
-  return (
-    JSBI.equal(JSBI.BigInt(aInteger ?? 0), JSBI.BigInt(bInteger ?? 0)) &&
-    JSBI.equal(JSBI.BigInt(aDecimal ?? 0), JSBI.BigInt(bDecimal ?? 0))
-  )
-}
-
 const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(function NumericInput(
   { value, onChange, enforcer, pattern, ...props }: EnforcedNumericInputProps,
   ref
 ) {
-  const [state, setState] = useState(value ?? '')
-  useEffect(() => {
-    if (!isNumericallyEqual(state, value)) {
-      setState(value ?? '')
-    }
-  }, [value, state, setState])
-
   const validateChange = useCallback(
-    (event) => {
-      const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
-      if (nextInput !== null) {
-        setState(nextInput ?? '')
-        if (!isNumericallyEqual(nextInput, value)) {
-          onChange(nextInput)
-        }
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const nextInput = enforcer(event.target.value.replace(/,/g, '.'))?.replace(/^0+$/, '0')
+      if (nextInput !== undefined) {
+        onChange(nextInput)
       }
     },
-    [value, onChange, enforcer]
+    [enforcer, onChange]
   )
 
   return (
     <Input
-      value={state}
+      value={value}
       onChange={validateChange}
       // universal input options
       inputMode="decimal"

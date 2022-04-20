@@ -1,17 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { TokenInfo } from '@uniswap/token-lists'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useAtom } from 'jotai'
-import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
-import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
-import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
+import { SwapInfoProvider } from 'lib/hooks/swap/useSwapInfo'
+import useSyncConvenienceFee, { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
+import useSyncTokenDefaults, { TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
-import useTokenList, { useSyncTokenList } from 'lib/hooks/useTokenList'
+import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
 import { displayTxHashAtom } from 'lib/state/swap'
-import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
-import { useMemo, useState } from 'react'
+import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
+import { useState } from 'react'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
@@ -23,67 +21,62 @@ import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
 import SwapButton from './SwapButton'
-import SwapPropValidator from './SwapPropValidator'
 import Toolbar from './Toolbar'
+import useValidate from './useValidate'
 
-export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
-
-function getSwapTx(txs: { [hash: string]: Transaction }, hash?: string): Transaction<SwapTransactionInfo> | undefined {
+function getTransactionFromMap(
+  txs: { [hash: string]: Transaction },
+  hash?: string
+): Transaction<SwapTransactionInfo | WrapTransactionInfo> | undefined {
   if (hash) {
     const tx = txs[hash]
     if (tx?.info?.type === TransactionType.SWAP) {
       return tx as Transaction<SwapTransactionInfo>
     }
+    if (tx?.info?.type === TransactionType.WRAP) {
+      return tx as Transaction<WrapTransactionInfo>
+    }
   }
   return
 }
 
-export interface SwapProps {
-  tokenList?: string | TokenInfo[]
-  defaultInputAddress?: DefaultAddress
-  defaultInputAmount?: string
-  defaultOutputAddress?: DefaultAddress
-  defaultOutputAmount?: string
-  convenienceFee?: number
-  convenienceFeeRecipient?: string | { [chainId: number]: string }
+export interface SwapProps extends TokenDefaults, FeeOptions {
   onConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
-  useSyncTokenList(props.tokenList)
-  useSyncSwapDefaults(props)
+  useValidate(props)
   useSyncConvenienceFee(props)
+  useSyncTokenDefaults(props)
 
-  const { active, account, chainId } = useActiveWeb3React()
+  const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
-  const displayTx = getSwapTx(pendingTxs, displayTxHash)
+  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
-  const tokenList = useTokenList()
-  const isSwapSupported = useMemo(
-    () => Boolean(chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId) && tokenList?.length),
-    [chainId, tokenList]
-  )
+  const onSupportedNetwork = useOnSupportedNetwork()
+  const isDisabled = !(active && onSupportedNetwork)
 
   const focused = useHasFocus(wrapper)
 
   return (
-    <SwapPropValidator {...props}>
-      {isSwapSupported && <SwapInfoUpdater />}
+    <>
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
-        <Settings disabled={!active} />
+        <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={!active} focused={focused} />
-          <ReverseButton disabled={!active} />
-          <Output disabled={!active} focused={focused}>
-            <Toolbar disabled={!active} />
-            <SwapButton disabled={!account} />
-          </Output>
+          <SwapInfoProvider disabled={isDisabled}>
+            <Input disabled={isDisabled} focused={focused} />
+            <ReverseButton disabled={isDisabled} />
+            <Output disabled={isDisabled} focused={focused}>
+              <Toolbar />
+              <SwapButton disabled={isDisabled} />
+            </Output>
+          </SwapInfoProvider>
         </BoundaryProvider>
       </div>
       {displayTx && (
@@ -91,6 +84,6 @@ export default function Swap(props: SwapProps) {
           <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />
         </Dialog>
       )}
-    </SwapPropValidator>
+    </>
   )
 }

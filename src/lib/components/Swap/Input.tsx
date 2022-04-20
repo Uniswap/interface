@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react'
-import { useUSDCValue } from 'hooks/useUSDCPrice'
-import { loadingOpacityCss } from 'lib/css/loading'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { loadingTransitionCss } from 'lib/css/loading'
 import {
   useIsSwapFieldIndependent,
   useSwapAmount,
@@ -21,8 +21,8 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-export const LoadingRow = styled(Row)<{ $loading: boolean }>`
-  ${loadingOpacityCss};
+export const USDC = styled(Row)`
+  ${loadingTransitionCss};
 `
 
 export const Balance = styled(ThemedText.Body2)<{ focused: boolean }>`
@@ -45,23 +45,42 @@ export interface InputProps {
   focused: boolean
 }
 
+interface UseFormattedFieldAmountArguments {
+  disabled: boolean
+  currencyAmount?: CurrencyAmount<Currency>
+  fieldAmount?: string
+}
+
+export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount }: UseFormattedFieldAmountArguments) {
+  return useMemo(() => {
+    if (disabled) {
+      return ''
+    }
+    if (fieldAmount !== undefined) {
+      return fieldAmount
+    }
+    if (currencyAmount) {
+      return currencyAmount.toSignificant(6)
+    }
+    return ''
+  }, [disabled, currencyAmount, fieldAmount])
+}
+
 export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
+    [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
     trade: { state: tradeState },
-    currencyBalances: { [Field.INPUT]: balance },
-    currencyAmounts: { [Field.INPUT]: swapInputCurrencyAmount },
   } = useSwapInfo()
-  const inputUSDC = useUSDCValue(swapInputCurrencyAmount)
 
-  const [swapInputAmount, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
-  const [swapInputCurrency, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
+  const [inputAmount, updateInputAmount] = useSwapAmount(Field.INPUT)
+  const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)
   const inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
   // extract eagerly in case of reversal
-  usePrefetchCurrencyColor(swapInputCurrency)
+  usePrefetchCurrencyColor(inputCurrency)
 
-  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 
@@ -77,27 +96,33 @@ export default function Input({ disabled, focused }: InputProps) {
   const balanceColor = useMemo(() => {
     const insufficientBalance =
       balance &&
-      (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : swapInputCurrencyAmount?.greaterThan(balance))
+      (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : tradeCurrencyAmount?.greaterThan(balance))
     return insufficientBalance ? 'error' : undefined
-  }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
+  }, [balance, inputCurrencyAmount, tradeCurrencyAmount])
+
+  const amount = useFormattedFieldAmount({
+    disabled,
+    currencyAmount: tradeCurrencyAmount,
+    fieldAmount: inputAmount,
+  })
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
-        currency={swapInputCurrency}
-        amount={(swapInputAmount !== undefined ? swapInputAmount : swapInputCurrencyAmount?.toSignificant(6)) ?? ''}
+        currency={inputCurrency}
+        amount={amount}
         max={max}
         disabled={disabled}
-        onChangeInput={updateSwapInputAmount}
-        onChangeCurrency={updateSwapInputCurrency}
+        onChangeInput={updateInputAmount}
+        onChangeCurrency={updateInputCurrency}
         loading={isLoading}
       >
-        <ThemedText.Body2 color="secondary">
+        <ThemedText.Body2 color="secondary" userSelect>
           <Row>
-            <LoadingRow $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingRow>
+            <USDC isLoading={isRouteLoading}>{usdc ? `$${formatCurrencyAmount(usdc, 6, 'en', 2)}` : '-'}</USDC>
             {balance && (
               <Balance color={balanceColor} focused={focused}>
-                Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
               </Balance>
             )}
           </Row>

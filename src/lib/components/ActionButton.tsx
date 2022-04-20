@@ -6,9 +6,9 @@ import Button from './Button'
 import Row from './Row'
 
 const StyledButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
-  transition: background-color 0.25s ease-out, flex-grow 0.25s ease-out, padding 0.25s ease-out;
+  transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
 
   :disabled {
     margin: -1px;
@@ -35,11 +35,13 @@ const actionCss = css`
 
   ${ActionRow} {
     animation: ${grow} 0.25s ease-in;
+    flex-grow: 1;
+    justify-content: flex-start;
     white-space: nowrap;
   }
 
   ${StyledButton} {
-    border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+    border-radius: ${({ theme }) => theme.borderRadius}em;
     flex-grow: 0;
     padding: 1em;
   }
@@ -57,27 +59,28 @@ export const Overlay = styled(Row)<{ hasAction: boolean }>`
 export interface Action {
   message: ReactNode
   icon?: Icon
-  onClick: () => void
-  children: ReactNode
+  onClick?: () => void
+  children?: ReactNode
 }
 
-export interface ActionButtonProps {
+export interface BaseProps {
   color?: Color
-  disabled?: boolean
   action?: Action
-  onClick: () => void
-  children: ReactNode
 }
+
+export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
 export default function ActionButton({ color = 'accent', disabled, action, onClick, children }: ActionButtonProps) {
   const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
   return (
     <Overlay hasAction={Boolean(action)} flex align="stretch">
-      <StyledButton color={color} disabled={disabled} onClick={action ? action.onClick : onClick}>
-        <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
-          {action ? action.children : children}
-        </ThemedText.TransitionButton>
-      </StyledButton>
+      {(action ? action.onClick : true) && (
+        <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick}>
+          <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
+            {action?.children || children}
+          </ThemedText.TransitionButton>
+        </StyledButton>
+      )}
       {action && (
         <ActionRow gap={0.5}>
           <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />

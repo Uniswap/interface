@@ -4,6 +4,7 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -20,6 +21,7 @@ import {
   SerializedPair,
   SerializedToken,
   updateHideClosedPositions,
+  updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -115,6 +117,26 @@ export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean)
     [dispatch]
   )
   return [showSurveyPopup, toggleShowSurveyPopup]
+}
+
+const DONATION_END_TIMESTAMP = 1646864954 // Jan 15th
+
+export function useShowDonationLink(): [boolean | undefined, (showDonationLink: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const showDonationLink = useAppSelector((state) => state.user.showDonationLink)
+
+  const toggleShowDonationLink = useCallback(
+    (showPopup: boolean) => {
+      dispatch(updateShowDonationLink({ showDonationLink: showPopup }))
+    },
+    [dispatch]
+  )
+
+  const timestamp = useCurrentBlockTimestamp()
+  const durationOver = timestamp ? timestamp.toNumber() > DONATION_END_TIMESTAMP : false
+  const donationVisible = showDonationLink !== false && !durationOver
+
+  return [donationVisible, toggleShowDonationLink]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {

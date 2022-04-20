@@ -5,7 +5,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryCurrencies } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
-import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
@@ -25,9 +25,9 @@ const SearchInput = styled(StringInput)`
 function usePrefetchBalances() {
   const { account } = useActiveWeb3React()
   const tokenList = useTokenList()
-  const [prefetchedTokenList, setPrefetchedTokenList] = useState(tokenList)
-  useEffect(() => setPrefetchedTokenList(tokenList), [tokenList])
-  useCurrencyBalances(account, tokenList !== prefetchedTokenList ? tokenList : undefined)
+  const prefetchedTokenList = useRef<typeof tokenList>()
+  useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
+  prefetchedTokenList.current = tokenList
 }
 
 function useAreBalancesLoaded(): boolean {
@@ -55,7 +55,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   // Give the balance-less tokens a small block period to avoid layout thrashing from re-sorting.
   useEffect(() => {
     if (!isLoaded) {
-      const timeout = setTimeout(() => setIsLoaded(true), 1500)
+      const timeout = setTimeout(() => setIsLoaded(true), 250)
       return () => clearTimeout(timeout)
     }
     return
@@ -68,7 +68,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
   const input = useRef<HTMLInputElement>(null)
-  useEffect(() => input.current?.focus(), [input])
+  useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
@@ -97,7 +97,21 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
         )}
         <Rule padded />
       </Column>
-      {isLoaded ? <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} /> : <TokenOptionsSkeleton />}
+      {isLoaded ? (
+        tokens.length ? (
+          <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
+        ) : (
+          <Column padded>
+            <Row justify="center">
+              <ThemedText.Body1 color="secondary">
+                <Trans>No results found.</Trans>
+              </ThemedText.Body1>
+            </Row>
+          </Column>
+        )
+      ) : (
+        <TokenOptionsSkeleton />
+      )}
     </>
   )
 }
@@ -109,10 +123,11 @@ interface TokenSelectProps {
   onSelect: (value: Currency) => void
 }
 
-export default function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
+export default memo(function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
+  const onOpen = useCallback(() => setOpen(true), [])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)
@@ -122,7 +137,7 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={() => setOpen(true)} />
+      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <TokenSelectDialog value={value} onSelect={selectAndClose} />
@@ -130,4 +145,4 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
       )}
     </>
   )
-}
+})

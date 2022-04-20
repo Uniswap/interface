@@ -3,26 +3,15 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
+import useIsValidBlock from 'lib/hooks/useIsValidBlock'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
 import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
-
-function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
-  const localBlockNumber = useBlockNumber()
-
-  if (!localBlockNumber) return undefined
-  if (localBlockNumber - dataBlockNumber > maxBlockAge) {
-    return undefined
-  }
-
-  return data
-}
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -56,12 +45,12 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     useClientSideRouter: clientSideRouter,
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
 
-  const quoteResult: GetQuoteResult | undefined = useFreshData(data, Number(data?.blockNumber) || 0)
+  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -70,6 +59,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
+
+  const isSyncing = currentData !== data
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
@@ -107,14 +98,24 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
       return {
         // always return VALID regardless of isFetching status
-        state: TradeState.VALID,
+        state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
         trade,
       }
     } catch (e) {
-      console.debug('transformRoutesToTrade failed: ', e)
       return { state: TradeState.INVALID, trade: undefined }
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
+  }, [
+    currencyIn,
+    currencyOut,
+    quoteResult,
+    isLoading,
+    tradeType,
+    isError,
+    route,
+    queryArgs,
+    gasUseEstimateUSD,
+    isSyncing,
+  ])
 }
 
 // only want to enable this when app hook called
@@ -124,12 +125,7 @@ class GAMetric extends IMetric {
   }
 
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    ReactGA.timing({
-      category: 'Routing API',
-      variable: `${key} | ${unit}`,
-      value,
-      label: 'client',
-    })
+    ReactGA._gaCommandSendTiming('Routing API', `${key} | ${unit}`, value, 'client')
   }
 }
 

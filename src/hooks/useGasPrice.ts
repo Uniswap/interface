@@ -1,5 +1,6 @@
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import { useMemo } from 'react'
 
 import { useContract } from './useContract'
 import useENSAddress from './useENSAddress'
@@ -22,5 +23,5 @@ export default function useGasPrice(): JSBI | undefined {
   const contract = useContract(address ?? undefined, CHAIN_DATA_ABI, false)
 
   const resultStr = useSingleCallResult(contract, 'latestAnswer').result?.[0]?.toString()
-  return typeof resultStr === 'string' ? JSBI.BigInt(resultStr) : undefined
+  return useMemo(() => (typeof resultStr === 'string' ? JSBI.BigInt(resultStr) : undefined), [resultStr])
 }

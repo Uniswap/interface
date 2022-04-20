@@ -11,8 +11,8 @@ export const store = createStore(reducer)
 export default multicall
 
 export function MulticallUpdater() {
-  const latestBlockNumber = useBlockNumber()
   const { chainId } = useActiveWeb3React()
+  const latestBlockNumber = useBlockNumber()
   const contract = useInterfaceMulticall()
   return <multicall.Updater chainId={chainId} latestBlockNumber={latestBlockNumber} contract={contract} />
 }

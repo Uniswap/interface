@@ -26,10 +26,12 @@ export default function EtherscanLink({ data, type, color = 'currentColor', chil
     () => data && getExplorerLink(chainId || SupportedChainId.MAINNET, data, type),
     [chainId, data, type]
   )
+
   return (
     <StyledExternalLink href={url} color={color} target="_blank">
       <Row gap={0.25}>
-        {children} <Link />
+        {children}
+        {url && <Link />}
       </Row>
     </StyledExternalLink>
   )

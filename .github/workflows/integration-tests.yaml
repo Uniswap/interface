@@ -38,10 +38,10 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - run: yarn cypress install
+
       - run: yarn build
         env:
           CI: false
-          REACT_APP_NETWORK_URL: 'https://mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847'
           REACT_APP_SERVICE_WORKER: false
 
       - run: yarn test:e2e

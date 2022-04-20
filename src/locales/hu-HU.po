@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-23 23:06\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -192,6 +192,10 @@ msgstr "A címnek nincs elérhető követelése"
 msgid "Against"
 msgstr "Ellen"
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow"
+msgstr "Lehetővé teszi"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP token migráció engedélyezése"
@@ -200,9 +204,21 @@ msgstr "LP token migráció engedélyezése"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Engedélyezze a magas árfolyamú kereskedéseket, és hagyja ki a megerősítő képernyőt. Használat csak saját felelősségre."
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "Engedd be a pénztárcádba"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Engedélyezze az Uniswap protokollnak a(z) {0} használatát"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow {0} first"
+msgstr "Először engedélyezze a {0} -t"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "A juttatás függőben van"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -216,13 +232,12 @@ msgstr "Összeg"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Kérelem folyamatban"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Jóváhagyás"
@@ -230,6 +245,10 @@ msgstr "Jóváhagyás"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Token jóváhagyása"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "Jóváhagyja a pénztárcájában"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -239,7 +258,7 @@ msgstr "Token jóváhagyása"
 msgid "Approve {0}"
 msgstr "Jóváhagyás {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Először hagyja jóvá a {0}"
 
@@ -450,8 +469,8 @@ msgstr "Begyűjtés"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Collect as WETH"
-msgstr "Begyűjtés WETH-ként"
+msgid "Collect as {nativeWrappedSymbol}"
+msgstr "Gyűjtse {nativeWrappedSymbol}-ként"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -491,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "Swap megerősítése"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "Erősítse meg pénztárcájában"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "Erősítse meg a cserét"
 
@@ -508,7 +532,6 @@ msgstr "A tranzakció megerősítése a pénztárcában"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -551,6 +574,10 @@ msgstr "Csatlakoztassa a pénztárcáját"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Csatlakoztatva: {name}"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Konvertálja {0} -t {1} -re csúszás nélkül"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -716,7 +743,6 @@ msgstr "Hatékonyság-összehasonlítás"
 msgid "Enter a percent"
 msgstr "Adjon meg egy százalékot"
 
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Címzett megadása"
@@ -732,7 +758,6 @@ msgstr "Adjon meg egy címet az UNI-követelés kiváltásához. Ha a címnek va
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -772,6 +797,10 @@ msgstr "Hiba történt a csatlakozáskor. Próbálja frissíteni az oldalt."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Hiba részletei"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Hiba történt a kereskedés lekérésekor"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -885,8 +914,13 @@ msgid "High Price Impact"
 msgstr "Magas árhatás"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "High price impact"
 msgstr "Magas árhatás"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High slippage"
+msgstr "Magas csúszás"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -964,7 +998,6 @@ msgstr "Nincs elegendő likviditás a poolban a kereskedéshez"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -996,7 +1029,6 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Érvénytelen tartományt választott ki. A minimális árnak alacsonyabbnak kell lennie, mint a maximális ár."
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Érvénytelen címzett"
@@ -1228,6 +1260,7 @@ msgid "No proposals found."
 msgstr "Nem található javaslat."
 
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "Nincs találat."
 
@@ -1285,10 +1318,6 @@ msgstr "Optimista Etherscan"
 msgid "Out of range"
 msgstr "Tartományon kívül"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "A kimenet becsült."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1297,6 +1326,14 @@ msgstr "Az output becsült érték. Ha az ár {0}%-nál nagyobb mértékben vál
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "A teljesítmény becsült. Legalább <0>{0} {1}</0> vagy a tranzakció visszaáll."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "A kimenet becsült. Legalább {0} {1} -et fog kapni, különben a tranzakció visszaáll."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "A kimenet becsült. Legfeljebb {0} {1} -et küld, vagy a tranzakció visszaáll."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1551,7 +1588,7 @@ msgstr "Visszaállítás"
 msgid "Return"
 msgstr "Visszatérés"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Véleménycsere"
 
@@ -1575,7 +1612,6 @@ msgstr "Válasszon hálózatot"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1705,6 +1741,10 @@ msgstr "Cserélje le a <0/> pontot <1/> értékre"
 msgid "Swap Anyway"
 msgstr "Swap mindenképp"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "A csere megerősítve"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Cserélje ki a részleteket"
@@ -1717,6 +1757,10 @@ msgstr "Pontosan cserélje ki a <0/> értéket a <1/> értékre"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "A csere nem sikerült: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Csere függőben"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1911,6 +1955,10 @@ msgstr "Tranzakció benyújtva"
 msgid "Transaction completed in"
 msgstr "A tranzakció befejeződött"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Az ügylet megerősítve"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1924,10 +1972,6 @@ msgstr "Tranzakció függőben"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "A tranzakció elutasítva."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Tranzakció elküldve"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2042,8 +2086,8 @@ msgid "Unsupported Assets"
 msgstr "Nem támogatott eszközök"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Nem támogatott hálózat – váltson másikra a kereskedéshez."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Nem támogatott hálózat – váltson másikra a kereskedéshez"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
@@ -2056,6 +2100,18 @@ msgstr "Kicsomagolás"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Kicsomagolás <0/> tól {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Kibontás megerősítve"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Felbontás függőben"
+
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "Kicsomagolás {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2233,6 +2289,18 @@ msgstr "Becsomagolás"
 msgid "Wrap <0/> to {0}"
 msgstr "Tekerje <0/> tól {0}"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Wrap megerősítve"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Becsomagolás függőben"
+
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "Tekercs {0}"
+
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
@@ -2306,14 +2374,6 @@ msgstr "Ezen a pozíción megszerzett díjakat is beszedi."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Kapni fog"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "{0} {1} fog kapni, különben a tranzakció visszaáll."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "{0} {1} küld, vagy a tranzakció visszaáll."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2453,8 +2513,8 @@ msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
 msgstr "{0, plural, =1 {A legjobb útvonal 1 ugrással} other {A legjobb útvonal # ugráson keresztül}}"
 
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Import token} other {Import tokenek}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Import token} other {Import tokenek}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2462,8 +2522,6 @@ msgid "{0}"
 msgstr "{0}"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/VotePage.tsx
 msgid "{0} %"
 msgstr "{0} %"
 

@@ -1,11 +1,11 @@
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
 import { ONE_HUNDRED_PERCENT } from '../constants/misc'
 
 export function computeFiatValuePriceImpact(
-  fiatValueInput: CurrencyAmount<Token> | undefined | null,
-  fiatValueOutput: CurrencyAmount<Token> | undefined | null
+  fiatValueInput: CurrencyAmount<Currency> | undefined | null,
+  fiatValueOutput: CurrencyAmount<Currency> | undefined | null
 ): Percent | undefined {
   if (!fiatValueOutput || !fiatValueInput) return undefined
   if (!fiatValueInput.currency.equals(fiatValueOutput.currency)) return undefined

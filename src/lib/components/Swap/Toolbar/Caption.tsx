@@ -1,15 +1,22 @@
 import { Trans } from '@lingui/macro'
-import { Currency, TradeType } from '@uniswap/sdk-core'
-import useUSDCPrice from 'hooks/useUSDCPrice'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import Column from 'lib/components/Column'
+import Rule from 'lib/components/Rule'
 import Tooltip from 'lib/components/Tooltip'
-import { AlertTriangle, Icon, Info, Spinner } from 'lib/icons'
-import { ThemedText } from 'lib/theme'
-import { ReactNode, useMemo, useState } from 'react'
+import { loadingCss } from 'lib/css/loading'
+import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
+import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
+import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
-import { TextButton } from '../../Button'
-import Row from '../../Row'
+import Price from '../Price'
 import RoutingDiagram from '../RoutingDiagram'
+
+const Loading = styled.span`
+  color: ${({ theme }) => theme.secondary};
+  ${loadingCss};
+`
 
 interface CaptionProps {
   icon?: Icon
@@ -25,60 +32,95 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   )
 }
 
+export function Connecting() {
+  return (
+    <Caption
+      icon={InlineSpinner}
+      caption={
+        <Loading>
+          <Trans>Connecting…</Trans>
+        </Loading>
+      }
+    />
+  )
+}
+
 export function ConnectWallet() {
   return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
+
 export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Unsupported network - switch to another to trade.</Trans>} />
+  return <Caption caption={<Trans>Unsupported network - switch to another to trade</Trans>} />
 }
+
 export function InsufficientBalance({ currency }: { currency: Currency }) {
   return <Caption caption={<Trans>Insufficient {currency?.symbol} balance</Trans>} />
 }
+
 export function InsufficientLiquidity() {
   return <Caption caption={<Trans>Insufficient liquidity in the pool for your trade</Trans>} />
 }
+
+export function Error() {
+  return <Caption caption={<Trans>Error fetching trade</Trans>} />
+}
+
 export function Empty() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
+
 export function LoadingTrade() {
-  return <Caption icon={Spinner} caption={<Trans>Fetching best price…</Trans>} />
+  return (
+    <Caption
+      icon={InlineSpinner}
+      caption={
+        <Loading>
+          <Trans>Fetching best price…</Trans>
+        </Loading>
+      }
+    />
+  )
 }
 
-export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
-  const [flip, setFlip] = useState(true)
-  const { inputAmount, outputAmount, executionPrice } = trade
-  const fiatValueInput = useUSDCPrice(inputAmount.currency)
-  const fiatValueOutput = useUSDCPrice(outputAmount.currency)
+export function WrapCurrency({ inputCurrency, outputCurrency }: { inputCurrency: Currency; outputCurrency: Currency }) {
+  const Text = useCallback(
+    () => (
+      <Trans>
+        Convert {inputCurrency.symbol} to {outputCurrency.symbol}
+      </Trans>
+    ),
+    [inputCurrency.symbol, outputCurrency.symbol]
+  )
 
-  const ratio = useMemo(() => {
-    const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
-    const priceString = (!flip ? executionPrice : executionPrice?.invert())?.toSignificant(6)
+  return <Caption icon={Info} caption={<Text />} />
+}
 
-    const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
-    const usdc = !flip
-      ? fiatValueInput
-        ? ` ($${fiatValueInput.toSignificant(6)})`
-        : null
-      : fiatValueOutput
-      ? ` ($${fiatValueOutput.toSignificant(6)})`
-      : null
-
-    return (
-      <Row gap={0.25} style={{ userSelect: 'text' }}>
-        {ratio}
-        {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
-      </Row>
-    )
-  }, [executionPrice, fiatValueInput, fiatValueOutput, flip, inputAmount, outputAmount])
-
+export function Trade({
+  trade,
+  outputUSDC,
+  impact,
+}: {
+  trade: InterfaceTrade<Currency, Currency, TradeType>
+  outputUSDC?: CurrencyAmount<Currency>
+  impact?: PriceImpact
+}) {
   return (
     <>
-      <Tooltip placement="bottom" icon={Info}>
-        <RoutingDiagram trade={trade} />
+      <Tooltip placement="bottom" icon={impact?.warning ? AlertTriangle : Info}>
+        <Column gap={0.75}>
+          {impact?.warning && (
+            <>
+              <ThemedText.Caption>
+                The output amount is estimated at {impact.toString()} less than the input amount due to high price
+                impact
+              </ThemedText.Caption>
+              <Rule />
+            </>
+          )}
+          <RoutingDiagram trade={trade} />
+        </Column>
       </Tooltip>
-      <TextButton color="primary" onClick={() => setFlip(!flip)}>
-        {ratio}
-      </TextButton>
+      <Price trade={trade} outputUSDC={outputUSDC} />
     </>
   )
 }

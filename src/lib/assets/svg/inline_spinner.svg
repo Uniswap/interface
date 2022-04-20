@@ -1,0 +1,35 @@
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <mask id="mask">
+        <circle cx="12" cy="12" r="10" fill="black" stroke="black" stroke-width="2" />
+        <rect width="12" height="12" fill="white" stroke-width="0" />
+        <circle cx="2" cy="12" r="1" fill="white" stroke-width="0" />
+        <circle cx="12" cy="2" r="1" fill="white" stroke-width="0" />
+      </mask>
+      <circle
+        cx="12"
+        cy="12"
+        r="6"
+        stroke="none"
+      />
+      <circle
+        id="track"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        mask="url(#mask)"
+      />
+    </svg>

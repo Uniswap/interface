@@ -1,18 +1,13 @@
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useEffect } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router-dom'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY } from './index'
 
 function reportWebVitals({ name, delta, id }: Metric) {
-  ReactGA.timing({
-    category: 'Web Vitals',
-    variable: name,
-    value: Math.round(name === 'CLS' ? delta * 1000 : delta),
-    label: id,
-  })
+  ReactGA._gaCommandSendTiming('Web Vitals', name, Math.round(name === 'CLS' ? delta * 1000 : delta), id)
 }
 
 // tracks web vitals and pageviews
@@ -35,7 +30,7 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
   }, [pathname, search])
 
   useEffect(() => {
-    // typed as 'any' in react-ga -.-
+    // typed as 'any' in react-ga4 -.-
     ReactGA.ga((tracker: any) => {
       if (!tracker) return
 
