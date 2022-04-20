@@ -31,6 +31,7 @@ export function useBestMarketTrade(
     tradeType,
     null,
     true,
+    false,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
     otherCurrency
   )
