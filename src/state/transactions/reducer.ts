@@ -5,7 +5,7 @@ import { TransactionDetails } from './types'
 
 const now = () => new Date().getTime()
 
-interface TransactionState {
+export interface TransactionState {
   [chainId: number]: {
     [txHash: string]: TransactionDetails
   }

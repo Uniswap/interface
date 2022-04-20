@@ -7,9 +7,9 @@ import reducer, {
   clearAllTransactions,
   finalizeTransaction,
   initialState,
-  TransactionType,
   TransactionState,
 } from './reducer'
+import { TransactionType } from './types'
 
 describe('transaction reducer', () => {
   let store: Store<TransactionState>
