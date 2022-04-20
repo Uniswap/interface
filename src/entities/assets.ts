@@ -13,11 +13,13 @@ export interface CurrencyAsset extends BaseTradeableAsset {
 }
 
 export interface NFTAsset extends BaseTradeableAsset {
-  type: AssetType.NFT
+  type: NFTAssetType
   tokenId: string
 }
 
 export enum AssetType {
   Currency = 'currency',
-  NFT = 'NFT',
+  ERC721 = 'erc-721',
+  ERC1155 = 'erc-1155',
 }
+export type NFTAssetType = AssetType.ERC721 | AssetType.ERC1155

@@ -1,7 +1,8 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
+import ERC1155_ABI from 'src/abis/erc1155.json'
 import ERC20_ABI from 'src/abis/erc20.json'
 import ERC721_ABI from 'src/abis/erc721.json'
-import { Erc20, Erc721 } from 'src/abis/types'
+import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { AssetType } from 'src/entities/assets'
@@ -13,38 +14,49 @@ import {
   TransferTokenParams,
 } from 'src/features/transactions/transfer/types'
 import {
+  SendTokenTransactionInfo,
   TransactionOptions,
   TransactionType,
-  TransactionTypeInfo,
 } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
 export function* transferToken(params: TransferTokenParams) {
-  const { account, chainId, type, tokenAddress } = params
+  const { account, chainId, type: assetType, tokenAddress } = params
   const provider = yield* call(getProvider, chainId)
   const contractManager = yield* call(getContractManager)
 
   let transactionRequest: providers.TransactionRequest
-  let typeInfo: TransactionTypeInfo
+  let typeInfo: SendTokenTransactionInfo = {
+    assetType,
+    recipient: params.toAddress,
+    tokenAddress,
+    type: TransactionType.Send,
+  }
 
-  if (type === AssetType.NFT) {
-    // TODO: fill recipient & amount
-    typeInfo = { type: TransactionType.Send }
+  switch (assetType) {
+    case AssetType.ERC1155:
+    case AssetType.ERC721:
+      typeInfo = {
+        ...typeInfo,
+        tokenId: params.tokenId,
+      }
+      transactionRequest = yield* call(prepareNFTTransfer, params, provider, contractManager)
+      break
+    case AssetType.Currency:
+      typeInfo = {
+        ...typeInfo,
+        currencyAmountRaw: params.amountInWei,
+      }
 
-    transactionRequest = yield* call(prepareNFTTransfer, params, provider, contractManager)
-  } else {
-    typeInfo = {
-      type: TransactionType.Send,
-      currencyAmountRaw: params.amountInWei,
-    }
+      if (tokenAddress === NATIVE_ADDRESS) {
+        transactionRequest = yield* call(prepareNativeTransfer, params, provider)
+      } else {
+        transactionRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
+      }
 
-    if (tokenAddress === NATIVE_ADDRESS) {
-      transactionRequest = yield* call(prepareNativeTransfer, params, provider)
-    } else {
-      transactionRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
-    }
+      break
   }
 
   const options: TransactionOptions = {
@@ -102,21 +114,39 @@ async function prepareNFTTransfer(
   contractManager: ContractManager
 ) {
   const { chainId, account, toAddress, tokenAddress, tokenId } = params
-  // TODO: distinguish type erc1155
-  const tokenContract = contractManager.getOrCreateContract<Erc721>(
-    chainId,
-    tokenAddress,
-    provider,
-    ERC721_ABI
-  )
-  const currentBalance = await tokenContract.balanceOf(account.address)
-  validateTransferAmount('1', currentBalance)
-  const transactionRequest = await tokenContract.populateTransaction.transferFrom(
-    account.address,
-    toAddress,
-    tokenId
-  )
-  return transactionRequest
+
+  const getTransactionRequest = async () => {
+    switch (params.type) {
+      case AssetType.ERC1155:
+        const erc1155Contract = contractManager.getOrCreateContract<Erc1155>(
+          chainId,
+          tokenAddress,
+          provider,
+          ERC1155_ABI
+        )
+        validateTransferAmount('1', await erc1155Contract.balanceOf(account.address, tokenId))
+        // TODO: handle `non ERC1155 Receiver implement` error
+        return erc1155Contract.populateTransaction.safeTransferFrom(
+          account.address,
+          toAddress,
+          tokenId,
+          /*amount=*/ '1',
+          /*data=*/ '0x0'
+        )
+      case AssetType.ERC721:
+        const erc20Contract = contractManager.getOrCreateContract<Erc721>(
+          chainId,
+          tokenAddress,
+          provider,
+          ERC721_ABI
+        )
+        const currentBalance = await erc20Contract.balanceOf(account.address)
+        validateTransferAmount('1', currentBalance)
+        return erc20Contract.populateTransaction.transferFrom(account.address, toAddress, tokenId)
+    }
+  }
+
+  return getTransactionRequest()
 }
 
 function validateTransferAmount(amountInWei: string, currentBalance: BigNumberish) {

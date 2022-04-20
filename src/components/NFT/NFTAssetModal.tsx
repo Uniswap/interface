@@ -63,7 +63,8 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
         chainId: ChainId.Mainnet,
         address: nftAsset.asset_contract.address,
         tokenId: nftAsset.token_id,
-        type: AssetType.NFT,
+        type:
+          nftAsset.asset_contract.schema_name === 'ERC1155' ? AssetType.ERC1155 : AssetType.ERC721,
       },
       [CurrencyField.OUTPUT]: null,
     }

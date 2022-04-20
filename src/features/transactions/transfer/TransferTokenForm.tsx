@@ -53,7 +53,10 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
   const { onSelectCurrency, onEnterExactAmount, onSelectRecipient } =
     useSwapActionHandlers(dispatch)
 
-  const isNFT = currencyTypes[CurrencyField.INPUT] === AssetType.NFT
+  // TODO: consider simplifying this logic
+  const isNFT =
+    currencyTypes[CurrencyField.INPUT] === AssetType.ERC721 ||
+    currencyTypes[CurrencyField.INPUT] === AssetType.ERC1155
   const currencyIn = !isNFT ? (currencies[CurrencyField.INPUT] as Currency) : undefined
   const nftIn = isNFT ? (currencies[CurrencyField.INPUT] as NFTAsset.Asset) : undefined
 

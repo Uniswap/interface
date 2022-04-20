@@ -24,7 +24,7 @@ import { tryParseAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
-  currencyTypes: { [CurrencyField.INPUT]?: AssetType.Currency | AssetType.NFT }
+  currencyTypes: { [CurrencyField.INPUT]?: AssetType }
   exactCurrencyField: CurrencyField.INPUT
   recipient?: string
 }
@@ -43,7 +43,9 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const { asset: nftIn } = useNFT(
     activeAccount?.address,
     tradeableAsset?.address,
-    tradeableAsset?.type === AssetType.NFT ? tradeableAsset.tokenId : undefined
+    tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
+      ? tradeableAsset.tokenId
+      : undefined
   )
 
   const currencies = {
@@ -125,7 +127,7 @@ export function useTransferNFTCallback(
           toAddress,
           tokenAddress,
           tokenId,
-          type: AssetType.NFT,
+          type: AssetType.ERC721,
         }
       : null,
     onSubmit

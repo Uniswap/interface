@@ -1,5 +1,5 @@
 import { ChainId } from 'src/constants/chains'
-import { AssetType } from 'src/entities/assets'
+import { AssetType, NFTAssetType } from 'src/entities/assets'
 import { Account } from 'src/features/wallet/accounts/types'
 
 interface BaseTransferParams {
@@ -10,13 +10,13 @@ interface BaseTransferParams {
 }
 
 export interface TransferCurrencyParams extends BaseTransferParams {
-  amountInWei: string
   type: AssetType.Currency
+  amountInWei: string
 }
 
 export interface TransferNFTParams extends BaseTransferParams {
   tokenId: string
-  type: AssetType.NFT
+  type: NFTAssetType
 }
 
 export type TransferTokenParams = TransferCurrencyParams | TransferNFTParams

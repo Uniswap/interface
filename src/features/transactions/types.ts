@@ -1,6 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
+import { AssetType } from 'src/entities/assets'
 
 export type ChainIdToTxIdToDetails = ChainIdTo<{ [txId: string]: TransactionDetails }>
 
@@ -102,18 +103,17 @@ export interface WrapTransactionInfo {
 }
 
 export interface SendTokenTransactionInfo extends BaseTransactionInfo {
+  assetType: AssetType
+  currencyAmountRaw?: string
+  recipient: string
+  tokenAddress: string
+  tokenId?: string // optional. NFT token id
   type: TransactionType.Send
-  currencyAmountRaw: string
-  // TODO: track recipient for recent
 }
 
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Receive
   currencyAmountRaw: string
-}
-
-export interface SendNFTTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.Send
 }
 
 export type TransactionTypeInfo =
@@ -123,4 +123,3 @@ export type TransactionTypeInfo =
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
-  | SendNFTTransactionInfo

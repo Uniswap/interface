@@ -59,6 +59,7 @@ export const mockTokenContract = {
   populateTransaction: {
     transfer: jest.fn(() => txRequest),
     transferFrom: jest.fn(() => txRequest),
+    safeTransferFrom: jest.fn(() => txRequest),
   },
 }
 

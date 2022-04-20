@@ -10,11 +10,7 @@ import { AssetType } from 'src/entities/assets'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { transferToken } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferCurrencyParams, TransferNFTParams } from 'src/features/transactions/transfer/types'
-import {
-  SendNFTTransactionInfo,
-  TransactionType,
-  TransactionTypeInfo,
-} from 'src/features/transactions/types'
+import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockContractManager, mockProvider, txRequest } from 'src/test/fixtures'
 
 const erc20TranferParams: TransferCurrencyParams = {
@@ -30,19 +26,23 @@ const nativeTranferParams: TransferCurrencyParams = {
   tokenAddress: NATIVE_ADDRESS,
 }
 const erc721TransferParams: TransferNFTParams = {
-  type: AssetType.NFT,
+  type: AssetType.ERC721,
   chainId: ChainId.Rinkeby,
   account: account,
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',
   tokenId: '123567',
 }
-
-const typeInfo: TransactionTypeInfo = {
-  type: TransactionType.Send,
-  currencyAmountRaw: erc20TranferParams.amountInWei,
+const erc1155TransferParams: TransferNFTParams = {
+  ...erc721TransferParams,
+  type: AssetType.ERC1155,
 }
-const nftTypeInfo: SendNFTTransactionInfo = {
+
+const typeInfo: SendTokenTransactionInfo = {
+  assetType: AssetType.Currency,
+  currencyAmountRaw: erc20TranferParams.amountInWei,
+  recipient: erc20TranferParams.toAddress,
+  tokenAddress: erc20TranferParams.tokenAddress,
   type: TransactionType.Send,
 }
 
@@ -65,7 +65,10 @@ describe('transferTokenSaga', () => {
           },
           fetchBalanceOnSuccess: true,
         },
-        typeInfo,
+        typeInfo: {
+          ...typeInfo,
+          tokenAddress: nativeTranferParams.tokenAddress,
+        },
       })
       .silentRun()
   })
@@ -105,7 +108,37 @@ describe('transferTokenSaga', () => {
           request: txRequest,
           fetchBalanceOnSuccess: true,
         },
-        typeInfo: nftTypeInfo,
+        typeInfo: {
+          assetType: AssetType.ERC721,
+          recipient: erc721TransferParams.toAddress,
+          tokenAddress: erc721TransferParams.tokenAddress,
+          tokenId: erc721TransferParams.tokenId,
+          type: TransactionType.Send,
+        },
+      })
+      .silentRun()
+  })
+  it('Transfers ERC1155', async () => {
+    await expectSaga(transferToken, erc1155TransferParams)
+      .provide([
+        [call(getProvider, erc1155TransferParams.chainId), mockProvider],
+        [call(getContractManager), mockContractManager],
+        [matchers.call.fn(sendTransaction), true],
+      ])
+      .call(sendTransaction, {
+        chainId: erc1155TransferParams.chainId,
+        account: erc1155TransferParams.account,
+        options: {
+          request: txRequest,
+          fetchBalanceOnSuccess: true,
+        },
+        typeInfo: {
+          assetType: AssetType.ERC1155,
+          recipient: erc1155TransferParams.toAddress,
+          tokenAddress: erc1155TransferParams.tokenAddress,
+          tokenId: erc1155TransferParams.tokenId,
+          type: TransactionType.Send,
+        },
       })
       .silentRun()
   })
