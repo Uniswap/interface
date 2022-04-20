@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import useGasPrice from 'hooks/useGasPrice'
 import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
