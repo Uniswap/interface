@@ -399,7 +399,11 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, undefined, undefined)
-  const { state: signatureState, signatureData, gatherPermitSignature } = useERC20PermitFromTrade(trade, undefined, true)
+  const {
+    state: signatureState,
+    signatureData,
+    gatherPermitSignature,
+  } = useERC20PermitFromTrade(trade, undefined, true)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
