@@ -33,7 +33,7 @@ import {
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
 import { useTransactionAdder } from '../transactions/hooks'
-import { TransactionType } from '../transactions/reducer'
+import { TransactionType } from '../transactions/types'
 import { VoteOption } from './types'
 
 function useGovernanceV0Contract(): Contract | null {

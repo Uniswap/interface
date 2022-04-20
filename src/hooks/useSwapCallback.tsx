@@ -5,7 +5,7 @@ import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/ho
 import { ReactNode, useMemo } from 'react'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { TransactionType } from '../state/transactions/reducer'
+import { TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
