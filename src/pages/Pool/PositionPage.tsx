@@ -967,14 +967,7 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                         <RowFixed>
-                          <TYPE.main>
-                            {inverted
-                              ? feeValue0 && commafy(feeValue0?.toSignificant(6))
-                              : feeValue1 && feeValue1?.toSignificant(6)}
-                          </TYPE.main>
-                          <TYPE.darkGray marginLeft={'5px'}>
-                            {feeValue0USD && feeValue0USD != 'NaN' ? ` ($${commafy(feeValue0USD)})` : '($-)'}
-                          </TYPE.darkGray>
+                          <TYPE.main>{inverted ? feeValue0?.toSignificant(6) : feeValue1?.toSignificant(6)}</TYPE.main>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main fontSize={11}>
@@ -988,9 +981,6 @@ export function PositionPage({
                         <LinkedCurrency chainId={chainId} currency={currencyBase} />
                         <RowFixed>
                           <TYPE.main>{inverted ? feeValue1?.toSignificant(6) : feeValue0?.toSignificant(6)}</TYPE.main>
-                          <TYPE.darkGray marginLeft={'5px'}>
-                            {token1PriceUSD && token1PriceUSD != 'NaN' ? `($${commafy(token1PriceUSD)})` : '($-)'}
-                          </TYPE.darkGray>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main color={theme.text2} fontSize={11}>
@@ -1022,27 +1012,6 @@ export function PositionPage({
                         {inverted
                           ? pool && commafy(pool.token1Price?.toSignificant(6))
                           : pool && commafy(pool.token0Price?.toSignificant(6))}
-                        <StyledUSD>
-                          {' '}
-                          {currentPriceInUSD && !shouldntUseCommafy(currentPriceInUSD) && numberOfZeroes < 3 ? (
-                            <span> (${commafy(currentPriceInUSD.toFixed(2))})</span>
-                          ) : (
-                            ''
-                          )}
-                          {currentPriceInUSD && shouldntUseCommafy(currentPriceInUSD) && numberOfZeroes < 3 ? (
-                            <span> (${commafy(currentPriceInUSD.toFixed(3))}) </span>
-                          ) : (
-                            ''
-                          )}
-                          {currentPriceInUSD && numberOfZeroes > 3 ? (
-                            <span>
-                              ($0.0<sub>{numberOfZeroes}</sub>
-                              {leftover})
-                            </span>
-                          ) : (
-                            ''
-                          )}
-                        </StyledUSD>
                       </span>
                     </TYPE.mediumHeader>
                     <ExtentsText>
@@ -1066,27 +1035,6 @@ export function PositionPage({
                     <TYPE.mediumHeader textAlign="center">
                       {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
                       {''}{' '}
-                      <StyledUSD>
-                        {' '}
-                        {targetPriceInUSD && !shouldntUseCommafy(targetPriceInUSD) && numberOfZeroesTargetPrice < 3 ? (
-                          <span> (${commafy(targetPriceInUSD.toFixed(2))})</span>
-                        ) : (
-                          ''
-                        )}
-                        {targetPriceInUSD && shouldntUseCommafy(targetPriceInUSD) && numberOfZeroesTargetPrice < 3 ? (
-                          <span> (${commafy(targetPriceInUSD.toFixed(3))})</span>
-                        ) : (
-                          ''
-                        )}
-                        {targetPriceInUSD && numberOfZeroesTargetPrice > 3 ? (
-                          <span>
-                            ($0.0<sub>{numberOfZeroesTargetPrice}</sub>
-                            {leftoverTargetPrice})
-                          </span>
-                        ) : (
-                          ''
-                        )}
-                      </StyledUSD>
                     </TYPE.mediumHeader>
 
                     <ExtentsText>
@@ -1130,13 +1078,12 @@ export function PositionPage({
                         Created Limit Trade {commafy(currencyCreatedEventAmount?.toSignificant(4))}{' '}
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
-                          : ''}
-                        {currencyCreatedEventAmountUSD ? ` ($${commafy(currencyCreatedEventAmountUSD)})` : ''} for{' '}
+                          : ''}{' '}
+                        for{' '}
                         {targetPrice && currencyCreatedEventAmount
                           ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2))
                           : ''}{' '}
-                        {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
-                        {targetPriceLimitOrder && ` ($${commafy(targetPriceLimitOrder)})`}↗
+                        {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}↗
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -1156,11 +1103,9 @@ export function PositionPage({
                     <TYPE.subHeader>
                       <Trans>
                         Collected {collectedValue0 ? commafy(collectedValue0?.toSignificant(3)) : ''}{' '}
-                        {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''}
-                        {collectedAmount0USD ? ` ($${commafy(collectedAmount0USD.toFixed(2))}) ` : ' '}
-                        and {collectedValue1 ? commafy(collectedValue1?.toFixed(6)) : ''}{' '}
+                        {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''} and{' '}
+                        {collectedValue1 ? commafy(collectedValue1?.toFixed(6)) : ''}{' '}
                         {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''}
-                        {collectedAmount0USD ? ` ($${commafy(collectedAmount1USD.toFixed(2))}) ` : ''}↗
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -1182,7 +1127,6 @@ export function PositionPage({
                       <Trans>
                         Paid {serviceFeePaidKrom?.toSignificant(2)}{' '}
                         {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
-                        {feePaidUSD ? ` ($${commafy(feePaidUSD.toFixed(2))}) ` : ''}
                         service fees ↗
                       </Trans>
                     </TYPE.subHeader>
