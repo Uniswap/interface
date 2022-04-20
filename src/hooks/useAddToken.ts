@@ -47,7 +47,7 @@ export default function useAddToken(currencyToAdd: Currency | undefined): {
     } else {
       setSuccess(false)
     }
-  }, [library, logoURL, token])
+  }, [isCoinbaseWallet, library, logoURL, token])
 
   return { addToken, success }
 }
