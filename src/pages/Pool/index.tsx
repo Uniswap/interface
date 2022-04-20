@@ -231,7 +231,7 @@ export default function Pool() {
                   <TYPE.body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans>Your trade will appear here.</Trans>
+                      <Trans>Your limit order will appear here.</Trans>
                     </div>
                   </TYPE.body>
                   {showConnectAWallet && (
@@ -242,23 +242,6 @@ export default function Pool() {
                 </NoLiquidity>
               )}
             </MainContentWrapper>
-
-            <ResponsiveRow>
-              {closedPositions.length > 0 ? (
-                <ShowInactiveToggle>
-                  <label>
-                    <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-                      <Trans>Show processed trades</Trans>
-                    </TYPE.body>
-                  </label>
-                  <input
-                    type="checkbox"
-                    onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
-                    checked={!userHideClosedPositions}
-                  />
-                </ShowInactiveToggle>
-              ) : null}
-            </ResponsiveRow>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
