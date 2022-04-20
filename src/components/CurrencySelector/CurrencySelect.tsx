@@ -10,6 +10,7 @@ import { SearchBar } from 'src/components/SearchBar'
 import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyId } from 'src/utils/currencyId'
 import { useFilteredCurrencies } from './hooks'
 import { CurrencySearchResultList } from './SearchResults'
@@ -29,7 +30,8 @@ export function CurrencySelect({
   showNonZeroBalancesOnly,
 }: CurrencySearchProps) {
   const currentChains = useActiveChainIds()
-  const { balances } = useAllBalancesByChainId(currentChains)
+  const activeAccount = useActiveAccount()
+  const { balances } = useAllBalancesByChainId(activeAccount?.address, currentChains)
 
   const {
     filteredCurrencies,

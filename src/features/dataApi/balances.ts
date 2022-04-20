@@ -72,12 +72,13 @@ function useChainBalances(
   )
 }
 
-export function useAllBalancesByChainId(chainIds: ChainId[]): {
+export function useAllBalancesByChainId(
+  address: Address | undefined,
+  chainIds: ChainId[]
+): {
   balances: ChainIdToCurrencyIdToPortfolioBalance
   loading: boolean
 } {
-  const address = useActiveAccount()?.address
-
   let balancesByChainId: ChainIdToCurrencyIdToPortfolioBalance | null = null
   let loading = false
 

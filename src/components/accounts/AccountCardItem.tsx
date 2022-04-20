@@ -30,7 +30,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
   const color = useAddressColor(address, isDarkMode)
 
   const currentChains = useActiveChainIds()
-  const { balances } = useAllBalancesByChainId(currentChains)
+  const { balances } = useAllBalancesByChainId(account.address, currentChains)
 
   return (
     <Button onPress={onPress ? () => onPress(address) : undefined}>

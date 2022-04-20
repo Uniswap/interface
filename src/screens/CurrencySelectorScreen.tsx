@@ -7,6 +7,7 @@ import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
@@ -65,8 +66,8 @@ function CurrencySearchWithBalancesOnly({
 }) {
   const navigation = useAppStackNavigation()
   const chainIds = useActiveChainIds()
-
-  const balances = useAllBalancesByChainId(chainIds)
+  const activeAccount = useActiveAccount()
+  const balances = useAllBalancesByChainId(activeAccount?.address, chainIds)
   const currencies = flattenObjectOfObjects(balances.balances).map((b) => b.amount.currency)
 
   return (

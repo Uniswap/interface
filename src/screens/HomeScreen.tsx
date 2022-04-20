@@ -44,7 +44,7 @@ export function HomeScreen({ navigation }: Props) {
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
 
-  const { balances, loading } = useAllBalancesByChainId(currentChains)
+  const { balances, loading } = useAllBalancesByChainId(activeAccount?.address, currentChains)
 
   const [refreshing, setRefreshing] = useState(false)
   const onRefresh = useCallback(() => {
