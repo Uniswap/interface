@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useAtom } from 'jotai'
-import { TRANSACTION_TTL_DEFAULT, transactionTtlAtom } from 'lib/state/settings'
+import { useDefaultTransactionTtl, useTransactionTtl } from 'lib/hooks/useTransactionDeadline'
 import styled, { ThemedText } from 'lib/theme'
 import { useRef } from 'react'
 
@@ -16,17 +15,20 @@ const Input = styled(Row)`
 `
 
 export default function TransactionTtlInput() {
-  const [transactionTtl, setTransactionTtl] = useAtom(transactionTtlAtom)
+  const [ttl, setTtl] = useTransactionTtl()
+  const defaultTtl = useDefaultTransactionTtl()
+  const placeholder = defaultTtl.toString()
   const input = useRef<HTMLInputElement>(null)
   return (
     <Column gap={0.75}>
       <Label name={<Trans>Transaction deadline</Trans>} tooltip={tooltip} />
       <ThemedText.Body1>
-        <Input onClick={() => input.current?.focus()}>
+        <Input justify="start" onClick={() => input.current?.focus()}>
           <IntegerInput
-            placeholder={TRANSACTION_TTL_DEFAULT.toString()}
-            value={transactionTtl?.toString() ?? ''}
-            onChange={(value) => setTransactionTtl(value ? parseFloat(value) : 0)}
+            placeholder={placeholder}
+            value={ttl?.toString() ?? ''}
+            onChange={(value) => setTtl(value ? parseFloat(value) : 0)}
+            size={Math.max(ttl?.toString().length || 0, placeholder.length)}
             ref={input}
           />
           <Trans>minutes</Trans>

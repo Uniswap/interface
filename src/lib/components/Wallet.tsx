@@ -1,15 +1,24 @@
-import { CreditCard } from 'lib/icons'
+import { Trans } from '@lingui/macro'
+import { Wallet as WalletIcon } from 'lib/icons'
 import { ThemedText } from 'lib/theme'
 
+import { TextButton } from './Button'
 import Row from './Row'
 
-export default function Wallet({ disabled }: { disabled?: boolean }) {
+interface WalletProps {
+  disabled?: boolean
+  onClick?: () => void
+}
+
+export default function Wallet({ disabled, onClick }: WalletProps) {
   return disabled ? (
-    <ThemedText.Caption color="secondary">
-      <Row gap={0.25}>
-        <CreditCard />
-        Connect wallet to swap
-      </Row>
-    </ThemedText.Caption>
+    <TextButton disabled={!onClick} onClick={onClick} color="secondary" style={{ filter: 'none' }}>
+      <ThemedText.Caption>
+        <Row gap={0.5}>
+          <WalletIcon />
+          <Trans>Connect your wallet</Trans>
+        </Row>
+      </ThemedText.Caption>
+    </TextButton>
   ) : null
 }

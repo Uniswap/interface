@@ -1,16 +1,19 @@
 import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
+import EtherscanLink from 'lib/components/EtherscanLink'
+import Rule from 'lib/components/Rule'
+import SwapSummary from 'lib/components/Swap/Summary'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
-import { SwapTransaction, swapTransactionAtom } from 'lib/state/swap'
+import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
 import styled, { ThemedText } from 'lib/theme'
+import ms from 'ms.macro'
 import { useCallback, useMemo, useState } from 'react'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 import Row from '../../Row'
-import Summary from '../Summary'
 
 const errorMessage = (
   <Trans>
@@ -24,18 +27,13 @@ const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
 
-function ElapsedTime({ tx }: { tx: SwapTransaction | null }) {
+type PendingTransaction = Transaction<SwapTransactionInfo | WrapTransactionInfo>
+
+function ElapsedTime({ tx }: { tx: PendingTransaction }) {
   const [elapsedMs, setElapsedMs] = useState(0)
-  useInterval(
-    () => {
-      if (tx?.elapsedMs) {
-        setElapsedMs(tx.elapsedMs)
-      } else if (tx?.timestamp) {
-        setElapsedMs(Date.now() - tx.timestamp)
-      }
-    },
-    elapsedMs === tx?.elapsedMs ? null : 1000
-  )
+
+  useInterval(() => setElapsedMs(Date.now() - tx.addedTime), tx.receipt ? null : ms`1s`)
+
   const toElapsedTime = useCallback((ms: number) => {
     let sec = Math.floor(ms / 1000)
     const min = Math.floor(sec / 60)
@@ -58,33 +56,41 @@ function ElapsedTime({ tx }: { tx: SwapTransaction | null }) {
   )
 }
 
-const EtherscanA = styled.a`
-  color: ${({ theme }) => theme.accent};
-  text-decoration: none;
-`
-
-interface TransactionStatusProps extends StatusProps {
-  tx: SwapTransaction | null
+interface TransactionStatusProps {
+  tx: PendingTransaction
+  onClose: () => void
 }
 
 function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   const Icon = useMemo(() => {
-    return tx?.status ? CheckCircle : Spinner
-  }, [tx?.status])
+    return tx.receipt?.status ? CheckCircle : Spinner
+  }, [tx.receipt?.status])
   const heading = useMemo(() => {
-    return tx?.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>
-  }, [tx?.status])
+    if (tx.info.type === TransactionType.SWAP) {
+      return tx.receipt?.status ? <Trans>Swap confirmed</Trans> : <Trans>Swap pending</Trans>
+    } else if (tx.info.type === TransactionType.WRAP) {
+      if (tx.info.unwrapped) {
+        return tx.receipt?.status ? <Trans>Unwrap confirmed</Trans> : <Trans>Unwrap pending</Trans>
+      }
+      return tx.receipt?.status ? <Trans>Wrap confirmed</Trans> : <Trans>Wrap pending</Trans>
+    }
+    return tx.receipt?.status ? <Trans>Transaction confirmed</Trans> : <Trans>Transaction pending</Trans>
+  }, [tx.info, tx.receipt?.status])
+
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
-      <StatusHeader icon={Icon} iconColor={tx?.status && 'success'}>
+      <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
         <ThemedText.Subhead1>{heading}</ThemedText.Subhead1>
-        {tx ? <Summary input={tx.input} output={tx.output} /> : <div style={{ height: '1.25em' }} />}
+        {tx.info.type === TransactionType.SWAP ? (
+          <SwapSummary input={tx.info.inputCurrencyAmount} output={tx.info.outputCurrencyAmount} />
+        ) : null}
       </StatusHeader>
+      <Rule />
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
-          <EtherscanA href="//etherscan.io" target="_blank">
+          <EtherscanLink type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash}>
             <Trans>View on Etherscan</Trans>
-          </EtherscanA>
+          </EtherscanLink>
         </ThemedText.ButtonSmall>
         <ElapsedTime tx={tx} />
       </TransactionRow>
@@ -95,15 +101,14 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   )
 }
 
-interface StatusProps {
-  onClose: () => void
-}
-
-export default function TransactionStatusDialog({ onClose }: StatusProps) {
-  const tx = useAtomValue(swapTransactionAtom)
-
-  return tx?.status instanceof Error ? (
-    <ErrorDialog header={errorMessage} error={tx.status} action={<Trans>Dismiss</Trans>} onAction={onClose} />
+export default function TransactionStatusDialog({ tx, onClose }: TransactionStatusProps) {
+  return tx.receipt?.status === 0 ? (
+    <ErrorDialog
+      header={errorMessage}
+      error={new Error('TODO(zzmp)')}
+      action={<Trans>Dismiss</Trans>}
+      onClick={onClose}
+    />
   ) : (
     <TransactionStatus tx={tx} onClose={onClose} />
   )

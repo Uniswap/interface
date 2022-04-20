@@ -107,3 +107,8 @@ export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA564
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.POLYGON,
 ])
+
+export const TICK_LENS_ADDRESSES: AddressMap = {
+  [SupportedChainId.ARBITRUM_ONE]: '0xbfd8137f7d1516D3ea5cA83523914859ec47F573',
+  [SupportedChainId.ARBITRUM_RINKEBY]: '0xbfd8137f7d1516D3ea5cA83523914859ec47F573',
+}

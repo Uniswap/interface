@@ -1,4 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import { Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useTransactionMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useMemo } from 'react'
@@ -75,11 +76,11 @@ export function isTransactionRecent(tx: TransactionDetails): boolean {
 }
 
 // returns whether a token has a pending approval transaction
-export function useHasPendingApproval(tokenAddress: string | undefined, spender: string | undefined): boolean {
+export function useHasPendingApproval(token?: Token, spender?: string): boolean {
   const allTransactions = useAllTransactions()
   return useMemo(
     () =>
-      typeof tokenAddress === 'string' &&
+      typeof token?.address === 'string' &&
       typeof spender === 'string' &&
       Object.keys(allTransactions).some((hash) => {
         const tx = allTransactions[hash]
@@ -88,10 +89,10 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
           return false
         } else {
           if (tx.info.type !== TransactionType.APPROVAL) return false
-          return tx.info.spender === spender && tx.info.tokenAddress === tokenAddress && isTransactionRecent(tx)
+          return tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)
         }
       }),
-    [allTransactions, spender, tokenAddress]
+    [allTransactions, spender, token?.address]
   )
 }
 

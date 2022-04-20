@@ -10,6 +10,10 @@
           {
             "name": "react-feather",
             "message": "Please import from lib/icons to ensure performant usage."
+          },
+          {
+            "name": "@uniswap/smart-order-router",
+            "message": "Forbidden import; smart-order-router is lazy-loaded."
           }
         ],
         "patterns": [

@@ -17,11 +17,11 @@
 # testing
 /coverage
 
-# production
+# builds
 /build
-
-# widgets
+/cosmos-export
 /dist
+/dts
 
 # misc
 .DS_Store

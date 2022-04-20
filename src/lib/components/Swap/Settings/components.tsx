@@ -12,10 +12,18 @@ export const optionCss = (selected: boolean) => css`
   color: ${({ theme }) => theme.primary} !important;
   display: grid;
   grid-gap: 0.25em;
-  padding: 0.5em 0.625em;
+  padding: calc(0.75em - 1px) 0.625em;
+
+  :enabled {
+    border: 1px solid ${({ theme }) => (selected ? theme.active : theme.outline)};
+  }
 
   :enabled:hover {
     border-color: ${({ theme }) => theme.onHover(selected ? theme.active : theme.outline)};
+  }
+
+  :enabled:focus-within {
+    border-color: ${({ theme }) => theme.active};
   }
 `
 

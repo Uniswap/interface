@@ -1,10 +1,11 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import StakingRewardsJson from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { useStakingContract } from '../../hooks/useContract'
+import { useContract } from '../../hooks/useContract'
 import { StakingInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -15,6 +16,12 @@ import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import { RowBetween } from '../Row'
+
+const { abi: STAKING_REWARDS_ABI } = StakingRewardsJson
+
+function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
+}
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

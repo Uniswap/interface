@@ -11,16 +11,19 @@ export const BoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.dialog};
+  border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
   opacity: ${(props) => (props.show ? 1 : 0)};
-  padding: 8px;
+  padding: 10px 12px;
   transition: visibility 0.25s linear, opacity 0.25s linear;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   z-index: ${Layer.TOOLTIP};
 `
 
 const Reference = styled.div`
+  align-self: flex-start;
   display: inline-block;
+  height: 1em;
 `
 
 const Arrow = styled.div`
@@ -32,7 +35,6 @@ const Arrow = styled.div`
     background: ${({ theme }) => theme.dialog};
     border: 1px solid ${({ theme }) => theme.outline};
     content: '';
-
     height: 8px;
     position: absolute;
     transform: rotate(45deg);
@@ -40,32 +42,36 @@ const Arrow = styled.div`
   }
 
   &.arrow-top {
-    bottom: -5px;
+    bottom: -4px;
     ::before {
+      border-radius: 1px;
       border-left: none;
       border-top: none;
     }
   }
 
   &.arrow-bottom {
-    top: -5px;
+    top: -5px; // includes -1px from border
     ::before {
       border-bottom: none;
       border-right: none;
+      border-radius: 1px;
     }
   }
 
   &.arrow-left {
-    right: -5px;
+    right: -4px;
     ::before {
       border-bottom: none;
       border-left: none;
+      border-radius: 1px;
     }
   }
 
   &.arrow-right {
-    left: -5px;
+    left: -5px; // includes -1px from border
     ::before {
+      border-radius: 1px;
       border-right: none;
       border-top: none;
     }
@@ -77,10 +83,11 @@ export interface PopoverProps {
   show: boolean
   children: React.ReactNode
   placement: Placement
+  offset?: number
   contained?: true
 }
 
-export default function Popover({ content, show, children, placement, contained }: PopoverProps) {
+export default function Popover({ content, show, children, placement, offset, contained }: PopoverProps) {
   const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
@@ -90,8 +97,8 @@ export default function Popover({ content, show, children, placement, contained 
 
   const options = useMemo((): Options => {
     const modifiers: Options['modifiers'] = [
-      { name: 'offset', options: { offset: [5, 5] } },
-      { name: 'arrow', options: { element: arrow, padding: 6 } },
+      { name: 'offset', options: { offset: [4, offset || 4] } },
+      { name: 'arrow', options: { element: arrow, padding: 4 } },
     ]
     if (contained) {
       modifiers.push(
@@ -118,7 +125,7 @@ export default function Popover({ content, show, children, placement, contained 
       strategy: 'absolute',
       modifiers,
     }
-  }, [arrow, boundary, placement, contained])
+  }, [offset, arrow, contained, placement, boundary])
 
   const { styles, attributes } = usePopper(reference.current, popover, options)
 

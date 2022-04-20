@@ -1,17 +1,17 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 
 import { SupportedChainId } from '../constants/chains'
-import { DAI_OPTIMISM, USDC, USDC_ARBITRUM, USDC_POLYGON } from '../constants/tokens'
+import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
 import { useBestV2Trade } from './useBestV2Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
-  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
+  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC_MAINNET, 100_000e6),
   [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
   [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
   [SupportedChainId.POLYGON]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
@@ -32,8 +32,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     maxHops: 2,
   })
   const v3USDCTrade = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountOut, currency)
-
-  return useMemo(() => {
+  const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined
     }
@@ -54,6 +53,12 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
 
     return undefined
   }, [currency, stablecoin, v2USDCTrade, v3USDCTrade.trade])
+
+  const lastPrice = useRef(price)
+  if (!price || !lastPrice.current || !price.equalTo(lastPrice.current)) {
+    lastPrice.current = price
+  }
+  return lastPrice.current
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
@@ -78,17 +83,18 @@ export function useStablecoinAmountFromFiatValue(fiatValue: string | null | unde
   const { chainId } = useActiveWeb3React()
   const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
 
-  if (fiatValue === null || fiatValue === undefined || !chainId || !stablecoin) {
-    return undefined
-  }
+  return useMemo(() => {
+    if (fiatValue === null || fiatValue === undefined || !chainId || !stablecoin) {
+      return undefined
+    }
 
-  // trim for decimal precision when parsing
-  const parsedForDecimals = parseFloat(fiatValue).toFixed(stablecoin.decimals).toString()
-
-  try {
-    // parse USD string into CurrencyAmount based on stablecoin decimals
-    return tryParseCurrencyAmount(parsedForDecimals, stablecoin)
-  } catch (error) {
-    return undefined
-  }
+    // trim for decimal precision when parsing
+    const parsedForDecimals = parseFloat(fiatValue).toFixed(stablecoin.decimals).toString()
+    try {
+      // parse USD string into CurrencyAmount based on stablecoin decimals
+      return tryParseCurrencyAmount(parsedForDecimals, stablecoin)
+    } catch (error) {
+      return undefined
+    }
+  }, [chainId, fiatValue, stablecoin])
 }

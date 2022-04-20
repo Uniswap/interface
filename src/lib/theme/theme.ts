@@ -9,6 +9,7 @@ export interface Colors {
 
   // text
   primary: string
+  onAccent: string
   secondary: string
   hint: string
   onInteractive: string
@@ -26,8 +27,12 @@ export type Color = keyof Colors
 
 export interface Attributes {
   borderRadius: boolean | number
-  fontFamily: string
-  fontFamilyVariable: string
+  fontFamily:
+    | string
+    | {
+        font: string
+        variable: string
+      }
   fontFamilyCode: string
   tokenColorExtraction: boolean
 }

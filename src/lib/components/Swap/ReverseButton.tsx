@@ -9,8 +9,7 @@ import Row from '../Row'
 const ReverseRow = styled(Row)`
   left: 50%;
   position: absolute;
-  top: 7.45em;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: ${Layer.OVERLAY};
 `
 
@@ -34,6 +33,7 @@ const Overlay = styled.div`
 
 const StyledReverseButton = styled(Button)<{ turns: number }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  color: ${({ theme }) => theme.primary};
   height: 2.5em;
   position: relative;
   width: 2.5em;

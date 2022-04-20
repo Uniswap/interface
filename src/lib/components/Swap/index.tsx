@@ -1,13 +1,17 @@
 import { Trans } from '@lingui/macro'
-import { TokenInfo } from '@uniswap/token-lists'
-import { nativeOnChain } from 'constants/tokens'
-import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
-import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
+import { useAtom } from 'jotai'
+import { SwapInfoProvider } from 'lib/hooks/swap/useSwapInfo'
+import useSyncConvenienceFee, { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
+import useSyncTokenDefaults, { TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
+import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import useTokenList, { DEFAULT_TOKEN_LIST } from 'lib/hooks/useTokenList'
-import { Field } from 'lib/state/swap'
-import { useLayoutEffect, useMemo, useState } from 'react'
+import useHasFocus from 'lib/hooks/useHasFocus'
+import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
+import { displayTxHashAtom } from 'lib/state/swap'
+import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
+import { useState } from 'react'
 
+import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
@@ -15,76 +19,71 @@ import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
+import { StatusDialog } from './Status'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
+import useValidate from './useValidate'
 
-interface DefaultTokenAmount {
-  address?: string | { [chainId: number]: string }
-  amount?: number
-}
-
-interface SwapDefaults {
-  tokenList: string | TokenInfo[]
-  input: DefaultTokenAmount
-  output: DefaultTokenAmount
-}
-
-const DEFAULT_INPUT: DefaultTokenAmount = { address: 'ETH' }
-const DEFAULT_OUTPUT: DefaultTokenAmount = {}
-
-function useSwapDefaults(defaults: Partial<SwapDefaults> = {}): SwapDefaults {
-  const tokenList = defaults.tokenList || DEFAULT_TOKEN_LIST
-  const input: DefaultTokenAmount = defaults.input || DEFAULT_INPUT
-  const output: DefaultTokenAmount = defaults.output || DEFAULT_OUTPUT
-  input.amount = input.amount || 0
-  output.amount = output.amount || 0
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useMemo(() => ({ tokenList, input, output }), [])
-}
-
-export interface SwapProps {
-  convenienceFee?: number
-  convenienceFeeRecipient?: string // TODO: improve typing to require recipient when fee is set
-  defaults?: Partial<SwapDefaults>
-}
-
-export default function Swap({ defaults }: SwapProps) {
-  const { tokenList } = useSwapDefaults(defaults)
-  useTokenList(tokenList)
-
-  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const { chainId, active, account } = useActiveWeb3React()
-
-  // Switch to on-chain currencies if/when chain changes to prevent chain mismatched currencies.
-  const [, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
-  const [, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
-  const [, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
-  useLayoutEffect(() => {
-    if (chainId) {
-      updateSwapInputCurrency(nativeOnChain(chainId))
-      updateSwapOutputCurrency()
-      updateSwapInputAmount('')
+function getTransactionFromMap(
+  txs: { [hash: string]: Transaction },
+  hash?: string
+): Transaction<SwapTransactionInfo | WrapTransactionInfo> | undefined {
+  if (hash) {
+    const tx = txs[hash]
+    if (tx?.info?.type === TransactionType.SWAP) {
+      return tx as Transaction<SwapTransactionInfo>
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId])
+    if (tx?.info?.type === TransactionType.WRAP) {
+      return tx as Transaction<WrapTransactionInfo>
+    }
+  }
+  return
+}
+
+export interface SwapProps extends TokenDefaults, FeeOptions {
+  onConnectWallet?: () => void
+}
+
+export default function Swap(props: SwapProps) {
+  useValidate(props)
+  useSyncConvenienceFee(props)
+  useSyncTokenDefaults(props)
+
+  const { active, account } = useActiveWeb3React()
+  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
+
+  const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
+  const pendingTxs = usePendingTransactions()
+  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
+
+  const onSupportedNetwork = useOnSupportedNetwork()
+  const isDisabled = !(active && onSupportedNetwork)
+
+  const focused = useHasFocus(wrapper)
 
   return (
     <>
-      <SwapInfoUpdater />
-      <Header logo title={<Trans>Swap</Trans>}>
-        {active && <Wallet disabled={!account} />}
-        <Settings disabled={!active} />
+      <Header title={<Trans>Swap</Trans>}>
+        {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
+        <Settings disabled={isDisabled} />
       </Header>
-      <div ref={setBoundary}>
-        <BoundaryProvider value={boundary}>
-          <Input disabled={!active} />
-          <ReverseButton disabled={!active} />
-          <Output disabled={!active}>
-            <Toolbar disabled={!active} />
-            <SwapButton />
-          </Output>
+      <div ref={setWrapper}>
+        <BoundaryProvider value={wrapper}>
+          <SwapInfoProvider disabled={isDisabled}>
+            <Input disabled={isDisabled} focused={focused} />
+            <ReverseButton disabled={isDisabled} />
+            <Output disabled={isDisabled} focused={focused}>
+              <Toolbar />
+              <SwapButton disabled={isDisabled} />
+            </Output>
+          </SwapInfoProvider>
         </BoundaryProvider>
       </div>
+      {displayTx && (
+        <Dialog color="dialog">
+          <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />
+        </Dialog>
+      )}
     </>
   )
 }

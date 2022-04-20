@@ -1,8 +1,9 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { pickAtom } from 'lib/state/atoms'
-import { amountAtom, Field, independentFieldAtom, swapAtom } from 'lib/state/swap'
+import { Field, swapAtom } from 'lib/state/swap'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo } from 'react'
 export { default as useSwapInfo } from './useSwapInfo'
 
@@ -55,10 +56,24 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency?
   return [currency, setOrSwitchCurrency]
 }
 
+const independentFieldAtom = pickAtom(swapAtom, 'independentField')
+
+export function useIsSwapFieldIndependent(field: Field): boolean {
+  const independentField = useAtomValue(independentFieldAtom)
+  return independentField === field
+}
+
+const amountAtom = pickAtom(swapAtom, 'amount')
+
+// check if any amount has been entered by user
+export function useIsAmountPopulated() {
+  return Boolean(useAtomValue(amountAtom))
+}
+
 export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
   const amount = useAtomValue(amountAtom)
-  const independentField = useAtomValue(independentFieldAtom)
-  const value = useMemo(() => (independentField === field ? amount : undefined), [amount, independentField, field])
+  const isFieldIndependent = useIsSwapFieldIndependent(field)
+  const value = isFieldIndependent ? amount : undefined
   const updateSwap = useUpdateAtom(swapAtom)
   const updateAmount = useCallback(
     (amount: string) =>
@@ -69,4 +84,16 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
     [field, updateSwap]
   )
   return [value, updateAmount]
+}
+
+export function useSwapCurrencyAmount(field: Field): CurrencyAmount<Currency> | undefined {
+  const isFieldIndependent = useIsSwapFieldIndependent(field)
+  const isAmountPopulated = useIsAmountPopulated()
+  const [swapAmount] = useSwapAmount(field)
+  const [swapCurrency] = useSwapCurrency(field)
+  const currencyAmount = useMemo(() => tryParseCurrencyAmount(swapAmount, swapCurrency), [swapAmount, swapCurrency])
+  if (isFieldIndependent && isAmountPopulated) {
+    return currencyAmount
+  }
+  return
 }

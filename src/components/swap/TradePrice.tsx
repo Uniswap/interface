@@ -16,7 +16,7 @@ const StyledPriceContainer = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  align-items: center
+  align-items: center;
   justify-content: flex-start;
   padding: 0;
   grid-template-columns: 1fr auto;

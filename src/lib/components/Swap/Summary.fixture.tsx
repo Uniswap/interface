@@ -2,8 +2,10 @@ import { tokens } from '@uniswap/default-token-list'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
+import { useSwapInfo } from 'lib/hooks/swap'
+import { SwapInfoProvider } from 'lib/hooks/swap/useSwapInfo'
 import { Field, swapAtom } from 'lib/state/swap'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import invariant from 'tiny-invariant'
 
@@ -18,9 +20,15 @@ const UNI = (function () {
 })()
 
 function Fixture() {
-  const [initialized, setInitialized] = useState(false)
   const setState = useUpdateAtom(swapAtom)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const {
+    [Field.INPUT]: { usdc: inputUSDC },
+    [Field.OUTPUT]: { usdc: outputUSDC },
+    trade: { trade },
+    slippage,
+    impact,
+  } = useSwapInfo()
+
   useEffect(() => {
     setState({
       independentField: Field.INPUT,
@@ -28,14 +36,26 @@ function Fixture() {
       [Field.INPUT]: ETH,
       [Field.OUTPUT]: UNI,
     })
-    setInitialized(true)
-  })
+  }, [setState])
 
-  return initialized ? (
+  return trade ? (
     <Modal color="dialog">
-      <SummaryDialog onConfirm={() => void 0} />
+      <SummaryDialog
+        onConfirm={async () => void 0}
+        trade={trade}
+        slippage={slippage}
+        inputUSDC={inputUSDC}
+        outputUSDC={outputUSDC}
+        impact={impact}
+      />
     </Modal>
   ) : null
 }
 
-export default <Fixture />
+export default (
+  <>
+    <SwapInfoProvider>
+      <Fixture />
+    </SwapInfoProvider>
+  </>
+)

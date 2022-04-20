@@ -18,11 +18,12 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { PoolState, usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
@@ -41,7 +42,6 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useToken } from '../../hooks/Tokens'
 import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
-import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { TransactionType } from '../../state/transactions/actions'
@@ -592,10 +592,10 @@ function V2PairMigration({
                   <ThemedText.Black fontSize={12}>
                     <Trans>
                       At least {formatCurrencyAmount(refund0, 4)}{' '}
-                      {token0.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : token0.symbol} and{' '}
+                      {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token0) ? 'ETH' : token0.symbol} and{' '}
                       {formatCurrencyAmount(refund1, 4)}{' '}
-                      {token1.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : token1.symbol} will be refunded to your
-                      wallet due to selected price range.
+                      {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token1) ? 'ETH' : token1.symbol} will be
+                      refunded to your wallet due to selected price range.
                     </Trans>
                   </ThemedText.Black>
                 ) : null}

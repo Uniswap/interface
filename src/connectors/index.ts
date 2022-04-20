@@ -1,11 +1,10 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { PortisConnector } from '@web3-react/portis-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { INFURA_NETWORK_URLS } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { INFURA_NETWORK_URLS } from 'constants/infura'
+import { InjectedConnector } from 'web3-react-injected-connector'
+import { WalletConnectConnector } from 'web3-react-walletconnect-connector'
+import { WalletLinkConnector } from 'web3-react-walletlink-connector'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import getLibrary from '../utils/getLibrary'
@@ -13,7 +12,6 @@ import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
-const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
 export const network = new NetworkConnector({
   urls: INFURA_NETWORK_URLS,
@@ -43,15 +41,9 @@ export const fortmatic = new FortmaticConnector({
   chainId: 1,
 })
 
-// mainnet only
-export const portis = new PortisConnector({
-  dAppId: PORTIS_ID ?? '',
-  networks: [1],
-})
-
 export const walletlink = new WalletLinkConnector({
   url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
   appName: 'Uniswap',
   appLogoUrl: UNISWAP_LOGO_URL,
-  supportedChainIds: [SupportedChainId.MAINNET, SupportedChainId.POLYGON],
+  supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
 })

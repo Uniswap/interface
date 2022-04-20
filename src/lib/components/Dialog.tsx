@@ -1,8 +1,8 @@
 import 'wicg-inert'
 
-import useUnmount from 'lib/hooks/useUnmount'
 import { X } from 'lib/icons'
 import styled, { Color, Layer, ThemeProvider } from 'lib/theme'
+import { delayUnmountForAnimation } from 'lib/utils/animations'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -40,7 +40,10 @@ export function Provider({ value, children }: ProviderProps) {
     }
   }, [active])
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      style={{ isolation: 'isolate' }} // creates a new stacking context, preventing the dialog from intercepting non-dialog clicks
+    >
       <Context.Provider value={context}>{children}</Context.Provider>
     </div>
   )
@@ -73,13 +76,12 @@ export const Modal = styled.div<{ color: Color }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 0.5em);
+  height: 100%;
   left: 0;
-  margin: 0.25em;
   overflow: hidden;
   position: absolute;
   top: 0;
-  width: calc(100% - 0.5em);
+  width: 100%;
   z-index: ${Layer.DIALOG};
 `
 
@@ -95,8 +97,10 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
     context.setActive(true)
     return () => context.setActive(false)
   }, [context])
-  const dialog = useRef<HTMLDivElement>(null)
-  useUnmount(dialog)
+
+  const modal = useRef<HTMLDivElement>(null)
+  useEffect(() => delayUnmountForAnimation(modal), [])
+
   useEffect(() => {
     const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()
     document.addEventListener('keydown', close, true)
@@ -106,9 +110,11 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
     context.element &&
     createPortal(
       <ThemeProvider>
-        <Modal className="dialog" color={color} ref={dialog}>
-          <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
-        </Modal>
+        <OnCloseContext.Provider value={onClose}>
+          <Modal color={color} ref={modal}>
+            {children}
+          </Modal>
+        </OnCloseContext.Provider>
       </ThemeProvider>,
       context.element
     )

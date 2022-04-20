@@ -18,6 +18,20 @@ export enum SupportedChainId {
   POLYGON_MUMBAI = 80001,
 }
 
+export const CHAIN_IDS_TO_NAMES = {
+  [SupportedChainId.MAINNET]: 'mainnet',
+  [SupportedChainId.ROPSTEN]: 'ropsten',
+  [SupportedChainId.RINKEBY]: 'rinkeby',
+  [SupportedChainId.GOERLI]: 'goerli',
+  [SupportedChainId.KOVAN]: 'kovan',
+  [SupportedChainId.POLYGON]: 'polygon',
+  [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
+  [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
+  [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
+  [SupportedChainId.OPTIMISM]: 'optimism',
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 'optimistic_kovan',
+}
+
 /**
  * Array of all the supported chain IDs
  */
@@ -25,7 +39,12 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(Support
   (id) => typeof id === 'number'
 ) as SupportedChainId[]
 
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.POLYGON]
+export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+]
 
 /**
  * All the chain IDs that are running the Ethereum protocol.

@@ -3,13 +3,13 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
-import { BlockUpdater } from 'lib/hooks/useBlockNumber'
+import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+import { createWeb3ReactRoot, Web3ReactProvider } from 'web3-react-core'
 
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants/misc'
@@ -40,7 +40,6 @@ function Updaters() {
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
-      <BlockUpdater />
       <MulticallUpdater />
       <LogsUpdater />
     </>
@@ -55,11 +54,13 @@ ReactDOM.render(
           <Web3ReactProvider getLibrary={getLibrary}>
             <Web3ProviderNetwork getLibrary={getLibrary}>
               <Blocklist>
-                <Updaters />
-                <ThemeProvider>
-                  <ThemedGlobalStyle />
-                  <App />
-                </ThemeProvider>
+                <BlockNumberProvider>
+                  <Updaters />
+                  <ThemeProvider>
+                    <ThemedGlobalStyle />
+                    <App />
+                  </ThemeProvider>
+                </BlockNumberProvider>
               </Blocklist>
             </Web3ProviderNetwork>
           </Web3ReactProvider>
@@ -73,4 +74,3 @@ ReactDOM.render(
 if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   serviceWorkerRegistration.register()
 }
-export { INFURA_NETWORK_URLS } from 'constants/chainInfo'
