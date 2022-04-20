@@ -23,6 +23,7 @@ import {
   DEFAULT_GAS_LIMIT_MARGIN,
   CLAIM_REWARD_SC_ADDRESS,
   FEE_OPTIONS,
+  ZERO_ADDRESS,
 } from 'constants/index'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import ROUTER_ABI_WITHOUT_DYNAMIC_FEE from '../constants/abis/dmm-router-without-dynamic-fee.json'
@@ -512,7 +513,12 @@ export const getRopstenTokenLogoURL = (address: string) => {
   )}/logo.png`
 }
 
-export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
+export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string => {
+  let address = inputAddress
+  if (address === ZERO_ADDRESS && chainId) {
+    address = WETH[chainId].address
+  }
+
   if (address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
     return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNC.svg'
   }

@@ -1137,7 +1137,7 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.CRONOS]: [],
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: [],
+  [ChainId.BTTC]: ['0xa107e6466Be74361840059a11e390200371a7538', '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3'],
   [ChainId.AURORA]: [],
   [ChainId.VELAS]: [],
   [ChainId.OASIS]: [],
@@ -1366,12 +1366,13 @@ export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'
 
 export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
-    [ChainId.ROPSTEN]: 'claim-reward-data.json',
-    [ChainId.AVAXMAINNET]: 'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/add-reward-data/results/phase_0/reward_proof.json',
-    [ChainId.BSCMAINNET]: 'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
+  [ChainId.ROPSTEN]: 'claim-reward-data.json',
+  [ChainId.AVAXMAINNET]:
+    'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/add-reward-data/results/phase_0/reward_proof.json',
+  [ChainId.BSCMAINNET]:
+    'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
 }
 
-  
 export const sentryRequestId = uuid()
 
 // Fee options instead of dynamic fee
