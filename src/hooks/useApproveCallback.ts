@@ -123,7 +123,7 @@ export function useApproveCallbackFromTrade(
   return useApproveCallback(
     amountToApprove,
     chainId
-      ? trade instanceof V2Trade
+      ? swapTransaction
         ? swapTransaction?.to
         : trade instanceof V3Trade
         ? v3SwapRouterAddress

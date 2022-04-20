@@ -309,7 +309,7 @@ export default function Market({ history }: RouteComponentProps) {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
-  } = useERC20PermitFromTrade(trade, allowedSlippage)
+  } = useERC20PermitFromTrade(trade, allowedSlippage, true)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {

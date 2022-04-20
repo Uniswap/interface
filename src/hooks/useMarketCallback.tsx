@@ -66,7 +66,7 @@ function useMarketCallArguments(
   showConfirm: boolean
 ): {
   state: V3TradeState
-  trade: V2Trade<Currency, Currency, TradeType> | null | undefined
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined | null // trade to execute, required
   tx: SwapTransaction | undefined
   marketcall: MarketCall[]
 } {

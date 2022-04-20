@@ -1,6 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Route, Trade } from '@uniswap/v2-sdk'
+import { Route as RouteV3, Trade as TradeV3 } from '@uniswap/v3-sdk'
 import { INCH_ROUTER_ADDRESS, V2_ROUTER_ADDRESS } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -12,7 +13,7 @@ import { useGetQuoteInchQuery, useGetSwapInchQuery } from 'state/routing/slice'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { SwapTransaction, V3TradeState } from './types'
-import { computeRoutes } from './utils'
+import { computeRoutes, v2StylePool } from './utils'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
@@ -111,7 +112,7 @@ export function useInchQuoteAPITrade(
   otherCurrency?: Currency
 ): {
   state: V3TradeState
-  trade: Trade<Currency, Currency, TradeType> | undefined
+  trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -189,9 +190,17 @@ export function useInchQuoteAPITrade(
     }
 
     try {
-      const trade = Trade.bestTradeExactIn(routes.flat(), otherAmount, currencyOut)
+      // get those from API
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, data ? data.fromTokenAmount : 0)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, data ? data.toTokenAmount : 0)
+      const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
+      const bestTrade = TradeV3.createUncheckedTrade({
+        route,
+        inputAmount,
+        outputAmount,
+        tradeType,
+      })
 
-      const bestTrade = trade[0]
       const tx = data
         ? {
             gas: data ? data.estimatedGas : '0x0',
@@ -226,7 +235,7 @@ export function useInchSwapAPITrade(
   otherCurrency?: Currency
 ): {
   state: V3TradeState
-  trade: Trade<Currency, Currency, TradeType> | null
+  trade: TradeV3<Currency, Currency, TradeType> | null
   tx: SwapTransaction | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -303,9 +312,17 @@ export function useInchSwapAPITrade(
     }
 
     try {
-      const trade = Trade.bestTradeExactIn(routes.flat(), otherAmount, currencyOut)
+      // get those from API
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult ? quoteResult.fromTokenAmount : 0)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult ? quoteResult.toTokenAmount : 0)
+      const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
+      const bestTrade = TradeV3.createUncheckedTrade({
+        route,
+        inputAmount,
+        outputAmount,
+        tradeType,
+      })
 
-      const bestTrade = trade[0]
       return {
         // always return VALID regardless of isFetching status
         state: V3TradeState.VALID,

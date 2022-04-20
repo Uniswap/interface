@@ -1,6 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Route, Trade } from '@uniswap/v2-sdk'
+import { Route } from '@uniswap/v2-sdk'
+import { Route as RouteV3, Trade as TradeV3 } from '@uniswap/v3-sdk'
 import { INCH_ROUTER_ADDRESS, V2_ROUTER_ADDRESS } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -10,6 +11,7 @@ import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { CHAIN_0x_URL, useGetSwap0xQuery } from 'state/quote/slice'
 import { SwapTransaction, V3TradeState } from 'state/routing/types'
+import { v2StylePool } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { computeRoutes0x } from './utils'
@@ -70,7 +72,7 @@ export function use0xQuoteAPITrade(
   otherCurrency?: Currency
 ): {
   state: V3TradeState
-  trade: Trade<Currency, Currency, TradeType> | undefined
+  trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -139,10 +141,16 @@ export function use0xQuoteAPITrade(
     }
 
     try {
-      // TODO (pai) fix the trade computation
-      const trade = new Trade(new Route(routes, currencyIn, currencyOut), otherAmount, tradeType)
-
-      const bestTrade = trade
+      // get those from API
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult ? quoteResult.sellAmount : 0)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult ? quoteResult.buyAmount : 0)
+      const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
+      const bestTrade = TradeV3.createUncheckedTrade({
+        route,
+        inputAmount,
+        outputAmount,
+        tradeType,
+      })
 
       return {
         // always return VALID regardless of isFetching status

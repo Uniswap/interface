@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade } from '@uniswap/v3-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
 import { useMemo } from 'react'
 import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
@@ -19,7 +19,7 @@ export function useBestMarketTrade(
   otherCurrency?: Currency
 ): {
   state: V3TradeState
-  trade: V2Trade<Currency, Currency, typeof tradeType> | undefined
+  trade: V3Trade<Currency, Currency, typeof tradeType> | undefined
   tx: SwapTransaction | undefined
 } {
   const isWindowVisible = useIsWindowVisible()
@@ -97,7 +97,7 @@ export function useBestV3Trade(
   otherCurrency?: Currency
 ): {
   state: V3TradeState
-  trade: Trade<Currency, Currency, typeof tradeType> | null
+  trade: V3Trade<Currency, Currency, typeof tradeType> | null
 } {
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce([amountSpecified, otherCurrency], 200)
 

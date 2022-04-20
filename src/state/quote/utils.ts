@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount, Ether, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
+import { v2StylePool } from 'state/routing/utils'
 
 import { GetQuote0xResult } from './types'
 
@@ -24,10 +25,10 @@ export function computeRoutes0x(
   try {
     return quoteResult.orders.map((order) => {
       const inputCurr = CurrencyAmount.fromRawAmount(parsedCurrencyIn, order.takerAmount)
-      const outCurr = CurrencyAmount.fromRawAmount(parsedCurrencyOut, order.makerAmount).multiply(JSBI.BigInt(2))
+      const outCurr = CurrencyAmount.fromRawAmount(parsedCurrencyOut, order.makerAmount)
       console.log(inputCurr.toSignificant(6))
       console.log(outCurr.toSignificant(6))
-      return new Pair(inputCurr, outCurr)
+      return v2StylePool(inputCurr, outCurr)
     })
   } catch (e) {
     console.log(e)

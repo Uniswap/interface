@@ -275,7 +275,8 @@ export function useV2LiquidityTokenPermit(
 
 export function useERC20PermitFromTrade(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined,
-  allowedSlippage: Percent | undefined
+  allowedSlippage: Percent | undefined,
+  skipPermit: boolean
 ) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
@@ -287,7 +288,7 @@ export function useERC20PermitFromTrade(
   return useERC20Permit(
     amountToApprove,
     // v2 router does not support
-    trade instanceof V2Trade ? undefined : trade instanceof V3Trade ? swapRouterAddress : undefined,
+    skipPermit ? undefined : trade instanceof V3Trade ? swapRouterAddress : undefined,
     null
   )
 }

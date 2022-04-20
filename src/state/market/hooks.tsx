@@ -123,7 +123,7 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
   inputError?: ReactNode
   v2Trade: {
     state: V3TradeState
-    trade: V2Trade<Currency, Currency, TradeType> | undefined
+    trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
     tx: SwapTransaction | undefined
   }
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined

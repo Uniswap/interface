@@ -1,5 +1,6 @@
-import { Currency, CurrencyAmount, Ether, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, Percent, sqrt, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
+import { encodeSqrtRatioX96, FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, TickMath } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 
 import { GetSwapInchResult, TokenInRoute } from './types'
@@ -49,12 +50,12 @@ export function computeRoutes(
         const part = new Percent(parseFloat(r.part) * 100, 10000)
 
         const rawAmountIn = part.multiply(inAmount)
-        const rawAmountOut = part.multiply(outAmount).multiply(JSBI.BigInt(2))
+        const rawAmountOut = part.multiply(outAmount)
         if (!rawAmountIn || !rawAmountOut) {
           throw new Error('Expected both amountIn and amountOut to be present')
         }
 
-        return new Pair(
+        return v2StylePool(
           CurrencyAmount.fromRawAmount(parseToken(fromToken, currencyIn.chainId), rawAmountIn.quotient),
           CurrencyAmount.fromRawAmount(parseToken(toToken, currencyOut.chainId), rawAmountOut.quotient)
         )
@@ -67,6 +68,35 @@ export function computeRoutes(
     // This is not fatal and will fix itself in future render cycles
     return undefined
   }
+}
+
+export function v2StylePool(
+  reserve0: CurrencyAmount<Token>,
+  reserve1: CurrencyAmount<Token>,
+  feeAmount: FeeAmount = FeeAmount.MEDIUM
+) {
+  const sqrtRatioX96 = encodeSqrtRatioX96(reserve1.quotient, reserve0.quotient)
+  const liquidity = sqrt(JSBI.multiply(reserve0.quotient, reserve1.quotient))
+  return new Pool(
+    reserve0.currency,
+    reserve1.currency,
+    feeAmount,
+    sqrtRatioX96,
+    liquidity,
+    TickMath.getTickAtSqrtRatio(sqrtRatioX96),
+    [
+      {
+        index: nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]),
+        liquidityNet: liquidity,
+        liquidityGross: liquidity,
+      },
+      {
+        index: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]),
+        liquidityNet: JSBI.multiply(liquidity, JSBI.BigInt(-1)),
+        liquidityGross: liquidity,
+      },
+    ]
+  )
 }
 
 const parseToken = ({ address, decimals, symbol, name }: TokenInRoute, chainId: number): Token => {
