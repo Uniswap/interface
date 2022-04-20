@@ -12,7 +12,7 @@ import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 
 import Blocklist from './components/Blocklist'
-import { connectors } from './constants/connectors'
+import { connectors } from './connectors'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
