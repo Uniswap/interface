@@ -85,7 +85,6 @@ export default function PositionList({ positions, fundingBalance, minBalance }: 
         </div>
       </MobileHeader>
       {positions.map((p) => {
-        console.log(p.processed)
         if (!filterProcessed || !p.processed)
           return <PositionListItem key={p.tokenId.toString()} positionDetails={p} isUnderfunded={isUnderfunded} />
         return

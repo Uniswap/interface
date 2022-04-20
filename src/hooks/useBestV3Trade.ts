@@ -60,8 +60,6 @@ export function useBestMarketTrade(
     }
   }, [isLoading, routingAPITrade, swapAPITrade])
 
-  console.log(betterTrade)
-
   const debouncing =
     betterTrade?.trade &&
     amountSpecified &&
