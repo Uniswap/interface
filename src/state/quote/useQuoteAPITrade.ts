@@ -44,6 +44,11 @@ function useRoutingAPIArguments({
     return undefined
   }
 
+  const queryUrl = chainId ? CHAIN_0x_URL[chainId] : undefined
+  if (!queryUrl) {
+    return undefined
+  }
+
   return {
     chainId: chainId.toString(),
     queryArg: {
@@ -68,6 +73,7 @@ export function use0xQuoteAPITrade(
   tradeType: TradeType,
   recipient: string | null | undefined,
   skipValidation: boolean,
+  showConfirm: boolean,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
@@ -142,8 +148,15 @@ export function use0xQuoteAPITrade(
 
     try {
       // get those from API
-      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult ? quoteResult.sellAmount : 0)
-      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult ? quoteResult.buyAmount : 0)
+      if (!quoteResult) {
+        return {
+          state: V3TradeState.INVALID,
+          trade: undefined,
+          tx: undefined,
+        }
+      }
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.sellAmount)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.buyAmount)
       const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
       const bestTrade = TradeV3.createUncheckedTrade({
         route,

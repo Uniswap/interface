@@ -83,6 +83,7 @@ function useMarketCallArguments(
     swapTransaction,
     swapTransaction?.type == 1 ? TradeType.EXACT_OUTPUT : trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
     recipient,
+    showConfirm,
     trade?.inputAmount,
     trade?.outputAmount.currency
   )
@@ -91,6 +92,7 @@ function useMarketCallArguments(
     trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
     recipient,
     true,
+    showConfirm,
     trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
     trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency
   )

@@ -191,8 +191,15 @@ export function useInchQuoteAPITrade(
 
     try {
       // get those from API
-      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, data ? data.fromTokenAmount : 0)
-      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, data ? data.toTokenAmount : 0)
+      if (!data) {
+        return {
+          state: V3TradeState.INVALID,
+          trade: undefined,
+          tx: undefined,
+        }
+      }
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, data.fromTokenAmount)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, data.toTokenAmount)
       const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
       const bestTrade = TradeV3.createUncheckedTrade({
         route,
@@ -231,6 +238,7 @@ export function useInchSwapAPITrade(
   swapTransaction: SwapTransaction | null | undefined,
   tradeType: TradeType,
   recipient: string | null | undefined,
+  showConfirm: boolean,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
@@ -313,8 +321,16 @@ export function useInchSwapAPITrade(
 
     try {
       // get those from API
-      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult ? quoteResult.fromTokenAmount : 0)
-      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult ? quoteResult.toTokenAmount : 0)
+      if (!quoteResult) {
+        return {
+          state: V3TradeState.NO_ROUTE_FOUND,
+          trade: null,
+          tx: undefined,
+        }
+      }
+
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.fromTokenAmount)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.toTokenAmount)
       const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
       const bestTrade = TradeV3.createUncheckedTrade({
         route,
