@@ -10,6 +10,7 @@ import { useNewStakingContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useState } from 'react'
 import { AlertCircle, ChevronDown, ChevronUp, HelpCircle } from 'react-feather'
+import { Link as HistoryLink, NavLink, useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useSingleCallResult } from 'state/multicall/hooks'
@@ -184,6 +185,8 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
 
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
 
+  const swapLink = `swap?inputCurrency=ETH&outputCurrency=${kromToken?.address}`
+
   return (
     <VoteCard>
       <CardBGImage />
@@ -293,14 +296,11 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
               </FixedHeightRow>
 
               <ButtonSecondary padding="8px" $borderRadius="8px">
-                <ExternalLink
-                  style={{ width: '100%', textAlign: 'center' }}
-                  href={`https://app.uniswap.org/#/limitorder?inputCurrency=ETH&outputCurrency=${kromToken?.address}`}
-                >
+                <HistoryLink to={swapLink} style={{ width: '100%', textAlign: 'center' }}>
                   <Trans>
                     Get KROM tokens here<span style={{ fontSize: '11px' }}>↗</span>
                   </Trans>
-                </ExternalLink>
+                </HistoryLink>
               </ButtonSecondary>
             </AutoColumn>
           )}

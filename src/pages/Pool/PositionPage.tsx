@@ -804,7 +804,7 @@ export function PositionPage({
   const numberOfZeroes = countZeroes(currentPriceInUSD.toFixed(10))
   const leftover = currentPriceInUSD.toFixed(10).substring(2 + numberOfZeroes)
   const numberOfZeroesTargetPrice = countZeroes(targetPriceInUSD.toFixed(10))
-  const leftoverTargetPrice = targetPriceInUSD.toFixed(10).substring(2 + numberOfZeroes)
+  const leftoverTargetPrice = targetPriceInUSD.toFixed(10).substring(2 + numberOfZeroesTargetPrice)
 
   function modalHeader() {
     return (
@@ -1019,9 +1019,9 @@ export function PositionPage({
                     </ExtentsText>
                     <TYPE.mediumHeader textAlign="center">
                       <span onClick={() => setInvert(!invert)}>
-                        {inverted &&
-                          pool &&
-                          commafy((inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6))}{' '}
+                        {inverted
+                          ? pool && commafy(pool.token1Price?.toSignificant(6))
+                          : pool && commafy(pool.token0Price?.toSignificant(6))}
                         <StyledUSD>
                           {' '}
                           {currentPriceInUSD && !shouldntUseCommafy(currentPriceInUSD) && numberOfZeroes < 3 ? (
@@ -1068,17 +1068,17 @@ export function PositionPage({
                       {''}{' '}
                       <StyledUSD>
                         {' '}
-                        {targetPriceInUSD && !shouldntUseCommafy(targetPriceInUSD) && numberOfZeroes < 3 ? (
+                        {targetPriceInUSD && !shouldntUseCommafy(targetPriceInUSD) && numberOfZeroesTargetPrice < 3 ? (
                           <span> (${commafy(targetPriceInUSD.toFixed(2))})</span>
                         ) : (
                           ''
                         )}
-                        {targetPriceInUSD && shouldntUseCommafy(targetPriceInUSD) && numberOfZeroes < 3 ? (
-                          <span> (${commafy(targetPriceInUSD.toFixed(3))}) </span>
+                        {targetPriceInUSD && shouldntUseCommafy(targetPriceInUSD) && numberOfZeroesTargetPrice < 3 ? (
+                          <span> (${commafy(targetPriceInUSD.toFixed(3))})</span>
                         ) : (
                           ''
                         )}
-                        {targetPriceInUSD && numberOfZeroes > 3 ? (
+                        {targetPriceInUSD && numberOfZeroesTargetPrice > 3 ? (
                           <span>
                             ($0.0<sub>{numberOfZeroesTargetPrice}</sub>
                             {leftoverTargetPrice})
