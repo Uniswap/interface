@@ -247,11 +247,16 @@ export function useOwnWeeklyEmission(
   totalPoolStaked?: CurrencyAmount<Token>
 ) {
   return useMemo(() => {
-    const poolShare =
-      totalPoolStaked && stakedLPAmount && totalPoolStaked.greaterThan(0)
-        ? stakedLPAmount.divide(totalPoolStaked.quotient).quotient
-        : JSBI.BigInt(0)
-    const hypotheticalEmissionPerWeek = poolEmission?.multiply(poolShare).multiply(JSBI.BigInt(60 * 60 * 24 * 7))
+    const hypotheticalEmissionPerWeek =
+      totalPoolStaked && stakedLPAmount && totalPoolStaked.greaterThan(0) && poolEmission
+        ? poolEmission
+            .multiply(JSBI.BigInt(60 * 60 * 24 * 7))
+            .multiply(stakedLPAmount)
+            .divide(totalPoolStaked)
+        : poolEmission?.currency
+        ? CurrencyAmount.fromRawAmount(poolEmission?.currency, JSBI.BigInt(0))
+        : undefined
+
     return hypotheticalEmissionPerWeek
   }, [poolEmission, stakedLPAmount, totalPoolStaked])
 }

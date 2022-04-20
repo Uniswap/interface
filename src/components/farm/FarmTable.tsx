@@ -159,7 +159,7 @@ export function FarmTableRow({
     <PoolRow to={`/farm/${poolId}`}>
       <AutoRow gap="0%" justify={'space-between'}>
         <PoolPair justify={'end'}>
-          <DoubleCurrencyLogo currency0={pair?.token0} currency1={pair?.token0} size={36} />
+          <DoubleCurrencyLogo currency0={pair?.token1} currency1={pair?.token0} size={36} />
           <span
             css={`
               margin-left: 10px;

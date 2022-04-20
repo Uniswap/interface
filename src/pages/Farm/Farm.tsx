@@ -118,7 +118,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
 
   const ownPrimaryWeeklyEmission = useOwnWeeklyEmission(poolEmissionAmount, stakedAmount, totalPoolStaked)
   const primaryAPR = useCalculateAPR(poolEmissionAmount, totalPoolStaked)
-  const ownSecondaryWeeklyEmission = useOwnWeeklyEmission(rewardPerSecondAmount, undefined, totalPoolStaked)
+  const ownSecondaryWeeklyEmission = useOwnWeeklyEmission(rewardPerSecondAmount, stakedAmount, totalPoolStaked)
   const secondaryAPR = useCalculateAPR(rewardPerSecondAmount, totalPoolStaked)
 
   const totalAPR = JSBI.add(primaryAPR || JSBI.BigInt(0), secondaryAPR || JSBI.BigInt(0))
@@ -401,13 +401,15 @@ function RewardRow({ action, ownWeeklyEmission, pendingAmount, style }: RewardRo
             duration={6}
           />
         </TYPE.largeHeader>
-        <TYPE.black fontSize={16} fontWeight={500}>
-          <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
-            ⚡
-          </span>
-          {ownWeeklyEmission?.toFixed(0, { groupSeparator: ',' }) ?? '-'} {pendingAmount?.currency.symbol}
-          {' / week'}
-        </TYPE.black>
+        {ownWeeklyEmission?.greaterThan(0) && (
+          <TYPE.black fontSize={16} fontWeight={500}>
+            <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
+              ⚡
+            </span>
+            {ownWeeklyEmission?.toFixed(0, { groupSeparator: ',' }) ?? '-'} {pendingAmount?.currency.symbol}
+            {' / week'}
+          </TYPE.black>
+        )}
       </RowBetween>
     </AutoColumn>
   )
