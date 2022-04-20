@@ -288,7 +288,7 @@ export default function RemoveLiquidity({
             {'DIFF ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
-            <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
+            <DoubleCurrencyLogo currency0={currencyB} currency1={currencyA} margin={true} />
             <Text fontWeight={500} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
             </Text>

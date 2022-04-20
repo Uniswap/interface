@@ -98,15 +98,18 @@ type TableRowProps = {
 
 const PoolPair = styled(AutoColumn)`
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   color: ${({ theme }: { theme: DefaultTheme }) => theme.primary1};
+  width: 25%;
 `
 
 const TVL = styled(AutoColumn)`
-  justify-content: center;
-  align-items: center;
+  justify-content: end;
+  text-align: right;
   text-decoration: none;
+  padding-right: 24px;
+  width: 25%;
 `
 
 const PoolRow = styled(Link)`
@@ -137,13 +140,19 @@ const PoolRow = styled(Link)`
 
 const Emission = styled(AutoColumn)`
   display: flex;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
   padding-top: 8px;
 `
 
 const EmissionText = styled.text`
   padding-right: 10px;
+`
+
+const RowColumn = styled.div`
+  width: 25%;
+  text-align: right;
+  justify-content: flex-end;
 `
 
 export function FarmTableRow({
@@ -158,7 +167,7 @@ export function FarmTableRow({
   return (
     <PoolRow to={`/farm/${poolId}`}>
       <AutoRow gap="0%" justify={'space-between'}>
-        <PoolPair justify={'end'}>
+        <PoolPair>
           <DoubleCurrencyLogo currency0={pair?.token1} currency1={pair?.token0} size={36} />
           <span
             css={`
@@ -168,12 +177,12 @@ export function FarmTableRow({
             {pair?.token0.symbol}/{pair?.token1.symbol}
           </span>
         </PoolPair>
-        <TVL justify={'end'}>
+        <TVL>
           {tlv
             ? `$${tlv.toFixed(0, { groupSeparator: ',' })}`
             : `${totalLPStaked?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} DIFF-LP`}
         </TVL>
-        <div>
+        <RowColumn>
           <Emission>
             <EmissionText>
               {primaryEmissionPerSecond?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
@@ -195,8 +204,8 @@ export function FarmTableRow({
               />
             </Emission>
           )}
-        </div>
-        <div>{totalAPR && `${JSBI.multiply(totalAPR, JSBI.BigInt(100))}%`}</div>
+        </RowColumn>
+        <RowColumn>{totalAPR && `${JSBI.multiply(totalAPR, JSBI.BigInt(100))}%`}</RowColumn>
       </AutoRow>
       <HRDark />
     </PoolRow>

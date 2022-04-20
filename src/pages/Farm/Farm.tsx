@@ -176,7 +176,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
             {token0?.symbol}-{token1?.symbol} Liquidity Mining
           </TYPE.largeHeader>
         </Heading>
-        <DoubleCurrencyLogo currency0={token0 ?? undefined} currency1={token1 ?? undefined} size={48} margin={true} />
+        <DoubleCurrencyLogo currency0={token1 ?? undefined} currency1={token0 ?? undefined} size={48} margin={true} />
       </AutoRow>
 
       <DataRow style={{ gap: '24px' }}>
@@ -209,7 +209,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
             <RewardRate width={1 / 1} align="left">
               <AutoColumn justify={'start'}>
                 <Heading>
-                  <CurrencyLogo currency={token0 ?? undefined} size={'24px'} />
+                  <CurrencyLogo currency={poolEmissionAmount?.currency ?? undefined} size={'24px'} />
                   <TYPE.body fontWeight={500} margin={'5px'}>
                     {poolEmissionAmount?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
                     <span style={{ color: '#27D2EA' }}> {` ${poolEmissionAmount?.currency.symbol || ''}`}</span>
@@ -218,7 +218,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
                 </Heading>
                 {rewardPerSecondAmount && (
                   <Heading>
-                    <CurrencyLogo currency={token1 ?? undefined} size={'24px'} />
+                    <CurrencyLogo currency={rewardPerSecondAmount.currency ?? undefined} size={'24px'} />
                     <TYPE.body fontWeight={500} margin={'5px'}>
                       {rewardPerSecondAmount?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
                         '-'}

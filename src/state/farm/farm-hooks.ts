@@ -196,7 +196,6 @@ export function usePool(poolId: number) {
     poolEmissionAmount,
     poolId,
   }
-  console.log(rawInfo)
   return rawInfo
 }
 
