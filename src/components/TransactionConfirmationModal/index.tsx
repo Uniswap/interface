@@ -6,7 +6,7 @@ import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAddToken from 'hooks/useAddToken'
 import useIsCoinbaseWallet from 'hooks/useIsCoinbaseWallet'
-import { ReactNode, useContext } from 'react'
+import { ReactNode, useContext, useMemo } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
@@ -100,6 +100,12 @@ function TransactionSubmittedContent({
   const { library } = useActiveWeb3React()
   const isCoinbaseWallet = useIsCoinbaseWallet()
 
+  const providerDisplayName = useMemo(() => {
+    if (library?.provider?.isMetaMask) return 'MetaMask'
+    if (isCoinbaseWallet) return 'Coinbase Wallet'
+    else return 'Wallet'
+  }, [library?.provider?.isMetaMask, isCoinbaseWallet])
+
   const { addToken, success } = useAddToken(currencyToAdd)
 
   return (
@@ -129,7 +135,9 @@ function TransactionSubmittedContent({
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  <Trans>Add {currencyToAdd.symbol} to Wallet</Trans>
+                  <Trans>
+                    Add {currencyToAdd.symbol} to {providerDisplayName}
+                  </Trans>
                 </RowFixed>
               ) : (
                 <RowFixed>
