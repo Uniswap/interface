@@ -3,7 +3,9 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useCallback, useState } from 'react'
 
-export default function useAddTokenToMetamask(currencyToAdd: Currency | undefined): {
+import useIsCoinbaseWallet from './useIsCoinbaseWallet'
+
+export default function useAddToken(currencyToAdd: Currency | undefined): {
   addToken: () => void
   success: boolean | undefined
 } {
@@ -14,8 +16,16 @@ export default function useAddTokenToMetamask(currencyToAdd: Currency | undefine
   const [success, setSuccess] = useState<boolean | undefined>()
   const logoURL = useCurrencyLogoURIs(token)[0]
 
+  const isCoinbaseWallet = useIsCoinbaseWallet()
+
   const addToken = useCallback(() => {
-    if (library && library?.provider?.isMetaMask && library.provider.request && token) {
+    if (
+      library &&
+      library?.provider &&
+      (library?.provider?.isMetaMask || isCoinbaseWallet) &&
+      library.provider.request &&
+      token
+    ) {
       library.provider
         .request({
           method: 'wallet_watchAsset',

@@ -4,7 +4,7 @@ import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
+import useAddToken from 'hooks/useAddToken'
 import { ReactNode, useContext } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
@@ -99,7 +99,7 @@ function TransactionSubmittedContent({
 
   const { library } = useActiveWeb3React()
 
-  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
+  const { addToken, success } = useAddToken(currencyToAdd)
 
   return (
     <Wrapper>
