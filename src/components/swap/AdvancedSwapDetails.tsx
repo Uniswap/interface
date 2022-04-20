@@ -143,7 +143,7 @@ export function AdvancedSwapDetails({
               text={
                 <Trans>
                   The fee paid to miners who process your transaction. This must be paid in{' '}
-                  {CHAIN_INFO[chainId ?? 1].addNetworkInfo.nativeCurrency.symbol}.
+                  {CHAIN_INFO[chainId ?? 1].nativeCurrency.symbol}.
                 </Trans>
               }
               disableHover={hideInfoTooltips}
