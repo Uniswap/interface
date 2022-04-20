@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Connector } from '@web3-react/core'
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
-import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
@@ -70,10 +70,10 @@ export default function PendingView({
   setPendingError,
   tryActivation,
 }: {
-  connector?: AbstractConnector
+  connector?: Connector
   error?: boolean
   setPendingError: (error: boolean) => void
-  tryActivation: (connector: AbstractConnector) => void
+  tryActivation: (connector: Connector) => void
 }) {
   const isMetamask = window?.ethereum?.isMetaMask
 

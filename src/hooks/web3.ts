@@ -1,9 +1,10 @@
+import { useWeb3React } from '@web3-react/core'
 import type { EthereumProvider } from 'lib/ethereum'
 import { useEffect, useState } from 'react'
-import { useWeb3React } from 'web3-react-core'
 
-import { gnosisSafe, injected } from '../connectors'
-import { IS_IN_IFRAME } from '../constants/misc'
+// import { gnosisSafe, injected } from '../connectors'
+import { injected } from '../connectors'
+// import { IS_IN_IFRAME } from '../constants/misc'
 import { isMobile } from '../utils/userAgent'
 
 export function useEagerConnect() {
@@ -12,22 +13,22 @@ export function useEagerConnect() {
 
   // gnosisSafe.isSafeApp() races a timeout against postMessage, so it delays pageload if we are not in a safe app;
   // if we are not embedded in an iframe, it is not worth checking
-  const [triedSafe, setTriedSafe] = useState(!IS_IN_IFRAME)
+  // const [triedSafe, setTriedSafe] = useState(!IS_IN_IFRAME)
 
   // first, try connecting to a gnosis safe
-  useEffect(() => {
-    if (!triedSafe) {
-      gnosisSafe.isSafeApp().then((loadedInSafe) => {
-        if (loadedInSafe) {
-          activate(gnosisSafe, undefined, true).catch(() => {
-            setTriedSafe(true)
-          })
-        } else {
-          setTriedSafe(true)
-        }
-      })
-    }
-  }, [activate, setTriedSafe, triedSafe])
+  // useEffect(() => {
+  //   if (!triedSafe) {
+  //     gnosisSafe.isSafeApp().then((loadedInSafe) => {
+  //       if (loadedInSafe) {
+  //         activate(gnosisSafe, undefined, true).catch(() => {
+  //           setTriedSafe(true)
+  //         })
+  //       } else {
+  //         setTriedSafe(true)
+  //       }
+  //     })
+  //   }
+  // }, [activate, setTriedSafe, triedSafe])
 
   // then, if that fails, try connecting to an injected connector
   useEffect(() => {
@@ -48,7 +49,8 @@ export function useEagerConnect() {
         }
       })
     }
-  }, [activate, active, triedSafe])
+    // }, [activate, active, triedSafe])
+  }, [activate, active])
 
   // wait until we get confirmation of a connection to flip the flag
   useEffect(() => {

@@ -1,12 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
-import { AbstractConnector } from 'web3-react-abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from 'web3-react-core'
 
 import { NetworkContextName } from '../../constants/misc'
 import useENSName from '../../hooks/useENSName'
@@ -131,7 +130,7 @@ function Sock() {
   )
 }
 
-function WrappedStatusIcon({ connector }: { connector: AbstractConnector | Connector }) {
+function WrappedStatusIcon({ connector }: { connector: Connector }) {
   return (
     <IconWrapper size={16}>
       <StatusIcon connector={connector} />

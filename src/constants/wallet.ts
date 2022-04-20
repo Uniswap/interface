@@ -1,14 +1,15 @@
-import { AbstractConnector } from 'web3-react-abstract-connector'
+import { Connector } from '@web3-react/types'
 
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
-import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
+// import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, walletconnect, walletlink } from '../connectors'
+// import { coinbaseWallet, fortmatic, injected, walletConnect } from '../connectors'
+import { coinbaseWallet, injected, walletConnect } from '../connectors'
 
 interface WalletInfo {
-  connector?: AbstractConnector
+  connector?: Connector
   name: string
   iconURL: string
   description: string
@@ -38,7 +39,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#E8831D',
   },
   WALLET_CONNECT: {
-    connector: walletconnect,
+    connector: walletConnect,
     name: 'WalletConnect',
     iconURL: WALLETCONNECT_ICON_URL,
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
@@ -46,8 +47,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#4196FC',
     mobile: true,
   },
-  WALLET_LINK: {
-    connector: walletlink,
+  COINBASE_WALLET: {
+    connector: coinbaseWallet,
     name: 'Coinbase Wallet',
     iconURL: COINBASE_ICON_URL,
     description: 'Use Coinbase Wallet app on mobile device',
@@ -63,13 +64,13 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobile: true,
     mobileOnly: true,
   },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconURL: FORTMATIC_ICON_URL,
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true,
-  },
+  // FORTMATIC: {
+  //   connector: fortmatic,
+  //   name: 'Fortmatic',
+  //   iconURL: FORTMATIC_ICON_URL,
+  //   description: 'Login using Fortmatic hosted wallet',
+  //   href: null,
+  //   color: '#6748FF',
+  //   mobile: true,
+  // },
 }

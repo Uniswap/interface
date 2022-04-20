@@ -1,4 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { Connector } from '@web3-react/types'
+import { WalletConnect } from '@web3-react/walletconnect'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
@@ -7,14 +10,12 @@ import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
-import { AbstractConnector } from 'web3-react-abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from 'web3-react-core'
-import { WalletConnectConnector } from 'web3-react-walletconnect-connector'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected } from '../../connectors'
-import { OVERLAY_READY } from '../../connectors/Fortmatic'
+// import { fortmatic, injected } from '../../connectors'
+import { injected } from '../../connectors'
+// import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
@@ -142,7 +143,7 @@ export default function WalletModal({
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
-  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
+  const [pendingWallet, setPendingWallet] = useState<Connector | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
 
@@ -177,7 +178,7 @@ export default function WalletModal({
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-  const tryActivation = async (connector: AbstractConnector | undefined) => {
+  const tryActivation = async (connector: Connector | undefined) => {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
@@ -195,7 +196,7 @@ export default function WalletModal({
     setWalletView(WALLET_VIEWS.PENDING)
 
     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-    if (connector instanceof WalletConnectConnector) {
+    if (connector instanceof WalletConnect) {
       connector.walletConnectProvider = undefined
     }
 
@@ -214,12 +215,12 @@ export default function WalletModal({
         })
   }
 
-  // close wallet modal if fortmatic modal is active
-  useEffect(() => {
-    fortmatic.on(OVERLAY_READY, () => {
-      toggleWalletModal()
-    })
-  }, [toggleWalletModal])
+  // // close wallet modal if fortmatic modal is active
+  // useEffect(() => {
+  //   fortmatic.on(OVERLAY_READY, () => {
+  //     toggleWalletModal()
+  //   })
+  // }, [toggleWalletModal])
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
