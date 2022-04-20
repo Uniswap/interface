@@ -1,10 +1,4 @@
 import React, { memo } from 'react'
-import AvaxContestDesktop from 'assets/banners/Avax-Contest-Desktop.png'
-import AvaxContestMobile from 'assets/banners/Avax-Contest-mobile.png'
-import AvaxContestTablet from 'assets/banners/Avax-Contest-Tablet.png'
-import AvaxLMDesktop from 'assets/banners/Avax-LM-desktop.png'
-import AvaxLMMobile from 'assets/banners/Avax-LM-mobile.png'
-import AvaxLMTablet from 'assets/banners/Avax-LM-tablet.png'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styled from 'styled-components'
 import { X } from 'react-feather'
@@ -14,6 +8,13 @@ import { Flex } from 'rebass'
 import { useLocalStorage } from 'react-use'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
+
+import B1_Desktop from 'assets/banners/banner_1_desktop.png'
+import B1_Tablet from 'assets/banners/banner_1_tablet.png'
+import B1_Mobile from 'assets/banners/banner_1_mobile.png'
+import B2_Desktop from 'assets/banners/banner_2_desktop.png'
+import B2_Tablet from 'assets/banners/banner_2_tablet.png'
+import B2_Mobile from 'assets/banners/banner_2_mobile.png'
 
 const BannerWrapper = styled(Flex)`
   --swiper-navigation-size: 12px;
@@ -81,14 +82,14 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
 
   const banners = [
     {
-      img: w >= 768 ? AvaxLMDesktop : w >= 500 ? AvaxLMTablet : AvaxLMMobile,
+      img: w >= 768 ? B2_Desktop : w >= 500 ? B2_Tablet : B2_Mobile,
       link:
-        'https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=avaxphase2&utm_content=lm#/farms?networkId=43114',
+        'https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------',
     },
     {
-      img: w >= 768 ? AvaxContestDesktop : w >= 500 ? AvaxContestTablet : AvaxContestMobile,
+      img: w >= 768 ? B1_Desktop : w >= 500 ? B1_Tablet : B1_Mobile,
       link:
-        'https://medium.com/@kyberteam/50-000-in-rewards-for-kyberswaps-sure-win-trading-contest-with-avax-9af822f6ae12',
+        'https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------',
     },
   ]
 
@@ -97,7 +98,7 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
   return (
     <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1028px'} width="100%">
       <Swiper
-        autoplay={{ delay: 60000 }}
+        autoplay={{ delay: 20000 }}
         slidesPerView={1}
         navigation={true}
         pagination={true}

@@ -335,7 +335,7 @@ export default function Swap({ history }: RouteComponentProps) {
         )}&networkId=${chainId}`
       : undefined
 
-  const showFarmBanner = new Date() <= new Date(1648684800000) // 31/3/2022
+  const showTxBanner = new Date() <= new Date(1654041600000) // Wednesday, June 1, 2022 0:00:00
 
   return (
     <>
@@ -385,7 +385,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <>
                   <Wrapper id="swap-page">
                     <ConfirmSwapModal
-                      showFarmBanner={showFarmBanner}
+                      showTxBanner={showTxBanner}
                       isOpen={showConfirm}
                       trade={trade}
                       originalTrade={tradeToConfirm}
@@ -397,7 +397,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       onConfirm={handleSwap}
                       swapErrorMessage={swapErrorMessage}
                       onDismiss={handleConfirmDismiss}
-                      tokenAddtoMetaMask={currencies[Field.OUTPUT]}
+                      tokenAddToMetaMask={currencies[Field.OUTPUT]}
                     />
 
                     <Flex flexDirection="column" sx={{ gap: '0.675rem' }}>

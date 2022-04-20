@@ -13,7 +13,7 @@ import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
-import farmbanner from '../../assets/banners/tx-banner.png'
+import TxBanner from '../../assets/banners/tx-banner.png'
 
 import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
@@ -118,28 +118,28 @@ function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
-  tokenAddtoMetaMask,
-  showFarmBanner = false,
+  tokenAddToMetaMask,
+  showTxBanner = false,
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
-  tokenAddtoMetaMask?: Token
-  showFarmBanner?: boolean
+  tokenAddToMetaMask?: Token
+  showTxBanner?: boolean
 }) {
   const theme = useContext(ThemeContext)
   return (
     <Wrapper>
       <Section>
-        {!showFarmBanner && (
+        {!showTxBanner && (
           <RowBetween>
             <div />
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
-        {showFarmBanner && (
-          <ExternalLink href="https://medium.com/@kyberteam/50-000-in-rewards-for-kyberswaps-sure-win-trading-contest-with-avax-9af822f6ae12">
-            <BannerWrapper src={farmbanner} alt="" width="100%" />
+        {showTxBanner && (
+          <ExternalLink href="https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------">
+            <BannerWrapper src={TxBanner} alt="" width="100%" />
           </ExternalLink>
         )}
 
@@ -157,7 +157,7 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {tokenAddtoMetaMask?.address && <AddTokenToMetaMask token={tokenAddtoMetaMask} chainId={chainId} />}
+          {tokenAddToMetaMask?.address && <AddTokenToMetaMask token={tokenAddToMetaMask} chainId={chainId} />}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
               <Trans>Close</Trans>
@@ -269,8 +269,8 @@ interface ConfirmationModalProps {
   content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
-  tokenAddtoMetaMask?: Currency
-  showFarmBanner?: boolean
+  tokenAddToMetaMask?: Currency
+  showTxBanner?: boolean
 }
 
 export default function TransactionConfirmationModal({
@@ -280,8 +280,8 @@ export default function TransactionConfirmationModal({
   hash,
   pendingText,
   content,
-  tokenAddtoMetaMask,
-  showFarmBanner,
+  tokenAddToMetaMask,
+  showTxBanner,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -294,11 +294,11 @@ export default function TransactionConfirmationModal({
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
         <TransactionSubmittedContent
-          showFarmBanner={showFarmBanner}
+          showTxBanner={showTxBanner}
           chainId={chainId}
           hash={hash}
           onDismiss={onDismiss}
-          tokenAddtoMetaMask={tokenAddtoMetaMask as Token}
+          tokenAddToMetaMask={tokenAddToMetaMask as Token}
         />
       ) : (
         content()
