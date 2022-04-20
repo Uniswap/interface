@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: Kromatika-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-10-14 18:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: Kromatika-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: ko\n"
 "X-Crowdin-File: en-US.po\n"
@@ -155,8 +155,8 @@ msgid "Add"
 msgstr "추가"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "Uniswap V2에 <0/> 및 <1/> 추가"
+msgid "Add <0/> and <1/> to Kromatika V2"
+msgstr "Kromatika V2에 <0/> 및 <1/> 추가"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -212,8 +212,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁니다. 자신의 책임하에 사용하십시오."
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
+msgid "Allow the Kromatika Protocol to use your {0}"
+msgstr "Kromatika 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -228,8 +228,8 @@ msgid "Amount"
 msgstr "금액"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -285,8 +285,8 @@ msgid "Are you sure?"
 msgstr "확실합니까?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Uniswap 커뮤니티의 회원으로서 UNI가 투표 및 거버넌스에 사용되도록 청구할 수 있습니다. <0/> <1/> <2> UN에 대해 자세히 알아보기</2>"
+msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Kromatika 커뮤니티의 회원으로서 UNI가 투표 및 거버넌스에 사용되도록 청구할 수 있습니다. <0/> <1/> <2> UN에 대해 자세히 알아보기</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -344,8 +344,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적으로 신뢰하게 됩니다. 기존 목록의 가짜 버전 및 목록이 없는 프로젝트를 나타낸다고 주장하는 목록을 만드는 등 누구나 목록을 만들 수 있습니다."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "지갑을 연결하면 Uniswap Labs의 <0> 서비스 약관</0>에 동의하고 <1>Uniswap 프로토콜 면책 조항</1>을 읽고 이해했음을 인정하는 것입니다."
+msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
+msgstr "지갑을 연결하면 Kromatika Labs의 <0> 서비스 약관</0>에 동의하고 <1>Kromatika 프로토콜 면책 조항</1>을 읽고 이해했음을 인정하는 것입니다."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -660,8 +660,8 @@ msgid "Deposit liquidity"
 msgstr "예금 유동성"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "유동성 제공자 토큰을 예치하여 Uniswap 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
+msgstr "유동성 제공자 토큰을 예치하여 Kromatika 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -708,8 +708,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "v2 포지션 중 하나가 보이지 않습니까? <0>가져 오십시오.</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "획득한 UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다."
+msgid "Earned UNI tokens represent voting shares in Kromatika governance."
+msgstr "획득한 UNI 토큰은 Kromatika 거버넌스의 의결권을 나타냅니다."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -793,8 +793,8 @@ msgid "Expired"
 msgstr "만료 됨"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap Analytics에서 인기있는 풀을 살펴보십시오."
+msgid "Explore popular pools on Kromatika Analytics."
+msgstr "Kromatika Analytics에서 인기있는 풀을 살펴보십시오."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -813,8 +813,8 @@ msgid "For"
 msgstr "찬성"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "아래 표시된 각 풀에 대해 마이그레이션을 클릭하여 Uniswap V2에서 유동성을 제거하고 Uniswap V3에 입금하십시오."
+msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
+msgstr "아래 표시된 각 풀에 대해 마이그레이션을 클릭하여 Kromatika V2에서 유동성을 제거하고 Kromatika V3에 입금하십시오."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1072,8 +1072,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "V2 유동성 마이그레이션"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "유동성 토큰을 Uniswap V2에서 Uniswap V3로 마이그레이션하십시오."
+msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
+msgstr "유동성 토큰을 Kromatika V2에서 Kromatika V3로 마이그레이션하십시오."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1357,8 +1357,8 @@ msgid "Read more about UNI"
 msgstr "UNI에 대해 자세히 알아보기"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Uniswap 거버넌스에 대해 자세히 알아보기"
+msgid "Read more about Kromatika governance"
+msgstr "Kromatika 거버넌스에 대해 자세히 알아보기"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1569,16 +1569,16 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} 을 {2} {3}(으)로 스왑"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Uniswap 커뮤니티에 참여해 주셔서 감사합니다. <0/>"
+msgid "Thanks for being part of the Kromatika community <0/>"
+msgstr "Kromatika 커뮤니티에 참여해 주셔서 감사합니다. <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "수수료로받을 수있는 %입니다."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Uniswap 불변 x * y = k가 스왑에 의해 충족되지 않았습니다. 이는 일반적으로 스와핑하는 토큰 중 하나가 이체시 사용자 지정 동작을 통합함을 의미합니다."
+msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Kromatika 불변 x * y = k가 스왑에 의해 충족되지 않았습니다. 이는 일반적으로 스와핑하는 토큰 중 하나가 이체시 사용자 지정 동작을 통합함을 의미합니다."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1593,8 +1593,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다. 참고: 이체 수수료 및 리베이스 토큰이 Uniswap V3와 호환되지 않습니다."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다. 참고: 이체 수수료 및 리베이스 토큰이 Kromatika V3와 호환되지 않습니다."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1641,8 +1641,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "이 도구로 {0} 유동성을 V3로 안전하게 마이그레이션할 수 있습니다. 이 과정은 다음 덕분에 신뢰할 수 있습니다."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "이 거래는 가격 변동으로 인해 성공하지 못합니다. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "이 거래는 가격 변동으로 인해 성공하지 못합니다. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1752,8 +1752,8 @@ msgid "UNI price:"
 msgstr "UNI 가격 :"
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다. 각 제안에 대해 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다."
+msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "UNI 토큰은 Kromatika 거버넌스의 의결권을 나타냅니다. 각 제안에 대해 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1793,36 +1793,36 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "가스 추정에 예상치 못한 문제가 있습니다. 다시 시도해 주세요."
 
 #: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap 거버넌스"
+msgid "Kromatika Governance"
+msgstr "Kromatika 거버넌스"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap 사용 가능 : <0>{0}</0>"
+msgid "Kromatika available in: <0>{0}</0>"
+msgstr "Kromatika 사용 가능 : <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Uniswap 거버넌스는 레이어 1에서만 사용할 수 있습니다. 제안 및 투표를 보려면 네트워크를 이더 리움 메인 넷으로 전환하십시오."
+msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Kromatika 거버넌스는 레이어 1에서만 사용할 수 있습니다. 제안 및 투표를 보려면 네트워크를 이더 리움 메인 넷으로 전환하십시오."
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Uniswap 유동성 채굴"
+msgid "Kromatika liquidity mining"
+msgstr "Kromatika 유동성 채굴"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
-msgstr "Uniswap 마이그레이션 계약 ↗"
+msgid "Kromatika migration contract↗"
+msgstr "Kromatika 마이그레이션 계약 ↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "{0}Uniswap"
+msgid "Kromatika on {0}"
+msgstr "{0}Kromatika"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "알 수 없는 출처"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "알 수 없는 오류 {0}. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "알 수 없는 오류 {0}. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1868,8 +1868,8 @@ msgid "Update list"
 msgstr "목록 업데이트"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Uniswap Labs API를 사용하여 보다 효율적인 경로를 통해 더 나은 가격을 얻으십시오."
+msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
+msgstr "Kromatika Labs API를 사용하여 보다 효율적인 경로를 통해 더 나은 가격을 얻으십시오."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
@@ -2060,8 +2060,8 @@ msgid "You are creating a pool"
 msgstr "풀을 만들고 있습니다."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "귀하는 이 Uniswap V3 풀의 최초 유동성 제공자입니다. 유동성은 현재 {0} 가격으로 마이그레이션됩니다."
+msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "귀하는 이 Kromatika V3 풀의 최초 유동성 제공자입니다. 유동성은 현재 {0} 가격으로 마이그레이션됩니다."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2096,16 +2096,16 @@ msgid "You must connect an account."
 msgstr "계정을 연결해야합니다."
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "{0}을 사용하려면 Uniswap 스마트 계약에 권한을 부여해야합니다. 토큰 당 한 번만 이 작업을 수행하면 됩니다."
+msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "{0}을 사용하려면 Kromatika 스마트 계약에 권한을 부여해야합니다. 토큰 당 한 번만 이 작업을 수행하면 됩니다."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "제안서를 제출 {formattedProposalThreshold} 표가 있어야합니다."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "유동성을 Uniswap V3에 정확하다고 생각하는 가격으로 예치해야합니다. <0/> 가격이 잘못된 것 같으면 교환하여 가격을 이동하거나 다른 사람이 이동하기를 기다릴 수 있습니다."
+msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "유동성을 Kromatika V3에 정확하다고 생각하는 가격으로 예치해야합니다. <0/> 가격이 잘못된 것 같으면 교환하여 가격을 이동하거나 다른 사람이 이동하기를 기다릴 수 있습니다."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

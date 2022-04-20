@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: Kromatika-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-10-14 18:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: Kromatika-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: sw-TZ\n"
 "X-Crowdin-File: en-US.po\n"
@@ -155,8 +155,8 @@ msgid "Add"
 msgstr "Ongeza"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "Ongeza <0/> na <1/> kwenye Uniswap V2"
+msgid "Add <0/> and <1/> to Kromatika V2"
+msgstr "Ongeza <0/> na <1/> kwenye Kromatika V2"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -212,8 +212,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "Ruhusu biashara ya athari za bei ya juu na uruke skrini ya thibitisho. Tumia kwa hatari yako mwenyewe."
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Ruhusu Itifaki ya Uniswap kutumia {0}"
+msgid "Allow the Kromatika Protocol to use your {0}"
+msgstr "Ruhusu Itifaki ya Kromatika kutumia {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -228,8 +228,8 @@ msgid "Amount"
 msgstr "Kiasi"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Kromatika V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -285,8 +285,8 @@ msgid "Are you sure?"
 msgstr "Una uhakika?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Kama mwanachama wa jamii ya Uniswap unaweza kudai UNI kutumika kwa kupiga kura na utawala. <0 /> <1 /> <2> Soma zaidi kuhusu UNI</2>"
+msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Kama mwanachama wa jamii ya Kromatika unaweza kudai UNI kutumika kwa kupiga kura na utawala. <0 /> <1 /> <2> Soma zaidi kuhusu UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -344,8 +344,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Kwa kuongeza orodha hii unaamini kabisa kuwa data ni sahihi. Mtu yeyote anaweza kuunda orodha, pamoja na kuunda matoleo bandia ya orodha zilizopo na orodha ambazo zinadai kuwakilisha miradi ambayo haina moja."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Kwa kuunganisha mkoba, unakubali Sheria na Masharti ya Maabara yasiyobadilishwa <0></0> na utambue kuwa umesoma na kuelewa kitoweo cha <1> Uniswap itifaki ya itifaki</1> ."
+msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
+msgstr "Kwa kuunganisha mkoba, unakubali Sheria na Masharti ya Maabara yasiyobadilishwa <0></0> na utambue kuwa umesoma na kuelewa kitoweo cha <1> Kromatika itifaki ya itifaki</1> ."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -660,8 +660,8 @@ msgid "Deposit liquidity"
 msgstr "Amana ukwasi"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Weka ishara zako za Mtoaji wa Liquidity kupokea UNI, ishara ya utawala wa itifaki ya Uniswap."
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
+msgstr "Weka ishara zako za Mtoaji wa Liquidity kupokea UNI, ishara ya utawala wa itifaki ya Kromatika."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -708,8 +708,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Je! Huoni moja ya nafasi zako za v2? <0> Ingiza.</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Ishara zilizopatikana za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap."
+msgid "Earned UNI tokens represent voting shares in Kromatika governance."
+msgstr "Ishara zilizopatikana za UNI zinawakilisha hisa za kupiga kura katika utawala wa Kromatika."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -793,8 +793,8 @@ msgid "Expired"
 msgstr "Imeisha muda"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Chunguza mabwawa maarufu kwenye Takwimu za Uniswap."
+msgid "Explore popular pools on Kromatika Analytics."
+msgstr "Chunguza mabwawa maarufu kwenye Takwimu za Kromatika."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -813,8 +813,8 @@ msgid "For"
 msgstr "Kwa maana"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Kwa kila dimbwi lililoonyeshwa hapa chini, bonyeza hamisha ili kuondoa ukwasi wako kutoka kwa Uniswap V2 na uweke kwenye Uniswap V3."
+msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
+msgstr "Kwa kila dimbwi lililoonyeshwa hapa chini, bonyeza hamisha ili kuondoa ukwasi wako kutoka kwa Kromatika V2 na uweke kwenye Kromatika V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1072,8 +1072,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "Hamisha Kioevu cha V2"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Hamisha ishara zako za ukwasi kutoka kwa Uniswap V2 hadi Uniswap V3."
+msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
+msgstr "Hamisha ishara zako za ukwasi kutoka kwa Kromatika V2 hadi Kromatika V3."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1357,8 +1357,8 @@ msgid "Read more about UNI"
 msgstr "Soma zaidi kuhusu UNI"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Soma zaidi kuhusu Uniswap utawala"
+msgid "Read more about Kromatika governance"
+msgstr "Soma zaidi kuhusu Kromatika utawala"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1569,15 +1569,15 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Kubadilisha {0} {1} kwa {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Asante kwa kuwa sehemu ya jamii ya Uniswap <0 />"
+msgid "Thanks for being part of the Kromatika community <0/>"
+msgstr "Asante kwa kuwa sehemu ya jamii ya Kromatika <0 />"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "% Utakayopata katika ada."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Kiasi kisichobadilika x * y = k hakiridhika na ubadilishaji. Hii kawaida inamaanisha moja ya ishara unazobadilisha zinajumuisha tabia ya kawaida kwenye uhamishaji."
 
 #: src/hooks/useSwapCallback.tsx
@@ -1593,8 +1593,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Kromatika V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1641,8 +1641,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "Chombo hiki kitahamisha {0} kwa V3. Mchakato huo hauna shukrani kabisa kwa"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Uuzaji huu hautafaulu kwa sababu ya harakati za bei. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "Uuzaji huu hautafaulu kwa sababu ya harakati za bei. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Kromatika V3."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1752,8 +1752,8 @@ msgid "UNI price:"
 msgstr "Bei ya UNI:"
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Ishara za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap. Unaweza kupiga kura kwa kila pendekezo mwenyewe au kupeana kura zako kwa mtu wa tatu."
+msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Ishara za UNI zinawakilisha hisa za kupiga kura katika utawala wa Kromatika. Unaweza kupiga kura kwa kila pendekezo mwenyewe au kupeana kura zako kwa mtu wa tatu."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1793,27 +1793,27 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Suala lisilotarajiwa na kukadiria gesi. Tafadhali jaribu tena."
 
 #: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
+msgid "Kromatika Governance"
 msgstr "Utawala usiobadilika"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
+msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kubadilisha kunapatikana katika: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Utawala usiobadilishwa unapatikana tu kwenye Tabaka la 1. Badilisha mtandao wako uwe Ethereum Mainnet ili uone Mapendekezo na Kura."
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
+msgid "Kromatika liquidity mining"
 msgstr "Uchimbaji wa ukwasi usiobadilika"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
+msgid "Kromatika migration contract↗"
 msgstr "Mkataba wa uhamiaji usiobadilika↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
+msgid "Kromatika on {0}"
 msgstr "Haibadiliki kwenye {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
@@ -1821,8 +1821,8 @@ msgid "Unknown Source"
 msgstr "Chanzo kisichojulikana"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Hitilafu isiyojulikana{0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "Hitilafu isiyojulikana{0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Kromatika V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1868,7 +1868,7 @@ msgid "Update list"
 msgstr "Sasisha orodha"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
+msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
 msgstr "Tumia API ya Maabara Isiyobadilishwa kupata bei bora kupitia njia inayofaa zaidi."
 
 #: src/components/claim/ClaimModal.tsx
@@ -2060,7 +2060,7 @@ msgid "You are creating a pool"
 msgstr "Unaunda dimbwi"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
+msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
 msgstr "Wewe ndiye mtoaji wa kwanza wa ukwasi wa dimbwi hili la V3 lisilobadilishwa. Ukwasi wako kuhamia kwa bei {0}"
 
 #: src/pages/AddLiquidityV2/index.tsx
@@ -2096,16 +2096,16 @@ msgid "You must connect an account."
 msgstr "Lazima uunganishe akaunti."
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Lazima upe Mkataba wa Uniswap ruhusa ya kutumia {0}yako. Lazima ufanye hivi mara moja tu kwa ishara."
+msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Lazima upe Mkataba wa Kromatika ruhusa ya kutumia {0}yako. Lazima ufanye hivi mara moja tu kwa ishara."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "Lazima uwe na {formattedProposalThreshold} ili kuwasilisha pendekezo"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Unapaswa kuweka tu ukwasi kwenye Uniswap V3 kwa bei unayoamini ni sahihi. <0 /> Ikiwa bei inaonekana si sahihi, unaweza kubadilisha kwa kuhamisha bei au subiri mtu mwingine afanye hivyo."
+msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Unapaswa kuweka tu ukwasi kwenye Kromatika V3 kwa bei unayoamini ni sahihi. <0 /> Ikiwa bei inaonekana si sahihi, unaweza kubadilisha kwa kuhamisha bei au subiri mtu mwingine afanye hivyo."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
