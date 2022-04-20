@@ -192,6 +192,14 @@ export const MATIC_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://i.imgur.com/o914JpY.jpg',
     },
+    {
+      chainId: 137,
+      address: '0x9F994e2783b44C83204377589854A17c6b0c226d',
+      symbol: 'RIGY',
+      name: 'RIGY',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/ZQWH9gg.jpg',
+    },
   ],
   version: {
     major: 0,
