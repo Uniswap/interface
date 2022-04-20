@@ -11,6 +11,7 @@ import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
+import { flex } from 'src/styles/flex'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
@@ -50,9 +51,13 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
             style={[StyleSheet.absoluteFill, nftCollectionBlurImageStyle]}
           />
         )}
-        <Box bg={image_url ? 'imageTintBackground' : 'tabBackground'} borderRadius="md" py="md">
-          <Box flexDirection="row" justifyContent="space-between" mb="md" mx="md">
-            <Flex alignItems="center" flexDirection="row" gap="sm">
+        <Flex
+          bg={image_url ? 'imageTintBackground' : 'tabBackground'}
+          borderRadius="md"
+          gap="md"
+          py="md">
+          <Flex row gap="sm" justifyContent="space-between" mx="md">
+            <Flex row shrink alignItems="center" gap="xs">
               {image_url && (
                 <RemoteImage
                   borderRadius={theme.borderRadii.md}
@@ -61,13 +66,15 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
                   width={20}
                 />
               )}
-              <Text variant="body">{name}</Text>
+              <Text numberOfLines={1} style={flex.shrink} variant="body">
+                {name}
+              </Text>
               {safelist_request_status === 'verified' && (
                 <Image height={20} source={VERIFIED_ICON} width={20} />
               )}
             </Flex>
             <Chevron color={theme.colors.gray400} direction="e" height={16} width={16} />
-          </Box>
+          </Flex>
           <FlatList
             horizontal
             contentContainerStyle={{ paddingLeft: theme.spacing.xs }}
@@ -76,7 +83,7 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
             renderItem={renderItem}
             showsHorizontalScrollIndicator={false}
           />
-        </Box>
+        </Flex>
       </Box>
     </Button>
   )

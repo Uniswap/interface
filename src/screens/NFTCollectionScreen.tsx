@@ -10,7 +10,6 @@ import { Button } from 'src/components/buttons/Button'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
@@ -20,6 +19,7 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { Screens } from 'src/screens/Screens'
+import { flex } from 'src/styles/flex'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
@@ -59,7 +59,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             borderWidth={1}
             gap="sm"
             p="md">
-            <Flex alignItems="center" flexDirection="row" gap="sm">
+            <Flex row alignItems="center" gap="sm">
               {collection?.image_url && (
                 <RemoteImage
                   borderRadius={theme.borderRadii.md}
@@ -68,7 +68,9 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   width={24}
                 />
               )}
-              <Text variant="h4">{collectionName}</Text>
+              <Text style={flex.shrink} variant="h4">
+                {collectionName}
+              </Text>
               {collection?.safelist_request_status === 'verified' && (
                 <Image height={25} source={VERIFIED_ICON} width={25} />
               )}
@@ -210,15 +212,15 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   return (
     <Screen>
       <Box flex={1}>
-        <CenterBox flexDirection="row" justifyContent="space-between" mx="lg" my="md">
+        <Flex flexDirection="row" gap="lg" justifyContent="space-between" mx="lg" my="md">
           <BackButton />
-          <Box alignItems="center" flexDirection="row">
-            <Text variant="h4">{collection?.name}</Text>
-          </Box>
+          <Text numberOfLines={1} style={flex.shrink} variant="h4">
+            {collection?.name}
+          </Text>
           <Button onPress={onPressShare}>
             <ShareIcon height={24} width={24} />
           </Button>
-        </CenterBox>
+        </Flex>
         <FlatList
           ListHeaderComponent={
             <Box mb="sm" mx="lg">
