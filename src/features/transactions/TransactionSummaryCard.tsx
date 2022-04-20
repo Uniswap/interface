@@ -4,7 +4,8 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { Flex } from 'src/components/layout/Flex'
 import { ToastIcon, ToastVariant } from 'src/components/notifications/Toast'
 import { Text } from 'src/components/Text'
-import { CHAIN_INFO } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { Transaction } from 'src/features/dataApi/zerion/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { getNotificationName } from 'src/features/transactions/TransactionStatusBanner'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
@@ -49,6 +50,58 @@ export function TransactionSummaryCard({ tx }: { tx: TransactionDetails }) {
         <Text variant="bodySm">
           {t('From {{addr}} on {{chain}}', { addr: fromAddress, chain: chainName })}
         </Text>
+        <TextButton
+          name={ElementName.TransactionSummaryHash}
+          textVariant="bodySm"
+          onPress={onPressHash}>
+          {t('Hash: {{hash}}', { hash: trimToLength(tx.hash, 10) })}
+        </TextButton>
+      </Flex>
+      <ToastIcon variant={toastVariant} />
+    </Flex>
+  )
+}
+
+// TODO: Merge with TransactionSummaryCard when types are compatible
+export function HistoricalTransactionSummaryCard({ tx }: { tx: Transaction }) {
+  const { t } = useTranslation()
+
+  const onPressHash = () => {
+    // TODO: update chain from tx when Zerion supports other chains
+    const explorerUrl = CHAIN_INFO[ChainId.Mainnet].explorer
+    if (!explorerUrl) return
+    openUri(`${explorerUrl}/tx/${tx.hash}`)
+  }
+
+  let toastVariant: ToastVariant
+  if (tx.status === 'confirmed') {
+    toastVariant = ToastVariant.Success
+  } else if (tx.status === 'failed') {
+    toastVariant = ToastVariant.Failed
+  } else {
+    toastVariant = ToastVariant.Pending
+  }
+
+  const fromAddress = tx.address_from ? shortenAddress(tx.address_from) : null
+  const chainName = CHAIN_INFO[ChainId.Mainnet]?.label ?? t('Unknown chain')
+
+  return (
+    <Flex
+      row
+      alignItems="center"
+      borderColor="gray200"
+      borderRadius="lg"
+      borderWidth={1}
+      gap="md"
+      justifyContent="space-between"
+      p="md">
+      <Flex gap="sm">
+        <Text variant="body">{tx.type}</Text>
+        {fromAddress ? (
+          <Text variant="bodySm">
+            {t('From {{addr}} on {{chain}}', { addr: fromAddress, chain: chainName })}
+          </Text>
+        ) : null}
         <TextButton
           name={ElementName.TransactionSummaryHash}
           textVariant="bodySm"

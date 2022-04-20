@@ -48,7 +48,7 @@ function useChainBalances(
               const currency = knownCurrencies[id]
 
               if (!currency) {
-                logger.info(
+                logger.debug(
                   'balances',
                   'useChainBalances',
                   'Ignoring item with balance: ',

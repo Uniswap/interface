@@ -16,6 +16,7 @@ import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { dataApi } from 'src/features/dataApi/slice'
+import { zerionApi } from 'src/features/dataApi/zerion/api'
 import { nftApi } from 'src/features/nfts/api'
 import { routingApi } from 'src/features/routing/routingApi'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
@@ -76,6 +77,7 @@ export const store = configureStore({
       dataApi.middleware,
       nftApi.middleware,
       routingApi.middleware,
+      zerionApi.middleware,
     ]
 
     return middleware

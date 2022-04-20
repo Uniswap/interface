@@ -1,18 +1,24 @@
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { BackX } from 'src/components/buttons/BackX'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Box } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Spacer } from 'src/components/layout/Spacer'
 import { Text } from 'src/components/Text'
+import { useTransactionHistoryQuery } from 'src/features/dataApi/zerion/api'
+import { Namespace } from 'src/features/dataApi/zerion/types'
+import { requests } from 'src/features/dataApi/zerion/utils'
 import { useSortedTransactions } from 'src/features/transactions/hooks'
-import { TransactionSummaryCard } from 'src/features/transactions/TransactionSummaryCard'
+import {
+  HistoricalTransactionSummaryCard,
+  TransactionSummaryCard,
+} from 'src/features/transactions/TransactionSummaryCard'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { flex } from 'src/styles/flex'
 import { openUri } from 'src/utils/linking'
 
 // For now, the notifications screen just shows transaction history/status
@@ -25,6 +31,10 @@ export function NotificationsScreen() {
   }
 
   const transactions = useSortedTransactions(true)
+
+  const { currentData: historicalTransactions } = useTransactionHistoryQuery(
+    activeAccount ? requests[Namespace.Address].transactions(activeAccount.address) : skipToken
+  )
 
   const { t } = useTranslation()
   return (
@@ -43,14 +53,22 @@ export function NotificationsScreen() {
           {t('View details on Etherscan')}
         </TextButton>
       )}
-      <Spacer y="sm" />
-      <FlatList
-        ListEmptyComponent={EmptyList}
-        contentContainerStyle={flex.fill}
-        data={transactions}
-        keyExtractor={getTxKey}
-        renderItem={ListItem}
-      />
+
+      {/* TODO: remove this ternary once local and remote txs are combined */}
+      {transactions.length > 0 || (historicalTransactions?.info?.length ?? 0) > 0 ? (
+        <Flex mt="sm">
+          <FlatList data={transactions} keyExtractor={getTxKey} renderItem={ListItem} />
+          <Text variant="body">{t('All transactions')}</Text>
+          <FlatList
+            ItemSeparatorComponent={() => <Spacer y="sm" />}
+            data={historicalTransactions?.info}
+            keyExtractor={(item) => item.hash}
+            renderItem={({ item }) => <HistoricalTransactionSummaryCard tx={item} />}
+          />
+        </Flex>
+      ) : (
+        <EmptyList />
+      )}
     </SheetScreen>
   )
 }

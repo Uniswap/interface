@@ -8,6 +8,7 @@ import {
   OPENSEA_API_KEY,
   SENTRY_DSN,
   VERSION,
+  ZERION_API_KEY,
 } from 'react-native-dotenv'
 import { ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
@@ -20,10 +21,11 @@ export interface Config {
   debug: boolean
   infuraProjectId: string
   logBufferSize: number
+  onesignalAppId: string
   openseaApiKey: string
   sentryDsn: string
   version: string
-  onesignalAppId: string
+  zerionApiKey: string
 }
 
 const _config: Config = {
@@ -32,10 +34,11 @@ const _config: Config = {
   debug: parseBoolean(DEBUG),
   infuraProjectId: INFURA_PROJECT_ID,
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
+  onesignalAppId: ONESIGNAL_APP_ID,
   openseaApiKey: OPENSEA_API_KEY,
   sentryDsn: SENTRY_DSN,
   version: VERSION,
-  onesignalAppId: ONESIGNAL_APP_ID,
+  zerionApiKey: ZERION_API_KEY,
 }
 
 function parseBoolean(value: string): boolean {

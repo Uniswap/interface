@@ -31,10 +31,10 @@ export interface TransactionDetails extends TransactionId {
 export enum TransactionStatus {
   Cancelled = 'cancelled',
   Cancelling = 'cancelling',
+  Success = 'confirmed',
   Failed = 'failed',
   Pending = 'pending',
   Replacing = 'replacing',
-  Success = 'success',
   // May want more granular options here later like InMemPool
 }
 
