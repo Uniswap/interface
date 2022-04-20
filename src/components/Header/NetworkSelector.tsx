@@ -103,6 +103,9 @@ const Logo = styled.img`
 `
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 const SelectorLabel = styled(NetworkLabel)`
   display: none;

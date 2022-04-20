@@ -3,6 +3,7 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
+import { ChakraProvider } from '@chakra-ui/provider'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'

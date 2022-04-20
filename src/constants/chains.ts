@@ -16,6 +16,27 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 }
 
+export enum ChainName {
+  ethereum = 1,
+  arbitrum = 42161,
+  optimism = 10,
+  polygon = 137,
+  bsc = 56,
+  avalanche = 43114,
+  fantom = 250,
+  harmony = 1666600000,
+  cronos = 25,
+  aurora = 1313161554,
+  moonriver = 1285,
+  moonbeam = 1284,
+  metis = 1088,
+  xdai = 100,
+  heco = 128,
+  smartbch = 10000,
+  arbitrumrinkeby = 421611,
+  kovan = 42,
+}
+
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.MAINNET,
   // SupportedChainId.ROPSTEN,

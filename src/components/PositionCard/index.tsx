@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -5,18 +6,24 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
 import { formatUnits } from 'ethers/lib/utils'
+import { useNewStakingContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
-import { transparentize } from 'polished'
 import { useState } from 'react'
 import { AlertCircle, ChevronDown, ChevronUp, HelpCircle } from 'react-feather'
+import { Link as HistoryLink, NavLink, useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import { TransactionType } from 'state/transactions/actions'
 import styled from 'styled-components/macro'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import Web3 from 'web3-utils'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -178,6 +185,8 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
 
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
 
+  const swapLink = `swap?inputCurrency=ETH&outputCurrency=${kromToken?.address}`
+
   return (
     <VoteCard>
       <CardBGImage />
@@ -287,14 +296,11 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
               </FixedHeightRow>
 
               <ButtonSecondary padding="8px" $borderRadius="8px">
-                <ExternalLink
-                  style={{ width: '100%', textAlign: 'center' }}
-                  href={`https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${kromToken?.address}`}
-                >
+                <HistoryLink to={swapLink} style={{ width: '100%', textAlign: 'center' }}>
                   <Trans>
                     Get KROM tokens here<span style={{ fontSize: '11px' }}>↗</span>
                   </Trans>
-                </ExternalLink>
+                </HistoryLink>
               </ButtonSecondary>
             </AutoColumn>
           )}
@@ -302,4 +308,147 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
       </CardSection>
     </VoteCard>
   )
+}
+
+export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
+  const stakeManager = useNewStakingContract()
+  const addTransaction = useTransactionAdder()
+  const showMore = true
+  const backgroundColor = useColor(fundingBalance?.currency)
+
+  const { account, chainId, library } = useActiveWeb3React()
+  const kromToken = chainId ? KROM[chainId] : undefined
+
+  let result = useSingleCallResult(stakeManager, 'getEarnedSKrom', [account?.toString()])
+  const earnedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
+
+  result = useSingleCallResult(stakeManager, 'getDepositedAmount', [account?.toString()])
+  const stakedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
+
+  result = useSingleCallResult(stakeManager, 'supplyInWarmup', [])
+  const totalValueLocked = result.result ? Web3.fromWei(result.result.toString()) : ''
+  const amountToStake = 100
+  if (stakeManager && account && library && chainId) {
+    const calldata = stakeManager.interface.encodeFunctionData('stake', [
+      account.toString(),
+      amountToStake,
+      false,
+      false,
+    ])
+
+    const txn = {
+      to: stakeManager.address,
+      data: calldata,
+      value: '0x0',
+    }
+  }
+
+  return (
+    <VoteCard>
+      <CardBGImage />
+      <CardNoise />
+      <CardSection>
+        <AutoColumn gap="md">
+          <FixedHeightRow>
+            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
+          </FixedHeightRow>
+
+          {showMore && (
+            <AutoColumn gap="8px">
+              <FixedHeightRow>
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500}>
+                    <TYPE.white>
+                      <Trans>Staked Balance:</Trans>
+                    </TYPE.white>
+                  </Text>
+                </RowFixed>
+                {stakedBalance != null ? (
+                  <RowFixed>
+                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      <TYPE.white>{stakedBalance} KROM</TYPE.white>
+                    </Text>
+                  </RowFixed>
+                ) : (
+                  '-'
+                )}
+              </FixedHeightRow>
+              <FixedHeightRow>
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500}>
+                    <TYPE.white>
+                      <Trans>Earned Balance:</Trans>
+                    </TYPE.white>
+                  </Text>
+                </RowFixed>
+                {earnedBalance ? (
+                  <RowFixed>
+                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      <TYPE.white>{earnedBalance} KROM </TYPE.white>
+                    </Text>
+                  </RowFixed>
+                ) : (
+                  '-'
+                )}
+              </FixedHeightRow>
+              <FixedHeightRow>
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500}>
+                    <TYPE.white>
+                      <Trans>APY:</Trans>
+                    </TYPE.white>
+                  </Text>
+                  <MouseoverTooltip
+                    text={
+                      <Trans>
+                        APY is calculated as participating percentage in the total value staked. The APY percentage is
+                        therefore applied on total amount collected in the Fee Treasury.
+                      </Trans>
+                    }
+                  >
+                    <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                  </MouseoverTooltip>
+                </RowFixed>
+                {fundingBalance ? (
+                  <RowFixed>
+                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      <TYPE.white>
+                        {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
+                      </TYPE.white>
+                    </Text>
+                  </RowFixed>
+                ) : (
+                  '-'
+                )}
+              </FixedHeightRow>
+              <FixedHeightRow>
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500}>
+                    <TYPE.white>
+                      <Trans>Total Value Locked:</Trans>
+                    </TYPE.white>
+                  </Text>
+                </RowFixed>
+                {totalValueLocked != null ? (
+                  <RowFixed>
+                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      <TYPE.white>{totalValueLocked} KROM</TYPE.white>
+                    </Text>
+                  </RowFixed>
+                ) : (
+                  '-'
+                )}
+              </FixedHeightRow>
+            </AutoColumn>
+          )}
+        </AutoColumn>
+      </CardSection>
+    </VoteCard>
+  )
+}
+function setCollectMigrationHash(hash: any) {
+  throw new Error('Function not implemented.')
+}
+function setCollecting(arg0: boolean) {
+  throw new Error('Function not implemented.')
 }

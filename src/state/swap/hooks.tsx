@@ -1,19 +1,29 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Ether, NativeCurrency, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { FACTORY_ADDRESS, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import {
+  computePoolAddress,
   encodeSqrtRatioX96,
+  FeeAmount,
   nearestUsableTick,
+  Pool,
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
+  toHex,
   Trade as V3Trade,
 } from '@uniswap/v3-sdk'
-import { KROM } from 'constants/tokens'
+import { KROMATIKA_ROUTER_ADDRESSES, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { ChainName } from 'constants/chains'
+import { KROM, WETH9_EXTENDED } from 'constants/tokens'
 import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
+import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { PoolState, usePools } from 'hooks/usePools'
+import { useV2Pair, useV2Pairs } from 'hooks/useV2Pairs'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -21,10 +31,11 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { tryParseTick } from 'state/mint/v3/utils'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
-import { useNetworkGasPrice } from 'state/user/hooks'
+import { useNetworkGasPrice, useUserTickOffset, useUserTickSize } from 'state/user/hooks'
 
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useCurrency } from '../../hooks/Tokens'
-import { useLimitOrderManager } from '../../hooks/useContract'
+import { useLimitOrderManager, useUniswapUtils } from '../../hooks/useContract'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
@@ -153,6 +164,27 @@ export function applyExchangeRateTo(
   }
 }
 
+export function useKromatikaRouterInfo(): {
+  estimateAmountToApprove: CurrencyAmount<Currency> | undefined
+  spender: string | undefined
+} {
+  const { chainId } = useActiveWeb3React()
+  const estimateAmountToApprove = useMemo(() => {
+    if (!chainId) return undefined
+    return CurrencyAmount.fromRawAmount(KROM[chainId], 100000)
+  }, [chainId])
+
+  const spender = useMemo(() => {
+    if (!chainId) return undefined
+    return KROMATIKA_ROUTER_ADDRESSES[chainId]
+  }, [chainId])
+
+  return {
+    estimateAmountToApprove,
+    spender,
+  }
+}
+
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | null }
@@ -184,8 +216,8 @@ export function useDerivedSwapInfo(): {
 
   const {
     independentField,
-    typedValue,
     inputValue,
+    typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
@@ -220,6 +252,8 @@ export function useDerivedSwapInfo(): {
     : tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
   const gasAmount = useNetworkGasPrice()
+
+  const [userTickOffset, setUserTickOffset] = useUserTickOffset()
 
   // get quotes
   const v3Trade = useBestV3Trade(
@@ -256,9 +290,10 @@ export function useDerivedSwapInfo(): {
       : encodeSqrtRatioX96(price.denominator, price.numerator)
 
     let tick = TickMath.getTickAtSqrtRatio(sqrtRatioX96)
+    const tickOffset = userTickOffset ?? 1
     const nextTick = sorted
-      ? tick + 3 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
-      : tick - 3 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+      ? tick + tickOffset * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+      : tick - tickOffset * TICK_SPACINGS[bestTrade.route.pools[0].fee]
     const nextTickPrice = tickToPrice(price.baseCurrency.wrapped, price.quoteCurrency.wrapped, nextTick)
     if (!nextTickPrice.lessThan(price)) {
       tick = nextTick
@@ -274,7 +309,7 @@ export function useDerivedSwapInfo(): {
       : new Price(inputCurrency, outputCurrency, ratioX192, Q192)
 
     //return bestTrade.route.midPrice
-  }, [bestTrade, inputCurrency, outputCurrency])
+  }, [bestTrade, inputCurrency, outputCurrency, userTickOffset])
 
   const marketPrice = useMemo(() => {
     const priceTmp =
@@ -354,7 +389,7 @@ export function useDerivedSwapInfo(): {
   }, [parsedAmounts.input, parsedAmounts.output])
 
   if (price && minPrice && bestTrade?.route && price?.lessThan(minPrice)) {
-    inputError = inputError ?? <Trans>Please trade above the minimum price</Trans>
+    inputError = inputError ?? <Trans>Place limit order above the minimum price</Trans>
   }
 
   // compare input balance to max input based on version
@@ -400,6 +435,98 @@ export function useDerivedSwapInfo(): {
     formattedAmounts,
     rawAmounts,
   }
+}
+
+function useExisitingPool(
+  aToken: Token | Currency | undefined | null,
+  bToken: Token | Currency | undefined | null
+): FeeAmount | undefined {
+  aToken ? aToken : (aToken = undefined)
+  bToken ? bToken : (bToken = undefined)
+
+  bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
+  aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
+
+  const pools = usePools([
+    [aToken, bToken, FeeAmount.LOW],
+    [aToken, bToken, FeeAmount.MEDIUM],
+    [aToken, bToken, FeeAmount.HIGH],
+  ])
+
+  const poolsByFeeTier = useMemo(
+    () =>
+      pools.reduce(
+        (acc, [curPoolState, curPool]) => {
+          acc = {
+            ...acc,
+            ...{ [curPool?.fee as FeeAmount]: curPoolState },
+          }
+          return acc
+        },
+        {
+          // default all states to NOT_EXISTS
+          [FeeAmount.LOWEST]: PoolState.NOT_EXISTS,
+          [FeeAmount.LOW]: PoolState.NOT_EXISTS,
+          [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
+          [FeeAmount.HIGH]: PoolState.NOT_EXISTS,
+        }
+      ),
+    [pools]
+  )
+
+  if (poolsByFeeTier[FeeAmount.MEDIUM] == PoolState.EXISTS) return FeeAmount.MEDIUM
+  if (poolsByFeeTier[FeeAmount.LOW] == PoolState.EXISTS) return FeeAmount.LOW
+  if (poolsByFeeTier[FeeAmount.HIGH] == PoolState.EXISTS) return FeeAmount.HIGH
+
+  return undefined
+}
+
+export function usePoolAddress(
+  aToken: Token | Currency | undefined | null,
+  bToken: Token | Currency | undefined | null,
+  fee: FeeAmount | undefined
+): { poolAddress: string; networkName: string } {
+  const existingPoolFee = useExisitingPool(aToken, bToken)
+  const { chainId } = useActiveWeb3React()
+
+  // v2 pair address
+  const [state, pair] = useV2Pair(aToken as Currency, bToken as Currency)
+
+  return useMemo(() => {
+    let poolAddress = ''
+    let networkName = ''
+    let nameOfNetwork = ''
+    let address = ''
+    if (aToken && bToken) {
+      bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
+      aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
+
+      if (aToken.isToken && bToken.isToken && existingPoolFee) {
+        address = Pool.getAddress(aToken, bToken, existingPoolFee)
+        nameOfNetwork = ChainName[aToken?.chainId] || ''
+      } else if (state == 3) {
+        address = Pair.getAddress(aToken, bToken)
+        nameOfNetwork = (pair && pair.chainId && ChainName[pair?.chainId]) || ''
+      }
+    } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
+      nameOfNetwork = ChainName[aToken?.chainId]
+      address = aToken.address
+    }
+
+    if (address == '' || address == undefined || address == null) {
+      poolAddress = (chainId && KROM[chainId].address) || '0x3af33bEF05C2dCb3C7288b77fe1C8d2AeBA4d789'
+    } else if (address != poolAddress) {
+      poolAddress = address
+    }
+
+    if (nameOfNetwork == '' || nameOfNetwork == undefined || nameOfNetwork == null) {
+      networkName = (chainId && ChainName[chainId]) || 'ethereum'
+    } else if (nameOfNetwork != networkName) {
+      networkName = nameOfNetwork
+    }
+
+    return { poolAddress, networkName }
+  }, [chainId, aToken, bToken, state, pair, existingPoolFee])
 }
 
 function parseCurrencyFromURLParameter(urlParam: any): string {

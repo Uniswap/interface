@@ -110,6 +110,13 @@ const Text = styled.p`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
+
+  @media (max-width: 400px) {
+    font-size: 0.4rem;
+  }
+  @media (max-width: 600px) {
+    font-size: 0.65rem;
+  }
 `
 
 const NetworkIcon = styled(Activity)`

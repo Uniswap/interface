@@ -14,10 +14,13 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { KROM } from 'constants/tokens'
+import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useGaslessCallback, useGaslessProvider } from 'hooks/useGaslessCallback'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
@@ -32,6 +35,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
+import { useIsExpertMode, useIsGaslessMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
 import { MEDIA_WIDTHS } from 'theme'
@@ -57,6 +61,7 @@ const Q192 = JSBI.exponentiate(Q96, JSBI.BigInt(2))
 const PageWrapper = styled.div`
   min-width: 800px;
   max-width: 960px;
+  margin-top: 60px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 680px;
@@ -77,6 +82,10 @@ const PageWrapper = styled.div`
     min-width: 340px;
     max-width: 340px;
   `};
+`
+
+const StyledUSD = styled.small`
+  color: gray;
 `
 
 const DesktopHeader = styled.div`
@@ -276,6 +285,30 @@ function getRatio(
   }
 }
 
+function countZeroes(x: string | number) {
+  let counter = 0
+  for (let i = 2; i < x.toString().length; i++) {
+    if (x.toString().charAt(i) != '0') return counter
+
+    counter++
+  }
+  return counter
+}
+
+function commafy(num: number | string) {
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
+function shouldntUseCommafy(x: string | number) {
+  const number = x.toString()
+  if (number.charAt(0) == '0' && number.charAt(1) == '.') return true
+  return false
+}
+
 // snapshots a src img into a canvas
 function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
   const context = canvas.getContext('2d')
@@ -366,6 +399,12 @@ export function PositionPage({
 
   const removed = liquidity?.eq(0)
 
+  const { gaslessCallback } = useGaslessCallback()
+
+  const kromatikaRouter = useKromatikaRouter()
+
+  const isExpertMode = useIsGaslessMode()
+
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
@@ -415,7 +454,7 @@ export function PositionPage({
     // if there was a tx hash, we want to clear the input
     if (collectMigrationHash) {
       // dont jump to pool page if creating
-      history.push('/pool/')
+      history.push('/limitorder/')
     }
     //setCollectMigrationHash('')
   }, [history, collectMigrationHash])
@@ -628,42 +667,144 @@ export function PositionPage({
           gasLimit: calculateGasMargin(chainId, estimate),
         }
 
-        return library
-          .getSigner()
-          .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
-            setCollectMigrationHash(response.hash)
-            setCollecting(false)
+        if (isExpertMode && kromatikaRouter) {
+          const routerCalldata = kromatikaRouter.interface.encodeFunctionData('execute', [
+            LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+            calldata,
+          ])
 
-            ReactGA.event({
-              category: 'Liquidity',
-              action: 'Cancel',
-              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
-            })
+          const txParams = {
+            data: routerCalldata,
+            to: kromatikaRouter.address,
+            from: account,
+            gasLimit: calculateGasMargin(chainId, estimate).add(100000).toHexString(),
+            signatureType: 'EIP712_SIGN',
+          }
 
-            addTransaction(response, {
-              type: TransactionType.COLLECT_FEES,
-              currencyId0: currencyId(feeValue0.currency),
-              currencyId1: currencyId(feeValue1.currency),
+          return gaslessCallback().then((gaslessProvider) => {
+            if (!gaslessProvider) return
+            return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
+              const txResponse = await poll(
+                async () => {
+                  const tx = await gaslessProvider.getTransaction(response)
+                  if (tx === null) {
+                    return undefined
+                  }
+                  const blockNumber = await gaslessProvider._getInternalBlockNumber(
+                    100 + 2 * gaslessProvider.pollingInterval
+                  )
+                  return gaslessProvider._wrapTransaction(tx, response, blockNumber)
+                },
+                { oncePoll: gaslessProvider }
+              )
+
+              setCollectMigrationHash(response)
+              setCollecting(false)
+
+              ReactGA.event({
+                category: 'Liquidity',
+                action: 'Cancel',
+                label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+              })
+
+              if (txResponse) {
+                addTransaction(txResponse, {
+                  type: TransactionType.COLLECT_FEES,
+                  currencyId0: currencyId(feeValue0.currency),
+                  currencyId1: currencyId(feeValue1.currency),
+                })
+              }
+              history.push('/limitorder/')
             })
-            history.push('/pool/')
           })
+        } else {
+          return library
+            .getSigner()
+            .sendTransaction(newTxn)
+            .then((response: TransactionResponse) => {
+              setCollectMigrationHash(response.hash)
+              setCollecting(false)
+
+              ReactGA.event({
+                category: 'Liquidity',
+                action: 'Cancel',
+                label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+              })
+
+              addTransaction(response, {
+                type: TransactionType.COLLECT_FEES,
+                currencyId0: currencyId(feeValue0.currency),
+                currencyId1: currencyId(feeValue1.currency),
+              })
+              history.push('/limitorder/')
+            })
+        }
       })
       .catch((error) => {
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, limitManager, account, tokenId, addTransaction, library])
+  }, [
+    chainId,
+    feeValue0,
+    feeValue1,
+    limitManager,
+    account,
+    tokenId,
+    library,
+    isExpertMode,
+    kromatikaRouter,
+    gaslessCallback,
+    history,
+    addTransaction,
+  ])
 
   const ownsNFT = owner === account
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0
 
+  const [invert, setInvert] = useState(true)
+
   // check if price is within range
   const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
   const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
   const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
+
+  const token0USD = Number(price0?.toFixed(10))
+  const token1USD = Number(price1?.toFixed(10))
+
+  const kromToken = (chainId && KROM[chainId]) || undefined
+  const kromPriceUSD = useUSDCPrice(kromToken)
+  const feePaidUSD = Number(serviceFeePaidKrom?.toSignificant(2)) * Number(kromPriceUSD?.toSignificant(5))
+  const collectedAmount0USD = Number(collectedValue0?.toSignificant(6)) * token0USD
+  const collectedAmount1USD = Number(collectedValue1?.toSignificant(6)) * token1USD
+
+  const currentPriceUSD = inverted
+    ? Number(pool?.token1Price.toSignificant(10)) * token1USD
+    : Number(pool?.token0Price.toSignificant(10)) * token0USD
+
+  const targetPriceUSD = inverted
+    ? Number(pool?.token1Price.toSignificant(10)) * token1USD
+    : Number(pool?.token0Price.toSignificant(10)) * token0USD
+
+  const invertedToken0Price = pool?.token0Price.invert().toFixed(10)
+  const invertedToken1Price = pool?.token1Price.invert().toFixed(10)
+
+  const currentPriceInUSD = token1USD && token1USD / Number(pool?.token1Price.toSignificant(10))
+  const targetPriceInUSD = token1USD / Number(priceUpper?.toSignificant(4))
+  const token1PriceUSD = (Number(price1?.toFixed(2)) * Number(feeValue1?.toSignificant(1))).toString() // target value in usd
+
+  const feeValue0USD = (Number(feeValue0?.toSignificant(6)) * Number(currentPriceInUSD)).toFixed(1)
+  const currencyCreatedEventAmountUSD = (Number(currencyCreatedEventAmount?.toSignificant(4)) * token0USD).toFixed(1)
+  const targetPriceLimitOrder =
+    currencyCreatedEventAmount &&
+    (Number(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2)) * Number(token1USD)).toFixed(1)
+
+  const numberOfZeroes = countZeroes(currentPriceInUSD.toFixed(10))
+  const leftover = currentPriceInUSD.toFixed(10).substring(2 + numberOfZeroes)
+  const numberOfZeroesTargetPrice = countZeroes(targetPriceInUSD.toFixed(10))
+  const leftoverTargetPrice = targetPriceInUSD.toFixed(10).substring(2 + numberOfZeroesTargetPrice)
 
   function modalHeader() {
     return (
@@ -736,9 +877,9 @@ export function PositionPage({
         />
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
-            <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
+            <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/limitorder">
               <HoverText>
-                <Trans>← Back to Dashboard</Trans>
+                <Trans>← Back to Limit Orders</Trans>
               </HoverText>
             </Link>
             <ResponsiveRow>
@@ -864,15 +1005,22 @@ export function PositionPage({
                 <LightCard padding="12px" width="100%">
                   <AutoColumn gap="8px" justify="center">
                     <ExtentsText>
-                      <Trans>Current price</Trans>
+                      <Trans>Current price </Trans>
                     </ExtentsText>
                     <TYPE.mediumHeader textAlign="center">
-                      {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}{' '}
+                      <span onClick={() => setInvert(!invert)}>
+                        {inverted
+                          ? pool && commafy(pool.token1Price?.toSignificant(6))
+                          : pool && commafy(pool.token0Price?.toSignificant(6))}
+                      </span>
                     </TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>
-                        {currencyQuote?.symbol} per {currencyBase?.symbol}
+                        <span onClick={() => setInvert(!invert)}>
+                          {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
+                          {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                        </span>
                       </Trans>
                     </ExtentsText>
                   </AutoColumn>
@@ -884,11 +1032,18 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Target price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(6)}</TYPE.mediumHeader>
+                    <TYPE.mediumHeader textAlign="center">
+                      {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
+                      {''}{' '}
+                    </TYPE.mediumHeader>
+
                     <ExtentsText>
                       {' '}
                       <Trans>
-                        {currencyQuote?.symbol} per {currencyBase?.symbol}
+                        <span onClick={() => setInvert(!invert)}>
+                          {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
+                          {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                        </span>
                       </Trans>
                     </ExtentsText>
                   </AutoColumn>
@@ -920,15 +1075,15 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Created Limit Trade {currencyCreatedEventAmount?.toSignificant(4)}{' '}
+                        Created Limit Trade {commafy(currencyCreatedEventAmount?.toSignificant(4))}{' '}
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}{' '}
                         for{' '}
                         {targetPrice && currencyCreatedEventAmount
-                          ? targetPrice?.quote(currencyCreatedEventAmount).toSignificant(6)
+                          ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2))
                           : ''}{' '}
-                        {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''} ↗
+                        {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}↗
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -947,10 +1102,10 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Collected {collectedValue0?.toSignificant(6)}{' '}
+                        Collected {collectedValue0 ? commafy(collectedValue0?.toSignificant(3)) : ''}{' '}
                         {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''} and{' '}
-                        {collectedValue1?.toSignificant(6)}{' '}
-                        {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''} ↗
+                        {collectedValue1 ? commafy(collectedValue1?.toFixed(6)) : ''}{' '}
+                        {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''}
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -970,7 +1125,7 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Paid {serviceFeePaidKrom?.toSignificant(6)}{' '}
+                        Paid {serviceFeePaidKrom?.toSignificant(2)}{' '}
                         {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
                         service fees ↗
                       </Trans>

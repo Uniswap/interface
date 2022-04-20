@@ -12,7 +12,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
+import { useClientSideRouter, useExpertModeManager, useGaslessModeManager } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -118,7 +118,7 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-export default function SettingsTab() {
+export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
   const { chainId } = useActiveWeb3React()
 
   const node = useRef<HTMLDivElement>()
@@ -127,7 +127,9 @@ export default function SettingsTab() {
 
   const theme = useContext(ThemeContext)
 
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const [expertMode, toggleExpertMode] = useGaslessModeManager()
+
+  const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -190,16 +192,18 @@ export default function SettingsTab() {
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14}>
-              <Trans>Kromatika Settings</Trans>
+              <Trans>Transaction Settings</Trans>
             </Text>
+            <TransactionSettings placeholderSlippage={placeholderSlippage} />
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Gasless Mode</Trans>
                 </TYPE.black>
-                <QuestionHelper text={<Trans>Enables gasless trades by compensating them with KROM.</Trans>} />
+                <QuestionHelper text={<Trans>Enables gasless transactions by compensating them with KROM.</Trans>} />
               </RowFixed>
-              <Toggle
+              <Trans>Coming Soon</Trans>
+              {/* <Toggle
                 id="toggle-expert-mode-button"
                 isActive={expertMode}
                 toggle={
@@ -213,7 +217,31 @@ export default function SettingsTab() {
                         setShowConfirmation(true)
                       }
                 }
-              />
+              /> */}
+            </RowBetween>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Frontrun Protection</Trans>
+                </TYPE.black>
+                <QuestionHelper text={<Trans>Prevents front-running of swaps</Trans>} />
+              </RowFixed>
+              <Trans>Coming Soon</Trans>
+              {/* <Toggle
+                id="toggle-expert-mode-button"
+                isActive={expertMode}
+                toggle={
+                  expertMode
+                    ? () => {
+                        toggleExpertMode()
+                        setShowConfirmation(false)
+                      }
+                    : () => {
+                        toggle()
+                        setShowConfirmation(true)
+                      }
+                }
+              /> */}
             </RowBetween>
           </AutoColumn>
         </MenuFlyout>

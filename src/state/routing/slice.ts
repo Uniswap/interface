@@ -1,44 +1,60 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {
+  BaseQueryFn,
+  createApi,
+  FetchArgs,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  retry,
+} from '@reduxjs/toolkit/query/react'
 import { SupportedChainId } from 'constants/chains'
 import qs from 'qs'
 
-import { GetQuoteResult } from './types'
+import { GetQuoteInchResult, GetSwapInchResult } from './types'
 
-export interface Post {
-  calldata: string
-}
-
-export const routingApi = createApi({
-  reducerPath: 'routingApi',
-  tagTypes: ['Posts'],
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.defender.openzeppelin.com/autotasks/873a861e-18a2-4f4e-bf41-c0556d85c723/runs/webhook/',
-  }),
+export const routingApiInch = createApi({
+  reducerPath: 'routingApiInch',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://api.1inch.io/v4.0' }),
   endpoints: (build) => ({
-    getQuote: build.query<
-      GetQuoteResult,
+    getSwapInch: build.query<
+      GetSwapInchResult,
       {
-        tokenInAddress: string
-        tokenInChainId: SupportedChainId
-        tokenOutAddress: string
-        tokenOutChainId: SupportedChainId
-        amount: string
-        type: 'exactIn' | 'exactOut'
+        chainId: string
+        queryArg: {
+          fromTokenAddress: string
+          toTokenAddress: string
+          amount: string
+          fromAddress: string
+          slippage: string
+          destReceiver: string
+          disableEstimate: boolean
+        }
       }
     >({
-      query: (args) => `quote?${qs.stringify(args)}`,
-    }),
-    addPost: build.mutation<Post, Partial<Post>>({
-      query(body) {
-        return {
-          url: `f01e923b-a353-445d-871f-036d5c876cc7/8wxovGTVS3yWdtU525Wo67`,
-          method: 'POST',
-          body,
-        }
+      query: (args) => {
+        const { chainId, queryArg } = args
+        return `/${chainId}/swap?${qs.stringify(queryArg)}`
       },
-      invalidatesTags: ['Posts'],
+      extraOptions: { maxRetries: 1 }, // You can o
+    }),
+    getQuoteInch: build.query<
+      GetQuoteInchResult,
+      {
+        chainId: string
+        queryArg: {
+          fromTokenAddress: string
+          toTokenAddress: string
+          amount: string
+        }
+      }
+    >({
+      query: (args) => {
+        const { chainId, queryArg } = args
+        return `/${chainId}/quote?${qs.stringify(queryArg)}`
+      },
+      extraOptions: { maxRetries: 3 }, // You can o
     }),
   }),
 })
 
-export const { useGetQuoteQuery, useAddPostMutation } = routingApi
+export const { useGetQuoteInchQuery } = routingApiInch
+export const { useGetSwapInchQuery } = routingApiInch

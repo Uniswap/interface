@@ -1,3 +1,4 @@
+import { MinimalPositionCard } from 'components/Stake'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -12,16 +13,26 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import AddLiquidity from './AddLiquidity'
+import AddLiquidity from './AddLiquidity/index'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import LimitOrder from './LimitOrder'
+import {
+  OpenClaimAddressModalAndRedirectToLimitOrder,
+  RedirectPathToLimitOrderOnly,
+  RedirectToLimitOrder,
+} from './LimitOrder/redirects'
+import Market from './Market'
+import { RedirectToMarket } from './Market/redirects'
 import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+import Stake from './Stake/index'
+import StakingModal from './Stake/StakingModal'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
@@ -37,10 +48,16 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 120px 16px 0px 16px;
+  padding-top: 45px;
   align-items: center;
   flex: 1;
   z-index: 1;
+  overflow: hidden;
+  max-height: 100vh;
+
+  @media screen and (max-width: 1592px) {
+    overflow: auto;
+  }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 6rem 16px 16px 16px;
@@ -82,21 +99,24 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Switch>
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/swap" component={Swap} />
+              <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
+              <Route exact strict path="/limitorder" component={LimitOrder} />
+              <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
+              <Route exact strict path="/swap" component={Market} />
 
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+              <Route exact strict path="/stake/:tokenId" component={StakingModal} />
+              <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
+              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+              <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
               <Route
                 exact
                 strict
                 path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
                 component={RedirectDuplicateTokenIds}
               />
-
-              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
-
+              <Route component={RedirectPathToLimitOrderOnly} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
             <Marginer />

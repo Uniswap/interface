@@ -1,11 +1,15 @@
+import { ChakraProvider, Flex, FormControl, FormLabel, SimpleGrid } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
+import { Box, FormControlLabel, Switch } from '@material-ui/core'
 import { Percent } from '@uniswap/sdk-core'
+import { useContext, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+import { useExpertModeManager } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { RowBetween, RowFixed } from '../Row'
-import SettingsTab from '../Settings'
+import Toggle from '../Toggle'
 
 const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;
@@ -23,20 +27,23 @@ const HoverText = styled(TYPE.main)`
 `
 
 export default function SwapHeader() {
+  const [expertMode, toggleExpertMode] = useExpertModeManager()
+
   return (
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed>
-          <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
-            <HoverText>
-              <Trans>← Back to Dashboard</Trans>
-            </HoverText>
-          </Link>
+          <HoverText>
+            <Box>
+              PRO Mode
+              <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
+            </Box>
+          </HoverText>
         </RowFixed>
-        {/* <RowFixed>
-          <SettingsTab />
-        </RowFixed> */}
       </RowBetween>
     </StyledSwapHeader>
   )
+}
+function handleSwitch(checked: any) {
+  throw new Error('Function not implemented.')
 }

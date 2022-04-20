@@ -1,11 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { KROM } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router-dom'
+import { useSingleCallResult } from 'state/multicall/hooks'
 import styled from 'styled-components/macro'
 import { CountUp } from 'use-count-up'
+import Web3 from 'web3-utils'
 
 import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
@@ -14,10 +17,12 @@ import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
 import StakingModal from '../../components/earn/StakingModal'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import UnstakingModal from '../../components/earn/UnstakingModal'
+import { RowFixed } from '../../components/Row'
 import { RowBetween } from '../../components/Row'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants/misc'
 import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
+import { useNewStakingContract } from '../../hooks/useContract'
 import usePrevious from '../../hooks/usePrevious'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
@@ -28,6 +33,38 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
+
+const TitleRow = styled(RowBetween)`
+  color: ${({ theme }) => theme.text2};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+  `};
+`
+const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  border-radius: 12px;
+  padding: 6px 8px;
+  width: fit-content;
+  margin-left: 8px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex: 1 1 auto;
+    width: 100%;
+  `};
+`
+
+const ButtonRow = styled(RowFixed)`
+  & > *:not(:last-child) {
+    margin-left: 8px;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  `};
+`
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -91,7 +128,18 @@ export default function Manage({
     params: { currencyIdA, currencyIdB },
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const stake = useNewStakingContract()
+  const kromToken = chainId ? KROM[chainId] : undefined
+
+  let result = useSingleCallResult(stake, 'getDepositedAmount', [account?.toString()])
+  let stakedBalance = result.result ? Web3.fromWei(result.result.toString()) : ''
+  stakedBalance = Number(stakedBalance).toFixed(4)
+
+  result = useSingleCallResult(stake, 'getEarnedSKrom', [account?.toString()])
+  //let earnedSKrom = result.result ? Web3.fromWei(result.result.toString()) : ''
+  //earnedSKrom = Number(earnedSKrom).toFixed(4)
+  const earnedSKrom = 123
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
@@ -156,9 +204,7 @@ export default function Manage({
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          <Trans>
-            {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
-          </Trans>
+          <Trans>Staking - make it bigger, maybe positioned at the centre</Trans>
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
@@ -167,11 +213,11 @@ export default function Manage({
         <PoolData>
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>
-              <Trans>Total deposits</Trans>
+              <Trans>Staked Balance:</Trans>
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {valueOfTotalStakedAmountInUSDC
-                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+              {stakedBalance
+                ? `${stakedBalance} KROM`
                 : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
             </TYPE.body>
           </AutoColumn>
@@ -179,17 +225,10 @@ export default function Manage({
         <PoolData>
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>
-              <Trans>Pool Rate</Trans>
+              <Trans>Total Value Staked</Trans>
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {stakingInfo?.active ? (
-                <Trans>
-                  {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
-                  UNI / week
-                </Trans>
-              ) : (
-                <Trans>0 UNI / week</Trans>
-              )}
+              888888 KROM
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -262,17 +301,12 @@ export default function Manage({
               <AutoColumn gap="md">
                 <RowBetween>
                   <TYPE.white fontWeight={600}>
-                    <Trans>Your liquidity deposits</Trans>
+                    <Trans>APY - add explanational tooltip</Trans>
                   </TYPE.white>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
                   <TYPE.white fontSize={36} fontWeight={600}>
-                    {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
-                  </TYPE.white>
-                  <TYPE.white>
-                    <Trans>
-                      UNI-V2 {currencyA?.symbol}-{currencyB?.symbol}
-                    </Trans>
+                    100%
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -285,31 +319,23 @@ export default function Manage({
               <RowBetween>
                 <div>
                   <TYPE.black>
-                    <Trans>Your unclaimed UNI</Trans>
+                    <Trans>Earned sKrom</Trans>
                   </TYPE.black>
                 </div>
-                {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.quotient) && (
+                {/* {earnedSKrom && 0 < +earnedSKrom && (
                   <ButtonEmpty
                     padding="8px"
                     $borderRadius="8px"
                     width="fit-content"
                     onClick={() => setShowClaimRewardModal(true)}
                   >
-                    <Trans>Claim</Trans>
-                  </ButtonEmpty>
-                )}
+                    <Trans>Claim - maybe should be deleted</Trans>
+                  </ButtonEmpty> 
+                )} */}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
                 <TYPE.largeHeader fontSize={36} fontWeight={600}>
-                  <CountUp
-                    key={countUpAmount}
-                    isCounting
-                    decimalPlaces={4}
-                    start={parseFloat(countUpAmountPrevious)}
-                    end={parseFloat(countUpAmount)}
-                    thousandsSeparator={','}
-                    duration={1}
-                  />
+                  {earnedSKrom}
                 </TYPE.largeHeader>
                 <TYPE.black fontSize={16} fontWeight={500}>
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
@@ -319,24 +345,35 @@ export default function Manage({
                   {stakingInfo?.active ? (
                     <Trans>
                       {stakingInfo.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
-                      UNI / week
+                      sKrom / week
                     </Trans>
                   ) : (
-                    <Trans>0 UNI / week</Trans>
+                    <Trans>0 sKrom / week</Trans>
                   )}
                 </TYPE.black>
               </RowBetween>
             </AutoColumn>
           </StyledBottomCard>
         </BottomSection>
-        <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
-          <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
-            ⭐️
-          </span>
-          <Trans>When you withdraw, the contract will automagically claim UNI on your behalf!</Trans>
-        </TYPE.main>
+        <AutoColumn gap="lg">
+          <AutoColumn gap="lg" style={{ width: '100%' }}>
+            <TitleRow style={{ marginTop: '1rem', alignContent: 'space-between' }} padding={'10'}>
+              <ButtonRow>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/stake/${kromToken?.address}`}>
+                  + <Trans>Stake KROM</Trans>
+                </ResponsiveButtonPrimary>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/unstake/${kromToken?.address}/remove`}>
+                  - <Trans>Unstake KROM</Trans>
+                </ResponsiveButtonPrimary>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/unstake/${kromToken?.address}/remove`}>
+                  - <Trans>Claim KROM</Trans>
+                </ResponsiveButtonPrimary>
+              </ButtonRow>
+            </TitleRow>
+          </AutoColumn>
+        </AutoColumn>
 
-        {!showAddLiquidityButton && (
+        {showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && stakingInfo.active && (
               <ButtonPrimary padding="8px" $borderRadius="8px" width="160px" onClick={handleDepositClick}>

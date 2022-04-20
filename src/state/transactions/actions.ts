@@ -36,6 +36,8 @@ export enum TransactionType {
   SUBMIT_PROPOSAL = 14,
   ADD_FUNDING = 15,
   WITHDRAW_FUNDING = 16,
+  STAKE = 17,
+  UNSTAKE = 18,
 }
 
 export interface BaseTransactionInfo {
@@ -154,6 +156,18 @@ export interface CollectFeesTransactionInfo {
   currencyId1: string
 }
 
+export interface StakeTransactionInfo {
+  type: TransactionType.STAKE
+  account: string
+  amount: string
+}
+
+export interface UnstakeTransactionInfo {
+  type: TransactionType.UNSTAKE
+  account: string
+  amount: string
+}
+
 export interface RemoveLiquidityV3TransactionInfo {
   type: TransactionType.REMOVE_LIQUIDITY_V3
   baseCurrencyId: string
@@ -185,6 +199,8 @@ export type TransactionInfo =
   | SubmitProposalTransactionInfo
   | AddFundingTransactionInfo
   | WithdrawFundingTransactionInfo
+  | StakeTransactionInfo
+  | UnstakeTransactionInfo
 
 export const addTransaction = createAction<{
   chainId: number

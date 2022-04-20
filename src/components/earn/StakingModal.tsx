@@ -1,28 +1,53 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { KROM } from 'constants/tokens'
+import { formatUnits } from 'ethers/lib/utils'
+import { useNewStakingContract } from 'hooks/useContract'
+import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
+import { AlertCircle, ChevronDown, ChevronUp, HelpCircle } from 'react-feather'
+import { Link } from 'react-router-dom'
+import { Text } from 'rebass'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import { TransactionType } from 'state/transactions/actions'
 import styled from 'styled-components/macro'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import Web3 from 'web3-utils'
 
+import { BIG_INT_ZERO } from '../../constants/misc'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { useColor } from '../../hooks/useColor'
 import { usePairContract, useStakingContract, useV2RouterContract } from '../../hooks/useContract'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
-import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { CloseIcon, TYPE } from '../../theme'
+import { ExternalLink } from '../../theme'
+import { currencyId } from '../../utils/currencyId'
 import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonConfirmed, ButtonError } from '../Button'
+import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
+import { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
+import CurrencyLogo from '../CurrencyLogo'
+import DoubleCurrencyLogo from '../DoubleLogo'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import ProgressCircles from '../ProgressSteps'
-import { RowBetween } from '../Row'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { Dots } from '../swap/styleds'
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -38,6 +63,14 @@ const ContentWrapper = styled(AutoColumn)`
   padding: 1rem;
 `
 
+const VoteCard = styled(DataCard)`
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  overflow: hidden;
+`
+export const FixedHeightRow = styled(RowBetween)`
+  height: 24px;
+`
+
 interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
@@ -45,198 +78,21 @@ interface StakingModalProps {
   userLiquidityUnstaked: CurrencyAmount<Token> | undefined
 }
 
-export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
-  const { library } = useActiveWeb3React()
-
-  // track and parse user input
-  const [typedValue, setTypedValue] = useState('')
-  const { parsedAmount, error } = useDerivedStakeInfo(
-    typedValue,
-    stakingInfo.stakedAmount.currency,
-    userLiquidityUnstaked
-  )
-  const parsedAmountWrapped = parsedAmount?.wrapped
-
-  let hypotheticalRewardRate: CurrencyAmount<Token> = CurrencyAmount.fromRawAmount(stakingInfo.rewardRate.currency, '0')
-  if (parsedAmountWrapped?.greaterThan('0')) {
-    hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
-      stakingInfo.stakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalRewardRate
-    )
-  }
-
-  // state for pending and submitted txn views
-  const addTransaction = useTransactionAdder()
-  const [attempting, setAttempting] = useState<boolean>(false)
-  const [hash, setHash] = useState<string | undefined>()
-  const wrappedOnDismiss = useCallback(() => {
-    setHash(undefined)
-    setAttempting(false)
-    onDismiss()
-  }, [onDismiss])
-
-  // pair contract for this token to be staked
-  const dummyPair = new Pair(
-    CurrencyAmount.fromRawAmount(stakingInfo.tokens[0], '0'),
-    CurrencyAmount.fromRawAmount(stakingInfo.tokens[1], '0')
-  )
-  const pairContract = usePairContract(dummyPair.liquidityToken.address)
-
-  // approval data for stake
-  const deadline = useTransactionDeadline()
-  const router = useV2RouterContract()
-  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(parsedAmountWrapped, router?.address)
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
-
-  const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
-  async function onStake() {
-    setAttempting(true)
-    if (stakingContract && parsedAmount && deadline) {
-      if (approval === ApprovalState.APPROVED) {
-        await stakingContract.stake(`0x${parsedAmount.quotient.toString(16)}`, { gasLimit: 350000 })
-      } else if (signatureData) {
-        stakingContract
-          .stakeWithPermit(
-            `0x${parsedAmount.quotient.toString(16)}`,
-            signatureData.deadline,
-            signatureData.v,
-            signatureData.r,
-            signatureData.s,
-            { gasLimit: 350000 }
-          )
-          .then((response: TransactionResponse) => {
-            addTransaction(response, {
-              type: TransactionType.DEPOSIT_LIQUIDITY_STAKING,
-              token0Address: stakingInfo.tokens[0].address,
-              token1Address: stakingInfo.tokens[1].address,
-            })
-            setHash(response.hash)
-          })
-          .catch((error: any) => {
-            setAttempting(false)
-            console.log(error)
-          })
-      } else {
-        setAttempting(false)
-        throw new Error('Attempting to stake without approval or a signature. Please contact support.')
-      }
-    }
-  }
-
-  // wrapped onUserInput to clear signatures
-  const onUserInput = useCallback((typedValue: string) => {
-    setTypedValue(typedValue)
-  }, [])
-
-  // used for max input button
-  const maxAmountInput = maxAmountSpend(userLiquidityUnstaked)
-  const atMaxAmount = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
-  const handleMax = useCallback(() => {
-    maxAmountInput && onUserInput(maxAmountInput.toExact())
-  }, [maxAmountInput, onUserInput])
-
-  async function onAttemptToApprove() {
-    if (!pairContract || !library || !deadline) throw new Error('missing dependencies')
-    if (!parsedAmount) throw new Error('missing liquidity amount')
-
-    if (gatherPermitSignature) {
-      try {
-        await gatherPermitSignature()
-      } catch (error) {
-        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
-        if (error?.code !== 4001) {
-          await approveCallback()
-        }
-      }
-    } else {
-      await approveCallback()
-    }
-  }
-
+export default function StakingModals({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
-      {!attempting && !hash && (
-        <ContentWrapper gap="lg">
-          <RowBetween>
-            <TYPE.mediumHeader>
-              <Trans>Deposit</Trans>
-            </TYPE.mediumHeader>
-            <CloseIcon onClick={wrappedOnDismiss} />
-          </RowBetween>
-          <CurrencyInputPanel
-            value={typedValue}
-            onUserInput={onUserInput}
-            onMax={handleMax}
-            showMaxButton={!atMaxAmount}
-            currency={stakingInfo.stakedAmount.currency}
-            pair={dummyPair}
-            label={''}
-            renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
-            id="stake-liquidity-token"
-          />
-
-          <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
-            <div>
-              <TYPE.black fontWeight={600}>
-                <Trans>Weekly Rewards</Trans>
-              </TYPE.black>
-            </div>
-
-            <TYPE.black>
-              <Trans>
-                {hypotheticalRewardRate
-                  .multiply((60 * 60 * 24 * 7).toString())
-                  .toSignificant(4, { groupSeparator: ',' })}{' '}
-                UNI / week
-              </Trans>
-            </TYPE.black>
-          </HypotheticalRewardRate>
-
-          <RowBetween>
-            <ButtonConfirmed
-              mr="0.5rem"
-              onClick={onAttemptToApprove}
-              confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-              disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-            >
-              <Trans>Approve</Trans>
-            </ButtonConfirmed>
-            <ButtonError
-              disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
-              error={!!error && !!parsedAmount}
-              onClick={onStake}
-            >
-              {error ?? <Trans>Deposit</Trans>}
-            </ButtonError>
-          </RowBetween>
-          <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />
-        </ContentWrapper>
-      )}
-      {attempting && !hash && (
-        <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>
-              <Trans>Depositing Liquidity</Trans>
-            </TYPE.largeHeader>
-            <TYPE.body fontSize={20}>
-              <Trans>{parsedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </TYPE.body>
-          </AutoColumn>
-        </LoadingView>
-      )}
-      {attempting && hash && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>
-              <Trans>Transaction Submitted</Trans>
-            </TYPE.largeHeader>
-            <TYPE.body fontSize={20}>
-              <Trans>Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </TYPE.body>
-          </AutoColumn>
-        </SubmittedView>
-      )}
-    </Modal>
+    <VoteCard>
+      <CardBGImage />
+      <CardNoise />
+      <CardSection>
+        <AutoColumn gap="md">
+          <FixedHeightRow>
+            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
+          </FixedHeightRow>
+          <FixedHeightRow>
+            <Text></Text>
+          </FixedHeightRow>
+        </AutoColumn>
+      </CardSection>
+    </VoteCard>
   )
 }

@@ -1,11 +1,11 @@
 import { splitSignature } from '@ethersproject/bytes'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 
-import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
+import { KROMATIKA_ROUTER_ADDRESSES, LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
 import { DAI, KROM, UNI, USDC } from '../constants/tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useEIP2612Contract } from './useContract'
@@ -38,6 +38,7 @@ const PERMITTABLE_TOKENS: {
     [USDC.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
     [UNI[1].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [KROM[1].address]: { type: PermitType.AMOUNT, name: 'Kromatika', version: '1' },
   },
   [4]: {
     ['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
@@ -52,6 +53,7 @@ const PERMITTABLE_TOKENS: {
   },
   [42]: {
     [UNI[42].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [KROM[42].address]: { type: PermitType.AMOUNT, name: 'Kromatika', version: '1' },
   },
 }
 
@@ -272,16 +274,28 @@ export function useV2LiquidityTokenPermit(
 }
 
 export function useERC20PermitFromTrade(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined,
+  allowedSlippage: Percent | undefined,
+  skipPermit: boolean
 ) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
-  const amountToApprove = useMemo(() => (trade ? trade.inputAmount : undefined), [trade])
+  const amountToApprove = useMemo(
+    () => (trade ? (allowedSlippage ? trade.maximumAmountIn(allowedSlippage) : trade.inputAmount) : undefined),
+    [allowedSlippage, trade]
+  )
 
   return useERC20Permit(
     amountToApprove,
     // v2 router does not support
-    trade instanceof V2Trade ? undefined : trade instanceof V3Trade ? swapRouterAddress : undefined,
+    skipPermit ? undefined : trade instanceof V3Trade ? swapRouterAddress : undefined,
     null
   )
+}
+
+export function useERC20PermitFromRouter(amountToApprove: CurrencyAmount<Currency> | null | undefined) {
+  const { chainId } = useActiveWeb3React()
+  const swapRouterAddress = chainId ? KROMATIKA_ROUTER_ADDRESSES[chainId] : undefined
+
+  return useERC20Permit(amountToApprove, swapRouterAddress, null)
 }

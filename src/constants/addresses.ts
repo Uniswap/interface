@@ -14,7 +14,13 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
+export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d')
+export const INCH_ROUTER_ADDRESS: AddressMap = {
+  ...constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d', [SupportedChainId.OPTIMISTIC_KOVAN]),
+  [SupportedChainId.OPTIMISM]: '0x1111111254760f7ab3f16433eea9304126dcd199',
+  [SupportedChainId.ARBITRUM_ONE]: '0x1111111254fb6c44bac0bed2854e76f90643097d',
+  [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
+}
 
 /**
  * The oldest V0 governance address
@@ -33,6 +39,22 @@ export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
  */
 export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x408ED6354d4973f66138C91495F2f2FCbd8724C3',
+}
+
+export const TREASURY_FEE_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0x9aE8F90f58a6bc41B469b386a0A49eBb94897fAE',
+}
+
+export const SKROMATIKA_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0xEcf12A780a922A8963A8f044e489F499Bf6494e7',
+}
+
+export const STAKING_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0x24C2F4d4e81620dBbC46E02d3DAc9A9c095DcF8C',
+}
+
+export const STAKING_DISTRIBUTOR_ADDRESS: AddressMap = {
+  [SupportedChainId.KOVAN]: '0xa6b19D85a221d5C063b62570457c1171068ba9fd',
 }
 
 export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC')
@@ -80,7 +102,7 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0xE592
   SupportedChainId.ARBITRUM_RINKEBY,
 ])
 export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
-  [SupportedChainId.KOVAN]: '0xec32237Be47D08F2C7B1a46D6F01f65c90Bf64e4',
+  [SupportedChainId.KOVAN]: '0x66E15bb53c9C5fB1B9Aa19D84920A3965cEad8a7',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '0x6bC9BFfF3CD847Fd1e061E3B275901b930872B4B',
   [SupportedChainId.OPTIMISM]: '0x7314Af7D05e054E96c44D7923E68d66475FfaAb8',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xf10A3841bc1ccEAe1DC162e66e615D2416A3adac',
@@ -88,12 +110,18 @@ export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0xD1fDF0144be118C30a53E1d08Cc1E61d600E508e',
 }
 export const KROM_TOKEN_ADDRESSES: AddressMap = {
-  [SupportedChainId.KOVAN]: '0x0B1a06B31b1680519Ea56B38e0dAddC3DA3cA0E5',
+  [SupportedChainId.KOVAN]: '0x4cEbC301Cd0E8AD64dE6B19576de7dd0B0140a1f',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '0x0f747ed5De34aaDc17E39368b7d90da2D0545319',
   [SupportedChainId.OPTIMISM]: '0xF98dCd95217E15E05d8638da4c91125E59590B07',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0x4f1BB8FD099170714AC6F756966616fCc39ae867',
   [SupportedChainId.ARBITRUM_ONE]: '0x55fF62567f09906A85183b866dF84bf599a4bf70',
   [SupportedChainId.MAINNET]: '0x3af33bef05c2dcb3c7288b77fe1c8d2aeba4d789',
+}
+export const UNISWAP_UTILS_ADDRESSES: AddressMap = {
+  [SupportedChainId.KOVAN]: '0x9E1E4f041877f1aB604E5B109Cf699545e20E4bC',
+}
+export const KROMATIKA_ROUTER_ADDRESSES: AddressMap = {
+  [SupportedChainId.ARBITRUM_ONE]: '0x79ba1CFF3998D7ce3DF452c3Fd6FCf817971Ea39',
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
   SupportedChainId.ARBITRUM_ONE,

@@ -70,6 +70,14 @@ function FormattedCurrencyAmountManaged({
   ) : null
 }
 
+function StakeSummary() {
+  return <Trans>Stake Summary called</Trans>
+}
+
+function UnStakeSummary() {
+  return <Trans>UnStake Summary called</Trans>
+}
+
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
   const { ENSName } = useENSName()
   return typeof uniAmountRaw === 'string' ? (
@@ -345,5 +353,11 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary info={info} />
+
+    case TransactionType.STAKE:
+      return <StakeSummary />
+
+    case TransactionType.UNSTAKE:
+      return <UnStakeSummary />
   }
 }

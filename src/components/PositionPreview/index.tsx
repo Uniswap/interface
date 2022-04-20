@@ -124,7 +124,7 @@ export const PositionPreview = ({
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
               <TYPE.main fontSize="12px">
-                <Trans>Min Price</Trans>
+                <Trans>Minimum Price</Trans>
               </TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${formatTickPrice(
                 priceLower,

@@ -5,7 +5,9 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
+import { KROM } from 'constants/tokens'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
+import { useActiveWeb3React } from 'hooks/web3'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { currencyId } from 'utils/currencyId'
@@ -43,6 +45,8 @@ export default function CommonBases({
   onSelect: (currency: Currency) => void
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
+
+  chainId && bases[0] != KROM[chainId] && bases.unshift(KROM[chainId])
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">

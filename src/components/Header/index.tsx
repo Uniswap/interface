@@ -13,7 +13,10 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
+import ComingSoon from '../../../src/assets/images/coming-soon.png'
+import ComingSoonLight from '../../../src/assets/images/coming-soon-light.png'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import { ReactComponent as PhoneScreenLogo } from '../../assets/svg/phone-logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
@@ -36,7 +39,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   width: 100%;
   top: 0;
   position: relative;
-  padding: 1rem;
+  padding: 0.5rem;
   z-index: 21;
   position: relative;
   /* Background slide effect on scroll. */
@@ -48,11 +51,11 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-blend-mode: hard-light;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 48px 1fr 1fr;
+    grid-template-columns: 175px 1fr 1fr;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding:  1rem;
+    padding:  0.5rem;
     grid-template-columns: 1fr 1fr;
   `};
 
@@ -60,6 +63,32 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
     padding:  1rem;
     grid-template-columns: 36px 1fr;
   `};
+`
+
+const MainLogo = styled.div`
+  @media screen and (max-width: 550px) {
+    display: none;
+  }
+`
+
+const PhoneLogo = styled.div`
+  @media screen and (min-width: 550px) {
+    display: none;
+  }
+
+  @media screen and (max-width: 380px) {
+    position: relative;
+    left: -15px;
+  }
+`
+
+const StyledImage = styled.img`
+  height: 15px;
+  width: 40px;
+  tranform: rotate(20deg);
+  position: relative;
+  left: -20px;
+  top: -10px;
 `
 
 const HeaderControls = styled.div`
@@ -178,8 +207,14 @@ const Title = styled.a`
 
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
+  overflow: hidden;
+  width: 200px;
   :hover {
     transform: rotate(-5deg);
+  }
+
+  @media screen and (max-width: 720px) {
+    margin-left: 150px;
   }
 `
 
@@ -263,14 +298,27 @@ export default function Header() {
 
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
-    <HeaderFrame showBackground={scrollY > 45}>
+    <HeaderFrame showBackground={true}>
       <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
       <Title href=".">
         <UniIcon>
-          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <MainLogo>
+            <Logo
+              fill={darkMode ? white : black}
+              transform="scale(9)"
+              width="100px"
+              height="35px"
+              title="logo"
+              z-index="1"
+              viewBox="0 0 350 840"
+            />
+          </MainLogo>
+          <PhoneLogo>
+            <PhoneScreenLogo fill={darkMode ? white : black} width="100px" height="35px" title="logo" z-index="1" />
+          </PhoneLogo>
         </UniIcon>
       </Title>
       <HeaderLinks>
@@ -287,9 +335,13 @@ export default function Header() {
         >
           <Trans>Dashboard</Trans>
         </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Trade</Trans>
+        <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
+          <Trans>Limit</Trans>
         </StyledNavLink>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <Trans>Swap</Trans>
+        </StyledNavLink>
+        {/* <StyledImage src={darkMode ? ComingSoon : ComingSoonLight}></StyledImage> */}
       </HeaderLinks>
 
       <HeaderControls>

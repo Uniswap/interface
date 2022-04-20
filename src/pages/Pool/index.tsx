@@ -109,6 +109,27 @@ const MainContentWrapper = styled.main`
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 500px;
+  padding: 15px;
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 10px;
+  }
 `
 
 const ShowInactiveToggle = styled.div`
@@ -158,7 +179,7 @@ export default function Pool() {
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'10'}>
+            <TitleRow style={{ marginTop: '4rem' }} padding={'10'}>
               <TYPE.body fontSize={'20px'}>
                 <Trans>Account</Trans>
               </TYPE.body>
@@ -177,12 +198,12 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  <Trans>Trades</Trans>
+                  <Trans>Limit Orders</Trans>
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/swap`}>
-                  + <Trans>New Trade</Trans>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/limitorder`}>
+                  + <Trans>New Limit Order</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -210,7 +231,7 @@ export default function Pool() {
                   <TYPE.body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans>Your trade will appear here.</Trans>
+                      <Trans>Your limit orders will appear here.</Trans>
                     </div>
                   </TYPE.body>
                   {showConnectAWallet && (
@@ -221,23 +242,6 @@ export default function Pool() {
                 </NoLiquidity>
               )}
             </MainContentWrapper>
-
-            <ResponsiveRow>
-              {closedPositions.length > 0 ? (
-                <ShowInactiveToggle>
-                  <label>
-                    <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-                      <Trans>Show processed trades</Trans>
-                    </TYPE.body>
-                  </label>
-                  <input
-                    type="checkbox"
-                    onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
-                    checked={!userHideClosedPositions}
-                  />
-                </ShowInactiveToggle>
-              ) : null}
-            </ResponsiveRow>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
