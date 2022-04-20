@@ -25,6 +25,7 @@ interface AdvancedSwapDetailsProps {
   allowedSlippage: Percent
   syncing?: boolean
   hideRouteDiagram?: boolean
+  hideInfoTooltips?: boolean
 }
 
 function TextWithLoadingPlaceholder({
@@ -45,7 +46,12 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({
+  trade,
+  allowedSlippage,
+  syncing = false,
+  hideInfoTooltips = false,
+}: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
 
@@ -69,6 +75,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
                   market price changes while your transaction is pending.
                 </Trans>
               }
+              disableHover={hideInfoTooltips}
             >
               <ThemedText.SubHeader color={theme.text1}>
                 <Trans>Expected Output</Trans>
@@ -85,7 +92,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+            <MouseoverTooltip
+              text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
+              disableHover={hideInfoTooltips}
+            >
               <ThemedText.SubHeader color={theme.text1}>
                 <Trans>Price Impact</Trans>
               </ThemedText.SubHeader>
@@ -107,6 +117,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
                   will revert.
                 </Trans>
               }
+              disableHover={hideInfoTooltips}
             >
               <ThemedText.SubHeader color={theme.text3}>
                 {trade.tradeType === TradeType.EXACT_INPUT ? (
@@ -135,6 +146,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
                   {CHAIN_INFO[chainId ?? 1].addNetworkInfo.nativeCurrency.symbol}.
                 </Trans>
               }
+              disableHover={hideInfoTooltips}
             >
               <ThemedText.SubHeader color={theme.text3}>
                 <Trans>Network Fee</Trans>

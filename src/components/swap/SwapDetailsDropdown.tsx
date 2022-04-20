@@ -147,7 +147,12 @@ export default function SwapDetailsDropdown({
                   content={
                     <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
                       <Card padding="12px">
-                        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+                        <AdvancedSwapDetails
+                          trade={trade}
+                          allowedSlippage={allowedSlippage}
+                          syncing={syncing}
+                          hideInfoTooltips={true}
+                        />
                       </Card>
                     </ResponsiveTooltipContainer>
                   }
