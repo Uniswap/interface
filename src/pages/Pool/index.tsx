@@ -231,7 +231,7 @@ export default function Pool() {
                   <TYPE.body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans>Your limit order will appear here.</Trans>
+                      <Trans>Your limit orders will appear here.</Trans>
                     </div>
                   </TYPE.body>
                   {showConnectAWallet && (
