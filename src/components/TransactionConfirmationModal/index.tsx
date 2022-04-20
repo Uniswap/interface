@@ -5,6 +5,7 @@ import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAddToken from 'hooks/useAddToken'
+import useIsCoinbaseWallet from 'hooks/useIsCoinbaseWallet'
 import { ReactNode, useContext } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
@@ -12,7 +13,6 @@ import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/ho
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import MetaMaskLogo from '../../assets/images/metamask.png'
 import { ExternalLink } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -98,6 +98,7 @@ function TransactionSubmittedContent({
   const theme = useContext(ThemeContext)
 
   const { library } = useActiveWeb3React()
+  const isCoinbaseWallet = useIsCoinbaseWallet()
 
   const { addToken, success } = useAddToken(currencyToAdd)
 
@@ -124,13 +125,11 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {currencyToAdd && library?.provider?.isMetaMask && (
+          {currencyToAdd && (library?.provider?.isMetaMask || isCoinbaseWallet) && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  <Trans>
-                    Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
-                  </Trans>
+                  <Trans>Add {currencyToAdd.symbol} to Wallet</Trans>
                 </RowFixed>
               ) : (
                 <RowFixed>
