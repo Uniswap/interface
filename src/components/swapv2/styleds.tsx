@@ -353,7 +353,13 @@ export const PriceImpactHigh = styled.div<{ veryHigh?: boolean }>`
 export const LiveChartWrapper = styled.div`
   width: 772px;
   display: none;
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 1100px) {
+    height: 416px;
+    display: block;
+  }
+  @media screen and (min-width: 1440px) {
+    height: 510px;
+    width: 1040px;
     display: block;
   }
 `

@@ -25,11 +25,6 @@ const LiveChartWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  ${!isMobile &&
-    `@media only screen and (min-width: 768px) {
-    width: 772px;
-    height: auto;
-  }`}
 `
 const TimeFrameButton = styled.div<{ active?: boolean }>`
   cursor: pointer;
@@ -65,6 +60,10 @@ const SwitchButtonWrapper = styled.div`
   &:hover {
     background-color: ${({ theme }) => theme.buttonGray};
   }
+`
+
+const ProLiveChartCustom = styled(ProLiveChart)`
+  margin: ${() => isMobile ? '0 -20px -20px -20px' : '10px 0'}
 `
 
 const getDifferentValues = (chartData: any, hoverValue: number | null) => {
@@ -206,9 +205,7 @@ function LiveChart({
             </Flex>
           </Flex>
           {showProLiveChart ? (
-            <div style={{ margin: isMobile ? '0 -20px -20px -20px' : '10px 0' }}>
-              <ProLiveChart tokens={tokens}/>
-            </div>
+            <ProLiveChartCustom tokens={tokens}/>
           ) : (
             <>
               <Flex justifyContent="space-between" alignItems="flex-start" marginTop={'5px'}>

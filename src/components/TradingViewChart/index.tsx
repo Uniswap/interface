@@ -20,7 +20,7 @@ import { Token } from '@dynamic-amm/sdk'
 
 const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
   margin-top: 10px;
-  height: ${isMobile ? '60vh' : '500px'};
+  height: ${isMobile ? '60vh' : 'calc(100% - 0px)'};
   width: 100%;
   border-radius: 10px;
   ${({ theme }) => `border: 1px solid ${theme.background};`}
