@@ -56,9 +56,6 @@ const Marginer = styled.div`
 `
 
 export default function App() {
-  if (window.location.origin.includes('app.diffusion.fi')) {
-    return <h1>Currently in Testing</h1>
-  }
   return (
     <ErrorBoundary>
       <Suspense fallback={null}>
