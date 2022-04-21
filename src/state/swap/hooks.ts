@@ -322,6 +322,7 @@ export function useDefaultsFromURLSearch():
       ChainId.BSCMAINNET,
       ChainId.MATIC,
       ChainId.AVAXMAINNET,
+      ChainId.BTTC,
     ].includes(chainId)
       ? KNC[chainId].address
       : USDC[chainId].address

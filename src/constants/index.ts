@@ -625,10 +625,16 @@ export const KNC: { [chainId in ChainId]: Token } = {
     'KNC',
     'Kyber Network Crystal',
   ),
+  [ChainId.BTTC]: new Token(
+    ChainId.BTTC,
+    '0x18fA72e0EE4C580a129b0CE5bD0694d716C7443E',
+    18,
+    'KNC_b',
+    'Kyber Network Crystal v2 - BSC',
+  ),
 
   // UPDATE WHEN HAS BRIDGE KNC
   [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-  [ChainId.BTTC]: new Token(ChainId.BTTC, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.OASIS]: new Token(ChainId.OASIS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
 }
