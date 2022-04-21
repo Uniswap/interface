@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Connector } from '@web3-react/core'
+import { Connector } from '@web3-react/types'
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
 
