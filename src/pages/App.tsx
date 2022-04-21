@@ -91,12 +91,13 @@ export default function App() {
                   path="/add/v2/:currencyIdA?/:currencyIdB?"
                   component={RedirectDuplicateTokenIdsV2}
                 />
-                {/* <Route
+
+                <Route
                   exact
                   strict
                   path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                  component={RedirectDuplicateTokenIds}
-                /> */}
+                  component={RedirectDuplicateTokenIdsV2}
+                />
 
                 {/* <Route
                   exact
@@ -106,6 +107,7 @@ export default function App() {
                 /> */}
 
                 <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
                 {/* <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} /> */}
 
                 {/* <Route exact strict path="/migrate/v2" component={MigrateV2} /> */}
