@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
+import { ChainIdNotAllowedError } from '@web3-react/store'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { AutoColumn } from 'components/Column'
@@ -138,7 +139,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   // important that these are destructed from the account-specific web3-react context
-  const { active, account, connector, activate, error } = useWeb3React()
+  const { isActive, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
@@ -170,13 +171,16 @@ export default function WalletModal({
   }, [walletModalOpen])
 
   // close modal when a connection is successful
-  const activePrevious = usePrevious(active)
+  const isActivePrevious = usePrevious(isActive)
   const connectorPrevious = usePrevious(connector)
   useEffect(() => {
-    if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
+    if (
+      walletModalOpen &&
+      ((isActive && !isActivePrevious) || (connector && connector !== connectorPrevious && !error))
+    ) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
-  }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
+  }, [setWalletView, isActive, error, connector, walletModalOpen, isActivePrevious, connectorPrevious])
 
   const tryActivation = async (connector: Connector | undefined) => {
     let name = ''
@@ -207,7 +211,7 @@ export default function WalletModal({
           logMonitoringEvent({ walletAddress })
         })
         .catch((error) => {
-          if (error instanceof UnsupportedChainIdError) {
+          if (error instanceof ChainIdNotAllowedError) {
             activate(connector) // a little janky...can't use setError because the connector isn't set
           } else {
             setPendingError(true)
@@ -311,10 +315,10 @@ export default function WalletModal({
             <CloseColor />
           </CloseIcon>
           <HeaderRow>
-            {error instanceof UnsupportedChainIdError ? <Trans>Wrong Network</Trans> : <Trans>Error connecting</Trans>}
+            {error instanceof ChainIdNotAllowedError ? <Trans>Wrong Network</Trans> : <Trans>Error connecting</Trans>}
           </HeaderRow>
           <ContentWrapper>
-            {error instanceof UnsupportedChainIdError ? (
+            {error instanceof ChainIdNotAllowedError ? (
               <h5>
                 <Trans>Please connect to a supported network in the dropdown menu or in your wallet.</Trans>
               </h5>

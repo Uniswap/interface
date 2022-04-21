@@ -177,8 +177,8 @@ function Row({
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
 }) {
-  const { library, chainId } = useActiveWeb3React()
-  if (!library || !chainId) {
+  const { provider, chainId } = useActiveWeb3React()
+  if (!provider || !chainId) {
     return null
   }
   const active = chainId === targetChain
@@ -238,7 +238,7 @@ const getChainNameFromId = (id: string | number) => {
 }
 
 export default function NetworkSelector() {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, provider } = useActiveWeb3React()
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
   const prevChainId = usePrevious(chainId)
@@ -255,8 +255,8 @@ export default function NetworkSelector() {
 
   const handleChainSwitch = useCallback(
     (targetChain: number, skipToggle?: boolean) => {
-      if (!library?.provider) return
-      switchToNetwork({ provider: library.provider, chainId: targetChain })
+      if (!provider) return
+      switchToNetwork({ provider, chainId: targetChain })
         .then(() => {
           if (!skipToggle) {
             toggle()
@@ -281,7 +281,7 @@ export default function NetworkSelector() {
           dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
         })
     },
-    [dispatch, library, toggle, history, chainId]
+    [dispatch, provider, toggle, history, chainId]
   )
 
   useEffect(() => {
@@ -303,7 +303,7 @@ export default function NetworkSelector() {
     }
   }, [chainId, history, urlChainId, urlChain])
 
-  if (!chainId || !info || !library) {
+  if (!chainId || !info || !provider) {
     return null
   }
 
