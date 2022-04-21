@@ -199,25 +199,34 @@ export function usePool(poolId: number) {
   return rawInfo
 }
 
-export function useRewardInfos(rewardContract?: string) {
+export function useRewardInfos(pid: number, rewardContractAddress?: string) {
   const { account } = useActiveWeb3React()
-  const rewarderContract = useComplexRewarderTime(rewardContract)
-  const pendingTokens = useSingleCallResult(rewarderContract, 'pendingTokens', [0, account ?? undefined, 0])
+  const rewarderContract = useComplexRewarderTime(rewardContractAddress)
+  const pendingTokens = useSingleCallResult(rewarderContract, 'pendingTokens', [pid, account ?? undefined, 0])
   const rewardToken = useToken(pendingTokens?.result?.rewardTokens[0])
   const rewardPerSecondResponse = useSingleCallResult(rewarderContract, 'rewardPerSecond')
 
-  const poolInfos = useSingleCallResult(rewarderContract, 'poolInfo', [0])
+  const poolInfos = useSingleCallResult(rewarderContract, 'poolInfo', [pid])
   const poolInfo = poolInfos?.result as unknown as PoolInfo
+
+  const totalAllocationResponse = useSingleCallResult(rewarderContract, 'totalAllocPoint')
+  const totalAllocation = totalAllocationResponse.result?.[0] as BigNumber | undefined
 
   const rewardPerSecondAmount = useMemo(() => {
     if (!rewardToken) {
       return undefined
     }
-    return CurrencyAmount.fromRawAmount(
-      rewardToken,
-      rewardPerSecondResponse.result?.[0] ? JSBI.BigInt(rewardPerSecondResponse.result[0].toString()) : JSBI.BigInt(0)
-    )
-  }, [rewardPerSecondResponse.result, rewardToken])
+    const totalRewardPerSecond: JSBI = JSBI.BigInt(rewardPerSecondResponse.result?.[0].toString() || 0)
+    const poolEmissionPerSecond =
+      poolInfo?.allocPoint && totalAllocation && totalAllocation.gt(0) && totalRewardPerSecond
+        ? JSBI.divide(
+            JSBI.multiply(totalRewardPerSecond, JSBI.BigInt(poolInfo.allocPoint.toString())),
+            JSBI.BigInt(totalAllocation.toString())
+          )
+        : JSBI.BigInt(0)
+
+    return CurrencyAmount.fromRawAmount(rewardToken, poolEmissionPerSecond)
+  }, [poolInfo?.allocPoint, rewardPerSecondResponse.result, rewardToken, totalAllocation])
 
   const pendingAmount = useMemo(() => {
     if (!rewardToken) {

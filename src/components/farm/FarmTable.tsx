@@ -145,7 +145,7 @@ const Emission = styled(AutoColumn)`
   padding-top: 8px;
 `
 
-const EmissionText = styled.text`
+const EmissionText = styled.span`
   padding-right: 10px;
 `
 

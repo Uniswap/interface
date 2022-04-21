@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 // import { CurrencyAmount, Token } from 'sdk-core/entities'
 
@@ -35,10 +35,10 @@ export function FarmListPage() {
       {/* {pools.map((pool) => pool.lpTokenAddress && <Pool key={pool.lpTokenAddress} {...pool} />).filter(isTruthy)} */}
       <FarmTable>
         {pools.map((pool) => (
-          <>
-            <HRDark key={`hr-${pool.poolId}`} />
-            <PoolRow key={pool.poolId} {...pool} />
-          </>
+          <Fragment key={pool.poolId}>
+            <HRDark />
+            <PoolRow {...pool} />
+          </Fragment>
         ))}
       </FarmTable>
     </FarmListContainer>
@@ -57,7 +57,7 @@ function PoolRow({
 }: PoolProps) {
   const { totalPoolStaked, pair } = usePairTokens(lpTokenAddress)
   const USDPrice = useUSDCPrice(totalPoolStaked?.currency)
-  const { rewardPerSecondAmount } = useRewardInfos(rewarderAddress)
+  const { rewardPerSecondAmount } = useRewardInfos(poolId, rewarderAddress)
   const primaryAPR = useCalculateAPR(poolEmissionAmount, totalPoolStaked)
   const secondaryAPR = useCalculateAPR(rewardPerSecondAmount, totalPoolStaked)
   const totalAPR = JSBI.add(primaryAPR || JSBI.BigInt(0), secondaryAPR || JSBI.BigInt(0))

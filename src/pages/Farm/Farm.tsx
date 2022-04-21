@@ -113,7 +113,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
   const pool = usePool(poolId)
   const { lpTokenAddress, pendingAmount, stakedRawAmount, rewarderAddress, poolEmissionAmount } = pool || {}
   const { token0, token1, availableLPAmount, lpToken, totalPoolStaked } = usePairTokens(lpTokenAddress)
-  const { pendingAmount: pendingRewardAmount, rewardPerSecondAmount } = useRewardInfos(rewarderAddress)
+  const { pendingAmount: pendingRewardAmount, rewardPerSecondAmount } = useRewardInfos(poolId, rewarderAddress)
   const stakedAmount = lpToken ? CurrencyAmount.fromRawAmount(lpToken, stakedRawAmount || 0) : undefined
 
   const ownPrimaryWeeklyEmission = useOwnWeeklyEmission(poolEmissionAmount, stakedAmount, totalPoolStaked)
@@ -252,7 +252,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
                 borderRadius="8px"
                 width={'fit-content'}
                 as={Link}
-                to={`/add/${token0 && currencyId(token0)}/${token1 && currencyId(token1)}`}
+                to={`/add/v2/${token0 && currencyId(token0)}/${token1 && currencyId(token1)}`}
               >
                 {`Add ${token0?.symbol}-${token1?.symbol} liquidity`}
               </ButtonPrimary>
