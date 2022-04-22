@@ -10,21 +10,30 @@ import {
 } from 'react-native-vision-camera'
 import { useAppTheme } from 'src/app/hooks'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
+import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
+import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
+import { opacify } from 'src/utils/colors'
 import { openSettings } from 'src/utils/linking'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
 
 type QRCodeScannerProps = {
+  numConnections: number
+  onPressConnections: () => void
   onScanCode: (data: string) => void
 }
 
 const SCAN_ICON_WIDTH_RATIO = 0.8
 
-export function QRCodeScanner({ onScanCode, ...rest }: QRCodeScannerProps) {
+export function QRCodeScanner({
+  numConnections,
+  onPressConnections,
+  onScanCode,
+}: QRCodeScannerProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -71,12 +80,7 @@ export function QRCodeScanner({ onScanCode, ...rest }: QRCodeScannerProps) {
 
   if (permission === 'authorized' && backCamera) {
     return (
-      <Box
-        borderTopLeftRadius="md"
-        borderTopRightRadius="md"
-        flexGrow={1}
-        overflow="hidden"
-        {...rest}>
+      <Box borderRadius="md" flexGrow={1} overflow="hidden">
         <Camera
           isActive
           device={backCamera}
@@ -85,13 +89,29 @@ export function QRCodeScanner({ onScanCode, ...rest }: QRCodeScannerProps) {
           onLayout={(event) => setLayout(event.nativeEvent.layout)}
         />
         {layout && (
-          <Flex centered style={StyleSheet.absoluteFill}>
+          <Flex centered gap="lg" style={StyleSheet.absoluteFill}>
             <CameraScan
-              height={layout.height * SCAN_ICON_WIDTH_RATIO}
+              height={layout.width * SCAN_ICON_WIDTH_RATIO}
               stroke={theme.colors.white}
               strokeWidth={5}
               width={layout.width * SCAN_ICON_WIDTH_RATIO}
             />
+            <Button onPress={onPressConnections}>
+              <Flex
+                row
+                alignItems="center"
+                borderRadius="full"
+                px="lg"
+                py="sm"
+                style={{ backgroundColor: opacify(60, theme.colors.black) }}>
+                <WalletConnectLogo height={30} width={30} />
+                <Text color="white" variant="h5">
+                  {numConnections === 1
+                    ? t('1 app connected')
+                    : t('{{numConnections}} apps connected', { numConnections })}
+                </Text>
+              </Flex>
+            </Button>
           </Flex>
         )}
       </Box>

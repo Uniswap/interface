@@ -169,5 +169,10 @@
   "Buy": "Buy",
   "Sell": "Sell",
   "Uniswap Wallet": "Uniswap Wallet",
-  "Create New Account": "Create New Account"
+  "Create New Account": "Create New Account",
+  "Scan code": "Scan code",
+  "Scan QR code for Wallet Connect": "Scan QR code for Wallet Connect",
+  "Show Connected Dapps": "Show Connected Dapps",
+  "{{numConnections}} apps connected": "{{numConnections}} apps connected",
+  "1 app connected": "1 app connected"
 }

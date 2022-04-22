@@ -1,6 +1,7 @@
 import { DrawerActions } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
+import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppStackParamList } from 'src/app/navigation/types'
@@ -60,6 +61,7 @@ export function HomeScreen({ navigation }: Props) {
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
 
   const onPressScan = () => {
+    selectionAsync()
     setShowWalletConnectModal(true)
   }
 

@@ -33,7 +33,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
     const sessionConnectedHandler = (req: SessionConnectedEvent) => {
       emit(
         addSession({
-          wcSession: { id: req.session_id, dappName: req.session_name },
+          wcSession: { id: req.session_id, dapp: req.dapp },
           account: req.account,
         })
       )

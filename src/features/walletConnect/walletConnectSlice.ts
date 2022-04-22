@@ -3,7 +3,7 @@ import { DappInfo, EthMethod } from 'src/features/walletConnect/types'
 
 export interface WalletConnectSession {
   id: string
-  dappName: string
+  dapp: DappInfo
 }
 
 interface SessionMapping {

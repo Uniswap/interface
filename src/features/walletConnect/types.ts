@@ -12,6 +12,7 @@ export type SessionConnectedEvent = {
   session_id: string
   session_name: string
   account: string
+  dapp: DappInfo
 }
 
 export type SessionDisconnectedEvent = {
@@ -23,6 +24,7 @@ export type DappInfo = {
   name: string
   url: string
   icon: string
+  chain_id: string
 }
 
 export type SignRequestEvent = {

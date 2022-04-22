@@ -30,6 +30,7 @@ export const enum SectionName {
 /** Known modals for telemetry purposes. */
 export const enum ModalName {
   Account = 'account-modal',
+  ConnectedDapps = 'connected-dapps',
   NetworkSelector = 'network-selector-modal',
   WalletQRCode = 'wallet-qr-code-modal',
   NFTAsset = 'nft-asset',
@@ -83,6 +84,9 @@ export const enum ElementName {
   TryAgain = 'try-again',
   Unwrap = 'unwrap',
   WalletConnectScan = 'wallet-connect-scan',
+  WCOpenDapp = 'wc-open-dapp',
+  WCDappSwitchNetwork = 'wc-dapp-switch-network',
+  WCViewDappConnections = 'wc-view-dapp-connections',
   Wrap = 'wrap',
   NFTAssetItem = 'nft-asset-item',
   NFTCollectionItem = 'nft-collection-item',

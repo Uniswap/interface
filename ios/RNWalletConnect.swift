@@ -48,13 +48,13 @@ class RNWalletConnect: RCTEventEmitter {
   }
   
   @objc
-    func sendSignature(_ requestInternalId: String, signature: String, account: String) {
-      guard let accountServer = self.accountToWcServer[account] else {
-        return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
-      }
-      
-      accountServer.sendSignature(requestInternalId: requestInternalId, signature: signature)
+  func sendSignature(_ requestInternalId: String, signature: String, account: String) {
+    guard let accountServer = self.accountToWcServer[account] else {
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
     }
+    
+    accountServer.sendSignature(requestInternalId: requestInternalId, signature: signature)
+  }
 
 
   @objc
@@ -210,13 +210,25 @@ class WalletConnectAccountServer: ServerDelegate {
                                                 url: URL(string: "https://uniswap.org")!)
     let walletInfo = Session.WalletInfo(approved: true,
                                         accounts: [self.account],
-                                        chainId: 1,
+                                        chainId: session.dAppInfo.chainId!,
                                         peerId: UUID().uuidString,
                                         peerMeta: walletMeta)
     
-    completion(walletInfo)
+    let icons = session.dAppInfo.peerMeta.icons
+
+    self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: [
+      "session_name": session.dAppInfo.peerMeta.name,
+      "session_id": session.url.topic,
+      "account": self.account!,
+      "dapp": [
+        "name": session.dAppInfo.peerMeta.name,
+        "url": session.dAppInfo.peerMeta.url.absoluteString,
+        "icon": icons.isEmpty ? "" : icons[0].absoluteString,
+        "chain_id": session.dAppInfo.chainId!
+      ]
+    ])
     
-    self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: ["session_name": session.dAppInfo.peerMeta.name, "session_id": session.url.topic, "account": self.account ])
+    completion(walletInfo)
   }
   
   func server(_ server: Server, didConnect session: Session) {
@@ -226,7 +238,11 @@ class WalletConnectAccountServer: ServerDelegate {
   func server(_ server: Server, didDisconnect session: Session) {
     self.topicToSession.removeValue(forKey: session.url.topic)
     
-    self.eventEmitter.sendEvent(withName: EventType.sessionDisconnected.rawValue, body: ["session_id": session.url.topic, "session_name": session.url.topic, "account": self.account])
+    self.eventEmitter.sendEvent(withName: EventType.sessionDisconnected.rawValue, body: [
+      "session_id": session.url.topic,
+      "session_name": session.url.topic,
+      "account": self.account
+    ])
   }
   
   func server(_ server: Server, didUpdate session: Session) {
