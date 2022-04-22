@@ -554,6 +554,13 @@ export function useFarmRewards(farms?: Farm[], onlyCurrentUser = true): Reward[]
         }
       })
       return total
+    } else {
+      farm.rewardTokens.forEach(token => {
+        total[token.address] = {
+          token,
+          amount: BigNumber.from(0),
+        }
+      })
     }
 
     return total
