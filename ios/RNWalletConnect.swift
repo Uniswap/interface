@@ -90,6 +90,7 @@ class WalletConnectAccountServer: ServerDelegate {
     
     self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
     self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
+    self.server.register(handler: WalletConnectSignTypedDataRequestHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
   }
   
   func disconnect(_ topic: String) {
@@ -245,11 +246,13 @@ class WalletConnectAccountServer: ServerDelegate {
 enum EthMethod: String {
   case personalSign = "personal_sign"
   case switchChain = "wallet_switchEthereumChain"
+  case signTypedData = "eth_signTypedData"
 }
 
 enum EventType: String, CaseIterable {
   case error = "error"
-  case signRequest = "sign_request"
+  case personalSign = "personal_sign"
+  case signTypedData = "sign_typed_data"
   case sessionConnected = "session_connected"
   case sessionDisconnected = "session_disconnected"
 }
@@ -310,7 +313,7 @@ class WalletConnectSignRequestHandler: RequestHandler {
     }
 
     func canHandle(request: Request) -> Bool {
-      // TODO: handle eth_sign, eth_signTypedData
+      // TODO: handle eth_sign
       return request.method == EthMethod.personalSign.rawValue
     }
 
@@ -326,10 +329,58 @@ class WalletConnectSignRequestHandler: RequestHandler {
         
         let messageBytes = try request.parameter(of: String.self, at: 0)
         self.eventEmitter.sendEvent(
-          withName: EventType.signRequest.rawValue, body: [
+          withName: EventType.personalSign.rawValue, body: [
             "type": request.method,
             "request": request.jsonString,
             "message": String(data: Data(hex: messageBytes), encoding: .utf8) ?? messageBytes,
+            "request_internal_id": internalId,
+            "account": self.account!,
+            "dapp": [
+              "name": session.dAppInfo.peerMeta.name,
+              "url": session.dAppInfo.peerMeta.url.absoluteString,
+              "icon": icons.isEmpty ? "" : icons[0].absoluteString
+            ]
+          ]
+        )
+      } catch {
+        self.accountServer.server.send(.invalid(request))
+      }
+    }
+}
+
+class WalletConnectSignTypedDataRequestHandler: RequestHandler {
+    var accountServer: WalletConnectAccountServer!
+    var eventEmitter: RCTEventEmitter!
+  
+    private var account: String!
+    
+    init(eventEmitter: RCTEventEmitter, accountServer: WalletConnectAccountServer, account: String) {
+      self.eventEmitter = eventEmitter
+      self.accountServer = accountServer
+      self.account = account
+    }
+
+    func canHandle(request: Request) -> Bool {
+      return request.method == EthMethod.signTypedData.rawValue
+    }
+
+    func handle(request: Request) {
+      // use our own UUID to index requests beacuse request.id may not always be defined, and is not
+      // guaranteed to be a string
+      let internalId = UUID().uuidString
+      self.accountServer.setPendingRequest(request: request, internalId: internalId)
+
+      do {
+        let session = try self.accountServer.getSessionFromTopic(request.url.topic)
+        let icons = session.dAppInfo.peerMeta.icons
+        
+        let typedData = try request.parameter(of: String.self, at: 1)
+
+        self.eventEmitter.sendEvent(
+          withName: EventType.signTypedData.rawValue, body: [
+            "type": request.method,
+            "request": request.jsonString,
+            "message": typedData,
             "request_internal_id": internalId,
             "account": self.account!,
             "dapp": [

@@ -14,6 +14,7 @@ import { EthMethod } from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { ClientDetails } from 'src/features/walletConnect/WCRequestModal/ClientDetails'
+import { logger } from 'src/utils/logger'
 
 interface Props {
   isVisible: boolean
@@ -21,12 +22,31 @@ interface Props {
   request: WalletConnectRequest | null
 }
 
+const getMessage = (request: WalletConnectRequest) => {
+  if (request.type === EthMethod.PersonalSign) {
+    return request.message
+  }
+
+  if (request.type === EthMethod.SignTypedData) {
+    try {
+      const message = JSON.parse(request.message)
+      return JSON.stringify(message, null, 4)
+    } catch (e) {
+      logger.error('WCRequestModal', 'getMessage', 'invalid JSON message', e)
+    }
+  }
+
+  return ''
+}
+
+const VALID_REQUEST_TYPES = [EthMethod.PersonalSign, EthMethod.SignTypedData]
+
 export function WCRequestModal({ isVisible, onClose, request }: Props) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  if (request?.type !== EthMethod.PersonalSign) {
+  if (!request?.type || !VALID_REQUEST_TYPES.includes(request?.type)) {
     return null
   }
 
@@ -43,6 +63,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
     dispatch(
       signMessageActions.trigger({
         requestInternalId: request.internalId,
+        method: request.type,
         message: request.message,
         account: activeAccount,
       })
@@ -50,6 +71,8 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
 
     onClose()
   }
+
+  const message = getMessage(request)
 
   return (
     <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={onClose}>
@@ -61,12 +84,12 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
           borderWidth={1}
           gap="sm"
           /* need a fixed height here or else modal gets confused about total height */
-          height={200}
+          maxHeight={200}
           overflow="hidden">
           <ScrollView>
             <Flex p="md">
               <Text variant="bodySmSoft">{t('Message')}</Text>
-              <Text variant="body">{request.message}</Text>
+              <Text variant="body">{message}</Text>
             </Flex>
           </ScrollView>
         </Flex>

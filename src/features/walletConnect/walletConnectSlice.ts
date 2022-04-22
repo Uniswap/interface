@@ -10,12 +10,15 @@ interface SessionMapping {
   [sessionId: string]: WalletConnectSession
 }
 
-interface SignRequest {
-  type: EthMethod
-  message: string
+interface BaseRequest {
   internalId: string
   account: string
   dapp: DappInfo
+}
+
+interface SignRequest extends BaseRequest {
+  type: EthMethod.PersonalSign | EthMethod.SignTypedData
+  message: string
 }
 
 export type WalletConnectRequest = SignRequest
