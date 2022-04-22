@@ -57,7 +57,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
 )
 
 export const connectors: [MetaMask | WalletConnect | CoinbaseWallet | Network, Web3ReactHooks][] = [
-  [metaMask, metaMaskHooks],
+  [injected, injectedHooks],
   [walletConnect, walletConnectHooks],
   [coinbaseWallet, coinbaseWalletHooks],
   [network, networkHooks],

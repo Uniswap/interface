@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { hexStripZeros } from '@ethersproject/bytes'
-import { Web3ReactProvider } from '@web3-react/core'
+import { ExternalProvider, hexStripZeros } from '@ethersproject/bytes'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 
 interface SwitchNetworkArguments {
-  provider: Web3ReactProvider
+  provider: ExternalProvider
   chainId: SupportedChainId
 }
 

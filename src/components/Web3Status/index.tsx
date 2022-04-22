@@ -1,13 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
+import { ChainIdNotAllowedError } from '@web3-react/store'
 import { Connector } from '@web3-react/types'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 
-import { NetworkContextName } from '../../constants/misc'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -179,7 +179,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
         <NetworkIcon />
-        <Text>{error instanceof UnsupportedChainIdError ? <Trans>Wrong Network</Trans> : <Trans>Error</Trans>}</Text>
+        <Text>{error instanceof ChainIdNotAllowedError ? <Trans>Wrong Network</Trans> : <Trans>Error</Trans>}</Text>
       </Web3StatusError>
     )
   } else {
@@ -194,8 +194,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { active, account } = useWeb3React()
-  const contextNetwork = useWeb3React(NetworkContextName)
+  const { isActive, account } = useWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -212,7 +211,7 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      {(contextNetwork.active || active) && (
+      {isActive && (
         <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       )}
     </>

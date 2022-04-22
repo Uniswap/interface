@@ -125,7 +125,7 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {currencyToAdd && connector instanceof MetaMask && (
+          {currencyToAdd && connector instanceof MetaMask && connector?.provider?.isMetaMask && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
