@@ -10,6 +10,7 @@ import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
   EthMethod,
+  EthSignMethod,
   SessionConnectedEvent,
   SessionDisconnectedEvent,
   SignRequestEvent,
@@ -47,22 +48,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
         addRequest({
           account: req.account,
           request: {
-            type: EthMethod.PersonalSign,
-            message: req.message,
-            internalId: req.request_internal_id,
-            account: req.account,
-            dapp: req.dapp,
-          },
-        })
-      )
-    }
-
-    const signTypedDataHandler = (req: any) => {
-      emit(
-        addRequest({
-          account: req.account,
-          request: {
-            type: EthMethod.SignTypedData,
+            type: req.type as EthSignMethod,
             message: req.message,
             internalId: req.request_internal_id,
             account: req.account,
@@ -78,16 +64,14 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
 
     wcEventEmitter.addListener(WCEventType.SessionConnected, sessionConnectedHandler)
     wcEventEmitter.addListener(WCEventType.SessionDisconnected, sessionDisconnectedHandler)
-    wcEventEmitter.addListener(WCEventType.PersonalSign, signRequestHandler)
-    wcEventEmitter.addListener(WCEventType.SignTypedData, signTypedDataHandler)
+    wcEventEmitter.addListener(WCEventType.SignRequest, signRequestHandler)
     wcEventEmitter.addListener(WCEventType.Error, errorHandler)
 
     const unsubscribe = () => {
       wcEventEmitter.removeAllListeners(WCEventType.SessionConnected)
       wcEventEmitter.removeAllListeners(WCEventType.SessionDisconnected)
       wcEventEmitter.removeAllListeners(WCEventType.Error)
-      wcEventEmitter.removeAllListeners(WCEventType.PersonalSign)
-      wcEventEmitter.removeAllListeners(WCEventType.SignTypedData)
+      wcEventEmitter.removeAllListeners(WCEventType.SignRequest)
     }
 
     return unsubscribe

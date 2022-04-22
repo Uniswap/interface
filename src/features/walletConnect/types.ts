@@ -6,6 +6,8 @@ export enum EthMethod {
   PersonalSign = 'personal_sign',
 }
 
+export type EthSignMethod = EthMethod.PersonalSign | EthMethod.SignTypedData
+
 export type SessionConnectedEvent = {
   session_id: string
   session_name: string
@@ -40,6 +42,5 @@ export enum WCEventType {
   SessionConnected = 'session_connected',
   SessionDisconnected = 'session_disconnected',
   Error = 'error',
-  PersonalSign = 'personal_sign',
-  SignTypedData = 'sign_typed_data',
+  SignRequest = 'sign_request',
 }
