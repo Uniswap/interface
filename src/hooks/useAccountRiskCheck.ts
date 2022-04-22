@@ -19,7 +19,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
           if (data.block) {
             dispatch(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
             ReactGA.event({
-              category: 'Risk',
+              category: 'Address Screening',
               action: 'blocked',
               label: account,
             })
