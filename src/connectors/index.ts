@@ -25,7 +25,8 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>(
-  (actions) => new MetaMask(actions, { supportedChainIds: ALL_SUPPORTED_CHAIN_IDS })
+  (actions) => new MetaMask(actions),
+  ALL_SUPPORTED_CHAIN_IDS
 )
 
 // export const gnosisSafe = new SafeAppConnector()
@@ -39,11 +40,10 @@ export const [injected, injectedHooks] = initializeConnector<MetaMask>(
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>
     new WalletConnect(actions, {
-      supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
       rpc: INFURA_NETWORK_URLS,
       qrcode: true,
     }),
-  Object.keys(URLS).map((chainId) => Number(chainId))
+  ALL_SUPPORTED_CHAIN_IDS
 )
 
 export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
@@ -52,8 +52,8 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
       url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
       appName: 'Uniswap',
       appLogoUrl: UNISWAP_LOGO_URL,
-      supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
-    })
+    }),
+  ALL_SUPPORTED_CHAIN_IDS
 )
 
 export const connectors: [MetaMask | WalletConnect | CoinbaseWallet | Network, Web3ReactHooks][] = [
