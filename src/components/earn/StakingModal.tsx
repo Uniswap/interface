@@ -53,7 +53,7 @@ interface StakingModalProps {
 }
 
 export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
-  const { connector } = useActiveWeb3React()
+  const { provider } = useActiveWeb3React()
 
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
@@ -144,7 +144,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
-    if (!pairContract || !connector || !deadline) throw new Error('missing dependencies')
+    if (!pairContract || !provider || !deadline) throw new Error('missing dependencies')
     if (!parsedAmount) throw new Error('missing liquidity amount')
 
     if (gatherPermitSignature) {
