@@ -91,6 +91,7 @@
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
+    "@walletconnect/ethereum-provider": "1.7.1",
     "@web3-react/coinbase-wallet": "^8.0.26-beta.0",
     "@web3-react/metamask": "^8.0.19-beta.0",
     "@web3-react/network": "^8.0.18-beta.0",

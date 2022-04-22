@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ChainIdNotAllowedError } from '@web3-react/store'
 import { Connector } from '@web3-react/types'
-// import { WalletConnect } from '@web3-react/walletconnect'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
@@ -198,11 +197,6 @@ export default function WalletModal({
     })
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
-
-    //     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-    //     if (connector instanceof WalletConnect) {
-    //       connector.walletConnectProvider = undefined
-    //     }
 
     if (connector) {
       try {
