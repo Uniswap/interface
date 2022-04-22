@@ -21,6 +21,10 @@ export const enum SectionName {
   QuickDetails = 'quick-details',
   TokenBalance = 'token-balance',
   NFTCollectionHeader = 'nft-collection-header',
+  OnboardingBackup = 'onboarding-backup',
+  OnboardingNotifications = 'onboarding-notifications',
+  OnboardingSecurity = 'onboarding-security',
+  OnboardingWalletCustomize = 'onboarding-wallet-customize',
 }
 
 /** Known modals for telemetry purposes. */
@@ -39,6 +43,8 @@ export const enum ModalName {
  */
 export const enum ElementName {
   AccountCard = 'account-card',
+  AddiCloudBackup = 'add-icloud-backup',
+  AddManualBackup = 'add-manual-backup',
   ApplyThemeFromNFT = 'apply-theme-from-nft',
   Back = 'back',
   BuyToken = 'buy-token',
@@ -51,10 +57,12 @@ export const enum ElementName {
   Done = 'done',
   Edit = 'edit',
   EditCancel = 'edit-cancel',
+  Enable = 'enable',
   FavoritesFilter = 'favorites-filter',
   ImportAccount = 'import',
   Manage = 'manage',
   NetworkButton = 'network-button',
+  Next = 'next',
   Notifications = 'notifications',
   QRCodeModalToggle = 'qr-code-modal-toggle',
   SwapQuickDetails = 'swap-quick-details',
@@ -66,6 +74,7 @@ export const enum ElementName {
   SellToken = 'sell-token',
   Send = 'send',
   Settings = 'settings',
+  Skip = 'skip',
   Submit = 'submit',
   Swap = 'swap',
   SwapArrow = 'swap-arrow',

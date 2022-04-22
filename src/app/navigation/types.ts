@@ -35,7 +35,12 @@ export type SettingsStackParamList = {
 }
 
 export type OnboardingStackParamList = {
+  [OnboardingScreens.Backup]: undefined
+  [OnboardingScreens.CreateWallet]: undefined
   [OnboardingScreens.Landing]: undefined
+  [OnboardingScreens.Notifications]: undefined
+  [OnboardingScreens.Outro]: undefined
+  [OnboardingScreens.Security]: undefined
 }
 
 export type AppStackParamList = {

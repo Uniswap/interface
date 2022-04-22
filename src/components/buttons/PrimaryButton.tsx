@@ -1,5 +1,6 @@
 import { createRestyleComponent, createVariant, VariantProps } from '@shopify/restyle'
 import React, { ComponentProps, ReactElement, useMemo } from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonProps } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
@@ -15,11 +16,13 @@ type Props = ButtonProps & {
 
 // A rounded, borderless, solid color button with optional icon left of text
 function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: Props) {
+  const theme = useAppTheme()
+
   // Restyle variants do not have any mechanism for using a variant value on a child
   // This extracts the color style to apply it on the child Text
   const textColor = useMemo(
-    () => rest.textColor || flattenStyleProp(style)?.color || '#FFFFFF',
-    [style, rest.textColor]
+    () => rest.textColor || flattenStyleProp(style)?.color || theme.colors.white,
+    [rest.textColor, style, theme.colors.white]
   )
 
   return (

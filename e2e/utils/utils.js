@@ -7,6 +7,8 @@ import { sleep } from '../../src/utils/timing'
 export async function quickOnboarding() {
   await device.setBiometricEnrollment(true)
 
+  await element(by.id(ElementName.OnboardingImportWallet)).tap()
+
   await element(by.id(ElementName.Manage)).tap()
   await element(by.id(ElementName.ImportAccount)).tap()
 

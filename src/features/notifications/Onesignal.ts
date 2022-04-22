@@ -30,12 +30,15 @@ export const initOneSignal = () => {
   })
 }
 
-export const promptPushPermission = () => {
+export const promptPushPermission = (successCallback?: () => void) => {
   OneSignal.promptForPushNotificationsWithUserResponse((response) => {
     logger.info(
       'Onesignal',
       'promptForPushNotificationsWithUserResponse',
       `Prompt response: ${response}`
     )
+    if (response) {
+      successCallback?.()
+    }
   })
 }

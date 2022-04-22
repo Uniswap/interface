@@ -48,40 +48,36 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => {
-    const middleware = [
-      ...getDefaultMiddleware({
-        thunk: true, // required for rtk-query
-        serializableCheck: {
-          ignoredActions: [
-            FLUSH,
-            REHYDRATE,
-            PAUSE,
-            PERSIST,
-            PURGE,
-            REGISTER,
-            // contains non-serializable objects that do not hit the store
-            swapActions.trigger.type,
-            tokenWrapActions.trigger.type,
-          ],
-          warnAfter: 128,
-        },
-        invariantCheck: {
-          warnAfter: 256,
-        },
-        immutableCheck: {
-          warnAfter: 256,
-        },
-      }),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: true, // required for rtk-query
+      serializableCheck: {
+        ignoredActions: [
+          FLUSH,
+          REHYDRATE,
+          PAUSE,
+          PERSIST,
+          PURGE,
+          REGISTER,
+          // contains non-serializable objects that do not hit the store
+          swapActions.trigger.type,
+          tokenWrapActions.trigger.type,
+        ],
+        warnAfter: 128,
+      },
+      invariantCheck: {
+        warnAfter: 256,
+      },
+      immutableCheck: {
+        warnAfter: 256,
+      },
+    }).concat(
       sagaMiddleware,
       dataApi.middleware,
       nftApi.middleware,
       routingApi.middleware,
-      zerionApi.middleware,
-    ]
-
-    return middleware
-  },
+      zerionApi.middleware
+    ),
   devTools: config.debug,
 })
 

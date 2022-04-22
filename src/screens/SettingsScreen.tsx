@@ -130,7 +130,7 @@ function OnboardingRow() {
       py="sm"
       onPress={() => {
         navigation.goBack()
-        dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+        dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       }}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">

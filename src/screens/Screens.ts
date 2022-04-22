@@ -27,7 +27,12 @@ export enum Screens {
 }
 
 export enum OnboardingScreens {
-  Landing = 'Landing',
+  Backup = 'OnboardingBackup',
+  CreateWallet = 'OnboardingCreateWallet',
+  Landing = 'OnboardingLanding',
+  Notifications = 'OnboardingNotifications',
+  Outro = 'OnboardingOutro',
+  Security = 'OnboardingSecurity',
 }
 
 export enum Tabs {

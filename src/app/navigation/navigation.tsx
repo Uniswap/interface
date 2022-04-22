@@ -23,7 +23,11 @@ import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTScreen } from 'src/screens/NFTScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
+import { BackupSetupScreen } from 'src/screens/Onboarding/BackupSetupScreen'
+import { CreateWalletScreen } from 'src/screens/Onboarding/CreateWalletScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
+import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
+import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
@@ -92,11 +96,25 @@ export function AppStackNavigator() {
   return (
     <AppStack.Navigator screenOptions={navOptions.noHeader}>
       {finishedOnboarding ? (
+        <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
+      ) : (
         <AppStack.Group>
           <OnboardingStack.Screen component={LandingScreen} name={OnboardingScreens.Landing} />
+          <OnboardingStack.Screen
+            component={CreateWalletScreen}
+            name={OnboardingScreens.CreateWallet}
+          />
+          <OnboardingStack.Screen component={BackupSetupScreen} name={OnboardingScreens.Backup} />
+          <OnboardingStack.Screen
+            component={NotificationsSetupScreen}
+            name={OnboardingScreens.Notifications}
+          />
+          <OnboardingStack.Screen
+            component={SecuritySetupScreen}
+            name={OnboardingScreens.Security}
+          />
+          {/* TODO: <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} /> */}
         </AppStack.Group>
-      ) : (
-        <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       )}
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />

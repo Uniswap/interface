@@ -1,6 +1,7 @@
 import { AuthenticationType, supportedAuthenticationTypesAsync } from 'expo-local-authentication'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -25,6 +26,7 @@ export function BiometricModal({
 }: BiometricModalProps) {
   const { t } = useTranslation()
   const navigation = useAppStackNavigation()
+  const theme = useAppTheme()
 
   const supportedBiometricTypes = useSupportedBiometricTypes()
 
@@ -49,7 +51,7 @@ export function BiometricModal({
       <Inset all="md">
         <Flex centered gap="lg">
           <Flex centered bg="paleBlue" borderRadius="md" px="xxl" py="lg">
-            <FaceIdIcon height={64} width={64} />
+            <FaceIdIcon color={theme.colors.blue} height={64} width={64} />
             <Text color="blue" variant="bodyBold">
               {t('Face ID')}
             </Text>

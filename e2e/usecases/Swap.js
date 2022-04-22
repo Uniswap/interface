@@ -3,10 +3,6 @@ import { by, expect, element, device } from 'detox'
 import { sleep } from '../../src/utils/timing'
 
 export function Swap() {
-  beforeAll(async () => {
-    await device.setBiometricEnrollment(true)
-  })
-
   it('fills the swap form', async () => {
     await element(by.id(ElementName.TabBarSwap)).tap()
 
