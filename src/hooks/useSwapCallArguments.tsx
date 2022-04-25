@@ -39,7 +39,7 @@ export function useSwapCallArguments(
   deadline: BigNumber | undefined,
   feeOptions: FeeOptions | undefined
 ): SwapCall[] {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, provider } = useActiveWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
@@ -47,7 +47,7 @@ export function useSwapCallArguments(
   const argentWalletContract = useArgentWalletContract()
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!trade || !recipient || !provider || !account || !chainId || !deadline) return []
 
     if (trade instanceof V2Trade) {
       if (!routerContract) return []
@@ -175,7 +175,7 @@ export function useSwapCallArguments(
     chainId,
     deadline,
     feeOptions,
-    library,
+    provider,
     recipient,
     routerContract,
     signatureData,

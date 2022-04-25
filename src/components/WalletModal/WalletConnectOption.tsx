@@ -16,12 +16,6 @@ export default function WalletConnectCard() {
   }, [])
 
   return (
-    <Option
-      connector={coinbaseWallet}
-      chainId={chainId}
-      isActivating={isActivating}
-      error={error}
-      isActive={isActive}
-    />
+    <Option connector={walletConnect} chainId={chainId} isActivating={isActivating} error={error} isActive={isActive} />
   )
 }

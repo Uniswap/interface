@@ -25,8 +25,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>(
-  (actions) => new MetaMask(actions),
-  true,
+  (actions) => new MetaMask(actions, true),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
