@@ -230,7 +230,7 @@ export default function WalletModal({
               }}
               id={`connect-${key}`}
               key={key}
-              active={option.connector && option.connector === connector}
+              isActive={option.connector && option.connector === connector}
               color={option.color}
               link={option.href}
               header={option.name}
@@ -284,7 +284,7 @@ export default function WalletModal({
                 : !option.href && tryActivation(option.connector)
             }}
             key={key}
-            active={option.connector === connector}
+            isActive={option.connector === connector}
             color={option.color}
             link={option.href}
             header={option.name}
