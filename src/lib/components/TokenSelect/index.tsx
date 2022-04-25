@@ -72,9 +72,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
 
   const { chainId } = useActiveWeb3React()
   const list = useTokenList()
-  const listHasTokens = useMemo(() => {
-    return Boolean(list.find((token) => token.chainId === chainId && !token.isNative))
-  }, [chainId, list])
+  const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
   if (listHasTokens || !isLoaded) {
     return (
