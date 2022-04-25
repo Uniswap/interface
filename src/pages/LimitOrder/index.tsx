@@ -371,13 +371,36 @@ export default function LimitOrder() {
                     </Text>
                   </RowBetween>
                   <RowBetween align="center">
-                    <Text fontWeight={800} fontSize={14} color={theme.text1}>
-                      Total
+                    <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                      {buying ? 'Total Buy' : 'Total Sell'}
                     </Text>
+                    {buying ? (
+                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                        {parsedOutputTotal ? parsedOutputTotal.toSignificant(6) : '-'}{' '}
+                        {parsedOutputTotal?.currency.symbol}
+                      </Text>
+                    ) : (
+                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                        {parsedInputTotal && orderFee ? parsedInputTotal.add(orderFee).toSignificant(6) : '-'}{' '}
+                        {parsedInputTotal?.currency.symbol}
+                      </Text>
+                    )}
+                  </RowBetween>
+                  <RowBetween align="center">
                     <Text fontWeight={800} fontSize={14} color={theme.text1}>
-                      {parsedInputTotal && orderFee ? parsedInputTotal.add(orderFee).toSignificant(6) : '-'}{' '}
-                      {parsedInputTotal?.currency.symbol}
+                      {buying ? 'Total Cost' : 'Total Received'}
                     </Text>
+                    {buying ? (
+                      <Text fontWeight={800} fontSize={14} color={theme.text1}>
+                        {parsedInputTotal && orderFee ? parsedInputTotal.add(orderFee).toSignificant(6) : '-'}{' '}
+                        {parsedInputTotal?.currency.symbol}
+                      </Text>
+                    ) : (
+                      <Text fontWeight={800} fontSize={14} color={theme.text1}>
+                        {parsedOutputTotal ? parsedOutputTotal.toSignificant(6) : '-'}{' '}
+                        {parsedOutputTotal?.currency.symbol}
+                      </Text>
+                    )}
                   </RowBetween>
                 </>
               </AutoColumn>
