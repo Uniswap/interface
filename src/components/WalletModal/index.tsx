@@ -5,14 +5,11 @@ import { Connector } from '@web3-react/types'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useWalletConnectMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
-import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -149,8 +146,6 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const logMonitoringEvent = useWalletConnectMonitoringEventCallback()
-
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -177,33 +172,6 @@ export default function WalletModal({
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [setWalletView, isActive, error, connector, walletModalOpen, isActivePrevious, connectorPrevious])
-
-  const tryActivation = async (connector: Connector | undefined) => {
-    let name = ''
-    Object.keys(SUPPORTED_WALLETS).map((key) => {
-      if (connector === SUPPORTED_WALLETS[key].connector) {
-        return (name = SUPPORTED_WALLETS[key].name)
-      }
-      return true
-    })
-    // log selected wallet
-    ReactGA.event({
-      category: 'Wallet',
-      action: 'Change Wallet',
-      label: name,
-    })
-    setPendingWallet(connector) // set wallet for pending view
-    setWalletView(WALLET_VIEWS.PENDING)
-
-    if (connector) {
-      try {
-        connector.activate()
-        logMonitoringEvent({ account })
-      } catch (error) {
-        setPendingError(true)
-      }
-    }
-  }
 
   // // close wallet modal if fortmatic modal is active
   // useEffect(() => {
@@ -323,7 +291,9 @@ export default function WalletModal({
                 connector={pendingWallet}
                 error={pendingError}
                 setPendingError={setPendingError}
-                tryActivation={tryActivation}
+                tryActivation={() => {
+                  return
+                }}
               />
             ) : (
               <OptionGrid>{getOptions()}</OptionGrid>
