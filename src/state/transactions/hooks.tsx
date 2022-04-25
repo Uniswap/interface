@@ -5,8 +5,8 @@ import { useTransactionMonitoringEventCallback } from 'hooks/useMonitoringEventC
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { addTransaction, TransactionInfo, TransactionType } from './actions'
-import { TransactionDetails } from './reducer'
+import { addTransaction } from './reducer'
+import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (response: TransactionResponse, info: TransactionInfo) => void {

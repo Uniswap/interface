@@ -6,8 +6,8 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
-import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
+import { TransactionType } from '../state/transactions/types'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useWETHContract } from './useContract'
 

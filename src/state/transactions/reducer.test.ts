@@ -1,14 +1,15 @@
 import { createStore, Store } from 'redux'
 
 import { updateVersion } from '../global/actions'
-import {
+import reducer, {
   addTransaction,
   checkedTransaction,
   clearAllTransactions,
   finalizeTransaction,
-  TransactionType,
-} from './actions'
-import reducer, { initialState, TransactionState } from './reducer'
+  initialState,
+  TransactionState,
+} from './reducer'
+import { TransactionType } from './types'
 
 describe('transaction reducer', () => {
   let store: Store<TransactionState>
