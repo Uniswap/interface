@@ -115,9 +115,7 @@ function TransactionSubmittedContent({
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  <Trans>
-                    Add {currencyToAdd.symbol} to your Wallet
-                  </Trans>
+                  <Trans>Add {currencyToAdd.symbol} to your Wallet</Trans>
                 </RowFixed>
               ) : (
                 <RowFixed>

@@ -52,7 +52,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
 }
 
 const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
-const tokenBalancesGasRequirement = { gasRequired: 125_000 }
+const tokenBalancesGasRequirement = { gasRequired: 125_000_000 }
 
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
