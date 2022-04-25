@@ -22,6 +22,7 @@ import WETH_ABI from 'abis/weth.json'
 import EIP_2612 from 'abis/eip_2612.json'
 import { abi as MINICHEF_V2_ABI } from 'abis/MiniChefV2.json'
 import { abi as COMPLEX_REWARDER_TIME_ABI } from 'abis/ComplexRewarderTime.json'
+import { abi as AIRDROP_ABI } from 'abis/Airdrop.json'
 
 import { ChainId } from 'constants/chains'
 import { WEVMOS, DIFFUSION } from 'constants/tokens'
@@ -39,6 +40,7 @@ import {
   ENS_REGISTRAR_ADDRESSES,
   SOCKS_CONTROLLER_ADDRESSES,
   MINICHEF_V2_ADDRESS,
+  AIRDROP_ADDRESS,
 } from 'constants/addresses'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { useMemo } from 'react'
@@ -55,6 +57,7 @@ import {
   Multicall2,
   Weth,
   ComplexRewarderTime,
+  Airdrop,
 } from '../abis/types'
 
 import { useActiveWeb3React } from './web3'
@@ -145,6 +148,10 @@ export function useGovernanceContract() {
 export function useUniContract() {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId ? DIFFUSION[chainId]?.address : undefined, UNI_ABI, true)
+}
+
+export function useAirdropContract() {
+  return useContract<Airdrop>(AIRDROP_ADDRESS, AIRDROP_ABI, true)
 }
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {

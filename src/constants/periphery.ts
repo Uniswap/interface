@@ -6,7 +6,7 @@
  *
  */
 
-export const TESTNET = {
+const PERIPHERY_TESTNET = {
   factory: '0x81BC50a2df9cE424843e3c17110E1ab1FedCD4b8',
   weth9: '0xcc491f589B45d4a3C679016195B3FB87D7848210',
   router: '0x72bd489d3cF0e9cC36af6e306Ff53E56d0f9EFb4',
@@ -27,4 +27,9 @@ export const TESTNET = {
   miniChef: '0x0fCee557E3eB94913e202eF91314f14298591a61',
   complexRewarderTime: '0x2916d2e0B675e6993250f2DB9764Cd7fD5379C04',
   diffusion: '',
+}
+
+export const TESTNET = {
+  ...PERIPHERY_TESTNET,
+  airdrop: '0x2F7Ad6172388aED2017FBfA1631724F172360Ab1',
 }

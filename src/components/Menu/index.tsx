@@ -14,6 +14,7 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ExternalLink } from '../../theme'
+import { AirdropButton } from './AirdropButton'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -67,7 +68,7 @@ export const StyledMenu = styled.div`
 
 export const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   backdrop-filter: blur(4px) brightness(50%) saturate(150%);
-  min-width: 8.125rem;
+  min-width: 12.125rem;
   background-color: ${({ theme }) =>
     `linear-gradient(90deg, ${theme.dark0} 0%, ${theme.dark2} 50%, ${theme.dark0} 100%);`};
   box-shadow: 0 0 5px rgba(39, 210, 234, 0.1), 0 0 7px rgba(39, 210, 234, 0.1);
@@ -142,6 +143,7 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
+          <AirdropButton />
           <MenuItem href="https://diffusion.fi/">
             <Info size={14} />
             <div>About</div>

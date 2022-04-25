@@ -29,6 +29,12 @@ export const MINICHEF_V2_ADDRESS = {
   [ChainId.RINKEBY]: '0xFCd2Ce20ef8ed3D43Ab4f8C2dA13bbF1C6d9512F',
 }
 
+export const AIRDROP_ADDRESS = {
+  [ChainId.MAINNET]: '',
+  [ChainId.TESTNET]: TESTNET.airdrop,
+  [ChainId.RINKEBY]: '',
+}
+
 // Used but ultimately not ours
 export const WETH9_ADDRESS = {
   //@TODO: FIX MAINNET
