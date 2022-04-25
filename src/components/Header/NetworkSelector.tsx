@@ -16,7 +16,6 @@ import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
 
 import { useAppDispatch } from '../../state/hooks'
-import { switchToNetwork } from '../../utils/switchToNetwork'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -238,7 +237,7 @@ const getChainNameFromId = (id: string | number) => {
 }
 
 export default function NetworkSelector() {
-  const { chainId, provider } = useActiveWeb3React()
+  const { chainId, provider, connector } = useActiveWeb3React()
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
   const prevChainId = usePrevious(chainId)
@@ -255,33 +254,22 @@ export default function NetworkSelector() {
 
   const handleChainSwitch = useCallback(
     (targetChain: number, skipToggle?: boolean) => {
-      if (!provider) return
-      switchToNetwork({ provider, chainId: targetChain })
-        .then(() => {
-          if (!skipToggle) {
-            toggle()
-          }
-          history.replace({
-            search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
-          })
+      if (!connector) return
+
+      try {
+        connector.activate(targetChain)
+
+        if (!skipToggle) {
+          toggle()
+        }
+        history.replace({
+          search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
         })
-        .catch((error) => {
-          console.error('Failed to switch networks', error)
-
-          // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
-          // but the request fails, revert the URL back to current chainId
-          if (chainId) {
-            history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-          }
-
-          if (!skipToggle) {
-            toggle()
-          }
-
-          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
-        })
+      } catch {
+        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
+      }
     },
-    [dispatch, provider, toggle, history, chainId]
+    [dispatch, connector, toggle, history]
   )
 
   useEffect(() => {
