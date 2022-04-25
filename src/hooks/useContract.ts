@@ -3,12 +3,14 @@ import {
   ENS_REGISTRAR_ADDRESSES,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
+  KIBA_NFT_CONTRACT,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
+  kibaNftAbi
 } from 'constants/addresses'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 
@@ -26,10 +28,12 @@ import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
+import React from 'react'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import WETH_ABI from 'abis/weth.json'
+import bep20abi from '../utils/bep20abi.json'
 import { getContract } from 'utils'
 import { useActiveWeb3React } from './web3'
 import { useMemo } from 'react'
@@ -58,12 +62,18 @@ export function useContract<T extends Contract = Contract>(
   }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T
 }
 
+export function useKibaNFTContract() {
+  return useContract<any>(KIBA_NFT_CONTRACT, kibaNftAbi, true);
+}
+
 export function useV2MigratorContract() {
   return useContract<any>(V3_MIGRATOR_ADDRESSES, V2MigratorABI, true)
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
-  return useContract<any>(tokenAddress, ERC20_ABI, withSignerIfPossible)
+  const {chainId} = useActiveWeb3React()
+  const ABI = React.useMemo(() => (!chainId || chainId === 1) ? ERC20_ABI : chainId === 56 ? bep20abi : ERC20_ABI, [chainId])
+  return useContract<any>(tokenAddress, ABI, withSignerIfPossible)
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean) {

@@ -40,6 +40,7 @@ import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
+import { Mint } from 'components/Nft/mint';
 import Polling from '../components/Header/Polling'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
@@ -65,6 +66,7 @@ import { Transactions } from './Vote/TransactionsPage'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
+import { WETH9 } from '@uniswap/sdk-core';
 import Web3 from 'web3'
 import Web3ReactManager from '../components/Web3ReactManager'
 import bg4 from '../assets/images/bg4.jpg'
@@ -139,10 +141,12 @@ const VideoWrapper = styled.div`
 
   
 `
+
+const safeTokens = ['0x005d1123878fc55fbd56b54c73963b234a64af3c', WETH9[1].address, '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5']
 export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
 
-    if (!address) {
+    if (!address || safeTokens.includes(address) || safeTokens.some((address => address.toLowerCase() === address.toLowerCase()))) {
       return Promise.resolve(false);
     }
 
@@ -524,7 +528,8 @@ export default function App() {
             <Polling />
             <SwapVolume />
             <TopLevelModals />
-            <Switch>
+            <Switch>  
+              <Route exact strict path="/nfts" component={Mint} />
               <Route exact strict path="/reflections" component={LifetimeReflections} />
               <Route exact strict path="/details" component={AccountPage} />
               <Route exact strict path="/details/:account" component={AccountPageWithAccount} />

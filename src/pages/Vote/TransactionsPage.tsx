@@ -139,7 +139,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                         textAlign: 'left',
                         position: 'sticky',
                         top: 0,
-                        background: '#222'
+                        background: 'linear-gradient(#181C27, #131722)'
                     }}>
                         <tr>
                             <th>Date</th>
@@ -163,7 +163,6 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                                 <td>{item.token0Symbol !== `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                     {item.token1Symbol !== `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                 </td>
-                                <td>{item.token1Symbol} {item.token0Symbol}</td>
                                 <td>${Number(item.amountUSD).toFixed(2).toLocaleString()}</td>
                             
                                 <td>

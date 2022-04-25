@@ -802,14 +802,14 @@ query trackerdata {
   const makeCultureString =() => {
     let string = '';
     cultureTokens.forEach((token) => {
-      string += cultureTokens[0].address === token.address || cultureTokens[cultureTokens.length - 1].address === token.address ? `"${token.address.toLowerCase()}"` : `"${token.address.toLowerCase()}",`;
+      string += cultureTokens[cultureTokens.length - 1].address === token.address ? `"${token.address.toLowerCase()}"` : `"${token.address.toLowerCase()}",`;
     })
-    return string;
+    return string.replace('""', '"');
   }
 
 const CULTURE_TOKENS = gql`
 query culturetokens {
-  pairs(first: 5, orderBy: volumeUSD, orderDirection:desc,  where: {token0_in:[
+  pairs(first: ${makeCultureString().length}, orderBy: volumeUSD, orderDirection:desc,  where: {token0_in:[
     ${makeCultureString()}
   ]}) {
     id
@@ -998,6 +998,8 @@ export const useCulturePairData = function () {
     if (chainId === 56) return TOP_TOKENS_BSC
     return CULTURE_TOKENS
   }, [chainId])
+
+  console.log(tokenQuery)
   
   const { data, loading, error } = useQuery(tokenQuery,
     {
@@ -1409,3 +1411,4 @@ export const FILTERED_TRANSACTIONS = gql`
     }
   }
 `
+

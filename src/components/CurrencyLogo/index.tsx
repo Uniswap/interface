@@ -7,6 +7,7 @@ import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import _ from 'lodash'
 import logo from '../../assets/images/download.png'
 import styled from 'styled-components/macro'
+import trending from '../../trending.json'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { useWeb3React } from '@web3-react/core'
 
@@ -72,6 +73,10 @@ const StyledLogo = styled(Logo)<{ size: string }>`
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />
   }
   
+  if (trending.some((token) => token.address.toLowerCase() === currency?.address.toLowerCase())) {
+    const trender = trending.find((token) => token.address.toLowerCase() === currency?.address?.toLowerCase());
+    if (trender) return <StyledLogo size={size} srcs={[trender?.image]} alt ={`${trender.name} Logo`} style={style} {...rest} />
+  }
 
   if (currency?.symbol?.toLowerCase() === 'kiba'.toLowerCase() || currency?.name?.toLowerCase() === 'kiba inu')
   return <StyledLogo size={size} srcs={['https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-05-08.31.13-copy-150x150.jpeg']} alt={`Kiba Inu logo`} style={style} {...rest} />

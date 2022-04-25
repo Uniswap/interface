@@ -1,6 +1,26 @@
 [
-    {"address": "0x06fcbf38e823efc1e609b9491aab546334c6ee69", "name": "STILTON MUSK", "symbol": "STILTON"},
-    {"address":"0x55509c29853405d819ba611c393ce920bcca2c0b","name":"Vulture", "symbol": "VULTURE"},
-    {"address":"0x4ff8de35c9faa8b53ef06e41ed82bfbd8ce3242a", "name":"Crypto King", "symbol": "CK"},
-   {"address": "0x612e1726435fe38dd49a0b35b4065b56f49c8f11", "name": "CryptoCartV2", "symbol":"CCv2"}
+    {
+        "address": "0x06fcbf38e823efc1e609b9491aab546334c6ee69",
+        "name": "STILTON MUSK",
+        "symbol": "STILTON",
+        "image":"https://assets.coingecko.com/coins/images/23572/large/2022-02-09_11.32.27-removebg-preview.png?1644475684"
+    },
+    {
+        "address": "0x55509c29853405d819ba611c393ce920bcca2c0b",
+        "name": "Vulture",
+        "symbol": "VULTURE",
+        "image":"https://pbs.twimg.com/profile_banners/1504955501230051328/1648078134/1500x500"
+    },
+    {
+        "address": "0x612e1726435fe38dd49a0b35b4065b56f49c8f11",
+        "name": "CryptoCartV2",
+        "symbol": "CCv2",
+        "image": "https://s2.coinmarketcap.com/static/img/coins/64x64/9564.png"
+    },
+    {
+        "address":"0xd3c4163e18aaebe43b4fc8b1a53dc3241fb3d017",
+        "name": "Chirp",
+        "symbol": "Chirp",
+        "image": "https://pbs.twimg.com/media/FQaoHvgagAAcFID?format=jpg&name=small"
+    }
 ]

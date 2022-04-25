@@ -5,6 +5,10 @@ import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
 type AddressMap = { [chainId: number]: string }
 
+// add nft contract address here after deploying
+export const KIBA_NFT_CONTRACT = ''
+export const kibaNftAbi = {} // add ABI here after deploying
+
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 export const MULTICALL_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [SupportedChainId.OPTIMISTIC_KOVAN]),

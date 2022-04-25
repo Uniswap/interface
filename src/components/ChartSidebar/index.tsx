@@ -7,7 +7,7 @@ import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
 import { RowBetween, RowFixed } from 'components/Row';
 import styled, { keyframes } from 'styled-components/macro'
-import { useCurrency, useToken } from 'hooks/Tokens';
+import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
 import { BurntKiba } from 'components/BurntKiba';
@@ -17,6 +17,7 @@ import React from 'react';
 import { StyledAnchorLink } from 'components/Header';
 import { Trans } from '@lingui/macro'
 import _ from 'lodash'
+import { useKiba } from 'pages/Vote/VotePage';
 import { useTokenBalance } from 'state/wallet/hooks';
 import { useTotalSupply } from 'hooks/useTotalSupply';
 import { useWeb3React } from '@web3-react/core';
@@ -53,7 +54,17 @@ const Spinner = styled.div`
 const Wrapper = styled.div`
 .pro-sidebar .pro-menu a:before {
     content: inherit;
-}`
+}
+.pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu .pro-inner-list-item {
+    padding-left: 0;
+    padding-top:0;
+}
+.pro-sidebar .pro-menu > ul > .pro-sub-menu > .pro-inner-list-item > div > ul {
+    padding-top:15px;
+    padding-bottom:15px;
+    background: linear-gradient(#181C27, #131722);
+}
+`
 
 
 type ChartSidebarProps = {
@@ -77,9 +88,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const tokenInfo = useTokenInfo(chainId ?? 1, token.address)
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
-    const oneDayVolume = React.useMemo(() => {
-        return tokenData && tokenData.oneDayVolumeUSD ? `$${parseFloat(tokenData?.oneDayVolumeUSD).toLocaleString()}` : undefined
-    }, [tokenData])
     const transactionCount = React.useMemo(() => {
         return tokenData && tokenData?.txCount ? tokenData?.txCount : undefined
     }, [tokenData])
@@ -99,42 +107,52 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         }
         return 0
     }, [tokenInfo?.totalSupply, totalSupply])
-    const formattedPrice = React.useMemo (() => {
+    const formattedPrice = React.useMemo(() => {
         console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
+
+        if (tokenData && tokenData.priceUSD) {
+            console.info(`Using uniswap v2 price -- its always much more up - to - date`, tokenData)
+            return `$${parseFloat(parseFloat(tokenData.priceUSD).toFixed(18)).toFixed(18)}`
+        }
         if (tokenInfo && tokenInfo.price && tokenInfo.price.rate) {
+            console.info(`Fallback to etherapi price -- not as  up - to - date, but better than nothing`, tokenData)
             return `$${tokenInfo.price.rate.toFixed(18)}`
         }
 
-        if (tokenData && tokenData.priceUSD) {
-            return `$${parseFloat(parseFloat(tokenData.priceUSD).toFixed(18)).toFixed(18)}`
-        }
+
         return `-`
     }, [tokenInfo?.price, token, tokenData])
+    const deadKiba = useKiba('0x000000000000000000000000000000000000dead')
     const _token = useToken(token.address)
-    const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', _token ?? undefined)
+    const _bscToken = useBscToken(chainId == 56 ? token.address : undefined)
+    const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', chainId == 56 ? _bscToken as Token : _token ?? undefined)
     const marketCap = React.useMemo(() => {
         if (!totalSupplyInt || totalSupplyInt === 0) return ''
         const hasTokenData = !!tokenData?.priceUSD
         const hasTokenInfo = !!tokenInfo?.price && !!tokenInfo?.price?.rate
         if (!hasTokenInfo && !hasTokenData) return ''
-        const price = tokenInfo && tokenInfo.price ? tokenInfo.price.rate : tokenData.priceUSD
+        const price = tokenData && tokenData.priceUSD ? tokenData?.priceUSD : tokenInfo && tokenInfo.price ? tokenInfo.price.rate : '';
+        if (price == '') return '';
         let excludingBurntValue = totalSupplyInt;
         if (amountBurnt) excludingBurntValue -= parseFloat(amountBurnt.toFixed(0))
+        else if (!amountBurnt && token.name.toLowerCase().includes('kiba') && deadKiba)
+            excludingBurntValue -= parseFloat(deadKiba.toFixed(0))
+
         return Number(parseFloat(price.toFixed(18)) * excludingBurntValue).toLocaleString()
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
     const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
     const currency = useCurrency(token.address ? token.address : tokenData?.id)
     console.log('chartSidebar -> tokenInfo', marketCap)
-   
+
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
                 width={'100%'}
                 onLoadStart={() => setComponentLoading(true)}
                 onLoadCapture={() => setComponentLoading(false)}
-                style={{ marginRight: 15, background: '#252632', borderRadius: 10, border: '.25px solid transparent' }}
+                style={{ marginRight: 15, background: 'linear-gradient(#181C27, #131722)', borderRadius: 10, border: '.25px solid transparent' }}
             >
-                <SidebarHeader style={{ background: '#252632' }}>
+                <SidebarHeader style={{ background: 'linear-gradient(#181C27, #131722)' }}>
                     <Menu iconShape="round">
 
                         <MenuItem icon={<BarChart2 style={{ background: 'transparent' }} />}> Kiba Charts </MenuItem>
@@ -151,12 +169,10 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                     </Menu>
 
                 </SidebarHeader>
-                <SidebarContent style={{ background: '#252632' }}>
-
-                    <Menu popperArrow innerSubMenuArrows style={{ background: '#252632' }} iconShape="round">
-
+                <SidebarContent style={{ background: 'linear-gradient(#181C27, #131722)' }}>
+                    <Menu>
                         <SubMenu
-                            style={{ background: '#252632' }}
+                            style={{ background: 'linear-gradient(#181C27, #131722)', paddingLeft: 0 }}
                             open={statsOpen}
                             onOpenChange={(isOpen) => {
                                 setStatsOpen(isOpen)
@@ -168,7 +184,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             title={`${tokenData?.name ? tokenData?.name : ''} Stats`}>
                             {hasData &&
                                 <>
-                                    <Menu iconShape="round"   >
+                                    <Menu style={{ background: 'linear-gradient(#181C27, #131722)', paddingLeft: 0 }} iconShape="round"   >
                                         <SidebarHeader>
                                             <MenuItem>{tokenData?.name} Info</MenuItem>
                                             {token && token.address && currency && (<MenuItem>
@@ -209,31 +225,30 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 </MenuItem>}
                                         </SidebarHeader>
 
-
                                         {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
                                             <TYPE.subHeader>Price</TYPE.subHeader>
                                             <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
                                         </MenuItem>
-                                        {!!marketCap &&
-                                            <MenuItem>
-                                                <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
-                                                <TYPE.black>${marketCap}</TYPE.black>
-                                            </MenuItem>}
+                                            {!!marketCap &&
+                                                <MenuItem>
+                                                    <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
+                                                    <TYPE.black>${marketCap}</TYPE.black>
+                                                </MenuItem>}
                                             <MenuItem>
                                                 <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
                                                 <TYPE.black>${Number(parseFloat(tokenData?.priceUSD?.toFixed(18)) * (totalSupplyInt)).toLocaleString()}</TYPE.black>
                                             </MenuItem></>}
-                            
+
                                         {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
                                             <MenuItem>
                                                 <TYPE.subHeader>Price</TYPE.subHeader>
                                                 <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
                                             </MenuItem>
                                             {!!marketCap &&
-                                            <MenuItem>
-                                                <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
-                                                <TYPE.black>${marketCap}</TYPE.black>
-                                            </MenuItem>}
+                                                <MenuItem>
+                                                    <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
+                                                    <TYPE.black>${marketCap}</TYPE.black>
+                                                </MenuItem>}
                                             <MenuItem>
                                                 <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
                                                 <TYPE.black>${Number(parseFloat(tokenInfo?.price?.rate?.toFixed(18)) * totalSupplyInt).toLocaleString()}</TYPE.black>
@@ -241,10 +256,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                         </>
                                         }
 
-                                        {oneDayVolume && <MenuItem>
-                                            <TYPE.subHeader>24 Hour Volume</TYPE.subHeader>
-                                            <TYPE.black>{(oneDayVolume)}</TYPE.black>
-                                        </MenuItem>}
                                         {token?.symbol?.toLowerCase().includes('kiba') && <MenuItem>
                                             <TYPE.subHeader>Total Burnt</TYPE.subHeader>
                                             <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
@@ -303,22 +314,22 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 </MenuItem>}
                                             </SidebarContent>
                                         </Menu>}
-
                                     </Menu>
+
                                 </>
                             }
                             {!hasData || loading || componentLoading && (
                                 <Spinner />
                             )}
-                        </SubMenu>
 
+                        </SubMenu>
                     </Menu>
 
                 </SidebarContent>
 
-                <SidebarFooter style={{ background: '#252632' }} >
-                    <Menu iconShape="square">
-                        <SubMenu title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={(isOpen) => {
+                <SidebarFooter style={{ background: 'linear-gradient(#181C27, #131722)' }} >
+                    <Menu iconShape="square" style={{background:'linear-gradient(#181C27, #131722)'}}>
+                        <SubMenu style={{background: 'linear-gradient(#181C27, #131722)'}} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={(isOpen) => {
                             setQuickNavOpen(isOpen)
                             if (isOpen) setStatsOpen(false)
                         }}>

@@ -292,7 +292,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                         textAlign: 'left',
                         position: 'sticky',
                         top: 0,
-                        background: '#222',
+                        background: 'linear-gradient(#181C27, #131722)',
                         fontWeight: 200
                     }}>
                         <tr>
@@ -538,7 +538,7 @@ export const Chart = () => {
                     {accessDenied === false &&
                         view === 'market' && (
                             <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
-                                <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid #222', borderRadius: 6, width: '100%', height: 500 }} />
+                                <iframe src="https://www.tradingview.com/mediumwidgetembed/?symbols=BTC,COINBASE%3AETHUSD%7C12M,BINANCEUS%3ABNBUSD%7C12M&BTC=COINBASE%3ABTCUSD%7C12M&fontFamily=Trebuchet%20MS%2C%20sans-serif&bottomColor=rgba(41%2C%2098%2C%20255%2C%200)&topColor=rgba(41%2C%2098%2C%20255%2C%200.3)&lineColor=%232962FF&chartType=area&scaleMode=Normal&scalePosition=no&locale=en&fontColor=%23787B86&gridLineColor=rgba(240%2C%20243%2C%20250%2C%200)&width=1000px&height=calc(400px%20-%2032px)&colorTheme=dark&utm_source=www.tradingview.com&utm_medium=widget_new&utm_campaign=symbol-overview&showFloatingTooltip=1" style={{ border: '1px solid linear-gradient(#181C27, #131722)', borderRadius: 6, width: '100%', height: 500 }} />
                             </div>
                         )}
 
@@ -549,12 +549,14 @@ export const Chart = () => {
                             {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
                             {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x6499b4f8263fc3be2d4577fffcee87c972a07be9'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
                         </div>
+                    </>}
+
                         {accessDenied === false && view === 'chart' && (
                 <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
                     {/* Loading Transaction data for either chain */}
                     {(!isBinance && transactionData?.loading) ||
                         (isBinance && binanceTransactionData.loading) && (
-                            <div style={{ background: '#222', padding: '9px 14px', display: 'flex', alignItems: 'center' }}><BarChartLoaderSVG /></div>
+                            <div style={{ background: 'linear-gradient(#181C27, #131722)', padding: '9px 14px', display: 'flex', alignItems: 'center' }}><BarChartLoaderSVG /></div>
                         )}
 
                     {/* ETH Transaction List */}
@@ -597,11 +599,9 @@ export const Chart = () => {
                     )}
                 </div>
             )}
-        
-                    </>}
                     {accessDenied === false && view==='market' &&                 <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
 
-<iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid #222', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
+<iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid linear-gradient(#181C27, #131722)', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
 </div>    }
                 </div>
             </div>
