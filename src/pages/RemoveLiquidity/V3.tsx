@@ -34,11 +34,7 @@ import { ThemedText } from 'theme'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-<<<<<<< HEAD
-import { TransactionType } from '../../state/transactions/reducer'
-=======
 import { TransactionType } from '../../state/transactions/types'
->>>>>>> main
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'

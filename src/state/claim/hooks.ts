@@ -12,11 +12,7 @@ import { useContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useTransactionAdder } from '../transactions/hooks'
-<<<<<<< HEAD
-import { TransactionType } from '../transactions/reducer'
-=======
 import { TransactionType } from '../transactions/types'
->>>>>>> main
 
 function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)

@@ -7,15 +7,9 @@ import reducer, {
   clearAllTransactions,
   finalizeTransaction,
   initialState,
-<<<<<<< HEAD
-  TransactionType,
-  TransactionState,
-} from './reducer'
-=======
   TransactionState,
 } from './reducer'
 import { TransactionType } from './types'
->>>>>>> main
 
 describe('transaction reducer', () => {
   let store: Store<TransactionState>

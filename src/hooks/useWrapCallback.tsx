@@ -7,11 +7,7 @@ import { useMemo } from 'react'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useTransactionAdder } from '../state/transactions/hooks'
-<<<<<<< HEAD
-import { TransactionType } from '../state/transactions/reducer'
-=======
 import { TransactionType } from '../state/transactions/types'
->>>>>>> main
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useWETHContract } from './useContract'
 

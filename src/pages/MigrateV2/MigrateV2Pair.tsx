@@ -44,11 +44,7 @@ import { useToken } from '../../hooks/Tokens'
 import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
-<<<<<<< HEAD
-import { TransactionType } from '../../state/transactions/reducer'
-=======
 import { TransactionType } from '../../state/transactions/types'
->>>>>>> main
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'

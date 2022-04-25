@@ -7,11 +7,7 @@ import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useCallback } from 'react'
 
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
-<<<<<<< HEAD
-import { TransactionType } from '../state/transactions/reducer'
-=======
 import { TransactionType } from '../state/transactions/types'
->>>>>>> main
 export { ApprovalState } from 'lib/hooks/useApproval'
 
 function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) {
