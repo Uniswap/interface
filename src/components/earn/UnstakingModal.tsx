@@ -8,7 +8,11 @@ import styled from 'styled-components/macro'
 import { useContract } from '../../hooks/useContract'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+<<<<<<< HEAD
 import { TransactionType } from '../../state/transactions/reducer'
+=======
+import { TransactionType } from '../../state/transactions/types'
+>>>>>>> main
 import { CloseIcon, ThemedText } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'

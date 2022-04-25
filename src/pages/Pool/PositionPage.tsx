@@ -42,7 +42,11 @@ import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import useTheme from '../../hooks/useTheme'
+<<<<<<< HEAD
 import { TransactionType } from '../../state/transactions/reducer'
+=======
+import { TransactionType } from '../../state/transactions/types'
+>>>>>>> main
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'

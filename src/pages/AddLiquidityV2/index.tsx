@@ -33,7 +33,11 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+<<<<<<< HEAD
 import { TransactionType } from '../../state/transactions/reducer'
+=======
+import { TransactionType } from '../../state/transactions/types'
+>>>>>>> main
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'

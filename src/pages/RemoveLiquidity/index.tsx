@@ -34,7 +34,11 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+<<<<<<< HEAD
 import { TransactionType } from '../../state/transactions/reducer'
+=======
+import { TransactionType } from '../../state/transactions/types'
+>>>>>>> main
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { StyledInternalLink, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'

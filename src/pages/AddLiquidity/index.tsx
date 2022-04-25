@@ -48,7 +48,11 @@ import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+<<<<<<< HEAD
 import { TransactionType } from '../../state/transactions/reducer'
+=======
+import { TransactionType } from '../../state/transactions/types'
+>>>>>>> main
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ExternalLink, ThemedText } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
