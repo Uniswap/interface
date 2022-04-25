@@ -78,7 +78,7 @@ export default function InfoHelper({
     <InfoHelperWrapper>
       <Tooltip text={text} show={show} placement={placement} width={width} size={size}>
         <InfoWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} isActive={isActive}>
-          <Info size={size || 16} color={color} />
+          <Info size={size || 12} color={color} />
         </InfoWrapper>
       </Tooltip>
     </InfoHelperWrapper>

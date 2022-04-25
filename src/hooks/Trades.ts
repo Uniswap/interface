@@ -64,6 +64,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
         : [],
     [bases, tokenA, tokenB],
   )
+
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
       tokenA && tokenB
@@ -135,6 +136,7 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
           if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
             console.log('trade amount: ', currencyAmountIn.toSignificant(10))
           }
+
           setTrade(
             Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
               maxHops: 3,
@@ -229,7 +231,7 @@ export function useTradeExactInV2(
 
   const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
   const onUpdateCallback = useCallback(
-    async (resetRoute = true) => {
+    async (resetRoute = false) => {
       if (
         debounceCurrencyAmountIn &&
         currencyOut &&
@@ -241,7 +243,11 @@ export function useTradeExactInV2(
         controller = new AbortController()
         const signal = controller.signal
 
-        setLoading(true)
+        let isCancelSetLoading = false
+
+        setTimeout(() => {
+          if (!isCancelSetLoading) setLoading(true)
+        }, 1000)
 
         const [state, comparedResult] = await Promise.all([
           Aggregator.bestTradeExactIn(
@@ -255,8 +261,11 @@ export function useTradeExactInV2(
           ),
           Aggregator.compareDex(routerApi, debounceCurrencyAmountIn, currencyOut, signal),
         ])
-        setTrade(state)
-        setComparer(comparedResult)
+        if (!signal.aborted) {
+          setTrade(state)
+          setComparer(comparedResult)
+        }
+        isCancelSetLoading = true
         setLoading(false)
       } else {
         setTrade(null)

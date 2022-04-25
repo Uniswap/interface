@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 
 export const TrueSightPageWrapper = styled.div`
   display: flex;
@@ -62,13 +62,6 @@ export const TrueSightFilterBarLayoutMobile = styled.div`
   position: relative;
 `
 
-export const TrueSightFilterBarTitle = styled.div`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.primary};
-`
-
 export const OptionsContainer = styled(Flex)`
   position: absolute;
   bottom: -4px;
@@ -106,5 +99,21 @@ export const OptionsContainer = styled(Flex)`
     &:hover {
       background: ${({ theme }) => theme.border};
     }
+  }
+`
+
+export const TextTooltip = styled(Text)<{ color: string }>`
+  position: relative;
+  cursor: pointer;
+
+  ::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2px);
+    height: 0;
+    border-bottom: ${({ color }) => `1px dashed ${color}`};
   }
 `

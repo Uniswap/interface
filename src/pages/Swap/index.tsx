@@ -251,7 +251,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const isLoading =
     (!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade
 
-  const showFarmBanner = new Date() <= new Date(1648684800000) // 31/3/2022
+  const showTxBanner = new Date() <= new Date(1654041600000) // Wednesday, June 1, 2022 0:00:00
 
   return (
     <>
@@ -270,7 +270,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
         <Wrapper id="swap-page">
           <ConfirmSwapModal
-            showFarmBanner={showFarmBanner}
+            showTxBanner={showTxBanner}
             isOpen={showConfirm}
             trade={trade}
             originalTrade={tradeToConfirm}
@@ -282,7 +282,7 @@ export default function Swap({ history }: RouteComponentProps) {
             onConfirm={handleSwap}
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
-            tokenAddtoMetaMask={currencies[Field.OUTPUT]}
+            tokenAddToMetaMask={currencies[Field.OUTPUT]}
           />
 
           <AutoColumn gap={'7px'}>

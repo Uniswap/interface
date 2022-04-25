@@ -227,6 +227,22 @@ export const MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/18876.png',
     },
+    {
+      chainId: 1,
+      address: '0xb620be8a1949aa9532e6a3510132864ef9bc3f82',
+      symbol: 'LFT',
+      name: 'Lend Flare Dao Token',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/19189.png',
+    },
+    {
+      chainId: 1,
+      address: '0x7C5A0CE9267ED19B22F8cae653F198e3E8daf098',
+      symbol: 'SAN',
+      name: 'Santiment Network Token',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/OH663J3.jpg',
+    },
   ],
   version: {
     major: 0,

@@ -28,6 +28,7 @@ import {
   toggleLiveChart,
   toggleTradeRoutes,
   toggleProLiveChart,
+  toggleTopTrendingTokens,
 } from './actions'
 import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
@@ -471,6 +472,12 @@ export function useShowTradeRoutes(): boolean {
   const showTradeRoutes = useSelector((state: AppState) => state.user.showTradeRoutes)
   return showTradeRoutes
 }
+
+export function useShowTopTrendingSoonTokens(): boolean {
+  const showTrendingSoon = useSelector((state: AppState) => state.user.showTopTrendingSoonTokens)
+  return showTrendingSoon ?? true
+}
+
 export function useToggleLiveChart(): () => void {
   const dispatch = useDispatch<AppDispatch>()
   const { chainId } = useActiveWeb3React()
@@ -483,4 +490,9 @@ export function useToggleProLiveChart(): () => void {
 export function useToggleTradeRoutes(): () => void {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(() => dispatch(toggleTradeRoutes()), [dispatch])
+}
+
+export function useToggleTopTrendingTokens(): () => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(() => dispatch(toggleTopTrendingTokens()), [dispatch])
 }

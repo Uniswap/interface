@@ -16,7 +16,7 @@ const Tags = ({
   backgroundColor,
 }: {
   tags: string[] | null
-  setFilter: React.Dispatch<React.SetStateAction<TrueSightFilter>>
+  setFilter?: React.Dispatch<React.SetStateAction<TrueSightFilter>>
   style?: CSSProperties
   backgroundColor?: string
 }) => {
@@ -65,7 +65,9 @@ const Tags = ({
             {(tags ?? []).map(tag => (
               <Tag
                 key={tag}
-                onClick={() => setFilter(prev => ({ ...prev, selectedTag: tag, selectedTokenData: undefined }))}
+                onClick={() =>
+                  setFilter && setFilter(prev => ({ ...prev, selectedTag: tag, selectedTokenData: undefined }))
+                }
               >
                 {tag}
               </Tag>
@@ -79,7 +81,10 @@ const Tags = ({
   return (
     <TagContainer style={style}>
       {(tags ?? []).map(tag => (
-        <Tag key={tag} onClick={() => setFilter(prev => ({ ...prev, selectedTag: tag, selectedTokenData: undefined }))}>
+        <Tag
+          key={tag}
+          onClick={() => setFilter && setFilter(prev => ({ ...prev, selectedTag: tag, selectedTokenData: undefined }))}
+        >
           {tag}
         </Tag>
       ))}

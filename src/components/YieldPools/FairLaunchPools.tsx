@@ -90,7 +90,8 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
       ? (farms || []).map(farm => {
           // TODO: hard code for SIPHER. Need to be remove later
           const isSipherFarm =
-            farm.fairLaunchAddress.toLowerCase() === '0xc0601973451d9369252Aee01397c0270CD2Ecd60'.toLowerCase()
+            farm.fairLaunchAddress.toLowerCase() === '0xc0601973451d9369252Aee01397c0270CD2Ecd60'.toLowerCase() &&
+            chainId === ChainId.MAINNET
 
           const isFarmStarted = farm && blockNumber && farm.startBlock < blockNumber
           const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber

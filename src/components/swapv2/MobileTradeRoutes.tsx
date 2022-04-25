@@ -15,11 +15,11 @@ import { Currency } from '@dynamic-amm/sdk'
 
 function MobileTradeRoutes({
   trade,
-  parsedAmounts,
+  formattedAmounts,
   currencies,
 }: {
   trade: any
-  parsedAmounts: any
+  formattedAmounts: { [x: string]: string }
   currencies: { [field in Field]?: Currency }
 }) {
   const theme = useContext(ThemeContext)
@@ -41,7 +41,7 @@ function MobileTradeRoutes({
           <Routing
             trade={trade}
             currencies={currencies}
-            parsedAmounts={parsedAmounts}
+            formattedAmounts={formattedAmounts}
             backgroundColor={theme.background}
           />
         </Flex>

@@ -32,6 +32,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       color={theme.subText}
       style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }}
       onClick={() => setShowInverted(!showInverted)}
+      height="22px"
     >
       {show ? (
         <>

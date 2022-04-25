@@ -1,6 +1,6 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@dynamic-amm/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { injected, ledger, walletconnect, walletlink } from '../connectors'
+import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
 import { t } from '@lingui/macro'
 import { uuid } from 'uuidv4'
@@ -69,17 +69,17 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
 
 // Aggregation Router
 export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.MATIC]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.AVAXMAINNET]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.MAINNET]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.FANTOM]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.CRONOS]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.ARBITRUM]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.BTTC]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
-  [ChainId.AURORA]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
-  [ChainId.VELAS]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
-  [ChainId.OASIS]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
+  [ChainId.BSCMAINNET]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.MATIC]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.AVAXMAINNET]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.MAINNET]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.FANTOM]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.CRONOS]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.ARBITRUM]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.BTTC]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.AURORA]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.VELAS]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
+  [ChainId.OASIS]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
 }
 
 export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
@@ -179,7 +179,7 @@ export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSCTESTNET]: '',
   [ChainId.BSCMAINNET]: '',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: '',
+  [ChainId.AVAXMAINNET]: '0x610A05127d51dd42031A39c25aF951a8e77cDDf7',
   [ChainId.FANTOM]: '',
   [ChainId.CRONOSTESTNET]: '',
   [ChainId.CRONOS]: '',
@@ -625,10 +625,16 @@ export const KNC: { [chainId in ChainId]: Token } = {
     'KNC',
     'Kyber Network Crystal',
   ),
+  [ChainId.BTTC]: new Token(
+    ChainId.BTTC,
+    '0x18fA72e0EE4C580a129b0CE5bD0694d716C7443E',
+    18,
+    'KNC_b',
+    'Kyber Network Crystal v2 - BSC',
+  ),
 
   // UPDATE WHEN HAS BRIDGE KNC
   [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-  [ChainId.BTTC]: new Token(ChainId.BTTC, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.OASIS]: new Token(ChainId.OASIS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
 }
@@ -692,6 +698,15 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.AURORA]: [...WETH_ONLY[ChainId.AURORA], DAI[ChainId.AURORA], USDC[ChainId.AURORA], USDT[ChainId.AURORA]],
   [ChainId.VELAS]: [...WETH_ONLY[ChainId.VELAS], USDC[ChainId.VELAS], USDT[ChainId.VELAS]],
   [ChainId.OASIS]: [...WETH_ONLY[ChainId.OASIS], USDC[ChainId.OASIS], USDT[ChainId.OASIS]],
+  [ChainId.BTTC]: [
+    ...WETH_ONLY[ChainId.BTTC],
+    DAI[ChainId.BTTC],
+    USDC[ChainId.BTTC],
+    USDT[ChainId.BTTC],
+    new Token(ChainId.BTTC, '0xdB28719F7f938507dBfe4f0eAe55668903D34a15', 6, 'USDT_t', 'USDT_t'),
+    new Token(ChainId.BTTC, '0xE887512ab8BC60BcC9224e1c3b5Be68E26048B8B', 6, 'USDT_e', 'USDT_e'),
+    new Token(ChainId.BTTC, '0xedf53026aea60f8f75fca25f8830b7e2d6200662', 6, 'TRX', 'TRX'),
+  ],
 }
 
 /**
@@ -836,6 +851,14 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Easy-to-use browser extension.',
     href: null,
     color: '#E8831D',
+  },
+  COIN98: {
+    connector: coin98InjectedConnector,
+    name: 'Coin98',
+    iconName: 'coin98.svg',
+    description: 'The Leading Multi-chain Wallet & DeFi Gateway',
+    href: null,
+    color: 'e6c959',
   },
   WALLET_CONNECT: {
     connector: walletconnect,
@@ -1110,6 +1133,7 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.BSCMAINNET]: [],
   [ChainId.AVAXTESTNET]: [],
   [ChainId.AVAXMAINNET]: [
+    '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C',
     '0x845d1d0d9b344fba8a205461b9e94aefe258b918',
     '0xa107e6466Be74361840059a11e390200371a7538',
     '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
@@ -1119,7 +1143,7 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.CRONOS]: [],
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: [],
+  [ChainId.BTTC]: ['0xa107e6466Be74361840059a11e390200371a7538', '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3'],
   [ChainId.AURORA]: [],
   [ChainId.VELAS]: [],
   [ChainId.OASIS]: [],
@@ -1347,8 +1371,13 @@ export const CREATE_POOL_AMP_HINT = t`Stands for amplification factor. Pools wit
 export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'
 
-export const CLAIM_REWARDS_DATA_URL =
-  'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json'
+export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
+  [ChainId.ROPSTEN]: 'claim-reward-data.json',
+  [ChainId.AVAXMAINNET]:
+    'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/add-reward-data/results/phase_0/reward_proof.json',
+  [ChainId.BSCMAINNET]:
+    'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
+}
 
 export const sentryRequestId = uuid()
 
@@ -1359,4 +1388,18 @@ export const FEE_OPTIONS: { [chainId: number]: number[] } = {
   [ChainId.AURORA]: [1, 5, 30, 50, 100],
   [ChainId.VELAS]: [1, 5, 30, 50, 100],
   [ChainId.OASIS]: [1, 5, 30, 50, 100],
+}
+
+export const TRENDING_SOON_ITEM_PER_PAGE = 10
+export const TRENDING_SOON_MAX_ITEMS = 50
+export const TRENDING_ITEM_PER_PAGE = 25
+export const TRENDING_MAX_ITEM = 50
+
+// Keys are present_on_chains' value.
+export const TRENDING_SOON_SUPPORTED_NETWORKS: { [p: string]: ChainId } = {
+  eth: ChainId.MAINNET,
+  bsc: ChainId.BSCMAINNET,
+  polygon: ChainId.MATIC,
+  avax: ChainId.AVAXMAINNET,
+  fantom: ChainId.FANTOM,
 }

@@ -10,6 +10,7 @@ import { OptionsContainer } from 'pages/TrueSight/styled'
 import { Trans } from '@lingui/macro'
 import Divider from 'components/Divider'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
+import { TruncatedText } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 
 interface TrueSightSearchBoxProps {
   minWidth?: string
@@ -29,14 +30,14 @@ const Option = ({ option, onClick }: { option: string | TrueSightTokenData; onCl
   const theme = useTheme()
 
   return (
-    <Flex alignItems="center" style={{ gap: '4px' }} onClick={onClick}>
+    <Flex alignItems="center" style={{ gap: '4px', maxWidth: '100%' }} onClick={onClick}>
       {typeof option !== 'string' ? (
         <>
           <img src={option.logo_url} width="16px" style={{ minWidth: '16px' }} alt="logo_url" />
-          <Text fontSize="12px" color={theme.subText}>
+          <TruncatedText fontSize="12px" color={theme.subText}>
             {option.name}
-          </Text>
-          <Text fontSize="12px" color={theme.disableText} marginLeft="4px">
+          </TruncatedText>
+          <Text fontSize="12px" color={theme.disableText} marginLeft="4px" style={{ minWidth: 'fit-content' }}>
             {option.symbol}
           </Text>
         </>
@@ -152,7 +153,6 @@ const SelectedOption = styled.div`
   font-size: 12px;
   height: 100%;
   min-height: 36px;
-  min-width: max-content;
   border-radius: 4px;
   padding: 6px 12px;
   display: flex;

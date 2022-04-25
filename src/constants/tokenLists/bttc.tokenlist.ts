@@ -21,6 +21,14 @@ export const BTTC_TOKEN_LIST = {
     },
     {
       chainId: 199,
+      address: '0xE887512ab8BC60BcC9224e1c3b5Be68E26048B8B',
+      symbol: 'USDT_e',
+      name: 'Tether USD_Ethereum',
+      decimals: 6,
+      logoURI: 'https://coin.top/production/logo/usdtlogo.png',
+    },
+    {
+      chainId: 199,
       address: '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100',
       symbol: 'DAI_e',
       name: 'Dai Stablecoin_Ethereum',
@@ -55,7 +63,7 @@ export const BTTC_TOKEN_LIST = {
     },
     {
       chainId: 199,
-      address: '0xedf53026aea60f8f75fca25f8830b7e2d6200662',
+      address: '0xEdf53026aeA60f8F75FcA25f8830b7e2d6200662',
       symbol: 'TRX',
       decimals: 6,
       name: 'TRON',
@@ -108,6 +116,48 @@ export const BTTC_TOKEN_LIST = {
       name: 'HYBERBTT',
       decimals: 18,
       logoURI: 'https://coin.top/production/logo/1002000.png',
+    },
+    {
+      chainId: 199,
+      address: '0x935faA2FCec6Ab81265B301a30467Bbc804b43d3',
+      symbol: 'USDC_t',
+      name: 'USD Coin_TRON',
+      decimals: 6,
+      logoURI: 'https://bttcscan.com/token/images/usdcbttc_32.png',
+    },
+    {
+      chainId: 199,
+      address: '0x9888221fE6B5A2ad4cE7266c7826D2AD74D40CcF',
+      symbol: 'WBTC_e',
+      name: 'Wrapped BTC_Ethereum',
+      decimals: 8,
+      logoURI: 'https://bttcscan.com/token/images/wrappedbtcbtt_32.png',
+    },
+    {
+      chainId: 199,
+      address: '0xE467F79E9869757DD818DfB8535068120F6BcB97',
+      symbol: 'KNC_e',
+      name: 'Kyber Network Crystal v2 - Ethereum',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png',
+    },
+
+    {
+      chainId: 199,
+      address: '0x18fA72e0EE4C580a129b0CE5bD0694d716C7443E',
+      symbol: 'KNC_b',
+      name: 'Kyber Network Crystal v2 - BSC',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png',
+    },
+    {
+      chainId: 199,
+      address: '0x1249C65AfB11D179FFB3CE7D4eEDd1D9b98AD006',
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0x2170Ed0880ac9A755fd29B2688956BD959F933F8/logo.png',
     },
   ],
   version: {

@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
-
-import { NETWORK_ICON, NETWORK_LABEL, SUPPORTED_NETWORKS } from '../../constants/networks'
-import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
-
-import { ApplicationModal } from '../../state/application/actions'
+import { NETWORK_ICON, NETWORK_LABEL, SUPPORTED_NETWORKS } from 'constants/networks'
+import { useModalOpen, useNetworkModalToggle } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/actions'
 import { ChainId } from '@dynamic-amm/sdk'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'

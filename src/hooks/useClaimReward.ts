@@ -18,7 +18,7 @@ export default function useClaimReward() {
   const [rewardAmounts, setRewardAmounts] = useState('0')
   const [error, setError] = useState<string | null>(null)
   const { data } = useSWR(
-    isValid ? (chainId === ChainId.ROPSTEN ? 'claim-reward-data.json' : CLAIM_REWARDS_DATA_URL) : '',
+    isValid && chainId ? CLAIM_REWARDS_DATA_URL[chainId] : '',
     (url: string) => fetch(url).then(r => r.json()),
   )
   const userReward = data && account && data.userRewards[account]
@@ -29,6 +29,7 @@ export default function useClaimReward() {
     if (rewardContract && chainId && userReward) {
       rewardContract.getClaimedAmounts(data?.phaseId || 0, account || '', data?.tokens || []).then((res: any) => {
         if (res) {
+          console.log("🚀 ~ file: useClaimReward.ts ~ line 32 ~ rewardContract.getClaimedAmounts ~ res", res)
           const remainAmounts = BigNumber.from(userReward.amounts[0])
             .sub(BigNumber.from(res[0]))
             .toString()

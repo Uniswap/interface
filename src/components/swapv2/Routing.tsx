@@ -25,7 +25,7 @@ const Shadow = styled.div<{ backgroundColor?: string }>`
     z-index: 3;
     pointer-events: none;
     position: absolute;
-    height: 90px;
+    height: 50px;
     width: 100%;
     left: 50%;
     transform: translateX(-50%);
@@ -424,12 +424,12 @@ const RouteRow = ({ route, chainId, backgroundColor }: RouteRowProps) => {
 interface RoutingProps {
   trade?: Aggregator
   currencies: { [field in Field]?: Currency }
-  parsedAmounts: { [Field.INPUT]: CurrencyAmount | undefined; [Field.OUTPUT]: CurrencyAmount | undefined }
+  formattedAmounts: { [x: string]: string }
   maxHeight?: string
   backgroundColor?: string
 }
 
-const Routing = ({ trade, currencies, parsedAmounts, maxHeight, backgroundColor }: RoutingProps) => {
+const Routing = ({ trade, currencies, formattedAmounts, maxHeight, backgroundColor }: RoutingProps) => {
   const { chainId } = useActiveWeb3React()
   const shadowRef: any = useRef(null)
   const wrapperRef: any = useRef(null)
@@ -453,26 +453,11 @@ const Routing = ({ trade, currencies, parsedAmounts, maxHeight, backgroundColor 
         ? nativeOutputCurrency
         : nativeInputCurrency
 
-    if (!currencyAmount) {
-      return (
-        <Flex flexDirection={isOutput ? 'row-reverse' : 'row'} width="100%">
-          {currency && <CurrencyLogo currency={currency} size={'20px'} />}
-          <Text marginX="0.5rem">
-            {currency
-              ? `${formattedNum(parsedAmounts[field]?.toSignificant(6) ?? '0.0')} ${currency.symbol}`
-              : 'Select a token'}
-          </Text>
-        </Flex>
-      )
-    }
-
     if (chainId && currency) {
       return (
         <StyledToken as={'div'} reverse={isOutput} style={{ border: 'none' }}>
           <CurrencyLogo currency={currency} size={'20px'} />
-          <span>{`${
-            typeof currencyAmount === 'string' ? currencyAmount : formattedNum(currencyAmount.toSignificant(6))
-          } ${currency.symbol}`}</span>
+          <span>{`${currency && formattedAmounts[field] ? formattedAmounts[field] : '0.0'} ${currency.symbol}`}</span>
         </StyledToken>
       )
     }

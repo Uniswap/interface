@@ -6,8 +6,9 @@ import { OptionsContainer } from 'pages/TrueSight/styled'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box, Flex } from 'rebass'
 import useTheme from 'hooks/useTheme'
-import { isAddress, shortenAddress } from 'utils'
+import { isAddress } from 'utils'
 import { NETWORK_ICON, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import getShortenAddress from 'utils/getShortenAddress'
 
 function AddressButtonItself({
   network,
@@ -33,14 +34,6 @@ function AddressButtonItself({
   }
 
   const mappedChainId = network ? TRUESIGHT_NETWORK_TO_CHAINID[network] : undefined
-
-  const getShortenAddress = (address: string) => {
-    try {
-      return shortenAddress(address)
-    } catch (err) {
-      return address.length > 13 ? address.substr(0, 6) + '...' + address.slice(-4) : address
-    }
-  }
 
   return (
     <StyledAddressButton isInOptionContainer={isInOptionContainer}>
@@ -73,26 +66,26 @@ function AddressButtonItself({
   )
 }
 
-export default function AddressButton({ platforms }: { platforms: { [p: string]: string } }) {
+export default function AddressButton({ platforms }: { platforms: Map<string, string> }) {
   const [isShowOptions, setIsShowOptions] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const toggleShowOptions = () => Object.keys(platforms).length >= 2 && setIsShowOptions(prev => !prev)
+  const toggleShowOptions = () => platforms.size >= 2 && setIsShowOptions(prev => !prev)
 
   useOnClickOutside(containerRef, () => setIsShowOptions(false))
 
-  const defaultNetwork = Object.keys(platforms).length ? Object.keys(platforms)[0] : ''
-  const defaultAddress = defaultNetwork ? platforms[defaultNetwork] : ''
+  const defaultNetwork = platforms.size ? platforms.keys().next().value : ''
+  const defaultAddress = defaultNetwork ? platforms.get(defaultNetwork) ?? '' : ''
 
   const optionRender = isShowOptions ? (
     <OptionsContainer>
-      {Object.keys(platforms)
+      {Array.from(platforms.keys())
         .slice(1)
         .map(network => (
           <AddressButtonItself
             key={network}
             network={network}
-            address={platforms[network]}
+            address={platforms.get(network) ?? ''}
             isInOptionContainer={true}
             isDisableChevronDown={false}
           />
@@ -100,7 +93,7 @@ export default function AddressButton({ platforms }: { platforms: { [p: string]:
     </OptionsContainer>
   ) : null
 
-  if (Object.keys(platforms).length === 0) return null
+  if (platforms.size === 0) return null
 
   return (
     <Box ref={containerRef}>
@@ -108,7 +101,7 @@ export default function AddressButton({ platforms }: { platforms: { [p: string]:
         network={defaultNetwork}
         address={defaultAddress}
         isInOptionContainer={false}
-        isDisableChevronDown={Object.keys(platforms).length < 2}
+        isDisableChevronDown={platforms.size < 2}
         optionRender={optionRender}
         toggleShowOptions={toggleShowOptions}
       />
@@ -116,11 +109,10 @@ export default function AddressButton({ platforms }: { platforms: { [p: string]:
   )
 }
 
-const AddressCopyContainer = styled.div`
+export const AddressCopyContainer = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 4px;
 
   &:hover {
     color: ${({ theme }) => theme.disableText};
@@ -136,7 +128,7 @@ const ChevronDownWrapper = styled.div`
 export const StyledAddressButton = styled(Flex)<{ isInOptionContainer?: boolean }>`
   align-items: center;
   padding: 4.5px 12px;
-  gap: 4px;
+  gap: 6px;
   width: fit-content;
   font-size: 12px;
   line-height: 14px;

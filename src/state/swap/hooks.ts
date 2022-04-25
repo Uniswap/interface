@@ -322,6 +322,7 @@ export function useDefaultsFromURLSearch():
       ChainId.BSCMAINNET,
       ChainId.MATIC,
       ChainId.AVAXMAINNET,
+      ChainId.BTTC,
     ].includes(chainId)
       ? KNC[chainId].address
       : USDC[chainId].address
@@ -341,8 +342,7 @@ export function useDefaultsFromURLSearch():
       inputCurrencyId: parsed[Field.INPUT].currencyId,
       outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress,
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, chainId])
+  }, [dispatch, chainId, parsedQs])
 
   return result
 }

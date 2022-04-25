@@ -34,6 +34,7 @@ import {
   encodeFeeConfig,
   encodeSimpleModeData,
   encodeSwapExecutor,
+  encodeParameters,
   isEncodeUniswapCallback,
 } from 'utils/aggregator'
 import invariant from 'tiny-invariant'
@@ -116,6 +117,7 @@ function getSwapCallParameters(
   chainId: ChainId,
   library: Web3Provider,
   feeConfig: FeeConfig | null,
+  clientData: Object
 ): SwapV2Parameters {
   const etherIn = trade.inputAmount.currency === ETHER
   const etherOut = trade.outputAmount.currency === ETHER
@@ -243,7 +245,10 @@ function getSwapCallParameters(
           deadline,
           destTokenFeeData,
         })
-        args = [aggregationExecutorAddress, swapDesc, executorDataForSwapSimpleMode]
+
+        const cData = encodeParameters(['string'], [JSON.stringify(clientData)])
+        
+        args = [aggregationExecutorAddress, swapDesc, executorDataForSwapSimpleMode, cData]
       }
       const getSwapNormalModeArgs = () => {
         trade.swaps.forEach(sequence => {
@@ -300,7 +305,10 @@ function getSwapCallParameters(
         ])
         // Remove method id (slice 10).
         executorData = '0x' + executorData.slice(10)
-        args = [aggregationExecutorAddress, swapDesc, executorData]
+
+        const cData = encodeParameters(['string'], [JSON.stringify(clientData)])
+
+        args = [aggregationExecutorAddress, swapDesc, executorData, cData]
       }
       if (isUseSwapSimpleMode) {
         getSwapSimpleModeArgs()
@@ -331,6 +339,7 @@ function useSwapV2CallArguments(
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   feeConfig: FeeConfig | null,
+  clientData: Object
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -356,6 +365,7 @@ function useSwapV2CallArguments(
       chainId,
       library,
       feeConfig,
+      clientData
     )
     const swapMethods = methodNames.map(methodName => ({
       methodName,
@@ -373,11 +383,12 @@ export function useSwapV2Callback(
   trade: Aggregator | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  clientData: Object
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
   const { typedValue, feeConfig, saveGas } = useSwapState()
 
-  const swapCalls = useSwapV2CallArguments(trade, allowedSlippage, recipientAddressOrName, feeConfig)
+  const swapCalls = useSwapV2CallArguments(trade, allowedSlippage, recipientAddressOrName, feeConfig, clientData)
 
   const addTransactionWithType = useTransactionAdder()
 

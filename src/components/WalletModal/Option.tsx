@@ -6,17 +6,13 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 15px;
-  padding: 15px 21px;
-  background-color: ${({ theme }) => theme.bg9};
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  background-color: transparent;
   transition: all 0.2s;
 
   & > img,
   span {
-    height: ${({ size }) => (size ? size + 'px' : '30px')};
-    width: ${({ size }) => (size ? size + 'px' : '30px')};
+    height: ${({ size }) => (size ? size + 'px' : '24px')};
+    width: ${({ size }) => (size ? size + 'px' : '24px')};
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: flex-end;
@@ -25,36 +21,36 @@ const IconWrapper = styled.div<{ size?: number | null }>`
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.subText};
   font-size: 14px;
   font-weight: 500;
 `
 
 const OptionCardClickable = styled.button<{ active?: boolean; clickable?: boolean }>`
+  width: 100%;
   outline: none;
   border: none;
-  border-radius: 8px;
+  border-radius: 42px;
   text-transform: uppercase;
   &:nth-child(2n) {
     margin-right: 0;
   }
   padding: 0;
   display: flex;
+  gap: 8px;
   flex-direction: row;
   align-items: center;
   margin-top: 2rem;
   margin-top: 0;
+  padding: 12px 16px;
   cursor: ${({ clickable }) => (clickable ? 'pointer' : 'not-allowed')};
   transition: all 0.2s;
-  background-color: ${({ theme }) => theme.bg10};
+  background-color: ${({ theme }) => theme.bg12};
 
   ${({ active }) => (active ? '&' : ':hover')} {
     background-color: ${({ theme }) => theme.bg7};
     & ${HeaderText} {
       color: ${({ theme }) => theme.darkText} !important;
-    }
-    > ${IconWrapper} {
-      background-color: ${({ theme }) => theme.bg8};
     }
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
@@ -99,7 +95,7 @@ export default function Option({
   onClick?: undefined | (() => void)
   color: string
   header: React.ReactNode
-  subheader: React.ReactNode | null
+  subheader?: React.ReactNode | null
   icon: string
   active?: boolean
   id: string

@@ -6,7 +6,6 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ThemeContext } from 'styled-components'
 import { KNC } from '../../constants'
-import { useWeb3React } from '@web3-react/core'
 import { ChainId } from '@dynamic-amm/sdk'
 import { ButtonPrimary } from 'components/Button'
 import { shortenAddress } from 'utils'
@@ -15,6 +14,7 @@ import styled from 'styled-components'
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
 import { CloseIcon } from 'theme'
 import { RowBetween } from 'components/Row'
+import { useActiveWeb3React } from 'hooks'
 
 const AddressWrapper = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
@@ -30,7 +30,7 @@ const AddressWrapper = styled.div`
   }
 `
 function ClaimRewardModal() {
-  const { chainId, account } = useWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const open = useModalOpen(ApplicationModal.CLAIM_POPUP)
   const toggle = useToggleModal(ApplicationModal.CLAIM_POPUP)
   const theme = useContext(ThemeContext)

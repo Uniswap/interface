@@ -224,7 +224,12 @@
         "internalType": "bytes",
         "name": "data",
         "type": "bytes"
-      }
+      },
+      {
+        "internalType": "bytes",
+        "name": "clientData",
+        "type": "bytes"
+      }      
     ],
     "name": "swap",
     "outputs": [

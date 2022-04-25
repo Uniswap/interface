@@ -78,7 +78,7 @@ const AccountGroupingRow = styled.div`
 
 const AccountSection = styled.div`
   background-color: ${({ theme }) => theme.bg1};
-  padding: 0rem 1rem;
+  padding: 1rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
 
@@ -241,9 +241,10 @@ export default function AccountDetails({
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK')),
       )
       .map(k => SUPPORTED_WALLETS[k].name)[0]
+
     return (
       <WalletName>
-        <Trans>Connected with {name}</Trans>
+        <Trans>Connected </Trans>
       </WalletName>
     )
   }
@@ -311,7 +312,8 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {disableDisconnect && (
+                  {/* We add disconnect button for every wallets in another tickets in future */}
+                  {/* {disableDisconnect && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
@@ -320,7 +322,7 @@ export default function AccountDetails({
                     >
                       <Trans>Disconnect</Trans>
                     </WalletAction>
-                  )}
+                  )} */}
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
