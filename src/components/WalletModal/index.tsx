@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ChainIdNotAllowedError } from '@web3-react/store'
-import { Connector } from '@web3-react/types'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
@@ -136,10 +135,6 @@ export default function WalletModal({
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
-  const [pendingWallet, setPendingWallet] = useState<Connector | undefined>()
-
-  const [pendingError, setPendingError] = useState<boolean>()
-
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
 
@@ -155,7 +150,6 @@ export default function WalletModal({
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
-      setPendingError(false)
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [walletModalOpen])
@@ -256,7 +250,6 @@ export default function WalletModal({
           <HeaderRow color="blue">
             <HoverText
               onClick={() => {
-                setPendingError(false)
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >

@@ -318,7 +318,7 @@ export function PositionPage({
     params: { tokenId: tokenIdFromUrl },
   },
 }: RouteComponentProps<{ tokenId?: string }>) {
-  const { chainId, account, library } = useActiveWeb3React()
+  const { chainId, account, provider } = useActiveWeb3React()
   const theme = useTheme()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
@@ -433,7 +433,7 @@ export function PositionPage({
       !positionManager ||
       !account ||
       !tokenId ||
-      !library
+      !provider
     )
       return
 
@@ -454,7 +454,7 @@ export function PositionPage({
       value,
     }
 
-    library
+    provider
       .getSigner()
       .estimateGas(txn)
       .then((estimate) => {
@@ -463,7 +463,7 @@ export function PositionPage({
           gasLimit: calculateGasMargin(estimate),
         }
 
-        return library
+        return provider
           .getSigner()
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
@@ -497,7 +497,7 @@ export function PositionPage({
     account,
     tokenId,
     addTransaction,
-    library,
+    provider,
   ])
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
