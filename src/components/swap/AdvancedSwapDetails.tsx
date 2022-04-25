@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
-import { CHAIN_INFO } from 'constants/chainInfo'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useContext, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -54,6 +54,7 @@ export function AdvancedSwapDetails({
 }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     if (!trade) return { expectedOutputAmount: undefined, priceImpact: undefined }
@@ -142,8 +143,7 @@ export function AdvancedSwapDetails({
             <MouseoverTooltip
               text={
                 <Trans>
-                  The fee paid to miners who process your transaction. This must be paid in{' '}
-                  {CHAIN_INFO[chainId ?? 1].nativeCurrency.symbol}.
+                  The fee paid to miners who process your transaction. This must be paid in {nativeCurrency.symbol}.
                 </Trans>
               }
               disableHover={hideInfoTooltips}
