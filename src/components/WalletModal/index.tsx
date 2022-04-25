@@ -19,7 +19,6 @@ import Card, { LightCard } from '../Card'
 import Modal from '../Modal'
 import CoinbaseWalletOption from './CoinbaseWalletOption'
 import MetaMaskOption from './MetaMaskOption'
-import PendingView from './PendingView'
 import WalletConnectOption from './WalletConnectOption'
 
 const CloseIcon = styled.div`
@@ -286,18 +285,7 @@ export default function WalletModal({
                 </ThemedText.Black>
               </AutoRow>
             </LightCard>
-            {walletView === WALLET_VIEWS.PENDING ? (
-              <PendingView
-                connector={pendingWallet}
-                error={pendingError}
-                setPendingError={setPendingError}
-                tryActivation={() => {
-                  return
-                }}
-              />
-            ) : (
-              <OptionGrid>{getOptions()}</OptionGrid>
-            )}
+            {walletView === WALLET_VIEWS.PENDING ? <div>pending</div> : <OptionGrid>{getOptions()}</OptionGrid>}
             <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
               <RowBetween>
                 <AutoRow gap="4px">

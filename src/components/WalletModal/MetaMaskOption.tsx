@@ -15,13 +15,5 @@ export default function MetaMaskCard() {
     void injected.connectEagerly()
   }, [])
 
-  return (
-    <Option
-      connector={coinbaseWallet}
-      chainId={chainId}
-      isActivating={isActivating}
-      error={error}
-      isActive={isActive}
-    />
-  )
+  return <Option connector={injected} chainId={chainId} isActivating={isActivating} error={error} isActive={isActive} />
 }
