@@ -18,11 +18,7 @@ exports[`renders correctly 1`] = `
           "alignItems": "center",
           "display": "flex",
           "flex": 1,
-          "flexBasis": "auto",
           "flexDirection": "column",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "flexWrap": "nowrap",
           "justifyContent": "center",
         },
       ]

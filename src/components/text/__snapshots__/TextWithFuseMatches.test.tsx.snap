@@ -7,11 +7,7 @@ exports[`renders text with few matches 1`] = `
       Object {
         "alignItems": "stretch",
         "display": "flex",
-        "flexBasis": "auto",
         "flexDirection": "row",
-        "flexGrow": 0,
-        "flexShrink": 0,
-        "flexWrap": "nowrap",
         "justifyContent": "flex-start",
       },
     ]

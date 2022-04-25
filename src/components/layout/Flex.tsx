@@ -38,20 +38,17 @@ export type FlexProps = ComponentProps<typeof Box> &
 
 /**
  * Layout component to place child items with spacing between them
- * TODO:
- *  - shorthand for flexDirection (and other props?)
- *  - make `flex` a boolean prop to set `flex={1}`
- * */
+ */
 export function Flex({
   alignItems = 'stretch',
   centered = false,
   children,
   fill,
-  flexBasis = 'auto',
+  flexBasis,
   flexDirection = 'column',
-  flexGrow = 0,
-  flexShrink = 0,
-  flexWrap = 'nowrap',
+  flexGrow,
+  flexShrink,
+  flexWrap,
   gap = 'md',
   grow,
   justifyContent = 'flex-start',
