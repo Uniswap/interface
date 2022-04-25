@@ -1,4 +1,4 @@
-import { metaMask, metaMaskHooks as hooks } from 'constants/connectors'
+import { injected, injectedHooks as hooks } from 'connectors'
 import { useEffect } from 'react'
 
 import Option from './Option'
@@ -12,7 +12,7 @@ export default function MetaMaskCard() {
   const isActive = useIsActive()
 
   useEffect(() => {
-    void metaMask.connectEagerly()
+    void injected.connectEagerly()
   }, [])
 
   return (

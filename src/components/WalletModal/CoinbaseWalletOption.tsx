@@ -1,4 +1,4 @@
-import { coinbaseWallet, coinbaseWalletHooks as hooks } from 'constants/connectors'
+import { coinbaseWallet, coinbaseWalletHooks as hooks } from 'connectors'
 import { useEffect } from 'react'
 
 import Option from './Option'
