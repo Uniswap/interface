@@ -12,13 +12,13 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
   const { provider } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
-  if (!provider) {
-    throw Error('provider missing')
-  }
-
   const ensResolver = useCallback(
     async (ensName: string) => {
-      return resolveENSContentHash(ensName, provider)
+      if (provider) {
+        return resolveENSContentHash(ensName, provider)
+      } else {
+        return Promise.resolve('string')
+      }
     },
     [provider]
   )
