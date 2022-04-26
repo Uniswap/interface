@@ -14,6 +14,7 @@ import { addPopup, ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
+import { switchToNetwork } from 'utils/switchToNetwork'
 
 import { useAppDispatch } from '../../state/hooks'
 
@@ -257,7 +258,7 @@ export default function NetworkSelector() {
       if (!connector) return
 
       try {
-        connector.activate(targetChain)
+        switchToNetwork(connector, targetChain)
 
         if (!skipToggle) {
           toggle()
