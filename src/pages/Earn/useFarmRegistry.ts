@@ -23,6 +23,7 @@ export type FarmSummary = {
 
 const blacklist: Record<string, boolean> = {
   '0x4488682fd16562a68ea0d0f898413e075f42e6da': true,
+  '0xC245976Db329Bb0414253376246a367B7c96C762': true,
 }
 
 const featuredPoolWhitelist: Record<string, boolean> = {
