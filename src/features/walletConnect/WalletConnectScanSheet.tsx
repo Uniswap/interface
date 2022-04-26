@@ -69,7 +69,7 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
           width={dimensions.fullWidth}
           zIndex="modal">
           <Box bg="gray400" borderRadius="sm" height={4} width={40} />
-          <Flex row>
+          <Flex centered row>
             <WalletConnectLogo height={30} width={30} />
             <Text color="textColor" variant="bodyLgBold">
               WalletConnect

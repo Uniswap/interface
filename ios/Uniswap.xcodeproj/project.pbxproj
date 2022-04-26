@@ -17,6 +17,9 @@
 		3D656370579445F38785B2B6 /* UniswapSansBeta4-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC290279048A490AA42C5075 /* UniswapSansBeta4-Bold.otf */; };
 		478C8EADE2274469AF151F9B /* UniswapSansBeta4-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8131CF7ACA840A2959DA472 /* UniswapSansBeta4-Regular.otf */; };
 		6BFD6E0A17CC43FA82F40599 /* UniswapSansBeta4-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D671DC161669472883FE2A12 /* UniswapSansBeta4-Medium.otf */; };
+		6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */; };
+		6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */; };
+		6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */; };
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
@@ -77,6 +80,9 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Uniswap/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Uniswap/main.m; sourceTree = "<group>"; };
 		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectAccountServer.swift; sourceTree = "<group>"; };
+		6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSwitchChainHandler.swift; sourceTree = "<group>"; };
+		6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSignRequestHandler.swift; sourceTree = "<group>"; };
 		776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Medium.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Medium.otf"; sourceTree = "<group>"; };
 		816850AA5E2EE808CDC32BCA /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Uniswap/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -160,10 +166,10 @@
 			isa = PBXGroup;
 			children = (
 				F35AFD3627EE49230011A725 /* Uniswap.entitlements */,
-				D63928F927D704350004F5CC /* RNWalletConnect.swift */,
-				A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				6CE631B928186D4500716D29 /* WalletConnect */,
+				A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */,
 				A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */,
 				A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */,
 				A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */,
@@ -173,7 +179,6 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */,
-				D63928FB27D70B510004F5CC /* RNWalletConnect.m */,
 			);
 			name = Uniswap;
 			sourceTree = "<group>";
@@ -204,6 +209,18 @@
 				47914D9EE3A4DE926EFC5089 /* UniswapTests */,
 			);
 			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		6CE631B928186D4500716D29 /* WalletConnect */ = {
+			isa = PBXGroup;
+			children = (
+				D63928FB27D70B510004F5CC /* RNWalletConnect.m */,
+				D63928F927D704350004F5CC /* RNWalletConnect.swift */,
+				6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */,
+				6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */,
+				6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */,
+			);
+			name = WalletConnect;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -626,9 +643,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */,
 				D63928FA27D704350004F5CC /* RNWalletConnect.swift in Sources */,
 				A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */,
+				6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */,
 				A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */,
