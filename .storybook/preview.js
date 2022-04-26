@@ -9,6 +9,7 @@ export const parameters = {
       excludeDecorators: true,
     },
   },
+  parameters: { actions: { argTypesRegex: '^on.*' } },
 }
 
 export const decorators = [

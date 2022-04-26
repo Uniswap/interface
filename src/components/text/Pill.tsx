@@ -7,7 +7,7 @@ type PillProps = {
   customBorderColor?: string
   foregroundColor?: string
   icon?: ReactNode
-  label?: string
+  label?: ReactNode
 } & FlexProps
 
 export function Pill({
