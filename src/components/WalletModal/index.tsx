@@ -129,7 +129,7 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
-  // important that these are destructed from the account-specific web3-react context
+  // important that these are destructed from the account-specific @web3-react context
   const { isActive, account, connector, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)

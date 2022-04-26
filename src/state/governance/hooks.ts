@@ -8,6 +8,7 @@ import { t } from '@lingui/macro'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
@@ -17,7 +18,6 @@ import {
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
@@ -51,7 +51,7 @@ function useGovernanceBravoContract(): Contract | null {
 const useLatestGovernanceContract = useGovernanceBravoContract
 
 export function useUniContract() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UNI_ABI, true)
 }
@@ -210,7 +210,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const gov0 = useGovernanceV0Contract()
   const gov1 = useGovernanceV1Contract()
   const gov2 = useGovernanceBravoContract()
@@ -317,7 +317,7 @@ export function useProposalData(governorIndex: number, id: string): ProposalData
 export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefined {
   const latestGovernanceContract = useLatestGovernanceContract()
   const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
   if (
@@ -334,7 +334,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
 
 // get the users delegatee if it exists
 export function useUserDelegatee(): string {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const uniContract = useUniContract()
   const { result } = useSingleCallResult(uniContract, 'delegates', [account ?? undefined])
   return result?.[0] ?? undefined
@@ -342,7 +342,7 @@ export function useUserDelegatee(): string {
 
 // gets the users current votes
 export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token> | undefined } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
   const uniContract = useUniContract()
 
   // check for available votes
@@ -355,7 +355,7 @@ export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token>
 
 // fetch available votes as of block (usually proposal start block)
 export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount<Token> | undefined {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
   const uniContract = useUniContract()
 
   // check for available votes
@@ -366,7 +366,7 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
 }
 
 export function useDelegateCallback(): (delegatee: string | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const uniContract = useUniContract()
@@ -395,7 +395,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
 export function useVoteCallback(): {
   voteCallback: (proposalId: string | undefined, voteOption: VoteOption) => undefined | Promise<string>
 } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
 
@@ -428,7 +428,7 @@ export function useVoteCallback(): {
 export function useCreateProposalCallback(): (
   createProposalData: CreateProposalData | undefined
 ) => undefined | Promise<string> {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
@@ -467,7 +467,7 @@ export function useLatestProposalId(address: string | undefined): string | undef
 }
 
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const res = useSingleCallResult(latestGovernanceContract, 'proposalThreshold')

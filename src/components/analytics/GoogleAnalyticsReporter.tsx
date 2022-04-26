@@ -1,4 +1,4 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router-dom'
@@ -19,7 +19,7 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
     getCLS(reportWebVitals)
   }, [])
 
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   useEffect(() => {
     // cd1 - custom dimension 1 - chainId
     ReactGA.set({ cd1: chainId ?? 0 })

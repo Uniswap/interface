@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
@@ -119,7 +119,7 @@ const ModalContentWrapper = styled.div`
 `
 
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)

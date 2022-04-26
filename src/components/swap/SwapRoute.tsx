@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { getTokenPath } from 'lib/components/Swap/RoutingDiagram/utils'
 import { memo, useState } from 'react'
@@ -48,7 +48,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
   const autoRouterSupported = useAutoRouterSupported()
   const routes = getTokenPath(trade)
   const [open, setOpen] = useState(false)
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   const [darkMode] = useDarkModeManager()
 

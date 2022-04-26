@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import Card from 'components/Card'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { RefObject, useCallback, useMemo, useRef, useState } from 'react'
 import { useRemoveUserAddedToken, useUserAddedTokens } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -44,7 +44,7 @@ export default function ManageTokens({
   setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const theme = useTheme()

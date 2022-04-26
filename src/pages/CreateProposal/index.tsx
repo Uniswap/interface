@@ -2,10 +2,10 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
@@ -86,7 +86,7 @@ const AutonomousProposalCTA = styled.div`
 `
 
 export default function CreateProposal() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
   const latestProposalData = useProposalData(LATEST_GOVERNOR_INDEX, latestProposalId)

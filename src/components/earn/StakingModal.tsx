@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import StakingRewardsJson from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -53,7 +53,7 @@ interface StakingModalProps {
 }
 
 export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
-  const { provider } = useActiveWeb3React()
+  const { provider } = useWeb3React()
 
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
