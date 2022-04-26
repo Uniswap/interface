@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment, useContext, useState } from 'react'
 import { ButtonPrimary } from 'components/Button'
 import { useAirdrop } from 'state/airdrop/airdrop-hooks'
 import styled, { ThemeContext } from 'styled-components'
@@ -8,6 +8,7 @@ import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import { DIFFUSION } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks/web3'
 import { Token } from 'sdk-core/entities'
+import Tooltip from 'components/Tooltip'
 
 const StyledAirdropbutton = styled(ButtonPrimary)`
   background-color: ${({ theme }) => theme.bg3};
@@ -22,14 +23,28 @@ const ClaimingDots = styled(Dots)`
 
 export function AirdropButton() {
   const { chainId } = useActiveWeb3React()
-  const { isEligable, didClaim, loading, claim, isClaiming, didJustClaim, isPending } = useAirdrop()
+  const { isEligible, didClaim, loading, claim, isClaiming, didJustClaim, isPending } = useAirdrop()
+  const [showHover, setShowHover] = useState(false)
 
   const diff = DIFFUSION[chainId!] as Token | undefined
   const { addToken, success: success } = useAddTokenToMetamask(diff)
   const theme = useContext(ThemeContext)
 
-  if ((!isEligable || didClaim || loading) && !didJustClaim) {
-    return null
+  if ((!isEligible || didClaim || loading) && !didJustClaim) {
+    return (
+      <Fragment>
+        <Tooltip
+          text="You are not eligible for the current Uniswap based Airdrop. The other airdrops will be announced shortly."
+          show={!isEligible && showHover}
+        >
+          <div onMouseEnter={() => setShowHover(true)} onMouseLeave={() => setShowHover(false)}>
+            <StyledAirdropbutton disabled>
+              {!isEligible ? 'Not Eligible' : didClaim ? 'Already Claimed' : <ClaimingDots>loading</ClaimingDots>}
+            </StyledAirdropbutton>
+          </div>
+        </Tooltip>
+      </Fragment>
+    )
   }
 
   return (

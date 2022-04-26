@@ -63,7 +63,7 @@ export function useAirdrop() {
   }, [account, addTransaction, airdropContract, airdropInfo, isClaiming])
 
   return {
-    isEligable: Boolean(airdropInfo),
+    isEligible: Boolean(airdropInfo),
     loading: didClaimResponse.loading,
     didClaim: Boolean(didClaimResponse.result?.[0]),
     didJustClaim,
