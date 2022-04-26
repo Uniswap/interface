@@ -10,6 +10,7 @@ import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { Evmos, EVMOS } from '../../constants/tokens'
+import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.primaryTransparent)};
@@ -65,7 +66,7 @@ export default function CommonBases({
           const selected = selectedCurrency?.isToken && selectedCurrency.address === token.address
           return (
             <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
-              <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
+              <CurrencyLogoFromList currency={token} />
               <Text fontWeight={500} fontSize={16}>
                 {token.symbol}
               </Text>
@@ -75,4 +76,11 @@ export default function CommonBases({
       </AutoRow>
     </AutoColumn>
   )
+}
+
+/** helper component to retrieve a base currency from the active token lists */
+function CurrencyLogoFromList({ currency }: { currency: Currency }) {
+  const token = useTokenInfoFromActiveList(currency)
+
+  return <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
 }
