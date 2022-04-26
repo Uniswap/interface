@@ -1,5 +1,4 @@
 import { coinbaseWallet, coinbaseWalletHooks as hooks } from 'connectors'
-import { useEffect } from 'react'
 
 import Option from './Option'
 
@@ -10,10 +9,6 @@ export default function CoinbaseWalletCard() {
   const error = useError()
   const isActivating = useIsActivating()
   const isActive = useIsActive()
-
-  useEffect(() => {
-    void coinbaseWallet.connectEagerly()
-  }, [])
 
   return (
     <Option

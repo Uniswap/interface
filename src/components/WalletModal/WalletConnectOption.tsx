@@ -1,5 +1,4 @@
 import { walletConnect, walletConnectHooks as hooks } from 'connectors'
-import { useEffect } from 'react'
 
 import Option from './Option'
 
@@ -10,10 +9,6 @@ export default function WalletConnectCard() {
   const error = useError()
   const isActivating = useIsActivating()
   const isActive = useIsActive()
-
-  useEffect(() => {
-    void walletConnect.connectEagerly()
-  }, [])
 
   return (
     <Option connector={walletConnect} chainId={chainId} isActivating={isActivating} error={error} isActive={isActive} />
