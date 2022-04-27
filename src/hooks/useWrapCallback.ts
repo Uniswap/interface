@@ -5,7 +5,7 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './web3'
 import { useWETHContract } from './useContract'
-import { WETH9 } from 'constants/tokens'
+import { WEVMOS } from 'constants/tokens'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -38,7 +38,7 @@ export default function useWrapCallback(
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency.isNative && currencyEquals(WETH9[chainId], outputCurrency)) {
+    if (inputCurrency.isNative && currencyEquals(WEVMOS[chainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -58,7 +58,7 @@ export default function useWrapCallback(
           ? 'Insufficient EVMOS balance'
           : 'Enter EVMOS amount',
       }
-    } else if (currencyEquals(WETH9[chainId], inputCurrency) && outputCurrency.isNative) {
+    } else if (currencyEquals(WEVMOS[chainId], inputCurrency) && outputCurrency.isNative) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:

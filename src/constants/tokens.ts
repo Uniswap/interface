@@ -1,13 +1,62 @@
 import { Token } from '@uniswap/sdk-core'
 
-import { WEVMOS, WETH9, Evmos } from './native-token'
+import { WEVMOS, Evmos } from './native-token'
 
 import { ChainId } from 'constants/chains'
 import { TESTNET } from './periphery'
 
-export { WETH9, WEVMOS, Evmos }
+export { WEVMOS, Evmos }
 
 export const EVMOS = Evmos.onChain(ChainId.MAINNET)
+
+/** ---------- NOMAD TOKENS
+ * https://docs.nomad.xyz/bridge/domains.html#milkomeda-c1
+ * ----------- */
+export const WETH = {
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x5842C5532b61aCF3227679a8b1BD0242a41752f2',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+}
+
+export const WBTC = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xF80699Dc594e00aE7bA200c7533a07C1604A106D', 8, 'WBTC', 'Wrapped BTC'),
+}
+
+export const DAI = {
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x63743ACF2c7cfee65A5E356A4C4A005b586fC7AA',
+    18,
+    'DAI',
+    'Dai Stablecoin'
+  ),
+}
+
+export const USDC = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x51e44FfaD5C2B122C8b635671FCC8139dc636E82', 6, 'USDC', 'USD Coin'),
+  [ChainId.TESTNET]: new Token(ChainId.TESTNET, TESTNET.mockUSDC, 18, 'MUSDC', 'Mock USDC'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xB2E91f27a9766bFD925D66D88B78D2cE64a846b6', 18, 'MUSDC', 'Mock USDC'),
+}
+
+export const TETHER = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7FF4a56B32ee13D7D4D405887E0eA37d61Ed919e', 6, 'USDT', 'Tether USD'),
+}
+
+export const FRAX = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x28eC4B29657959F4A5052B41079fe32919Ec3Bd3', 18, 'FRAX', 'FRAX'),
+}
+
+export const FXS = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xd0ec216A38F199B0229AE668a96c3Cd9F9f118A6', 18, 'FXS', 'FXS'),
+}
+
+/**
+ * ------------ IBC Tokens
+ */
 
 export const ATOM = {
   //@TODO: FIX MAINNET
@@ -16,12 +65,6 @@ export const ATOM = {
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xC97D061637D6b3a3E54AC76537B2635B112ecdad', 18, 'MATOM', 'Mock ATOM'),
 }
 
-export const USDC = {
-  //@TODO: FIX MAINNET
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x6aBdDa34Fb225be4610a2d153845e09429523Cd2', 18, 'MUSDC', 'Mock USDC'),
-  [ChainId.TESTNET]: new Token(ChainId.TESTNET, TESTNET.mockUSDC, 18, 'MUSDC', 'Mock USDC'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xB2E91f27a9766bFD925D66D88B78D2cE64a846b6', 18, 'MUSDC', 'Mock USDC'),
-}
 export const MEVMOS = makeToken('Mock EVMOS', 'MEVMOS', 18, {
   //@TODO: FIX MAINNET
   [ChainId.MAINNET]: '0xFCd2Ce20ef8ed3D43Ab4f8C2dA13bbF1C6d9512F',
