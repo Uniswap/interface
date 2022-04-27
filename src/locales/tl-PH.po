@@ -1764,10 +1764,6 @@ msgstr ""
 msgid "Search name or paste address"
 msgstr ""
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "See"
-msgstr ""
-
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
 msgstr ""
@@ -2282,6 +2278,10 @@ msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
+msgstr ""
+
+#: src/components/TrendingSoonTokenBanner/index.tsx
+msgid "View"
 msgstr ""
 
 #: src/pages/About/index.tsx

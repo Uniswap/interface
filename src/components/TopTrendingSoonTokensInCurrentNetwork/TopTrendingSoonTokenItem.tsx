@@ -10,7 +10,7 @@ import { Info } from 'react-feather'
 import { ButtonEmpty } from 'components/Button'
 import useTheme from 'hooks/useTheme'
 import { MoneyBag } from 'components/Icons'
-import { formattedNum } from 'utils'
+import { formatNumberWithPrecisionRange, formattedNum } from 'utils'
 import { Link } from 'react-router-dom'
 import { TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
@@ -110,7 +110,10 @@ const TopTrendingSoonTokenItem = ({
         <Flex alignItems="center" justifyContent="space-between">
           <Text fontSize="12px">{formattedNum(tokenData.price.toString(), true)}</Text>
           <Text fontSize="12px" color={tokenData.price_change_percentage_24h >= 0 ? theme.apr : theme.red}>
-            {formattedNum(tokenData.price_change_percentage_24h.toString(), false)}%
+            {tokenData.price_change_percentage_24h >= 1
+              ? formatNumberWithPrecisionRange(tokenData.price_change_percentage_24h, 0, 0)
+              : formatNumberWithPrecisionRange(tokenData.price_change_percentage_24h, 0, 2)}
+            %
           </Text>
         </Flex>
       </Flex>

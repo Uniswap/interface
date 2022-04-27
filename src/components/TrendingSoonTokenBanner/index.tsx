@@ -48,7 +48,7 @@ const TrendingSoonTokenBanner = ({
       <Flex alignItems="center">
         <CurrencyLogo currency={trendingSoonCurrency} size="16px" style={{ marginRight: '4px' }} />
         <BannerText>
-          {currencySymbol} <Trans>could be trending very soon!</Trans> <Trans>See</Trans>{' '}
+          {currencySymbol} <Trans>could be trending very soon!</Trans> <Trans>View</Trans>{' '}
           <ExternalLink
             href={
               window.location.origin +

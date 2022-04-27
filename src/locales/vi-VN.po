@@ -1764,10 +1764,6 @@ msgstr ""
 msgid "Search name or paste address"
 msgstr "Tìm kiếm tên hoặc địa chỉ"
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "See"
-msgstr ""
-
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
 msgstr "Chọn Tối Đa"
@@ -2283,6 +2279,10 @@ msgstr ""
 #: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "Vesting đã bắt đầu: {0}"
+
+#: src/components/TrendingSoonTokenBanner/index.tsx
+msgid "View"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "View Farms"

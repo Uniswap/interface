@@ -325,7 +325,15 @@ export const formatDollarSignificantAmount = (num: number, minDigits: number, ma
   return formatter.format(num)
 }
 
-export function formattedNum(number: string, usd = false) {
+export function formatNumberWithPrecisionRange(number: number, minPrecision = 2, maxPrecision = 2) {
+  const options = {
+    minimumFractionDigits: minPrecision,
+    maximumFractionDigits: maxPrecision,
+  }
+  return number.toLocaleString(undefined, options)
+}
+
+export function formattedNum(number: string, usd = false, fractionDigits = 5) {
   if (number === '' || number === undefined) {
     return usd ? '$0' : 0
   }
@@ -359,7 +367,7 @@ export function formattedNum(number: string, usd = false) {
     }
   }
 
-  return Number(num.toFixed(5)).toLocaleString()
+  return Number(num.toFixed(fractionDigits)).toLocaleString()
 }
 
 export function formattedNumLong(num: number, usd = false) {
