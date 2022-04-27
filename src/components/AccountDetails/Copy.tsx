@@ -39,6 +39,8 @@ export default function CopyHelper({ color, toCopy, children }: CopyHelperProps)
 
   return (
     <CopyIcon onClick={copy} color={color}>
+      {isCopied ? '' : children}
+      &nbsp;
       {isCopied ? (
         <TransactionStatusText>
           <CheckCircle size={'12'} />
@@ -51,8 +53,6 @@ export default function CopyHelper({ color, toCopy, children }: CopyHelperProps)
           <Copy size={'12'} />
         </TransactionStatusText>
       )}
-      &nbsp;
-      {isCopied ? '' : children}
     </CopyIcon>
   )
 }
