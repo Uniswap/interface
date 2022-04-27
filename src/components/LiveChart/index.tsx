@@ -65,7 +65,7 @@ const SwitchButtonWrapper = styled.div`
 `
 
 const ProLiveChartCustom = styled(ProLiveChart)`
-  margin: ${() => (isMobile ? '0 -20px -20px -20px' : '15px 0 !important')};
+  margin: ${() => (isMobile ? '0 -20px -20px -20px' : '15px 0 25px 0 !important')};
 `
 
 const getDifferentValues = (chartData: any, hoverValue: number | null) => {

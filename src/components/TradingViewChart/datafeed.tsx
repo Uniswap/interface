@@ -9,24 +9,8 @@ import {
 } from './charting_library'
 import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
+import { ChainId, Currency } from '@dynamic-amm/sdk'
 import { nativeNameFromETH } from 'hooks/useMixpanel'
-const getResolutionTimeTicks = (resolution: ResolutionString) => {
-  switch (resolution) {
-    case '1':
-      return 60000
-    case '5':
-      return 300000
-    case '15':
-      return 900000
-    case '60':
-      return 3600000
-    case '240':
-      return 14400000
-    default:
-      return 300000
-  }
-}
 
 export const getTimeframeMilliseconds = (timeFrame: LiveDataTimeframeEnum) => {
   switch (timeFrame) {
@@ -88,8 +72,17 @@ const getResolutionString = (res: string) => {
 const DEXTOOLS_API = 'https://pancake-subgraph-proxy.kyberswap.com/dextools'
 const monthTs = 2592000000
 const weekTs = 604800000
-
+const TOKEN_PAIRS_ADDRESS_MAPPING: {
+  [key: string]: string
+} = {
+  '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': '0xd75ea151a61d06868e31f8988d28dfe5e9df57b4',
+}
 export const searchTokenPair = (address: string, chainId: ChainId | undefined) => {
+  if (TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()]) {
+    return new Promise((resolve, reject) => {
+      resolve([{ id: TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()] }])
+    })
+  }
   return fetch(`${DEXTOOLS_API}/${getNetworkString(chainId)}/api/pair/search?s=${address}`)
     .then(res => res.json())
     .catch(error => console.log(error))
@@ -153,9 +146,12 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           timezone: 'Etc/UTC',
           exchange: '',
           minmov: 1,
-          pricescale: Math.pow(10, Math.ceil(Math.log10(isReverse ? candles[0].open : 1 / candles[0].open)) + 5),
+          pricescale:
+            candles.length > 0
+              ? Math.pow(10, Math.ceil(Math.log10(isReverse ? candles[0].open : 1 / candles[0].open)) + 5)
+              : 100,
           has_intraday: true,
-          //has_empty_bars: true,
+          has_empty_bars: true,
           has_weekly_and_monthly: true,
           supported_resolutions: configurationData.supported_resolutions as ResolutionString[],
           data_status: 'streaming',
@@ -176,11 +172,12 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
       try {
         let from = periodParams.from * 1000
         let to = periodParams.to * 1000
-        let noData = false
         let candlesTemp = stateRef.current.data
+        let noData = false
         if (!candlesTemp || candlesTemp.length === 0) {
           const ts = Math.floor(new Date().getTime() / monthTs) * monthTs
           const { candles, oldestTs } = await getCandles(ts, resolution)
+          if (candles.length === 0) noData = true
           candlesTemp = candles
           setOldestTs(parseFloat(oldestTs))
           setData(candlesTemp)
@@ -223,7 +220,6 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
             return { ...c, open: 1 / c.open, close: 1 / c.close, high: 1 / c.low, low: 1 / c.high }
           })
         }
-
         onHistoryCallback(formatedCandles, { noData: noData })
       } catch (error) {
         console.log('[getBars]: Get error', error)

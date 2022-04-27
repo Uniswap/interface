@@ -24,12 +24,12 @@ const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
     fullscreen &&
     !isMobile &&
     `
-    background-color: rgb(0,0,0,0.6);
+    background-color: rgb(0,0,0,0.5);
     position: fixed;
-    top: 0;
+    top: -15px;
     left: 0;
     z-index: 99999;
-    padding-top: 84px;
+    padding-top: 82px;
     height: 100%!important;
     width: 100%!important;
     border-radius: 0;
@@ -100,7 +100,7 @@ function ProLiveChart({
     }
     setLoading(true)
     const widgetOptions: ChartingLibraryWidgetOptions = {
-      symbol: 'AAPL',
+      symbol: 'KNC',
       datafeed: datafeed,
       interval: '15' as ResolutionString,
       container: ref,
@@ -126,7 +126,7 @@ function ProLiveChart({
       theme: theme.darkMode ? 'Dark' : 'Light',
       custom_css_url: '/charting_library/style.css',
       time_frames: [
-        // { text: '6m', resolution: '4H' as ResolutionString, description: '6 Months' },
+        { text: '6m', resolution: '4H' as ResolutionString, description: '6 Months' },
         { text: '1m', resolution: '1H' as ResolutionString, description: '1 Month' },
         { text: '1w', resolution: '1H' as ResolutionString, description: '1 Week' },
         { text: '1d', resolution: '15' as ResolutionString, description: '1 Day' },
