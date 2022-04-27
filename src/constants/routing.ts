@@ -8,7 +8,7 @@ type ChainTokenList = {
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.MAINNET),
+  [ChainId.MAINNET]: pickNetwork([WEVMOS], ChainId.MAINNET),
   [ChainId.TESTNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.TESTNET),
   [ChainId.RINKEBY]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.RINKEBY),
 }
@@ -22,13 +22,14 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: Partial<ChainTokenList> = {
-  [ChainId.MAINNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.MAINNET),
+  // [ChainId.MAINNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.MAINNET),
+  [ChainId.MAINNET]: pickNetwork([WEVMOS], ChainId.MAINNET),
   [ChainId.TESTNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.TESTNET),
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  [ChainId.MAINNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.MAINNET),
+  [ChainId.MAINNET]: pickNetwork([WEVMOS], ChainId.MAINNET),
   [ChainId.TESTNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.TESTNET),
   [ChainId.RINKEBY]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.RINKEBY),
 }

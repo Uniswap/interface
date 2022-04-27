@@ -326,6 +326,7 @@ export default function Header() {
           >
             {t('pool')}
           </StyledNavLink>
+
           <StyledNavLink
             id={`farm-nav-link`}
             to={'/farm'}
@@ -334,10 +335,6 @@ export default function Header() {
             {t('Farm')}
           </StyledNavLink>
           <BridgeMenu />
-
-          {/* <StyledExternalLink id={`stake-nav-link`} href={'https://app.nomad.xyz/'}>
-          Bridge <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
-        </StyledExternalLink> */}
         </HeaderLinks>
       </HideSmall>
       <HeaderControls>

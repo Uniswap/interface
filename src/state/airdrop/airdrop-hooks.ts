@@ -1,18 +1,19 @@
 import { useAirdropContract } from 'hooks/useContract'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import _airdropData from './forFrontend.json'
 
 export const AIRDROP_ENDDATE = new Date('June 24 2022')
 
 type AirdropInfo = {
-  amount: string
-  index: number
+  leaf: {
+    address: string
+    amount: string
+    index: number
+  }
   proof: string[]
 }
-const airdropData = _airdropData as Record<string, AirdropInfo>
 
 export function useAirdrop() {
   const { account } = useActiveWeb3React()
@@ -23,14 +24,9 @@ export function useAirdrop() {
   const [txHash, setTxHash] = useState<string | undefined>()
   const isPending = useIsTransactionPending(txHash)
 
-  const airdropInfo = useMemo(() => {
-    if (!account) {
-      return null
-    }
-    return airdropData[account.toLowerCase()] ?? null
-  }, [account])
+  const { airdropInfo, isLoading } = useAirdropInfo(account)
 
-  const didClaimResponse = useSingleCallResult(airdropContract, 'redeemed', [airdropInfo?.index])
+  const didClaimResponse = useSingleCallResult(airdropContract, 'redeemed', [airdropInfo?.leaf.index])
   console.log('didClaimResponse', didClaimResponse)
 
   const claim = useCallback(async () => {
@@ -43,9 +39,9 @@ export function useAirdrop() {
     try {
       setIsClaiming(true)
       const response = await airdropContract.redeemPackage(
-        airdropInfo.index,
+        airdropInfo.leaf.index,
         account,
-        airdropInfo.amount,
+        airdropInfo.leaf.amount,
         airdropInfo.proof
       )
 
@@ -64,11 +60,42 @@ export function useAirdrop() {
 
   return {
     isEligible: Boolean(airdropInfo),
-    loading: didClaimResponse.loading,
+    loading: didClaimResponse.loading || isLoading,
     didClaim: Boolean(didClaimResponse.result?.[0]),
     didJustClaim,
     isClaiming,
     isPending,
     claim,
+  }
+}
+
+function useAirdropInfo(address?: string | null) {
+  const [airdropInfo, setAirdropInfo] = useState<AirdropInfo | undefined>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  async function loadInfo(address: string) {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`
+      https://diff-drop-bb.s3.amazonaws.com/${address.toLowerCase()}.json`)
+      const body = await response.json()
+      if (body.leaf && body.proof) {
+        setAirdropInfo(body)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (address) {
+      loadInfo(address)
+    }
+  }, [address])
+  return {
+    airdropInfo,
+    isLoading,
   }
 }

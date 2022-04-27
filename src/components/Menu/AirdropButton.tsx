@@ -39,7 +39,15 @@ export function AirdropButton() {
         >
           <div onMouseEnter={() => setShowHover(true)} onMouseLeave={() => setShowHover(false)}>
             <StyledAirdropbutton disabled>
-              {!isEligible ? 'Not Eligible' : didClaim ? 'Already Claimed' : <ClaimingDots>loading</ClaimingDots>}
+              {loading ? (
+                <ClaimingDots>loading</ClaimingDots>
+              ) : !isEligible ? (
+                'Not Eligible'
+              ) : didClaim ? (
+                'Already Claimed'
+              ) : (
+                <ClaimingDots>loading</ClaimingDots>
+              )}
             </StyledAirdropbutton>
           </div>
         </Tooltip>
