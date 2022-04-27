@@ -1,18 +1,16 @@
 # E2E Tests
 
-The e2e tests use [detox](https://github.com/wix/Detox). To run them, you need to build:
+The e2e tests use [detox](https://github.com/wix/Detox). To run them, terminate metro and then,
 
 ```
+# Build and start metro
 yarn test:e2e:build
-```
 
-Start the hardhat server
-
-```
+# Start hardhat server (forks mainnet)
 yarn hardhat
 ```
 
-And then run:
+finally run:
 
 ```
 yarn test:e2e:run
