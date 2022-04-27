@@ -75,6 +75,7 @@ export interface ChartContainerProps {
 }
 
 export interface ChartContainerState {}
+const LOCALSTORAGE_STATE_NAME = 'proChartSavedState'
 
 function ProLiveChart({
   currencies,
@@ -159,6 +160,14 @@ function ProLiveChart({
           })
         })
         fullscreenOn.innerHTML = ReactDOMServer.renderToStaticMarkup(<FullscreenOn />)
+      })
+      if (localStorage.getItem(LOCALSTORAGE_STATE_NAME)) {
+        tvWidget.load(JSON.parse(localStorage.getItem(LOCALSTORAGE_STATE_NAME) || '{}'))
+      }
+      tvWidget.subscribe('onAutoSaveNeeded', () => {
+        tvWidget.save((object: any) => {
+          localStorage.setItem(LOCALSTORAGE_STATE_NAME, JSON.stringify(object))
+        })
       })
       // tvWidget.activeChart().setVisibleRange({
       //   from: (new Date().getTime() - getTimeframeMilliseconds(timeFrame)) / 1000,
