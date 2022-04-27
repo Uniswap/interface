@@ -1,77 +1,57 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
-import { useTheme } from '@shopify/restyle'
-import { BlurView } from 'expo-blur'
 import { impactAsync, notificationAsync } from 'expo-haptics'
 import React from 'react'
-import { useColorScheme, ViewStyle } from 'react-native'
-import { ExploreTabIcon, NFTTabIcon, WalletTabIcon } from 'src/app/navigation/icons'
+import { useColorScheme } from 'react-native'
+import { useAppTheme } from 'src/app/hooks'
+import { ExploreTabIcon, HomeTabIcon, NFTTabIcon, WalletTabIcon } from 'src/app/navigation/icons'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { Box, Flex } from 'src/components/layout'
+import { Box } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Screens, Tabs } from 'src/screens/Screens'
-import { borderRadii } from 'src/styles/sizing'
-import { Theme } from 'src/styles/theme'
 
 export function TabBar({ state, navigation }: BottomTabBarProps) {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
-
-  const leftBlurStyle: ViewStyle = {
-    overflow: 'hidden',
-    borderRadius: borderRadii.md,
-    borderWidth: 1,
-    borderColor: theme.colors.gray50,
-  }
-
-  const SwapTabIcon = <SwapIcon fill="white" height={24} width={24} />
+  const SwapTabIcon = (
+    <SwapIcon
+      color={isDarkMode ? theme.colors.white : theme.colors.primary1}
+      height={20}
+      width={20}
+    />
+  )
 
   return (
-    <Box bottom={20} position="absolute" width="100%">
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="lg" py="md">
+    <Box backgroundColor="background1" bottom={0} paddingBottom="md" width="100%">
+      <Box
+        alignItems="center"
+        borderColor="background1"
+        borderTopColor="lightBorder"
+        borderWidth={1}
+        flexDirection="row"
+        justifyContent="space-between"
+        px="xl"
+        py="md">
+        <Button
+          onPress={() => {
+            impactAsync()
+            navigation.navigate(Tabs.Home, { merge: true })
+          }}>
+          <HomeTabIcon focused={state.index === 1} />
+        </Button>
+        <Button
+          onPress={() => {
+            impactAsync()
+            navigation.navigate(Tabs.Portfolio, { merge: true })
+          }}>
+          <WalletTabIcon focused={state.index === 0} />
+        </Button>
         <Box
-          shadowColor="black"
-          shadowOffset={{ width: 0, height: 12 }}
-          shadowOpacity={0.4}
-          shadowRadius={20}>
-          <BlurView intensity={90} style={leftBlurStyle} tint={isDarkMode ? 'dark' : 'light'}>
-            <Flex
-              alignItems="center"
-              bg="tabBackground"
-              flexDirection="row"
-              gap="xl"
-              px="lg"
-              py="md">
-              <Button
-                onPress={() => {
-                  impactAsync()
-                  navigation.navigate(Tabs.Home, { merge: true })
-                }}>
-                <WalletTabIcon focused={state.index === 0} />
-              </Button>
-              <Button
-                onPress={() => {
-                  impactAsync()
-                  navigation.navigate(Tabs.NFT, { merge: true })
-                }}>
-                <NFTTabIcon focused={state.index === 1} />
-              </Button>
-              <Button
-                onPress={() => {
-                  impactAsync()
-                  navigation.navigate(Tabs.Explore, { merge: true })
-                }}>
-                <ExploreTabIcon focused={state.index === 2} />
-              </Button>
-            </Flex>
-          </BlurView>
-        </Box>
-        <Box
-          shadowColor="black"
-          shadowOffset={{ width: 0, height: 12 }}
-          shadowOpacity={0.4}
-          shadowRadius={20}>
+          shadowColor="primary1"
+          shadowOffset={{ width: 0, height: 8 }}
+          shadowOpacity={isDarkMode ? 0.4 : 0}
+          shadowRadius={6}>
           <IconButton
             icon={SwapTabIcon}
             name={ElementName.TabBarSwap}
@@ -83,6 +63,20 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
             }}
           />
         </Box>
+        <Button
+          onPress={() => {
+            impactAsync()
+            navigation.navigate(Tabs.NFT, { merge: true })
+          }}>
+          <NFTTabIcon focused={state.index === 2} />
+        </Button>
+        <Button
+          onPress={() => {
+            impactAsync()
+            navigation.navigate(Tabs.Explore, { merge: true })
+          }}>
+          <ExploreTabIcon focused={state.index === 3} />
+        </Button>
       </Box>
     </Box>
   )

@@ -24,6 +24,8 @@ export const theme = createTheme({
     imageTintBackground: opacify(90, colorsLight.white),
     tokenSelector: colorsLight.gray50,
     shimmer: colorsLight.white,
+    lightBorder: colorsLight.gray100,
+    iconButtonPrimaryBackground: colorsLight.white,
     ...colorsLight,
   },
   iconButtonVariants,
@@ -42,6 +44,8 @@ export const darkTheme: Theme = {
     imageTintBackground: opacify(90, colorsDark.black),
     tokenSelector: colorsDark.gray50,
     shimmer: colorsDark.gray100,
+    lightBorder: colorsDark.gray50,
+    iconButtonPrimaryBackground: colorsDark.pink,
     ...colorsDark,
   },
 }

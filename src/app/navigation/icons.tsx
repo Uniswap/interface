@@ -1,30 +1,38 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
-import PictureIcon from 'src/assets/icons/picture.svg'
+import { useAppTheme } from 'src/app/hooks'
+import HomeIcon from 'src/assets/icons/home.svg'
 import SearchIcon from 'src/assets/icons/search.svg'
+import StackedIcon from 'src/assets/icons/stacked.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
-import { Theme } from 'src/styles/theme'
 
 interface NavIconProps {
   focused: boolean
 }
 
-export function WalletTabIcon({ focused }: NavIconProps) {
-  const theme = useTheme<Theme>()
+export function HomeTabIcon({ focused }: NavIconProps) {
+  const theme = useAppTheme()
 
   return (
-    <WalletIcon fill={theme.colors.textColor} height={24} opacity={focused ? 1 : 0.6} width={24} />
+    <HomeIcon color={theme.colors.textColor} height={24} opacity={focused ? 1 : 0.6} width={24} />
+  )
+}
+
+export function WalletTabIcon({ focused }: NavIconProps) {
+  const theme = useAppTheme()
+
+  return (
+    <WalletIcon color={theme.colors.textColor} height={24} opacity={focused ? 1 : 0.6} width={24} />
   )
 }
 
 export function ExploreTabIcon({ focused }: NavIconProps) {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
-  return <SearchIcon opacity={focused ? 1 : 0.6} stroke={theme.colors.textColor} strokeWidth={2} />
+  return <SearchIcon color={theme.colors.textColor} opacity={focused ? 1 : 0.6} strokeWidth={2} />
 }
 
 export function NFTTabIcon({ focused }: NavIconProps) {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
-  return <PictureIcon opacity={focused ? 1 : 0.6} stroke={theme.colors.textColor} strokeWidth={2} />
+  return <StackedIcon color={theme.colors.textColor} opacity={focused ? 1 : 0.6} strokeWidth={2} />
 }

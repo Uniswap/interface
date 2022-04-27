@@ -38,6 +38,7 @@ export const iconButtonVariants = {
   defaults: {},
   primary: {
     alignSelf: 'center',
+    backgroundColor: 'iconButtonPrimaryBackground', // custom background defined in theme
     borderRadius: 'md',
     letterSpacing: 'headline',
     paddingHorizontal: 'lg',
@@ -50,5 +51,7 @@ export const iconButtonVariants = {
     shadowOpacity: 0.2,
     shadowRadius: 5,
   },
-  transparent: {},
+  transparent: {
+    backgroundColor: 'none',
+  },
 }

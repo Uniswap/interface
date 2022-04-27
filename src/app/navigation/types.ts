@@ -14,6 +14,7 @@ import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
 export type TabParamList = {
   [Tabs.Home]: undefined
+  [Tabs.Portfolio]: undefined
   [Tabs.Swap]: { swapFormState?: TransactionState } | undefined
   [Tabs.Explore]: undefined
   [Tabs.NFT]: undefined

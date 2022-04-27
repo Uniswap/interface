@@ -28,6 +28,7 @@ import { CreateWalletScreen } from 'src/screens/Onboarding/CreateWalletScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
+import { PortfolioScreen } from 'src/screens/PortfolioScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
@@ -49,6 +50,7 @@ const Drawer = createDrawerNavigator()
 function TabNavigator() {
   return (
     <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+      <Tab.Screen component={PortfolioScreen} name={Tabs.Portfolio} options={navOptions.noHeader} />
       <Tab.Screen component={HomeScreen} name={Tabs.Home} options={navOptions.noHeader} />
       <Tab.Screen component={NFTScreen} name={Tabs.NFT} options={navOptions.noHeader} />
       <Tab.Screen component={ExploreScreen} name={Tabs.Explore} options={navOptions.noHeader} />

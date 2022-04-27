@@ -39,5 +39,6 @@ export enum Tabs {
   Explore = 'ExploreTab',
   Home = 'HomeTab',
   NFT = 'NFTTab',
+  Portfolio = 'PortfolioTab',
   Swap = 'SwapTab',
 }
