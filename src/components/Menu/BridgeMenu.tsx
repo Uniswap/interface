@@ -75,6 +75,11 @@ export function BridgeMenu() {
               Nomad <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
             </div>
           </MenuItem>
+          <MenuItem href="https://spacestation.zone/">
+            <div>
+              Gravity Bridge <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
+            </div>
+          </MenuItem>
           <MenuItem href="https://cbridge.celer.network/">
             <div>
               Celer <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
