@@ -233,8 +233,14 @@ const TrendingSoonTokensContainer = styled.div`
   background: ${({ theme }) => rgba(theme.background, 0.5)};
   border-radius: 8px;
   width: 100%;
-  max-width: 1028px;
   overflow: auto;
+
+  @media screen and (min-width: 1100px) {
+    max-width: 1226px;
+  }
+  @media screen and (min-width: 1440px) {
+    max-width: 1394px;
+  }
 `
 
 const TrendingSoonTokensMobileContainer = styled.div`
@@ -252,8 +258,14 @@ const TextNote = styled(Text)`
   font-size: 10px;
   font-weight: 500;
   width: 100%;
-  max-width: 1028px;
   text-align: end;
+
+  @media screen and (min-width: 1100px) {
+    max-width: 1226px;
+  }
+  @media screen and (min-width: 1440px) {
+    max-width: 1394px;
+  }
 `
 
 export default TopTrendingSoonTokensInCurrentNetwork

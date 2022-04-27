@@ -1290,7 +1290,6 @@ msgstr "Minimum alındı"
 msgid "More info"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "My Deposit"

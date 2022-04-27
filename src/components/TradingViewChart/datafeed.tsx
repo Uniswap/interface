@@ -7,7 +7,10 @@ import {
   PeriodParams,
   HistoryCallback,
 } from './charting_library'
-
+import { useState, useEffect, useRef } from 'react'
+import { useActiveWeb3React } from 'hooks'
+import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
+import { nativeNameFromETH } from 'hooks/useMixpanel'
 const getResolutionTimeTicks = (resolution: ResolutionString) => {
   switch (resolution) {
     case '1':
@@ -25,90 +28,142 @@ const getResolutionTimeTicks = (resolution: ResolutionString) => {
   }
 }
 
-const getLatestBarTimestamp = (resolution: ResolutionString) => {
-  const nowTimestamp = new Date().getTime() 
-  return nowTimestamp - (nowTimestamp % getResolutionTimeTicks(resolution))
-}
 export const getTimeframeMilliseconds = (timeFrame: LiveDataTimeframeEnum) => {
   switch (timeFrame) {
-    case LiveDataTimeframeEnum.HOUR: 
+    case LiveDataTimeframeEnum.HOUR:
       return 3600000
-    case LiveDataTimeframeEnum.FOUR_HOURS: 
+    case LiveDataTimeframeEnum.FOUR_HOURS:
       return 14400000
-    case LiveDataTimeframeEnum.DAY: 
+    case LiveDataTimeframeEnum.DAY:
       return 86400000
-    case LiveDataTimeframeEnum.WEEK: 
+    case LiveDataTimeframeEnum.WEEK:
       return 604800000
-    case LiveDataTimeframeEnum.MONTH: 
+    case LiveDataTimeframeEnum.MONTH:
       return 2592000000
-    case LiveDataTimeframeEnum.SIX_MONTHS: 
+    case LiveDataTimeframeEnum.SIX_MONTHS:
       return 15552000000
   }
 }
 
 const configurationData = {
-  supported_resolutions: ['15', '1H', '4H'],
-  exchanges: [
-    {
-      value: 'Bitfinex',
-      name: 'Bitfinex',
-      desc: 'Bitfinex',
-    },
-    {
-      // `exchange` argument for the `searchSymbols` method, if a user selects this exchange
-      value: 'Kraken',
-
-      // filter name
-      name: 'Kraken',
-
-      // full exchange name displayed in the filter popup
-      desc: 'Kraken bitcoin exchange',
-    },
-  ],
-  symbols_types: [
-    {
-      name: 'crypto',
-
-      // `symbolType` argument for the `searchSymbols` method, if a user selects this symbol type
-      value: 'crypto',
-    },
-    // ...
-  ],
+  supported_resolutions: ['5', '15', '1H', '4H'],
 }
 
-export const useDatafeed = (data: any, timeframe: LiveDataTimeframeEnum) => {
+const getNetworkString = (chainId: ChainId | undefined) => {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return 'chain-ethereum'
+    case ChainId.BSCMAINNET:
+      return 'chain-bsc'
+    case ChainId.MATIC:
+      return 'chain-polygon'
+    case ChainId.CRONOS:
+      return 'chain-cronos'
+    case ChainId.AVAXMAINNET:
+      return 'chain-avalanche'
+    case ChainId.FANTOM:
+      return 'chain-fantom'
+    case ChainId.ARBITRUM:
+      return 'chain-arbitrum'
+    case ChainId.VELAS:
+      return 'chain-velas'
+    case ChainId.AURORA:
+      return 'chain-aurora'
+    case ChainId.OASIS:
+      return 'chain-oasis'
+    default:
+      return ''
+  }
+}
+
+const getResolutionString = (res: string) => {
+  switch (res) {
+    case '15':
+      return '15m'
+    default:
+      return '15m'
+  }
+}
+
+const DEXTOOLS_API = 'https://pancake-subgraph-proxy.kyberswap.com/dextools'
+const monthTs = 2592000000
+const weekTs = 604800000
+
+export const searchTokenPair = (address: string, chainId: ChainId | undefined) => {
+  return fetch(`${DEXTOOLS_API}/${getNetworkString(chainId)}/api/pair/search?s=${address}`)
+    .then(res => res.json())
+    .catch(error => console.log(error))
+}
+export const getHistoryCandleStatus = (address: string, chainId: ChainId | undefined) => {
+  return fetch(`${DEXTOOLS_API}/${getNetworkString(chainId)}/api/Uniswap/1/history-candle-status?pair=${address}`)
+    .then(res => res.json())
+    .catch(error => console.log(error))
+}
+
+export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: string) => {
+  const { chainId } = useActiveWeb3React()
+  const [data, setData] = useState<any[]>([])
+  const [oldestTs, setOldestTs] = useState(0)
+  const stateRef = useRef<any>({ data, oldestTs })
+  const fetchingRef = useRef<boolean>(false)
+  const isReverse = currencies[0] === Currency.ETHER
+
+  useEffect(() => {
+    stateRef.current = { data, oldestTs }
+  }, [data, oldestTs])
+
+  const getCandles = async (ts: number, res: string, span: string = 'month') => {
+    const resStr = getResolutionString(res)
+    const response = await fetch(
+      `${DEXTOOLS_API}/${getNetworkString(
+        chainId,
+      )}/api/Pancakeswap/history/candles?sym=eth&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${resStr &&
+        '&res=' + resStr}`,
+    )
+      .then(res => res.json())
+      .catch(error => console.log(error))
+    return response?.data
+  }
   return {
     onReady: (callback: any) => {
       setTimeout(() => callback(configurationData))
     },
-    resolveSymbol: (
+    resolveSymbol: async (
       symbolName: string,
       onSymbolResolvedCallback: ResolveCallback,
       onResolveErrorCallback: ErrorCallback,
     ) => {
-      const symbolInfo: LibrarySymbolInfo = {
-        ticker: 'TEST',
-        name: 'TEST',
-        full_name: 'Full name',
-        listed_exchange: 'listed exchange',
-        format: 'price',
-        description: 'Test description',
-        type: 'crypto',
-        session: '24x7',
-        timezone: 'Etc/UTC',
-        exchange: 'TEST EXCHANGE',
-        minmov: 1,
-        pricescale: 100,
-        has_intraday: true,
-        has_no_volume: true,
-        has_empty_bars: true,
-        has_weekly_and_monthly: true,
-        supported_resolutions: configurationData.supported_resolutions as ResolutionString[],
-        volume_precision: 2,
-        data_status: 'streaming',
+      try {
+        const token = isReverse ? currencies[1] : currencies[0]
+        const ethSymbol = nativeNameFromETH(chainId)
+        const label = isReverse ? `${ethSymbol}/${token?.symbol}` : `${token?.symbol}/${ethSymbol}`
+
+        const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+        const { candles } = await getCandles(ts, '15', 'week')
+
+        const symbolInfo: LibrarySymbolInfo = {
+          ticker: label,
+          name: label,
+          full_name: label,
+          listed_exchange: '',
+          format: 'price',
+          description: label,
+          type: 'crypto',
+          session: '24x7',
+          timezone: 'Etc/UTC',
+          exchange: '',
+          minmov: 1,
+          pricescale: Math.pow(10, Math.ceil(Math.log10(isReverse ? candles[0].open : 1 / candles[0].open)) + 5),
+          has_intraday: true,
+          //has_empty_bars: true,
+          has_weekly_and_monthly: true,
+          supported_resolutions: configurationData.supported_resolutions as ResolutionString[],
+          data_status: 'streaming',
+        }
+        onSymbolResolvedCallback(symbolInfo)
+      } catch (error) {
+        console.log(error)
       }
-      console.log('[resolveSymbol]: Symbol resolved')
-      onSymbolResolvedCallback(symbolInfo)
     },
     getBars: async (
       symbolInfo: LibrarySymbolInfo,
@@ -117,56 +172,59 @@ export const useDatafeed = (data: any, timeframe: LiveDataTimeframeEnum) => {
       onHistoryCallback: HistoryCallback,
       onErrorCallback: ErrorCallback,
     ) => {
-      console.log('🚀 ~ file: datafeed.js ~ line 57 ~ getBars: ~ periodParams', periodParams)
-      console.log('🚀 ~ file: datafeed.js ~ line 57 ~ getBars: ~ symbolInfo', symbolInfo)
-      console.log('🚀 ~ file: datafeed.js ~ line 57 ~ getBars: ~ resolution', resolution)
-      console.log(data)
+      if (fetchingRef.current) return
       try {
-        const timeframeMilliseconds = getTimeframeMilliseconds(timeframe)
-        const { countBack, from, to } = periodParams
-        console.log("🚀 ~ file: datafeed.tsx ~ line 111 ~ useDatafeed ~ to", to)
-        if (to < (new Date().getTime() - timeframeMilliseconds) /1000) {
-          onHistoryCallback([], { noData: true })
-          return
-        }
-        const resolutionTicks = getResolutionTimeTicks(resolution)
-        const latestBarTimestamp = getLatestBarTimestamp(resolution)
-        const firstBarTimestamp = latestBarTimestamp - timeframeMilliseconds
-        let currentBarTimestamp = firstBarTimestamp
-        let bars: any[] = []
-        let bar: any = {time:firstBarTimestamp}
-      
-        data.forEach((item: any) => {
-          let newValue = parseFloat(item.value)
-          if (!bar.open) {
-            bar.open = newValue
-            bar.high = newValue
-            bar.low = newValue
-          } else {
-            if (!bar.high || bar.high < newValue) {
-              bar.high = newValue
+        let from = periodParams.from * 1000
+        let to = periodParams.to * 1000
+        let noData = false
+        let candlesTemp = stateRef.current.data
+        if (!candlesTemp || candlesTemp.length === 0) {
+          const ts = Math.floor(new Date().getTime() / monthTs) * monthTs
+          const { candles, oldestTs } = await getCandles(ts, resolution)
+          candlesTemp = candles
+          setOldestTs(parseFloat(oldestTs))
+          setData(candlesTemp)
+        } else {
+          const minTime = candlesTemp[0].time
+          if (minTime > from) {
+            const lastTimePoint = Math.floor(minTime / monthTs)
+            const fromTimePoint = Math.floor(from / monthTs)
+            fetchingRef.current = true
+            for (let i = lastTimePoint; i >= fromTimePoint; i--) {
+              const ts = i * monthTs
+              const { candles } = await getCandles(ts, resolution)
+              candlesTemp = [...candles, ...candlesTemp].sort((a, b) => a.time - b.time)
+              if (ts < stateRef.current.oldestTs) {
+                noData = true
+                break
+              }
             }
-            if (!bar.low || bar.low > newValue) {
-              bar.low = newValue
-            }
+            setData(candlesTemp)
+            fetchingRef.current = false
           }
-          if (currentBarTimestamp + resolutionTicks < item.time) {
-            bar.close = newValue
-            bars = [...bars, bar]
-            bar = {};
-            currentBarTimestamp += resolutionTicks
-            bar.time = currentBarTimestamp
-            bar.open = newValue
-          } 
-        })
-        console.log(bars)
+        }
+        let formatedCandles = candlesTemp
+          .filter((c: any) => c.time > from && c.time < to)
+          .map((c: any, i: number, arr: any[]) => {
+            if (arr[i + 1] && c.close !== arr[i + 1].open) {
+              c.close = arr[i + 1].open
+              if (c.close > c.high) {
+                c.high = c.close
+              }
+              if (c.close < c.low) {
+                c.low = c.close
+              }
+            }
+            return c
+          })
 
-        // bars = data.map((item: { time: number, value: string }, index: number) => {
-        //   const open = parseFloat(item.value);
-        //   const close = parseFloat(data[index + 1]?.value || item.value);
-        //   return {time:item.time, open:open, close: close, high: Math.max(open,close), low: Math.min(open,close) }
-        // })
-        onHistoryCallback(bars, { noData: false })
+        if (isReverse) {
+          formatedCandles = formatedCandles.map((c: any) => {
+            return { ...c, open: 1 / c.open, close: 1 / c.close, high: 1 / c.low, low: 1 / c.high }
+          })
+        }
+
+        onHistoryCallback(formatedCandles, { noData: noData })
       } catch (error) {
         console.log('[getBars]: Get error', error)
         onErrorCallback(error as string)

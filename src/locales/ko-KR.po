@@ -1286,12 +1286,10 @@ msgstr "최소 수령 금액을 받을 수 없다면 거래는 진행 되지 않
 msgid "Minimum received"
 msgstr "최소 수령"
 
-
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem.tsx
 msgid "More info"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "My Deposit"

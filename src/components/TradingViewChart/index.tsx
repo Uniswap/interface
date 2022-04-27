@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  widget,
-  ChartingLibraryWidgetOptions,
-  LanguageCode,
-  ResolutionString,
-} from './charting_library'
+import { widget, ChartingLibraryWidgetOptions, LanguageCode, ResolutionString, Timezone } from './charting_library'
 import styled from 'styled-components'
 import AnimatedLoader from 'components/Loader/AnimatedLoader'
 import useTheme from 'hooks/useTheme'
@@ -14,9 +9,7 @@ import { ReactComponent as FullscreenOff } from 'assets/svg/fullscreen_off.svg'
 import * as ReactDOMServer from 'react-dom/server'
 import Portal from '@reach/portal'
 import { isMobile } from 'react-device-detect'
-import { getTimeframeMilliseconds, useDatafeed } from './datafeed'
-import useLiveChartData, { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
-import { Token } from '@dynamic-amm/sdk'
+import { useDatafeed } from './datafeed'
 
 const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
   margin-top: 10px;
@@ -83,64 +76,54 @@ export interface ChartContainerProps {
 
 export interface ChartContainerState {}
 
-const getInterval = (timeframe: LiveDataTimeframeEnum) => {
-  switch (timeframe) {
-    case LiveDataTimeframeEnum.HOUR: 
-      return '5'
-    case LiveDataTimeframeEnum.FOUR_HOURS: 
-    return '5'
-    case LiveDataTimeframeEnum.DAY: 
-    return '15'
-    case LiveDataTimeframeEnum.WEEK: 
-    return '1H'
-    case LiveDataTimeframeEnum.MONTH: 
-    return '1H'
-    case LiveDataTimeframeEnum.SIX_MONTHS: 
-    return '4H'
-  }
-}
-function ProLiveChart({ tokens }: { tokens: (Token | null | undefined)[] }) {
+function ProLiveChart({
+  currencies,
+  stateProChart,
+  className,
+}: {
+  currencies: any
+  stateProChart?: any
+  className?: string
+}) {
   const theme = useTheme()
   const userLocale = useUserLocale()
-
+  const { hasProChart, apiVersion, pairAddress } = stateProChart
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [loading, setLoading] = useState(true)
   const [fullscreen, setFullscreen] = useState(false)
-  const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
-  const { data: chartData } = useLiveChartData(tokens,timeFrame)
-  const datafeed = useDatafeed(chartData,timeFrame)
+  const datafeed = useDatafeed(currencies, pairAddress, apiVersion)
 
   useEffect(() => {
-    if (!ref) {
+    if (!ref || !hasProChart) {
       return
     }
     setLoading(true)
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: 'AAPL',
       datafeed: datafeed,
-      interval: getInterval(timeFrame) as ResolutionString,
+      interval: '15' as ResolutionString,
       container: ref,
       library_path: '/charting_library/',
       locale: (userLocale ? userLocale.slice(0, 2) : 'en') as LanguageCode,
       disabled_features: [
-        'use_localstorage_for_settings',
         'header_symbol_search',
         'header_fullscreen_button',
         'header_compare',
         'header_saveload',
         'drawing_templates',
       ],
-      enabled_features: ['study_templates', 'fix_left_edge'],
-      charts_storage_url: 'https://saveload.tradingview.com',
-      charts_storage_api_version: '1.1',
-      client_id: 'tradingview.com',
-      user_id: 'public_user_id',
+      enabled_features: [
+        'study_templates',
+        'fix_left_edge',
+        'create_volume_indicator_by_default',
+        'use_localstorage_for_settings',
+        'save_chart_properties_to_local_storage',
+      ],
       fullscreen: false,
       autosize: true,
       studies_overrides: {},
       theme: theme.darkMode ? 'Dark' : 'Light',
       custom_css_url: '/charting_library/style.css',
-      timeframe: timeFrame as ResolutionString,
       time_frames: [
         // { text: '6m', resolution: '4H' as ResolutionString, description: '6 Months' },
         { text: '1m', resolution: '1H' as ResolutionString, description: '1 Month' },
@@ -149,18 +132,23 @@ function ProLiveChart({ tokens }: { tokens: (Token | null | undefined)[] }) {
         // { text: '4h', resolution: '5' as ResolutionString, description: '4 Hours' },
         // { text: '1h', resolution: '5' as ResolutionString, description: '1 Hour' },
       ],
-      timezone: 'Asia/Ho_Chi_Minh' 
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone as Timezone,
     }
     const tvWidget = new widget(widgetOptions)
-    tvWidget.applyOverrides({
-      'paneProperties.backgroundType': 'solid',
-      'paneProperties.background': theme.buttonBlack,
-      'mainSeriesProperties.candleStyle.upColor': theme.primary,
-      'mainSeriesProperties.candleStyle.borderUpColor': theme.primary,
-      'mainSeriesProperties.candleStyle.wickUpColor': theme.primary,
-    })
+
     tvWidget.onChartReady(() => {
+      tvWidget.applyOverrides({
+        'paneProperties.backgroundType': 'solid',
+        'paneProperties.background': theme.buttonBlack,
+        'mainSeriesProperties.candleStyle.upColor': theme.primary,
+        'mainSeriesProperties.candleStyle.borderUpColor': theme.primary,
+        'mainSeriesProperties.candleStyle.wickUpColor': theme.primary,
+        'mainSeriesProperties.candleStyle.downColor': theme.red,
+        'mainSeriesProperties.candleStyle.borderDownColor': theme.red,
+        'mainSeriesProperties.candleStyle.wickDownColor': theme.red,
+      })
       setLoading(false)
+
       tvWidget.headerReady().then(() => {
         const fullscreenOn = tvWidget.createButton()
         fullscreenOn.setAttribute('title', 'Fullscreen on')
@@ -172,17 +160,18 @@ function ProLiveChart({ tokens }: { tokens: (Token | null | undefined)[] }) {
         })
         fullscreenOn.innerHTML = ReactDOMServer.renderToStaticMarkup(<FullscreenOn />)
       })
-      tvWidget.activeChart().setVisibleRange(
-        { from: (new Date().getTime() - getTimeframeMilliseconds(timeFrame)) / 1000, to: new Date().getTime() / 1000 },
-      )
-      tvWidget
-        .activeChart()
-        .onIntervalChanged()
-        .subscribe(null, (interval, timeframeObj:any) => {
-          console.log('🚀 ~ file: index.tsx ~ line 160 ~ tvWidget.activeChart ~ interval', interval)
-          console.log('🚀 ~ file: index.tsx ~ line 160 ~ tvWidget.activeChart ~ timeframeObj', timeframeObj)
-          timeframeObj?.timeframe?.value && setTimeFrame(timeframeObj?.timeframe?.value as LiveDataTimeframeEnum)
-        })
+      // tvWidget.activeChart().setVisibleRange({
+      //   from: (new Date().getTime() - getTimeframeMilliseconds(timeFrame)) / 1000,
+      //   to: new Date().getTime() / 1000,
+      // })
+      // tvWidget
+      //   .activeChart()
+      //   .onIntervalChanged()
+      //   .subscribe(null, (interval, timeframeObj: any) => {
+      //     console.log('🚀 ~ file: index.tsx ~ line 160 ~ tvWidget.activeChart ~ interval', interval)
+      //     console.log('🚀 ~ file: index.tsx ~ line 160 ~ tvWidget.activeChart ~ timeframeObj', timeframeObj)
+      //     timeframeObj?.timeframe?.value && setTimeFrame(timeframeObj?.timeframe?.value as LiveDataTimeframeEnum)
+      //   })
     })
 
     return () => {
@@ -190,10 +179,10 @@ function ProLiveChart({ tokens }: { tokens: (Token | null | undefined)[] }) {
         tvWidget.remove()
       }
     }
-  }, [theme, userLocale, ref, chartData])
+  }, [theme, userLocale, ref, pairAddress])
 
   return (
-    <ProLiveChartWrapper fullscreen={fullscreen} onClick={() => setFullscreen(false)}>
+    <ProLiveChartWrapper fullscreen={fullscreen} onClick={() => setFullscreen(false)} className={className}>
       {loading && (
         <Loader>
           <AnimatedLoader />

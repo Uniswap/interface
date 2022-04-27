@@ -20,7 +20,7 @@ import { ApplicationModal } from 'state/application/actions'
 import { MouseoverTooltipDesktopOnly } from 'components/Tooltip'
 import { t } from '@lingui/macro'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-
+import { ShoppingCart } from 'react-feather'
 const TopTrendingSoonTokenItem = ({
   tokenData,
   top,
@@ -69,7 +69,13 @@ const TopTrendingSoonTokenItem = ({
             style={{ borderRadius: '50%', cursor: 'pointer' }}
             onClick={onSelectToken}
           />
-          <Text fontSize="14px" mr="5px" color={theme.subText} style={{ cursor: 'pointer' }} onClick={onSelectToken}>
+          <Text
+            fontSize="14px"
+            mr="5px"
+            color={theme.subText}
+            style={{ cursor: 'pointer', flex: '1' }}
+            onClick={onSelectToken}
+          >
             {tokenData.symbol}
           </Text>
           <MouseoverTooltipDesktopOnly text={t`More info`} placement="top" width="fit-content">
@@ -103,7 +109,7 @@ const TopTrendingSoonTokenItem = ({
                 mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_CLICKED, { trending_token: tokenData.symbol })
               }
             >
-              <MoneyBag color={theme.primary} size={12} />
+              <ShoppingCart color={theme.primary} size={10} fill={theme.primary} />
             </ButtonEmpty>
           </MouseoverTooltipDesktopOnly>
         </Flex>
@@ -123,6 +129,8 @@ const Container = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
   border-radius: 4px;
   position: relative;
+  width: calc(20% - 70px);
+  min-width: 135px;
 `
 
 export default TopTrendingSoonTokenItem

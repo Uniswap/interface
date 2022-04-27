@@ -359,7 +359,7 @@ export const LiveChartWrapper = styled.div`
   }
   @media screen and (min-width: 1440px) {
     height: 510px;
-    width: 1040px;
+    width: 940px;
     display: block;
   }
 `

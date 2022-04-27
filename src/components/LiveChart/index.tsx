@@ -4,7 +4,7 @@ import AnimatingNumber from './AnimatingNumber'
 import styled, { ThemeContext } from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { Repeat } from 'react-feather'
-import { Currency } from '@dynamic-amm/sdk'
+import { Currency, Token } from '@dynamic-amm/sdk'
 import { Field } from 'state/swap/actions'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
@@ -19,6 +19,8 @@ import { Trans } from '@lingui/macro'
 import CustomToggle from 'components/Toggle/CustomToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 import ProLiveChart from 'components/TradingViewChart'
+import { Aggregator } from 'utils/aggregator'
+import { searchTokenPair, getHistoryCandleStatus } from 'components/TradingViewChart/datafeed'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
@@ -63,7 +65,7 @@ const SwitchButtonWrapper = styled.div`
 `
 
 const ProLiveChartCustom = styled(ProLiveChart)`
-  margin: ${() => isMobile ? '0 -20px -20px -20px' : '10px 0'}
+  margin: ${() => (isMobile ? '0 -20px -20px -20px' : '15px 0 !important')};
 `
 
 const getDifferentValues = (chartData: any, hoverValue: number | null) => {
@@ -121,6 +123,8 @@ function LiveChart({
   const isWrappedToken = tokens[0]?.address === tokens[1]?.address
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
+  const [stateProChart, setStateProChart] = useState({ hasProChart: false, pairAddress: '', apiVersion: '' })
+  const { hasProChart } = stateProChart
   const { data: chartData, error, loading } = useLiveChartData(tokens, timeFrame)
   const showProLiveChart = useShowProLiveChart()
   const toggleProLiveChart = useToggleProLiveChart()
@@ -130,6 +134,33 @@ function LiveChart({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartData])
+  useEffect(() => {
+    setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '' })
+    if (currencies[Field.INPUT] === Currency.ETHER || currencies[Field.OUTPUT] === Currency.ETHER) {
+      const token = (currencies[Field.INPUT] !== Currency.ETHER
+        ? currencies[Field.INPUT]
+        : currencies[Field.OUTPUT]) as Token
+
+      if (token?.address) {
+        searchTokenPair(token.address, chainId)
+          .then((data: any) => {
+            if (data.length > 0 && data[0].id) {
+              setStateProChart(state => {
+                return { ...state, pairAddress: data[0].id }
+              })
+              getHistoryCandleStatus(data[0].id, chainId)
+                .then((ver: any) => {
+                  setStateProChart(state => {
+                    return { ...state, apiVersion: ver, hasProChart: true }
+                  })
+                })
+                .catch(error => console.log(error))
+            }
+          })
+          .catch(error => console.log(error))
+      }
+    }
+  }, [currencies])
 
   const showingValue = hoverValue ?? (chartData[chartData.length - 1]?.value || 0)
 
@@ -190,22 +221,24 @@ function LiveChart({
                 </SwitchButtonWrapper>
               </Flex>
             </Flex>
-            <Flex>
-              <CustomToggle
-                activeName={showProLiveChart ? 'pro' : 'basic'}
-                toggle={() => {
-                  toggleProLiveChart()
-                }}
-                buttons={[
-                  { name: 'basic', title: 'Basic' },
-                  { name: 'pro', title: 'Pro' },
-                ]}
-                bgColor={isMobile ? 'buttonBlack' : 'background'}
-              />
-            </Flex>
+            {hasProChart && (
+              <Flex>
+                <CustomToggle
+                  activeName={showProLiveChart ? 'pro' : 'basic'}
+                  toggle={() => {
+                    toggleProLiveChart()
+                  }}
+                  buttons={[
+                    { name: 'basic', title: 'Basic' },
+                    { name: 'pro', title: 'Pro' },
+                  ]}
+                  bgColor={isMobile ? 'buttonBlack' : 'background'}
+                />
+              </Flex>
+            )}
           </Flex>
-          {showProLiveChart ? (
-            <ProLiveChartCustom tokens={tokens}/>
+          {hasProChart && showProLiveChart ? (
+            <ProLiveChartCustom currencies={Object.values(currencies)} stateProChart={stateProChart} />
           ) : (
             <>
               <Flex justifyContent="space-between" alignItems="flex-start" marginTop={'5px'}>
