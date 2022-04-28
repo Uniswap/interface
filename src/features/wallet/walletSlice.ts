@@ -54,7 +54,6 @@ const slice = createSlice({
       const id = normalizeAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot edit missing account ${id}`)
       state.accounts[id] = updatedAccount
-      if (state.activeAccount?.address === id) state.activeAccount = updatedAccount
     },
     activateAccount: (state, action: PayloadAction<Address>) => {
       const address = action.payload
