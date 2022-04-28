@@ -12,7 +12,7 @@ import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected } from '../../connectors'
+import { injected, network } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
@@ -129,7 +129,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   // important that these are destructed from the account-specific web3-react context
-  const { connector, error, isActive, account } = useWeb3React()
+  const { connector, error, account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
@@ -143,6 +143,8 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
+  const isNetworkConnector = connector === network
+
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -154,21 +156,17 @@ export default function WalletModal({
   useEffect(() => {
     if (walletModalOpen) {
       setPendingError(false)
-      setWalletView(WALLET_VIEWS.ACCOUNT)
+      setWalletView(isNetworkConnector ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
     }
-  }, [walletModalOpen])
+  }, [walletModalOpen, isNetworkConnector])
 
   // close modal when a connection is successful
-  const isActivePrevious = usePrevious(isActive)
   const connectorPrevious = usePrevious(connector)
   useEffect(() => {
-    if (
-      walletModalOpen &&
-      ((isActive && !isActivePrevious) || (connector && connector !== connectorPrevious && !error))
-    ) {
+    if (walletModalOpen && connector && connector !== connectorPrevious && !error) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
-  }, [setWalletView, isActive, error, connector, walletModalOpen, isActivePrevious, connectorPrevious])
+  }, [setWalletView, error, connector, walletModalOpen, connectorPrevious])
 
   const tryActivation = async (connector: Connector | undefined) => {
     let name = ''
@@ -339,25 +337,16 @@ export default function WalletModal({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        {walletView !== WALLET_VIEWS.ACCOUNT ? (
-          <HeaderRow color="blue">
-            <HoverText
-              onClick={() => {
-                setPendingError(false)
-                setWalletView(WALLET_VIEWS.ACCOUNT)
-              }}
-            >
-              <ArrowLeft />
-            </HoverText>
-          </HeaderRow>
-        ) : (
-          <HeaderRow>
-            <HoverText>
-              <Trans>Connect a wallet</Trans>
-            </HoverText>
-          </HeaderRow>
-        )}
-
+        <HeaderRow color="blue">
+          <HoverText
+            onClick={() => {
+              setPendingError(false)
+              setWalletView(WALLET_VIEWS.ACCOUNT)
+            }}
+          >
+            <ArrowLeft />
+          </HoverText>
+        </HeaderRow>
         <ContentWrapper>
           <AutoColumn gap="16px">
             <LightCard>
