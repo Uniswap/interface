@@ -4,7 +4,7 @@ name: Fastlane deploy iOS
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * 1,3,5' # run at 2 AM UTC MWF
+    - cron: '0 2 * * 1,2,3,4,5' # run at 2 AM UTC MWF
 
 jobs:
   ios:
