@@ -4,12 +4,20 @@ import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 
-interface OnboardingScreenProps {
-  stepCount: number
-  stepNumber: number
+type StepProps =
+  | {
+      stepCount: number
+      stepNumber: number
+    }
+  | {
+      stepCount?: undefined
+      stepNumber?: undefined
+    }
+
+type OnboardingScreenProps = {
   subtitle: string
   title: string
-}
+} & StepProps
 
 export function OnboardingScreen({
   title,
@@ -25,7 +33,9 @@ export function OnboardingScreen({
           <Box alignItems="flex-start" flex={1}>
             <BackButton />
           </Box>
-          <Indicator count={stepCount} current={stepNumber} />
+          {stepCount !== undefined && stepNumber !== undefined ? (
+            <Indicator count={stepCount} current={stepNumber} />
+          ) : null}
           <Box flex={1}>{/* ensures indicator is centered */}</Box>
         </Flex>
 

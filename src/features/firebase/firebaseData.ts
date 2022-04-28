@@ -50,14 +50,20 @@ export function* editAccountDataInFirebase(
   const { payload } = actionData
   const { type, address } = payload
 
-  if (type === EditAccountAction.Remove) {
-    yield* call(deleteAccountMetadata, address)
-    yield* call(disassociateAddressesFromPushToken, [address])
-    yield* call(disassociateAddressesFromFirebaseUid, [address])
-  } else if (type === EditAccountAction.Rename) {
-    yield* call(updateAccountMetadata, address, { name: payload.newName })
-  } else {
-    throw new Error(`Invalid EditAccountAction ${type}`)
+  switch (type) {
+    case EditAccountAction.Remove:
+      yield* call(deleteAccountMetadata, address)
+      yield* call(disassociateAddressesFromPushToken, [address])
+      yield* call(disassociateAddressesFromFirebaseUid, [address])
+      break
+    case EditAccountAction.Rename:
+      yield* call(updateAccountMetadata, address, { name: payload.newName })
+      break
+    case EditAccountAction.AddBackupMethod:
+      // no-op
+      break
+    default:
+      throw new Error(`Invalid EditAccountAction ${type}`)
   }
 }
 

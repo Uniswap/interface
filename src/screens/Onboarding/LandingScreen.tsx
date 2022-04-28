@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, View } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_SPLASH_LOGO } from 'src/assets'
 import WalletIcon from 'src/assets/icons/wallet.svg'
@@ -17,7 +17,8 @@ import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
-import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
+import { createAccountActions } from 'src/features/wallet/createAccountSaga'
+import { activeAccountSelector, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
 
@@ -31,18 +32,26 @@ export function LandingScreen({ navigation }: Props) {
   const gradientStops = usePrimaryToSecondaryLinearGradient()
 
   const onPressCreateWallet = () => {
-    navigation.navigate(OnboardingScreens.CreateWallet)
+    navigation.navigate(OnboardingScreens.NameAndColor)
   }
-
   const onPressImportWallet = () => {
     // TODO Implement import wallet flow
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
   }
-
   const onPressExplore = () => {
     // TODO Build any tooltips/guides for "explore"
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
   }
+
+  // avoids `useActiveAccount` since response may be null
+  const activeAccount = useAppSelector(activeAccountSelector)
+
+  // create account on mount
+  useEffect(() => {
+    if (!activeAccount) {
+      dispatch(createAccountActions.trigger())
+    }
+  }, [activeAccount, dispatch])
 
   return (
     <Screen edges={['bottom']}>

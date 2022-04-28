@@ -5,19 +5,21 @@ import {
   SpacingShorthandProps,
 } from '@shopify/restyle'
 import React, { memo } from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import Checkmark from 'src/assets/icons/checkmark.svg'
 import { Box } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
 
 type Props = {
   size: number
-  backgroundColor: string
+  color?: string
 } & BackgroundColorProps<Theme> &
   BackgroundColorShorthandProps<Theme> &
   SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-function _CheckmarkCircle({ size, ...rest }: Props) {
+function _CheckmarkCircle({ color, size, ...rest }: Props) {
+  const theme = useAppTheme()
   return (
     <Box
       alignItems="center"
@@ -26,7 +28,7 @@ function _CheckmarkCircle({ size, ...rest }: Props) {
       justifyContent="center"
       width={size}
       {...rest}>
-      <Checkmark height={size / 2} stroke="white" width={size / 2} />
+      <Checkmark height={size / 2} stroke={color ?? theme.colors.white} width={size / 2} />
     </Box>
   )
 }

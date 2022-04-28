@@ -36,8 +36,9 @@ export type SettingsStackParamList = {
 }
 
 export type OnboardingStackParamList = {
+  [OnboardingScreens.BackupManual]: undefined
   [OnboardingScreens.Backup]: undefined
-  [OnboardingScreens.CreateWallet]: undefined
+  [OnboardingScreens.NameAndColor]: undefined
   [OnboardingScreens.Landing]: undefined
   [OnboardingScreens.Notifications]: undefined
   [OnboardingScreens.Outro]: undefined
@@ -103,6 +104,11 @@ export type SettingsStackNavigationProp = CompositeNavigationProp<
 export type SettingsStackScreenProp<Screen extends keyof SettingsStackParamList> =
   CompositeScreenProps<NativeStackScreenProps<SettingsStackParamList, Screen>, AppStackScreenProps>
 
+export type OnboardingStackNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<OnboardingStackParamList>,
+  AppStackNavigationProp
+>
+
 export type RootParamList = TabParamList &
   AccountStackParamList &
   SettingsStackParamList &
@@ -112,3 +118,4 @@ export type RootParamList = TabParamList &
 export const useAppStackNavigation = () => useNavigation<AppStackNavigationProp>()
 export const useAccountStackNavigation = () => useNavigation<AccountStackNavigationProp>()
 export const useSettingsStackNavigation = () => useNavigation<SettingsStackNavigationProp>()
+export const useOnboardingStackNavigation = () => useNavigation<OnboardingStackNavigationProp>()

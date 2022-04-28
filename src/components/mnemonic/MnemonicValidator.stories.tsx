@@ -51,7 +51,12 @@ export default {
 } as ComponentMeta<typeof MnemonicValidator>
 
 const Template: ComponentStory<typeof MnemonicValidator> = () => (
-  <MnemonicValidator missingPositions={[2, 4, 7, 9]} mnemonic={SAMPLE_SEED} onSuccess={() => {}} />
+  <MnemonicValidator
+    missingPositions={[2, 4, 7, 9]}
+    mnemonic={SAMPLE_SEED}
+    onFailure={() => {}}
+    onSuccess={() => {}}
+  />
 )
 
 export const Primary = Template.bind({})

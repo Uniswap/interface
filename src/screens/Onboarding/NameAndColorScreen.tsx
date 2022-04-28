@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
@@ -11,29 +11,20 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
-import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { activeAccountSelector } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.CreateWallet>
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.NameAndColor>
 
-export function CreateWalletScreen({ navigation }: Props) {
+export function NameAndColorScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
   // avoids `useActiveAccount` since response may be null
   const activeAccount = useAppSelector(activeAccountSelector)
-
   const [newAccountName, setNewAccountName] = useState(activeAccount?.name ?? '')
-
-  // create account on mount
-  useEffect(() => {
-    if (!activeAccount) {
-      dispatch(createAccountActions.trigger())
-    }
-  }, [activeAccount, dispatch])
 
   const onTextInputBlur = () =>
     activeAccount &&
@@ -57,7 +48,7 @@ export function CreateWalletScreen({ navigation }: Props) {
         'Your wallet is your ticket to the world of crypto and web3--give it a nickname and color to get started.'
       )}
       title={t('Say hello to your new wallet')}>
-      <Box flexGrow={1}>
+      <Box>
         {activeAccount ? (
           <CustomizationSection
             accountName={newAccountName}

@@ -2,22 +2,26 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { useAppTheme } from 'src/app/hooks'
+import { OnboardingStackParamList, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { RainbowLinearGradientStops } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
+import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
+import { BackupType } from 'src/features/wallet/accounts/types'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>
 
-export function BackupSetupScreen({ navigation }: Props) {
+export function BackupScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   const onPressNext = () => {
@@ -45,20 +49,34 @@ export function BackupSetupScreen({ navigation }: Props) {
 
 function BackupOptions() {
   const { t } = useTranslation()
+  const theme = useAppTheme()
+
+  const { navigate } = useOnboardingStackNavigation()
+
+  const activeAccountBackups = useActiveAccount()?.backups
+
   const spacer = <Box borderTopColor="gray50" borderTopWidth={1} />
   return (
     <Flex gap="lg">
       {spacer}
       <BackupOptionButton
-        icon={<CloudIcon height={20} stroke="white" width={20} />}
+        completed={activeAccountBackups?.includes(BackupType.Cloud)}
+        icon={<CloudIcon height={20} stroke={theme.colors.white} width={20} />}
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
+        onPress={() => {
+          // navigate(OnboardingScreens.Backup)
+        }}
       />
       {spacer}
       <BackupOptionButton
-        icon={<PencilIcon height={20} stroke="white" width={20} />}
+        completed={activeAccountBackups?.includes(BackupType.Manual)}
+        icon={<PencilIcon height={20} stroke={theme.colors.white} width={20} />}
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
+        onPress={() => {
+          navigate(OnboardingScreens.BackupManual)
+        }}
       />
       {spacer}
     </Flex>
@@ -66,13 +84,16 @@ function BackupOptions() {
 }
 
 interface BackupOptionButtonProps {
+  completed?: boolean
   icon: ReactNode
   label: string
   name?: ElementName
+  onPress: () => void
 }
 
-function BackupOptionButton({ icon, label, name }: BackupOptionButtonProps) {
+function BackupOptionButton({ icon, label, name, onPress, completed }: BackupOptionButtonProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
   return (
     <Flex gap="lg">
       <Flex row alignItems="center" justifyContent="space-between">
@@ -88,17 +109,21 @@ function BackupOptionButton({ icon, label, name }: BackupOptionButtonProps) {
           </Box>
           <Text variant="body">{label}</Text>
         </Flex>
-        <TextButton
-          bg="gray50"
-          borderRadius="lg"
-          disabled={true}
-          name={name}
-          opacity={0.5}
-          p="sm"
-          textColor="textColor"
-          textVariant="buttonLabel">
-          {t('+ Add')}
-        </TextButton>
+        {completed ? (
+          <CheckmarkCircle backgroundColor="none" color={theme.colors.textColor} size={40} />
+        ) : (
+          <TextButton
+            bg="gray50"
+            borderRadius="lg"
+            disabled={false}
+            name={name}
+            p="sm"
+            textColor="textColor"
+            textVariant="buttonLabel"
+            onPress={onPress}>
+            {t('+ Add')}
+          </TextButton>
+        )}
       </Flex>
     </Flex>
   )

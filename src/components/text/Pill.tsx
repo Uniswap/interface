@@ -12,6 +12,7 @@ type PillProps = {
 
 export function Pill({
   customBackgroundColor,
+  children,
   customBorderColor,
   borderRadius = 'full',
   foregroundColor,
@@ -39,12 +40,13 @@ export function Pill({
         ...(customBorderColor ? { borderColor: customBorderColor } : {}),
       }}
       {...rest}>
-      {icon}
-      {label && (
+      {icon ?? null}
+      {label ? (
         <Text style={{ color: foregroundColor }} variant="bodyMd">
           {label}
         </Text>
-      )}
+      ) : null}
+      {children}
     </Flex>
   )
 }

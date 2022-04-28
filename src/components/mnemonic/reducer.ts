@@ -9,7 +9,7 @@ export const initState = (mnemonicLength: number, missingPositions: number[]): N
 
 export const reducer = (
   state: Nullable<string>[],
-  payload: { action: 'update'; word: string }
+  payload: { action: 'update'; word: string } | { action: 'reset'; state: Nullable<string>[] }
 ): Nullable<string>[] => {
   switch (payload.action) {
     case 'update':
@@ -19,5 +19,7 @@ export const reducer = (
       newState[nextInput] = word
 
       return newState
+    case 'reset':
+      return payload.state
   }
 }

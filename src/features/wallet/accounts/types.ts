@@ -8,6 +8,11 @@ export enum AccountType {
   Readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
 }
 
+export enum BackupType {
+  Manual = 'manual',
+  Cloud = 'cloud',
+}
+
 type DynamicPalette = Pick<Palette, 'primary1' | 'secondary1' | 'background1' | 'textColor'>
 
 export type AccountCustomizations = {
@@ -20,6 +25,7 @@ export interface AccountBase {
   address: Address
   name?: string
   customizations?: AccountCustomizations
+  backups?: BackupType[]
 }
 
 export interface LocalAccount extends AccountBase {

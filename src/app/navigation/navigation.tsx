@@ -23,9 +23,10 @@ import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTScreen } from 'src/screens/NFTScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
-import { BackupSetupScreen } from 'src/screens/Onboarding/BackupSetupScreen'
-import { CreateWalletScreen } from 'src/screens/Onboarding/CreateWalletScreen'
+import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
+import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
+import { NameAndColorScreen } from 'src/screens/Onboarding/NameAndColorScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { PortfolioScreen } from 'src/screens/PortfolioScreen'
@@ -103,10 +104,10 @@ export function AppStackNavigator() {
         <AppStack.Group>
           <OnboardingStack.Screen component={LandingScreen} name={OnboardingScreens.Landing} />
           <OnboardingStack.Screen
-            component={CreateWalletScreen}
-            name={OnboardingScreens.CreateWallet}
+            component={NameAndColorScreen}
+            name={OnboardingScreens.NameAndColor}
           />
-          <OnboardingStack.Screen component={BackupSetupScreen} name={OnboardingScreens.Backup} />
+          <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
           <OnboardingStack.Screen
             component={NotificationsSetupScreen}
             name={OnboardingScreens.Notifications}
@@ -115,7 +116,13 @@ export function AppStackNavigator() {
             component={SecuritySetupScreen}
             name={OnboardingScreens.Security}
           />
+          <OnboardingStack.Screen
+            component={ManualBackupScreen}
+            name={OnboardingScreens.BackupManual}
+          />
           {/* TODO: <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} /> */}
+          {/* </AppStack.Group>
+          <AppStack.Group screenOptions={navOptions.presentationModal}> */}
         </AppStack.Group>
       )}
       <AppStack.Group screenOptions={navOptions.presentationModal}>
