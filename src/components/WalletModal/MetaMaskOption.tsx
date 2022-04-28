@@ -1,14 +1,26 @@
 import { injected, injectedHooks as hooks } from 'connectors'
 
+import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import Option from './Option'
 
-const { useChainId, useError, useIsActivating, useIsActive } = hooks
+const { useIsActive } = hooks
+const { name, iconURL, href, color } = SUPPORTED_WALLETS.METAMASK
 
 export default function MetaMaskCard() {
-  const chainId = useChainId()
-  const error = useError()
-  const isActivating = useIsActivating()
   const isActive = useIsActive()
 
-  return <Option connector={injected} chainId={chainId} isActivating={isActivating} error={error} isActive={isActive} />
+  const onClick = () => injected.activate()
+
+  return (
+    <Option
+      onClick={onClick}
+      id="connect-metamask"
+      isActive={isActive}
+      color={color}
+      link={href}
+      header={name}
+      subheader={null}
+      icon={iconURL}
+    />
+  )
 }
