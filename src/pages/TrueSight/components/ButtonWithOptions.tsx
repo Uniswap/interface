@@ -16,6 +16,7 @@ import { useLocation } from 'react-router-dom'
 import { useHistory } from 'react-router'
 import { useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
+import Cart from 'components/Icons/Cart'
 
 const ButtonWithOptions = ({
   platforms,
@@ -62,7 +63,10 @@ const ButtonWithOptions = ({
       }}
       ref={containerRef}
     >
-      <Trans>Buy now</Trans>
+      <Flex alignItems="center">
+        <Cart color={theme.text14} style={{ marginRight: '8px' }} />
+        <Trans>{tokenData.symbol}</Trans>
+      </Flex>
       <ChevronDown
         size="16px"
         style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)' }}
@@ -97,7 +101,7 @@ const ButtonWithOptions = ({
                       fontWeight={500}
                       minWidth="fit-content"
                     >
-                      <Trans>Buy on {NETWORK_LABEL[mappedChainId]}</Trans>
+                      <Trans>{NETWORK_LABEL[mappedChainId]}</Trans>
                     </Text>
                   </Flex>
                 )
@@ -115,7 +119,7 @@ const ButtonWithOptions = ({
                 >
                   <img src={NETWORK_ICON[mappedChainId]} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
                   <Text marginLeft="4px" color={theme.subText} fontSize="12px" fontWeight={500} minWidth="fit-content">
-                    <Trans>Buy on {NETWORK_LABEL[mappedChainId]}</Trans>
+                    <Trans>{NETWORK_LABEL[mappedChainId]}</Trans>
                   </Text>
                 </Flex>
               )

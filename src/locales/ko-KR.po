@@ -311,13 +311,7 @@ msgid "Bug Bounty"
 msgstr ""
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem.tsx
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
 msgid "Buy now"
-msgstr ""
-
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
-msgid "Buy on {0}"
 msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
@@ -2560,6 +2554,9 @@ msgstr "{0}을(를) 통해"
 msgid "via {0} token list"
 msgstr "{0} 토큰 목록을 통해"
 
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/FilterBar/NetworkSelect.tsx
 msgid "{0}"
 msgstr ""
