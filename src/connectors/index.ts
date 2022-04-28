@@ -1,4 +1,4 @@
-// import { SafeAppConnector } from '@gnosis.pm/safe-apps-@web3-react'
+// import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'

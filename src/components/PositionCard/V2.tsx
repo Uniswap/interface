@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
 import { useState } from 'react'
@@ -42,7 +42,7 @@ interface PositionCardProps {
 }
 
 export default function V2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)

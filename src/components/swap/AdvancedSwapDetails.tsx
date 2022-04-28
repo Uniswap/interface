@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContext, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -45,7 +45,7 @@ function TextWithLoadingPlaceholder({
 
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     if (!trade) return { expectedOutputAmount: undefined, priceImpact: undefined }

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import ReactGA from 'react-ga4'
@@ -55,7 +55,7 @@ const UniToken = styled.img`
 `
 
 export default function ClaimPopup() {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   // dont store these in persisted state yet
   const showClaimPopup: boolean = useShowClaimPopup()

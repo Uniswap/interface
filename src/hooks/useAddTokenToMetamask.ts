@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 // import { Currency, Token } from '@uniswap/sdk-core'
-// import { useWeb3React } from '@web3-react/core'
+// import useActiveWeb3React from 'hooks/useActiveWeb3React'
 // import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 // import { useCallback, useState } from 'react'
 
@@ -8,7 +8,7 @@ export default function useAddTokenToMetamask(currencyToAdd: Currency | undefine
   addToken: () => void
   success: boolean | undefined
 } {
-  // const { library } = useWeb3React()
+  // const { library } = useActiveWeb3React()
 
   // const token: Token | undefined = currencyToAdd?.wrapped
 

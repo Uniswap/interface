@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -7,6 +6,7 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
 import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
@@ -127,7 +127,7 @@ function PositionsLoadingPlaceholder() {
 }
 
 export default function Pool() {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
 
   const theme = useContext(ThemeContext)

@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -13,7 +13,7 @@ export function RedirectDuplicateTokenIds(
     },
   } = props
 
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   // prevent weth + eth
   const isETHOrWETHA =

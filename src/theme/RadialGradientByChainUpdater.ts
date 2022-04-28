@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
 
@@ -27,7 +27,7 @@ const setBackground = (newValues: TargetBackgroundStyles) =>
     }
   })
 export default function RadialGradientByChainUpdater(): null {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   // manage background color
   useEffect(() => {

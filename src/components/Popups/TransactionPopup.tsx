@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -16,7 +16,7 @@ const RowNoFlex = styled(AutoRow)`
 `
 
 export default function TransactionPopup({ hash }: { hash: string }) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const tx = useTransaction(hash)
   const theme = useContext(ThemeContext)

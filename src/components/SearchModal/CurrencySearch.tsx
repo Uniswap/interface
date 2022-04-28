@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -71,7 +71,7 @@ export function CurrencySearch({
   showImportView,
   setImportToken,
 }: CurrencySearchProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
   // refs for fixed size lists

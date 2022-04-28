@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -8,6 +7,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
@@ -126,7 +126,7 @@ export default function SwapDetailsDropdown({
   allowedSlippage,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
 
   return (

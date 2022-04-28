@@ -1,7 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, push, ref } from 'firebase/database'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback } from 'react'
 import { TransactionInfo, TransactionType } from 'state/transactions/actions'
 
@@ -20,7 +20,7 @@ const firebaseEnabled = typeof FIREBASE_API_KEY !== 'undefined'
 if (firebaseEnabled) initializeFirebase()
 
 function useMonitoringEventCallback() {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   return useCallback(
     async function log(
@@ -56,7 +56,7 @@ function useMonitoringEventCallback() {
 }
 
 export function useTransactionMonitoringEventCallback() {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const log = useMonitoringEventCallback()
 
   return useCallback(
