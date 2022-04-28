@@ -7,7 +7,7 @@ import { useAppDispatch } from 'state/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected } from '../../connectors'
+import { coinbaseWallet, injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/actions'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
@@ -264,14 +264,16 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                    onClick={() => {
-                      connector.deactivate()
-                    }}
-                  >
-                    <Trans>Disconnect</Trans>
-                  </WalletAction>
+                  {connector !== injected && connector !== coinbaseWallet && (
+                    <WalletAction
+                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                      onClick={() => {
+                        connector.deactivate()
+                      }}
+                    >
+                      <Trans>Disconnect</Trans>
+                    </WalletAction>
+                  )}
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
