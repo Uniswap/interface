@@ -14,7 +14,7 @@ interface HardwareDevice {
 
 interface Wallet {
   accounts: Record<Address, Account>
-  activeAccount: Account | null
+  activeAccountAddress: Address | null
   bluetooth: boolean
   finishedOnboarding?: boolean
   hardwareDevices: HardwareDevice[]
@@ -23,7 +23,7 @@ interface Wallet {
 
 const initialState: Wallet = {
   accounts: {},
-  activeAccount: null,
+  activeAccountAddress: null,
   bluetooth: false,
   hardwareDevices: [],
   isUnlocked: false,
@@ -44,9 +44,9 @@ const slice = createSlice({
       if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
       delete state.accounts[id]
       // If removed account was active, activate first one
-      if (state.activeAccount && areAddressesEqual(state.activeAccount.address, address)) {
+      if (state.activeAccountAddress && areAddressesEqual(state.activeAccountAddress, address)) {
         const firstAccountId = Object.keys(state.accounts)[0]
-        state.activeAccount = state.accounts[firstAccountId]
+        state.activeAccountAddress = firstAccountId
       }
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
@@ -59,7 +59,7 @@ const slice = createSlice({
       const address = action.payload
       const id = normalizeAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${id}`)
-      state.activeAccount = state.accounts[id]
+      state.activeAccountAddress = id
     },
     unlockWallet: (state) => {
       state.isUnlocked = true
@@ -82,7 +82,14 @@ const slice = createSlice({
 })
 
 export const accountsSelector = (state: RootState) => state.wallet.accounts
-export const activeAccountSelector = (state: RootState) => state.wallet.activeAccount
+
+const activeAccountAddressSelector = (state: RootState) => state.wallet.activeAccountAddress
+export const activeAccountSelector = createSelector(
+  accountsSelector,
+  activeAccountAddressSelector,
+  (accounts, activeAccountAddress) =>
+    (activeAccountAddress ? accounts[activeAccountAddress] : null) ?? null
+)
 
 export const selectUserPalette = createSelector(
   activeAccountSelector,
