@@ -136,8 +136,6 @@ export default function WalletModal({
 
   const [pendingWallet, setPendingWallet] = useState<Connector | undefined>()
 
-  const [pendingError, setPendingError] = useState<boolean>()
-
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
 
@@ -155,7 +153,6 @@ export default function WalletModal({
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
-      setPendingError(false)
       setWalletView(isNetworkConnector ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
     }
   }, [walletModalOpen, isNetworkConnector])
@@ -168,7 +165,7 @@ export default function WalletModal({
     }
   }, [setWalletView, error, connector, walletModalOpen, connectorPrevious])
 
-  const tryActivation = async (connector: Connector | undefined) => {
+  const tryActivation = async (connector: Connector) => {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
@@ -185,13 +182,7 @@ export default function WalletModal({
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
-    try {
-      connector?.activate()
-    } catch (error) {
-      if (error instanceof ChainIdNotAllowedError) {
-        setPendingError(true)
-      }
-    }
+    connector.activate()
   }
 
   // get wallets user can switch too, depending on device/browser
@@ -205,7 +196,7 @@ export default function WalletModal({
           return (
             <Option
               onClick={() => {
-                option.connector !== connector && !option.href && tryActivation(option.connector)
+                !!option.connector && option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               id={`connect-${key}`}
               key={key}
@@ -260,7 +251,7 @@ export default function WalletModal({
             onClick={() => {
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                : !option.href && tryActivation(option.connector)
+                : !option.href && option.connector && tryActivation(option.connector)
             }}
             key={key}
             isActive={option.connector === connector}
@@ -340,7 +331,6 @@ export default function WalletModal({
         <HeaderRow color="blue">
           <HoverText
             onClick={() => {
-              setPendingError(false)
               setWalletView(WALLET_VIEWS.ACCOUNT)
             }}
           >
@@ -362,12 +352,7 @@ export default function WalletModal({
               </AutoRow>
             </LightCard>
             {walletView === WALLET_VIEWS.PENDING ? (
-              <PendingView
-                connector={pendingWallet}
-                error={pendingError}
-                setPendingError={setPendingError}
-                tryActivation={tryActivation}
-              />
+              <PendingView connector={pendingWallet} error={error} tryActivation={tryActivation} />
             ) : (
               <OptionGrid>{getOptions()}</OptionGrid>
             )}

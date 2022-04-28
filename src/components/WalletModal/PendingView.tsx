@@ -67,12 +67,10 @@ const LoadingWrapper = styled.div`
 export default function PendingView({
   connector,
   error = false,
-  setPendingError,
   tryActivation,
 }: {
   connector?: Connector
   error?: boolean
-  setPendingError: (error: boolean) => void
   tryActivation: (connector: Connector) => void
 }) {
   const isMetamask = window?.ethereum?.isMetaMask
@@ -88,7 +86,6 @@ export default function PendingView({
               </div>
               <ErrorButton
                 onClick={() => {
-                  setPendingError(false)
                   connector && tryActivation(connector)
                 }}
               >
