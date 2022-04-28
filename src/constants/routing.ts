@@ -23,7 +23,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: Partial<ChainTokenList> = {
   // [ChainId.MAINNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.MAINNET),
-  [ChainId.MAINNET]: pickNetwork([WEVMOS, USDC, WETH, DAI, WBTC, DIFFUSION] as any, ChainId.MAINNET),
+  [ChainId.MAINNET]: pickNetwork([USDC, WETH, DAI, WBTC, DIFFUSION] as any, ChainId.MAINNET),
   [ChainId.TESTNET]: pickNetwork([ATOM, MEVMOS, OSMOSIS, USDC, WEVMOS], ChainId.TESTNET),
 }
 
