@@ -310,10 +310,6 @@ msgstr "Bridge Assets"
 msgid "Bug Bounty"
 msgstr "Bug Bounty"
 
-#: src/components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem.tsx
-msgid "Buy now"
-msgstr "Buy now"
-
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -2030,6 +2026,10 @@ msgstr "To"
 #: src/pages/SwapV2/index.tsx
 msgid "To (estimated)"
 msgstr "To (estimated)"
+
+#: src/components/YieldPools/ListItem.tsx
+msgid "To be extended"
+msgstr "To be extended"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Token"
