@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
-const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
+const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement; disable: boolean }>`
   position: absolute;
   transition: all 0.2s ease;
-  background-color: ${({ theme }) => theme.primary};
+  background-color: ${({ theme, disable }) => (disable ? theme.buttonGray : theme.primary)};
   ${({ element }) => `transform: translateX(${element?.offsetLeft || 0}px); width: ${element?.offsetWidth || 48}px;`}
   border-radius: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   height: 100%;
@@ -12,7 +12,13 @@ const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
   top: 0;
 `
 
-const ToggleElement = styled.span<{ isActive?: boolean; size?: string; border?: boolean; isOff?: boolean }>`
+const ToggleElement = styled.span<{
+  isActive?: boolean
+  size?: string
+  border?: boolean
+  isOff?: boolean
+  disable?: boolean
+}>`
   font-size: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   font-weight: 500;
   height: ${({ size, border }) => (size === 'md' ? 32 : 20) + (border ? 0 : 2) + 'px'};
@@ -23,9 +29,10 @@ const ToggleElement = styled.span<{ isActive?: boolean; size?: string; border?: 
 
   z-index: 1;
   transition: all 0.2s ease;
-  color: ${({ theme, isActive, isOff }) => (isActive && !isOff ? theme.textReverse : theme.subText)};
+  color: ${({ theme, isActive, isOff, disable }) =>
+    isActive && !isOff && !disable ? theme.textReverse : theme.subText};
   :hover {
-    color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text2)};
+    color: ${({ theme, isActive, disable }) => (isActive && !disable ? theme.white : theme.text2)};
   }
 `
 
@@ -53,6 +60,7 @@ export interface CustomToggleProps {
   size?: 'sm' | 'md'
   border?: boolean
   bgColor?: 'background' | 'buttonBlack'
+  disabled?: boolean
 }
 
 export default function CustomToggle({
@@ -66,6 +74,7 @@ export default function CustomToggle({
   size = 'sm',
   border = false,
   bgColor = 'background',
+  disabled = false,
 }: CustomToggleProps) {
   const buttonsRef = useRef<any>({})
   const theme = useTheme()
@@ -87,12 +96,13 @@ export default function CustomToggle({
             isActive={activeName === button.name}
             size={size}
             border={border}
+            disable={disabled}
           >
             {button.title}
           </ToggleElement>
         )
       })}
-      <ToggleButton element={activeElement} size={size} />
+      <ToggleButton element={activeElement} size={size} disable={disabled} />
     </StyledToggle>
   )
 }

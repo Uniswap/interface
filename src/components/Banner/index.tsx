@@ -96,7 +96,7 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
   if (!showBanner) return null
 
   return (
-    <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1028px'} width="100%">
+    <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1394px'} width="100%">
       <Swiper
         autoplay={{ delay: 20000 }}
         slidesPerView={1}

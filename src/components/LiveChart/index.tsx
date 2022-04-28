@@ -20,7 +20,7 @@ import CustomToggle from 'components/Toggle/CustomToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 import ProLiveChart from 'components/TradingViewChart'
 import { Aggregator } from 'utils/aggregator'
-import { searchTokenPair, getHistoryCandleStatus } from 'components/TradingViewChart/datafeed'
+import { searchTokenPair, getHistoryCandleStatus, checkAddressHasData } from 'components/TradingViewChart/datafeed'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
@@ -148,11 +148,14 @@ function LiveChart({
               setStateProChart(state => {
                 return { ...state, pairAddress: data[0].id }
               })
-              getHistoryCandleStatus(data[0].id, chainId)
+
+              checkAddressHasData(data[0].id, chainId)
                 .then((ver: any) => {
-                  setStateProChart(state => {
-                    return { ...state, apiVersion: ver, hasProChart: true }
-                  })
+                  if (ver) {
+                    setStateProChart(state => {
+                      return { ...state, apiVersion: ver, hasProChart: true }
+                    })
+                  }
                 })
                 .catch(error => console.log(error))
             }
@@ -160,7 +163,7 @@ function LiveChart({
           .catch(error => console.log(error))
       }
     }
-  }, [currencies])
+  }, [JSON.stringify(currencies)])
 
   const showingValue = hoverValue ?? (chartData[chartData.length - 1]?.value || 0)
 
@@ -221,21 +224,21 @@ function LiveChart({
                 </SwitchButtonWrapper>
               </Flex>
             </Flex>
-            {hasProChart && (
-              <Flex>
-                <CustomToggle
-                  activeName={showProLiveChart ? 'pro' : 'basic'}
-                  toggle={() => {
-                    toggleProLiveChart()
-                  }}
-                  buttons={[
-                    { name: 'basic', title: 'Basic' },
-                    { name: 'pro', title: 'Pro' },
-                  ]}
-                  bgColor={isMobile ? 'buttonBlack' : 'background'}
-                />
-              </Flex>
-            )}
+
+            <Flex>
+              <CustomToggle
+                activeName={hasProChart && showProLiveChart ? 'pro' : 'basic'}
+                disabled={!hasProChart}
+                toggle={() => {
+                  toggleProLiveChart()
+                }}
+                buttons={[
+                  { name: 'basic', title: 'Basic' },
+                  { name: 'pro', title: 'Pro' },
+                ]}
+                bgColor={isMobile ? 'buttonBlack' : 'background'}
+              />
+            </Flex>
           </Flex>
           {hasProChart && showProLiveChart ? (
             <ProLiveChartCustom currencies={Object.values(currencies)} stateProChart={stateProChart} />

@@ -30,7 +30,7 @@ export const getTimeframeMilliseconds = (timeFrame: LiveDataTimeframeEnum) => {
 }
 
 const configurationData = {
-  supported_resolutions: ['5', '15', '1H', '4H'],
+  supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H'],
 }
 
 const getNetworkString = (chainId: ChainId | undefined) => {
@@ -77,20 +77,52 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
 } = {
   '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': '0xd75ea151a61d06868e31f8988d28dfe5e9df57b4',
 }
+
+const fetcherDextools = (url: string) => {
+  return fetch(`${DEXTOOLS_API}/${url}`)
+    .then(res => res.json())
+    .catch(error => console.log(error))
+}
+
 export const searchTokenPair = (address: string, chainId: ChainId | undefined) => {
   if (TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()]) {
     return new Promise((resolve, reject) => {
       resolve([{ id: TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()] }])
     })
   }
-  return fetch(`${DEXTOOLS_API}/${getNetworkString(chainId)}/api/pair/search?s=${address}`)
-    .then(res => res.json())
-    .catch(error => console.log(error))
+  return fetcherDextools(`${getNetworkString(chainId)}/api/pair/search?s=${address}`)
 }
-export const getHistoryCandleStatus = (address: string, chainId: ChainId | undefined) => {
-  return fetch(`${DEXTOOLS_API}/${getNetworkString(chainId)}/api/Uniswap/1/history-candle-status?pair=${address}`)
-    .then(res => res.json())
-    .catch(error => console.log(error))
+export const getHistoryCandleStatus = (pairAddress: string, chainId: ChainId | undefined) => {
+  return fetcherDextools(`${getNetworkString(chainId)}/api/Uniswap/1/history-candle-status?pair=${pairAddress}`)
+}
+export const getCandlesApi = (
+  chainId: ChainId | undefined,
+  pairAddress: string,
+  apiVersion: string,
+  ts: number,
+  span: string = 'month',
+  res: string = '15m',
+) => {
+  return fetcherDextools(
+    `${getNetworkString(
+      chainId,
+    )}/api/Pancakeswap/history/candles?sym=eth&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${res &&
+      '&res=' + res}`,
+  )
+}
+export const checkAddressHasData = async (pairAddress: string, chainId: ChainId | undefined) => {
+  const ver = await getHistoryCandleStatus(pairAddress, chainId)
+  console.log('🚀 ~ file: datafeed.tsx ~ line 115 ~ checkAddressHasData ~ ver', ver)
+
+  if (ver) {
+    const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+    const { data } = await getCandlesApi(chainId, pairAddress, ver, ts, 'week')
+    console.log('🚀 ~ file: datafeed.tsx ~ line 120 ~ checkAddressHasData ~ data', data)
+    if (data?.candles?.length) {
+      return ver
+    }
+  }
+  return undefined
 }
 
 export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: string) => {
@@ -105,18 +137,11 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
     stateRef.current = { data, oldestTs }
   }, [data, oldestTs])
 
-  const getCandles = async (ts: number, res: string, span: string = 'month') => {
-    const resStr = getResolutionString(res)
-    const response = await fetch(
-      `${DEXTOOLS_API}/${getNetworkString(
-        chainId,
-      )}/api/Pancakeswap/history/candles?sym=eth&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${resStr &&
-        '&res=' + resStr}`,
-    )
-      .then(res => res.json())
-      .catch(error => console.log(error))
+  const getCandles = async (ts: number, span: string = 'month', res: string = '15m') => {
+    const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res)
     return response?.data
   }
+
   return {
     onReady: (callback: any) => {
       setTimeout(() => callback(configurationData))
@@ -132,7 +157,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
         const label = isReverse ? `${ethSymbol}/${token?.symbol}` : `${token?.symbol}/${ethSymbol}`
 
         const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
-        const { candles } = await getCandles(ts, '15', 'week')
+        const { candles } = await getCandles(ts)
 
         const symbolInfo: LibrarySymbolInfo = {
           ticker: label,
@@ -176,7 +201,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
         let noData = false
         if (!candlesTemp || candlesTemp.length === 0) {
           const ts = Math.floor(new Date().getTime() / monthTs) * monthTs
-          const { candles, oldestTs } = await getCandles(ts, resolution)
+          const { candles, oldestTs } = await getCandles(ts)
           if (candles.length === 0) noData = true
           candlesTemp = candles
           setOldestTs(parseFloat(oldestTs))
@@ -187,16 +212,24 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
             const lastTimePoint = Math.floor(minTime / monthTs)
             const fromTimePoint = Math.floor(from / monthTs)
             fetchingRef.current = true
+            let promisesArray = []
             for (let i = lastTimePoint; i >= fromTimePoint; i--) {
               const ts = i * monthTs
-              const { candles } = await getCandles(ts, resolution)
-              candlesTemp = [...candles, ...candlesTemp].sort((a, b) => a.time - b.time)
+              //const { candles } = await getCandles(ts)
+              promisesArray.push(getCandles(ts))
+              //candlesTemp = [...candles, ...candlesTemp].sort((a, b) => a.time - b.time)
               if (ts < stateRef.current.oldestTs) {
                 noData = true
                 break
               }
             }
+            const datas = await Promise.all(promisesArray)
+            const candles = datas.map(data => {
+              return data.candles
+            })
+            candlesTemp = [...candles.reduce((p, c) => p.concat(c)), ...candlesTemp].sort((a, b) => a.time - b.time)
             setData(candlesTemp)
+
             fetchingRef.current = false
           }
         }

@@ -102,7 +102,7 @@ function ProLiveChart({
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: 'KNC',
       datafeed: datafeed,
-      interval: '15' as ResolutionString,
+      interval: '1H' as ResolutionString,
       container: ref,
       library_path: '/charting_library/',
       locale: (userLocale ? userLocale.slice(0, 2) : 'en') as LanguageCode,
@@ -125,13 +125,13 @@ function ProLiveChart({
       studies_overrides: {},
       theme: theme.darkMode ? 'Dark' : 'Light',
       custom_css_url: '/charting_library/style.css',
+      timeframe: '2w',
       time_frames: [
         { text: '6m', resolution: '4H' as ResolutionString, description: '6 Months' },
         { text: '1m', resolution: '1H' as ResolutionString, description: '1 Month' },
+        { text: '2w', resolution: '1H' as ResolutionString, description: '2 Weeks' },
         { text: '1w', resolution: '1H' as ResolutionString, description: '1 Week' },
         { text: '1d', resolution: '15' as ResolutionString, description: '1 Day' },
-        // { text: '4h', resolution: '5' as ResolutionString, description: '4 Hours' },
-        // { text: '1h', resolution: '5' as ResolutionString, description: '1 Hour' },
       ],
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone as Timezone,
     }
@@ -169,18 +169,6 @@ function ProLiveChart({
           localStorage.setItem(LOCALSTORAGE_STATE_NAME, JSON.stringify(object))
         })
       })
-      // tvWidget.activeChart().setVisibleRange({
-      //   from: (new Date().getTime() - getTimeframeMilliseconds(timeFrame)) / 1000,
-      //   to: new Date().getTime() / 1000,
-      // })
-      // tvWidget
-      //   .activeChart()
-      //   .onIntervalChanged()
-      //   .subscribe(null, (interval, timeframeObj: any) => {
-      //     console.log('🚀 ~ file: index.tsx ~ line 160 ~ tvWidget.activeChart ~ interval', interval)
-      //     console.log('🚀 ~ file: index.tsx ~ line 160 ~ tvWidget.activeChart ~ timeframeObj', timeframeObj)
-      //     timeframeObj?.timeframe?.value && setTimeFrame(timeframeObj?.timeframe?.value as LiveDataTimeframeEnum)
-      //   })
     })
 
     return () => {
