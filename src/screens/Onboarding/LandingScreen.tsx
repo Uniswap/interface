@@ -80,7 +80,7 @@ export function LandingScreen({ navigation }: Props) {
               gap="sm"
               px="lg"
               py="md">
-              <WalletIcon fill={theme.colors.purple} height={15} width={15} />
+              <WalletIcon color={theme.colors.purple} height={15} width={15} />
               <Text color="white" variant="h5">
                 {t('Create a Wallet')}
               </Text>
