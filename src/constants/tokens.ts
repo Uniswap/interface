@@ -78,8 +78,7 @@ export const OSMOSIS = makeToken('Mock Osmosis', 'OSMOSIS', 18, {
   [ChainId.RINKEBY]: '0x7F2D8c2bb0cD4368C9f44198e0Cd1486cD5Ae1aA',
 })
 export const DIFFUSION = makeToken('Mock Diffusion', 'DIFF', 18, {
-  //@TODO: FIX MAINNET & RINKEBY
-  [ChainId.MAINNET]: '0x067eC87844fBD73eDa4a1059F30039584586e09d',
+  [ChainId.MAINNET]: '0x3f75ceabCDfed1aCa03257Dc6Bdc0408E2b4b026',
   [ChainId.TESTNET]: TESTNET.diffusion || '0x067eC87844fBD73eDa4a1059F30039584586e09d',
   // Minichef Main Reward
   [ChainId.RINKEBY]: '0x655dfdd82cb10dc7fb931fd85d69887756b922fd ',
