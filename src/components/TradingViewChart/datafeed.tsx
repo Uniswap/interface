@@ -6,6 +6,7 @@ import {
   ResolutionString,
   PeriodParams,
   HistoryCallback,
+  Timezone,
 } from './charting_library'
 import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
@@ -77,6 +78,7 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
 } = {
   '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': '0xd75ea151a61d06868e31f8988d28dfe5e9df57b4',
 }
+const LOCALSTORAGE_CHECKED_PAIRS_STR = 'proChartCheckedPairs'
 
 const fetcherDextools = (url: string) => {
   return fetch(`${DEXTOOLS_API}/${url}`)
@@ -110,19 +112,28 @@ export const getCandlesApi = (
       '&res=' + res}`,
   )
 }
-export const checkAddressHasData = async (pairAddress: string, chainId: ChainId | undefined) => {
+export const checkAddressHasData = async (address: string, pairAddress: string, chainId: ChainId | undefined) => {
+  const cPstr = localStorage.getItem(LOCALSTORAGE_CHECKED_PAIRS_STR)
+  const checkedPairs: any[] = cPstr ? JSON.parse(cPstr) : []
+  let index: number = checkedPairs.findIndex(item => item.address === address)
+  if (index >= 0) {
+    if (checkedPairs[index]?.time > new Date().getTime() - 86400000) {
+      return checkedPairs[index].ver
+    }
+  } else {
+    checkedPairs.push({ address: address, time: new Date().getTime() })
+    index = checkedPairs.length - 1
+  }
   const ver = await getHistoryCandleStatus(pairAddress, chainId)
-  console.log('🚀 ~ file: datafeed.tsx ~ line 115 ~ checkAddressHasData ~ ver', ver)
-
   if (ver) {
     const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
     const { data } = await getCandlesApi(chainId, pairAddress, ver, ts, 'week')
-    console.log('🚀 ~ file: datafeed.tsx ~ line 120 ~ checkAddressHasData ~ data', data)
     if (data?.candles?.length) {
-      return ver
+      checkedPairs[index].ver = ver
     }
   }
-  return undefined
+  localStorage.setItem(LOCALSTORAGE_CHECKED_PAIRS_STR, JSON.stringify(checkedPairs))
+  return checkedPairs[index].ver
 }
 
 export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: string) => {
@@ -168,7 +179,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           description: label,
           type: 'crypto',
           session: '24x7',
-          timezone: 'Etc/UTC',
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone as Timezone,
           exchange: '',
           minmov: 1,
           pricescale:
@@ -199,40 +210,34 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
         let to = periodParams.to * 1000
         let candlesTemp = stateRef.current.data
         let noData = false
-        if (!candlesTemp || candlesTemp.length === 0) {
-          const ts = Math.floor(new Date().getTime() / monthTs) * monthTs
-          const { candles, oldestTs } = await getCandles(ts)
-          if (candles.length === 0) noData = true
-          candlesTemp = candles
-          setOldestTs(parseFloat(oldestTs))
-          setData(candlesTemp)
-        } else {
-          const minTime = candlesTemp[0].time
-          if (minTime > from) {
-            const lastTimePoint = Math.floor(minTime / monthTs)
-            const fromTimePoint = Math.floor(from / monthTs)
-            fetchingRef.current = true
-            let promisesArray = []
-            for (let i = lastTimePoint; i >= fromTimePoint; i--) {
-              const ts = i * monthTs
-              //const { candles } = await getCandles(ts)
-              promisesArray.push(getCandles(ts))
-              //candlesTemp = [...candles, ...candlesTemp].sort((a, b) => a.time - b.time)
-              if (ts < stateRef.current.oldestTs) {
-                noData = true
-                break
-              }
-            }
-            const datas = await Promise.all(promisesArray)
-            const candles = datas.map(data => {
-              return data.candles
-            })
-            candlesTemp = [...candles.reduce((p, c) => p.concat(c)), ...candlesTemp].sort((a, b) => a.time - b.time)
-            setData(candlesTemp)
+        const minTime = candlesTemp[0]?.time || new Date().getTime()
+        if (minTime > from) {
+          const lastTimePoint = Math.floor(minTime / monthTs) + (periodParams.firstDataRequest ? 1 : 0)
+          const fromTimePoint = Math.floor(from / monthTs)
 
-            fetchingRef.current = false
+          fetchingRef.current = true
+          let promisesArray = []
+          for (let i = lastTimePoint - 1; i >= fromTimePoint; i--) {
+            const ts = i * monthTs
+            //const { candles } = await getCandles(ts)
+            promisesArray.push(getCandles(ts))
+            //candlesTemp = [...candles, ...candlesTemp].sort((a, b) => a.time - b.time)
+            if (ts < stateRef.current.oldestTs) {
+              noData = true
+              break
+            }
           }
+          const datas = await Promise.all(promisesArray)
+          setOldestTs(parseFloat(datas[0]?.oldestTs))
+          const candles = datas.map(data => {
+            return data.candles
+          })
+          candlesTemp = [...candles.reduce((p, c) => p.concat(c)), ...candlesTemp].sort((a, b) => a.time - b.time)
+          setData(candlesTemp)
+
+          fetchingRef.current = false
         }
+        // }
         let formatedCandles = candlesTemp
           .filter((c: any) => c.time > from && c.time < to)
           .map((c: any, i: number, arr: any[]) => {

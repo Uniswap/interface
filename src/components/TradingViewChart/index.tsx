@@ -134,6 +134,7 @@ function ProLiveChart({
         { text: '1d', resolution: '15' as ResolutionString, description: '1 Day' },
       ],
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone as Timezone,
+      saved_data: JSON.parse(localStorage.getItem(LOCALSTORAGE_STATE_NAME) || '{}'),
     }
     const tvWidget = new widget(widgetOptions)
 
@@ -161,9 +162,6 @@ function ProLiveChart({
         })
         fullscreenOn.innerHTML = ReactDOMServer.renderToStaticMarkup(<FullscreenOn />)
       })
-      if (localStorage.getItem(LOCALSTORAGE_STATE_NAME)) {
-        tvWidget.load(JSON.parse(localStorage.getItem(LOCALSTORAGE_STATE_NAME) || '{}'))
-      }
       tvWidget.subscribe('onAutoSaveNeeded', () => {
         tvWidget.save((object: any) => {
           localStorage.setItem(LOCALSTORAGE_STATE_NAME, JSON.stringify(object))

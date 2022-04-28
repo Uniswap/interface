@@ -149,7 +149,7 @@ function LiveChart({
                 return { ...state, pairAddress: data[0].id }
               })
 
-              checkAddressHasData(data[0].id, chainId)
+              checkAddressHasData(token.address, data[0].id, chainId)
                 .then((ver: any) => {
                   if (ver) {
                     setStateProChart(state => {
