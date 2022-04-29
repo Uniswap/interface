@@ -4,6 +4,8 @@ import { Route } from '@uniswap/v2-sdk'
 import { Route as RouteV3, Trade as TradeV3 } from '@uniswap/v3-sdk'
 import { INCH_ROUTER_ADDRESS, V2_ROUTER_ADDRESS } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
+import { ONE_HUNDRED_PERCENT } from 'constants/misc'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import ms from 'ms.macro'
@@ -12,7 +14,7 @@ import { useBlockNumber } from 'state/application/hooks'
 import { CHAIN_0x_URL, useGetSwap0xQuery } from 'state/quote/slice'
 import { SwapTransaction, V3TradeState } from 'state/routing/types'
 import { v2StylePool } from 'state/routing/utils'
-import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { useNetworkGasPrice, useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { computeRoutes0x } from './utils'
 
@@ -106,10 +108,19 @@ export function use0xQuoteAPITrade(
 
   const quoteResult = data
 
-  const routes = useMemo(
-    () => computeRoutes0x(currencyIn, currencyOut, tradeType, quoteResult),
-    [currencyIn, currencyOut, quoteResult, tradeType]
-  )
+  // const routes = useMemo(
+  //   () => computeRoutes0x(currencyIn, currencyOut, tradeType, quoteResult),
+  //   [currencyIn, currencyOut, quoteResult, tradeType]
+  // )
+
+  const gasAmount = useNetworkGasPrice()
+  const priceGwei =
+    gasAmount && data?.estimatedGas
+      ? gasAmount
+          .multiply(JSBI.BigInt(data?.estimatedGas))
+          .multiply(ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(1500), JSBI.BigInt(10000))))
+      : undefined
+  const gasUseEstimateUSD = useUSDCValue(priceGwei) ?? null
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
@@ -138,7 +149,7 @@ export function use0xQuoteAPITrade(
         ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.buyAmount)
         : undefined
 
-    if (isError || !otherAmount || !routes || routes.length === 0 || !queryArgs) {
+    if (isError || !otherAmount || !queryArgs) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: undefined,
@@ -176,6 +187,7 @@ export function use0xQuoteAPITrade(
           value: quoteResult?.value ?? '',
           gas: quoteResult?.gas ?? '',
           type: 1,
+          gasUseEstimateUSD: gasUseEstimateUSD ? gasUseEstimateUSD.toFixed(2) : '0',
         },
       }
     } catch (error) {
@@ -186,5 +198,5 @@ export function use0xQuoteAPITrade(
         tx: undefined,
       }
     }
-  }, [currencyIn, currencyOut, isError, isLoading, quoteResult, tradeType, routes, queryArgs, account])
+  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, queryArgs, account, gasUseEstimateUSD])
 }

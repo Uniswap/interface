@@ -1,6 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
@@ -125,6 +125,7 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     state: V3TradeState
     trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
     tx: SwapTransaction | undefined
+    savings: CurrencyAmount<Token> | null
   }
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
@@ -160,6 +161,7 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     toggledVersion !== Version.v3 ? parsedAmount : undefined,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
+  console.log(v2Trade)
 
   const bestTrade = v2Trade == undefined ? undefined : v2Trade.trade
 

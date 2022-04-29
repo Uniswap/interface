@@ -5,5 +5,5 @@ import { SupportedChainId } from 'constants/chains'
 export function calculateGasMargin(chainId: number, value: BigNumber): BigNumber {
   return chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN
     ? value
-    : value.mul(BigNumber.from(10000 + 500)).div(BigNumber.from(10000))
+    : value.mul(BigNumber.from(10000 + 1500)).div(BigNumber.from(10000))
 }

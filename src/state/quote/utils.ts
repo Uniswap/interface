@@ -26,8 +26,7 @@ export function computeRoutes0x(
     return quoteResult.orders.map((order) => {
       const inputCurr = CurrencyAmount.fromRawAmount(parsedCurrencyIn, order.takerAmount)
       const outCurr = CurrencyAmount.fromRawAmount(parsedCurrencyOut, order.makerAmount)
-      console.log(inputCurr.toSignificant(6))
-      console.log(outCurr.toSignificant(6))
+      if (inputCurr.equalTo('0') || outCurr.equalTo('0')) return
       return v2StylePool(inputCurr, outCurr)
     })
   } catch (e) {
