@@ -13,7 +13,7 @@ export default function TopLevelModals() {
   const { account } = useActiveWeb3React()
 
   useAccountRiskCheck(account)
-  const open = true || Boolean(blockedAccountModalOpen && account)
+  const open = Boolean(blockedAccountModalOpen && account)
   return (
     <>
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
