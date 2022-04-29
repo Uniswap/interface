@@ -80,7 +80,7 @@ export default function Input({ disabled, focused }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)
 
-  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 

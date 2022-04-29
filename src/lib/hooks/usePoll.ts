@@ -9,7 +9,7 @@ interface PollingOptions<T> {
   debounce?: boolean
 
   // If stale, any cached result will be returned, and a new fetch will be initiated.
-  staleCallback?: (value: T) => boolean
+  isStale?: (value: T) => boolean
 
   pollingInterval?: number
   keepUnusedDataFor?: number
@@ -25,7 +25,7 @@ export default function usePoll<T>(
   key = '',
   {
     debounce = false,
-    staleCallback,
+    isStale,
     pollingInterval = DEFAULT_POLLING_INTERVAL,
     keepUnusedDataFor = DEFAULT_KEEP_UNUSED_DATA_FOR,
   }: PollingOptions<T>
@@ -39,11 +39,10 @@ export default function usePoll<T>(
     let timeout: number
 
     const entry = cache.get(key)
-    const isStale = staleCallback && entry?.result !== undefined ? staleCallback(entry.result) : false
     if (entry) {
       // If there is not a pending fetch (and there should be), queue one.
       if (entry.ttl) {
-        if (isStale) {
+        if (isStale && entry?.result !== undefined ? isStale(entry.result) : false) {
           poll() // stale results should be refetched immediately
         } else if (entry.ttl && entry.ttl + keepUnusedDataFor > Date.now()) {
           timeout = setTimeout(poll, Math.max(0, entry.ttl - Date.now()))
@@ -57,6 +56,7 @@ export default function usePoll<T>(
 
     return () => {
       clearTimeout(timeout)
+      timeout = 0
     }
 
     async function poll(ttl = Date.now() + pollingInterval) {
@@ -66,9 +66,9 @@ export default function usePoll<T>(
       // Always set the result in the cache, but only set it as data if the key is still being queried.
       const result = await fetch()
       cache.set(key, { ttl, result })
-      setData((data) => (data.key === key ? { key, result } : data))
+      if (timeout) setData((data) => (data.key === key ? { key, result } : data))
     }
-  }, [cache, debounce, fetch, keepUnusedDataFor, key, pollingInterval, staleCallback])
+  }, [cache, debounce, fetch, isStale, keepUnusedDataFor, key, pollingInterval])
 
   useEffect(() => {
     // Cleanup stale entries when a new key is used.

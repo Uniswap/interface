@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
-import { checkedTransaction, finalizeTransaction } from './actions'
+import { checkedTransaction, finalizeTransaction } from './reducer'
 
 export default function Updater() {
   const { chainId } = useActiveWeb3React()

@@ -3,6 +3,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
+import { TokenListProvider } from 'lib/hooks/useTokenList'
 import { useEffect } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
 
@@ -89,16 +90,17 @@ function Fixture() {
   })
 
   return (
-    <Swap
-      convenienceFee={convenienceFee}
-      convenienceFeeRecipient={convenienceFeeRecipient}
-      defaultInputTokenAddress={optionsToAddressMap[defaultInputToken]}
-      defaultInputAmount={defaultInputAmount}
-      defaultOutputTokenAddress={optionsToAddressMap[defaultOutputToken]}
-      defaultOutputAmount={defaultOutputAmount}
-      tokenList={tokenListNameMap[tokenListName]}
-      onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
-    />
+    <TokenListProvider list={tokenListNameMap[tokenListName]}>
+      <Swap
+        convenienceFee={convenienceFee}
+        convenienceFeeRecipient={convenienceFeeRecipient}
+        defaultInputTokenAddress={optionsToAddressMap[defaultInputToken]}
+        defaultInputAmount={defaultInputAmount}
+        defaultOutputTokenAddress={optionsToAddressMap[defaultOutputToken]}
+        defaultOutputAmount={defaultOutputAmount}
+        onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      />
+    </TokenListProvider>
   )
 }
 

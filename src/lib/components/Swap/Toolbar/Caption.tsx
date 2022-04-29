@@ -32,6 +32,19 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   )
 }
 
+export function Connecting() {
+  return (
+    <Caption
+      icon={InlineSpinner}
+      caption={
+        <Loading>
+          <Trans>Connecting…</Trans>
+        </Loading>
+      }
+    />
+  )
+}
+
 export function ConnectWallet() {
   return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
@@ -73,7 +86,7 @@ export function WrapCurrency({ inputCurrency, outputCurrency }: { inputCurrency:
   const Text = useCallback(
     () => (
       <Trans>
-        Convert {inputCurrency.symbol} to {outputCurrency.symbol} with no slippage
+        Convert {inputCurrency.symbol} to {outputCurrency.symbol}
       </Trans>
     ),
     [inputCurrency.symbol, outputCurrency.symbol]

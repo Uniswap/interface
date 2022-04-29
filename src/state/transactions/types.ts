@@ -1,9 +1,8 @@
-import { createAction } from '@reduxjs/toolkit'
 import { TradeType } from '@uniswap/sdk-core'
 
 import { VoteOption } from '../governance/types'
 
-export interface SerializableTransactionReceipt {
+interface SerializableTransactionReceipt {
   to: string
   from: string
   contractAddress: string
@@ -171,20 +170,12 @@ export type TransactionInfo =
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
 
-export const addTransaction = createAction<{
-  chainId: number
+export interface TransactionDetails {
   hash: string
+  receipt?: SerializableTransactionReceipt
+  lastCheckedBlockNumber?: number
+  addedTime: number
+  confirmedTime?: number
   from: string
   info: TransactionInfo
-}>('transactions/addTransaction')
-export const clearAllTransactions = createAction<{ chainId: number }>('transactions/clearAllTransactions')
-export const finalizeTransaction = createAction<{
-  chainId: number
-  hash: string
-  receipt: SerializableTransactionReceipt
-}>('transactions/finalizeTransaction')
-export const checkedTransaction = createAction<{
-  chainId: number
-  hash: string
-  blockNumber: number
-}>('transactions/checkedTransaction')
+}

@@ -14,17 +14,18 @@ export type PopupContent =
     }
 
 export enum ApplicationModal {
-  WALLET,
-  SETTINGS,
-  SELF_CLAIM,
   ADDRESS_CLAIM,
+  BLOCKED_ACCOUNT,
+  DELEGATE,
   CLAIM_POPUP,
   MENU,
-  DELEGATE,
-  VOTE,
-  POOL_OVERVIEW_OPTIONS,
   NETWORK_SELECTOR,
+  POOL_OVERVIEW_OPTIONS,
   PRIVACY_POLICY,
+  SELF_CLAIM,
+  SETTINGS,
+  VOTE,
+  WALLET,
 }
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>

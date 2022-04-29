@@ -1,16 +1,15 @@
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useAtomValue } from 'jotai/utils'
+import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'lib/hooks/useSlippage'
+import useUSDCPriceImpact, { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useEffect, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
-import useActiveWeb3React from '../useActiveWeb3React'
-import useSlippage, { Slippage } from '../useSlippage'
-import useUSDCPriceImpact, { PriceImpact } from '../useUSDCPriceImpact'
-import { useBestTrade } from './useBestTrade'
+import { INVALID_TRADE, useBestTrade } from './useBestTrade'
 import useWrapCallback, { WrapType } from './useWrapCallback'
 
 interface SwapField {
@@ -33,7 +32,6 @@ interface SwapInfo {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(): SwapInfo {
-  const { account } = useActiveWeb3React()
   const { type: wrapType } = useWrapCallback()
   const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
   const { independentField, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
@@ -43,7 +41,7 @@ function useComputeSwapInfo(): SwapInfo {
     () => tryParseCurrencyAmount(amount, (isExactIn ? currencyIn : currencyOut) ?? undefined),
     [amount, isExactIn, currencyIn, currencyOut]
   )
-  const hasAmounts = currencyIn && currencyOut && parsedAmount
+  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrapping
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     hasAmounts ? parsedAmount : undefined,
@@ -58,6 +56,8 @@ function useComputeSwapInfo(): SwapInfo {
     () => (isWrapping || !isExactIn ? parsedAmount : trade.trade?.outputAmount),
     [isExactIn, isWrapping, parsedAmount, trade.trade?.outputAmount]
   )
+
+  const { account } = useActiveWeb3React()
   const [balanceIn, balanceOut] = useCurrencyBalances(
     account,
     useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
@@ -102,21 +102,24 @@ function useComputeSwapInfo(): SwapInfo {
   )
 }
 
-const swapInfoAtom = atom<SwapInfo>({
+const DEFAULT_SWAP_INFO: SwapInfo = {
   [Field.INPUT]: {},
   [Field.OUTPUT]: {},
-  trade: { state: TradeState.INVALID },
-  slippage: { auto: true, allowed: new Percent(0) },
-})
+  trade: INVALID_TRADE,
+  slippage: DEFAULT_SLIPPAGE,
+}
 
-export function SwapInfoUpdater() {
-  const setSwapInfo = useUpdateAtom(swapInfoAtom)
+const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
+
+export function SwapInfoProvider({ children, disabled }: PropsWithChildren<{ disabled?: boolean }>) {
   const swapInfo = useComputeSwapInfo()
-  useEffect(() => setSwapInfo(swapInfo), [setSwapInfo, swapInfo])
-  return null
+  if (disabled) {
+    return <SwapInfoContext.Provider value={DEFAULT_SWAP_INFO}>{children}</SwapInfoContext.Provider>
+  }
+  return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }
 
 /** Requires that SwapInfoUpdater be installed in the DOM tree. **/
 export default function useSwapInfo(): SwapInfo {
-  return useAtomValue(swapInfoAtom)
+  return useContext(SwapInfoContext)
 }

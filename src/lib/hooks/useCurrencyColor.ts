@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useTheme } from 'lib/theme'
 import Vibrant from 'node-vibrant/lib/bundle.js'
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import useCurrencyLogoURIs from './useCurrencyLogoURIs'
 
@@ -57,7 +57,7 @@ export default function useCurrencyColor(token?: Currency) {
   const theme = useTheme()
   const logoURIs = useCurrencyLogoURIs(token)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let stale = false
 
     if (theme.tokenColorExtraction && token) {

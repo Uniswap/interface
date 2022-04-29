@@ -1,14 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { TokenInfo } from '@uniswap/token-lists'
 import { useAtom } from 'jotai'
-import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
+import { SwapInfoProvider } from 'lib/hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
 import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
-import { useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
 import { useState } from 'react'
@@ -23,8 +21,8 @@ import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
 import SwapButton from './SwapButton'
-import SwapPropValidator from './SwapPropValidator'
 import Toolbar from './Toolbar'
+import useValidate from './useValidate'
 
 function getTransactionFromMap(
   txs: { [hash: string]: Transaction },
@@ -43,19 +41,14 @@ function getTransactionFromMap(
 }
 
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  tokenList?: string | TokenInfo[]
   onConnectWallet?: () => void
 }
 
-function Updaters(props: SwapProps & { disabled: boolean }) {
-  useSyncTokenList(props.tokenList)
-  useSyncTokenDefaults(props)
-  useSyncConvenienceFee(props)
-
-  return props.disabled ? null : <SwapInfoUpdater />
-}
-
 export default function Swap(props: SwapProps) {
+  useValidate(props)
+  useSyncConvenienceFee(props)
+  useSyncTokenDefaults(props)
+
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -70,20 +63,20 @@ export default function Swap(props: SwapProps) {
 
   return (
     <>
-      <SwapPropValidator {...props} />
-      <Updaters {...props} disabled={isDisabled} />
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={isDisabled} focused={focused} />
-          <ReverseButton disabled={isDisabled} />
-          <Output disabled={isDisabled} focused={focused}>
-            <Toolbar disabled={!active} />
-            <SwapButton disabled={isDisabled} />
-          </Output>
+          <SwapInfoProvider disabled={isDisabled}>
+            <Input disabled={isDisabled} focused={focused} />
+            <ReverseButton disabled={isDisabled} />
+            <Output disabled={isDisabled} focused={focused}>
+              <Toolbar />
+              <SwapButton disabled={isDisabled} />
+            </Output>
+          </SwapInfoProvider>
         </BoundaryProvider>
       </div>
       {displayTx && (

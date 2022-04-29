@@ -46,7 +46,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
-  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
   const isLoading = isRouteLoading && isDependentField
 
