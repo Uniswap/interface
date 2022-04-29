@@ -1,7 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useTransactionMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
@@ -13,8 +12,6 @@ export function useTransactionAdder(): (response: TransactionResponse, info: Tra
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
-  const logMonitoringEvent = useTransactionMonitoringEventCallback()
-
   return useCallback(
     (response: TransactionResponse, info: TransactionInfo) => {
       if (!account) return
@@ -25,10 +22,8 @@ export function useTransactionAdder(): (response: TransactionResponse, info: Tra
         throw Error('No transaction hash found.')
       }
       dispatch(addTransaction({ hash, from: account, info, chainId }))
-
-      logMonitoringEvent(info, response)
     },
-    [account, chainId, dispatch, logMonitoringEvent]
+    [account, chainId, dispatch]
   )
 }
 

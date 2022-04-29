@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useWalletConnectMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
@@ -151,8 +150,6 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const logMonitoringEvent = useWalletConnectMonitoringEventCallback()
-
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -200,18 +197,13 @@ export default function WalletModal({
     }
 
     connector &&
-      activate(connector, undefined, true)
-        .then(async () => {
-          const walletAddress = await connector.getAccount()
-          logMonitoringEvent({ walletAddress })
-        })
-        .catch((error) => {
-          if (error instanceof UnsupportedChainIdError) {
-            activate(connector) // a little janky...can't use setError because the connector isn't set
-          } else {
-            setPendingError(true)
-          }
-        })
+      activate(connector, undefined, true).catch((error) => {
+        if (error instanceof UnsupportedChainIdError) {
+          activate(connector) // a little janky...can't use setError because the connector isn't set
+        } else {
+          setPendingError(true)
+        }
+      })
   }
 
   // close wallet modal if fortmatic modal is active
