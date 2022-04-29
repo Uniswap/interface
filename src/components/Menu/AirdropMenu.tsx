@@ -5,8 +5,6 @@ import styled from 'styled-components/macro'
 import { css } from 'styled-components'
 import { darken } from 'polished'
 import { usePopper } from 'react-popper'
-
-import { MenuItem } from './index'
 import { AirdropButton } from './AirdropButton'
 
 const StyledAirdropButton = styled.div<{ isActive?: boolean }>`
@@ -67,7 +65,7 @@ export function AirdropMenu() {
   return (
     <div ref={node as any}>
       <StyledAirdropButton onClick={toggle} isActive={open} ref={setReferenceElement as any}>
-        Claim $DIFF Airdrop
+        Claim Diffusion Airdrop
       </StyledAirdropButton>
 
       {open && (
