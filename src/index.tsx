@@ -24,6 +24,25 @@ const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 if (!!window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
+  // @ts-ignore
+  window.ethereum.request({ method: 'eth_requestAccounts' })
+  // @ts-ignore
+  window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: '0x2329',
+        chainName: 'EVMOS',
+        nativeCurrency: {
+          name: 'EVMOS',
+          symbol: 'EVMOS',
+          decimals: 18,
+        },
+        rpcUrls: ['https://eth.bd.evmos.org:8545/'],
+        blockExplorerUrls: ['https://evm.evmos.org'],
+      },
+    ],
+  })
 }
 
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
