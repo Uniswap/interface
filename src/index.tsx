@@ -24,10 +24,9 @@ const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 if (!!window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
-  // @ts-ignore
-  window.ethereum.request({ method: 'eth_requestAccounts' })
-  // @ts-ignore
-  window.ethereum.request({
+
+  window.ethereum.request?.({ method: 'eth_requestAccounts' })
+  window.ethereum.request?.({
     method: 'wallet_addEthereumChain',
     params: [
       {
