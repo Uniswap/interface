@@ -13,13 +13,13 @@ import { ChainId, NETWORK_URLS } from '../constants/chains'
 // const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
-const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
+// const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
 
 // if (typeof INFURA_KEY === 'undefined') {
 //   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 // }
 
-const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.TESTNET, ChainId.RINKEBY]
+const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.TESTNET]
 
 /**
  * @TODO: Crypzoh: This is to enable the other connectors temporarily without removing them from the code
@@ -41,10 +41,12 @@ export const injected = new InjectedConnector({
 })
 
 export const walletconnect = new WalletConnectConnector({
-  // supportedChainIds: SUPPORTED_CHAIN_IDS,
-  supportedChainIds: [FAKE_CHAIN_ID],
-  infuraId: '1234', //INFURA_KEY, // obviously a hack
-  bridge: WALLETCONNECT_BRIDGE_URL,
+  supportedChainIds: SUPPORTED_CHAIN_IDS,
+  rpc: {
+    9000: 'https://eth.bd.evmos.dev:8545',
+    9001: 'https://eth.bd.evmos.org:8545',
+  },
+  // bridge: WALLETCONNECT_BRIDGE_URL,
   qrcode: true,
   pollingInterval: 15000,
 })

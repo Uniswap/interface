@@ -4,11 +4,13 @@ import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 // import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 // import PORTIS_ICON_URL from '../assets/images/portisIcon.png'
-// import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
+import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
 import {
   // fortmatic,
   injected,
-  // portis, walletconnect, walletlink
+  // portis,
+  walletconnect,
+  //  walletlink
 } from '../connectors'
 
 export interface WalletInfo {
@@ -41,15 +43,15 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D',
   },
-  // WALLET_CONNECT: {
-  //   connector: walletconnect,
-  //   name: 'WalletConnect',
-  //   iconURL: WALLETCONNECT_ICON_URL,
-  //   description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
-  //   href: null,
-  //   color: '#4196FC',
-  //   mobile: true,
-  // },
+  WALLET_CONNECT: {
+    connector: walletconnect,
+    name: 'WalletConnect',
+    iconURL: WALLETCONNECT_ICON_URL,
+    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+    href: null,
+    color: '#4196FC',
+    mobile: true,
+  },
   // WALLET_LINK: {
   //   connector: walletlink,
   //   name: 'Coinbase Wallet',
