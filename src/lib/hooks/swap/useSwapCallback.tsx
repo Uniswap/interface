@@ -2,7 +2,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useENS from 'hooks/useENS'
@@ -10,6 +11,7 @@ import { SignatureData } from 'hooks/useERC20Permit'
 import { AnyTrade, useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
 
+import { useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../../hooks/useApproveCallback'
 import useSendSwapTransaction from './useSendSwapTransaction'
 
 export enum SwapCallbackState {
@@ -52,7 +54,14 @@ export function useSwapCallback({
     deadline,
     feeOptions
   )
-  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls)
+
+  const approvalOptimizedTrade = useApprovalOptimizedTrade(
+    trade as Trade<Currency, Currency, TradeType>,
+    allowedSlippage
+  )
+  const [approvalState] = useApproveCallbackFromTrade(approvalOptimizedTrade, allowedSlippage)
+
+  const { callback } = useSendSwapTransaction(account, chainId, library, trade, approvalState, swapCalls)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress

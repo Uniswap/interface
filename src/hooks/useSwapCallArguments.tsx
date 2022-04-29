@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { SwapRouter, Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, MaxUint256, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
@@ -8,10 +8,12 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 import approveAmountCalldata from 'utils/approveAmountCalldata'
 
+import { ApprovalState, useApproveCallbackFromTrade } from './useApproveCallback'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useV2RouterContract } from './useContract'
+import { useTokenContract, useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
+import useIsAmbireWC from './useIsAmbireWC'
 
 export type AnyTrade =
   | V2Trade<Currency, Currency, TradeType>
@@ -46,6 +48,13 @@ export function useSwapCallArguments(
   const routerContract = useV2RouterContract()
   const argentWalletContract = useArgentWalletContract()
 
+  const [approvalState] = useApproveCallbackFromTrade(trade as Trade<Currency, Currency, TradeType>, allowedSlippage)
+
+  const token = trade?.inputAmount.currency as Token
+  const tokenContract = useTokenContract(token?.address)
+
+  const isAmbireWC = useIsAmbireWC()
+
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
@@ -73,7 +82,31 @@ export function useSwapCallArguments(
         )
       }
       return swapMethods.map(({ methodName, args, value }) => {
-        if (argentWalletContract && trade.inputAmount.currency.isToken) {
+        if (isAmbireWC && trade.inputAmount.currency.isToken && approvalState === ApprovalState.NOT_APPROVED) {
+          const approveData = tokenContract?.interface?.encodeFunctionData('approve', [
+            routerContract.address,
+            MaxUint256.toString(),
+          ])
+
+          const swapData = routerContract.interface.encodeFunctionData(methodName, args)
+
+          return {
+            address: '',
+            calldata: '',
+            value,
+            skipGasEstimation: true,
+            extra: [
+              {
+                to: tokenContract?.address,
+                calldata: approveData,
+              },
+              {
+                to: routerContract.address,
+                calldata: swapData,
+              },
+            ],
+          }
+        } else if (argentWalletContract && trade.inputAmount.currency.isToken) {
           return {
             address: argentWalletContract.address,
             calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
@@ -142,7 +175,31 @@ export function useSwapCallArguments(
               deadlineOrPreviousBlockhash: deadline.toString(),
             })
 
-      if (argentWalletContract && trade.inputAmount.currency.isToken) {
+      if (isAmbireWC && trade.inputAmount.currency.isToken && approvalState === ApprovalState.NOT_APPROVED) {
+        const approveData = tokenContract?.interface?.encodeFunctionData('approve', [
+          swapRouterAddress,
+          MaxUint256.toString(),
+        ])
+
+        return [
+          {
+            address: '',
+            calldata: '',
+            value,
+            skipGasEstimation: true,
+            extra: [
+              {
+                to: tokenContract?.address,
+                data: approveData,
+              },
+              {
+                to: swapRouterAddress,
+                data: calldata,
+              },
+            ],
+          },
+        ]
+      } else if (argentWalletContract && trade.inputAmount.currency.isToken) {
         return [
           {
             address: argentWalletContract.address,
@@ -172,6 +229,7 @@ export function useSwapCallArguments(
     account,
     allowedSlippage,
     argentWalletContract,
+    approvalState,
     chainId,
     deadline,
     feeOptions,
@@ -180,5 +238,7 @@ export function useSwapCallArguments(
     routerContract,
     signatureData,
     trade,
+    tokenContract,
+    isAmbireWC,
   ])
 }
