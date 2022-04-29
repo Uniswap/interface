@@ -24,6 +24,7 @@ import Web3Status from '../Web3Status'
 // import Modal from '../Modal'
 // import UniBalanceContent from './UniBalanceContent'
 import { ChainId } from 'constants/chains'
+import { AirdropMenu } from '../Menu/AirdropMenu'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -335,6 +336,7 @@ export default function Header() {
             {t('Farm')}
           </StyledNavLink>
           <BridgeMenu />
+          <AirdropMenu />
         </HeaderLinks>
       </HideSmall>
       <HeaderControls>
