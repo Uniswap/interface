@@ -4,7 +4,7 @@ import { Header as DialogHeader } from 'lib/components/Dialog'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import useTokenList, { useIsTokenListLoaded, useQueryCurrencies } from 'lib/hooks/useTokenList'
+import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -42,12 +42,13 @@ function useAreBalancesLoaded(): boolean {
 interface TokenSelectDialogProps {
   value?: Currency
   onSelect: (token: Currency) => void
+  onClose: () => void
 }
 
-export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
+export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
-  const queriedTokens = useQueryCurrencies(query)
-  const tokens = useMemo(() => queriedTokens?.filter((token) => token !== value), [queriedTokens, value])
+  const list = useTokenList()
+  const tokens = useQueryTokens(query, list)
 
   const isTokenListLoaded = useIsTokenListLoaded()
   const areBalancesLoaded = useAreBalancesLoaded()
@@ -71,46 +72,52 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
   const { chainId } = useActiveWeb3React()
-  const list = useTokenList()
   const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
-  if (listHasTokens || !isLoaded) {
+  if (!listHasTokens && isLoaded) {
     return (
-      <>
-        <Column gap={0.75}>
-          <Row pad={0.75} grow>
-            <ThemedText.Body1>
-              <SearchInput
-                value={query}
-                onChange={setQuery}
-                placeholder={t`Search by token name or address`}
-                onKeyDown={options?.onKeyDown}
-                onBlur={options?.blur}
-                ref={input}
-              />
-            </ThemedText.Body1>
-          </Row>
-          <Rule padded />
-        </Column>
-        {isLoaded ? (
-          tokens.length ? (
-            <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
-          ) : (
-            <Column padded>
-              <Row justify="center">
-                <ThemedText.Body1 color="secondary">
-                  <Trans>No results found.</Trans>
-                </ThemedText.Body1>
-              </Row>
-            </Column>
-          )
-        ) : (
-          <TokenOptionsSkeleton />
-        )}
-      </>
+      <Dialog color="module" onClose={onClose}>
+        <DialogHeader title={<Trans>Select a token</Trans>} />
+        <NoTokensAvailableOnNetwork />
+      </Dialog>
     )
   }
-  return <NoTokensAvailableOnNetwork />
+
+  return (
+    <Dialog color="module" onClose={onClose}>
+      <DialogHeader title={<Trans>Select a token</Trans>} />
+      <Column gap={0.75}>
+        <Row pad={0.75} grow>
+          <ThemedText.Body1>
+            <SearchInput
+              value={query}
+              onChange={setQuery}
+              placeholder={t`Search by token name or address`}
+              onKeyDown={options?.onKeyDown}
+              onBlur={options?.blur}
+              ref={input}
+            />
+          </ThemedText.Body1>
+        </Row>
+        <Rule padded />
+      </Column>
+      {isLoaded ? (
+        tokens.length ? (
+          <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
+        ) : (
+          <Column padded>
+            <Row justify="center">
+              <ThemedText.Body1 color="secondary">
+                <Trans>No results found.</Trans>
+              </ThemedText.Body1>
+            </Row>
+          </Column>
+        )
+      ) : (
+        <TokenOptionsSkeleton />
+      )}
+    </Dialog>
+  )
 }
 
 interface TokenSelectProps {
@@ -135,12 +142,7 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
   return (
     <>
       <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
-      {open && (
-        <Dialog color="module" onClose={() => setOpen(false)}>
-          <DialogHeader title={<Trans>Select a token</Trans>} />
-          <TokenSelectDialog value={value} onSelect={selectAndClose} />
-        </Dialog>
-      )}
+      {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )
 })

@@ -1,4 +1,4 @@
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -8,9 +8,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import fetchTokenList from './fetchTokenList'
-import { useQueryTokens } from './querying'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
+
+export { useQueryTokens } from './querying'
 
 export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 
@@ -96,8 +97,4 @@ export function useTokenMap(): TokenMap {
       return map
     }, {} as TokenMap)
   }, [tokenMap])
-}
-
-export function useQueryCurrencies(query = ''): (WrappedTokenInfo | NativeCurrency)[] {
-  return useQueryTokens(query, useTokenList())
 }

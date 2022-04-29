@@ -9,7 +9,7 @@ export default function Fixture() {
 
   return (
     <Modal color="module">
-      <TokenSelectDialog onSelect={() => void 0} />
+      <TokenSelectDialog onSelect={() => void 0} onClose={() => void 0} />
     </Modal>
   )
 }
