@@ -15,6 +15,13 @@ export type SessionConnectedEvent = {
   dapp: DappInfo
 }
 
+export type SessionUpdatedEvent = {
+  session_id: string
+  session_name: string
+  account: string
+  dapp: DappInfo
+}
+
 export type SessionDisconnectedEvent = {
   session_id: string
   account: string
@@ -42,6 +49,7 @@ export type WCError = {
 
 export enum WCEventType {
   SessionConnected = 'session_connected',
+  SessionUpdated = 'session_updated',
   SessionDisconnected = 'session_disconnected',
   Error = 'error',
   SignRequest = 'sign_request',

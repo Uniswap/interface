@@ -13,6 +13,7 @@ import {
   EthSignMethod,
   SessionConnectedEvent,
   SessionDisconnectedEvent,
+  SessionUpdatedEvent,
   SignRequestEvent,
   WCError,
   WCEventType,
@@ -22,6 +23,7 @@ import {
   addRequest,
   addSession,
   removeSession,
+  updateSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { ensureLeading0x } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
@@ -36,6 +38,12 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           wcSession: { id: req.session_id, dapp: req.dapp },
           account: req.account,
         })
+      )
+    }
+
+    const sessionUpdatedHandler = (req: SessionUpdatedEvent) => {
+      emit(
+        updateSession({ wcSession: { id: req.session_id, dapp: req.dapp }, account: req.account })
       )
     }
 
@@ -62,16 +70,22 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       logger.error('wcSaga', 'errorHandler', req.type, req.message || '')
     }
 
-    wcEventEmitter.addListener(WCEventType.SessionConnected, sessionConnectedHandler)
-    wcEventEmitter.addListener(WCEventType.SessionDisconnected, sessionDisconnectedHandler)
-    wcEventEmitter.addListener(WCEventType.SignRequest, signRequestHandler)
-    wcEventEmitter.addListener(WCEventType.Error, errorHandler)
+    const eventEmitters = [
+      { type: WCEventType.SessionConnected, handler: sessionConnectedHandler },
+      { type: WCEventType.SessionDisconnected, handler: sessionUpdatedHandler },
+      { type: WCEventType.SessionDisconnected, handler: sessionDisconnectedHandler },
+      { type: WCEventType.SignRequest, handler: signRequestHandler },
+      { type: WCEventType.Error, handler: errorHandler },
+    ]
+
+    for (const { type, handler } of eventEmitters) {
+      wcEventEmitter.addListener(type, handler)
+    }
 
     const unsubscribe = () => {
-      wcEventEmitter.removeAllListeners(WCEventType.SessionConnected)
-      wcEventEmitter.removeAllListeners(WCEventType.SessionDisconnected)
-      wcEventEmitter.removeAllListeners(WCEventType.Error)
-      wcEventEmitter.removeAllListeners(WCEventType.SignRequest)
+      for (const { type } of eventEmitters) {
+        wcEventEmitter.removeAllListeners(type)
+      }
     }
 
     return unsubscribe

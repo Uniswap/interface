@@ -9,16 +9,17 @@ import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
-import { Spacer } from 'src/components/layout/Spacer'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WalletQRCode } from 'src/components/modals/WalletQRCode'
+import { ChangeNetworkModal } from 'src/components/Network/ChangeNetworkModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { DappConnectionItem } from 'src/features/walletConnect/DappConnectionItem'
 import { QRCodeScanner } from 'src/features/walletConnect/QRCodeScanner'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { connectToApp } from 'src/features/walletConnect/WalletConnect'
+import { changeChainId, connectToApp } from 'src/features/walletConnect/WalletConnect'
+import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { dimensions } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -34,9 +35,14 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
 
   const [showQRModal, setShowQRModal] = useState(false)
   const [showConnectedDapps, setShowConnectedDapps] = useState(false)
+  const [showNetworkModal, setShowNetworkModal] = useState(false)
+  const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
+
+  const onCloseNetworkModal = () => setShowNetworkModal(false)
 
   const onPressQRCode = () => setShowQRModal(true)
   const onCloseQrCode = () => setShowQRModal(false)
+
   const theme = useAppTheme()
 
   const onScanCode = (uri: string) => {
@@ -80,10 +86,19 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
         {showConnectedDapps ? (
           <Flex grow mt="xxl" pt="lg">
             <FlatList
-              ItemSeparatorComponent={() => <Spacer y="md" />}
+              columnWrapperStyle={{ marginHorizontal: theme.spacing.sm }}
               data={sessions}
               keyExtractor={(item) => item.id}
-              renderItem={(item) => <DappConnectionItem wrapped={item} />}
+              numColumns={2}
+              renderItem={(item) => (
+                <DappConnectionItem
+                  wrapped={item}
+                  onPressChangeNetwork={() => {
+                    setSelectedSession(item.item)
+                    setShowNetworkModal(true)
+                  }}
+                />
+              )}
             />
           </Flex>
         ) : (
@@ -150,6 +165,20 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
           </Flex>
         </Button>
       </Flex>
+      <BottomSheetModal
+        isVisible={showNetworkModal}
+        name={ModalName.NetworkSelector}
+        onClose={onCloseNetworkModal}>
+        {selectedSession && (
+          <ChangeNetworkModal
+            chainId={parseInt(selectedSession.dapp.chain_id, 10)}
+            setChainId={(chainId) => {
+              if (activeAccount) changeChainId(selectedSession.id, chainId, activeAccount.address)
+            }}
+            onPressClose={onCloseNetworkModal}
+          />
+        )}
+      </BottomSheetModal>
     </BottomSheetModal>
   )
 }

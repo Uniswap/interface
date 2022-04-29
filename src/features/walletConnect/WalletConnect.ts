@@ -15,6 +15,10 @@ export const disconnectFromApp = (sessionId: string, account: string) => {
   RNWalletConnect.disconnect(sessionId, account)
 }
 
+export const changeChainId = (topic: string, chainId: number, account: string) => {
+  RNWalletConnect.changeChainId(topic, chainId, account)
+}
+
 export const rejectRequest = (requestInternalId: string, account: string) => {
   RNWalletConnect.rejectRequest(requestInternalId, account)
 }

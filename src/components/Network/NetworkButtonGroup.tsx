@@ -2,7 +2,7 @@ import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
-import { Box } from 'src/components/layout/Box'
+import { Flex } from 'src/components/layout'
 import { NetworkBox } from 'src/components/Network/NetworkBox'
 import { NetworkPill } from 'src/components/Network/NetworkPill'
 import { ChainId } from 'src/constants/chains'
@@ -33,7 +33,7 @@ export function NetworkButtonGroup({
   const activeChains = useActiveChainIds()
 
   return (
-    <Box flexDirection="row">
+    <Flex row>
       <ScrollView
         horizontal
         directionalLockEnabled={true}
@@ -44,7 +44,6 @@ export function NetworkButtonGroup({
           return (
             <Button
               key={chainId}
-              height={36}
               mr="sm"
               name={`${ElementName.NetworkButton}-${chainId}`}
               onPress={() => {
@@ -60,7 +59,7 @@ export function NetworkButtonGroup({
           )
         })}
       </ScrollView>
-    </Box>
+    </Flex>
   )
 }
 

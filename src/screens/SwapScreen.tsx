@@ -8,7 +8,7 @@ import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/ty
 import { Box } from 'src/components/layout'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { SwapNetworkModal } from 'src/components/swap/SwapNetworkModal'
+import { ChangeNetworkModal } from 'src/components/Network/ChangeNetworkModal'
 import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
@@ -90,7 +90,7 @@ export function SheetWithNetworkSelector({
         isVisible={showNetworkModal}
         name={ModalName.NetworkSelector}
         onClose={onCloseNetworkModal}>
-        <SwapNetworkModal
+        <ChangeNetworkModal
           chainId={chainId}
           setChainId={setChainId}
           onPressClose={onCloseNetworkModal}

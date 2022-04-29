@@ -6,7 +6,7 @@ import {
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
-import React, { PropsWithChildren, useEffect, useRef } from 'react'
+import React, { ComponentProps, PropsWithChildren, useEffect, useRef } from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
@@ -22,6 +22,7 @@ type Props = {
   name: ModalName
   onClose: () => void
   snapPoints?: Array<string | number>
+  stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
 }
 
@@ -53,6 +54,7 @@ export function BottomSheetModal({
   name,
   onClose,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
+  stackBehavior = 'push',
   fullScreen,
   hideHandlebar,
 }: Props) {
@@ -81,6 +83,7 @@ export function BottomSheetModal({
       handleComponent={hideHandlebar ? null : HandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
+      stackBehavior={stackBehavior}
       onDismiss={onClose}>
       <Trace logImpression section={name}>
         <BottomSheetView
@@ -102,6 +105,7 @@ export function BottomSheetScrollModal({
   name,
   onClose,
   snapPoints = FULL_HEIGHT_SNAP_POINTS,
+  stackBehavior = 'push',
 }: Props) {
   const modalRef = useRef<BaseModal>(null)
 
@@ -122,6 +126,7 @@ export function BottomSheetScrollModal({
       backgroundStyle={{ backgroundColor: theme.colors.mainBackground }}
       handleComponent={HandleBar}
       snapPoints={snapPoints}
+      stackBehavior={stackBehavior}
       onDismiss={onClose}>
       <Trace logImpression section={name}>
         <BottomSheetScrollView>{children}</BottomSheetScrollView>

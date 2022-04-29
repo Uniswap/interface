@@ -18,6 +18,7 @@ enum EventType: String, CaseIterable {
   case error = "error"
   case signRequest = "sign_request"
   case sessionConnected = "session_connected"
+  case sessionUpdated = "session_updated"
   case sessionDisconnected = "session_disconnected"
 }
 
@@ -39,6 +40,7 @@ enum WCSwiftError: Error {
 
 @objc(RNWalletConnect)
 class RNWalletConnect: RCTEventEmitter {
+  // TODO: Persist accountToWcServer to persist active connections
   private var accountToWcServer: [String: WalletConnectAccountServer]! = [:]
   var supportedChainIds: [Int] = []
   
@@ -46,7 +48,7 @@ class RNWalletConnect: RCTEventEmitter {
   func initialize(_ supportedChainIds: [Int]) {
     self.supportedChainIds = supportedChainIds
   }
- 
+  
   func getServer(_ account: String) -> WalletConnectAccountServer {
     guard self.accountToWcServer[account] == nil else { return self.accountToWcServer[account]! }
     
@@ -55,7 +57,7 @@ class RNWalletConnect: RCTEventEmitter {
     
     return accountServer
   }
-
+  
   @objc
   func connect(_ url: String, account: String) {
     guard let wcUrl = WCURL(url) else {
@@ -72,8 +74,10 @@ class RNWalletConnect: RCTEventEmitter {
   
   @objc
   func disconnect(_ topic: String, account: String) {
-    guard let server = self.accountToWcServer[account] else { return }
-    server.disconnect(topic)
+    guard let accountServer = self.accountToWcServer[account] else {
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
+    }
+    accountServer.disconnect(topic)
   }
   
   @objc
@@ -84,14 +88,23 @@ class RNWalletConnect: RCTEventEmitter {
     
     accountServer.sendSignature(requestInternalId: requestInternalId, signature: signature)
   }
-
-
+  
+  @objc
+  func changeChainId(_ topic: String, chainId: Int, account: String) {
+    guard let accountServer = self.accountToWcServer[account] else {
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
+    }
+    guard let session: Session = accountServer.topicToSession[topic] else { return }
+    
+    accountServer.switchChainId(session: session, chainId: chainId)
+  }
+  
   @objc
   func rejectRequest(_ requestInternalId: String, account: String) {
     guard let accountServer = self.accountToWcServer[account] else {
       return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
     }
-
+    
     accountServer.rejectRequest(requestInternalId: requestInternalId)
   }
   

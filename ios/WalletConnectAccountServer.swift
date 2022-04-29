@@ -8,13 +8,13 @@
 import Foundation
 import WalletConnectSwift
 
-class WalletConnectAccountServer: ServerDelegate {
+class WalletConnectAccountServer {
   var eventEmitter: RCTEventEmitter!
   var account: String!
   var server: Server!
   var supportedChainIds: [Int]!
   
-  private var topicToSession: [String: Session]! = [:]
+  var topicToSession: [String: Session]! = [:]
   
   // mapping of internal id (uuid) => request
   private var pendingRequests: [String: Request]! = [:]
@@ -82,20 +82,38 @@ class WalletConnectAccountServer: ServerDelegate {
         self.eventEmitter.sendEvent(
           withName: EventType.error.rawValue,
           body: [
-            "type": ErrorType.wcRejectRequestError.rawValue
+            "type": ErrorType.wcRejectRequestError.rawValue,
           ]
         )
       }
       
       return
     }
-    
+  
+    switchChainId(session: session, chainId: chainId)
+  }
+  
+  func switchChainId(session: Session, chainId: Int) {
     let w = session.walletInfo!
     let newWalletInfo = Session.WalletInfo(
       approved: w.approved, accounts: w.accounts, chainId: chainId, peerId: w.peerId, peerMeta: w.peerMeta)
     
     do {
       try self.server.updateSession(session, with: newWalletInfo)
+      
+      let icons = session.dAppInfo.peerMeta.icons
+      
+      self.eventEmitter.sendEvent(withName: EventType.sessionUpdated.rawValue, body: [
+        "session_name": session.dAppInfo.peerMeta.name,
+        "session_id": session.url.topic,
+        "account": self.account!,
+        "dapp": [
+          "name": session.dAppInfo.peerMeta.name,
+          "url": session.dAppInfo.peerMeta.url.absoluteString,
+          "icon": icons.isEmpty ? "" : icons[0].absoluteString,
+          "chain_id": chainId
+        ]
+      ])
     } catch {
       self.eventEmitter.sendEvent(
         withName: EventType.error.rawValue,
@@ -135,6 +153,18 @@ class WalletConnectAccountServer: ServerDelegate {
     self.pendingRequests.updateValue(request, forKey: internalId)
   }
   
+  func getSessionFromTopic(_ topic: String) throws -> Session {
+    guard let session = self.topicToSession[topic] else {
+      throw WCSwiftError.invalidSessionTopic
+    }
+    
+    return session
+  }
+}
+
+
+
+extension WalletConnectAccountServer: ServerDelegate {
   func server(_ server: Server, didFailToConnect url: WCURL) {
     self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue ])
   }
@@ -147,12 +177,12 @@ class WalletConnectAccountServer: ServerDelegate {
                                         url: URL(string: "https://uniswap.org")!)
     let walletInfo = Session.WalletInfo(approved: true,
                                         accounts: [self.account],
-                                        chainId: session.dAppInfo.chainId!,
+                                        chainId: session.dAppInfo.chainId ?? 1,
                                         peerId: UUID().uuidString,
                                         peerMeta: walletMeta)
     
     let icons = session.dAppInfo.peerMeta.icons
-
+    
     self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: [
       "session_name": session.dAppInfo.peerMeta.name,
       "session_id": session.url.topic,
@@ -161,7 +191,7 @@ class WalletConnectAccountServer: ServerDelegate {
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
-        "chain_id": session.dAppInfo.chainId!
+        "chain_id": session.dAppInfo.chainId ?? 1,
       ]
     ])
     
@@ -185,13 +215,4 @@ class WalletConnectAccountServer: ServerDelegate {
   func server(_ server: Server, didUpdate session: Session) {
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }
-  
-  func getSessionFromTopic(_ topic: String) throws -> Session {
-    guard let session = self.topicToSession[topic] else {
-      throw WCSwiftError.invalidSessionTopic
-    }
-    
-    return session
-  }
 }
-
