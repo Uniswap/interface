@@ -37,7 +37,7 @@ if (!!window.ethereum) {
           symbol: 'EVMOS',
           decimals: 18,
         },
-        rpcUrls: ['https://eth.bd.evmos.org:8545/'],
+        rpcUrls: ['https://evmos-rpc2.binary.host'],
         blockExplorerUrls: ['https://evm.evmos.org'],
       },
     ],
