@@ -44,7 +44,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
           .
         </ThemedText.Main>
         <ThemedText.Main fontSize={12}>
-          <Trans>If you believe this is an error, please email: </Trans>{' '}
+          <Trans>If you believe this is an error, please send an email including your address to </Trans>{' '}
         </ThemedText.Main>
         <CopyHelper toCopy="compliance@uniswap.org" color={theme.primary1}>
           compliance@uniswap.org.
