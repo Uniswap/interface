@@ -288,31 +288,31 @@ export function useOwnWeeklyEmission(
 }
 
 export function useCalculateAPR(poolEmission?: CurrencyAmount<Token>, totalPoolStaked?: CurrencyAmount<Token>) {
-  return JSBI.BigInt(0)
-  // const fractionOfPool = 100
-  // const onePercentOfPool = totalPoolStaked?.divide(fractionOfPool)
+  // return JSBI.BigInt(0)
+  const fractionOfPool = 100
+  const onePercentOfPool = totalPoolStaked?.divide(fractionOfPool)
 
-  // const hypotheticalEmissionPerYear = poolEmission?.multiply(JSBI.BigInt(60 * 60 * 24 * 365)).divide(fractionOfPool)
+  const hypotheticalEmissionPerYear = poolEmission?.multiply(JSBI.BigInt(60 * 60 * 24 * 365)).divide(fractionOfPool)
 
-  // const emissionTokenPrice = useUSDCPrice(poolEmission?.currency)
+  const emissionTokenPrice = useUSDCPrice(poolEmission?.currency)
 
-  // // console.log('emissionTokenPrice', emissionTokenPrice, poolEmission?.currency.name)
-  // const emissionAmount =
-  //   poolEmission?.currency && onePercentOfPool
-  //     ? CurrencyAmount.fromRawAmount(poolEmission?.currency, onePercentOfPool.multiply(2).quotient)
-  //     : undefined
-  // const usdValueOfStakedLP = useUSDCValue(emissionAmount)
-  // // console.log('usdValueOfStakedLP', usdValueOfStakedLP?.toSignificant())
+  // console.log('emissionTokenPrice', emissionTokenPrice, poolEmission?.currency.name)
+  const emissionAmount =
+    poolEmission?.currency && onePercentOfPool
+      ? CurrencyAmount.fromRawAmount(poolEmission?.currency, onePercentOfPool.multiply(2).quotient)
+      : undefined
+  const usdValueOfStakedLP = useUSDCValue(emissionAmount)
+  // console.log('usdValueOfStakedLP', usdValueOfStakedLP?.toSignificant())
 
-  // const apr =
-  //   usdValueOfStakedLP &&
-  //   hypotheticalEmissionPerYear &&
-  //   emissionTokenPrice &&
-  //   usdValueOfStakedLP.greaterThan(JSBI.BigInt(0))
-  //     ? JSBI.divide(emissionTokenPrice?.quote(hypotheticalEmissionPerYear).quotient, usdValueOfStakedLP.quotient)
-  //     : JSBI.BigInt(0)
+  const apr =
+    usdValueOfStakedLP &&
+    hypotheticalEmissionPerYear &&
+    emissionTokenPrice &&
+    usdValueOfStakedLP.greaterThan(JSBI.BigInt(0))
+      ? JSBI.divide(emissionTokenPrice?.quote(hypotheticalEmissionPerYear).quotient, usdValueOfStakedLP.quotient)
+      : JSBI.BigInt(0)
 
-  // return apr
+  return apr
 }
 
 export interface MinichefRawPoolInfo {

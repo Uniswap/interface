@@ -26,7 +26,7 @@ import {
   useRewardInfos,
   usePool,
   useOwnWeeklyEmission,
-  useCalculateAPR,
+  // useCalculateAPR,
   useFarmTVL,
 } from 'state/farm/farm-hooks'
 import { PotionIcon4 } from '../../components/Potions/Potions'
@@ -123,11 +123,11 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
   const stakedAmount = lpToken ? CurrencyAmount.fromRawAmount(lpToken, stakedRawAmount || 0) : undefined
 
   const ownPrimaryWeeklyEmission = useOwnWeeklyEmission(poolEmissionAmount, stakedAmount, totalPoolStaked)
-  const primaryAPR = useCalculateAPR(poolEmissionAmount, totalPoolStaked)
+  // const primaryAPR = useCalculateAPR(poolEmissionAmount, totalPoolStaked)
   const ownSecondaryWeeklyEmission = useOwnWeeklyEmission(rewardPerSecondAmount, stakedAmount, totalPoolStaked)
-  const secondaryAPR = useCalculateAPR(rewardPerSecondAmount, totalPoolStaked)
+  // const secondaryAPR = useCalculateAPR(rewardPerSecondAmount, totalPoolStaked)
 
-  const totalAPR = JSBI.add(primaryAPR || JSBI.BigInt(0), secondaryAPR || JSBI.BigInt(0))
+  // const totalAPR = JSBI.add(primaryAPR || JSBI.BigInt(0), secondaryAPR || JSBI.BigInt(0))
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = availableLPAmount

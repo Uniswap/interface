@@ -162,8 +162,8 @@ export function FarmTableRow({
   totalLPStaked,
   primaryEmissionPerSecond,
   secondaryEmissionPerSecond,
-  totalAPR,
-}: TableRowProps) {
+}: // totalAPR,
+TableRowProps) {
   return (
     <PoolRow to={`/farm/${poolId}`}>
       <AutoRow gap="0%" justify={'space-between'}>
