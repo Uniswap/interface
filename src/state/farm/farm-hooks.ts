@@ -2,16 +2,18 @@ import { DIFFUSION } from 'constants/tokens'
 import { BigNumber } from 'ethers'
 import { useToken } from 'hooks/Tokens'
 import { useComplexRewarderTime, useMiniChef, usePairContract } from 'hooks/useContract'
+import { useTotalSupply } from 'hooks/useTotalSupply'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2Pair } from 'hooks/useV2Pairs'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { BigintIsh } from 'sdk-core/constants'
-import { CurrencyAmount, Token } from 'sdk-core/entities'
+import { Currency, CurrencyAmount, Token } from 'sdk-core/entities'
 import { useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { isTruthy } from 'utils/isTruthy'
+import { Pair } from 'v2-sdk/entities'
 
 export function usePairTokens(pairAddress?: string) {
   const { account } = useActiveWeb3React()
@@ -138,6 +140,22 @@ export function usePools() {
     poolIndizes,
   ])
   return pools.filter((pool) => pool.lpTokenAddress)
+}
+
+export function usePoolTVL(pair?: Pair) {
+  const valueToken0 = useUSDCValue(pair?.reserve0)
+  const valueToken1 = useUSDCValue(pair?.reserve1)
+
+  return valueToken0?.multiply(2) || valueToken1?.multiply(2)
+}
+
+export function useFarmTVL(pair?: Pair, totalAmountStaked?: CurrencyAmount<Currency>) {
+  const totalPoolValue = usePoolTVL(pair)
+  const totalSupplyOfStakingToken = useTotalSupply(totalAmountStaked?.currency)
+  if (totalPoolValue && totalSupplyOfStakingToken && totalAmountStaked) {
+    return totalPoolValue.multiply(totalAmountStaked.quotient).divide(totalSupplyOfStakingToken)
+  }
+  return undefined
 }
 
 export function usePool(poolId: number) {
@@ -270,17 +288,20 @@ export function useOwnWeeklyEmission(
 }
 
 export function useCalculateAPR(poolEmission?: CurrencyAmount<Token>, totalPoolStaked?: CurrencyAmount<Token>) {
-  const fractionOfPool = 10000
+  const fractionOfPool = 100
   const onePercentOfPool = totalPoolStaked?.divide(fractionOfPool)
 
   const hypotheticalEmissionPerYear = poolEmission?.multiply(JSBI.BigInt(60 * 60 * 24 * 365)).divide(fractionOfPool)
 
   const emissionTokenPrice = useUSDCPrice(poolEmission?.currency)
-  const usdValueOfStakedLP = useUSDCValue(
+
+  // console.log('emissionTokenPrice', emissionTokenPrice, poolEmission?.currency.name)
+  const emissionAmount =
     poolEmission?.currency && onePercentOfPool
       ? CurrencyAmount.fromRawAmount(poolEmission?.currency, onePercentOfPool.multiply(2).quotient)
       : undefined
-  )
+  const usdValueOfStakedLP = useUSDCValue(emissionAmount)
+  // console.log('usdValueOfStakedLP', usdValueOfStakedLP?.toSignificant())
 
   const apr =
     usdValueOfStakedLP &&

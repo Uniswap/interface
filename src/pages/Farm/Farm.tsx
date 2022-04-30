@@ -20,13 +20,19 @@ import { CountUp } from 'use-count-up'
 
 import { currencyId } from '../../utils/currencyId'
 import usePrevious from '../../hooks/usePrevious'
-import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
-import { usePairTokens, useRewardInfos, usePool, useOwnWeeklyEmission, useCalculateAPR } from 'state/farm/farm-hooks'
+import {
+  usePairTokens,
+  useRewardInfos,
+  usePool,
+  useOwnWeeklyEmission,
+  useCalculateAPR,
+  useFarmTVL,
+} from 'state/farm/farm-hooks'
 import { PotionIcon4 } from '../../components/Potions/Potions'
 import { Box } from 'rebass/styled-components'
-import CurrencyLogo from '../../components/CurrencyLogo'
 import { HRDark } from '../../components/HR/HR'
+import { CurrencyLogoFromList } from 'components/CurrencyLogo/CurrencyLogoFromList'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -112,7 +118,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
 
   const pool = usePool(poolId)
   const { lpTokenAddress, pendingAmount, stakedRawAmount, rewarderAddress, poolEmissionAmount } = pool || {}
-  const { token0, token1, availableLPAmount, lpToken, totalPoolStaked } = usePairTokens(lpTokenAddress)
+  const { token0, token1, availableLPAmount, lpToken, totalPoolStaked, pair } = usePairTokens(lpTokenAddress)
   const { pendingAmount: pendingRewardAmount, rewardPerSecondAmount } = useRewardInfos(poolId, rewarderAddress)
   const stakedAmount = lpToken ? CurrencyAmount.fromRawAmount(lpToken, stakedRawAmount || 0) : undefined
 
@@ -140,8 +146,8 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
   // const backgroundColor = useColor(colorToken ?? undefined)
 
   // get the USD value of staked dIFFUSION
-  const USDPrice = useUSDCPrice(totalPoolStaked?.currency)
-  const valueOfTotalStakedAmountInUSDC = totalPoolStaked && USDPrice?.quote(totalPoolStaked)
+
+  const valueOfTotalStakedAmountInUSDC = useFarmTVL(pair ?? undefined)
 
   const toggleWalletModal = useWalletModalToggle()
 
@@ -200,7 +206,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
             </PoolHeading>
             <PoolHeading width={1 / 2} align="center">
               <TYPE.body fontSize={20} fontWeight={500}>
-                {JSBI.multiply(totalAPR, JSBI.BigInt(100))}%
+                {JSBI.GT(totalAPR, JSBI.BigInt(0)) ? `${JSBI.multiply(totalAPR, JSBI.BigInt(100))}%` : '-'}
               </TYPE.body>
             </PoolHeading>
           </RowBetween>
@@ -209,7 +215,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
             <RewardRate width={1 / 1} align="left">
               <AutoColumn justify={'start'}>
                 <Heading>
-                  <CurrencyLogo currency={poolEmissionAmount?.currency ?? undefined} size={'24px'} />
+                  <CurrencyLogoFromList currency={poolEmissionAmount?.currency ?? undefined} size={'24px'} />
                   <TYPE.body fontWeight={500} margin={'5px'}>
                     {poolEmissionAmount?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
                     <span style={{ color: '#27D2EA' }}> {` ${poolEmissionAmount?.currency.symbol || ''}`}</span>
@@ -218,7 +224,7 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
                 </Heading>
                 {rewardPerSecondAmount && (
                   <Heading>
-                    <CurrencyLogo currency={rewardPerSecondAmount.currency ?? undefined} size={'24px'} />
+                    <CurrencyLogoFromList currency={rewardPerSecondAmount.currency ?? undefined} size={'24px'} />
                     <TYPE.body fontWeight={500} margin={'5px'}>
                       {rewardPerSecondAmount?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
                         '-'}

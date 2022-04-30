@@ -5,7 +5,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Link } from 'react-router-dom'
 import { CurrencyAmount, Token } from 'sdk-core/entities'
 import { BIG_INT_SECONDS_IN_WEEK } from 'constants/misc'
-import CurrencyLogo from 'components/CurrencyLogo'
+import { CurrencyLogoFromList } from 'components/CurrencyLogo/CurrencyLogoFromList'
 import JSBI from 'jsbi'
 import { DefaultTheme } from 'styled-components/macro'
 import styled from 'styled-components'
@@ -89,7 +89,7 @@ export function FarmTableHeader() {
 type TableRowProps = {
   poolId: number
   pair?: Pair
-  tlv?: CurrencyAmount<Token>
+  tvl?: CurrencyAmount<Token>
   totalLPStaked?: CurrencyAmount<Token>
   primaryEmissionPerSecond?: CurrencyAmount<Token>
   secondaryEmissionPerSecond?: CurrencyAmount<Token>
@@ -158,7 +158,7 @@ const RowColumn = styled.div`
 export function FarmTableRow({
   pair,
   poolId,
-  tlv,
+  tvl,
   totalLPStaked,
   primaryEmissionPerSecond,
   secondaryEmissionPerSecond,
@@ -178,8 +178,8 @@ export function FarmTableRow({
           </span>
         </PoolPair>
         <TVL>
-          {tlv
-            ? `$${tlv.toFixed(0, { groupSeparator: ',' })}`
+          {tvl
+            ? `$${tvl.toFixed(0, { groupSeparator: ',' })}`
             : `${totalLPStaked?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} DIFF-LP`}
         </TVL>
         <RowColumn>
@@ -187,7 +187,7 @@ export function FarmTableRow({
             <EmissionText>
               {primaryEmissionPerSecond?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
             </EmissionText>
-            <CurrencyLogo
+            <CurrencyLogoFromList
               currency={primaryEmissionPerSecond?.currency}
               title={secondaryEmissionPerSecond?.currency.symbol}
             />
@@ -198,14 +198,16 @@ export function FarmTableRow({
                 {secondaryEmissionPerSecond?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
                   '-'}
               </EmissionText>
-              <CurrencyLogo
+              <CurrencyLogoFromList
                 currency={secondaryEmissionPerSecond?.currency}
                 title={secondaryEmissionPerSecond?.currency.symbol}
               />
             </Emission>
           )}
         </RowColumn>
-        <RowColumn>{totalAPR && `${JSBI.multiply(totalAPR, JSBI.BigInt(100))}%`}</RowColumn>
+        <RowColumn>
+          {totalAPR && JSBI.GT(totalAPR, JSBI.BigInt(0)) ? `${JSBI.multiply(totalAPR, JSBI.BigInt(100))}%` : '-'}
+        </RowColumn>
       </AutoRow>
       <HRDark />
     </PoolRow>

@@ -25,7 +25,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   background-color: ${({ theme }) => theme.white};
 `
 
-type CurrencyLogoProps = {
+export type CurrencyLogoProps = {
   currency?: Currency
   size?: string
   title?: string

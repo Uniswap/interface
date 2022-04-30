@@ -12,8 +12,14 @@ import JSBI from 'jsbi'
 // import CurrencyLogo from 'components/CurrencyLogo'
 import { FarmTable, FarmTableRow } from 'components/farm/FarmTable'
 
-import { MinichefRawPoolInfo, useCalculateAPR, usePairTokens, usePools, useRewardInfos } from 'state/farm/farm-hooks'
-import useUSDCPrice from 'hooks/useUSDCPrice'
+import {
+  MinichefRawPoolInfo,
+  useCalculateAPR,
+  useFarmTVL,
+  usePairTokens,
+  usePools,
+  useRewardInfos,
+} from 'state/farm/farm-hooks'
 
 import styled from 'styled-components'
 import { Tux } from '../../components/farm/TuxBanner'
@@ -56,20 +62,19 @@ function PoolRow({
   poolEmissionAmount,
 }: PoolProps) {
   const { totalPoolStaked, pair } = usePairTokens(lpTokenAddress)
-  const USDPrice = useUSDCPrice(totalPoolStaked?.currency)
   const { rewardPerSecondAmount } = useRewardInfos(poolId, rewarderAddress)
   const primaryAPR = useCalculateAPR(poolEmissionAmount, totalPoolStaked)
   const secondaryAPR = useCalculateAPR(rewardPerSecondAmount, totalPoolStaked)
   const totalAPR = JSBI.add(primaryAPR || JSBI.BigInt(0), secondaryAPR || JSBI.BigInt(0))
 
-  const valueOfTotalStakedAmountInUSDC = totalPoolStaked && USDPrice?.quote(totalPoolStaked)
+  const tvl = useFarmTVL(pair ?? undefined, totalPoolStaked)
 
   return (
     <>
       <FarmTableRow
         pair={pair ?? undefined}
         poolId={poolId}
-        tlv={valueOfTotalStakedAmountInUSDC}
+        tvl={tvl}
         totalLPStaked={totalPoolStaked}
         primaryEmissionPerSecond={poolEmissionAmount}
         secondaryEmissionPerSecond={rewardPerSecondAmount}

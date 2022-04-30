@@ -79,7 +79,9 @@ export function useContract<T extends Contract = Contract>(
     try {
       return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
     } catch (error) {
-      console.error('Failed to get contract', error)
+      if (address !== '0x0000000000000000000000000000000000000000') {
+        console.error('Failed to get contract', error)
+      }
       return null
     }
   }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T

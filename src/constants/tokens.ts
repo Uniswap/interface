@@ -65,19 +65,19 @@ export const ATOM = {
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xC97D061637D6b3a3E54AC76537B2635B112ecdad', 18, 'MATOM', 'Mock ATOM'),
 }
 
-export const MEVMOS = makeToken('Mock EVMOS', 'MEVMOS', 18, {
+export const MEVMOS = makeToken('EVMOS', 'MEVMOS', 18, {
   //@TODO: FIX MAINNET
   [ChainId.MAINNET]: '0xFCd2Ce20ef8ed3D43Ab4f8C2dA13bbF1C6d9512F',
   [ChainId.TESTNET]: TESTNET.mockEVMOS,
   [ChainId.RINKEBY]: '0xDfbBc5573024984ddac30BbE632fa3DAA821aBaD',
 })
-export const OSMOSIS = makeToken('Mock Osmosis', 'OSMOSIS', 18, {
+export const OSMOSIS = makeToken('Osmosis', 'OSMOSIS', 18, {
   //@TODO: FIX MAINNET
   [ChainId.MAINNET]: '0x067eC87844fBD73eDa4a1059F30039584586e09d',
   [ChainId.TESTNET]: TESTNET.mockOSMOSIS,
   [ChainId.RINKEBY]: '0x7F2D8c2bb0cD4368C9f44198e0Cd1486cD5Ae1aA',
 })
-export const DIFFUSION = makeToken('Mock Diffusion', 'DIFF', 18, {
+export const DIFFUSION = makeToken('Diffusion', 'DIFF', 18, {
   [ChainId.MAINNET]: '0x3f75ceabCDfed1aCa03257Dc6Bdc0408E2b4b026',
   [ChainId.TESTNET]: TESTNET.diffusion || '0x067eC87844fBD73eDa4a1059F30039584586e09d',
   // Minichef Main Reward
@@ -87,7 +87,7 @@ export const DIFFUSION = makeToken('Mock Diffusion', 'DIFF', 18, {
 function makeToken(name: string, symbol: string, decimals: number, addresses: Record<ChainId, string>) {
   return {
     [ChainId.MAINNET]: new Token(ChainId.MAINNET, addresses[ChainId.MAINNET], decimals, symbol, name),
-    [ChainId.TESTNET]: new Token(ChainId.TESTNET, addresses[ChainId.TESTNET], decimals, symbol, name),
-    [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, addresses[ChainId.TESTNET], decimals, symbol, name),
+    [ChainId.TESTNET]: new Token(ChainId.TESTNET, addresses[ChainId.TESTNET], decimals, `M${symbol}`, `Mock ${name}`),
+    [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, addresses[ChainId.TESTNET], decimals, `M${symbol}`, `Mock ${name}`),
   }
 }
