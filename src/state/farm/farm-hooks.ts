@@ -288,6 +288,7 @@ export function useOwnWeeklyEmission(
 }
 
 export function useCalculateAPR(poolEmission?: CurrencyAmount<Token>, totalPoolStaked?: CurrencyAmount<Token>) {
+  // return JSBI.BigInt(0)
   const fractionOfPool = 100
   const onePercentOfPool = totalPoolStaked?.divide(fractionOfPool)
 

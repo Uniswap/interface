@@ -7,7 +7,9 @@ import { ChainId } from 'constants/chains'
 
 // USDC amount used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC[ChainId.MAINNET], 100_000e6)
+// const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC[ChainId.MAINNET], 100_000e6)
+// @TODO: change back, but to bootstrap we dont have enought liquidity
+const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC[ChainId.MAINNET], 100e6)
 
 /**
  * Returns the price in USDC of the input currency
