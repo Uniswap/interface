@@ -191,9 +191,9 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
             <PoolHeading width={1 / 2} align="center">
               <TYPE.mediumHeader color={'primary1'}>Total deposits</TYPE.mediumHeader>
             </PoolHeading>
-            <PoolHeading width={1 / 2} align="center">
+            {/* <PoolHeading width={1 / 2} align="center">
               <TYPE.mediumHeader color={'primary1'}>APR</TYPE.mediumHeader>
-            </PoolHeading>
+            </PoolHeading> */}
           </RowBetween>
           <HRDark />
           <RowBetween>
@@ -204,11 +204,11 @@ export default function Manage({ match: { params } }: RouteComponentProps<{ pool
                   : `${totalPoolStaked?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} DIFF - LP`}
               </TYPE.body>
             </PoolHeading>
-            <PoolHeading width={1 / 2} align="center">
+            {/* <PoolHeading width={1 / 2} align="center">
               <TYPE.body fontSize={20} fontWeight={500}>
                 {JSBI.GT(totalAPR, JSBI.BigInt(0)) ? `${JSBI.multiply(totalAPR, JSBI.BigInt(100))}%` : '-'}
               </TYPE.body>
-            </PoolHeading>
+            </PoolHeading> */}
           </RowBetween>
           <CardNoise />
           <RowBetween>

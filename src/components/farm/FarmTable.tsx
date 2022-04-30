@@ -81,7 +81,7 @@ export function FarmTableHeader() {
       <FarmTableHeaderText>Pool</FarmTableHeaderText>
       <FarmTableHeaderText>TVL</FarmTableHeaderText>
       <FarmTableHeaderText>Rewards (per Week)</FarmTableHeaderText>
-      <FarmTableHeaderText>APR</FarmTableHeaderText>
+      {/* <FarmTableHeaderText>APR</FarmTableHeaderText> */}
     </FarmTableHeaderContainer>
   )
 }
@@ -205,9 +205,9 @@ export function FarmTableRow({
             </Emission>
           )}
         </RowColumn>
-        <RowColumn>
+        {/* <RowColumn>
           {totalAPR && JSBI.GT(totalAPR, JSBI.BigInt(0)) ? `${JSBI.multiply(totalAPR, JSBI.BigInt(100))}%` : '-'}
-        </RowColumn>
+        </RowColumn> */}
       </AutoRow>
       <HRDark />
     </PoolRow>
