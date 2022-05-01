@@ -126,9 +126,23 @@ const DataText = styled.div`
   `};
 `
 
+const DollarValues = styled.span`
+  font-size: 12px;
+  color: gray;
+`
+
 interface PositionListItemProps {
   positionDetails: PositionDetails
   isUnderfunded: boolean
+}
+
+function isToken0Stable(token0: Token | undefined): boolean {
+  if (token0 == undefined) return false
+  const stables = [DAI, USDC, USDT]
+  let flag = false
+
+  stables.forEach((stable) => (stable && stable.symbol && stable?.symbol == token0.symbol ? (flag = true) : ''))
+  return flag
 }
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
@@ -146,7 +160,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 
   // if token0 is a dollar-stable asset, set it as the quote token
   const stables = [DAI, USDC, USDT]
-  if (stables.some((stable) => stable.equals(token0))) {
+  if (stables.some((stable) => stable && stable.symbol && stable.symbol == token1.symbol)) {
     return {
       priceLower: position.token0PriceUpper.invert(),
       priceUpper: position.token0PriceLower.invert(),
@@ -185,6 +199,37 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 }
 
+function countZeroes(x: string | number) {
+  let counter = 0
+  for (let i = 2; i < x.toString().length; i++) {
+    if (x.toString().charAt(i) != '0') return counter
+
+    counter++
+  }
+  return counter
+}
+
+function commafy(num: number | string | undefined) {
+  if (num == undefined) return undefined
+  const str = num.toString().split('.')
+  if (str[0].length >= 4) {
+    str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+  }
+  return str.join('.')
+}
+
+function formatPrice(value: string | number | undefined) {
+  if (value == undefined) return undefined
+
+  if (Number(value) > 9) return commafy(Number(value).toFixed())
+  const numberOfZeros = countZeroes(Number(value).toFixed(20))
+
+  if (3 > numberOfZeros && numberOfZeros > 0) return commafy(Number(value).toFixed(3))
+
+  if (Number(value) >= 1) return commafy(Number(value).toFixed(1))
+
+  return commafy(Number(value).toFixed(3))
+}
 export default function PositionListItem({ positionDetails, isUnderfunded }: PositionListItemProps) {
   const {
     token0: token0Address,
@@ -249,6 +294,35 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
 
   const removed = liquidity?.eq(0)
 
+  const token0USD = useUSDCPrice(currency0 ?? undefined)?.toSignificant(4)
+  const token1USD = useUSDCPrice(currency1 ?? undefined)?.toSignificant(4)
+
+  const currentPriceUSD =
+    currency0 && currencyBase?.name == unwrappedToken(currency0)?.name
+      ? inverted
+        ? Number(token0USD) / Number(pool?.token1Price.toSignificant(6))
+        : Number(token0USD) / Number(pool?.token0Price.toSignificant(6))
+      : inverted
+      ? Number(token1USD) / Number(pool?.token1Price.toSignificant(6))
+      : Number(token1USD) / Number(pool?.token0Price.toSignificant(6))
+
+  const targetPriceUSD =
+    currency0 && currencyBase?.name == unwrappedToken(currency0)?.name
+      ? inverted
+        ? Number(token0USD) / Number(priceUpper?.toSignificant(6))
+        : Number(token0USD) / Number(priceUpper?.toSignificant(6))
+      : inverted
+      ? Number(token1USD) / Number(priceUpper?.toSignificant(6))
+      : Number(token1USD) / Number(priceUpper?.toSignificant(6))
+
+  const numberOfZeroes = pool && countZeroes((inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6))
+  const leftover = numberOfZeroes && currentPriceUSD.toFixed(20).substring(2 + numberOfZeroes)
+  const numberOfZeroesTargetPrice = priceUpper && countZeroes(priceUpper?.toSignificant(6))
+  const leftoverTargetPrice =
+    numberOfZeroesTargetPrice && targetPriceUSD.toFixed(20).substring(2 + numberOfZeroesTargetPrice)
+
+  const isTokenStable = isToken0Stable(pool?.token0) ?? undefined
+
   return (
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
@@ -269,8 +343,11 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         </RangeText>{' '}
         <RangeText>
           <Trans>
-            {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}{' '}
+            {inverted ? commafy(pool?.token1Price.toSignificant(3)) : commafy(pool?.token0Price.toSignificant(6))}{' '}
             <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />{' '}
+            <DollarValues>
+              {currentPriceUSD && !isTokenStable ? <span>(${formatPrice(currentPriceUSD)})</span> : ''}{' '}
+            </DollarValues>
           </Trans>
         </RangeText>{' '}
       </RowBetween>
@@ -282,8 +359,11 @@ export default function PositionListItem({ positionDetails, isUnderfunded }: Pos
         </RangeText>
         <RangeText>
           <Trans>
-            {priceUpper?.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}
-            <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+            {commafy(priceUpper?.toSignificant(3))} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}
+            <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />{' '}
+            <DollarValues>
+              {targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}{' '}
+            </DollarValues>{' '}
           </Trans>
         </RangeText>
       </RowBetween>
