@@ -194,22 +194,27 @@ export default function WalletModal({
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
+
+      const baseProps = {
+        id: `connect-${key}`,
+        link: option.href,
+        header: option.name,
+        color: option.color,
+        isActive: option.connector && option.connector === connector,
+        key,
+        icon: option.iconURL,
+      }
+
       // check for mobile options
       if (isMobile) {
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
+              {...baseProps}
               onClick={() => {
                 !!option.connector && option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
-              id={`connect-${key}`}
-              key={key}
-              isActive={option.connector && option.connector === connector}
-              color={option.color}
-              link={option.href}
-              header={option.name}
               subheader={null}
-              icon={option.iconURL}
             />
           )
         }
@@ -251,19 +256,13 @@ export default function WalletModal({
         !isMobile &&
         !option.mobileOnly && (
           <Option
-            id={`connect-${key}`}
+            {...baseProps}
             onClick={() => {
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && option.connector && tryActivation(option.connector)
             }}
-            key={key}
-            isActive={option.connector === connector}
-            color={option.color}
-            link={option.href}
-            header={option.name}
             subheader={null} //use option.descriptio to bring back multi-line
-            icon={option.iconURL}
           />
         )
       )

@@ -20,6 +20,23 @@ interface WalletInfo {
   mobileOnly?: true
 }
 
+enum Wallet {
+  INJECTED = 'INJECTED',
+  COINBASE_WALLET = 'COINBASE_WALLET',
+  WALLET_CONNECT = 'WALLET_CONNECT',
+}
+
+export const getConnectorForWallet = (wallet: Wallet) => {
+  switch (wallet) {
+    case Wallet.INJECTED:
+      return injected
+    case Wallet.COINBASE_WALLET:
+      return coinbaseWallet
+    case Wallet.WALLET_CONNECT:
+      return walletConnect
+  }
+}
+
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   INJECTED: {
     connector: injected,
