@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 
-import { updateMatchesDarkMode } from './actions'
+import { updateMatchesDarkMode } from './reducer'
 
 export default function Updater(): null {
   const dispatch = useAppDispatch()
