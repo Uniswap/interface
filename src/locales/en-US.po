@@ -2028,6 +2028,7 @@ msgid "To (estimated)"
 msgstr "To (estimated)"
 
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "To be extended"
 msgstr "To be extended"
 
