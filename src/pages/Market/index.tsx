@@ -967,15 +967,29 @@ export default function Market({ history }: RouteComponentProps) {
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         <TYPE.subHeader>
                           <Trans>${swapTransaction?.gasUseEstimateUSD} </Trans>
-                          <img
-                            src={darkMode ? GasIconDark : GasIconLight}
-                            style={{
-                              width: '22px',
-                              height: '14px',
-                              position: 'relative',
-                              top: '2px',
-                            }}
-                          />
+                          {darkMode && (
+                            <img
+                              src={GasIconDark}
+                              style={{
+                                width: '13px',
+                                height: '14px',
+                                position: 'relative',
+                                top: '1px',
+                                marginLeft: '5px',
+                              }}
+                            />
+                          )}
+                          {!darkMode && (
+                            <img
+                              src={GasIconLight}
+                              style={{
+                                width: '18px',
+                                height: '14px',
+                                position: 'relative',
+                                top: '1px',
+                              }}
+                            />
+                          )}
                         </TYPE.subHeader>
                       </LoadingOpacityContainer>
                     </RowFixed>
