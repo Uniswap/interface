@@ -1,4 +1,4 @@
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
@@ -6,9 +6,10 @@ import { createContext, PropsWithChildren, useCallback, useContext, useEffect, u
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import fetchTokenList from './fetchTokenList'
-import { useQueryTokens } from './querying'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
+
+export { useQueryTokens } from './useQueryTokens'
 
 export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 
@@ -50,10 +51,6 @@ export function useTokenMap(): TokenMap {
       return map
     }, {} as TokenMap)
   }, [tokenMap])
-}
-
-export function useQueryCurrencies(query = ''): (WrappedTokenInfo | NativeCurrency)[] {
-  return useQueryTokens(query, useTokenList())
 }
 
 export function TokenListProvider({

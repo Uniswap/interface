@@ -8,7 +8,7 @@ export default function Fixture() {
   return (
     <Modal color="module">
       <TokenListProvider list={DEFAULT_TOKEN_LIST.tokens}>
-        <TokenSelectDialog onSelect={() => void 0} />
+        <TokenSelectDialog onSelect={() => void 0} onClose={() => void 0} />
       </TokenListProvider>
     </Modal>
   )
