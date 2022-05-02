@@ -143,9 +143,13 @@ export default function WalletModal({
 
   const isNetworkConnector = connector === network
 
-  // close on connection, when logged out before
+  // close on connection/disconnection
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
+      toggleWalletModal()
+    }
+
+    if (!account && previousAccount && walletModalOpen) {
       toggleWalletModal()
     }
   }, [account, previousAccount, toggleWalletModal, walletModalOpen])
