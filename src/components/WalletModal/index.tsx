@@ -8,12 +8,14 @@ import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
+import { useAppDispatch } from 'state/hooks'
+import { setWalletOverride } from 'state/user/actions'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, network } from '../../connectors'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
+import { getWalletForConnector, SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -128,7 +130,8 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
-  // important that these are destructed from the account-specific web3-react context
+  const dispatch = useAppDispatch()
+
   const { connector, error, account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
@@ -143,6 +146,13 @@ export default function WalletModal({
 
   const isNetworkConnector = connector === network
 
+  // on error, disconnect the wallet override
+  useEffect(() => {
+    if (error) {
+      dispatch(setWalletOverride({ wallet: undefined }))
+    }
+  }, [dispatch, error])
+
   // close on connection/disconnection
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -152,7 +162,7 @@ export default function WalletModal({
     if (!account && previousAccount && walletModalOpen) {
       toggleWalletModal()
     }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+  }, [connector, dispatch, account, previousAccount, toggleWalletModal, walletModalOpen])
 
   // always reset to account view
   useEffect(() => {
@@ -170,12 +180,12 @@ export default function WalletModal({
   }, [setWalletView, error, connector, walletModalOpen, connectorPrevious])
 
   const tryActivation = async (connector: Connector) => {
+    const wallet = getWalletForConnector(connector)
     let name = ''
-    Object.keys(SUPPORTED_WALLETS).map((key) => {
+    Object.keys(SUPPORTED_WALLETS).forEach((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
-        return (name = SUPPORTED_WALLETS[key].name)
+        name = SUPPORTED_WALLETS[key].name
       }
-      return true
     })
     // log selected wallet
     ReactGA.event({
@@ -186,7 +196,8 @@ export default function WalletModal({
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
-    connector.activate()
+    await connector.activate()
+    dispatch(setWalletOverride({ wallet }))
   }
 
   // get wallets user can switch too, depending on device/browser

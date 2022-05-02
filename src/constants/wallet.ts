@@ -8,6 +8,7 @@ import { coinbaseWallet, injected, walletConnect } from '../connectors'
 
 interface WalletInfo {
   connector?: Connector
+  wallet: Wallet
   name: string
   iconURL: string
   description: string
@@ -24,6 +25,19 @@ export enum Wallet {
   WALLET_CONNECT = 'WALLET_CONNECT',
 }
 
+export const getWalletForConnector = (connector: Connector) => {
+  switch (connector) {
+    case injected:
+      return Wallet.INJECTED
+    case coinbaseWallet:
+      return Wallet.COINBASE_WALLET
+    case walletConnect:
+      return Wallet.WALLET_CONNECT
+    default:
+      throw Error('unsupported connector')
+  }
+}
+
 export const getConnectorForWallet = (wallet: Wallet) => {
   switch (wallet) {
     case Wallet.INJECTED:
@@ -38,6 +52,7 @@ export const getConnectorForWallet = (wallet: Wallet) => {
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   INJECTED: {
     connector: injected,
+    wallet: Wallet.INJECTED,
     name: 'Injected',
     iconURL: INJECTED_ICON_URL,
     description: 'Injected web3 provider.',
@@ -47,6 +62,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   METAMASK: {
     connector: injected,
+    wallet: Wallet.INJECTED,
     name: 'MetaMask',
     iconURL: METAMASK_ICON_URL,
     description: 'Easy-to-use browser extension.',
@@ -55,6 +71,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   WALLET_CONNECT: {
     connector: walletConnect,
+    wallet: Wallet.WALLET_CONNECT,
     name: 'WalletConnect',
     iconURL: WALLETCONNECT_ICON_URL,
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
@@ -64,6 +81,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   COINBASE_WALLET: {
     connector: coinbaseWallet,
+    wallet: Wallet.COINBASE_WALLET,
     name: 'Coinbase Wallet',
     iconURL: COINBASE_ICON_URL,
     description: 'Use Coinbase Wallet app on mobile device',
@@ -72,6 +90,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   COINBASE_LINK: {
     name: 'Open in Coinbase Wallet',
+    wallet: Wallet.COINBASE_WALLET,
     iconURL: COINBASE_ICON_URL,
     description: 'Open in Coinbase Wallet app.',
     href: 'https://go.cb-w.com/mtUDhEZPy1',

@@ -11,7 +11,7 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  setOverrideWallet,
+  setWalletOverride,
   updateHideClosedPositions,
   updateMatchesDarkMode,
   updateShowDonationLink,
@@ -202,7 +202,7 @@ export default createReducer(initialState, (builder) =>
       }
       state.timestamp = currentTimestamp()
     })
-    .addCase(setOverrideWallet, (state, { payload: { wallet } }) => {
+    .addCase(setWalletOverride, (state, { payload: { wallet } }) => {
       state.walletOverride = wallet
     })
 )
