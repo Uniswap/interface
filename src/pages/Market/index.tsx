@@ -27,6 +27,8 @@ import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 's
 import { V3TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
+import GasIconLight from '../../assets/images/gas-pump.svg'
+import GasIconDark from '../../assets/images/gas-pump-dark.png'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -60,7 +62,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/market/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, usePoolAddress } from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
+import { useDarkModeManager, useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -227,6 +229,8 @@ export default function Market({ history }: RouteComponentProps) {
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
+
+  const [darkMode] = useDarkModeManager()
 
   const parsedAmounts = useMemo(
     () =>
@@ -959,25 +963,19 @@ export default function Market({ history }: RouteComponentProps) {
                         />
                       </LoadingOpacityContainer>
                     </RowFixed>
-                    <RowFixed style={{ position: 'relative', top: '-8px' }}>
+                    <RowFixed style={{ position: 'relative', top: '-3px' }}>
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         <TYPE.subHeader>
                           <Trans>${swapTransaction?.gasUseEstimateUSD} </Trans>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            aria-hidden="true"
-                            role="img"
-                            width="1.5em"
-                            height="1.7em"
-                            preserveAspectRatio="xMidYMid meet"
-                            viewBox="0 0 24 24"
-                            style={{ marginLeft: '5px', position: 'relative', top: '5px' }}
-                          >
-                            <path
-                              fill="currentColor"
-                              d="m19.616 6.48l.014-.017l-4-3.24l-1.26 1.554l2.067 1.674a2.99 2.99 0 0 0-1.395 3.058c.149.899.766 1.676 1.565 2.112c.897.49 1.685.446 2.384.197L18.976 18a.996.996 0 0 1-1.39.922a.995.995 0 0 1-.318-.217a.996.996 0 0 1-.291-.705L17 16a2.98 2.98 0 0 0-.877-2.119A3 3 0 0 0 14 13h-1V5c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h7c1.103 0 2-.897 2-2v-4h1c.136 0 .267.027.391.078a1.028 1.028 0 0 1 .531.533A.994.994 0 0 1 15 16l-.024 2c0 .406.079.799.236 1.168c.151.359.368.68.641.951a2.97 2.97 0 0 0 2.123.881c.406 0 .798-.078 1.168-.236c.358-.15.68-.367.951-.641A2.983 2.983 0 0 0 20.976 18L21 9a2.997 2.997 0 0 0-1.384-2.52zM4 5h7l.001 4H4V5zm0 14v-8h7.001l.001 8H4zm14-9a1 1 0 1 1 0-2a1 1 0 0 1 0 2z"
-                            />
-                          </svg>
+                          <img
+                            src={darkMode ? GasIconDark : GasIconLight}
+                            style={{
+                              width: '22px',
+                              height: '14px',
+                              position: 'relative',
+                              top: '2px',
+                            }}
+                          />
                         </TYPE.subHeader>
                       </LoadingOpacityContainer>
                     </RowFixed>
@@ -1008,7 +1006,7 @@ export default function Market({ history }: RouteComponentProps) {
                     </RowFixed>
                     {uniSavings && fiatValueOutput && uniSavings.lessThan(fiatValueOutput) ? (
                       <Row justify={'end'} style={{ height: '24px' }}>
-                        <RowFixed style={{ position: 'relative' }}>
+                        <RowFixed style={{ marginRight: '5px' }}>
                           <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
                             <Trans>You save: </Trans>
                           </TYPE.body>
