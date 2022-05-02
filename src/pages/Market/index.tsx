@@ -222,6 +222,8 @@ export default function Market({ history }: RouteComponentProps) {
     inputError: swapInputError,
   } = useDerivedMarketInfo(toggledVersion)
 
+  if (currencies.OUTPUT == undefined) currencies.OUTPUT = null
+
   const {
     wrapType,
     execute: onWrap,
@@ -888,7 +890,7 @@ export default function Market({ history }: RouteComponentProps) {
                   />
                 </ArrowWrapper>
                 <CurrencyInputPanel
-                  value={formattedAmounts[Field.OUTPUT]}
+                  value={formattedAmounts.output}
                   onUserInput={handleTypeOutput}
                   label={
                     independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
