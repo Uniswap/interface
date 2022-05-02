@@ -18,7 +18,7 @@ interface WalletInfo {
   mobileOnly?: true
 }
 
-enum Wallet {
+export enum Wallet {
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',

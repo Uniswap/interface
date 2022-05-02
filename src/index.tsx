@@ -4,12 +4,14 @@ import 'polyfills'
 import 'components/analytics'
 
 import { Web3ReactProvider } from '@web3-react/core'
+import { getConnectorForWallet } from 'constants/wallet'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+import { useAppSelector } from 'state/hooks'
 
 import Blocklist from './components/Blocklist'
 import { connectors } from './connectors'
@@ -43,24 +45,32 @@ function Updaters() {
   )
 }
 
+const Wrapper = () => {
+  const walletOverride = useAppSelector((state) => state.user.walletOverride)
+  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
+  return (
+    <HashRouter>
+      <LanguageProvider>
+        <Web3ReactProvider connectors={connectors} connectorOverride={connectorOverride}>
+          <Blocklist>
+            <BlockNumberProvider>
+              <Updaters />
+              <ThemeProvider>
+                <ThemedGlobalStyle />
+                <App />
+              </ThemeProvider>
+            </BlockNumberProvider>
+          </Blocklist>
+        </Web3ReactProvider>
+      </LanguageProvider>
+    </HashRouter>
+  )
+}
+
 ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
-      <HashRouter>
-        <LanguageProvider>
-          <Web3ReactProvider connectors={connectors}>
-            <Blocklist>
-              <BlockNumberProvider>
-                <Updaters />
-                <ThemeProvider>
-                  <ThemedGlobalStyle />
-                  <App />
-                </ThemeProvider>
-              </BlockNumberProvider>
-            </Blocklist>
-          </Web3ReactProvider>
-        </LanguageProvider>
-      </HashRouter>
+      <Wrapper />
     </Provider>
   </StrictMode>,
   document.getElementById('root')

@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
+import { Wallet } from 'constants/wallet'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
@@ -10,6 +11,7 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  setOverrideWallet,
   updateHideClosedPositions,
   updateMatchesDarkMode,
   updateShowDonationLink,
@@ -67,6 +69,8 @@ export interface UserState {
   showSurveyPopup: boolean | undefined
 
   showDonationLink: boolean
+
+  walletOverride: Wallet | undefined
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -89,6 +93,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   showSurveyPopup: undefined,
   showDonationLink: true,
+  walletOverride: undefined,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -196,5 +201,8 @@ export default createReducer(initialState, (builder) =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
+    })
+    .addCase(setOverrideWallet, (state, { payload: { wallet } }) => {
+      state.walletOverride = wallet
     })
 )

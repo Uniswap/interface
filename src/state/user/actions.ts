@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
+import { Wallet } from 'constants/wallet'
 
 export interface SerializedToken {
   chainId: number
@@ -33,3 +34,4 @@ export const removeSerializedToken = createAction<{ chainId: number; address: st
 export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('user/addSerializedPair')
 export const removeSerializedPair =
   createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>('user/removeSerializedPair')
+export const setOverrideWallet = createAction<{ wallet: Wallet }>('user/setOverrideWallet')
