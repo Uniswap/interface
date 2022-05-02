@@ -11,8 +11,8 @@ import { UNI } from '../../constants/tokens'
 import { useContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
+import { TransactionType } from '../transactions/types'
 
 function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)

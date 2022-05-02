@@ -25,7 +25,7 @@ import {
   VoteTransactionInfo,
   WithdrawLiquidityStakingTransactionInfo,
   WrapTransactionInfo,
-} from '../../state/transactions/actions'
+} from '../../state/transactions/types'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
   return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(sigFigs)

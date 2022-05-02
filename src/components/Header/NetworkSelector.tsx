@@ -146,7 +146,7 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
       return <Trans>Arbitrum Bridge</Trans>
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimism Gateway</Trans>
+      return <Trans>Optimism Bridge</Trans>
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return <Trans>Polygon Bridge</Trans>
