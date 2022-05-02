@@ -5,8 +5,8 @@ import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
-import { ReactNode, useContext } from 'react'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
+import { ReactNode, useCallback, useContext, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
@@ -100,7 +100,25 @@ function TransactionSubmittedContent({
 
   const { connector } = useActiveWeb3React()
 
-  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
+  const token = currencyToAdd?.wrapped
+  const logoURL = useCurrencyLogoURIs(token)[0]
+
+  const [success, setSuccess] = useState<boolean | undefined>()
+
+  const addToken = useCallback(() => {
+    token &&
+      token.symbol &&
+      connector.watchAsset &&
+      connector
+        .watchAsset({
+          address: token.address,
+          symbol: token.symbol,
+          decimals: token.decimals,
+          image: logoURL,
+        })
+        .then(() => setSuccess(true))
+        .catch(() => setSuccess(false))
+  }, [connector, logoURL, token])
 
   return (
     <Wrapper>
