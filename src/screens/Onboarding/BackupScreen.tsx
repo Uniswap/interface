@@ -1,13 +1,19 @@
+import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { OnboardingStackParamList, useOnboardingStackNavigation } from 'src/app/navigation/types'
+import {
+  AppStackParamList,
+  OnboardingStackParamList,
+  useOnboardingStackNavigation,
+} from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { EducationContentType } from 'src/components/education'
 import { RainbowLinearGradientStops } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
@@ -17,15 +23,22 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { OnboardingScreens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
+  NativeStackScreenProps<AppStackParamList, Screens.Education>
+>
 
 export function BackupScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   const onPressNext = () => {
     navigation.navigate(OnboardingScreens.Notifications)
+  }
+
+  const onPressEducationButton = () => {
+    navigation.navigate(Screens.Education, { type: EducationContentType.SeedPhrase })
   }
 
   return (
@@ -38,6 +51,18 @@ export function BackupScreen({ navigation }: Props) {
       title={t('Choose a backup option')}>
       <Flex grow justifyContent="space-between">
         <BackupOptions />
+
+        <TextButton
+          alignSelf="center"
+          bg="gray50"
+          borderRadius="md"
+          px="md"
+          py="sm"
+          textColor="textColor"
+          textVariant="buttonLabel"
+          onPress={onPressEducationButton}>
+          {t("What's a seed phrase?")}
+        </TextButton>
 
         <Flex justifyContent="flex-end">
           <PrimaryButton label={t('Next')} name={ElementName.Next} onPress={onPressNext} />

@@ -5,6 +5,7 @@ export enum Screens {
   Camera = 'Camera',
   CurrencySelector = 'CurrencySelector',
   Dev = 'Dev',
+  Education = 'Education',
   Explore = 'Explore',
   ImportAccount = 'ImportAccount',
   Ledger = 'Ledger',

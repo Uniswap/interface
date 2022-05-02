@@ -54,7 +54,7 @@ export function ManualBackupScreen({ navigation }: Props) {
   const activeAccount = useActiveAccount()
 
   const [inputIsInvalid, setInputIsInvalid] = useState(false)
-  const [view, nextView] = useReducer((curView: View) => curView + 1, View.Confirm)
+  const [view, nextView] = useReducer((curView: View) => curView + 1, View.Education)
 
   const onValidationSuccessful = () => {
     if (activeAccount) {
@@ -113,7 +113,7 @@ export function ManualBackupScreen({ navigation }: Props) {
           )}
           title={t('Confirm your seed phrase')}>
           {inputIsInvalid ? (
-            <Text color="red" variant="body">
+            <Text color="red" textAlign="center" variant="body">
               {t('Incorrect order. Please try again.')}
             </Text>
           ) : null}

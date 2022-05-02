@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
+import { EducationContentType } from 'src/components/education'
 import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
@@ -54,6 +55,9 @@ export type AppStackParamList = {
     otherCurrencyChainId?: ChainId
     selectedCurrencyAddress?: string
     selectedCurrencyChainId?: ChainId
+  }
+  [Screens.Education]: {
+    type: EducationContentType
   }
   [Screens.Notifications]: undefined | { txHash: string }
   [Screens.NFTCollection]: {
