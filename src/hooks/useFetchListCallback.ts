@@ -17,7 +17,7 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
       if (provider) {
         return resolveENSContentHash(ensName, provider)
       } else {
-        return Promise.resolve('string')
+        return Promise.resolve('')
       }
     },
     [provider]
