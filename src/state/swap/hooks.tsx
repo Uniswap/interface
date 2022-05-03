@@ -24,6 +24,7 @@ import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { PoolState, usePools } from 'hooks/usePools'
 import { useV2Pair, useV2Pairs } from 'hooks/useV2Pairs'
+import { useV3SwapPools } from 'hooks/useV3SwapPools'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -491,39 +492,57 @@ export function usePoolAddress(
 
   // v2 pair address
   const [state, pair] = useV2Pair(aToken as Currency, bToken as Currency)
+  const v3Pools = useV3SwapPools(aToken as Currency, bToken as Currency)
+
+  // filter out non-pair combinations
+  const pairPools = v3Pools.pools.filter(
+    (pool) =>
+      (pool.token1.address == bToken?.wrapped.address && pool.token0.address == aToken?.wrapped.address) ||
+      (pool.token0.wrapped.address == bToken?.wrapped.address && pool.token1.wrapped.address == aToken?.wrapped.address)
+  )
+
+  // if 0.3% pool exists, take the first one; else take any
+  const v3Pool = pairPools
+    ? pairPools.filter((pool) => pool.fee == 3000)
+      ? pairPools.filter((pool) => pool.fee == 3000)[0]
+      : pairPools[0]
+    : ''
 
   return useMemo(() => {
     let poolAddress = ''
     let networkName = ''
-    let nameOfNetwork = ''
+    let addressV2 = ''
     let address = ''
     if (aToken && bToken) {
       bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
       aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
 
-      if (aToken.isToken && bToken.isToken && existingPoolFee) {
-        address = Pool.getAddress(aToken, bToken, existingPoolFee)
-        nameOfNetwork = ChainName[aToken?.chainId] || ''
-      } else if (state == 3) {
-        address = Pair.getAddress(aToken, bToken)
-        nameOfNetwork = (pair && pair.chainId && ChainName[pair?.chainId]) || ''
-      }
-    } else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
-      nameOfNetwork = ChainName[aToken?.chainId]
+      try {
+        if (aToken.isToken && bToken.isToken && existingPoolFee) {
+          address = Pool.getAddress(aToken, bToken, existingPoolFee)
+        }
+      } catch (exception) {}
+
+      try {
+        if (state == 2) {
+          addressV2 = Pair.getAddress(aToken, bToken)
+        }
+      } catch (exception) {}
+
+      v3Pool ? (poolAddress = address) : addressV2 ? (poolAddress = addressV2) : ''
+    }
+
+    // if one of the tokens does not exist; set aToken
+    else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
       address = aToken.address
     }
 
-    if (address == '' || address == undefined || address == null) {
+    // no address; set default
+    if (poolAddress == '' || poolAddress == undefined || poolAddress == null) {
       poolAddress = (chainId && KROM[chainId].address) || '0x3af33bEF05C2dCb3C7288b77fe1C8d2AeBA4d789'
-    } else if (address != poolAddress) {
-      poolAddress = address
     }
 
-    if (nameOfNetwork == '' || nameOfNetwork == undefined || nameOfNetwork == null) {
-      networkName = (chainId && ChainName[chainId]) || 'ethereum'
-    } else if (nameOfNetwork != networkName) {
-      networkName = nameOfNetwork
-    }
+    networkName = (chainId && ChainName[chainId]) || 'ethereum'
 
     return { poolAddress, networkName }
   }, [chainId, aToken, bToken, state, pair, existingPoolFee])

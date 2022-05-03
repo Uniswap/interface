@@ -44,12 +44,13 @@ export const routingApiInch = createApi({
           fromTokenAddress: string
           toTokenAddress: string
           amount: string
+          protocols: string | null
         }
       }
     >({
       query: (args) => {
         const { chainId, queryArg } = args
-        return `/${chainId}/quote?${qs.stringify(queryArg)}`
+        return `/${chainId}/quote?${qs.stringify(queryArg, { skipNulls: true })}`
       },
       extraOptions: { maxRetries: 3 }, // You can o
     }),

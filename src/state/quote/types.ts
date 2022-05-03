@@ -12,6 +12,7 @@ export interface GetQuote0xResult {
   data: string
   value: string
   gas: string
+  estimatedGas: string
 
   buyTokenAddress: string
   buyAmount: string

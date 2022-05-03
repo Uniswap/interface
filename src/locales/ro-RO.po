@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: Kromatika-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-10-14 18:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: Kromatika-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: ro\n"
 "X-Crowdin-File: en-US.po\n"
@@ -155,8 +155,8 @@ msgid "Add"
 msgstr "Adăugare"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "Adăugați <0 /> și <1 /> la Uniswap V2"
+msgid "Add <0/> and <1/> to Kromatika V2"
+msgstr "Adăugați <0 /> și <1 /> la Kromatika V2"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -212,8 +212,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "Permite tranzacțiile cu impact asupra prețurilor mari și sari peste ecranul de confirmare. Utilizează pe propriul risc."
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Permite Protocolului Uniswap să îți utilizeze {0}"
+msgid "Allow the Kromatika Protocol to use your {0}"
+msgstr "Permite Protocolului Kromatika să îți utilizeze {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -228,8 +228,8 @@ msgid "Amount"
 msgstr "Sumă"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "A apărut o eroare la încercarea de a executa acest swap. Este posibil să fie nevoie să vă măriți toleranța la alunecare. Dacă acest lucru nu funcționează, poate exista o incompatibilitate cu jetonul pe care îl tranzacționați. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "A apărut o eroare la încercarea de a executa acest swap. Este posibil să fie nevoie să vă măriți toleranța la alunecare. Dacă acest lucru nu funcționează, poate exista o incompatibilitate cu jetonul pe care îl tranzacționați. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Kromatika V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -285,8 +285,8 @@ msgid "Are you sure?"
 msgstr "Ești sigur?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Ca membru al comunității Uniswap poți pretinde ca UNI să fie folosit pentru  vot și guvernanță.<0/><1/><2>Citește mai multe despre UNI</2>"
+msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Ca membru al comunității Kromatika poți pretinde ca UNI să fie folosit pentru  vot și guvernanță.<0/><1/><2>Citește mai multe despre UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -344,8 +344,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Prin adăugarea acestei liste ești încrezător implicit că datele sunt corecte. Oricine poate crea o listă, inclusiv crearea de versiuni false ale listelor și liste existente care pretind că reprezintă proiecte care nu au unul."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Prin conectarea unui portofel, ești de acord cu <0>Termenii de Utilizare</0> ai Uniswap Lab și accepți că ai citit și înțeles <1>Protocolul de Renunțare al Uniswap </1>."
+msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
+msgstr "Prin conectarea unui portofel, ești de acord cu <0>Termenii de Utilizare</0> ai Kromatika Lab și accepți că ai citit și înțeles <1>Protocolul de Renunțare al Kromatika </1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -660,8 +660,8 @@ msgid "Deposit liquidity"
 msgstr "Lichiditate de depozit"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Depune jetoanele Furnizorului tău de Lichidități pentru a primi UNI, jetonul de guvernare al protocolului Uniswap."
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
+msgstr "Depune jetoanele Furnizorului tău de Lichidități pentru a primi UNI, jetonul de guvernare al protocolului Kromatika."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -708,8 +708,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Nu vezi una dintre pozițiile tale v2? <0>Import-o.</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Jetoanele UNI câștigate reprezintă acțiunile cu drept de vot în guvernarea Uniswap."
+msgid "Earned UNI tokens represent voting shares in Kromatika governance."
+msgstr "Jetoanele UNI câștigate reprezintă acțiunile cu drept de vot în guvernarea Kromatika."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -793,8 +793,8 @@ msgid "Expired"
 msgstr "Expirat"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Explorează grupurile populare pe Uniswap Analytics."
+msgid "Explore popular pools on Kromatika Analytics."
+msgstr "Explorează grupurile populare pe Kromatika Analytics."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -813,8 +813,8 @@ msgid "For"
 msgstr "Pentru"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Pentru fiecare grup indicat mai jos, dă clic pe migrare pentru a elimina lichiditatea de la Uniswap V2 și depune-l în Uniswap V3."
+msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
+msgstr "Pentru fiecare grup indicat mai jos, dă clic pe migrare pentru a elimina lichiditatea de la Kromatika V2 și depune-l în Kromatika V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1072,8 +1072,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "Migrare Lichiditate V2"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Migrează jetoanele tale de lichiditate de la Uniswap V2 la Uniswap V3."
+msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
+msgstr "Migrează jetoanele tale de lichiditate de la Kromatika V2 la Kromatika V3."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1357,8 +1357,8 @@ msgid "Read more about UNI"
 msgstr "Citește mai multe despre UNI"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Citește mai multe despre guvernarea Uniswap"
+msgid "Read more about Kromatika governance"
+msgstr "Citește mai multe despre guvernarea Kromatika"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1569,16 +1569,16 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Se schimbă {0} {1} cu {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Îți mulțumim că faci parte din comunitatea Uniswap <0/>"
+msgid "Thanks for being part of the Kromatika community <0/>"
+msgstr "Îți mulțumim că faci parte din comunitatea Kromatika <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "Procentul pe care îl veți câștiga în taxe."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Invariantul Uniswap x*y=k nu a fost satisfăcut de schimbare. Acest lucru înseamnă, de obicei, că unul dintre jetoanele pe care le schimbi încorporează un comportament personalizat la transfer."
+msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Invariantul Kromatika x*y=k nu a fost satisfăcut de schimbare. Acest lucru înseamnă, de obicei, că unul dintre jetoanele pe care le schimbi încorporează un comportament personalizat la transfer."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1593,8 +1593,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Jetonul de ieșire nu poate fi transferat. S-ar putea să existe o problemă cu simbolul de ieșire."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Jetonul de ieșire nu poate fi transferat. S-ar putea să existe o problemă cu simbolul de ieșire. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "Jetonul de ieșire nu poate fi transferat. S-ar putea să existe o problemă cu simbolul de ieșire. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Kromatika V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1641,8 +1641,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "Acest instrument va migra în siguranță lichiditatea ta {0} în V3. Procesul este complet lipsit de încredere datorită"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Această tranzacție nu va reuși din cauza mișcării prețurilor. Încercați să vă măriți toleranța la alunecare. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "Această tranzacție nu va reuși din cauza mișcării prețurilor. Încercați să vă măriți toleranța la alunecare. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Kromatika V3."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1752,8 +1752,8 @@ msgid "UNI price:"
 msgstr "Preț UNI:"
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Jetoanele UNI reprezintă acțiunile cu drept de vot în guvernarea Uniswap. Poți vota pentru fiecare propunere sau poți să delegi voturile unui terț."
+msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Jetoanele UNI reprezintă acțiunile cu drept de vot în guvernarea Kromatika. Poți vota pentru fiecare propunere sau poți să delegi voturile unui terț."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1793,36 +1793,36 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Problemă neașteptată cu estimarea gazului. Vă rugăm să încercați din nou."
 
 #: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Guvernare Uniswap"
+msgid "Kromatika Governance"
+msgstr "Guvernare Kromatika"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap disponibil în: <0>{0}</0>"
+msgid "Kromatika available in: <0>{0}</0>"
+msgstr "Kromatika disponibil în: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Guvernarea Uniswap este disponibilă numai pe stratul 1. Comutați-vă rețeaua la Ethereum Mainnet pentru a vizualiza propuneri și voturi."
+msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Guvernarea Kromatika este disponibilă numai pe stratul 1. Comutați-vă rețeaua la Ethereum Mainnet pentru a vizualiza propuneri și voturi."
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Exploatare de lichidități Uniswap"
+msgid "Kromatika liquidity mining"
+msgstr "Exploatare de lichidități Kromatika"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
-msgstr "Contract de migrare Uniswap↗"
+msgid "Kromatika migration contract↗"
+msgstr "Contract de migrare Kromatika↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "Uniswap pe {0}"
+msgid "Kromatika on {0}"
+msgstr "Kromatika pe {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "Sursă Necunoscută"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Eroare necunoscută{0}. Încercați să vă măriți toleranța la alunecare. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "Eroare necunoscută{0}. Încercați să vă măriți toleranța la alunecare. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Kromatika V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1868,8 +1868,8 @@ msgid "Update list"
 msgstr "Actualizare listă"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Utilizați API Uniswap Labs pentru a obține prețuri mai bune printr-un traseu mai eficient."
+msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
+msgstr "Utilizați API Kromatika Labs pentru a obține prețuri mai bune printr-un traseu mai eficient."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
@@ -2060,8 +2060,8 @@ msgid "You are creating a pool"
 msgstr "Creezi o rezervă"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Ești primul furnizor de lichidități pentru această rezervă Uniswap V3. Lichiditatea ta va migra la prețul actual de {0}."
+msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "Ești primul furnizor de lichidități pentru această rezervă Kromatika V3. Lichiditatea ta va migra la prețul actual de {0}."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2096,16 +2096,16 @@ msgid "You must connect an account."
 msgstr "Trebuie să conectezi un cont."
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Trebuie să acorzi permisiunea contractelor inteligente Uniswap de a-ți utiliza {0}. Trebuie să faci asta o singură dată per jeton."
+msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Trebuie să acorzi permisiunea contractelor inteligente Kromatika de a-ți utiliza {0}. Trebuie să faci asta o singură dată per jeton."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "Trebuie să aveți {formattedProposalThreshold} voturi pentru a trimite o propunere"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Ar trebui să depozitați doar lichiditatea în Uniswap V3 la un preț pe care îl crezi corect. <0/>Dacă prețul pare incorect, poți fie să faci un schimb pentru a muta prețul, fie să aștepți ca altcineva să facă acest lucru."
+msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Ar trebui să depozitați doar lichiditatea în Kromatika V3 la un preț pe care îl crezi corect. <0/>Dacă prețul pare incorect, poți fie să faci un schimb pentru a muta prețul, fie să aștepți ca altcineva să facă acest lucru."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

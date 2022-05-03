@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: Kromatika-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-10-15 07:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: Kromatika-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: zh-CN\n"
 "X-Crowdin-File: en-US.po\n"
@@ -155,8 +155,8 @@ msgid "Add"
 msgstr "添加"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "将 <0/> 和 <1/> 添加到 Uniswap V2"
+msgid "Add <0/> and <1/> to Kromatika V2"
+msgstr "将 <0/> 和 <1/> 添加到 Kromatika V2"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -212,8 +212,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "允许高度影响价格的交易，并跳过确认步骤。须自行承担使用风险。"
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "允许 Uniswap 调用您的 {0}"
+msgid "Allow the Kromatika Protocol to use your {0}"
+msgstr "允许 Kromatika 调用您的 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -228,8 +228,8 @@ msgid "Amount"
 msgstr "数额"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Uniswap不兼容。注：Uniswap V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Kromatika不兼容。注：Kromatika V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -285,8 +285,8 @@ msgid "Are you sure?"
 msgstr "您确定吗？"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作为Uniswap社区的成员，您可以认领 UNI 代币，用于投票和治理。<0/><1/><2>阅读更多关于 UNI 代币信息</2>"
+msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "作为Kromatika社区的成员，您可以认领 UNI 代币，用于投票和治理。<0/><1/><2>阅读更多关于 UNI 代币信息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -344,8 +344,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "添加此代币列表代表您信任其数据是正确的。任何人都可以创建代币列表，包括创建假冒实际列表的造假版本，以及自我声称代表了某项目的代币列表。"
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "通过连接钱包，您同意接受 Uniswap 实验室的<0>服务条款</0>，并确认您已阅读和理解<1>Uniswap协议免责声明</1>。"
+msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
+msgstr "通过连接钱包，您同意接受 Kromatika 实验室的<0>服务条款</0>，并确认您已阅读和理解<1>Kromatika协议免责声明</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -660,8 +660,8 @@ msgid "Deposit liquidity"
 msgstr "充入流动资金"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "充入您的流动池代币以领取 UNI（Uniswap 的治理代币）。"
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
+msgstr "充入您的流动池代币以领取 UNI（Kromatika 的治理代币）。"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -708,8 +708,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "看不到您的一些 v2 流动资金吗？<0>将它手动导入。</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "已赚取的 UNI 代币代表了 Uniswap 治理中的投票份额。"
+msgid "Earned UNI tokens represent voting shares in Kromatika governance."
+msgstr "已赚取的 UNI 代币代表了 Kromatika 治理中的投票份额。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -793,8 +793,8 @@ msgid "Expired"
 msgstr "已过期"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "在Uniswap分析中探索热门的流动池。"
+msgid "Explore popular pools on Kromatika Analytics."
+msgstr "在Kromatika分析中探索热门的流动池。"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -813,8 +813,8 @@ msgid "For"
 msgstr "赞成"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "对于下面显示的每个流动池，单击“迁移”以从 Uniswap V2 赎回您的流动资金，并将其注入到 Uniswap V3。"
+msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
+msgstr "对于下面显示的每个流动池，单击“迁移”以从 Kromatika V2 赎回您的流动资金，并将其注入到 Kromatika V3。"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1072,8 +1072,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "迁移V2 流动资金"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "将您的流动资金从 Uniswap V2 迁移到 Uniswap V3。"
+msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
+msgstr "将您的流动资金从 Kromatika V2 迁移到 Kromatika V3。"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1357,8 +1357,8 @@ msgid "Read more about UNI"
 msgstr "阅读更多关于 UNI 代币的信息"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "阅读有关Uniswap治理的更多信息"
+msgid "Read more about Kromatika governance"
+msgstr "阅读有关Kromatika治理的更多信息"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1569,16 +1569,16 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "感谢您加入 Uniswap 社区 <0/>"
+msgid "Thanks for being part of the Kromatika community <0/>"
+msgstr "感谢您加入 Kromatika 社区 <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "您将赚取的手续费百分比。"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "兑换交易不满足 Uniswap 不变量 X × Y = K 的要求。这通常意味着您要兑换的代币之一在代币转账过程中带有一些自定义代币合约特性。"
+msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "兑换交易不满足 Kromatika 不变量 X × Y = K 的要求。这通常意味着您要兑换的代币之一在代币转账过程中带有一些自定义代币合约特性。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1593,8 +1593,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "输出代币无法进行转账。输出代币可能有些问题。"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "无法对输出代币进行转账。输出代币可能有些问题。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "无法对输出代币进行转账。输出代币可能有些问题。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Kromatika V3不兼容。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1641,8 +1641,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "该工具将安全地将您的 {0} 流动资金迁移到 V3。该过程完全不依赖任何信任需求"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "由于兑换率变动，此交易将不会成功。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "由于兑换率变动，此交易将不会成功。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Kromatika V3不兼容。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1752,8 +1752,8 @@ msgid "UNI price:"
 msgstr "UNI 代币兑换率："
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI代币代表了Uniswap治理中的投票份额。您可以自行为提案进行投票，或将您的投票权委托给第三方。"
+msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "UNI代币代表了Kromatika治理中的投票份额。您可以自行为提案进行投票，或将您的投票权委托给第三方。"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1793,36 +1793,36 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "估计气体的意外问题。请再试一次。"
 
 #: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap治理"
+msgid "Kromatika Governance"
+msgstr "Kromatika治理"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap可用：<0>{0}</0>"
+msgid "Kromatika available in: <0>{0}</0>"
+msgstr "Kromatika可用：<0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Uniswap 治理仅在 Layer 1 可用。将您的网络切换到以太坊主网以查看提案和投票。"
+msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Kromatika 治理仅在 Layer 1 可用。将您的网络切换到以太坊主网以查看提案和投票。"
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Uniswap 流动性挖矿："
+msgid "Kromatika liquidity mining"
+msgstr "Kromatika 流动性挖矿："
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
-msgstr "Uniswap 迁移合约↗"
+msgid "Kromatika migration contract↗"
+msgstr "Kromatika 迁移合约↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "在 {0} 上的 Uniswap"
+msgid "Kromatika on {0}"
+msgstr "在 {0} 上的 Kromatika"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "未知来源"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "未知错误{0}。可以尝试增加滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+msgstr "未知错误{0}。可以尝试增加滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Kromatika V3不兼容。"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1868,8 +1868,8 @@ msgid "Update list"
 msgstr "更新代币列表"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "使用 Uniswap Labs API 通过更有效的路由获得更好的定价。"
+msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
+msgstr "使用 Kromatika Labs API 通过更有效的路由获得更好的定价。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
@@ -2060,8 +2060,8 @@ msgid "You are creating a pool"
 msgstr "您正在创建一个流动池"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "您是此 Uniswap V3 流动池的第一个流动资金提供者。您的流动资金将以当前的 {0} 兑换率迁移。"
+msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "您是此 Kromatika V3 流动池的第一个流动资金提供者。您的流动资金将以当前的 {0} 兑换率迁移。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2096,16 +2096,16 @@ msgid "You must connect an account."
 msgstr "您必须连接帐户。"
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "您必须授予 Uniswap 智能合约使用您的 {0} 的权限。每个代币只需要授权一次。"
+msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "您必须授予 Kromatika 智能合约使用您的 {0} 的权限。每个代币只需要授权一次。"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "您必须有 {formattedProposalThreshold} 票才能提交提案"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "请确保以您认为是正确的兑换率来将流动资金注入到 Uniswap V3。 <0/>如果兑换率看起来不正确，您可以进行兑换交易以移动兑换率，或者等待别人进行此操作。"
+msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "请确保以您认为是正确的兑换率来将流动资金注入到 Kromatika V3。 <0/>如果兑换率看起来不正确，您可以进行兑换交易以移动兑换率，或者等待别人进行此操作。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

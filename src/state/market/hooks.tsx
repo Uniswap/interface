@@ -1,6 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
@@ -125,6 +125,7 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     state: V3TradeState
     trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
     tx: SwapTransaction | undefined
+    savings: CurrencyAmount<Token> | null
   }
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
@@ -213,18 +214,15 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
     inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
   }
 
-  return useMemo(
-    () => ({
-      currencies,
-      currencyBalances,
-      parsedAmount,
-      inputError,
-      v2Trade,
-      bestTrade: bestTrade ?? undefined,
-      allowedSlippage,
-    }),
-    [allowedSlippage, bestTrade, currencies, currencyBalances, inputError, parsedAmount, v2Trade]
-  )
+  return {
+    currencies,
+    currencyBalances,
+    parsedAmount,
+    inputError,
+    v2Trade,
+    bestTrade: bestTrade ?? undefined,
+    allowedSlippage,
+  }
 }
 
 function parseCurrencyFromURLParameter(urlParam: any): string {

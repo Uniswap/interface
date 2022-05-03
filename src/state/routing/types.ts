@@ -17,6 +17,7 @@ export type SwapTransaction = {
   value: string
   gas: string
   type: number
+  gasUseEstimateUSD: string
 }
 
 export type PoolInRoute = {
