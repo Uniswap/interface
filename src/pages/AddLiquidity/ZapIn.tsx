@@ -252,6 +252,7 @@ const ZapIn = ({
                 token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
                 add_liquidity_method: 'single token',
+                amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
               },
             })
             setTxHash(tx.hash)

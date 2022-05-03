@@ -272,6 +272,7 @@ const TokenPair = ({
                 token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
                 add_liquidity_method: 'token pair',
+                amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
               },
             })
             setTxHash(response.hash)

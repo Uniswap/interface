@@ -354,3 +354,13 @@ export const FARM_HISTORIES = gql`
     }
   }
 `
+
+export const TRANSACTION_SWAP_AMOUNTUSD = gql`
+  query transactionSwapAmountUSD($transactionHash: String!) {
+    transaction(id: $transactionHash) {
+      swaps {
+        amountUSD
+      }
+    }
+  }
+`

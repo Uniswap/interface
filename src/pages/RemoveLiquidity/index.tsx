@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { t, Trans } from '@lingui/macro'
 
-import { currencyEquals, WETH } from '@dynamic-amm/sdk'
+import { currencyEquals, WETH, JSBI, Fraction } from '@dynamic-amm/sdk'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
 import LiquidityProviderMode from 'components/LiquidityProviderMode'
@@ -28,6 +28,8 @@ export default function RemoveLiquidity({
 
   const { pair } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
 
+  const amp = pair?.amp || JSBI.BigInt(0)
+
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
@@ -37,7 +39,11 @@ export default function RemoveLiquidity({
   const [activeTab, setActiveTab] = useState(0)
   const { mixpanelHandler } = useMixpanel()
   useEffect(() => {
-    mixpanelHandler(MIXPANEL_TYPE.REMOVE_LIQUIDITY_INITIATED, { token_1: nativeA?.symbol, token_2: nativeB?.symbol })
+    mixpanelHandler(MIXPANEL_TYPE.REMOVE_LIQUIDITY_INITIATED, {
+      token_1: nativeA?.symbol,
+      token_2: nativeB?.symbol,
+      amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
