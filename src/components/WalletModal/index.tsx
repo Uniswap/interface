@@ -8,14 +8,12 @@ import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
-import { useAppDispatch } from 'state/hooks'
-import { setWalletOverride } from 'state/user/actions'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, network } from '../../connectors'
-import { getWalletForConnector, SUPPORTED_WALLETS } from '../../constants/wallet'
+import { injected } from '../../connectors'
+import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -130,9 +128,7 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
-  const dispatch = useAppDispatch()
-
-  const { connector, error, account } = useWeb3React()
+  const { connector, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
@@ -141,35 +137,6 @@ export default function WalletModal({
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
-
-  const previousAccount = usePrevious(account)
-
-  const isNetworkConnector = connector === network
-
-  // on error, disconnect the wallet override
-  useEffect(() => {
-    if (error) {
-      dispatch(setWalletOverride({ wallet: undefined }))
-    }
-  }, [dispatch, error])
-
-  // close on connection/disconnection
-  useEffect(() => {
-    if (account && !previousAccount && walletModalOpen) {
-      toggleWalletModal()
-    }
-
-    if (!account && previousAccount && walletModalOpen) {
-      toggleWalletModal()
-    }
-  }, [connector, dispatch, account, previousAccount, toggleWalletModal, walletModalOpen])
-
-  // always reset to account view
-  useEffect(() => {
-    if (walletModalOpen) {
-      setWalletView(isNetworkConnector ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
-    }
-  }, [walletModalOpen, isNetworkConnector])
 
   // close modal when a connection is successful
   const connectorPrevious = usePrevious(connector)
@@ -180,7 +147,6 @@ export default function WalletModal({
   }, [setWalletView, error, connector, walletModalOpen, connectorPrevious])
 
   const tryActivation = async (connector: Connector) => {
-    const wallet = getWalletForConnector(connector)
     let name = ''
     Object.keys(SUPPORTED_WALLETS).forEach((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
@@ -196,8 +162,7 @@ export default function WalletModal({
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
-    await connector.activate()
-    dispatch(setWalletOverride({ wallet }))
+    connector.activate()
   }
 
   // get wallets user can switch too, depending on device/browser

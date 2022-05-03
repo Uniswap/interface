@@ -4,11 +4,10 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
-import { setWalletOverride } from 'state/user/actions'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { coinbaseWallet, injected } from '../../connectors'
+import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
@@ -265,11 +264,10 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== coinbaseWallet && (
+                  {connector !== injected && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        dispatch(setWalletOverride({ wallet: undefined }))
                         connector.deactivate()
                       }}
                     >
