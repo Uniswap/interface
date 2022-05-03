@@ -76,7 +76,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
 
     const eventEmitters = [
       { type: WCEventType.SessionConnected, handler: sessionConnectedHandler },
-      { type: WCEventType.SessionDisconnected, handler: sessionUpdatedHandler },
+      { type: WCEventType.SessionUpdated, handler: sessionUpdatedHandler },
       { type: WCEventType.SessionDisconnected, handler: sessionDisconnectedHandler },
       { type: WCEventType.SignRequest, handler: signRequestHandler },
       { type: WCEventType.Error, handler: errorHandler },
