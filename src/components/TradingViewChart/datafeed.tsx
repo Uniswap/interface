@@ -31,7 +31,7 @@ export const getTimeframeMilliseconds = (timeFrame: LiveDataTimeframeEnum) => {
 }
 
 const configurationData = {
-  supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H'],
+  supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H', '1D', '1W', '1M'],
 }
 
 const getNetworkString = (chainId: ChainId | undefined) => {
@@ -73,6 +73,7 @@ const getResolutionString = (res: string) => {
 const DEXTOOLS_API = 'https://pancake-subgraph-proxy.kyberswap.com/dextools'
 const monthTs = 2592000000
 const weekTs = 604800000
+const dayTs = 86400000
 const TOKEN_PAIRS_ADDRESS_MAPPING: {
   [key: string]: string
 } = {
@@ -189,6 +190,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           has_intraday: true,
           has_empty_bars: true,
           has_weekly_and_monthly: true,
+          has_daily: true,
           supported_resolutions: configurationData.supported_resolutions as ResolutionString[],
           data_status: 'streaming',
         }
@@ -258,7 +260,44 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
             return { ...c, open: 1 / c.open, close: 1 / c.close, high: 1 / c.low, low: 1 / c.high }
           })
         }
-        onHistoryCallback(formatedCandles, { noData: noData })
+        if (resolution === '1D' || resolution === '1W' || resolution === '1M') {
+          let dayCandles: { [key: number]: any } = {}
+          let timeTs = 0
+          switch (resolution) {
+            case '1D':
+              timeTs = dayTs
+              break
+            case '1W':
+              timeTs = weekTs
+              break
+            case '1M':
+              timeTs = monthTs
+              break
+            default:
+              timeTs = dayTs
+          }
+          formatedCandles.forEach((c: any) => {
+            let ts = Math.floor(c.time / timeTs)
+            if (!dayCandles[ts]) {
+              dayCandles[ts] = {
+                ...c,
+                time: ts * timeTs,
+              }
+            } else {
+              dayCandles[ts].volume += c.volume
+              dayCandles[ts].close = c.close
+              if (dayCandles[ts].high < c.high) {
+                dayCandles[ts].high = c.high
+              }
+              if (dayCandles[ts].low > c.low) {
+                dayCandles[ts].low = c.low
+              }
+            }
+          })
+          onHistoryCallback(Object.values(dayCandles), { noData: noData })
+        } else {
+          onHistoryCallback(formatedCandles, { noData: noData })
+        }
       } catch (error) {
         console.log('[getBars]: Get error', error)
         onErrorCallback(error as string)

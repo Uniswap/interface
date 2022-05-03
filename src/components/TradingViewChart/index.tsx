@@ -115,7 +115,6 @@ function ProLiveChart({
       ],
       enabled_features: [
         'study_templates',
-        'fix_left_edge',
         'create_volume_indicator_by_default',
         'use_localstorage_for_settings',
         'save_chart_properties_to_local_storage',
@@ -135,6 +134,7 @@ function ProLiveChart({
       ],
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone as Timezone,
       saved_data: JSON.parse(localStorage.getItem(LOCALSTORAGE_STATE_NAME) || '{}'),
+      debug: true,
     }
     const tvWidget = new widget(widgetOptions)
 
