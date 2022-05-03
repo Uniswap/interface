@@ -885,7 +885,7 @@ export default function Market({ history }: RouteComponentProps) {
                   />
                 </ArrowWrapper>
                 <CurrencyInputPanel
-                  value={formattedAmounts.output}
+                  value={formattedAmounts[Field.OUTPUT]}
                   onUserInput={handleTypeOutput}
                   label={
                     independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>

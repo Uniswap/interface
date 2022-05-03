@@ -75,9 +75,9 @@ export function useBestMarketTrade(
     try {
       // compare if tradeB is better than tradeA
       return !isLoading
-        ? isTradeBetter(routingAPITrade.trade, swapAPITrade.trade, BETTER_TRADE_LESS_HOPS_THRESHOLD)
-          ? swapAPITrade
-          : routingAPITrade
+        ? isTradeBetter(swapAPITrade.trade, routingAPITrade.trade, BETTER_TRADE_LESS_HOPS_THRESHOLD)
+          ? routingAPITrade
+          : swapAPITrade
         : undefined
     } catch (e) {
       // v3 trade may be debouncing or fetching and have different
