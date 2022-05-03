@@ -27,6 +27,10 @@ export const injected = new InjectedConnector({
   supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
 })
 
+export const injectedTally = new InjectedConnector({
+  supportedChainIds: [1],
+})
+
 export const gnosisSafe = new SafeAppConnector()
 
 export const walletconnect = new WalletConnectConnector({
