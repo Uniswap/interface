@@ -15,43 +15,37 @@ export const [network, networkHooks] = initializeConnector<Network>(
 )
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>(
-  (actions) => new MetaMask(actions, true),
+  (actions) => new MetaMask(actions),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
-export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe(actions, true))
+export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe(actions))
 
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>
-    new WalletConnect(
-      actions,
-      {
-        rpc: INFURA_NETWORK_URLS,
-        qrcode: true,
-      },
-      true
-    ),
+    new WalletConnect(actions, {
+      rpc: INFURA_NETWORK_URLS,
+      qrcode: true,
+    }),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
 export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
-    new CoinbaseWallet(
-      actions,
-      {
-        url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
-        appName: 'Uniswap',
-        appLogoUrl: UNISWAP_LOGO_URL,
-      },
-      true
-    ),
+    new CoinbaseWallet(actions, {
+      url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
+      appName: 'Uniswap',
+      appLogoUrl: UNISWAP_LOGO_URL,
+    }),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
+// this is an ordered priority list. network connector should be at the top because we want to always
+// pass in a walletOverride manually for the connected wallet
 export const connectors: [GnosisSafe | MetaMask | WalletConnect | CoinbaseWallet | Network, Web3ReactHooks][] = [
+  [network, networkHooks],
   [gnosisSafe, gnosisSafeHooks],
   [injected, injectedHooks],
   [walletConnect, walletConnectHooks],
   [coinbaseWallet, coinbaseWalletHooks],
-  [network, networkHooks],
 ]
