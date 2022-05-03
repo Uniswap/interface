@@ -1,13 +1,6 @@
-import React, {
-  ComponentProps,
-  createContext,
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useRef,
-} from 'react'
+import React, { ComponentProps, createContext, ReactElement, ReactNode, useCallback } from 'react'
 import { ListRenderItemInfo } from 'react-native'
-import Animated from 'react-native-reanimated'
+import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { AnimatedIndicator } from 'src/components/carousel/Indicator'
 import { Flex } from 'src/components/layout'
 import { dimensions } from 'src/styles/sizing'
@@ -32,14 +25,22 @@ type CarouselProps = {
 } & Pick<ComponentProps<typeof Animated.FlatList>, 'scrollEnabled'>
 
 export function Carousel({ slides, ...flatListProps }: CarouselProps) {
-  const scrollX = useRef(new Animated.Value(0)).current
+  const scroll = useSharedValue(0)
 
-  const goToNext = useCallback(() => {}, [])
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scroll.value = event.contentOffset.x
+    },
+  })
+
+  const goToNext = useCallback(() => {
+    // TODO: implement
+  }, [])
 
   return (
     <CarouselContext.Provider value={{ goToNext, goToPrev: goToNext, current: 0 }}>
       <Flex grow mb="lg">
-        <AnimatedIndicator scrollX={scrollX} stepCount={slides.length} />
+        <AnimatedIndicator scroll={scroll} stepCount={slides.length} />
         <Animated.FlatList
           horizontal
           pagingEnabled
@@ -53,9 +54,7 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps) {
           )}
           scrollEventThrottle={32}
           showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
-            useNativeDriver: false,
-          })}
+          onScroll={scrollHandler}
         />
       </Flex>
     </CarouselContext.Provider>
