@@ -1,7 +1,7 @@
 import { opacify } from 'src/utils/colors'
 
 it('returns an hex color with opacity', () => {
-  expect(opacify(10, '#000000')).toEqual('#00000010')
+  expect(opacify(10, '#000000')).toEqual('#0000001a')
 })
 
 it('ignores color when not an hex', () => {

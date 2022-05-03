@@ -23,7 +23,10 @@ export function opacify(amount: number, hexColor: string): string {
     throw new Error('opacify: provided amount should be between 0 and 100')
   }
 
-  return hexColor.slice(0, 7) + amount.toString().slice(0, 2)
+  const opacityHex = Math.round((amount / 100) * 255).toString(16)
+  const opacifySuffix = opacityHex.length < 2 ? `0${opacityHex}` : opacityHex
+
+  return `${hexColor.slice(0, 7)}${opacifySuffix}`
 }
 
 /** Helper to retrieve foreground and background colors for a given chain */
