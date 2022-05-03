@@ -22,7 +22,7 @@ export function WalletConnectWrapper({ children }: PropsWithChildren<any>) {
 
   return (
     <>
-      <WCRequestModal isVisible={Boolean(currRequest)} request={currRequest} onClose={onClose} />
+      {currRequest && <WCRequestModal isVisible request={currRequest} onClose={onClose} />}
       {children}
     </>
   )

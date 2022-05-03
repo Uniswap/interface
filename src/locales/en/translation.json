@@ -91,6 +91,8 @@
   "Signature request from": "Signature request from",
   "Request from": "Request from",
   "Message": "Message",
+  "This method of authorization could be insecure.": "This method of authorization could be insecure.",
+  "I understand": "I understand",
   "Signing as": "Signing as",
   "Confirm": "Confirm",
   "Tokens": "Tokens",

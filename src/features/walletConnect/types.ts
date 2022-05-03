@@ -6,7 +6,7 @@ export enum EthMethod {
   PersonalSign = 'personal_sign',
 }
 
-export type EthSignMethod = EthMethod.PersonalSign | EthMethod.SignTypedData
+export type EthSignMethod = EthMethod.PersonalSign | EthMethod.SignTypedData | EthMethod.EthSign
 
 export type SessionConnectedEvent = {
   session_id: string

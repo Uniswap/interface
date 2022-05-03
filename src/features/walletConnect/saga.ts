@@ -18,7 +18,11 @@ import {
   WCError,
   WCEventType,
 } from 'src/features/walletConnect/types'
-import { initializeWalletConnect, sendSignature } from 'src/features/walletConnect/WalletConnect'
+import {
+  initializeWalletConnect,
+  rejectRequest,
+  sendSignature,
+} from 'src/features/walletConnect/WalletConnect'
 import {
   addRequest,
   addSession,
@@ -67,7 +71,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
     }
 
     const errorHandler = (req: WCError) => {
-      logger.error('wcSaga', 'errorHandler', req.type, req.message || '')
+      logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
     }
 
     const eventEmitters = [
@@ -129,7 +133,7 @@ export function* signWcMessage(params: SignMessageParams) {
   try {
     const signerManager = yield* call(getSignerManager)
     let signature = ''
-    if (method === EthMethod.PersonalSign) {
+    if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
       signature = yield* call(signMessage, message, account, signerManager)
     } else if (method === EthMethod.SignTypedData) {
       signature = yield* call(signTypedData, message, account, signerManager)
@@ -137,6 +141,7 @@ export function* signWcMessage(params: SignMessageParams) {
 
     yield* call(sendSignature, requestInternalId, signature, account.address)
   } catch (err) {
+    yield* call(rejectRequest, requestInternalId, account.address)
     logger.error('wcSaga', 'signMessage', 'signing error:', err)
   }
 }

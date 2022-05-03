@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DappInfo, EthMethod } from 'src/features/walletConnect/types'
+import { DappInfo, EthSignMethod } from 'src/features/walletConnect/types'
 
 export interface WalletConnectSession {
   id: string
@@ -17,7 +17,7 @@ interface BaseRequest {
 }
 
 interface SignRequest extends BaseRequest {
-  type: EthMethod.PersonalSign | EthMethod.SignTypedData
+  type: EthSignMethod
   message: string
 }
 

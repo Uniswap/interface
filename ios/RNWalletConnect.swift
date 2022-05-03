@@ -10,6 +10,7 @@ import WalletConnectSwift
 
 enum EthMethod: String {
   case personalSign = "personal_sign"
+  case ethSign = "eth_sign"
   case switchChain = "wallet_switchEthereumChain"
   case signTypedData = "eth_signTypedData"
 }
@@ -112,4 +113,3 @@ class RNWalletConnect: RCTEventEmitter {
     return false
   }
 }
-

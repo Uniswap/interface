@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
@@ -14,6 +15,7 @@ import { EthMethod } from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { ClientDetails } from 'src/features/walletConnect/WCRequestModal/ClientDetails'
+import { opacify } from 'src/utils/colors'
 import { logger } from 'src/utils/logger'
 
 interface Props {
@@ -22,8 +24,10 @@ interface Props {
   request: WalletConnectRequest | null
 }
 
+const isPotentiallyUnsafeMethod = (type: EthMethod) => type === EthMethod.EthSign
+
 const getMessage = (request: WalletConnectRequest) => {
-  if (request.type === EthMethod.PersonalSign) {
+  if ([EthMethod.PersonalSign, EthMethod.EthSign].includes(request.type)) {
     return request.message
   }
 
@@ -39,16 +43,20 @@ const getMessage = (request: WalletConnectRequest) => {
   return ''
 }
 
-const VALID_REQUEST_TYPES = [EthMethod.PersonalSign, EthMethod.SignTypedData]
+const VALID_REQUEST_TYPES = [EthMethod.PersonalSign, EthMethod.SignTypedData, EthMethod.EthSign]
 
 export function WCRequestModal({ isVisible, onClose, request }: Props) {
+  const theme = useAppTheme()
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const [maybeUnsafeConfirmation, setMaybeUnsafeConfirmation] = useState(false)
 
   if (!request?.type || !VALID_REQUEST_TYPES.includes(request?.type)) {
     return null
   }
+
+  const canSubmit = !isPotentiallyUnsafeMethod(request.type) || maybeUnsafeConfirmation
 
   const onReject = () => {
     if (!activeAccount) return
@@ -58,7 +66,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
   }
 
   const onConfirm = async () => {
-    if (!activeAccount) return
+    if (!activeAccount || !canSubmit) return
 
     dispatch(
       signMessageActions.trigger({
@@ -93,6 +101,25 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
             </Flex>
           </ScrollView>
         </Flex>
+        {isPotentiallyUnsafeMethod(request.type) ? (
+          <Flex
+            centered
+            borderRadius="lg"
+            gap="sm"
+            padding="md"
+            style={{ backgroundColor: opacify(5, theme.colors.yellow) }}>
+            <AlertTriangle height={22} stroke={theme.colors.yellow} width={22} />
+            <Text color="yellow" textAlign="center" variant="body">
+              {t('This method of authorization could be insecure.')}
+            </Text>
+            <PrimaryButton
+              disabled={maybeUnsafeConfirmation}
+              label={t('I understand')}
+              variant="yellow"
+              onPress={() => setMaybeUnsafeConfirmation(true)}
+            />
+          </Flex>
+        ) : null}
 
         <Flex row backgroundColor="gray50" borderRadius="lg" justifyContent="space-between" p="md">
           <Text color="gray600" variant="body">
@@ -109,6 +136,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
             onPress={onReject}
           />
           <PrimaryButton
+            disabled={!canSubmit}
             flex={1}
             label={t('Confirm')}
             name={ElementName.Confirm}

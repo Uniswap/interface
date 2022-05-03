@@ -32,6 +32,10 @@ export const primaryButtonVariants = {
     backgroundColor: 'blue',
     color: 'white',
   },
+  yellow: {
+    backgroundColor: 'yellow',
+    color: 'white',
+  },
 }
 
 export const iconButtonVariants = {

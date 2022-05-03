@@ -8,7 +8,7 @@
 import Foundation
 import WalletConnectSwift
 
-let EthSignMethods = [EthMethod.personalSign.rawValue, EthMethod.signTypedData.rawValue]
+let EthSignMethods = [EthMethod.personalSign.rawValue, EthMethod.signTypedData.rawValue, EthMethod.ethSign.rawValue]
 
 class WalletConnectSignRequestHandler: RequestHandler {
   var accountServer: WalletConnectAccountServer!
@@ -26,6 +26,24 @@ class WalletConnectSignRequestHandler: RequestHandler {
     return EthSignMethods.contains(request.method)
   }
   
+  // request is a wrapped array and WalletConnect changes the position of the message
+  // based on the eth method
+  // https://docs.walletconnect.com/json-rpc-api-methods/ethereum
+  func getMessage(_ request: Request) throws -> String {
+    if (request.method == EthMethod.personalSign.rawValue) {
+      let rawMessage = try request.parameter(of: String.self, at: 0)
+      return String(data: Data(hex: rawMessage), encoding: .utf8) ?? rawMessage
+    }
+    
+    if (request.method == EthMethod.ethSign.rawValue) {
+      let rawMessage = try request.parameter(of: String.self, at: 1)
+      return String(data: Data(hex: rawMessage), encoding: .utf8) ?? rawMessage
+    }
+    
+    // signTypedData case
+    return try request.parameter(of: String.self, at: 1)
+  }
+  
   func handle(request: Request) {
     // use our own UUID to index requests beacuse request.id may not always be defined, and is not
     // guaranteed to be a string
@@ -36,17 +54,7 @@ class WalletConnectSignRequestHandler: RequestHandler {
       let session = try self.accountServer.getSessionFromTopic(request.url.topic)
       let icons = session.dAppInfo.peerMeta.icons
       
-      let message: String
-      // request is a wrapped array and WalletConnect changes the position of the message
-      // based on the eth method
-      // https://docs.walletconnect.com/json-rpc-api-methods/ethereum
-      if (request.method == EthMethod.personalSign.rawValue) {
-        let rawMessage = try request.parameter(of: String.self, at: 0)
-        message = String(data: Data(hex: rawMessage), encoding: .utf8) ?? rawMessage
-      } else {
-        message = try request.parameter(of: String.self, at: 1)
-      }
-      
+      let message = try getMessage(request)
       self.eventEmitter.sendEvent(
         withName: EventType.signRequest.rawValue, body: [
           "type": request.method,
