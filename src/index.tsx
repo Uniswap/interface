@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setWalletOverride } from 'state/user/actions'
+import { setWalletOverride } from 'state/user/reducer'
 
 import Blocklist from './components/Blocklist'
 import { coinbaseWallet, connectors, injected, walletConnect } from './connectors'

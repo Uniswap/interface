@@ -1,19 +1,19 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { Header as DialogHeader } from 'lib/components/Dialog'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import useTokenList, { useIsTokenListLoaded, useQueryCurrencies } from 'lib/hooks/useTokenList'
+import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
-import Dialog, { Header } from '../Dialog'
+import Dialog from '../Dialog'
 import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
-import TokenBase from './TokenBase'
+import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
 import TokenButton from './TokenButton'
 import TokenOptions from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
@@ -42,12 +42,13 @@ function useAreBalancesLoaded(): boolean {
 interface TokenSelectDialogProps {
   value?: Currency
   onSelect: (token: Currency) => void
+  onClose: () => void
 }
 
-export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
+export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
-  const queriedTokens = useQueryCurrencies(query)
-  const tokens = useMemo(() => queriedTokens?.filter((token) => token !== value), [queriedTokens, value])
+  const list = useTokenList()
+  const tokens = useQueryTokens(query, list)
 
   const isTokenListLoaded = useIsTokenListLoaded()
   const areBalancesLoaded = useAreBalancesLoaded()
@@ -65,16 +66,26 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
     [query, areBalancesLoaded, isTokenListLoaded]
   )
 
-  const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
-
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
+  const { chainId } = useActiveWeb3React()
+  const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
+
+  if (!listHasTokens && isLoaded) {
+    return (
+      <Dialog color="module" onClose={onClose}>
+        <DialogHeader title={<Trans>Select a token</Trans>} />
+        <NoTokensAvailableOnNetwork />
+      </Dialog>
+    )
+  }
+
   return (
-    <>
-      <Header title={<Trans>Select a token</Trans>} />
+    <Dialog color="module" onClose={onClose}>
+      <DialogHeader title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
         <Row pad={0.75} grow>
           <ThemedText.Body1>
@@ -88,13 +99,6 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
             />
           </ThemedText.Body1>
         </Row>
-        {Boolean(baseTokens.length) && (
-          <Row pad={0.75} gap={0.25} justify="flex-start" flex>
-            {baseTokens.map((token) => (
-              <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
-            ))}
-          </Row>
-        )}
         <Rule padded />
       </Column>
       {isLoaded ? (
@@ -112,7 +116,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
       ) : (
         <TokenOptionsSkeleton />
       )}
-    </>
+    </Dialog>
   )
 }
 
@@ -138,11 +142,7 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
   return (
     <>
       <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
-      {open && (
-        <Dialog color="module" onClose={() => setOpen(false)}>
-          <TokenSelectDialog value={value} onSelect={selectAndClose} />
-        </Dialog>
-      )}
+      {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )
 })
