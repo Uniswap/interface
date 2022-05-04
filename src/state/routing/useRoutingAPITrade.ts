@@ -2,11 +2,11 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
-import { useFreshQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
+import useIsValidBlock from 'lib/hooks/useIsValidBlock'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
@@ -50,7 +50,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnFocus: true,
   })
 
-  const quoteResult: GetQuoteResult | undefined = useFreshQuote(data)
+  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -125,12 +125,7 @@ class GAMetric extends IMetric {
   }
 
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    ReactGA.timing({
-      category: 'Routing API',
-      variable: `${key} | ${unit}`,
-      value,
-      label: 'client',
-    })
+    ReactGA._gaCommandSendTiming('Routing API', `${key} | ${unit}`, value, 'client')
   }
 }
 

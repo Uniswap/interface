@@ -9,8 +9,8 @@ import Expando from 'lib/components/Expando'
 import Row from 'lib/components/Row'
 import { Slippage } from 'lib/hooks/useSlippage'
 import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
-import { AlertTriangle, BarChart, Info } from 'lib/icons'
-import styled, { Color, ThemedText } from 'lib/theme'
+import { AlertTriangle, BarChart, Info, Spinner } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -41,16 +41,16 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
-function Subhead({ priceImpact, slippage }: { priceImpact: { warning?: Color }; slippage: Slippage }) {
+function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
   return (
     <Row gap={0.5}>
-      {priceImpact.warning || slippage.warning ? (
-        <AlertTriangle color={priceImpact.warning || slippage.warning} />
+      {impact?.warning || slippage.warning ? (
+        <AlertTriangle color={impact?.warning || slippage.warning} />
       ) : (
         <Info color="secondary" />
       )}
-      <ThemedText.Subhead2 color={priceImpact.warning || slippage.warning || 'secondary'}>
-        {priceImpact.warning ? (
+      <ThemedText.Subhead2 color={impact?.warning || slippage.warning || 'secondary'}>
+        {impact?.warning ? (
           <Trans>High price impact</Trans>
         ) : slippage.warning ? (
           <Trans>High slippage</Trans>
@@ -94,16 +94,27 @@ function ConfirmButton({
 }: {
   trade: Trade<Currency, Currency, TradeType>
   highPriceImpact: boolean
-  onConfirm: () => void
+  onConfirm: () => Promise<void>
 }) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
+
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
     [ackTrade, trade]
   )
+
+  const [isPending, setIsPending] = useState(false)
+  const onClick = useCallback(async () => {
+    setIsPending(true)
+    await onConfirm()
+    setIsPending(false)
+  }, [onConfirm])
+
   const action = useMemo((): Action | undefined => {
-    if (doesTradeDiffer) {
+    if (isPending) {
+      return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner }
+    } else if (doesTradeDiffer) {
       return {
         message: <Trans>Price updated</Trans>,
         icon: BarChart,
@@ -118,10 +129,10 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, trade])
+  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
 
   return (
-    <ActionButton onClick={onConfirm} action={action}>
+    <ActionButton onClick={onClick} action={action}>
       <Trans>Confirm swap</Trans>
     </ActionButton>
   )
@@ -132,8 +143,8 @@ interface SummaryDialogProps {
   slippage: Slippage
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
-  impact: PriceImpact
-  onConfirm: () => void
+  impact?: PriceImpact
+  onConfirm: () => Promise<void>
 }
 
 export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, onConfirm }: SummaryDialogProps) {
@@ -152,23 +163,18 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
             output={outputAmount}
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
-            priceImpact={impact}
+            impact={impact}
           />
           <Price trade={trade} />
         </Heading>
         <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
-          <Expando
-            title={<Subhead priceImpact={impact} slippage={slippage} />}
-            open={open}
-            onExpand={onExpand}
-            height={7.25}
-          >
-            <Details trade={trade} slippage={slippage} priceImpact={impact} />
+          <Expando title={<Subhead impact={impact} slippage={slippage} />} open={open} onExpand={onExpand} height={7}>
+            <Details trade={trade} slippage={slippage} impact={impact} />
           </Expando>
           <Footing>
             <Estimate trade={trade} slippage={slippage} />
           </Footing>
-          <ConfirmButton trade={trade} highPriceImpact={impact.warning === 'error'} onConfirm={onConfirm} />
+          <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
         </Column>
       </Body>
     </>

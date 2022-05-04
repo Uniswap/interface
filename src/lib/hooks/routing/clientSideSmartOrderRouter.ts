@@ -1,7 +1,8 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+// This file is lazy-loaded, so the import of smart-order-router is intentional.
+// eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
@@ -98,11 +99,4 @@ export async function getClientSideQuote(
     routerParams,
     routerConfig
   )
-}
-
-export function useFreshQuote(quoteResult: GetQuoteResult | undefined, maxBlockAge = 10): GetQuoteResult | undefined {
-  const block = useBlockNumber()
-  if (!block || !quoteResult) return undefined
-  if (block - (Number(quoteResult.blockNumber) || 0) > maxBlockAge) return undefined
-  return quoteResult
 }

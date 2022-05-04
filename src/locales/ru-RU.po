@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-28 23:07\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -192,7 +192,7 @@ msgstr "У адреса нет прав требования"
 msgid "Against"
 msgstr "Против"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "Одобрить"
 
@@ -204,13 +204,21 @@ msgstr "Разрешить перенос LP-токенов"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Разрешить сделки с высоким влиянием на цену и не показывать экран подтверждения. Используйте на свой страх и риск."
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "Разрешите в своём кошельке"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Разрешить протоколу Uniswap использовать ваши {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "Сначала одобрите {0}"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "Разрешение подтверждается"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -224,13 +232,12 @@ msgstr "Сумма"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Произошла ошибка при попытке произвести этот обмен. Возможно, нужно увеличить допустимое проскальзывание. Если это не сработает, возможно, имеет место несовместимость с токеном, которым вы торгуете. Обратите внимание: токены с комиссией за перевод или изменяемой базой несовместимы с Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Одобрение подтверждается"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Одобрить"
@@ -238,6 +245,10 @@ msgstr "Одобрить"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Одобрить токен"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "Одобрите в своём кошельке"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -247,7 +258,7 @@ msgstr "Одобрить токен"
 msgid "Approve {0}"
 msgstr "Одобрить {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Сначала одобрите {0}"
 
@@ -499,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "Подтвердить обмен"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "Подтвердите в своём кошельке"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "Подтвердите обмен"
 
@@ -558,6 +574,10 @@ msgstr "Подключить свой кошелёк"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Подключено к {name}"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Конвертировать {0} в {1} без проскальзывания"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -756,8 +776,6 @@ msgstr "Введите правильный адрес токена"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Введите сумму в {0}"
 
@@ -779,6 +797,10 @@ msgstr "Ошибка подключения. Попробуйте обновит
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Описание ошибки"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Ошибка при получении сделки"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -975,8 +997,6 @@ msgstr "Недостаточно ликвидности в пуле для ва�
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1567,7 +1587,7 @@ msgstr "Сбросить"
 msgid "Return"
 msgstr "Назад"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Проверьте обмен"
 
@@ -2065,14 +2085,13 @@ msgid "Unsupported Assets"
 msgstr "Неподдерживаемые активы"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Сеть не поддерживается; переключитесь на другую, чтобы торговать."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Сеть не поддерживается; переключитесь на другую, чтобы торговать"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Без названия"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Развернуть"
@@ -2085,17 +2104,13 @@ msgstr "Развернуть <0/> в {0}"
 msgid "Unwrap confirmed"
 msgstr "Разворачивание подтверждено"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Развернуть нативную валюту."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Разворачивание подтверждается"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Разворачивание нативной валюты."
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "Развернуть {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2265,30 +2280,25 @@ msgstr "Вывод {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Вы вывели UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Завернуть"
+msgstr "Обернуть"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr "Завернуть <0/> в {0}"
+msgstr "Обернуть <0/> в {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap confirmed"
 msgstr "Обёртывание подтверждено"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Обернуть нативную валюту."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Обёртывание подтверждается"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Обёртывание нативной валюты."
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "Обернуть {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

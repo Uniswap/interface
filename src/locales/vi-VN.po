@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -192,7 +192,7 @@ msgstr "Địa chỉ không có yêu cầu"
 msgid "Against"
 msgstr "Chống lại"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "Cho phép"
 
@@ -204,13 +204,21 @@ msgstr "Cho phép di chuyển mã token LP"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Cho phép các giao dịch tác động đến giá cao và bỏ qua màn hình xác nhận. Sử dụng và tự gánh chịu mọi rủi ro."
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "Cho phép trong ví của bạn"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Cho phép Giao thức hoán đổi Uniswap sử dụng {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "Cho phép {0} trước"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "Trợ cấp đang chờ xử lý"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -224,13 +232,12 @@ msgstr "Số tiền"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Đang chờ phê duyệt"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Phê duyệt"
@@ -238,6 +245,10 @@ msgstr "Phê duyệt"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Phê duyệt mã thông báo"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "Phê duyệt trong ví của bạn"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -247,7 +258,7 @@ msgstr "Phê duyệt mã thông báo"
 msgid "Approve {0}"
 msgstr "Phê duyệt {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Phê duyệt {0} trước"
 
@@ -499,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "Xác nhận Hoán đổi"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "Xác nhận trong ví của bạn"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "Xác nhận hoán đổi"
 
@@ -558,6 +574,10 @@ msgstr "Kết nối ví của bạn"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Đã kết nối với {name}"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Chuyển đổi {0} thành {1} mà không bị trượt"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -756,8 +776,6 @@ msgstr "Nhập địa chỉ mã token hợp lệ"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Nhập số tiền {0}"
 
@@ -779,6 +797,10 @@ msgstr "Lỗi kết nối. Hãy thử làm mới trang."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "Chi tiết lỗi"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "Lỗi khi tìm nạp giao dịch"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -975,8 +997,6 @@ msgstr "Không đủ thanh khoản trong pool cho giao dịch của bạn"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1567,7 +1587,7 @@ msgstr "Cài lại"
 msgid "Return"
 msgstr "Trở về"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Đánh giá hoán đổi"
 
@@ -2065,14 +2085,13 @@ msgid "Unsupported Assets"
 msgstr "Tài sản không được hỗ trợ"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Mạng không được hỗ trợ - chuyển sang mạng khác để giao dịch."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Mạng không được hỗ trợ - chuyển sang mạng khác để giao dịch"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Không có tiêu đề"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Tháo"
@@ -2085,17 +2104,13 @@ msgstr "Bỏ gói <0/> thành {0}"
 msgid "Unwrap confirmed"
 msgstr "Đã xác nhận mở gói"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Mở gói nội tệ."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Mở gói đang chờ xử lý"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Mở gói nội tệ."
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "Unwrap {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2265,7 +2280,6 @@ msgstr "Đang rút {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Đã rút UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Bọc lại"
@@ -2278,17 +2292,13 @@ msgstr "Kết thúc từ <0/> đến {0}"
 msgid "Wrap confirmed"
 msgstr "Đã xác nhận kết thúc"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Bao bọc nội tệ."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Gói đang chờ xử lý"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Bao bọc nội tệ."
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "Bọc {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

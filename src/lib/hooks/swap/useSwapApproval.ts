@@ -7,7 +7,6 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
-import invariant from 'tiny-invariant'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
@@ -75,10 +74,6 @@ export default function useSwapApproval(
   const spender = useSwapRouterAddress(trade)
 
   const approval = useApproval(amountToApprove, spender, useIsPendingApproval)
-  if (trade instanceof V2Trade || trade instanceof V3Trade) {
-    const approvalState = approval[0]
-    invariant(approvalState === ApprovalState.APPROVED, 'Trying to approve legacy router')
-  }
   return approval
 }
 
@@ -171,39 +166,39 @@ export const useApproveOrPermit = (
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
 
-  const notApproved = approval === ApprovalState.NOT_APPROVED && !(signatureState === UseERC20PermitState.SIGNED)
-
   // If permit is supported, trigger a signature, if not create approval transaction.
   const handleApproveOrPermit = useCallback(async () => {
-    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
-      try {
-        return await gatherPermitSignature()
-      } catch (error) {
-        // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
-        if (error?.code !== 4001) {
-          return getApproval()
+    try {
+      if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+        try {
+          return await gatherPermitSignature()
+        } catch (error) {
+          // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
+          if (error?.code !== 4001) {
+            return await getApproval()
+          }
         }
+      } else {
+        return await getApproval()
       }
-    } else {
-      return getApproval()
+    } catch (e) {
+      // Swallow approval errors - user rejections do not need to be displayed.
     }
   }, [signatureState, gatherPermitSignature, getApproval])
 
   const approvalState = useMemo(() => {
     if (approval === ApprovalState.PENDING) {
       return ApproveOrPermitState.PENDING_APPROVAL
-    }
-    if (signatureState === UseERC20PermitState.LOADING) {
+    } else if (signatureState === UseERC20PermitState.LOADING) {
       return ApproveOrPermitState.PENDING_SIGNATURE
-    }
-    if (notApproved && Boolean(gatherPermitSignature)) {
+    } else if (approval !== ApprovalState.NOT_APPROVED || signatureState === UseERC20PermitState.SIGNED) {
+      return ApproveOrPermitState.APPROVED
+    } else if (gatherPermitSignature) {
       return ApproveOrPermitState.REQUIRES_SIGNATURE
-    }
-    if (notApproved) {
+    } else {
       return ApproveOrPermitState.REQUIRES_APPROVAL
     }
-    return ApproveOrPermitState.APPROVED
-  }, [approval, gatherPermitSignature, notApproved, signatureState])
+  }, [approval, gatherPermitSignature, signatureState])
 
   return {
     approvalState,

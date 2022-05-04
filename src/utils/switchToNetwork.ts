@@ -1,12 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexStripZeros } from '@ethersproject/bytes'
-import { Web3Provider } from '@ethersproject/providers'
+import { ExternalProvider } from '@ethersproject/providers'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 
 interface SwitchNetworkArguments {
-  library: Web3Provider
+  provider: ExternalProvider
   chainId: SupportedChainId
 }
 
@@ -38,13 +38,13 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
 // see https://github.com/rekmarks/EIPs/blob/3326-create/EIPS/eip-3326.md for more info on wallet_switchEthereumChain
-export async function switchToNetwork({ library, chainId }: SwitchNetworkArguments): Promise<null | void> {
-  if (!library?.provider?.request) {
+export async function switchToNetwork({ provider, chainId }: SwitchNetworkArguments): Promise<null | void> {
+  if (!provider.request) {
     return
   }
   const formattedChainId = hexStripZeros(BigNumber.from(chainId).toHexString())
   try {
-    await library.provider.request({
+    await provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: formattedChainId }],
     })
@@ -53,7 +53,7 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
     if (error.code === 4902) {
       const info = CHAIN_INFO[chainId]
 
-      await library.provider.request({
+      await provider.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
@@ -69,7 +69,7 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
       // the second call is done here because that behavior is not a part of the spec and cannot be relied upon in the future
       // metamask's behavior when switching to the current network is just to return null (a no-op)
       try {
-        await library.provider.request({
+        await provider.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: formattedChainId }],
         })

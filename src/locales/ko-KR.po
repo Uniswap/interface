@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -192,7 +192,7 @@ msgstr "주소에 사용 가능한 청구가 없습니다."
 msgid "Against"
 msgstr "반대"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "허용하다"
 
@@ -204,13 +204,21 @@ msgstr "LP 토큰 마이그레이션 허용"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁니다. 자신의 책임하에 사용하십시오."
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "지갑에서 허용"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "먼저 {0} 허용"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "수당 보류"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -224,13 +232,12 @@ msgstr "금액"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "교환을 실행하는 중에 오류가 발생했습니다. 가격변동 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 교환중인 토큰이 Uniswap과 호환되지 않는 것일 수 있습니다. 참고: 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "승인 대기 중"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "승인"
@@ -238,6 +245,10 @@ msgstr "승인"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "토큰 승인"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "지갑에서 승인"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -247,7 +258,7 @@ msgstr "토큰 승인"
 msgid "Approve {0}"
 msgstr "{0} 승인"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "{0} 먼저 승인"
 
@@ -499,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "스왑 확인"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "지갑에서 확인"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "스왑 확인"
 
@@ -558,6 +574,10 @@ msgstr "지갑 연결"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "{name}와(과) 연결됨"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "미끄러짐 없이 {0} 을 {1} 로 변환"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -756,8 +776,6 @@ msgstr "유효한 토큰 주소를 입력하세요."
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "{0} 금액을 입력하세요"
 
@@ -779,6 +797,10 @@ msgstr "연결 오류. 페이지를 새로 고침 해보세요."
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "오류 상세"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "거래를 가져오는 중에 오류가 발생했습니다."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -975,8 +997,6 @@ msgstr "거래를 위한 풀의 유동성 부족"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1567,7 +1587,7 @@ msgstr "초기화"
 msgid "Return"
 msgstr "반환"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "스왑 검토"
 
@@ -2065,14 +2085,13 @@ msgid "Unsupported Assets"
 msgstr "지원되지 않는 자산"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "지원되지 않는 네트워크 - 거래하려면 다른 네트워크로 전환하세요."
+msgid "Unsupported network - switch to another to trade"
+msgstr "지원되지 않는 네트워크 - 거래를 위해 다른 네트워크로 전환"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "제목 없음"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "언랩"
@@ -2085,17 +2104,13 @@ msgstr "<0/> 에서 {0}풀기"
 msgid "Unwrap confirmed"
 msgstr "포장 풀기 확인"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "기본 통화 포장을 풉니다."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "언래핑 보류"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "기본 통화 포장 풀기."
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "포장 풀기 {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2265,7 +2280,6 @@ msgstr "{0} UNI-V2 인출"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 인출!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "랩"
@@ -2278,17 +2292,13 @@ msgstr "<0/> 에서 {0}바꿈"
 msgid "Wrap confirmed"
 msgstr "랩 확인됨"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "기본 통화를 포장합니다."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "랩 대기 중"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "기본 통화 래핑."
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "랩 {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

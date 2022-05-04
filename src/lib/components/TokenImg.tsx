@@ -3,7 +3,7 @@ import { useToken } from 'lib/hooks/useCurrency'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { MissingToken } from 'lib/icons'
 import styled from 'lib/theme'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 const badSrcs = new Set<string>()
 
@@ -18,19 +18,26 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
   const tokenInfo = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
 
   const srcs = useCurrencyLogoURIs(tokenInfo)
-  const [src, setSrc] = useState<string | undefined>()
-  useEffect(() => {
-    setSrc(srcs.find((src) => !badSrcs.has(src)))
-  }, [srcs])
-  const onError = useCallback(() => {
-    if (src) badSrcs.add(src)
-    setSrc(srcs.find((src) => !badSrcs.has(src)))
-  }, [src, srcs])
 
-  if (src) {
-    return <img src={src} alt={tokenInfo.name || tokenInfo.symbol} onError={onError} {...rest} />
-  }
-  return <MissingToken color="secondary" {...rest} />
+  const [attempt, setAttempt] = useState(0)
+  const src = useMemo(() => {
+    // Trigger a re-render when an error occurs.
+    void attempt
+
+    return srcs.find((src) => !badSrcs.has(src))
+  }, [attempt, srcs])
+  const onError = useCallback(
+    (e) => {
+      if (src) badSrcs.add(src)
+      setAttempt((attempt) => ++attempt)
+    },
+    [src]
+  )
+
+  if (!src) return <MissingToken color="secondary" {...rest} />
+
+  const alt = tokenInfo.name || tokenInfo.symbol
+  return <img src={src} alt={alt} key={alt} onError={onError} {...rest} />
 }
 
 export default styled(TokenImg)<{ size?: number }>`

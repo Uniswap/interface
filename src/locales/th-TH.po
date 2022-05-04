@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-24 20:06\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -192,7 +192,7 @@ msgstr "ที่อยู่ไม่มีการอ้างสิทธิ
 msgid "Against"
 msgstr "ขัดต่อ"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "อนุญาต"
 
@@ -204,13 +204,21 @@ msgstr "อนุญาตให้ย้ายโทเค็น LP"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "อนุญาตให้ทำการซื้อขายที่กระทบราคาสูงและข้ามหน้าจอยืนยัน ใช้ความเสี่ยงของคุณเอง"
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "อนุญาตในกระเป๋าสตางค์ของคุณ"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "อนุญาตให้ Uniswap Protocol ใช้ {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "ให้ {0} ก่อน"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "ค่าเผื่อที่รอดำเนินการ"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -224,13 +232,12 @@ msgstr "จำนวน"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "รอการอนุมัติ"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "อนุมัติ"
@@ -238,6 +245,10 @@ msgstr "อนุมัติ"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "อนุมัติโทเค็น"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "อนุมัติในกระเป๋าเงินของคุณ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -247,7 +258,7 @@ msgstr "อนุมัติโทเค็น"
 msgid "Approve {0}"
 msgstr "อนุมัติ {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "อนุมัติ {0} ก่อน"
 
@@ -499,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "ยืนยันการสลับ"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "ยืนยันในกระเป๋าเงินของคุณ"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "ยืนยันการสลับ"
 
@@ -558,6 +574,10 @@ msgstr "เชื่อมต่อกระเป๋าสตางค์ขอ
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "เชื่อมต่อกับ {name}"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "แปลง {0} เป็น {1} โดยไม่มีการคลาดเคลื่อน"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -756,8 +776,6 @@ msgstr "ป้อนที่อยู่โทเค็นที่ถูกต
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "ใส่ {0} จำนวน"
 
@@ -779,6 +797,10 @@ msgstr "เกิดข้อผิดพลาดในการเชื่อ
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
 msgstr "รายละเอียดผิดพลาด"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "เกิดข้อผิดพลาดในการดึงข้อมูลการค้า"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -975,8 +997,6 @@ msgstr "สภาพคล่องไม่เพียงพอสำหรั
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1567,7 +1587,7 @@ msgstr "รีเซ็ต"
 msgid "Return"
 msgstr "กลับ"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "แลกเปลี่ยนรีวิว"
 
@@ -2065,14 +2085,13 @@ msgid "Unsupported Assets"
 msgstr "สินทรัพย์ที่ไม่รองรับ"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
+msgid "Unsupported network - switch to another to trade"
 msgstr "เครือข่ายที่ไม่รองรับ - เปลี่ยนไปใช้เครือข่ายอื่นเพื่อแลกเปลี่ยน"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "ไม่มีชื่อ"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "แกะ"
@@ -2085,17 +2104,13 @@ msgstr "แกะ <0/> ถึง {0}"
 msgid "Unwrap confirmed"
 msgstr "แกะกล่องยืนยัน"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "แกะสกุลเงินพื้นเมือง"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "แกะกล่องที่รอดำเนินการ"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "แกะสกุลเงินพื้นเมือง"
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "แกะ {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2265,7 +2280,6 @@ msgstr "ถอน {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "ถอนตัว UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "ห่อ"
@@ -2278,17 +2292,13 @@ msgstr "ตัด <0/> ถึง {0}"
 msgid "Wrap confirmed"
 msgstr "ยืนยันห่อแล้ว"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "ห่อสกุลเงินพื้นเมือง"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "อยู่ระหว่างการพิจารณา"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "ห่อสกุลเงินพื้นเมือง"
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "แรป {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

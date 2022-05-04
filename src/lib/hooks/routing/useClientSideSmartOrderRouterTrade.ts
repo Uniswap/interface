@@ -1,6 +1,8 @@
+import 'setimmediate'
+
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
+import { SupportedChainId } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useCallback, useMemo } from 'react'
@@ -9,8 +11,8 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
+import { useGetIsValidBlock } from '../useIsValidBlock'
 import usePoll from '../usePoll'
-import { getClientSideQuote, useFreshQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -18,14 +20,14 @@ import { useRoutingAPIArguments } from './useRoutingAPIArguments'
  * Defaults are defined in https://github.com/Uniswap/smart-order-router/blob/309e6f6603984d3b5aef0733b0cfaf129c29f602/src/routers/alpha-router/config.ts#L83.
  */
 const DistributionPercents: { [key: number]: number } = {
-  [ChainId.MAINNET]: 10,
-  [ChainId.OPTIMISM]: 10,
-  [ChainId.OPTIMISTIC_KOVAN]: 10,
-  [ChainId.ARBITRUM_ONE]: 25,
-  [ChainId.ARBITRUM_RINKEBY]: 25,
+  [SupportedChainId.MAINNET]: 10,
+  [SupportedChainId.OPTIMISM]: 10,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 10,
+  [SupportedChainId.ARBITRUM_ONE]: 25,
+  [SupportedChainId.ARBITRUM_RINKEBY]: 25,
 }
 const DEFAULT_DISTRIBUTION_PERCENT = 10
-function getConfig(chainId: ChainId | undefined) {
+function getConfig(chainId: SupportedChainId | undefined) {
   return {
     // Limit to only V2 and V3.
     protocols: [Protocol.V2, Protocol.V3],
@@ -70,18 +72,31 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const { type: wrapType } = useWrapCallback()
 
   const getQuoteResult = useCallback(async (): Promise<{ data?: GetQuoteResult; error?: unknown }> => {
-    if (wrapType !== WrapType.NOT_APPLICABLE) return { error: undefined }
+    if (wrapType !== WrapType.NONE) return { error: undefined }
     if (!queryArgs || !params) return { error: undefined }
     try {
-      return await getClientSideQuote(queryArgs, params, config)
+      // Lazy-load the smart order router to improve initial pageload times.
+      const quoteResult = await (
+        await import('./clientSideSmartOrderRouter')
+      ).getClientSideQuote(queryArgs, params, config)
+
+      // There is significant post-fetch processing, so delay a tick to prevent dropped frames.
+      // This is only important in the context of integrations - if we control the whole site,
+      // then we can afford to drop a few frames.
+      return new Promise((resolve) => setImmediate(() => resolve(quoteResult)))
     } catch {
       return { error: true }
     }
   }, [config, params, queryArgs, wrapType])
-  const { data, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs)) ?? {
+
+  const getIsValidBlock = useGetIsValidBlock()
+  const { data: quoteResult, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), {
+    debounce: isDebouncing,
+    isStale: useCallback(({ data }) => !getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
+  }) ?? {
     error: undefined,
   }
-  const quoteResult = useFreshQuote(data)
+  const isValid = getIsValidBlock(Number(quoteResult?.blockNumber) || 0)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -104,12 +119,11 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.INVALID, trade: undefined }
     }
 
-    // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
-    if (!error) {
+    if (!trade && !error) {
       if (isDebouncing) {
-        return { state: TradeState.SYNCING, trade }
-      } else if (!quoteResult) {
-        return { state: TradeState.LOADING, trade }
+        return { state: TradeState.SYNCING, trade: undefined }
+      } else if (!isValid) {
+        return { state: TradeState.LOADING, trade: undefined }
       }
     }
 
@@ -125,7 +139,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       }
     }
 
-    if (error || !otherAmount || !route || route.length === 0 || !queryArgs) {
+    if (error || !otherAmount || !route || route.length === 0) {
       return { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
     }
 
@@ -133,5 +147,5 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, quoteResult, error, route, queryArgs, trade, isDebouncing, tradeType])
+  }, [currencyIn, currencyOut, trade, error, isValid, quoteResult, route, isDebouncing, tradeType])
 }

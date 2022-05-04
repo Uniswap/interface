@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { pickAtom } from 'lib/state/atoms'
@@ -61,16 +61,6 @@ const independentFieldAtom = pickAtom(swapAtom, 'independentField')
 export function useIsSwapFieldIndependent(field: Field): boolean {
   const independentField = useAtomValue(independentFieldAtom)
   return independentField === field
-}
-
-export function useSwapTradeType(): TradeType {
-  const independentField = useAtomValue(independentFieldAtom)
-  switch (independentField) {
-    case Field.INPUT:
-      return TradeType.EXACT_INPUT
-    case Field.OUTPUT:
-      return TradeType.EXACT_OUTPUT
-  }
 }
 
 const amountAtom = pickAtom(swapAtom, 'amount')

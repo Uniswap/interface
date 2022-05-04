@@ -15,7 +15,7 @@ export default function useAddTokenToMetamask(currencyToAdd: Currency | undefine
   const logoURL = useCurrencyLogoURIs(token)[0]
 
   const addToken = useCallback(() => {
-    if (library && library.provider.isMetaMask && library.provider.request && token) {
+    if (library && library?.provider?.isMetaMask && library.provider.request && token) {
       library.provider
         .request({
           method: 'wallet_watchAsset',

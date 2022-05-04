@@ -17,57 +17,61 @@ const ToolbarRow = styled(Row)`
   ${largeIconCss}
 `
 
-export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
-  const { chainId } = useActiveWeb3React()
+export default memo(function Toolbar() {
+  const { active, activating, chainId } = useActiveWeb3React()
   const {
-    [Field.INPUT]: { currency: inputCurrency, balance },
+    [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     trade: { trade, state },
     impact,
   } = useSwapInfo()
-  const isRouteLoading = state === TradeState.SYNCING || state === TradeState.LOADING
   const isAmountPopulated = useIsAmountPopulated()
-  const { type: wrapType, loading: wrapLoading } = useWrapCallback()
+  const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
-    if (disabled) {
+    if (!active || !chainId) {
+      if (activating) return <Caption.Connecting />
       return <Caption.ConnectWallet />
     }
 
-    if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
+    if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
       return <Caption.UnsupportedNetwork />
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (wrapType !== WrapType.NOT_APPLICABLE) {
-        return <Caption.WrapCurrency wrapType={wrapType} loading={wrapLoading} />
-      }
-      if (isRouteLoading) {
+      if (state === TradeState.SYNCING || state === TradeState.LOADING) {
         return <Caption.LoadingTrade />
       }
-      if (!trade?.swaps) {
+      if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
+        return <Caption.InsufficientBalance currency={inputCurrency} />
+      }
+      if (wrapType !== WrapType.NONE) {
+        return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+      }
+      if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
         return <Caption.InsufficientLiquidity />
       }
-      if (balance && trade?.inputAmount.greaterThan(balance)) {
-        return <Caption.InsufficientBalance currency={trade.inputAmount.currency} />
-      }
-      if (trade.inputAmount && trade.outputAmount) {
+      if (trade?.inputAmount && trade.outputAmount) {
         return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
+      }
+      if (state === TradeState.INVALID) {
+        return <Caption.Error />
       }
     }
 
     return <Caption.Empty />
   }, [
-    balance,
+    activating,
+    active,
     chainId,
-    disabled,
     impact,
+    inputAmount,
+    inputBalance,
     inputCurrency,
     isAmountPopulated,
-    isRouteLoading,
     outputCurrency,
     outputUSDC,
+    state,
     trade,
-    wrapLoading,
     wrapType,
   ])
 

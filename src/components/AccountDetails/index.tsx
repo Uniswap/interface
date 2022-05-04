@@ -8,9 +8,9 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injectedMetamask, portis, walletlink } from '../../connectors'
+import { injectedMetamask, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import { clearAllTransactions } from '../../state/transactions/actions'
+import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -181,15 +181,6 @@ function WrappedStatusIcon({ connector }: { connector: AbstractConnector | Conne
   return (
     <IconWrapper size={16}>
       <StatusIcon connector={connector} />
-      {connector === portis && (
-        <MainWalletAction
-          onClick={() => {
-            portis.portis.showPortis()
-          }}
-        >
-          <Trans>Show Portis</Trans>
-        </MainWalletAction>
-      )}
     </IconWrapper>
   )
 }
@@ -208,10 +199,6 @@ const WalletAction = styled(ButtonSecondary)`
     cursor: pointer;
     text-decoration: underline;
   }
-`
-
-const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.primary1};
 `
 
 function renderTransactions(transactions: string[]) {

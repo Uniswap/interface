@@ -146,7 +146,7 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
       return <Trans>Arbitrum Bridge</Trans>
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimism Gateway</Trans>
+      return <Trans>Optimism Bridge</Trans>
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return <Trans>Polygon Bridge</Trans>
@@ -255,8 +255,8 @@ export default function NetworkSelector() {
 
   const handleChainSwitch = useCallback(
     (targetChain: number, skipToggle?: boolean) => {
-      if (!library) return
-      switchToNetwork({ library, chainId: targetChain })
+      if (!library?.provider) return
+      switchToNetwork({ provider: library.provider, chainId: targetChain })
         .then(() => {
           if (!skipToggle) {
             toggle()

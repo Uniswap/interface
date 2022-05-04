@@ -2,6 +2,7 @@ import 'setimmediate'
 
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import TokenSelect from 'lib/components/TokenSelect'
 import { loadingTransitionCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -10,7 +11,6 @@ import Button from '../Button'
 import Column from '../Column'
 import { DecimalInput } from '../Input'
 import Row from '../Row'
-import TokenSelect from '../TokenSelect'
 
 const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
@@ -18,7 +18,8 @@ const TokenInputRow = styled(Row)`
 
 const ValueInput = styled(DecimalInput)`
   color: ${({ theme }) => theme.primary};
-  height: 1em;
+  height: 1.5em;
+  margin: -0.25em 0;
 
   :hover:not(:focus-within) {
     color: ${({ theme }) => theme.onHover(theme.primary)};

@@ -4,6 +4,7 @@ import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useContext, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -12,6 +13,7 @@ import { Separator, ThemedText } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
+import { MouseoverTooltip } from '../Tooltip'
 import FormattedPriceImpact from './FormattedPriceImpact'
 
 const StyledCard = styled(Card)`
@@ -23,6 +25,7 @@ interface AdvancedSwapDetailsProps {
   allowedSlippage: Percent
   syncing?: boolean
   hideRouteDiagram?: boolean
+  hideInfoTooltips?: boolean
 }
 
 function TextWithLoadingPlaceholder({
@@ -43,9 +46,15 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({
+  trade,
+  allowedSlippage,
+  syncing = false,
+  hideInfoTooltips = false,
+}: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     if (!trade) return { expectedOutputAmount: undefined, priceImpact: undefined }
@@ -60,9 +69,19 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       <AutoColumn gap="8px">
         <RowBetween>
           <RowFixed>
-            <ThemedText.SubHeader color={theme.text1}>
-              <Trans>Expected Output</Trans>
-            </ThemedText.SubHeader>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  The amount you expect to receive at the current market price. You may receive less or more if the
+                  market price changes while your transaction is pending.
+                </Trans>
+              }
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.SubHeader color={theme.text1}>
+                <Trans>Expected Output</Trans>
+              </ThemedText.SubHeader>
+            </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.Black textAlign="right" fontSize={14}>
@@ -74,9 +93,14 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <ThemedText.SubHeader color={theme.text1}>
-              <Trans>Price Impact</Trans>
-            </ThemedText.SubHeader>
+            <MouseoverTooltip
+              text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.SubHeader color={theme.text1}>
+                <Trans>Price Impact</Trans>
+              </ThemedText.SubHeader>
+            </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
             <ThemedText.Black textAlign="right" fontSize={14}>
@@ -87,14 +111,24 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <Separator />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
-            <ThemedText.SubHeader color={theme.text3}>
-              {trade.tradeType === TradeType.EXACT_INPUT ? (
-                <Trans>Minimum received</Trans>
-              ) : (
-                <Trans>Maximum sent</Trans>
-              )}{' '}
-              <Trans>after slippage</Trans> ({allowedSlippage.toFixed(2)}%)
-            </ThemedText.SubHeader>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  The minimum amount you are guaranteed to receive. If the price slips any further, your transaction
+                  will revert.
+                </Trans>
+              }
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.SubHeader color={theme.text3}>
+                {trade.tradeType === TradeType.EXACT_INPUT ? (
+                  <Trans>Minimum received</Trans>
+                ) : (
+                  <Trans>Maximum sent</Trans>
+                )}{' '}
+                <Trans>after slippage</Trans> ({allowedSlippage.toFixed(2)}%)
+              </ThemedText.SubHeader>
+            </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
             <ThemedText.Black textAlign="right" fontSize={14} color={theme.text3}>
@@ -106,9 +140,18 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowBetween>
         {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
           <RowBetween>
-            <ThemedText.SubHeader color={theme.text3}>
-              <Trans>Network Fee</Trans>
-            </ThemedText.SubHeader>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  The fee paid to miners who process your transaction. This must be paid in {nativeCurrency.symbol}.
+                </Trans>
+              }
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.SubHeader color={theme.text3}>
+                <Trans>Network Fee</Trans>
+              </ThemedText.SubHeader>
+            </MouseoverTooltip>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
               <ThemedText.Black textAlign="right" fontSize={14} color={theme.text3}>
                 ~${trade.gasUseEstimateUSD.toFixed(2)}

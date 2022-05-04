@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-29 06:07\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -192,7 +192,7 @@ msgstr "請求可能なアドレスではありません"
 msgid "Against"
 msgstr "反対"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "許可する"
 
@@ -204,13 +204,21 @@ msgstr "LPトークンの移行を許可する"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "価格への大きな影響がある取引を許可し、確認画面をスキップします。自己責任でご利用ください。"
 
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "ウォレットで許可する"
+
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "{0} の使用をUniswapに許可する"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "最初に {0} を許可する"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allowance pending"
+msgstr "保留中の手当"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -224,13 +232,12 @@ msgstr "数量"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "スワップ実行時にエラーが発生しました。スリッページの許容範囲を広げる必要がある可能性があります。それでも上手くいかない場合、取引しているトークンとの互換性がない可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "承認待ち"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "承認"
@@ -238,6 +245,10 @@ msgstr "承認"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "トークンを承認する"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "ウォレットで承認する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -247,7 +258,7 @@ msgstr "トークンを承認する"
 msgid "Approve {0}"
 msgstr "{0} を承認する"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "最初に {0} を承認する"
 
@@ -330,7 +341,7 @@ msgstr "非常に安定したペアに最適"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
-msgstr "ベストプライスルートコスト〜{formattedGasPriceString} ガスインチ"
+msgstr "ベスト価格のルートでガス代として〜{formattedGasPriceString} の費用がかかります。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -499,6 +510,11 @@ msgid "Confirm Swap"
 msgstr "スワップの確認"
 
 #: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "ウォレットで確認する"
+
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
 msgstr "スワップを確認する"
 
@@ -549,7 +565,7 @@ msgstr "ウォレットに接続して流動性を確認します。"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
-msgstr "ウォレットをスワップに接続します"
+msgstr "ウォレットを接続してスワップする"
 
 #: src/lib/components/Wallet.tsx
 msgid "Connect your wallet"
@@ -558,6 +574,10 @@ msgstr "ウォレットを接続する"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "{name} と接続しました"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "スリッページなしで {0} を {1} に変換します"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -656,7 +676,7 @@ msgstr "流動性を預ける"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit tokens to the {label} network."
-msgstr "{label} ネットワークにトークンをデポジットします。"
+msgstr "{label} ネットワークにトークンを預け入れます"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -756,10 +776,8 @@ msgstr "有効なトークンアドレスを入力してください"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
-msgstr "{0} 金額を入力してください"
+msgstr "{0} の数量を入力してください"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -780,13 +798,17 @@ msgstr "接続中にエラーが発生しました。ページを更新してく
 msgid "Error details"
 msgstr "エラーの詳細"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Error fetching trade"
+msgstr "取引の取得中にエラーが発生しました"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "リストのインポートエラー"
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimate may differ due to your wallet gas settings"
-msgstr "ウォレットガスの設定により、見積もりが異なる場合があります"
+msgstr "ウォレットのガス設定により、見積もりが異なる場合があります"
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
@@ -806,7 +828,7 @@ msgstr "あなたが利用していないトークンリストからの検索結
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
-msgstr "期待される出力"
+msgstr "予想される結果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -826,7 +848,7 @@ msgstr "Uniswap Analyticsをご覧ください。"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "ユニスワップインターフェイスからのネットワークの切り替えに失敗しました。 {0}でユニスワップを使用するには、ウォレットのネットワークを変更する必要があります。"
+msgstr "Uniswapのインターフェイスからのネットワークの切り替えに失敗しました。 {0} でUniswapを使用するには、ウォレットのネットワークを変更する必要があります。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -838,11 +860,11 @@ msgstr "手数料レベル"
 
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
-msgstr "最高の価格を取得しています..."
+msgstr "ベストな価格を取得中…"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
-msgstr "最安値を取得…"
+msgstr "ベストな価格を取得中…"
 
 #: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -970,13 +992,11 @@ msgstr "流動性が不足しているため、取引できません。"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
-msgstr "あなたの取引のためのプールの不十分な流動性"
+msgstr "流動性が不足しているため、取引できません。"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1308,7 +1328,7 @@ msgstr "取引結果は概算です。<0>{0} {1}</0> 以上を買えない場合
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "出力は推定されます。少なくとも {1} を受け取るか、トランザクションが元に戻り {0}。"
+msgstr "取引結果は概算です。{0} {1} 以上を買えない場合は、取引は差し戻されます。"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
@@ -1397,7 +1417,7 @@ msgstr "プールの概要"
 
 #: src/lib/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
-msgstr "ユニスワッププロトコルを搭載"
+msgstr "Uniswapプロトコルによって提供"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1567,7 +1587,7 @@ msgstr "リセット"
 msgid "Return"
 msgstr "戻る"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "スワップを確認する"
 
@@ -2065,14 +2085,13 @@ msgid "Unsupported Assets"
 msgstr "サポートされていないアセット"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "サポートされていないネットワーク-別のネットワークに切り替えて取引します。"
+msgid "Unsupported network - switch to another to trade"
+msgstr "サポートされていないネットワーク-別のネットワークに切り替えて取引する"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "タイトル未設定"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "アンラップ"
@@ -2085,17 +2104,13 @@ msgstr "<0/> から {0} にアンラップ"
 msgid "Unwrap confirmed"
 msgstr "開封確認済み"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "自国通貨をアンラップします。"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "保留中のアンラップ"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "自国通貨の開封。"
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Unwrap {0}"
+msgstr "{0}をアンラップ"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2265,7 +2280,6 @@ msgstr "{0} UNI-V2を引き出し中"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2を引き出しました"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "ラップ"
@@ -2278,17 +2292,13 @@ msgstr "<0/> から {0} にラップ"
 msgid "Wrap confirmed"
 msgstr "ラップが確認されました"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "自国通貨をラップします。"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "ラップ保留中"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "自国通貨のラッピング。"
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Wrap {0}"
+msgstr "ラップ {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

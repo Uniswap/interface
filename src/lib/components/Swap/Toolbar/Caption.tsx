@@ -4,7 +4,6 @@ import Column from 'lib/components/Column'
 import Rule from 'lib/components/Rule'
 import Tooltip from 'lib/components/Tooltip'
 import { loadingCss } from 'lib/css/loading'
-import { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
@@ -33,12 +32,25 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   )
 }
 
+export function Connecting() {
+  return (
+    <Caption
+      icon={InlineSpinner}
+      caption={
+        <Loading>
+          <Trans>Connecting…</Trans>
+        </Loading>
+      }
+    />
+  )
+}
+
 export function ConnectWallet() {
   return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
 
 export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Unsupported network - switch to another to trade.</Trans>} />
+  return <Caption caption={<Trans>Unsupported network - switch to another to trade</Trans>} />
 }
 
 export function InsufficientBalance({ currency }: { currency: Currency }) {
@@ -47,6 +59,10 @@ export function InsufficientBalance({ currency }: { currency: Currency }) {
 
 export function InsufficientLiquidity() {
   return <Caption caption={<Trans>Insufficient liquidity in the pool for your trade</Trans>} />
+}
+
+export function Error() {
+  return <Caption caption={<Trans>Error fetching trade</Trans>} />
 }
 
 export function Empty() {
@@ -66,15 +82,17 @@ export function LoadingTrade() {
   )
 }
 
-export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType: WrapType.UNWRAP | WrapType.WRAP }) {
-  const WrapText = useCallback(() => {
-    if (wrapType === WrapType.WRAP) {
-      return loading ? <Trans>Wrapping native currency.</Trans> : <Trans>Wrap native currency.</Trans>
-    }
-    return loading ? <Trans>Unwrapping native currency.</Trans> : <Trans>Unwrap native currency.</Trans>
-  }, [loading, wrapType])
+export function WrapCurrency({ inputCurrency, outputCurrency }: { inputCurrency: Currency; outputCurrency: Currency }) {
+  const Text = useCallback(
+    () => (
+      <Trans>
+        Convert {inputCurrency.symbol} to {outputCurrency.symbol}
+      </Trans>
+    ),
+    [inputCurrency.symbol, outputCurrency.symbol]
+  )
 
-  return <Caption icon={Info} caption={<WrapText />} />
+  return <Caption icon={Info} caption={<Text />} />
 }
 
 export function Trade({
@@ -84,16 +102,17 @@ export function Trade({
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   outputUSDC?: CurrencyAmount<Currency>
-  impact: PriceImpact
+  impact?: PriceImpact
 }) {
   return (
     <>
-      <Tooltip placement="bottom" icon={impact.warning ? AlertTriangle : Info}>
+      <Tooltip placement="bottom" icon={impact?.warning ? AlertTriangle : Info}>
         <Column gap={0.75}>
-          {impact.warning && (
+          {impact?.warning && (
             <>
               <ThemedText.Caption>
-                The output amount is estimated at {impact.display} less than the input amount due to high price impact
+                The output amount is estimated at {impact.toString()} less than the input amount due to high price
+                impact
               </ThemedText.Caption>
               <Rule />
             </>

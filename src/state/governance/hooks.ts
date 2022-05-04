@@ -5,10 +5,9 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import GovernorAlphaJson from '@uniswap/governance/build/GovernorAlpha.json'
-import UniJson from '@uniswap/governance/build/Uni.json'
+import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
@@ -33,12 +32,9 @@ import {
 } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
-import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
+import { TransactionType } from '../transactions/types'
 import { VoteOption } from './types'
-
-const { abi: GOVERNANCE_ABI } = GovernorAlphaJson
-const { abi: UNI_ABI } = UniJson
 
 function useGovernanceV0Contract(): Contract | null {
   return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ABI, false)
@@ -117,6 +113,7 @@ interface FormattedProposalLog {
 const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0x5ef2c7f0': 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)',
   '0x10f13a8c': 'setText(bytes32,string,string)',
+  '0xb4720477': 'sendMessageToChild(address,bytes)',
 }
 
 /**
@@ -185,7 +182,7 @@ function useFormattedProposalCreatedLogs(
             let types: string
             if (signature === '') {
               const fourbyte = calldata.slice(0, 10)
-              const sig = FOUR_BYTES_DIR[fourbyte]
+              const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
               if (!sig) throw new Error('Missing four byte sig')
               ;[name, types] = sig.substring(0, sig.length - 1).split('(')
               calldata = `0x${calldata.slice(10)}`
@@ -326,7 +323,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== ChainId.MAINNET ||
+    chainId !== SupportedChainId.MAINNET ||
     !uni ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )

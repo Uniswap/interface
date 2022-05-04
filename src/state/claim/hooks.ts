@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import MerkleDistributorJson from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { MERKLE_DISTRIBUTOR_ADDRESS } from 'constants/addresses'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -11,10 +11,8 @@ import { UNI } from '../../constants/tokens'
 import { useContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
-
-const { abi: MERKLE_DISTRIBUTOR_ABI } = MerkleDistributorJson
+import { TransactionType } from '../transactions/types'
 
 function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
