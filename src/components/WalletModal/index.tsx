@@ -314,7 +314,7 @@ export default function WalletModal({
         <HeaderRow color="blue">
           <HoverText
             onClick={() => {
-              setWalletView(WALLET_VIEWS.ACCOUNT)
+              setWalletView(WALLET_VIEWS.OPTIONS)
             }}
           >
             <ArrowLeft />
