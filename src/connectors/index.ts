@@ -53,7 +53,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
 export const connectors: [GnosisSafe | MetaMask | WalletConnect | CoinbaseWallet | Network, Web3ReactHooks][] = [
   [network, networkHooks],
   [gnosisSafe, gnosisSafeHooks],
-  [injected, injectedHooks],
-  [walletConnect, walletConnectHooks],
   [coinbaseWallet, coinbaseWalletHooks],
+  [walletConnect, walletConnectHooks],
+  [injected, injectedHooks],
 ]

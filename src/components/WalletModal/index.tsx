@@ -8,6 +8,7 @@ import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
+import { setWalletOverride } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -131,8 +132,8 @@ export default function WalletModal({
   const { connector, error, hooks } = useWeb3React()
   const isActiveMap = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
-    [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(coinbaseWallet),
-    [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(walletConnect),
+    [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
+    [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(walletConnect),
   }
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
@@ -170,8 +171,10 @@ export default function WalletModal({
     })
 
     connector.activate()
-    if (isActiveMap[getWalletForConnector(connector)]) {
+    const wallet = getWalletForConnector(connector)
+    if (isActiveMap[wallet]) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
+      setWalletOverride({ wallet })
     } else {
       setPendingWallet(connector)
       setWalletView(WALLET_VIEWS.PENDING)
