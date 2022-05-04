@@ -254,7 +254,6 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
   }, [data, oldestTs])
   useEffect(() => {
     return () => {
-      console.log(intervalRef.current)
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
       }
@@ -347,7 +346,9 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           const candles = datas.map(data => {
             return data.candles
           })
-          candlesTemp = [...candles.reduce((p, c) => p.concat(c)), ...candlesTemp].sort((a, b) => a.time - b.time)
+          candlesTemp = [...(candles.length ? candles.reduce((p, c) => p.concat(c)) : []), ...candlesTemp].sort(
+            (a, b) => a.time - b.time,
+          )
           setData(candlesTemp)
 
           fetchingRef.current = false

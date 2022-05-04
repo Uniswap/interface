@@ -207,7 +207,7 @@ function LiveChart({
 
             <Flex>
               <CustomToggle
-                activeName={hasProChart && showProLiveChart ? 'pro' : 'basic'}
+                activeName={hasProChart && (showProLiveChart || error) ? 'pro' : 'basic'}
                 disabled={!hasProChart}
                 toggle={() => {
                   toggleProLiveChart()
@@ -220,7 +220,7 @@ function LiveChart({
               />
             </Flex>
           </Flex>
-          {hasProChart && showProLiveChart ? (
+          {hasProChart && (showProLiveChart || error) ? (
             <ProLiveChartCustom currencies={Object.values(currencies)} stateProChart={stateProChart} />
           ) : (
             <>

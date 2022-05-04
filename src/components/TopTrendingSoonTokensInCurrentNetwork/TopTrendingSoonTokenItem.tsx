@@ -134,6 +134,7 @@ const Container = styled.div`
   position: relative;
   width: calc(20% - 70px);
   min-width: 135px;
+  max-width: 176px;
 `
 
 export default TopTrendingSoonTokenItem
