@@ -303,6 +303,7 @@ export default function WalletModal({
           pendingTransactions={pendingTransactions}
           confirmedTransactions={confirmedTransactions}
           ENSName={ENSName}
+          openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
         />
       )
     }
