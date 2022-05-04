@@ -3,18 +3,20 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { Web3ReactProvider } from '@web3-react/core'
-import { getConnectorForWallet } from 'constants/wallet'
+import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
+import { getConnectorForWallet, Wallet } from 'constants/wallet'
+import usePrevious from 'hooks/usePrevious'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import { useAppSelector } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { setWalletOverride } from 'state/user/reducer'
 
 import Blocklist from './components/Blocklist'
-import { connectors } from './connectors'
+import { coinbaseWallet, connectors, injected, walletConnect } from './connectors'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
@@ -45,6 +47,54 @@ function Updaters() {
   )
 }
 
+const Wrapper2 = () => {
+  const dispatch = useAppDispatch()
+  const { hooks } = useWeb3React()
+
+  const injectedIsActive = hooks.useSelectedIsActive(injected)
+  const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
+  const walletConnectIsActive = hooks.useSelectedIsActive(walletConnect)
+
+  const previousInjectedIsActive = usePrevious(injectedIsActive)
+  const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
+  const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
+
+  useEffect(() => {
+    const isActiveState = new Map<Wallet, any>([
+      [Wallet.INJECTED, [injectedIsActive, previousInjectedIsActive]],
+      [Wallet.COINBASE_WALLET, [coinbaseWalletIsActive, previousCoinbaseWalletIsActive]],
+      [Wallet.WALLET_CONNECT, [walletConnectIsActive, previousWalletConnectIsActive]],
+    ])
+
+    isActiveState.forEach((state: boolean[], wallet: Wallet) => {
+      const [isActive, previousIsActive] = state
+      if (isActive && previousIsActive === false) {
+        dispatch(setWalletOverride({ wallet }))
+      }
+    })
+  }, [
+    dispatch,
+    injectedIsActive,
+    coinbaseWalletIsActive,
+    walletConnectIsActive,
+    previousInjectedIsActive,
+    previousCoinbaseWalletIsActive,
+    previousWalletConnectIsActive,
+  ])
+
+  return (
+    <Blocklist>
+      <BlockNumberProvider>
+        <Updaters />
+        <ThemeProvider>
+          <ThemedGlobalStyle />
+          <App />
+        </ThemeProvider>
+      </BlockNumberProvider>
+    </Blocklist>
+  )
+}
+
 const Wrapper = () => {
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
@@ -52,15 +102,7 @@ const Wrapper = () => {
     <HashRouter>
       <LanguageProvider>
         <Web3ReactProvider connectors={connectors} connectorOverride={connectorOverride}>
-          <Blocklist>
-            <BlockNumberProvider>
-              <Updaters />
-              <ThemeProvider>
-                <ThemedGlobalStyle />
-                <App />
-              </ThemeProvider>
-            </BlockNumberProvider>
-          </Blocklist>
+          <Wrapper2 />
         </Web3ReactProvider>
       </LanguageProvider>
     </HashRouter>
