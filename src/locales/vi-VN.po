@@ -310,16 +310,6 @@ msgstr ""
 msgid "Bug Bounty"
 msgstr ""
 
-#: src/components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem.tsx
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
-msgid "Buy now"
-msgstr ""
-
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
-msgid "Buy on {0}"
-msgstr ""
-
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -1764,10 +1754,6 @@ msgstr ""
 msgid "Search name or paste address"
 msgstr "Tìm kiếm tên hoặc địa chỉ"
 
-#: src/components/TrendingSoonTokenBanner/index.tsx
-msgid "See"
-msgstr ""
-
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Select Max"
 msgstr "Chọn Tối Đa"
@@ -2041,6 +2027,11 @@ msgstr "Sang"
 msgid "To (estimated)"
 msgstr "Sang (ước tính)"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "To be extended"
+msgstr ""
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Token"
 msgstr "Token"
@@ -2283,6 +2274,10 @@ msgstr ""
 #: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "Vesting đã bắt đầu: {0}"
+
+#: src/components/TrendingSoonTokenBanner/index.tsx
+msgid "View"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "View Farms"
@@ -2560,6 +2555,9 @@ msgstr "qua {0}"
 msgid "via {0} token list"
 msgstr "qua danh sách token {0}"
 
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/FilterBar/NetworkSelect.tsx
 msgid "{0}"
 msgstr ""

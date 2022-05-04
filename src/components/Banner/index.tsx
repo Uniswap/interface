@@ -16,6 +16,10 @@ import B2_Desktop from 'assets/banners/banner_2_desktop.png'
 import B2_Tablet from 'assets/banners/banner_2_tablet.png'
 import B2_Mobile from 'assets/banners/banner_2_mobile.png'
 
+import LM_Desktop from 'assets/banners/LM-desktop.png'
+import LM_Tablet from 'assets/banners/LM-tablet.png'
+import LM_Mobile from 'assets/banners/LM-mobile-300dpi.png'
+
 const BannerWrapper = styled(Flex)`
   --swiper-navigation-size: 12px;
 
@@ -90,6 +94,11 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
       img: w >= 768 ? B1_Desktop : w >= 500 ? B1_Tablet : B1_Mobile,
       link:
         'https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------',
+    },
+    {
+      img: w >= 768 ? LM_Desktop : w >= 500 ? LM_Tablet : LM_Mobile,
+      link:
+        'https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=avaxphase2&utm_content=lm#/farms?networkId=43114',
     },
   ]
 

@@ -9,8 +9,7 @@ import { rgba } from 'polished'
 import { Info } from 'react-feather'
 import { ButtonEmpty } from 'components/Button'
 import useTheme from 'hooks/useTheme'
-import { MoneyBag } from 'components/Icons'
-import { formattedNum } from 'utils'
+import { formatNumberWithPrecisionRange, formattedNum } from 'utils'
 import { Link } from 'react-router-dom'
 import { TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
@@ -20,7 +19,8 @@ import { ApplicationModal } from 'state/application/actions'
 import { MouseoverTooltipDesktopOnly } from 'components/Tooltip'
 import { t } from '@lingui/macro'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { ShoppingCart } from 'react-feather'
+import Cart from 'components/Icons/Cart'
+
 const TopTrendingSoonTokenItem = ({
   tokenData,
   top,
@@ -93,30 +93,33 @@ const TopTrendingSoonTokenItem = ({
               <Info size="10px" color={theme.subText} />
             </ButtonEmpty>
           </MouseoverTooltipDesktopOnly>
-          <MouseoverTooltipDesktopOnly text={t`Buy now`} placement="top" width="fit-content">
-            <ButtonEmpty
-              padding="0"
-              as={Link}
-              to={`/swap?inputCurrency=ETH&outputCurrency=${tokenData.platforms.get(currentNetwork)}`}
-              style={{
-                background: rgba(theme.primary, 0.2),
-                minWidth: '20px',
-                minHeight: '20px',
-                width: '20px',
-                height: '20px',
-              }}
-              onClick={() =>
-                mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_CLICKED, { trending_token: tokenData.symbol })
-              }
-            >
-              <ShoppingCart color={theme.primary} size={10} fill={theme.primary} />
-            </ButtonEmpty>
-          </MouseoverTooltipDesktopOnly>
+          {/*<MouseoverTooltipDesktopOnly text={t`Buy now`} placement="top" width="fit-content">*/}
+          <ButtonEmpty
+            padding="0"
+            as={Link}
+            to={`/swap?inputCurrency=ETH&outputCurrency=${tokenData.platforms.get(currentNetwork)}`}
+            style={{
+              background: rgba(theme.primary, 0.2),
+              minWidth: '20px',
+              minHeight: '20px',
+              width: '20px',
+              height: '20px',
+            }}
+            onClick={() =>
+              mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_CLICKED, { trending_token: tokenData.symbol })
+            }
+          >
+            <Cart color={theme.primary} size={12} />
+          </ButtonEmpty>
+          {/*</MouseoverTooltipDesktopOnly>*/}
         </Flex>
         <Flex alignItems="center" justifyContent="space-between">
           <Text fontSize="12px">{formattedNum(tokenData.price.toString(), true)}</Text>
           <Text fontSize="12px" color={tokenData.price_change_percentage_24h >= 0 ? theme.apr : theme.red}>
-            {formattedNum(tokenData.price_change_percentage_24h.toString(), false)}%
+            {tokenData.price_change_percentage_24h >= 1
+              ? formatNumberWithPrecisionRange(tokenData.price_change_percentage_24h, 0, 0)
+              : formatNumberWithPrecisionRange(tokenData.price_change_percentage_24h, 0, 2)}
+            %
           </Text>
         </Flex>
       </Flex>

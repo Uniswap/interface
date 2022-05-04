@@ -190,7 +190,7 @@ export const MATIC_TOKEN_LIST = {
       symbol: 'RIKEN',
       name: 'RIKEN',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/o914JpY.jpg',
+      logoURI: 'https://i.imgur.com/cTLXfWJ.png',
     },
     {
       chainId: 137,

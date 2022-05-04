@@ -159,6 +159,14 @@ export const BTTC_TOKEN_LIST = {
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0x2170Ed0880ac9A755fd29B2688956BD959F933F8/logo.png',
     },
+    {
+      chainId: 199,
+      address: '0x17F235FD5974318E4E2a5e37919a209f7c37A6d1',
+      symbol: 'USDD_t',
+      name: 'Decentralized USD_TRON',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/yCFVBVH.png',
+    },
   ],
   version: {
     major: 0,

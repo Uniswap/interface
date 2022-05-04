@@ -3,11 +3,11 @@ import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
 import { stringify } from 'qs'
 
-import { AMP_HINT } from 'constants/index'
+import { AMP_HINT, TOBE_EXTENDED_FARMING_POOLS } from 'constants/index'
 import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
 import InfoHelper from 'components/InfoHelper'
 import { useFarmsData } from 'state/farms/hooks'
-import { formattedNum } from 'utils'
+import { formattedNum, isAddressString } from 'utils'
 import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import {
   TotalRewardsContainer,
@@ -86,11 +86,17 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         farm.fairLaunchAddress.toLowerCase() === '0xc0601973451d9369252Aee01397c0270CD2Ecd60'.toLowerCase() &&
         chainId === ChainId.MAINNET
 
+      // Keep to be extended farm in active tab
+      const now = +new Date() / 1000
+      const toBeExtendTime = TOBE_EXTENDED_FARMING_POOLS[isAddressString(farm.id)]
+      // only show if it will be ended less than 2 day
+      const tobeExtended = toBeExtendTime && farm.endTime - now < 172800 && farm.endTime < toBeExtendTime
+
       if (farm.rewardPerSeconds) {
         // for active/ended farms
         return (
           currentTimestamp &&
-          (active ? farm.endTime >= currentTimestamp : farm.endTime < currentTimestamp) &&
+          (active ? farm.endTime >= currentTimestamp || tobeExtended : farm.endTime < currentTimestamp) &&
           // search farms
           (debouncedSearchText
             ? farm.token0?.symbol.toLowerCase().includes(debouncedSearchText) ||
@@ -106,7 +112,11 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         // for active/ended farms
         return (
           blockNumber &&
-          (isSipherFarm ? active : active ? farm.endBlock >= blockNumber : farm.endBlock < blockNumber) &&
+          (isSipherFarm
+            ? active
+            : active
+            ? farm.endBlock >= blockNumber || tobeExtended
+            : farm.endBlock < blockNumber) &&
           // search farms
           (debouncedSearchText
             ? farm.token0?.symbol.toLowerCase().includes(debouncedSearchText) ||
