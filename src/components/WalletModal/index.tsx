@@ -12,8 +12,8 @@ import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, network } from '../../connectors'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
+import { coinbaseWallet, injected, network, walletConnect } from '../../connectors'
+import { getWalletForConnector, SUPPORTED_WALLETS, Wallet } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -128,8 +128,12 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
-  const { connector, error } = useWeb3React()
-
+  const { connector, error, hooks } = useWeb3React()
+  const isActiveMap = {
+    [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
+    [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(coinbaseWallet),
+    [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(walletConnect),
+  }
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
@@ -164,10 +168,14 @@ export default function WalletModal({
       action: 'Change Wallet',
       label: name,
     })
-    setPendingWallet(connector) // set wallet for pending view
-    setWalletView(WALLET_VIEWS.PENDING)
 
     connector.activate()
+    if (isActiveMap[getWalletForConnector(connector)]) {
+      setWalletView(WALLET_VIEWS.ACCOUNT)
+    } else {
+      setPendingWallet(connector)
+      setWalletView(WALLET_VIEWS.PENDING)
+    }
   }
 
   // get wallets user can switch too, depending on device/browser
@@ -181,7 +189,7 @@ export default function WalletModal({
         link: option.href,
         header: option.name,
         color: option.color,
-        isActive: option.connector && option.connector === connector,
+        isActive: option.connector === connector,
         key,
         icon: option.iconURL,
       }
