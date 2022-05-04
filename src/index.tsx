@@ -37,6 +37,7 @@ interface ConnectorState {
   isActive: boolean
   previousIsActive: boolean | undefined
   isActivating: boolean
+  previousIsActivating: boolean | undefined
   isEagerlyConnecting: boolean
   setIsEagerlyConnecting(connecting: boolean): void
 }
@@ -67,6 +68,10 @@ const Wrapper2 = () => {
   const coinbaseWalletIsActivating = hooks.useSelectedIsActivating(coinbaseWallet)
   const walletConnectIsActivating = hooks.useSelectedIsActivating(walletConnect)
 
+  const previousInjectedIsActivating = usePrevious(injectedIsActivating)
+  const previousCoinbaseWalletIsActivating = usePrevious(coinbaseWalletIsActivating)
+  const previousWalletConnectIsActivating = usePrevious(walletConnectIsActivating)
+
   const previousInjectedIsActive = usePrevious(injectedIsActive)
   const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
   const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
@@ -89,6 +94,7 @@ const Wrapper2 = () => {
       isActive: injectedIsActive,
       previousIsActive: previousInjectedIsActive,
       isActivating: injectedIsActivating,
+      previousIsActivating: previousInjectedIsActivating,
       isEagerlyConnecting: isInjectedEagerlyConnecting,
       setIsEagerlyConnecting: setIsInjectedEagerlyConnecting,
     }
@@ -96,6 +102,7 @@ const Wrapper2 = () => {
       isActive: coinbaseWalletIsActive,
       previousIsActive: previousCoinbaseWalletIsActive,
       isActivating: coinbaseWalletIsActivating,
+      previousIsActivating: previousCoinbaseWalletIsActivating,
       isEagerlyConnecting: isCoinbaseWalletEagerlyConnecting,
       setIsEagerlyConnecting: setIsCoinbaseWalletEagerlyConnecting,
     }
@@ -103,6 +110,7 @@ const Wrapper2 = () => {
       isActive: walletConnectIsActive,
       previousIsActive: previousWalletConnectIsActive,
       isActivating: walletConnectIsActivating,
+      previousIsActivating: previousWalletConnectIsActivating,
       isEagerlyConnecting: isWalletConnectEagerlyConnecting,
       setIsEagerlyConnecting: setIsWalletConnectEagerlyConnecting,
     }
@@ -113,7 +121,18 @@ const Wrapper2 = () => {
     ])
 
     isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
-      const { isActive, previousIsActive, isActivating, isEagerlyConnecting, setIsEagerlyConnecting } = state
+      const {
+        isActive,
+        previousIsActive,
+        isActivating,
+        previousIsActivating,
+        isEagerlyConnecting,
+        setIsEagerlyConnecting,
+      } = state
+
+      if (isEagerlyConnecting && !isActivating && previousIsActivating) {
+        setIsEagerlyConnecting(false)
+      }
 
       if (isActive === false && previousIsActive === undefined && isActivating) {
         setIsEagerlyConnecting(true)
@@ -138,6 +157,9 @@ const Wrapper2 = () => {
     injectedIsActivating,
     coinbaseWalletIsActivating,
     walletConnectIsActivating,
+    previousInjectedIsActivating,
+    previousCoinbaseWalletIsActivating,
+    previousWalletConnectIsActivating,
     isInjectedEagerlyConnecting,
     isCoinbaseWalletEagerlyConnecting,
     isWalletConnectEagerlyConnecting,
