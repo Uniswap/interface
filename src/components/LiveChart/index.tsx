@@ -19,8 +19,7 @@ import { Trans } from '@lingui/macro'
 import CustomToggle from 'components/Toggle/CustomToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 import ProLiveChart from 'components/TradingViewChart'
-import { Aggregator } from 'utils/aggregator'
-import { searchTokenPair, getHistoryCandleStatus, checkAddressHasData } from 'components/TradingViewChart/datafeed'
+import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
@@ -136,33 +135,14 @@ function LiveChart({
   }, [chartData])
   useEffect(() => {
     setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '' })
-    if (currencies[Field.INPUT] === Currency.ETHER || currencies[Field.OUTPUT] === Currency.ETHER) {
-      const token = (currencies[Field.INPUT] !== Currency.ETHER
-        ? currencies[Field.INPUT]
-        : currencies[Field.OUTPUT]) as Token
 
-      if (token?.address) {
-        searchTokenPair(token.address, chainId)
-          .then((data: any) => {
-            if (data.length > 0 && data[0].id) {
-              setStateProChart(state => {
-                return { ...state, pairAddress: data[0].id }
-              })
-
-              checkAddressHasData(token.address, data[0].id, chainId)
-                .then((ver: any) => {
-                  if (ver) {
-                    setStateProChart(state => {
-                      return { ...state, apiVersion: ver, hasProChart: true }
-                    })
-                  }
-                })
-                .catch(error => console.log(error))
-            }
-          })
-          .catch(error => console.log(error))
-      }
-    }
+    checkPairHasDextoolsData(currencies, chainId)
+      .then((res: any) => {
+        if (res.ver && res.pairAddress) {
+          setStateProChart({ hasProChart: true, pairAddress: res.pairAddress, apiVersion: res.ver })
+        }
+      })
+      .catch(error => console.log(error))
   }, [JSON.stringify(currencies)])
 
   const showingValue = hoverValue ?? (chartData[chartData.length - 1]?.value || 0)

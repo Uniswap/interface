@@ -10,8 +10,10 @@ import {
 } from './charting_library'
 import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, Currency } from '@dynamic-amm/sdk'
+import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
 import { nativeNameFromETH } from 'hooks/useMixpanel'
+import { USDC, USDT, DAI } from 'constants/index'
+import { Field } from 'state/swap/actions'
 
 export const getTimeframeMilliseconds = (timeFrame: LiveDataTimeframeEnum) => {
   switch (timeFrame) {
@@ -79,7 +81,7 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
 } = {
   '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': '0xd75ea151a61d06868e31f8988d28dfe5e9df57b4',
 }
-const LOCALSTORAGE_CHECKED_PAIRS_STR = 'proChartCheckedPairs'
+const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs2'
 
 const fetcherDextools = (url: string) => {
   return fetch(`${DEXTOOLS_API}/${url}`)
@@ -105,52 +107,153 @@ export const getCandlesApi = (
   ts: number,
   span: string = 'month',
   res: string = '15m',
+  sym: string = 'eth',
 ) => {
   return fetcherDextools(
     `${getNetworkString(
       chainId,
-    )}/api/Pancakeswap/history/candles?sym=eth&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${res &&
+    )}/api/Pancakeswap/history/candles?sym=${sym}&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${res &&
       '&res=' + res}`,
   )
 }
-export const checkAddressHasData = async (address: string, pairAddress: string, chainId: ChainId | undefined) => {
-  const cPstr = localStorage.getItem(LOCALSTORAGE_CHECKED_PAIRS_STR)
-  const checkedPairs: any[] = cPstr ? JSON.parse(cPstr) : []
-  let index: number = checkedPairs.findIndex(item => item.address === address)
-  if (index >= 0) {
-    if (checkedPairs[index]?.time > new Date().getTime() - 86400000) {
-      return checkedPairs[index].ver
-    }
-  } else {
-    checkedPairs.push({ address: address, time: new Date().getTime() })
-    index = checkedPairs.length - 1
+const checkIsUSDToken = (chainId: ChainId | undefined, currency: any) => {
+  if (currency === Currency.ETHER || !chainId) {
+    return false
   }
-  const ver = await getHistoryCandleStatus(pairAddress, chainId)
-  if (ver) {
-    const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
-    const { data } = await getCandlesApi(chainId, pairAddress, ver, ts, 'week')
-    if (data?.candles?.length) {
-      checkedPairs[index].ver = ver
-    }
+  const usdTokenAddresses = [
+    USDT[chainId].address.toLowerCase(),
+    USDC[chainId].address.toLowerCase(),
+    DAI[chainId].address.toLowerCase(),
+    '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', //BUSD
+    '0xcd7509b76281223f5b7d3ad5d47f8d7aa5c2b9bf', //USDV Velas
+    '0xdB28719F7f938507dBfe4f0eAe55668903D34a15', //USDT_t BTTC
+    '0xE887512ab8BC60BcC9224e1c3b5Be68E26048B8B', //USDT_e BTTC
+  ]
+  if (usdTokenAddresses.includes(currency.address.toLowerCase())) {
+    return true
   }
-  localStorage.setItem(LOCALSTORAGE_CHECKED_PAIRS_STR, JSON.stringify(checkedPairs))
-  return checkedPairs[index].ver
+  return false
 }
+
+const updateLocalstorageCheckedPair = (key: string, res: { ver: number; pairAddress: string }) => {
+  const cPstr = localStorage.getItem(LOCALSTORAGE_CHECKED_PAIRS)
+  let checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
+    ? JSON.parse(cPstr)
+    : {}
+  checkedPairs[key] = { ...res, time: new Date().getTime() }
+  localStorage.setItem(LOCALSTORAGE_CHECKED_PAIRS, JSON.stringify(checkedPairs))
+}
+
+export const checkPairHasDextoolsData = async (
+  currencies: { [field in Field]?: Currency },
+  chainId: ChainId | undefined,
+): Promise<{ ver: number; pairAddress: string }> => {
+  const [currencyA, currencyB] = Object.values(currencies)
+  const res = { ver: 0, pairAddress: '' }
+  if (!currencyA || !currencyB) return Promise.resolve(res)
+  if (
+    (currencyA === Currency.ETHER && currencyB === Currency.ETHER) ||
+    (checkIsUSDToken(chainId, currencyA) && checkIsUSDToken(chainId, currencyB))
+  ) {
+    return Promise.resolve(res)
+  }
+  const cPstr = localStorage.getItem(LOCALSTORAGE_CHECKED_PAIRS)
+  const checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
+    ? JSON.parse(cPstr)
+    : {}
+  const key: string = [currencyA.symbol, currencyB.symbol, chainId].sort().join('')
+  const checkedPair = checkedPairs[key]
+  if (
+    checkedPair &&
+    checkedPair.ver &&
+    checkedPair.pairAddress &&
+    checkedPair.time > new Date().getTime() - dayTs * 3
+  ) {
+    return Promise.resolve({ ver: checkedPair.ver, pairAddress: checkedPair.pairAddress })
+  }
+  /// ETH pair
+  if (currencyA === Currency.ETHER || currencyB === Currency.ETHER) {
+    const token = (currencyA !== Currency.ETHER ? currencyA : currencyB) as Token
+    if (token?.address) {
+      const data1 = await searchTokenPair(token.address, chainId)
+      if (data1.length > 0 && data1[0].id) {
+        const ver = await getHistoryCandleStatus(data1[0].id, chainId)
+        if (ver) {
+          const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+          const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'week')
+          if (data?.candles?.length) {
+            res.ver = ver
+            res.pairAddress = data1[0].id
+            updateLocalstorageCheckedPair(key, res)
+            return Promise.resolve(res)
+          }
+        }
+      }
+    }
+  }
+  /// USD pair
+  if (checkIsUSDToken(chainId, currencyA) || checkIsUSDToken(chainId, currencyB)) {
+    const token = (checkIsUSDToken(chainId, currencyA) ? currencyB : currencyA) as Token
+    if (token?.address) {
+      const data1 = await searchTokenPair(token.address, chainId)
+      if (data1.length > 0 && data1[0].id) {
+        const ver = await getHistoryCandleStatus(data1[0].id, chainId)
+        if (ver) {
+          const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+          const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'week', '15m', 'usd')
+          if (data?.candles?.length) {
+            res.ver = ver
+            res.pairAddress = data1[0].id
+            updateLocalstorageCheckedPair(key, res)
+            return Promise.resolve(res)
+          }
+        }
+      }
+    }
+  }
+  updateLocalstorageCheckedPair(key, res)
+  return Promise.resolve(res)
+}
+
+// export const checkAddressHasData = async (address: string, pairAddress: string, chainId: ChainId | undefined) => {
+//   const cPstr = localStorage.getItem(LOCALSTORAGE_CHECKED_PAIRS)
+//   const checkedPairs: any[] = cPstr ? JSON.parse(cPstr) : []
+//   let index: number = checkedPairs.findIndex(item => item.address === address)
+//   if (index >= 0) {
+//     if (checkedPairs[index]?.time > new Date().getTime() - 86400000) {
+//       return checkedPairs[index].ver
+//     }
+//   } else {
+//     checkedPairs.push({ address: address, time: new Date().getTime() })
+//     index = checkedPairs.length - 1
+//   }
+//   const ver = await getHistoryCandleStatus(pairAddress, chainId)
+//   if (ver) {
+//     const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+//     const { data } = await getCandlesApi(chainId, pairAddress, ver, ts, 'week')
+//     if (data?.candles?.length) {
+//       checkedPairs[index].ver = ver
+//     }
+//   }
+//   localStorage.setItem(LOCALSTORAGE_CHECKED_PAIRS, JSON.stringify(checkedPairs))
+//   return checkedPairs[index].ver
+// }
 
 export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: string) => {
   const { chainId } = useActiveWeb3React()
+  const isUSDPair = checkIsUSDToken(chainId, currencies[0]) || checkIsUSDToken(chainId, currencies[1])
   const [data, setData] = useState<any[]>([])
   const [oldestTs, setOldestTs] = useState(0)
   const stateRef = useRef<any>({ data, oldestTs })
   const fetchingRef = useRef<boolean>(false)
-  const isReverse = currencies[0] === Currency.ETHER
+  const isReverse = currencies[0] === Currency.ETHER || checkIsUSDToken(chainId, currencies[0])
 
   useEffect(() => {
     stateRef.current = { data, oldestTs }
   }, [data, oldestTs])
 
   const getCandles = async (ts: number, span: string = 'month', res: string = '15m') => {
-    const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res)
+    const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res, isUSDPair ? 'usd' : 'eth')
     return response?.data
   }
 
@@ -165,7 +268,11 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
     ) => {
       try {
         const token = isReverse ? currencies[1] : currencies[0]
-        const ethSymbol = nativeNameFromETH(chainId)
+        const ethSymbol = isUSDPair
+          ? isReverse
+            ? currencies[0].symbol
+            : currencies[1].symbol
+          : nativeNameFromETH(chainId)
         const label = isReverse ? `${ethSymbol}/${token?.symbol}` : `${token?.symbol}/${ethSymbol}`
 
         const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
