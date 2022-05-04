@@ -527,8 +527,10 @@ export default function App() {
           </div> */}
           <BodyWrapper>
             <Popups />
-            <Polling />
-            <SwapVolume />
+            {!isMobile && <> 
+              <Polling />
+              <SwapVolume />
+            </>}
             <TopLevelModals />
             <Switch>  
               <Route exact strict path="/nfts" component={Mint} />
