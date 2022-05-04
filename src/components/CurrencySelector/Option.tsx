@@ -1,36 +1,58 @@
 import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
-import React from 'react'
-import { Pressable } from 'react-native'
+import React, { useMemo } from 'react'
+import { ActivityIndicator, Pressable } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { InlinePriceChart } from 'src/components/PriceChart/InlinePriceChart'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { TextWithFuseMatches } from 'src/components/text/TextWithFuseMatches'
-import { PortfolioBalance, SpotPrice } from 'src/features/dataApi/types'
+import { ChainId } from 'src/constants/chains'
+import { useActiveChainIds } from 'src/features/chains/utils'
+import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import { useSpotPrices } from 'src/features/dataApi/prices'
+import { useActiveAccount } from 'src/features/wallet/hooks'
+import { currencyId } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { Flex } from '../layout'
 
 interface OptionProps {
-  balance?: PortfolioBalance
   currency: Currency
-  currencyPrice?: SpotPrice
   onPress: () => void
   metadataType: 'balance' | 'price'
   matches: Fuse.FuseResult<Currency>['matches']
 }
 
-export function Option({
-  balance,
-  currency,
-  currencyPrice,
-  onPress,
-  matches,
-  metadataType,
-}: OptionProps) {
+export function Option({ currency, onPress, matches, metadataType }: OptionProps) {
   const symbolMatches = matches?.filter((m) => m.key === 'symbol')
   const nameMatches = matches?.filter((m) => m.key === 'name')
+
+  const { balances, loading: balanceLoading } = useAllBalancesByChainId(
+    useActiveAccount()?.address,
+    useActiveChainIds()
+  )
+
+  const balance = useMemo(
+    () => balances[currency.chainId as ChainId]?.[currencyId(currency)],
+    [balances, currency]
+  )
+  const { loading: spotPricesLoading, spotPrices } = useSpotPrices(
+    balanceLoading || balance ? [] : [currency]
+  )
+
+  const currencyPrice = useMemo(
+    () =>
+      balance
+        ? {
+            price: balance.balanceUSD,
+            relativeChange24: balance.relativeChange24,
+          }
+        : spotPrices[currencyId(currency.wrapped)],
+    [currency.wrapped, balance, spotPrices]
+  )
+
+  const loading = balanceLoading || spotPricesLoading
 
   return (
     <Pressable testID={`currency-option-${currency.chainId}-${currency.symbol}`} onPress={onPress}>
@@ -51,7 +73,9 @@ export function Option({
           </Flex>
         </Flex>
         <Flex row justifyContent="flex-end">
-          {metadataType === 'price' ? (
+          {loading ? (
+            <ActivityIndicator size={20} />
+          ) : metadataType === 'price' ? (
             <TokenMetadata
               main={formatUSDPrice(currencyPrice?.price)}
               pre={<InlinePriceChart currency={currency} />}

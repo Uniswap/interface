@@ -11,10 +11,8 @@ import { CurrencySearchResultList } from 'src/components/CurrencySelector/Search
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { Screens, Tabs } from 'src/screens/Screens'
-import { currencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
@@ -51,7 +49,7 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
     selected,
   } = useFilteredCurrencies(currencies)
 
-  const { spotPrices } = useSpotPrices(currencies)
+  // const { spotPrices } = useSpotPrices(currencies)
 
   const { t } = useTranslation()
 
@@ -78,7 +76,7 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
           return (
             <Option
               currency={currency}
-              currencyPrice={spotPrices?.[currencyId(currency.wrapped)]}
+              // currencyPrice={spotPrices?.[currencyId(currency.wrapped)]}
               matches={item.matches}
               metadataType="price"
               onPress={() => onSelectCurrency?.(currency)}

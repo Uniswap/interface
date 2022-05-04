@@ -82,7 +82,7 @@ export const dataApi = createApi({
           from: yesterday,
         })
         // TODO: send a body to avoid url char limit
-        const serializedAddresses = addresses.slice(0, 50).join(',')
+        const serializedAddresses = addresses.join(',')
         return `pricing/historical_by_addresses_v2/${chainId}/${baseQueryOptions['quote-currency']}/${serializedAddresses}/?${q}`
       },
       transformResponse: (response: { data: CovalentHistoricalPrices }, _, args) =>
