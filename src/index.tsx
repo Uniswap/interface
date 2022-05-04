@@ -8,7 +8,7 @@ import { getConnectorForWallet, Wallet } from 'constants/wallet'
 import usePrevious from 'hooks/usePrevious'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
-import { StrictMode, useEffect } from 'react'
+import { StrictMode, useEffect, useReducer } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
@@ -33,6 +33,14 @@ if (!!window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
 }
 
+interface ConnectorState {
+  isActive: boolean
+  previousIsActive: boolean | undefined
+  isActivating: boolean
+  isEagerlyConnecting: boolean
+  setIsEagerlyConnecting(connecting: boolean): void
+}
+
 function Updaters() {
   return (
     <>
@@ -55,21 +63,68 @@ const Wrapper2 = () => {
   const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
   const walletConnectIsActive = hooks.useSelectedIsActive(walletConnect)
 
+  const injectedIsActivating = hooks.useSelectedIsActivating(injected)
+  const coinbaseWalletIsActivating = hooks.useSelectedIsActivating(coinbaseWallet)
+  const walletConnectIsActivating = hooks.useSelectedIsActivating(walletConnect)
+
   const previousInjectedIsActive = usePrevious(injectedIsActive)
   const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
   const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
 
+  const [isInjectedEagerlyConnecting, setIsInjectedEagerlyConnecting] = useReducer(
+    (_state: boolean, action: boolean) => action,
+    false
+  )
+  const [isCoinbaseWalletEagerlyConnecting, setIsCoinbaseWalletEagerlyConnecting] = useReducer(
+    (_state: boolean, action: boolean) => action,
+    false
+  )
+  const [isWalletConnectEagerlyConnecting, setIsWalletConnectEagerlyConnecting] = useReducer(
+    (_state: boolean, action: boolean) => action,
+    false
+  )
+
   useEffect(() => {
-    const isActiveState = new Map<Wallet, any>([
-      [Wallet.INJECTED, [injectedIsActive, previousInjectedIsActive]],
-      [Wallet.COINBASE_WALLET, [coinbaseWalletIsActive, previousCoinbaseWalletIsActive]],
-      [Wallet.WALLET_CONNECT, [walletConnectIsActive, previousWalletConnectIsActive]],
+    const injectedState: ConnectorState = {
+      isActive: injectedIsActive,
+      previousIsActive: previousInjectedIsActive,
+      isActivating: injectedIsActivating,
+      isEagerlyConnecting: isInjectedEagerlyConnecting,
+      setIsEagerlyConnecting: setIsInjectedEagerlyConnecting,
+    }
+    const coinbaseWalletState: ConnectorState = {
+      isActive: coinbaseWalletIsActive,
+      previousIsActive: previousCoinbaseWalletIsActive,
+      isActivating: coinbaseWalletIsActivating,
+      isEagerlyConnecting: isCoinbaseWalletEagerlyConnecting,
+      setIsEagerlyConnecting: setIsCoinbaseWalletEagerlyConnecting,
+    }
+    const walletConnectState: ConnectorState = {
+      isActive: walletConnectIsActive,
+      previousIsActive: previousWalletConnectIsActive,
+      isActivating: walletConnectIsActivating,
+      isEagerlyConnecting: isWalletConnectEagerlyConnecting,
+      setIsEagerlyConnecting: setIsWalletConnectEagerlyConnecting,
+    }
+    const isActiveMap = new Map<Wallet, ConnectorState>([
+      [Wallet.INJECTED, injectedState],
+      [Wallet.COINBASE_WALLET, coinbaseWalletState],
+      [Wallet.WALLET_CONNECT, walletConnectState],
     ])
 
-    isActiveState.forEach((state: boolean[], wallet: Wallet) => {
-      const [isActive, previousIsActive] = state
+    isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
+      const { isActive, previousIsActive, isActivating, isEagerlyConnecting, setIsEagerlyConnecting } = state
+
+      if (isActive === false && previousIsActive === undefined && isActivating) {
+        setIsEagerlyConnecting(true)
+      }
+
       if (isActive && previousIsActive === false) {
-        dispatch(setWalletOverride({ wallet }))
+        if (isEagerlyConnecting) {
+          setIsEagerlyConnecting(false)
+        } else {
+          dispatch(setWalletOverride({ wallet }))
+        }
       }
     })
   }, [
@@ -80,6 +135,15 @@ const Wrapper2 = () => {
     previousInjectedIsActive,
     previousCoinbaseWalletIsActive,
     previousWalletConnectIsActive,
+    injectedIsActivating,
+    coinbaseWalletIsActivating,
+    walletConnectIsActivating,
+    isInjectedEagerlyConnecting,
+    isCoinbaseWalletEagerlyConnecting,
+    isWalletConnectEagerlyConnecting,
+    setIsInjectedEagerlyConnecting,
+    setIsCoinbaseWalletEagerlyConnecting,
+    setIsWalletConnectEagerlyConnecting,
   ])
 
   return (

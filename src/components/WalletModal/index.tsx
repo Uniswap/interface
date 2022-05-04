@@ -175,8 +175,8 @@ export default function WalletModal({
     connector.activate()
     const wallet = getWalletForConnector(connector)
     if (isActiveMap[wallet]) {
-      setWalletView(WALLET_VIEWS.ACCOUNT)
       dispatch(setWalletOverride({ wallet }))
+      setWalletView(WALLET_VIEWS.ACCOUNT)
     } else {
       setPendingWallet(connector)
       setWalletView(WALLET_VIEWS.PENDING)
