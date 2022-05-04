@@ -490,9 +490,11 @@ export default function App() {
       <VideoWrapper style={style} >
       </VideoWrapper>
     )
-  }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
+  }, [])
   const {chainId,account,library} = useWeb3React()
-  
+  const isMobile = React.useMemo(() => {
+    return window.innerWidth <= 768
+  }, [window.innerWidth])
   const GainsPage = (props:any) =>   <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
@@ -510,7 +512,7 @@ export default function App() {
         <AppWrapper>
           {Video}
           <HeaderWrapper>
-          <TopTokenMovers />
+          {!isMobile && <TopTokenMovers />}
 
             <Header />
     
