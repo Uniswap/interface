@@ -134,7 +134,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
               ).toFixed(4),
             max_return_or_low_gas: arbitrary.saveGas ? 'Lowest Gas' : 'Maximum Return',
             trade_qty: arbitrary.inputAmount,
-            amountUSD: amountUSD,
+            trade_amount_usd: amountUSD,
           })
           break
         }
