@@ -13,7 +13,7 @@ import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTim
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { NotificationSeverity } from 'src/features/notifications/types'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -51,8 +51,8 @@ export function DevScreen({ navigation }: any) {
   const onPressShowError = () => {
     dispatch(
       pushNotification({
-        message: 'A scary new error has happened. Be afraid!!',
-        severity: NotificationSeverity.Error,
+        title: 'A scary new error has happened. Be afraid!!',
+        type: AppNotificationType.Default,
       })
     )
   }

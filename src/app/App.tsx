@@ -13,7 +13,7 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { MulticallUpdaters } from 'src/features/multicall'
-import { NotificationBannerWrapper } from 'src/features/notifications/NotificationBanner'
+import { NotificationToastWrapper } from 'src/features/notifications/NotificationToast'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { enableAnalytics } from 'src/features/telemetry'
@@ -47,9 +47,7 @@ export function App() {
                   <DataUpdaters />
                   <BottomSheetModalProvider>
                     <WalletConnectWrapper>
-                      <NotificationBannerWrapper>
-                        <NavStack isDarkMode={isDarkMode} />
-                      </NotificationBannerWrapper>
+                      <NavStack isDarkMode={isDarkMode} />
                     </WalletConnectWrapper>
                   </BottomSheetModalProvider>
                 </WalletContextProvider>
@@ -74,8 +72,10 @@ function DataUpdaters() {
 function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <NavigationContainer>
-      <DrawerNavigator />
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <NotificationToastWrapper>
+        <DrawerNavigator />
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      </NotificationToastWrapper>
     </NavigationContainer>
   )
 }

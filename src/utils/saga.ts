@@ -1,7 +1,7 @@
 import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
 import { call, delay, Effect, put, race, take } from 'redux-saga/effects'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { NotificationSeverity } from 'src/features/notifications/types'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { logger } from 'src/utils/logger'
 import { errorToString } from 'src/utils/validation'
 
@@ -129,9 +129,7 @@ export function createMonitoredSaga<SagaParams = void>(
         const errorMessage = errorToString(error)
         yield put(errorAction(errorMessage))
         if (!options?.suppressErrorNotification) {
-          yield put(
-            pushNotification({ message: errorMessage, severity: NotificationSeverity.Error })
-          )
+          yield put(pushNotification({ title: errorMessage, type: AppNotificationType.Default }))
         }
       }
     }

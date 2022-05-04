@@ -1,8 +1,9 @@
 import { BigNumber, providers } from 'ethers'
 import { appSelect } from 'src/app/hooks'
+import { i18n } from 'src/app/i18n'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { NotificationSeverity } from 'src/features/notifications/types'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { signAndSendTransaction } from 'src/features/transactions/sendTransaction'
 import { updateTransaction } from 'src/features/transactions/slice'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
@@ -66,8 +67,10 @@ export function* attemptReplaceTransaction(
     logger.error('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
     yield* put(
       pushNotification({
-        message: `Unable to ${isCancellation ? 'cancel' : 'replace'} transaction`,
-        severity: NotificationSeverity.Error,
+        title: isCancellation
+          ? i18n.t('Unable to cancel transaction')
+          : i18n.t('Unable to replace transaction'),
+        type: AppNotificationType.Default,
       })
     )
   }

@@ -162,8 +162,6 @@ class WalletConnectAccountServer {
   }
 }
 
-
-
 extension WalletConnectAccountServer: ServerDelegate {
   func server(_ server: Server, didFailToConnect url: WCURL) {
     self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue ])
@@ -204,11 +202,18 @@ extension WalletConnectAccountServer: ServerDelegate {
   
   func server(_ server: Server, didDisconnect session: Session) {
     self.topicToSession.removeValue(forKey: session.url.topic)
-    
+    let icons = session.dAppInfo.peerMeta.icons
+
     self.eventEmitter.sendEvent(withName: EventType.sessionDisconnected.rawValue, body: [
       "session_id": session.url.topic,
       "session_name": session.url.topic,
-      "account": self.account
+      "account": self.account!,
+      "dapp": [
+        "name": session.dAppInfo.peerMeta.name,
+        "url": session.dAppInfo.peerMeta.url.absoluteString,
+        "icon": icons.isEmpty ? "" : icons[0].absoluteString,
+        "chain_id": session.dAppInfo.chainId!
+      ]
     ])
   }
   

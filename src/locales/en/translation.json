@@ -88,6 +88,11 @@
   "Unknown chain": "Unknown chain",
   "1 app connected": "1 app connected",
   "{{numConnections}} apps connected": "{{numConnections}} apps connected",
+  "Connected to {{dappName}}": "Connected to {{dappName}}",
+  "Disconnected from {{dappName}}": "Disconnected from {{dappName}}",
+  "Unable to cancel transaction": "Unable to cancel transaction",
+  "Unable to replace transaction": "Unable to replace transaction",
+  "Error while checking transaction status": "Error while checking transaction status",
   "Please enable your camera.": "Please enable your camera.",
   "Scan code": "Scan code",
   "Scan QR code for Wallet Connect": "Scan QR code for Wallet Connect",
@@ -197,10 +202,5 @@
   "Sell": "Sell",
   "Uniswap Wallet": "Uniswap Wallet",
   "Create New Account": "Create New Account",
-  "Scan code": "Scan code",
-  "Scan QR code for Wallet Connect": "Scan QR code for Wallet Connect",
-  "Show Connected Dapps": "Show Connected Dapps",
-  "{{numConnections}} apps connected": "{{numConnections}} apps connected",
-  "1 app connected": "1 app connected",
   "Unsupported chain": "Unsupported chain"
 }

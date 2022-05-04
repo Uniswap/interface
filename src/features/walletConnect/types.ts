@@ -8,33 +8,30 @@ export enum EthMethod {
 
 export type EthSignMethod = EthMethod.PersonalSign | EthMethod.SignTypedData | EthMethod.EthSign
 
-export type SessionConnectedEvent = {
+interface BaseSessionEvent {
   session_id: string
-  session_name: string
   account: string
   dapp: DappInfo
 }
 
-export type SessionUpdatedEvent = {
-  session_id: string
+export interface SessionConnectedEvent extends BaseSessionEvent {
   session_name: string
-  account: string
-  dapp: DappInfo
 }
 
-export type SessionDisconnectedEvent = {
-  session_id: string
-  account: string
+export interface SessionUpdatedEvent extends BaseSessionEvent {
+  session_name: string
 }
 
-export type DappInfo = {
+export interface SessionDisconnectedEvent extends BaseSessionEvent {}
+
+export interface DappInfo {
   name: string
   url: string
   icon: string
   chain_id: string
 }
 
-export type SignRequestEvent = {
+export interface SignRequestEvent {
   account: string
   type: EthMethod
   message: string
@@ -42,7 +39,7 @@ export type SignRequestEvent = {
   dapp: DappInfo
 }
 
-export type WCError = {
+export interface WCError {
   type: string
   message?: string
 }

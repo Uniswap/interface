@@ -1,11 +1,12 @@
 import { BigNumber, providers } from 'ethers'
 import { appSelect } from 'src/app/hooks'
+import { i18n } from 'src/app/i18n'
 import { getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { TRANSACTION_TIMEOUT_DURATION } from 'src/constants/transactions'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { NotificationSeverity } from 'src/features/notifications/types'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
@@ -104,8 +105,8 @@ export function* watchTransaction(transaction: TransactionDetails) {
     )
     yield* put(
       pushNotification({
-        message: 'Error while checking transaction status',
-        severity: NotificationSeverity.Error,
+        title: i18n.t('Error while checking transaction status'),
+        type: AppNotificationType.Default,
       })
     )
   }

@@ -4,7 +4,10 @@ import { Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { NativeEventEmitter, NativeModules } from 'react-native'
 import { eventChannel } from 'redux-saga'
+import { i18n } from 'src/app/i18n'
 import { getSignerManager } from 'src/app/walletContext'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account } from 'src/features/wallet/accounts/types'
@@ -43,16 +46,40 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           account: req.account,
         })
       )
+      emit(
+        pushNotification({
+          type: AppNotificationType.WalletConnect,
+          title: i18n.t('Connected to {{dappName}}', { dappName: req.dapp.name }),
+          imageUrl: req.dapp.icon,
+          chainId: req.dapp.chain_id,
+        })
+      )
     }
 
     const sessionUpdatedHandler = (req: SessionUpdatedEvent) => {
       emit(
         updateSession({ wcSession: { id: req.session_id, dapp: req.dapp }, account: req.account })
       )
+      emit(
+        pushNotification({
+          type: AppNotificationType.WalletConnect,
+          title: i18n.t('Connected to {{dappName}}', { dappName: req.dapp.name }),
+          imageUrl: req.dapp.icon,
+          chainId: req.dapp.chain_id,
+        })
+      )
     }
 
     const sessionDisconnectedHandler = (req: SessionDisconnectedEvent) => {
       emit(removeSession({ sessionId: req.session_id, account: req.account }))
+      emit(
+        pushNotification({
+          type: AppNotificationType.WalletConnect,
+          title: i18n.t('Disconnected from {{dappName}}', { dappName: req.dapp.name }),
+          imageUrl: req.dapp.icon,
+          chainId: req.dapp.chain_id,
+        })
+      )
     }
 
     const signRequestHandler = (req: SignRequestEvent) => {

@@ -60,7 +60,6 @@ export function DappConnectionItem({
         )}
         <Button
           onPress={() => {
-            // TODO handle UX around disconnection (notification? ensure hidden from list?)
             if (activeAccount) disconnectFromApp(wrapped.item.id, activeAccount.address)
           }}>
           <X
