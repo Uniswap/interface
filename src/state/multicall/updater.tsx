@@ -246,5 +246,5 @@ export const Updater = React.memo(() => {
 
   return null
 })
-
+Updater.displayName = 'updater';
 export default Updater;

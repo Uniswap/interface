@@ -1,27 +1,30 @@
 import 'inter-ui'
 import '@reach/dialog/styles.css'
-import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
-import { StrictMode } from 'react'
-import { isMobile } from 'react-device-detect'
+
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
+
+import ThemeProvider, { ThemedGlobalStyle } from './theme'
+import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
+
+import App from './pages/App'
+import ApplicationUpdater from './state/application/updater'
+import Blocklist from './components/Blocklist'
+import { HashRouter } from 'react-router-dom'
+import { LanguageProvider } from './i18n'
+import ListsUpdater from './state/lists/updater'
+import LogsUpdater from './state/logs/updater'
+import { MulticallUpdater } from 'state/multicall/multicall'
+import { NetworkContextName } from './constants/misc'
+import { Provider } from 'react-redux'
+import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
-import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
-import Blocklist from './components/Blocklist'
-import { NetworkContextName } from './constants/misc'
-import { LanguageProvider } from './i18n'
-import App from './pages/App'
-import store from './state'
-import * as serviceWorkerRegistration from './serviceWorkerRegistration'
-import ApplicationUpdater from './state/application/updater'
-import ListsUpdater from './state/lists/updater'
-import MulticallUpdater from './state/multicall/updater'
-import LogsUpdater from './state/logs/updater'
+import { StrictMode } from 'react'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
-import ThemeProvider, { ThemedGlobalStyle } from './theme'
-import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
 import getLibrary from './utils/getLibrary'
+import { isMobile } from 'react-device-detect'
+import store from './state'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -66,7 +69,7 @@ function Updaters() {
 }
 
 ReactDOM.render(
-  <StrictMode>
+  <StrictMode>  
     <Provider store={store}>
       <HashRouter>
         <LanguageProvider>
