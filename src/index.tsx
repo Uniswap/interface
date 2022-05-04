@@ -51,20 +51,6 @@ const Wrapper2 = () => {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
 
-  const walletOverride = useAppSelector((state) => state.user.walletOverride)
-
-  useEffect(() => {
-    if (walletOverride === Wallet.COINBASE_WALLET) {
-      coinbaseWallet.connectEagerly()
-    }
-    if (walletOverride === Wallet.INJECTED) {
-      injected.connectEagerly()
-    }
-    if (walletOverride === Wallet.WALLET_CONNECT) {
-      walletConnect.connectEagerly()
-    }
-  }, [])
-
   const injectedIsActive = hooks.useSelectedIsActive(injected)
   const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
   const walletConnectIsActive = hooks.useSelectedIsActive(walletConnect)
