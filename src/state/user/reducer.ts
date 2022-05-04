@@ -70,7 +70,7 @@ export interface UserState {
 
   showDonationLink: boolean
 
-  walletOverride: Wallet | undefined
+  walletOverride: Wallet | null
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -93,7 +93,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   showSurveyPopup: undefined,
   showDonationLink: true,
-  walletOverride: undefined,
+  walletOverride: null,
 }
 
 export default createReducer(initialState, (builder) =>

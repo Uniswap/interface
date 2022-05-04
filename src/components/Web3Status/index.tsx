@@ -194,7 +194,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { isActive, account } = useWeb3React()
+  const { account } = useWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -211,9 +211,7 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      {isActive && (
-        <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-      )}
+      <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )
 }

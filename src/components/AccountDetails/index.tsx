@@ -9,7 +9,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected } from '../../connectors'
-import { getWalletForConnector, SUPPORTED_WALLETS } from '../../constants/wallet'
+import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
@@ -266,8 +266,8 @@ export default function AccountDetails({
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                     onClick={() => {
+                      dispatch(setWalletOverride({ wallet: null }))
                       connector.deactivate()
-                      dispatch(setWalletOverride({ wallet: getWalletForConnector(connector) }))
                     }}
                   >
                     <Trans>Disconnect</Trans>

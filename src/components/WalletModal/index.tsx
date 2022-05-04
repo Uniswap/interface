@@ -12,7 +12,7 @@ import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected } from '../../connectors'
+import { injected, network } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
@@ -138,13 +138,18 @@ export default function WalletModal({
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
 
-  // close modal when a connection is successful
   const connectorPrevious = usePrevious(connector)
   useEffect(() => {
     if (walletModalOpen && connector && connector !== connectorPrevious && !error) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [setWalletView, error, connector, walletModalOpen, connectorPrevious])
+
+  useEffect(() => {
+    if (connector === network) {
+      setWalletView(WALLET_VIEWS.OPTIONS)
+    }
+  }, [connector])
 
   const tryActivation = async (connector: Connector) => {
     let name = ''

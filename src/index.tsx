@@ -63,7 +63,7 @@ const Wrapper2 = () => {
     if (walletOverride === Wallet.WALLET_CONNECT) {
       walletConnect.connectEagerly()
     }
-  }, [walletOverride])
+  }, [])
 
   const injectedIsActive = hooks.useSelectedIsActive(injected)
   const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
