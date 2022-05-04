@@ -8,6 +8,7 @@ import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
+import { useAppDispatch } from 'state/hooks'
 import { setWalletOverride } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 
@@ -129,6 +130,7 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
+  const dispatch = useAppDispatch()
   const { connector, error, hooks } = useWeb3React()
   const isActiveMap = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
@@ -174,7 +176,7 @@ export default function WalletModal({
     const wallet = getWalletForConnector(connector)
     if (isActiveMap[wallet]) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
-      setWalletOverride({ wallet })
+      dispatch(setWalletOverride({ wallet }))
     } else {
       setPendingWallet(connector)
       setWalletView(WALLET_VIEWS.PENDING)
