@@ -82,6 +82,7 @@ const Wrapper2 = () => {
 
     isActiveState.forEach((state: boolean[], wallet: Wallet) => {
       const [isActive, previousIsActive] = state
+
       if (isActive && previousIsActive === false) {
         dispatch(setWalletOverride({ wallet }))
       }
