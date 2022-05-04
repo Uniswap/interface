@@ -1,14 +1,15 @@
-import { useEffect, useMemo, useRef } from 'react'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useMulticall2Contract } from '../../hooks/useContract'
-import useDebounce from '../../hooks/useDebounce'
-import chunkArray from '../../utils/chunkArray'
-import { retry, RetryableError } from '../../utils/retry'
-import { useBlockNumber } from '../application/hooks'
-import { AppState } from '../index'
+import { Call, parseCallKey } from './utils'
+import React, { useEffect, useMemo, useRef } from 'react'
+import { RetryableError, retry } from '../../utils/retry'
 import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { Call, parseCallKey } from './utils'
+
+import { AppState } from '../index'
+import chunkArray from '../../utils/chunkArray'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useBlockNumber } from '../application/hooks'
+import useDebounce from '../../hooks/useDebounce'
+import { useMulticall2Contract } from '../../hooks/useContract'
 
 const DEFAULT_GAS_REQUIRED = 1_000_000
 
@@ -126,7 +127,7 @@ export function outdatedListeningKeys(
   })
 }
 
-export default function Updater(): null {
+export const Updater = React.memo(() => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.multicall)
   // wait for listeners to settle before triggering updates
@@ -244,4 +245,6 @@ export default function Updater(): null {
   }, [chainId, multicall2Contract, dispatch, serializedOutdatedCallKeys, latestBlockNumber])
 
   return null
-}
+})
+
+export default Updater;

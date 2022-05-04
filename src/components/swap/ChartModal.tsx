@@ -164,6 +164,6 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
             </div>
         </FrameWrapper>
     </Modal>
-}, _.isEqual)
+})
 
 ChartModal.displayName = "CHARTMODAL";

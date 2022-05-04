@@ -344,6 +344,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
             </ProSidebar>
         </Wrapper>
     )
-}, _.isEqual)
+})
 _ChartSidebar.displayName = 'chart.sidebar'
 export const ChartSidebar = _ChartSidebar

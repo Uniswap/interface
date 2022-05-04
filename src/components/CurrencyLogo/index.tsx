@@ -73,8 +73,8 @@ const StyledLogo = styled(Logo)<{ size: string }>`
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />
   }
   
-  if (trending.some((token) => token.address.toLowerCase() === currency?.address.toLowerCase())) {
-    const trender = trending.find((token) => token.address.toLowerCase() === currency?.address?.toLowerCase());
+  if (trending.some((token) => token?.address?.toLowerCase() === currency?.address?.toLowerCase())) {
+    const trender = trending.find((token) => token?.address?.toLowerCase() === currency?.address?.toLowerCase());
     if (trender) return <StyledLogo size={size} srcs={[trender?.image]} alt ={`${trender.name} Logo`} style={style} {...rest} />
   }
 
@@ -94,7 +94,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   return <StyledLogo size={size} srcs={['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt7jQS8Jx_R171pHWK3ffTtXnXKod0bZFoUg&usqp=CAU']} alt={`Vulture logo`} style={style} {...rest} />
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-}, _.isEqual);
+});
 
 CurrencyLogo.displayName = 'CurrencyLogo';
 

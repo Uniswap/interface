@@ -706,7 +706,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
                                 <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
                               ) : (
-                                <Trans>Enable {currencies[Field.INPUT]?.symbol}</Trans>
+                                <>Enable {currencies[Field.INPUT]?.symbol}</>
                               )}
                             </span>
                             {approvalState === ApprovalState.PENDING ? (

@@ -142,11 +142,11 @@ const VideoWrapper = styled.div`
   
 `
 
-const safeTokens = ['0x005d1123878fc55fbd56b54c73963b234a64af3c', WETH9[1].address, '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5']
+const safeTokens = ['0x005d1123878fc55fbd56b54c73963b234a64af3c', WETH9[1]?.address ?? '', '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5']
 export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
 
-    if (!address || safeTokens.includes(address) || safeTokens.some((address => address.toLowerCase() === address.toLowerCase()))) {
+    if (!address || safeTokens.includes(address) || !!address && safeTokens.some((addy =>  !!addy && addy?.toLowerCase() === address?.toLowerCase()))) {
       return Promise.resolve(false);
     }
 

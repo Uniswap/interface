@@ -88,36 +88,36 @@ export const ScrollableRow = styled.div`
 `
 
 const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: number }) => {
-  const token = useToken(tokenData.id.toLowerCase());
+  const token = useToken(tokenData?.id?.toLowerCase());
   const { chainId } = useWeb3React()
   const route = '/selective-charts/' + tokenData.id + '/' + tokenData.symbol + '/' + tokenData.name + '/' + tokenData?.decimals
-  return (
+  return !tokenData?.id ? null : (
     <CardWrapper to={route}>
       <GreyCard padding="3px">
         <RowFixed>
           <AutoColumn gap="3px" style={{ marginLeft: '3px' }}>
             <TYPE.label fontSize="13px">
-
               <div style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <small><Badge style={{ marginRight: "2px" }} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
-
                 <CurrencyLogo style={{ marginRight: "2px" }} currency={(chainId === 1 || !chainId) ? token : tokenData} size="20px" />
                 <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 7 ? 7 : tokenData.symbol.length)} />
                 {!!tokenData?.priceChangeUSD && (
                   <>
-                    {tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp;
+                    {tokenData?.priceChangeUSD < 0 ? 
+                      <ChevronDown color={'red'} /> 
+                      : <ChevronUp color={'green'} />
+                    }&nbsp;
                     {parseFloat(tokenData?.priceChangeUSD).toFixed(2)}%
                   </>
                 )}
               </div>
             </TYPE.label>
-
           </AutoColumn>
         </RowFixed>
       </GreyCard>
     </CardWrapper>
   )
-}, _.isEqual)
+})
 DataCard.displayName = 'DataCard';
 
 
@@ -258,6 +258,6 @@ DataCard.displayName = 'DataCard';
       }
     </DarkGreyCard>
   )
-}, _.isEqual)
+})
 _TopTokenMovers.displayName = 'topMovers'
 export const TopTokenMovers = _TopTokenMovers

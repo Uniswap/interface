@@ -1003,8 +1003,7 @@ export const useCulturePairData = function () {
   
   const { data, loading, error } = useQuery(tokenQuery,
     {
-      pollInterval: 60000,
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-first'
     })
   return { data, loading, error }
 }
@@ -1017,7 +1016,6 @@ export const useTopPairData = function () {
   }, [chainId])
   const { data, loading, error } = useQuery(tokenQuery,
     {
-      pollInterval: 60000,
       fetchPolicy: 'cache-first'
     })
   return { data, loading, error }

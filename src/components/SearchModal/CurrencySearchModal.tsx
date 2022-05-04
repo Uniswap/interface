@@ -1,14 +1,15 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { useCallback, useEffect, useState } from 'react'
-import useLast from '../../hooks/useLast'
-import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
-import Modal from '../Modal'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import { CurrencySearch } from './CurrencySearch'
-import { ImportToken } from './ImportToken'
-import usePrevious from 'hooks/usePrevious'
-import Manage from './Manage'
-import { TokenList } from '@uniswap/token-lists'
 import { ImportList } from './ImportList'
+import { ImportToken } from './ImportToken'
+import Manage from './Manage'
+import Modal from '../Modal'
+import { TokenList } from '@uniswap/token-lists'
+import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
+import useLast from '../../hooks/useLast'
+import usePrevious from 'hooks/usePrevious'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -29,8 +30,8 @@ export enum CurrencyModalView {
   importList,
 }
 
-export default function CurrencySearchModal({
-  isOpen,
+export const  CurrencySearchModal = React.memo((props: CurrencySearchModalProps) => {
+const {  isOpen,
   onDismiss,
   onCurrencySelect,
   selectedCurrency,
@@ -38,8 +39,7 @@ export default function CurrencySearchModal({
   showCommonBases = false,
   showCurrencyAmount = true,
   disableNonToken = false,
-  showOnlyTrumpCoins = false
-}: CurrencySearchModalProps) {
+  showOnlyTrumpCoins = false} = props;
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
 
@@ -74,7 +74,7 @@ export default function CurrencySearchModal({
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
       {modalView === CurrencyModalView.search ? (
         <CurrencySearch
-        showOnlyTrumpCoins={showOnlyTrumpCoins}
+          showOnlyTrumpCoins={showOnlyTrumpCoins}
           isOpen={isOpen}
           onDismiss={onDismiss}
           onCurrencySelect={handleCurrencySelect}
@@ -112,4 +112,6 @@ export default function CurrencySearchModal({
       )}
     </Modal>
   )
-}
+})
+CurrencySearchModal.displayName = 'csm';
+export default CurrencySearchModal;

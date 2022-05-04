@@ -1,5 +1,5 @@
-import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { RowBetween, RowFixed } from '../Row'
 
 import Column from '../Column'
@@ -99,21 +99,20 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
-function CurrencyRow({
-  currency,
-  onSelect,
-  isSelected,
-  otherSelected,
-  style,
-  showCurrencyAmount,
-}: {
+const CurrencyRow = React.memo((props: {
   currency: Currency
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
   showCurrencyAmount?: boolean
-}) {
+}) =>  {
+  const {  currency,
+    onSelect,
+    isSelected,
+    otherSelected,
+    style,
+    showCurrencyAmount} = props;
   const { account } = useActiveWeb3React()
   const key = currencyKey(currency)
   const selectedTokenList = useCombinedActiveList()
@@ -151,7 +150,7 @@ function CurrencyRow({
       )}
     </MenuItem>
   )
-}
+})
 
 const BREAK_LINE = 'BREAK'
 type BreakLine = typeof BREAK_LINE
@@ -183,19 +182,7 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
     </FixedContentRow>
   )
 }
-
-export default function CurrencyList({
-  height,
-  currencies,
-  otherListTokens,
-  selectedCurrency,
-  onCurrencySelect,
-  otherCurrency,
-  fixedListRef,
-  showImportView,
-  setImportToken,
-  showCurrencyAmount,
-}: {
+type CurrrencyListProps = {
   height: number
   currencies: Currency[]
   otherListTokens?: WrappedTokenInfo[]
@@ -206,7 +193,10 @@ export default function CurrencyList({
   showImportView: () => void
   setImportToken: (token: Token) => void
   showCurrencyAmount?: boolean
-}) {
+};
+  
+export const CurrencyList = React.memo((props: CurrrencyListProps) => {
+  const {height,currencies,otherListTokens,selectedCurrency,onCurrencySelect,fixedListRef,showImportView,setImportToken,otherCurrency,showCurrencyAmount} = props;
   const itemData: (Currency | BreakLine)[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
       return [...currencies, BREAK_LINE, ...otherListTokens]
@@ -281,4 +271,7 @@ export default function CurrencyList({
       {Row}
     </FixedSizeList>
   )
-}
+})
+CurrencyList.displayName = 'clist';
+  CurrencyRow.displayName = 'crow';
+export default CurrencyList ;
