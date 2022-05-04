@@ -5,6 +5,7 @@ import {
   clearAllTransactions,
   finalizeTransaction,
   SerializableTransactionReceipt,
+  checkedSubgraph,
 } from './actions'
 
 const now = () => new Date().getTime()
@@ -21,6 +22,7 @@ export interface TransactionDetails {
   confirmedTime?: number
   from: string
   arbitrary: any // To store anything arbitrary, so it has any type
+  needCheckSubgraph?: boolean
 }
 
 export interface TransactionState {
@@ -59,12 +61,20 @@ export default createReducer(initialState, builder =>
         tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
       }
     })
-    .addCase(finalizeTransaction, (transactions, { payload: { hash, chainId, receipt } }) => {
+    .addCase(finalizeTransaction, (transactions, { payload: { hash, chainId, receipt, needCheckSubgraph } }) => {
       const tx = transactions[chainId]?.[hash]
       if (!tx) {
         return
       }
       tx.receipt = receipt
       tx.confirmedTime = now()
+      tx.needCheckSubgraph = needCheckSubgraph
+    })
+    .addCase(checkedSubgraph, (transactions, { payload: { chainId, hash } }) => {
+      const tx = transactions[chainId]?.[hash]
+      if (!tx) {
+        return
+      }
+      tx.needCheckSubgraph = false
     }),
 )
