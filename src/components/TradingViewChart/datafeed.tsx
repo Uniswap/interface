@@ -7,6 +7,7 @@ import {
   PeriodParams,
   HistoryCallback,
   Timezone,
+  SubscribeBarsCallback,
 } from './charting_library'
 import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
@@ -247,11 +248,18 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
   const stateRef = useRef<any>({ data, oldestTs })
   const fetchingRef = useRef<boolean>(false)
   const isReverse = currencies[0] === Currency.ETHER || checkIsUSDToken(chainId, currencies[0])
-
+  const intervalRef = useRef<any>()
   useEffect(() => {
     stateRef.current = { data, oldestTs }
   }, [data, oldestTs])
-
+  useEffect(() => {
+    return () => {
+      console.log(intervalRef.current)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [])
   const getCandles = async (ts: number, span: string = 'month', res: string = '15m') => {
     const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res, isUSDPair ? 'usd' : 'eth')
     return response?.data
@@ -328,9 +336,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           let promisesArray = []
           for (let i = lastTimePoint - 1; i >= fromTimePoint; i--) {
             const ts = i * monthTs
-            //const { candles } = await getCandles(ts)
             promisesArray.push(getCandles(ts))
-            //candlesTemp = [...candles, ...candlesTemp].sort((a, b) => a.time - b.time)
             if (ts < stateRef.current.oldestTs) {
               noData = true
               break
@@ -411,7 +417,30 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
       }
     },
     searchSymbols: () => {},
-    subscribeBars: () => {},
+    subscribeBars: (
+      symbolInfo: LibrarySymbolInfo,
+      resolution: ResolutionString,
+      onTick: SubscribeBarsCallback,
+      listenerGuid: string,
+      onResetCacheNeededCallback: () => void,
+    ) => {
+      intervalRef.current = setInterval(async () => {
+        const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+        const { candles } = await getCandles(ts, 'week', '15m')
+        let lastCandle = candles[candles.length - 1]
+        if (isReverse) {
+          lastCandle = {
+            ...lastCandle,
+            open: 1 / lastCandle.open,
+            close: 1 / lastCandle.close,
+            high: 1 / lastCandle.low,
+            low: 1 / lastCandle.high,
+          }
+        }
+        lastCandle.time = Math.floor(new Date().getTime() / 60000) * 60000
+        onTick(lastCandle)
+      }, 30000)
+    },
     unsubscribeBars: () => {},
   }
 }
