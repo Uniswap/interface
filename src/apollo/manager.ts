@@ -20,7 +20,7 @@ const EXCHANGE_SUBGRAPH_URLS = {
   bscTestnet: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-ropsten'],
   avalanche: [
     // 'https://avalanche-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-avalanche',
-    'https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-avalanche',
+    'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-avalanche',
   ],
   avalancheTestnet: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij'],
   fantom: [

@@ -52,11 +52,7 @@ const avaxTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Apoll
 })
 
 const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? ''
-      : 'https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-avalanche',
-
+  uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-avalanche',
   cache: new InMemoryCache(),
 })
 
