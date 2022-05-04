@@ -11,7 +11,7 @@ import { checkedTransaction, finalizeTransaction, checkedSubgraph } from './acti
 import { AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC } from 'constants/index'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { TRANSACTION_SWAP_AMOUNTUSD } from 'apollo/queries'
+import { TRANSACTION_SWAP_AMOUNT_USD } from 'apollo/queries'
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -190,7 +190,7 @@ export default function Updater(): null {
         if (transaction.type === 'Swap') {
           apolloClient
             .query({
-              query: TRANSACTION_SWAP_AMOUNTUSD,
+              query: TRANSACTION_SWAP_AMOUNT_USD,
               variables: {
                 transactionHash: hash,
               },
