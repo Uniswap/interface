@@ -11,7 +11,7 @@ jobs:
     name: iOS
     runs-on: macos-latest
     # TODO matrix across APIs, at least 11 and 15 (lowest to highest)
-    timeout-minutes: 50
+    timeout-minutes: 60
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
