@@ -1,4 +1,4 @@
-import { ChainId, TokenAmount } from '@dynamic-amm/sdk'
+import { TokenAmount } from '@dynamic-amm/sdk'
 import { CLAIM_REWARDS_DATA_URL, KNC } from 'constants/index'
 import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
