@@ -14,7 +14,6 @@ import { useDatafeed } from './datafeed'
 const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
   margin-top: 10px;
   height: ${isMobile ? '60vh' : 'calc(100% - 0px)'};
-  width: 100%;
   border-radius: 10px;
   ${({ theme }) => `border: 1px solid ${theme.background};`}
   overflow: hidden;
@@ -52,7 +51,8 @@ const MobileChart = styled.div<{ fullscreen: boolean; loading: boolean }>`
   position: fixed;
   z-index: 100000;
   bottom: 0;
-  ${({ fullscreen }) => fullscreen && `height:calc(100vh - 65px);`}
+
+  ${({ fullscreen }) => (fullscreen ? 'height:calc(100vh - 65px);' : 'padding-top: 10px;')}
   ${({ loading }) => `display:${loading ? 'none' : 'block'}`}
 `
 
