@@ -93,14 +93,15 @@ export default function useClaimReward() {
     if (rewardContract && chainId && account && library && data && userRewards[phaseId]) {
       setAttemptingTxn(true)
       //execute isValidClaim method to pre-check
+      const userReward = userRewards[phaseId]
       rewardContract
         .isValidClaim(
-          data.phaseId,
-          userRewards[phaseId].index,
+          userReward.phaseId,
+          userReward.reward.index,
           account,
-          data.tokens,
-          userRewards[phaseId].amounts,
-          userRewards[phaseId].proof,
+          userReward.tokens,
+          userReward.reward.amounts,
+          userReward.reward.proof,
         )
         .then((res: any) => {
           if (res) {
@@ -112,18 +113,19 @@ export default function useClaimReward() {
         .then((res: any) => {
           if (res) {
             if (
-              !BigNumber.from(userRewards[phaseId].amounts[0])
+              res.length === 0 ||
+              !BigNumber.from(userReward.reward.amounts[0])
                 .sub(BigNumber.from(res[0]))
                 .isZero()
             ) {
               //if amount available for claim, execute claim method
               return rewardContract.claim(
-                data.phaseId,
-                userRewards[phaseId].index,
+                userReward.phaseId,
+                userReward.reward.index,
                 account,
-                data.tokens,
-                userRewards[phaseId].amounts,
-                userRewards[phaseId].proof,
+                userReward.tokens,
+                userReward.reward.amounts,
+                userReward.reward.proof,
               )
             } else {
               setRewardAmounts('0')
