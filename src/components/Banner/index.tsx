@@ -65,6 +65,12 @@ const Wrapper = styled.div`
   img {
     border-radius: 8px;
   }
+  @media screen and (min-width: 1100px) {
+    max-width: 1226px;
+  }
+  @media screen and (min-width: 1440px) {
+    max-width: 1394px;
+  }
 `
 
 const Close = styled(X)`
