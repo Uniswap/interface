@@ -534,6 +534,7 @@ export default function App() {
             <TopLevelModals />
             <Switch>  
               <Route exact strict path="/nfts" component={Mint} />
+              <Route exact strict path="/nfts/mint/:referrer" component={Mint} />
               <Route exact strict path="/reflections" component={LifetimeReflections} />
               <Route exact strict path="/details" component={AccountPage} />
               <Route exact strict path="/details/:account" component={AccountPageWithAccount} />

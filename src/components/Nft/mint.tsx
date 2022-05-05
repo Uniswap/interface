@@ -10,6 +10,7 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useKibaNFTContract } from 'hooks/useContract'
+import { useParams } from 'react-router-dom'
 import useTheme from 'hooks/useTheme'
 
 const CardWrapper = styled.div`
@@ -56,7 +57,9 @@ export const Mint: React.FC<any> = () => {
     const theme = useTheme()
     const { account, library } = useActiveWeb3React()
     const kibaNftContract = useKibaNFTContract()
+    const params = useParams<{referrer: string}>()
 
+    
     //state
     const [hasEnoughTokensForEarlyMint, setHasEnoughTokensForEarlyMint] = React.useState(false)
     const [amountToMint, setAmountToMint] = React.useState(0)
@@ -96,6 +99,9 @@ export const Mint: React.FC<any> = () => {
         return false;
     }, [isMintingLive, amountToMint])
 
+    const referrerText = React.useMemo(() => {
+        return !params.referrer ? null : <>Referral Address <Badge>{params.referrer}</Badge></>
+    },[params.referrer])
     //callbacks
     const mintAmount = React.useCallback(async (amount: number) => {
         if (account && amount) {
@@ -103,7 +109,8 @@ export const Mint: React.FC<any> = () => {
                 from: account,
                 to: kibaNftContract.address,
                 amount,
-                data: amount.toString()
+                data: amount.toString(),
+                referrer: params && params.referrer ? params.referrer : 0
             }
 
             console.log(`sample mint tx`, tx)
@@ -165,6 +172,8 @@ export const Mint: React.FC<any> = () => {
                     )}
 
                     {activeTab === 'mint' && (
+                        <>
+                        {referrerText}
                         <div style={{ padding: window.innerWidth <= 768 ? 0 : `9px 14px`, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexFlow: 'column wrap', gap: 5 }}>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                                 <Badge style={{ marginRight: window.innerWidth <= 768 ? 20 : 15 }}>Amount to Mint </Badge>
@@ -190,7 +199,8 @@ export const Mint: React.FC<any> = () => {
                                     MINT
                                 </ButtonPrimary>
                             </div>
-                        </div>)}
+                        </div>
+                        </>)}
 
                 </CardWrapper>
             </ConfirmOrLoadingWrapper>
