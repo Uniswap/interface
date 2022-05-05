@@ -81,7 +81,20 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
   [key: string]: string
 } = {
   '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': '0xd75ea151a61d06868e31f8988d28dfe5e9df57b4',
+  '0x6b175474e89094c44da98b954eedeac495271d0f': '0x74c99f3f5331676f6aec2756e1f39b4fc029a83e',
+  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': '0x74c99f3f5331676f6aec2756e1f39b4fc029a83e',
+  '0x1c954e8fe737f99f68fa1ccda3e51ebdb291948c': 'nodata',
+  '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063': '0xa374094527e1673a86de625aa59517c5de346d32',
+  '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3': '0xd99c7f6c65857ac913a8f880a4cb84032ab2fc5b',
+  '0xd586e7f844cea2f87f50152665bcbc2c279d8d70': '0xa389f9430876455c36478deea9769b7ca4e3ddb1',
+  '0xc7198437980c041c805a1edcba50c1ce5db95118': '0xa389f9430876455c36478deea9769b7ca4e3ddb1',
+  '0x19860ccb0a68fd4213ab9d8266f7bbf05a8dde98': '0xa389f9430876455c36478deea9769b7ca4e3ddb1',
+  '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e': '0xadc8ad9d3d62b1af72e5ce0ec767465f313513dd',
+  '0x049d68029688eabf473097a2fc38ef61633a3c7a': '0xadc8ad9d3d62b1af72e5ce0ec767465f313513dd',
+  '0x41e3df7f716ab5af28c1497b354d79342923196a': '0xadc8ad9d3d62b1af72e5ce0ec767465f313513dd',
+  '0xf2001b145b43032aaf5ee2884e456ccd805f677d': '0xa68466208f1a3eb21650320d2520ee8eba5ba623',
 }
+//TODO CHANGE THIS BACK TO proChartCheckedPairs
 const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs2'
 
 const fetcherDextools = (url: string) => {
@@ -125,12 +138,12 @@ const checkIsUSDToken = (chainId: ChainId | undefined, currency: any) => {
     USDT[chainId].address.toLowerCase(),
     USDC[chainId].address.toLowerCase(),
     DAI[chainId].address.toLowerCase(),
-    '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', //BUSD
+    '0xe9e7cea3dedca5984780bafc599bd69add087d56', //BUSD
     '0xcd7509b76281223f5b7d3ad5d47f8d7aa5c2b9bf', //USDV Velas
-    '0xdB28719F7f938507dBfe4f0eAe55668903D34a15', //USDT_t BTTC
-    '0xE887512ab8BC60BcC9224e1c3b5Be68E26048B8B', //USDT_e BTTC
+    '0xdb28719f7f938507dbfe4f0eae55668903d34a15', //USDT_t BTTC
+    '0xe887512ab8bc60bcc9224e1c3b5be68e26048b8b', //USDT_e BTTC
   ]
-  if (usdTokenAddresses.includes(currency.address.toLowerCase())) {
+  if (currency?.address && usdTokenAddresses.includes(currency.address.toLowerCase())) {
     return true
   }
   return false
@@ -191,22 +204,23 @@ export const checkPairHasDextoolsData = async (
         }
       }
     }
-  }
-  /// USD pair
-  if (checkIsUSDToken(chainId, currencyA) || checkIsUSDToken(chainId, currencyB)) {
-    const token = (checkIsUSDToken(chainId, currencyA) ? currencyB : currencyA) as Token
-    if (token?.address) {
-      const data1 = await searchTokenPair(token.address, chainId)
-      if (data1.length > 0 && data1[0].id) {
-        const ver = await getHistoryCandleStatus(data1[0].id, chainId)
-        if (ver) {
-          const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
-          const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'week', '15m', 'usd')
-          if (data?.candles?.length) {
-            res.ver = ver
-            res.pairAddress = data1[0].id
-            updateLocalstorageCheckedPair(key, res)
-            return Promise.resolve(res)
+  } else {
+    /// USD pair
+    if (checkIsUSDToken(chainId, currencyA) || checkIsUSDToken(chainId, currencyB)) {
+      const token = (checkIsUSDToken(chainId, currencyA) ? currencyB : currencyA) as Token
+      if (token?.address) {
+        const data1 = await searchTokenPair(token.address, chainId)
+        if (data1.length > 0 && data1[0].id) {
+          const ver = await getHistoryCandleStatus(data1[0].id, chainId)
+          if (ver) {
+            const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+            const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'week', '15m', 'usd')
+            if (data?.candles?.length) {
+              res.ver = ver
+              res.pairAddress = data1[0].id
+              updateLocalstorageCheckedPair(key, res)
+              return Promise.resolve(res)
+            }
           }
         }
       }
@@ -242,12 +256,20 @@ export const checkPairHasDextoolsData = async (
 
 export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: string) => {
   const { chainId } = useActiveWeb3React()
-  const isUSDPair = checkIsUSDToken(chainId, currencies[0]) || checkIsUSDToken(chainId, currencies[1])
+  const isTokenUSD =
+    (checkIsUSDToken(chainId, currencies[0]) && currencies[1] !== Currency.ETHER) ||
+    (checkIsUSDToken(chainId, currencies[1]) && currencies[0] !== Currency.ETHER)
+  const isEtherUSD =
+    (checkIsUSDToken(chainId, currencies[0]) && currencies[1] === Currency.ETHER) ||
+    (checkIsUSDToken(chainId, currencies[1]) && currencies[0] === Currency.ETHER)
+  const sym = isTokenUSD || isEtherUSD ? 'usd' : 'eth'
   const [data, setData] = useState<any[]>([])
   const [oldestTs, setOldestTs] = useState(0)
   const stateRef = useRef<any>({ data, oldestTs })
   const fetchingRef = useRef<boolean>(false)
-  const isReverse = currencies[0] === Currency.ETHER || checkIsUSDToken(chainId, currencies[0])
+  const isReverse =
+    (!isEtherUSD && (currencies[0] === Currency.ETHER || checkIsUSDToken(chainId, currencies[0]))) ||
+    (isEtherUSD && currencies[1] === Currency.ETHER)
   const intervalRef = useRef<any>()
   useEffect(() => {
     stateRef.current = { data, oldestTs }
@@ -260,7 +282,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
     }
   }, [])
   const getCandles = async (ts: number, span: string = 'month', res: string = '15m') => {
-    const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res, isUSDPair ? 'usd' : 'eth')
+    const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res, sym)
     return response?.data
   }
 
@@ -274,13 +296,10 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
       onResolveErrorCallback: ErrorCallback,
     ) => {
       try {
-        const token = isReverse ? currencies[1] : currencies[0]
-        const ethSymbol = isUSDPair
-          ? isReverse
-            ? currencies[0].symbol
-            : currencies[1].symbol
-          : nativeNameFromETH(chainId)
-        const label = isReverse ? `${ethSymbol}/${token?.symbol}` : `${token?.symbol}/${ethSymbol}`
+        const label1 = currencies[0] === Currency.ETHER ? nativeNameFromETH(chainId) : currencies[0].symbol
+        const label2 = currencies[1] === Currency.ETHER ? nativeNameFromETH(chainId) : currencies[1].symbol
+
+        const label = `${label1}/${label2}`
 
         const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
         const { candles } = await getCandles(ts, 'week')
