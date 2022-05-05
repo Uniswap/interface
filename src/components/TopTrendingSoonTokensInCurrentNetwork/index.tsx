@@ -114,15 +114,10 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
               </ExternalLink>
             </Flex>
             {topTrendingSoonTokens.map((tokenData, index) => (
-              <>
+              <React.Fragment key={index}>
                 {index !== 0 && <div style={{ height: '40px', width: '0px', borderLeft: '1px solid #40505A' }} />}
-                <TopTrendingSoonTokenItem
-                  key={index}
-                  tokenData={tokenData}
-                  top={index}
-                  setSelectedToken={setSelectedToken}
-                />
-              </>
+                <TopTrendingSoonTokenItem tokenData={tokenData} top={index} setSelectedToken={setSelectedToken} />
+              </React.Fragment>
             ))}
           </TrendingSoonTokensContainer>
           <TextNote>
