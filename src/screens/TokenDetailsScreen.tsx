@@ -17,11 +17,13 @@ import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { ElementName } from 'src/features/telemetry/constants'
+import { TokenWarningLevel, useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
   CurrencyField,
   TransactionState,
@@ -74,6 +76,9 @@ export function TokenDetailsScreen({
 
   const theme = useAppTheme()
   const { t } = useTranslation()
+
+  const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } =
+    useTokenWarningLevel(currency)
 
   const onPressBuy = () => {
     const swapFormState: TransactionState = {
@@ -134,6 +139,7 @@ export function TokenDetailsScreen({
             )}
             <Flex flexDirection="row" gap="sm" mx="lg" my="md">
               <PrimaryButton
+                disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
                 flex={1}
                 label={t('Buy')}
                 name={ElementName.BuyToken}
@@ -141,7 +147,7 @@ export function TokenDetailsScreen({
                 onPress={onPressBuy}
               />
               <PrimaryButton
-                disabled={!balance}
+                disabled={!balance || tokenWarningLevel === TokenWarningLevel.BLOCKED}
                 flex={1}
                 label={t('Sell')}
                 name={ElementName.SellToken}
@@ -166,6 +172,14 @@ export function TokenDetailsScreen({
                 onPress={onPressSend}
               />
             </Flex>
+            {tokenWarningLevel && !tokenWarningDismissed && (
+              <Box mx="lg">
+                <TokenWarningCard
+                  tokenWarningLevel={tokenWarningLevel}
+                  onDismiss={warningDismissCallback}
+                />
+              </Box>
+            )}
           </Box>
         </Flex>
       </ScrollView>

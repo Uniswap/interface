@@ -4,7 +4,8 @@ import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import BROKEN_LIST from 'src/constants/tokenLists/broken.tokenlist.json'
-import { UNSUPPORTED_LIST_URLS } from 'src/constants/tokenLists/tokenLists'
+import TOKEN_WARNING_LIST from 'src/constants/tokenLists/testlist.tokenlist.json'
+import { UNI_LIST, UNSUPPORTED_LIST_URLS } from 'src/constants/tokenLists/tokenLists'
 import UNSUPPORTED_TOKEN_LIST from 'src/constants/tokenLists/unsupported.tokenlist.json'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
 import sortByListPriority from 'src/features/tokenLists/utils'
@@ -70,6 +71,7 @@ export function combineMaps(
 // merge tokens contained within lists from urls
 function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainIdToListedTokens {
   const lists = useAllLists()
+
   return useMemo(() => {
     if (!urls) return {}
     return (
@@ -136,6 +138,15 @@ export function useUnsupportedTokenList(): ChainIdToListedTokens {
     [brokenListMap, localUnsupportedListMap, loadedUnsupportedListMap]
   )
 }
+
+export function useTokenWarningList(): ChainIdToListedTokens {
+  return useMemo(() => listToTokenMap(TOKEN_WARNING_LIST), [])
+}
+
+export function useUniswapDefaultList(): ChainIdToListedTokens {
+  return useCombinedTokenMapFromUrls([UNI_LIST])
+}
+
 export function useIsListActive(url: string): boolean {
   const activeListUrls = useActiveListUrls()
   return Boolean(activeListUrls?.includes(url))

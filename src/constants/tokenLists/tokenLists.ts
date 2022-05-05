@@ -1,6 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/lists.ts
 
-const UNI_LIST = 'https://tokens.uniswap.org'
+export const UNI_LIST = 'https://tokens.uniswap.org'
 const AAVE_LIST = 'tokenlist.aave.eth'
 const BA_LIST =
   'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'

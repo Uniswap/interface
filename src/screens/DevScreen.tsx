@@ -14,6 +14,7 @@ import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -22,6 +23,10 @@ export function DevScreen({ navigation }: any) {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.Rinkeby)
+
+  const onPressResetTokenWarnings = () => {
+    dispatch(resetDismissedWarnings())
+  }
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
@@ -94,6 +99,9 @@ export function DevScreen({ navigation }: any) {
           </TextButton>
           <TextButton mt="sm" name="DEBUG_ToggleTestnets" onPress={onPressToggleTestnets}>
             Toggle Testnets
+          </TextButton>
+          <TextButton mt="sm" name="DEBUG_ResetTokenWarnings" onPress={onPressResetTokenWarnings}>
+            Reset Token Warnings
           </TextButton>
           <TextButton mt="sm" name="DEBUG_ShowError" onPress={onPressShowError}>
             Show global error

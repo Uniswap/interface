@@ -54,7 +54,7 @@ export function ToastIcon({ variant }: { variant: ToastVariant }) {
     case ToastVariant.Success:
       return <Checkmark height={23} stroke={color} width={23} />
     case ToastVariant.Failed:
-      return <AlertTriangle height={23} stroke={color} width={23} />
+      return <AlertTriangle color={color} height={23} width={23} />
   }
 }
 

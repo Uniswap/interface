@@ -1,5 +1,6 @@
 // Shares similarities with https://github.com/Uniswap/interface/blob/main/src/state/user/reducer.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import type { RootState } from 'src/app/rootReducer'
 import { DEFAULT_WATCHED_TOKENS } from 'src/constants/watchedTokens'
 import { SerializedPair, SerializedToken } from 'src/features/tokenLists/types'
 
@@ -20,12 +21,18 @@ interface Tokens {
       [key: string]: SerializedPair
     }
   }
+  dismissedWarningTokens: {
+    [chainId: number]: {
+      [address: Address]: boolean
+    }
+  }
 }
 
 const initialState: Tokens = {
   watchedTokens: DEFAULT_WATCHED_TOKENS,
   customTokens: {},
   tokenPairs: {},
+  dismissedWarningTokens: {},
 }
 
 const slice = createSlice({
@@ -72,6 +79,18 @@ const slice = createSlice({
       delete state.customTokens[chainId][pairKey(token1Address, token2Address)]
       delete state.customTokens[chainId][pairKey(token2Address, token1Address)]
     },
+    addDismissedWarningToken: (
+      state,
+      action: PayloadAction<{ address: Address; chainId: number }>
+    ) => {
+      const { chainId, address } = action.payload
+      state.dismissedWarningTokens ||= {}
+      state.dismissedWarningTokens[chainId] ||= {}
+      state.dismissedWarningTokens[chainId][address] = true
+    },
+    resetDismissedWarnings: (state) => {
+      state.dismissedWarningTokens = {}
+    },
     resetTokens: () => initialState,
   },
 })
@@ -84,9 +103,15 @@ export const {
   addTokenPair,
   removeTokenPair,
   resetTokens,
+  addDismissedWarningToken,
+  resetDismissedWarnings,
 } = slice.actions
 
 export const tokensReducer = slice.reducer
+
+// selectors
+export const dismissedWarningTokensSelector = (state: RootState) =>
+  state.tokens.dismissedWarningTokens
 
 function pairKey(token0Address: Address, token1Address: Address) {
   return `${token0Address};${token1Address}`

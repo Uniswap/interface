@@ -5,7 +5,12 @@ import { useMemo } from 'react'
 import { NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
-import { useCombinedActiveList, useUnsupportedTokenList } from 'src/features/tokenLists/hooks'
+import {
+  useCombinedActiveList,
+  useTokenWarningList,
+  useUniswapDefaultList,
+  useUnsupportedTokenList,
+} from 'src/features/tokenLists/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
 import {
@@ -63,6 +68,17 @@ export function useNativeCurrencies(): ChainIdToCurrencyIdToNativeCurrency {
 export function useUnsupportedTokens(): ChainIdToCurrencyIdToToken {
   const unsupportedTokensMap = useUnsupportedTokenList()
   return useTokensFromListedMap(unsupportedTokensMap, false)
+}
+
+export function useWarningTokens(): ChainIdToCurrencyIdToToken {
+  const warningTokensMap = useTokenWarningList()
+  return useTokensFromListedMap(warningTokensMap, false)
+}
+
+// Used for determining risk levels of tokens.
+export function useUniswapDefaultTokens(): ChainIdToCurrencyIdToToken {
+  const uniswapDefaultTokenMap = useUniswapDefaultList()
+  return useTokensFromListedMap(uniswapDefaultTokenMap, false)
 }
 
 export function useIsTokenActive(token: Nullable<Token>): boolean {
