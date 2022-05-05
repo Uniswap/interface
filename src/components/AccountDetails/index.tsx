@@ -265,7 +265,7 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== coinbaseWallet && (
+                  {connector !== coinbaseWallet && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
