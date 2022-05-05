@@ -1,3 +1,4 @@
+import { providers } from 'ethers'
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { Action } from '@reduxjs/toolkit'
 import { Wallet } from 'ethers'
@@ -18,6 +19,7 @@ import {
   SessionDisconnectedEvent,
   SessionUpdatedEvent,
   SignRequestEvent,
+  SignTransactionEvent,
   WCError,
   WCEventType,
 } from 'src/features/walletConnect/types'
@@ -97,6 +99,30 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
+    const signTransactionHandler = (req: SignTransactionEvent) => {
+      const { to, from, value, data, gas, gas_price: gasPrice, nonce } = req.transaction
+      emit(
+        addRequest({
+          account: req.account,
+          request: {
+            type: req.type as EthMethod.EthSignTransaction,
+            transaction: {
+              to,
+              from,
+              value,
+              data,
+              gas,
+              gasPrice,
+              nonce,
+            },
+            account: req.account,
+            dapp: req.dapp,
+            internalId: req.request_internal_id,
+          },
+        })
+      )
+    }
+
     const errorHandler = (req: WCError) => {
       logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
     }
@@ -106,6 +132,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       { type: WCEventType.SessionUpdated, handler: sessionUpdatedHandler },
       { type: WCEventType.SessionDisconnected, handler: sessionDisconnectedHandler },
       { type: WCEventType.SignRequest, handler: signRequestHandler },
+      { type: WCEventType.SignTransaction, handler: signTransactionHandler },
       { type: WCEventType.Error, handler: errorHandler },
     ]
 
@@ -146,7 +173,14 @@ type SignMessageParams = {
   requestInternalId: string
   message: string
   account: Account
-  method: EthMethod
+  method: EthSignMethod
+}
+
+type SignTransactionParams = {
+  requestInternalId: string
+  transaction: providers.TransactionRequest
+  account: Account
+  method: EthMethod.EthSignTransaction
 }
 
 type EthTypedMessage = {
@@ -155,15 +189,17 @@ type EthTypedMessage = {
   message: Record<string, any>
 }
 
-export function* signWcMessage(params: SignMessageParams) {
-  const { requestInternalId, message, account, method } = params
+export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
+  const { requestInternalId, account, method } = params
   try {
     const signerManager = yield* call(getSignerManager)
     let signature = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
-      signature = yield* call(signMessage, message, account, signerManager)
+      signature = yield* call(signMessage, params.message, account, signerManager)
     } else if (method === EthMethod.SignTypedData) {
-      signature = yield* call(signTypedData, message, account, signerManager)
+      signature = yield* call(signTypedData, params.message, account, signerManager)
+    } else if (method === EthMethod.EthSignTransaction) {
+      signature = yield* call(signTransaction, params.transaction, account, signerManager)
     }
 
     yield* call(sendSignature, requestInternalId, signature, account.address)
@@ -185,6 +221,16 @@ async function signMessage(message: string, account: Account, signerManager: Sig
     signature = await signer.signMessage(message)
   }
 
+  return ensureLeading0x(signature)
+}
+
+async function signTransaction(
+  transaction: providers.TransactionRequest,
+  account: Account,
+  signerManager: SignerManager
+) {
+  const signer = await signerManager.getSignerForAccount(account)
+  const signature = await signer.signTransaction(transaction)
   return ensureLeading0x(signature)
 }
 
@@ -213,7 +259,7 @@ async function signTypedData(message: string, account: Account, signerManager: S
   }
 }
 
-export const { wrappedSaga: signMessageSaga, actions: signMessageActions } = createSaga(
-  signWcMessage,
-  'signMessage'
+export const { wrappedSaga: signWcRequestSaga, actions: signWcRequestActions } = createSaga(
+  signWcRequest,
+  'signWalletConnect'
 )

@@ -1,7 +1,7 @@
 // derived from this list https://docs.walletconnect.com/json-rpc-api-methods/ethereum#eth_signtypeddata
 export enum EthMethod {
   EthSign = 'eth_sign',
-  EthSignTransaction = 'eth_sign_transaction',
+  EthSignTransaction = 'eth_signTransaction',
   SignTypedData = 'eth_signTypedData',
   PersonalSign = 'personal_sign',
 }
@@ -31,6 +31,32 @@ export interface DappInfo {
   chain_id: string
 }
 
+export interface EthTransaction {
+  to: string
+  from: string
+  value: string
+  data: string
+  gas: string
+  gasPrice: string
+  nonce: string
+}
+
+export interface SignTransactionEvent {
+  account: string
+  type: EthMethod.EthSignTransaction
+  transaction: {
+    to: string
+    from: string
+    value: string
+    data: string
+    gas: string
+    gas_price: string
+    nonce: string
+  }
+  request_internal_id: string
+  dapp: DappInfo
+}
+
 export interface SignRequestEvent {
   account: string
   type: EthMethod
@@ -50,4 +76,5 @@ export enum WCEventType {
   SessionDisconnected = 'session_disconnected',
   Error = 'error',
   SignRequest = 'sign_request',
+  SignTransaction = 'sign_transaction',
 }

@@ -26,6 +26,7 @@ class WalletConnectAccountServer {
     self.supportedChainIds = supportedChainIds
     
     self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
+    self.server.register(handler: WalletConnectSignTransactionHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
     self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
   }
   

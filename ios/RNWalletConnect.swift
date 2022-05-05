@@ -11,6 +11,7 @@ import WalletConnectSwift
 enum EthMethod: String {
   case personalSign = "personal_sign"
   case ethSign = "eth_sign"
+  case signTransaction = "eth_signTransaction"
   case switchChain = "wallet_switchEthereumChain"
   case signTypedData = "eth_signTypedData"
 }
@@ -18,6 +19,7 @@ enum EthMethod: String {
 enum EventType: String, CaseIterable {
   case error = "error"
   case signRequest = "sign_request"
+  case signTransaction = "sign_transaction"
   case sessionConnected = "session_connected"
   case sessionUpdated = "session_updated"
   case sessionDisconnected = "session_disconnected"
