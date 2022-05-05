@@ -6,6 +6,7 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useMemo } from 'react'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
 
+import { INT_SECONDS_IN_WEEK } from './../../constants/index'
 import { StakingInfo, useStakingPools } from './hooks'
 
 // Gets the staking info from the network for the active chain id
@@ -31,9 +32,7 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
 
   // tokens per second, constants
   const rewardRates = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'rewardRate')
-
   const periodFinishes = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'periodFinish')
-
   return useMemo(() => {
     if (!chainId || !ube) return []
 
@@ -81,7 +80,6 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
           // check for account, if no account set to 0
           const stakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
           const totalStakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
-          const totalRewardRate = new TokenAmount(rewardToken, JSBI.BigInt(rewardRateState.result?.[0]))
           const nextPeriodRewards = new TokenAmount(ube, poolInfo.nextPeriodRewards?.toString() ?? '0')
 
           const getHypotheticalRewardRate = (
@@ -99,16 +97,20 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
             ]
           }
 
-          const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, [totalRewardRate])
-
           const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
           const periodFinishMs = periodFinishSeconds * 1000
-
           // compare period end timestamp vs current block timestamp (in seconds)
           const active =
             periodFinishSeconds && currentBlockTimestamp
               ? periodFinishSeconds > currentBlockTimestamp.toNumber()
               : false
+
+          const rewardsFinished = Math.floor(Date.now() / 1000) - periodFinishSeconds > INT_SECONDS_IN_WEEK
+          const totalRewardRate = new TokenAmount(
+            rewardToken,
+            rewardsFinished ? JSBI.BigInt(0) : JSBI.BigInt(rewardRateState.result?.[0])
+          )
+          const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, [totalRewardRate])
 
           if (!tokens) {
             return memo
