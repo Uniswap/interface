@@ -155,7 +155,7 @@ export const Mint: React.FC<any> = () => {
                             <Info size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                             <TYPE.body color={theme.text3} textAlign="center">
                                 {account && <div style={{marginBottom:10}}>
-                                    <Trans>Connected Account <Badge>{account}</Badge></Trans>
+                                    <>Connected Account <Badge>{account}</Badge></>
                                 </div>}
                                 <div>
                                     <Trans>Your Minted Kiba Inu NFTs will Appear Here.</Trans>
