@@ -7,7 +7,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (account && window.location.hostname === 'app.uniswap.org') {
+    if (account) {
       const headers = new Headers({ 'Content-Type': 'application/json' })
       fetch('https://screening-worker.uniswap.workers.dev', {
         method: 'POST',
