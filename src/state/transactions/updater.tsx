@@ -197,13 +197,21 @@ export default function Updater(): null {
               fetchPolicy: 'network-only',
             })
             .then(res => {
-              if (res.data?.transaction?.swaps) {
+              if (!!res.data?.transaction?.swaps) {
                 mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
                   arbitrary: transaction.arbitrary,
                   actual_gas: transaction.receipt?.gasUsed || '',
                   amountUSD: Math.max(
                     res.data.transaction.swaps.map((s: any) => parseFloat(s.amountUSD).toPrecision(3)),
                   ),
+                })
+                dispatch(checkedSubgraph({ chainId, hash }))
+              }
+              if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime > 3600000) {
+                mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
+                  arbitrary: transaction.arbitrary,
+                  actual_gas: transaction.receipt?.gasUsed || '',
+                  amountUSD: '',
                 })
                 dispatch(checkedSubgraph({ chainId, hash }))
               }
