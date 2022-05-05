@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@ethersproject/providers'
 import { TokenAmount } from '@dynamic-amm/sdk'
 import { CLAIM_REWARDS_DATA_URL, KNC } from 'constants/index'
 import { BigNumber } from 'ethers'
@@ -7,6 +8,24 @@ import { useAllTransactions, useTransactionAdder } from 'state/transactions/hook
 import useSWR from 'swr'
 import { getClaimRewardContract } from 'utils'
 import { t } from '@lingui/macro'
+
+export interface IReward {
+  index: number
+  amounts: string[]
+  proof: string[]
+}
+export interface IPhaseData {
+  phaseId: number
+  merkleRoot: string
+  tokens: string[]
+  userRewards: { [address: string]: IReward }
+}
+export interface IUserReward {
+  phaseId: number
+  tokens: string[]
+  reward: IReward | undefined
+}
+
 // eslint-disable react-hooks/exhaustive-deps
 export default function useClaimReward() {
   const { chainId, account, library } = useActiveWeb3React()
@@ -21,12 +40,12 @@ export default function useClaimReward() {
   const { data } = useSWR(isValid && chainId ? CLAIM_REWARDS_DATA_URL[chainId] : '', (url: string) =>
     fetch(url).then(r => r.json()),
   )
-  const userRewards: any[] = useMemo(
+  const userRewards: IUserReward[] = useMemo(
     () =>
       (data &&
         Array.isArray(data) &&
         account &&
-        data.map((phase: any) => {
+        data.map((phase: IPhaseData) => {
           return { phaseId: phase.phaseId, tokens: phase.tokens, reward: phase.userRewards[account] }
         })) ||
       [],
@@ -35,7 +54,7 @@ export default function useClaimReward() {
 
   const updateRewardAmounts = useCallback(async () => {
     setRewardAmounts('0')
-    setIsUserHasReward(userRewards && userRewards.some((phase: any) => !!phase.reward))
+    setIsUserHasReward(userRewards && userRewards.some((phase: IUserReward) => !!phase.reward))
     if (rewardContract && chainId && data && account && userRewards.length > 0) {
       for (let i = 0; i < userRewards.length; i++) {
         const phase = userRewards[i]
@@ -65,7 +84,7 @@ export default function useClaimReward() {
 
   const addTransactionWithType = useTransactionAdder()
   const [attemptingTxn, setAttemptingTxn] = useState(false)
-  const [txHash, setTxHash] = useState(undefined)
+  const [txHash, setTxHash] = useState<string | undefined>(undefined)
 
   const allTransactions = useAllTransactions()
   const tx = useMemo(
@@ -97,35 +116,35 @@ export default function useClaimReward() {
       rewardContract
         .isValidClaim(
           userReward.phaseId,
-          userReward.reward.index,
+          userReward.reward?.index,
           account,
           userReward.tokens,
-          userReward.reward.amounts,
-          userReward.reward.proof,
+          userReward.reward?.amounts,
+          userReward.reward?.proof,
         )
-        .then((res: any) => {
+        .then((res: boolean) => {
           if (res) {
             return rewardContract.getClaimedAmounts(data.phaseId || 0, account || '', data?.tokens || [])
           } else {
             throw new Error()
           }
         })
-        .then((res: any) => {
+        .then((res: number[]) => {
           if (res) {
             if (
               res.length === 0 ||
-              !BigNumber.from(userReward.reward.amounts[0])
+              !BigNumber.from(userReward.reward?.amounts[0])
                 .sub(BigNumber.from(res[0]))
                 .isZero()
             ) {
               //if amount available for claim, execute claim method
               return rewardContract.claim(
                 userReward.phaseId,
-                userReward.reward.index,
+                userReward.reward?.index,
                 account,
                 userReward.tokens,
-                userReward.reward.amounts,
-                userReward.reward.proof,
+                userReward.reward?.amounts,
+                userReward.reward?.proof,
               )
             } else {
               setRewardAmounts('0')
@@ -135,7 +154,7 @@ export default function useClaimReward() {
             throw new Error()
           }
         })
-        .then((tx: any) => {
+        .then((tx: TransactionResponse) => {
           setAttemptingTxn(false)
           setTxHash(tx.hash)
           addTransactionWithType(tx, {
