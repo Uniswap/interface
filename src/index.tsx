@@ -56,7 +56,7 @@ function Updaters() {
   )
 }
 
-const Wrapper2 = () => {
+const Web3Wrapper = () => {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
@@ -186,14 +186,14 @@ const Wrapper2 = () => {
   )
 }
 
-const Wrapper = () => {
+const ReduxWrapper = () => {
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
   return (
     <HashRouter>
       <LanguageProvider>
         <Web3ReactProvider connectors={connectors} connectorOverride={connectorOverride}>
-          <Wrapper2 />
+          <Web3Wrapper />
         </Web3ReactProvider>
       </LanguageProvider>
     </HashRouter>
@@ -203,7 +203,7 @@ const Wrapper = () => {
 ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
-      <Wrapper />
+      <ReduxWrapper />
     </Provider>
   </StrictMode>,
   document.getElementById('root')
