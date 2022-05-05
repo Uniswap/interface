@@ -64,6 +64,10 @@ const Wrapper2 = () => {
   const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
   const walletConnectIsActive = hooks.useSelectedIsActive(walletConnect)
 
+  const previousInjectedIsActive = usePrevious(injectedIsActive)
+  const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
+  const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
+
   const injectedIsActivating = hooks.useSelectedIsActivating(injected)
   const coinbaseWalletIsActivating = hooks.useSelectedIsActivating(coinbaseWallet)
   const walletConnectIsActivating = hooks.useSelectedIsActivating(walletConnect)
@@ -71,10 +75,6 @@ const Wrapper2 = () => {
   const previousInjectedIsActivating = usePrevious(injectedIsActivating)
   const previousCoinbaseWalletIsActivating = usePrevious(coinbaseWalletIsActivating)
   const previousWalletConnectIsActivating = usePrevious(walletConnectIsActivating)
-
-  const previousInjectedIsActive = usePrevious(injectedIsActive)
-  const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
-  const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
 
   const [isInjectedEagerlyConnecting, setIsInjectedEagerlyConnecting] = useReducer(
     (_state: boolean, action: boolean) => action,
@@ -130,7 +130,7 @@ const Wrapper2 = () => {
         setIsEagerlyConnecting,
       } = state
 
-      if (isEagerlyConnecting && !isActivating && previousIsActivating) {
+      if (!isActivating && previousIsActivating) {
         setIsEagerlyConnecting(false)
       }
 
