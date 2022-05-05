@@ -16,7 +16,7 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 import Loader from 'components/LocalLoader'
 import CircleInfoIcon from './CircleInfoIcon'
 import { Trans } from '@lingui/macro'
-import CustomToggle from 'components/Toggle/CustomToggle'
+import ProChartToggle from 'components/LiveChart/ProChartToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 import ProLiveChart from 'components/TradingViewChart'
 import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
@@ -206,15 +206,15 @@ function LiveChart({
             </Flex>
 
             <Flex>
-              <CustomToggle
+              <ProChartToggle
                 activeName={hasProChart && (showProLiveChart || error) ? 'pro' : 'basic'}
                 disabled={!hasProChart}
                 toggle={() => {
                   toggleProLiveChart()
                 }}
                 buttons={[
-                  { name: 'basic', title: 'Basic' },
-                  { name: 'pro', title: 'Pro' },
+                  { name: 'basic', title: 'Basic', disabled: error },
+                  { name: 'pro', title: 'Pro', disabled: !hasProChart },
                 ]}
                 bgColor={isMobile ? 'buttonBlack' : 'background'}
               />
@@ -247,9 +247,11 @@ function LiveChart({
                         <Text fontSize={12} color={different >= 0 ? '#31CB9E' : '#FF537B'} marginRight="5px">
                           {different} ({differentPercent}%)
                         </Text>
-                        <Text fontSize={12} color={theme.disableText}>
-                          {getTimeFrameText(timeFrame)}
-                        </Text>
+                        {!hoverValue && (
+                          <Text fontSize={12} color={theme.disableText}>
+                            {getTimeFrameText(timeFrame)}
+                          </Text>
+                        )}
                       </>
                     )}
                   </Flex>

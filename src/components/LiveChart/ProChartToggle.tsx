@@ -4,7 +4,7 @@ import useTheme from 'hooks/useTheme'
 const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement; disable: boolean }>`
   position: absolute;
   transition: all 0.2s ease;
-  background-color: ${({ theme, disable }) => (disable ? theme.buttonGray : theme.primary)};
+  background-color: ${({ theme }) => theme.primary};
   ${({ element }) => `transform: translateX(${element?.offsetLeft || 0}px); width: ${element?.offsetWidth || 48}px;`}
   border-radius: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   height: 100%;
@@ -16,8 +16,7 @@ const ToggleElement = styled.span<{
   isActive?: boolean
   size?: string
   border?: boolean
-  isOff?: boolean
-  disable?: boolean
+  disabled?: boolean
 }>`
   font-size: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   font-weight: 500;
@@ -29,21 +28,20 @@ const ToggleElement = styled.span<{
 
   z-index: 1;
   transition: all 0.2s ease;
-  color: ${({ theme, isActive, isOff, disable }) =>
-    isActive && !isOff && !disable ? theme.textReverse : theme.subText};
+  color: ${({ theme, isActive, disabled }) => (isActive ? theme.text14 : disabled ? theme.buttonGray : theme.subText)};
+  cursor: ${({ disabled }) => (disabled ? 'inherit' : 'pointer')};
   :hover {
-    color: ${({ theme, isActive, disable }) => (isActive && !disable ? theme.white : theme.text2)};
+    color: ${({ theme, isActive, disabled }) => (isActive ? theme.white : disabled ? theme.buttonGray : theme.text2)};
   }
 `
 
-const StyledToggle = styled.button<{ size?: string; border?: boolean; background?: string }>`
+const ToggleWrapper = styled.button<{ size?: string; border?: boolean; background?: string }>`
   position: relative;
   border-radius: ${({ size }) => (size === 'md' ? '18px' : '12px')};
   border: ${({ background, border }) => (border ? `2px solid ${background}` : 'none')};
   background: ${({ background }) => background};
   display: flex;
   width: fit-content;
-  cursor: pointer;
   outline: none;
   padding: 0;
 `
@@ -51,8 +49,9 @@ const StyledToggle = styled.button<{ size?: string; border?: boolean; background
 export interface IToggleButton {
   name: string
   title: string
+  disabled?: boolean
 }
-export interface CustomToggleProps {
+export interface ProChartToggleProps {
   id?: string
   activeName?: string
   buttons?: IToggleButton[]
@@ -63,7 +62,7 @@ export interface CustomToggleProps {
   disabled?: boolean
 }
 
-export default function CustomToggle({
+export default function ProChartToggle({
   id,
   activeName = 'on',
   buttons = [
@@ -75,7 +74,7 @@ export default function CustomToggle({
   border = false,
   bgColor = 'background',
   disabled = false,
-}: CustomToggleProps) {
+}: ProChartToggleProps) {
   const buttonsRef = useRef<any>({})
   const theme = useTheme()
   const [activeElement, setActiveElement] = useState()
@@ -85,7 +84,13 @@ export default function CustomToggle({
   }, [activeName])
 
   return (
-    <StyledToggle id={id} size={size} border={border} background={theme[bgColor]} onClick={toggle}>
+    <ToggleWrapper
+      id={id}
+      size={size}
+      border={border}
+      background={`${theme[bgColor]}${buttons.some((b: any) => b.disabled) ? '20' : ''}`}
+      onClick={toggle}
+    >
       {buttons.map(button => {
         return (
           <ToggleElement
@@ -96,13 +101,13 @@ export default function CustomToggle({
             isActive={activeName === button.name}
             size={size}
             border={border}
-            disable={disabled}
+            disabled={button.disabled}
           >
             {button.title}
           </ToggleElement>
         )
       })}
       <ToggleButton element={activeElement} size={size} disable={disabled} />
-    </StyledToggle>
+    </ToggleWrapper>
   )
 }
