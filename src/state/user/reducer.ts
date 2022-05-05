@@ -53,6 +53,7 @@ export interface UserState {
   showDonationLink: boolean
 
   walletOverride: Wallet | null
+  walletOverrideBackfilled: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -76,6 +77,7 @@ export const initialState: UserState = {
   showSurveyPopup: undefined,
   showDonationLink: true,
   walletOverride: null,
+  walletOverrideBackfilled: false,
 }
 
 const userSlice = createSlice({
@@ -155,6 +157,7 @@ const userSlice = createSlice({
     },
     setWalletOverride(state, { payload: { wallet } }) {
       state.walletOverride = wallet
+      state.walletOverrideBackfilled = true
     },
   },
   extraReducers: (builder) => {

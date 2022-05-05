@@ -59,6 +59,7 @@ function Updaters() {
 const Wrapper2 = () => {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
+  const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
 
   const injectedIsActive = hooks.useSelectedIsActive(injected)
   const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
@@ -141,6 +142,9 @@ const Wrapper2 = () => {
       if (isActive && previousIsActive === false) {
         if (isEagerlyConnecting) {
           setIsEagerlyConnecting(false)
+          if (!walletOverrideBackfilled) {
+            dispatch(setWalletOverride({ wallet }))
+          }
         } else {
           dispatch(setWalletOverride({ wallet }))
         }
@@ -148,6 +152,7 @@ const Wrapper2 = () => {
     })
   }, [
     dispatch,
+    walletOverrideBackfilled,
     injectedIsActive,
     coinbaseWalletIsActive,
     walletConnectIsActive,
