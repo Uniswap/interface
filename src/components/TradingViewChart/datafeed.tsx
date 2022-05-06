@@ -367,20 +367,19 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           }
           formatedCandles.forEach((c: Bar) => {
             let ts = Math.floor(c.time / timeTs)
-            let dayCandle = dayCandles[ts]
-            if (!dayCandle) {
-              dayCandle = {
+            if (!dayCandles[ts]) {
+              dayCandles[ts] = {
                 ...c,
                 time: ts * timeTs,
               }
             } else {
-              dayCandle.volume = (c.volume || 0) + (dayCandle.volume || 0)
-              dayCandle.close = c.close
-              if (dayCandle.high < c.high) {
-                dayCandle.high = c.high
+              dayCandles[ts].volume = (c.volume || 0) + (dayCandles[ts].volume || 0)
+              dayCandles[ts].close = c.close
+              if (dayCandles[ts].high < c.high) {
+                dayCandles[ts].high = c.high
               }
-              if (dayCandle.low > c.low) {
-                dayCandle.low = c.low
+              if (dayCandles[ts].low > c.low) {
+                dayCandles[ts].low = c.low
               }
             }
           })
