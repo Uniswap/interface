@@ -1143,7 +1143,11 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.CRONOS]: [],
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: ['0xa107e6466Be74361840059a11e390200371a7538', '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3'],
+  [ChainId.BTTC]: [
+    '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C',
+    '0xa107e6466Be74361840059a11e390200371a7538',
+    '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
+  ],
   [ChainId.AURORA]: [],
   [ChainId.VELAS]: [],
   [ChainId.OASIS]: [],
