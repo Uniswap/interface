@@ -15,7 +15,7 @@ import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
 import { nativeNameFromETH } from 'hooks/useMixpanel'
 import { USDC, USDT, DAI } from 'constants/index'
 import { Field } from 'state/swap/actions'
-
+import { Bar } from './charting_library'
 const configurationData = {
   supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H', '1D', '1W', '1M'],
 }
@@ -220,9 +220,9 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
     (checkIsUSDToken(chainId, currencies[0]) && currencies[1] === Currency.ETHER) ||
     (checkIsUSDToken(chainId, currencies[1]) && currencies[0] === Currency.ETHER)
   const sym = isTokenUSD || isEtherUSD ? 'usd' : 'eth'
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<Bar[]>([])
   const [oldestTs, setOldestTs] = useState(0)
-  const stateRef = useRef<any>({ data, oldestTs })
+  const stateRef = useRef<{ data: Bar[]; oldestTs: number }>({ data, oldestTs })
   const fetchingRef = useRef<boolean>(false)
   const isReverse =
     (!isEtherUSD && (currencies[0] === Currency.ETHER || checkIsUSDToken(chainId, currencies[0]))) ||
@@ -331,8 +331,8 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
         }
         // }
         let formatedCandles = candlesTemp
-          .filter((c: any) => c.time > from && c.time < to)
-          .map((c: any, i: number, arr: any[]) => {
+          .filter((c: Bar) => c.time > from && c.time < to)
+          .map((c: Bar, i: number, arr: Bar[]) => {
             if (arr[i + 1] && c.close !== arr[i + 1].open) {
               c.close = arr[i + 1].open
               if (c.close > c.high) {
@@ -346,12 +346,12 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           })
 
         if (isReverse) {
-          formatedCandles = formatedCandles.map((c: any) => {
+          formatedCandles = formatedCandles.map((c: Bar) => {
             return { ...c, open: 1 / c.open, close: 1 / c.close, high: 1 / c.low, low: 1 / c.high }
           })
         }
         if (resolution === '1D' || resolution === '1W' || resolution === '1M') {
-          let dayCandles: { [key: number]: any } = {}
+          let dayCandles: { [key: number]: Bar } = {}
           let timeTs = 0
           switch (resolution) {
             case '1D':
@@ -366,21 +366,22 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
             default:
               timeTs = dayTs
           }
-          formatedCandles.forEach((c: any) => {
+          formatedCandles.forEach((c: Bar) => {
             let ts = Math.floor(c.time / timeTs)
-            if (!dayCandles[ts]) {
-              dayCandles[ts] = {
+            let dayCandle = dayCandles[ts]
+            if (!dayCandle) {
+              dayCandle = {
                 ...c,
                 time: ts * timeTs,
               }
             } else {
-              dayCandles[ts].volume += c.volume
-              dayCandles[ts].close = c.close
-              if (dayCandles[ts].high < c.high) {
-                dayCandles[ts].high = c.high
+              dayCandle.volume = (c.volume || 0) + (dayCandle.volume || 0)
+              dayCandle.close = c.close
+              if (dayCandle.high < c.high) {
+                dayCandle.high = c.high
               }
-              if (dayCandles[ts].low > c.low) {
-                dayCandles[ts].low = c.low
+              if (dayCandle.low > c.low) {
+                dayCandle.low = c.low
               }
             }
           })
