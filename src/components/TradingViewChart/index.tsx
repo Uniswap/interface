@@ -138,7 +138,7 @@ function ProLiveChart({
     if (localStorageState) {
       widgetOptions.saved_data = JSON.parse(localStorageState)
     }
-    const tvWidget = new widget(widgetOptions)
+    const tvWidget = new window.TradingView.widget(widgetOptions)
 
     tvWidget.onChartReady(() => {
       tvWidget.applyOverrides({
