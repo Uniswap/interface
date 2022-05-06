@@ -448,7 +448,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
       onResetCacheNeededCallback: () => void,
     ) => {
       if (intervalRef.current) clearInterval(intervalRef.current)
-      intervalRef.current = setInterval(async () => {
+      const getLivePrice = async () => {
         const ts =
           resolution === '1M'
             ? Math.floor(new Date().getTime() / monthTs) * monthTs
@@ -473,39 +473,42 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
             default:
               timeTs = Math.floor(new Date().getTime() / dayTs) * dayTs
           }
-        } else {
-          timeTs = Math.floor(new Date().getTime() / (60000 * parseInt(resolution))) * 60000 * parseInt(resolution)
-        }
-        const closestTs = candles
-          .map((c: any) => c.time)
-          .reduce((prev: any, curr: any) => {
-            return Math.abs(curr - timeTs) < Math.abs(prev - timeTs) ? curr : prev
-          })
-        const inRangeCandles = candles.filter((c: any) => c.time >= closestTs)
-
-        if (inRangeCandles.length > 0) {
-          lastCandle.time = timeTs
-          lastCandle.open = inRangeCandles[0].open
-          lastCandle.close = inRangeCandles[inRangeCandles.length - 1].close
-          lastCandle.high = Math.max(...inRangeCandles.map((c: any) => c.high))
-          lastCandle.low = Math.min(...inRangeCandles.map((c: any) => c.low))
-          lastCandle.volume = inRangeCandles
-            .map((c: any) => c.volume)
-            .reduce((prev: any, c: any) => {
-              return prev + c
+          const closestTs = candles
+            .map((c: any) => c.time)
+            .reduce((prev: any, curr: any) => {
+              return Math.abs(curr - timeTs) < Math.abs(prev - timeTs) ? curr : prev
             })
-          if (isReverse) {
-            lastCandle = {
-              ...lastCandle,
-              open: 1 / lastCandle.open,
-              close: 1 / lastCandle.close,
-              high: 1 / lastCandle.low,
-              low: 1 / lastCandle.high,
-            }
+          const inRangeCandles = candles.filter((c: any) => c.time >= closestTs)
+
+          if (inRangeCandles.length > 0) {
+            lastCandle.time = timeTs
+            lastCandle.open = inRangeCandles[0].open
+            lastCandle.close = inRangeCandles[inRangeCandles.length - 1].close
+            lastCandle.high = Math.max(...inRangeCandles.map((c: any) => c.high))
+            lastCandle.low = Math.min(...inRangeCandles.map((c: any) => c.low))
+            lastCandle.volume = inRangeCandles
+              .map((c: any) => c.volume)
+              .reduce((prev: any, c: any) => {
+                return prev + c
+              })
           }
-          onTick(lastCandle)
+        } else {
+          lastCandle = candles[candles.length - 1]
         }
-      }, 30000)
+        if (isReverse) {
+          lastCandle = {
+            ...lastCandle,
+            open: 1 / lastCandle.open,
+            close: 1 / lastCandle.close,
+            high: 1 / lastCandle.low,
+            low: 1 / lastCandle.high,
+          }
+        }
+        onTick(lastCandle)
+        console.log('🚀 ~ file: datafeed.tsx ~ line 508 ~ getLivePrice ~ lastCandle', lastCandle)
+      }
+      intervalRef.current = setInterval(getLivePrice, 10000)
+      getLivePrice()
     },
     unsubscribeBars: () => {},
   }
