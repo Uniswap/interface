@@ -17,6 +17,7 @@ export const CHAIN_0x_URL: Record<number, string> = {
   [SupportedChainId.MAINNET]: 'https://api.0x.org/swap/v1',
   [SupportedChainId.ROPSTEN]: 'https://ropsten.api.0x.org/swap/v1',
   [SupportedChainId.OPTIMISM]: 'https://optimism.api.0x.org/swap/v1',
+  [SupportedChainId.POLYGON]: 'https://polygon.api.0x.org/swap/v1',
 }
 
 const dynamicBase0xQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (

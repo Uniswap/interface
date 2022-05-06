@@ -62,7 +62,7 @@ import {
   UniswapUtils,
   Weth,
 } from '../abis/types'
-import { UNI, WETH9_EXTENDED } from '../constants/tokens'
+import { UNI, WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 
 // returns null on errors
@@ -110,7 +110,11 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
   const { chainId } = useActiveWeb3React()
-  return useContract<Weth>(chainId ? WETH9_EXTENDED[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
+  return useContract<Weth>(
+    chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
+    WETH_ABI,
+    withSignerIfPossible
+  )
 }
 
 export function useArgentWalletDetectorContract() {

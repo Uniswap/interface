@@ -11,7 +11,7 @@ import {
   LIMIT_ORDER_MANAGER_ADDRESSES,
   V3_CORE_FACTORY_ADDRESSES,
 } from 'constants/addresses'
-import { WETH9_EXTENDED } from 'constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { ReactNode, useMemo } from 'react'
@@ -96,7 +96,7 @@ function useSwapCallArguments(
 
     const value = parsedAmount.currency.isNative ? toHex(parsedAmount.quotient) : toHex('0')
 
-    const weth = WETH9_EXTENDED[chainId]
+    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
 
     const token0: Token = parsedAmount.currency.isToken ? parsedAmount.currency.wrapped : weth
     const token1: Token = priceAmount.quoteCurrency.isToken ? priceAmount.quoteCurrency.wrapped : weth

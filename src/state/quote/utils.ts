@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Ether, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { v2StylePool } from 'state/routing/utils'
 
@@ -19,8 +20,8 @@ export function computeRoutes0x(
 
   if (quoteResult.orders.length === 0) return []
 
-  const parsedCurrencyIn = currencyIn.isNative ? WETH9[currencyIn.chainId] : currencyIn
-  const parsedCurrencyOut = currencyOut.isNative ? WETH9[currencyOut.chainId] : currencyOut
+  const parsedCurrencyIn = currencyIn.isNative ? WRAPPED_NATIVE_CURRENCY[currencyIn.chainId] : currencyIn
+  const parsedCurrencyOut = currencyOut.isNative ? WRAPPED_NATIVE_CURRENCY[currencyOut.chainId] : currencyOut
 
   try {
     return quoteResult.orders.map((order) => {

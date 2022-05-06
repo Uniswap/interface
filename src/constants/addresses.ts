@@ -8,15 +8,23 @@ type AddressMap = { [chainId: number]: string }
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 export const MULTICALL_ADDRESS: AddressMap = {
-  ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [SupportedChainId.OPTIMISTIC_KOVAN]),
-  [SupportedChainId.OPTIMISM]: '0x1F98415757620B543A52E61c46B32eB19261F984',
+  ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.POLYGON_MUMBAI,
+    SupportedChainId.POLYGON,
+  ]),
   [SupportedChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d')
 export const INCH_ROUTER_ADDRESS: AddressMap = {
-  ...constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d', [SupportedChainId.OPTIMISTIC_KOVAN]),
+  ...constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d', [
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    SupportedChainId.POLYGON_MUMBAI,
+    SupportedChainId.POLYGON,
+  ]),
   [SupportedChainId.OPTIMISM]: '0x1111111254760f7ab3f16433eea9304126dcd199',
   [SupportedChainId.ARBITRUM_ONE]: '0x1111111254fb6c44bac0bed2854e76f90643097d',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
@@ -70,12 +78,16 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V3_
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.POLYGON,
 ])
 export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', [
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.POLYGON,
 ])
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
@@ -84,6 +96,8 @@ export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = constructSameA
     SupportedChainId.OPTIMISTIC_KOVAN,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.ARBITRUM_RINKEBY,
+    SupportedChainId.POLYGON_MUMBAI,
+    SupportedChainId.POLYGON,
   ]
 )
 export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
@@ -108,6 +122,7 @@ export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xf10A3841bc1ccEAe1DC162e66e615D2416A3adac',
   [SupportedChainId.ARBITRUM_ONE]: '0x02C282F60FB2f3299458c2B85EB7E303b25fc6F0',
   [SupportedChainId.MAINNET]: '0xD1fDF0144be118C30a53E1d08Cc1E61d600E508e',
+  [SupportedChainId.POLYGON]: '0xD1fDF0144be118C30a53E1d08Cc1E61d600E508e',
 }
 export const KROM_TOKEN_ADDRESSES: AddressMap = {
   [SupportedChainId.KOVAN]: '0x4cEbC301Cd0E8AD64dE6B19576de7dd0B0140a1f',
@@ -116,6 +131,7 @@ export const KROM_TOKEN_ADDRESSES: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0x4f1BB8FD099170714AC6F756966616fCc39ae867',
   [SupportedChainId.ARBITRUM_ONE]: '0x55fF62567f09906A85183b866dF84bf599a4bf70',
   [SupportedChainId.MAINNET]: '0x3af33bef05c2dcb3c7288b77fe1c8d2aeba4d789',
+  [SupportedChainId.POLYGON]: '0x14Af1F2f02DCcB1e43402339099A05a5E363b83c',
 }
 export const UNISWAP_UTILS_ADDRESSES: AddressMap = {
   [SupportedChainId.KOVAN]: '0x9E1E4f041877f1aB604E5B109Cf699545e20E4bC',
@@ -126,4 +142,6 @@ export const KROMATIKA_ROUTER_ADDRESSES: AddressMap = {
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.POLYGON,
 ])
