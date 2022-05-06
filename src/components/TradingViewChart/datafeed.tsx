@@ -74,8 +74,7 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
   '0xd501281565bf7789224523144fe5d98e8b28f267': '0x64ed9711667c9e8923bee32260a55a9b8dbc99d3',
   '0x63a72806098Bd3D9520cC43356dD78afe5D386D9': '0x5944f135e4f1e3fa2e5550d4b5170783868cc4fe',
 }
-//TODO CHANGE THIS BACK TO proChartCheckedPairs
-const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs3'
+const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs'
 
 const fetcherDextools = (url: string) => {
   return fetch(`${DEXTOOLS_API}/${url}`)
@@ -156,7 +155,9 @@ export const checkPairHasDextoolsData = async (
   const checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
     ? JSON.parse(cPstr)
     : {}
-  const key: string = [currencyA.symbol, currencyB.symbol, chainId].sort().join('')
+  const symbolA = currencyA === Currency.ETHER ? nativeNameFromETH(chainId) : currencyA.symbol
+  const symbolB = currencyB === Currency.ETHER ? nativeNameFromETH(chainId) : currencyB.symbol
+  const key: string = [symbolA, symbolB, chainId].sort().join('')
   const checkedPair = checkedPairs[key]
   if (
     checkedPair &&
@@ -459,7 +460,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
         }
         onTick(lastCandle)
       }
-      intervalRef.current = setInterval(getLivePrice, 10000)
+      intervalRef.current = setInterval(getLivePrice, 30000)
       getLivePrice()
     },
     unsubscribeBars: () => {},
