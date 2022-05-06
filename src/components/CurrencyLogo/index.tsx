@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import { SupportedChainId } from 'constants/chains'
 import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
@@ -34,7 +35,7 @@ export const getTokenLogoURL = (
   }
 }
 
-const StyledEthereumLogo = styled.img<{ size: string }>`
+const StyledNativeLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
@@ -79,7 +80,17 @@ export default function CurrencyLogo({
   }, [currency, uriLocations])
 
   if (currency?.isNative) {
-    return <StyledEthereumLogo src={EthereumLogo} alt="ethereum logo" size={size} style={style} {...rest} />
+    let nativeLogoUrl: string
+    switch (currency.chainId) {
+      case SupportedChainId.POLYGON_MUMBAI:
+      case SupportedChainId.POLYGON:
+        nativeLogoUrl = MaticLogo
+        break
+      default:
+        nativeLogoUrl = EthereumLogo
+        break
+    }
+    return <StyledNativeLogo src={nativeLogoUrl} alt="ethereum logo" size={size} style={style} {...rest} />
   }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />

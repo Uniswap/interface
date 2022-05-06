@@ -73,3 +73,4 @@ if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   console.log('Using service worker')
   serviceWorkerRegistration.register()
 }
+export { INFURA_NETWORK_URLS } from './constants/chains'

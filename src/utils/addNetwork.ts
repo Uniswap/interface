@@ -23,8 +23,8 @@ export async function addNetwork({ library, chainId, info }: AddNetworkArguments
         {
           chainId: formattedChainId,
           chainName: info.label,
-          rpcUrls: info.rpcUrls,
-          nativeCurrency: info.nativeCurrency,
+          rpcUrls: [info.addNetworkInfo.rpcUrl],
+          nativeCurrency: info.addNetworkInfo.nativeCurrency,
           blockExplorerUrls: [info.explorer],
         },
       ],

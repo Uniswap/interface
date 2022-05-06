@@ -1,8 +1,9 @@
-import { Currency, CurrencyAmount, Ether, Percent, sqrt, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, Percent, sqrt, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { encodeSqrtRatioX96, FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, TickMath } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { GetSwapInchResult, TokenInRoute } from './types'
 
 /**
@@ -38,8 +39,8 @@ export function computeRoutes(
   if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
   if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
 
-  const parsedCurrencyIn = currencyIn.isNative ? Ether.onChain(currencyIn.chainId) : parsedTokenIn
-  const parsedCurrencyOut = currencyOut.isNative ? Ether.onChain(currencyOut.chainId) : parsedTokenOut
+  const parsedCurrencyIn = currencyIn.isNative ? nativeOnChain(currencyIn.chainId) : parsedTokenIn
+  const parsedCurrencyOut = currencyOut.isNative ? nativeOnChain(currencyOut.chainId) : parsedTokenOut
 
   try {
     // take the first route
@@ -102,7 +103,7 @@ export function v2StylePool(
 const parseToken = ({ address, decimals, symbol, name }: TokenInRoute, chainId: number): Token => {
   return new Token(
     chainId,
-    address == '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' ? WETH9[chainId].address : address,
+    address == '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' ? WRAPPED_NATIVE_CURRENCY[chainId].address : address,
     parseInt(decimals.toString()),
     symbol,
     name

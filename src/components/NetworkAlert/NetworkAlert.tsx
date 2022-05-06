@@ -10,7 +10,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from 'state/user/hooks'
-import { useETHBalances } from 'state/wallet/hooks'
+import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
@@ -215,7 +215,7 @@ export function NetworkAlert(props: NetworkAlertProps) {
   const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
   const [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged] = useOptimismAlphaAlert()
   const [locallyDismissed, setLocallyDimissed] = useState(false)
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
 
   const dismiss = useCallback(() => {
     if (userEthBalance?.greaterThan(0)) {

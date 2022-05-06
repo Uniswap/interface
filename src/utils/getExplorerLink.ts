@@ -8,6 +8,8 @@ const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.KOVAN]: 'kovan.',
   [SupportedChainId.OPTIMISM]: 'optimistic.',
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'kovan-optimistic.',
+  [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
+  [SupportedChainId.POLYGON]: 'https://polygonscan.com',
 }
 
 export enum ExplorerDataType {
@@ -52,7 +54,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] ?? ''}etherscan.io`
+  const prefix = ETHERSCAN_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
