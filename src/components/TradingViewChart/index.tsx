@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { widget, ChartingLibraryWidgetOptions, LanguageCode, ResolutionString, Timezone } from './charting_library'
+import { ChartingLibraryWidgetOptions, LanguageCode, ResolutionString, Timezone } from './charting_library'
 import styled from 'styled-components'
 import AnimatedLoader from 'components/Loader/AnimatedLoader'
 import useTheme from 'hooks/useTheme'
@@ -176,6 +176,7 @@ function ProLiveChart({
         tvWidget.remove()
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme, userLocale, ref, pairAddress])
 
   return (

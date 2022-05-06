@@ -1,4 +1,3 @@
-import { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
 import {
   ResolveCallback,
   ErrorCallback,

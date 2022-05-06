@@ -17120,11 +17120,6 @@ react-style-singleton@^2.1.0:
     invariant "^2.2.4"
     tslib "^1.0.0"
 
-react-tradingview-embed@^3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/react-tradingview-embed/-/react-tradingview-embed-3.0.6.tgz#880c0a9de55b3f3a8ba9738dee96c4cfc89eef3d"
-  integrity sha512-1qClGqBHOi7mvRFvhBxXSoyoPrNR8aPi/yfF/mYt8EWStA8LoWBl9ufemCyG+mc61iPmNGjJla0XB00FPENaPg==
-
 react-transition-group@2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"

@@ -143,6 +143,7 @@ function LiveChart({
         }
       })
       .catch(error => console.log(error))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(currencies)])
 
   const showingValue = hoverValue ?? (chartData[chartData.length - 1]?.value || 0)
