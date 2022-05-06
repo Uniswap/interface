@@ -32,6 +32,7 @@ enum ErrorType: String {
   case wcRejectRequestError = "wc_reject_request_error"
   case wcSendSignatureError = "wc_send_signature_error"
   case wcSwitchChainError = "wc_switch_chain_error"
+  case wcUnsupportedChainError = "wc_unsupported_chain_error"
   case invalidRequestId = "invalid_request_id"
   case invalidAccount = "invalid_account"
 }

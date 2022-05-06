@@ -6,6 +6,26 @@ export enum EthMethod {
   PersonalSign = 'personal_sign',
 }
 
+export enum WCErrorType {
+  InvalidURL = 'wc_invalid_url',
+  DisconnectError = 'wc_disconnect_error',
+  ConnectError = 'wc_connect_error',
+  RejectRequestError = 'wc_reject_request_error',
+  SendSignatureError = 'wc_send_signature_error',
+  SwitchChainError = 'wc_switch_chain_eror',
+  UnsupportedChainError = 'wc_unsupported_chain_error',
+  InvalidRequestId = 'invalid_request_id',
+}
+
+export enum WCEventType {
+  SessionConnected = 'session_connected',
+  SessionUpdated = 'session_updated',
+  SessionDisconnected = 'session_disconnected',
+  Error = 'error',
+  SignRequest = 'sign_request',
+  SignTransaction = 'sign_transaction',
+}
+
 export type EthSignMethod = EthMethod.PersonalSign | EthMethod.SignTypedData | EthMethod.EthSign
 
 interface BaseSessionEvent {
@@ -66,15 +86,7 @@ export interface SignRequestEvent {
 }
 
 export interface WCError {
-  type: string
+  type: WCErrorType
   message?: string
-}
-
-export enum WCEventType {
-  SessionConnected = 'session_connected',
-  SessionUpdated = 'session_updated',
-  SessionDisconnected = 'session_disconnected',
-  Error = 'error',
-  SignRequest = 'sign_request',
-  SignTransaction = 'sign_transaction',
+  dapp?: DappInfo
 }

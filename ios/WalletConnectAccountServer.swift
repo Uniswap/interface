@@ -79,6 +79,17 @@ class WalletConnectAccountServer {
     guard supportedChainIds.contains(chainId) else {
       do {
         try self.server.send(Response(request: request, error: .requestRejected))
+        
+        let icons = session.dAppInfo.peerMeta.icons
+        self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: [
+          "type": ErrorType.wcUnsupportedChainError.rawValue,
+          "dapp": [
+            "name": session.dAppInfo.peerMeta.name,
+            "url": session.dAppInfo.peerMeta.url.absoluteString,
+            "icon": icons.isEmpty ? "" : icons[0].absoluteString,
+            "chain_id": chainId,
+          ]
+        ])
       } catch {
         self.eventEmitter.sendEvent(
           withName: EventType.error.rawValue,
@@ -90,7 +101,7 @@ class WalletConnectAccountServer {
       
       return
     }
-  
+    
     switchChainId(session: session, chainId: chainId)
   }
   
@@ -169,6 +180,12 @@ extension WalletConnectAccountServer: ServerDelegate {
   }
   
   func server(_ server: Server, shouldStart session: Session, completion: @escaping (Session.WalletInfo) -> Void) {
+    
+    let icons = session.dAppInfo.peerMeta.icons
+    
+    // Default to chain 1 if dapp chainId is unsupported
+    let chainId = supportedChainIds.contains(session.dAppInfo.chainId ?? -1) ? session.dAppInfo.chainId! : 1
+
     // TODO: pass in client info on initialization, also update these values when link is ready
     let walletMeta = Session.ClientMeta(name: "Uniswap Wallet",
                                         description: "A very cool wallet!",
@@ -176,11 +193,10 @@ extension WalletConnectAccountServer: ServerDelegate {
                                         url: URL(string: "https://uniswap.org")!)
     let walletInfo = Session.WalletInfo(approved: true,
                                         accounts: [self.account],
-                                        chainId: session.dAppInfo.chainId ?? 1,
+                                        chainId: chainId,
                                         peerId: UUID().uuidString,
                                         peerMeta: walletMeta)
     
-    let icons = session.dAppInfo.peerMeta.icons
     
     self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: [
       "session_name": session.dAppInfo.peerMeta.name,
@@ -190,7 +206,7 @@ extension WalletConnectAccountServer: ServerDelegate {
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
-        "chain_id": session.dAppInfo.chainId ?? 1,
+        "chain_id": chainId,
       ]
     ])
     
@@ -204,7 +220,7 @@ extension WalletConnectAccountServer: ServerDelegate {
   func server(_ server: Server, didDisconnect session: Session) {
     self.topicToSession.removeValue(forKey: session.url.topic)
     let icons = session.dAppInfo.peerMeta.icons
-
+    
     self.eventEmitter.sendEvent(withName: EventType.sessionDisconnected.rawValue, body: [
       "session_id": session.url.topic,
       "session_name": session.url.topic,

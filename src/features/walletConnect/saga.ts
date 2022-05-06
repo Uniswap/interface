@@ -21,6 +21,7 @@ import {
   SignRequestEvent,
   SignTransactionEvent,
   WCError,
+  WCErrorType,
   WCEventType,
 } from 'src/features/walletConnect/types'
 import {
@@ -124,7 +125,22 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
     }
 
     const errorHandler = (req: WCError) => {
-      logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
+      switch (req.type) {
+        case WCErrorType.UnsupportedChainError:
+          if (req.dapp) {
+            emit(
+              pushNotification({
+                type: AppNotificationType.WalletConnect,
+                title: i18n.t('Failed to switch network, chain is not supported'),
+                imageUrl: req.dapp.icon,
+                chainId: req.dapp.chain_id,
+              })
+            )
+          }
+          break
+        default:
+          logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
+      }
     }
 
     const eventEmitters = [
