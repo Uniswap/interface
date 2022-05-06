@@ -4,6 +4,7 @@ import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { DEFAULT_USER_GAS_PRICE, L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { nativeOnChain } from 'constants/tokens'
 import { useLimitOrderManager } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
@@ -289,7 +290,7 @@ export function useNetworkGasPrice(): CurrencyAmount<Currency> | undefined {
   return useMemo(
     () =>
       userGasPrice && chainId
-        ? CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(parseUnits(userGasPrice, 'gwei').toString()))
+        ? CurrencyAmount.fromRawAmount(nativeOnChain(chainId), JSBI.BigInt(parseUnits(userGasPrice, 'gwei').toString()))
         : undefined,
     [chainId, userGasPrice]
   )
@@ -303,7 +304,7 @@ export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
 
   return useMemo(
     () =>
-      chainId && gasPriceResult ? CurrencyAmount.fromRawAmount(Ether.onChain(chainId), gasPriceResult?.[0]) : undefined,
+      chainId && gasPriceResult ? CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasPriceResult?.[0]) : undefined,
     [chainId, gasPriceResult]
   )
 }
