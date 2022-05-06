@@ -130,7 +130,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         )
       }
     },
-    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly, currentTimestamp],
+    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly, currentTimestamp, chainId],
   )
 
   const farms = useMemo(

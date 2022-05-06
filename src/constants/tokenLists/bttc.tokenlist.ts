@@ -13,6 +13,15 @@ export const BTTC_TOKEN_LIST = {
     },
     {
       chainId: 199,
+      address: '0xAE17940943BA9440540940DB0F1877f101D39e8b',
+      symbol: 'USDC_e',
+      name: 'USD Coin_Ethereum',
+      decimals: 6,
+      logoURI: 'https://coin.top/production/upload/logo/TEkxiTehnzSmSe2XqrBj4w32RUN966rdz81.png',
+    },
+
+    {
+      chainId: 199,
       address: '0x9B5F27f6ea9bBD753ce3793a07CbA3C74644330d',
       symbol: 'USDT_b',
       name: 'Tether USD_BSC',

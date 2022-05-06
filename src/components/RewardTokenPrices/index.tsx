@@ -7,7 +7,7 @@ import { KNC, ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useThrottle from 'hooks/useThrottle'
 import { useRewardTokenPrices } from 'state/farms/hooks'
-import { formattedNum } from 'utils'
+import { formattedNumLong } from 'utils'
 import { useRewardTokensFullInfo } from 'utils/dmm'
 import CurrencyLogo from 'components/CurrencyLogo'
 
@@ -144,7 +144,7 @@ const RewardTokenPrices = () => {
                 <CurrencyLogo currency={token} size="20px" />
                 <TokenSymbol>{token.symbol}:</TokenSymbol>
                 <span>
-                  {rewardTokenPrices[index] ? formattedNum(rewardTokenPrices[index]?.toString(), true) : 'N/A'}
+                  {rewardTokenPrices[index] ? formattedNumLong(rewardTokenPrices[index]?.toString(), true) : 'N/A'}
                 </span>
               </TokenWrapper>
             )

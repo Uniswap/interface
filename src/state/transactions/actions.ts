@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { ChainId } from '@dynamic-amm/sdk'
+import { BigNumber } from 'ethers'
 
 export interface SerializableTransactionReceipt {
   to: string
@@ -10,6 +11,7 @@ export interface SerializableTransactionReceipt {
   transactionHash: string
   blockNumber: number
   status?: number
+  gasUsed?: BigNumber
 }
 
 export const addTransaction = createAction<{
@@ -27,9 +29,11 @@ export const finalizeTransaction = createAction<{
   chainId: ChainId
   hash: string
   receipt: SerializableTransactionReceipt
+  needCheckSubgraph?: boolean
 }>('transactions/finalizeTransaction')
 export const checkedTransaction = createAction<{
   chainId: ChainId
   hash: string
   blockNumber: number
 }>('transactions/checkedTransaction')
+export const checkedSubgraph = createAction<{ chainId: ChainId; hash: string }>('transactions/checkedSubgraph')

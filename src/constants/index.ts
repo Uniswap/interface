@@ -1143,7 +1143,11 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.CRONOS]: [],
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: ['0xa107e6466Be74361840059a11e390200371a7538', '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3'],
+  [ChainId.BTTC]: [
+    '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C',
+    '0xa107e6466Be74361840059a11e390200371a7538',
+    '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
+  ],
   [ChainId.AURORA]: [],
   [ChainId.VELAS]: [],
   [ChainId.OASIS]: [],
@@ -1374,7 +1378,7 @@ export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
 export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
   [ChainId.ROPSTEN]: 'claim-reward-data.json',
   [ChainId.AVAXMAINNET]:
-    'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/add-reward-data/results/phase_0/reward_proof.json',
+    'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/develop/results/reward_proof.json',
   [ChainId.BSCMAINNET]:
     'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
 }

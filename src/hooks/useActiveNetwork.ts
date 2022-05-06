@@ -204,11 +204,17 @@ export function useActiveNetwork() {
   const qs = useParsedQueryString()
   const dispatch = useAppDispatch()
 
-  const locationWithoutNetworkId = useMemo(() => {
+  const filteredQueryStringLocation = useMemo(() => {
     // Delete networkId from qs object
-    const { networkId, ...qsWithoutNetworkId } = qs
+    const { networkId, inputCurrency, outputCurrency, keepCurrencyIds, ...qsWithoutNetworkIdAndCurrencyIds } = qs
 
-    return { ...location, search: stringify({ ...qsWithoutNetworkId }) }
+    return {
+      ...location,
+      search: stringify({
+        ...qsWithoutNetworkIdAndCurrencyIds,
+        ...(keepCurrencyIds ? { inputCurrency, outputCurrency } : {}),
+      }),
+    }
   }, [location])
 
   const changeNetwork = useCallback(
@@ -223,7 +229,7 @@ export function useActiveNetwork() {
       }
 
       if (library && library.provider && library.provider.request) {
-        history.push(locationWithoutNetworkId)
+        history.push(filteredQueryStringLocation)
 
         try {
           await library.provider.request({
@@ -247,7 +253,7 @@ export function useActiveNetwork() {
         }
       }
     },
-    [dispatch, history, library, locationWithoutNetworkId, error],
+    [dispatch, history, library, filteredQueryStringLocation, error],
   )
 
   useEffect(() => {

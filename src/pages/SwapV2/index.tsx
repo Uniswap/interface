@@ -182,8 +182,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/swap')
-  }, [history])
+  }, [])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -527,11 +526,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
                     <TradeTypeSelection />
 
-                    <TrendingSoonTokenBanner
-                      currency0={currencies[Field.INPUT]}
-                      currency1={currencies[Field.OUTPUT]}
-                      style={{ marginTop: '24px' }}
-                    />
+                    <TrendingSoonTokenBanner currencies={currencies} style={{ marginTop: '24px' }} />
 
                     {trade?.priceImpact === -1 ? (
                       <PriceImpactHigh>
