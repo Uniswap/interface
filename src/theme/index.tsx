@@ -361,10 +361,11 @@ export const ThemedGlobalStyle = createGlobalStyle`
 
   .tf-v1-popover-button-icon {
     > img {
-    width: 24px !important;
-    height: 24px !important;
-    object-fit: contain !important;
-    border-radius: 0 !important;
+      width: 24px !important;
+      height: 24px !important;
+      object-fit: contain !important;
+      border-radius: 0 !important;
+    }
   }
 
   .tf-v1-sidetab-close {
