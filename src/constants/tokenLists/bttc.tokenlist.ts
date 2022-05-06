@@ -16,7 +16,7 @@ export const BTTC_TOKEN_LIST = {
       address: '0xAE17940943BA9440540940DB0F1877f101D39e8b',
       symbol: 'USDC_e',
       name: 'USD Coin_Ethereum',
-      decimals: 18,
+      decimals: 6,
       logoURI: 'https://coin.top/production/upload/logo/TEkxiTehnzSmSe2XqrBj4w32RUN966rdz81.png',
     },
 
