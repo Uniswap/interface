@@ -52,7 +52,7 @@ const MobileChart = styled.div<{ fullscreen: boolean; loading: boolean }>`
   z-index: 100000;
   bottom: 0;
 
-  ${({ fullscreen }) => (fullscreen ? 'height:calc(100vh - 65px);' : 'padding-top: 10px;')}
+  ${({ fullscreen }) => (fullscreen ? 'height: 100vh;' : 'padding-top: 10px;')}
   ${({ loading }) => `display:${loading ? 'none' : 'block'}`}
 `
 

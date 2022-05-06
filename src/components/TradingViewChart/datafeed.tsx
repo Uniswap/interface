@@ -16,23 +16,6 @@ import { nativeNameFromETH } from 'hooks/useMixpanel'
 import { USDC, USDT, DAI } from 'constants/index'
 import { Field } from 'state/swap/actions'
 
-export const getTimeframeMilliseconds = (timeFrame: LiveDataTimeframeEnum) => {
-  switch (timeFrame) {
-    case LiveDataTimeframeEnum.HOUR:
-      return 3600000
-    case LiveDataTimeframeEnum.FOUR_HOURS:
-      return 14400000
-    case LiveDataTimeframeEnum.DAY:
-      return 86400000
-    case LiveDataTimeframeEnum.WEEK:
-      return 604800000
-    case LiveDataTimeframeEnum.MONTH:
-      return 2592000000
-    case LiveDataTimeframeEnum.SIX_MONTHS:
-      return 15552000000
-  }
-}
-
 const configurationData = {
   supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H', '1D', '1W', '1M'],
 }
@@ -64,15 +47,6 @@ const getNetworkString = (chainId: ChainId | undefined) => {
   }
 }
 
-const getResolutionString = (res: string) => {
-  switch (res) {
-    case '15':
-      return '15m'
-    default:
-      return '15m'
-  }
-}
-
 const DEXTOOLS_API = 'https://pancake-subgraph-proxy.kyberswap.com/dextools'
 const monthTs = 2592000000
 const weekTs = 604800000
@@ -96,9 +70,12 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
   '0x66e428c3f67a68878562e79a0234c1f83c208770': '0xa68466208f1a3eb21650320d2520ee8eba5ba623',
   '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': '0xc31e54c7a869b9fcbecc14363cf510d1c41fa443',
   '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': '0xc31e54c7a869b9fcbecc14363cf510d1c41fa443',
+  '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab': '0x0f0fc5a5029e3d155708356b422d22cc29f8b3d4',
+  '0xd501281565bf7789224523144fe5d98e8b28f267': '0x64ed9711667c9e8923bee32260a55a9b8dbc99d3',
+  '0x63a72806098Bd3D9520cC43356dD78afe5D386D9': '0x5944f135e4f1e3fa2e5550d4b5170783868cc4fe',
 }
 //TODO CHANGE THIS BACK TO proChartCheckedPairs
-const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs2'
+const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs3'
 
 const fetcherDextools = (url: string) => {
   return fetch(`${DEXTOOLS_API}/${url}`)
@@ -145,6 +122,7 @@ const checkIsUSDToken = (chainId: ChainId | undefined, currency: any) => {
     '0xcd7509b76281223f5b7d3ad5d47f8d7aa5c2b9bf', //USDV Velas
     '0xdb28719f7f938507dbfe4f0eae55668903d34a15', //USDT_t BTTC
     '0xe887512ab8bc60bcc9224e1c3b5be68e26048b8b', //USDT_e BTTC
+    '0x19860ccb0a68fd4213ab9d8266f7bbf05a8dde98', //BUSD.e
   ]
   if (currency?.address && usdTokenAddresses.includes(currency.address.toLowerCase())) {
     return true
@@ -194,16 +172,15 @@ export const checkPairHasDextoolsData = async (
     if (token?.address) {
       const data1 = await searchTokenPair(token.address, chainId)
       if (data1.length > 0 && data1[0].id) {
-        const ver = await getHistoryCandleStatus(data1[0].id, chainId)
-        if (ver) {
-          const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
-          const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'week')
-          if (data?.candles?.length) {
-            res.ver = ver
-            res.pairAddress = data1[0].id
-            updateLocalstorageCheckedPair(key, res)
-            return Promise.resolve(res)
-          }
+        const ver = (await getHistoryCandleStatus(data1[0].id, chainId)) || 0
+
+        const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
+        const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'week')
+        if (data?.candles?.length) {
+          res.ver = ver
+          res.pairAddress = data1[0].id
+          updateLocalstorageCheckedPair(key, res)
+          return Promise.resolve(res)
         }
       }
     }
@@ -232,30 +209,6 @@ export const checkPairHasDextoolsData = async (
   updateLocalstorageCheckedPair(key, res)
   return Promise.resolve(res)
 }
-
-// export const checkAddressHasData = async (address: string, pairAddress: string, chainId: ChainId | undefined) => {
-//   const cPstr = localStorage.getItem(LOCALSTORAGE_CHECKED_PAIRS)
-//   const checkedPairs: any[] = cPstr ? JSON.parse(cPstr) : []
-//   let index: number = checkedPairs.findIndex(item => item.address === address)
-//   if (index >= 0) {
-//     if (checkedPairs[index]?.time > new Date().getTime() - 86400000) {
-//       return checkedPairs[index].ver
-//     }
-//   } else {
-//     checkedPairs.push({ address: address, time: new Date().getTime() })
-//     index = checkedPairs.length - 1
-//   }
-//   const ver = await getHistoryCandleStatus(pairAddress, chainId)
-//   if (ver) {
-//     const ts = Math.floor(new Date().getTime() / weekTs) * weekTs
-//     const { data } = await getCandlesApi(chainId, pairAddress, ver, ts, 'week')
-//     if (data?.candles?.length) {
-//       checkedPairs[index].ver = ver
-//     }
-//   }
-//   localStorage.setItem(LOCALSTORAGE_CHECKED_PAIRS, JSON.stringify(checkedPairs))
-//   return checkedPairs[index].ver
-// }
 
 export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: string) => {
   const { chainId } = useActiveWeb3React()
@@ -505,7 +458,6 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
           }
         }
         onTick(lastCandle)
-        console.log('🚀 ~ file: datafeed.tsx ~ line 508 ~ getLivePrice ~ lastCandle', lastCandle)
       }
       intervalRef.current = setInterval(getLivePrice, 10000)
       getLivePrice()

@@ -138,7 +138,7 @@ function LiveChart({
 
     checkPairHasDextoolsData(currencies, chainId)
       .then((res: any) => {
-        if (res.ver && res.pairAddress) {
+        if ((res.ver || res.ver === 0) && res.pairAddress) {
           setStateProChart({ hasProChart: true, pairAddress: res.pairAddress, apiVersion: res.ver })
         }
       })
