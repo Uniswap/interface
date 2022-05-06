@@ -359,11 +359,6 @@ export const ThemedGlobalStyle = createGlobalStyle`
     }
   }
 
-
-  .tf-v1-popover {
-    z-index: 99 !important;
-  }
-
   .tf-v1-popover-button-icon {
     > img {
       width: 24px !important;
@@ -385,6 +380,10 @@ export const ThemedGlobalStyle = createGlobalStyle`
     display: block !important;
     z-index: 1;
     cursor: pointer;
+  }
+
+  .tf-v1-popover{
+    z-index:1 !important;
   }
 
   .tf-v1-popover-button {

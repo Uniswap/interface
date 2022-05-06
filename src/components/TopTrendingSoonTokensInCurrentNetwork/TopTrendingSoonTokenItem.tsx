@@ -69,7 +69,13 @@ const TopTrendingSoonTokenItem = ({
             style={{ borderRadius: '50%', cursor: 'pointer' }}
             onClick={onSelectToken}
           />
-          <Text fontSize="14px" mr="5px" color={theme.subText} style={{ cursor: 'pointer' }} onClick={onSelectToken}>
+          <Text
+            fontSize="14px"
+            mr="5px"
+            color={theme.subText}
+            style={{ cursor: 'pointer', flex: '1' }}
+            onClick={onSelectToken}
+          >
             {tokenData.symbol}
           </Text>
           <MouseoverTooltipDesktopOnly text={t`More info`} placement="top" width="fit-content">
@@ -126,6 +132,9 @@ const Container = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
   border-radius: 4px;
   position: relative;
+  width: calc(20% - 70px);
+  min-width: 135px;
+  max-width: 176px;
 `
 
 export default TopTrendingSoonTokenItem

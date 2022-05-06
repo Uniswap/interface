@@ -18,6 +18,7 @@ import {
   toggleRebrandingAnnouncement,
   toggleLiveChart,
   toggleTradeRoutes,
+  toggleProLiveChart,
   toggleTopTrendingTokens,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
@@ -61,6 +62,7 @@ export interface UserState {
   showLiveCharts: {
     [chainId: number]: boolean
   }
+  showProLiveChart: boolean
   showTradeRoutes: boolean
   showTopTrendingSoonTokens: boolean
 }
@@ -106,6 +108,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   rebrandingAnnouncement: true,
   showLiveCharts: defaultShowLiveCharts,
+  showProLiveChart: false,
   showTradeRoutes: !isMobile,
   showTopTrendingSoonTokens: true,
 }
@@ -191,6 +194,9 @@ export default createReducer(initialState, builder =>
         state.showLiveCharts = defaultShowLiveCharts
       }
       state.showLiveCharts[chainId] = !state.showLiveCharts[chainId]
+    })
+    .addCase(toggleProLiveChart, state => {
+      state.showProLiveChart = !state.showProLiveChart
     })
     .addCase(toggleTradeRoutes, state => {
       state.showTradeRoutes = !state.showTradeRoutes

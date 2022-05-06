@@ -65,6 +65,12 @@ const Wrapper = styled.div`
   img {
     border-radius: 8px;
   }
+  @media screen and (min-width: 1100px) {
+    max-width: 1226px;
+  }
+  @media screen and (min-width: 1440px) {
+    max-width: 1394px;
+  }
 `
 
 const Close = styled(X)`
@@ -105,7 +111,7 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
   if (!showBanner) return null
 
   return (
-    <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1028px'} width="100%">
+    <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1394px'} width="100%">
       <Swiper
         autoplay={{ delay: 20000 }}
         slidesPerView={1}

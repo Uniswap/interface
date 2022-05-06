@@ -30,6 +30,7 @@ import Tooltip from 'components/Tooltip'
 import MenuFlyout from 'components/MenuFlyout'
 import { isMobile } from 'react-device-detect'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import ProChartToggle from 'components/LiveChart/ProChartToggle'
 import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
 enum SlippageError {
   InvalidInput = 'InvalidInput',

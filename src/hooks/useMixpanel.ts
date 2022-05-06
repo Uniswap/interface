@@ -116,6 +116,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
             trade_qty: trade?.inputAmount.toExact(),
           })
+
           break
         }
         case MIXPANEL_TYPE.SWAP_COMPLETED: {
