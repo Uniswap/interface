@@ -10,7 +10,6 @@ import { useMemo } from 'react'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
-import { TokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -70,6 +69,8 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
     tokenNameBytes32.result,
   ])
 }
+
+type TokenMap = { [address: string]: Token }
 
 /**
  * Returns a Token from the tokenAddress.
