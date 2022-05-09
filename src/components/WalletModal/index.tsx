@@ -145,12 +145,12 @@ export default function WalletModal({
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
 
-  const connectorPrevious = usePrevious(connector)
+  const previousConnector = usePrevious(connector)
   useEffect(() => {
-    if (walletModalOpen && connector && connector !== connectorPrevious && !error) {
+    if (walletModalOpen && connector && connector !== previousConnector && !error) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
-  }, [setWalletView, error, connector, walletModalOpen, connectorPrevious])
+  }, [setWalletView, error, connector, walletModalOpen, previousConnector])
 
   useEffect(() => {
     if (connector === network) {
