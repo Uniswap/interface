@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setWalletOverride } from 'state/user/reducer'
 
 import Blocklist from './components/Blocklist'
-import { coinbaseWallet, connectors, injected, walletConnect } from './connectors'
+import { coinbaseWallet, connectors, injected, network, walletConnect } from './connectors'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
@@ -188,7 +188,7 @@ const Web3Wrapper = () => {
 
 const ReduxWrapper = () => {
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
-  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
+  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : network
   return (
     <HashRouter>
       <LanguageProvider>
