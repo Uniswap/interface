@@ -9,13 +9,13 @@ export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/swap' }} />
 }
 
-export function RedirectToVote({ location }: RouteComponentProps) {
+export function RedirectToVote() {
   window.location.replace('https://gov.xspswap.finance')
   return null
 }
 
-export function RedirectToCharts({ location }: RouteComponentProps) {
-  window.location.replace('http://147.182.160.81')
+export function RedirectToCharts() {
+  window.location.replace('https://analytics.xspswap.finance/ ')
   return null
 }
 
