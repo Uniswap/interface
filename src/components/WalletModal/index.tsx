@@ -377,6 +377,14 @@ export default function WalletModal({
 
         <ContentWrapper>
           <AutoColumn gap="16px">
+            {walletView === WALLET_VIEWS.PENDING && (
+              <PendingView
+                connector={pendingWallet}
+                error={pendingError}
+                setPendingError={setPendingError}
+                tryActivation={tryActivation}
+              />
+            )}
             <LightCard>
               <AutoRow style={{ flexWrap: 'nowrap' }}>
                 <ThemedText.Black fontSize={14}>
@@ -389,35 +397,30 @@ export default function WalletModal({
                 </ThemedText.Black>
               </AutoRow>
             </LightCard>
-            {walletView === WALLET_VIEWS.PENDING ? (
-              <PendingView
-                connector={pendingWallet}
-                error={pendingError}
-                setPendingError={setPendingError}
-                tryActivation={tryActivation}
-              />
-            ) : (
-              <OptionGrid>{getOptions()}</OptionGrid>
+            {walletView !== WALLET_VIEWS.PENDING && (
+              <>
+                <OptionGrid>{getOptions()}</OptionGrid>
+                <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
+                  <RowBetween>
+                    <AutoRow gap="4px">
+                      <Info size={20} />
+                      <ThemedText.Label fontSize={14}>
+                        <Trans>How this app uses APIs</Trans>
+                      </ThemedText.Label>
+                    </AutoRow>
+                    <ArrowRight size={16} />
+                  </RowBetween>
+                </LinkCard>
+                <ThemedText.Black fontSize={14}>
+                  <ExternalLink href="https://help.uniswap.org/en/articles/5391525-what-is-a-wallet">
+                    <Row justify="center" alignItems="center">
+                      <Trans>Learn more about wallets</Trans>
+                      <ArrowRight size={16} />
+                    </Row>
+                  </ExternalLink>
+                </ThemedText.Black>
+              </>
             )}
-            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
-              <RowBetween>
-                <AutoRow gap="4px">
-                  <Info size={20} />
-                  <ThemedText.Label fontSize={14}>
-                    <Trans>How this app uses APIs</Trans>
-                  </ThemedText.Label>
-                </AutoRow>
-                <ArrowRight size={16} />
-              </RowBetween>
-            </LinkCard>
-            <ThemedText.Black fontSize={14}>
-              <ExternalLink href="https://help.uniswap.org/en/articles/5391525-what-is-a-wallet">
-                <Row justify="center" alignItems="center">
-                  <Trans>Learn more about wallets</Trans>
-                  <ArrowRight size={16} />
-                </Row>
-              </ExternalLink>
-            </ThemedText.Black>
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
