@@ -8,7 +8,7 @@ import { getConnectorForWallet, Wallet } from 'constants/wallet'
 import usePrevious from 'hooks/usePrevious'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
-import { StrictMode, useEffect, useReducer } from 'react'
+import { StrictMode, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
@@ -77,18 +77,9 @@ const Web3Wrapper = () => {
   const previousCoinbaseWalletIsActivating = usePrevious(coinbaseWalletIsActivating)
   const previousWalletConnectIsActivating = usePrevious(walletConnectIsActivating)
 
-  const [isInjectedEagerlyConnecting, setIsInjectedEagerlyConnecting] = useReducer(
-    (_state: boolean, action: boolean) => action,
-    false
-  )
-  const [isCoinbaseWalletEagerlyConnecting, setIsCoinbaseWalletEagerlyConnecting] = useReducer(
-    (_state: boolean, action: boolean) => action,
-    false
-  )
-  const [isWalletConnectEagerlyConnecting, setIsWalletConnectEagerlyConnecting] = useReducer(
-    (_state: boolean, action: boolean) => action,
-    false
-  )
+  const [isInjectedEagerlyConnecting, setIsInjectedEagerlyConnecting] = useState(false)
+  const [isCoinbaseWalletEagerlyConnecting, setIsCoinbaseWalletEagerlyConnecting] = useState(false)
+  const [isWalletConnectEagerlyConnecting, setIsWalletConnectEagerlyConnecting] = useState(false)
 
   useEffect(() => {
     const injectedState: ConnectorState = {
