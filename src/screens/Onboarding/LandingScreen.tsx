@@ -2,15 +2,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, View } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_SPLASH_LOGO } from 'src/assets'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Button } from 'src/components/buttons/Button'
-import {
-  RainbowLinearGradientStops,
-  usePrimaryToSecondaryLinearGradient,
-} from 'src/components/gradients'
+import { RainbowLinearGradientStops, usePinkToBlueLinearGradient } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -20,16 +17,16 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { activeAccountSelector, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { theme } from 'src/styles/theme'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
 export function LandingScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
+  const theme = useAppTheme()
 
   const { t } = useTranslation()
 
-  const gradientStops = usePrimaryToSecondaryLinearGradient()
+  const gradientStops = usePinkToBlueLinearGradient()
 
   const onPressCreateWallet = () => {
     navigation.navigate(OnboardingScreens.NameAndColor)
@@ -55,14 +52,17 @@ export function LandingScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['bottom']}>
-      <LinearGradientBox opacity={0.1} stops={gradientStops} />
+      <LinearGradientBox opacity={0.2} stops={gradientStops} />
       <Box flex={1} justifyContent={'flex-end'}>
         <Box alignItems="center" flex={1} justifyContent={'center'}>
           <Box>
             <LinearGradientBox radius="lg" stops={RainbowLinearGradientStops}>
               <View style={styles.padded}>
-                <Box bg="black" borderRadius="lg">
-                  <Image source={UNISWAP_SPLASH_LOGO} />
+                <Box bg="background1" borderRadius="lg">
+                  <Image
+                    source={UNISWAP_SPLASH_LOGO}
+                    style={{ tintColor: theme.colors.textColor }}
+                  />
                 </Box>
               </View>
             </LinearGradientBox>
@@ -73,7 +73,7 @@ export function LandingScreen({ navigation }: Props) {
             <Flex
               row
               alignItems="center"
-              bg="black"
+              bg="background1"
               borderColor="gray100"
               borderRadius="md"
               borderWidth={1}
@@ -81,7 +81,7 @@ export function LandingScreen({ navigation }: Props) {
               px="lg"
               py="md">
               <WalletIcon color={theme.colors.purple} height={15} width={15} />
-              <Text color="white" variant="h5">
+              <Text color="textColor" variant="h5">
                 {t('Create a Wallet')}
               </Text>
             </Flex>
@@ -93,7 +93,7 @@ export function LandingScreen({ navigation }: Props) {
             <Flex
               row
               alignItems="center"
-              bg="black"
+              bg="background1"
               borderColor="gray100"
               borderRadius="md"
               borderWidth={1}
@@ -101,7 +101,7 @@ export function LandingScreen({ navigation }: Props) {
               px="lg"
               py="md">
               <Chevron color={theme.colors.purple} direction="s" height={15} width={15} />
-              <Text color="white" variant="h5">
+              <Text color="textColor" variant="h5">
                 {t('I Already Have a Wallet')}
               </Text>
             </Flex>
