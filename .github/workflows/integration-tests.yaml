@@ -44,7 +44,8 @@ jobs:
           CI: false
           REACT_APP_SERVICE_WORKER: false
 
-      - run: yarn test:e2e
-        env:
-          CYPRESS_INTEGRATION_TEST_PRIVATE_KEY: ${{ secrets.CYPRESS_INTEGRATION_TEST_PRIVATE_KEY }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      # 05/09 - Commenting this out considering we have no cypress test private key
+      # - run: yarn test:e2e
+      #   env:
+      #     CYPRESS_INTEGRATION_TEST_PRIVATE_KEY: ${{ secrets.CYPRESS_INTEGRATION_TEST_PRIVATE_KEY }}
+      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
