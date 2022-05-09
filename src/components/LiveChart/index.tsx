@@ -21,6 +21,7 @@ import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 import ProLiveChart from 'components/TradingViewChart'
 import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
 import { useMedia } from 'react-use'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
@@ -131,7 +132,7 @@ function LiveChart({
   const showProLiveChart = useShowProLiveChart()
   const toggleProLiveChart = useToggleProLiveChart()
   const above400 = useMedia('(min-width:400px)')
-
+  const { mixpanelHandler } = useMixpanel()
   useEffect(() => {
     if (hoverValue !== null) {
       setHoverValue(null)
@@ -216,8 +217,17 @@ function LiveChart({
               <ProChartToggle
                 activeName={hasProChart && (showProLiveChart || error) ? 'pro' : 'basic'}
                 disabled={!hasProChart}
-                toggle={() => {
-                  toggleProLiveChart()
+                toggle={(name: string) => {
+                  if (!error && hasProChart) {
+                    if (name !== (hasProChart && (showProLiveChart || error) ? 'pro' : 'basic')) {
+                      if (name === 'pro') {
+                        mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
+                      } else {
+                        mixpanelHandler(MIXPANEL_TYPE.BASIC_CHART_CLICKED)
+                      }
+                      toggleProLiveChart()
+                    }
+                  }
                 }}
                 buttons={[
                   { name: 'basic', title: 'Basic', disabled: error },

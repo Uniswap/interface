@@ -55,7 +55,7 @@ export interface ProChartToggleProps {
   id?: string
   activeName?: string
   buttons?: IToggleButton[]
-  toggle: () => void
+  toggle: (name: string) => void
   size?: 'sm' | 'md'
   border?: boolean
   bgColor?: 'background' | 'buttonBlack'
@@ -89,7 +89,6 @@ export default function ProChartToggle({
       size={size}
       border={border}
       background={`${theme[bgColor]}${buttons.some((b: any) => b.disabled) ? '20' : ''}`}
-      onClick={toggle}
     >
       {buttons.map(button => {
         return (
@@ -102,6 +101,7 @@ export default function ProChartToggle({
             size={size}
             border={border}
             disabled={button.disabled}
+            onClick={() => toggle(button.name)}
           >
             {button.title}
           </ToggleElement>
