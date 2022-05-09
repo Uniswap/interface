@@ -123,6 +123,34 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.KOVAN]: USDC_KOVAN,
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
 }
+export const ALLY = new Token(
+  SupportedChainId.MAINNET,
+  '0x1aa1e61369874bae3444A8Ef6528d6b13D6952EF',
+  18,
+  'ALLY',
+  'ALLY'
+)
+export const oneUNI = new Token(
+  SupportedChainId.MAINNET,
+  '0x8290d7a64f25e6b5002d98367e8367c1b532b534',
+  18,
+  'oneUNI',
+  'oneUNI'
+)
+export const oneBTC = new Token(
+  SupportedChainId.MAINNET,
+  '0xEc4325F0518584F0774b483c215F65474EAbD27F',
+  18,
+  'oneBTC',
+  'oneBTC'
+)
+export const oneDODO = new Token(
+  SupportedChainId.MAINNET,
+  '0xcA37530E7c5968627BE470081d1C993eb1dEaf90',
+  18,
+  'oneDODO',
+  'oneDODO'
+)
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',

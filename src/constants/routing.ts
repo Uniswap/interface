@@ -1,8 +1,10 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
 
+//import { ALL } from 'dns'
 import { SupportedChainId } from './chains'
 import {
+  ALLY,
   AMPL,
   DAI,
   DAI_ARBITRUM_ONE,
@@ -13,6 +15,9 @@ import {
   FRAX,
   FXS,
   nativeOnChain,
+  oneBTC,
+  oneDODO,
+  oneUNI,
   renBTC,
   rETH2,
   sETH2,
@@ -107,12 +112,12 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.MAINNET]: [
-    nativeOnChain(SupportedChainId.MAINNET),
-    DAI,
-    USDC_MAINNET,
-    USDT,
-    WBTC,
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token,
+    //nativeOnChain(SupportedChainId.MAINNET),
+    ALLY,
+    oneUNI,
+    oneBTC,
+    oneDODO,
+    //WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token,
   ],
   [SupportedChainId.ROPSTEN]: [
     nativeOnChain(SupportedChainId.ROPSTEN),
