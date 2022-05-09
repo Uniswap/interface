@@ -20,7 +20,13 @@ import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import Swap from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import {
+  OpenClaimAddressModalAndRedirectToSwap,
+  RedirectPathToSwapOnly,
+  RedirectToCharts,
+  RedirectToSwap,
+  RedirectToVote,
+} from './Swap/redirects'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -94,6 +100,8 @@ export default function App() {
                 <Route exact strict path="/pool" component={PoolV2} />
                 <Route exact strict path="/add/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
                 <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                <Route exact strict path="/vote" component={RedirectToVote} />
+                <Route exact strict path="/charts" component={RedirectToCharts} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Suspense>

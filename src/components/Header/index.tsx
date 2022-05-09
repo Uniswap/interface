@@ -83,7 +83,7 @@ const HeaderElement = styled.div`
 `
 
 const HeaderLinks = styled(Row)`
-  justify-self: center;
+  justify-self: start;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
   padding: 4px;
@@ -256,6 +256,12 @@ export default function Header() {
           }
         >
           <Trans>Pool</Trans>
+        </StyledNavLink>
+        <StyledNavLink id={`vote-nav-link`} to={'/vote'}>
+          <Trans>Vote</Trans>
+        </StyledNavLink>
+        <StyledNavLink id={`charts-nav-link`} to={'/charts'}>
+          <Trans>Charts</Trans>
         </StyledNavLink>
       </HeaderLinks>
 
