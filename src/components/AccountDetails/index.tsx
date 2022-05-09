@@ -265,6 +265,7 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
+                  {/* coinbase wallet reloads the page right now, which breaks the walletOverride from being set properly on localStorage */}
                   {connector !== coinbaseWallet && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
