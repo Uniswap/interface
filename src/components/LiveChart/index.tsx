@@ -213,7 +213,7 @@ function LiveChart({
               </Flex>
             </Flex>
 
-            <Flex flex={1} justifyContent="right">
+            <Flex flex={1} justifyContent="flex-end">
               <ProChartToggle
                 activeName={hasProChart && (showProLiveChart || error) ? 'pro' : 'basic'}
                 disabled={!hasProChart}

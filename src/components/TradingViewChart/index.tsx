@@ -42,13 +42,13 @@ const Loader = styled.div`
   justify-content: center;
 `
 
-const MobileChart = styled.div<{ fullscreen: boolean; loading: boolean }>`
+const MobileChart = styled.div<{ fullscreen: boolean; $loading: boolean }>`
   height: 100%;
   width: 100%;
   bottom: 0;
 
   ${({ theme, fullscreen }) => !fullscreen && `padding-top: 15px; border-bottom: solid 15px ${theme.buttonBlack};`}
-  ${({ loading }) => `display:${loading ? 'none' : 'block'}`}
+  ${({ $loading }) => `display:${$loading ? 'none' : 'block'};`}
 `
 
 export interface ChartContainerProps {
@@ -228,7 +228,7 @@ function ProLiveChart({
             e.stopPropagation()
           }}
           fullscreen={fullscreen}
-          loading={loading}
+          $loading={loading}
         ></MobileChart>
       ) : (
         <div
