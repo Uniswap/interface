@@ -20,6 +20,7 @@ import ProChartToggle from 'components/LiveChart/ProChartToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 import ProLiveChart from 'components/TradingViewChart'
 import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
+import { useMedia } from 'react-use'
 
 const LiveChartWrapper = styled.div`
   width: 100%;
@@ -106,9 +107,11 @@ const getTimeFrameText = (timeFrame: LiveDataTimeframeEnum) => {
 function LiveChart({
   currencies,
   onRotateClick,
+  mobileCloseButton,
 }: {
   currencies: { [field in Field]?: Currency }
   onRotateClick?: () => void
+  mobileCloseButton?: React.ReactNode
 }) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
@@ -127,6 +130,8 @@ function LiveChart({
   const { data: chartData, error, loading } = useLiveChartData(tokens, timeFrame)
   const showProLiveChart = useShowProLiveChart()
   const toggleProLiveChart = useToggleProLiveChart()
+  const above400 = useMedia('(min-width:400px)')
+
   useEffect(() => {
     if (hoverValue !== null) {
       setHoverValue(null)
@@ -185,8 +190,9 @@ function LiveChart({
         </Flex>
       ) : (
         <>
+          {!above400 && mobileCloseButton}
           <Flex justifyContent="space-between" alignItems="center">
-            <Flex>
+            <Flex flex={1}>
               <DoubleCurrencyLogo
                 currency0={nativeInputCurrency}
                 currency1={nativeOutputCurrency}
@@ -206,7 +212,7 @@ function LiveChart({
               </Flex>
             </Flex>
 
-            <Flex>
+            <Flex flex={1} justifyContent="right">
               <ProChartToggle
                 activeName={hasProChart && (showProLiveChart || error) ? 'pro' : 'basic'}
                 disabled={!hasProChart}
@@ -220,6 +226,7 @@ function LiveChart({
                 bgColor={isMobile ? 'buttonBlack' : 'background'}
               />
             </Flex>
+            {above400 && mobileCloseButton}
           </Flex>
           {hasProChart && (showProLiveChart || error) ? (
             <ProLiveChartCustom currencies={Object.values(currencies)} stateProChart={stateProChart} />

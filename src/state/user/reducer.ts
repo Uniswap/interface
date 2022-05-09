@@ -108,7 +108,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   rebrandingAnnouncement: true,
   showLiveCharts: defaultShowLiveCharts,
-  showProLiveChart: false,
+  showProLiveChart: true,
   showTradeRoutes: !isMobile,
   showTopTrendingSoonTokens: true,
 }

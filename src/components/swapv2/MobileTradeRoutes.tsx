@@ -28,7 +28,7 @@ function MobileTradeRoutes({
 
   return (
     <MobileView>
-      <MobileModalWrapper isOpen={isOpen && Boolean(trade)} onDismiss={toggle} height="80vh">
+      <MobileModalWrapper isOpen={isOpen && Boolean(trade)} onDismiss={toggle} maxHeight={80}>
         <Flex flexDirection="column" width="100%" padding="20px">
           <RowBetween padding="5px 0">
             <Text fontSize={18} fontWeight={500} color={theme.subText}>
