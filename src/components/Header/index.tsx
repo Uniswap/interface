@@ -12,7 +12,7 @@ import styled from 'styled-components/macro'
 
 import Logo from '../../assets/images/logo.png'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ThemedText } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
@@ -83,7 +83,7 @@ const HeaderElement = styled.div`
 `
 
 const HeaderLinks = styled(Row)`
-  justify-self: center;
+  justify-self: start;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
   padding: 4px;
@@ -257,6 +257,21 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
+        <ExternalLink
+          style={{ padding: '8px 8px' }}
+          href="https://gov.xspswap.finance"
+          id={`vote-nav-link`}
+          target="_blank"
+        >
+          <ThemedText.White>
+            <Trans>Vote</Trans>
+          </ThemedText.White>
+        </ExternalLink>
+        <ExternalLink style={{ padding: '8px 8px' }} href="https://analytics.xspswap.finance/" id={`charts-nav-link`}>
+          <ThemedText.White>
+            <Trans>Charts</Trans>
+          </ThemedText.White>
+        </ExternalLink>
       </HeaderLinks>
 
       <HeaderControls>

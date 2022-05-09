@@ -9,6 +9,16 @@ export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/swap' }} />
 }
 
+export function RedirectToVote() {
+  window.location.replace('https://gov.xspswap.finance')
+  return null
+}
+
+export function RedirectToCharts() {
+  window.location.replace('https://analytics.xspswap.finance/ ')
+  return null
+}
+
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format
 export function RedirectToSwap(props: RouteComponentProps<{ outputCurrency: string }>) {
   const {

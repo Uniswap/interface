@@ -30,7 +30,8 @@
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
     "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos",
-    "bad": "yarn build && firebase deploy"
+    "bad": "yarn build && npm run upload",
+    "upload": "scp -r build/* root@147.182.160.81:/www/swap/"
   },
   "devDependencies": {
     "@ethersproject/experimental": "^5.4.0",
