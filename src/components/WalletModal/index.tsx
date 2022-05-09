@@ -159,12 +159,10 @@ export default function WalletModal({
   }, [connector])
 
   const tryActivation = async (connector: Connector) => {
-    let name = ''
-    Object.keys(SUPPORTED_WALLETS).forEach((key) => {
-      if (connector === SUPPORTED_WALLETS[key].connector) {
-        name = SUPPORTED_WALLETS[key].name
-      }
-    })
+    const name = Object.values(SUPPORTED_WALLETS).find(
+      (supportedWallet) => connector === supportedWallet.connector
+    )?.name
+
     // log selected wallet
     ReactGA.event({
       category: 'Wallet',
