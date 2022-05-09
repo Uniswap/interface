@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ChainIdNotAllowedError } from '@web3-react/store'
+import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { darken } from 'polished'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 
@@ -139,7 +139,18 @@ function WrappedStatusIcon({ connector }: { connector: Connector }) {
 }
 
 function Web3StatusInner() {
-  const { account, connector, error } = useWeb3React()
+  const { account: accountFromHook, connector, error } = useWeb3React()
+
+  // strangely when there´s an unsupoorted chain id error
+  // web3React.account comes in empty even though connector.getAccount is not empty
+  // doing something like this makes quite a lot of issues though, in StatusIcon, injected connector does not match, I suppose its because chain id is not inside supportedIds
+  // also should do this in Header.tsx if we want the eth balance like the design mock
+  const [account, setAccount] = useState(accountFromHook)
+  useEffect(() => {
+    if (!account) {
+      connector?.getAccount().then((acc) => setAccount(acc))
+    }
+  }, [account, connector])
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -179,7 +190,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
         <NetworkIcon />
-        <Text>{error instanceof ChainIdNotAllowedError ? <Trans>Wrong Network</Trans> : <Trans>Error</Trans>}</Text>
+        <Text>{<Trans>Error</Trans>}</Text>
       </Web3StatusError>
     )
   } else {

@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -8,6 +9,7 @@ import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
@@ -108,15 +110,16 @@ const NetworkLabel = styled.div`
 `
 const SelectorLabel = styled(NetworkLabel)`
   display: none;
+  white-space: nowrap;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     display: block;
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div<{ interactive: boolean }>`
+const SelectorControls = styled.div<{ interactive: boolean; error?: boolean }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 2px solid ${({ theme }) => theme.bg0};
+  background-color: ${({ theme, error }) => (error ? theme.red1 : theme.bg0)};
+  border: 2px solid ${({ theme, error }) => (error ? theme.red1 : theme.bg0)};
   border-radius: 16px;
   color: ${({ theme }) => theme.text1};
   cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
@@ -238,7 +241,8 @@ const getChainNameFromId = (id: string | number) => {
 }
 
 export default function NetworkSelector() {
-  const { chainId, provider, connector } = useActiveWeb3React()
+  const { chainId, library, provider, connector } = useActiveWeb3React()
+  const { error } = useWeb3React()
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
   const prevChainId = usePrevious(chainId)
@@ -307,11 +311,24 @@ export default function NetworkSelector() {
     return null
   }
 
+  const isUnsupportedChainError = error instanceof UnsupportedChainIdError
+
   return (
     <SelectorWrapper ref={node as any} onMouseEnter={toggle} onMouseLeave={toggle}>
-      <SelectorControls interactive>
-        <SelectorLogo interactive src={info.logoUrl} />
-        <SelectorLabel>{info.label}</SelectorLabel>
+      <SelectorControls interactive error={isUnsupportedChainError}>
+        {isUnsupportedChainError ? (
+          <>
+            <SelectorLogo interactive as={AlertTriangle} size={16} />
+            <SelectorLabel>
+              <Trans>Switch Network</Trans>
+            </SelectorLabel>
+          </>
+        ) : (
+          <>
+            <SelectorLogo interactive src={info.logoUrl} />
+            <SelectorLabel>{info.label}</SelectorLabel>
+          </>
+        )}
         <StyledChevronDown />
       </SelectorControls>
       {open && (
