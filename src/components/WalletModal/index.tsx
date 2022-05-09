@@ -410,6 +410,14 @@ export default function WalletModal({
                 <ArrowRight size={16} />
               </RowBetween>
             </LinkCard>
+            <ThemedText.Black fontSize={14}>
+              <ExternalLink href="https://help.uniswap.org/en/articles/5391525-what-is-a-wallet">
+                <Row justify="center" alignItems="center">
+                  <Trans>Learn more about wallets</Trans>
+                  <ArrowRight size={16} />
+                </Row>
+              </ExternalLink>
+            </ThemedText.Black>
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
