@@ -37,7 +37,6 @@ interface ConnectorState {
   isActive: boolean
   previousIsActive: boolean | undefined
   isActivating: boolean
-  previousIsActivating: boolean | undefined
   isEagerlyConnecting: boolean
   setIsEagerlyConnecting(connecting: boolean): void
 }
@@ -73,10 +72,6 @@ const Web3Wrapper = () => {
   const coinbaseWalletIsActivating = hooks.useSelectedIsActivating(coinbaseWallet)
   const walletConnectIsActivating = hooks.useSelectedIsActivating(walletConnect)
 
-  const previousInjectedIsActivating = usePrevious(injectedIsActivating)
-  const previousCoinbaseWalletIsActivating = usePrevious(coinbaseWalletIsActivating)
-  const previousWalletConnectIsActivating = usePrevious(walletConnectIsActivating)
-
   const [isInjectedEagerlyConnecting, setIsInjectedEagerlyConnecting] = useState(false)
   const [isCoinbaseWalletEagerlyConnecting, setIsCoinbaseWalletEagerlyConnecting] = useState(false)
   const [isWalletConnectEagerlyConnecting, setIsWalletConnectEagerlyConnecting] = useState(false)
@@ -86,7 +81,6 @@ const Web3Wrapper = () => {
       isActive: injectedIsActive,
       previousIsActive: previousInjectedIsActive,
       isActivating: injectedIsActivating,
-      previousIsActivating: previousInjectedIsActivating,
       isEagerlyConnecting: isInjectedEagerlyConnecting,
       setIsEagerlyConnecting: setIsInjectedEagerlyConnecting,
     }
@@ -94,7 +88,6 @@ const Web3Wrapper = () => {
       isActive: coinbaseWalletIsActive,
       previousIsActive: previousCoinbaseWalletIsActive,
       isActivating: coinbaseWalletIsActivating,
-      previousIsActivating: previousCoinbaseWalletIsActivating,
       isEagerlyConnecting: isCoinbaseWalletEagerlyConnecting,
       setIsEagerlyConnecting: setIsCoinbaseWalletEagerlyConnecting,
     }
@@ -102,7 +95,6 @@ const Web3Wrapper = () => {
       isActive: walletConnectIsActive,
       previousIsActive: previousWalletConnectIsActive,
       isActivating: walletConnectIsActivating,
-      previousIsActivating: previousWalletConnectIsActivating,
       isEagerlyConnecting: isWalletConnectEagerlyConnecting,
       setIsEagerlyConnecting: setIsWalletConnectEagerlyConnecting,
     }
@@ -113,30 +105,22 @@ const Web3Wrapper = () => {
     ])
 
     isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
-      const {
-        isActive,
-        previousIsActive,
-        isActivating,
-        previousIsActivating,
-        isEagerlyConnecting,
-        setIsEagerlyConnecting,
-      } = state
+      const { isActive, previousIsActive, isActivating, isEagerlyConnecting, setIsEagerlyConnecting } = state
 
-      if (!isActivating && previousIsActivating) {
-        setIsEagerlyConnecting(false)
-      }
-
-      if (isActive === false && previousIsActive === undefined && isActivating) {
+      if (!isActive && previousIsActive === undefined && isActivating) {
+        // if previousIsActive is undefined and isActivating is true, then we know it's an eager connection attempt
         setIsEagerlyConnecting(true)
-      }
+      } else if (isActive && !previousIsActive) {
+        // if the connection state changes...
 
-      if (isActive && previousIsActive === false) {
+        // reset the eagerly connecting state
         if (isEagerlyConnecting) {
           setIsEagerlyConnecting(false)
-          if (!walletOverrideBackfilled) {
-            dispatch(setWalletOverride({ wallet }))
-          }
-        } else {
+        }
+
+        // when a user manually sets their new connection we want to set a wallet override
+        // we also want to set an override when they were a user prior to this state being introduced
+        if (!isEagerlyConnecting || !walletOverrideBackfilled) {
           dispatch(setWalletOverride({ wallet }))
         }
       }
@@ -153,9 +137,6 @@ const Web3Wrapper = () => {
     injectedIsActivating,
     coinbaseWalletIsActivating,
     walletConnectIsActivating,
-    previousInjectedIsActivating,
-    previousCoinbaseWalletIsActivating,
-    previousWalletConnectIsActivating,
     isInjectedEagerlyConnecting,
     isCoinbaseWalletEagerlyConnecting,
     isWalletConnectEagerlyConnecting,
