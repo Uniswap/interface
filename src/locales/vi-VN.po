@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-05-03 17:17\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -343,6 +343,10 @@ msgstr "Tốt nhất cho các cặp rất ổn định."
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
 msgstr "Tuyến đường giá tốt nhất chi phí ~{formattedGasPriceString} xăng."
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "Blocked Address"
+msgstr "Địa chỉ bị chặn"
+
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Địa chỉ bị chặn"
@@ -576,8 +580,12 @@ msgid "Connected with {name}"
 msgstr "Đã kết nối với {name}"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1} with no slippage"
-msgstr "Chuyển đổi {0} thành {1} mà không bị trượt"
+msgid "Connecting…"
+msgstr "Kết nối…"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1}"
+msgstr "Chuyển đổi {0} thành {1}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -934,6 +942,10 @@ msgstr "Cách ứng dụng này sử dụng API"
 msgid "I understand"
 msgstr "Tôi hiểu"
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "If you believe this is an error, please send an email including your address to"
+msgstr "Nếu bạn cho rằng đây là lỗi, vui lòng gửi email bao gồm địa chỉ của bạn tới"
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Nếu bạn mua mã token từ danh sách này, bạn có thể không bán lại được."
@@ -1263,6 +1275,10 @@ msgstr "Không tìm thấy đề xuất nào."
 msgid "No results found."
 msgstr "Không có kết quả nào được tìm thấy."
 
+#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "Không có mã thông báo nào có sẵn trên mạng này. Vui lòng chuyển sang mạng khác."
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Chưa tạo"
@@ -1302,8 +1318,8 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ối! Đã xảy ra lỗi không xác định. Vui lòng làm mới trang hoặc truy cập từ trình duyệt hoặc thiết bị khác."
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimism Gateway"
-msgstr "Cổng lạc quan"
+msgid "Optimism Bridge"
+msgstr "Cầu lạc quan"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1611,6 +1627,7 @@ msgstr "Chọn một mạng"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1658,10 +1675,6 @@ msgstr "Chia sẻ của Pool"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "Chia sẻ của Pool:"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Hiển thị Portis"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
@@ -1789,6 +1802,10 @@ msgstr "% Bạn sẽ kiếm được từ phí."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã token bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
+msgstr "Số tiền bạn mong đợi nhận được theo giá thị trường hiện tại. Bạn có thể nhận được ít hơn hoặc nhiều hơn nếu giá thị trường thay đổi trong khi giao dịch của bạn đang chờ xử lý."
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
 msgstr "Ứng dụng tìm nạp dữ liệu blockchain từ dịch vụ lưu trữ của The Graph."
@@ -1821,6 +1838,14 @@ msgstr "Lượng gas nhanh hiện tại để gửi một giao dịch trên L1. 
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Chênh lệch ước tính giữa giá trị USD của lượng đầu vào và đầu ra."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
+msgstr "Phí trả cho thợ đào xử lý giao dịch của bạn. Cái này phải được trả bằng {0}."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The impact your trade has on the market price of this pool."
+msgstr "Tác động của giao dịch của bạn lên giá thị trường của nhóm này."
+
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
@@ -1828,6 +1853,10 @@ msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố v�
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định của bạn. Chỉ gửi một tài sản duy nhất."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "Số tiền tối thiểu bạn được đảm bảo nhận được. Nếu giá trượt thêm nữa, giao dịch của bạn sẽ hoàn nguyên."
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
@@ -1860,6 +1889,10 @@ msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng ki
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr "Không có dữ liệu thanh khoản."
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgstr "Địa chỉ này bị chặn trên giao diện Uniswap Labs vì nó được liên kết với một hoặc nhiều"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
@@ -2469,6 +2502,10 @@ msgstr "UNI chưa được nhận của bạn"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "sau khi trượt"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "blocked activities"
+msgstr "các hoạt động bị chặn"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-05-03 17:16\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -343,6 +343,10 @@ msgstr "Ideale per coppie molto stabili."
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
 msgstr "Il miglior percorso di prezzo costa ~{formattedGasPriceString} in gas."
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "Blocked Address"
+msgstr "Indirizzo bloccato"
+
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Indirizzo bloccato"
@@ -576,8 +580,12 @@ msgid "Connected with {name}"
 msgstr "Connesso con {name}"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1} with no slippage"
-msgstr "Converti {0} in {1} senza slippage"
+msgid "Connecting…"
+msgstr "Collegamento…"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1}"
+msgstr "Converti {0} in {1}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -934,6 +942,10 @@ msgstr "In che modo questa app utilizza le API"
 msgid "I understand"
 msgstr "Capisco"
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "If you believe this is an error, please send an email including your address to"
+msgstr "Se ritieni che si tratti di un errore, invia un'e-mail includendo il tuo indirizzo a"
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Se acquisti un token da questa lista, potresti non essere in grado di venderlo."
@@ -1263,6 +1275,10 @@ msgstr "Nessuna proposta trovata."
 msgid "No results found."
 msgstr "Nessun risultato trovato."
 
+#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "Nessun token è disponibile su questa rete. Si prega di passare a un'altra rete."
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Non creato"
@@ -1302,8 +1318,8 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Oops! Si è verificato un errore sconosciuto. Si prega di aggiornare la pagina, o visitare da un altro browser o dispositivo."
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimism Gateway"
-msgstr "Porta dell'ottimismo"
+msgid "Optimism Bridge"
+msgstr "Ponte dell'ottimismo"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1611,6 +1627,7 @@ msgstr "Seleziona una rete"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1658,10 +1675,6 @@ msgstr "Quota del pool"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "Quota del pool:"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Show Portis"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
@@ -1789,6 +1802,10 @@ msgstr "La % che guadagnerai in commissioni."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "L'invariante Uniswap x * y = k non è stata soddisfatta con lo scambio. Questo di solito significa che uno dei token che stai scambiando incorpora un comportamento personalizzato durante il trasferimento."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
+msgstr "L'importo che prevedi di ricevere al prezzo di mercato corrente. Potresti ricevere meno o più se il prezzo di mercato cambia mentre la transazione è in sospeso."
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
 msgstr "L'app recupera i dati blockchain dal servizio ospitato di The Graph."
@@ -1821,6 +1838,14 @@ msgstr "L'importo corrente del gas veloce per l'invio di una transazione su L1. 
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "La differenza stimata tra i valori in USD degli importi di input e output."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
+msgstr "La commissione pagata ai minatori che elaborano la tua transazione. Questo deve essere pagato in {0}."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The impact your trade has on the market price of this pool."
+msgstr "L'impatto che il tuo trade ha sul prezzo di mercato di questo pool."
+
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Il token di input non può essere trasferito. Potrebbe esserci un problema con il token di input."
@@ -1828,6 +1853,10 @@ msgstr "Il token di input non può essere trasferito. Potrebbe esserci un proble
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Il prezzo di mercato è al di fuori della tua fascia di prezzo specificata. Solo deposito singolo asset."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "L'importo minimo che sei sicuro di ricevere. Se il prezzo scende ulteriormente, la transazione verrà annullata."
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
@@ -1860,6 +1889,10 @@ msgstr "Impossibile inviare la transazione perché il termine è scaduto. Si pre
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr "Non ci sono dati sulla liquidità."
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgstr "Questo indirizzo è bloccato sull'interfaccia di Uniswap Labs perché è associato a uno o più"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
@@ -2469,6 +2502,10 @@ msgstr "La tua UNI non richiesta"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "dopo lo slittamento"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "blocked activities"
+msgstr "attività bloccate"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"

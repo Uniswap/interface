@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-05-03 17:16\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -343,6 +343,10 @@ msgstr "Terbaik untuk pasangan yang sangat stabil."
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
 msgstr "Biaya rute harga terbaik ~{formattedGasPriceString} dalam gas."
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "Blocked Address"
+msgstr "Alamat yang Diblokir"
+
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Alamat diblokir"
@@ -576,8 +580,12 @@ msgid "Connected with {name}"
 msgstr "Terhubung dengan {name}"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1} with no slippage"
-msgstr "Konversi {0} ke {1} tanpa selip"
+msgid "Connecting…"
+msgstr "Menghubungkan…"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1}"
+msgstr "Ubah {0} menjadi {1}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -934,6 +942,10 @@ msgstr "Bagaimana aplikasi ini menggunakan API"
 msgid "I understand"
 msgstr "Saya mengerti"
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "If you believe this is an error, please send an email including your address to"
+msgstr "Jika Anda yakin ini adalah kesalahan, silakan kirim email termasuk alamat Anda ke"
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Jika Anda membeli token dari daftar ini, Anda mungkin tidak dapat menjualnya kembali."
@@ -1263,6 +1275,10 @@ msgstr "Proposal tidak ditemukan."
 msgid "No results found."
 msgstr "Hasil tidak ditemukan."
 
+#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "Tidak ada token yang tersedia di jaringan ini. Silakan beralih ke jaringan lain."
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Tidak dibuat"
@@ -1302,8 +1318,8 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ups! Terjadi kesalahan yang tidak diketahui. Harap segarkan halaman, atau kunjungi dari browser atau perangkat lain."
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimism Gateway"
-msgstr "Gerbang Optimisme"
+msgid "Optimism Bridge"
+msgstr "Jembatan Optimisme"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1611,6 +1627,7 @@ msgstr "Pilih jaringan"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1658,10 +1675,6 @@ msgstr "Bagian dari Pool"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "Bagian dari Pool:"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Tampilkan Portis"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
@@ -1789,6 +1802,10 @@ msgstr "% yang akan Anda peroleh dalam bentuk biaya."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Invarian Uniswap x*y=k tidak dipenuhi oleh penukaran. Ini biasanya berarti salah satu token yang Anda tukar menyertakan perilaku khusus saat transfer."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
+msgstr "Jumlah yang Anda harapkan akan diterima pada harga pasar saat ini. Anda mungkin menerima lebih sedikit atau lebih jika harga pasar berubah saat transaksi Anda tertunda."
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
 msgstr "Aplikasi ini mengambil data blockchain dari layanan yang dihosting The Graph."
@@ -1821,6 +1838,14 @@ msgstr "Jumlah gas cepat saat ini untuk mengirim transaksi di L1. Biaya gas diba
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Perkiraan perbedaan antara nilai input dan jumlah output USD."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
+msgstr "Biaya yang dibayarkan kepada penambang yang memproses transaksi Anda. Ini harus dibayar dalam {0}."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The impact your trade has on the market price of this pool."
+msgstr "Dampak perdagangan Anda terhadap harga pasar kumpulan ini."
+
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Token input tidak dapat ditransfer. Mungkin ada masalah dengan token input."
@@ -1828,6 +1853,10 @@ msgstr "Token input tidak dapat ditransfer. Mungkin ada masalah dengan token inp
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Harga pasar di luar rentang harga yang Anda tentukan. Khusus setoran aset tunggal."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "Jumlah minimum yang dijamin akan Anda terima. Jika harga tergelincir lebih jauh, transaksi Anda akan kembali."
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
@@ -1860,6 +1889,10 @@ msgstr "Transaksi tidak dapat dikirim karena tenggat waktu telah berlalu. Harap 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr "Tidak ada data likuiditas."
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgstr "Alamat ini diblokir di antarmuka Uniswap Labs karena terkait dengan satu atau lebih"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
@@ -2469,6 +2502,10 @@ msgstr "UNI Anda yang belum diklaim"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "setelah tergelincir"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "blocked activities"
+msgstr "aktivitas yang diblokir"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"

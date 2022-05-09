@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-05-03 17:17\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -343,6 +343,10 @@ msgstr "ดีที่สุดสำหรับคู่ที่มีเส
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
 msgstr "เส้นทางราคาที่ถูกที่สุด ~{formattedGasPriceString} ในก๊าซ"
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "Blocked Address"
+msgstr "ที่อยู่ที่ถูกบล็อก"
+
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "ที่อยู่ที่ถูกบล็อก"
@@ -576,8 +580,12 @@ msgid "Connected with {name}"
 msgstr "เชื่อมต่อกับ {name}"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1} with no slippage"
-msgstr "แปลง {0} เป็น {1} โดยไม่มีการคลาดเคลื่อน"
+msgid "Connecting…"
+msgstr "กำลังเชื่อมต่อ…"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1}"
+msgstr "แปลง {0} เป็น {1}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -934,6 +942,10 @@ msgstr "แอปนี้ใช้ API อย่างไร"
 msgid "I understand"
 msgstr "ฉันเข้าใจ"
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "If you believe this is an error, please send an email including your address to"
+msgstr "หากคุณเชื่อว่านี่เป็นข้อผิดพลาด โปรดส่งอีเมลพร้อมที่อยู่ของคุณไปที่"
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "หากคุณซื้อโทเค็นจากรายการนี้ คุณอาจไม่สามารถขายคืนได้"
@@ -1263,6 +1275,10 @@ msgstr "ไม่พบข้อเสนอ"
 msgid "No results found."
 msgstr "ไม่พบผลลัพธ์."
 
+#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "ไม่มีโทเค็นในเครือข่ายนี้ โปรดเปลี่ยนไปใช้เครือข่ายอื่น"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "ไม่ได้สร้าง"
@@ -1302,8 +1318,8 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "อ๊ะ! เกิดข้อผิดพลาดที่ไม่รู้จัก โปรดรีเฟรชหน้า หรือเยี่ยมชมจากเบราว์เซอร์หรืออุปกรณ์อื่น"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimism Gateway"
-msgstr "เกตเวย์การมองในแง่ดี"
+msgid "Optimism Bridge"
+msgstr "สะพานมองในแง่ดี"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1611,6 +1627,7 @@ msgstr "เลือกเครือข่าย"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1658,10 +1675,6 @@ msgstr "ส่วนแบ่งของพูล"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "ส่วนแบ่งของพูล:"
-
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "โชว์ปอร์ติส"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
@@ -1789,6 +1802,10 @@ msgstr "% ที่คุณจะได้รับเป็นค่าธร�
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "ค่าคงที่ Uniswap x*y=k ไม่พอใจโดยการแลกเปลี่ยน ซึ่งมักจะหมายถึงหนึ่งในโทเค็นที่คุณกำลังแลกเปลี่ยนรวมลักษณะการทำงานที่กำหนดเองในการโอน"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
+msgstr "จำนวนเงินที่คุณคาดว่าจะได้รับในราคาตลาดปัจจุบัน คุณอาจได้รับน้อยลงหรือมากขึ้นหากราคาตลาดเปลี่ยนแปลงในขณะที่การทำธุรกรรมของคุณอยู่ระหว่างดำเนินการ"
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
 msgstr "แอพดึงข้อมูลบล็อคเชนจากบริการโฮสต์ของ The Graph"
@@ -1821,6 +1838,14 @@ msgstr "ปริมาณก๊าซที่รวดเร็วในปั
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "ค่าความแตกต่างโดยประมาณระหว่างค่า USD ของจำนวนเงินเข้าและออก"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
+msgstr "ค่าธรรมเนียมที่จ่ายให้กับนักขุดที่ดำเนินการธุรกรรมของคุณ ต้องชำระเป็น {0}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The impact your trade has on the market price of this pool."
+msgstr "ผลกระทบที่การค้าของคุณมีต่อราคาตลาดของกลุ่มนี้"
+
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "ไม่สามารถโอนโทเค็นอินพุตได้ อาจมีปัญหากับโทเค็นอินพุต"
@@ -1828,6 +1853,10 @@ msgstr "ไม่สามารถโอนโทเค็นอินพุต
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "ราคาตลาดอยู่นอกช่วงราคาที่คุณกำหนด เงินฝากสินทรัพย์เดียวเท่านั้น"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "จำนวนเงินขั้นต่ำที่คุณรับประกันว่าจะได้รับ หากราคาหลุดไปอีก ธุรกรรมของคุณจะกลับคืนมา"
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
@@ -1860,6 +1889,10 @@ msgstr "ไม่สามารถส่งธุรกรรมได้เน
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr "ไม่มีข้อมูลสภาพคล่อง"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgstr "ที่อยู่นี้ถูกบล็อกบนอินเทอร์เฟซ Uniswap Labs เนื่องจากเชื่อมโยงกับหนึ่งรายการขึ้นไป"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
@@ -2469,6 +2502,10 @@ msgstr "UNI . ที่ไม่มีการอ้างสิทธิ์ข
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "หลังการลื่นไถล"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "blocked activities"
+msgstr "กิจกรรมที่ถูกปิดกั้น"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
