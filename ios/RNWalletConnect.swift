@@ -13,6 +13,7 @@ enum EthMethod: String {
   case ethSign = "eth_sign"
   case signTransaction = "eth_signTransaction"
   case switchChain = "wallet_switchEthereumChain"
+  case addChain = "wallet_addEthereumChain"
   case signTypedData = "eth_signTypedData"
 }
 
