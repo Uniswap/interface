@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-03 17:16\n"
+"PO-Revision-Date: 2022-05-09 19:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -1061,6 +1061,10 @@ msgstr "Tudjon meg többet a likviditás biztosításáról"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Tudj meg többet"
+
+#: src/components/WalletModal/index.tsx
+msgid "Learn more about wallets"
+msgstr "Tudjon meg többet a pénztárcákról"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-03 17:17\n"
+"PO-Revision-Date: 2022-05-09 19:06\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -1060,6 +1060,10 @@ msgstr "เรียนรู้เกี่ยวกับการจัดห
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "เรียนรู้เพิ่มเติม"
+
+#: src/components/WalletModal/index.tsx
+msgid "Learn more about wallets"
+msgstr "เรียนรู้เพิ่มเติมเกี่ยวกับกระเป๋าเงิน"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx

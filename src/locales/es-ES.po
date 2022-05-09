@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-03 17:17\n"
+"PO-Revision-Date: 2022-05-09 19:06\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -1060,6 +1060,10 @@ msgstr "Más información sobre cómo proporcionar liquidez"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Aprende más"
+
+#: src/components/WalletModal/index.tsx
+msgid "Learn more about wallets"
+msgstr "Más información sobre carteras"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-03 17:17\n"
+"PO-Revision-Date: 2022-05-09 19:06\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -1060,6 +1060,10 @@ msgstr "Likidite sağlama hakkında bilgi edinin"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Daha fazla bilgi edin"
+
+#: src/components/WalletModal/index.tsx
+msgid "Learn more about wallets"
+msgstr "Cüzdanlar hakkında daha fazla bilgi edinin"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx

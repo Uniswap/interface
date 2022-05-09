@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-03 17:16\n"
+"PO-Revision-Date: 2022-05-09 19:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1060,6 +1060,10 @@ msgstr "閱讀有關提供流動資金的資訊"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "瞭解更多"
+
+#: src/components/WalletModal/index.tsx
+msgid "Learn more about wallets"
+msgstr "了解有關錢包的更多信息"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
