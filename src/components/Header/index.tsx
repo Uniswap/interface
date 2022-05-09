@@ -4,8 +4,8 @@ import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
-import { darken } from 'polished'
-import { NavLink } from 'react-router-dom'
+//import { darken } from 'polished'
+//import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
@@ -15,11 +15,12 @@ import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
-import { ExternalLink, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
+//import { ExternalLink, ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
-import Row from '../Row'
+//import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import HolidayOrnament from './HolidayOrnament'
@@ -86,7 +87,7 @@ const HeaderElement = styled.div`
   `};
 `
 
-const HeaderLinks = styled(Row)`
+/*const HeaderLinks = styled(Row)`
   justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
@@ -117,7 +118,7 @@ const HeaderLinks = styled(Row)`
     box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
   `};
 `
-
+*/
 const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
@@ -185,9 +186,9 @@ const UniIcon = styled.div`
   position: relative;
 `
 
-const activeClassName = 'ACTIVE'
+//const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
+/*const StyledNavLink = styled(NavLink).attrs({
   activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -216,8 +217,8 @@ const StyledNavLink = styled(NavLink).attrs({
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 `
-
-const StyledExternalLink = styled(ExternalLink).attrs({
+*/
+/*const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName,
 })<{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -244,7 +245,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
     text-decoration: none;
   }
 `
-
+*/
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -263,7 +264,6 @@ export default function Header() {
   const scrollY = useScrollPosition()
 
   const {
-    infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
   } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
