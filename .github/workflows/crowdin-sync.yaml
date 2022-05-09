@@ -42,7 +42,7 @@ jobs:
         run: "yarn i18n:extract"
 
       - name: Synchronize
-        uses: crowdin/github-action@1.1.0
+        uses: crowdin/github-action@1.4.9
         with:
           upload_sources: false
           download_translations: true
