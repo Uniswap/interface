@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { UnsupportedChainIdError, useWeb3React } from 'web3-react-core'
 
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
@@ -101,6 +102,7 @@ const NETWORK_HEALTH_CHECK_MS = ms`10s`
 
 export default function Polling() {
   const { chainId } = useActiveWeb3React()
+  const { error } = useWeb3React()
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
@@ -135,6 +137,12 @@ export default function Polling() {
   )
 
   //TODO - chainlink gas oracle is really slow. Can we get a better data source?
+
+  const isUnsupportedChainError = error instanceof UnsupportedChainIdError
+
+  if (isUnsupportedChainError) {
+    return null // Hide all this info when there's an unsupported chain id error
+  }
 
   return (
     <>
