@@ -69,7 +69,10 @@ export function LandingScreen({ navigation }: Props) {
           </Box>
         </Box>
         <Flex gap="sm" mx="md" my="sm">
-          <Button name={ElementName.OnboardingCreateWallet} onPress={onPressCreateWallet}>
+          <Button
+            name={ElementName.OnboardingCreateWallet}
+            testID={ElementName.OnboardingCreateWallet}
+            onPress={onPressCreateWallet}>
             <Flex
               row
               alignItems="center"

@@ -40,6 +40,7 @@ export function NotificationsSetupScreen({ navigation }: Props) {
             alignSelf="stretch"
             label={t('Turn on notifications')}
             name={ElementName.Enable}
+            testID={ElementName.Enable}
             onPress={onPressEnableNotifications}
           />
           <TextButton

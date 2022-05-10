@@ -62,8 +62,7 @@ function* editAccount(params: EditAccountParams) {
 
 function* renameAccount(params: RenameParams, account: Account) {
   const { address, newName } = params
-  logger.info('editAccountSaga', 'renameAccount', 'Renaming account', address)
-  account.name = newName
+  logger.info('editAccountSaga', 'renameAccount', 'Renaming account', address, 'to ', newName)
   yield* put(
     editInStore({
       address,

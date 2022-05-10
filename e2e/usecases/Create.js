@@ -1,0 +1,45 @@
+import { by, device, element, expect } from 'detox'
+import { ElementName } from '../../src/features/telemetry/constants'
+import { Accounts } from '../utils/fixtures'
+
+export function Create() {
+  it('creates a readonly account', async () => {
+    await device.setBiometricEnrollment(true)
+
+    await element(by.id(ElementName.OnboardingCreateWallet)).tap()
+
+    // Name and color
+    await element(by.id('customize/name')).typeText(`${Accounts.managed.name}`)
+    await element(by.id('customize/name')).tapReturnKey()
+    await element(by.id(ElementName.Next)).tap()
+
+    // Backups
+    // iCloud Backup
+    await element(by.id(ElementName.AddiCloudBackup)).tap()
+
+    // enter pin
+    await repeatedTap(6, 'decimal-pad-1')
+    // failure
+    await repeatedTap(6, 'decimal-pad-9')
+    // valid
+    await repeatedTap(6, 'decimal-pad-1')
+
+    await element(by.id(ElementName.Next)).tap()
+
+    // Push notifications
+    await element(by.id(ElementName.Enable)).tap()
+
+    // Face ID
+    await element(by.id(ElementName.Enable)).tap()
+
+    // Home screen
+    await expect(element(by.id(`address-display/name/${Accounts.managed.name}`))).toBeVisible()
+  })
+}
+
+async function repeatedTap(to, id) {
+  let counter = 0
+  while (counter++ < to) {
+    await element(by.id(id)).tap()
+  }
+}

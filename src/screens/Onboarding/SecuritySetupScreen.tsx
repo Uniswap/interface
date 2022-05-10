@@ -50,6 +50,7 @@ export function SecuritySetupScreen({}: Props) {
             alignSelf="stretch"
             label={t('Turn on FaceID')}
             name={ElementName.Enable}
+            testID={ElementName.Enable}
             onPress={onPressEnableSecurity}
           />
           <TextButton

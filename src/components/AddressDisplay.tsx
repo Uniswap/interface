@@ -38,7 +38,7 @@ export function AddressDisplay({
     <Flex row alignItems="center" gap="sm">
       <Identicon address={validatedAddress} size={size} />
       <Flex gap={verticalGap}>
-        <Text color="textColor" variant={variant}>
+        <Text color="textColor" testID={`address-display/name/${name}`} variant={variant}>
           {name}
         </Text>
         {alwaysShowAddress && (

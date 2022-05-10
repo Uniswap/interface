@@ -74,6 +74,7 @@ export function BackupScreen({ navigation }: Props) {
             disabled={!activeAccountBackups || activeAccountBackups.length < 1}
             label={t('Next')}
             name={ElementName.Next}
+            testID={ElementName.Next}
             onPress={onPressNext}
           />
         </Flex>
@@ -151,6 +152,7 @@ function BackupOptionButton({ icon, label, name, onPress, completed }: BackupOpt
             disabled={false}
             name={name}
             p="sm"
+            testID={name}
             textColor="textColor"
             textVariant="buttonLabel"
             onPress={onPress}>

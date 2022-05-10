@@ -26,18 +26,18 @@ export function NameAndColorScreen({ navigation }: Props) {
   const activeAccount = useAppSelector(activeAccountSelector)
   const [newAccountName, setNewAccountName] = useState(activeAccount?.name ?? '')
 
-  const onTextInputBlur = () =>
-    activeAccount &&
-    dispatch(
-      editAccountActions.trigger({
-        type: EditAccountAction.Rename,
-        address: activeAccount.address,
-        newName: newAccountName,
-      })
-    )
-
   const onPressNext = () => {
     navigation.navigate(OnboardingScreens.Backup)
+
+    if (activeAccount) {
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.Rename,
+          address: activeAccount.address,
+          newName: newAccountName,
+        })
+      )
+    }
   }
 
   return (
@@ -54,7 +54,6 @@ export function NameAndColorScreen({ navigation }: Props) {
             accountName={newAccountName}
             address={activeAccount.address}
             setAccountName={setNewAccountName}
-            onBlur={onTextInputBlur}
           />
         ) : (
           <ActivityIndicator />
@@ -62,7 +61,12 @@ export function NameAndColorScreen({ navigation }: Props) {
       </Box>
 
       <Flex justifyContent="flex-end">
-        <PrimaryButton label={t('Next')} name={ElementName.Next} onPress={onPressNext} />
+        <PrimaryButton
+          label={t('Next')}
+          name={ElementName.Next}
+          testID={ElementName.Next}
+          onPress={onPressNext}
+        />
       </Flex>
     </OnboardingScreen>
   )
@@ -71,12 +75,10 @@ export function NameAndColorScreen({ navigation }: Props) {
 function CustomizationSection({
   address,
   accountName,
-  onBlur,
   setAccountName,
 }: {
   address: Address
   accountName: string
-  onBlur: () => void
   setAccountName: Dispatch<SetStateAction<string>>
 }) {
   return (
@@ -85,10 +87,10 @@ function CustomizationSection({
         <TextInput
           fontSize={28}
           placeholder="Nickname"
+          testID="customize/name"
           textAlign="center"
           value={accountName}
           width="100%"
-          onBlur={onBlur}
           onChangeText={(newName) => setAccountName(newName)}
         />
         <Text color="textColor" opacity={0.7} variant="body">
@@ -96,7 +98,7 @@ function CustomizationSection({
         </Text>
       </Flex>
       <Flex centered bg="gray50" borderRadius="lg" p="lg">
-        <QRCode size={200} value={address} />
+        <QRCode size={180} value={address} />
       </Flex>
     </Flex>
   )

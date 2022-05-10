@@ -16,7 +16,11 @@ export function AccountHeader({ children, onPress }: AccountHeaderProps) {
   const { t } = useTranslation()
 
   return (
-    <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+    <Box
+      alignItems="center"
+      flexDirection="row"
+      justifyContent="space-between"
+      testID="account-header">
       <Button
         alignItems="center"
         flexDirection="row"
@@ -26,6 +30,7 @@ export function AccountHeader({ children, onPress }: AccountHeaderProps) {
         <AddressDisplay
           address={activeAccount?.address}
           fallback={t('Connect Wallet')}
+          override={activeAccount?.name}
           variant="buttonLabel"
         />
       </Button>
