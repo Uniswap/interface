@@ -4,7 +4,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
-import { setWalletOverride } from 'state/user/reducer'
+import { updateWalletOverride } from 'state/user/reducer'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -270,7 +270,7 @@ export default function AccountDetails({
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        dispatch(setWalletOverride({ wallet: undefined }))
+                        dispatch(updateWalletOverride({ wallet: undefined }))
                         connector.deactivate()
                       }}
                     >

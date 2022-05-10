@@ -4,7 +4,7 @@ import { Wallet } from 'constants/wallet'
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setWalletOverride } from 'state/user/reducer'
+import { updateWalletOverride } from 'state/user/reducer'
 
 interface ConnectorState {
   isActive: boolean
@@ -84,7 +84,7 @@ const Web3Wrapper = ({ children }: Props) => {
         // when a user manually sets their new connection we want to set a wallet override
         // we also want to set an override when they were a user prior to this state being introduced
         if (!isEagerlyConnecting || !walletOverrideBackfilled) {
-          dispatch(setWalletOverride({ wallet }))
+          dispatch(updateWalletOverride({ wallet }))
         }
       }
     })

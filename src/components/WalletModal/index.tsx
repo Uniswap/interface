@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
 import { useAppDispatch } from 'state/hooks'
-import { setWalletOverride } from 'state/user/reducer'
+import { updateWalletOverride } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -137,7 +137,7 @@ export default function WalletModal({
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
     [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(walletConnect),
   }
-  const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const [walletView, updateWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
   const [pendingWallet, setPendingWallet] = useState<Connector | undefined>()
@@ -148,13 +148,13 @@ export default function WalletModal({
   const previousConnector = usePrevious(connector)
   useEffect(() => {
     if (walletModalOpen && connector && connector !== previousConnector && !error) {
-      setWalletView(WALLET_VIEWS.ACCOUNT)
+      updateWalletView(WALLET_VIEWS.ACCOUNT)
     }
-  }, [setWalletView, error, connector, walletModalOpen, previousConnector])
+  }, [updateWalletView, error, connector, walletModalOpen, previousConnector])
 
   useEffect(() => {
     if (connector === network) {
-      setWalletView(WALLET_VIEWS.OPTIONS)
+      updateWalletView(WALLET_VIEWS.OPTIONS)
     }
   }, [connector])
 
@@ -173,11 +173,11 @@ export default function WalletModal({
     connector.activate()
     const wallet = getWalletForConnector(connector)
     if (isActiveMap[wallet]) {
-      dispatch(setWalletOverride({ wallet }))
-      setWalletView(WALLET_VIEWS.ACCOUNT)
+      dispatch(updateWalletOverride({ wallet }))
+      updateWalletView(WALLET_VIEWS.ACCOUNT)
     } else {
       setPendingWallet(connector)
-      setWalletView(WALLET_VIEWS.PENDING)
+      updateWalletView(WALLET_VIEWS.PENDING)
     }
   }
 
@@ -251,7 +251,7 @@ export default function WalletModal({
             {...baseProps}
             onClick={() => {
               option.connector === connector
-                ? setWalletView(WALLET_VIEWS.ACCOUNT)
+                ? updateWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && option.connector && tryActivation(option.connector)
             }}
             subheader={null} //use option.descriptio to bring back multi-line
@@ -289,7 +289,7 @@ export default function WalletModal({
           <HeaderRow>
             <HoverText
               onClick={() => {
-                setWalletView(
+                updateWalletView(
                   (previousWalletView === WALLET_VIEWS.LEGAL ? WALLET_VIEWS.ACCOUNT : previousWalletView) ??
                     WALLET_VIEWS.ACCOUNT
                 )
@@ -314,7 +314,7 @@ export default function WalletModal({
           pendingTransactions={pendingTransactions}
           confirmedTransactions={confirmedTransactions}
           ENSName={ENSName}
-          openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
+          openOptions={() => updateWalletView(WALLET_VIEWS.OPTIONS)}
         />
       )
     }
@@ -326,7 +326,7 @@ export default function WalletModal({
         <HeaderRow color="blue">
           <HoverText
             onClick={() => {
-              setWalletView(WALLET_VIEWS.OPTIONS)
+              updateWalletView(WALLET_VIEWS.OPTIONS)
             }}
           >
             <ArrowLeft />
@@ -352,7 +352,7 @@ export default function WalletModal({
             {walletView !== WALLET_VIEWS.PENDING && (
               <>
                 <OptionGrid>{getOptions()}</OptionGrid>
-                <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
+                <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => updateWalletView(WALLET_VIEWS.LEGAL)}>
                   <RowBetween>
                     <AutoRow gap="4px">
                       <Info size={20} />
