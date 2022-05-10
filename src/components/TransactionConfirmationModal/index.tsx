@@ -106,18 +106,16 @@ function TransactionSubmittedContent({
   const [success, setSuccess] = useState<boolean | undefined>()
 
   const addToken = useCallback(() => {
-    token &&
-      token.symbol &&
-      connector.watchAsset &&
-      connector
-        .watchAsset({
-          address: token.address,
-          symbol: token.symbol,
-          decimals: token.decimals,
-          image: logoURL,
-        })
-        .then(() => setSuccess(true))
-        .catch(() => setSuccess(false))
+    if (!token?.symbol || !connector.watchAsset) return
+    connector
+      .watchAsset({
+        address: token.address,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        image: logoURL,
+      })
+      .then(() => setSuccess(true))
+      .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
   return (
