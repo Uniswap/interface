@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 15:12\n"
+"PO-Revision-Date: 2022-05-10 21:06\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -121,17 +121,12 @@ msgid "About"
 msgstr "Sobre"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "Accepta"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Compte"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Acknowledge"
-msgstr "Reconèixer"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -192,10 +187,6 @@ msgstr "L'adreça no té cap reclamació disponible"
 msgid "Against"
 msgstr "En contra"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow"
-msgstr "Permetre"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Permet la migració de token LP"
@@ -204,21 +195,9 @@ msgstr "Permet la migració de token LP"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Permet operacions amb alt impacte en els preus i ometre la pantalla de confirmació. Utilitzeu al vostre propi risc."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow in your wallet"
-msgstr "Permeteu-ho a la vostra cartera"
-
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Permetre que el protocol Uniswap utilitzi el vostre {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Primer permeteu {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allowance pending"
-msgstr "Subvenció pendent"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -232,12 +211,7 @@ msgstr "Import"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "S'ha produït un error en intentar executar aquest intercanvi. És possible que hàgiu d'augmentar la tolerància a la relliscada. Si això no funciona, és possible que hi hagi una incompatibilitat amb el testimoni que esteu negociant. Nota: els tokens de transferència i rebase no són compatibles amb Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approval pending"
-msgstr "Aprovació pendent"
-
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Aprovar"
@@ -246,10 +220,6 @@ msgstr "Aprovar"
 msgid "Approve Token"
 msgstr "Aprova el testimoni"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve in your wallet"
-msgstr "Aprova a la teva cartera"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -257,10 +227,6 @@ msgstr "Aprova a la teva cartera"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Aprova {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Aprova {0} primer"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -303,13 +269,8 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Com a mínim {0} {1} i {2} {3} seran reemborsats a la cartera a causa de l'interval de preus seleccionat."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Automàtic"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "Auto Router"
-msgstr "Encaminador automàtic"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -458,7 +419,6 @@ msgstr "Esborra-ho tot"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Tanca"
 
@@ -513,15 +473,6 @@ msgstr "Confirmeu el subministrament"
 msgid "Confirm Swap"
 msgstr "Confirmeu l'intercanvi"
 
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Confirm in your wallet"
-msgstr "Confirmeu a la vostra cartera"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Confirm swap"
-msgstr "Confirmeu l'intercanvi"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -567,14 +518,6 @@ msgstr "Connecteu-vos a una cartera per veure la vostra liquiditat V2."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Connecteu-vos a una cartera per veure la vostra liquiditat."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connect wallet to swap"
-msgstr "Connecteu la cartera per intercanviar"
-
-#: src/lib/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "Connecta la teva cartera"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Connectat amb {name}"
@@ -582,14 +525,6 @@ msgstr "Connectat amb {name}"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
 msgstr "Connectant..."
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connecting…"
-msgstr "Connexió…"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1}"
-msgstr "Converteix {0} a {1}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -727,7 +662,6 @@ msgid "Discord"
 msgstr "Discòrdia"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "Destitueix"
 
@@ -769,7 +703,6 @@ msgstr "Introduïu una adreça per activar una reclamació UNI. Si l'adreça té
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -805,14 +738,6 @@ msgstr "Error de connexió"
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
 msgstr "Error de connexió. Proveu d'actualitzar la pàgina."
-
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Error details"
-msgstr "Detalls de l'error"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Error fetching trade"
-msgstr "S'ha produït un error en recuperar el comerç"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -874,11 +799,6 @@ msgstr "Nivell de tarifa"
 msgid "Fetching best price..."
 msgstr "Buscant el millor preu..."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Fetching best price…"
-msgstr "Obtenint el millor preu…"
-
-#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Per a"
@@ -923,19 +843,6 @@ msgstr "Amaga les posicions tancades"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Alt impacte en els preus"
-
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High price impact"
-msgstr "Alt impacte en el preu"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High slippage"
-msgstr "Alt lliscament"
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "High slippage increases the risk of price movement"
-msgstr "Un gran lliscament augmenta el risc de moviment de preus"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1002,13 +909,8 @@ msgstr "Instal·leu Metamask"
 msgid "Insufficient liquidity for this trade."
 msgstr "Liquiditat insuficient per a aquest comerç."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Insufficient liquidity in the pool for your trade"
-msgstr "Liquiditat insuficient al pool per al vostre comerç"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1084,10 +986,6 @@ msgstr "Liquiditat"
 msgid "Liquidity data not available."
 msgstr "No hi ha dades de liquiditat disponibles."
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Comissió del proveïdor de liquiditat"
-
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Recompenses del proveïdor de liquiditat"
@@ -1139,7 +1037,6 @@ msgstr "Gestiona les llistes de fitxes"
 msgid "Manage this pool."
 msgstr "Gestioneu aquest fons."
 
-#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Màx"
@@ -1153,16 +1050,11 @@ msgstr "Preu màxim"
 msgid "Max price"
 msgstr "Preu màxim"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Max slippage"
-msgstr "Lliscament màxim"
-
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Màx.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Màxim enviat"
 
@@ -1213,17 +1105,12 @@ msgid "Min:"
 msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Mínim rebut"
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Falten dependències"
-
-#: src/lib/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Alternativa simulada"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1275,25 +1162,18 @@ msgid "No proposals found."
 msgstr "No s'ha trobat cap proposta."
 
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "Sense resultats."
-
-#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
-msgid "No tokens are available on this network. Please switch to another network."
-msgstr "No hi ha cap testimoni disponible en aquesta xarxa. Canvia a una altra xarxa."
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "No creat"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "OFF"
 msgstr "DESACTIVAT"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "ON"
 msgstr "ACTIVAT"
 
@@ -1346,14 +1226,6 @@ msgstr "S’estima la producció. Si el preu canvia més del {0}%, la vostra tra
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "S’estima la producció. Rebrà com a mínim <0>{0} {1}</0> o la transacció es revertirà."
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "La sortida s'estima. Rebràs almenys {0} {1} o la transacció es revertirà."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
-msgstr "La sortida s'estima. Enviareu com a màxim {0} {1} o la transacció es revertirà."
-
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "La sortida s’enviarà a <0>{0}</0>"
@@ -1381,10 +1253,6 @@ msgstr "Connecteu-vos a la capa 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Connecteu-vos a una xarxa compatible al menú desplegable o a la vostra cartera."
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Please enter a valid slippage %"
-msgstr "Introduïu un % de lliscament vàlid"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1435,10 +1303,6 @@ msgstr "Agrupat {0}:"
 msgid "Pools Overview"
 msgstr "Visió general dels grups"
 
-#: src/lib/components/BrandedFooter.tsx
-msgid "Powered by the Uniswap protocol"
-msgstr "Impulsat pel protocol Uniswap"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "Vista prèvia"
@@ -1463,17 +1327,9 @@ msgstr "L’impacte en el preu és massa alt"
 msgid "Price Updated"
 msgstr "Preu actualitzat"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "Impacte en el preu"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Gamma de preus"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Price updated"
-msgstr "Preu actualitzat"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1543,17 +1399,9 @@ msgstr "Obteniu més informació sobre els recursos no compatibles"
 msgid "Recent Transactions"
 msgstr "Transaccions recents"
 
-#: src/lib/components/RecentTransactionsDialog.tsx
-msgid "Recent transactions"
-msgstr "Transaccions recents"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Destinatari"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page"
-msgstr "Torna a carregar la pàgina"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1597,23 +1445,11 @@ msgstr "Eliminació de {0} {1} i{2} {3}"
 msgid "Request Features"
 msgstr "Sol·licitud de característiques"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Reset"
-msgstr "Restableix"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Torna"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Review swap"
-msgstr "Intercanvi de ressenyes"
-
-#: src/lib/components/TokenSelect/index.tsx
-msgid "Search by token name or address"
-msgstr "Cerca per nom o adreça de testimoni"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1629,9 +1465,6 @@ msgstr "Seleccioneu una xarxa"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/TokenButton.tsx
-#: src/lib/components/TokenSelect/index.tsx
-#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1668,10 +1501,6 @@ msgstr "Estableix l'interval de preus"
 msgid "Set Starting Price"
 msgstr "Estableix el preu inicial"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Settings"
-msgstr "Configuració"
-
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "Quota de grup"
@@ -1689,7 +1518,6 @@ msgid "Simple"
 msgstr "Senzill"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "Tolerància al lliscament"
 
@@ -1700,11 +1528,6 @@ msgstr "Alguns recursos no estan disponibles a través d’aquesta interfície p
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Alguna cosa ha anat malament"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Something went wrong."
-msgstr "Alguna cosa ha anat malament."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1741,7 +1564,6 @@ msgstr "Subministrant {0} {1} i {2} {3}"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/lib/components/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1757,14 +1579,6 @@ msgstr "Canvieu <0 /> per <1 /> exactament"
 msgid "Swap Anyway"
 msgstr "Intercanviar de totes maneres"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap confirmed"
-msgstr "Canvi confirmat"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap details"
-msgstr "Intercanviar detalls"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Canvieu exactament <0 /> per <1 />"
@@ -1773,14 +1587,6 @@ msgstr "Canvieu exactament <0 /> per <1 />"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Ha fallat l'intercanvi: {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap pending"
-msgstr "Canvi pendent"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap summary"
-msgstr "Resum d'intercanvi"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1991,18 +1797,9 @@ msgstr "Transacció enviada"
 msgid "Transaction completed in"
 msgstr "Transacció finalitzada el"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction confirmed"
-msgstr "Transacció confirmada"
-
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "Termini de transacció"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction pending"
-msgstr "Transacció pendent"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -2016,10 +1813,6 @@ msgstr "Transferir el testimoni"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Torna-ho a provar"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Intenteu augmentar la vostra tolerància al lliscament.<0/>NOTA: La tarifa de les fitxes de transferència i rebase no és compatible amb Uniswap V3."
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2121,10 +1914,6 @@ msgstr "Recurs no admès"
 msgid "Unsupported Assets"
 msgstr "Actius no admesos"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade"
-msgstr "Xarxa no compatible: canvieu a una altra per operar"
-
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Sense títol"
@@ -2136,18 +1925,6 @@ msgstr "Desembolicar"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Desembolica de <0/> a {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap confirmed"
-msgstr "Desembolcall confirmat"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap pending"
-msgstr "Desembolcall pendent"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Desembolica {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2186,7 +1963,6 @@ msgstr "Consulteu els honoraris i les taxes acumulades <0> ↗</0>"
 msgid "View list"
 msgstr "Veure llista"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Veure a Etherscan"
@@ -2324,18 +2100,6 @@ msgstr "Embolicar"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Embolcalla de <0/> a {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Embolcall confirmat"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Embolcall pendent"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "Embolcall {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2482,16 +2246,11 @@ msgstr "La vostra transacció pot ser inicial"
 msgid "Your transaction may fail"
 msgstr "La vostra transacció pot fallar"
 
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
-msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "La transacció es revertirà si ha estat pendent durant més d'aquest període de temps."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "La vostra transacció es revertirà si està pendent durant més d’aquest període de temps."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "La vostra transacció es revertirà si el preu canvia desfavorablement en més d’aquest percentatge."
 
@@ -2536,7 +2295,6 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https: // o ipfs: // o nom ENS"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minuts"
 
@@ -2547,10 +2305,6 @@ msgstr "mitjançant {0}"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "mitjançant la llista de tokens {0}"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {La millor ruta amb 1 salt} other {La millor ruta amb # hops}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
@@ -2699,25 +2453,13 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} fitxes"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "{integrator} fee"
-msgstr "{integrator} tarifa"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
 msgstr "{label} pont de fitxes"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{min}m {sec}s"
-msgstr "{min}m {sec}s"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{sec}s"
-msgstr "{sec}s"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

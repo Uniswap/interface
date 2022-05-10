@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 15:12\n"
+"PO-Revision-Date: 2022-05-10 21:06\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -121,17 +121,12 @@ msgid "About"
 msgstr "O aplikaci"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "Přijmout"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Účet"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Acknowledge"
-msgstr "Potvrdit"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -192,10 +187,6 @@ msgstr "Adresa nemá žádný dostupný nárok"
 msgid "Against"
 msgstr "Proti"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow"
-msgstr "Dovolit"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Povolit migraci žetonů LP"
@@ -204,21 +195,9 @@ msgstr "Povolit migraci žetonů LP"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Povolit obchody s vysokým dopadem na cenu a přeskočit obrazovku s potvrzením. Používejte na vlastní nebezpečí."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow in your wallet"
-msgstr "Povolte v peněžence"
-
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Povolit protokolu Uniswap používat váš {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Nejprve povolte {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allowance pending"
-msgstr "Čeká se na příspěvek"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -232,12 +211,7 @@ msgstr "Částka"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete muset zvýšit toleranci skluzu. Pokud to nefunguje, může dojít k nekompatibilitě s tokenem, s nímž obchodujete. Poznámka: Poplatky za tokeny za převody a rebase nejsou kompatibilní s Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approval pending"
-msgstr "Čeká se na schválení"
-
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Schválit"
@@ -246,10 +220,6 @@ msgstr "Schválit"
 msgid "Approve Token"
 msgstr "Schválit token"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve in your wallet"
-msgstr "Schvalujte v peněžence"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -257,10 +227,6 @@ msgstr "Schvalujte v peněžence"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Schválit {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Nejprve schválit {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -303,13 +269,8 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Alespoň {0} {1} a {2} {3} budou kvůli vybranému cenovému rozpětí vráceny do Vaší peněženky."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Automaticky"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "Auto Router"
-msgstr "Auto Router"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -458,7 +419,6 @@ msgstr "Vymazat vše"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Zavřít"
 
@@ -513,15 +473,6 @@ msgstr "Potvrdit zásobu"
 msgid "Confirm Swap"
 msgstr "Potvrdit výměnu"
 
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Confirm in your wallet"
-msgstr "Potvrďte v peněžence"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Confirm swap"
-msgstr "Potvrďte výměnu"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -567,14 +518,6 @@ msgstr "Chcete-li si zobrazit svou likviditu V2, připojte se k peněžence."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Chcete-li si zobrazit svou likviditu, připojte se k peněžence."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connect wallet to swap"
-msgstr "Připojte peněženku k výměně"
-
-#: src/lib/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "Připojte svou peněženku"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Propojeno s {name}"
@@ -582,14 +525,6 @@ msgstr "Propojeno s {name}"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
 msgstr "Spojovací..."
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connecting…"
-msgstr "Připojení…"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1}"
-msgstr "Převést {0} na {1}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -727,7 +662,6 @@ msgid "Discord"
 msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "Zamítnout"
 
@@ -769,7 +703,6 @@ msgstr "Chcete-li spustit nárokování UNI, zadejte adresu. Jestliže bude mít
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -805,14 +738,6 @@ msgstr "Chyba připojení"
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
 msgstr "Chyba připojení. Zkuste obnovit stránku."
-
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Error details"
-msgstr "Detaily chyby"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Error fetching trade"
-msgstr "Chyba při načítání obchodu"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -874,11 +799,6 @@ msgstr "Úroveň poplatku"
 msgid "Fetching best price..."
 msgstr "Načítání nejlepší ceny..."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Fetching best price…"
-msgstr "Načítání nejlepší ceny…"
-
-#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Pro"
@@ -923,19 +843,6 @@ msgstr "Skrýt zavřené pozice"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Vysoký dopad na cenu"
-
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High price impact"
-msgstr "Vysoký cenový dopad"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High slippage"
-msgstr "Vysoký skluz"
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "High slippage increases the risk of price movement"
-msgstr "Vysoký skluz zvyšuje riziko pohybu cen"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1002,13 +909,8 @@ msgstr "Nainstalovat Metamasku"
 msgid "Insufficient liquidity for this trade."
 msgstr "Nedostatek likvidity pro tento obchod."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Insufficient liquidity in the pool for your trade"
-msgstr "Nedostatečná likvidita v poolu pro váš obchod"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1084,10 +986,6 @@ msgstr "Likvidita"
 msgid "Liquidity data not available."
 msgstr "Údaje o likviditě nejsou k dispozici."
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Poplatek poskytovatele likvidity"
-
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Odměny poskytovatele likvidity"
@@ -1139,7 +1037,6 @@ msgstr "Spravovat seznamy žetonů"
 msgid "Manage this pool."
 msgstr "Spravovat tento fond."
 
-#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Max."
@@ -1153,16 +1050,11 @@ msgstr "Maximální cena"
 msgid "Max price"
 msgstr "Maximální cena"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Max slippage"
-msgstr "Maximální prokluz"
-
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Maximálně:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maximum odeslané"
 
@@ -1213,17 +1105,12 @@ msgid "Min:"
 msgstr "Minimum:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum přijato"
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Chybějící závislosti"
-
-#: src/lib/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Mock Toggle"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1275,25 +1162,18 @@ msgid "No proposals found."
 msgstr "Nebyly nalezeny žádné návrhy."
 
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "Nebyly nalezeny žádné výsledky."
-
-#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
-msgid "No tokens are available on this network. Please switch to another network."
-msgstr "V této síti nejsou k dispozici žádné tokeny. Přepněte na jinou síť."
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Není vytvořeno"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "OFF"
 msgstr "VYPNUTO"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "ON"
 msgstr "ZAPNUTO"
 
@@ -1346,14 +1226,6 @@ msgstr "Výstup je odhadnutý. Jestliže se cena změní o více než {0} %, Va�
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Výstup je odhadnutý. Obdržíte alespoň <0>{0} {1}</0>, nebo bude transakce vzata zpět."
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "Výkon se odhaduje. Obdržíte alespoň {0} {1} nebo se transakce vrátí zpět."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
-msgstr "Výkon se odhaduje. Odešlete maximálně {0} {1} nebo se transakce vrátí zpět."
-
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "Výstup bude odeslán na <0>{0}</0>"
@@ -1381,10 +1253,6 @@ msgstr "Připojte se k Ethereu vrstvy 1"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Připojte se k podporované síti v rozbalovací nabídce nebo ve své peněžence."
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Please enter a valid slippage %"
-msgstr "Zadejte prosím platný skluz %"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1435,10 +1303,6 @@ msgstr "Sestaveno do fondu {0}:"
 msgid "Pools Overview"
 msgstr "Přehled fondů"
 
-#: src/lib/components/BrandedFooter.tsx
-msgid "Powered by the Uniswap protocol"
-msgstr "Využívá protokol Uniswap"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "Náhled"
@@ -1463,17 +1327,9 @@ msgstr "Příliš vysoký dopad ceny"
 msgid "Price Updated"
 msgstr "Cena byla aktualizována"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "Vliv ceny"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Cenové rozpětí"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Price updated"
-msgstr "Cena aktualizována"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1543,17 +1399,9 @@ msgstr "Přečtěte si více o nepodporovaných aktivech"
 msgid "Recent Transactions"
 msgstr "Nedávné transakce"
 
-#: src/lib/components/RecentTransactionsDialog.tsx
-msgid "Recent transactions"
-msgstr "Nedávné transakce"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Příjemce"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page"
-msgstr "Znovu načtěte stránku"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1597,23 +1445,11 @@ msgstr "Odebírání {0} {1} a{2} {3}"
 msgid "Request Features"
 msgstr "Vyžádejte si funkce"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Reset"
-msgstr "Resetovat"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Návrat"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Review swap"
-msgstr "Výměna recenze"
-
-#: src/lib/components/TokenSelect/index.tsx
-msgid "Search by token name or address"
-msgstr "Vyhledávejte podle názvu tokenu nebo adresy"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1629,9 +1465,6 @@ msgstr "Vyberte síť"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/TokenButton.tsx
-#: src/lib/components/TokenSelect/index.tsx
-#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1668,10 +1501,6 @@ msgstr "Nastavit cenové rozmezí"
 msgid "Set Starting Price"
 msgstr "Nastavit počáteční cenu"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Settings"
-msgstr "Nastavení"
-
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "Podíl na fondu"
@@ -1689,7 +1518,6 @@ msgid "Simple"
 msgstr "Jednoduché"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "Tolerance skluzu"
 
@@ -1700,11 +1528,6 @@ msgstr "Některá aktiva nejsou přes toto rozhraní dostupná, protože nemusí
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Něco je špatně"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Something went wrong."
-msgstr "Něco se pokazilo."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1741,7 +1564,6 @@ msgstr "Dodávání {0} {1} a {2} {3}"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/lib/components/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1757,14 +1579,6 @@ msgstr "Vyměňte <0/> za přesně <1/>"
 msgid "Swap Anyway"
 msgstr "Přesto prohodit"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap confirmed"
-msgstr "Výměna potvrzena"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap details"
-msgstr "Vyměňte si detaily"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Vyměňte přesně <0/> za <1/>"
@@ -1773,14 +1587,6 @@ msgstr "Vyměňte přesně <0/> za <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Výměna se nezdařila: {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap pending"
-msgstr "Čeká se na výměnu"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap summary"
-msgstr "Swap shrnutí"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1991,18 +1797,9 @@ msgstr "Transakce odeslána"
 msgid "Transaction completed in"
 msgstr "Transakce dokončena v"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction confirmed"
-msgstr "Transakce potvrzena"
-
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "Lhůta pro transakce"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction pending"
-msgstr "Transakce čeká na vyřízení"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -2016,10 +1813,6 @@ msgstr "Přenosový token"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Zkusit znovu"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Zkuste zvýšit toleranci prokluzu.<0/>POZNÁMKA: Poplatky za převod a rebase tokeny nejsou kompatibilní s Uniswap V3."
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2121,10 +1914,6 @@ msgstr "Nepodporované aktivum"
 msgid "Unsupported Assets"
 msgstr "Nepodporovaná aktiva"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade"
-msgstr "Nepodporovaná síť – přepněte na jinou a obchodujte"
-
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Nepojmenovaná"
@@ -2136,18 +1925,6 @@ msgstr "Rozbalit"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Rozbalte <0/> až {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap confirmed"
-msgstr "Rozbalení potvrzeno"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap pending"
-msgstr "Rozbalení čeká na vyřízení"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Rozbalit {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2186,7 +1963,6 @@ msgstr "Zobrazit naběhlé poplatky a analýzy<0>↗</0>"
 msgid "View list"
 msgstr "Zobrazit seznam"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Pohled na Etherscan"
@@ -2324,18 +2100,6 @@ msgstr "Zalomit"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Zabalit <0/> až {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Zabalení potvrzeno"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Čeká se na zabalení"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "Zabalit {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2482,16 +2246,11 @@ msgstr "Vaše transakce může být frontrun"
 msgid "Your transaction may fail"
 msgstr "Vaše transakce může selhat"
 
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
-msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "Vaše transakce se vrátí zpět, pokud čeká na zpracování déle než toto časové období."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "Jestliže bude Vaše transakce nevyřízená déle než po toto časové období, bude vzata zpět."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Jestliže se cena nepříznivě změní o více, než o tuto procentní hodnotu, Vaše transakce bude vzata zpět."
 
@@ -2536,7 +2295,6 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// nebo ipfs:// nebo název ENS"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minuty"
 
@@ -2547,10 +2305,6 @@ msgstr "přes {0}"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "prostřednictvím seznamu žetonů {0}"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr ""
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
@@ -2699,25 +2453,13 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} žetonů"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "{integrator} fee"
-msgstr "{integrator} poplatek"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
 msgstr "{label} token bridge"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{min}m {sec}s"
-msgstr "{min}m {sec}s"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{sec}s"
-msgstr "{sec}s"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

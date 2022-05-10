@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 15:12\n"
+"PO-Revision-Date: 2022-05-10 21:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -121,17 +121,12 @@ msgid "About"
 msgstr "정보"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "수락"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "계정"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Acknowledge"
-msgstr "인정하다"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -192,10 +187,6 @@ msgstr "주소에 사용 가능한 청구가 없습니다."
 msgid "Against"
 msgstr "반대"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow"
-msgstr "허용하다"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP 토큰 마이그레이션 허용"
@@ -204,21 +195,9 @@ msgstr "LP 토큰 마이그레이션 허용"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁니다. 자신의 책임하에 사용하십시오."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow in your wallet"
-msgstr "지갑에서 허용"
-
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "먼저 {0} 허용"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allowance pending"
-msgstr "수당 보류"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -232,12 +211,7 @@ msgstr "금액"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "교환을 실행하는 중에 오류가 발생했습니다. 가격변동 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 교환중인 토큰이 Uniswap과 호환되지 않는 것일 수 있습니다. 참고: 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approval pending"
-msgstr "승인 대기 중"
-
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "승인"
@@ -246,10 +220,6 @@ msgstr "승인"
 msgid "Approve Token"
 msgstr "토큰 승인"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve in your wallet"
-msgstr "지갑에서 승인"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -257,10 +227,6 @@ msgstr "지갑에서 승인"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "{0} 승인"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "{0} 먼저 승인"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -303,13 +269,8 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "선택한 가격 범위로 인해 최소 {0} {1} 및 {2} {3} 이 지갑으로 환불됩니다."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "자동"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "Auto Router"
-msgstr "자동 라우터"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -458,7 +419,6 @@ msgstr "모두 지우기"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "닫기"
 
@@ -513,15 +473,6 @@ msgstr "공급 확인"
 msgid "Confirm Swap"
 msgstr "스왑 확인"
 
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Confirm in your wallet"
-msgstr "지갑에서 확인"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Confirm swap"
-msgstr "스왑 확인"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -567,14 +518,6 @@ msgstr "V2 유동성을 보려면 지갑에 연결하십시오."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "유동성을 보려면 지갑에 연결하십시오."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connect wallet to swap"
-msgstr "교환에 지갑 연결"
-
-#: src/lib/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "지갑 연결"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "{name}와(과) 연결됨"
@@ -582,14 +525,6 @@ msgstr "{name}와(과) 연결됨"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
 msgstr "연결 중..."
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connecting…"
-msgstr "연결…"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1}"
-msgstr "{0} 을 {1}로 변환"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -727,7 +662,6 @@ msgid "Discord"
 msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "해제"
 
@@ -769,7 +703,6 @@ msgstr "UNI 청구를 트리거할 주소를 입력하십시오. 주소에 청�
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -805,14 +738,6 @@ msgstr "연결 오류"
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
 msgstr "연결 오류. 페이지를 새로 고침 해보세요."
-
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Error details"
-msgstr "오류 상세"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Error fetching trade"
-msgstr "거래를 가져오는 중에 오류가 발생했습니다."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -874,11 +799,6 @@ msgstr "수수료 등급"
 msgid "Fetching best price..."
 msgstr "최적 가격을 가져오는 중..."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Fetching best price…"
-msgstr "최적 가격을 가져오는 중…"
-
-#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "찬성"
@@ -923,19 +843,6 @@ msgstr "닫은 포지션 숨기기"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "높은 가격 영향"
-
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High price impact"
-msgstr "높은 가격 영향"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High slippage"
-msgstr "높은 미끄러짐"
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "High slippage increases the risk of price movement"
-msgstr "높은 미끄러짐은 가격 변동의 위험을 증가시킵니다."
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1002,13 +909,8 @@ msgstr "메타 마스크 설치"
 msgid "Insufficient liquidity for this trade."
 msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Insufficient liquidity in the pool for your trade"
-msgstr "거래를 위한 풀의 유동성 부족"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1084,10 +986,6 @@ msgstr "유동성"
 msgid "Liquidity data not available."
 msgstr "유동성 데이터를 사용할 수 없습니다."
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "유동성 공급자 수수료"
-
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "유동성 제공자 보상"
@@ -1139,7 +1037,6 @@ msgstr "토큰 목록 관리"
 msgid "Manage this pool."
 msgstr "이 풀을 관리합니다."
 
-#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "최대"
@@ -1153,16 +1050,11 @@ msgstr "최고 가격"
 msgid "Max price"
 msgstr "최고 가격"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Max slippage"
-msgstr "최대 가격 변동"
-
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "최대 :"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "최대 이체"
 
@@ -1213,17 +1105,12 @@ msgid "Min:"
 msgstr "최소 :"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "최소 수령됨"
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "누락된 종속성"
-
-#: src/lib/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "모의 토글"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1275,25 +1162,18 @@ msgid "No proposals found."
 msgstr "제안이 없습니다."
 
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "결과가 없습니다."
-
-#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
-msgid "No tokens are available on this network. Please switch to another network."
-msgstr "이 네트워크에서 사용할 수 있는 토큰이 없습니다. 다른 네트워크로 전환하십시오."
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "생성되지 않음"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "OFF"
 msgstr "OFF"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "ON"
 msgstr "ON"
 
@@ -1346,14 +1226,6 @@ msgstr "산출은 추정됩니다. 가격이 {0}% 이상 변경되면 거래가 
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "산출은 추정됩니다. 최소한 <0>{0} {1}</0>을(를) 받거나 그렇지 않으면 거래가 취소됩니다."
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "출력이 예상됩니다. 당신은 적어도 {0} {1} 을 받게 될 것입니다. 그렇지 않으면 거래가 되돌릴 것입니다."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
-msgstr "출력이 예상됩니다. 최대 {0} {1} 을 보내지 않으면 거래가 취소됩니다."
-
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "산출은 <0>{0}</0>(으)로 이체됩니다"
@@ -1381,10 +1253,6 @@ msgstr "레이어 1 Ethereum에 연결하세요"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "드롭다운 메뉴 또는 지갑에서 지원되는 네트워크에 연결하십시오."
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Please enter a valid slippage %"
-msgstr "유효한 미끄러짐 %를 입력하십시오"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1435,10 +1303,6 @@ msgstr "{0} 풀링 됨:"
 msgid "Pools Overview"
 msgstr "풀 개요"
 
-#: src/lib/components/BrandedFooter.tsx
-msgid "Powered by the Uniswap protocol"
-msgstr "Uniswap 프로토콜 기반"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "시사"
@@ -1463,17 +1327,9 @@ msgstr "가격 영향이 너무 높음"
 msgid "Price Updated"
 msgstr "가격 업데이트됨"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "가격 영향"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "가격 범위"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Price updated"
-msgstr "가격 업데이트됨"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1543,17 +1399,9 @@ msgstr "지원되지 않는 자산에 대해 자세히 알아보기"
 msgid "Recent Transactions"
 msgstr "최근 거래"
 
-#: src/lib/components/RecentTransactionsDialog.tsx
-msgid "Recent transactions"
-msgstr "최근 거래"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "받는 사람"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page"
-msgstr "페이지 새로고침"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1597,23 +1445,11 @@ msgstr "{0} {1} 및{2} {3}제거"
 msgid "Request Features"
 msgstr "기능 요청"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Reset"
-msgstr "초기화"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "반환"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Review swap"
-msgstr "스왑 검토"
-
-#: src/lib/components/TokenSelect/index.tsx
-msgid "Search by token name or address"
-msgstr "토큰 이름 또는 주소로 검색"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1629,9 +1465,6 @@ msgstr "네트워크 선택"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/TokenButton.tsx
-#: src/lib/components/TokenSelect/index.tsx
-#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1668,10 +1501,6 @@ msgstr "가격 범위 설정"
 msgid "Set Starting Price"
 msgstr "시작 가격 설정"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Settings"
-msgstr "설정"
-
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "풀 쉐어"
@@ -1689,7 +1518,6 @@ msgid "Simple"
 msgstr "단순한"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "슬리피지 허용 오차"
 
@@ -1700,11 +1528,6 @@ msgstr "일부 자산은 스마트 계약과 잘 작동하지 않거나 법적 �
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "문제가 발생했습니다"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Something went wrong."
-msgstr "문제가 발생했습니다."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1741,7 +1564,6 @@ msgstr "{0} {1} 및 {2} {3} 공급 중"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/lib/components/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1757,14 +1579,6 @@ msgstr "<0/>을 정확히 <1/>로 바꿉니다."
 msgid "Swap Anyway"
 msgstr "어쨌든 스왑"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap confirmed"
-msgstr "스왑 확인됨"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap details"
-msgstr "세부정보 교환"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "<1/>에 대해 정확히 <0/> 스왑"
@@ -1773,14 +1587,6 @@ msgstr "<1/>에 대해 정확히 <0/> 스왑"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "스왑 실패: {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap pending"
-msgstr "스왑 보류"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap summary"
-msgstr "스왑 요약"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1991,18 +1797,9 @@ msgstr "제출된 거래"
 msgid "Transaction completed in"
 msgstr "거래 완료"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction confirmed"
-msgstr "거래 확인됨"
-
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "거래 마감 시간"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction pending"
-msgstr "거래 보류 중"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -2016,10 +1813,6 @@ msgstr "이전 토큰"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "다시 시도하십시오"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "미끄러짐 내성을 높이십시오.<0/>참고: 이전 및 리베이스 토큰 수수료는 Uniswap V3와 호환되지 않습니다."
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2121,10 +1914,6 @@ msgstr "지원되지 않는 자산"
 msgid "Unsupported Assets"
 msgstr "지원되지 않는 자산"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade"
-msgstr "지원되지 않는 네트워크 - 거래를 위해 다른 네트워크로 전환"
-
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "제목 없음"
@@ -2136,18 +1925,6 @@ msgstr "언랩"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "<0/> 에서 {0}풀기"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap confirmed"
-msgstr "포장 풀기 확인"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap pending"
-msgstr "언래핑 보류"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "포장 풀기 {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2186,7 +1963,6 @@ msgstr "발생한 수수료 및 분석 보기 <0> ↗</0>"
 msgid "View list"
 msgstr "목록 보기"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Etherscan에서보기"
@@ -2324,18 +2100,6 @@ msgstr "랩"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> 에서 {0}바꿈"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "랩 확인됨"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "랩 대기 중"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "랩 {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2482,16 +2246,11 @@ msgstr "귀하의 거래는 프론트런일 수 있습니다"
 msgid "Your transaction may fail"
 msgstr "거래가 실패할 수 있습니다"
 
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
-msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "이 기간보다 오랫동안 보류 중인 거래는 되돌려집니다."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "이 기간 이상 보류중인 거래는 취소됩니다."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "가격이 이 요율 이상으로 불리하게 변경되면 거래가 취소됩니다."
 
@@ -2536,7 +2295,6 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// 또는 ipfs:// 또는 ENS 이름"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "분"
 
@@ -2547,10 +2305,6 @@ msgstr "{0} 경유"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "{0} 토큰 목록을 통해"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {1 홉을 통한 최적의 경로} other {# 홉을 통한 최적의 경로}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
@@ -2699,25 +2453,13 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} 토큰"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "{integrator} fee"
-msgstr "수수료 {integrator}"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
 msgstr "{label} 토큰 브릿지"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{min}m {sec}s"
-msgstr "{min}m {sec}의"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{sec}s"
-msgstr "{sec}초"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

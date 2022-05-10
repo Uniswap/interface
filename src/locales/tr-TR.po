@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 15:12\n"
+"PO-Revision-Date: 2022-05-10 21:06\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -121,17 +121,12 @@ msgid "About"
 msgstr "Hakkında"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "Kabul et"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Hesap"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Acknowledge"
-msgstr "Kabullenmek"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -192,10 +187,6 @@ msgstr "Adreste herhangi bir hak talebi yok"
 msgid "Against"
 msgstr "Karşısında"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow"
-msgstr "İzin vermek"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP jeton geçişine izin ver"
@@ -204,21 +195,9 @@ msgstr "LP jeton geçişine izin ver"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Yüksek fiyat etkili işlemlere izin verin ve onay ekranını atlayın. Kendi sorumluluğunuz altında kullanın."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow in your wallet"
-msgstr "Cüzdanınızda izin verin"
-
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Uniswap Protokolünün {0} kullanmasına izin verin"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Önce {0} izin ver"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allowance pending"
-msgstr "ödenek beklemede"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -232,12 +211,7 @@ msgstr "Miktar"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Bu takas yürütülmeye çalışılırken bir hata oluştu. Kayma toleransınızı artırmanız gerekebilir. Bu işe yaramazsa, işlem yaptığınız token ile uyumsuzluk olabilir. Not: Transfer ve rebase jetonlarındaki ücret, Uniswap V3 ile uyumlu değildir."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approval pending"
-msgstr "Onay Bekliyor"
-
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Onayla"
@@ -246,10 +220,6 @@ msgstr "Onayla"
 msgid "Approve Token"
 msgstr "Onay Simgesi"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve in your wallet"
-msgstr "Cüzdanınızda onaylayın"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -257,10 +227,6 @@ msgstr "Cüzdanınızda onaylayın"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Onayla {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Önce {0} onayla"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -303,13 +269,8 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Seçilen fiyat aralığından en az {0} {1} ve {2} {3} cüzdanınıza iade edilecektir."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Otomatik"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "Auto Router"
-msgstr "Otomatik Yönlendirici"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -458,7 +419,6 @@ msgstr "Tümünü temizle"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Kapat"
 
@@ -513,15 +473,6 @@ msgstr "Kaynağı Onayla"
 msgid "Confirm Swap"
 msgstr "Swap'ı Onayla"
 
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Confirm in your wallet"
-msgstr "Cüzdanınızda onaylayın"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Confirm swap"
-msgstr "Takas işlemini onaylayın"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -567,14 +518,6 @@ msgstr "V2 likiditenizi görüntülemek için bir cüzdana bağlanın."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Likiditenizi görüntülemek için bir cüzdana bağlanın."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connect wallet to swap"
-msgstr "Takas için cüzdanı bağlayın"
-
-#: src/lib/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "Cüzdanını bağla"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "{name} ile bağlantılı"
@@ -582,14 +525,6 @@ msgstr "{name} ile bağlantılı"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
 msgstr "Bağlanıyor..."
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connecting…"
-msgstr "Bağlanıyor…"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1}"
-msgstr "{0} {1}dönüştür"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -727,7 +662,6 @@ msgid "Discord"
 msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "Reddet"
 
@@ -769,7 +703,6 @@ msgstr "Bir UNI talebini tetiklemek için bir adres girin. Adreste talep edilebi
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -805,14 +738,6 @@ msgstr "Bağlantı hatası"
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
 msgstr "Bağlanırken hata oluştu. Sayfayı yenilemeyi deneyin."
-
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Error details"
-msgstr "Hata detayları"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Error fetching trade"
-msgstr "Takas alınırken hata oluştu"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -874,11 +799,6 @@ msgstr "Ücret katmanı"
 msgid "Fetching best price..."
 msgstr "En iyi fiyat alınıyor..."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Fetching best price…"
-msgstr "En iyi fiyat getiriliyor…"
-
-#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Şunun için"
@@ -923,19 +843,6 @@ msgstr "Kapalı pozisyonları gizle"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Yüksek Fiyat Etkisi"
-
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High price impact"
-msgstr "Yüksek fiyat etkisi"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High slippage"
-msgstr "Yüksek kayma"
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "High slippage increases the risk of price movement"
-msgstr "Yüksek kayma, fiyat hareketi riskini artırır"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1002,13 +909,8 @@ msgstr "Metamask'ı yükleyin"
 msgid "Insufficient liquidity for this trade."
 msgstr "Bu işlem için yetersiz likidite."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Insufficient liquidity in the pool for your trade"
-msgstr "İşleminiz için havuzda yetersiz likidite"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1084,10 +986,6 @@ msgstr "Likidite"
 msgid "Liquidity data not available."
 msgstr "Likidite verileri mevcut değil."
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likidite sağlayıcı ücreti"
-
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Likidite sağlayıcı ödülleri"
@@ -1139,7 +1037,6 @@ msgstr "Jeton Listelerini Yönetin"
 msgid "Manage this pool."
 msgstr "Bu havuzu yönetin."
 
-#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Maksimum"
@@ -1153,16 +1050,11 @@ msgstr "Maksimum Fiyat"
 msgid "Max price"
 msgstr "Maksimum fiyat"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Max slippage"
-msgstr "Maksimum kayma"
-
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Maksimum:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maksimum gönderme"
 
@@ -1213,17 +1105,12 @@ msgid "Min:"
 msgstr "Minimum:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum alınan"
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Eksik bağımlılıklar"
-
-#: src/lib/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Sahte Geçiş"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1275,25 +1162,18 @@ msgid "No proposals found."
 msgstr "Teklif bulunamadı."
 
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
-
-#: src/lib/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
-msgid "No tokens are available on this network. Please switch to another network."
-msgstr "Bu ağda kullanılabilir jeton yok. Lütfen başka bir ağa geçin."
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "oluşturulmadı"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "OFF"
 msgstr "KAPALI"
 
 #: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
 msgid "ON"
 msgstr "AÇIK"
 
@@ -1346,14 +1226,6 @@ msgstr "Çıktı tahminidir. Fiyat %{0} oranından fazla değişirse işleminiz 
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Giriş tahminidir. En az <0>{0} {1}</0> alabilirsiniz. Aksi takdirde işlem geri döner."
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "Çıktı tahmin edilmektedir. En az {0} {1} alacaksınız veya işlem geri dönecek."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
-msgstr "Çıktı tahmin edilmektedir. En fazla {0} {1} gönderirsiniz yoksa işlem geri döner."
-
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "Çıktı şuraya gönderilecek: <0>{0}</0>"
@@ -1381,10 +1253,6 @@ msgstr "Lütfen Katman 1 Ethereum'a bağlanın"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Lütfen açılır menüden veya cüzdanınızdan desteklenen bir ağa bağlanın."
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Please enter a valid slippage %"
-msgstr "Lütfen geçerli bir kayma yüzdesi girin"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1435,10 +1303,6 @@ msgstr "Havuza alınmış {0}:"
 msgid "Pools Overview"
 msgstr "Havuzlara Genel Bakış"
 
-#: src/lib/components/BrandedFooter.tsx
-msgid "Powered by the Uniswap protocol"
-msgstr "Uniswap protokolü tarafından desteklenmektedir"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "Ön izleme"
@@ -1463,17 +1327,9 @@ msgstr "Fiyat Etkisi Çok Yüksek"
 msgid "Price Updated"
 msgstr "Fiyat Güncellendi"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "Fiyat etkisi"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Fiyat aralığı"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Price updated"
-msgstr "Fiyat güncellendi"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1543,17 +1399,9 @@ msgstr "Desteklenmeyen varlıklar hakkında daha fazla bilgi edinin"
 msgid "Recent Transactions"
 msgstr "Son İşlemler"
 
-#: src/lib/components/RecentTransactionsDialog.tsx
-msgid "Recent transactions"
-msgstr "Son İşlemler"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "alıcı"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page"
-msgstr "Sayfayı yenile"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1597,23 +1445,11 @@ msgstr "{0} {1} ve{2} {3}kaldırma"
 msgid "Request Features"
 msgstr "Özellikler İste"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Reset"
-msgstr "Sıfırla"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Geri Dön"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Review swap"
-msgstr "Değişimi gözden geçir"
-
-#: src/lib/components/TokenSelect/index.tsx
-msgid "Search by token name or address"
-msgstr "Belirteç adına veya adresine göre arama yapın"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1629,9 +1465,6 @@ msgstr "Bir ağ seçin"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/TokenButton.tsx
-#: src/lib/components/TokenSelect/index.tsx
-#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1668,10 +1501,6 @@ msgstr "Fiyat Aralığını Ayarla"
 msgid "Set Starting Price"
 msgstr "Başlangıç Fiyatını Belirleyin"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Settings"
-msgstr "Ayarlar"
-
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "Havuz Payı"
@@ -1689,7 +1518,6 @@ msgid "Simple"
 msgstr "Basit"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "Kayma toleransı"
 
@@ -1700,11 +1528,6 @@ msgstr "Bazı varlıklar bu arayüz aracılığıyla kullanılamaz. Bunun nedeni
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Bir şeyler yanlış gitti"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Something went wrong."
-msgstr "Bir şeyler yanlış gitti."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1741,7 +1564,6 @@ msgstr "{0} {1} ve {2} {3} temini"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/lib/components/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1757,14 +1579,6 @@ msgstr "<0/> öğesini tam olarak <1/> ile değiştirin"
 msgid "Swap Anyway"
 msgstr "Yine de Swap"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap confirmed"
-msgstr "Takas onaylandı"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap details"
-msgstr "Ayrıntıları değiştir"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Tam olarak <0/> ile <1/> arasında geçiş yapın"
@@ -1773,14 +1587,6 @@ msgstr "Tam olarak <0/> ile <1/> arasında geçiş yapın"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Değiştirilemedi: {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap pending"
-msgstr "Takas beklemede"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap summary"
-msgstr "takas özeti"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1991,18 +1797,9 @@ msgstr "İşlem Gönderildi"
 msgid "Transaction completed in"
 msgstr "İşlem tamamlandı"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction confirmed"
-msgstr "İşlem onaylandı"
-
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "İşlem son tarihi"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction pending"
-msgstr "İşlem beklemede"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -2016,10 +1813,6 @@ msgstr "Transfer Jetonu"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Tekrar deneyin"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Kayma toleransınızı artırmayı deneyin.<0/>NOT: Transfer ve rebase belirteçleri üzerindeki ücret, Uniswap V3 ile uyumlu değildir."
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2121,10 +1914,6 @@ msgstr "Desteklenmeyen Varlık"
 msgid "Unsupported Assets"
 msgstr "Desteklenmeyen Varlıklar"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade"
-msgstr "Desteklenmeyen ağ - ticaret yapmak için diğerine geçin"
-
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "başlıksız"
@@ -2136,18 +1925,6 @@ msgstr "Paketi Aç"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "<0/> {0}paketi aç"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap confirmed"
-msgstr "Paketi açma onaylandı"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap pending"
-msgstr "Bekleyen paketi aç"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Paketi aç {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2186,7 +1963,6 @@ msgstr "Tahakkuk eden ücretleri ve analizleri görüntüleyin<0>↗</0>"
 msgid "View list"
 msgstr "Listeyi görüntüle"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Etherscan üzerinde görüntüle"
@@ -2324,18 +2100,6 @@ msgstr "Paketle"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> {0}kaydır"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "sarma onaylandı"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Beklemede sarıl"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "{0}sarın"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2482,16 +2246,11 @@ msgstr "İşleminiz frontrun olabilir"
 msgid "Your transaction may fail"
 msgstr "İşleminiz başarısız olabilir"
 
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
-msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "İşleminiz bu süreden daha uzun süredir beklemedeyse geri alınacaktır."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "İşleminiz bu süreden daha uzun süredir beklemedeyse geri alınacaktır."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Fiyatın istenmeyen şekilde bu yüzdeden daha fazla değişmesi durumunda işleminiz geri döner."
 
@@ -2536,7 +2295,6 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// veya ipfs:// veya ENS adı"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "dakika"
 
@@ -2547,10 +2305,6 @@ msgstr "{0} üzerinden"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "{0} jeton listesi aracılığıyla"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {1 atlama yoluyla en iyi rota} other {# şerbetçiotu ile en iyi rota}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
@@ -2699,25 +2453,13 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} jeton"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "{integrator} fee"
-msgstr "{integrator} ücret"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
 msgstr "{label} simge köprüsü"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{min}m {sec}s"
-msgstr "{min}m {sec}s"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "%{percentForSlider}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{sec}s"
-msgstr "{sec}sn"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
