@@ -30,10 +30,10 @@ export enum Screens {
 export enum OnboardingScreens {
   Backup = 'OnboardingBackup',
   BackupCloud = 'OnboardingBackupCloud',
+  BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
   BackupManual = 'OnboardingBackupManual',
   Landing = 'OnboardingLanding',
-  BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
-  NameAndColor = 'OnboardingCreateWallet',
+  NameAndColor = 'OnboardingNameAndColor',
   Notifications = 'OnboardingNotifications',
   Outro = 'OnboardingOutro',
   Security = 'OnboardingSecurity',

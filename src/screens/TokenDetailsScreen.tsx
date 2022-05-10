@@ -158,7 +158,7 @@ export function TokenDetailsScreen({
               <IconButton
                 bg="gray100"
                 borderRadius="md"
-                disabled={false}
+                disabled={!balance}
                 icon={
                   <SendIcon
                     height={20}
