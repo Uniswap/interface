@@ -147,6 +147,8 @@ function Web3StatusInner() {
   const [account, setAccount] = useState(accountFromHook)
   useEffect(() => {
     if (!account) {
+      // this doesn't work now connector.getAccount is not there anymore
+      // wonder where we can get account from
       // connector?.getAccount().then((acc) => setAccount(acc))
     }
   }, [account, connector])
