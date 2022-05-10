@@ -94,7 +94,7 @@ export default function PendingView({
             </ErrorGroup>
           ) : (
             <>
-              <ThemedText.Black fontSize={20} marginY={16} marginX="auto">
+              <ThemedText.Black fontSize={20} marginY={16}>
                 <LoaderContainer>
                   <Loader stroke="currentColor" size="32px" />
                 </LoaderContainer>
