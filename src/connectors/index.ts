@@ -3,6 +3,7 @@ import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
+import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
@@ -50,7 +51,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
 
 // this is an ordered priority list. network connector should be at the top because we want to always
 // pass in a walletOverride manually for the connected wallet
-export const connectors: [GnosisSafe | MetaMask | WalletConnect | CoinbaseWallet | Network, Web3ReactHooks][] = [
+export const connectors: [Connector, Web3ReactHooks][] = [
   [network, networkHooks],
   [gnosisSafe, gnosisSafeHooks],
   [coinbaseWallet, coinbaseWalletHooks],

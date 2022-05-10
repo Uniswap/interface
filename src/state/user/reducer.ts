@@ -155,7 +155,7 @@ const userSlice = createSlice({
       }
       state.timestamp = currentTimestamp()
     },
-    setWalletOverride(state, { payload: { wallet } }) {
+    updateWalletOverride(state, { payload: { wallet } }) {
       state.walletOverride = wallet
       state.walletOverrideBackfilled = true
     },
@@ -212,6 +212,6 @@ export const {
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
-  setWalletOverride,
+  updateWalletOverride,
 } = userSlice.actions
 export default userSlice.reducer
