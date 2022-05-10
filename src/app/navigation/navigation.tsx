@@ -31,6 +31,7 @@ import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NameAndColorScreen } from 'src/screens/Onboarding/NameAndColorScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
+import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { PortfolioScreen } from 'src/screens/PortfolioScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
@@ -123,6 +124,7 @@ export function AppStackNavigator() {
             component={ManualBackupScreen}
             name={OnboardingScreens.BackupManual}
           />
+          <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} />
           <OnboardingStack.Screen
             component={CloudBackupScreen}
             name={OnboardingScreens.BackupCloud}
@@ -131,9 +133,6 @@ export function AppStackNavigator() {
             component={CloudBackupProcessingScreen}
             name={OnboardingScreens.BackupCloudProcessing}
           />
-          {/* TODO: <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} /> */}
-          {/* </AppStack.Group>
-          <AppStack.Group screenOptions={navOptions.presentationModal}> */}
         </AppStack.Group>
       )}
       <AppStack.Group screenOptions={navOptions.presentationModal}>

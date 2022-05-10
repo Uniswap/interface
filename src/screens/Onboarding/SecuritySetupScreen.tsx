@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import FaceIcon from 'src/assets/icons/faceid.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -11,18 +11,16 @@ import { tryLocalAuthenticate } from 'src/features/biometrics'
 import { biometricAuthenticationSuccessful } from 'src/features/biometrics/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
-import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
-export function SecuritySetupScreen({}: Props) {
+export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const dispatch = useAppDispatch()
 
   const onPressNext = () => {
-    dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+    navigate(OnboardingScreens.Outro)
   }
 
   const onPressEnableSecurity = async () => {
