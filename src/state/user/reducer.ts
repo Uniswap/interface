@@ -52,7 +52,7 @@ export interface UserState {
 
   showDonationLink: boolean
 
-  walletOverride: Wallet | null
+  walletOverride: Wallet | undefined
   walletOverrideBackfilled: boolean
 }
 
@@ -76,7 +76,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   showSurveyPopup: undefined,
   showDonationLink: true,
-  walletOverride: null,
+  walletOverride: undefined,
   walletOverrideBackfilled: false,
 }
 
