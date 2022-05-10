@@ -82,7 +82,6 @@ function NotificationButton({ children, onPress }: PropsWithChildren<{ onPress: 
       borderColor="secondary1"
       borderRadius="lg"
       borderWidth={1}
-      flex={1}
       flexDirection="row"
       px="lg"
       py="md"

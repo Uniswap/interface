@@ -5,8 +5,8 @@ import { StyleSheet } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
-import PencilIcon from 'src/assets/icons/pencil.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Switch } from 'src/components/buttons/Switch'
 import { RainbowLinearGradientStops } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
 import { Box, Flex } from 'src/components/layout'
@@ -54,6 +54,7 @@ export function ManualBackupScreen({ navigation }: Props) {
   const activeAccount = useActiveAccount()
 
   const [inputIsInvalid, setInputIsInvalid] = useState(false)
+  const [acknowledged, setAcknowledged] = useState(false)
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.Education)
 
   const onValidationSuccessful = () => {
@@ -82,11 +83,27 @@ export function ManualBackupScreen({ navigation }: Props) {
         <OnboardingScreen
           subtitle={t('Prepare to back up your seed phrase by keeping these steps in mind.')}
           title={t('Back up manually')}>
-          <Flex grow justifyContent="space-between">
+          <Flex grow justifyContent="space-between" px="sm">
             <EducationSection />
 
+            <Flex row>
+              <Switch
+                value={acknowledged}
+                onValueChange={(newValue: boolean) => setAcknowledged(newValue)}
+              />
+              <Text color="gray600" style={styles.switchLabel} variant="bodySm">
+                {t(
+                  'I acknowledge that if I lose my seed phrase, Uniswap Labs can’t recover my wallet.'
+                )}
+              </Text>
+            </Flex>
             <Flex justifyContent="flex-end">
-              <PrimaryButton label={t('Continue')} name={ElementName.Next} onPress={nextView} />
+              <PrimaryButton
+                disabled={!acknowledged}
+                label={t('Continue')}
+                name={ElementName.Next}
+                onPress={nextView}
+              />
             </Flex>
           </Flex>
         </OnboardingScreen>
@@ -146,13 +163,13 @@ function EducationSection() {
       />
       {spacer}
       <EducationRow
-        icon={<PencilIcon height={20} stroke="white" width={20} />}
+        icon={<CloudIcon height={20} stroke="white" width={20} />}
         label={t('Keep it somewhere safe')}
         sublabel={t('Remember that anyone who has your seed phrase can access your wallet.')}
       />
       {spacer}
       <EducationRow
-        icon={<PencilIcon height={20} stroke="white" width={20} />}
+        icon={<CloudIcon height={20} stroke="white" width={20} />}
         label={t("Don't lose it")}
         sublabel={t(
           "If you lose your seed phrase, you'll lose access to your wallet and its contents."
@@ -199,5 +216,9 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
 const styles = StyleSheet.create({
   padded: {
     padding: 1,
+  },
+  switchLabel: {
+    flex: 1,
+    flexWrap: 'wrap',
   },
 })

@@ -33,6 +33,8 @@ type Props = CompositeScreenProps<
 export function BackupScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
+  const activeAccountBackups = useActiveAccount()?.backups
+
   const onPressNext = () => {
     navigation.navigate(OnboardingScreens.Notifications)
   }
@@ -50,7 +52,7 @@ export function BackupScreen({ navigation }: Props) {
       )}
       title={t('Choose a backup option')}>
       <Flex grow justifyContent="space-between">
-        <BackupOptions />
+        <BackupOptions backupMethods={activeAccountBackups} />
 
         <TextButton
           alignSelf="center"
@@ -61,31 +63,37 @@ export function BackupScreen({ navigation }: Props) {
           textColor="textColor"
           textVariant="buttonLabel"
           onPress={onPressEducationButton}>
+          <Text color="yellow" fontSize={20}>
+            ✦{' '}
+          </Text>
           {t("What's a seed phrase?")}
         </TextButton>
 
         <Flex justifyContent="flex-end">
-          <PrimaryButton label={t('Next')} name={ElementName.Next} onPress={onPressNext} />
+          <PrimaryButton
+            disabled={!activeAccountBackups || activeAccountBackups.length < 1}
+            label={t('Next')}
+            name={ElementName.Next}
+            onPress={onPressNext}
+          />
         </Flex>
       </Flex>
     </OnboardingScreen>
   )
 }
 
-function BackupOptions() {
+function BackupOptions({ backupMethods }: { backupMethods?: BackupType[] }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
   const { navigate } = useOnboardingStackNavigation()
-
-  const activeAccountBackups = useActiveAccount()?.backups
 
   const spacer = <Box borderTopColor="gray50" borderTopWidth={1} />
   return (
     <Flex gap="lg">
       {spacer}
       <BackupOptionButton
-        completed={activeAccountBackups?.includes(BackupType.Cloud)}
+        completed={backupMethods?.includes(BackupType.Cloud)}
         icon={<CloudIcon height={20} stroke={theme.colors.white} width={20} />}
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
@@ -95,7 +103,7 @@ function BackupOptions() {
       />
       {spacer}
       <BackupOptionButton
-        completed={activeAccountBackups?.includes(BackupType.Manual)}
+        completed={backupMethods?.includes(BackupType.Manual)}
         icon={<PencilIcon height={20} stroke={theme.colors.white} width={20} />}
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
