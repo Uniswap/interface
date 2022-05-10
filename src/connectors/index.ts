@@ -11,16 +11,32 @@ import { INFURA_NETWORK_URLS } from 'constants/infura'
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 
 export const [network, networkHooks] = initializeConnector<Network>(
-  (actions) => new Network(actions, INFURA_NETWORK_URLS, true, 1),
+  (actions) =>
+    new Network(
+      actions,
+      INFURA_NETWORK_URLS,
+      true, // eagerlyConnect
+      1
+    ),
   Object.keys(INFURA_NETWORK_URLS).map((chainId) => Number(chainId))
 )
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>(
-  (actions) => new MetaMask(actions, true),
+  (actions) =>
+    new MetaMask(
+      actions,
+      true // eagerlyConnect
+    ),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
-export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe(actions, true))
+export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>(
+  (actions) =>
+    new GnosisSafe(
+      actions,
+      true // eagerlyConnect
+    )
+)
 
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>
@@ -30,7 +46,7 @@ export const [walletConnect, walletConnectHooks] = initializeConnector<WalletCon
         rpc: INFURA_NETWORK_URLS,
         qrcode: true,
       },
-      true
+      true // eagerlyConnect
     ),
   ALL_SUPPORTED_CHAIN_IDS
 )
@@ -44,7 +60,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO_URL,
       },
-      true
+      true // eagerlyConnect
     ),
   ALL_SUPPORTED_CHAIN_IDS
 )
