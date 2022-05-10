@@ -93,9 +93,9 @@ export const ButtonLight = styled(BaseButton)`
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
   }
-  :disabled {
+  &:disabled {
     opacity: 0.4;
-    :hover {
+    &:hover {
       cursor: auto;
       background-color: ${({ theme }) => theme.primary5};
       box-shadow: none;
