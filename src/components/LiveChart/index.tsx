@@ -65,8 +65,9 @@ const SwitchButtonWrapper = styled.div`
   }
 `
 
-const ProLiveChartCustom = styled(ProLiveChart)`
+const ProLiveChartCustom = styled(ProLiveChart)<{ $isShowProChart: boolean }>`
   margin: ${() => (isMobile ? '0 -20px -20px -20px' : '15px 0 25px 0 !important')};
+  display: ${({ $isShowProChart }) => ($isShowProChart ? 'block' : 'none')};
 `
 
 const getDifferentValues = (chartData: any, hoverValue: number | null) => {
@@ -178,6 +179,7 @@ function LiveChart({
       </Flex>
     )
   }
+
   return (
     <LiveChartWrapper>
       {isWrappedToken ? (
@@ -246,9 +248,12 @@ function LiveChart({
             </Flex>
             {above400 && mobileCloseButton}
           </Flex>
-          {isShowProChart ? (
-            <ProLiveChartCustom currencies={Object.values(currencies)} stateProChart={stateProChart} />
-          ) : (
+          <ProLiveChartCustom
+            currencies={Object.values(currencies)}
+            stateProChart={stateProChart}
+            $isShowProChart={isShowProChart}
+          />
+          {!isShowProChart && (
             <>
               <Flex justifyContent="space-between" alignItems="flex-start" marginTop={'5px'}>
                 <Flex flexDirection="column" alignItems="flex-start">

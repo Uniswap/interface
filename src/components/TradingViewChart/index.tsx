@@ -243,4 +243,4 @@ function ProLiveChart({
   )
 }
 
-export default ProLiveChart
+export default React.memo(ProLiveChart)
