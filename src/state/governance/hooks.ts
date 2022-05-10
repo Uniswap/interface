@@ -26,6 +26,7 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { SupportedChainId } from '../../constants/chains'
 import {
   BRAVO_START_BLOCK,
+  MOONBEAN_START_BLOCK,
   ONE_BIP_START_BLOCK,
   POLYGON_START_BLOCK,
   UNISWAP_GRANTS_START_BLOCK,
@@ -168,8 +169,12 @@ function useFormattedProposalCreatedLogs(
           description = JSON.parse(toUtf8String(error.error.value, onError)) || ''
         }
 
-        // Bravo and one bip proposals omit newlines
-        if (startBlock === BRAVO_START_BLOCK || startBlock === ONE_BIP_START_BLOCK) {
+        // some proposals omit newlines
+        if (
+          startBlock === BRAVO_START_BLOCK ||
+          startBlock === ONE_BIP_START_BLOCK ||
+          startBlock === MOONBEAN_START_BLOCK
+        ) {
           description = description.replace(/ {2}/g, '\n').replace(/\d\. /g, '\n$&')
         }
 

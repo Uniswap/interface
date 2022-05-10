@@ -1,12 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { AbstractConnector } from 'web3-react-abstract-connector'
 
-import { injected } from '../../connectors'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import Loader from '../Loader'
-import Option from './Option'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -18,18 +16,19 @@ const PendingSection = styled.div`
   }
 `
 
-const StyledLoader = styled(Loader)`
-  margin-right: 1rem;
+const LoaderContainer = styled.div`
+  margin: 16px 0;
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: center;
 `
 
 const LoadingMessage = styled.div<{ error?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   border-radius: 12px;
-  margin-bottom: 20px;
   color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
-  border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text4)};
 
   & > * {
     padding: 1rem;
@@ -59,7 +58,7 @@ const ErrorButton = styled.div`
 `
 
 const LoadingWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
 `
@@ -75,8 +74,6 @@ export default function PendingView({
   setPendingError: (error: boolean) => void
   tryActivation: (connector: AbstractConnector) => void
 }) {
-  const isMetamask = window?.ethereum?.isMetaMask
-
   return (
     <PendingSection>
       <LoadingMessage error={error}>
@@ -97,37 +94,16 @@ export default function PendingView({
             </ErrorGroup>
           ) : (
             <>
-              <StyledLoader />
-              <Trans>Initializing...</Trans>
+              <ThemedText.Black fontSize={20} marginY={16}>
+                <LoaderContainer>
+                  <Loader stroke="currentColor" size="32px" />
+                </LoaderContainer>
+                <Trans>Connecting...</Trans>
+              </ThemedText.Black>
             </>
           )}
         </LoadingWrapper>
       </LoadingMessage>
-      {Object.keys(SUPPORTED_WALLETS).map((key) => {
-        const option = SUPPORTED_WALLETS[key]
-        if (option.connector === connector) {
-          if (option.connector === injected) {
-            if (isMetamask && option.name !== 'MetaMask') {
-              return null
-            }
-            if (!isMetamask && option.name === 'MetaMask') {
-              return null
-            }
-          }
-          return (
-            <Option
-              id={`connect-${key}`}
-              key={key}
-              clickable={false}
-              color={option.color}
-              header={option.name}
-              subheader={option.description}
-              icon={option.iconURL}
-            />
-          )
-        }
-        return null
-      })}
     </PendingSection>
   )
 }
