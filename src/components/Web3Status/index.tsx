@@ -153,8 +153,6 @@ function Web3StatusInner() {
     }
   }, [account, connector])
 
-  console.log(account)
-
   const { ENSName } = useENSName(account ?? undefined)
 
   const allTransactions = useAllTransactions()

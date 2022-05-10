@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
-import { CHAIN_INFO } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'constants/chainInfo'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
@@ -98,7 +98,7 @@ const HeaderLinks = styled(Row)`
   overflow: auto;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-self: start;  
+    justify-self: start;
     `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
@@ -261,11 +261,14 @@ export default function Header() {
   const showClaimPopup = useShowClaimPopup()
 
   const scrollY = useScrollPosition()
-
+  let chainInfo: L1ChainInfo | L2ChainInfo = CHAIN_INFO[SupportedChainId.MAINNET]
+  if (chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
+    chainInfo = CHAIN_INFO[chainId]
+  }
   const {
     infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  } = chainInfo
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
