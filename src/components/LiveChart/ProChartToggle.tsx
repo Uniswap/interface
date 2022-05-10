@@ -5,7 +5,7 @@ const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
   position: absolute;
   transition: all 0.2s ease;
   background-color: ${({ theme }) => theme.primary};
-  ${({ element }) => `transform: translateX(${element?.offsetLeft || 0}px); width: ${element?.offsetWidth || 48}px;`}
+  ${({ element }) => `transform: translateX(${element?.offsetLeft ?? 55}px); width: ${element?.offsetWidth || 44}px;`}
   border-radius: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   height: 100%;
   
@@ -63,10 +63,10 @@ export interface ProChartToggleProps {
 
 export default function ProChartToggle({
   id,
-  activeName = 'on',
+  activeName = 'pro',
   buttons = [
-    { name: 'on', title: 'On' },
-    { name: 'off', title: 'Off' },
+    { name: 'basic', title: 'Basic' },
+    { name: 'pro', title: 'Pro' },
   ],
   toggle,
   size = 'sm',

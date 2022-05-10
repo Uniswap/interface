@@ -134,7 +134,7 @@ function LiveChart({
   })
   const { hasProChart, loading: proChartLoading } = stateProChart
   const { data: chartData, error: basicChartError, loading: basicChartLoading } = useLiveChartData(tokens, timeFrame)
-  const showProLiveChart = useShowProLiveChart()
+  const showProChartStore = useShowProLiveChart()
   const toggleProLiveChart = useToggleProLiveChart()
   const above400 = useMedia('(min-width:400px)')
   const { mixpanelHandler } = useMixpanel()
@@ -162,6 +162,8 @@ function LiveChart({
   const showingValue = hoverValue ?? (chartData[chartData.length - 1]?.value || 0)
 
   const { chartColor, different, differentPercent } = getDifferentValues(chartData, hoverValue)
+
+  const isShowProChart = showProChartStore && (hasProChart || proChartLoading || basicChartError)
 
   const renderTimeframes = () => {
     return (
@@ -222,10 +224,10 @@ function LiveChart({
 
             <Flex flex={1} justifyContent="flex-end">
               <ProChartToggle
-                activeName={hasProChart && (showProLiveChart || basicChartError) ? 'pro' : 'basic'}
+                activeName={isShowProChart ? 'pro' : 'basic'}
                 toggle={(name: string) => {
                   if (!basicChartError && hasProChart) {
-                    if (name !== (hasProChart && (showProLiveChart || basicChartError) ? 'pro' : 'basic')) {
+                    if (name !== (isShowProChart ? 'pro' : 'basic')) {
                       if (name === 'pro') {
                         mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
                       } else {
@@ -244,7 +246,7 @@ function LiveChart({
             </Flex>
             {above400 && mobileCloseButton}
           </Flex>
-          {hasProChart && (showProLiveChart || basicChartError) ? (
+          {isShowProChart ? (
             <ProLiveChartCustom currencies={Object.values(currencies)} stateProChart={stateProChart} />
           ) : (
             <>
@@ -282,7 +284,7 @@ function LiveChart({
                 </Flex>
                 {!isMobile && renderTimeframes()}
               </Flex>
-              {isMobile && !showProLiveChart && renderTimeframes()}
+              {isMobile && !showProChartStore && renderTimeframes()}
               <div style={{ flex: 1, marginTop: '12px' }}>
                 {basicChartLoading || basicChartError ? (
                   <Flex

@@ -114,7 +114,7 @@ function ProLiveChart({
 }) {
   const theme = useTheme()
   const userLocale = useUserLocale()
-  const { hasProChart, apiVersion, pairAddress } = stateProChart
+  const { hasProChart, apiVersion, pairAddress, loading: loadingProp } = stateProChart
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [loading, setLoading] = useState(true)
   const [fullscreen, setFullscreen] = useState(false)
@@ -214,7 +214,7 @@ function ProLiveChart({
 
   return (
     <ProLiveChartWrapper fullscreen={fullscreen} onClick={() => setFullscreen(false)} className={className}>
-      {loading && (
+      {(loading || loadingProp) && (
         <Loader>
           <AnimatedLoader />
         </Loader>
@@ -228,12 +228,12 @@ function ProLiveChart({
             e.stopPropagation()
           }}
           fullscreen={fullscreen}
-          $loading={loading}
+          $loading={loading || loadingProp}
         ></MobileChart>
       ) : (
         <div
           ref={newRef => setRef(newRef)}
-          style={{ height: '100%', width: '100%', display: loading ? 'none' : 'block' }}
+          style={{ height: '100%', width: '100%', display: loading || loadingProp ? 'none' : 'block' }}
           onClick={(e: any) => {
             e.stopPropagation()
           }}
