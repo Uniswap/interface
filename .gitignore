@@ -19,8 +19,6 @@
 
 # builds
 /build
-/cosmos-export
-/dist
 /dts
 
 # misc

@@ -1,5 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Protocol } from '@uniswap/router-sdk'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
@@ -8,7 +11,6 @@ import { AutoRow, RowBetween } from 'components/Row'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
-import { getTokenPath } from 'lib/components/Swap/RoutingDiagram/utils'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -106,3 +108,41 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
     </Wrapper>
   )
 })
+
+export interface RoutingDiagramEntry {
+  percent: Percent
+  path: [Currency, Currency, FeeAmount][]
+  protocol: Protocol
+}
+
+const V2_DEFAULT_FEE_TIER = 3000
+
+/**
+ * Loops through all routes on a trade and returns an array of diagram entries.
+ */
+export function getTokenPath(trade: InterfaceTrade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
+  return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
+    const portion =
+      trade.tradeType === TradeType.EXACT_INPUT
+        ? inputAmount.divide(trade.inputAmount)
+        : outputAmount.divide(trade.outputAmount)
+    const percent = new Percent(portion.numerator, portion.denominator)
+    const path: RoutingDiagramEntry['path'] = []
+    for (let i = 0; i < pools.length; i++) {
+      const nextPool = pools[i]
+      const tokenIn = tokenPath[i]
+      const tokenOut = tokenPath[i + 1]
+      const entry: RoutingDiagramEntry['path'][0] = [
+        tokenIn,
+        tokenOut,
+        nextPool instanceof Pair ? V2_DEFAULT_FEE_TIER : nextPool.fee,
+      ]
+      path.push(entry)
+    }
+    return {
+      percent,
+      path,
+      protocol,
+    }
+  })
+}
