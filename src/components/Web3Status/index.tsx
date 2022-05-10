@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { darken } from 'polished'
 import { useEffect, useMemo, useState } from 'react'
@@ -148,9 +147,11 @@ function Web3StatusInner() {
   const [account, setAccount] = useState(accountFromHook)
   useEffect(() => {
     if (!account) {
-      connector?.getAccount().then((acc) => setAccount(acc))
+      // connector?.getAccount().then((acc) => setAccount(acc))
     }
   }, [account, connector])
+
+  console.log(account)
 
   const { ENSName } = useENSName(account ?? undefined)
 

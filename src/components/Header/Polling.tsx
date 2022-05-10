@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import { ChainIdNotAllowedError } from '@web3-react/store'
 import { RowFixed } from 'components/Row'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -13,7 +15,6 @@ import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { UnsupportedChainIdError, useWeb3React } from 'web3-react-core'
 
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
@@ -138,9 +139,9 @@ export default function Polling() {
 
   //TODO - chainlink gas oracle is really slow. Can we get a better data source?
 
-  const isUnsupportedChainError = error instanceof UnsupportedChainIdError
+  const isChainIdNotAllowed = error instanceof ChainIdNotAllowedError
 
-  if (isUnsupportedChainError) {
+  if (isChainIdNotAllowed) {
     return null // Hide all this info when there's an unsupported chain id error
   }
 

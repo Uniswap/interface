@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
+import { ChainIdNotAllowedError } from '@web3-react/store'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -241,7 +242,7 @@ const getChainNameFromId = (id: string | number) => {
 }
 
 export default function NetworkSelector() {
-  const { chainId, library, provider, connector } = useActiveWeb3React()
+  const { chainId, provider, connector } = useActiveWeb3React()
   const { error } = useWeb3React()
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
@@ -311,12 +312,12 @@ export default function NetworkSelector() {
     return null
   }
 
-  const isUnsupportedChainError = error instanceof UnsupportedChainIdError
+  const isChainIdNotAllowed = error instanceof ChainIdNotAllowedError
 
   return (
     <SelectorWrapper ref={node as any} onMouseEnter={toggle} onMouseLeave={toggle}>
-      <SelectorControls interactive error={isUnsupportedChainError}>
-        {isUnsupportedChainError ? (
+      <SelectorControls interactive error={isChainIdNotAllowed}>
+        {isChainIdNotAllowed ? (
           <>
             <SelectorLogo interactive as={AlertTriangle} size={16} />
             <SelectorLabel>
