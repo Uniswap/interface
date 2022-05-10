@@ -426,7 +426,7 @@ export const useGlobalMixpanelEvents = () => {
   useEffect(() => {
     if (account && isAddress(account)) {
       mixpanel.init(process.env.REACT_APP_MIXPANEL_PROJECT_TOKEN || '', {
-        debug: true,
+        debug: process.env.REACT_APP_MAINNET_ENV === 'staging',
       })
       mixpanel.identify(account)
       mixpanel.people.set({})

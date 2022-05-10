@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
-const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement; disable: boolean }>`
+const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
   position: absolute;
   transition: all 0.2s ease;
   background-color: ${({ theme }) => theme.primary};
@@ -59,7 +59,6 @@ export interface ProChartToggleProps {
   size?: 'sm' | 'md'
   border?: boolean
   bgColor?: 'background' | 'buttonBlack'
-  disabled?: boolean
 }
 
 export default function ProChartToggle({
@@ -73,7 +72,6 @@ export default function ProChartToggle({
   size = 'sm',
   border = false,
   bgColor = 'background',
-  disabled = false,
 }: ProChartToggleProps) {
   const buttonsRef = useRef<any>({})
   const theme = useTheme()
@@ -107,7 +105,7 @@ export default function ProChartToggle({
           </ToggleElement>
         )
       })}
-      <ToggleButton element={activeElement} size={size} disable={disabled} />
+      <ToggleButton element={activeElement} size={size} />
     </ToggleWrapper>
   )
 }

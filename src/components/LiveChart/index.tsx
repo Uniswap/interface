@@ -126,9 +126,14 @@ function LiveChart({
   const isWrappedToken = tokens[0]?.address === tokens[1]?.address
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
-  const [stateProChart, setStateProChart] = useState({ hasProChart: false, pairAddress: '', apiVersion: '' })
-  const { hasProChart } = stateProChart
-  const { data: chartData, error, loading } = useLiveChartData(tokens, timeFrame)
+  const [stateProChart, setStateProChart] = useState({
+    hasProChart: false,
+    pairAddress: '',
+    apiVersion: '',
+    loading: true,
+  })
+  const { hasProChart, loading: proChartLoading } = stateProChart
+  const { data: chartData, error: basicChartError, loading: basicChartLoading } = useLiveChartData(tokens, timeFrame)
   const showProLiveChart = useShowProLiveChart()
   const toggleProLiveChart = useToggleProLiveChart()
   const above400 = useMedia('(min-width:400px)')
@@ -140,12 +145,14 @@ function LiveChart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartData])
   useEffect(() => {
-    setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '' })
+    setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: true })
 
     checkPairHasDextoolsData(currencies, chainId)
       .then((res: any) => {
         if ((res.ver || res.ver === 0) && res.pairAddress) {
-          setStateProChart({ hasProChart: true, pairAddress: res.pairAddress, apiVersion: res.ver })
+          setStateProChart({ hasProChart: true, pairAddress: res.pairAddress, apiVersion: res.ver, loading: false })
+        } else {
+          setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: false })
         }
       })
       .catch(error => console.log(error))
@@ -215,11 +222,10 @@ function LiveChart({
 
             <Flex flex={1} justifyContent="flex-end">
               <ProChartToggle
-                activeName={hasProChart && (showProLiveChart || error) ? 'pro' : 'basic'}
-                disabled={!hasProChart}
+                activeName={hasProChart && (showProLiveChart || basicChartError) ? 'pro' : 'basic'}
                 toggle={(name: string) => {
-                  if (!error && hasProChart) {
-                    if (name !== (hasProChart && (showProLiveChart || error) ? 'pro' : 'basic')) {
+                  if (!basicChartError && hasProChart) {
+                    if (name !== (hasProChart && (showProLiveChart || basicChartError) ? 'pro' : 'basic')) {
                       if (name === 'pro') {
                         mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
                       } else {
@@ -230,7 +236,7 @@ function LiveChart({
                   }
                 }}
                 buttons={[
-                  { name: 'basic', title: 'Basic', disabled: error },
+                  { name: 'basic', title: 'Basic', disabled: basicChartError },
                   { name: 'pro', title: 'Pro', disabled: !hasProChart },
                 ]}
                 bgColor={isMobile ? 'buttonBlack' : 'background'}
@@ -238,13 +244,13 @@ function LiveChart({
             </Flex>
             {above400 && mobileCloseButton}
           </Flex>
-          {hasProChart && (showProLiveChart || error) ? (
+          {hasProChart && (showProLiveChart || basicChartError) ? (
             <ProLiveChartCustom currencies={Object.values(currencies)} stateProChart={stateProChart} />
           ) : (
             <>
               <Flex justifyContent="space-between" alignItems="flex-start" marginTop={'5px'}>
                 <Flex flexDirection="column" alignItems="flex-start">
-                  {showingValue === 0 || error ? (
+                  {showingValue === 0 || basicChartError ? (
                     <Text fontSize={28} color={theme.subText}>
                       --
                     </Text>
@@ -256,7 +262,7 @@ function LiveChart({
                     />
                   )}
                   <Flex marginTop="2px">
-                    {showingValue === 0 || error ? (
+                    {showingValue === 0 || basicChartError ? (
                       <Text fontSize={12} color={theme.disableText}>
                         --
                       </Text>
@@ -278,7 +284,7 @@ function LiveChart({
               </Flex>
               {isMobile && !showProLiveChart && renderTimeframes()}
               <div style={{ flex: 1, marginTop: '12px' }}>
-                {loading || error ? (
+                {basicChartLoading || basicChartError ? (
                   <Flex
                     minHeight={isMobile ? '300px' : '370px'}
                     flexDirection={'column'}
@@ -287,8 +293,8 @@ function LiveChart({
                     color={theme.disableText}
                     style={{ gap: '16px' }}
                   >
-                    {loading && <Loader />}
-                    {error && (
+                    {basicChartLoading && <Loader />}
+                    {basicChartError && (
                       <>
                         <WarningIcon />
                         <Text fontSize={16}>
