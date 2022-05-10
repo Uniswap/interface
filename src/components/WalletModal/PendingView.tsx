@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -17,8 +16,11 @@ const PendingSection = styled.div`
   }
 `
 
-const StyledLoader = styled.div`
+const LoaderContainer = styled.div`
   margin: 16px 0;
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: center;
 `
 
 const LoadingMessage = styled.div<{ error?: boolean }>`
@@ -72,8 +74,6 @@ export default function PendingView({
   setPendingError: (error: boolean) => void
   tryActivation: (connector: AbstractConnector) => void
 }) {
-  const theme = useTheme()
-
   return (
     <PendingSection>
       <LoadingMessage error={error}>
@@ -94,10 +94,10 @@ export default function PendingView({
             </ErrorGroup>
           ) : (
             <>
-              <StyledLoader>
-                <Loader stroke={theme.text1} size="32px" />
-              </StyledLoader>
-              <ThemedText.Black fontSize={20} marginY={16}>
+              <ThemedText.Black fontSize={20} marginY={16} marginX="auto">
+                <LoaderContainer>
+                  <Loader stroke="currentColor" size="32px" />
+                </LoaderContainer>
                 <Trans>Connecting...</Trans>
               </ThemedText.Black>
             </>
