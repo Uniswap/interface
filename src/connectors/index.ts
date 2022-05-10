@@ -49,8 +49,6 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
   ALL_SUPPORTED_CHAIN_IDS
 )
 
-// this is an ordered priority list. network connector should be at the top because we want to always
-// pass in a walletOverride manually for the connected wallet
 export const connectors: [Connector, Web3ReactHooks][] = [
   [network, networkHooks],
   [gnosisSafe, gnosisSafeHooks],
