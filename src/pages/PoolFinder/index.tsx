@@ -79,7 +79,7 @@ export default function PoolFinder() {
       if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
         hasPosition = Boolean(
           positions[pair.liquidityToken.address] &&
-            JSBI.greaterThan((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0)),
+            JSBI.greaterThanOrEqual((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0)),
         )
       }
       return pairState === PairState.EXISTS && hasPosition && pair

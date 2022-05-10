@@ -27,7 +27,7 @@ import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useIsExpertMode, usePairAdderByTokens, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -158,6 +158,8 @@ export default function CreatePool({
   )
 
   const addTransactionWithType = useTransactionAdder()
+  const addPair = usePairAdderByTokens()
+
   async function onAdd() {
     // if (!pair) return
     if (!chainId || !library || !account) return
@@ -241,6 +243,12 @@ export default function CreatePool({
               },
             })
             setTxHash(response.hash)
+            const tA = wrappedCurrency(cA, chainId)
+            const tB = wrappedCurrency(cB, chainId)
+            if (!!tA && !!tB) {
+              // In case subgraph sync is slow, doing this will show the pool in "My Pools" page.
+              addPair(tA, tB)
+            }
           }
         })
       })
