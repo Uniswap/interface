@@ -17,9 +17,6 @@ import { selectFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
-import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
-import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
-import { NameAndColorScreen } from 'src/screens/Onboarding/NameAndColorScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
@@ -27,7 +24,12 @@ import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTScreen } from 'src/screens/NFTScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
+import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
+import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
+import { CloudBackupScreen } from 'src/screens/Onboarding/CloudBackupScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
+import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
+import { NameAndColorScreen } from 'src/screens/Onboarding/NameAndColorScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { PortfolioScreen } from 'src/screens/PortfolioScreen'
@@ -120,6 +122,14 @@ export function AppStackNavigator() {
           <OnboardingStack.Screen
             component={ManualBackupScreen}
             name={OnboardingScreens.BackupManual}
+          />
+          <OnboardingStack.Screen
+            component={CloudBackupScreen}
+            name={OnboardingScreens.BackupCloud}
+          />
+          <OnboardingStack.Screen
+            component={CloudBackupProcessingScreen}
+            name={OnboardingScreens.BackupCloudProcessing}
           />
           {/* TODO: <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} /> */}
           {/* </AppStack.Group>

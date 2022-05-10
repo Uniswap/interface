@@ -37,10 +37,17 @@ export type SettingsStackParamList = {
 }
 
 export type OnboardingStackParamList = {
+  [OnboardingScreens.BackupCloud]: {
+    pin?: string
+  }
+  [OnboardingScreens.BackupCloudProcessing]: {
+    pin: string
+    type: 'restore' | 'backup'
+  }
   [OnboardingScreens.BackupManual]: undefined
   [OnboardingScreens.Backup]: undefined
-  [OnboardingScreens.NameAndColor]: undefined
   [OnboardingScreens.Landing]: undefined
+  [OnboardingScreens.NameAndColor]: undefined
   [OnboardingScreens.Notifications]: undefined
   [OnboardingScreens.Outro]: undefined
   [OnboardingScreens.Security]: undefined

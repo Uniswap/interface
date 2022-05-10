@@ -16,7 +16,7 @@ type StepProps =
     }
 
 type OnboardingScreenProps = {
-  subtitle: string
+  subtitle?: string
   title: string
 } & StepProps
 
@@ -44,12 +44,16 @@ export function OnboardingScreen({
           <Text fontWeight="600" textAlign="center" variant="h4">
             {title}
           </Text>
-          <Text color="gray400" textAlign="center" variant="body">
-            {subtitle}
-          </Text>
+          {subtitle ? (
+            <Text color="gray400" textAlign="center" variant="body">
+              {subtitle}
+            </Text>
+          ) : null}
         </Flex>
 
-        {children}
+        <Flex grow justifyContent="space-between">
+          {children}
+        </Flex>
       </Flex>
     </Screen>
   )

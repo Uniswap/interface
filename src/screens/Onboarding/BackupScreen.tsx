@@ -90,7 +90,7 @@ function BackupOptions() {
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
         onPress={() => {
-          // navigate(OnboardingScreens.Backup)
+          navigate(OnboardingScreens.BackupCloud, {})
         }}
       />
       {spacer}

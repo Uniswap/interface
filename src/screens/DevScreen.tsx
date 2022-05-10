@@ -17,6 +17,7 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { resetWallet } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 
 export function DevScreen({ navigation }: any) {
@@ -62,6 +63,12 @@ export function DevScreen({ navigation }: any) {
     )
   }
 
+  const onPressResetOnboarding = () => {
+    if (!activeAccount) return
+
+    dispatch(resetWallet())
+  }
+
   return (
     <SheetScreen>
       <Box flexDirection="row" justifyContent="flex-end" px="md" py="sm">
@@ -105,6 +112,9 @@ export function DevScreen({ navigation }: any) {
           </TextButton>
           <TextButton mt="sm" name="DEBUG_ShowError" onPress={onPressShowError}>
             Show global error
+          </TextButton>
+          <TextButton mt="sm" name="DEBUG_ResetOnboarding" onPress={onPressResetOnboarding}>
+            Reset onboarding
           </TextButton>
           <Text mt="xl" textAlign="center">
             {`Active Chains: ${activeChains}`}
