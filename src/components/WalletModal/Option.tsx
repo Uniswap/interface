@@ -3,8 +3,8 @@ import styled from 'styled-components/macro'
 
 import { ExternalLink } from '../../theme'
 
-const InfoCard = styled.button<{ isActive?: boolean }>`
-  background-color: ${({ theme, isActive }) => (isActive ? theme.bg3 : theme.bg2)};
+const InfoCard = styled.button<{ active?: boolean }>`
+  background-color: ${({ theme, active }) => (active ? theme.bg3 : theme.bg2)};
   padding: 1rem;
   outline: none;
   border: 1px solid;
@@ -13,7 +13,7 @@ const InfoCard = styled.button<{ isActive?: boolean }>`
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.primary1};
   }
-  border-color: ${({ theme, isActive }) => (isActive ? 'transparent' : theme.bg3)};
+  border-color: ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
 `
 
 const OptionCard = styled(InfoCard as any)`
@@ -44,6 +44,7 @@ const GreenCircle = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   justify-content: center;
   align-items: center;
+
   &:first-child {
     height: 8px;
     width: 8px;
@@ -96,7 +97,7 @@ export default function Option({
   header,
   subheader = null,
   icon,
-  isActive = false,
+  active = false,
   id,
 }: {
   link?: string | null
@@ -107,14 +108,14 @@ export default function Option({
   header: React.ReactNode
   subheader: React.ReactNode | null
   icon: string
-  isActive?: boolean
+  active?: boolean
   id: string
 }) {
   const content = (
-    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !isActive} isActive={isActive}>
+    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
       <OptionCardLeft>
         <HeaderText color={color}>
-          {isActive ? (
+          {active ? (
             <CircleWrapper>
               <GreenCircle>
                 <div />
