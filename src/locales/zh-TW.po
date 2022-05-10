@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-09 19:06\n"
+"PO-Revision-Date: 2022-05-10 15:12\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -579,6 +579,10 @@ msgstr "連接你的錢包"
 msgid "Connected with {name}"
 msgstr "已與 {name} 連接"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "正在連接..."
+
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"
 msgstr "連接…"
@@ -985,10 +989,6 @@ msgstr "增加流動資金"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
 msgstr "初始兌換率和流動池份額"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "初始化中..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-09 19:06\n"
+"PO-Revision-Date: 2022-05-10 15:12\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -579,6 +579,10 @@ msgstr "Hubungkan dompet Anda"
 msgid "Connected with {name}"
 msgstr "Terhubung dengan {name}"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "Menghubungkan..."
+
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"
 msgstr "Menghubungkan…"
@@ -985,10 +989,6 @@ msgstr "Tingkatkan Likuiditas"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
 msgstr "Harga awal dan bagian pool"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "Memulai..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."

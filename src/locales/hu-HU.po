@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-09 19:06\n"
+"PO-Revision-Date: 2022-05-10 15:12\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -579,6 +579,10 @@ msgstr "Csatlakoztassa a pénztárcáját"
 msgid "Connected with {name}"
 msgstr "Csatlakoztatva: {name}"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "Csatlakozás..."
+
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"
 msgstr "Csatlakozás…"
@@ -986,10 +990,6 @@ msgstr "Likviditás növelése"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
 msgstr "Kezdeti árfolyam és a pool részesedés"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "Inicializálás..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."

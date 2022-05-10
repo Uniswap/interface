@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-09 19:06\n"
+"PO-Revision-Date: 2022-05-10 15:12\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -579,6 +579,10 @@ msgstr "Cüzdanını bağla"
 msgid "Connected with {name}"
 msgstr "{name} ile bağlantılı"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "Bağlanıyor..."
+
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"
 msgstr "Bağlanıyor…"
@@ -985,10 +989,6 @@ msgstr "Likiditeyi Artırın"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
 msgstr "İlk fiyatlar ve havuz payı"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "Başlatılıyor..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."

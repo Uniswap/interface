@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-09 19:06\n"
+"PO-Revision-Date: 2022-05-10 15:12\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -579,6 +579,10 @@ msgstr "Підключіть гаманець"
 msgid "Connected with {name}"
 msgstr "Під'єднано через {name}"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "Підключення..."
+
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"
 msgstr "Підключення…"
@@ -985,10 +989,6 @@ msgstr "Збільшити ліквідність"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
 msgstr "Початкові ціни й частка пулу"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "Ініціалізація..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."

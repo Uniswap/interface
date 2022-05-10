@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-09 19:06\n"
+"PO-Revision-Date: 2022-05-10 15:12\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -579,6 +579,10 @@ msgstr "Povežite svojo denarnico"
 msgid "Connected with {name}"
 msgstr "Povezano z: {name}"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "Povezovanje ..."
+
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"
 msgstr "Povezujem se…"
@@ -985,10 +989,6 @@ msgstr "Povečaj likvidnost"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
 msgstr "Začetne cene in delež v skladu"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "Inicializacija..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
