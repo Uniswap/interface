@@ -221,15 +221,19 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
   const sym = isTokenUSD || isEtherUSD ? 'usd' : 'eth'
   const [data, setData] = useState<Bar[]>([])
   const [oldestTs, setOldestTs] = useState(0)
+
   const stateRef = useRef<{ data: Bar[]; oldestTs: number }>({ data, oldestTs })
   const fetchingRef = useRef<boolean>(false)
+  const intervalRef = useRef<any>()
+
   const isReverse =
     (!isEtherUSD && (currencies[0] === Currency.ETHER || checkIsUSDToken(chainId, currencies[0]))) ||
     (isEtherUSD && currencies[1] === Currency.ETHER)
-  const intervalRef = useRef<any>()
+
   useEffect(() => {
     stateRef.current = { data, oldestTs }
   }, [data, oldestTs])
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
@@ -237,6 +241,11 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
       }
     }
   }, [])
+
+  useEffect(() => {
+    setData([])
+  }, [currencies])
+
   const getCandles = async (ts: number, span: string = 'month', res: string = '15m') => {
     const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res, sym)
     return response?.data

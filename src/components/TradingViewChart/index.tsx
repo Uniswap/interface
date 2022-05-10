@@ -7,17 +7,16 @@ import { useUserLocale } from 'state/user/hooks'
 import { ReactComponent as FullscreenOn } from 'assets/svg/fullscreen_on.svg'
 import { ReactComponent as FullscreenOff } from 'assets/svg/fullscreen_off.svg'
 import * as ReactDOMServer from 'react-dom/server'
-import Portal from '@reach/portal'
 import { isMobile } from 'react-device-detect'
 import { useDatafeed } from './datafeed'
 
 const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
   margin-top: 10px;
-  height: ${isMobile ? '60vh' : 'calc(100% - 0px)'};
-  border-radius: 10px;
+  height: ${isMobile ? '100%' : 'calc(100% - 0px)'};
   ${({ theme }) => `border: 1px solid ${theme.background};`}
   overflow: hidden;
   box-shadow: 0px 4px 16px rgb(0 0 0 / 4%);
+  border-radius: ${isMobile ? '0' : '10px'};
 
   ${({ fullscreen }) =>
     fullscreen &&
@@ -34,8 +33,6 @@ const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
     border-radius: 0;
     margin:0;
   `}
-
-  ${isMobile && 'height: 60vh; border-radius: 0;'}
 `
 const Loader = styled.div`
   height: 100%;
@@ -45,15 +42,13 @@ const Loader = styled.div`
   justify-content: center;
 `
 
-const MobileChart = styled.div<{ fullscreen: boolean; loading: boolean }>`
-  height: 60vh;
+const MobileChart = styled.div<{ fullscreen: boolean; $loading: boolean }>`
+  height: 100%;
   width: 100%;
-  position: fixed;
-  z-index: 100000;
   bottom: 0;
 
-  ${({ fullscreen }) => (fullscreen ? `height: ${window.innerHeight}px;` : 'padding-top: 10px;')}
-  ${({ loading }) => `display:${loading ? 'none' : 'block'}`}
+  ${({ theme, fullscreen }) => !fullscreen && `padding-top: 15px; border-bottom: solid 15px ${theme.buttonBlack};`}
+  ${({ $loading }) => `display:${$loading ? 'none' : 'block'};`}
 `
 
 export interface ChartContainerProps {
@@ -77,6 +72,37 @@ export interface ChartContainerProps {
 export interface ChartContainerState {}
 const LOCALSTORAGE_STATE_NAME = 'proChartSavedState'
 
+function openFullscreen(elem: any) {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen()
+  } else if (elem.webkitRequestFullscreen) {
+    /* Safari */
+    elem.webkitRequestFullscreen()
+  } else if (elem.msRequestFullscreen) {
+    /* IE11 */
+    elem.msRequestFullscreen()
+  }
+}
+
+interface FullScreenDocument extends Document {
+  msExitFullscreen?: () => void
+  mozCancelFullScreen?: () => void
+  webkitExitFullscreen?: () => void
+}
+
+function closeFullscreen() {
+  const doc = document as FullScreenDocument
+  if (doc.exitFullscreen) {
+    doc.exitFullscreen()
+  } else if (doc.webkitExitFullscreen) {
+    /* Safari */
+    doc.webkitExitFullscreen()
+  } else if (doc.msExitFullscreen) {
+    /* IE11 */
+    doc.msExitFullscreen()
+  }
+}
+
 function ProLiveChart({
   currencies,
   stateProChart,
@@ -88,7 +114,7 @@ function ProLiveChart({
 }) {
   const theme = useTheme()
   const userLocale = useUserLocale()
-  const { hasProChart, apiVersion, pairAddress } = stateProChart
+  const { hasProChart, apiVersion, pairAddress, loading: loadingProp } = stateProChart
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [loading, setLoading] = useState(true)
   const [fullscreen, setFullscreen] = useState(false)
@@ -158,6 +184,13 @@ function ProLiveChart({
         fullscreenOn.setAttribute('title', 'Fullscreen on')
         fullscreenOn.addEventListener('click', () => {
           setFullscreen(fs => {
+            if (isMobile) {
+              if (fs) {
+                closeFullscreen()
+              } else {
+                openFullscreen(ref)
+              }
+            }
             fullscreenOn.innerHTML = ReactDOMServer.renderToStaticMarkup(fs ? <FullscreenOn /> : <FullscreenOff />)
             return !fs
           })
@@ -181,28 +214,26 @@ function ProLiveChart({
 
   return (
     <ProLiveChartWrapper fullscreen={fullscreen} onClick={() => setFullscreen(false)} className={className}>
-      {loading && (
+      {(loading || loadingProp) && (
         <Loader>
           <AnimatedLoader />
         </Loader>
       )}
 
       {isMobile ? (
-        <Portal>
-          <MobileChart
-            id="mobile25235"
-            ref={newRef => setRef(newRef)}
-            onClick={(e: any) => {
-              e.stopPropagation()
-            }}
-            fullscreen={fullscreen}
-            loading={loading}
-          ></MobileChart>
-        </Portal>
+        <MobileChart
+          id="mobile25235"
+          ref={newRef => setRef(newRef)}
+          onClick={(e: any) => {
+            e.stopPropagation()
+          }}
+          fullscreen={fullscreen}
+          $loading={loading || loadingProp}
+        ></MobileChart>
       ) : (
         <div
           ref={newRef => setRef(newRef)}
-          style={{ height: '100%', width: '100%', display: loading ? 'none' : 'block' }}
+          style={{ height: '100%', width: '100%', display: loading || loadingProp ? 'none' : 'block' }}
           onClick={(e: any) => {
             e.stopPropagation()
           }}
@@ -212,4 +243,4 @@ function ProLiveChart({
   )
 }
 
-export default ProLiveChart
+export default React.memo(ProLiveChart)

@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
-const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement; disable: boolean }>`
+const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
   position: absolute;
   transition: all 0.2s ease;
   background-color: ${({ theme }) => theme.primary};
-  ${({ element }) => `transform: translateX(${element?.offsetLeft || 0}px); width: ${element?.offsetWidth || 48}px;`}
+  ${({ element }) => `transform: translateX(${element?.offsetLeft ?? 55}px); width: ${element?.offsetWidth || 44}px;`}
   border-radius: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   height: 100%;
   
@@ -55,25 +55,23 @@ export interface ProChartToggleProps {
   id?: string
   activeName?: string
   buttons?: IToggleButton[]
-  toggle: () => void
+  toggle: (name: string) => void
   size?: 'sm' | 'md'
   border?: boolean
   bgColor?: 'background' | 'buttonBlack'
-  disabled?: boolean
 }
 
 export default function ProChartToggle({
   id,
-  activeName = 'on',
+  activeName = 'pro',
   buttons = [
-    { name: 'on', title: 'On' },
-    { name: 'off', title: 'Off' },
+    { name: 'basic', title: 'Basic' },
+    { name: 'pro', title: 'Pro' },
   ],
   toggle,
   size = 'sm',
   border = false,
   bgColor = 'background',
-  disabled = false,
 }: ProChartToggleProps) {
   const buttonsRef = useRef<any>({})
   const theme = useTheme()
@@ -89,7 +87,6 @@ export default function ProChartToggle({
       size={size}
       border={border}
       background={`${theme[bgColor]}${buttons.some((b: any) => b.disabled) ? '20' : ''}`}
-      onClick={toggle}
     >
       {buttons.map(button => {
         return (
@@ -102,12 +99,13 @@ export default function ProChartToggle({
             size={size}
             border={border}
             disabled={button.disabled}
+            onClick={() => toggle(button.name)}
           >
             {button.title}
           </ToggleElement>
         )
       })}
-      <ToggleButton element={activeElement} size={size} disable={disabled} />
+      <ToggleButton element={activeElement} size={size} />
     </ToggleWrapper>
   )
 }
