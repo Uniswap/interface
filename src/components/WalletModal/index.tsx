@@ -160,10 +160,14 @@ export default function WalletModal({
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
-      setPendingError(false)
-      setWalletView(WALLET_VIEWS.ACCOUNT)
+      resetAccountView()
     }
   }, [walletModalOpen])
+
+  const resetAccountView = () => {
+    setPendingError(false)
+    setWalletView(WALLET_VIEWS.ACCOUNT)
+  }
 
   // close modal when a connection is successful
   const activePrevious = usePrevious(active)
@@ -358,12 +362,7 @@ export default function WalletModal({
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
           <HeaderRow color="blue">
-            <HoverText
-              onClick={() => {
-                setPendingError(false)
-                setWalletView(WALLET_VIEWS.ACCOUNT)
-              }}
-            >
+            <HoverText onClick={resetAccountView}>
               <ArrowLeft />
             </HoverText>
           </HeaderRow>
@@ -383,20 +382,23 @@ export default function WalletModal({
                 error={pendingError}
                 setPendingError={setPendingError}
                 tryActivation={tryActivation}
+                resetAccountView={resetAccountView}
               />
             )}
-            <LightCard>
-              <AutoRow style={{ flexWrap: 'nowrap' }}>
-                <ThemedText.Black fontSize={14}>
-                  <Trans>
-                    By connecting a wallet, you agree to Uniswap Labs’{' '}
-                    <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                    acknowledge that you have read and understand the Uniswap{' '}
-                    <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
-                  </Trans>
-                </ThemedText.Black>
-              </AutoRow>
-            </LightCard>
+            {!pendingError && (
+              <LightCard>
+                <AutoRow style={{ flexWrap: 'nowrap' }}>
+                  <ThemedText.Black fontSize={14}>
+                    <Trans>
+                      By connecting a wallet, you agree to Uniswap Labs’{' '}
+                      <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                      acknowledge that you have read and understand the Uniswap{' '}
+                      <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
+                    </Trans>
+                  </ThemedText.Black>
+                </AutoRow>
+              </LightCard>
+            )}
             {walletView !== WALLET_VIEWS.PENDING && (
               <>
                 <OptionGrid>{getOptions()}</OptionGrid>
