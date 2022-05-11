@@ -14,7 +14,7 @@ Example commit messages:
 
 - feat: adds support for gnosis safe wallet
 - fix: removes a polling memory leak
-- chore: bumps eslint version
+- chore: bumps redux version
 
 Other things to note:
 
