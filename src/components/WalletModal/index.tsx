@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
@@ -150,6 +150,11 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
+  const resetAccountView = useCallback(() => {
+    setPendingError(false)
+    setWalletView(WALLET_VIEWS.ACCOUNT)
+  }, [setPendingError, setWalletView])
+
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -160,10 +165,9 @@ export default function WalletModal({
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
-      setPendingError(false)
-      setWalletView(WALLET_VIEWS.ACCOUNT)
+      resetAccountView()
     }
-  }, [walletModalOpen])
+  }, [walletModalOpen, resetAccountView])
 
   // close modal when a connection is successful
   const activePrevious = usePrevious(active)
@@ -358,12 +362,7 @@ export default function WalletModal({
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
           <HeaderRow color="blue">
-            <HoverText
-              onClick={() => {
-                setPendingError(false)
-                setWalletView(WALLET_VIEWS.ACCOUNT)
-              }}
-            >
+            <HoverText onClick={resetAccountView}>
               <ArrowLeft />
             </HoverText>
           </HeaderRow>
@@ -383,20 +382,23 @@ export default function WalletModal({
                 error={pendingError}
                 setPendingError={setPendingError}
                 tryActivation={tryActivation}
+                resetAccountView={resetAccountView}
               />
             )}
-            <LightCard>
-              <AutoRow style={{ flexWrap: 'nowrap' }}>
-                <ThemedText.Black fontSize={14}>
-                  <Trans>
-                    By connecting a wallet, you agree to Uniswap Labs’{' '}
-                    <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                    acknowledge that you have read and understand the Uniswap{' '}
-                    <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
-                  </Trans>
-                </ThemedText.Black>
-              </AutoRow>
-            </LightCard>
+            {!pendingError && (
+              <LightCard>
+                <AutoRow style={{ flexWrap: 'nowrap' }}>
+                  <ThemedText.Black fontSize={14}>
+                    <Trans>
+                      By connecting a wallet, you agree to Uniswap Labs’{' '}
+                      <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                      acknowledge that you have read and understand the Uniswap{' '}
+                      <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
+                    </Trans>
+                  </ThemedText.Black>
+                </AutoRow>
+              </LightCard>
+            )}
             {walletView !== WALLET_VIEWS.PENDING && (
               <>
                 <OptionGrid>{getOptions()}</OptionGrid>
