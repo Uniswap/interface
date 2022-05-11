@@ -195,13 +195,14 @@ export default function WalletModal({
     const isMetamask = !!window.ethereum?.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
+      const isActive = option.connector === connector
 
       const baseProps = {
+        active: isActive,
         id: `connect-${key}`,
         link: option.href,
         header: option.name,
         color: option.color,
-        active: option.connector === connector,
         key,
         icon: option.iconURL,
       }
@@ -213,7 +214,9 @@ export default function WalletModal({
             <Option
               {...baseProps}
               onClick={() => {
-                !!option.connector && option.connector !== connector && !option.href && tryActivation(option.connector)
+                if (!isActive && !option.href && !!option.connector) {
+                  tryActivation(option.connector)
+                }
               }}
               subheader={null}
             />
