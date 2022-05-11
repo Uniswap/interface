@@ -140,6 +140,7 @@ export default function WalletModal({
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
+  const [pendingError, setPendingError] = useState<boolean>()
   const [pendingWallet, setPendingWallet] = useState<Connector | undefined>()
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
@@ -148,8 +149,9 @@ export default function WalletModal({
   const previousConnector = usePrevious(connector)
 
   const resetAccountView = useCallback(() => {
+    setPendingError(false)
     setWalletView(WALLET_VIEWS.ACCOUNT)
-  }, [setWalletView])
+  }, [setPendingError, setWalletView])
 
   useEffect(() => {
     if (walletModalOpen && connector && connector !== previousConnector && !error) {
@@ -181,6 +183,7 @@ export default function WalletModal({
       dispatch(updateWalletOverride({ wallet }))
       setWalletView(WALLET_VIEWS.ACCOUNT)
     } else {
+      setPendingError(true)
       setPendingWallet(connector)
       setWalletView(WALLET_VIEWS.PENDING)
     }
@@ -343,11 +346,11 @@ export default function WalletModal({
               <PendingView
                 resetAccountView={resetAccountView}
                 connector={pendingWallet}
-                error={error}
+                error={pendingError}
                 tryActivation={tryActivation}
               />
             )}
-            {!error && (
+            {!pendingError && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>
                   <ThemedText.Black fontSize={14}>
