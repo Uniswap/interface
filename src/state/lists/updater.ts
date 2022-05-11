@@ -48,7 +48,7 @@ export default function Updater(): null {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, fetchList, provider, lists])
+  }, [dispatch, fetchList, lists])
 
   // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Updater(): null {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, fetchList, provider, lists])
+  }, [dispatch, fetchList, lists])
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {
