@@ -1,4 +1,4 @@
-import { ChainId, Currency, ETHER } from '@dynamic-amm/sdk'
+import { ChainId, Currency, ETHER, Token } from '@dynamic-amm/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -70,11 +70,10 @@ export default function CurrencyLogo({
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
 
-    if (!!(currency as any)?.address) {
+    if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, getTokenLogoURL(currency.address, chainId)]
       }
-
       return [getTokenLogoURL((currency as any)?.address, chainId)]
     }
 

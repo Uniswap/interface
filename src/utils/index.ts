@@ -50,6 +50,13 @@ import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
 import { OASIS_TOKEN_LIST } from 'constants/tokenLists/oasis.tokenlist'
 import { ARBITRUM_TOKEN_LIST } from 'constants/tokenLists/arbitrum.tokenlist'
 import { FANTOM_MAINNET_TOKEN_LIST } from 'constants/tokenLists/fantom.mainnet.tokenlist'
+import { MATIC_TOKEN_LIST } from '../constants/tokenLists/matic.tokenlist'
+import { MAINNET_TOKEN_LIST } from '../constants/tokenLists/mainnet.tokenlist'
+import { MUMBAI_TOKEN_LIST } from '../constants/tokenLists/mumbai.tokenlist'
+import { BSC_MAINNET_TOKEN_LIST } from '../constants/tokenLists/bsc.mainnet.tokenlist'
+import { AVAX_MAINNET_TOKEN_LIST } from '../constants/tokenLists/avax.mainnet.tokenlist'
+import { CRONOS_TOKEN_LIST } from '../constants/tokenLists/cronos.tokenlist'
+import { AURORA_TOKEN_LIST } from '../constants/tokenLists/aurora.tokenlist'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -544,40 +551,53 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
 
   switch (chainId) {
     case ChainId.MAINNET:
-      imageURL = getEthereumMainnetTokenLogoURL(address)
+      imageURL =
+        MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getEthereumMainnetTokenLogoURL(address)
       break
     case ChainId.ROPSTEN:
       imageURL = getRopstenTokenLogoURL(address)
       break
     case ChainId.MATIC:
-      imageURL = getMaticTokenLogoURL(address)
+      imageURL =
+        MATIC_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getMaticTokenLogoURL(address)
       break
     case ChainId.MUMBAI:
-      imageURL = getMumbaiTokenLogoURL(address)
+      imageURL =
+        MUMBAI_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getMumbaiTokenLogoURL(address)
       break
     case ChainId.BSCTESTNET:
       imageURL = getBscTestnetTokenLogoURL(address)
       break
     case ChainId.BSCMAINNET:
-      imageURL = getBscMainnetTokenLogoURL(address)
+      imageURL =
+        BSC_MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getBscMainnetTokenLogoURL(address)
       break
     case ChainId.AVAXTESTNET:
       imageURL = getAvaxTestnetTokenLogoURL(address)
       break
     case ChainId.AVAXMAINNET:
-      imageURL = getAvaxMainnetTokenLogoURL(address)
+      imageURL =
+        AVAX_MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getAvaxMainnetTokenLogoURL(address)
       break
     case ChainId.FANTOM:
       imageURL =
-        FANTOM_MAINNET_TOKEN_LIST.tokens.find(
-          (item: { address: string }) => item.address.toLowerCase() === address.toLowerCase(),
-        )?.logoURI || getFantomTokenLogoURL(address)
+        FANTOM_MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getFantomTokenLogoURL(address)
       break
     case ChainId.CRONOS:
-      imageURL = getCronosTokenLogoURL(address)
+      imageURL =
+        CRONOS_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getCronosTokenLogoURL(address)
       break
     case ChainId.AURORA:
-      imageURL = getAuroraTokenLogoURL(address)
+      imageURL =
+        AURORA_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        getAuroraTokenLogoURL(address)
       break
     case ChainId.ARBITRUM:
       imageURL =
