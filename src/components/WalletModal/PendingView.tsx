@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Connector } from '@web3-react/types'
-import { darken } from 'polished'
+import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -23,12 +23,11 @@ const LoaderContainer = styled.div`
   justify-content: center;
 `
 
-const LoadingMessage = styled.div<{ error?: boolean }>`
+const LoadingMessage = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
 
   & > * {
     padding: 1rem;
@@ -36,25 +35,9 @@ const LoadingMessage = styled.div<{ error?: boolean }>`
 `
 
 const ErrorGroup = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
+  ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: flex-start;
-`
-
-const ErrorButton = styled.div`
-  border-radius: 8px;
-  font-size: 12px;
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg4};
-  margin-left: 1rem;
-  padding: 0.5rem;
-  font-weight: 600;
-  user-select: none;
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${({ theme }) => darken(0.1, theme.text4)};
-  }
 `
 
 const LoadingWrapper = styled.div`
@@ -67,27 +50,41 @@ export default function PendingView({
   connector,
   error = false,
   tryActivation,
+  resetAccountView,
 }: {
   connector?: Connector
   error?: boolean
   tryActivation: (connector: Connector) => void
+  resetAccountView: () => void
 }) {
   return (
     <PendingSection>
-      <LoadingMessage error={error}>
+      <LoadingMessage>
         <LoadingWrapper>
           {error ? (
             <ErrorGroup>
-              <div>
+              <ThemedText.MediumHeader marginBottom={12}>
                 <Trans>Error connecting</Trans>
-              </div>
-              <ErrorButton
+              </ThemedText.MediumHeader>
+              <ThemedText.Small marginBottom={36} textAlign="center">
+                <Trans>
+                  The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
+                </Trans>
+              </ThemedText.Small>
+              <ButtonPrimary
+                $borderRadius="12px"
+                padding="12px"
                 onClick={() => {
                   connector && tryActivation(connector)
                 }}
               >
                 <Trans>Try Again</Trans>
-              </ErrorButton>
+              </ButtonPrimary>
+              <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
+                <ThemedText.Link fontSize={12} onClick={resetAccountView}>
+                  <Trans>Back to wallet selection</Trans>
+                </ThemedText.Link>
+              </ButtonEmpty>
             </ErrorGroup>
           ) : (
             <>

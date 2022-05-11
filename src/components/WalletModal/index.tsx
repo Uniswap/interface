@@ -5,7 +5,7 @@ import { Connector } from '@web3-react/types'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
 import { useAppDispatch } from 'state/hooks'
@@ -137,7 +137,7 @@ export default function WalletModal({
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
     [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(walletConnect),
   }
-  const [walletView, updateWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
   const [pendingWallet, setPendingWallet] = useState<Connector | undefined>()
@@ -146,17 +146,22 @@ export default function WalletModal({
   const toggleWalletModal = useWalletModalToggle()
 
   const previousConnector = usePrevious(connector)
+
+  const resetAccountView = useCallback(() => {
+    setWalletView(WALLET_VIEWS.ACCOUNT)
+  }, [setWalletView])
+
   useEffect(() => {
     if (walletModalOpen && connector && connector !== previousConnector && !error) {
-      updateWalletView(WALLET_VIEWS.ACCOUNT)
+      setWalletView(WALLET_VIEWS.ACCOUNT)
     }
-  }, [updateWalletView, error, connector, walletModalOpen, previousConnector])
+  }, [setWalletView, error, connector, walletModalOpen, previousConnector])
 
   useEffect(() => {
     if (connector === network) {
-      updateWalletView(WALLET_VIEWS.OPTIONS)
+      setWalletView(WALLET_VIEWS.OPTIONS)
     }
-  }, [connector])
+  }, [setWalletView, connector])
 
   const tryActivation = async (connector: Connector) => {
     const name = Object.values(SUPPORTED_WALLETS).find(
@@ -174,10 +179,10 @@ export default function WalletModal({
     const wallet = getWalletForConnector(connector)
     if (isActiveMap[wallet]) {
       dispatch(updateWalletOverride({ wallet }))
-      updateWalletView(WALLET_VIEWS.ACCOUNT)
+      setWalletView(WALLET_VIEWS.ACCOUNT)
     } else {
       setPendingWallet(connector)
-      updateWalletView(WALLET_VIEWS.PENDING)
+      setWalletView(WALLET_VIEWS.PENDING)
     }
   }
 
@@ -251,7 +256,7 @@ export default function WalletModal({
             {...baseProps}
             onClick={() => {
               option.connector === connector
-                ? updateWalletView(WALLET_VIEWS.ACCOUNT)
+                ? setWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && option.connector && tryActivation(option.connector)
             }}
             subheader={null} //use option.descriptio to bring back multi-line
@@ -289,7 +294,7 @@ export default function WalletModal({
           <HeaderRow>
             <HoverText
               onClick={() => {
-                updateWalletView(
+                setWalletView(
                   (previousWalletView === WALLET_VIEWS.LEGAL ? WALLET_VIEWS.ACCOUNT : previousWalletView) ??
                     WALLET_VIEWS.ACCOUNT
                 )
@@ -314,7 +319,7 @@ export default function WalletModal({
           pendingTransactions={pendingTransactions}
           confirmedTransactions={confirmedTransactions}
           ENSName={ENSName}
-          openOptions={() => updateWalletView(WALLET_VIEWS.OPTIONS)}
+          openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
         />
       )
     }
@@ -326,7 +331,7 @@ export default function WalletModal({
         <HeaderRow color="blue">
           <HoverText
             onClick={() => {
-              updateWalletView(WALLET_VIEWS.OPTIONS)
+              setWalletView(WALLET_VIEWS.OPTIONS)
             }}
           >
             <ArrowLeft />
@@ -335,24 +340,31 @@ export default function WalletModal({
         <ContentWrapper>
           <AutoColumn gap="16px">
             {walletView === WALLET_VIEWS.PENDING && (
-              <PendingView connector={pendingWallet} error={error} tryActivation={tryActivation} />
+              <PendingView
+                resetAccountView={resetAccountView}
+                connector={pendingWallet}
+                error={error}
+                tryActivation={tryActivation}
+              />
             )}
-            <LightCard>
-              <AutoRow style={{ flexWrap: 'nowrap' }}>
-                <ThemedText.Black fontSize={14}>
-                  <Trans>
-                    By connecting a wallet, you agree to Uniswap Labs’{' '}
-                    <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                    acknowledge that you have read and understand the Uniswap{' '}
-                    <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
-                  </Trans>
-                </ThemedText.Black>
-              </AutoRow>
-            </LightCard>
+            {!error && (
+              <LightCard>
+                <AutoRow style={{ flexWrap: 'nowrap' }}>
+                  <ThemedText.Black fontSize={14}>
+                    <Trans>
+                      By connecting a wallet, you agree to Uniswap Labs’{' '}
+                      <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                      acknowledge that you have read and understand the Uniswap{' '}
+                      <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
+                    </Trans>
+                  </ThemedText.Black>
+                </AutoRow>
+              </LightCard>
+            )}
             {walletView !== WALLET_VIEWS.PENDING && (
               <>
                 <OptionGrid>{getOptions()}</OptionGrid>
-                <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => updateWalletView(WALLET_VIEWS.LEGAL)}>
+                <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
                   <RowBetween>
                     <AutoRow gap="4px">
                       <Info size={20} />
