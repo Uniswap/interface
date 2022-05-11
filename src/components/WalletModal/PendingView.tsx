@@ -68,14 +68,14 @@ export default function PendingView({
               <ThemedText.MediumHeader marginBottom={12}>
                 <Trans>Error connecting</Trans>
               </ThemedText.MediumHeader>
-              <ThemedText.Small fontSize={12} marginBottom={35} textAlign="center">
+              <ThemedText.Small fontSize={12} marginBottom={36} textAlign="center">
                 <Trans>
                   The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
                 </Trans>
               </ThemedText.Small>
               <ButtonPrimary
                 $borderRadius="12px"
-                height="43px"
+                padding="12px"
                 onClick={() => {
                   setPendingError(false)
                   connector && tryActivation(connector)
@@ -83,19 +83,11 @@ export default function PendingView({
               >
                 <Trans>Try Again</Trans>
               </ButtonPrimary>
-              <ButtonEmpty width="fit-content" padding="0" marginTop={19}>
+              <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
                 <ThemedText.Link fontSize={12} onClick={resetAccountView}>
                   <Trans>Back to wallet selection</Trans>
                 </ThemedText.Link>
               </ButtonEmpty>
-              {/* <ErrorButton
-                onClick={() => {
-                  setPendingError(false)
-                  connector && tryActivation(connector)
-                }}
-              >
-                <Trans>Try Again</Trans>
-              </ErrorButton> */}
             </ErrorGroup>
           ) : (
             <>

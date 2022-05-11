@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
@@ -150,6 +150,11 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
+  const resetAccountView = useCallback(() => {
+    setPendingError(false)
+    setWalletView(WALLET_VIEWS.ACCOUNT)
+  }, [setPendingError, setWalletView])
+
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -162,12 +167,7 @@ export default function WalletModal({
     if (walletModalOpen) {
       resetAccountView()
     }
-  }, [walletModalOpen])
-
-  const resetAccountView = () => {
-    setPendingError(false)
-    setWalletView(WALLET_VIEWS.ACCOUNT)
-  }
+  }, [walletModalOpen, resetAccountView])
 
   // close modal when a connection is successful
   const activePrevious = usePrevious(active)
