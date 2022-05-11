@@ -10,9 +10,15 @@ Your PR title must follow ![conventional commits](https://github.com/Uniswap/int
 - style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
 - test: Adding missing tests or correcting existing tests
 
+Example commit messages:
+
+- feat: Adds support for Gnosis Safe wallet
+- fix: Removes a polling memory leak
+- chore: Bumps eslint version
+
 Other things to note:
 
-- Please describe the change using verb statements (feat: Removes X from Y)
+- Please describe the change using verb statements (ex: Removes X from Y)
 - PRs with multiple changes should use a list of verb statements
 - Add any relevant unit / integration tests
 - Changes will be previewable via vercel. Non-obvious changes should include instructions for how to reproduce them
