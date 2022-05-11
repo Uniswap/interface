@@ -1,4 +1,4 @@
-Your PR title should start with one of the following conventions:
+Your PR title must follow ![conventional commits](https://github.com/Uniswap/interface/pull/3832/files), and should start with one of the following ![types](https://github.com/Uniswap/interface/pull/3832/files):
 
 - build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
 - ci: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
@@ -12,5 +12,7 @@ Your PR title should start with one of the following conventions:
 
 Other things to note:
 
-- Please describe the change using verbs (ex: Removes X from Y, Creates new Z)
-- Add any relevant unit / integration tests, and possibly instructions for how to reproduce
+- Please describe the change using verb statements (feat: Removes X from Y)
+- PRs with multiple changes should use a list of verb statements
+- Add any relevant unit / integration tests
+- Changes will be previewable via vercel. Non-obvious changes should include instructions for how to reproduce them
