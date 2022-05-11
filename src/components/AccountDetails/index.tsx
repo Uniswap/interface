@@ -265,7 +265,8 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {/* coinbase wallet reloads the page right now, which breaks the walletOverride from being set properly on localStorage */}
+                  {/* Coinbase Wallet disconnection causes a page reload from their SDK today. This leads to a race condition where the local storage value for walletOverride may not be set in time. */}
+                  {/* @TODO(vm): Add disconnect for Coinbase Wallet once the team allows preventing reload via SDK */}
                   {connector !== coinbaseWallet && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
