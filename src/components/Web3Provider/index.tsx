@@ -1,6 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import { coinbaseWallet, injected, walletConnect } from 'connectors'
-import { Wallet } from 'constants/wallet'
+import { connectors, network } from 'connectors'
+import { getConnectorForWallet, Wallet } from 'constants/wallet'
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -18,7 +19,7 @@ interface Props {
   children: JSX.Element
 }
 
-const Web3Wrapper = ({ children }: Props) => {
+const Web3Updater = ({ children }: Props) => {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
@@ -111,4 +112,12 @@ const Web3Wrapper = ({ children }: Props) => {
   return children
 }
 
-export default Web3Wrapper
+export default function Web3Provider({ children }: Props) {
+  const walletOverride = useAppSelector((state) => state.user.walletOverride)
+  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : network
+  return (
+    <Web3ReactProvider connectors={connectors} connectorOverride={connectorOverride}>
+      <Web3Updater>{children}</Web3Updater>
+    </Web3ReactProvider>
+  )
+}

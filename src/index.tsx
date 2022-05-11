@@ -3,19 +3,15 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { Web3ReactProvider } from '@web3-react/core'
-import { getConnectorForWallet } from 'constants/wallet'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import { useAppSelector } from 'state/hooks'
 
 import Blocklist from './components/Blocklist'
-import Web3Wrapper from './components/Web3Wrapper'
-import { connectors, network } from './connectors'
+import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
@@ -47,24 +43,20 @@ function Updaters() {
 }
 
 const ReduxWrapper = () => {
-  const walletOverride = useAppSelector((state) => state.user.walletOverride)
-  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : network
   return (
     <HashRouter>
       <LanguageProvider>
-        <Web3ReactProvider connectors={connectors} connectorOverride={connectorOverride}>
-          <Web3Wrapper>
-            <Blocklist>
-              <BlockNumberProvider>
-                <Updaters />
-                <ThemeProvider>
-                  <ThemedGlobalStyle />
-                  <App />
-                </ThemeProvider>
-              </BlockNumberProvider>
-            </Blocklist>
-          </Web3Wrapper>
-        </Web3ReactProvider>
+        <Web3Provider>
+          <Blocklist>
+            <BlockNumberProvider>
+              <Updaters />
+              <ThemeProvider>
+                <ThemedGlobalStyle />
+                <App />
+              </ThemeProvider>
+            </BlockNumberProvider>
+          </Blocklist>
+        </Web3Provider>
       </LanguageProvider>
     </HashRouter>
   )
