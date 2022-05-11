@@ -68,7 +68,7 @@ export default function PendingView({
               <ThemedText.MediumHeader marginBottom={12}>
                 <Trans>Error connecting</Trans>
               </ThemedText.MediumHeader>
-              <ThemedText.Small fontSize={12} marginBottom={36} textAlign="center">
+              <ThemedText.Small marginBottom={36} textAlign="center">
                 <Trans>
                   The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
                 </Trans>
