@@ -160,10 +160,11 @@ export default function WalletModal({
   }, [setWalletView, error, connector, walletModalOpen, previousConnector])
 
   useEffect(() => {
-    if (connector === network) {
-      setWalletView(WALLET_VIEWS.OPTIONS)
+    if (walletModalOpen) {
+      setPendingError(false)
+      setWalletView(connector === network ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
     }
-  }, [setWalletView, connector])
+  }, [walletModalOpen, setWalletView, connector])
 
   const tryActivation = async (connector: Connector) => {
     const name = Object.values(SUPPORTED_WALLETS).find(
@@ -200,7 +201,7 @@ export default function WalletModal({
         link: option.href,
         header: option.name,
         color: option.color,
-        isActive: option.connector === connector,
+        active: option.connector === connector,
         key,
         icon: option.iconURL,
       }
