@@ -12,9 +12,9 @@ Your PR title must follow ![conventional commits](https://www.conventionalcommit
 
 Example commit messages:
 
-- feat: Adds support for Gnosis Safe wallet
-- fix: Removes a polling memory leak
-- chore: Bumps eslint version
+- feat: adds support for gnosis safe wallet
+- fix: removes a polling memory leak
+- chore: bumps eslint version
 
 Other things to note:
 
