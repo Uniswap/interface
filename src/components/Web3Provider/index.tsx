@@ -15,11 +15,7 @@ interface ConnectorState {
   setIsEagerlyConnecting(connecting: boolean): void
 }
 
-interface Props {
-  children: JSX.Element
-}
-
-const Web3Updater = ({ children }: Props) => {
+const Web3Updater = () => {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
@@ -109,15 +105,22 @@ const Web3Updater = ({ children }: Props) => {
     setIsWalletConnectEagerlyConnecting,
   ])
 
-  return children
+  return null
 }
 
-export default function Web3Provider({ children }: Props) {
+interface Props {
+  children: JSX.Element
+}
+
+const Web3Provider = ({ children }: Props) => {
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : network
   return (
     <Web3ReactProvider connectors={connectors} connectorOverride={connectorOverride}>
-      <Web3Updater>{children}</Web3Updater>
+      <Web3Updater />
+      {children}
     </Web3ReactProvider>
   )
 }
+
+export default Web3Provider
