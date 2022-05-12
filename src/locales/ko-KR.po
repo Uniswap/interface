@@ -45,7 +45,7 @@ msgstr "- 보내기 제거"
 msgid "1D"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "24H Trading Volume"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr "<0>고급 모드</0> 슬립피지가 높더라도 항상 거래를 허�
 msgid "<0>KyberSwap</0> gets you the best token rates"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
 msgstr ""
 
@@ -73,6 +73,10 @@ msgstr "<0>팁:</0> 이 도구를 사용하여 인터페이스에 자동으로 �
 #: src/components/swap/SwapModalFooter.tsx
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "각 거래량의 일부가({0}%) 프로토콜 인센티브로써 유동성 공급자에게 전달됩니다."
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "ABOUT KNC"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -91,10 +95,10 @@ msgstr "증폭된 유동성"
 msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
 msgstr "AMP 계수와 풀에 있는 유동성을 곱한 값."
 
-#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/ListItem.tsx
+#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "APR"
 msgstr "APR"
 
@@ -103,14 +107,14 @@ msgstr "APR"
 msgid "AVAILABLE BALANCE:"
 msgstr ""
 
-#: src/components/Header/index.tsx
-#: src/components/Menu/index.tsx
+#: src/components/AboutPageDropDown/index.tsx
+#: src/components/Menu/AboutPageDropDown.tsx
 msgid "About"
 msgstr "About"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/WalletModal/index.tsx
 msgid "Accept"
 msgstr "승인"
 
@@ -173,8 +177,8 @@ msgstr "고급 설정"
 msgid "Advanced mode is on!"
 msgstr "고급 모드 사용중"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "After harvesting, your rewards will unlock linearly over the indicated time period"
 msgstr ""
 
@@ -205,7 +209,7 @@ msgstr "URL이 <0>KyberSwap.com인지 항상 확인하십시오.</0> - 안전하
 msgid "Amount"
 msgstr "금액"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Amplified Liquidity Pools"
 msgstr ""
 
@@ -227,20 +231,20 @@ msgstr "애널리틱스"
 msgid "Any referral commission will automatically be sent to this wallet address"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators."
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams."
 msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Approve"
 msgstr "승인"
 
@@ -249,10 +253,10 @@ msgstr "승인"
 msgid "Approve {0}"
 msgstr "승인{0}"
 
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approved"
@@ -260,10 +264,10 @@ msgstr "승인됨"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approving"
@@ -285,7 +289,7 @@ msgstr ""
 msgid "Available for yield farming"
 msgstr "유동성 마이닝 지정 풀"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "BONUS REWARDS"
 msgstr ""
 
@@ -298,7 +302,7 @@ msgstr "뒤로"
 msgid "Balance"
 msgstr "잔액"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Best price guaranteed"
 msgstr ""
 
@@ -306,7 +310,7 @@ msgstr ""
 msgid "Bridge Assets"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Bug Bounty"
 msgstr ""
 
@@ -336,7 +340,7 @@ msgstr "최적 경로 계산"
 msgid "Cancel"
 msgstr "취소"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Chains"
 msgstr ""
 
@@ -398,7 +402,7 @@ msgstr ""
 msgid "Close"
 msgstr "닫기"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Code Audited"
 msgstr ""
 
@@ -415,7 +419,7 @@ msgstr ""
 msgid "Commission fee to be paid directly to your referrer"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Committed to Security"
 msgstr ""
 
@@ -430,10 +434,10 @@ msgid "Community"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Confirm"
 msgstr "확인"
 
@@ -454,17 +458,17 @@ msgstr "지갑에서 이 거래를 승인하세요"
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Connect Wallet"
 msgstr "지갑 연결"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Connect to a wallet to find pools"
 msgstr "지갑에 연결하여 풀 찾기"
 
@@ -496,7 +500,7 @@ msgid "Connected"
 msgstr ""
 
 #: src/components/Menu/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Contact Us"
 msgstr "연락처"
 
@@ -534,7 +538,7 @@ msgstr ""
 msgid "Create"
 msgstr "생성"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Create New Pool"
 msgstr ""
 
@@ -580,7 +584,7 @@ msgstr "사용자 정의"
 msgid "DEPOSIT"
 msgstr "내 예치금"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "DEXs"
 msgstr ""
 
@@ -588,7 +592,7 @@ msgstr ""
 msgid "Dark Mode"
 msgstr "다크 모드"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
 msgstr ""
 
@@ -634,8 +638,9 @@ msgid "Display Settings"
 msgstr ""
 
 #: src/components/Menu/index.tsx
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Docs"
 msgstr "문서"
 
@@ -656,8 +661,12 @@ msgstr "기간: {duration}"
 msgid "Dynamic Fee Range"
 msgstr "다이나믹 수수료 범위"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Dynamic Fees"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Dynamic Token Model"
 msgstr ""
 
 #: src/components/Vesting/index.tsx
@@ -669,11 +678,11 @@ msgstr "새로운 보상을 획득할 때마다 새로운 베스팅 일정(기�
 msgid "Earn More!"
 msgstr ""
 
-#: src/pages/About/index.tsx
-msgid "Earn fees and rewards by depositing your tokens into our pools."
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "Earn more due to compounding"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Earn more with your crypto assets"
 msgstr ""
 
@@ -689,8 +698,8 @@ msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. �
 msgid "Ended"
 msgstr "끝남"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Ending In"
 msgstr "종료"
 
@@ -757,8 +766,8 @@ msgstr "이번 거래 규모로 인한 예상 가격 변동"
 msgid "Estimated network fee for your transaction"
 msgstr "거래에 대한 예상 네트워크 수수료"
 
-#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Estimated return based on yearly fees of the pool"
 msgstr "풀의 연간 요금을 기준으로 한 예상 수익"
@@ -767,11 +776,11 @@ msgstr "풀의 연간 요금을 기준으로 한 예상 수익"
 msgid "Expanded results from inactive Token Lists"
 msgstr "비활성 토큰 목록 확장하기"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "FOR LIQUIDITY PROVIDERS"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "FOR TRADERS"
 msgstr ""
 
@@ -821,12 +830,17 @@ msgstr ""
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "토큰을 찾으시려면 토큰 이름이나 심볼를 검색하거나 아래에 주소를 붙여넣주세요."
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "Find out more"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "For everyone"
 msgstr ""
 
 #: src/components/Menu/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Forum"
 msgstr "포럼"
 
@@ -864,7 +878,8 @@ msgstr ""
 msgid "Get {0}-{1} {2} LP ↗"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Github"
 msgstr ""
 
@@ -881,7 +896,7 @@ msgstr ""
 msgid "HARVEST"
 msgstr "수확하다"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "HIGHER RETURNS"
 msgstr ""
 
@@ -907,8 +922,8 @@ msgstr ""
 msgid "History"
 msgstr "기록"
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Holders"
@@ -977,7 +992,7 @@ msgstr ""
 msgid "Include Tokens"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Includes DEX aggregation"
 msgstr ""
 
@@ -986,8 +1001,8 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Information"
 msgstr "정보"
 
@@ -1054,7 +1069,7 @@ msgid "Insufficient {0} balance"
 msgstr "{0} 잔액 부족"
 
 #: src/components/Footer/Footer.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Insured by"
 msgstr "보험 제공"
 
@@ -1079,15 +1094,80 @@ msgstr "잘못된 쌍입니다."
 msgid "Invalid recipient"
 msgstr "잘못된 수신자"
 
-#: src/pages/About/index.tsx
-msgid "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
+#: src/components/AboutPageDropDown/index.tsx
+#: src/components/Menu/AboutPageDropDown.tsx
+msgid "KNC"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC allows token holders to play a critical role in building a wide base of stakeholders and capturing value created by products like KyberSwap on Kyber Network. KNC holders stake and vote to receive trading fees from protocols like KyberSwap. As more trades are executed on KyberSwap, more rewards are generated for KNC holders."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC enables KyberDAO to shape token behaviour and upgrades, making KNC much more adaptable and providing better support for innovation and growth."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC holders can stake KNC in KyberDAO and vote on important decisions. Voters receive trading fees generated on KyberSwap and other benefits from ecosystem collaborations on Kyber."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC is a utility and governance token and an integral part of Kyber Network and its product KyberSwap - the multi-chain decentralized exchange (DEX) protocol that provides the best rates for traders and highest passive income for liquidity providers"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "KNC is a utility and governance token, and an integral part of Kyber Network and its flagship product KyberSwap. It is the glue that connects different stakeholders in Kyber's ecosystem"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC is an ERC-20 token, so it can be stored in many Web3 wallets you control. Below are some examples."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC is dynamic and can be upgraded, minted, or burned by KyberDAO to better support liquidity and growth. Holding KNC means having a stake in all the important innovation and liquidity protocols created for DeFi."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KYBER DAO"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "Kyber Network Crystal (KNC)"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Kyber Network Crystal <0>(KNC)</0>"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KyberDAO can propose various KNC incentives like liquidity mining rewards on KyberSwap on top of standard trading fees to provide more value to liquidity providers."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KyberDAO is a community platform that allows KNC token holders to participate in governance. KNC holders can stake KNC to vote on proposals. In return, they receive rewards from fees generated on KyberSwap through trading activities in Kyber Network."
+msgstr ""
+
+#: src/components/AboutPageDropDown/index.tsx
+msgid "KyberSwap"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "KyberSwap is DeFi’s premier automated market maker, providing the best token prices for traders across multiple exchanges, and maximizing passing income for liquidity providers, in one decentralized platform."
+msgstr ""
+
+#: src/components/Menu/AboutPageDropDown.tsx
+msgid "Kyberswap"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "LIQUIDITY INCENTIVES"
 msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "잠김"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "LOWER SLIPPAGE"
 msgstr ""
 
@@ -1100,9 +1180,10 @@ msgstr "LP 토큰이 제거되었습니다. "
 msgid "Language"
 msgstr "언어"
 
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Learn More"
 msgstr ""
 
@@ -1130,7 +1211,7 @@ msgstr "유동성 공급자 수수료"
 msgid "Liquidity providers will earn this trading fee for each trade that uses this pool"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "List your tokens permissionlessly"
 msgstr ""
 
@@ -1144,8 +1225,8 @@ msgstr "불러움"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/pages/Pool/lp.tsx
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Loading"
 msgstr "로딩중"
 
@@ -1157,7 +1238,7 @@ msgstr "잠긴 보상"
 msgid "Lowest Gas"
 msgstr "가장 낮은 가스"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Lowest possible slippage"
 msgstr ""
 
@@ -1195,8 +1276,8 @@ msgid "Manage your pools."
 msgstr "자신의 풀 관리하기."
 
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Market Cap"
@@ -1207,14 +1288,14 @@ msgid "Market Cap Rank"
 msgstr ""
 
 #: src/pages/CreateReferral/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Max"
 msgstr "최대"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Max APR Available ↗️"
 msgstr ""
 
@@ -1280,8 +1361,12 @@ msgstr "최소 수령"
 msgid "More info"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
+#: src/pages/About/AboutKNC.tsx
+msgid "More information about KNC is available on:"
+msgstr ""
+
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Deposit"
 msgstr "내 예치금"
 
@@ -1295,8 +1380,8 @@ msgstr "내 풀"
 msgid "My Pools on External Platforms"
 msgstr "외부 플랫폼의 내 풀"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Rewards"
 msgstr "내 보상"
 
@@ -1318,8 +1403,8 @@ msgstr "나의 유동성"
 msgid "Name"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Network"
 msgstr "네트워크"
 
@@ -1333,11 +1418,11 @@ msgstr "신규"
 msgid "No Farms found"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "No KYC or sign-ups required"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "No extra deposit or withdrawal fees"
 msgstr ""
 
@@ -1402,7 +1487,7 @@ msgstr "끄기"
 msgid "On"
 msgstr "켜기"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "On-chain & Open Source"
 msgstr ""
 
@@ -1447,6 +1532,10 @@ msgstr "예상된 가격입니다. 가격이 {0}% 이상 변경되면 거래가 
 msgid "Output is estimated. You will receive at least"
 msgstr "최소한 받을 수 있는 예상된 결과 액수입니다"
 
+#: src/pages/About/AboutKNC.tsx
+msgid "Participation Rewards"
+msgstr ""
+
 #: src/components/PoolPriceBar/index.tsx
 #: src/components/PoolPriceBar/index.tsx
 #: src/components/PoolPriceBar/index.tsx
@@ -1486,8 +1575,8 @@ msgstr "풀"
 msgid "Pool Address"
 msgstr "풀 주소"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Pool Found!"
 msgstr "풀 발견!"
 
@@ -1536,8 +1625,8 @@ msgid "Pooled {0}:"
 msgstr "풀링된 {0}:"
 
 #: src/components/Header/index.tsx
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Pools"
 msgstr "풀"
 
@@ -1550,7 +1639,7 @@ msgid "Powered By"
 msgstr "Powered by"
 
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Powered by"
 msgstr "Powered by"
 
@@ -1568,8 +1657,8 @@ msgstr "기본 설정"
 
 #: src/components/swapv2/TokenInfo.tsx
 #: src/pages/TrueSight/components/Chart.tsx
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Price"
@@ -1637,7 +1726,7 @@ msgstr ""
 msgid "REWARD:"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Rainmaker Yield Farming"
 msgstr ""
 
@@ -1704,8 +1793,8 @@ msgstr "풀 토큰을 제거하면 풀 지분에 비례하는 현재 비율로 �
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} 및 {2} {3} 제거"
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Rewards"
 msgstr "내 보상"
@@ -1727,11 +1816,11 @@ msgstr "라우팅을 통해 최고의 토큰 가격으로 거래를 진행할수
 msgid "STAKED BALANCE:"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Save time & effort"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Seamless liquidity."
 msgstr ""
 
@@ -1779,8 +1868,8 @@ msgstr "토큰 선택"
 msgid "Select a token"
 msgstr "토큰 선택"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Select a token to find your liquidity."
 msgstr "유동성을 찾기 위해 토큰을 선택하십시오."
 
@@ -1837,6 +1926,14 @@ msgstr "문제가 발생했습니다"
 msgid "Sort by"
 msgstr ""
 
+#: src/pages/About/AboutKNC.tsx
+msgid "Stake KNC"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Stake KNC, Vote, Earn Rewards."
+msgstr ""
+
 #: src/components/PoolList/ItemCard/index.tsx
 msgid "Staked"
 msgstr ""
@@ -1850,8 +1947,8 @@ msgstr ""
 msgid "Staked Only"
 msgstr "스테이킹 풀만 보기"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "스테이킹된 TVL"
 
@@ -1870,13 +1967,13 @@ msgstr "증폭 계수를 뜻합니다. 모든 풀은 다른 AMP를 세팅 할 �
 msgid "Stands for amplification factor. Pools with a higher AMP provide higher capital efficiency within a particular price range. We recommend higher AMP for stable token pairs and lower AMP for volatile token pairs"
 msgstr "증폭 계수를 뜻합니다. AMP가 더 높은 풀은 더 높은 자본 효율성을 제공하지만 운영되는 토큰 가격범위가 좁습니다. 스테이블 같은 안정적인 토큰 쌍에는 더 높은 AMP를, 변동성이 큰 토큰 쌍에는 더 낮은 AMP를 권장합니다."
 
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Start Earning"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Starting In"
 msgstr "이 기간에 시작됩니다. "
 
@@ -1920,25 +2017,30 @@ msgstr "스왑하기"
 msgid "Swap Legacy"
 msgstr "레거시 스왑"
 
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Swap Now"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Swap your tokens at the best rates. No limits"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "TOKEN UTILITY"
 msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
 msgstr "총 수확된 보상"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "TVL From DEXs"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "TVL equivalent compared to AMMs"
 msgstr ""
 
@@ -2006,7 +2108,7 @@ msgstr ""
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "이 토큰은 활성 토큰 목록에 표시되지 않습니다. 거래하려는 토큰이 맞는지 확인하십시오."
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Thousands of users and multiple decentralized applications are already providing and using our liquidity."
 msgstr ""
 
@@ -2059,7 +2161,7 @@ msgstr "토큰 풀 분석 →"
 
 #: src/components/SearchModal/Manage.tsx
 #: src/components/SearchModal/ManageTokens.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 #: src/pages/TrueSight/components/FilterBar/TrueSightSearchBox.tsx
 msgid "Tokens"
 msgstr "토큰"
@@ -2072,7 +2174,7 @@ msgstr "비활성 목록의 토큰. 아래에서 특정 토큰을 가져오거�
 msgid "Tokens we had discovered earlier to be Trending Soon"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total AMP Liquidity"
 msgstr ""
 
@@ -2080,7 +2182,7 @@ msgstr ""
 msgid "Total AMP Liquidity:"
 msgstr "총 AMP 유동성:"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Earnings"
 msgstr ""
 
@@ -2093,7 +2195,7 @@ msgstr "총 LP 토큰"
 msgid "Total Supply"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Trading Volume"
 msgstr ""
 
@@ -2102,7 +2204,7 @@ msgid "Total Trading Volume:"
 msgstr "총 거래량:"
 
 #: src/components/PoolList/ItemCard/TabInfoItems.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Value Locked"
 msgstr "예치된 자산 가치"
 
@@ -2129,8 +2231,8 @@ msgid "Trading Volume"
 msgstr ""
 
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Trading Volume (24H)"
@@ -2266,8 +2368,8 @@ msgstr "V1"
 msgid "VESTING PERIODS"
 msgstr "베스팅 일정"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Vesting"
 msgstr ""
 
@@ -2279,7 +2381,7 @@ msgstr "베스팅 시작됨: {0}"
 msgid "View"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "View Farms"
 msgstr ""
 
@@ -2316,17 +2418,25 @@ msgstr "확인 대기 중"
 msgid "Wallet Address or ENS name"
 msgstr "지갑 주소 또는 ENS 이름"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "We adjust trading fees dynamically based on market conditions to give you the best returns."
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "We automatically reinvest your trading fee earnings by adding it back into the pool. And so you earn even more with less effort due to compounding."
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you. Deposit less tokens and still achieve better liquidity and volume."
 msgstr ""
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 msgid "We discovered this on"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "We gives liquidity providers the option of choosing between two liquidity protocols so they can earn passive income - KyberSwap Elastic and KyberSwap Classic. Simply deposit your liquidity and start earning."
 msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
@@ -2343,7 +2453,19 @@ msgstr ""
 msgid "What can KNC be used for?"
 msgstr "KNC의 사용처"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+msgid "What is KNC used for?"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Where you can buy KNC"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Where you can store KNC"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from multiple DEXs (including KyberSwap) and identify the best trade route for you."
 msgstr ""
 
@@ -2454,17 +2576,17 @@ msgstr ""
 msgid "Your available LP Token balance after staking (if applicable)"
 msgstr ""
 
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
 msgid "Your pool share:"
 msgstr "풀 비중:"
 
+#: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "당신의 위치"
 

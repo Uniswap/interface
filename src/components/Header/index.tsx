@@ -17,6 +17,7 @@ import { ExternalLink } from 'theme/components'
 import Web3Network from 'components/Web3Network'
 import { useIsDarkMode } from 'state/user/hooks'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
+import AboutPageDropwdown from 'components/AboutPageDropDown'
 // import { MouseoverTooltip } from 'components/Tooltip'
 
 const HeaderFrame = styled.div`
@@ -360,9 +361,7 @@ export default function Header() {
           </DiscoverWrapper>
 
           <AboutWrapper>
-            <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
-              <Trans>About</Trans>
-            </StyledNavLink>
+            <AboutPageDropwdown />
           </AboutWrapper>
         </HeaderLinks>
       </HeaderRow>

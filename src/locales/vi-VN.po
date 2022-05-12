@@ -45,7 +45,7 @@ msgstr "- Gửi Lệnh Xoá"
 msgid "1D"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "24H Trading Volume"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr "<0>Chế Độ Nâng Cao</0> tắt lời nhắc giao dịch 'Xác nhận
 msgid "<0>KyberSwap</0> gets you the best token rates"
 msgstr "<0>KyberSwap</0> mang đến tỷ giá Token tốt nhất cho bạn"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
 msgstr ""
 
@@ -73,6 +73,10 @@ msgstr "<0>Mẹo:</0> Sử dụng công cụ này để tìm các cặp Token kh
 #: src/components/swap/SwapModalFooter.tsx
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "Một phần phí của mỗi giao dịch ({0}%) sẽ được chuyển đến các nhà cung cấp thanh khoản nhằm khuyến khích phát triển giao thức."
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "ABOUT KNC"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -91,10 +95,10 @@ msgstr "Thanh Khoản AMP"
 msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
 msgstr "Yếu tố AMP x Tính thanh khoản trong pool. Các pool khuếch đại có hiệu quả sử dụng vốn và tính thanh khoản cao hơn."
 
-#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/ListItem.tsx
+#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "APR"
 msgstr "APR"
 
@@ -103,14 +107,14 @@ msgstr "APR"
 msgid "AVAILABLE BALANCE:"
 msgstr ""
 
-#: src/components/Header/index.tsx
-#: src/components/Menu/index.tsx
+#: src/components/AboutPageDropDown/index.tsx
+#: src/components/Menu/AboutPageDropDown.tsx
 msgid "About"
 msgstr "Giới thiệu"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/WalletModal/index.tsx
 msgid "Accept"
 msgstr "Chấp nhận"
 
@@ -173,8 +177,8 @@ msgstr "Tuỳ Chỉnh Nâng Cao"
 msgid "Advanced mode is on!"
 msgstr "Đang bật chế độ nâng cao!"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "After harvesting, your rewards will unlock linearly over the indicated time period"
 msgstr ""
 
@@ -205,7 +209,7 @@ msgstr "Luôn đảm bảo URL là<0>KyberSwap.com</0> - nên bookmark link này
 msgid "Amount"
 msgstr "Số Lượng"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Amplified Liquidity Pools"
 msgstr ""
 
@@ -227,20 +231,20 @@ msgstr "Phân tích ↗"
 msgid "Any referral commission will automatically be sent to this wallet address"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators."
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams."
 msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Approve"
 msgstr "Chấp nhận"
 
@@ -249,10 +253,10 @@ msgstr "Chấp nhận"
 msgid "Approve {0}"
 msgstr "Chấp nhận {0}"
 
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approved"
@@ -260,10 +264,10 @@ msgstr "Đã chấp nhận"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approving"
@@ -285,7 +289,7 @@ msgstr ""
 msgid "Available for yield farming"
 msgstr "Có thể yield farming"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "BONUS REWARDS"
 msgstr ""
 
@@ -298,7 +302,7 @@ msgstr "Quay lại"
 msgid "Balance"
 msgstr "Số Dư"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Best price guaranteed"
 msgstr ""
 
@@ -306,7 +310,7 @@ msgstr ""
 msgid "Bridge Assets"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Bug Bounty"
 msgstr ""
 
@@ -336,7 +340,7 @@ msgstr "Đang tính Route tốt nhất"
 msgid "Cancel"
 msgstr "Huỷ"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Chains"
 msgstr ""
 
@@ -398,7 +402,7 @@ msgstr ""
 msgid "Close"
 msgstr "Đóng"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Code Audited"
 msgstr ""
 
@@ -415,7 +419,7 @@ msgstr ""
 msgid "Commission fee to be paid directly to your referrer"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Committed to Security"
 msgstr ""
 
@@ -430,10 +434,10 @@ msgid "Community"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Confirm"
 msgstr "Chấp nhận"
 
@@ -454,17 +458,17 @@ msgstr "Chấp thuận giao dịch này trong ví của bạn"
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Connect Wallet"
 msgstr "Kết nối Ví"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Connect to a wallet to find pools"
 msgstr "Kết nối đến Ví để tìm các Pool"
 
@@ -496,7 +500,7 @@ msgid "Connected"
 msgstr ""
 
 #: src/components/Menu/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Contact Us"
 msgstr "Liên Hệ Chúng Tôi"
 
@@ -534,7 +538,7 @@ msgstr ""
 msgid "Create"
 msgstr "Tạo mới"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Create New Pool"
 msgstr ""
 
@@ -580,7 +584,7 @@ msgstr "Tự chọn"
 msgid "DEPOSIT"
 msgstr "GỬI THANH KHOẢN"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "DEXs"
 msgstr ""
 
@@ -588,7 +592,7 @@ msgstr ""
 msgid "Dark Mode"
 msgstr "Chế Độ Tối"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
 msgstr ""
 
@@ -634,8 +638,9 @@ msgid "Display Settings"
 msgstr ""
 
 #: src/components/Menu/index.tsx
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Docs"
 msgstr "Tài liệu"
 
@@ -656,8 +661,12 @@ msgstr "Thời Gian: {duration}"
 msgid "Dynamic Fee Range"
 msgstr "Khoảng Phí Linh Động"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Dynamic Fees"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Dynamic Token Model"
 msgstr ""
 
 #: src/components/Vesting/index.tsx
@@ -669,11 +678,11 @@ msgstr "Mỗi khi bạn thu hoạch được phần thưởng mới, một lịc
 msgid "Earn More!"
 msgstr ""
 
-#: src/pages/About/index.tsx
-msgid "Earn fees and rewards by depositing your tokens into our pools."
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "Earn more due to compounding"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Earn more with your crypto assets"
 msgstr ""
 
@@ -689,8 +698,8 @@ msgstr "Cho phép các giao dịch trượt giá cao. Chỉ sử dụng khi bạ
 msgid "Ended"
 msgstr "Đã kết thúc"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Ending In"
 msgstr "Kết Thúc Trong"
 
@@ -757,8 +766,8 @@ msgstr "Sự thay đổi về giá (ước tính) do khối lượng giao dịch
 msgid "Estimated network fee for your transaction"
 msgstr "Phí mạng được ước tính cho giao dịch của bạn"
 
-#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Estimated return based on yearly fees of the pool"
 msgstr "Lợi nhuận ước tính dựa trên các phí hàng năm của Pool"
@@ -767,11 +776,11 @@ msgstr "Lợi nhuận ước tính dựa trên các phí hàng năm của Pool"
 msgid "Expanded results from inactive Token Lists"
 msgstr "Kết quả mở rộng từ Danh Sách các Token không hoạt động"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "FOR LIQUIDITY PROVIDERS"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "FOR TRADERS"
 msgstr ""
 
@@ -821,12 +830,17 @@ msgstr ""
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "Tìm token bằng cách tìm kiếm tên hoặc biểu tượng của nó hoặc bằng cách dán địa chỉ token bên dưới."
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "Find out more"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "For everyone"
 msgstr ""
 
 #: src/components/Menu/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Forum"
 msgstr "Diễn đàn"
 
@@ -864,7 +878,8 @@ msgstr ""
 msgid "Get {0}-{1} {2} LP ↗"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Github"
 msgstr ""
 
@@ -881,7 +896,7 @@ msgstr ""
 msgid "HARVEST"
 msgstr "THU HOẠCH"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "HIGHER RETURNS"
 msgstr ""
 
@@ -907,8 +922,8 @@ msgstr ""
 msgid "History"
 msgstr "Lịch sử"
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Holders"
@@ -977,7 +992,7 @@ msgstr ""
 msgid "Include Tokens"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Includes DEX aggregation"
 msgstr ""
 
@@ -986,8 +1001,8 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Information"
 msgstr "Thông tin"
 
@@ -1054,7 +1069,7 @@ msgid "Insufficient {0} balance"
 msgstr "Tài khoản {0} không đủ"
 
 #: src/components/Footer/Footer.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Insured by"
 msgstr "Được bảo hiểm bởi"
 
@@ -1079,15 +1094,80 @@ msgstr "Cặp không hợp lệ."
 msgid "Invalid recipient"
 msgstr "Người nhận không hợp lệ"
 
-#: src/pages/About/index.tsx
-msgid "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
+#: src/components/AboutPageDropDown/index.tsx
+#: src/components/Menu/AboutPageDropDown.tsx
+msgid "KNC"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC allows token holders to play a critical role in building a wide base of stakeholders and capturing value created by products like KyberSwap on Kyber Network. KNC holders stake and vote to receive trading fees from protocols like KyberSwap. As more trades are executed on KyberSwap, more rewards are generated for KNC holders."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC enables KyberDAO to shape token behaviour and upgrades, making KNC much more adaptable and providing better support for innovation and growth."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC holders can stake KNC in KyberDAO and vote on important decisions. Voters receive trading fees generated on KyberSwap and other benefits from ecosystem collaborations on Kyber."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC is a utility and governance token and an integral part of Kyber Network and its product KyberSwap - the multi-chain decentralized exchange (DEX) protocol that provides the best rates for traders and highest passive income for liquidity providers"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "KNC is a utility and governance token, and an integral part of Kyber Network and its flagship product KyberSwap. It is the glue that connects different stakeholders in Kyber's ecosystem"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC is an ERC-20 token, so it can be stored in many Web3 wallets you control. Below are some examples."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KNC is dynamic and can be upgraded, minted, or burned by KyberDAO to better support liquidity and growth. Holding KNC means having a stake in all the important innovation and liquidity protocols created for DeFi."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KYBER DAO"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "Kyber Network Crystal (KNC)"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Kyber Network Crystal <0>(KNC)</0>"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KyberDAO can propose various KNC incentives like liquidity mining rewards on KyberSwap on top of standard trading fees to provide more value to liquidity providers."
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "KyberDAO is a community platform that allows KNC token holders to participate in governance. KNC holders can stake KNC to vote on proposals. In return, they receive rewards from fees generated on KyberSwap through trading activities in Kyber Network."
+msgstr ""
+
+#: src/components/AboutPageDropDown/index.tsx
+msgid "KyberSwap"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "KyberSwap is DeFi’s premier automated market maker, providing the best token prices for traders across multiple exchanges, and maximizing passing income for liquidity providers, in one decentralized platform."
+msgstr ""
+
+#: src/components/Menu/AboutPageDropDown.tsx
+msgid "Kyberswap"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "LIQUIDITY INCENTIVES"
 msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "ĐÃ KHÓA"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "LOWER SLIPPAGE"
 msgstr ""
 
@@ -1100,9 +1180,10 @@ msgstr "Token LP bị huỷ"
 msgid "Language"
 msgstr "Ngôn ngữ"
 
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Learn More"
 msgstr ""
 
@@ -1130,7 +1211,7 @@ msgstr "Phí cho Nhà Cung cấp Thanh khoản"
 msgid "Liquidity providers will earn this trading fee for each trade that uses this pool"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "List your tokens permissionlessly"
 msgstr ""
 
@@ -1144,8 +1225,8 @@ msgstr "Đã tải"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/pages/Pool/lp.tsx
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Loading"
 msgstr "Đang tải"
 
@@ -1157,7 +1238,7 @@ msgstr "Các Phần thưởng bị Khóa"
 msgid "Lowest Gas"
 msgstr "Ít Phí Gas Nhất"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Lowest possible slippage"
 msgstr ""
 
@@ -1195,8 +1276,8 @@ msgid "Manage your pools."
 msgstr "Quản lý các Pool của bạn."
 
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Market Cap"
@@ -1207,14 +1288,14 @@ msgid "Market Cap Rank"
 msgstr ""
 
 #: src/pages/CreateReferral/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Max"
 msgstr "Tối đa"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Max APR Available ↗️"
 msgstr ""
 
@@ -1280,8 +1361,12 @@ msgstr "Tối thiểu nhận được"
 msgid "More info"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
+#: src/pages/About/AboutKNC.tsx
+msgid "More information about KNC is available on:"
+msgstr ""
+
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Deposit"
 msgstr "Tiền gửi của tôi"
 
@@ -1295,8 +1380,8 @@ msgstr "Pool của Tôi"
 msgid "My Pools on External Platforms"
 msgstr "Các Pool của tôi trên các Nền tảng Bên ngoài"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Rewards"
 msgstr "Các Phần thưởng của tôi"
 
@@ -1318,8 +1403,8 @@ msgstr "Thanh khoản của tôi"
 msgid "Name"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Network"
 msgstr "Mạng"
 
@@ -1333,11 +1418,11 @@ msgstr "Mới"
 msgid "No Farms found"
 msgstr "Không tìm thấy kết quả"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "No KYC or sign-ups required"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "No extra deposit or withdrawal fees"
 msgstr ""
 
@@ -1402,7 +1487,7 @@ msgstr "Off"
 msgid "On"
 msgstr "On"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "On-chain & Open Source"
 msgstr ""
 
@@ -1447,6 +1532,10 @@ msgstr "Đầu ra đã được ước tính. Nếu giá thay đổi hơn {0}% t
 msgid "Output is estimated. You will receive at least"
 msgstr "Đầu ra được ước tính. Bạn sẽ nhận được ít nhất"
 
+#: src/pages/About/AboutKNC.tsx
+msgid "Participation Rewards"
+msgstr ""
+
 #: src/components/PoolPriceBar/index.tsx
 #: src/components/PoolPriceBar/index.tsx
 #: src/components/PoolPriceBar/index.tsx
@@ -1486,8 +1575,8 @@ msgstr "Pool"
 msgid "Pool Address"
 msgstr "Địa chỉ Pool"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Pool Found!"
 msgstr "Đã tim thấy Pool!"
 
@@ -1536,8 +1625,8 @@ msgid "Pooled {0}:"
 msgstr "Số lượng {0}:"
 
 #: src/components/Header/index.tsx
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Pools"
 msgstr "Pool"
 
@@ -1550,7 +1639,7 @@ msgid "Powered By"
 msgstr "Được cung cấp bởi"
 
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Powered by"
 msgstr "Được cung cấp bởi"
 
@@ -1568,8 +1657,8 @@ msgstr "Các tùy chọn"
 
 #: src/components/swapv2/TokenInfo.tsx
 #: src/pages/TrueSight/components/Chart.tsx
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Price"
@@ -1637,7 +1726,7 @@ msgstr ""
 msgid "REWARD:"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Rainmaker Yield Farming"
 msgstr ""
 
@@ -1704,8 +1793,8 @@ msgstr "Việc rút token khỏi Pool sẽ chuyển đổi vị trí của bạn
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Xóa {0} {1} và {2} {3}"
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Rewards"
 msgstr "Các Phần thưởng"
@@ -1727,11 +1816,11 @@ msgstr "Trao đổi thông qua các token này dẫn đến giá tốt nhất ch
 msgid "STAKED BALANCE:"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Save time & effort"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Seamless liquidity."
 msgstr ""
 
@@ -1779,8 +1868,8 @@ msgstr "Chọn một Token"
 msgid "Select a token"
 msgstr "Chọn một token"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Select a token to find your liquidity."
 msgstr "Chọn một token để tìm thanh khoản của bạn."
 
@@ -1837,6 +1926,14 @@ msgstr "Có lỗi đã xảy ra"
 msgid "Sort by"
 msgstr ""
 
+#: src/pages/About/AboutKNC.tsx
+msgid "Stake KNC"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Stake KNC, Vote, Earn Rewards."
+msgstr ""
+
 #: src/components/PoolList/ItemCard/index.tsx
 msgid "Staked"
 msgstr ""
@@ -1850,8 +1947,8 @@ msgstr ""
 msgid "Staked Only"
 msgstr "Bạn đã Stake"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "TVL đã Stake"
 
@@ -1870,13 +1967,13 @@ msgstr "Viết tắt của hệ số khuếch đại. Mỗi Pool có thể có c
 msgid "Stands for amplification factor. Pools with a higher AMP provide higher capital efficiency within a particular price range. We recommend higher AMP for stable token pairs and lower AMP for volatile token pairs"
 msgstr "Viết tắt của hệ số khuếch đại. Các Pool có chỉ số AMP cao hơn mang lại hiệu quả sử dụng vốn cao hơn trong một phạm vi giá cụ thể. Chúng tôi đề xuất AMP cao hơn cho các cặp token ổn định và AMP thấp hơn cho các cặp token biến động mạnh"
 
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Start Earning"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Starting In"
 msgstr "Bắt đầu trong"
 
@@ -1920,25 +2017,30 @@ msgstr "Vẫn Giao dịch"
 msgid "Swap Legacy"
 msgstr "Lịch sử Giao dịch"
 
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Swap Now"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Swap your tokens at the best rates. No limits"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "TOKEN UTILITY"
 msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
 msgstr "TỔNG PHẦN THƯỞNG ĐÃ THU HOẠCH"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "TVL From DEXs"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "TVL equivalent compared to AMMs"
 msgstr ""
 
@@ -2006,7 +2108,7 @@ msgstr ""
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Token này không xuất hiện trên các danh sách token đang hoạt động. Đảm bảo rằng đây là token mà bạn muốn giao dịch."
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Thousands of users and multiple decentralized applications are already providing and using our liquidity."
 msgstr ""
 
@@ -2059,7 +2161,7 @@ msgstr "Phân tích pool token →"
 
 #: src/components/SearchModal/Manage.tsx
 #: src/components/SearchModal/ManageTokens.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 #: src/pages/TrueSight/components/FilterBar/TrueSightSearchBox.tsx
 msgid "Tokens"
 msgstr "Các Token"
@@ -2072,7 +2174,7 @@ msgstr "Các Token từ các danh sách không hoạt động. Nhập các Token
 msgid "Tokens we had discovered earlier to be Trending Soon"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total AMP Liquidity"
 msgstr ""
 
@@ -2080,7 +2182,7 @@ msgstr ""
 msgid "Total AMP Liquidity:"
 msgstr "Tổng Thanh khoản AMP:"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Earnings"
 msgstr ""
 
@@ -2093,7 +2195,7 @@ msgstr "Tổng số Token LP"
 msgid "Total Supply"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Trading Volume"
 msgstr ""
 
@@ -2102,7 +2204,7 @@ msgid "Total Trading Volume:"
 msgstr "Tổng Khối lượng Giao dịch:"
 
 #: src/components/PoolList/ItemCard/TabInfoItems.tsx
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Value Locked"
 msgstr "Tổng Giá trị Đã khóa"
 
@@ -2129,8 +2231,8 @@ msgid "Trading Volume"
 msgstr ""
 
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 msgid "Trading Volume (24H)"
@@ -2266,8 +2368,8 @@ msgstr "V1"
 msgid "VESTING PERIODS"
 msgstr "LỊCH VESTING"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Vesting"
 msgstr ""
 
@@ -2279,7 +2381,7 @@ msgstr "Vesting đã bắt đầu: {0}"
 msgid "View"
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "View Farms"
 msgstr ""
 
@@ -2316,17 +2418,25 @@ msgstr "Chờ xác nhận"
 msgid "Wallet Address or ENS name"
 msgstr "Địa chỉ Ví hoặc tên ENS"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "We adjust trading fees dynamically based on market conditions to give you the best returns."
 msgstr ""
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "We automatically reinvest your trading fee earnings by adding it back into the pool. And so you earn even more with less effort due to compounding."
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you. Deposit less tokens and still achieve better liquidity and volume."
 msgstr ""
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 msgid "We discovered this on"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
+msgid "We gives liquidity providers the option of choosing between two liquidity protocols so they can earn passive income - KyberSwap Elastic and KyberSwap Classic. Simply deposit your liquidity and start earning."
 msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
@@ -2343,7 +2453,19 @@ msgstr ""
 msgid "What can KNC be used for?"
 msgstr "KNC có thể được sử dụng vào mục đích gì?"
 
-#: src/pages/About/index.tsx
+#: src/pages/About/AboutKNC.tsx
+msgid "What is KNC used for?"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Where you can buy KNC"
+msgstr ""
+
+#: src/pages/About/AboutKNC.tsx
+msgid "Where you can store KNC"
+msgstr ""
+
+#: src/pages/About/AboutKyberSwap.tsx
 msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from multiple DEXs (including KyberSwap) and identify the best trade route for you."
 msgstr ""
 
@@ -2454,17 +2576,17 @@ msgstr ""
 msgid "Your available LP Token balance after staking (if applicable)"
 msgstr ""
 
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
 msgid "Your pool share:"
 msgstr "Tỷ lệ của Bạn trong Pool:"
 
+#: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "Vị trí của bạn"
 
