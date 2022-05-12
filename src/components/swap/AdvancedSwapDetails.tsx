@@ -156,10 +156,22 @@ export function KromDetails({
           {' '}
           <div>
             {' '}
-            <Trans>KROM Balance</Trans>
+            <Trans>KROM Details</Trans>
           </div>
         </HeaderContainer>
       </TransactionDetailsLabel>
+      <RowBetween>
+        <RowFixed>
+          <TYPE.subHeader color={theme.text1}>
+            <Trans>Service Fee</Trans>
+          </TYPE.subHeader>
+        </RowFixed>
+        <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+          <TYPE.black textAlign="right" fontSize={14}>
+            {serviceFee ? `${serviceFee.toSignificant(8)} ${serviceFee.currency.symbol}` : '-'}
+          </TYPE.black>
+        </TextWithLoadingPlaceholder>
+      </RowBetween>
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
