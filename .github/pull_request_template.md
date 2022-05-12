@@ -1,7 +1,7 @@
-Your PR title must follow ![conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary), and should start with one of the following ![types](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type):
+Your PR title must follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary), and should start with one of the following [types](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type):
 
 - build: Changes that affect the build system or external dependencies (example scopes: yarn, eslint, typescript)
-- ci: Changes to our CI configuration files and scripts (example scopes: Vercel, GitHub, Cypress)
+- ci: Changes to our CI configuration files and scripts (example scopes: vercel, github, cypress)
 - docs: Documentation only changes
 - feat: A new feature
 - fix: A bug fix
