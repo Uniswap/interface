@@ -7,7 +7,8 @@ import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/user/reducer'
 
-const GNOSIS_SAFE_HOSTNAME = 'gnosis-safe.io'
+const GNOSIS_SAFE_URL = 'https://gnosis-safe.io'
+const IS_GNOSIS_SAFE = window.location.ancestorOrigins.contains(GNOSIS_SAFE_URL)
 
 interface ConnectorState {
   isActive: boolean
@@ -20,8 +21,6 @@ interface ConnectorState {
 const Web3Updater = () => {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
-
-  const isGnosisSafe = window.location.hostname === GNOSIS_SAFE_HOSTNAME
 
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
 
@@ -85,7 +84,7 @@ const Web3Updater = () => {
 
         // when a user manually sets their new connection we want to set a wallet override
         // we also want to set an override when they were a user prior to this state being introduced
-        if (!isEagerlyConnecting || (!isGnosisSafe && !walletOverrideBackfilled)) {
+        if (!isEagerlyConnecting || (!IS_GNOSIS_SAFE && !walletOverrideBackfilled)) {
           dispatch(updateWalletOverride({ wallet }))
         }
       }
@@ -93,7 +92,6 @@ const Web3Updater = () => {
   }, [
     dispatch,
     walletOverrideBackfilled,
-    isGnosisSafe,
     injectedIsActive,
     coinbaseWalletIsActive,
     walletConnectIsActive,
@@ -120,9 +118,8 @@ interface Props {
 
 const Web3Provider = ({ children }: Props) => {
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
-  const isGnosisSafe = window.location.hostname === GNOSIS_SAFE_HOSTNAME
   let connectorOverride
-  if (isGnosisSafe) {
+  if (IS_GNOSIS_SAFE) {
     connectorOverride = gnosisSafe
   } else if (walletOverride) {
     connectorOverride = getConnectorForWallet(walletOverride)
