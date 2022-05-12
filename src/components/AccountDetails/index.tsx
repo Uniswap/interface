@@ -274,6 +274,7 @@ export default function AccountDetails({
                         dispatch(updateWalletOverride({ wallet: undefined }))
                         connector.deactivate()
                       }}
+                      data-cy="wallet-disconnect"
                     >
                       <Trans>Disconnect</Trans>
                     </WalletAction>
@@ -283,6 +284,7 @@ export default function AccountDetails({
                     onClick={() => {
                       openOptions()
                     }}
+                    data-cy="wallet-change"
                   >
                     <Trans>Change</Trans>
                   </WalletAction>

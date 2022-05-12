@@ -375,7 +375,7 @@ export default function WalletModal({
             )}
             {walletView !== WALLET_VIEWS.PENDING && (
               <>
-                <OptionGrid>{getOptions()}</OptionGrid>
+                <OptionGrid data-cy="option-grid">{getOptions()}</OptionGrid>
                 <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
                   <RowBetween>
                     <AutoRow gap="4px">
