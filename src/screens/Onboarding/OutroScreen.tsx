@@ -47,7 +47,12 @@ export function OutroScreen({}: Props) {
             </Text>
           </Flex>
         </Flex>
-        <PrimaryButton label={t('Next')} name={ElementName.Next} onPress={onPressNext} />
+        <PrimaryButton
+          label={t('Next')}
+          name={ElementName.Next}
+          testID={ElementName.Next}
+          onPress={onPressNext}
+        />
       </Flex>
     </Screen>
   )

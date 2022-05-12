@@ -3,7 +3,7 @@ import { ElementName } from '../../src/features/telemetry/constants'
 import { Accounts } from '../utils/fixtures'
 
 export function Create() {
-  it('creates a readonly account', async () => {
+  it('onboards a new account', async () => {
     await device.setBiometricEnrollment(true)
 
     await element(by.id(ElementName.OnboardingCreateWallet)).tap()
@@ -31,6 +31,9 @@ export function Create() {
 
     // Face ID
     await element(by.id(ElementName.Enable)).tap()
+
+    // Outro
+    await element(by.id(ElementName.Next)).tap()
 
     // Home screen
     await expect(element(by.id(`address-display/name/${Accounts.managed.name}`))).toBeVisible()
