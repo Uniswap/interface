@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 21:06\n"
+"PO-Revision-Date: 2022-05-11 16:11\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -279,6 +279,10 @@ msgstr "자동 라우터 API"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "입금 가능 : {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "지갑 선택으로 돌아가기"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -1635,6 +1639,10 @@ msgstr "앱은 시간이 지남에 따라 개선하기 위해 익명화된 사�
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "앱은 위험 및 규정 준수를 위해 지갑 주소를 안전하게 수집하고 TRM Labs Inc.와 공유합니다."
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "연결 시도가 실패했습니다. 다시 시도를 클릭하고 단계에 따라 지갑에 연결하십시오."
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."

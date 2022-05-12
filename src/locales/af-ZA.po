@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 21:06\n"
+"PO-Revision-Date: 2022-05-11 16:11\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -279,6 +279,10 @@ msgstr "Auto Router API"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Beskikbaar vir deposito: {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "Terug na beursie seleksie"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -1635,6 +1639,10 @@ msgstr "Die toepassing teken anonieme gebruikstatistieke aan om mettertyd te ver
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Die toepassing versamel jou beursie-adres veilig en deel dit met TRM Labs Inc. vir risiko- en voldoeningsredes."
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "Die verbindingspoging het misluk. Klik asseblief probeer weer en volg die stappe om in jou beursie te koppel."
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."

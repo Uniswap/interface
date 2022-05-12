@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 21:06\n"
+"PO-Revision-Date: 2022-05-11 16:12\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -279,6 +279,10 @@ msgstr "Ауто Роутер АПИ"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Доступно за депозит: {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "Назад на избор новчаника"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -1635,6 +1639,10 @@ msgstr "Aplikacija beleži anonimnu statistiku korišćenja kako bi se vremenom 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Aplikacija bezbedno prikuplja adresu vašeg novčanika i deli je sa TRM Labs Inc. iz razloga rizika i usklađenosti."
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "Покушај повезивања није успео. Кликните на дугме Пробај поново и пратите кораке за повезивање у новчанику."
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."

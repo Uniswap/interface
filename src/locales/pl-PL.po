@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 21:06\n"
+"PO-Revision-Date: 2022-05-11 16:11\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -279,6 +279,10 @@ msgstr "Interfejs API automatycznego routera"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Dostępne do wpłaty: {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "Powrót do wyboru portfela"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -1635,6 +1639,10 @@ msgstr "Aplikacja rejestruje anonimowe statystyki użytkowania, aby z czasem ule
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Aplikacja bezpiecznie gromadzi Twój adres portfela i udostępnia go TRM Labs Inc. ze względu na ryzyko i zgodność."
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "Próba połączenia nie powiodła się. Kliknij spróbuj ponownie i postępuj zgodnie z instrukcjami, aby połączyć się w swoim portfelu."
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."

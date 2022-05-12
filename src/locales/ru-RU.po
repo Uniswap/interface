@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 21:06\n"
+"PO-Revision-Date: 2022-05-11 16:12\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -279,6 +279,10 @@ msgstr "API автомаршрутизатора"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Доступно для внесения: {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "Вернуться к выбору кошелька"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -1635,6 +1639,10 @@ msgstr "Приложение собирает анонимную статист�
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Приложение безопасно получает адрес вашего кошелька и передает его TRM Labs Inc. в целях управления рисками и соблюдения требований законодательства."
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "Попытка подключения не удалась. Нажмите «Повторить попытку» и следуйте инструкциям по подключению в своем кошельке."
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."

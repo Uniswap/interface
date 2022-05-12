@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-10 21:06\n"
+"PO-Revision-Date: 2022-05-11 16:11\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -279,6 +279,10 @@ msgstr "Auto Router API"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Tilgjengelig for innskudd: {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "Tilbake til lommebokvalg"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -1635,6 +1639,10 @@ msgstr "Appen logger anonymisert bruksstatistikk for å forbedre seg over tid."
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Appen samler sikkert lommebokadressen din og deler den med TRM Labs Inc. av risiko- og samsvarsgrunner."
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "Tilkoblingsforsøket mislyktes. Klikk prøv igjen og følg trinnene for å koble til i lommeboken."
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."
