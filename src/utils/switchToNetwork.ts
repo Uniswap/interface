@@ -1,4 +1,4 @@
-import { Connector } from '@web3-react/types'
+import { AddEthereumChainParameter, Connector } from '@web3-react/types'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
@@ -37,5 +37,5 @@ export async function switchToNetwork(connector: Connector, chainId: SupportedCh
     rpcUrls: getRpcUrls(chainId),
     nativeCurrency: info.nativeCurrency,
     blockExplorerUrls: [info.explorer],
-  })
+  } as AddEthereumChainParameter)
 }
