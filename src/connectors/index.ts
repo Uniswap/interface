@@ -11,13 +11,7 @@ import { INFURA_NETWORK_URLS } from 'constants/infura'
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 
 export const [network, networkHooks] = initializeConnector<Network>(
-  (actions) =>
-    new Network(
-      actions,
-      INFURA_NETWORK_URLS,
-      false, // eagerlyConnect; We eagerlyConnect in the Web3Provider component instead.
-      1
-    ),
+  (actions) => new Network(actions, INFURA_NETWORK_URLS, true, 1),
   Object.keys(INFURA_NETWORK_URLS).map((chainId) => Number(chainId))
 )
 
