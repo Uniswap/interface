@@ -114,11 +114,18 @@ interface Props {
 }
 
 const Web3Provider = ({ children }: Props) => {
+  const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
 
   useEffect(() => {
-    connectorOverride?.connectEagerly()
+    if (walletOverrideBackfilled) {
+      injected.connectEagerly()
+      walletConnect.connectEagerly()
+      coinbaseWallet.connectEagerly()
+    } else {
+      connectorOverride?.connectEagerly()
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
