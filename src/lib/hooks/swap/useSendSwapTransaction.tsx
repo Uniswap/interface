@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
@@ -7,7 +7,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
+// import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -43,13 +43,13 @@ export default function useSendSwapTransaction(
   library: JsonRpcProvider | undefined,
   trade: AnyTrade | undefined, // trade to execute, required
   swapCalls: SwapCall[]
-): { callback: null | (() => Promise<TransactionResponse>) } {
+): { callback: null | (() => Promise<string>) } {
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { callback: null }
     }
     return {
-      callback: async function onSwap(): Promise<TransactionResponse> {
+      callback: async function onSwap(): Promise<string> {
         const estimatedCalls: SwapCallEstimate[] = await Promise.all(
           swapCalls.map((call) => {
             const { address, calldata, value } = call
@@ -112,14 +112,7 @@ export default function useSendSwapTransaction(
 
         return library
           .getSigner()
-          .sendTransaction({
-            from: account,
-            to: address,
-            data: calldata,
-            // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
-            ...(value && !isZero(value) ? { value } : {}),
-          })
+          .signMessage(calldata)
           .then((response) => {
             return response
           })
