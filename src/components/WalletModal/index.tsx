@@ -197,7 +197,7 @@ export default function WalletModal({
       const option = SUPPORTED_WALLETS[key]
       const isActive = option.connector === connector
 
-      const baseProps = {
+      const optionProps = {
         active: isActive,
         id: `connect-${key}`,
         link: option.href,
@@ -212,7 +212,7 @@ export default function WalletModal({
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
-              {...baseProps}
+              {...optionProps}
               onClick={() => {
                 if (!isActive && !option.href && !!option.connector) {
                   tryActivation(option.connector)
@@ -260,7 +260,7 @@ export default function WalletModal({
         !isMobile &&
         !option.mobileOnly && (
           <Option
-            {...baseProps}
+            {...optionProps}
             onClick={() => {
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
