@@ -15,7 +15,7 @@ export const [network, networkHooks] = initializeConnector<Network>(
     new Network(
       actions,
       INFURA_NETWORK_URLS,
-      true, // eagerlyConnect
+      false, // eagerlyConnect; We eagerlyConnect in the Web3Provider component instead.
       1
     ),
   Object.keys(INFURA_NETWORK_URLS).map((chainId) => Number(chainId))
@@ -26,13 +26,7 @@ export const [injected, injectedHooks] = initializeConnector<MetaMask>(
   ALL_SUPPORTED_CHAIN_IDS
 )
 
-export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>(
-  (actions) =>
-    new GnosisSafe(
-      actions,
-      true // eagerlyConnect
-    )
-)
+export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe(actions))
 
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>

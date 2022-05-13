@@ -1,5 +1,5 @@
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
-import { coinbaseWallet, injected, walletConnect } from 'connectors'
+import { coinbaseWallet, gnosisSafe, injected, network, walletConnect } from 'connectors'
 import { connectors } from 'connectors'
 import { getConnectorForWallet, Wallet } from 'constants/wallet'
 import usePrevious from 'hooks/usePrevious'
@@ -15,7 +15,7 @@ interface ConnectorState {
   setIsEagerlyConnecting(connecting: boolean): void
 }
 
-const Web3Updater = () => {
+function Web3Updater() {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
 
@@ -113,18 +113,21 @@ interface Props {
   children: JSX.Element
 }
 
-const Web3Provider = ({ children }: Props) => {
+export default function Web3Provider({ children }: Props) {
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
 
   useEffect(() => {
+    network.connectEagerly?.()
+    gnosisSafe.connectEagerly()
+
     if (walletOverrideBackfilled) {
+      connectorOverride?.connectEagerly()
+    } else {
       injected.connectEagerly()
       walletConnect.connectEagerly()
       coinbaseWallet.connectEagerly()
-    } else {
-      connectorOverride?.connectEagerly()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -135,5 +138,3 @@ const Web3Provider = ({ children }: Props) => {
     </Web3ReactProvider>
   )
 }
-
-export default Web3Provider
