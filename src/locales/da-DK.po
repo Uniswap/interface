@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -848,10 +848,6 @@ msgstr "Skjul lukkede positioner"
 msgid "High Price Impact"
 msgstr "Høj prispåvirkning"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Hvordan denne app bruger API'er"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "Lær om levering af likviditet"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Lær mere"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "Lær mere om tegnebøger"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "Byt {0} {1} til {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Tag en 10 minutters undersøgelse for at hjælpe os med at forbedre din oplevelse i Uniswap-appen."
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Tally"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

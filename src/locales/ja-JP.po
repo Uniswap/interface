@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -848,10 +848,6 @@ msgstr "決済したポジションを隠す"
 msgid "High Price Impact"
 msgstr "大きな価格への影響"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "このアプリがAPIを使用する方法"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "流動性の提供について学ぶ"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "より詳しく"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "ウォレットの詳細"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "{0} {1} を {2} {3} にスワップ中"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Uniswapアプリのエクスペリエンスを向上させるために、10分間のアンケートに回答してください。"
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "タリー"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -848,10 +848,6 @@ msgstr "Skrýt zavřené pozice"
 msgid "High Price Impact"
 msgstr "Vysoký dopad na cenu"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Jak tato aplikace používá rozhraní API"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "Zjistěte více o poskytování likvidity"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Zjistěte více"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "Zjistěte více o peněženkách"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "Výměna {0} {1} za {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Udělejte si 10minutový průzkum, který nám pomůže zlepšit vaši zkušenost s aplikací Uniswap."
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Tally"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

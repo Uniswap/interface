@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -848,10 +848,6 @@ msgstr "隐藏已关闭的仓位"
 msgid "High Price Impact"
 msgstr "对兑换率有高度影响"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "此应用程序如何使用 API"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "了解提供流动性的相关信息"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "了解更多"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "了解有关钱包的更多信息"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "将 {0} {1} 兑换为 {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "参加 10 分钟调查，以帮助我们改善您在 Uniswap 中的体验。"
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "相符"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

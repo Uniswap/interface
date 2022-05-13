@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -849,10 +849,6 @@ msgstr "Zárt pozíciók elrejtése"
 msgid "High Price Impact"
 msgstr "Magas árhatás"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Hogyan használja ez az alkalmazás az API-kat"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -967,10 +963,6 @@ msgstr "Tudjon meg többet a likviditás biztosításáról"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Tudj meg többet"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "Tudjon meg többet a pénztárcákról"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1600,6 +1592,10 @@ msgstr "{0} {1} cseréje a következőre {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Töltsön ki egy 10 perces kérdőívet, hogy segítsen nekünk javítani az Uniswap alkalmazással kapcsolatos élményét."
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Tally"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

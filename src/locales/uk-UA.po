@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:11\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -848,10 +848,6 @@ msgstr "Приховати закриті позиції"
 msgid "High Price Impact"
 msgstr "Вплив високої ціни"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Як ця програма використовує API"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "Дізнайтеся про забезпечення ліквіднос�
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Вчи більше"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "Дізнайтеся більше про гаманці"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "Обмін {0} {1} на {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Пройдіть 10-хвилинне опитування, щоб допомогти нам покращити ваш досвід роботи в додатку Uniswap."
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Підрахунок"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

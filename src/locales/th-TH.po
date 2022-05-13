@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:11\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -848,10 +848,6 @@ msgstr "ซ่อนตำแหน่งที่ปิด"
 msgid "High Price Impact"
 msgstr "ผลกระทบราคาสูง"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "แอปนี้ใช้ API อย่างไร"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "เรียนรู้เกี่ยวกับการจัดห
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "เรียนรู้เพิ่มเติม"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "เรียนรู้เพิ่มเติมเกี่ยวกับกระเป๋าเงิน"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "สลับ {0} {1} เป็น {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "ทำแบบสำรวจ 10 นาทีเพื่อช่วยเราปรับปรุงประสบการณ์ของคุณในแอป Uniswap"
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Tally"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

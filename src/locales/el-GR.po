@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -848,10 +848,6 @@ msgstr "Απόκρυψη κλειστών θέσεων"
 msgid "High Price Impact"
 msgstr "Υψηλή Επίδραση Τιμών"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Πώς αυτή η εφαρμογή χρησιμοποιεί API"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "Μάθετε σχετικά με την παροχή ρευστότητ�
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Μάθε περισσότερα"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "Μάθετε περισσότερα για τα πορτοφόλια"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "Ανταλλαγή {0} {1} για {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Κάντε μια έρευνα 10 λεπτών για να μας βοηθήσετε να βελτιώσουμε την εμπειρία σας στην εφαρμογή Uniswap."
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Λογαριασμός"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

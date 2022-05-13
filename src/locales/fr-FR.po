@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -848,10 +848,6 @@ msgstr "Masquer les positions fermées"
 msgid "High Price Impact"
 msgstr "Impact sur les prix élevés"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Comment cette application utilise les API"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "En savoir plus sur la fourniture de liquidités"
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "En savoir plus"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "En savoir plus sur les portefeuilles"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "Échange de {0} {1} contre {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Répondez à un sondage de 10 minutes pour nous aider à améliorer votre expérience dans l'application Uniswap."
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Pointage"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

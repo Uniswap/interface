@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-12 18:10\n"
+"PO-Revision-Date: 2022-05-13 23:06\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -848,10 +848,6 @@ msgstr "Сакриј затворене позиције"
 msgid "High Price Impact"
 msgstr "Утицај високе цене"
 
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Kako ova aplikacija koristi API-je"
-
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -966,10 +962,6 @@ msgstr "Сазнајте више о обезбеђивању ликвиднос
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Сазнајте више"
-
-#: src/components/WalletModal/index.tsx
-msgid "Learn more about wallets"
-msgstr "Сазнајте више о новчаницима"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1599,6 +1591,10 @@ msgstr "Замена {0} {1} за {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Попуните 10-минутну анкету да бисте нам помогли да побољшамо ваше искуство у апликацији Унисвап."
+
+#: src/components/WalletModal/index.tsx
+msgid "Tally"
+msgstr "Талли"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
