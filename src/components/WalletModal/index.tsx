@@ -140,8 +140,9 @@ export default function WalletModal({
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
-  const [pendingError, setPendingError] = useState<boolean>()
-  const [pendingWallet, setPendingWallet] = useState<Connector | undefined>()
+  const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
+  // Need to pass network as a default case because useSelectedError requirse a connector
+  const pendingError = hooks.useSelectedError(pendingConnector || network)
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
@@ -149,9 +150,8 @@ export default function WalletModal({
   const previousConnector = usePrevious(connector)
 
   const resetAccountView = useCallback(() => {
-    setPendingError(false)
     setWalletView(WALLET_VIEWS.ACCOUNT)
-  }, [setPendingError, setWalletView])
+  }, [setWalletView])
 
   useEffect(() => {
     if (walletModalOpen && connector && connector !== previousConnector && !error) {
@@ -161,7 +161,6 @@ export default function WalletModal({
 
   useEffect(() => {
     if (walletModalOpen) {
-      setPendingError(false)
       setWalletView(connector === network ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
     }
   }, [walletModalOpen, setWalletView, connector])
@@ -184,8 +183,7 @@ export default function WalletModal({
       dispatch(updateWalletOverride({ wallet }))
       setWalletView(WALLET_VIEWS.ACCOUNT)
     } else {
-      setPendingError(true)
-      setPendingWallet(connector)
+      setPendingConnector(connector)
       setWalletView(WALLET_VIEWS.PENDING)
     }
   }
@@ -345,8 +343,8 @@ export default function WalletModal({
             {walletView === WALLET_VIEWS.PENDING && (
               <PendingView
                 resetAccountView={resetAccountView}
-                connector={pendingWallet}
-                error={pendingError}
+                connector={pendingConnector}
+                error={!!pendingError}
                 tryActivation={tryActivation}
               />
             )}
