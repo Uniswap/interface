@@ -10,16 +10,18 @@ import { updateWalletOverride } from 'state/user/reducer'
 interface ConnectorState {
   isActive: boolean
   previousIsActive: boolean | undefined
-  isActivating: boolean
   isEagerlyConnecting: boolean
   setIsEagerlyConnecting(connecting: boolean): void
 }
 
+// This component handles state changes in web3-react and updates wallet connections as needed.
 function Web3Updater() {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
 
+  const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
+  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
 
   const injectedIsActive = hooks.useSelectedIsActive(injected)
   const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
@@ -29,33 +31,44 @@ function Web3Updater() {
   const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
   const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
 
-  const injectedIsActivating = hooks.useSelectedIsActivating(injected)
-  const coinbaseWalletIsActivating = hooks.useSelectedIsActivating(coinbaseWallet)
-  const walletConnectIsActivating = hooks.useSelectedIsActivating(walletConnect)
-
   const [isInjectedEagerlyConnecting, setIsInjectedEagerlyConnecting] = useState(false)
   const [isCoinbaseWalletEagerlyConnecting, setIsCoinbaseWalletEagerlyConnecting] = useState(false)
   const [isWalletConnectEagerlyConnecting, setIsWalletConnectEagerlyConnecting] = useState(false)
 
   useEffect(() => {
+    network.connectEagerly?.()
+    gnosisSafe.connectEagerly()
+
+    if (walletOverrideBackfilled) {
+      connectorOverride?.connectEagerly()
+    } else {
+      injected.connectEagerly()
+      setIsInjectedEagerlyConnecting(true)
+
+      walletConnect.connectEagerly()
+      setIsWalletConnectEagerlyConnecting(true)
+
+      coinbaseWallet.connectEagerly()
+      setIsCoinbaseWalletEagerlyConnecting(true)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     const injectedState: ConnectorState = {
       isActive: injectedIsActive,
       previousIsActive: previousInjectedIsActive,
-      isActivating: injectedIsActivating,
       isEagerlyConnecting: isInjectedEagerlyConnecting,
       setIsEagerlyConnecting: setIsInjectedEagerlyConnecting,
     }
     const coinbaseWalletState: ConnectorState = {
       isActive: coinbaseWalletIsActive,
       previousIsActive: previousCoinbaseWalletIsActive,
-      isActivating: coinbaseWalletIsActivating,
       isEagerlyConnecting: isCoinbaseWalletEagerlyConnecting,
       setIsEagerlyConnecting: setIsCoinbaseWalletEagerlyConnecting,
     }
     const walletConnectState: ConnectorState = {
       isActive: walletConnectIsActive,
       previousIsActive: previousWalletConnectIsActive,
-      isActivating: walletConnectIsActivating,
       isEagerlyConnecting: isWalletConnectEagerlyConnecting,
       setIsEagerlyConnecting: setIsWalletConnectEagerlyConnecting,
     }
@@ -66,28 +79,28 @@ function Web3Updater() {
     ])
 
     isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
-      const { isActive, previousIsActive, isActivating, isEagerlyConnecting, setIsEagerlyConnecting } = state
-
-      if (!isActive && previousIsActive === undefined && isActivating) {
-        // if previousIsActive is undefined and isActivating is true, then we know it's an eager connection attempt
-        setIsEagerlyConnecting(true)
-      } else if (isActive && !previousIsActive) {
-        // if the connection state changes...
-
-        // reset the eagerly connecting state
+      const { isActive, previousIsActive, isEagerlyConnecting, setIsEagerlyConnecting } = state
+      if (isActive && !previousIsActive) {
+        // Reset the eagerly connecting state.
         if (isEagerlyConnecting) {
           setIsEagerlyConnecting(false)
         }
 
-        // when a user manually sets their new connection we want to set a wallet override
-        // we also want to set an override when they were a user prior to this state being introduced
+        // When a user manually sets their new connection, set a wallet override.
+        // Also set an override when they were a user prior to this state being introduced.
+        // Deactivates the previously connected wallet when a new wallet is connected.
         if (!isEagerlyConnecting || !walletOverrideBackfilled) {
+          // walletOverride should always be defined here, but need for type safety.
+          if (walletOverride) {
+            getConnectorForWallet(walletOverride).deactivate()
+          }
           dispatch(updateWalletOverride({ wallet }))
         }
       }
     })
   }, [
     dispatch,
+    walletOverride,
     walletOverrideBackfilled,
     injectedIsActive,
     coinbaseWalletIsActive,
@@ -95,9 +108,6 @@ function Web3Updater() {
     previousInjectedIsActive,
     previousCoinbaseWalletIsActive,
     previousWalletConnectIsActive,
-    injectedIsActivating,
-    coinbaseWalletIsActivating,
-    walletConnectIsActivating,
     isInjectedEagerlyConnecting,
     isCoinbaseWalletEagerlyConnecting,
     isWalletConnectEagerlyConnecting,
@@ -114,23 +124,6 @@ interface Props {
 }
 
 export default function Web3Provider({ children }: Props) {
-  const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
-  const walletOverride = useAppSelector((state) => state.user.walletOverride)
-  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
-
-  useEffect(() => {
-    network.connectEagerly?.()
-    gnosisSafe.connectEagerly()
-
-    if (walletOverrideBackfilled) {
-      connectorOverride?.connectEagerly()
-    } else {
-      injected.connectEagerly()
-      walletConnect.connectEagerly()
-      coinbaseWallet.connectEagerly()
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   return (
     <Web3ReactProvider connectors={connectors}>
       <Web3Updater />

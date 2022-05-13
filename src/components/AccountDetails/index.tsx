@@ -264,16 +264,27 @@ export default function AccountDetails({
             <InfoCard>
               <AccountGroupingRow>
                 {formatConnectorName()}
-                <WalletAction
-                  style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                  onClick={() => {
-                    dispatch(updateWalletOverride({ wallet: undefined }))
-                    connector.deactivate()
-                  }}
-                  data-cy="wallet-disconnect"
-                >
-                  <Trans>Disconnect</Trans>
-                </WalletAction>
+                <div>
+                  <WalletAction
+                    style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                    onClick={() => {
+                      dispatch(updateWalletOverride({ wallet: undefined }))
+                      connector.deactivate()
+                    }}
+                    data-cy="wallet-disconnect"
+                  >
+                    <Trans>Disconnect</Trans>
+                  </WalletAction>
+                  <WalletAction
+                    style={{ fontSize: '.825rem', fontWeight: 400 }}
+                    onClick={() => {
+                      openOptions()
+                    }}
+                    data-cy="wallet-change"
+                  >
+                    <Trans>Change</Trans>
+                  </WalletAction>
+                </div>
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
                 <AccountControl>
