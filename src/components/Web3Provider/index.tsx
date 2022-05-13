@@ -41,6 +41,17 @@ function Web3Updater() {
 
     if (walletOverrideBackfilled) {
       connectorOverride?.connectEagerly()
+      switch (walletOverride) {
+        case Wallet.INJECTED:
+          setIsInjectedEagerlyConnecting(true)
+          break
+        case Wallet.WALLET_CONNECT:
+          setIsWalletConnectEagerlyConnecting(true)
+          break
+        case Wallet.COINBASE_WALLET:
+          setIsCoinbaseWalletEagerlyConnecting(true)
+          break
+      }
     } else {
       injected.connectEagerly()
       setIsInjectedEagerlyConnecting(true)
@@ -81,11 +92,6 @@ function Web3Updater() {
     isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
       const { isActive, previousIsActive, isEagerlyConnecting, setIsEagerlyConnecting } = state
       if (isActive && !previousIsActive) {
-        // Reset the eagerly connecting state.
-        if (isEagerlyConnecting) {
-          setIsEagerlyConnecting(false)
-        }
-
         // When a user manually sets their new connection, set a wallet override.
         // Also set an override when they were a user prior to this state being introduced.
         // Deactivates the previously connected wallet when a new wallet is connected.
@@ -95,6 +101,11 @@ function Web3Updater() {
             getConnectorForWallet(walletOverride).deactivate()
           }
           dispatch(updateWalletOverride({ wallet }))
+        }
+
+        // Reset the eagerly connecting state.
+        if (isEagerlyConnecting) {
+          setIsEagerlyConnecting(false)
         }
       }
     })
