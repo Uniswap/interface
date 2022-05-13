@@ -335,20 +335,11 @@ export default function WalletModal({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        {walletView !== WALLET_VIEWS.ACCOUNT ? (
-          <HeaderRow color="blue">
-            <HoverText onClick={resetAccountView}>
-              <ArrowLeft />
-            </HoverText>
-          </HeaderRow>
-        ) : (
-          <HeaderRow>
-            <HoverText>
-              <Trans>Connect a wallet</Trans>
-            </HoverText>
-          </HeaderRow>
-        )}
-
+        <HeaderRow color="blue">
+          <HoverText onClick={() => setWalletView(WALLET_VIEWS.OPTIONS)}>
+            <ArrowLeft />
+          </HoverText>
+        </HeaderRow>
         <ContentWrapper>
           <AutoColumn gap="16px">
             {walletView === WALLET_VIEWS.PENDING && (
