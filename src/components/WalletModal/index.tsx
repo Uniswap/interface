@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
-import Row, { AutoRow, RowBetween } from 'components/Row'
+import Row, { AutoRow } from 'components/Row'
 import { useCallback, useEffect, useState } from 'react'
-import { ArrowLeft, ArrowRight, Info } from 'react-feather'
+import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
 import { AbstractConnector } from 'web3-react-abstract-connector'
@@ -405,43 +405,28 @@ export default function WalletModal({
                 resetAccountView={resetAccountView}
               />
             )}
+            {walletView !== WALLET_VIEWS.PENDING && <OptionGrid>{getOptions()}</OptionGrid>}
             {!pendingError && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>
-                  <ThemedText.Black fontSize={14}>
+                  <ThemedText.Body fontSize={12}>
                     <Trans>
                       By connecting a wallet, you agree to Uniswap Labs’{' '}
-                      <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                      acknowledge that you have read and understand the Uniswap{' '}
-                      <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
+                      <ExternalLink
+                        style={{ textDecoration: 'underline' }}
+                        href="https://uniswap.org/terms-of-service/"
+                      >
+                        Terms of Service
+                      </ExternalLink>{' '}
+                      and acknowledge that you have read and understand the Uniswap{' '}
+                      <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
+                        Protocol Disclaimer
+                      </ExternalLink>
+                      .
                     </Trans>
-                  </ThemedText.Black>
+                  </ThemedText.Body>
                 </AutoRow>
               </LightCard>
-            )}
-            {walletView !== WALLET_VIEWS.PENDING && (
-              <>
-                <OptionGrid>{getOptions()}</OptionGrid>
-                <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
-                  <RowBetween>
-                    <AutoRow gap="4px">
-                      <Info size={20} />
-                      <ThemedText.Label fontSize={14}>
-                        <Trans>How this app uses APIs</Trans>
-                      </ThemedText.Label>
-                    </AutoRow>
-                    <ArrowRight size={16} />
-                  </RowBetween>
-                </LinkCard>
-                <ThemedText.Black fontSize={14}>
-                  <ExternalLink href="https://help.uniswap.org/en/articles/5391525-what-is-a-wallet">
-                    <Row justify="center" alignItems="center">
-                      <Trans>Learn more about wallets</Trans>
-                      <ArrowRight size={16} />
-                    </Row>
-                  </ExternalLink>
-                </ThemedText.Black>
-              </>
             )}
           </AutoColumn>
         </ContentWrapper>
