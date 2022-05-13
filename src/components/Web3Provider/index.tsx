@@ -119,7 +119,7 @@ const Web3Provider = ({ children }: Props) => {
 
   useEffect(() => {
     connectorOverride?.connectEagerly()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Web3ReactProvider connectors={connectors}>
