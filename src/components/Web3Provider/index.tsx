@@ -1,14 +1,11 @@
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
-import { coinbaseWallet, gnosisSafe, injected, walletConnect } from 'connectors'
-import { connectors, network } from 'connectors'
+import { coinbaseWallet, injected, walletConnect } from 'connectors'
+import { connectors } from 'connectors'
 import { getConnectorForWallet, Wallet } from 'constants/wallet'
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/user/reducer'
-
-const GNOSIS_SAFE_URL = 'https://gnosis-safe.io'
-const IS_GNOSIS_SAFE = window.location.ancestorOrigins.contains(GNOSIS_SAFE_URL)
 
 interface ConnectorState {
   isActive: boolean
@@ -84,7 +81,7 @@ const Web3Updater = () => {
 
         // when a user manually sets their new connection we want to set a wallet override
         // we also want to set an override when they were a user prior to this state being introduced
-        if (!isEagerlyConnecting || (!IS_GNOSIS_SAFE && !walletOverrideBackfilled)) {
+        if (!isEagerlyConnecting || !walletOverrideBackfilled) {
           dispatch(updateWalletOverride({ wallet }))
         }
       }
@@ -118,16 +115,14 @@ interface Props {
 
 const Web3Provider = ({ children }: Props) => {
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
-  let connectorOverride
-  if (IS_GNOSIS_SAFE) {
-    connectorOverride = gnosisSafe
-  } else if (walletOverride) {
-    connectorOverride = getConnectorForWallet(walletOverride)
-  } else {
-    connectorOverride = network
-  }
+  const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
+
+  useEffect(() => {
+    connectorOverride?.connectEagerly()
+  }, [])
+
   return (
-    <Web3ReactProvider connectors={connectors} connectorOverride={connectorOverride}>
+    <Web3ReactProvider connectors={connectors}>
       <Web3Updater />
       {children}
     </Web3ReactProvider>

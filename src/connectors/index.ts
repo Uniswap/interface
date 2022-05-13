@@ -22,11 +22,7 @@ export const [network, networkHooks] = initializeConnector<Network>(
 )
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>(
-  (actions) =>
-    new MetaMask(
-      actions,
-      true // eagerlyConnect
-    ),
+  (actions) => new MetaMask(actions),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
@@ -40,35 +36,27 @@ export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>(
 
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>
-    new WalletConnect(
-      actions,
-      {
-        rpc: INFURA_NETWORK_URLS,
-        qrcode: true,
-      },
-      true // eagerlyConnect
-    ),
+    new WalletConnect(actions, {
+      rpc: INFURA_NETWORK_URLS,
+      qrcode: true,
+    }),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
 export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
-    new CoinbaseWallet(
-      actions,
-      {
-        url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
-        appName: 'Uniswap',
-        appLogoUrl: UNISWAP_LOGO_URL,
-      },
-      true // eagerlyConnect
-    ),
+    new CoinbaseWallet(actions, {
+      url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
+      appName: 'Uniswap',
+      appLogoUrl: UNISWAP_LOGO_URL,
+    }),
   ALL_SUPPORTED_CHAIN_IDS
 )
 
 export const connectors: [Connector, Web3ReactHooks][] = [
-  [network, networkHooks],
   [gnosisSafe, gnosisSafeHooks],
   [coinbaseWallet, coinbaseWalletHooks],
   [walletConnect, walletConnectHooks],
   [injected, injectedHooks],
+  [network, networkHooks],
 ]

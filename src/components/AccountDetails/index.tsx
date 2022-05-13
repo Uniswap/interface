@@ -8,7 +8,7 @@ import { updateWalletOverride } from 'state/user/reducer'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { coinbaseWallet, injected } from '../../connectors'
+import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
@@ -264,31 +264,16 @@ export default function AccountDetails({
             <InfoCard>
               <AccountGroupingRow>
                 {formatConnectorName()}
-                <div>
-                  {/* Coinbase Wallet disconnection causes a page reload from their SDK. This leads to a race condition where the local storage value for walletOverride may not be set in time. */}
-                  {/* TODO(vm): Add disconnect for Coinbase Wallet once the team allows preventing reload via SDK */}
-                  {connector !== coinbaseWallet && (
-                    <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                      onClick={() => {
-                        dispatch(updateWalletOverride({ wallet: undefined }))
-                        connector.deactivate()
-                      }}
-                      data-cy="wallet-disconnect"
-                    >
-                      <Trans>Disconnect</Trans>
-                    </WalletAction>
-                  )}
-                  <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400 }}
-                    onClick={() => {
-                      openOptions()
-                    }}
-                    data-cy="wallet-change"
-                  >
-                    <Trans>Change</Trans>
-                  </WalletAction>
-                </div>
+                <WalletAction
+                  style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                  onClick={() => {
+                    dispatch(updateWalletOverride({ wallet: undefined }))
+                    connector.deactivate()
+                  }}
+                  data-cy="wallet-disconnect"
+                >
+                  <Trans>Disconnect</Trans>
+                </WalletAction>
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
                 <AccountControl>
