@@ -4,6 +4,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
+import { useAccounts } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -12,7 +13,6 @@ type AddressDisplayProps = {
   alwaysShowAddress?: boolean
   displayName?: string
   fallback?: string
-  override?: string
   size?: number
   variant?: keyof Theme['textVariants']
   verticalGap?: keyof Theme['spacing']
@@ -22,13 +22,12 @@ type AddressDisplayProps = {
 export function AddressDisplay({
   address,
   fallback,
-  override,
   size = 24,
   variant = 'body',
   verticalGap = 'xxs',
   alwaysShowAddress,
 }: AddressDisplayProps) {
-  const { name, address: validatedAddress } = useDisplayName(address, override, fallback)
+  const { name, address: validatedAddress } = useDisplayName(address, fallback)
 
   if (!validatedAddress || !name) {
     return null
@@ -54,11 +53,14 @@ export function AddressDisplay({
   )
 }
 
-function useDisplayName(address?: string, nameOverride?: string, fallback?: string) {
+function useDisplayName(address?: string, fallback?: string) {
   const ens = useENS(ChainId.Mainnet, address)
 
+  // if address is a local account with a name
+  const maybeLocalName = useAccounts()[address ?? '']?.name
+
   return {
-    name: nameOverride ?? ens.name ?? (ens.address ? shortenAddress(ens.address) : fallback),
+    name: maybeLocalName ?? ens.name ?? (ens.address ? shortenAddress(ens.address) : fallback),
     address: ens.address,
   }
 }
