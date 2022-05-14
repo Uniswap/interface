@@ -41,7 +41,7 @@ export function DappConnectionItem({
 
   return (
     <Flex
-      bg="gray50"
+      bg="deprecated_gray50"
       borderRadius="md"
       gap="none"
       justifyContent="space-between"
@@ -64,7 +64,7 @@ export function DappConnectionItem({
           }}>
           <X
             height={16}
-            stroke={theme.colors.textColor}
+            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="2.5"
             width={16}
@@ -76,28 +76,28 @@ export function DappConnectionItem({
           <Button name={ElementName.WCOpenDapp} onPress={() => openUri(dapp.url)}>
             <Flex gap="xs">
               <Text variant="h4">{dapp.name}</Text>
-              <Text color="blue" numberOfLines={1} variant="bodySm">
+              <Text color="deprecated_blue" numberOfLines={1} variant="bodySm">
                 {dapp.url}
               </Text>
             </Flex>
           </Button>
         </Flex>
-        <Box bg="gray200" height={0.5} width="100%" />
+        <Box bg="deprecated_gray200" height={0.5} width="100%" />
         <Button name={ElementName.WCDappSwitchNetwork} onPress={onPressChangeNetwork}>
           <Flex row justifyContent="space-between" px="md" py="sm">
             {chainId ? (
               <Flex row alignItems="center" gap="xxs">
                 <NetworkLogo chainId={chainId} mr="xs" size={25} />
-                <Text color="gray600" variant="h6">
+                <Text color="deprecated_gray600" variant="h6">
                   {CHAIN_INFO[chainId].label}
                 </Text>
               </Flex>
             ) : (
-              <Text color="gray600" variant="h6">
+              <Text color="deprecated_gray600" variant="h6">
                 {t('Unsupported chain')}
               </Text>
             )}
-            <Chevron color={theme.colors.gray600} direction="s" height="10" width="13" />
+            <Chevron color={theme.colors.deprecated_gray600} direction="s" height="10" width="13" />
           </Flex>
         </Button>
       </Flex>

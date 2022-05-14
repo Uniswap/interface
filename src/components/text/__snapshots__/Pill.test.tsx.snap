@@ -6,8 +6,8 @@ exports[`renders a Pill with border 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#CED0D9",
-        "borderColor": "#28CD88",
+        "backgroundColor": "#C0C7DE",
+        "borderColor": "#1A9550",
         "borderRadius": 999999,
         "borderWidth": 1,
         "display": "flex",
@@ -93,7 +93,7 @@ exports[`renders a Pill without image 1`] = `
           "fontSize": 14,
         },
         Object {
-          "color": "blue",
+          "color": "deprecated_blue",
         },
       ]
     }

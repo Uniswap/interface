@@ -5,8 +5,20 @@ import { Box } from 'src/components/layout'
 export function HeaderLoader() {
   return (
     <Box>
-      <Box backgroundColor="gray50" borderRadius="md" height={50} marginBottom="sm" width="100%" />
-      <Box backgroundColor="gray50" borderRadius="md" height={10} marginBottom="sm" width="100%" />
+      <Box
+        backgroundColor="deprecated_gray50"
+        borderRadius="md"
+        height={50}
+        marginBottom="sm"
+        width="100%"
+      />
+      <Box
+        backgroundColor="deprecated_gray50"
+        borderRadius="md"
+        height={10}
+        marginBottom="sm"
+        width="100%"
+      />
     </Box>
   )
 }

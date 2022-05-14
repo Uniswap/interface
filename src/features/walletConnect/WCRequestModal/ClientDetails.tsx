@@ -27,7 +27,7 @@ export function ClientDetails({ dapp, method }: { dapp: DappInfo; method: EthMet
         <Text textAlign="center" variant="bodyLgBold">
           {dapp.name}
         </Text>
-        <LinkButton mt="xs" textColor="blue" url={dapp.url}>
+        <LinkButton mt="xs" textColor="deprecated_blue" url={dapp.url}>
           {dapp.url}
         </LinkButton>
       </Flex>

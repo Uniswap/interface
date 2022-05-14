@@ -89,20 +89,20 @@ export function PortfolioScreen({ navigation }: Props) {
           <Flex centered row>
             {isWalletConnectSupportedAccount(activeAccount) && (
               <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                <Scan height={20} stroke="gray100" width={20} />
+                <Scan height={20} stroke="deprecated_gray100" width={20} />
               </Button>
             )}
             <Button name={ElementName.Settings} onPress={onPressSettings}>
-              <Settings height={24} stroke="gray100" width={24} />
+              <Settings height={24} stroke="deprecated_gray100" width={24} />
             </Button>
             <Button name={ElementName.Notifications} onPress={onPressNotifications}>
-              <Clock height={24} stroke="gray100" width={24} />
+              <Clock height={24} stroke="deprecated_gray100" width={24} />
             </Button>
           </Flex>
         </Box>
         <TransactionStatusBanner />
         <Flex gap="xs">
-          <Text color="gray600" variant="bodySm">
+          <Text color="deprecated_gray600" variant="bodySm">
             {t('Total Balance')}
           </Text>
           <Flex alignItems="flex-start" flexDirection="row" gap="sm">

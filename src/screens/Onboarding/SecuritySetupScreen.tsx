@@ -39,8 +39,8 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
       )}
       title={t('Turn on FaceID')}>
       <Flex grow alignItems="center" justifyContent="space-between">
-        <Box bg="gray50" borderRadius="lg" p="lg">
-          <FaceIcon color={theme.colors.gray600} height={100} width={100} />
+        <Box bg="deprecated_gray50" borderRadius="lg" p="lg">
+          <FaceIcon color={theme.colors.deprecated_gray600} height={100} width={100} />
         </Box>
 
         <Flex alignItems="center" justifyContent="flex-end" width={'100%'}>
@@ -53,7 +53,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
           />
           <TextButton
             name={ElementName.Skip}
-            textColor="textColor"
+            textColor="deprecated_textColor"
             textVariant="buttonLabel"
             onPress={onPressNext}>
             {t('Skip for now')}

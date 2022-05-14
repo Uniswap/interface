@@ -42,7 +42,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
         my="xs"
         p="md"
         style={{
-          borderColor: isActive ? theme.colors.primary1 : opacify(80, color),
+          borderColor: isActive ? theme.colors.deprecated_primary1 : opacify(80, color),
           backgroundColor: opacify(20, color),
         }}
         testID={`account_item/${address.toLowerCase()}`}>
@@ -61,7 +61,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
             padding="sm"
             width={20}
             onPress={() => onPressQRCode(address)}>
-            <QrCode height={20} stroke={theme.colors.textColor} width={20} />
+            <QrCode height={20} stroke={theme.colors.deprecated_textColor} width={20} />
           </Button>
         </Flex>
         <Flex row alignItems="center" justifyContent="space-between">

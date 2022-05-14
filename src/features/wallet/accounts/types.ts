@@ -13,7 +13,13 @@ export enum BackupType {
   Cloud = 'cloud',
 }
 
-type DynamicPalette = Pick<Palette, 'primary1' | 'secondary1' | 'background1' | 'textColor'>
+type DynamicPalette = Pick<
+  Palette,
+  | 'deprecated_primary1'
+  | 'deprecated_secondary1'
+  | 'deprecated_background1'
+  | 'deprecated_textColor'
+>
 
 export type AccountCustomizations = {
   palette?: DynamicPalette

@@ -167,7 +167,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           renderItem={renderItem}
           renderSectionHeader={({ section: { title } }) => (
             <Box bg="mainBackground" py="md">
-              <Text color="gray600" variant="h4">
+              <Text color="deprecated_gray600" variant="h4">
                 {title}
               </Text>
             </Box>
@@ -176,7 +176,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           showsVerticalScrollIndicator={false}
         />
         <Flex mb="sm">
-          <Box bg="gray100" height={1} mb="md" />
+          <Box bg="deprecated_gray100" height={1} mb="md" />
           <Flex gap="xl">
             <Button
               name={ElementName.ImportAccount}
@@ -184,7 +184,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               onPress={onPressNewAccount}>
               <Flex row gap="sm">
                 <PlusSquareIcon height={25} width={25} />
-                <Text color="gray600" variant="h4">
+                <Text color="deprecated_gray600" variant="h4">
                   {t('New account')}
                 </Text>
               </Flex>
@@ -195,7 +195,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               onPress={onPressSettings}>
               <Flex row gap="sm">
                 <SettingsIcon height={25} width={25} />
-                <Text color="gray600" variant="h4">
+                <Text color="deprecated_gray600" variant="h4">
                   {t('Settings')}
                 </Text>
               </Flex>
@@ -238,7 +238,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             pb="sm"
             pt="xs"
             textAlign="center"
-            textColor="primary1"
+            textColor="deprecated_primary1"
             textVariant="body"
             width="100%"
             onPress={onPressEditCancel}>

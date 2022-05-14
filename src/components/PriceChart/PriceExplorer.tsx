@@ -85,14 +85,14 @@ export const PriceExplorer = ({ graphs, title }: GraphProps) => {
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
-            stroke={theme.colors.primary1}
+            stroke={theme.colors.deprecated_primary1}
             strokeWidth={2}
           />
 
           <Defs>
             <LinearGradient id="gradient" x1="50%" x2="50%" y1="0%" y2="100%">
-              <Stop offset="0%" stopColor={theme.colors.primary1} stopOpacity="0.2" />
-              <Stop offset="100%" stopColor={theme.colors.primary1} stopOpacity="0" />
+              <Stop offset="0%" stopColor={theme.colors.deprecated_primary1} stopOpacity="0.2" />
+              <Stop offset="100%" stopColor={theme.colors.deprecated_primary1} stopOpacity="0" />
             </LinearGradient>
           </Defs>
 
@@ -113,7 +113,7 @@ export const PriceExplorer = ({ graphs, title }: GraphProps) => {
       <Box alignSelf="center" flexDirection="row" width={SELECTION_WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="primary1"
+            bg="deprecated_primary1"
             borderRadius="lg"
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
             width={BUTTON_WIDTH}

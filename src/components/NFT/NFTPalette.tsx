@@ -21,11 +21,13 @@ function useNFTColors(asset: NFTAsset.Asset | undefined) {
     if (!asset?.image_url) return
 
     setLoading(true)
-    extractColors(asset.image_url, theme.colors.primary1).then((result: ImageColorsResult) => {
-      setLoading(false)
-      setColors(result)
-    })
-  }, [asset?.image_url, theme.colors.primary1])
+    extractColors(asset.image_url, theme.colors.deprecated_primary1).then(
+      (result: ImageColorsResult) => {
+        setLoading(false)
+        setColors(result)
+      }
+    )
+  }, [asset?.image_url, theme.colors.deprecated_primary1])
 
   return { loading, colors }
 }
@@ -41,19 +43,18 @@ export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
 
   return colors?.platform === 'ios' ? (
     <IconButton
-      bg="gray50"
+      bg="deprecated_gray50"
       borderRadius="md"
-      icon={<MagicWand fill={theme.colors.textColor} height={24} width={24} />}
+      icon={<MagicWand fill={theme.colors.deprecated_textColor} height={24} width={24} />}
       name={ElementName.ApplyThemeFromNFT}
       variant="transparent"
       onPress={() => {
         if (!activeAccount) return
-
         const palette = (({ primary, secondary, background, detail }: IOSImageColors) => ({
-          primary1: secondary,
-          secondary1: detail,
-          background1: background,
-          textColor: primary,
+          deprecated_primary1: secondary,
+          deprecated_secondary1: detail,
+          deprecated_background1: background,
+          deprecated_textColor: primary,
         }))(colors)
         const updatedAccount = {
           ...activeAccount,
@@ -79,7 +80,10 @@ export function NFTPalette({ asset }: { asset: NFTAsset.Asset }) {
 
   return colors?.platform === 'ios' ? (
     <Flex row alignItems="flex-end" gap="sm" justifyContent="flex-end">
-      <Flex borderRadius="md" p="xs" style={{ backgroundColor: opacify(30, theme.colors.gray100) }}>
+      <Flex
+        borderRadius="md"
+        p="xs"
+        style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray100) }}>
         <Flex centered gap="sm">
           <Box borderRadius="sm" style={{ backgroundColor: colors.primary }}>
             <Inset />

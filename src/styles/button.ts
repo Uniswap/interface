@@ -1,6 +1,6 @@
 export const primaryButtonVariants = {
   defaults: {
-    backgroundColor: 'primary1',
+    backgroundColor: 'deprecated_primary1',
     color: 'white',
   },
   black: {
@@ -9,31 +9,31 @@ export const primaryButtonVariants = {
     borderRadius: 'md',
   },
   gray: {
-    backgroundColor: 'gray100',
-    color: 'textColor',
+    backgroundColor: 'deprecated_gray100',
+    color: 'deprecated_textColor',
   },
   green: {
-    backgroundColor: 'green',
+    backgroundColor: 'deprecated_green',
     color: 'white',
   },
   palePink: {
-    backgroundColor: 'secondary1',
+    backgroundColor: 'deprecated_secondary1',
     color: 'white',
   },
   paleOrange: {
-    backgroundColor: 'paleOrange',
-    color: 'orange',
+    backgroundColor: 'deprecated_paleOrange',
+    color: 'deprecated_orange',
   },
   paleBlue: {
-    backgroundColor: 'paleBlue',
-    color: 'blue',
+    backgroundColor: 'deprecated_paleBlue',
+    color: 'deprecated_blue',
   },
   blue: {
-    backgroundColor: 'blue',
+    backgroundColor: 'deprecated_blue',
     color: 'white',
   },
   yellow: {
-    backgroundColor: 'yellow',
+    backgroundColor: 'deprecated_yellow',
     color: 'white',
   },
 }

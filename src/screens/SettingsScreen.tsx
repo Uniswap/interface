@@ -49,7 +49,7 @@ export function SettingsScreen() {
         icon: (
           <ChatBubbleIcon
             height={20}
-            stroke={theme.colors.textColor}
+            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -62,7 +62,7 @@ export function SettingsScreen() {
         icon: (
           <ChatBubbleIcon
             height={20}
-            stroke={theme.colors.textColor}
+            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -75,7 +75,7 @@ export function SettingsScreen() {
         icon: (
           <ChatBubbleIcon
             height={20}
-            stroke={theme.colors.textColor}
+            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -88,7 +88,7 @@ export function SettingsScreen() {
         icon: (
           <CoffeeIcon
             height={20}
-            stroke={theme.colors.textColor}
+            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -136,7 +136,7 @@ function OnboardingRow() {
         <Box alignItems="center" flexDirection="row">
           <StarIcon
             height={20}
-            stroke={theme.colors.textColor}
+            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -145,7 +145,7 @@ function OnboardingRow() {
             {t('Onboarding')}
           </Text>
         </Box>
-        <Chevron color={theme.colors.gray200} direction="e" height={16} width={16} />
+        <Chevron color={theme.colors.deprecated_gray200} direction="e" height={16} width={16} />
       </Box>
     </Button>
   )
@@ -172,7 +172,7 @@ function SettingsRow({ page: { screen, icon, text }, navigation, theme }: Settin
             {text}
           </Text>
         </Box>
-        <Chevron color={theme.colors.gray200} direction="e" height={16} width={16} />
+        <Chevron color={theme.colors.deprecated_gray200} direction="e" height={16} width={16} />
       </Box>
     </Button>
   )

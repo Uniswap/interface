@@ -34,7 +34,7 @@ exports[`renders correctly 1`] = `
       editable={false}
       style={
         Object {
-          "color": "#CED0D9",
+          "color": "#C0C7DE",
           "fontFamily": "UniswapSansBeta4-Medium",
           "fontSize": 18,
         }
@@ -89,7 +89,7 @@ exports[`renders correctly 1`] = `
       animatedStyle={
         Object {
           "value": Object {
-            "color": "#DA2D2B",
+            "color": "#FD4040",
           },
         }
       }
@@ -97,7 +97,7 @@ exports[`renders correctly 1`] = `
       editable={false}
       style={
         Object {
-          "color": "#DA2D2B",
+          "color": "#FD4040",
           "fontFamily": "UniswapSansBeta4-Medium",
           "fontSize": 20,
         }
@@ -148,7 +148,7 @@ exports[`renders correctly 1`] = `
               "strokeWidth",
             ]
           }
-          stroke={4294901882}
+          stroke={4293867150}
           strokeWidth={2}
         />
         <RNSVGDefs>
@@ -156,9 +156,9 @@ exports[`renders correctly 1`] = `
             gradient={
               Array [
                 0,
-                872349818,
+                871315086,
                 1,
-                16711802,
+                15677070,
               ]
             }
             gradientTransform={null}
@@ -281,7 +281,7 @@ exports[`renders correctly 1`] = `
             style={
               Array [
                 Object {
-                  "backgroundColor": "#FF007A",
+                  "backgroundColor": "#EF368E",
                   "borderRadius": 999999,
                   "display": "flex",
                   "height": 15,
@@ -333,7 +333,7 @@ exports[`renders correctly 1`] = `
         style={
           Array [
             Object {
-              "backgroundColor": "#FF007A",
+              "backgroundColor": "#EF368E",
               "borderRadius": 20,
               "display": "flex",
               "width": 140,
@@ -378,14 +378,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#FF007A",
+              "color": "#EF368E",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#FF007A",
+            "color": "#EF368E",
             "display": "flex",
             "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
@@ -464,14 +464,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#FF007A",
+              "color": "#EF368E",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#FF007A",
+            "color": "#EF368E",
             "display": "flex",
             "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
@@ -507,14 +507,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#FF007A",
+              "color": "#EF368E",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#FF007A",
+            "color": "#EF368E",
             "display": "flex",
             "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
@@ -550,14 +550,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#FF007A",
+              "color": "#EF368E",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#FF007A",
+            "color": "#EF368E",
             "display": "flex",
             "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,

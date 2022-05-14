@@ -18,9 +18,9 @@ export function TransferArrowButton({ name, onPress }: ArrowDownButtonProps) {
     <IconButton
       alignItems="center"
       alignSelf="center"
-      bg="gray50"
+      bg="deprecated_gray50"
       borderRadius="md"
-      icon={<ArrowDown color="textColor" height={30} width={30} />}
+      icon={<ArrowDown color="deprecated_textColor" height={30} width={30} />}
       justifyContent="center"
       name={name}
       onPress={onPress}

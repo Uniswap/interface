@@ -38,11 +38,14 @@ export function AddressDisplay({
     <Flex row alignItems="center" gap="sm">
       <Identicon address={validatedAddress} size={size} />
       <Flex gap={verticalGap}>
-        <Text color="textColor" testID={`address-display/name/${name}`} variant={variant}>
+        <Text
+          color="deprecated_textColor"
+          testID={`address-display/name/${name}`}
+          variant={variant}>
           {name}
         </Text>
         {alwaysShowAddress && (
-          <Text color="gray600" variant="bodySm">
+          <Text color="deprecated_gray600" variant="bodySm">
             {shortenAddress(validatedAddress)}
           </Text>
         )}

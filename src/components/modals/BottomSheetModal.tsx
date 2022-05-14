@@ -30,7 +30,7 @@ const HandleBar = () => {
   return (
     <Box
       alignSelf="center"
-      backgroundColor="gray400"
+      backgroundColor="deprecated_gray400"
       borderRadius="xs"
       height={4}
       mt="sm"

@@ -7,7 +7,7 @@ export function HomeScreen() {
   return (
     <Screen edges={['top', 'left', 'right']}>
       <Flex gap="md" mt="xl" mx="lg">
-        <Text color="gray600" variant="h3">
+        <Text color="deprecated_gray600" variant="h3">
           Under construction 🚧 🔨
         </Text>
       </Flex>

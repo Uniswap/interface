@@ -131,7 +131,7 @@ export function TokenDetailsScreen({
           <Box>
             {balance && (
               <>
-                <Text color="gray600" mx="lg" variant="bodyMd">
+                <Text color="deprecated_gray600" mx="lg" variant="bodyMd">
                   {t('Your balance')}
                 </Text>
                 <TokenBalanceItem balance={balance} />
@@ -156,13 +156,13 @@ export function TokenDetailsScreen({
                 onPress={onPressSell}
               />
               <IconButton
-                bg="gray100"
+                bg="deprecated_gray100"
                 borderRadius="md"
                 disabled={!balance}
                 icon={
                   <SendIcon
                     height={20}
-                    stroke={theme.colors.textColor}
+                    stroke={theme.colors.deprecated_textColor}
                     strokeWidth={1.5}
                     width={20}
                   />

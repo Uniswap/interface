@@ -29,17 +29,17 @@ export default {
   decorators: [
     (Story) => (
       <Flex row>
-        <Box bg="gray50" p="md" width={300}>
+        <Box bg="deprecated_gray50" p="md" width={300}>
           <Story />
         </Box>
-        <Flex bg="gray50" gap="xs" p="md">
-          <Text color="textColor" variant="bodyBold">
+        <Flex bg="deprecated_gray50" gap="xs" p="md">
+          <Text color="deprecated_textColor" variant="bodyBold">
             Mnemonic
           </Text>
           {SAMPLE_SEED.map((s, i) => (
             <Text
               key={s}
-              color={POSITIONS_TO_CONFIRM.includes(i) ? 'black' : 'gray400'}
+              color={POSITIONS_TO_CONFIRM.includes(i) ? 'black' : 'deprecated_gray400'}
               variant="body">
               {s}
             </Text>

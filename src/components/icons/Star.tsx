@@ -12,9 +12,9 @@ function _Star({ active, size }: Props) {
 
   return (
     <StarIcon
-      fill={active ? theme.colors.yellow : theme.colors.gray50}
+      fill={active ? theme.colors.deprecated_yellow : theme.colors.deprecated_gray50}
       height={size}
-      stroke={active ? theme.colors.yellow : theme.colors.gray400}
+      stroke={active ? theme.colors.deprecated_yellow : theme.colors.deprecated_gray400}
       width={size}
     />
   )

@@ -82,7 +82,7 @@ export const textVariants = {
   bodySmSoft: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 12,
-    color: 'gray600',
+    color: 'deprecated_gray600',
   },
   buttonLabel: {
     fontFamily: fontFamily.sansSerif.medium,

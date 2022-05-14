@@ -142,7 +142,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
             )}
             <Flex bg={collectionImageUrl ? 'imageTintBackground' : 'tabBackground'} gap="sm" p="md">
               <Text
-                color="gray400"
+                color="deprecated_gray400"
                 style={flex.fill}
                 variant="bodyMd">{t`From the Collection`}</Text>
               <Flex row alignItems="center" gap="xs">
@@ -163,7 +163,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           </Box>
           <Flex gap="md" mt="sm">
             <Text variant="h5">{t`Description`}</Text>
-            <Text color="gray400" variant="bodyMd">
+            <Text color="deprecated_gray400" variant="bodyMd">
               {collectionDescription}
             </Text>
           </Flex>

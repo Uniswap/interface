@@ -12,7 +12,7 @@ export default {
   },
   decorators: [
     (Story) => (
-      <Box bg="gray50" height={300} width={400}>
+      <Box bg="deprecated_gray50" height={300} width={400}>
         <Story />
       </Box>
     ),

@@ -50,13 +50,13 @@ export function BiometricModal({
       visible={show}>
       <Inset all="md">
         <Flex centered gap="lg">
-          <Flex centered bg="paleBlue" borderRadius="md" px="xxl" py="lg">
-            <FaceIdIcon color={theme.colors.blue} height={64} width={64} />
-            <Text color="blue" variant="bodyBold">
+          <Flex centered bg="deprecated_paleBlue" borderRadius="md" px="xxl" py="lg">
+            <FaceIdIcon color={theme.colors.deprecated_blue} height={64} width={64} />
+            <Text color="deprecated_blue" variant="bodyBold">
               {t('Face ID')}
             </Text>
           </Flex>
-          <Text color="gray400" variant="bodySm">
+          <Text color="deprecated_gray400" variant="bodySm">
             {t(
               'Face ID or Touch ID is required in this early release to help safeguard your assets.'
             )}

@@ -10,8 +10,8 @@ function _BlueToPinkRadial() {
     <Svg height="100%" width="100%">
       <Defs>
         <RadialGradient cy="-0.1" id="background" rx="4" ry="1">
-          <Stop offset="0" stopColor={theme.colors.secondary1} stopOpacity="1" />
-          <Stop offset="1" stopColor={theme.colors.primary1} stopOpacity="0" />
+          <Stop offset="0" stopColor={theme.colors.deprecated_secondary1} stopOpacity="1" />
+          <Stop offset="1" stopColor={theme.colors.deprecated_primary1} stopOpacity="0" />
         </RadialGradient>
       </Defs>
       {/* <Rect fill="#F5F4F5" height="100%" width="100%" x="0" y="0" /> */}

@@ -44,7 +44,7 @@
   "The address you typed either does not exist or is spelled incorrectly.": "The address you typed either does not exist or is spelled incorrectly.",
   "Input address or ENS": "Input address or ENS",
   "Be careful": "Be careful",
-  "Warning": "Warning",
+  "deprecated_warning": "deprecated_warning",
   "Not available for trading": "Not available for trading",
   "This token only appears on one partner token list or has low trade volume. Please research this token using the information and links below.": "This token only appears on one partner token list or has low trade volume. Please research this token using the information and links below.",
   "This token does not appear on any partner token lists or has very low trade volume. Please research this token using the information and links below.": "This token does not appear on any partner token lists or has very low trade volume. Please research this token using the information and links below.",

@@ -36,11 +36,14 @@ export function QuickDetails(props: QuickDetailsProps) {
         justifyContent="space-between">
         <Flex centered row gap="xs">
           <InfoCircle
-            color={label ? theme.colors.gray400 : theme.colors.mainForeground}
+            color={label ? theme.colors.deprecated_gray400 : theme.colors.mainForeground}
             height={20}
             width={20}
           />
-          <Text color={label ? 'gray400' : 'mainForeground'} fontWeight="500" variant="bodyMd">
+          <Text
+            color={label ? 'deprecated_gray400' : 'mainForeground'}
+            fontWeight="500"
+            variant="bodyMd">
             {label || formatExecutionPrice(trade?.executionPrice)}
           </Text>
         </Flex>

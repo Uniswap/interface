@@ -58,10 +58,10 @@ export function LandingScreen({ navigation }: Props) {
           <Box>
             <LinearGradientBox radius="lg" stops={RainbowLinearGradientStops}>
               <View style={styles.padded}>
-                <Box bg="background1" borderRadius="lg">
+                <Box bg="deprecated_background1" borderRadius="lg">
                   <Image
                     source={UNISWAP_SPLASH_LOGO}
-                    style={{ tintColor: theme.colors.textColor }}
+                    style={{ tintColor: theme.colors.deprecated_textColor }}
                   />
                 </Box>
               </View>
@@ -76,15 +76,15 @@ export function LandingScreen({ navigation }: Props) {
             <Flex
               row
               alignItems="center"
-              bg="background1"
-              borderColor="gray100"
+              bg="deprecated_background1"
+              borderColor="deprecated_gray100"
               borderRadius="md"
               borderWidth={1}
               gap="sm"
               px="lg"
               py="md">
-              <WalletIcon color={theme.colors.purple} height={15} width={15} />
-              <Text color="textColor" variant="h5">
+              <WalletIcon color={theme.colors.deprecated_purple} height={15} width={15} />
+              <Text color="deprecated_textColor" variant="h5">
                 {t('Create a Wallet')}
               </Text>
             </Flex>
@@ -96,15 +96,20 @@ export function LandingScreen({ navigation }: Props) {
             <Flex
               row
               alignItems="center"
-              bg="background1"
-              borderColor="gray100"
+              bg="deprecated_background1"
+              borderColor="deprecated_gray100"
               borderRadius="md"
               borderWidth={1}
               gap="sm"
               px="lg"
               py="md">
-              <Chevron color={theme.colors.purple} direction="s" height={15} width={15} />
-              <Text color="textColor" variant="h5">
+              <Chevron
+                color={theme.colors.deprecated_purple}
+                direction="s"
+                height={15}
+                width={15}
+              />
+              <Text color="deprecated_textColor" variant="h5">
                 {t('I Already Have a Wallet')}
               </Text>
             </Flex>
@@ -117,7 +122,7 @@ export function LandingScreen({ navigation }: Props) {
             pt="sm"
             onPress={onPressExplore}>
             <Text variant="bodySm">{t('Not ready? Try')}</Text>
-            <Text color="purple" variant="bodySm">
+            <Text color="deprecated_purple" variant="bodySm">
               {' '}
               {t('Exploring')}{' '}
             </Text>

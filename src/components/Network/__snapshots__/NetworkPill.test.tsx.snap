@@ -6,7 +6,7 @@ exports[`renders a NetworkPill with border 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#CED0D9",
+        "backgroundColor": "#C0C7DE",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -18,8 +18,8 @@ exports[`renders a NetworkPill with border 1`] = `
         "paddingVertical": 6,
       },
       Object {
-        "backgroundColor": "#FF007A1a",
-        "borderColor": "#FF007A",
+        "backgroundColor": "#EF368E1a",
+        "borderColor": "#EF368E",
       },
     ]
   }
@@ -34,7 +34,7 @@ exports[`renders a NetworkPill with border 1`] = `
           "marginRight": 6,
         },
         Object {
-          "borderColor": "#FF007A",
+          "borderColor": "#EF368E",
         },
       ]
     }
@@ -82,7 +82,7 @@ exports[`renders a NetworkPill with border 1`] = `
           "fontSize": 14,
         },
         Object {
-          "color": "#FF007A",
+          "color": "#EF368E",
         },
       ]
     }
@@ -98,7 +98,7 @@ exports[`renders a NetworkPill without image 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#CED0D9",
+        "backgroundColor": "#C0C7DE",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -110,7 +110,7 @@ exports[`renders a NetworkPill without image 1`] = `
         "paddingVertical": 6,
       },
       Object {
-        "backgroundColor": "#FF007A1a",
+        "backgroundColor": "#EF368E1a",
         "borderColor": "transparent",
       },
     ]
@@ -126,7 +126,7 @@ exports[`renders a NetworkPill without image 1`] = `
           "marginRight": 6,
         },
         Object {
-          "borderColor": "#FF007A",
+          "borderColor": "#EF368E",
         },
       ]
     }
@@ -174,7 +174,7 @@ exports[`renders a NetworkPill without image 1`] = `
           "fontSize": 14,
         },
         Object {
-          "color": "#FF007A",
+          "color": "#EF368E",
         },
       ]
     }

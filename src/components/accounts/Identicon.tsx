@@ -44,9 +44,9 @@ export function Identicon({ address, size = 36, ...rest }: Props) {
 export function useAddressColor(address: string, isDarkMode: boolean, offset = 1) {
   const palette = isDarkMode ? colorsDark : colorsLight
   const colorSeed = parseInt(address.at(-offset)!, 16)
-  if (colorSeed < 3) return palette.orange
-  if (colorSeed < 6) return palette.green
-  if (colorSeed < 9) return palette.pink
-  if (colorSeed < 12) return palette.blue
-  return palette.red
+  if (colorSeed < 3) return palette.deprecated_orange
+  if (colorSeed < 6) return palette.deprecated_green
+  if (colorSeed < 9) return palette.deprecated_pink
+  if (colorSeed < 12) return palette.deprecated_blue
+  return palette.deprecated_red
 }

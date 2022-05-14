@@ -93,11 +93,11 @@ function CustomizationSection({
           width="100%"
           onChangeText={(newName) => setAccountName(newName)}
         />
-        <Text color="textColor" opacity={0.7} variant="body">
+        <Text color="deprecated_textColor" opacity={0.7} variant="body">
           {shortenAddress(address)}
         </Text>
       </Flex>
-      <Flex centered bg="gray50" borderRadius="lg" p="lg">
+      <Flex centered bg="deprecated_gray50" borderRadius="lg" p="lg">
         <QRCode size={180} value={address} />
       </Flex>
     </Flex>

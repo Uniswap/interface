@@ -66,7 +66,7 @@ export function CloudBackupScreen({
       {/* keep spacing consistent when no errors with minHeight */}
       <Box minHeight={30}>
         {error ? (
-          <Text color="red" textAlign="center" variant="body">
+          <Text color="deprecated_red" textAlign="center" variant="body">
             {t('Incorrect order. Please try again.')}
           </Text>
         ) : null}
@@ -97,8 +97,8 @@ function PinInput({ length, setValue, value }: PinInputProps) {
           {[...Array(length)].map((_, i) => (
             <Box
               key={i}
-              bg={i < value.length ? 'textColor' : 'none'}
-              borderColor="gray600"
+              bg={i < value.length ? 'deprecated_textColor' : 'none'}
+              borderColor="deprecated_gray600"
               borderRadius="full"
               borderWidth={1}
               height={15}

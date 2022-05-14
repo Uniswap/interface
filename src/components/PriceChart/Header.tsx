@@ -65,7 +65,7 @@ export const Header = ({ graphs, index, isPanning, title, translation }: HeaderP
     isNaN(percentChange.value) ? '-' : `${round(percentChange.value, 2)}%`
   )
   const percentChangeLabelStyle = useAnimatedStyle(() => ({
-    color: percentChange.value > 0 ? theme.colors.green : theme.colors.red,
+    color: percentChange.value > 0 ? theme.colors.deprecated_green : theme.colors.deprecated_red,
   }))
 
   // retrieves date and formats it
@@ -89,7 +89,7 @@ export const Header = ({ graphs, index, isPanning, title, translation }: HeaderP
 
   return (
     <Flex centered flex={1} flexDirection="column" gap="xs">
-      <StyledReText color="gray200" text={header} variant="h4" />
+      <StyledReText color="deprecated_gray200" text={header} variant="h4" />
       <StyledReText color="mainForeground" fontSize={45} text={priceFormatted} />
       <StyledReText style={percentChangeLabelStyle} text={percentChangeFormatted} variant="h3" />
     </Flex>

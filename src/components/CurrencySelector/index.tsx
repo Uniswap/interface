@@ -61,7 +61,12 @@ export function CurrencySelector({
               <Text color="mainForeground" variant="h3">
                 {selectedCurrency.symbol}
               </Text>
-              <Chevron color={theme.colors.textColor} direction="e" height={8} width={12} />
+              <Chevron
+                color={theme.colors.deprecated_textColor}
+                direction="e"
+                height={8}
+                width={12}
+              />
             </Flex>
           ) : (
             <Flex centered row gap="xs" px="md" py="xs">

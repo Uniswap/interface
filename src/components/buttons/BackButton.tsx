@@ -19,7 +19,7 @@ export function BackButton({ onPressBack, size, ...rest }: Props) {
   return (
     <Button onPress={goBack} {...rest}>
       <Chevron
-        color={theme.colors.textColor}
+        color={theme.colors.deprecated_textColor}
         direction="w"
         height={size ?? 18}
         width={size ?? 18}

@@ -16,7 +16,7 @@ export default {
   component: Autocomplete,
   decorators: [
     (Story) => (
-      <Box bg="gray100" borderRadius="md" p="lg" width={400}>
+      <Box bg="deprecated_gray100" borderRadius="md" p="lg" width={400}>
         <Story />
       </Box>
     ),
@@ -50,7 +50,7 @@ export const Custom: ComponentStory<typeof Autocomplete> = (args) => (
     {...args}
     InitialComponent={
       <Flex>
-        <Text color="gray400">Can provide an initial component</Text>
+        <Text color="deprecated_gray400">Can provide an initial component</Text>
         <Text fontSize={16}>Suggestions</Text>
         <Flex>
           <Flex row alignItems="center" gap="sm">

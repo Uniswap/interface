@@ -107,7 +107,7 @@ function TokenMetadata({ pre, main, sub }: TokenMetadataProps) {
       <Box alignItems="flex-end" minWidth={70}>
         <Text variant="bodyBold">{main}</Text>
         {sub && (
-          <Text color="gray400" variant="bodySm">
+          <Text color="deprecated_gray400" variant="bodySm">
             {sub}
           </Text>
         )}

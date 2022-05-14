@@ -56,14 +56,14 @@ export function BackupScreen({ navigation }: Props) {
 
         <TextButton
           alignSelf="center"
-          bg="gray50"
+          bg="deprecated_gray50"
           borderRadius="md"
           px="md"
           py="sm"
-          textColor="textColor"
+          textColor="deprecated_textColor"
           textVariant="buttonLabel"
           onPress={onPressEducationButton}>
-          <Text color="yellow" fontSize={20}>
+          <Text color="deprecated_yellow" fontSize={20}>
             ✦{' '}
           </Text>
           {t("What's a seed phrase?")}
@@ -89,7 +89,7 @@ function BackupOptions({ backupMethods }: { backupMethods?: BackupType[] }) {
 
   const { navigate } = useOnboardingStackNavigation()
 
-  const spacer = <Box borderTopColor="gray50" borderTopWidth={1} />
+  const spacer = <Box borderTopColor="deprecated_gray50" borderTopWidth={1} />
   return (
     <Flex gap="lg">
       {spacer}
@@ -135,7 +135,7 @@ function BackupOptionButton({ icon, label, name, onPress, completed }: BackupOpt
           <Box height={40} width={40}>
             <LinearGradientBox radius="md" stops={RainbowLinearGradientStops}>
               <Box alignItems="center" justifyContent="center" style={styles.padded}>
-                <Box bg="gray50" borderRadius="md" height={38} p="sm" width={38}>
+                <Box bg="deprecated_gray50" borderRadius="md" height={38} p="sm" width={38}>
                   {icon}
                 </Box>
               </Box>
@@ -144,16 +144,20 @@ function BackupOptionButton({ icon, label, name, onPress, completed }: BackupOpt
           <Text variant="body">{label}</Text>
         </Flex>
         {completed ? (
-          <CheckmarkCircle backgroundColor="none" color={theme.colors.textColor} size={40} />
+          <CheckmarkCircle
+            backgroundColor="none"
+            color={theme.colors.deprecated_textColor}
+            size={40}
+          />
         ) : (
           <TextButton
-            bg="gray50"
+            bg="deprecated_gray50"
             borderRadius="lg"
             disabled={false}
             name={name}
             p="sm"
             testID={name}
-            textColor="textColor"
+            textColor="deprecated_textColor"
             textVariant="buttonLabel"
             onPress={onPress}>
             {t('+ Add')}

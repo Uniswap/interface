@@ -30,17 +30,17 @@ export function OutroScreen({}: Props) {
     <Screen>
       <Flex grow justifyContent="space-between" px="md" py="lg">
         <Flex centered grow gap="xl" mb="sm">
-          <Box borderColor="primary1" borderRadius="lg" borderWidth={2} padding="lg">
+          <Box borderColor="deprecated_primary1" borderRadius="lg" borderWidth={2} padding="lg">
             <QRCode
-              backgroundColor={theme.colors.background1}
-              color={theme.colors.primary1}
+              backgroundColor={theme.colors.deprecated_background1}
+              color={theme.colors.deprecated_primary1}
               size={190}
               value={activeAddress ?? ''}
             />
           </Box>
           <Flex centered gap="sm">
             <Text variant="h3">{t("You're ready to go!")}</Text>
-            <Text color="gray600" textAlign="center" variant="body">
+            <Text color="deprecated_gray600" textAlign="center" variant="body">
               {t(
                 'Transfer tokens to your wallet to make a swap or add assets to your watchlist to save them for later.'
               )}

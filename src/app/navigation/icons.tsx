@@ -13,7 +13,12 @@ export function HomeTabIcon({ focused }: NavIconProps) {
   const theme = useAppTheme()
 
   return (
-    <HomeIcon color={theme.colors.textColor} height={24} opacity={focused ? 1 : 0.6} width={24} />
+    <HomeIcon
+      color={theme.colors.deprecated_textColor}
+      height={24}
+      opacity={focused ? 1 : 0.6}
+      width={24}
+    />
   )
 }
 
@@ -21,18 +26,35 @@ export function WalletTabIcon({ focused }: NavIconProps) {
   const theme = useAppTheme()
 
   return (
-    <WalletIcon color={theme.colors.textColor} height={24} opacity={focused ? 1 : 0.6} width={24} />
+    <WalletIcon
+      color={theme.colors.deprecated_textColor}
+      height={24}
+      opacity={focused ? 1 : 0.6}
+      width={24}
+    />
   )
 }
 
 export function ExploreTabIcon({ focused }: NavIconProps) {
   const theme = useAppTheme()
 
-  return <SearchIcon color={theme.colors.textColor} opacity={focused ? 1 : 0.6} strokeWidth={2} />
+  return (
+    <SearchIcon
+      color={theme.colors.deprecated_textColor}
+      opacity={focused ? 1 : 0.6}
+      strokeWidth={2}
+    />
+  )
 }
 
 export function NFTTabIcon({ focused }: NavIconProps) {
   const theme = useAppTheme()
 
-  return <StackedIcon color={theme.colors.textColor} opacity={focused ? 1 : 0.6} strokeWidth={2} />
+  return (
+    <StackedIcon
+      color={theme.colors.deprecated_textColor}
+      opacity={focused ? 1 : 0.6}
+      strokeWidth={2}
+    />
+  )
 }

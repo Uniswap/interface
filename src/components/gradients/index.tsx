@@ -24,14 +24,17 @@ export function linearGradientStops(...colors: string[]): Stops {
 export function usePrimaryToSecondaryLinearGradient(): Stops {
   const theme = useAppTheme()
 
-  return useMemo(() => linearGradientStops(theme.colors.primary1, theme.colors.secondary1), [theme])
+  return useMemo(
+    () => linearGradientStops(theme.colors.deprecated_primary1, theme.colors.deprecated_secondary1),
+    [theme]
+  )
 }
 
 export function usePinkToBlueLinearGradient(): Stops {
   const theme = useAppTheme()
 
   return useMemo(
-    () => linearGradientStops(theme.colors.pink, theme.colors.background1),
-    [theme.colors.background1, theme.colors.pink]
+    () => linearGradientStops(theme.colors.deprecated_pink, theme.colors.deprecated_background1),
+    [theme.colors.deprecated_background1, theme.colors.deprecated_pink]
   )
 }

@@ -34,12 +34,12 @@ export function RecipientInputPanel({
   return (
     <Flex centered gap="sm">
       {recipientAddress && (
-        <Text color="gray400" variant="bodyMd">
+        <Text color="deprecated_gray400" variant="bodyMd">
           {t('To')}
         </Text>
       )}
       <Button
-        bg={recipientAddress ? 'tokenSelector' : 'primary1'}
+        bg={recipientAddress ? 'tokenSelector' : 'deprecated_primary1'}
         borderRadius="lg"
         name={ElementName.SelectRecipient}
         p="sm"

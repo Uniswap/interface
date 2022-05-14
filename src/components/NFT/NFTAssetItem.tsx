@@ -28,7 +28,7 @@ export function NFTAssetItem({ nft, size, onPress, ...rest }: Props) {
           imageUrl={imageUrl}
           width={size}
         />
-        <Text color="gray600" fontWeight="500" numberOfLines={1} variant="bodySm">
+        <Text color="deprecated_gray600" fontWeight="500" numberOfLines={1} variant="bodySm">
           {name}
         </Text>
       </Flex>

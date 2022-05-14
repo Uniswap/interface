@@ -29,12 +29,15 @@ export function CurrencySearchResultList({
       ListEmptyComponent={
         <Flex centered gap="sm" px="lg">
           <Text variant="h4">😔</Text>
-          <Text color="gray200" textAlign="center" variant="h4">
+          <Text color="deprecated_gray200" textAlign="center" variant="h4">
             {searchFilter
               ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
               : t('No tokens found')}
           </Text>
-          <TextButton name={ElementName.ClearSearch} textColor="blue" onPress={onClearSearchFilter}>
+          <TextButton
+            name={ElementName.ClearSearch}
+            textColor="deprecated_blue"
+            onPress={onClearSearchFilter}>
             {t('Clear Search')}
           </TextButton>
         </Flex>

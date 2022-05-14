@@ -25,7 +25,7 @@ export function Toast({ label, variant }: ToastProps) {
     <Box
       alignContent="center"
       alignSelf="stretch"
-      backgroundColor="background1"
+      backgroundColor="deprecated_background1"
       borderRadius="md"
       borderWidth={1}
       flexDirection="row"
@@ -63,10 +63,10 @@ function useVariantColor(variant: ToastProps['variant']) {
 
   switch (variant) {
     case ToastVariant.Pending:
-      return theme.colors.yellow
+      return theme.colors.deprecated_yellow
     case ToastVariant.Success:
-      return theme.colors.success
+      return theme.colors.deprecated_success
     case ToastVariant.Failed:
-      return theme.colors.error
+      return theme.colors.deprecated_error
   }
 }

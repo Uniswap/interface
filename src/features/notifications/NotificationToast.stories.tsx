@@ -11,7 +11,7 @@ export default {
   component: NotificationToast,
   decorators: [
     (Story) => (
-      <Box bg="gray50" p="md" width={300}>
+      <Box bg="deprecated_gray50" p="md" width={300}>
         <Story />
       </Box>
     ),

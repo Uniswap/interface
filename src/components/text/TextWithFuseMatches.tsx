@@ -20,7 +20,7 @@ export function TextWithFuseMatches({
 }: TextWithFuseMatchesProps & TextProps) {
   if (!matches || matches.length === 0) {
     return (
-      <Text color="textColor" numberOfLines={numberOfLines} variant={variant}>
+      <Text color="deprecated_textColor" numberOfLines={numberOfLines} variant={variant}>
         {text}
       </Text>
     )
@@ -50,13 +50,13 @@ export function TextWithFuseMatches({
       {pieces.map((p, i) => {
         if (p[1])
           return (
-            <Text key={`${i}${p[0]}`} color="textColor" variant={variant}>
+            <Text key={`${i}${p[0]}`} color="deprecated_textColor" variant={variant}>
               {p[0]}
             </Text>
           )
         else
           return (
-            <Text key={`${i}${p[0]}`} color="gray400" variant={variant}>
+            <Text key={`${i}${p[0]}`} color="deprecated_gray400" variant={variant}>
               {p[0]}
             </Text>
           )

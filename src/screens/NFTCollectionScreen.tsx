@@ -54,7 +54,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           )}
           <Flex
             bg={collection?.image_url ? 'imageTintBackground' : 'tabBackground'}
-            borderColor="gray100"
+            borderColor="deprecated_gray100"
             borderRadius="md"
             borderWidth={1}
             gap="sm"
@@ -76,7 +76,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               )}
             </Flex>
             {collection?.description && (
-              <Text color="gray400" variant="bodySm">
+              <Text color="deprecated_gray400" variant="bodySm">
                 {collection?.description}
               </Text>
             )}
@@ -117,7 +117,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             </Flex>
             <Flex flexDirection="row" gap="xl">
               <Flex gap="xs">
-                <Text color="gray400" variant="bodySm">
+                <Text color="deprecated_gray400" variant="bodySm">
                   {t('Items')}
                 </Text>
                 {collection?.stats.total_supply && (
@@ -127,7 +127,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 )}
               </Flex>
               <Flex gap="xs">
-                <Text color="gray400" variant="bodySm">
+                <Text color="deprecated_gray400" variant="bodySm">
                   {t('Owners')}
                 </Text>
                 {collection?.stats.num_owners && (
@@ -138,7 +138,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               </Flex>
               {collection?.stats.floor_price && (
                 <Flex gap="xs">
-                  <Text color="gray400" variant="bodySm">
+                  <Text color="deprecated_gray400" variant="bodySm">
                     {t('Floor')}
                   </Text>
                   <Text fontWeight="600" variant="h3">
@@ -150,8 +150,8 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           </Flex>
         </Box>
         <Button
-          bg="gray50"
-          borderColor="gray200"
+          bg="deprecated_gray50"
+          borderColor="deprecated_gray200"
           borderRadius="md"
           borderWidth={1}
           name={ElementName.NFTCollectionViewOnOpensea}

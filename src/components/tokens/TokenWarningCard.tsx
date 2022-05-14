@@ -44,13 +44,13 @@ function getColors(
 ): [string, keyof Theme['colors']] {
   switch (tokenWarningLevel) {
     case TokenWarningLevel.LOW:
-      return [theme.colors.yellow, 'yellow']
+      return [theme.colors.deprecated_yellow, 'deprecated_yellow']
     case TokenWarningLevel.MEDIUM:
-      return [theme.colors.red, 'red']
+      return [theme.colors.deprecated_red, 'deprecated_red']
     case TokenWarningLevel.BLOCKED:
-      return [theme.colors.gray400, 'gray400']
+      return [theme.colors.deprecated_gray400, 'deprecated_gray400']
     default:
-      return [theme.colors.gray400, 'gray400']
+      return [theme.colors.deprecated_gray400, 'deprecated_gray400']
   }
 }
 
@@ -99,7 +99,7 @@ export default function TokenWarningCard({
         )}
       </Flex>
       <Flex>
-        <Text color="gray600" fontSize={16}>
+        <Text color="deprecated_gray600" fontSize={16}>
           {getBodyText(tokenWarningLevel, t)}
         </Text>
       </Flex>

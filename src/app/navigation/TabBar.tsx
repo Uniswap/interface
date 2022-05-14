@@ -16,17 +16,17 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
   const isDarkMode = useColorScheme() === 'dark'
   const SwapTabIcon = (
     <SwapIcon
-      color={isDarkMode ? theme.colors.white : theme.colors.primary1}
+      color={isDarkMode ? theme.colors.white : theme.colors.deprecated_primary1}
       height={20}
       width={20}
     />
   )
 
   return (
-    <Box backgroundColor="background1" bottom={0} paddingBottom="md" width="100%">
+    <Box backgroundColor="deprecated_background1" bottom={0} paddingBottom="md" width="100%">
       <Box
         alignItems="center"
-        borderColor="background1"
+        borderColor="deprecated_background1"
         borderTopColor="lightBorder"
         borderWidth={1}
         flexDirection="row"
@@ -48,7 +48,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           <WalletTabIcon focused={state.index === 0} />
         </Button>
         <Box
-          shadowColor="primary1"
+          shadowColor="deprecated_primary1"
           shadowOffset={{ width: 0, height: 8 }}
           shadowOpacity={isDarkMode ? 0.4 : 0}
           shadowRadius={6}>

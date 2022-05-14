@@ -33,13 +33,13 @@ enum StepStatus {
 function renderStepStatus(status: StepStatus) {
   switch (status) {
     case StepStatus.Done:
-      return <CheckmarkCircle backgroundColor="primary1" size={25} />
+      return <CheckmarkCircle backgroundColor="deprecated_primary1" size={25} />
     case StepStatus.InProgress:
-      return <EmptyCircle borderColor="primary1" size={25} />
+      return <EmptyCircle borderColor="deprecated_primary1" size={25} />
     case StepStatus.Loading:
       return <ActivityIndicator size={25} />
     case StepStatus.NotStarted:
-      return <EmptyCircle borderColor="gray600" size={25} />
+      return <EmptyCircle borderColor="deprecated_gray600" size={25} />
   }
 }
 
@@ -52,10 +52,10 @@ function Step({ status, text }: { status: StepStatus; text: string }) {
       <Text
         color={
           status === StepStatus.Done
-            ? 'secondary1'
+            ? 'deprecated_secondary1'
             : status === StepStatus.NotStarted
-            ? 'gray600'
-            : 'primary1'
+            ? 'deprecated_gray600'
+            : 'deprecated_primary1'
         }
         style={textStyle}
         variant="bodyLg">
@@ -317,13 +317,13 @@ export function LedgerScreen({ navigation }: AccountStackScreenProp<Screens.Impo
             alignSelf="center"
             mt="md"
             name={ElementName.Restart}
-            textColor="primary1"
+            textColor="deprecated_primary1"
             textVariant="body"
             onPress={onPressRestart}>
             {t('Restart Pairing')}
           </TextButton>
           {error && (
-            <Text color="red" variant="body">
+            <Text color="deprecated_red" variant="body">
               {error}
             </Text>
           )}

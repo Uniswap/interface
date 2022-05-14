@@ -24,11 +24,11 @@ export function DynamicThemeProvider({ children }: PropsWithChildren<{}>) {
       ...baseTheme,
       colors: {
         ...baseTheme.colors,
-        primary1: userPalette?.primary1 ?? primaryColor,
-        secondary1: userPalette?.secondary1 ?? secondaryColor,
-        ...(userPalette?.background1
+        deprecated_primary1: userPalette?.deprecated_primary1 ?? primaryColor,
+        deprecated_secondary1: userPalette?.deprecated_secondary1 ?? secondaryColor,
+        ...(userPalette?.deprecated_background1
           ? {
-              background1: userPalette.background1,
+              deprecated_background1: userPalette.deprecated_background1,
             }
           : {}),
       },
@@ -37,9 +37,9 @@ export function DynamicThemeProvider({ children }: PropsWithChildren<{}>) {
       baseTheme,
       primaryColor,
       secondaryColor,
-      userPalette?.background1,
-      userPalette?.primary1,
-      userPalette?.secondary1,
+      userPalette?.deprecated_background1,
+      userPalette?.deprecated_primary1,
+      userPalette?.deprecated_secondary1,
     ]
   )
 

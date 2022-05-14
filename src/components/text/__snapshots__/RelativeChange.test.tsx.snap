@@ -5,7 +5,7 @@ exports[`renders a relative change 1`] = `
   style={
     Array [
       Object {
-        "color": "#28CD88",
+        "color": "#1A9550",
         "display": "flex",
         "fontFamily": "UniswapSansBeta4-Regular",
         "fontSize": 12,
@@ -23,7 +23,7 @@ exports[`renders placeholders without a change 1`] = `
   style={
     Array [
       Object {
-        "color": "#888D9B",
+        "color": "#44495A",
         "display": "flex",
         "fontFamily": "UniswapSansBeta4-Regular",
         "fontSize": 12,

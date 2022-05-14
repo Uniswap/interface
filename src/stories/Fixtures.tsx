@@ -6,16 +6,16 @@ import { colorsDark, colorsLight, Palette } from 'src/styles/color'
 export function FlexWithChildren(props: ComponentProps<typeof FlexBase>) {
   return (
     <FlexBase {...props}>
-      <Box bg="primary1" borderRadius="sm">
+      <Box bg="deprecated_primary1" borderRadius="sm">
         <Inset all="lg" />
       </Box>
-      <Box bg="primary2" borderRadius="sm">
+      <Box bg="deprecated_primary2" borderRadius="sm">
         <Inset all="lg" />
       </Box>
-      <Box bg="primary3" borderRadius="sm">
+      <Box bg="deprecated_primary3" borderRadius="sm">
         <Inset all="lg" />
       </Box>
-      <Box bg="secondary1" borderRadius="sm">
+      <Box bg="deprecated_secondary1" borderRadius="sm">
         <Inset all="lg" />
       </Box>
     </FlexBase>

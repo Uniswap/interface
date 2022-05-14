@@ -36,7 +36,7 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
           <Text ellipsizeMode="tail" numberOfLines={1} variant="h4">
             {currency.name}
           </Text>
-          <Text color="gray600" variant="bodySm">{`${formatCurrencyAmount(amount)} ${
+          <Text color="deprecated_gray600" variant="bodySm">{`${formatCurrencyAmount(amount)} ${
             currency.symbol
           }`}</Text>
         </Flex>

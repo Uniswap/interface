@@ -28,41 +28,41 @@ export function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
   const gasFeeUSD = parseFloat(trade.quote!.gasUseEstimateUSD).toFixed(2)
 
   return (
-    <Flex borderColor="gray100" borderRadius="md" borderWidth={1} gap="xs" p="md">
-      <Text color="textColor" variant="h6">
+    <Flex borderColor="deprecated_gray100" borderRadius="md" borderWidth={1} gap="xs" p="md">
+      <Text color="deprecated_textColor" variant="h6">
         {t('Transaction Details')}
       </Text>
-      <Box bg="gray100" height={1} my="xs" />
+      <Box bg="deprecated_gray100" height={1} my="xs" />
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {t('Expected Output')}
         </Text>
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {`${formatCurrencyAmount(currencyOut)} ${currencyOut?.currency.symbol}`}
         </Text>
       </Box>
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {t('Price Impact')}
         </Text>
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {trade.priceImpact ? `${trade.priceImpact.multiply(-1).toFixed(2)}%` : '-'}
         </Text>
       </Box>
-      <Box bg="gray100" height={1} my="xs" />
+      <Box bg="deprecated_gray100" height={1} my="xs" />
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {`${t('Min. received after slippage')} (${DEFAULT_SLIPPAGE_TOLERANCE}%)`}
         </Text>
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {`${formatPrice(minReceived).replace('$', '')} ${currencyOut?.currency.symbol}`}
         </Text>
       </Box>
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {t('Network Fee')}
         </Text>
-        <Text color="gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="h6">
           {`~$${gasFeeUSD}`}
         </Text>
       </Box>

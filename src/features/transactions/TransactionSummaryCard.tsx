@@ -38,7 +38,7 @@ export function TransactionSummaryCard({ tx }: { tx: TransactionDetails }) {
   return (
     <Flex
       alignItems="center"
-      borderColor="gray200"
+      borderColor="deprecated_gray200"
       borderRadius="lg"
       borderWidth={1}
       flexDirection="row"
@@ -89,7 +89,7 @@ export function HistoricalTransactionSummaryCard({ tx }: { tx: Transaction }) {
     <Flex
       row
       alignItems="center"
-      borderColor="gray200"
+      borderColor="deprecated_gray200"
       borderRadius="lg"
       borderWidth={1}
       gap="md"

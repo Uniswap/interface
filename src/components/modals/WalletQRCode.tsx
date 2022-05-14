@@ -42,7 +42,7 @@ export function WalletQRCode({ address, isVisible, onClose }: Props) {
     <BottomSheetModal isVisible={isVisible} name={ModalName.WalletQRCode} onClose={onClose}>
       <Box alignItems="center" marginBottom="lg" p="lg">
         <Flex alignItems="center" gap="sm">
-          <Text color="gray400" variant="body">
+          <Text color="deprecated_gray400" variant="body">
             {t`Receive funds`}
           </Text>
           <AddressDisplay address={address} variant="bodyMd" />
@@ -61,7 +61,7 @@ export function WalletQRCode({ address, isVisible, onClose }: Props) {
           <PrimaryCopyTextButton
             copyText={address}
             flex={1}
-            icon={<CopySheets height={18} stroke={theme.colors.textColor} width={18} />}
+            icon={<CopySheets height={18} stroke={theme.colors.deprecated_textColor} width={18} />}
             label={t`Copy`}
             variant="gray"
           />

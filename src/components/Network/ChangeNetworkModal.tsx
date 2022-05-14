@@ -26,7 +26,11 @@ export function ChangeNetworkModal({ chainId, setChainId, onPressClose }: Change
           onPressClose()
         }}
       />
-      <TextButton alignSelf="center" textColor="blue" textVariant="h4" onPress={onPressClose}>
+      <TextButton
+        alignSelf="center"
+        textColor="deprecated_blue"
+        textVariant="h4"
+        onPress={onPressClose}>
         {t('Close')}
       </TextButton>
     </Flex>

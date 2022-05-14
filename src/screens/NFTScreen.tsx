@@ -54,12 +54,12 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
         <Text variant="h3">{t('Collectibles')}</Text>
       </Box>
       {isLoading ? (
-        <ActivityIndicator color={theme.colors.gray100} size={25} />
+        <ActivityIndicator color={theme.colors.deprecated_gray100} size={25} />
       ) : (
         <FlatList
           ListEmptyComponent={
             <CenterBox m="md">
-              <Text color="gray200" variant={'bodyBold'}>
+              <Text color="deprecated_gray200" variant={'bodyBold'}>
                 {t('No NFTs found')}
               </Text>
             </CenterBox>

@@ -58,7 +58,7 @@ export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) =>
             justifyContent="center"
             style={[styles.cursor, cursorAnimatedStyles]}
             width={CURSOR_SIZE}>
-            <Box bg="primary1" borderRadius="full" height={15} width={15} />
+            <Box bg="deprecated_primary1" borderRadius="full" height={15} width={15} />
           </AnimatedBox>
         </AnimatedBox>
       </PanGestureHandler>

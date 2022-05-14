@@ -51,7 +51,7 @@ export function Shimmer({ children }: Props) {
         width: layout.width,
         height: layout.height,
       }}>
-      <Box backgroundColor="gray50" flexGrow={1} overflow="hidden" />
+      <Box backgroundColor="deprecated_gray50" flexGrow={1} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
           maskElement={

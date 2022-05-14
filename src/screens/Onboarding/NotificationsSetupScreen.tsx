@@ -45,7 +45,7 @@ export function NotificationsSetupScreen({ navigation }: Props) {
           />
           <TextButton
             name={ElementName.Skip}
-            textColor="textColor"
+            textColor="deprecated_textColor"
             textVariant="buttonLabel"
             onPress={onPressNext}>
             {t('Skip for now')}

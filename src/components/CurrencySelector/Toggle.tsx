@@ -11,7 +11,7 @@ interface ToggleProps {
 export function Toggle({ children, filled, onToggle, testID }: PropsWithChildren<ToggleProps>) {
   return (
     <Button
-      bg={filled ? 'primary1' : 'tokenSelector'}
+      bg={filled ? 'deprecated_primary1' : 'tokenSelector'}
       borderRadius="full"
       name={ElementName.CurrencySelectorToggle}
       testID={testID}

@@ -43,15 +43,15 @@ export function FilterGroup({
         <Flex row gap="none">
           <Button mr="sm" name={ElementName.FavoritesFilter} onPress={onPressFavorites}>
             <Pill
-              backgroundColor="gray100"
-              borderColor={selected === 'favorites' ? 'gray600' : 'gray50'}
-              foregroundColor={theme.colors.textColor}
+              backgroundColor="deprecated_gray100"
+              borderColor={selected === 'favorites' ? 'deprecated_gray600' : 'deprecated_gray50'}
+              foregroundColor={theme.colors.deprecated_textColor}
               height={36}
               icon={
                 <StarIcon
-                  fill={theme.colors.yellow}
+                  fill={theme.colors.deprecated_yellow}
                   height={20}
-                  stroke={theme.colors.yellow}
+                  stroke={theme.colors.deprecated_yellow}
                   width={20}
                 />
               }
@@ -60,9 +60,9 @@ export function FilterGroup({
           </Button>
           <Button mr="sm" name={ElementName.Reset} onPress={onReset}>
             <Pill
-              backgroundColor="gray100"
-              borderColor={selected === 'reset' ? 'gray600' : 'gray50'}
-              foregroundColor={theme.colors.textColor}
+              backgroundColor="deprecated_gray100"
+              borderColor={selected === 'reset' ? 'deprecated_gray600' : 'deprecated_gray50'}
+              foregroundColor={theme.colors.deprecated_textColor}
               height={36}
               label={resetButtonLabel}
             />

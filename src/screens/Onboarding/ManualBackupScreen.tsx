@@ -91,7 +91,7 @@ export function ManualBackupScreen({ navigation }: Props) {
                 value={acknowledged}
                 onValueChange={(newValue: boolean) => setAcknowledged(newValue)}
               />
-              <Text color="gray600" style={styles.switchLabel} variant="bodySm">
+              <Text color="deprecated_gray600" style={styles.switchLabel} variant="bodySm">
                 {t(
                   'I acknowledge that if I lose my seed phrase, Uniswap Labs can’t recover my wallet.'
                 )}
@@ -130,7 +130,7 @@ export function ManualBackupScreen({ navigation }: Props) {
           )}
           title={t('Confirm your seed phrase')}>
           {inputIsInvalid ? (
-            <Text color="red" textAlign="center" variant="body">
+            <Text color="deprecated_red" textAlign="center" variant="body">
               {t('Incorrect order. Please try again.')}
             </Text>
           ) : null}
@@ -150,7 +150,7 @@ export function ManualBackupScreen({ navigation }: Props) {
 
 function EducationSection() {
   const { t } = useTranslation()
-  const spacer = <Box borderTopColor="gray50" borderTopWidth={1} />
+  const spacer = <Box borderTopColor="deprecated_gray50" borderTopWidth={1} />
   return (
     <Flex gap="lg">
       {spacer}
@@ -195,7 +195,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
             <LinearGradientBox radius="md" stops={RainbowLinearGradientStops}>
               {/* TODO: simplify Rainbow border */}
               <Box alignItems="center" justifyContent="center" style={styles.padded}>
-                <Box bg="gray50" borderRadius="md" height={38} p="sm" width={38}>
+                <Box bg="deprecated_gray50" borderRadius="md" height={38} p="sm" width={38}>
                   {icon}
                 </Box>
               </Box>
@@ -203,7 +203,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
           </Box>
           <Flex flex={1} gap="none">
             <Text variant="body">{label}</Text>
-            <Text color="gray600" variant="bodySm">
+            <Text color="deprecated_gray600" variant="bodySm">
               {sublabel}
             </Text>
           </Flex>

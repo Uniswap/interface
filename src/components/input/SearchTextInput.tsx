@@ -23,7 +23,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
     clearIcon,
     disableClearable,
     endAdornment = (
-      <SearchIcon height={20} stroke={theme.colors.gray600} strokeWidth={2} width={20} />
+      <SearchIcon height={20} stroke={theme.colors.deprecated_gray600} strokeWidth={2} width={20} />
     ),
     onChangeText,
     placeholder,
@@ -36,7 +36,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
     <Flex
       row
       alignItems="center"
-      backgroundColor="gray50"
+      backgroundColor="deprecated_gray50"
       borderRadius="lg"
       flex={1}
       flexGrow={1}
@@ -49,7 +49,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
         fontSize={16}
         fontWeight="500"
         placeholder={placeholder}
-        placeholderTextColor="gray400"
+        placeholderTextColor="deprecated_gray400"
         value={value ?? undefined}
         onChangeText={onChangeText}
       />
@@ -69,8 +69,12 @@ interface ClearButtonProps {
 function ClearButton(props: ClearButtonProps) {
   const theme = useAppTheme()
 
-  const { onPress, clearIcon = <X height={12} stroke={theme.colors.textColor} width={12} /> } =
-    props
+  const {
+    onPress,
+    clearIcon = <X height={12} stroke={theme.colors.deprecated_textColor} width={12} />,
+  } = props
 
-  return <IconButton bg="gray200" borderRadius="full" icon={clearIcon} onPress={onPress} />
+  return (
+    <IconButton bg="deprecated_gray200" borderRadius="full" icon={clearIcon} onPress={onPress} />
+  )
 }

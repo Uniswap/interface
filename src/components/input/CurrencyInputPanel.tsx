@@ -78,7 +78,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
           {/* TODO: add usd toggle
           {price && (
-            <Text color="gray600" variant="bodyMd">
+            <Text color="deprecated_gray600" variant="bodyMd">
               {t('({{price}})', { price: formatPrice(price) })}
             </Text>
           )} */}

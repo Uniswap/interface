@@ -13,19 +13,19 @@ interface WordPillProps {
 export function WordPill({ label, position, active, disabled }: WordPillProps) {
   return (
     <Pill
-      bg={active ? 'gray200' : 'none'}
-      borderColor={active ? 'gray400' : 'gray200'}
+      bg={active ? 'deprecated_gray200' : 'none'}
+      borderColor={active ? 'deprecated_gray400' : 'deprecated_gray200'}
       justifyContent="flex-start"
       opacity={disabled ? 0.5 : 1}
       px="sm">
       <Flex row gap="sm">
         {position ? (
-          <Text color="gray600" variant="body">
+          <Text color="deprecated_gray600" variant="body">
             {position}
           </Text>
         ) : null}
         {label ? (
-          <Text color="textColor" variant="body">
+          <Text color="deprecated_textColor" variant="body">
             {label}
           </Text>
         ) : null}

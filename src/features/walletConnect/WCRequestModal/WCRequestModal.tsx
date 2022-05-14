@@ -117,7 +117,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails dapp={request.dapp} method={request.type} />
         <Flex
-          borderColor="gray100"
+          borderColor="deprecated_gray100"
           borderRadius="lg"
           borderWidth={1}
           gap="sm"
@@ -137,9 +137,9 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
             borderRadius="lg"
             gap="sm"
             padding="md"
-            style={{ backgroundColor: opacify(5, theme.colors.yellow) }}>
-            <AlertTriangle height={22} stroke={theme.colors.yellow} width={22} />
-            <Text color="yellow" textAlign="center" variant="body">
+            style={{ backgroundColor: opacify(5, theme.colors.deprecated_yellow) }}>
+            <AlertTriangle height={22} stroke={theme.colors.deprecated_yellow} width={22} />
+            <Text color="deprecated_yellow" textAlign="center" variant="body">
               {t('This method of authorization could be insecure.')}
             </Text>
             <PrimaryButton
@@ -151,8 +151,13 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
           </Flex>
         ) : null}
 
-        <Flex row backgroundColor="gray50" borderRadius="lg" justifyContent="space-between" p="md">
-          <Text color="gray600" variant="body">
+        <Flex
+          row
+          backgroundColor="deprecated_gray50"
+          borderRadius="lg"
+          justifyContent="space-between"
+          p="md">
+          <Text color="deprecated_gray600" variant="body">
             {t('Signing as')}
           </Text>
           <AddressDisplay address={request.account} />
