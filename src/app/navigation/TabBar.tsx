@@ -33,11 +33,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         justifyContent="space-between"
         px="xl"
         py="md">
-        <Button
-          onPress={() => {
-            impactAsync()
-            navigation.navigate(Tabs.Home, { merge: true })
-          }}>
+        <Button onPress={() => {}}>
           <HomeTabIcon focused={state.index === 1} />
         </Button>
         <Button

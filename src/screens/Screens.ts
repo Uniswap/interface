@@ -24,6 +24,7 @@ export enum Screens {
   TabNavigator = 'TabNavigator',
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',
+  User = 'User',
   Welcome = 'Welcome',
 }
 
@@ -41,7 +42,7 @@ export enum OnboardingScreens {
 
 export enum Tabs {
   Explore = 'ExploreTab',
-  Home = 'HomeTab',
+  Profile = 'ProfileTab',
   NFT = 'NFTTab',
   Portfolio = 'PortfolioTab',
   Swap = 'SwapTab',

@@ -7,3 +7,9 @@ export const selectFavoriteTokensSet = createSelector(
   selectFavoriteTokens,
   (tokens) => new Set(tokens)
 )
+
+const selectFollowedAddresses = (state: RootState) => state.favorites.followedAddresses
+export const selectFollowedAddressSet = createSelector(
+  selectFollowedAddresses,
+  (following) => new Set(following)
+)

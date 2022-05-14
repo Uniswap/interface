@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import QRCode from 'react-native-qrcode-svg'
 import 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import CameraScan from 'src/assets/icons/camera-scan.svg'
+import QrScanIcon from 'src/assets/icons/qr-scan-icon.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { WalletQRCode } from 'src/components/modals/WalletQRCode'
 import { ChangeNetworkModal } from 'src/components/Network/ChangeNetworkModal'
 import { Text } from 'src/components/Text'
+import { ChainId } from 'src/constants/chains'
+import { useENS } from 'src/features/ens/useENS'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { DappConnectionItem } from 'src/features/walletConnect/DappConnectionItem'
@@ -20,8 +22,10 @@ import { QRCodeScanner } from 'src/features/walletConnect/QRCodeScanner'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { changeChainId, connectToApp } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletQRCode } from 'src/features/walletConnect/WalletQRCode'
 import { dimensions } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
+import { opacify } from 'src/utils/colors'
 
 type Props = {
   isVisible: boolean
@@ -33,15 +37,17 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
   const activeAccount = useActiveAccount()
   const { sessions } = useWalletConnect(activeAccount?.address)
 
-  const [showQRModal, setShowQRModal] = useState(false)
+  const address = activeAccount?.address
+  const ens = useENS(ChainId.Mainnet, address)
+
+  const [showQRCode, setShowQRCode] = useState(false)
   const [showConnectedDapps, setShowConnectedDapps] = useState(false)
   const [showNetworkModal, setShowNetworkModal] = useState(false)
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
   const onCloseNetworkModal = () => setShowNetworkModal(false)
 
-  const onPressQRCode = () => setShowQRModal(true)
-  const onCloseQrCode = () => setShowQRModal(false)
+  const onPressQRCode = () => setShowQRCode(true)
 
   const theme = useAppTheme()
 
@@ -52,36 +58,42 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
     onClose()
   }
 
-  if (!activeAccount) return null
+  if (!activeAccount || !address) return null
 
   return (
     <BottomSheetModal
       fullScreen
       hideHandlebar
+      backgroundColor="black"
       isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
-      <WalletQRCode
-        address={activeAccount.address}
-        isVisible={showQRModal}
-        onClose={onCloseQrCode}
-      />
-      <Box flex={1}>
-        <Flex
-          centered
-          gap="md"
-          mt="sm"
-          position="absolute"
-          width={dimensions.fullWidth}
-          zIndex="modal">
-          <Box bg="deprecated_gray400" borderRadius="sm" height={4} width={40} />
-          <Flex centered row>
-            <WalletConnectLogo height={30} width={30} />
-            <Text color="deprecated_textColor" variant="bodyLgBold">
-              WalletConnect
+      <Flex
+        centered
+        gap="md"
+        mt="md"
+        position="absolute"
+        width={dimensions.fullWidth}
+        zIndex="modal">
+        <Box bg="deprecated_gray400" borderRadius="sm" height={4} width={40} />
+      </Flex>
+      <Box borderRadius="lg" flex={1} pt="xxl" style={ModalStyles.gradient}>
+        <Flex centered gap="sm">
+          <Text color="deprecated_textColor" variant="bodyLgBold">
+            {showQRCode ? ens.name ?? shortenAddress(address) : t('Scan a QR code')}
+          </Text>
+          <Flex centered row gap="sm">
+            {!showQRCode && <WalletConnectLogo height={16} width={16} />}
+            <Text variant="bodySmSoft">
+              {showQRCode
+                ? ens.name
+                  ? shortenAddress(address)
+                  : ''
+                : t('Use WalletConnect or send assets')}
             </Text>
           </Flex>
         </Flex>
+
         {/* This is temporary UI/UX and the mt is there because existing header is positioned absolute*/}
         {showConnectedDapps ? (
           <Flex grow mt="xxl" pt="lg">
@@ -101,27 +113,35 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
               )}
             />
           </Flex>
-        ) : (
+        ) : !showQRCode ? (
           <QRCodeScanner
             numConnections={sessions.length}
             onPressConnections={() => setShowConnectedDapps(true)}
             onScanCode={onScanCode}
           />
+        ) : (
+          <WalletQRCode address={activeAccount.address} />
         )}
       </Box>
       <Flex gap="sm" mb="xl" mt="md" mx="md">
-        {showConnectedDapps ? (
+        {showQRCode ? (
           <Button
-            backgroundColor="deprecated_gray100"
             borderRadius="lg"
-            name={ElementName.WalletConnectScan}
+            name={ElementName.QRCodeModalToggle}
             p="md"
-            onPress={() => setShowConnectedDapps(false)}>
-            <Flex row alignItems="center" gap="sm">
-              <CameraScan height={30} stroke={theme.colors.white} strokeWidth={20} width={40} />
+            style={{ backgroundColor: opacify(50, theme.colors.deprecated_gray100) }}
+            onPress={() => setShowQRCode(false)}>
+            <Flex row gap="sm">
+              <Flex
+                centered
+                backgroundColor="deprecated_background1"
+                borderRadius="sm"
+                padding="xs">
+                <QrScanIcon />
+              </Flex>
               <Flex flexGrow={1} gap="xxs">
-                <Text variant="bodyBold">{t('Scan code')}</Text>
-                <Text variant="bodySmSoft">{t('Scan QR code for Wallet Connect')}</Text>
+                <Text variant="bodyBold">{t('Scan a QR code')}</Text>
+                <Text variant="bodySmSoft">{t('Use WalletConnect or send assets')}</Text>
               </Flex>
               <Chevron
                 color={theme.colors.deprecated_textColor}
@@ -133,20 +153,18 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
           </Button>
         ) : (
           <Button
-            backgroundColor="deprecated_gray100"
             borderRadius="lg"
-            name={ElementName.WCViewDappConnections}
-            padding="md"
-            onPress={() => setShowConnectedDapps(true)}>
-            <Flex row alignItems="center" gap="sm">
-              <CameraScan height={30} stroke={theme.colors.white} strokeWidth={20} width={40} />
+            name={ElementName.QRCodeModalToggle}
+            p="md"
+            style={{ backgroundColor: opacify(50, theme.colors.deprecated_gray100) }}
+            onPress={onPressQRCode}>
+            <Flex row gap="sm">
+              <Flex centered backgroundColor="white" borderRadius="sm" padding="xs">
+                <QRCode size={30} value={activeAccount.address} />
+              </Flex>
               <Flex flexGrow={1} gap="xxs">
-                <Text variant="bodyBold">{t('Show Connected Dapps')}</Text>
-                <Text variant="bodySmSoft">
-                  {sessions.length === 1
-                    ? t('1 app connected')
-                    : t('{{numConnections}} apps connected', { numConnections: sessions.length })}
-                </Text>
+                <Text variant="bodyBold">{t('Show my QR code')}</Text>
+                <Text variant="bodySmSoft">{shortenAddress(activeAccount.address)}</Text>
               </Flex>
               <Chevron
                 color={theme.colors.deprecated_textColor}
@@ -157,28 +175,6 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
             </Flex>
           </Button>
         )}
-        <Button
-          backgroundColor="deprecated_gray100"
-          borderRadius="lg"
-          name={ElementName.QRCodeModalToggle}
-          p="md"
-          onPress={onPressQRCode}>
-          <Flex row gap="sm">
-            <Flex centered backgroundColor="white" borderRadius="sm" padding="xs">
-              <QRCode size={30} value={activeAccount.address} />
-            </Flex>
-            <Flex flexGrow={1} gap="xxs">
-              <Text variant="bodyBold">{t('Show my QR code')}</Text>
-              <Text variant="bodySmSoft">{shortenAddress(activeAccount.address)}</Text>
-            </Flex>
-            <Chevron
-              color={theme.colors.deprecated_textColor}
-              direction="e"
-              height="20"
-              width="10"
-            />
-          </Flex>
-        </Button>
       </Flex>
       <BottomSheetModal
         isVisible={showNetworkModal}
@@ -197,3 +193,10 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
     </BottomSheetModal>
   )
 }
+
+const ModalStyles = StyleSheet.create({
+  gradient: {
+    backgroundColor:
+      'linear-gradient(180deg, rgba(156, 136, 159, 0.2) 0%, rgba(156, 136, 159, 0) 100%), #181B24;',
+  },
+})

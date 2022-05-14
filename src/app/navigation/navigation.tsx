@@ -18,7 +18,6 @@ import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
-import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
@@ -34,6 +33,7 @@ import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSe
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { PortfolioScreen } from 'src/screens/PortfolioScreen'
+import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
@@ -43,6 +43,7 @@ import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
+import { UserScreen } from 'src/screens/UserScreen'
 import { dimensions } from 'src/styles/sizing'
 
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -56,7 +57,7 @@ function TabNavigator() {
   return (
     <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen component={PortfolioScreen} name={Tabs.Portfolio} options={navOptions.noHeader} />
-      <Tab.Screen component={HomeScreen} name={Tabs.Home} options={navOptions.noHeader} />
+      <Tab.Screen component={ProfileScreen} name={Tabs.Profile} options={navOptions.noHeader} />
       <Tab.Screen component={NFTScreen} name={Tabs.NFT} options={navOptions.noHeader} />
       <Tab.Screen component={ExploreScreen} name={Tabs.Explore} options={navOptions.noHeader} />
       <Tab.Screen component={View} name={Tabs.Swap} options={navOptions.noHeader} />
@@ -142,6 +143,7 @@ export function AppStackNavigator() {
       <AppStack.Group>
         <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
+        <AppStack.Screen component={UserScreen} name={Screens.User} />
       </AppStack.Group>
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />

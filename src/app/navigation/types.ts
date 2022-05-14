@@ -14,7 +14,7 @@ import { TransactionState } from 'src/features/transactions/transactionState/tra
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
 export type TabParamList = {
-  [Tabs.Home]: undefined
+  [Tabs.Profile]: undefined
   [Tabs.Portfolio]: undefined
   [Tabs.Swap]: { swapFormState?: TransactionState } | undefined
   [Tabs.Explore]: undefined
@@ -81,6 +81,7 @@ export type AppStackParamList = {
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.Transfer]: { transferFormState?: TransactionState } | undefined
   [Screens.TokenDetails]: { currency: Currency }
+  [Screens.User]: { address: string }
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

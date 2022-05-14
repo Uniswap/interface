@@ -7,11 +7,12 @@ import { Theme } from 'src/styles/theme'
 
 type Props = {
   size?: number
+  color?: keyof Theme['colors']
   onPressBack?: () => void
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function BackButton({ onPressBack, size, ...rest }: Props) {
+export function BackButton({ onPressBack, size, color, ...rest }: Props) {
   const navigation = useNavigation()
   const goBack = onPressBack ? onPressBack : () => navigation.goBack()
   const theme = useTheme<Theme>()
@@ -19,7 +20,7 @@ export function BackButton({ onPressBack, size, ...rest }: Props) {
   return (
     <Button onPress={goBack} {...rest}>
       <Chevron
-        color={theme.colors.deprecated_textColor}
+        color={color ?? theme.colors.deprecated_textColor}
         direction="w"
         height={size ?? 18}
         width={size ?? 18}

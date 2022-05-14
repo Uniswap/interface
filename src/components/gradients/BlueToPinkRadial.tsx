@@ -21,3 +21,21 @@ function _BlueToPinkRadial() {
 }
 
 export const BlueToPinkRadial = memo(_BlueToPinkRadial)
+
+function _BlueToDarkRadial() {
+  const theme = useAppTheme()
+
+  return (
+    <Svg height="100%" width="100%">
+      <Defs>
+        <RadialGradient cy="-0.1" id="background" rx="4" ry="1">
+          <Stop offset="0" stopColor={theme.colors.deprecated_secondary1} stopOpacity="1" />
+          <Stop offset="1" stopColor={theme.colors.black} stopOpacity="0" />
+        </RadialGradient>
+      </Defs>
+      <Rect fill="url(#background)" height="100%" opacity={0.2} width="100%" x="0" y="0" />
+    </Svg>
+  )
+}
+
+export const BlueToDarkRadial = memo(_BlueToDarkRadial)

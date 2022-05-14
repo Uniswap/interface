@@ -13,6 +13,7 @@ import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { dimensions } from 'src/styles/sizing'
+import { Theme } from 'src/styles/theme'
 
 type Props = {
   children: PropsWithChildren<any>
@@ -24,6 +25,7 @@ type Props = {
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
+  backgroundColor?: keyof Theme['colors']
 }
 
 const HandleBar = () => {
@@ -57,6 +59,7 @@ export function BottomSheetModal({
   stackBehavior = 'push',
   fullScreen,
   hideHandlebar,
+  backgroundColor,
 }: Props) {
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
@@ -78,7 +81,7 @@ export function BottomSheetModal({
     <BaseModal
       ref={modalRef}
       backdropComponent={Backdrop}
-      backgroundStyle={{ backgroundColor: theme.colors.mainBackground }}
+      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.mainBackground }}
       contentHeight={animatedContentHeight}
       handleComponent={hideHandlebar ? null : HandleBar}
       handleHeight={animatedHandleHeight}

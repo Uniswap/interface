@@ -85,6 +85,7 @@ export const enum ElementName {
   SellToken = 'sell-token',
   Send = 'send',
   Settings = 'settings',
+  ShareButton = 'share-button',
   Skip = 'skip',
   Submit = 'submit',
   Swap = 'swap',

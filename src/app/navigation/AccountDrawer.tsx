@@ -16,7 +16,6 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { WalletQRCode } from 'src/components/modals/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -28,6 +27,7 @@ import {
 } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
+import { WalletQRCode } from 'src/features/walletConnect/WalletQRCode'
 import { Screens } from 'src/screens/Screens'
 import { darkTheme, theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
@@ -203,7 +203,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           </Flex>
         </Flex>
       </Box>
-      <WalletQRCode address={qrCodeAddress} isVisible={showQRModal} onClose={onCloseQrCode} />
       <BottomSheetModal
         isVisible={showEditAccountModal}
         name={ModalName.Account}
@@ -264,6 +263,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           />
         </Box>
       )}
+      <BottomSheetModal
+        isVisible={showQRModal}
+        name={ModalName.WalletQRCode}
+        onClose={onCloseQrCode}>
+        <WalletQRCode address={qrCodeAddress} />
+      </BottomSheetModal>
     </SafeAreaView>
   )
 }
