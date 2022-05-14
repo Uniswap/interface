@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, Image, ListRenderItemInfo, Share, StyleSheet } from 'react-native'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { VERIFIED_ICON } from 'src/assets'
 import ShareIcon from 'src/assets/icons/share.svg'
+import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
@@ -47,7 +47,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
         <Box my="sm">
           {collection?.image_url && (
             <Image
-              blurRadius={5}
+              blurRadius={3}
               source={{ uri: collection.image_url }}
               style={[StyleSheet.absoluteFill, nftCollectionBlurImageStyle]}
             />
@@ -72,7 +72,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 {collectionName}
               </Text>
               {collection?.safelist_request_status === 'verified' && (
-                <Image height={25} source={VERIFIED_ICON} width={25} />
+                <VerifiedIcon height={16} width={16} />
               )}
             </Flex>
             {collection?.description && (

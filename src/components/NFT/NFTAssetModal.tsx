@@ -2,9 +2,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, Share, StyleSheet } from 'react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { VERIFIED_ICON } from 'src/assets'
 import SendIcon from 'src/assets/icons/send.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
+import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -132,7 +132,11 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           />
         </Flex>
         <Flex gap="sm">
-          <Box bg="tabBackground" borderRadius="md">
+          <Box
+            bg="tabBackground"
+            borderColor="deprecated_gray100"
+            borderRadius="md"
+            borderWidth={1}>
             {collectionImageUrl && (
               <Image
                 blurRadius={5}
@@ -140,7 +144,13 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
                 style={[StyleSheet.absoluteFill, nftCollectionBlurImageStyle]}
               />
             )}
-            <Flex bg={collectionImageUrl ? 'imageTintBackground' : 'tabBackground'} gap="sm" p="md">
+            <Flex
+              bg={collectionImageUrl ? 'imageTintBackground' : 'tabBackground'}
+              borderColor="deprecated_gray100"
+              borderRadius="md"
+              borderWidth={1}
+              gap="sm"
+              p="md">
               <Text
                 color="deprecated_gray400"
                 style={flex.fill}
@@ -155,9 +165,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
                 <Text ml="xs" variant="body">
                   {collectionName}
                 </Text>
-                {safelistRequestStatus === 'verified' && (
-                  <Image height={25} source={VERIFIED_ICON} width={25} />
-                )}
+                {safelistRequestStatus === 'verified' && <VerifiedIcon height={16} width={16} />}
               </Flex>
             </Flex>
           </Box>

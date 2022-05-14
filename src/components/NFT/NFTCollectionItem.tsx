@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { VERIFIED_ICON } from 'src/assets'
+import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { RemoteImage } from 'src/components/images/RemoteImage'
@@ -69,9 +69,7 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
               <Text numberOfLines={1} style={flex.shrink} variant="body">
                 {name}
               </Text>
-              {safelist_request_status === 'verified' && (
-                <Image height={20} source={VERIFIED_ICON} width={20} />
-              )}
+              {safelist_request_status === 'verified' && <VerifiedIcon height={16} width={16} />}
             </Flex>
             <Chevron color={theme.colors.deprecated_gray400} direction="e" height={16} width={16} />
           </Flex>

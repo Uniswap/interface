@@ -30,7 +30,6 @@ export function AccountHeader({ children, onPress }: AccountHeaderProps) {
         <AddressDisplay
           address={activeAccount?.address}
           fallback={t('Connect Wallet')}
-          override={activeAccount?.name}
           variant="buttonLabel"
         />
       </Button>

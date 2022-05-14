@@ -5,5 +5,5 @@ export const resizeModeContain: ImageResizeMode = 'contain'
 
 export const nftCollectionBlurImageStyle: ImageStyle = {
   borderRadius: theme.borderRadii.md,
-  opacity: 0.4,
+  opacity: 0.85,
 }
