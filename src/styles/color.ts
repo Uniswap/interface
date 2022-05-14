@@ -3,16 +3,16 @@
 export interface GlobalPalette {
   white: string
   black: string
-  grey50: string
-  grey100: string
-  grey200: string
-  grey300: string
-  grey400: string
-  grey500: string
-  grey600: string
-  grey700: string
-  grey800: string
-  grey900: string
+  gray50: string
+  gray100: string
+  gray200: string
+  gray300: string
+  gray400: string
+  gray500: string
+  gray600: string
+  gray700: string
+  gray800: string
+  gray900: string
   pink50: string
   pink100: string
   pink200: string
@@ -75,16 +75,16 @@ export interface GlobalPalette {
 export const colors: GlobalPalette = {
   white: '#FFFFFF',
   black: '#000000',
-  grey50: '#F4F6FE',
-  grey100: '#DBE1F5',
-  grey200: '#C0C7DE',
-  grey300: '#99A1BD',
-  grey400: '#747D9C',
-  grey500: '#5F667D',
-  grey600: '#44495A',
-  grey700: '#272A35',
-  grey800: '#181B24',
-  grey900: '#070A15',
+  gray50: '#F4F6FE',
+  gray100: '#DBE1F5',
+  gray200: '#C0C7DE',
+  gray300: '#99A1BD',
+  gray400: '#747D9C',
+  gray500: '#5F667D',
+  gray600: '#44495A',
+  gray700: '#272A35',
+  gray800: '#181B24',
+  gray900: '#070A15',
   pink50: '#FFF2F7',
   pink100: '#FFD7E3',
   pink200: '#FBA4C0',
@@ -171,23 +171,23 @@ export interface Palette {
   deprecated_warning: string
   deprecated_error: string
 
-  neutral0: string
-  neutral1: string
-  neutral2: string
-  neutral3: string
-  neutral4: string
-  primary: string
-  secondary: string
-  tertiary: string
-  accentAction: string
-  accentActionSoft: string
-  accentActive: string
-  accentSuccess: string
-  accentWarning: string
-  accentFailure: string
-  accentLabel1: string
-  accentLabel2: string
-  accentLabel3: string
+  neutralBackground: string
+  neutralSurface: string
+  neutralContainer: string
+  neutralAction: string
+  neutralOutline: string
+  neutralTextPrimary: string
+  neutralTextSecondary: string
+  neutralTextTertiary: string
+  accentBackgroundAction: string
+  accentBackgroundActionSoft: string
+  accentBackgroundActive: string
+  accentBackgroundSuccess: string
+  accentBackgroundWarning: string
+  accentBackgroundFailure: string
+  accentText1: string
+  accentText2: string
+  accentText3: string
 
   white: string
   black: string
@@ -213,13 +213,13 @@ export const colorsLight: Palette = {
   deprecated_primaryText: colors.pink400,
   deprecated_secondary1: colors.pink600,
   deprecated_secondary2: colors.pink500,
-  deprecated_background1: colors.grey50,
-  deprecated_textColor: colors.grey900,
-  deprecated_gray50: colors.grey50,
-  deprecated_gray100: colors.grey100,
-  deprecated_gray200: colors.grey200,
-  deprecated_gray400: colors.grey400,
-  deprecated_gray600: colors.grey600,
+  deprecated_background1: colors.gray50,
+  deprecated_textColor: colors.gray900,
+  deprecated_gray50: colors.gray50,
+  deprecated_gray100: colors.gray100,
+  deprecated_gray200: colors.gray200,
+  deprecated_gray400: colors.gray400,
+  deprecated_gray600: colors.gray600,
   deprecated_paleBlue: colors.blue50,
   deprecated_blue: colors.blue400,
   deprecated_green: colors.green400,
@@ -234,23 +234,23 @@ export const colorsLight: Palette = {
   deprecated_error: colors.red400,
   none: 'transparent',
 
-  neutral0: colors.white,
-  neutral1: colors.grey50,
-  neutral2: colors.grey100,
-  neutral3: colors.grey200,
-  neutral4: colors.grey400,
-  primary: colors.grey900,
-  secondary: colors.grey600,
-  tertiary: colors.grey400,
-  accentAction: colors.pink400,
-  accentActionSoft: colors.pink100,
-  accentActive: colors.blue400,
-  accentSuccess: colors.green400,
-  accentWarning: colors.yellow200,
-  accentFailure: colors.red400,
-  accentLabel1: 'rgba(0,0,0, 0.80)',
-  accentLabel2: 'rgba(0,0,0, 0.60)',
-  accentLabel3: 'rgba(0,0,0, 0.24)',
+  neutralBackground: colors.white,
+  neutralSurface: colors.gray50,
+  neutralContainer: colors.gray100,
+  neutralAction: colors.gray200,
+  neutralOutline: colors.gray400,
+  neutralTextPrimary: colors.gray900,
+  neutralTextSecondary: colors.gray600,
+  neutralTextTertiary: colors.gray400,
+  accentBackgroundAction: colors.pink400,
+  accentBackgroundActionSoft: colors.pink100,
+  accentBackgroundActive: colors.blue400,
+  accentBackgroundSuccess: colors.green400,
+  accentBackgroundWarning: colors.yellow200,
+  accentBackgroundFailure: colors.red400,
+  accentText1: 'rgba(0,0,0, 0.80)',
+  accentText2: 'rgba(0,0,0, 0.60)',
+  accentText3: 'rgba(0,0,0, 0.24)',
 
   white: colors.white,
   black: colors.black,
@@ -275,13 +275,13 @@ export const colorsDark: Palette = {
   deprecated_primaryText: colors.blue400,
   deprecated_secondary1: colors.blue600,
   deprecated_secondary2: colors.blue500,
-  deprecated_background1: colors.grey900,
+  deprecated_background1: colors.gray900,
   deprecated_textColor: colors.white,
-  deprecated_gray50: colors.grey600,
-  deprecated_gray100: colors.grey400,
-  deprecated_gray200: colors.grey200,
-  deprecated_gray400: colors.grey100,
-  deprecated_gray600: colors.grey50,
+  deprecated_gray50: colors.gray600,
+  deprecated_gray100: colors.gray400,
+  deprecated_gray200: colors.gray200,
+  deprecated_gray400: colors.gray100,
+  deprecated_gray600: colors.gray50,
   deprecated_paleBlue: colors.blue800,
   deprecated_blue: colors.blue400,
   deprecated_green: colors.green400,
@@ -295,23 +295,23 @@ export const colorsDark: Palette = {
   deprecated_warning: colors.yellow200,
   deprecated_error: colors.red400,
 
-  neutral0: colors.white,
-  neutral1: colors.grey50,
-  neutral2: colors.grey100,
-  neutral3: colors.grey200,
-  neutral4: colors.grey400,
-  primary: colors.grey900,
-  secondary: colors.grey600,
-  tertiary: colors.grey400,
-  accentAction: colors.pink400,
-  accentActionSoft: colors.pink100,
-  accentActive: colors.blue400,
-  accentSuccess: colors.green400,
-  accentWarning: colors.yellow200,
-  accentFailure: colors.red400,
-  accentLabel1: colors.white,
-  accentLabel2: 'rgba(255, 255, 255, 0.72)',
-  accentLabel3: 'rgba(255, 255, 255, 0.12)',
+  neutralBackground: colors.white,
+  neutralSurface: colors.gray50,
+  neutralContainer: colors.gray100,
+  neutralAction: colors.gray200,
+  neutralOutline: colors.gray400,
+  neutralTextPrimary: colors.gray900,
+  neutralTextSecondary: colors.gray600,
+  neutralTextTertiary: colors.gray400,
+  accentBackgroundAction: colors.pink400,
+  accentBackgroundActionSoft: colors.pink100,
+  accentBackgroundActive: colors.blue400,
+  accentBackgroundSuccess: colors.green400,
+  accentBackgroundWarning: colors.yellow200,
+  accentBackgroundFailure: colors.red400,
+  accentText1: colors.white,
+  accentText2: 'rgba(255, 255, 255, 0.72)',
+  accentText3: 'rgba(255, 255, 255, 0.12)',
 
   white: colors.white,
   black: colors.black,
