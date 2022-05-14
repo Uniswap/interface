@@ -83,7 +83,7 @@ const HeaderElement = styled.div`
 `
 
 const HeaderLinks = styled(Row)`
-  justify-self: start;
+  justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
   padding: 4px;
@@ -97,7 +97,7 @@ const HeaderLinks = styled(Row)`
     justify-self: start;  
     `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-self: center;
+    justify-self: start;
   `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
