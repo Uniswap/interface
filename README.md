@@ -40,6 +40,10 @@ See [stories/README.md](https://github.com/Uniswap/mobile/tree/main/src/stories/
 
 Start the mobile app by running `yarn ios` or `yarn android`. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.
 
+### Troubleshooting
+
+* `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`. Resolve this issue by navigating to the `ios/` directory and running `pod update`.
+
 ### I18n
 
 Stubs for new i18n strings used throughout the app can be generated automatically. Use the string as you would normally (e.g. `t('id')`) and then run `yarn i18n:extract`.
