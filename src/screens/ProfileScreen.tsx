@@ -16,9 +16,10 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
+import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { ChainId } from 'src/constants/chains'
 import { useFavoriteCurrencyBalances } from 'src/features/balances/hooks'
+import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useENS } from 'src/features/ens/useENS'
 import { selectFollowedAddressSet } from 'src/features/favorites/selectors'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -132,13 +133,16 @@ export function ProfileScreen({ navigation }: Props) {
           </Flex>
         </Flex>
         <Flex gap="xs" mt="lg" px="lg" width="100%">
-          <Text color="deprecated_gray400" variant="subHead1">
-            {t('Favorite Tokens')}
-          </Text>
           <TokenBalanceList
-            balances={favoriteBalances}
+            balances={favoriteBalances as PortfolioBalance[]}
+            header={
+              <Text color="deprecated_gray400" variant="subHead1">
+                {t('Favorite Tokens')}
+              </Text>
+            }
             loading={loading}
             refreshing={false}
+            view={ViewType.Flat}
             onPressToken={() => {}}
             onRefresh={() => {}}
           />

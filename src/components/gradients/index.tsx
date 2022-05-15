@@ -25,7 +25,7 @@ export function usePrimaryToSecondaryLinearGradient(): Stops {
   const theme = useAppTheme()
 
   return useMemo(
-    () => linearGradientStops(theme.colors.deprecated_primary1, theme.colors.deprecated_secondary1),
+    () => linearGradientStops(theme.colors.deprecated_primary1, theme.colors.mainBackground),
     [theme]
   )
 }

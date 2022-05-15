@@ -16,7 +16,7 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
 
-export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
+export function NFTScreen({ navigation }: TabScreenProp<Tabs.Profile>) {
   const [showNFTModal, setShowNFTModal] = useState(false)
   const [selectedNFTAsset, setSelectedNFTAsset] = useState<NFTAsset.Asset>()
 

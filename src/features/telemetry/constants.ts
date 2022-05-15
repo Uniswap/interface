@@ -91,7 +91,6 @@ export const enum ElementName {
   Swap = 'swap',
   SwapArrow = 'swap-arrow',
   SwapQuickDetails = 'swap-quick-details',
-  TabBarSwap = 'tab-bar-swap',
   TransactionSummaryHash = 'transaction-summary',
   TryAgain = 'try-again',
   Unwrap = 'unwrap',

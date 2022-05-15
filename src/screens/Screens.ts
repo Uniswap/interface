@@ -7,11 +7,15 @@ export enum Screens {
   Dev = 'Dev',
   Education = 'Education',
   Explore = 'Explore',
+  Home = 'Home',
   ImportAccount = 'ImportAccount',
   Ledger = 'Ledger',
   Notifications = 'Notifications',
   NFTCollection = 'NFTCollection',
+  NFTItem = 'NFTItem',
   OnboardingStack = 'OnboardingStack',
+  PortfolioTokens = 'PortfolioTokens',
+  PortfolioNFTs = 'PortfolioNFTs',
   RecipientSelector = 'RecipientSelector',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
@@ -42,8 +46,6 @@ export enum OnboardingScreens {
 
 export enum Tabs {
   Explore = 'ExploreTab',
-  Profile = 'ProfileTab',
-  NFT = 'NFTTab',
-  Portfolio = 'PortfolioTab',
-  Swap = 'SwapTab',
+  Home = 'HomeTab',
+  Profile = 'Profile',
 }

@@ -49,7 +49,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
         <Box my="sm">
           {collection?.image_url && (
             <Image
-              blurRadius={3}
+              blurRadius={5}
               source={{ uri: collection.image_url }}
               style={[StyleSheet.absoluteFill, nftCollectionBlurImageStyle]}
             />
@@ -74,7 +74,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 {collectionName}
               </Text>
               {collection?.safelist_request_status === 'verified' && (
-                <VerifiedIcon fill={theme.colors.deprecated_blue} height={16} width={16} />
+                <VerifiedIcon height={16} width={16} />
               )}
             </Flex>
             {collection?.description && (

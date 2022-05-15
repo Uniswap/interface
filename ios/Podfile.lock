@@ -891,6 +891,8 @@ PODS:
   - RNSentry (3.1.1):
     - React-Core
     - Sentry (= 7.3.0)
+  - RNSharedElement (0.8.4):
+    - React-Core
   - RNSVG (12.1.1):
     - React
   - Sentry (7.3.0):
@@ -973,6 +975,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
+  - RNSharedElement (from `../node_modules/react-native-shared-element`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - vision-camera-code-scanner (from `../node_modules/vision-camera-code-scanner`)
   - vision-camera-ocr (from `../node_modules/vision-camera-ocr`)
@@ -1135,6 +1138,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSentry:
     :path: "../node_modules/@sentry/react-native"
+  RNSharedElement:
+    :path: "../node_modules/react-native-shared-element"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   vision-camera-code-scanner:
@@ -1238,6 +1243,7 @@ SPEC CHECKSUMS:
   RNReanimated: e8afbe2a9e08e9e778ea72ddb1a8533445812621
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNSentry: 49abc89b0190b4c8afe0fa5d065f98e36cb53233
+  RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   Sentry: 9a4e621430e2dae4477d791f2f7e905720b6efbf
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0

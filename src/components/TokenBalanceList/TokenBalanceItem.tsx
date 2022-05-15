@@ -23,13 +23,7 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
   }
 
   return (
-    <Button
-      bg="none"
-      flexDirection="row"
-      justifyContent="space-between"
-      px="lg"
-      py="sm"
-      onPress={onPress}>
+    <Button bg="none" flexDirection="row" justifyContent="space-between" py="sm" onPress={onPress}>
       <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
         <CurrencyLogo currency={currency} size={40} />
         <Flex alignItems="flex-start" flexShrink={1} gap="xxs">

@@ -14,11 +14,17 @@ import { TransactionState } from 'src/features/transactions/transactionState/tra
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
 export type TabParamList = {
-  [Tabs.Profile]: undefined
-  [Tabs.Portfolio]: undefined
-  [Tabs.Swap]: { swapFormState?: TransactionState } | undefined
+  [Tabs.Home]: undefined
   [Tabs.Explore]: undefined
-  [Tabs.NFT]: undefined
+  [Tabs.Profile]: undefined
+}
+
+export type HomeStackParamList = {
+  [Screens.Home]: undefined
+  [Screens.PortfolioTokens]: undefined
+  [Screens.PortfolioNFTs]: undefined
+  [Screens.NFTItem]: { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
+    Pick<NFTAsset.Asset, 'token_id'>
 }
 
 export type AccountStackParamList = {
@@ -108,6 +114,16 @@ export type AccountStackNavigationProp = CompositeNavigationProp<
 export type AccountStackScreenProp<Screen extends keyof AccountStackParamList> =
   CompositeScreenProps<NativeStackScreenProps<AccountStackParamList, Screen>, AppStackScreenProps>
 
+export type HomeStackNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<HomeStackParamList>,
+  AppStackNavigationProp
+>
+
+export type HomeStackScreenProp<Screen extends keyof HomeStackParamList> = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParamList, Screen>,
+  AppStackScreenProps
+>
+
 export type SettingsStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<SettingsStackParamList>,
   AppStackNavigationProp
@@ -122,12 +138,14 @@ export type OnboardingStackNavigationProp = CompositeNavigationProp<
 >
 
 export type RootParamList = TabParamList &
+  HomeStackParamList &
   AccountStackParamList &
   SettingsStackParamList &
   OnboardingStackParamList &
   AppStackParamList
 
 export const useAppStackNavigation = () => useNavigation<AppStackNavigationProp>()
+export const useHomeStackNavigation = () => useNavigation<HomeStackNavigationProp>()
 export const useAccountStackNavigation = () => useNavigation<AccountStackNavigationProp>()
 export const useSettingsStackNavigation = () => useNavigation<SettingsStackNavigationProp>()
 export const useOnboardingStackNavigation = () => useNavigation<OnboardingStackNavigationProp>()

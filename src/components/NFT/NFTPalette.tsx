@@ -47,7 +47,6 @@ export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
       borderRadius="md"
       icon={<MagicWand color={theme.colors.deprecated_textColor} height={24} width={24} />}
       name={ElementName.ApplyThemeFromNFT}
-      variant="transparent"
       onPress={() => {
         if (!activeAccount) return
         const palette = (({ primary, secondary, background, detail }: IOSImageColors) => ({
