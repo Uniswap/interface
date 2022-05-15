@@ -76,7 +76,7 @@ export function DevScreen({ navigation }: any) {
       </Box>
       <ScrollView>
         <Box alignItems="center">
-          <Text textAlign="center" variant="h3">
+          <Text color="deprecated_textColor" textAlign="center" variant="h3">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
           <Text mt="md" textAlign="center" variant="h3">
@@ -89,6 +89,7 @@ export function DevScreen({ navigation }: any) {
                 m="xs"
                 name={`DEBUG_${s}`}
                 testID={`dev_screen/${s}`}
+                textColor="deprecated_textColor"
                 onPress={() => activateWormhole(s)}>
                 {s}
               </TextButton>
@@ -98,31 +99,55 @@ export function DevScreen({ navigation }: any) {
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
 
-          <TextButton mt="md" name="DEBUG_Create" onPress={onPressCreate}>
+          <TextButton
+            mt="md"
+            name="DEBUG_Create"
+            textColor="deprecated_textColor"
+            onPress={onPressCreate}>
             Create Account
           </TextButton>
-          <TextButton mt="sm" name="DEBUG_GetBalance" onPress={onPressGetBalance}>
+          <TextButton
+            mt="sm"
+            name="DEBUG_GetBalance"
+            textColor="deprecated_textColor"
+            onPress={onPressGetBalance}>
             Get Balance
           </TextButton>
-          <TextButton mt="sm" name="DEBUG_ToggleTestnets" onPress={onPressToggleTestnets}>
+          <TextButton
+            mt="sm"
+            name="DEBUG_ToggleTestnets"
+            textColor="deprecated_textColor"
+            onPress={onPressToggleTestnets}>
             Toggle Testnets
           </TextButton>
-          <TextButton mt="sm" name="DEBUG_ResetTokenWarnings" onPress={onPressResetTokenWarnings}>
+          <TextButton
+            mt="sm"
+            name="DEBUG_ResetTokenWarnings"
+            textColor="deprecated_textColor"
+            onPress={onPressResetTokenWarnings}>
             Reset Token Warnings
           </TextButton>
-          <TextButton mt="sm" name="DEBUG_ShowError" onPress={onPressShowError}>
+          <TextButton
+            mt="sm"
+            name="DEBUG_ShowError"
+            textColor="deprecated_textColor"
+            onPress={onPressShowError}>
             Show global error
           </TextButton>
-          <TextButton mt="sm" name="DEBUG_ResetOnboarding" onPress={onPressResetOnboarding}>
+          <TextButton
+            mt="sm"
+            name="DEBUG_ResetOnboarding"
+            textColor="deprecated_textColor"
+            onPress={onPressResetOnboarding}>
             Reset onboarding
           </TextButton>
-          <Text mt="xl" textAlign="center">
+          <Text color="deprecated_textColor" mt="xl" textAlign="center">
             {`Active Chains: ${activeChains}`}
           </Text>
-          <Text mt="sm" textAlign="center">
+          <Text color="deprecated_textColor" mt="sm" textAlign="center">
             {`Current Chain: ${currentChain}`}
           </Text>
-          <Text mt="sm" textAlign="center">
+          <Text color="deprecated_textColor" mt="sm" textAlign="center">
             {`Block Timestamp: ${blockTimestamp}`}
           </Text>
         </Box>

@@ -52,13 +52,13 @@ export function WalletQRCode({ address }: Props) {
         <PrimaryCopyTextButton
           copyText={address}
           flex={1}
-          icon={<CopySheets height={18} stroke={theme.colors.deprecated_textColor} width={18} />}
+          icon={<CopySheets color={theme.colors.deprecated_textColor} height={18} width={18} />}
           label={t`Copy`}
           style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray100) }}
         />
         <PrimaryButton
           flex={1}
-          icon={<ShareIcon height={18} stroke="white" width={18} />}
+          icon={<ShareIcon color="white" height={18} width={18} />}
           label={t`Share`}
           marginLeft="sm"
           style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray100) }}

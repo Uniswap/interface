@@ -20,8 +20,8 @@ export function BackX({ onPressBack, size, ...rest }: Props) {
   return (
     <Button name={ElementName.Back} onPress={goBack} {...rest}>
       <X
+        color={theme.colors.deprecated_textColor}
         height={size ?? 20}
-        stroke={theme.colors.deprecated_textColor}
         strokeLinecap="round"
         strokeWidth="2"
         width={size ?? 20}

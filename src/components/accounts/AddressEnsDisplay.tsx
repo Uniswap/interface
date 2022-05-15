@@ -56,7 +56,7 @@ export default function AddressEnsDisplay({
         </Text>
         {showCopy && !ens.name && (
           <Button name={ElementName.Copy} onPress={onPressCopyAddress}>
-            <CopyIcon height={mainSize} stroke={theme.colors[mainColor]} width={mainSize} />
+            <CopyIcon color={theme.colors[mainColor]} height={mainSize} width={mainSize} />
           </Button>
         )}
       </Flex>
@@ -69,8 +69,8 @@ export default function AddressEnsDisplay({
           {showCopy && (
             <Button name={ElementName.Copy} onPress={onPressCopyAddress}>
               <CopyIcon
+                color={theme.colors[secondaryColor]}
                 height={secondarySize}
-                stroke={theme.colors[secondaryColor]}
                 width={secondarySize}
               />
             </Button>

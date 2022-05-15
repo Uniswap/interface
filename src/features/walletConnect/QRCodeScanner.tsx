@@ -91,8 +91,8 @@ export function QRCodeScanner({
         {layout && (
           <Flex centered gap="lg" style={StyleSheet.absoluteFill}>
             <CameraScan
+              color={theme.colors.white}
               height={layout.width * SCAN_ICON_WIDTH_RATIO}
-              stroke={theme.colors.white}
               strokeWidth={5}
               width={layout.width * SCAN_ICON_WIDTH_RATIO}
             />
@@ -119,7 +119,7 @@ export function QRCodeScanner({
   }
 
   return (
-    <Flex centered flexGrow={1} gap="md">
+    <Flex centered backgroundColor="deprecated_background1" flexGrow={1} gap="md">
       <Text variant="h5">📸</Text>
       <Text variant="h5">{t('Please enable your camera.')}</Text>
       <PrimaryButton

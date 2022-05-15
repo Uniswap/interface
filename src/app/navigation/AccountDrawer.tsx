@@ -183,8 +183,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               testID={ElementName.ImportAccount}
               onPress={onPressNewAccount}>
               <Flex row gap="sm">
-                <PlusSquareIcon height={25} width={25} />
-                <Text color="deprecated_gray600" variant="h4">
+                <PlusSquareIcon color={theme.colors.deprecated_gray400} height={25} width={25} />
+                <Text color="deprecated_gray400" variant="h4">
                   {t('New account')}
                 </Text>
               </Flex>
@@ -194,8 +194,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               testID={ElementName.Settings}
               onPress={onPressSettings}>
               <Flex row gap="sm">
-                <SettingsIcon height={25} width={25} />
-                <Text color="deprecated_gray600" variant="h4">
+                <SettingsIcon color={theme.colors.deprecated_gray400} height={25} width={25} />
+                <Text color="deprecated_gray400" variant="h4">
                   {t('Settings')}
                 </Text>
               </Flex>
@@ -210,7 +210,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         <Flex centered gap="sm" p="md">
           <PrimaryButton
             disabled={isLoading}
-            icon={<EditIcon height={18} stroke={theme.colors.white} strokeWidth={2} width={18} />}
+            icon={<EditIcon color={theme.colors.white} height={18} strokeWidth={2} width={18} />}
             label={t('Rename Account')}
             name={ElementName.Rename}
             width="100%"
@@ -218,7 +218,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           />
           <PrimaryButton
             disabled={isLoading}
-            icon={<CopyIcon height={18} stroke={theme.colors.white} width={18} />}
+            icon={<CopyIcon color={theme.colors.white} height={18} width={18} />}
             label={t('Copy Address')}
             name={ElementName.Copy}
             width="100%"

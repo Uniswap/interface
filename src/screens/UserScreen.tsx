@@ -68,14 +68,14 @@ export function UserScreen({
         <Flex centered row gap="lg">
           <Button>
             <SendIcon
+              color={theme.colors.deprecated_gray600}
               height={24}
-              stroke={theme.colors.deprecated_gray600}
               strokeWidth={2.5}
               width={24}
             />
           </Button>
           <Button name={ElementName.ShareButton} onPress={onShare}>
-            <ShareIcon height={28} stroke={theme.colors.deprecated_gray600} width={28} />
+            <ShareIcon color={theme.colors.deprecated_gray600} height={28} width={28} />
           </Button>
         </Flex>
       </Flex>

@@ -63,8 +63,8 @@ export function DappConnectionItem({
             if (activeAccount) disconnectFromApp(wrapped.item.id, activeAccount.address)
           }}>
           <X
+            color={theme.colors.deprecated_textColor}
             height={16}
-            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="2.5"
             width={16}

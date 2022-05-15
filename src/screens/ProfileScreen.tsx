@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
-import QRIcon from 'src/assets/icons/qr-code-small.svg'
+import QRIcon from 'src/assets/icons/qr-code.svg'
 import Scan from 'src/assets/icons/scan.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import Settings from 'src/assets/icons/settings.svg'
@@ -71,11 +71,11 @@ export function ProfileScreen({ navigation }: Props) {
         <Flex centered row gap="md">
           {isWalletConnectSupportedAccount(activeAccount) && (
             <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-              <Scan height={20} stroke="gray100" width={20} />
+              <Scan color="gray100" height={20} width={20} />
             </Button>
           )}
           <Button name={ElementName.Settings} onPress={onPressSettings}>
-            <Settings height={24} stroke="gray100" width={24} />
+            <Settings color="gray100" height={24} width={24} />
           </Button>
         </Flex>
       </Flex>
@@ -99,8 +99,8 @@ export function ProfileScreen({ navigation }: Props) {
             p="md"
             style={{ backgroundColor: opacify(6, theme.colors.deprecated_blue) }}>
             <SendIcon
+              color={theme.colors.deprecated_textColor}
               height={16}
-              stroke={theme.colors.deprecated_textColor}
               strokeWidth={3}
               width={16}
             />

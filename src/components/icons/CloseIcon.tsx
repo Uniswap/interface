@@ -18,5 +18,5 @@ type Props = {
 
 export function CloseIcon({ size, ...rest }: Props) {
   const theme = useAppTheme()
-  return <X height={size} stroke={theme.colors.white} strokeWidth={3} width={size} {...rest} />
+  return <X color={theme.colors.white} height={size} strokeWidth={3} width={size} {...rest} />
 }

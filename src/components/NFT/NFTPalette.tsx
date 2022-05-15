@@ -45,7 +45,7 @@ export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
     <IconButton
       bg="deprecated_gray50"
       borderRadius="md"
-      icon={<MagicWand fill={theme.colors.deprecated_textColor} height={24} width={24} />}
+      icon={<MagicWand color={theme.colors.deprecated_textColor} height={24} width={24} />}
       name={ElementName.ApplyThemeFromNFT}
       variant="transparent"
       onPress={() => {

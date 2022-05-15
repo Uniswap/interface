@@ -155,7 +155,7 @@ function EducationSection() {
     <Flex gap="lg">
       {spacer}
       <EducationRow
-        icon={<CloudIcon height={20} stroke="white" width={20} />}
+        icon={<CloudIcon color="white" height={20} width={20} />}
         label={t('Write it down in private')}
         sublabel={t(
           "Ensure that you're in a private location and write down your seed phrase's words in order."
@@ -163,13 +163,13 @@ function EducationSection() {
       />
       {spacer}
       <EducationRow
-        icon={<CloudIcon height={20} stroke="white" width={20} />}
+        icon={<CloudIcon color="white" height={20} width={20} />}
         label={t('Keep it somewhere safe')}
         sublabel={t('Remember that anyone who has your seed phrase can access your wallet.')}
       />
       {spacer}
       <EducationRow
-        icon={<CloudIcon height={20} stroke="white" width={20} />}
+        icon={<CloudIcon color="white" height={20} width={20} />}
         label={t("Don't lose it")}
         sublabel={t(
           "If you lose your seed phrase, you'll lose access to your wallet and its contents."

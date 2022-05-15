@@ -69,7 +69,9 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
               <Text numberOfLines={1} style={flex.shrink} variant="body">
                 {name}
               </Text>
-              {safelist_request_status === 'verified' && <VerifiedIcon height={16} width={16} />}
+              {safelist_request_status === 'verified' && (
+                <VerifiedIcon fill={theme.colors.deprecated_blue} height={16} width={16} />
+              )}
             </Flex>
             <Chevron color={theme.colors.deprecated_gray400} direction="e" height={16} width={16} />
           </Flex>

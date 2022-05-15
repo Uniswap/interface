@@ -40,8 +40,8 @@ export function AccountItem({ account, isActive, onPress, onEdit }: Props) {
           {onEdit && (
             <Button mx="sm" my="md" name={ElementName.Edit} onPress={() => onEdit(address)}>
               <TripleDots
+                color={theme.colors.deprecated_textColor}
                 height={12}
-                stroke={theme.colors.deprecated_textColor}
                 strokeLinecap="round"
                 strokeWidth="2"
                 width={22}

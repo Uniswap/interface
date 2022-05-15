@@ -4,6 +4,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
 import Scan from 'src/assets/icons/scan.svg'
@@ -37,6 +38,7 @@ export function PortfolioScreen({ navigation }: Props) {
   useTestAccount()
 
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
@@ -89,14 +91,14 @@ export function PortfolioScreen({ navigation }: Props) {
           <Flex centered row>
             {isWalletConnectSupportedAccount(activeAccount) && (
               <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                <Scan height={20} stroke="deprecated_gray100" width={20} />
+                <Scan color={theme.colors.neutralTextTertiary} height={20} width={20} />
               </Button>
             )}
             <Button name={ElementName.Settings} onPress={onPressSettings}>
-              <Settings height={24} stroke="deprecated_gray100" width={24} />
+              <Settings color={theme.colors.neutralTextTertiary} height={24} width={24} />
             </Button>
             <Button name={ElementName.Notifications} onPress={onPressNotifications}>
-              <Clock height={24} stroke="deprecated_gray100" width={24} />
+              <Clock color={theme.colors.neutralTextTertiary} height={24} width={24} />
             </Button>
           </Flex>
         </Box>

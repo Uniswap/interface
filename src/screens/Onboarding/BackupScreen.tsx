@@ -95,7 +95,7 @@ function BackupOptions({ backupMethods }: { backupMethods?: BackupType[] }) {
       {spacer}
       <BackupOptionButton
         completed={backupMethods?.includes(BackupType.Cloud)}
-        icon={<CloudIcon height={20} stroke={theme.colors.white} width={20} />}
+        icon={<CloudIcon color={theme.colors.white} height={20} width={20} />}
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
         onPress={() => {
@@ -105,7 +105,7 @@ function BackupOptions({ backupMethods }: { backupMethods?: BackupType[] }) {
       {spacer}
       <BackupOptionButton
         completed={backupMethods?.includes(BackupType.Manual)}
-        icon={<PencilIcon height={20} stroke={theme.colors.white} width={20} />}
+        icon={<PencilIcon color={theme.colors.white} height={20} width={20} />}
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
         onPress={() => {

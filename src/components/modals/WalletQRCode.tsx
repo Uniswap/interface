@@ -61,13 +61,13 @@ export function WalletQRCode({ address, isVisible, onClose }: Props) {
           <PrimaryCopyTextButton
             copyText={address}
             flex={1}
-            icon={<CopySheets height={18} stroke={theme.colors.deprecated_textColor} width={18} />}
+            icon={<CopySheets color={theme.colors.deprecated_textColor} height={18} width={18} />}
             label={t`Copy`}
             variant="gray"
           />
           <PrimaryButton
             flex={1}
-            icon={<ShareIcon height={18} stroke="white" width={18} />}
+            icon={<ShareIcon color="white" height={18} width={18} />}
             label={t`Share`}
             marginLeft="sm"
             onPress={onShare}

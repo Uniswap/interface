@@ -107,14 +107,14 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           </Text>
           <Flex>
             <Button onPress={onPressShare}>
-              <ShareIcon height={24} width={24} />
+              <ShareIcon color={theme.colors.neutralTextTertiary} height={24} width={24} />
             </Button>
           </Flex>
         </Flex>
         <Flex centered row>
           <PrimaryButton
             flex={1}
-            icon={<OpenSeaIcon height={20} width={20} />}
+            icon={<OpenSeaIcon color={theme.colors.white} height={20} width={20} />}
             label={t('View')}
             name={ElementName.NFTAssetViewOnOpensea}
             testID={ElementName.NFTAssetViewOnOpensea}
@@ -123,7 +123,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           />
           <PrimaryButton
             flex={1}
-            icon={<SendIcon height={20} stroke={theme.colors.white} strokeWidth={2} width={20} />}
+            icon={<SendIcon color={theme.colors.white} height={20} strokeWidth={2} width={20} />}
             label={t('Send')}
             name={ElementName.Send}
             testID={ElementName.Send}
@@ -165,7 +165,9 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
                 <Text ml="xs" variant="body">
                   {collectionName}
                 </Text>
-                {safelistRequestStatus === 'verified' && <VerifiedIcon height={16} width={16} />}
+                {safelistRequestStatus === 'verified' && (
+                  <VerifiedIcon fill={theme.colors.deprecated_blue} height={16} width={16} />
+                )}
               </Flex>
             </Flex>
           </Box>

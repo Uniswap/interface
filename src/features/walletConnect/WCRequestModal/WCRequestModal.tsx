@@ -138,7 +138,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
             gap="sm"
             padding="md"
             style={{ backgroundColor: opacify(5, theme.colors.deprecated_yellow) }}>
-            <AlertTriangle height={22} stroke={theme.colors.deprecated_yellow} width={22} />
+            <AlertTriangle color={theme.colors.deprecated_yellow} height={22} width={22} />
             <Text color="deprecated_yellow" textAlign="center" variant="body">
               {t('This method of authorization could be insecure.')}
             </Text>

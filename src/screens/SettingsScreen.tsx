@@ -48,8 +48,8 @@ export function SettingsScreen() {
         // TODO use chains icon when available
         icon: (
           <ChatBubbleIcon
+            color={theme.colors.deprecated_textColor}
             height={20}
-            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -61,8 +61,8 @@ export function SettingsScreen() {
         text: t('Support'),
         icon: (
           <ChatBubbleIcon
+            color={theme.colors.deprecated_textColor}
             height={20}
-            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -74,8 +74,8 @@ export function SettingsScreen() {
         text: 'Test Configs',
         icon: (
           <ChatBubbleIcon
+            color={theme.colors.deprecated_textColor}
             height={20}
-            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -87,8 +87,8 @@ export function SettingsScreen() {
         text: t('Dev Options'),
         icon: (
           <CoffeeIcon
+            color={theme.colors.deprecated_textColor}
             height={20}
-            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
@@ -135,8 +135,8 @@ function OnboardingRow() {
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
           <StarIcon
+            color={theme.colors.deprecated_textColor}
             height={20}
-            stroke={theme.colors.deprecated_textColor}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}

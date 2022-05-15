@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, Image, ListRenderItemInfo, Share, StyleSheet } from 'react-native'
+import { useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
@@ -40,6 +41,7 @@ const ITEM_WIDTH =
 
 function NFTCollectionHeader({ collection, collectionName }: Props) {
   const { t } = useTranslation()
+  const appTheme = useAppTheme()
 
   return (
     <Trace section={SectionName.NFTCollectionHeader}>
@@ -72,7 +74,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 {collectionName}
               </Text>
               {collection?.safelist_request_status === 'verified' && (
-                <VerifiedIcon height={16} width={16} />
+                <VerifiedIcon fill={theme.colors.deprecated_blue} height={16} width={16} />
               )}
             </Flex>
             {collection?.description && (
@@ -159,7 +161,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           testID={ElementName.NFTCollectionViewOnOpensea}
           onPress={() => openUri(`https://opensea.io/collection/${collection?.slug}`)}>
           <Flex alignItems="center" flexDirection="row" gap="xs" justifyContent="center">
-            <OpenSeaIcon height={16} width={16} />
+            <OpenSeaIcon color={appTheme.colors.deprecated_textColor} height={16} width={16} />
             <Text variant="body">{t('View Collection')}</Text>
           </Flex>
         </Button>
@@ -175,6 +177,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   const [showNFTModal, setShowNFTModal] = useState(false)
   const [selectedNFTAsset, setSelectedNFTAsset] = useState<NFTAsset.Asset>()
   const { nftAssets } = route.params
+  const appTheme = useAppTheme()
 
   const { currentData: collection } = useNftCollectionQuery({
     openseaSlug: nftAssets[0].collection.slug,
@@ -218,7 +221,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
             {collection?.name}
           </Text>
           <Button onPress={onPressShare}>
-            <ShareIcon height={24} width={24} />
+            <ShareIcon color={appTheme.colors.neutralTextTertiary} height={24} width={24} />
           </Button>
         </Flex>
         <FlatList

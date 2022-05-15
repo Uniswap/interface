@@ -161,8 +161,8 @@ export function TokenDetailsScreen({
                 disabled={!balance}
                 icon={
                   <SendIcon
+                    color={theme.colors.deprecated_textColor}
                     height={20}
-                    stroke={theme.colors.deprecated_textColor}
                     strokeWidth={1.5}
                     width={20}
                   />

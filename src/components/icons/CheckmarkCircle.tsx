@@ -28,7 +28,7 @@ function _CheckmarkCircle({ color, size, ...rest }: Props) {
       justifyContent="center"
       width={size}
       {...rest}>
-      <Checkmark height={size / 2} stroke={color ?? theme.colors.white} width={size / 2} />
+      <Checkmark color={color ?? theme.colors.white} height={size / 2} width={size / 2} />
     </Box>
   )
 }
