@@ -13,7 +13,7 @@ export const RainbowLinearGradientStops: Stops = [
   { offset: '1', stopColor: '#7A58FF', stopOpacity: '56%' },
 ]
 
-export function linearGradientStops(...colors: string[]): Stops {
+export function getStops(...colors: string[]): Stops {
   return colors.map((c, i) => ({
     offset: (i * (1 / (colors.length - 1))).toString(),
     stopColor: c,
@@ -25,7 +25,7 @@ export function usePrimaryToSecondaryLinearGradient(): Stops {
   const theme = useAppTheme()
 
   return useMemo(
-    () => linearGradientStops(theme.colors.deprecated_primary1, theme.colors.mainBackground),
+    () => getStops(theme.colors.deprecated_primary1, theme.colors.deprecated_gray600),
     [theme]
   )
 }
@@ -34,7 +34,7 @@ export function usePinkToBlueLinearGradient(): Stops {
   const theme = useAppTheme()
 
   return useMemo(
-    () => linearGradientStops(theme.colors.deprecated_pink, theme.colors.deprecated_background1),
+    () => getStops(theme.colors.deprecated_pink, theme.colors.deprecated_background1),
     [theme.colors.deprecated_background1, theme.colors.deprecated_pink]
   )
 }

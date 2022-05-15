@@ -1,7 +1,7 @@
 import { DrawerActions } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -14,8 +14,8 @@ import WalletIcon from 'src/assets/icons/wallet.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { usePrimaryToSecondaryLinearGradient } from 'src/components/gradients'
-import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
+import { getStops } from 'src/components/gradients'
+import { RadialGradientBox } from 'src/components/gradients/RadialGradient'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -60,7 +60,15 @@ export function HomeScreen({ navigation }: Props) {
     navigation.dispatch(DrawerActions.toggleDrawer())
   }
 
-  const gradientStops = usePrimaryToSecondaryLinearGradient()
+  const stops = useMemo(
+    () =>
+      getStops(
+        theme.colors.deprecated_primary1,
+        theme.colors.mainBackground,
+        theme.colors.mainBackground
+      ),
+    [theme.colors.deprecated_primary1, theme.colors.mainBackground]
+  )
 
   if (!activeAccount)
     return (
@@ -73,8 +81,8 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['left', 'right']}>
+      <RadialGradientBox stops={stops} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <LinearGradientBox height="100%" opacity={0.1} stops={gradientStops} />
         <Box mt="xl">
           <Flex gap="lg" mt="lg" mx="lg">
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
