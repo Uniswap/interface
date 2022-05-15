@@ -73,4 +73,30 @@ describe('Swap', () => {
       cy.get('#recipient').should('not.exist')
     })
   })
+
+  describe('settings', () => {
+    
+    beforeEach(() => {
+      cy.visit('/swap')
+      cy.get('#open-settings-dialog-button').click()
+      cy.get(`[data-cy="settings-modal"]`).should('be.visible')
+    })
+
+    it('default transaction settings values', () => {
+      cy.get(`[data-cy="custom-slippage"]`).invoke('attr', 'placeholder').should('contain', '0.1')
+      cy.get(`[data-cy="transaction-deadline"]`).invoke('attr', 'placeholder').should('contain', '30')
+    })
+
+    it('can edit transaction settings and settings do not change after closing settings modal', () => {
+      cy.get(`[data-cy="custom-slippage"]`).type('1', { delay: 200 })
+      cy.get(`[data-cy="transaction-deadline"]`).type('10', { delay: 200 })
+
+      cy.get('#open-settings-dialog-button').click()
+      cy.get(`[data-cy="settings-modal"]`).should('not.exist')
+      cy.get('#open-settings-dialog-button').click()
+
+      cy.get(`[data-cy="custom-slippage"]`).should('have.value', '1.00')
+      cy.get(`[data-cy="transaction-deadline"]`).should('have.value', '10')
+    })
+  })
 })

@@ -205,6 +205,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                   setSlippageError(false)
                 }}
                 color={slippageError ? 'red' : ''}
+                data-cy="custom-slippage"
               />
               %
             </RowBetween>
@@ -256,6 +257,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                   setDeadlineError(false)
                 }}
                 color={deadlineError ? 'red' : ''}
+                data-cy="transaction-deadline"
               />
             </OptionCustom>
             <ThemedText.Body style={{ paddingLeft: '8px' }} fontSize={14}>
