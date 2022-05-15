@@ -54,7 +54,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
   return (
     <Flex borderRadius="lg" gap="sm" mb="sm" p="md" px="md" {...transformedProps}>
       {title && (
-        <Text color="deprecated_gray600" variant="bodyMd">
+        <Text color="deprecated_gray600" variant="body2">
           {title}
         </Text>
       )}
@@ -94,12 +94,12 @@ export function CurrencyInput(props: CurrencyInputProps) {
       {currency && (
         <Flex alignContent="center" flexDirection="row" justifyContent="space-between">
           {price && (
-            <Text color="deprecated_gray600" variant="bodyMd">
+            <Text color="deprecated_gray600" variant="body2">
               {formatPrice(price)}
             </Text>
           )}
           {currency && (
-            <Text color="deprecated_gray600" variant="bodyMd">{`${t(
+            <Text color="deprecated_gray600" variant="body2">{`${t(
               'Balance'
             )} ${formatCurrencyAmount(currencyBalance)}`}</Text>
           )}

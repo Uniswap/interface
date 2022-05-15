@@ -12,11 +12,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
-		2A5635C4D1004128AACDE5B4 /* UniswapSansBeta4-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0336D04376104CA8961C6A43 /* UniswapSansBeta4-Semibold.otf */; };
+		158BE978A06245FDA665B4CE /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */; };
 		30564088BB6685F4F099D444 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 816850AA5E2EE808CDC32BCA /* libPods-OneSignalNotificationServiceExtension.a */; };
-		3D656370579445F38785B2B6 /* UniswapSansBeta4-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC290279048A490AA42C5075 /* UniswapSansBeta4-Bold.otf */; };
-		478C8EADE2274469AF151F9B /* UniswapSansBeta4-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8131CF7ACA840A2959DA472 /* UniswapSansBeta4-Regular.otf */; };
-		6BFD6E0A17CC43FA82F40599 /* UniswapSansBeta4-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D671DC161669472883FE2A12 /* UniswapSansBeta4-Medium.otf */; };
 		6C0E0FE728256CAA00A975BF /* WalletConnectAddChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E0FE628256CAA00A975BF /* WalletConnectAddChainHandler.swift */; };
 		6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */; };
 		6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */; };
@@ -24,16 +21,19 @@
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
+		9293C688E2BC4F0791E544E7 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3155C0CF238C4436932B207D /* Inter-Regular.ttf */; };
 		9692A4132CDBBD084091EC6F /* libPods-Uniswap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB3AFFD496155F5A6C54D55B /* libPods-Uniswap.a */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
 		A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */; };
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
 		A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */; };
+		A5EA9E9AE02E45D38A5829D7 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD04BDB5970E41149622BF7D /* Inter-Medium.ttf */; };
 		C984362CBE87419489C23601 /* monospace.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B665738960844523B06BB63B /* monospace.ttf */; };
 		D63452452821BD540018ED83 /* WalletConnectSignTransactionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63452442821BD540018ED83 /* WalletConnectSignTransactionHandler.swift */; };
 		D63928FA27D704350004F5CC /* RNWalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63928F927D704350004F5CC /* RNWalletConnect.swift */; };
 		D63928FC27D70B510004F5CC /* RNWalletConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = D63928FB27D70B510004F5CC /* RNWalletConnect.m */; };
 		E58AFCB5279DB5F9297D2D0D /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAAE6F1B194B03FAC33323D /* libPods-Uniswap-UniswapTests.a */; };
+		E6063F6CDE8D4D9F84B2945E /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D720622E155642CCBAEDD803 /* Inter-Bold.ttf */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
 		F35AFD4227EE49990011A725 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F35AFD3B27EE49990011A725 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -73,7 +73,6 @@
 		00E356EE1AD99517003FC87E /* UniswapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniswapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UniswapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniswapTests.m; sourceTree = "<group>"; };
-		0336D04376104CA8961C6A43 /* UniswapSansBeta4-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Semibold.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Semibold.otf"; sourceTree = "<group>"; };
 		0DAAE6F1B194B03FAC33323D /* libPods-Uniswap-UniswapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap-UniswapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* Uniswap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Uniswap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Uniswap/AppDelegate.h; sourceTree = "<group>"; };
@@ -81,35 +80,32 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Uniswap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Uniswap/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Uniswap/main.m; sourceTree = "<group>"; };
+		3155C0CF238C4436932B207D /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
 		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		6C0E0FE628256CAA00A975BF /* WalletConnectAddChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectAddChainHandler.swift; sourceTree = "<group>"; };
 		6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectAccountServer.swift; sourceTree = "<group>"; };
 		6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSwitchChainHandler.swift; sourceTree = "<group>"; };
 		6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSignRequestHandler.swift; sourceTree = "<group>"; };
-		776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Medium.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Medium.otf"; sourceTree = "<group>"; };
 		816850AA5E2EE808CDC32BCA /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Uniswap/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8A54E514DE6E4CB1A39FDB3A /* UniswapSansBeta3-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Bold.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Bold.otf"; sourceTree = "<group>"; };
-		8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Semibold.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Semibold.otf"; sourceTree = "<group>"; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNEthersRS-Bridging-Header.h"; sourceTree = "<group>"; };
 		A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RnEthersRS.m; sourceTree = "<group>"; };
 		A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
 		A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNEthersRS.swift; sourceTree = "<group>"; };
 		A87B4C3727F6D91B4DAABF14 /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
+		AD04BDB5970E41149622BF7D /* Inter-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Medium.ttf"; path = "../src/assets/fonts/Inter-Medium.ttf"; sourceTree = "<group>"; };
 		B665738960844523B06BB63B /* monospace.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = monospace.ttf; path = ../src/assets/fonts/monospace.ttf; sourceTree = "<group>"; };
-		BC290279048A490AA42C5075 /* UniswapSansBeta4-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Bold.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Bold.otf"; sourceTree = "<group>"; };
 		BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Uniswap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap-UniswapTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		C7C23EDACE3BC348607A0E83 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		CA37BC1BA471C071B5090928 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		CB3AFFD496155F5A6C54D55B /* libPods-Uniswap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Regular.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Regular.otf"; sourceTree = "<group>"; };
 		D63452442821BD540018ED83 /* WalletConnectSignTransactionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSignTransactionHandler.swift; sourceTree = "<group>"; };
 		D63928F927D704350004F5CC /* RNWalletConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNWalletConnect.swift; sourceTree = "<group>"; };
 		D63928FB27D70B510004F5CC /* RNWalletConnect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNWalletConnect.m; sourceTree = "<group>"; };
-		D671DC161669472883FE2A12 /* UniswapSansBeta4-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Medium.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Medium.otf"; sourceTree = "<group>"; };
-		D8131CF7ACA840A2959DA472 /* UniswapSansBeta4-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Regular.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Regular.otf"; sourceTree = "<group>"; };
+		D720622E155642CCBAEDD803 /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../src/assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
+		E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		EC813AD85060898D4DD580C5 /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F35AFD3627EE49230011A725 /* Uniswap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Uniswap.entitlements; path = Uniswap/Uniswap.entitlements; sourceTree = "<group>"; };
@@ -275,15 +271,11 @@
 		C2C18ECBEF5A4489BF3A314C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				8A54E514DE6E4CB1A39FDB3A /* UniswapSansBeta3-Bold.otf */,
-				776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */,
-				D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */,
-				8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */,
 				B665738960844523B06BB63B /* monospace.ttf */,
-				BC290279048A490AA42C5075 /* UniswapSansBeta4-Bold.otf */,
-				D671DC161669472883FE2A12 /* UniswapSansBeta4-Medium.otf */,
-				D8131CF7ACA840A2959DA472 /* UniswapSansBeta4-Regular.otf */,
-				0336D04376104CA8961C6A43 /* UniswapSansBeta4-Semibold.otf */,
+				D720622E155642CCBAEDD803 /* Inter-Bold.ttf */,
+				AD04BDB5970E41149622BF7D /* Inter-Medium.ttf */,
+				3155C0CF238C4436932B207D /* Inter-Regular.ttf */,
+				E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -436,10 +428,10 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
 				C984362CBE87419489C23601 /* monospace.ttf in Resources */,
-				3D656370579445F38785B2B6 /* UniswapSansBeta4-Bold.otf in Resources */,
-				6BFD6E0A17CC43FA82F40599 /* UniswapSansBeta4-Medium.otf in Resources */,
-				478C8EADE2274469AF151F9B /* UniswapSansBeta4-Regular.otf in Resources */,
-				2A5635C4D1004128AACDE5B4 /* UniswapSansBeta4-Semibold.otf in Resources */,
+				E6063F6CDE8D4D9F84B2945E /* Inter-Bold.ttf in Resources */,
+				A5EA9E9AE02E45D38A5829D7 /* Inter-Medium.ttf in Resources */,
+				9293C688E2BC4F0791E544E7 /* Inter-Regular.ttf in Resources */,
+				158BE978A06245FDA665B4CE /* Inter-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -847,7 +839,7 @@
 				DEVELOPMENT_TEAM = CGCYLJG7GA;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -913,7 +905,7 @@
 				DEVELOPMENT_TEAM = CGCYLJG7GA;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

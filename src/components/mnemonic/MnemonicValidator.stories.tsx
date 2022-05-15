@@ -33,14 +33,14 @@ export default {
           <Story />
         </Box>
         <Flex bg="deprecated_gray50" gap="xs" p="md">
-          <Text color="deprecated_textColor" variant="bodyBold">
+          <Text color="deprecated_textColor" variant="body1">
             Mnemonic
           </Text>
           {SAMPLE_SEED.map((s, i) => (
             <Text
               key={s}
               color={POSITIONS_TO_CONFIRM.includes(i) ? 'black' : 'deprecated_gray400'}
-              variant="body">
+              variant="body1">
               {s}
             </Text>
           ))}

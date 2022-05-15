@@ -35,8 +35,9 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "color": "#C0C7DE",
-          "fontFamily": "UniswapSansBeta4-Medium",
-          "fontSize": 18,
+          "fontFamily": "Inter-SemiBold",
+          "fontSize": 16,
+          "lineHeight": 20,
         }
       }
       text="My Token"
@@ -98,8 +99,9 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "color": "#FD4040",
-          "fontFamily": "UniswapSansBeta4-Medium",
+          "fontFamily": "Inter-Regular",
           "fontSize": 20,
+          "lineHeight": 24,
         }
       }
       text="-50%"
@@ -387,9 +389,9 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#EF368E",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta4-Medium",
+            "fontFamily": "Inter-SemiBold",
             "fontSize": 16,
-            "lineHeight": 24,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -430,9 +432,9 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "rgba(255, 255, 255, 1)",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta4-Medium",
+            "fontFamily": "Inter-SemiBold",
             "fontSize": 16,
-            "lineHeight": 24,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -473,9 +475,9 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#EF368E",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta4-Medium",
+            "fontFamily": "Inter-SemiBold",
             "fontSize": 16,
-            "lineHeight": 24,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -516,9 +518,9 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#EF368E",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta4-Medium",
+            "fontFamily": "Inter-SemiBold",
             "fontSize": 16,
-            "lineHeight": 24,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -559,9 +561,9 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#EF368E",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta4-Medium",
+            "fontFamily": "Inter-SemiBold",
             "fontSize": 16,
-            "lineHeight": 24,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }

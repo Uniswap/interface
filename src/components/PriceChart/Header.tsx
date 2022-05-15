@@ -89,7 +89,7 @@ export const Header = ({ graphs, index, isPanning, title, translation }: HeaderP
 
   return (
     <Flex centered flex={1} flexDirection="column" gap="xs">
-      <StyledReText color="deprecated_gray200" text={header} variant="h4" />
+      <StyledReText color="deprecated_gray200" text={header} variant="mediumLabel" />
       <StyledReText color="mainForeground" fontSize={45} text={priceFormatted} />
       <StyledReText style={percentChangeLabelStyle} text={percentChangeFormatted} variant="h3" />
     </Flex>

@@ -52,11 +52,11 @@ export function BiometricModal({
         <Flex centered gap="lg">
           <Flex centered bg="deprecated_paleBlue" borderRadius="md" px="xxl" py="lg">
             <FaceIdIcon color={theme.colors.deprecated_blue} height={64} width={64} />
-            <Text color="deprecated_blue" variant="bodyBold">
+            <Text color="deprecated_blue" variant="body1">
               {t('Face ID')}
             </Text>
           </Flex>
-          <Text color="deprecated_gray400" variant="bodySm">
+          <Text color="deprecated_gray400" variant="caption">
             {t(
               'Face ID or Touch ID is required in this early release to help safeguard your assets.'
             )}
@@ -75,7 +75,7 @@ export function BiometricModal({
               onPress={tryAuthenticate}
             />
             <TextButton name={ElementName.Back} onPress={() => navigation.popToTop()}>
-              <Text variant="bodySm">{t('Cancel')}</Text>
+              <Text variant="caption">{t('Cancel')}</Text>
             </TextButton>
           </Flex>
         </Flex>

@@ -42,7 +42,7 @@ export function Pill({
       {...rest}>
       {icon ?? null}
       {label ? (
-        <Text style={{ color: foregroundColor }} variant="bodyMd">
+        <Text style={{ color: foregroundColor }} variant="body2">
           {label}
         </Text>
       ) : null}

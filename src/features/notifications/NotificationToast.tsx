@@ -116,7 +116,7 @@ export function NotificationToast({
             )}
           </Box>
           <Flex row shrink gap="xs">
-            <Text fontWeight="500" style={flex.shrink} variant="bodyMd">
+            <Text fontWeight="500" style={flex.shrink} variant="body2">
               {title}
             </Text>
           </Flex>
@@ -129,7 +129,7 @@ export function NotificationToast({
     <NotificationButton onPress={onPress}>
       <Flex row alignItems="center" gap="md">
         <Flex shrink gap="xs">
-          <Text fontWeight="500" style={flex.shrink} variant="bodyMd">
+          <Text fontWeight="500" style={flex.shrink} variant="body2">
             {title}
           </Text>
         </Flex>

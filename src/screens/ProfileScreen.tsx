@@ -116,7 +116,7 @@ export function ProfileScreen({ navigation }: Props) {
           View friend
         </Text>
         <Flex gap="sm" mt="lg" px="lg" width="100%">
-          <Text color="deprecated_gray400" variant="bodyBold">
+          <Text color="deprecated_gray400" variant="subHead1">
             {t('Following')}
           </Text>
           <Flex row gap="sm">
@@ -132,7 +132,7 @@ export function ProfileScreen({ navigation }: Props) {
           </Flex>
         </Flex>
         <Flex gap="xs" mt="lg" px="lg" width="100%">
-          <Text color="deprecated_gray400" variant="bodyBold">
+          <Text color="deprecated_gray400" variant="subHead1">
             {t('Favorite Tokens')}
           </Text>
           <TokenBalanceList
@@ -159,7 +159,7 @@ function FriendCard({ address, onPress }: { address: string; onPress: () => void
     <Button onPress={onPress}>
       <Flex centered gap="sm">
         <Identicon address={address} />
-        <Text variant="bodySm">{ens.name ?? shortenAddress(address)}</Text>
+        <Text variant="body1">{ens.name ?? shortenAddress(address)}</Text>
       </Flex>
     </Button>
   )

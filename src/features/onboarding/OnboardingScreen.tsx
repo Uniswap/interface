@@ -41,11 +41,11 @@ export function OnboardingScreen({
         </Flex>
 
         <Flex centered gap="sm" m="sm">
-          <Text fontWeight="600" textAlign="center" variant="h4">
+          <Text fontWeight="600" textAlign="center" variant="mediumLabel">
             {title}
           </Text>
           {subtitle ? (
-            <Text color="deprecated_gray400" textAlign="center" variant="body">
+            <Text color="deprecated_gray400" textAlign="center" variant="body1">
               {subtitle}
             </Text>
           ) : null}

@@ -17,7 +17,7 @@ export function ChangeNetworkModal({ chainId, setChainId, onPressClose }: Change
 
   return (
     <Flex centered gap="lg" mb="md" p="md">
-      <Text variant="h5">{t('Select Network')}</Text>
+      <Text variant="mediumLabel">{t('Select Network')}</Text>
       <NetworkButtonGroup
         selected={chainId ?? null}
         type={NetworkButtonType.BOX}
@@ -29,7 +29,7 @@ export function ChangeNetworkModal({ chainId, setChainId, onPressClose }: Change
       <TextButton
         alignSelf="center"
         textColor="deprecated_blue"
-        textVariant="h4"
+        textVariant="mediumLabel"
         onPress={onPressClose}>
         {t('Close')}
       </TextButton>

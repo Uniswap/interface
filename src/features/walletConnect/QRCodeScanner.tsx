@@ -105,7 +105,7 @@ export function QRCodeScanner({
                 py="sm"
                 style={{ backgroundColor: opacify(60, theme.colors.black) }}>
                 <WalletConnectLogo height={30} width={30} />
-                <Text color="white" variant="h5">
+                <Text color="white" variant="mediumLabel">
                   {numConnections === 1
                     ? t('1 app connected')
                     : t('{{numConnections}} apps connected', { numConnections })}
@@ -120,8 +120,8 @@ export function QRCodeScanner({
 
   return (
     <Flex centered backgroundColor="deprecated_background1" flexGrow={1} gap="md">
-      <Text variant="h5">📸</Text>
-      <Text variant="h5">{t('Please enable your camera.')}</Text>
+      <Text variant="mediumLabel">📸</Text>
+      <Text variant="mediumLabel">{t('Please enable your camera.')}</Text>
       <PrimaryButton
         label="Open settings"
         name={ElementName.OpenSettingsButton}

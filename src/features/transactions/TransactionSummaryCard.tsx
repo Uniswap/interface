@@ -46,13 +46,13 @@ export function TransactionSummaryCard({ tx }: { tx: TransactionDetails }) {
       justifyContent="space-between"
       p="md">
       <Flex gap="sm">
-        <Text variant="body">{getNotificationName(tx, t)}</Text>
-        <Text variant="bodySm">
+        <Text variant="body1">{getNotificationName(tx, t)}</Text>
+        <Text variant="caption">
           {t('From {{addr}} on {{chain}}', { addr: fromAddress, chain: chainName })}
         </Text>
         <TextButton
           name={ElementName.TransactionSummaryHash}
-          textVariant="bodySm"
+          textVariant="caption"
           onPress={onPressHash}>
           {t('Hash: {{hash}}', { hash: trimToLength(tx.hash, 10) })}
         </TextButton>
@@ -96,15 +96,15 @@ export function HistoricalTransactionSummaryCard({ tx }: { tx: Transaction }) {
       justifyContent="space-between"
       p="md">
       <Flex gap="sm">
-        <Text variant="body">{tx.type}</Text>
+        <Text variant="body1">{tx.type}</Text>
         {fromAddress ? (
-          <Text variant="bodySm">
+          <Text variant="caption">
             {t('From {{addr}} on {{chain}}', { addr: fromAddress, chain: chainName })}
           </Text>
         ) : null}
         <TextButton
           name={ElementName.TransactionSummaryHash}
-          textVariant="bodySm"
+          textVariant="caption"
           onPress={onPressHash}>
           {t('Hash: {{hash}}', { hash: trimToLength(tx.hash, 10) })}
         </TextButton>

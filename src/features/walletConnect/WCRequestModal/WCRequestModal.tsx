@@ -126,8 +126,8 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
           overflow="hidden">
           <ScrollView>
             <Flex p="md">
-              <Text variant="bodySmSoft">{t('Message')}</Text>
-              <Text variant="body">{message}</Text>
+              <Text variant="caption">{t('Message')}</Text>
+              <Text variant="body1">{message}</Text>
             </Flex>
           </ScrollView>
         </Flex>
@@ -139,7 +139,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
             padding="md"
             style={{ backgroundColor: opacify(5, theme.colors.deprecated_yellow) }}>
             <AlertTriangle color={theme.colors.deprecated_yellow} height={22} width={22} />
-            <Text color="deprecated_yellow" textAlign="center" variant="body">
+            <Text color="deprecated_yellow" textAlign="center" variant="body1">
               {t('This method of authorization could be insecure.')}
             </Text>
             <PrimaryButton
@@ -157,7 +157,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
           borderRadius="lg"
           justifyContent="space-between"
           p="md">
-          <Text color="deprecated_gray600" variant="body">
+          <Text color="deprecated_gray600" variant="body1">
             {t('Signing as')}
           </Text>
           <AddressDisplay address={request.account} />

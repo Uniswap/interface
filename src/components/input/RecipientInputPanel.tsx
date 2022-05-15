@@ -34,7 +34,7 @@ export function RecipientInputPanel({
   return (
     <Flex centered gap="sm">
       {recipientAddress && (
-        <Text color="deprecated_gray400" variant="bodyMd">
+        <Text color="deprecated_gray400" variant="body2">
           {t('To')}
         </Text>
       )}

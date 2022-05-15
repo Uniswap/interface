@@ -61,7 +61,7 @@ export function LongPressButton({
           style={animatedStyle}
           top={0}
         />
-        <Text color="white" variant="buttonLabel">
+        <Text color="white" variant="mediumLabel">
           {label}
         </Text>
       </Box>

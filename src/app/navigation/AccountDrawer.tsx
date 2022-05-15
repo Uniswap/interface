@@ -167,7 +167,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           renderItem={renderItem}
           renderSectionHeader={({ section: { title } }) => (
             <Box bg="mainBackground" py="md">
-              <Text color="deprecated_gray600" variant="h4">
+              <Text color="deprecated_gray600" variant="mediumLabel">
                 {title}
               </Text>
             </Box>
@@ -184,7 +184,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               onPress={onPressNewAccount}>
               <Flex row gap="sm">
                 <PlusSquareIcon color={theme.colors.deprecated_gray400} height={25} width={25} />
-                <Text color="deprecated_gray400" variant="h4">
+                <Text color="deprecated_gray400" variant="mediumLabel">
                   {t('New account')}
                 </Text>
               </Flex>
@@ -195,7 +195,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               onPress={onPressSettings}>
               <Flex row gap="sm">
                 <SettingsIcon color={theme.colors.deprecated_gray400} height={25} width={25} />
-                <Text color="deprecated_gray400" variant="h4">
+                <Text color="deprecated_gray400" variant="mediumLabel">
                   {t('Settings')}
                 </Text>
               </Flex>
@@ -238,7 +238,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             pt="xs"
             textAlign="center"
             textColor="deprecated_primary1"
-            textVariant="body"
+            textVariant="body1"
             width="100%"
             onPress={onPressEditCancel}>
             {t('Cancel')}

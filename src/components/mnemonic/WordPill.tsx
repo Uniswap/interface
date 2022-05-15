@@ -20,12 +20,12 @@ export function WordPill({ label, position, active, disabled }: WordPillProps) {
       px="sm">
       <Flex row gap="sm">
         {position ? (
-          <Text color="deprecated_gray600" variant="body">
+          <Text color="deprecated_gray600" variant="body1">
             {position}
           </Text>
         ) : null}
         {label ? (
-          <Text color="deprecated_textColor" variant="body">
+          <Text color="deprecated_textColor" variant="body1">
             {label}
           </Text>
         ) : null}

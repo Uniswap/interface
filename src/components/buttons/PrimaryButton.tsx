@@ -38,7 +38,7 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: 
       style={style}
       {...rest}>
       {icon && <Box mr="sm">{icon}</Box>}
-      <Text style={{ color: textColor }} textAlign="center" variant={textVariant ?? 'buttonLabel'}>
+      <Text style={{ color: textColor }} textAlign="center" variant={textVariant ?? 'mediumLabel'}>
         {label}
       </Text>
     </Button>

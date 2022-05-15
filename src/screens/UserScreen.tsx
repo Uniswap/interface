@@ -96,7 +96,7 @@ export function UserScreen({
           px="md"
           py="xxs"
           onPress={onFollowPress}>
-          <Text color="deprecated_textColor" fontSize={14} variant="bodyBold">
+          <Text color="deprecated_textColor" fontSize={14} variant="subHead1">
             {isFollowing ? t('Following') : t('Follow')}
           </Text>
         </Button>

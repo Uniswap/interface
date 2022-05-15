@@ -81,7 +81,7 @@ export default function TokenWarningCard({
           ) : (
             <AlertTriangle color={backgroundColor} />
           )}
-          <Text color={mainColor} variant="bodyBold">
+          <Text color={mainColor} variant="body1">
             {getHeaderText(tokenWarningLevel, t)}
           </Text>
         </Flex>

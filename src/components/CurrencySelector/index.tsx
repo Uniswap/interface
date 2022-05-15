@@ -70,7 +70,7 @@ export function CurrencySelector({
             </Flex>
           ) : (
             <Flex centered row gap="xs" px="md" py="xs">
-              <Text color="white" lineHeight={20} variant="h4">
+              <Text color="white" lineHeight={20} variant="mediumLabel">
                 {t('Select a token')}
               </Text>
               <Chevron color="white" direction="e" height={12} width={12} />

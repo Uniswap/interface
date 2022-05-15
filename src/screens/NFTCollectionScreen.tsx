@@ -70,7 +70,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   width={24}
                 />
               )}
-              <Text style={flex.shrink} variant="h4">
+              <Text style={flex.shrink} variant="mediumLabel">
                 {collectionName}
               </Text>
               {collection?.safelist_request_status === 'verified' && (
@@ -78,7 +78,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               )}
             </Flex>
             {collection?.description && (
-              <Text color="deprecated_gray400" variant="bodySm">
+              <Text color="deprecated_gray400" variant="caption">
                 {collection?.description}
               </Text>
             )}
@@ -89,7 +89,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   name={ElementName.NFTCollectionWebsite}
                   testID={ElementName.NFTCollectionWebsite}
                   onPress={() => collection?.external_url && openUri(collection?.external_url)}>
-                  <Text fontWeight="600" variant="bodySm">
+                  <Text fontWeight="600" variant="caption">
                     {t('Website ↗')}
                   </Text>
                 </Button>
@@ -100,7 +100,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   name={ElementName.NFTCollectionTwitter}
                   testID={ElementName.NFTCollectionTwitter}
                   onPress={() => openUri(`https://twitter.com/${collection?.twitter_username}`)}>
-                  <Text fontWeight="600" variant="bodySm">
+                  <Text fontWeight="600" variant="caption">
                     {t('Twitter ↗')}
                   </Text>
                 </Button>
@@ -111,7 +111,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   name={ElementName.NFTCollectionDiscord}
                   testID={ElementName.NFTCollectionDiscord}
                   onPress={() => collection?.discord_url && openUri(collection?.discord_url)}>
-                  <Text fontWeight="600" variant="bodySm">
+                  <Text fontWeight="600" variant="caption">
                     {t('Discord ↗')}
                   </Text>
                 </Button>
@@ -119,7 +119,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             </Flex>
             <Flex flexDirection="row" gap="xl">
               <Flex gap="xs">
-                <Text color="deprecated_gray400" variant="bodySm">
+                <Text color="deprecated_gray400" variant="caption">
                   {t('Items')}
                 </Text>
                 {collection?.stats.total_supply && (
@@ -129,7 +129,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 )}
               </Flex>
               <Flex gap="xs">
-                <Text color="deprecated_gray400" variant="bodySm">
+                <Text color="deprecated_gray400" variant="caption">
                   {t('Owners')}
                 </Text>
                 {collection?.stats.num_owners && (
@@ -140,7 +140,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               </Flex>
               {collection?.stats.floor_price && (
                 <Flex gap="xs">
-                  <Text color="deprecated_gray400" variant="bodySm">
+                  <Text color="deprecated_gray400" variant="caption">
                     {t('Floor')}
                   </Text>
                   <Text fontWeight="600" variant="h3">
@@ -162,10 +162,10 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           onPress={() => openUri(`https://opensea.io/collection/${collection?.slug}`)}>
           <Flex alignItems="center" flexDirection="row" gap="xs" justifyContent="center">
             <OpenSeaIcon color={appTheme.colors.deprecated_textColor} height={16} width={16} />
-            <Text variant="body">{t('View Collection')}</Text>
+            <Text variant="body1">{t('View Collection')}</Text>
           </Flex>
         </Button>
-        <Text mt="md" variant="h5">
+        <Text mt="md" variant="mediumLabel">
           {t('Your {{collection}}', { collection: collectionName })}
         </Text>
       </Flex>
@@ -217,7 +217,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
       <Box flex={1}>
         <Flex flexDirection="row" gap="lg" justifyContent="space-between" mx="lg" my="md">
           <BackButton />
-          <Text numberOfLines={1} style={flex.shrink} variant="h4">
+          <Text numberOfLines={1} style={flex.shrink} variant="mediumLabel">
             {collection?.name}
           </Text>
           <Button onPress={onPressShare}>

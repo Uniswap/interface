@@ -1,97 +1,101 @@
 // TODO set actual fonts
+export const sizes = {
+  0: 8,
+  1: 12,
+  2: 14,
+  3: 16,
+  4: 20,
+  5: 24,
+  6: 36,
+}
+
 export const fontFamily = {
   serif: 'serif',
   sansSerif: {
-    regular: 'UniswapSansBeta4-Regular',
-    medium: 'UniswapSansBeta4-Medium',
-    semibold: 'UniswapSansBeta4-Semibold',
-    bold: 'UniswapSansBeta4-Bold',
+    regular: 'Inter-Regular',
+    medium: 'Inter-Medium',
+    semibold: 'Inter-SemiBold',
+    bold: 'Inter-Bold',
   },
 }
 
 export const textVariants = {
   h1: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 36,
-    color: 'mainForeground',
+    lineHeight: 40,
+    color: 'neutralTextPrimary',
   },
   h2: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 24,
-    color: 'mainForeground',
+    lineHeight: 32,
+    color: 'neutralTextPrimary',
   },
   h3: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 20,
-    color: 'mainForeground',
+    lineHeight: 24,
+    color: 'neutralTextPrimary',
   },
-  h4: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 18,
-    color: 'mainForeground',
-  },
-  h5: {
+  subHead1: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 16,
-    color: 'mainForeground',
+    lineHeight: 24,
+    color: 'neutralTextPrimary',
   },
-  h6: {
+  subHead2: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 14,
-    color: 'mainForeground',
+    lineHeight: 20,
+    color: 'neutralTextPrimary',
   },
-  bodyLg: {
-    fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 18,
-    lineHeight: 24,
-    color: 'mainForeground',
-  },
-  bodyLgBold: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 18,
-    lineHeight: 24,
-    color: 'mainForeground',
-  },
-  body: {
+  body1: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 16,
     lineHeight: 24,
-    color: 'mainForeground',
+    color: 'neutralTextPrimary',
   },
-  bodyBold: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 16,
-    lineHeight: 24,
-    color: 'mainForeground',
-  },
-  bodyMd: {
-    fontFamily: fontFamily.sansSerif.medium,
+  body2: {
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 14,
-    color: 'mainForeground',
+    lineHeight: 20,
+    color: 'neutralTextPrimary',
   },
-  bodySm: {
+  caption: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 12,
-    color: 'mainForeground',
+    lineHeight: 16,
+    color: 'neutralTextPrimary',
   },
-  bodyXs: {
-    fontFamily: fontFamily.sansSerif.regular,
+  badge: {
+    fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 10,
-    color: 'mainForeground',
+    lineHeight: 12,
+    color: 'neutralTextPrimary',
   },
-  bodySmSoft: {
+  code: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 12,
-    color: 'deprecated_gray600',
+    lineHeight: 16,
+    color: 'neutralTextPrimary',
   },
-  buttonLabel: {
-    fontFamily: fontFamily.sansSerif.medium,
+  largeLabel: {
+    fontFamily: fontFamily.sansSerif.semibold,
+    fontSize: 20,
+    lineHeight: 24,
+    color: 'neutralTextPrimary',
+  },
+  mediumLabel: {
+    fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 20,
+    color: 'neutralTextPrimary',
   },
-  buttonLabelLg: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 18,
-    lineHeight: 24,
+  smallLabel: {
+    fontFamily: fontFamily.sansSerif.semibold,
+    fontSize: 14,
+    lineHeight: 16,
+    color: 'neutralTextPrimary',
   },
 }

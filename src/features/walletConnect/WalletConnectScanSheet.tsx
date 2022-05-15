@@ -79,12 +79,12 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
       </Flex>
       <Box borderRadius="lg" flex={1} pt="xxl" style={ModalStyles.gradient}>
         <Flex centered gap="sm">
-          <Text color="deprecated_textColor" variant="bodyLgBold">
+          <Text color="deprecated_textColor" variant="subHead1">
             {showQRCode ? ens.name ?? shortenAddress(address) : t('Scan a QR code')}
           </Text>
           <Flex centered row gap="sm">
             {!showQRCode && <WalletConnectLogo height={16} width={16} />}
-            <Text variant="bodySmSoft">
+            <Text variant="body2">
               {showQRCode
                 ? ens.name
                   ? shortenAddress(address)
@@ -140,8 +140,8 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
                 <QrScanIcon />
               </Flex>
               <Flex flexGrow={1} gap="xxs">
-                <Text variant="bodyBold">{t('Scan a QR code')}</Text>
-                <Text variant="bodySmSoft">{t('Use WalletConnect or send assets')}</Text>
+                <Text variant="body1">{t('Scan a QR code')}</Text>
+                <Text variant="body2">{t('Use WalletConnect or send assets')}</Text>
               </Flex>
               <Chevron
                 color={theme.colors.deprecated_textColor}
@@ -163,8 +163,8 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
                 <QRCode size={30} value={activeAccount.address} />
               </Flex>
               <Flex flexGrow={1} gap="xxs">
-                <Text variant="bodyBold">{t('Show my QR code')}</Text>
-                <Text variant="bodySmSoft">{shortenAddress(activeAccount.address)}</Text>
+                <Text variant="body1">{t('Show my QR code')}</Text>
+                <Text variant="body2">{shortenAddress(activeAccount.address)}</Text>
               </Flex>
               <Chevron
                 color={theme.colors.deprecated_textColor}

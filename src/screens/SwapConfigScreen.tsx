@@ -25,7 +25,7 @@ export function SwapConfigScreen() {
           </Text>
         </Box>
         <Box alignItems="center" flexDirection="row">
-          <Text variant="body">Gas Price</Text>
+          <Text variant="body1">Gas Price</Text>
           <TooltipButton
             lines={[
               t(
@@ -45,7 +45,7 @@ export function SwapConfigScreen() {
           justifyContent="space-between"
           px="md"
           width="100%">
-          <Text variant="body">Expert Mode</Text>
+          <Text variant="body1">Expert Mode</Text>
           <Switch value={expertMode} onValueChange={setExpertMode} />
         </Box>
       </Box>

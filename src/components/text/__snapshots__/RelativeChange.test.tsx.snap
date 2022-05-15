@@ -7,8 +7,9 @@ exports[`renders a relative change 1`] = `
       Object {
         "color": "#1A9550",
         "display": "flex",
-        "fontFamily": "UniswapSansBeta4-Regular",
+        "fontFamily": "Inter-Regular",
         "fontSize": 12,
+        "lineHeight": 16,
       },
     ]
   }
@@ -25,8 +26,9 @@ exports[`renders placeholders without a change 1`] = `
       Object {
         "color": "#44495A",
         "display": "flex",
-        "fontFamily": "UniswapSansBeta4-Regular",
+        "fontFamily": "Inter-Regular",
         "fontSize": 12,
+        "lineHeight": 16,
       },
     ]
   }

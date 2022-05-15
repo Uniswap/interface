@@ -32,8 +32,8 @@ export function _Palette(colors: Palette) {
           p="sm"
           style={{ backgroundColor: value }}>
           <Flex flexDirection="row" justifyContent="space-between">
-            <Text variant="bodySm">{color}</Text>
-            <Text variant="bodySm">{value}</Text>
+            <Text variant="caption">{color}</Text>
+            <Text variant="caption">{value}</Text>
           </Flex>
         </Box>
       ))}

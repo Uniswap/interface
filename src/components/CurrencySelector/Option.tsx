@@ -61,13 +61,17 @@ export function Option({ currency, onPress, matches, metadataType }: OptionProps
           <CurrencyLogo currency={currency} size={40} />
           <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
             <Flex row>
-              <TextWithFuseMatches matches={nameMatches} text={currency.name ?? ''} variant="h4" />
+              <TextWithFuseMatches
+                matches={nameMatches}
+                text={currency.name ?? ''}
+                variant="mediumLabel"
+              />
             </Flex>
             <Flex row>
               <TextWithFuseMatches
                 matches={symbolMatches}
                 text={currency.symbol ?? ''}
-                variant="bodySmSoft"
+                variant="caption"
               />
             </Flex>
           </Flex>
@@ -105,9 +109,9 @@ function TokenMetadata({ pre, main, sub }: TokenMetadataProps) {
     <Flex row>
       {pre}
       <Box alignItems="flex-end" minWidth={70}>
-        <Text variant="bodyBold">{main}</Text>
+        <Text variant="body1">{main}</Text>
         {sub && (
-          <Text color="deprecated_gray400" variant="bodySm">
+          <Text color="deprecated_gray400" variant="caption">
             {sub}
           </Text>
         )}

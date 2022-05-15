@@ -36,8 +36,8 @@ export default {
     ),
     EmptyComponent: (
       <Flex centered gap="sm" mt="lg" px="lg">
-        <Text variant="h4">😔</Text>
-        <Text variant="h4">No results found</Text>
+        <Text variant="mediumLabel">😔</Text>
+        <Text variant="mediumLabel">No results found</Text>
       </Flex>
     ),
   },

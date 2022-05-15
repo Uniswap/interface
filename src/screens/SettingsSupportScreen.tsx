@@ -18,13 +18,13 @@ export function SettingsSupportScreen() {
       <ScrollView contentContainerStyle={flex.fill}>
         <Box alignItems="center" flexDirection="row" mb="lg">
           <BackButton mr="md" />
-          <Text variant="bodyLg">{t('Wallet Support')}</Text>
+          <Text variant="subHead1">{t('Wallet Support')}</Text>
         </Box>
-        <Text mb="sm" variant="bodyLg">
+        <Text mb="sm" variant="subHead1">
           {t('Recent logs')}
         </Text>
         <ScrollView>
-          <Text mt="md" variant="bodyXs">
+          <Text mt="md" variant="badge">
             {recentLogs.join('\n\n')}
           </Text>
         </ScrollView>

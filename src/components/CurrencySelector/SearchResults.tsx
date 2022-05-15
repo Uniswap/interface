@@ -28,8 +28,8 @@ export function CurrencySearchResultList({
     <FlatList
       ListEmptyComponent={
         <Flex centered gap="sm" px="lg">
-          <Text variant="h4">😔</Text>
-          <Text color="deprecated_gray200" textAlign="center" variant="h4">
+          <Text variant="mediumLabel">😔</Text>
+          <Text color="deprecated_gray200" textAlign="center" variant="mediumLabel">
             {searchFilter
               ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
               : t('No tokens found')}

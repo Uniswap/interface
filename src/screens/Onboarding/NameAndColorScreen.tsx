@@ -93,7 +93,7 @@ function CustomizationSection({
           width="100%"
           onChangeText={(newName) => setAccountName(newName)}
         />
-        <Text color="deprecated_textColor" opacity={0.7} variant="body">
+        <Text color="deprecated_textColor" opacity={0.7} variant="body1">
           {shortenAddress(address)}
         </Text>
       </Flex>

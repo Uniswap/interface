@@ -131,7 +131,7 @@ export function TokenDetailsScreen({
           <Box>
             {balance && (
               <>
-                <Text color="deprecated_gray600" mx="lg" variant="bodyMd">
+                <Text color="deprecated_gray600" mx="lg" variant="body2">
                   {t('Your balance')}
                 </Text>
                 <TokenBalanceItem balance={balance} />
@@ -143,7 +143,7 @@ export function TokenDetailsScreen({
                 flex={1}
                 label={t('Buy')}
                 name={ElementName.BuyToken}
-                textVariant="buttonLabelLg"
+                textVariant="largeLabel"
                 onPress={onPressBuy}
               />
               <PrimaryButton
@@ -151,7 +151,7 @@ export function TokenDetailsScreen({
                 flex={1}
                 label={t('Sell')}
                 name={ElementName.SellToken}
-                textVariant="buttonLabelLg"
+                textVariant="largeLabel"
                 variant="gray"
                 onPress={onPressSell}
               />

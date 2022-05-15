@@ -66,7 +66,7 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
                   width={20}
                 />
               )}
-              <Text numberOfLines={1} style={flex.shrink} variant="body">
+              <Text numberOfLines={1} style={flex.shrink} variant="body1">
                 {name}
               </Text>
               {safelist_request_status === 'verified' && (

@@ -27,9 +27,9 @@ export function RecipientSelect({ setRecipientAddress }: RecipientSelectProps) {
       <Autocomplete
         EmptyComponent={
           <Flex centered gap="sm" mt="lg" px="lg">
-            <Text variant="h4">😔</Text>
-            <Text variant="h4">{t('No results found')}</Text>
-            <Text color="deprecated_gray200" textAlign="center" variant="body">
+            <Text variant="mediumLabel">😔</Text>
+            <Text variant="mediumLabel">{t('No results found')}</Text>
+            <Text color="deprecated_gray200" textAlign="center" variant="body1">
               {t('The address you typed either does not exist or is spelled incorrectly.')}
             </Text>
           </Flex>

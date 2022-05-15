@@ -22,7 +22,7 @@ export function TooltipButton({ title, lines, size, ...rest }: Props) {
       </Button>
       <Modal hide={() => setShowModal(false)} title={title} visible={showModal}>
         {lines.map((l) => (
-          <Text mt="sm" textAlign="center" variant="body">
+          <Text mt="sm" textAlign="center" variant="body1">
             {l}
           </Text>
         ))}

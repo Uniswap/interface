@@ -66,7 +66,7 @@ export function CloudBackupScreen({
       {/* keep spacing consistent when no errors with minHeight */}
       <Box minHeight={30}>
         {error ? (
-          <Text color="deprecated_red" textAlign="center" variant="body">
+          <Text color="deprecated_red" textAlign="center" variant="body1">
             {t('Incorrect order. Please try again.')}
           </Text>
         ) : null}

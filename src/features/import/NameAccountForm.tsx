@@ -64,7 +64,7 @@ export function NameAccountForm({ address, onSuccess }: Props) {
           width="100%"
           onPress={onPressDone}
         />
-        <TextButton mt="lg" textColor="deprecated_primary1" textVariant="body" onPress={onSuccess}>
+        <TextButton mt="lg" textColor="deprecated_primary1" textVariant="body1" onPress={onSuccess}>
           {t('Skip')}
         </TextButton>
       </CenterBox>

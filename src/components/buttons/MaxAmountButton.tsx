@@ -37,7 +37,7 @@ export function MaxAmountButton({
       label={t('MAX')}
       px="xs"
       py="xs"
-      textVariant="bodyBold"
+      textVariant="body1"
       variant="paleBlue"
       onPress={() => onSetAmount(maxInputAmount.toSignificant())}
     />

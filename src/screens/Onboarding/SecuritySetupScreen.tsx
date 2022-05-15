@@ -54,7 +54,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
           <TextButton
             name={ElementName.Skip}
             textColor="deprecated_textColor"
-            textVariant="buttonLabel"
+            textVariant="mediumLabel"
             onPress={onPressNext}>
             {t('Skip for now')}
           </TextButton>

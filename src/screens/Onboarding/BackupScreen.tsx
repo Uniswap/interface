@@ -61,7 +61,7 @@ export function BackupScreen({ navigation }: Props) {
           px="md"
           py="sm"
           textColor="deprecated_textColor"
-          textVariant="buttonLabel"
+          textVariant="mediumLabel"
           onPress={onPressEducationButton}>
           <Text color="deprecated_yellow" fontSize={20}>
             ✦{' '}
@@ -141,7 +141,7 @@ function BackupOptionButton({ icon, label, name, onPress, completed }: BackupOpt
               </Box>
             </LinearGradientBox>
           </Box>
-          <Text variant="body">{label}</Text>
+          <Text variant="body1">{label}</Text>
         </Flex>
         {completed ? (
           <CheckmarkCircle
@@ -158,7 +158,7 @@ function BackupOptionButton({ icon, label, name, onPress, completed }: BackupOpt
             p="sm"
             testID={name}
             textColor="deprecated_textColor"
-            textVariant="buttonLabel"
+            textVariant="mediumLabel"
             onPress={onPress}>
             {t('+ Add')}
           </TextButton>

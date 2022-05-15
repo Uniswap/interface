@@ -15,7 +15,7 @@ interface HeaderWithNetworkSelectorProps {
 export function HeaderWithNetworkSelector({ label, onPressBack }: HeaderWithNetworkSelectorProps) {
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="lg">
-      <Text color="deprecated_textColor" variant="bodyBold">
+      <Text color="deprecated_textColor" variant="body1">
         {label}
       </Text>
       {/* TODO: add network selector */}

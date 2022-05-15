@@ -51,7 +51,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
             alwaysShowAddress
             address={address}
             size={40}
-            variant="body"
+            variant="body1"
             verticalGap="none"
           />
           <Button

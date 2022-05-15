@@ -103,7 +103,7 @@ export function SettingsScreen() {
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
         <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
-          <Text variant="bodyBold">{t('Settings')}</Text>
+          <Text variant="body1">{t('Settings')}</Text>
           <BackX size={16} onPressBack={() => navigation.goBack()} />
         </Box>
         {<ActiveAccountSummary />}
@@ -141,7 +141,7 @@ function OnboardingRow() {
             strokeWidth="1.5"
             width={20}
           />
-          <Text fontWeight="500" ml="md" variant="bodyLg">
+          <Text fontWeight="500" ml="md" variant="subHead1">
             {t('Onboarding')}
           </Text>
         </Box>
@@ -168,7 +168,7 @@ function SettingsRow({ page: { screen, icon, text }, navigation, theme }: Settin
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
           {icon}
-          <Text fontWeight="500" ml="md" variant="bodyLg">
+          <Text fontWeight="500" ml="md" variant="subHead1">
             {text}
           </Text>
         </Box>
@@ -186,12 +186,12 @@ function ActiveAccountSummary() {
       <GradientBackground opacity={1}>
         <BlueToPinkRadial />
       </GradientBackground>
-      <AddressDisplay address={activeAccount.address} size={50} variant="h4" />
+      <AddressDisplay address={activeAccount.address} size={50} variant="mediumLabel" />
       <CopyTextButton
         copyText={activeAccount.address}
         mt="sm"
         name={ElementName.Copy}
-        textVariant="bodySm">
+        textVariant="caption">
         {shortenAddress(activeAccount.address, 4)}
       </CopyTextButton>
     </Box>

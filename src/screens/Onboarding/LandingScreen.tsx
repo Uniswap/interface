@@ -84,7 +84,7 @@ export function LandingScreen({ navigation }: Props) {
               px="lg"
               py="md">
               <WalletIcon color={theme.colors.deprecated_purple} height={15} width={15} />
-              <Text color="deprecated_textColor" variant="h5">
+              <Text color="deprecated_textColor" variant="mediumLabel">
                 {t('Create a Wallet')}
               </Text>
             </Flex>
@@ -109,7 +109,7 @@ export function LandingScreen({ navigation }: Props) {
                 height={15}
                 width={15}
               />
-              <Text color="deprecated_textColor" variant="h5">
+              <Text color="deprecated_textColor" variant="mediumLabel">
                 {t('I Already Have a Wallet')}
               </Text>
             </Flex>
@@ -121,12 +121,12 @@ export function LandingScreen({ navigation }: Props) {
             name={ElementName.OnboardingExplore}
             pt="sm"
             onPress={onPressExplore}>
-            <Text variant="bodySm">{t('Not ready? Try')}</Text>
-            <Text color="deprecated_purple" variant="bodySm">
+            <Text variant="caption">{t('Not ready? Try')}</Text>
+            <Text color="deprecated_purple" variant="caption">
               {' '}
               {t('Exploring')}{' '}
             </Text>
-            <Text variant="bodySm">{t('first.')}</Text>
+            <Text variant="caption">{t('first.')}</Text>
           </Button>
         </Flex>
       </Box>

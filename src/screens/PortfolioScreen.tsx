@@ -104,7 +104,7 @@ export function PortfolioScreen({ navigation }: Props) {
         </Box>
         <TransactionStatusBanner />
         <Flex gap="xs">
-          <Text color="deprecated_gray600" variant="bodySm">
+          <Text color="deprecated_gray600" variant="caption">
             {t('Total Balance')}
           </Text>
           <Flex alignItems="flex-start" flexDirection="row" gap="sm">

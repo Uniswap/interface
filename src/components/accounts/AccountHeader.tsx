@@ -30,7 +30,7 @@ export function AccountHeader({ children, onPress }: AccountHeaderProps) {
         <AddressDisplay
           address={activeAccount?.address}
           fallback={t('Connect Wallet')}
-          variant="buttonLabel"
+          variant="mediumLabel"
         />
       </Button>
       <Box alignItems="center" flexDirection="row" justifyContent="flex-end">

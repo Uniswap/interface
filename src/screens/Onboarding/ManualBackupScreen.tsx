@@ -91,7 +91,7 @@ export function ManualBackupScreen({ navigation }: Props) {
                 value={acknowledged}
                 onValueChange={(newValue: boolean) => setAcknowledged(newValue)}
               />
-              <Text color="deprecated_gray600" style={styles.switchLabel} variant="bodySm">
+              <Text color="deprecated_gray600" style={styles.switchLabel} variant="caption">
                 {t(
                   'I acknowledge that if I lose my seed phrase, Uniswap Labs can’t recover my wallet.'
                 )}
@@ -130,7 +130,7 @@ export function ManualBackupScreen({ navigation }: Props) {
           )}
           title={t('Confirm your seed phrase')}>
           {inputIsInvalid ? (
-            <Text color="deprecated_red" textAlign="center" variant="body">
+            <Text color="deprecated_red" textAlign="center" variant="body1">
               {t('Incorrect order. Please try again.')}
             </Text>
           ) : null}
@@ -202,8 +202,8 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
             </LinearGradientBox>
           </Box>
           <Flex flex={1} gap="none">
-            <Text variant="body">{label}</Text>
-            <Text color="deprecated_gray600" variant="bodySm">
+            <Text variant="body1">{label}</Text>
+            <Text color="deprecated_gray600" variant="caption">
               {sublabel}
             </Text>
           </Flex>

@@ -29,40 +29,40 @@ export function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
 
   return (
     <Flex borderColor="deprecated_gray100" borderRadius="md" borderWidth={1} gap="xs" p="md">
-      <Text color="deprecated_textColor" variant="h6">
+      <Text color="deprecated_textColor" variant="smallLabel">
         {t('Transaction Details')}
       </Text>
       <Box bg="deprecated_gray100" height={1} my="xs" />
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {t('Expected Output')}
         </Text>
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {`${formatCurrencyAmount(currencyOut)} ${currencyOut?.currency.symbol}`}
         </Text>
       </Box>
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {t('Price Impact')}
         </Text>
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {trade.priceImpact ? `${trade.priceImpact.multiply(-1).toFixed(2)}%` : '-'}
         </Text>
       </Box>
       <Box bg="deprecated_gray100" height={1} my="xs" />
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {`${t('Min. received after slippage')} (${DEFAULT_SLIPPAGE_TOLERANCE}%)`}
         </Text>
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {`${formatPrice(minReceived).replace('$', '')} ${currencyOut?.currency.symbol}`}
         </Text>
       </Box>
       <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {t('Network Fee')}
         </Text>
-        <Text color="deprecated_gray600" variant="h6">
+        <Text color="deprecated_gray600" variant="smallLabel">
           {`~$${gasFeeUSD}`}
         </Text>
       </Box>

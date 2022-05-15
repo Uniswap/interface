@@ -23,7 +23,7 @@ export function AddressDisplay({
   address,
   fallback,
   size = 24,
-  variant = 'body',
+  variant = 'body1',
   verticalGap = 'xxs',
   alwaysShowAddress,
 }: AddressDisplayProps) {
@@ -44,7 +44,7 @@ export function AddressDisplay({
           {name}
         </Text>
         {alwaysShowAddress && (
-          <Text color="deprecated_gray600" variant="bodySm">
+          <Text color="deprecated_gray600" variant="caption">
             {shortenAddress(validatedAddress)}
           </Text>
         )}

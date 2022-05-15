@@ -58,7 +58,7 @@ function Step({ status, text }: { status: StepStatus; text: string }) {
             : 'deprecated_primary1'
         }
         style={textStyle}
-        variant="bodyLg">
+        variant="subHead1">
         {text}
       </Text>
     </Flex>
@@ -222,7 +222,7 @@ export function LedgerScreen({ navigation }: AccountStackScreenProp<Screens.Impo
       <Box flex={1} px="lg">
         <Box alignItems="center" flexDirection="row" mb="lg">
           <BackButton mr="md" />
-          <Text color="black" variant="bodyLg">
+          <Text color="black" variant="subHead1">
             {t('Connect a Ledger Nano X')}
           </Text>
         </Box>
@@ -318,12 +318,12 @@ export function LedgerScreen({ navigation }: AccountStackScreenProp<Screens.Impo
             mt="md"
             name={ElementName.Restart}
             textColor="deprecated_primary1"
-            textVariant="body"
+            textVariant="body1"
             onPress={onPressRestart}>
             {t('Restart Pairing')}
           </TextButton>
           {error && (
-            <Text color="deprecated_red" variant="body">
+            <Text color="deprecated_red" variant="body1">
               {error}
             </Text>
           )}

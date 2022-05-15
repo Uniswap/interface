@@ -16,7 +16,7 @@ export function RelativeChange({ change }: RelativeChangeProps) {
           ? 'deprecated_red'
           : 'deprecated_gray600'
       }
-      variant="bodySm">
+      variant="caption">
       {direction === 'up' ? '↑ ' : direction === 'down' ? '↓ ' : ''}
       {change ? `${change.toFixed(1)}%` : '-'}
     </Text>

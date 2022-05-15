@@ -41,13 +41,13 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
         <Box flex={1} px="lg">
           <Box alignItems="center" flexDirection="row" mb="lg">
             <BackButton mr="md" />
-            <Text color="deprecated_textColor" variant="bodyLg">
+            <Text color="deprecated_textColor" variant="subHead1">
               {t('Import Account')}
             </Text>
           </Box>
           {!importDone ? (
             <>
-              <Text color="deprecated_textColor" mb="xl" mt="sm" variant="body">
+              <Text color="deprecated_textColor" mb="xl" mt="sm" variant="body1">
                 {t(
                   'Watch or manage an account by inputting its ENS name, address, or secret phrase.'
                 )}
@@ -56,7 +56,7 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
             </>
           ) : (
             <>
-              <Text color="deprecated_textColor" mb="xl" mt="sm" variant="body">
+              <Text color="deprecated_textColor" mb="xl" mt="sm" variant="body1">
                 {t('Set a name for this account to help you stay organized.')}
               </Text>
               <NameAccountForm
@@ -66,10 +66,10 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
             </>
           )}
           <Box alignItems="center" mt="lg">
-            <Text color="deprecated_gray600" variant="body">
+            <Text color="deprecated_gray600" variant="body1">
               {t('Looking for more options?')}
             </Text>
-            <TextButton textColor="deprecated_primary1" textVariant="body" onPress={connectLedger}>
+            <TextButton textColor="deprecated_primary1" textVariant="body1" onPress={connectLedger}>
               {t('Connect a Ledger Nano X')}
             </TextButton>
           </Box>

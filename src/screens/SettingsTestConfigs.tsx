@@ -17,10 +17,10 @@ export function SettingsTestConfigs() {
         <Flex>
           <Flex row alignItems="center">
             <BackButton />
-            <Text variant="bodyLg">Test Configs</Text>
+            <Text variant="subHead1">Test Configs</Text>
           </Flex>
-          <Text variant="body">List of all test configs available to the app</Text>
-          <Text variant="bodySm">
+          <Text variant="body1">List of all test configs available to the app</Text>
+          <Text variant="caption">
             Remote-only test configs cannot be toggled locally. Use the Firebase console instead.
           </Text>
           <ScrollView>
@@ -29,14 +29,14 @@ export function SettingsTestConfigs() {
 
               return (
                 <Flex key={name} row alignItems="center" justifyContent="space-between">
-                  <Text variant="body">{name}</Text>
+                  <Text variant="body1">{name}</Text>
                   {configValue.getSource() === 'default' ? (
                     <Switch
                       value={enabled}
                       onValueChange={() => toggleLocalConfig({ config: name, enabled: !enabled })}
                     />
                   ) : (
-                    <Text variant="bodySm">Remote only</Text>
+                    <Text variant="caption">Remote only</Text>
                   )}
                 </Flex>
               )

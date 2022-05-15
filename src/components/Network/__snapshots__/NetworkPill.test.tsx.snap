@@ -76,10 +76,11 @@ exports[`renders a NetworkPill with border 1`] = `
     style={
       Array [
         Object {
-          "color": "#000000",
+          "color": "#070A15",
           "display": "flex",
-          "fontFamily": "UniswapSansBeta4-Medium",
+          "fontFamily": "Inter-Regular",
           "fontSize": 14,
+          "lineHeight": 20,
         },
         Object {
           "color": "#EF368E",
@@ -168,10 +169,11 @@ exports[`renders a NetworkPill without image 1`] = `
     style={
       Array [
         Object {
-          "color": "#000000",
+          "color": "#070A15",
           "display": "flex",
-          "fontFamily": "UniswapSansBeta4-Medium",
+          "fontFamily": "Inter-Regular",
           "fontSize": 14,
+          "lineHeight": 20,
         },
         Object {
           "color": "#EF368E",

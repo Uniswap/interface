@@ -75,8 +75,8 @@ export function DappConnectionItem({
         <Flex flex={1} gap="xs" px="md" py="md">
           <Button name={ElementName.WCOpenDapp} onPress={() => openUri(dapp.url)}>
             <Flex gap="xs">
-              <Text variant="h4">{dapp.name}</Text>
-              <Text color="deprecated_blue" numberOfLines={1} variant="bodySm">
+              <Text variant="mediumLabel">{dapp.name}</Text>
+              <Text color="deprecated_blue" numberOfLines={1} variant="caption">
                 {dapp.url}
               </Text>
             </Flex>
@@ -88,12 +88,12 @@ export function DappConnectionItem({
             {chainId ? (
               <Flex row alignItems="center" gap="xxs">
                 <NetworkLogo chainId={chainId} mr="xs" size={25} />
-                <Text color="deprecated_gray600" variant="h6">
+                <Text color="deprecated_gray600" variant="smallLabel">
                   {CHAIN_INFO[chainId].label}
                 </Text>
               </Flex>
             ) : (
-              <Text color="deprecated_gray600" variant="h6">
+              <Text color="deprecated_gray600" variant="smallLabel">
                 {t('Unsupported chain')}
               </Text>
             )}

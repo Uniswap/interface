@@ -95,7 +95,7 @@ export function DevScreen({ navigation }: any) {
               </TextButton>
             ))}
           </Box>
-          <Text mt="sm" textAlign="center" variant="body">
+          <Text mt="sm" textAlign="center" variant="body1">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
 

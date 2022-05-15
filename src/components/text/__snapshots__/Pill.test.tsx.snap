@@ -47,10 +47,11 @@ exports[`renders a Pill with border 1`] = `
     style={
       Array [
         Object {
-          "color": "#000000",
+          "color": "#070A15",
           "display": "flex",
-          "fontFamily": "UniswapSansBeta4-Medium",
+          "fontFamily": "Inter-Regular",
           "fontSize": 14,
+          "lineHeight": 20,
         },
         Object {
           "color": undefined,
@@ -87,10 +88,11 @@ exports[`renders a Pill without image 1`] = `
     style={
       Array [
         Object {
-          "color": "#000000",
+          "color": "#070A15",
           "display": "flex",
-          "fontFamily": "UniswapSansBeta4-Medium",
+          "fontFamily": "Inter-Regular",
           "fontSize": 14,
+          "lineHeight": 20,
         },
         Object {
           "color": "deprecated_blue",
