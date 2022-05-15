@@ -1,5 +1,7 @@
 // Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
 
+import { opacify } from 'src/utils/colors'
+
 export interface GlobalPalette {
   white: string
   black: string
@@ -238,9 +240,9 @@ export const colorsLight: Palette = {
   neutralSurface: colors.gray50,
   neutralContainer: colors.gray100,
   neutralAction: colors.gray200,
-  neutralOutline: colors.gray400,
+  neutralOutline: colors.gray300,
   neutralTextPrimary: colors.gray900,
-  neutralTextSecondary: colors.gray600,
+  neutralTextSecondary: colors.gray500,
   neutralTextTertiary: colors.gray400,
   accentBackgroundAction: colors.pink400,
   accentBackgroundActionSoft: colors.pink100,
@@ -248,9 +250,9 @@ export const colorsLight: Palette = {
   accentBackgroundSuccess: colors.green400,
   accentBackgroundWarning: colors.yellow200,
   accentBackgroundFailure: colors.red400,
-  accentText1: 'rgba(0,0,0, 0.80)',
-  accentText2: 'rgba(0,0,0, 0.60)',
-  accentText3: 'rgba(0,0,0, 0.24)',
+  accentText1: opacify(80, colors.black),
+  accentText2: opacify(60, colors.black),
+  accentText3: opacify(24, colors.black),
 
   white: colors.white,
   black: colors.black,
@@ -295,6 +297,7 @@ export const colorsDark: Palette = {
   deprecated_warning: colors.yellow200,
   deprecated_error: colors.red400,
 
+  // TODO: double-check these values
   neutralBackground: colors.white,
   neutralSurface: colors.gray50,
   neutralContainer: colors.gray100,
@@ -309,6 +312,7 @@ export const colorsDark: Palette = {
   accentBackgroundSuccess: colors.green400,
   accentBackgroundWarning: colors.yellow200,
   accentBackgroundFailure: colors.red400,
+  // TODO: rgba(white) or rgba(black)
   accentText1: colors.white,
   accentText2: 'rgba(255, 255, 255, 0.72)',
   accentText3: 'rgba(255, 255, 255, 0.12)',
