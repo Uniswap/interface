@@ -65,7 +65,9 @@ class WalletConnectSignRequestHandler: RequestHandler {
           "dapp": [
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
-            "icon": icons.isEmpty ? "" : icons[0].absoluteString
+            "icon": icons.isEmpty ? "" : icons[0].absoluteString,
+            // use walletInfo's chainId because .dappInfo does not update on network change
+            "chain_id": session.walletInfo?.chainId ?? 1,
           ]
         ]
       )
