@@ -76,7 +76,6 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
           return (
             <Option
               currency={currency}
-              // currencyPrice={spotPrices?.[currencyId(currency.wrapped)]}
               matches={item.matches}
               metadataType="price"
               onPress={() => onSelectCurrency?.(currency)}

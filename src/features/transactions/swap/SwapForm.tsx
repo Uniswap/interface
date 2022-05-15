@@ -4,13 +4,14 @@ import { notificationAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
+import { SlideInDown, SlideOutDown } from 'react-native-reanimated'
 import { AnyAction } from 'redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { LongPressButton } from 'src/components/buttons/LongPressButton'
 import { SwapArrow } from 'src/components/icons/SwapArrow'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
-import { DecimalPad } from 'src/components/input/DecimalPad'
+import { AnimatedDecimalPad } from 'src/components/input/DecimalPad'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
@@ -142,7 +143,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
           />
         </Trace>
       </Box>
-      <Flex flexGrow={1} gap="md" justifyContent="space-between" my="xs">
+      <Flex flexGrow={1} gap="md" justifyContent="flex-end" my="xs">
         {showDetails && !isWrapAction(wrapType) && trade && quoteSuccess && (
           <SwapDetails
             currencyIn={currencyAmounts[CurrencyField.INPUT]}
@@ -160,10 +161,14 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
             <QuickDetails label={swapInputStatusMessage} trade={trade} />
           </Button>
         )}
-        <DecimalPad
-          setValue={(value) => onEnterExactAmount(exactCurrencyField, value)}
-          value={formattedAmounts[exactCurrencyField]}
-        />
+        {showDetails ? null : (
+          <AnimatedDecimalPad
+            entering={SlideInDown}
+            exiting={SlideOutDown}
+            setValue={(value: string) => onEnterExactAmount(exactCurrencyField, value)}
+            value={formattedAmounts[exactCurrencyField]}
+          />
+        )}
         <ActionButton
           callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
           disabled={actionButtonDisabled}

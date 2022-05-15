@@ -1,6 +1,7 @@
 import React from 'react'
+import { withAnimated } from 'src/components/animated'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Flex } from 'src/components/layout'
+import { AnimatedBox } from 'src/components/layout'
 
 type KeyProps = {
   action: string
@@ -30,11 +31,17 @@ interface DecimalPadProps {
 
 export function DecimalPad({ setValue, value = '' }: DecimalPadProps) {
   return (
-    <Flex row flex={1} flexGrow={1} flexWrap="wrap" gap="none">
+    <AnimatedBox
+      // entering={SlideInDown}
+      // exiting={SlideOutDown}
+      flex={1}
+      flexDirection="row"
+      flexGrow={1}
+      flexWrap="wrap">
       {keys.map((key, i) => (
         <KeyButton {...key} key={i} setValue={setValue} value={value} />
       ))}
-    </Flex>
+    </AnimatedBox>
   )
 }
 
@@ -69,3 +76,5 @@ function KeyButton({ action, disabled, label, setValue, value }: KeyButtonProps)
     </TextButton>
   )
 }
+
+export const AnimatedDecimalPad = withAnimated(DecimalPad)

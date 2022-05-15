@@ -1,10 +1,10 @@
 import React from 'react'
+import { SlideInDown, SlideOutUp } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
+import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
@@ -29,9 +29,11 @@ export function QuickDetails(props: QuickDetailsProps) {
 
   return (
     <Trace logImpression section={SectionName.QuickDetails}>
-      <Box
+      <AnimatedBox
         alignItems="center"
         alignSelf="stretch"
+        entering={SlideInDown}
+        exiting={SlideOutUp}
         flexDirection="row"
         justifyContent="space-between">
         <Flex centered row gap="xs">
@@ -63,7 +65,7 @@ export function QuickDetails(props: QuickDetailsProps) {
             </Flex>
           </Button>
         )}
-      </Box>
+      </AnimatedBox>
     </Trace>
   )
 }
