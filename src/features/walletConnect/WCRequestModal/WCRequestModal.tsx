@@ -33,7 +33,10 @@ const getMessage = (request: WalletConnectRequest) => {
     return request.message
   }
 
-  if (request.type === EthMethod.EthSignTransaction) {
+  if (
+    request.type === EthMethod.EthSignTransaction ||
+    request.type === EthMethod.EthSendTransaction
+  ) {
     return request.transaction.data
   }
 
@@ -54,6 +57,7 @@ const VALID_REQUEST_TYPES = [
   EthMethod.SignTypedData,
   EthMethod.EthSign,
   EthMethod.EthSignTransaction,
+  EthMethod.EthSendTransaction,
 ]
 
 export function WCRequestModal({ isVisible, onClose, request }: Props) {
@@ -78,7 +82,10 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
 
   const onConfirm = async () => {
     if (!activeAccount || !canSubmit) return
-    if (request.type === EthMethod.EthSignTransaction) {
+    if (
+      request.type === EthMethod.EthSignTransaction ||
+      request.type === EthMethod.EthSendTransaction
+    ) {
       const { to, from, gasPrice, data, nonce } = request.transaction
       const transaction: providers.TransactionRequest = {
         to,
@@ -94,6 +101,7 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
           method: request.type,
           transaction,
           account: activeAccount,
+          dapp: request.dapp,
         })
       )
     } else {
@@ -101,8 +109,10 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
         signWcRequestActions.trigger({
           requestInternalId: request.internalId,
           method: request.type,
+          // @ts-ignore this is EthSignMessage type
           message: request.message,
           account: activeAccount,
+          dapp: request.dapp,
         })
       )
     }

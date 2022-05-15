@@ -12,6 +12,7 @@ enum EthMethod: String {
   case personalSign = "personal_sign"
   case ethSign = "eth_sign"
   case signTransaction = "eth_signTransaction"
+  case sendTransaction = "eth_sendTransaction"
   case switchChain = "wallet_switchEthereumChain"
   case addChain = "wallet_addEthereumChain"
   case signTypedData = "eth_signTypedData"
@@ -19,8 +20,8 @@ enum EthMethod: String {
 
 enum EventType: String, CaseIterable {
   case error = "error"
-  case signRequest = "sign_request"
-  case signTransaction = "sign_transaction"
+  case signRequest = "sign_request" // personal_sign, eth_sign, eth_signTypedData requests
+  case transactionRequest = "transaction_request" // eth_signTransaction and eth_sendTransaction requests
   case sessionConnected = "session_connected"
   case sessionUpdated = "session_updated"
   case sessionDisconnected = "session_disconnected"

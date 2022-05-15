@@ -1,25 +1,27 @@
-import { providers } from 'ethers'
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { Action } from '@reduxjs/toolkit'
-import { Wallet } from 'ethers'
+import { providers, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { NativeEventEmitter, NativeModules } from 'react-native'
 import { eventChannel } from 'redux-saga'
 import { i18n } from 'src/app/i18n'
-import { getSignerManager } from 'src/app/walletContext'
+import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { signAndSendTransaction } from 'src/features/transactions/sendTransaction'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
+  DappInfo,
   EthMethod,
   EthSignMethod,
+  EthTransactionMethod,
   SessionConnectedEvent,
   SessionDisconnectedEvent,
   SessionUpdatedEvent,
   SignRequestEvent,
-  SignTransactionEvent,
+  TransactionRequestEvent,
   WCError,
   WCErrorType,
   WCEventType,
@@ -100,13 +102,13 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
-    const signTransactionHandler = (req: SignTransactionEvent) => {
+    const transactionRequestHandler = (req: TransactionRequestEvent) => {
       const { to, from, value, data, gas, gas_price: gasPrice, nonce } = req.transaction
       emit(
         addRequest({
           account: req.account,
           request: {
-            type: req.type as EthMethod.EthSignTransaction,
+            type: req.type as EthTransactionMethod,
             transaction: {
               to,
               from,
@@ -148,7 +150,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       { type: WCEventType.SessionUpdated, handler: sessionUpdatedHandler },
       { type: WCEventType.SessionDisconnected, handler: sessionDisconnectedHandler },
       { type: WCEventType.SignRequest, handler: signRequestHandler },
-      { type: WCEventType.SignTransaction, handler: signTransactionHandler },
+      { type: WCEventType.TransactionRequest, handler: transactionRequestHandler },
       { type: WCEventType.Error, handler: errorHandler },
     ]
 
@@ -190,13 +192,15 @@ type SignMessageParams = {
   message: string
   account: Account
   method: EthSignMethod
+  dapp: DappInfo
 }
 
 type SignTransactionParams = {
   requestInternalId: string
   transaction: providers.TransactionRequest
   account: Account
-  method: EthMethod.EthSignTransaction
+  method: EthMethod.EthSignTransaction | EthMethod.EthSendTransaction
+  dapp: DappInfo
 }
 
 type EthTypedMessage = {
@@ -216,12 +220,30 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = yield* call(signTypedData, params.message, account, signerManager)
     } else if (method === EthMethod.EthSignTransaction) {
       signature = yield* call(signTransaction, params.transaction, account, signerManager)
+    } else if (method === EthMethod.EthSendTransaction) {
+      const provider = yield* call(getProvider, params.transaction.chainId || 1)
+      const { transactionResponse } = yield* call(
+        signAndSendTransaction,
+        params.transaction,
+        account,
+        provider,
+        signerManager
+      )
+      signature = transactionResponse.hash
     }
 
     yield* call(sendSignature, requestInternalId, signature, account.address)
   } catch (err) {
     yield* call(rejectRequest, requestInternalId, account.address)
-    logger.error('wcSaga', 'signMessage', 'signing error:', err)
+    yield* put(
+      pushNotification({
+        type: AppNotificationType.WalletConnect,
+        title: i18n.t('There was an issue submitting your transaction.'),
+        imageUrl: params.dapp.icon,
+        chainId: params.dapp.chain_id,
+      })
+    )
+    logger.info('wcSaga', 'signMessage', 'signing error:', err)
   }
 }
 

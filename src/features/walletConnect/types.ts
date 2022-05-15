@@ -2,6 +2,7 @@
 export enum EthMethod {
   EthSign = 'eth_sign',
   EthSignTransaction = 'eth_signTransaction',
+  EthSendTransaction = 'eth_sendTransaction',
   SignTypedData = 'eth_signTypedData',
   PersonalSign = 'personal_sign',
 }
@@ -23,10 +24,11 @@ export enum WCEventType {
   SessionDisconnected = 'session_disconnected',
   Error = 'error',
   SignRequest = 'sign_request',
-  SignTransaction = 'sign_transaction',
+  TransactionRequest = 'transaction_request',
 }
 
 export type EthSignMethod = EthMethod.PersonalSign | EthMethod.SignTypedData | EthMethod.EthSign
+export type EthTransactionMethod = EthMethod.EthSignTransaction | EthMethod.EthSendTransaction
 
 interface BaseSessionEvent {
   session_id: string
@@ -61,9 +63,9 @@ export interface EthTransaction {
   nonce: string
 }
 
-export interface SignTransactionEvent {
+export interface TransactionRequestEvent {
   account: string
-  type: EthMethod.EthSignTransaction
+  type: EthTransactionMethod
   transaction: {
     to: string
     from: string

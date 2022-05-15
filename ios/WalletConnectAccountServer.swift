@@ -127,6 +127,12 @@ class WalletConnectAccountServer {
           "chain_id": chainId
         ]
       ])
+      
+      // update session with updated chain ID in our local store
+      var newSession = session
+      newSession.walletInfo = newWalletInfo
+      self.topicToSession.updateValue(newSession, forKey: session.url.topic)
+      
     } catch {
       self.eventEmitter.sendEvent(
         withName: EventType.error.rawValue,
@@ -230,11 +236,12 @@ extension WalletConnectAccountServer: ServerDelegate {
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
-        "chain_id": session.dAppInfo.chainId!
+        "chain_id": session.walletInfo?.chainId ?? 1
       ]
     ])
   }
   
+  // TODO: figure out why this update function is never called on network change
   func server(_ server: Server, didUpdate session: Session) {
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }

@@ -21,7 +21,7 @@ class WalletConnectSignTransactionHandler: RequestHandler {
   }
   
   func canHandle(request: Request) -> Bool {
-    return request.method == EthMethod.signTransaction.rawValue
+    return request.method == EthMethod.signTransaction.rawValue || request.method == EthMethod.sendTransaction.rawValue
   }
   
   func handle(request: Request) {
@@ -32,25 +32,27 @@ class WalletConnectSignTransactionHandler: RequestHandler {
       let session = try self.accountServer.getSessionFromTopic(request.url.topic)
       let icons = session.dAppInfo.peerMeta.icons
       let transaction = try request.parameter(of: EthereumTransaction.self, at: 0)
+
       self.eventEmitter.sendEvent(
-        withName: EventType.signTransaction.rawValue, body: [
+        withName: EventType.transactionRequest.rawValue, body: [
           "type": request.method,
           "request_internal_id": internalId,
           "account": self.account!,
           "transaction": [
-            "data": transaction.data ?? "",
-            "from": transaction.from ?? "",
+            "data": transaction.data,
+            "from": transaction.from,
             "to": transaction.to,
-            "gas": transaction.gas ?? "",
-            "gas_price": transaction.gasPrice ?? "",
-            "value": transaction.value ?? "",
-            "nonce": transaction.nonce ?? "",
+            "gas": transaction.gas,
+            "gas_price": transaction.gasPrice,
+            "value": transaction.value,
+            "nonce": transaction.nonce,
           ],
           "dapp": [
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
             "icon": icons.isEmpty ? "" : icons[0].absoluteString,
-            "chain_id": session.dAppInfo.chainId ?? 1,
+            // use walletInfo's chainId because .dappInfo does not update on network change
+            "chain_id": session.walletInfo?.chainId ?? 1,
           ]
         ]
       )
