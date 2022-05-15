@@ -36,7 +36,9 @@ export function Create() {
     await element(by.id(ElementName.Next)).tap()
 
     // Home screen
-    await expect(element(by.id(`address-display/name/${Accounts.managed.name}`))).toBeVisible()
+    await expect(
+      element(by.id(`address-display/name/${Accounts.managed.name}`)).atIndex(0)
+    ).toBeVisible()
   })
 }
 
