@@ -3,6 +3,8 @@ import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { config } from 'src/config'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { FLASHBOTS_URLS } from 'src/features/providers/constants'
+import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProvider'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
 import { logger } from 'src/utils/logger'
@@ -72,6 +74,15 @@ export class ProviderManager {
     return provider!
   }
 
+  private getFlashbotsProvider(chainId: ChainId) {
+    if (!FLASHBOTS_SUPPORTED_CHAINS.includes(chainId.toString())) {
+      throw new Error(`${chainId} is not supported by flashbots`)
+    }
+
+    const flashbotsUrl = FLASHBOTS_URLS[chainId]?.rpcUrl
+    return new ethersProviders.JsonRpcProvider(flashbotsUrl)
+  }
+
   removeProvider(chainId: ChainId) {
     if (!this._providers[chainId]) {
       logger.warn(
@@ -98,7 +109,9 @@ export class ProviderManager {
     return provider.provider
   }
 
-  getProvider(chainId: ChainId): ethersProviders.Provider {
+  getProvider(chainId: ChainId, isFlashbots?: boolean): ethersProviders.Provider {
+    if (isFlashbots) return this.getFlashbotsProvider(chainId)
+
     if (!this._providers[chainId]) {
       throw new Error(`No provider initialized for chain: ${chainId}`)
     }

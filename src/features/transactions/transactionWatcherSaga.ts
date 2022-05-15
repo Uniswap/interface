@@ -7,6 +7,7 @@ import { TRANSACTION_TIMEOUT_DURATION } from 'src/constants/transactions'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
@@ -26,7 +27,10 @@ import {
 import { getPendingTransactions } from 'src/features/transactions/utils'
 import { logger } from 'src/utils/logger'
 import { flattenObjectOfObjects } from 'src/utils/objects'
+import { sleep } from 'src/utils/timing'
 import { call, delay, fork, put, race, take } from 'typed-redux-saga'
+
+const FLASHBOTS_POLLING_INTERVAL = 5000 // 5 seconds
 
 export function* transactionWatcher() {
   // Delay execution until providers are ready
@@ -47,68 +51,113 @@ export function* transactionWatcher() {
       addTransaction.type,
       updateTransaction.type,
     ])
-    yield* fork(watchTransaction, transaction)
+    try {
+      if (transaction.isFlashbots) {
+        yield* fork(watchFlashbotsTransaction, transaction)
+      } else {
+        yield* fork(watchTransaction, transaction)
+      }
+    } catch (error) {
+      const { hash } = transaction
+      logger.error(
+        'transactionWatcherSaga',
+        'watchTransaction',
+        'Error while watching transaction',
+        hash,
+        error
+      )
+      yield* put(
+        pushNotification({
+          title: i18n.t('Error while checking transaction status'),
+          type: AppNotificationType.Default,
+        })
+      )
+    }
+  }
+}
+
+export function* getFlashbotsTxConfirmation(txHash: string, chainId: ChainId) {
+  while (true) {
+    const status = yield* call(fetchTransactionStatus, txHash, chainId)
+    if (status !== TransactionStatus.Pending) {
+      return status
+    }
+
+    yield* call(sleep, FLASHBOTS_POLLING_INTERVAL)
+  }
+}
+
+export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
+  const { chainId, hash, id, options, from } = transaction
+
+  const txStatus = yield* call(getFlashbotsTxConfirmation, hash, chainId)
+  if (txStatus === TransactionStatus.Failed || txStatus === TransactionStatus.Unknown) {
+    yield* put(failTransaction({ chainId, id }))
+    yield* put(
+      pushNotification({
+        title: i18n.t('Your transaction has failed.'),
+        type: AppNotificationType.Default,
+      })
+    )
+
+    // TODO: skip finalizeTransaction for failed tx for now because
+    // flashbots failed tx do not have txReceipts so we need to refactor
+    // finalizeTransaction to mark txReceipts as optional
+    return
+  }
+
+  const provider = yield* call(getProvider, chainId)
+  const receipt = yield* call(waitForReceipt, hash, provider)
+  yield* call(finalizeTransaction, chainId, id, receipt, txStatus)
+
+  if (options.fetchBalanceOnSuccess) {
+    yield* put(fetchBalancesActions.trigger(from))
   }
 }
 
 export function* watchTransaction(transaction: TransactionDetails) {
   const { chainId, id, hash, options, from, addedTime } = transaction
-  try {
-    logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
-    const provider = yield* call(getProvider, chainId)
 
-    const maxTimeout = options.timeoutMs ?? TRANSACTION_TIMEOUT_DURATION
-    const remainingTimeout = maxTimeout - (Date.now() - addedTime)
+  logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
+  const provider = yield* call(getProvider, chainId)
 
-    // Before starting race, check to see if tx is old and already (or nearly) timed out
-    if (remainingTimeout <= 5_000 /* 5s */) {
-      yield* call(handleTimedOutTransaction, transaction, provider)
-      return
-    }
+  const maxTimeout = options.timeoutMs ?? TRANSACTION_TIMEOUT_DURATION
+  const remainingTimeout = maxTimeout - (Date.now() - addedTime)
 
-    const { receipt, cancel, replace, timeout } = yield* race({
-      receipt: call(waitForReceipt, hash, provider),
-      cancel: call(waitForCancellation, chainId, id),
-      replace: call(waitForReplacement, chainId, id),
-      timeout: delay(remainingTimeout),
-    })
+  // Before starting race, check to see if tx is old and already (or nearly) timed out
+  if (remainingTimeout <= 5_000 /* 5s */) {
+    yield* call(handleTimedOutTransaction, transaction, provider)
+    return
+  }
 
-    if (cancel) {
-      yield* call(attemptCancelTransaction, transaction)
-      return
-    }
+  const { receipt, cancel, replace, timeout } = yield* race({
+    receipt: call(waitForReceipt, hash, provider),
+    cancel: call(waitForCancellation, chainId, id),
+    replace: call(waitForReplacement, chainId, id),
+    timeout: delay(remainingTimeout),
+  })
 
-    if (replace) {
-      yield* call(attemptReplaceTransaction, transaction, replace.newTxParams)
-      return
-    }
+  if (cancel) {
+    yield* call(attemptCancelTransaction, transaction)
+    return
+  }
 
-    if (timeout || !receipt) {
-      logger.debug('transactionWatcherSaga', 'watchTransaction', 'Tx timed out', hash)
-      yield* call(handleTimedOutTransaction, transaction, provider)
-      return
-    }
+  if (replace) {
+    yield* call(attemptReplaceTransaction, transaction, replace.newTxParams)
+    return
+  }
 
-    // Update the store with tx receipt details
-    yield* call(finalizeTransaction, chainId, id, receipt)
+  if (timeout || !receipt) {
+    logger.debug('transactionWatcherSaga', 'watchTransaction', 'Tx timed out', hash)
+    yield* call(handleTimedOutTransaction, transaction, provider)
+    return
+  }
 
-    if (options.fetchBalanceOnSuccess) {
-      yield* put(fetchBalancesActions.trigger(from))
-    }
-  } catch (error) {
-    logger.error(
-      'transactionWatcherSaga',
-      'watchTransaction',
-      'Error while watching transaction',
-      hash,
-      error
-    )
-    yield* put(
-      pushNotification({
-        title: i18n.t('Error while checking transaction status'),
-        type: AppNotificationType.Default,
-      })
-    )
+  // Update the store with tx receipt details
+  yield* call(finalizeTransaction, chainId, id, receipt)
+
+  if (options.fetchBalanceOnSuccess) {
+    yield* put(fetchBalancesActions.trigger(from))
   }
 }
 
@@ -165,9 +214,11 @@ function* handleTimedOutTransaction(transaction: TransactionDetails, provider: p
 function* finalizeTransaction(
   chainId: ChainId,
   id: string,
-  ethersReceipt: providers.TransactionReceipt
+  ethersReceipt: providers.TransactionReceipt,
+  statusOverride?: TransactionStatus
 ) {
-  const status = ethersReceipt.status ? TransactionStatus.Success : TransactionStatus.Failed
+  const status =
+    statusOverride || (ethersReceipt.status ? TransactionStatus.Success : TransactionStatus.Failed)
   const receipt: TransactionReceipt = {
     blockHash: ethersReceipt.blockHash,
     blockNumber: ethersReceipt.blockNumber,

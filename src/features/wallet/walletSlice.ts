@@ -17,6 +17,7 @@ interface Wallet {
   activeAccountAddress: Address | null
   bluetooth: boolean
   finishedOnboarding?: boolean
+  flashbotsEnabled: boolean
   hardwareDevices: HardwareDevice[]
   isUnlocked: boolean
 }
@@ -25,6 +26,7 @@ const initialState: Wallet = {
   accounts: {},
   activeAccountAddress: null,
   bluetooth: false,
+  flashbotsEnabled: false,
   hardwareDevices: [],
   isUnlocked: false,
 }
@@ -64,6 +66,9 @@ const slice = createSlice({
     unlockWallet: (state) => {
       state.isUnlocked = true
     },
+    toggleFlashbots: (state, action: PayloadAction<boolean>) => {
+      state.flashbotsEnabled = action.payload
+    },
     addHardwareDevice: (state, action: PayloadAction<HardwareDevice>) => {
       state.hardwareDevices ??= []
       state.hardwareDevices.push(action.payload)
@@ -100,6 +105,7 @@ export const selectUserLocalPfp = createSelector(
   (activeAccount) => activeAccount?.customizations?.localPfp
 )
 export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
+export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
 
 export const {
   addAccount,
@@ -111,6 +117,7 @@ export const {
   addHardwareDevice,
   toggleBluetooth,
   setFinishedOnboarding,
+  toggleFlashbots,
 } = slice.actions
 
 export const walletReducer = slice.reducer

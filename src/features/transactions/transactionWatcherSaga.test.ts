@@ -1,6 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { getProvider } from 'src/app/walletContext'
+import { getProvider, getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
@@ -12,11 +12,20 @@ import {
   updateTransaction,
 } from 'src/features/transactions/slice'
 import {
+  getFlashbotsTxConfirmation,
   transactionWatcher,
+  waitForReceipt,
+  watchFlashbotsTransaction,
   watchTransaction,
 } from 'src/features/transactions/transactionWatcherSaga'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
-import { provider, txDetailsPending, txReceipt } from 'src/test/fixtures'
+import {
+  mockProvider,
+  mockProviderManager,
+  provider,
+  txDetailsPending,
+  txReceipt,
+} from 'src/test/fixtures'
 import { sleep } from 'src/utils/timing'
 
 describe(transactionWatcher, () => {
@@ -31,12 +40,65 @@ describe(transactionWatcher, () => {
           },
         },
       })
-      .provide([[call(waitForProvidersInitialized), true]])
+      .provide([
+        [call(waitForProvidersInitialized), true],
+        [call(getProvider, ChainId.Mainnet), mockProvider],
+        [call(getProviderManager), mockProviderManager],
+      ])
       .fork(watchTransaction, txDetailsPending)
       .dispatch(addTransaction(txDetailsPending))
       .fork(watchTransaction, txDetailsPending)
       .dispatch(updateTransaction(txDetailsPending))
       .fork(watchTransaction, txDetailsPending)
+      .silentRun()
+  })
+})
+
+describe(watchFlashbotsTransaction, () => {
+  let dateNowSpy: any
+  beforeAll(() => {
+    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1400000000000)
+  })
+  afterAll(() => {
+    dateNowSpy?.mockRestore()
+  })
+
+  const { chainId, id, hash } = txDetailsPending
+
+  it('Finalizes successful transactions', () => {
+    return expectSaga(watchFlashbotsTransaction, txDetailsPending)
+      .withState({ wallet: { flashbotsEnabled: true } })
+      .provide([
+        [call(getProvider, chainId), provider],
+        [call(waitForReceipt, hash, provider), txReceipt],
+        [call(getFlashbotsTxConfirmation, hash, chainId), TransactionStatus.Success],
+      ])
+      .put(
+        finalizeTransaction({
+          chainId,
+          id,
+          status: TransactionStatus.Success,
+          receipt: {
+            blockHash: txReceipt.blockHash,
+            blockNumber: txReceipt.blockNumber,
+            transactionIndex: txReceipt.transactionIndex,
+            confirmations: txReceipt.confirmations,
+            confirmedTime: 1400000000000,
+          },
+        })
+      )
+      .silentRun()
+  })
+
+  it('Handles failed transactions', () => {
+    return expectSaga(watchFlashbotsTransaction, txDetailsPending)
+      .withState({ wallet: { flashbotsEnabled: true } })
+      .provide([
+        [call(getProvider, chainId, true), provider],
+        [call(waitForReceipt, hash, provider), txReceipt],
+        [call(getFlashbotsTxConfirmation, hash, chainId), TransactionStatus.Failed],
+      ])
+      .put(failTransaction({ chainId, id }))
       .silentRun()
   })
 })
@@ -109,10 +171,7 @@ describe(watchTransaction, () => {
 
   it('Finalizes successful timed out transaction', () => {
     return expectSaga(watchTransaction, oldTx)
-      .provide([
-        [call(getProvider, chainId), provider],
-        [call([provider, provider.getTransactionReceipt], hash), txReceipt],
-      ])
+      .provide([[call(getProvider, chainId), mockProvider]])
       .put(
         finalizeTransaction({
           chainId,

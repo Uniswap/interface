@@ -2,6 +2,7 @@ import { providers } from 'ethers'
 import { appSelect } from 'src/app/hooks'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
 import { logEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
@@ -17,8 +18,9 @@ import {
 } from 'src/features/transactions/utils'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { selectFlashbotsEnabled } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
-import { call, put } from 'typed-redux-saga'
+import { call, put, select } from 'typed-redux-saga'
 
 interface SendTransactionParams {
   chainId: ChainId
@@ -36,8 +38,12 @@ export function* sendTransaction(params: SendTransactionParams) {
   logger.debug('sendTransaction', '', `Sending tx on ${CHAIN_INFO[chainId].label} to ${request.to}`)
 
   if (account.type === AccountType.Readonly) throw new Error('Account must support signing')
+
+  const isFlashbotsEnabled = yield* select(selectFlashbotsEnabled)
+  const isFlashbots = isFlashbotsEnabled && isFlashbotsSupportedChainId(params.chainId)
+
   // Sign and send the transaction
-  const provider = yield* call(getProvider, chainId)
+  const provider = yield* call(getProvider, chainId, isFlashbots)
   const signerManager = yield* call(getSignerManager)
   const { transactionResponse, populatedRequest } = yield* call(
     signAndSendTransaction,
@@ -49,7 +55,7 @@ export function* sendTransaction(params: SendTransactionParams) {
   logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
   // Register the tx in the store
-  yield* call(addTransaction, params, transactionResponse.hash, populatedRequest)
+  yield* call(addTransaction, params, transactionResponse.hash, populatedRequest, isFlashbots)
 }
 
 export async function signAndSendTransaction(
@@ -69,7 +75,8 @@ export async function signAndSendTransaction(
 function* addTransaction(
   { chainId, typeInfo, account, options }: SendTransactionParams,
   hash: string,
-  populatedRequest: providers.TransactionRequest
+  populatedRequest: providers.TransactionRequest,
+  isFlashbots?: boolean
 ) {
   const txsByChainId = yield* appSelect((state) => state.transactions.byChainId)
   const txCount = getTransactionCount(txsByChainId)
@@ -80,6 +87,7 @@ function* addTransaction(
     chainId,
     hash,
     typeInfo,
+    isFlashbots,
     from: account.address,
     addedTime: Date.now(),
     status: TransactionStatus.Pending,

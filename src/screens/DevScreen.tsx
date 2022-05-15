@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { batch } from 'react-redux'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { BackX } from 'src/components/buttons/BackX'
+import { Switch } from 'src/components/buttons/Switch'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
@@ -17,13 +19,18 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { resetWallet } from 'src/features/wallet/walletSlice'
+import {
+  resetWallet,
+  selectFlashbotsEnabled,
+  toggleFlashbots,
+} from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 
 export function DevScreen({ navigation }: any) {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.Rinkeby)
+  const flashbotsEnabled = useAppSelector(selectFlashbotsEnabled)
 
   const onPressResetTokenWarnings = () => {
     dispatch(resetDismissedWarnings())
@@ -50,6 +57,10 @@ export function DevScreen({ navigation }: any) {
       dispatch(setChainActiveStatus({ chainId: ChainId.Rinkeby, isActive: !isRinkebyActive }))
       dispatch(setChainActiveStatus({ chainId: ChainId.Goerli, isActive: !isRinkebyActive }))
     })
+  }
+
+  const onToggleFlashbots = (enabled: boolean) => {
+    dispatch(toggleFlashbots(enabled))
   }
 
   const blockTimestamp = useCurrentBlockTimestamp(currentChain)
@@ -98,7 +109,13 @@ export function DevScreen({ navigation }: any) {
           <Text mt="sm" textAlign="center" variant="body1">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
-
+          <Flex row alignItems="center" justifyContent="space-between">
+            <Text variant="body1">Use flashbots for transactions</Text>
+            <Switch
+              value={flashbotsEnabled}
+              onValueChange={() => onToggleFlashbots(!flashbotsEnabled)}
+            />
+          </Flex>
           <TextButton
             mt="md"
             name="DEBUG_Create"

@@ -1,6 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { getProvider, getSignerManager } from 'src/app/walletContext'
+import { getProvider, getProviderManager, getSignerManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { sendTransaction, signAndSendTransaction } from 'src/features/transactions/sendTransaction'
 import { addTransaction } from 'src/features/transactions/slice'
@@ -9,6 +9,7 @@ import { AccountType, ReadOnlyAccount } from 'src/features/wallet/accounts/types
 import {
   account,
   provider,
+  providerManager,
   signerManager,
   txRequest,
   txResponse,
@@ -37,9 +38,10 @@ describe(sendTransaction, () => {
 
   it('Sends valid transactions successfully', () => {
     return expectSaga(sendTransaction, sendParams)
-      .withState({ transactions: {} })
+      .withState({ transactions: {}, wallet: {} })
       .provide([
         [call(getProvider, sendParams.chainId), provider],
+        [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
           call(signAndSendTransaction, txRequest, account, provider as any, signerManager),
@@ -52,6 +54,7 @@ describe(sendTransaction, () => {
           id: '0',
           hash: txResponse.hash,
           typeInfo: txTypeInfo,
+          isFlashbots: undefined,
           from: sendParams.account.address,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
@@ -65,7 +68,7 @@ describe(sendTransaction, () => {
               nonce: txRequest.nonce,
               type: undefined,
               gasLimit: undefined,
-              gasPrice: undefined,
+              gasPrice: txRequest.gasPrice?.toString(),
               maxPriorityFeePerGas: undefined,
               maxFeePerGas: undefined,
             },

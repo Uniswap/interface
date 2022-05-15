@@ -98,6 +98,7 @@
   "From {{addr}} on {{chain}}": "From {{addr}} on {{chain}}",
   "Hash: {{hash}}": "Hash: {{hash}}",
   "Unknown chain": "Unknown chain",
+  "Your transaction has failed.": "Your transaction has failed.",
   "Error while checking transaction status": "Error while checking transaction status",
   "Unsupported chain": "Unsupported chain",
   "1 app connected": "1 app connected",

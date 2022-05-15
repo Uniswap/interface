@@ -32,6 +32,7 @@ export interface AccountBase {
   name?: string
   customizations?: AccountCustomizations
   backups?: BackupType[]
+  flashbotsEnabled?: boolean
 }
 
 export interface LocalAccount extends AccountBase {

@@ -27,6 +27,8 @@ export interface TransactionDetails extends TransactionId {
   // we start tracking txs before their actually sent
   hash: string
   receipt?: TransactionReceipt
+
+  isFlashbots?: boolean
 }
 
 export enum TransactionStatus {
@@ -36,6 +38,7 @@ export enum TransactionStatus {
   Failed = 'failed',
   Pending = 'pending',
   Replacing = 'replacing',
+  Unknown = 'unknown',
   // May want more granular options here later like InMemPool
 }
 

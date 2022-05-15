@@ -31,12 +31,22 @@ export const mockSignerManager = {
   getSignerForAccount: async () => mockSigner,
 }
 
+const mockFeeData = {
+  maxFeePerPrice: BigNumber.from('1000'),
+  maxPriorityFeePerGas: BigNumber.from('10000'),
+  gasPrice: BigNumber.from('10000'),
+}
+
 export const mockProvider = {
   getBalance: jest.fn(() => BigNumber.from('1000000000000000000')),
   getGasPrice: jest.fn(() => BigNumber.from('100000000000')),
   getTransactionCount: jest.fn(() => 1000),
   estimateGas: jest.fn(() => BigNumber.from('30000')),
   sendTransaction: jest.fn(() => ({ hash: '0xabcdef' })),
+  detectNetwork: jest.fn(() => ({ name: 'mainnet', chainId: 1 })),
+  getTransactionReceipt: jest.fn(() => txReceipt),
+  waitForTransaction: jest.fn(() => txReceipt),
+  getFeeData: jest.fn(() => mockFeeData),
 }
 
 export const mockProviderManager = {
@@ -86,6 +96,7 @@ export const txRequest: providers.TransactionRequest = {
   value: '0x0',
   data: '0x789',
   nonce: 10,
+  gasPrice: mockFeeData.gasPrice,
 }
 
 export const txReceipt = {
