@@ -100,10 +100,10 @@ export const selectUserPalette = createSelector(
   activeAccountSelector,
   (activeAccount) => activeAccount?.customizations?.palette
 )
-export const selectUserLocalPfp = createSelector(
-  activeAccountSelector,
-  (activeAccount) => activeAccount?.customizations?.localPfp
-)
+
+export const selectAccountLocalPfp = (address: Address) => (state: RootState) =>
+  state.wallet.accounts[address]?.customizations?.localPfp
+
 export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
 
