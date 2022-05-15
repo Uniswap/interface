@@ -133,9 +133,9 @@ function QuickActions() {
           <WalletIcon color={theme.colors.mainForeground} height={20} strokeWidth={2} width={20} />
         }
         label={t('Buy')}
-        name={ElementName.BuyToken}
+        name={ElementName.NavigateBuy}
         style={{ backgroundColor: theme.colors.tabBackground }}
-        testID={ElementName.BuyToken}
+        testID={ElementName.NavigateBuy}
         variant="gray"
         onPress={onPressSwap}
       />
@@ -145,9 +145,9 @@ function QuickActions() {
           <SwapIcon color={theme.colors.mainForeground} height={20} strokeWidth={2} width={20} />
         }
         label={t('Swap')}
-        name={ElementName.Swap}
+        name={ElementName.NavigateSwap}
         style={{ backgroundColor: theme.colors.tabBackground }}
-        testID={ElementName.Swap}
+        testID={ElementName.NavigateSwap}
         variant="gray"
         onPress={onPressSwap}
       />
@@ -157,9 +157,9 @@ function QuickActions() {
           <SendIcon height={20} stroke={theme.colors.mainForeground} strokeWidth={2} width={20} />
         }
         label={t('Send')}
-        name={ElementName.Send}
+        name={ElementName.NavigateSend}
         style={{ backgroundColor: theme.colors.tabBackground }}
-        testID={ElementName.Send}
+        testID={ElementName.NavigateSend}
         variant="gray"
         onPress={onPressSend}
       />

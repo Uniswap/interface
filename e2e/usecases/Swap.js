@@ -4,7 +4,7 @@ import { sleep } from '../../src/utils/timing'
 
 export function Swap() {
   it('fills the swap form', async () => {
-    await element(by.id(ElementName.Swap)).tap()
+    await element(by.id(ElementName.NavigateSwap)).tap()
 
     await element(by.id('currency-selector-toggle-in')).tap()
     await element(by.id('currency-option-1-ETH')).tap()
