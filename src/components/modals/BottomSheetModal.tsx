@@ -13,7 +13,6 @@ import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { dimensions } from 'src/styles/sizing'
-import { Theme } from 'src/styles/theme'
 
 type Props = {
   children: PropsWithChildren<any>
@@ -25,7 +24,7 @@ type Props = {
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
-  backgroundColor?: keyof Theme['colors']
+  backgroundColor?: string
 }
 
 const HandleBar = () => {

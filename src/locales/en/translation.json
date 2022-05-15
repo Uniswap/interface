@@ -208,7 +208,7 @@
   "Turn on FaceID": "Turn on FaceID",
   "NFTs": "NFTs",
   "View all": "View all",
-  "Following": "Following",
+  "Friends": "Friends",
   "Favorite Tokens": "Favorite Tokens",
   "Extra words detected - tap to remove them": "Extra words detected - tap to remove them",
   "Confirm phrase": "Confirm phrase",
@@ -226,6 +226,7 @@
   "About Gas Price": "About Gas Price",
   "Your balance": "Your balance",
   "Sell": "Sell",
+  "Following": "Following",
   "Follow": "Follow",
   "Uniswap Wallet": "Uniswap Wallet",
   "Create New Account": "Create New Account"

@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
@@ -10,12 +11,14 @@ import AddressEnsDisplay from 'src/components/accounts/AddressEnsDisplay'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
+import { IconButton } from 'src/components/buttons/IconButton'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { selectFollowedAddressSet } from 'src/features/favorites/selectors'
 import { addFollow, removeFollow } from 'src/features/favorites/slice'
-import { ElementName } from 'src/features/telemetry/constants'
+import { NFTMasonry } from 'src/screens/PortfolioNFTs'
+import { PortfolioTokens } from 'src/screens/PortfolioTokens'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 
@@ -30,6 +33,8 @@ export function UserScreen({
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
+  const isFollowing = useAppSelector(selectFollowedAddressSet).has(address)
+
   const onShare = async () => {
     if (!address) return
     try {
@@ -40,8 +45,6 @@ export function UserScreen({
       logger.error('UserShare', 'onShare', 'Error sharing account address', e)
     }
   }
-
-  const isFollowing = useAppSelector(selectFollowedAddressSet).has(address)
 
   const onFollowPress = () => {
     if (isFollowing) {
@@ -62,45 +65,68 @@ export function UserScreen({
 
   return (
     <Screen>
-      {/* header */}
-      <Flex row alignItems="center" justifyContent="space-between" mt="lg" px="lg">
-        <BackButton color="deprecated_gray100" />
-        <Flex centered row gap="lg">
-          <Button>
-            <SendIcon
-              color={theme.colors.deprecated_gray600}
-              height={24}
-              strokeWidth={2.5}
-              width={24}
-            />
-          </Button>
-          <Button name={ElementName.ShareButton} onPress={onShare}>
-            <ShareIcon color={theme.colors.deprecated_gray600} height={28} width={28} />
-          </Button>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Flex gap="lg">
+          {/* header */}
+          <Flex row alignItems="center" justifyContent="space-between" mt="lg" px="lg">
+            <BackButton color="deprecated_gray600" />
+            <Flex centered row gap="xs">
+              <IconButton
+                icon={
+                  <SendIcon
+                    height={24}
+                    stroke={theme.colors.deprecated_gray600}
+                    strokeWidth={2.5}
+                    width={24}
+                  />
+                }
+              />
+              <IconButton
+                icon={<ShareIcon height={28} stroke={theme.colors.deprecated_gray600} width={28} />}
+                onPress={onShare}
+              />
+            </Flex>
+          </Flex>
+
+          {/* profile info */}
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="space-between"
+            mt="md"
+            px="lg"
+            width={'100%'}>
+            {/* address group */}
+            <Flex centered row gap="sm">
+              <Identicon address={address} size={50} />
+              <AddressEnsDisplay address={address} mainSize={20} secondarySize={14} />
+            </Flex>
+
+            {/* follow button */}
+            <Button
+              alignItems="center"
+              backgroundColor={isFollowing ? 'deprecated_gray50' : 'deprecated_blue'}
+              borderColor={isFollowing ? 'deprecated_gray100' : 'deprecated_blue'}
+              borderRadius="lg"
+              borderWidth={1}
+              px="md"
+              py="xxs"
+              onPress={onFollowPress}>
+              <Text fontWeight={'500'} variant="body2">
+                {isFollowing ? t('Following') : t('Follow')}
+              </Text>
+            </Button>
+          </Flex>
+
+          {/* user token info */}
+          <Flex px="md">
+            <PortfolioTokens count={5} owner={address} />
+          </Flex>
+          <Flex px="md">
+            <NFTMasonry count={5} owner={address} />
+          </Flex>
         </Flex>
-      </Flex>
-      {/* profile info */}
-      <Flex row alignItems="center" justifyContent="space-between" mt="xl" px="lg" width={'100%'}>
-        {/* address group */}
-        <Flex centered row gap="md">
-          <Identicon address={address} size={50} />
-          <AddressEnsDisplay address={address} secondarySize={14} />
-        </Flex>
-        {/* follow button */}
-        <Button
-          alignItems="center"
-          backgroundColor={isFollowing ? 'deprecated_gray50' : 'deprecated_blue'}
-          borderColor={isFollowing ? 'deprecated_gray100' : 'deprecated_blue'}
-          borderRadius="lg"
-          borderWidth={1}
-          px="md"
-          py="xxs"
-          onPress={onFollowPress}>
-          <Text color="deprecated_textColor" fontSize={14} variant="subHead1">
-            {isFollowing ? t('Following') : t('Follow')}
-          </Text>
-        </Button>
-      </Flex>
+      </ScrollView>
     </Screen>
   )
 }

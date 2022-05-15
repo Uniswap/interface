@@ -16,6 +16,7 @@ export enum Screens {
   OnboardingStack = 'OnboardingStack',
   PortfolioTokens = 'PortfolioTokens',
   PortfolioNFTs = 'PortfolioNFTs',
+  ProfileStack = 'ProfileStack',
   RecipientSelector = 'RecipientSelector',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',

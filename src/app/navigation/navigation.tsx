@@ -13,6 +13,7 @@ import {
   AppStackParamList,
   HomeStackParamList,
   OnboardingStackParamList,
+  ProfileStackParamList,
   SettingsStackParamList,
   TabParamList,
 } from 'src/app/navigation/types'
@@ -51,6 +52,7 @@ import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
+import { UserScreen } from 'src/screens/UserScreen'
 import { dimensions } from 'src/styles/sizing'
 
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -59,6 +61,9 @@ const AppStack = createNativeStackNavigator<AppStackParamList>()
 const HomeStack = createSharedElementStackNavigator<HomeStackParamList>()
 const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
+
+const ProfileStack = createSharedElementStackNavigator<ProfileStackParamList>()
+
 const Drawer = createDrawerNavigator()
 
 function TabNavigator() {
@@ -115,6 +120,31 @@ function SettingsStackGroup() {
       <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
     </SettingsStack.Navigator>
+  )
+}
+
+function ProfileStackGroup() {
+  return (
+    <ProfileStack.Navigator
+      screenOptions={{
+        cardStyleInterpolator: forFade,
+        gestureEnabled: false,
+      }}>
+      <ProfileStack.Screen
+        component={PortfolioTokensScreen}
+        name={Screens.PortfolioTokens}
+        sharedElements={() => {
+          return [{ id: 'portfolio-tokens-header', animation: 'fade' }]
+        }}
+      />
+      <ProfileStack.Screen
+        component={PortfolioNFTsScreen}
+        name={Screens.PortfolioNFTs}
+        sharedElements={() => {
+          return ['portfolio-nfts-header']
+        }}
+      />
+    </ProfileStack.Navigator>
   )
 }
 
@@ -228,12 +258,14 @@ export function AppStackNavigator() {
         <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
+      <AppStack.Screen component={UserScreen} name={Screens.User} />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
         <AppStack.Screen component={SwapScreen} name={Screens.Swap} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
         <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
         <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
+        <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />
         <AppStack.Screen component={TransferTokenScreen} name={Screens.Transfer} />
         <AppStack.Screen component={EducationScreen} name={Screens.Education} />
       </AppStack.Group>

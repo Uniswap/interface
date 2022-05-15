@@ -5,12 +5,10 @@ import { ChainId, ChainIdToCurrencyIdTo } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useMulticall2Contract, useTokenContract } from 'src/features/contracts/useContract'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
-import { ChainIdToCurrencyIdToPortfolioBalance } from 'src/features/dataApi/types'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { useSingleCallResult } from 'src/features/multicall'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { toSupportedChainId } from 'src/utils/chainId'
 import { currencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
@@ -85,22 +83,9 @@ export function useFavoriteCurrencyBalances() {
   const { balances, loading } = useAllBalancesByChainId(activeAccount?.address, chainIds)
   const balanceMap = flattenObjectOfObjects(balances)
 
-  const favoriteBalances = balanceMap
-    .filter((b) => favoriteCurrencies.has(currencyId(b.amount.currency)))
-    .reduce((accum, b) => {
-      const chainId = toSupportedChainId(b.amount.currency.chainId)
-      if (chainId) {
-        const cId = currencyId(b.amount.currency)
-        accum = {
-          ...accum,
-          [chainId]: {
-            ...accum[chainId],
-            [cId]: b,
-          },
-        }
-      }
-      return accum
-    }, {} as ChainIdToCurrencyIdToPortfolioBalance)
+  const favoriteBalances = balanceMap.filter((b) =>
+    favoriteCurrencies.has(currencyId(b.amount.currency))
+  )
 
   return {
     loading,

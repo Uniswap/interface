@@ -32,7 +32,7 @@ type ViewProps = FlatViewProps | NetworkViewProps
 
 type TokenBalanceListProps = {
   loading: boolean
-  header: ReactElement
+  header: ReactElement | null
   refreshing?: boolean
   onRefresh?: () => void
   onPressToken: (currency: Currency) => void

@@ -11,6 +11,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
+import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
@@ -18,7 +19,11 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
-export function PortfolioTokensScreen({}: HomeStackScreenProp<Screens.PortfolioTokens>) {
+export function PortfolioTokensScreen({
+  route: {
+    params: { owner },
+  },
+}: HomeStackScreenProp<Screens.PortfolioTokens>) {
   // avoid relayouts which causes an jitter with shared elements
   const insets = useSafeAreaInsets()
 
@@ -31,16 +36,25 @@ export function PortfolioTokensScreen({}: HomeStackScreenProp<Screens.PortfolioT
         paddingLeft: insets.left,
         paddingRight: insets.right,
       }}>
-      <PortfolioTokens expanded count={15} />
+      <PortfolioTokens expanded count={15} owner={owner} />
     </Box>
   )
 }
 
-export function PortfolioTokens({ expanded, count }: { count?: number; expanded?: boolean }) {
+export function PortfolioTokens({
+  expanded,
+  count,
+  owner,
+}: {
+  count?: number
+  expanded?: boolean
+  owner?: string
+}) {
   const { t } = useTranslation()
   const navigation = useHomeStackNavigation()
   const theme = useAppTheme()
-  const activeAddress = useActiveAccount()?.address
+  const accountAddress = useActiveAccount()?.address
+  const activeAddress = owner ?? accountAddress
   const currentChains = useActiveChainIds()
 
   const { balances: balanceData, loading } = useAllBalancesByChainId(activeAddress, currentChains)
@@ -61,7 +75,7 @@ export function PortfolioTokens({ expanded, count }: { count?: number; expanded?
     if (expanded) {
       navigation.goBack()
     } else {
-      navigation.navigate(Screens.PortfolioTokens)
+      navigation.navigate(Screens.PortfolioTokens, { owner: activeAddress })
     }
   }
 
@@ -101,7 +115,7 @@ export function PortfolioTokens({ expanded, count }: { count?: number; expanded?
             </TextButton>
           )}
         </Flex>
-        <Text variant="subHead1">$124.34</Text>
+        <TotalBalance balances={balanceData} variant="body1" />
       </Flex>
     </Flex>
   )

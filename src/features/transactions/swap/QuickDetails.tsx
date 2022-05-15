@@ -1,7 +1,7 @@
 import React from 'react'
+import { SlideInDown, SlideOutUp } from 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import FlashbotsIcon from 'src/assets/icons/flashbots.svg'
-import { SlideInDown, SlideOutUp } from 'react-native-reanimated'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'

@@ -20,7 +20,11 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 
-export function PortfolioNFTsScreen({}: HomeStackScreenProp<Screens.PortfolioNFTs>) {
+export function PortfolioNFTsScreen({
+  route: {
+    params: { owner },
+  },
+}: HomeStackScreenProp<Screens.PortfolioNFTs>) {
   // avoid relayouts which causes an jitter with shared elements
   const insets = useSafeAreaInsets()
 
@@ -33,13 +37,22 @@ export function PortfolioNFTsScreen({}: HomeStackScreenProp<Screens.PortfolioNFT
         paddingLeft: insets.left,
         paddingRight: insets.right,
       }}>
-      <NFTMasonry expanded count={4} />
+      <NFTMasonry expanded count={4} owner={owner} />
     </Box>
   )
 }
-export function NFTMasonry({ expanded, count }: { count: number; expanded?: boolean }) {
+export function NFTMasonry({
+  expanded,
+  count,
+  owner,
+}: {
+  count: number
+  expanded?: boolean
+  owner?: string
+}) {
   const navigation = useHomeStackNavigation()
-  const activeAddress = useActiveAccount()?.address
+  const accountAddress = useActiveAccount()?.address
+  const activeAddress = owner ?? accountAddress
   const theme = useAppTheme()
   const { t } = useTranslation()
 
@@ -54,7 +67,7 @@ export function NFTMasonry({ expanded, count }: { count: number; expanded?: bool
     if (expanded) {
       navigation.goBack()
     } else {
-      navigation.navigate(Screens.PortfolioNFTs)
+      navigation.navigate(Screens.PortfolioNFTs, { owner: activeAddress })
     }
   }
 

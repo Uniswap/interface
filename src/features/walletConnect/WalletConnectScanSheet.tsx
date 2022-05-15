@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import QRCode from 'react-native-qrcode-svg'
 import 'react-native-reanimated'
@@ -64,7 +63,7 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
     <BottomSheetModal
       fullScreen
       hideHandlebar
-      backgroundColor="black"
+      backgroundColor={theme.colors.mainBackground}
       isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
@@ -77,7 +76,7 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
         zIndex="modal">
         <Box bg="deprecated_gray400" borderRadius="sm" height={4} width={40} />
       </Flex>
-      <Box borderRadius="lg" flex={1} pt="xxl" style={ModalStyles.gradient}>
+      <Box borderRadius="lg" flex={1} pt="xxl">
         <Flex centered gap="sm">
           <Text color="deprecated_textColor" variant="subHead1">
             {showQRCode ? ens.name ?? shortenAddress(address) : t('Scan a QR code')}
@@ -129,7 +128,7 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
             borderRadius="lg"
             name={ElementName.QRCodeModalToggle}
             p="md"
-            style={{ backgroundColor: opacify(50, theme.colors.deprecated_gray100) }}
+            style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray50) }}
             onPress={() => setShowQRCode(false)}>
             <Flex row gap="sm">
               <Flex
@@ -137,7 +136,7 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
                 backgroundColor="deprecated_background1"
                 borderRadius="sm"
                 padding="xs">
-                <QrScanIcon />
+                <QrScanIcon color={theme.colors.deprecated_gray100} />
               </Flex>
               <Flex flexGrow={1} gap="xxs">
                 <Text variant="body1">{t('Scan a QR code')}</Text>
@@ -156,7 +155,7 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
             borderRadius="lg"
             name={ElementName.QRCodeModalToggle}
             p="md"
-            style={{ backgroundColor: opacify(50, theme.colors.deprecated_gray100) }}
+            style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray50) }}
             onPress={onPressQRCode}>
             <Flex row gap="sm">
               <Flex centered backgroundColor="white" borderRadius="sm" padding="xs">
@@ -193,10 +192,3 @@ export function WalletConnectScanSheet({ isVisible, onClose }: Props) {
     </BottomSheetModal>
   )
 }
-
-const ModalStyles = StyleSheet.create({
-  gradient: {
-    backgroundColor:
-      'linear-gradient(180deg, rgba(156, 136, 159, 0.2) 0%, rgba(156, 136, 159, 0) 100%), #181B24;',
-  },
-})

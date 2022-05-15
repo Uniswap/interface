@@ -46,7 +46,7 @@ export const slice = createSlice({
       state.tokens = newTokens
     },
     addFollow: (state, { payload: { address } }: PayloadAction<{ address: Address }>) => {
-      state.followedAddresses.includes(address)
+      !state.followedAddresses.includes(address)
         ? state.followedAddresses.push(address)
         : logger.warn('slice', 'addFollow', `Attempting to follow an address twice (${address})`)
     },

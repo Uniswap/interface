@@ -11,6 +11,7 @@ import Settings from 'src/assets/icons/settings.svg'
 import AddressEnsDisplay from 'src/components/accounts/AddressEnsDisplay'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
+import { IconButton } from 'src/components/buttons/IconButton'
 import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Box, Flex } from 'src/components/layout'
@@ -50,6 +51,10 @@ export function ProfileScreen({ navigation }: Props) {
     setShowWalletConnectModal(true)
   }
 
+  const onPressFriend = (friendAddres: string) => {
+    navigation.navigate(Screens.User, { address: friendAddres })
+  }
+
   const onPressSettings = () =>
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
 
@@ -67,6 +72,7 @@ export function ProfileScreen({ navigation }: Props) {
       <GradientBackground opacity={1}>
         <BlueToDarkRadial />
       </GradientBackground>
+      {/* nav header */}
       <Flex row justifyContent="space-between" mt="lg" mx="lg">
         <Text variant={'h3'}>Profile</Text>
         <Flex centered row gap="md">
@@ -80,63 +86,54 @@ export function ProfileScreen({ navigation }: Props) {
           </Button>
         </Flex>
       </Flex>
+      {/* profile info */}
       <Flex centered gap="sm" mt={'xl'}>
         <Identicon address={activeAccount.address} size={40} />
         <AddressEnsDisplay address={address} align="center" gap="xs" mainSize={18} />
         <Flex centered row gap="sm" mt="sm">
-          <Button
+          <IconButton
             borderColor={'deprecated_gray100'}
             borderRadius={'lg'}
             borderWidth={1}
+            icon={<QRIcon color={theme.colors.accentText1} height={16} width={16} />}
             p="md"
             style={{ backgroundColor: opacify(6, theme.colors.deprecated_blue) }}
-            onPress={() => setShowWalletConnectModal(true)}>
-            <QRIcon height={16} width={16} />
-          </Button>
-          <Button
+            onPress={() => setShowWalletConnectModal(true)}
+          />
+          <IconButton
             borderColor={'deprecated_gray100'}
             borderRadius={'lg'}
             borderWidth={1}
+            icon={
+              <SendIcon
+                color={theme.colors.deprecated_textColor}
+                height={16}
+                strokeWidth={3}
+                width={16}
+              />
+            }
             p="md"
-            style={{ backgroundColor: opacify(6, theme.colors.deprecated_blue) }}>
-            <SendIcon
-              color={theme.colors.deprecated_textColor}
-              height={16}
-              strokeWidth={3}
-              width={16}
-            />
-          </Button>
+            style={{ backgroundColor: opacify(6, theme.colors.deprecated_blue) }}
+            onPress={() => {}}
+          />
         </Flex>
-        <Text
-          color="deprecated_textColor"
-          onPress={() =>
-            navigation.push(Screens.User, {
-              address: '0x74Aa01d162E6dC6A657caC857418C403D48E2D77',
-            })
-          }>
-          View friend
-        </Text>
+        {/* friends */}
         <Flex gap="sm" mt="lg" px="lg" width="100%">
-          <Text color="deprecated_gray400" variant="subHead1">
-            {t('Following')}
+          <Text color="neutralTextSecondary" variant="subHead1">
+            {t('Friends')}
           </Text>
           <Flex row gap="sm">
             {[...following].map((a) => {
-              return (
-                <FriendCard
-                  key={a}
-                  address={a}
-                  onPress={() => navigation.push(Screens.User, { address: a })}
-                />
-              )
+              return <FriendCard key={a} address={a} onPress={() => onPressFriend(a)} />
             })}
           </Flex>
         </Flex>
+        {/* favorited tokens */}
         <Flex gap="xs" mt="lg" px="lg" width="100%">
           <TokenBalanceList
             balances={favoriteBalances as PortfolioBalance[]}
             header={
-              <Text color="deprecated_gray400" variant="subHead1">
+              <Text color="neutralTextSecondary" variant="subHead1">
                 {t('Favorite Tokens')}
               </Text>
             }
@@ -148,6 +145,7 @@ export function ProfileScreen({ navigation }: Props) {
           />
         </Flex>
       </Flex>
+      {/* modals */}
       <WalletConnectScanSheet
         isVisible={showWalletConnectModal}
         onClose={() => setShowWalletConnectModal(false)}

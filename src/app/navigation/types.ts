@@ -21,8 +21,8 @@ export type TabParamList = {
 
 export type HomeStackParamList = {
   [Screens.Home]: undefined
-  [Screens.PortfolioTokens]: undefined
-  [Screens.PortfolioNFTs]: undefined
+  [Screens.PortfolioTokens]: { owner: Address | undefined }
+  [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.NFTItem]: { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
     Pick<NFTAsset.Asset, 'token_id'>
 }
@@ -40,6 +40,11 @@ export type SettingsStackParamList = {
   [Screens.SettingsTestConfigs]: undefined
   [Screens.Dev]: undefined
   [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings
+}
+
+export type ProfileStackParamList = {
+  [Screens.PortfolioTokens]: { Address: string | undefined }
+  [Screens.PortfolioNFTs]: { Address: string | undefined }
 }
 
 export type OnboardingStackParamList = {
@@ -81,6 +86,7 @@ export type AppStackParamList = {
     selectedRecipient?: string
     setSelectedRecipient: (newRecipient: string) => void
   }
+  [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.Swap]: { swapFormState?: TransactionState } | undefined
   [Screens.SwapConfig]: undefined
@@ -141,6 +147,7 @@ export type RootParamList = TabParamList &
   HomeStackParamList &
   AccountStackParamList &
   SettingsStackParamList &
+  ProfileStackParamList &
   OnboardingStackParamList &
   AppStackParamList
 

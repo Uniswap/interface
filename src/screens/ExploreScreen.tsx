@@ -4,6 +4,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { TabScreenProp } from 'src/app/navigation/types'
+import EnsNameResults from 'src/components/CurrencySelector/EnsNameResults'
 import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
 import { useFilteredCurrencies } from 'src/components/CurrencySelector/hooks'
 import { Option } from 'src/components/CurrencySelector/Option'
@@ -11,6 +12,8 @@ import { CurrencySearchResultList } from 'src/components/CurrencySelector/Search
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { ChainId } from 'src/constants/chains'
+import { useENS } from 'src/features/ens/useENS'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flattenObjectOfObjects } from 'src/utils/objects'
@@ -53,6 +56,8 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
 
   const { t } = useTranslation()
 
+  const { address: ensAddress, name: ensName } = useENS(ChainId.Mainnet, searchFilter)
+
   return (
     <Flex gap="lg" p="md">
       <SearchTextInput
@@ -68,6 +73,17 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
         onPressNetwork={onChainPress}
         onReset={onClearChainFilter}
       />
+
+      {ensName && ensAddress ? (
+        <EnsNameResults
+          names={[
+            {
+              name: ensName,
+              address: ensAddress,
+            },
+          ]}
+        />
+      ) : null}
 
       <CurrencySearchResultList
         currencies={filteredCurrencies}
