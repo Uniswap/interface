@@ -29,3 +29,5 @@ yarn test:e2e:run e2e/Swap.e2e.js
 [Detox Troubleshooting](https://github.com/wix/Detox/blob/master/docs/Troubleshooting.RunningTests.md)
 
 - Example: [#430](https://github.com/Uniswap/mobile/pull/430)
+
+* Element not visible: [Debug View Hierarchy](https://github.com/wix/Detox/blob/master/docs/Troubleshooting.RunningTests.md#debug-view-hierarchy)
