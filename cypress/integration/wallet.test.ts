@@ -23,11 +23,8 @@ describe('Wallet', () => {
     cy.get('#web3-account-identifier-row').contains(TEST_ADDRESS_NEVER_USE_SHORTENED)
   })
 
-  it('disconnects the wallet', () => {
+  it('shows connect buttons after disconnect', () => {
     cy.get('[data-cy=wallet-disconnect]').click()
-  })
-
-  it('shows connect buttons', () => {
     cy.reload()
     cy.get('#connect-wallet').click()
     cy.get('[data-cy=option-grid]').should('exist')

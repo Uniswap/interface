@@ -359,7 +359,7 @@ export default function WalletModal({
                 tryActivation={tryActivation}
               />
             )}
-            {walletView !== WALLET_VIEWS.PENDING && <OptionGrid>{getOptions()}</OptionGrid>}
+            {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-cy="option-grid">{getOptions()}</OptionGrid>}
             {!pendingError && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>
