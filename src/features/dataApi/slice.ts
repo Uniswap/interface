@@ -50,8 +50,7 @@ export const dataApi = createApi({
           (memo, item) => {
             if (item.quote === 0) return memo
 
-            // PERF: skips address validation for performance
-            // ideally address could be left lower case to avoid checksumming it
+            // PERF: ideally address could be left lower case to avoid checksumming it
             const contract_address = utils.getAddress(item.contract_address)
             memo[buildCurrencyId(args.chainId, contract_address)] = {
               balance: item.balance,

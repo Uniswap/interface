@@ -88,7 +88,7 @@ const slice = createSlice({
 
 export const accountsSelector = (state: RootState) => state.wallet.accounts
 
-const activeAccountAddressSelector = (state: RootState) => state.wallet.activeAccountAddress
+export const activeAccountAddressSelector = (state: RootState) => state.wallet.activeAccountAddress
 export const activeAccountSelector = createSelector(
   accountsSelector,
   activeAccountAddressSelector,

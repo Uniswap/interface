@@ -44,7 +44,7 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
   )
 }
 
-function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
+export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   const srcs: string[] = getCurrencyLogoSrcs(currency)
 
   if (currency?.isNative) {

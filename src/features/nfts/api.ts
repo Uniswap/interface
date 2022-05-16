@@ -1,5 +1,6 @@
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { utils } from 'ethers'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import {
@@ -66,7 +67,7 @@ export const nftApi = createApi({
         }
 
         const assetsByCollection = assets.reduce<Record<Address, NFTAsset.Asset[]>>((all, nft) => {
-          const key = nft.asset_contract.address
+          const key = utils.getAddress(nft.asset_contract.address)
           all[key] ??= []
           all[key]!.push({ ...nft, chainId })
           return all

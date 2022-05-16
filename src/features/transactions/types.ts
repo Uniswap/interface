@@ -24,7 +24,7 @@ export interface TransactionDetails extends TransactionId {
   status: TransactionStatus
   addedTime: number
   // Note: hash is mandatory for now but may be made optional if
-  // we start tracking txs before their actually sent
+  // we start tracking txs before they're actually sent
   hash: string
   receipt?: TransactionReceipt
 
@@ -66,6 +66,7 @@ export enum TransactionType {
   Wrap = 'wrap',
   Send = 'send',
   Receive = 'receive',
+  Unknown = 'unknown',
 }
 
 export interface BaseTransactionInfo {
@@ -106,17 +107,26 @@ export interface WrapTransactionInfo {
 }
 
 export interface SendTokenTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Send
   assetType: AssetType
   currencyAmountRaw?: string
   recipient: string
   tokenAddress: string
   tokenId?: string // optional. NFT token id
-  type: TransactionType.Send
 }
 
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Receive
+  assetType: AssetType
   currencyAmountRaw: string
+  sender: string
+  tokenAddress: string
+  tokenId?: string // optional. NFT token id
+}
+
+export interface UnknownTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Unknown
+  tokenAddress?: string
 }
 
 export type TransactionTypeInfo =
@@ -126,3 +136,4 @@ export type TransactionTypeInfo =
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
+  | UnknownTransactionInfo

@@ -44,14 +44,14 @@ const slice = createSlice({
         payload: { chainId, id, status, receipt },
       }: PayloadAction<
         TransactionId & {
-          status: TransactionStatus
-          receipt: TransactionReceipt
+          status: TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Cancelled
+          receipt: TransactionReceipt | null
         }
       >
     ) => {
       if (!state.byChainId[chainId]?.[id]) return
       state.byChainId[chainId]![id].status = status
-      state.byChainId[chainId]![id].receipt = receipt
+      if (receipt) state.byChainId[chainId]![id].receipt = receipt
     },
     cancelTransaction: (state, { payload: { chainId, id } }: PayloadAction<TransactionId>) => {
       if (!state.byChainId[chainId]?.[id]) return
@@ -70,10 +70,6 @@ const slice = createSlice({
       if (!state.byChainId[chainId]?.[id]) return
       state.byChainId[chainId]![id].status = TransactionStatus.Replacing
     },
-    failTransaction: (state, { payload: { chainId, id } }: PayloadAction<TransactionId>) => {
-      if (!state.byChainId[chainId]?.[id]) return
-      state.byChainId[chainId]![id].status = TransactionStatus.Failed
-    },
     resetTransactions: () => initialState,
   },
 })
@@ -84,7 +80,6 @@ export const {
   finalizeTransaction,
   cancelTransaction,
   replaceTransaction,
-  failTransaction,
   resetTransactions,
 } = slice.actions
 export const { reducer: transactionReducer, actions: transactionActions } = slice

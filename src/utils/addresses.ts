@@ -9,13 +9,13 @@ export enum AddressStringFormat {
   Shortened,
 }
 
-// shorten the checksummed version of the input address to have 0x + 4 characters at start and end
+// shorten the checksummed version of the input address to have 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
   const parsed = isValidAddress(address)
   if (!parsed) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
-  return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
+  return `${address.substring(0, chars)}...${address.substring(42 - chars)}`
 }
 
 export function isValidAddress(address: Nullable<Address>, allowZero = true) {

@@ -7,7 +7,8 @@ import { useSpotPricesQuery } from 'src/features/dataApi/slice'
 import { SpotPrices } from 'src/features/dataApi/types'
 import { isTestnet } from 'src/utils/chainId'
 
-export function useSpotPrices(currencies: Currency[]): {
+// Keys for native currency spot prices are the wrapped token addresses
+export function useSpotPrices(currencies: Array<Nullable<Currency>>): {
   spotPrices: SpotPrices
   loading: boolean
 } {
@@ -16,6 +17,8 @@ export function useSpotPrices(currencies: Currency[]): {
   const addresses = useMemo(
     () =>
       currencies.reduce<ChainIdTo<Address[]>>((acc, cur) => {
+        if (!cur) return acc
+
         acc[cur.chainId as ChainId] ??= []
         acc[cur.chainId as ChainId]!.push(cur.wrapped.address)
         return acc

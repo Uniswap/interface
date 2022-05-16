@@ -7,7 +7,6 @@ import { attemptCancelTransaction } from 'src/features/transactions/cancelTransa
 import {
   addTransaction,
   cancelTransaction,
-  failTransaction,
   finalizeTransaction,
   updateTransaction,
 } from 'src/features/transactions/slice'
@@ -98,7 +97,7 @@ describe(watchFlashbotsTransaction, () => {
         [call(waitForReceipt, hash, provider), txReceipt],
         [call(getFlashbotsTxConfirmation, hash, chainId), TransactionStatus.Failed],
       ])
-      .put(failTransaction({ chainId, id }))
+      .put(finalizeTransaction({ chainId, id, status: TransactionStatus.Failed, receipt: null }))
       .silentRun()
   })
 })
@@ -165,7 +164,14 @@ describe(watchTransaction, () => {
         [call([provider, provider.getTransactionReceipt], hash), null],
         [call([provider, provider.getTransactionCount], from, 'pending'), 0],
       ])
-      .put(failTransaction({ chainId, id }))
+      .put(
+        finalizeTransaction({
+          chainId,
+          id,
+          status: TransactionStatus.Failed,
+          receipt: null,
+        })
+      )
       .silentRun()
   })
 

@@ -14,7 +14,6 @@ import { attemptReplaceTransaction } from 'src/features/transactions/replaceTran
 import {
   addTransaction,
   cancelTransaction,
-  failTransaction,
   replaceTransaction,
   transactionActions,
   updateTransaction,
@@ -92,17 +91,13 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
 
   const txStatus = yield* call(getFlashbotsTxConfirmation, hash, chainId)
   if (txStatus === TransactionStatus.Failed || txStatus === TransactionStatus.Unknown) {
-    yield* put(failTransaction({ chainId, id }))
+    yield* call(finalizeTransaction, chainId, id, null)
     yield* put(
       pushNotification({
         title: i18n.t('Your transaction has failed.'),
         type: AppNotificationType.Default,
       })
     )
-
-    // TODO: skip finalizeTransaction for failed tx for now because
-    // flashbots failed tx do not have txReceipts so we need to refactor
-    // finalizeTransaction to mark txReceipts as optional
     return
   }
 
@@ -185,13 +180,9 @@ function* waitForReplacement(chainId: ChainId, id: string) {
 
 function* handleTimedOutTransaction(transaction: TransactionDetails, provider: providers.Provider) {
   const { hash, id, chainId, from, options } = transaction
-  if (!hash) {
-    // Tx was never sent properly, mark as failed
-    yield* put(failTransaction({ chainId, id }))
-  }
   // Check if tx was actually mined
   // Just a backup to ensure wallet doesn't incorrectly report a failed tx
-  const txReceipt = yield* call([provider, provider.getTransactionReceipt], transaction.hash)
+  const txReceipt = yield* call([provider, provider.getTransactionReceipt], hash)
   if (txReceipt) {
     yield* call(finalizeTransaction, chainId, id, txReceipt)
   }
@@ -203,29 +194,36 @@ function* handleTimedOutTransaction(transaction: TransactionDetails, provider: p
   const nonce = options.request.nonce
   const txCount = yield* call([provider, provider.getTransactionCount], from, 'pending')
   if (nonce && BigNumber.from(txCount).gt(nonce)) {
+    // NOTE (TB): Seems like weird UX to attempt to cancel a user transaction without warning
     // The tx may still be pending, attempt to cancel it
     yield* call(attemptCancelTransaction, transaction)
   } else {
     // Otherwise, mark it as failed
-    yield* put(failTransaction({ chainId, id }))
+    yield* call(finalizeTransaction, chainId, id, null)
   }
 }
 
 function* finalizeTransaction(
   chainId: ChainId,
   id: string,
-  ethersReceipt: providers.TransactionReceipt,
-  statusOverride?: TransactionStatus
+  ethersReceipt: providers.TransactionReceipt | null,
+  statusOverride?:
+    | TransactionStatus.Success
+    | TransactionStatus.Failed
+    | TransactionStatus.Cancelled
 ) {
   const status =
-    statusOverride || (ethersReceipt.status ? TransactionStatus.Success : TransactionStatus.Failed)
-  const receipt: TransactionReceipt = {
-    blockHash: ethersReceipt.blockHash,
-    blockNumber: ethersReceipt.blockNumber,
-    transactionIndex: ethersReceipt.transactionIndex,
-    confirmations: ethersReceipt.confirmations,
-    confirmedTime: Date.now(),
-  }
+    statusOverride ?? (ethersReceipt?.status ? TransactionStatus.Success : TransactionStatus.Failed)
+  const receipt: TransactionReceipt | null = ethersReceipt
+    ? {
+        blockHash: ethersReceipt.blockHash,
+        blockNumber: ethersReceipt.blockNumber,
+        transactionIndex: ethersReceipt.transactionIndex,
+        confirmations: ethersReceipt.confirmations,
+        confirmedTime: Date.now(),
+      }
+    : null
+
   yield* put(
     transactionActions.finalizeTransaction({
       chainId,

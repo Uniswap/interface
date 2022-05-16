@@ -79,3 +79,4 @@ src/abis/uniswapV3
 
 # Storybook
 build-storybook.log
+storybook-static/*

@@ -32,6 +32,6 @@ exports[`renders a FormattedAddress without a name 1`] = `
     ]
   }
 >
-  0xf39F...2266
+  0xf3...2266
 </Text>
 `;

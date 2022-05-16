@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { utils } from 'ethers'
 import { useEffect, useMemo } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
@@ -40,9 +41,10 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       ? buildCurrencyId(tradeableAsset?.chainId, tradeableAsset?.address)
       : undefined
   )
+
   const { asset: nftIn } = useNFT(
     activeAccount?.address,
-    tradeableAsset?.address,
+    utils.getAddress(tradeableAsset?.address ?? ''),
     tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
       ? tradeableAsset.tokenId
       : undefined
