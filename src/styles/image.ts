@@ -7,3 +7,8 @@ export const nftCollectionBlurImageStyle: ImageStyle = {
   borderRadius: theme.borderRadii.md,
   opacity: 0.85,
 }
+
+export const nftCollectionBlurBackgroundImageStyle: ImageStyle = {
+  borderRadius: theme.borderRadii.md,
+  opacity: 0.1,
+}

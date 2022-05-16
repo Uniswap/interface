@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
-import { ProfileIcon } from 'src/app/navigation/icons'
 import {
   AccountStackParamList,
   AppStackParamList,
@@ -17,8 +16,9 @@ import {
   SettingsStackParamList,
   TabParamList,
 } from 'src/app/navigation/types'
-import HomeIcon from 'src/assets/icons/home.svg'
-import SearchIcon from 'src/assets/icons/search.svg'
+import DiscoverIcon from 'src/assets/icons/discover.svg'
+import ProfileIcon from 'src/assets/icons/profile.svg'
+import WalletIcon from 'src/assets/icons/wallet.svg'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
@@ -72,8 +72,8 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.deprecated_gray600,
-        tabBarInactiveTintColor: theme.colors.deprecated_gray200,
+        tabBarActiveTintColor: theme.colors.neutralTextPrimary,
+        tabBarInactiveTintColor: theme.colors.neutralTextTertiary,
         tabBarShowLabel: false,
         headerShown: false,
         tabBarStyle: {
@@ -87,7 +87,7 @@ function TabNavigator() {
         name={Tabs.Home}
         options={{
           tabBarLabel: t('Home'),
-          tabBarIcon: ({ color }) => <HomeIcon color={color} height={28} />,
+          tabBarIcon: ({ color }) => <WalletIcon color={color} height={24} />,
         }}
       />
       <Tab.Screen
@@ -96,7 +96,7 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => <SearchIcon color={color} height={28} strokeWidth={2} />,
+          tabBarIcon: ({ color }) => <DiscoverIcon color={color} height={24} />,
         }}
       />
       <Tab.Screen
@@ -104,7 +104,7 @@ function TabNavigator() {
         name={Tabs.Profile}
         options={{
           tabBarLabel: t('Me'),
-          tabBarIcon: () => <ProfileIcon size={28} />,
+          tabBarIcon: ({ color }) => <ProfileIcon color={color} height={24} />,
         }}
       />
     </Tab.Navigator>

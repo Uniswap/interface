@@ -26,7 +26,7 @@ export function Pill({
   return (
     <Flex
       alignItems="center"
-      backgroundColor="deprecated_gray200"
+      backgroundColor="neutralSurface"
       borderColor="none"
       borderRadius={borderRadius}
       borderWidth={1}

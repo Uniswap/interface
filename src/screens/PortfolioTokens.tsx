@@ -83,10 +83,10 @@ export function PortfolioTokens({
     navigation.navigate(Screens.TokenDetails, { currency })
 
   const header = () => (
-    <Flex row alignItems="center" justifyContent="space-between" mb="xs">
+    <Flex row alignItems="center" justifyContent="space-between" mb="xxs">
       <Flex flex={1} gap="xs">
         <Flex row justifyContent="space-between">
-          <Text color="deprecated_gray400" variant="body2">
+          <Text color="neutralTextSecondary" variant="body2">
             {t('Tokens')}
           </Text>
 
@@ -94,7 +94,12 @@ export function PortfolioTokens({
           {expanded ? (
             <IconButton
               icon={
-                <Chevron color={theme.colors.neutralAction} direction="s" height={16} width={16} />
+                <Chevron
+                  color={theme.colors.neutralTextSecondary}
+                  direction="s"
+                  height={16}
+                  width={16}
+                />
               }
               p="none"
               onPress={onPress}
@@ -102,20 +107,20 @@ export function PortfolioTokens({
           ) : (
             <TextButton onPress={onPress}>
               <Flex row gap="xs">
-                <Text color="deprecated_gray400" variant="body2">
+                <Text color="neutralTextSecondary" variant="body2">
                   {t('View all')}
                 </Text>
                 <Chevron
-                  color={theme.colors.deprecated_gray400}
+                  color={theme.colors.neutralTextSecondary}
                   direction="e"
-                  height={10}
-                  width={10}
+                  height={12}
+                  width={12}
                 />
               </Flex>
             </TextButton>
           )}
         </Flex>
-        <TotalBalance balances={balanceData} variant="body1" />
+        <TotalBalance balances={balanceData} variant="h3" />
       </Flex>
     </Flex>
   )
@@ -123,7 +128,7 @@ export function PortfolioTokens({
   return (
     <Flex mx="sm">
       <SharedElement id="portfolio-tokens-header">
-        <Flex bg="tabBackground" borderRadius="md" pt="md" px="md">
+        <Flex bg="tabBackground" borderRadius="md" pb="sm" pt="md" px="md">
           <TokenBalanceList
             balances={balances as PortfolioBalance[]}
             header={header()}

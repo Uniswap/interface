@@ -112,6 +112,8 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
         disabled={false}
         label={t('Send')}
         name={ElementName.Submit}
+        py="md"
+        textVariant="largeLabel"
         onPress={() => {
           notificationAsync()
           isNFT ? transferNFTCallback?.() : transferERC20Callback?.()

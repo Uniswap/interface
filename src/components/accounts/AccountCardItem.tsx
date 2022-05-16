@@ -36,21 +36,21 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
     <Button onPress={onPress ? () => onPress(address) : undefined}>
       <Flex
         borderRadius="lg"
-        borderWidth={isActive ? 1.5 : 1}
+        borderWidth={0.5}
         flexDirection="column"
         gap="xl"
         my="xs"
         p="md"
         style={{
-          borderColor: isActive ? theme.colors.deprecated_primary1 : opacify(80, color),
-          backgroundColor: opacify(20, color),
+          borderColor: isActive ? color : 'none',
+          backgroundColor: opacify(10, color),
         }}
         testID={`account_item/${address.toLowerCase()}`}>
         <Flex row alignItems="center" borderRadius="sm" justifyContent="space-between">
           <AddressDisplay
             alwaysShowAddress
             address={address}
-            size={40}
+            size={36}
             variant="body1"
             verticalGap="none"
           />
@@ -61,7 +61,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
             padding="sm"
             width={20}
             onPress={() => onPressQRCode(address)}>
-            <QrCode color={theme.colors.deprecated_textColor} height={20} width={20} />
+            <QrCode color={theme.colors.accentText2} height={20} strokeWidth={1} width={20} />
           </Button>
         </Flex>
         <Flex row alignItems="center" justifyContent="space-between">
@@ -69,10 +69,10 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots
-                color={isDarkMode ? opacify(50, '#FFFFFF') : opacify(30, '#000000')}
+                color={theme.colors.accentText3}
                 height={12}
                 strokeLinecap="round"
-                strokeWidth="2"
+                strokeWidth="1"
                 width={20}
               />
             </Button>

@@ -28,7 +28,7 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: 
   return (
     <Button
       alignItems="center"
-      borderRadius="lg"
+      borderRadius="xl"
       disabled={disabled}
       flexDirection="row"
       justifyContent="center"

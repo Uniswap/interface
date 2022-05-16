@@ -51,7 +51,7 @@ exports[`renders correctly 1`] = `
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
-            "height": 6,
+            "height": 8,
           },
         ]
       }
@@ -81,7 +81,7 @@ exports[`renders correctly 1`] = `
             "display": "flex",
             "flexGrow": 0,
             "flexShrink": 0,
-            "height": 6,
+            "height": 8,
           },
         ]
       }
@@ -99,7 +99,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "color": "#FD4040",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 20,
           "lineHeight": 24,
         }
@@ -114,7 +114,7 @@ exports[`renders correctly 1`] = `
       Array [
         Object {
           "display": "flex",
-          "marginBottom": 10,
+          "marginBottom": 12,
         },
       ]
     }
@@ -336,7 +336,7 @@ exports[`renders correctly 1`] = `
           Array [
             Object {
               "backgroundColor": "#EF368E",
-              "borderRadius": 20,
+              "borderRadius": 16,
               "display": "flex",
               "width": 140,
             },
@@ -370,7 +370,7 @@ exports[`renders correctly 1`] = `
         Array [
           Object {
             "display": "flex",
-            "padding": 6,
+            "padding": 8,
             "width": 140,
           },
         ]
@@ -390,8 +390,8 @@ exports[`renders correctly 1`] = `
             "color": "#EF368E",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
-            "fontSize": 16,
-            "lineHeight": 20,
+            "fontSize": 14,
+            "lineHeight": 16,
             "textAlign": "center",
           }
         }
@@ -413,7 +413,7 @@ exports[`renders correctly 1`] = `
         Array [
           Object {
             "display": "flex",
-            "padding": 6,
+            "padding": 8,
             "width": 140,
           },
         ]
@@ -433,8 +433,8 @@ exports[`renders correctly 1`] = `
             "color": "rgba(255, 255, 255, 1)",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
-            "fontSize": 16,
-            "lineHeight": 20,
+            "fontSize": 14,
+            "lineHeight": 16,
             "textAlign": "center",
           }
         }
@@ -456,7 +456,7 @@ exports[`renders correctly 1`] = `
         Array [
           Object {
             "display": "flex",
-            "padding": 6,
+            "padding": 8,
             "width": 140,
           },
         ]
@@ -476,8 +476,8 @@ exports[`renders correctly 1`] = `
             "color": "#EF368E",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
-            "fontSize": 16,
-            "lineHeight": 20,
+            "fontSize": 14,
+            "lineHeight": 16,
             "textAlign": "center",
           }
         }
@@ -499,7 +499,7 @@ exports[`renders correctly 1`] = `
         Array [
           Object {
             "display": "flex",
-            "padding": 6,
+            "padding": 8,
             "width": 140,
           },
         ]
@@ -519,8 +519,8 @@ exports[`renders correctly 1`] = `
             "color": "#EF368E",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
-            "fontSize": 16,
-            "lineHeight": 20,
+            "fontSize": 14,
+            "lineHeight": 16,
             "textAlign": "center",
           }
         }
@@ -542,7 +542,7 @@ exports[`renders correctly 1`] = `
         Array [
           Object {
             "display": "flex",
-            "padding": 6,
+            "padding": 8,
             "width": 140,
           },
         ]
@@ -562,8 +562,8 @@ exports[`renders correctly 1`] = `
             "color": "#EF368E",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
-            "fontSize": 16,
-            "lineHeight": 20,
+            "fontSize": 14,
+            "lineHeight": 16,
             "textAlign": "center",
           }
         }

@@ -9,7 +9,7 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { editAccount } from 'src/features/wallet/walletSlice'
-import { extractColors, opacify } from 'src/utils/colors'
+import { extractColors } from 'src/utils/colors'
 
 function useNFTColors(asset: NFTAsset.Asset | undefined) {
   const [loading, setLoading] = useState<boolean>(false)
@@ -43,9 +43,9 @@ export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
 
   return colors?.platform === 'ios' ? (
     <IconButton
-      bg="deprecated_gray50"
+      bg="neutralOutline"
       borderRadius="md"
-      icon={<MagicWand color={theme.colors.deprecated_textColor} height={24} width={24} />}
+      icon={<MagicWand color={theme.colors.neutralTextPrimary} height={24} width={24} />}
       name={ElementName.ApplyThemeFromNFT}
       onPress={() => {
         if (!activeAccount) return
@@ -79,22 +79,19 @@ export function NFTPalette({ asset }: { asset: NFTAsset.Asset }) {
 
   return colors?.platform === 'ios' ? (
     <Flex row alignItems="flex-end" gap="sm" justifyContent="flex-end">
-      <Flex
-        borderRadius="md"
-        p="xs"
-        style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray100) }}>
+      <Flex borderRadius="lg" p="xs" style={{ backgroundColor: theme.colors.neutralOutline }}>
         <Flex centered gap="sm">
-          <Box borderRadius="sm" style={{ backgroundColor: colors.primary }}>
-            <Inset />
+          <Box borderRadius="lg" style={{ backgroundColor: colors.primary }}>
+            <Inset all="xs" />
           </Box>
-          <Box borderRadius="sm" style={{ backgroundColor: colors.secondary }}>
-            <Inset />
+          <Box borderRadius="lg" style={{ backgroundColor: colors.secondary }}>
+            <Inset all="xs" />
           </Box>
-          <Box borderRadius="sm" style={{ backgroundColor: colors.background }}>
-            <Inset />
+          <Box borderRadius="lg" style={{ backgroundColor: colors.background }}>
+            <Inset all="xs" />
           </Box>
-          <Box borderRadius="sm" style={{ backgroundColor: colors.detail }}>
-            <Inset />
+          <Box borderRadius="lg" style={{ backgroundColor: colors.detail }}>
+            <Inset all="xs" />
           </Box>
         </Flex>
       </Flex>

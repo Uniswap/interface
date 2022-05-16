@@ -17,7 +17,7 @@ export function Masonry<T>({ data, getKey, loading, renderItem }: MasonryProps<T
 
   if (loading)
     return (
-      <Flex row padding="sm">
+      <Flex row gap="xxs" padding="xxs">
         <Loading repeat={2} type="box" />
         <Loading repeat={2} type="box" />
       </Flex>
@@ -25,10 +25,10 @@ export function Masonry<T>({ data, getKey, loading, renderItem }: MasonryProps<T
 
   return (
     <ScrollView
-      contentContainerStyle={{ paddingHorizontal: theme.spacing.md }}
+      contentContainerStyle={{ paddingHorizontal: theme.spacing.xxs }}
       showsVerticalScrollIndicator={false}>
-      <Flex row>
-        <Flex flex={1}>
+      <Flex row gap="none" px="xs">
+        <Flex flex={1} gap="sm" padding="xxs">
           {data
             .filter((_, i) => i % 2 === 0)
             .map((d) => (
@@ -37,7 +37,7 @@ export function Masonry<T>({ data, getKey, loading, renderItem }: MasonryProps<T
               </Box>
             ))}
         </Flex>
-        <Flex flex={1}>
+        <Flex flex={1} gap="sm" padding="xxs">
           {data
             .filter((_, i) => i % 2 !== 0)
             .map((d) => (

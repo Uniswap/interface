@@ -143,7 +143,7 @@ export function TokenDetailsScreen({
                 flex={1}
                 label={t('Buy')}
                 name={ElementName.BuyToken}
-                textVariant="largeLabel"
+                textVariant="mediumLabel"
                 onPress={onPressBuy}
               />
               <PrimaryButton
@@ -151,7 +151,7 @@ export function TokenDetailsScreen({
                 flex={1}
                 label={t('Sell')}
                 name={ElementName.SellToken}
-                textVariant="largeLabel"
+                textVariant="mediumLabel"
                 variant="gray"
                 onPress={onPressSell}
               />

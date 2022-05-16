@@ -6,7 +6,7 @@ exports[`renders a NetworkPill with border 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#C0C7DE",
+        "backgroundColor": "#F4F6FE",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -14,8 +14,8 @@ exports[`renders a NetworkPill with border 1`] = `
         "flexDirection": "row",
         "height": 36,
         "justifyContent": "center",
-        "paddingHorizontal": 10,
-        "paddingVertical": 6,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
       },
       Object {
         "backgroundColor": "#EF368E1a",
@@ -31,7 +31,7 @@ exports[`renders a NetworkPill with border 1`] = `
           "borderRadius": 999999,
           "borderWidth": 0,
           "display": "flex",
-          "marginRight": 6,
+          "marginRight": 8,
         },
         Object {
           "borderColor": "#EF368E",
@@ -67,7 +67,7 @@ exports[`renders a NetworkPill with border 1`] = `
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
-          "width": 6,
+          "width": 8,
         },
       ]
     }
@@ -99,7 +99,7 @@ exports[`renders a NetworkPill without image 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#C0C7DE",
+        "backgroundColor": "#F4F6FE",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -107,8 +107,8 @@ exports[`renders a NetworkPill without image 1`] = `
         "flexDirection": "row",
         "height": 36,
         "justifyContent": "center",
-        "paddingHorizontal": 10,
-        "paddingVertical": 6,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
       },
       Object {
         "backgroundColor": "#EF368E1a",
@@ -124,7 +124,7 @@ exports[`renders a NetworkPill without image 1`] = `
           "borderRadius": 999999,
           "borderWidth": 0,
           "display": "flex",
-          "marginRight": 6,
+          "marginRight": 8,
         },
         Object {
           "borderColor": "#EF368E",
@@ -160,7 +160,7 @@ exports[`renders a NetworkPill without image 1`] = `
           "display": "flex",
           "flexGrow": 0,
           "flexShrink": 0,
-          "width": 6,
+          "width": 8,
         },
       ]
     }

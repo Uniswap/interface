@@ -42,7 +42,8 @@ export function RecipientInputPanel({
         bg={recipientAddress ? 'tokenSelector' : 'deprecated_primary1'}
         borderRadius="lg"
         name={ElementName.SelectRecipient}
-        p="sm"
+        p="xs"
+        px="sm"
         onPress={() => {
           navigation.navigate(Screens.RecipientSelector, {
             selectedRecipient: recipientAddress,
@@ -66,7 +67,7 @@ function RecipientInput() {
   const { t } = useTranslation()
 
   return (
-    <Text color="white" variant="h3">
+    <Text color="white" variant="mediumLabel">
       {t('Select Recipient')}
     </Text>
   )

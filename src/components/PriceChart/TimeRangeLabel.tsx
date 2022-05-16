@@ -34,7 +34,7 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
       // @ts-expect-error style.color will be an integer
       style={style}
       textAlign="center"
-      variant="mediumLabel">
+      variant="smallLabel">
       {label}
     </AnimatedText>
   )

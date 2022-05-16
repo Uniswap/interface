@@ -7,21 +7,22 @@ export const dimensions = {
 
 export const spacing = {
   none: 0,
-  xxs: 3,
-  xs: 6,
-  sm: 10,
+  xxs: 4,
+  xs: 8,
+  sm: 12,
   md: 16,
   lg: 24,
-  xl: 40,
-  xxl: 50,
+  xl: 36,
+  xxl: 48,
 }
 
 export const borderRadii = {
   none: 0,
-  xs: 3,
-  sm: 6,
+  xs: 4,
+  sm: 8,
   md: 12,
-  lg: 20,
+  lg: 16,
+  xl: 20,
   full: 999999,
 }
 

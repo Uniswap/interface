@@ -23,20 +23,20 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
   }
 
   return (
-    <Button bg="none" flexDirection="row" justifyContent="space-between" py="sm" onPress={onPress}>
-      <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
-        <CurrencyLogo currency={currency} size={40} />
-        <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
-          <Text ellipsizeMode="tail" numberOfLines={1} variant="mediumLabel">
-            {currency.name}
+    <Button bg="none" flexDirection="row" justifyContent="space-between" py="xs" onPress={onPress}>
+      <Flex row alignItems={'center'} flexShrink={1} gap="xs" overflow="hidden">
+        <CurrencyLogo currency={currency} size={36} />
+        <Flex alignItems="flex-start" flexShrink={1} gap="none">
+          <Text ellipsizeMode="tail" numberOfLines={1} variant="subHead1">
+            {currency.symbol}
           </Text>
-          <Text color="deprecated_gray600" variant="caption">{`${formatCurrencyAmount(amount)} ${
-            currency.symbol
-          }`}</Text>
+          <Text color="neutralTextSecondary" variant="caption">{`${formatCurrencyAmount(
+            amount
+          )} `}</Text>
         </Flex>
       </Flex>
-      <Box alignItems="flex-end" flexBasis="auto">
-        <Text variant="mediumLabel">{formatUSDPrice(balance.balanceUSD)}</Text>
+      <Box alignItems="flex-end" flexBasis="auto" flexShrink={1}>
+        <Text variant="subHead1">{formatUSDPrice(balance.balanceUSD)}</Text>
         <RelativeChange change={relativeChange24} />
       </Box>
     </Button>

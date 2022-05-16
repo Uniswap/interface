@@ -83,18 +83,18 @@ export function NFTMasonry({
     const key = getNFTAssetKey(asset.asset_contract.address, asset.token_id)
     return (
       <Button onPress={() => onPressItem(asset)}>
-        <NFTAssetItem id={key} nft={asset} size={dimensions.fullWidth / 2.6} />
+        <NFTAssetItem id={key} nft={asset} size={dimensions.fullWidth / 2.4} />
       </Button>
     )
   }
 
   return (
-    <Flex m="sm">
+    <Flex m="sm" mb="xs">
       <SharedElement id="portfolio-nfts-header">
-        <Flex bg="tabBackground" borderRadius="md">
+        <Flex bg="tabBackground" borderRadius="md" gap="none">
           <Flex row justifyContent="space-between" p="md">
             <Flex gap="xs">
-              <Text color="deprecated_gray400" variant="body2">
+              <Text color="neutralTextSecondary" variant="body2">
                 {t('NFTs')}
               </Text>
             </Flex>
@@ -102,7 +102,7 @@ export function NFTMasonry({
               <IconButton
                 icon={
                   <Chevron
-                    color={theme.colors.neutralAction}
+                    color={theme.colors.neutralTextSecondary}
                     direction="s"
                     height={16}
                     width={16}
@@ -114,11 +114,11 @@ export function NFTMasonry({
             ) : (
               <TextButton onPress={onPressToggle}>
                 <Flex row gap="xs">
-                  <Text color="deprecated_gray400" variant="body2">
+                  <Text color="neutralTextSecondary" variant="body2">
                     {t('View all')}
                   </Text>
                   <Chevron
-                    color={theme.colors.deprecated_gray400}
+                    color={theme.colors.neutralTextSecondary}
                     direction="e"
                     height={10}
                     width={10}

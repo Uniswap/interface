@@ -36,7 +36,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
     <Flex
       row
       alignItems="center"
-      backgroundColor="deprecated_gray50"
+      backgroundColor="neutralSurface"
       borderRadius="lg"
       flex={1}
       flexGrow={1}

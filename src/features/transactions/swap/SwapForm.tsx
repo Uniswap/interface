@@ -99,7 +99,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
           <Box alignItems="center" height={40} style={StyleSheet.absoluteFill}>
             <Box
               alignItems="center"
-              bg="deprecated_gray50"
+              bg="neutralSurface"
               borderColor="mainBackground"
               borderRadius="md"
               borderWidth={4}
@@ -128,7 +128,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
         </Box>
         <Trace section={SectionName.CurrencyOutputPanel}>
           <CurrencyInput
-            backgroundColor="deprecated_gray50"
+            backgroundColor="neutralSurface"
             currency={currencies[CurrencyField.OUTPUT]}
             currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
             currencyBalance={currencyBalances[CurrencyField.OUTPUT]}

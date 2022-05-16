@@ -12,7 +12,7 @@ import { ChainId } from 'src/constants/chains'
 import { Theme } from 'src/styles/theme'
 
 const DEFAULT_SIZE = 40
-const NETWORK_LOGO_SIZE = 12
+const NETWORK_LOGO_SIZE = 16
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 

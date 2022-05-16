@@ -27,8 +27,7 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import { flex } from 'src/styles/flex'
-import { nftCollectionBlurImageStyle } from 'src/styles/image'
+import { nftCollectionBlurBackgroundImageStyle } from 'src/styles/image'
 import { dimensions } from 'src/styles/sizing'
 import { openUri } from 'src/utils/linking'
 
@@ -78,36 +77,65 @@ export function NFTItemScreen({
         paddingRight: insets.right,
       }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Flex m="sm">
-          <Flex bg="deprecated_gray50" borderRadius="md" p="md">
-            <Flex row alignItems="center" justifyContent="space-between">
-              <Flex gap="xs">
-                <Text variant="body2">{asset?.name}</Text>
-                <Text color="deprecated_gray400" variant="caption">
-                  {asset?.collection.name}
+        <Flex m="none">
+          <Flex bg="neutralBackground" borderRadius="md" p="md">
+            {asset.collection.image_url && (
+              <Image
+                blurRadius={5}
+                source={{ uri: asset.collection.image_url }}
+                style={[StyleSheet.absoluteFill, nftCollectionBlurBackgroundImageStyle]}
+              />
+            )}
+            <TextButton p="none" onPress={onPressToggle}>
+              <Flex row alignItems="center" justifyContent="space-between" width={'100%'}>
+                <Text color="neutralTextSecondary" variant="body2">
+                  {'Back'}
                 </Text>
+                <Chevron
+                  color={theme.colors.neutralTextSecondary}
+                  direction="s"
+                  height={12}
+                  width={12}
+                />
               </Flex>
-              <TextButton onPress={onPressToggle}>
-                <Chevron color={theme.colors.mainForeground} direction="s" height={15} width={15} />
-              </TextButton>
-            </Flex>
+            </TextButton>
 
             <Flex centered>
               <NFTAssetItem
                 id={getNFTAssetKey(address, token_id)}
                 mx="sm"
                 nft={asset}
-                size={dimensions.fullWidth - theme.spacing.lg * 2}
+                size={dimensions.fullWidth}
               />
 
               <Flex
                 alignItems="flex-end"
                 justifyContent="space-between"
-                mx="sm"
+                mx="none"
                 my="lg"
                 style={StyleSheet.absoluteFill}>
                 <ApplyNFTPaletteButton asset={asset} />
                 {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={asset} />}
+              </Flex>
+            </Flex>
+
+            <Flex gap="xs">
+              <Text variant="h2">{asset?.name}</Text>
+              <Flex row alignItems="center" gap="xxs">
+                {asset.collection.image_url ? (
+                  <RemoteImage
+                    borderRadius={theme.borderRadii.full}
+                    height={16}
+                    imageUrl={asset.collection.image_url}
+                    width={16}
+                  />
+                ) : null}
+                <Text color="neutralTextSecondary" ml="xs" variant="subHead2">
+                  {asset.collection.name}
+                </Text>
+                {asset.collection.safelist_request_status === 'verified' && (
+                  <VerifiedIcon height={25} width={25} />
+                )}
               </Flex>
             </Flex>
 
@@ -135,46 +163,9 @@ export function NFTItemScreen({
             </Flex>
 
             <Flex gap="sm">
-              <Box borderColor="deprecated_gray100" borderRadius="md" borderWidth={1}>
-                {asset.collection.image_url && (
-                  <Image
-                    blurRadius={5}
-                    source={{ uri: asset.collection.image_url }}
-                    style={[StyleSheet.absoluteFill, nftCollectionBlurImageStyle]}
-                  />
-                )}
-                <Flex
-                  bg={asset.collection.image_url ? 'imageTintBackground' : 'tabBackground'}
-                  borderColor="deprecated_gray100"
-                  borderRadius="md"
-                  borderWidth={1}
-                  gap="sm"
-                  p="md">
-                  <Text
-                    color="deprecated_gray400"
-                    style={flex.fill}
-                    variant="body2">{t`From the Collection`}</Text>
-                  <Flex row alignItems="center" gap="xs">
-                    {asset.collection.image_url ? (
-                      <RemoteImage
-                        borderRadius={theme.borderRadii.full}
-                        height={20}
-                        imageUrl={asset.collection.image_url}
-                        width={20}
-                      />
-                    ) : null}
-                    <Text ml="xs" variant="body1">
-                      {asset.collection.name}
-                    </Text>
-                    {asset.collection.safelist_request_status === 'verified' && (
-                      <VerifiedIcon height={25} width={25} />
-                    )}
-                  </Flex>
-                </Flex>
-              </Box>
-              <Flex gap="md" mt="sm">
-                <Text color="deprecated_gray400" variant="subHead1">{t`About this NFT`}</Text>
-                <Text lineHeight={18} variant="body2">
+              <Flex gap="md">
+                <Text color="neutralTextSecondary" variant="subHead1">{t`About this NFT`}</Text>
+                <Text color="neutralTextSecondary" variant="caption">
                   {asset.collection.description}
                 </Text>
               </Flex>

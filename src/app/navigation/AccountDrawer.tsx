@@ -167,7 +167,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           renderItem={renderItem}
           renderSectionHeader={({ section: { title } }) => (
             <Box bg="mainBackground" py="md">
-              <Text color="deprecated_gray600" variant="mediumLabel">
+              <Text color="neutralTextPrimary" variant="subHead1">
                 {title}
               </Text>
             </Box>
@@ -176,15 +176,15 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           showsVerticalScrollIndicator={false}
         />
         <Flex mb="sm">
-          <Box bg="deprecated_gray100" height={1} mb="md" />
+          <Box bg="neutralOutline" height={1} mb="md" />
           <Flex gap="xl">
             <Button
               name={ElementName.ImportAccount}
               testID={ElementName.ImportAccount}
               onPress={onPressNewAccount}>
-              <Flex row gap="sm">
-                <PlusSquareIcon color={theme.colors.deprecated_gray400} height={25} width={25} />
-                <Text color="deprecated_gray400" variant="mediumLabel">
+              <Flex row alignItems="center" gap="sm">
+                <PlusSquareIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
+                <Text color="neutralTextSecondary" variant="subHead1">
                   {t('New account')}
                 </Text>
               </Flex>
@@ -193,9 +193,9 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               name={ElementName.Settings}
               testID={ElementName.Settings}
               onPress={onPressSettings}>
-              <Flex row gap="sm">
-                <SettingsIcon color={theme.colors.deprecated_gray400} height={25} width={25} />
-                <Text color="deprecated_gray400" variant="mediumLabel">
+              <Flex row alignItems="center" gap="sm">
+                <SettingsIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
+                <Text color="neutralTextSecondary" variant="subHead1">
                   {t('Settings')}
                 </Text>
               </Flex>

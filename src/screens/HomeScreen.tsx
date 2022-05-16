@@ -99,9 +99,9 @@ export function HomeScreen({ navigation }: Props) {
               </Flex>
             </Box>
             <TransactionStatusBanner />
-            <Flex centered gap="sm">
+            <Flex centered gap="xxs">
               <TotalBalance balances={balances} />
-              <RelativeChange change={4.2} variant="subHead1" />
+              <RelativeChange change={4.2} variant="body1" />
             </Flex>
             <QuickActions />
             <WalletConnectScanSheet
@@ -109,7 +109,7 @@ export function HomeScreen({ navigation }: Props) {
               onClose={() => setShowWalletConnectModal(false)}
             />
           </Flex>
-          <Flex gap="xs">
+          <Flex gap="xxs">
             <PortfolioTokens count={4} />
             <NFTMasonry count={4} />
           </Flex>
@@ -134,38 +134,44 @@ function QuickActions() {
   }
 
   return (
-    <Flex centered row>
+    <Flex centered row gap="xs">
       <PrimaryButton
+        borderRadius="lg"
         flex={1}
         icon={
           <WalletIcon color={theme.colors.mainForeground} height={20} strokeWidth={2} width={20} />
         }
         label={t('Buy')}
         name={ElementName.NavigateBuy}
+        py="sm"
         style={{ backgroundColor: theme.colors.tabBackground }}
         testID={ElementName.NavigateBuy}
         variant="gray"
         onPress={onPressSwap}
       />
       <PrimaryButton
+        borderRadius="lg"
         flex={1}
         icon={
           <SwapIcon color={theme.colors.mainForeground} height={20} strokeWidth={2} width={20} />
         }
         label={t('Swap')}
         name={ElementName.NavigateSwap}
+        py="sm"
         style={{ backgroundColor: theme.colors.tabBackground }}
         testID={ElementName.NavigateSwap}
         variant="gray"
         onPress={onPressSwap}
       />
       <PrimaryButton
+        borderRadius="lg"
         flex={1}
         icon={
           <SendIcon height={20} stroke={theme.colors.mainForeground} strokeWidth={2} width={20} />
         }
         label={t('Send')}
         name={ElementName.NavigateSend}
+        py="sm"
         style={{ backgroundColor: theme.colors.tabBackground }}
         testID={ElementName.NavigateSend}
         variant="gray"

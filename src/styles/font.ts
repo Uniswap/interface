@@ -21,19 +21,19 @@ export const fontFamily = {
 
 export const textVariants = {
   h1: {
-    fontFamily: fontFamily.sansSerif.regular,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 36,
     lineHeight: 40,
     color: 'neutralTextPrimary',
   },
   h2: {
-    fontFamily: fontFamily.sansSerif.regular,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 24,
     lineHeight: 32,
     color: 'neutralTextPrimary',
   },
   h3: {
-    fontFamily: fontFamily.sansSerif.regular,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 20,
     lineHeight: 24,
     color: 'neutralTextPrimary',

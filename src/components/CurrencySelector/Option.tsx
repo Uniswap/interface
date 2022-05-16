@@ -57,14 +57,14 @@ export function Option({ currency, onPress, matches, metadataType }: OptionProps
   return (
     <Pressable testID={`currency-option-${currency.chainId}-${currency.symbol}`} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="sm">
-        <Flex row flexShrink={1} gap="xs" overflow="hidden">
+        <Flex row flexShrink={1} gap="sm" overflow="hidden">
           <CurrencyLogo currency={currency} size={40} />
-          <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
+          <Flex alignItems="flex-start" flexShrink={1} gap="none">
             <Flex row>
               <TextWithFuseMatches
                 matches={nameMatches}
                 text={currency.name ?? ''}
-                variant="mediumLabel"
+                variant="subHead1"
               />
             </Flex>
             <Flex row>
@@ -109,9 +109,9 @@ function TokenMetadata({ pre, main, sub }: TokenMetadataProps) {
     <Flex row>
       {pre}
       <Box alignItems="flex-end" minWidth={70}>
-        <Text variant="body1">{main}</Text>
+        <Text variant="subHead1">{main}</Text>
         {sub && (
-          <Text color="deprecated_gray400" variant="caption">
+          <Text color="neutralTextSecondary" variant="caption">
             {sub}
           </Text>
         )}
