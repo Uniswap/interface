@@ -7,16 +7,18 @@ import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Loader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
 import { useModalOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ProposalData } from 'state/governance/hooks'
+import { ProposalData, ProposalState } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
@@ -106,6 +108,8 @@ const StyledExternalLink = styled(ExternalLink)`
 
 export default function Landing() {
   const { account, chainId } = useActiveWeb3React()
+
+  const [hideCancelled, setHideCancelled] = useState(true)
 
   // toggle for showing delegation modal
   const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
@@ -237,10 +241,24 @@ export default function Landing() {
               )}
             </RowBetween>
           )}
+
           {allProposals?.length === 0 && <ProposalEmptyState />}
+
+          {allProposals?.length > 0 && (
+            <AutoColumn gap="md">
+              <RowBetween>
+                <ThemedText.Main>
+                  <Trans>Show Cancelled</Trans>
+                </ThemedText.Main>
+                <Toggle isActive={!hideCancelled} toggle={() => setHideCancelled((hideCancelled) => !hideCancelled)} />
+              </RowBetween>
+            </AutoColumn>
+          )}
+
           {allProposals
             ?.slice(0)
             ?.reverse()
+            ?.filter((p: ProposalData) => (hideCancelled ? p.status !== ProposalState.CANCELED : true))
             ?.map((p: ProposalData) => {
               return (
                 <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
@@ -253,6 +271,7 @@ export default function Landing() {
               )
             })}
         </TopSection>
+
         <ThemedText.SubHeader color="text3">
           <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
         </ThemedText.SubHeader>
