@@ -1,10 +1,11 @@
+import { Filter } from '@ethersproject/providers'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { fetchedLogs, fetchedLogsError, fetchingLogs } from './slice'
-import { EventFilter, keyToFilter } from './utils'
+import { keyToFilter } from './utils'
 
 export default function Updater(): null {
   const dispatch = useAppDispatch()
@@ -13,7 +14,7 @@ export default function Updater(): null {
 
   const blockNumber = useBlockNumber()
 
-  const filtersNeedFetch: EventFilter[] = useMemo(() => {
+  const filtersNeedFetch: Filter[] = useMemo(() => {
     if (!chainId || typeof blockNumber !== 'number') return []
 
     const active = state[chainId]
@@ -21,6 +22,7 @@ export default function Updater(): null {
 
     return Object.keys(active)
       .filter((key) => {
+        // TODO figure out how to not refresh logs that have a toBlock
         const { fetchingBlockNumber, results, listeners } = active[key]
         if (listeners === 0) return false
         if (typeof fetchingBlockNumber === 'number' && fetchingBlockNumber >= blockNumber) return false
@@ -35,11 +37,16 @@ export default function Updater(): null {
 
     dispatch(fetchingLogs({ chainId, filters: filtersNeedFetch, blockNumber }))
     filtersNeedFetch.forEach((filter) => {
+      // provide defaults if {from,to}Block are missing
+      let fromBlock = filter.fromBlock ?? 0
+      let toBlock = filter.toBlock ?? blockNumber
+      if (typeof fromBlock === 'string') fromBlock = Number.parseInt(fromBlock)
+      if (typeof toBlock === 'string') toBlock = Number.parseInt(toBlock)
       library
         .getLogs({
           ...filter,
-          fromBlock: 0,
-          toBlock: blockNumber,
+          fromBlock,
+          toBlock,
         })
         .then((logs) => {
           dispatch(
