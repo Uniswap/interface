@@ -23,7 +23,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
-import Card, { LightCard } from '../Card'
+import { LightCard } from '../Card'
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
@@ -102,15 +102,6 @@ const HoverText = styled.div`
   align-items: center;
   :hover {
     cursor: pointer;
-  }
-`
-
-const LinkCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg1};
-  color: ${({ theme }) => theme.text3};
-  :hover {
-    cursor: pointer;
-    filter: brightness(0.9);
   }
 `
 
@@ -260,7 +251,7 @@ export default function WalletModal({
               onClick={() => {
                 option.connector === connector
                   ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                  : !option.href && tryActivation(option.connector)
+                  : !option.href && option.connector && tryActivation(option.connector)
               }}
               color={'#E8831D'}
               header={<Trans>Tally</Trans>}
