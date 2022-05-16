@@ -359,6 +359,7 @@ export default function TokenPair({
                 ' ' +
                 convertToNativeTokenFromETH(currencyB, chainId).symbol,
               arbitrary: {
+                poolAddress: pairAddress,
                 token_1: convertToNativeTokenFromETH(currencyA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(currencyB, chainId).symbol,
                 remove_liquidity_method: 'token pair',

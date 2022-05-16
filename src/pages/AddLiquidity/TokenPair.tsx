@@ -271,6 +271,7 @@ const TokenPair = ({
                 ' ' +
                 convertToNativeTokenFromETH(cB, chainId).symbol,
               arbitrary: {
+                poolAddress: pairAddress,
                 token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
                 add_liquidity_method: 'token pair',

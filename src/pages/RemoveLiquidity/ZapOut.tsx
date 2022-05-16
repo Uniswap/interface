@@ -392,6 +392,7 @@ export default function ZapOut({
               type: 'Remove liquidity',
               summary: parsedAmounts[independentTokenField]?.toSignificant(6) + ' ' + independentToken?.symbol,
               arbitrary: {
+                poolAddress: pairAddress,
                 token_1: convertToNativeTokenFromETH(currencyA, chainId).symbol,
                 token_2: convertToNativeTokenFromETH(currencyB, chainId).symbol,
                 remove_liquidity_method: 'single token',
