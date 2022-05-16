@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { KROM } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
@@ -121,6 +123,15 @@ export default function Polling() {
         onMouseLeave={() => setIsHover(false)}
         warning={chainConnectivityWarning}
       >
+        {priceGwei ? (
+          <RowFixed style={{ marginRight: '8px' }}>
+            <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+              <span>🔥</span>
+              1.423.000 KROM
+            </TYPE.main>
+            <StyledGasDot />
+          </RowFixed>
+        ) : null}
         <ExternalLink href={'https://etherscan.io/gastracker'}>
           {priceGwei ? (
             <RowFixed style={{ marginRight: '8px' }}>

@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { KROM } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 import { darken } from 'polished'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
@@ -26,7 +28,6 @@ import Modal from '../Modal'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
-import CoinsBurned from './CoinsBurned'
 import NetworkSelector from './NetworkSelector'
 import UniBalanceContent from './UniBalanceContent'
 
@@ -296,21 +297,9 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
 
-  const [width, setWidth] = useState(0.0)
+  const kromToken = chainId ? KROM[chainId] : undefined
 
-  useEffect(() => {
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      setWidth(window.innerWidth)
-    }
-    // Add event listener
-    window.addEventListener('resize', handleResize)
-    // Call handler right away so state gets updated with initial window size
-    handleResize()
-    // Remove event listener on cleanup
-    return () => window.removeEventListener('resize', handleResize)
-  }, []) // Empty array ensures that effect is only run on mount
+  const kromPrice = useUSDCPrice(kromToken)
 
   const {
     infoLink,
@@ -363,9 +352,15 @@ export default function Header() {
       </HeaderLinks>
 
       <HeaderControls>
-        {/* <HeaderElement>
-          <CoinsBurned />
-        </HeaderElement> */}
+        <HeaderElement>
+          <AccountElement active={!!account}>
+            {account && userEthBalance ? (
+              <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                <Trans> Krom: {kromPrice?.toSignificant(4)}$</Trans>
+              </BalanceText>
+            ) : null}
+          </AccountElement>
+        </HeaderElement>
         <HeaderElement>
           <NetworkSelector />
         </HeaderElement>
@@ -386,16 +381,7 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )}
-          <AccountElement active={!!account}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                <Trans>
-                  {userEthBalance?.toSignificant(3)} {nativeCurrencySymbol}
-                </Trans>
-              </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
+          <Web3Status />
         </HeaderElement>
         <HeaderElement>
           <Menu />
