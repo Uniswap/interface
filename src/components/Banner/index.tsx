@@ -66,9 +66,15 @@ const Wrapper = styled.div`
     border-radius: 8px;
   }
   @media screen and (min-width: 1100px) {
+    max-width: 1054px;
+  }
+  @media screen and (min-width: 1240px) {
+    max-width: 1154px;
+  }
+  @media screen and (min-width: 1320px) {
     max-width: 1226px;
   }
-  @media screen and (min-width: 1440px) {
+  @media screen and (min-width: 1500px) {
     max-width: 1394px;
   }
 `

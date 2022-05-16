@@ -272,7 +272,7 @@ export function getClaimRewardContract(
   library: Web3Provider,
   account?: string,
 ): Contract | undefined {
-  if (![ChainId.ROPSTEN, ChainId.MATIC, ChainId.AVAXMAINNET].includes(chainId)) return
+  if (CLAIM_REWARD_SC_ADDRESS[chainId] === '') return
   return getContract(CLAIM_REWARD_SC_ADDRESS[chainId], CLAIM_REWARD_ABI, library, account)
 }
 

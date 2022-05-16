@@ -220,6 +220,20 @@ const TrendingSoonTokensAndNoteContainer = styled.div`
   align-items: center;
   gap: 8px;
   overflow: hidden;
+  magin: auto;
+  align-self: center;
+  @media screen and (min-width: 1100px) {
+    max-width: 1054px;
+  }
+  @media screen and (min-width: 1240px) {
+    max-width: 1154px;
+  }
+  @media screen and (min-width: 1320px) {
+    max-width: 1226px;
+  }
+  @media screen and (min-width: 1500px) {
+    max-width: 1394px;
+  }
 `
 
 const TrendingSoonTokensContainer = styled.div`
@@ -232,13 +246,6 @@ const TrendingSoonTokensContainer = styled.div`
   border-radius: 8px;
   width: 100%;
   overflow: auto;
-
-  @media screen and (min-width: 1100px) {
-    max-width: 1226px;
-  }
-  @media screen and (min-width: 1440px) {
-    max-width: 1394px;
-  }
 `
 
 const TrendingSoonTokensMobileContainer = styled.div`
@@ -257,13 +264,6 @@ const TextNote = styled(Text)`
   font-weight: 500;
   width: 100%;
   text-align: end;
-
-  @media screen and (min-width: 1100px) {
-    max-width: 1226px;
-  }
-  @media screen and (min-width: 1440px) {
-    max-width: 1394px;
-  }
 `
 
 export default TopTrendingSoonTokensInCurrentNetwork

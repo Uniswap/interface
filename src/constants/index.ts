@@ -183,7 +183,7 @@ export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.FANTOM]: '',
   [ChainId.CRONOSTESTNET]: '',
   [ChainId.CRONOS]: '',
-  [ChainId.BTTC]: '',
+  [ChainId.BTTC]: '0x1a91f5ADc7cB5763d35A26e98A18520CB9b67e70',
   [ChainId.ARBITRUM]: '',
   [ChainId.ARBITRUM_TESTNET]: '',
   [ChainId.AURORA]: '',
@@ -1381,6 +1381,8 @@ export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
     'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/develop/results/reward_proof.json',
   [ChainId.BSCMAINNET]:
     'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
+  [ChainId.BTTC]:
+    'https://raw.githubusercontent.com/KyberNetwork/trading-contest-reward-distribution/main/bttc/results/reward_proof.json',
 }
 
 export const sentryRequestId = uuid()
