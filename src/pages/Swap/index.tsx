@@ -1151,11 +1151,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     </RowFixed>
                     <RowFixed>
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
-                        <TradePrice
-                          price={minPrice}
-                          showInverted={showInverted}
-                          setShowInverted={setShowInverted}
-                        />
+                        <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
                       </LoadingOpacityContainer>
                     </RowFixed>
                   </Row>
