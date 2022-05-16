@@ -382,7 +382,7 @@ function AboutKyberSwap() {
           >
             <Trans>
               KyberSwap is DeFi’s premier automated market maker, providing the best token prices for traders across
-              multiple exchanges, and maximizing passing income for liquidity providers, in one decentralized platform.
+              multiple exchanges, and maximizing earnings for liquidity providers, in one decentralized platform.
             </Trans>
           </Text>
 
