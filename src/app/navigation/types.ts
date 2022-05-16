@@ -79,7 +79,8 @@ export type AppStackParamList = {
   }
   [Screens.Notifications]: undefined | { txHash: string }
   [Screens.NFTCollection]: {
-    nftAssets: NFTAsset.Asset[]
+    address: Address
+    slug: string
   }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.RecipientSelector]: {

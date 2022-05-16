@@ -78,8 +78,8 @@ function TabNavigator() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: theme.colors.mainBackground,
-          borderTopColor: 'transparent',
-          paddingBottom: 10,
+          borderTopColor: theme.colors.neutralOutline,
+          paddingBottom: 16,
         },
       }}>
       <Tab.Screen
@@ -203,7 +203,7 @@ export function HomeStackNavigator() {
         component={PortfolioNFTsScreen}
         name={Screens.PortfolioNFTs}
         sharedElements={() => {
-          return ['portfolio-nfts-header']
+          return [{ id: 'portfolio-nfts-header', animation: 'fade' }]
         }}
       />
     </HomeStack.Navigator>

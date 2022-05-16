@@ -1,6 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
 import { View } from 'react-native'
+import { Text } from 'src/components/Text'
 import { Box } from '../layout'
 import { Masonry } from './Masonry'
 
@@ -15,7 +17,7 @@ const data = [
   { key: 8, color: 'red', height: 40 },
   { key: 9, color: 'lightsalmon', height: 50 },
   { key: 10, color: 'darksalmon', height: 75 },
-  { key: 11, color: 'lightcoral', height: 13 },
+  { key: 11, color: 'lightcoral', height: 23 },
 ]
 
 export default {
@@ -34,15 +36,20 @@ const Template: ComponentStory<typeof Masonry> = () => (
   <Masonry
     data={data}
     getKey={({ key }) => key.toString()}
-    renderItem={({ color, height }) => (
+    loading={false}
+    renderItem={({ key, color, height }) => (
       <View
         style={{
           backgroundColor: color,
           height: height,
-        }}
-      />
+          width: '100%',
+          padding: 5,
+        }}>
+        <Text color="accentBackgroundActionSoft" variant="code">
+          {key}
+        </Text>
+      </View>
     )}
-    width={300}
   />
 )
 

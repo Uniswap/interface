@@ -41,6 +41,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
         gap="xl"
         my="xs"
         p="md"
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           borderColor: isActive ? color : 'none',
           backgroundColor: opacify(10, color),

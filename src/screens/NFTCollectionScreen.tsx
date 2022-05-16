@@ -1,3 +1,4 @@
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, Image, ListRenderItemInfo, Share, StyleSheet } from 'react-native'
@@ -15,10 +16,11 @@ import { Screen } from 'src/components/layout/Screen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { Text } from 'src/components/Text'
-import { useNftCollectionQuery } from 'src/features/nfts/api'
+import { useNftBalancesQuery, useNftCollectionQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
@@ -176,11 +178,18 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
 export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCollection>) {
   const [showNFTModal, setShowNFTModal] = useState(false)
   const [selectedNFTAsset, setSelectedNFTAsset] = useState<NFTAsset.Asset>()
-  const { nftAssets } = route.params
+  const activeAddress = useActiveAccount()?.address
+  const { address, slug } = route.params
+
   const appTheme = useAppTheme()
 
+  const { currentData: nftsByCollection } = useNftBalancesQuery(
+    activeAddress ? { owner: activeAddress } : skipToken
+  )
+  const nftAssets = nftsByCollection?.[address]
+
   const { currentData: collection } = useNftCollectionQuery({
-    openseaSlug: nftAssets[0].collection.slug,
+    openseaSlug: slug,
   })
 
   const renderItem = useCallback(
@@ -229,7 +238,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
             <Box mb="sm" mx="lg">
               <NFTCollectionHeader
                 collection={collection}
-                collectionName={nftAssets[0].collection?.name}
+                collectionName={collection?.name ?? ''}
               />
             </Box>
           }

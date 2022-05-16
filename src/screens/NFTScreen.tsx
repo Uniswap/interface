@@ -35,7 +35,10 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.Profile>) {
   const renderItem = ({ item }: ListRenderItemInfo<NFTAsset.Asset[]>) => {
     const onPressCollection = (nftAssets: NFTAsset.Asset[]) => {
       if (nftAssets.length > 0) {
-        navigation.navigate(Screens.NFTCollection, { nftAssets })
+        navigation.navigate(Screens.NFTCollection, {
+          address: nftAssets[0].asset_contract.address,
+          slug: nftAssets[0].collection.slug,
+        })
       }
     }
 

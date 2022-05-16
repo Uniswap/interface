@@ -10,13 +10,13 @@ export const RadialGradient = memo(({ stops }: RadialGradientProps) => {
   return (
     <Svg height="100%" width="100%">
       <Defs>
-        <RadialGradientSVG cx="0.18" cy="0" id="background" r="1.2">
+        <RadialGradientSVG cx="0.2" cy="0" id="background" r="2.1">
           {stops.map(({ ...props }, i) => (
             <Stop {...props} key={i} />
           ))}
         </RadialGradientSVG>
       </Defs>
-      <Rect fill="url(#background)" height="100%" opacity={0.2} width="100%" x="0" y="0" />
+      <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
     </Svg>
   )
 })

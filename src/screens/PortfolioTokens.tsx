@@ -3,13 +3,9 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SharedElement } from 'react-navigation-shared-element'
-import { useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
-import { IconButton } from 'src/components/buttons/IconButton'
-import { TextButton } from 'src/components/buttons/TextButton'
-import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { Box } from 'src/components/layout'
+import { Section } from 'src/components/layout/Section'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -52,7 +48,6 @@ export function PortfolioTokens({
 }) {
   const { t } = useTranslation()
   const navigation = useHomeStackNavigation()
-  const theme = useAppTheme()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
   const currentChains = useActiveChainIds()
@@ -71,73 +66,42 @@ export function PortfolioTokens({
     [balanceData, count]
   )
 
-  const onPress = () => {
-    if (expanded) {
-      navigation.goBack()
-    } else {
-      navigation.navigate(Screens.PortfolioTokens, { owner: activeAddress })
-    }
-  }
-
   const onPressToken = (currency: Currency) =>
     navigation.navigate(Screens.TokenDetails, { currency })
 
-  const header = () => (
-    <Flex row alignItems="center" justifyContent="space-between" mb="xxs">
-      <Flex flex={1} gap="xs">
-        <Flex row justifyContent="space-between">
-          <Text color="neutralTextSecondary" variant="body2">
-            {t('Tokens')}
-          </Text>
-
-          {/* TODO(judo): move to component */}
-          {expanded ? (
-            <IconButton
-              icon={
-                <Chevron
-                  color={theme.colors.neutralTextSecondary}
-                  direction="s"
-                  height={16}
-                  width={16}
-                />
-              }
-              p="none"
-              onPress={onPress}
-            />
-          ) : (
-            <TextButton onPress={onPress}>
-              <Flex row gap="xs">
-                <Text color="neutralTextSecondary" variant="body2">
-                  {t('View all')}
-                </Text>
-                <Chevron
-                  color={theme.colors.neutralTextSecondary}
-                  direction="e"
-                  height={12}
-                  width={12}
-                />
-              </Flex>
-            </TextButton>
-          )}
-        </Flex>
-        <TotalBalance balances={balanceData} variant="h3" />
-      </Flex>
-    </Flex>
-  )
-
   return (
-    <Flex mx="sm">
-      <SharedElement id="portfolio-tokens-header">
-        <Flex bg="tabBackground" borderRadius="md" pb="sm" pt="md" px="md">
+    <SharedElement id="portfolio-tokens-header">
+      <Section.Container>
+        {balances.length === 0 ? (
+          <Section.EmptyState
+            buttonLabel={t('Explore')}
+            description={t(
+              'Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet.'
+            )}
+            title={t('Explore Tokens')}
+            onPress={() => {
+              // TODO: figure out how to navigate to explore
+            }}
+          />
+        ) : (
           <TokenBalanceList
             balances={balances as PortfolioBalance[]}
-            header={header()}
+            header={
+              <Section.Header
+                buttonLabel={t('View all')}
+                expanded={expanded ?? false}
+                subtitle={<TotalBalance balances={balanceData} variant="h3" />}
+                title={t('Tokens')}
+                onMaximize={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
+                onMinimize={() => navigation.canGoBack() && navigation.goBack()}
+              />
+            }
             loading={loading}
             view={viewType}
             onPressToken={onPressToken}
           />
-        </Flex>
-      </SharedElement>
-    </Flex>
+        )}
+      </Section.Container>
+    </SharedElement>
   )
 }

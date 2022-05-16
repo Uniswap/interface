@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useAppTheme } from 'src/app/hooks'
 import { Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 
@@ -9,26 +8,15 @@ interface MasonryProps<T> {
   getKey: (data: T) => string
   loading?: boolean
   renderItem: (data: T) => ReactElement
-  width?: number
 }
 
 export function Masonry<T>({ data, getKey, loading, renderItem }: MasonryProps<T>) {
-  const theme = useAppTheme()
-
-  if (loading)
-    return (
-      <Flex row gap="xxs" padding="xxs">
-        <Loading repeat={2} type="box" />
-        <Loading repeat={2} type="box" />
-      </Flex>
-    )
+  if (loading) return <Loading repeat={2} type="box" />
 
   return (
-    <ScrollView
-      contentContainerStyle={{ paddingHorizontal: theme.spacing.xxs }}
-      showsVerticalScrollIndicator={false}>
-      <Flex row gap="none" px="xs">
-        <Flex flex={1} gap="sm" padding="xxs">
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <Flex row>
+        <Flex flex={1} gap="sm">
           {data
             .filter((_, i) => i % 2 === 0)
             .map((d) => (
@@ -37,7 +25,7 @@ export function Masonry<T>({ data, getKey, loading, renderItem }: MasonryProps<T
               </Box>
             ))}
         </Flex>
-        <Flex flex={1} gap="sm" padding="xxs">
+        <Flex flex={1} gap="sm">
           {data
             .filter((_, i) => i % 2 !== 0)
             .map((d) => (

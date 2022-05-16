@@ -56,5 +56,12 @@ export function TextInput({ onChangeText, onBlur, ...rest }: TextInputProps) {
   rest.placeholderTextColor = theme.colors.deprecated_gray600
   const transformedProps = useRestyle(restyleFunctions, rest)
 
-  return <TextInputBase onBlur={onBlur} onChangeText={onChangeText} {...transformedProps} />
+  return (
+    <TextInputBase
+      autoCompleteType="off"
+      onBlur={onBlur}
+      onChangeText={onChangeText}
+      {...transformedProps}
+    />
+  )
 }

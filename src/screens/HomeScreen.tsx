@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
+import { ScrollView, useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { AppStackParamList, useHomeStackNavigation } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
@@ -41,6 +41,7 @@ export function HomeScreen({ navigation }: Props) {
   useTestAccount()
 
   const theme = useAppTheme()
+  const darkMode = useColorScheme() === 'dark'
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
@@ -81,10 +82,10 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['left', 'right']}>
-      <RadialGradientBox stops={stops} />
+      <RadialGradientBox opacity={darkMode ? 0.4 : 0.2} stops={stops} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Box mt="xl">
-          <Flex gap="lg" mt="lg" mx="lg">
+        <Box mt="xl" mx="md">
+          <Flex gap="lg" mt="lg">
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
               <AccountHeader onPress={onPressAccountHeader} />
               <Flex centered row>
@@ -109,9 +110,9 @@ export function HomeScreen({ navigation }: Props) {
               onClose={() => setShowWalletConnectModal(false)}
             />
           </Flex>
-          <Flex gap="xxs">
+          <Flex gap="md">
             <PortfolioTokens count={4} />
-            <NFTMasonry count={4} />
+            <NFTMasonry count={16} />
           </Flex>
         </Box>
       </ScrollView>
