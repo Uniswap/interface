@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { fetchedLogs, fetchedLogsError, fetchingLogs } from './slice'
-import { keyToFilter } from './utils'
+import { isHistoricalLog, keyToFilter } from './utils'
 
 export default function Updater(): null {
   const dispatch = useAppDispatch()
@@ -22,11 +22,12 @@ export default function Updater(): null {
 
     return Object.keys(active)
       .filter((key) => {
-        // TODO figure out how to not refresh logs that have a toBlock
         const { fetchingBlockNumber, results, listeners } = active[key]
         if (listeners === 0) return false
         if (typeof fetchingBlockNumber === 'number' && fetchingBlockNumber >= blockNumber) return false
         if (results && typeof results.blockNumber === 'number' && results.blockNumber >= blockNumber) return false
+        // this condition ensures that if a log is historical, and it's already fetched, we don't re-fetch it
+        if (isHistoricalLog(keyToFilter(key), blockNumber) && results?.logs !== undefined) return false
         return true
       })
       .map((key) => keyToFilter(key))

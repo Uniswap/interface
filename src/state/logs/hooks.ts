@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
-import { filterToKey, Log } from './utils'
+import { filterToKey, isHistoricalLog, Log } from './utils'
 
 export enum LogsState {
   // The filter is invalid
@@ -46,17 +46,16 @@ export function useLogs(filter: Filter | undefined): UseLogsResult {
     }
   }, [chainId, dispatch, filter])
 
-  const filterKey = useMemo(() => (filter ? filterToKey(filter) : undefined), [filter])
-
   return useMemo(() => {
-    if (!chainId || !filterKey || !blockNumber)
+    if (!chainId || !filter || !blockNumber)
       return {
         logs: undefined,
         state: LogsState.INVALID,
       }
 
-    const state = logs[chainId]?.[filterKey]
+    const state = logs[chainId]?.[filterToKey(filter)]
     const result = state?.results
+
     if (!result) {
       return {
         state: LogsState.LOADING,
@@ -72,8 +71,13 @@ export function useLogs(filter: Filter | undefined): UseLogsResult {
     }
 
     return {
-      state: result.blockNumber >= blockNumber ? LogsState.SYNCED : LogsState.SYNCING,
+      // if we're only fetching logs until a block that has already elapsed, we're synced regardless of result.blockNumber
+      state: isHistoricalLog(filter, blockNumber)
+        ? LogsState.SYNCED
+        : result.blockNumber >= blockNumber
+        ? LogsState.SYNCED
+        : LogsState.SYNCING,
       logs: result.logs,
     }
-  }, [blockNumber, chainId, filterKey, logs])
+  }, [blockNumber, chainId, filter, logs])
 }

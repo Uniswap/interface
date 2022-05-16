@@ -41,3 +41,16 @@ export function keyToFilter(key: string): Filter {
     toBlock: toBlock.length === 0 ? undefined : toBlock,
   }
 }
+
+/**
+ * Determines whether a filter is for a historical log that doesn't need to be re-fetched.
+ * @param filter The filter to check.
+ * @param blockNumber The current block number.
+ */
+export function isHistoricalLog(filter: Filter, blockNumber: number): boolean {
+  if (!filter.toBlock) return false
+
+  let toBlock = filter.toBlock
+  if (typeof toBlock === 'string') toBlock = Number.parseInt(toBlock)
+  return toBlock <= blockNumber
+}
