@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Ether, NativeCurrency, Price, Token, TradeType } from '@uniswap/sdk-core'
@@ -17,7 +18,7 @@ import {
 } from '@uniswap/v3-sdk'
 import { KROMATIKA_ROUTER_ADDRESSES, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { ChainName } from 'constants/chains'
-import { KROM } from 'constants/tokens'
+import { KROM, USDC } from 'constants/tokens'
 import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
@@ -378,6 +379,12 @@ export function useDerivedSwapInfo(): {
     if (!chainId || !estimatedServiceFeeResult) return undefined
 
     return CurrencyAmount.fromRawAmount(KROM[chainId], estimatedServiceFeeResult?.[0])
+  }, [chainId, estimatedServiceFeeResult])
+
+  const serviceFeeUSD = useMemo(() => {
+    if (!chainId || !estimatedServiceFeeResult) return undefined
+
+    return CurrencyAmount.fromRawAmount(USDC, estimatedServiceFeeResult?.[0])
   }, [chainId, estimatedServiceFeeResult])
 
   const price = useMemo(() => {

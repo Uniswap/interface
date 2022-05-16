@@ -456,9 +456,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     setDepositSuggestedKrom(!depositSuggestedKrom)
   }
 
-  console.log('depositSuggestedKrom ---- top')
-  console.log(depositSuggestedKrom)
-
   const fiatValueInput = useUSDCValue(parsedAmounts.input)
 
   const fiatValueOutput = useUSDCValue(parsedAmounts.output)
@@ -470,16 +467,18 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     : fiatValueInput
     ? +fiatValueInput?.toSignificant(6)
     : 0
-  console.log('kromTokenUSD')
+
+  /*  console.log('kromTokenUSD')
   console.log(kromTokenUSD?.toSignificant(8))
   console.log('fiatValueInput')
   console.log(fiatValueInput?.toSignificant(4))
   console.log('amountToBePaid')
-  console.log(amountToBePaid)
+  console.log(amountToBePaid) */
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
 
+  // --------------------------------------- moze ovde treba da se stava setSwapState & setError state
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
@@ -597,11 +596,13 @@ export default function LimitOrder({ history }: RouteComponentProps) {
 
   const margin = calculateGasMargin(gas ? +gas : 0, serviceFee ? +serviceFee?.toSignificant(8) : 0, chainId ?? 0)
 
-  !depositSuggestedKrom && fundingBalance && margin
-    ? +fundingBalance?.toSignificant(8) < margin
-      ? console.log('error state: not enough krom balance deposited')
-      : console.log('set swap state')
-    : 'some prop is undefined'
+  const userShouldDepositKrom =
+    !depositSuggestedKrom && fundingBalance && margin
+      ? +fundingBalance?.toSignificant(8) < margin
+        ? true
+        : false
+      : undefined
+  const depositErrorMessage = userShouldDepositKrom ? 'Insufficient deposited KROM' : undefined
 
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
@@ -689,6 +690,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     [onCurrencySelection]
   )
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
+  console.log('swapErrorMessage')
+  console.log(swapErrorMessage)
 
   if (expertMode) {
     return (
@@ -725,6 +728,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     outputAmount={parsedAmounts.output}
                     onChange={handleDepositChange}
                     depositSuggestedKrom
+                    depositErrorMessage={depositErrorMessage}
                   />
 
                   <AutoColumn gap={'md'}>
@@ -1178,6 +1182,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               outputAmount={parsedAmounts.output}
               onChange={handleDepositChange}
               depositSuggestedKrom
+              depositErrorMessage={depositErrorMessage}
             />
 
             <AutoColumn gap={'md'}>

@@ -44,7 +44,6 @@ interface AdvancedSwapDetailsProps {
   priceAmount: Price<Currency, Currency> | undefined
   syncing?: boolean
   outputAmount: CurrencyAmount<Currency> | undefined
-  amountToBePaid: number
 }
 
 function TextWithLoadingPlaceholder({
@@ -71,7 +70,6 @@ export function AdvancedSwapDetails({
   outputAmount,
   priceAmount,
   syncing = false,
-  amountToBePaid,
 }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
@@ -104,7 +102,6 @@ export function TransactionDetails({
   outputAmount,
   priceAmount,
   syncing = false,
-  amountToBePaid,
 }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
@@ -138,7 +135,6 @@ export function KromDetails({
   outputAmount,
   priceAmount,
   syncing = false,
-  amountToBePaid,
 }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
