@@ -64,23 +64,23 @@ export default function Earn() {
             <AutoColumn gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={600}>
-                  <Trans>Uniswap liquidity mining</Trans>
+                  <Trans>Kromatika liquidity mining</Trans>
                 </TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
                   <Trans>
-                    Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
+                    Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token.
                   </Trans>
                 </TYPE.white>
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://uniswap.org/blog/uni/"
+                href="https://uniswap.org/blog/uni"
                 target="_blank"
               >
                 <TYPE.white fontSize={14}>
-                  <Trans>Read more about UNI</Trans>
+                  <Trans>Read more about KROM</Trans>
                 </TYPE.white>
               </ExternalLink>
             </AutoColumn>

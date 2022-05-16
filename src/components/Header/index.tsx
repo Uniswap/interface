@@ -3,7 +3,7 @@ import useScrollPosition from '@react-hook/window-scroll'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
@@ -26,6 +26,7 @@ import Modal from '../Modal'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
+import CoinsBurned from './CoinsBurned'
 import NetworkSelector from './NetworkSelector'
 import UniBalanceContent from './UniBalanceContent'
 
@@ -295,6 +296,22 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
 
+  const [width, setWidth] = useState(0.0)
+
+  useEffect(() => {
+    // Handler to call on window resize
+    function handleResize() {
+      // Set window width/height to state
+      setWidth(window.innerWidth)
+    }
+    // Add event listener
+    window.addEventListener('resize', handleResize)
+    // Call handler right away so state gets updated with initial window size
+    handleResize()
+    // Remove event listener on cleanup
+    return () => window.removeEventListener('resize', handleResize)
+  }, []) // Empty array ensures that effect is only run on mount
+
   const {
     infoLink,
     addNetworkInfo: {
@@ -346,6 +363,9 @@ export default function Header() {
       </HeaderLinks>
 
       <HeaderControls>
+        {/* <HeaderElement>
+          <CoinsBurned />
+        </HeaderElement> */}
         <HeaderElement>
           <NetworkSelector />
         </HeaderElement>

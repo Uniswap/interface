@@ -190,7 +190,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
   return (
     <VoteCard>
       <CardBGImage />
-      <CardNoise />
+      {/* <CardNoise /> */}
       <CardSection>
         <AutoColumn gap="md">
           <FixedHeightRow>

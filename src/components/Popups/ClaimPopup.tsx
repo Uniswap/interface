@@ -112,7 +112,7 @@ export default function ClaimPopup() {
             </TYPE.white>
             <TYPE.subHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
               <Trans>
-                Thanks for being part of the Uniswap community <Heart size={12} />
+                Thanks for being part of the Kromatika community <Heart size={12} />
               </Trans>
             </TYPE.subHeader>
           </AutoColumn>

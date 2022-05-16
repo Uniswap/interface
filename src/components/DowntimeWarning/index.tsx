@@ -44,7 +44,7 @@ export default function DowntimeWarning() {
               Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade
               the network in the near future. During downtime, your position will not earn fees and you will be unable
               to remove liquidity.{' '}
-              <ReadMoreLink href="https://help.uniswap.org/en/articles/5406082-what-happens-if-the-optimistic-ethereum-network-experiences-downtime">
+              <ReadMoreLink href="https://help.kromatika.finance/en/articles/5406082-what-happens-if-the-optimistic-ethereum-network-experiences-downtime">
                 Read more.
               </ReadMoreLink>
             </Trans>
@@ -57,7 +57,7 @@ export default function DowntimeWarning() {
             <Trans>
               Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you
               will be unable to remove liquidity.{' '}
-              <ReadMoreLink href="https://help.uniswap.org/en/articles/5576122-arbitrum-network-downtime">
+              <ReadMoreLink href="https://help.kromatika.finance/en/articles/5576122-arbitrum-network-downtime">
                 Read more.
               </ReadMoreLink>
             </Trans>

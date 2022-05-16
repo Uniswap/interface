@@ -564,10 +564,8 @@ export default function Swap({ history }: RouteComponentProps) {
                     onDismiss={handleConfirmDismiss}
                     inputAmount={parsedAmounts.input}
                     outputAmount={parsedAmounts.output}
-                    onChange={() => console.log()}
-                    depositSuggestedKrom={true}
-                    depositErrorMessage={undefined}
                   />
+
                   <AutoColumn gap={'md'}>
                     <div style={{ display: 'relative' }}>
                       <CurrencyInputPanel
@@ -991,9 +989,6 @@ export default function Swap({ history }: RouteComponentProps) {
               onDismiss={handleConfirmDismiss}
               inputAmount={parsedAmounts.input}
               outputAmount={parsedAmounts.output}
-              onChange={() => console.log()}
-              depositSuggestedKrom={true}
-              depositErrorMessage={undefined}
             />
 
             <AutoColumn gap={'md'}>
@@ -1156,7 +1151,11 @@ export default function Swap({ history }: RouteComponentProps) {
                     </RowFixed>
                     <RowFixed>
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
-                        <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
+                        <TradePrice
+                          price={minPrice}
+                          showInverted={showInverted}
+                          setShowInverted={setShowInverted}
+                        />
                       </LoadingOpacityContainer>
                     </RowFixed>
                   </Row>

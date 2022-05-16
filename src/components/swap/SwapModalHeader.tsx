@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { KROM } from 'constants/tokens'
 import { useContext, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -15,11 +14,11 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { ButtonPrimary } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
-import { FiatNumberType, FiatValue } from '../CurrencyInputPanel/FiatValue'
+import { FiatValue } from '../CurrencyInputPanel/FiatValue'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
-import { AdvancedSwapDetails, KromDetails, TransactionDetails } from './AdvancedSwapDetails'
+import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 const ArrowWrapper = styled.div`
@@ -49,8 +48,6 @@ export default function SwapModalHeader({
   onAcceptChanges,
   inputAmount,
   outputAmount,
-  onChange,
-  depositSuggestedKrom,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   serviceFee: CurrencyAmount<Currency> | undefined
@@ -60,20 +57,12 @@ export default function SwapModalHeader({
   onAcceptChanges: () => void
   inputAmount: CurrencyAmount<Currency> | undefined
   outputAmount: CurrencyAmount<Currency> | undefined
-  onChange: () => void
-  depositSuggestedKrom: boolean
 }) {
   const theme = useContext(ThemeContext)
 
   const [showInverted, setShowInverted] = useState<boolean>(true)
 
-  const suggestedKrom = serviceFee ? serviceFee.multiply(2) : 0
-
   const fiatValueInput = useUSDCValue(inputAmount)
-
-  const [depositSuggestedKroms, setDepositSuggestedKroms] = useState(false)
-  console.log('depositSuggestedKrom ****** bottom')
-  console.log(depositSuggestedKroms)
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -112,38 +101,23 @@ export default function SwapModalHeader({
           <TradePrice price={priceAmount} showInverted={showInverted} setShowInverted={setShowInverted} />
         </RowBetween>
       ) : null}
+
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
         <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
           <Trans>Current Price</Trans>
         </TYPE.body>
         <TradePrice price={trade.route.midPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
       </RowBetween>
+
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <TransactionDetails
+        <AdvancedSwapDetails
           trade={trade}
           priceAmount={priceAmount}
           outputAmount={outputAmount}
           serviceFee={serviceFee}
         />
-      </LightCard>{' '}
-      <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem', justifyContent: 'end' }}>
-        <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-          <Trans>
-            Deposit suggested KROM{' '}
-            <input
-              type="checkbox"
-              checked={depositSuggestedKroms}
-              onClick={() => {
-                onChange()
-                setDepositSuggestedKroms(!depositSuggestedKroms)
-              }}
-            />
-          </Trans>
-        </TYPE.body>
-      </RowBetween>
-      <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <KromDetails trade={trade} priceAmount={priceAmount} outputAmount={outputAmount} serviceFee={serviceFee} />
-      </LightCard>{' '}
+      </LightCard>
+
       {showAcceptChanges ? (
         <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
           <RowBetween>
@@ -162,6 +136,7 @@ export default function SwapModalHeader({
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}
+
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
         <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
           <Trans>

@@ -46,9 +46,6 @@ export default function ConfirmSwapModal({
   txHash,
   inputAmount,
   outputAmount,
-  onChange,
-  depositSuggestedKrom,
-  depositErrorMessage,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -64,9 +61,6 @@ export default function ConfirmSwapModal({
   onDismiss: () => void
   inputAmount: CurrencyAmount<Currency> | undefined
   outputAmount: CurrencyAmount<Currency> | undefined
-  onChange: () => void
-  depositSuggestedKrom: boolean
-  depositErrorMessage: string | undefined
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -92,8 +86,6 @@ export default function ConfirmSwapModal({
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
-        onChange={onChange}
-        depositSuggestedKrom
       />
     ) : null
   }, [trade, serviceFee, priceAmount, inputAmount, outputAmount, recipient, showAcceptChanges, onAcceptChanges])
@@ -105,7 +97,6 @@ export default function ConfirmSwapModal({
         trade={trade}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
-        depositErrorMessage={depositErrorMessage}
       />
     ) : null
   }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])

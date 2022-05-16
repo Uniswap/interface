@@ -17,7 +17,7 @@ import { useV3Positions } from 'hooks/useV3Positions'
 import JSBI from 'jsbi'
 import { constantToCode } from 'multicodec/src/maps'
 import { LoadingRows } from 'pages/Pool/styleds'
-import React, { createContext } from 'react'
+import React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -60,7 +60,7 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useUSDCPrice, { useUSDCValue } from '../../hooks/useUSDCPrice'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -342,17 +342,6 @@ const LimitOrderContainer = styled.div`
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
-// calculates how much KROM should be paid in service fee, based on the gwei price
-function calculateGasMargin(gas: number, serviceFee: number, chainId: number) {
-  if (chainId != 1) return serviceFee * 2
-  // use this chain for mainnet only
-  if (serviceFee) {
-    if (Number(gas) > 100) return +serviceFee * 2
-    if (Number(gas) > 50) return +serviceFee * 3
-    return +serviceFee * 10
-  }
-  return 0
-}
 
 export default function LimitOrder({ history }: RouteComponentProps) {
   const { account, chainId } = useActiveWeb3React()
@@ -447,38 +436,13 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     [trade, v3TradeState]
   )
 
-  const kromToken = (chainId && KROM[chainId]) || undefined
-  const kromTokenUSD = useUSDCPrice(kromToken)
-
-  const [depositSuggestedKrom, setDepositSuggestedKrom] = useState(false)
-
-  const handleDepositChange = () => {
-    setDepositSuggestedKrom(!depositSuggestedKrom)
-  }
-
   const fiatValueInput = useUSDCValue(parsedAmounts.input)
-
   const fiatValueOutput = useUSDCValue(parsedAmounts.output)
   const priceImpact = routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
-  const amountToBePaid = depositSuggestedKrom
-    ? fiatValueInput && serviceFee && kromTokenUSD
-      ? +fiatValueInput?.toSignificant(6) + 2 * +serviceFee?.toSignificant(6) * +kromTokenUSD?.toSignificant(6)
-      : 0
-    : fiatValueInput
-    ? +fiatValueInput?.toSignificant(6)
-    : 0
-
-  /*  console.log('kromTokenUSD')
-  console.log(kromTokenUSD?.toSignificant(8))
-  console.log('fiatValueInput')
-  console.log(fiatValueInput?.toSignificant(4))
-  console.log('amountToBePaid')
-  console.log(amountToBePaid) */
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
 
-  // --------------------------------------- moze ovde treba da se stava setSwapState & setError state
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
@@ -578,43 +542,11 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     serviceFee
   )
 
-  /*
-  depositedKrom // funding balance 
-  serviceFee
-  !depositSuggestedKrom && (depositedKrom < serviceFee * 2) ? setSwapState(.....) : setErrorMessage = 'not enough krom balance'
-
-  // ==================== add a margin ===============================================================
-
-    checkGwei
-      1. if gwei > 1000: fee x2 
-      2. if gwei > 50: fee x5
-      3. else: fee x 10 
-
-  */
-  //const gasPrice = ethGasPrice?.multiply(JSBI.BigInt(1000000000)).toSignificant(6)
-  const gas = gasPrice?.multiply(JSBI.BigInt(1000000000)).toSignificant(6)
-
-  const margin = calculateGasMargin(gas ? +gas : 0, serviceFee ? +serviceFee?.toSignificant(8) : 0, chainId ?? 0)
-
-  const userShouldDepositKrom =
-    !depositSuggestedKrom && fundingBalance && margin
-      ? +fundingBalance?.toSignificant(8) < margin
-        ? true
-        : false
-      : undefined
-  const depositErrorMessage = userShouldDepositKrom ? 'Insufficient deposited KROM' : undefined
-
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
       return
     }
-    setSwapState({
-      attemptingTxn: true,
-      tradeToConfirm,
-      showConfirm,
-      swapErrorMessage: undefined,
-      txHash: undefined,
-    })
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
@@ -690,8 +622,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     [onCurrencySelection]
   )
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
-  console.log('swapErrorMessage')
-  console.log(swapErrorMessage)
 
   if (expertMode) {
     return (
@@ -726,9 +656,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     onDismiss={handleConfirmDismiss}
                     inputAmount={parsedAmounts.input}
                     outputAmount={parsedAmounts.output}
-                    onChange={handleDepositChange}
-                    depositSuggestedKrom
-                    depositErrorMessage={depositErrorMessage}
                   />
 
                   <AutoColumn gap={'md'}>
@@ -1180,9 +1107,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               onDismiss={handleConfirmDismiss}
               inputAmount={parsedAmounts.input}
               outputAmount={parsedAmounts.output}
-              onChange={handleDepositChange}
-              depositSuggestedKrom
-              depositErrorMessage={depositErrorMessage}
             />
 
             <AutoColumn gap={'md'}>
