@@ -30,7 +30,7 @@ export const PageWrapper = styled.div`
   //   padding: 24px 155px 50px;
   // }
 
-  // @media only screen and (min-width: 1440px) {
+  // @media only screen and (min-width: 1500px) {
   //   padding: 24px 202px 50px;
   // }
 `
@@ -354,13 +354,11 @@ export const LiveChartWrapper = styled.div`
   width: 772px;
   display: none;
   @media screen and (min-width: 1100px) {
-    height: 416px;
+    height: 510px;
     display: block;
   }
-  @media screen and (min-width: 1440px) {
-    height: 510px;
+  @media screen and (min-width: 1500px) {
     width: 940px;
-    display: block;
   }
 `
 

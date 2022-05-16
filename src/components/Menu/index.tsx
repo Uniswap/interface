@@ -7,7 +7,7 @@ import { ChainId } from '@dynamic-amm/sdk'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ExternalLink } from 'theme'
-import { DMM_ANALYTICS_URL } from 'constants/index'
+import { CLAIM_REWARD_SC_ADDRESS, DMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useMedia } from 'react-use'
@@ -278,11 +278,7 @@ export default function Menu() {
           <Trans>Contact Us</Trans>
         </MenuItem>
         <ClaimRewardButton
-          disabled={
-            !account ||
-            (!!chainId && ![ChainId.MATIC, ChainId.ROPSTEN, ChainId.AVAXMAINNET].includes(chainId)) ||
-            pendingTx
-          }
+          disabled={!account || (!!chainId && CLAIM_REWARD_SC_ADDRESS[chainId] === '') || pendingTx}
           onClick={() => {
             mixpanelHandler(MIXPANEL_TYPE.CLAIM_REWARDS_INITIATED)
             toggleClaimPopup()

@@ -46,7 +46,7 @@ const FooterContent = styled.div`
     padding: 16px 215px;
   }
 
-  @media only screen and (min-width: 1440px) {
+  @media only screen and (min-width: 1500px) {
     padding: 16px 252px;
   }
 `
