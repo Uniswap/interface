@@ -4,7 +4,7 @@ import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
-import { coinbaseWallet, injected, walletConnect } from '../connectors'
+import { coinbaseWallet, injected, Wallet, walletConnect } from '../connectors'
 
 interface WalletInfo {
   connector?: Connector
@@ -17,36 +17,6 @@ interface WalletInfo {
   primary?: true
   mobile?: true
   mobileOnly?: true
-}
-
-export enum Wallet {
-  INJECTED = 'INJECTED',
-  COINBASE_WALLET = 'COINBASE_WALLET',
-  WALLET_CONNECT = 'WALLET_CONNECT',
-}
-
-export const getWalletForConnector = (connector: Connector) => {
-  switch (connector) {
-    case injected:
-      return Wallet.INJECTED
-    case coinbaseWallet:
-      return Wallet.COINBASE_WALLET
-    case walletConnect:
-      return Wallet.WALLET_CONNECT
-    default:
-      throw Error('unsupported connector')
-  }
-}
-
-export const getConnectorForWallet = (wallet: Wallet) => {
-  switch (wallet) {
-    case Wallet.INJECTED:
-      return injected
-    case Wallet.COINBASE_WALLET:
-      return coinbaseWallet
-    case Wallet.WALLET_CONNECT:
-      return walletConnect
-  }
 }
 
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {

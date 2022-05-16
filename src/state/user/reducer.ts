@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { Wallet } from 'connectors'
 import { SupportedLocale } from 'constants/locales'
-import { Wallet } from 'constants/wallet'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
