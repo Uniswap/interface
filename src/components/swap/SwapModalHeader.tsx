@@ -50,7 +50,7 @@ export default function SwapModalHeader({
   inputAmount,
   outputAmount,
   onChange,
-  amountToBePaid,
+  depositSuggestedKrom,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   serviceFee: CurrencyAmount<Currency> | undefined
@@ -61,7 +61,7 @@ export default function SwapModalHeader({
   inputAmount: CurrencyAmount<Currency> | undefined
   outputAmount: CurrencyAmount<Currency> | undefined
   onChange: () => void
-  amountToBePaid: number
+  depositSuggestedKrom: boolean
 }) {
   const theme = useContext(ThemeContext)
 
@@ -71,7 +71,9 @@ export default function SwapModalHeader({
 
   const fiatValueInput = useUSDCValue(inputAmount)
 
-  const [depositSuggestedKrom, setDepositSuggestedKrom] = useState(false)
+  const [depositSuggestedKroms, setDepositSuggestedKroms] = useState(false)
+  console.log('depositSuggestedKrom ****** bottom')
+  console.log(depositSuggestedKroms)
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -117,12 +119,11 @@ export default function SwapModalHeader({
         <TradePrice price={trade.route.midPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
       </RowBetween>
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedSwapDetails
+        <TransactionDetails
           trade={trade}
           priceAmount={priceAmount}
           outputAmount={outputAmount}
           serviceFee={serviceFee}
-          amountToBePaid={+amountToBePaid}
         />
       </LightCard>{' '}
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem', justifyContent: 'end' }}>
@@ -131,32 +132,17 @@ export default function SwapModalHeader({
             Deposit suggested KROM{' '}
             <input
               type="checkbox"
-              checked={depositSuggestedKrom}
+              checked={depositSuggestedKroms}
               onClick={() => {
                 onChange()
-                setDepositSuggestedKrom(!depositSuggestedKrom)
+                setDepositSuggestedKroms(!depositSuggestedKroms)
               }}
             />
           </Trans>
         </TYPE.body>
       </RowBetween>
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <KromDetails
-          trade={trade}
-          priceAmount={priceAmount}
-          outputAmount={outputAmount}
-          serviceFee={serviceFee}
-          amountToBePaid={+amountToBePaid}
-        />
-      </LightCard>{' '}
-      <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <TransactionDetails
-          trade={trade}
-          priceAmount={priceAmount}
-          outputAmount={outputAmount}
-          serviceFee={serviceFee}
-          amountToBePaid={+amountToBePaid}
-        />
+        <KromDetails trade={trade} priceAmount={priceAmount} outputAmount={outputAmount} serviceFee={serviceFee} />
       </LightCard>{' '}
       {showAcceptChanges ? (
         <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
