@@ -4,7 +4,6 @@ import React, { useMemo } from 'react'
 import { ActivityIndicator, Pressable } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
-import { InlinePriceChart } from 'src/components/PriceChart/InlinePriceChart'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { TextWithFuseMatches } from 'src/components/text/TextWithFuseMatches'
@@ -82,7 +81,7 @@ export function Option({ currency, onPress, matches, metadataType }: OptionProps
           ) : metadataType === 'price' ? (
             <TokenMetadata
               main={formatUSDPrice(currencyPrice?.price)}
-              pre={<InlinePriceChart currency={currency} />}
+              // pre={<InlinePriceChart currency={currency} />}
               sub={<RelativeChange change={currencyPrice?.relativeChange24} />}
             />
           ) : balance?.amount && !balance.amount.equalTo(0) ? (
