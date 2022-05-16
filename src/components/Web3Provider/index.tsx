@@ -2,7 +2,6 @@ import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import {
   coinbaseWallet,
   createOrderedConnectors,
-  getConnectorForWallet,
   gnosisSafe,
   injected,
   Wallet,
@@ -19,7 +18,8 @@ interface ConnectorState {
   previousIsActive: boolean | undefined
 }
 
-// This component handles state changes in web3-react and updates wallet connections as needed.
+// This component handles state changes in web3-react. It eagerly connects to all wallets.
+// It also checks for Coinbase Wallet, Wallet Connect, or Injected wallets to become active.
 function Web3Updater() {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
@@ -40,16 +40,10 @@ function Web3Updater() {
 
   useEffect(() => {
     gnosisSafe.connectEagerly()
-    if (walletOverrideBackfilled) {
-      const connectorOverride = walletOverride ? getConnectorForWallet(walletOverride) : undefined
-      connectorOverride?.connectEagerly()
-      setEagerlyConnectingWallets(new Set([walletOverride]))
-    } else {
-      injected.connectEagerly()
-      walletConnect.connectEagerly()
-      coinbaseWallet.connectEagerly()
-      setEagerlyConnectingWallets(new Set(WALLETS))
-    }
+    injected.connectEagerly()
+    walletConnect.connectEagerly()
+    coinbaseWallet.connectEagerly()
+    setEagerlyConnectingWallets(new Set(WALLETS))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
