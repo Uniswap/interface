@@ -33,6 +33,11 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   const theme = useContext(ThemeContext)
 
   const usdcPrice = useUSDCPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
+  /*
+   * calculate needed amount of decimal prices, for prices between 0.95-1.05 use 4 decimal places
+   */
+  const p = Number(usdcPrice?.toFixed(3))
+  const visibleDecimalPlaces = p >= 0.95 && p <= 1.05 ? 4 : 2
 
   let formattedPrice: string
   try {
@@ -60,7 +65,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       </Text>{' '}
       {usdcPrice && (
         <ThemedText.DarkGray>
-          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>
+          <Trans>(${usdcPrice.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })})</Trans>
         </ThemedText.DarkGray>
       )}
     </StyledPriceContainer>
