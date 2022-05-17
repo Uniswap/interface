@@ -28,7 +28,7 @@ export function FiatValue({
   }, [priceImpact, theme.green1, theme.red1, theme.text3, theme.yellow1])
 
   const p = Number(fiatValue?.toFixed())
-  const visibleDecimalPlaces = p < 0.95 ? 4 : 2
+  const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
   return (
     <ThemedText.Body fontSize={14} color={fiatValue ? theme.text3 : theme.text4}>
