@@ -1,6 +1,7 @@
 import { ElementName } from '../../src/features/telemetry/constants'
 import { by, expect, element, device } from 'detox'
 import { sleep } from '../../src/utils/timing'
+import { maybeDismissTokenWarning } from '../utils/utils'
 
 export function Swap() {
   it('fills the swap form', async () => {
@@ -9,8 +10,12 @@ export function Swap() {
     await element(by.id('currency-selector-toggle-in')).tap()
     await element(by.id('currency-option-1-ETH')).tap()
 
+    await maybeDismissTokenWarning()
+
     await element(by.id('currency-selector-toggle-out')).tap()
-    await element(by.id('currency-option-1-DAI')).tap()
+    await element(by.id('currency-option-1-1INCH')).tap()
+
+    await maybeDismissTokenWarning()
 
     // type 1.23
     await element(by.id('decimal-pad-1')).tap()

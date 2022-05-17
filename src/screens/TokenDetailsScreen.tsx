@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -14,15 +14,17 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
+import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { TokenWarningLevel, useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
   CurrencyField,
@@ -66,6 +68,11 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   )
 }
 
+enum SwapType {
+  BUY,
+  SELL,
+}
+
 export function TokenDetailsScreen({
   route,
   navigation,
@@ -77,10 +84,17 @@ export function TokenDetailsScreen({
   const theme = useAppTheme()
   const { t } = useTranslation()
 
-  const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } =
-    useTokenWarningLevel(currency)
+  const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
+    currency.wrapped
+  )
 
-  const onPressBuy = () => {
+  // set if attempting buy or sell, use for warning modal
+  const [activeSwapAttemptType, setActiveSwapAttemptType] = useState<SwapType | undefined>(
+    undefined
+  )
+
+  const navigateToSwapBuy = useCallback(() => {
+    setActiveSwapAttemptType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.OUTPUT,
       exactAmount: '0',
@@ -92,9 +106,10 @@ export function TokenDetailsScreen({
       },
     }
     navigation.push(Screens.Swap, { swapFormState })
-  }
+  }, [currency, navigation])
 
-  const onPressSell = () => {
+  const navigateToSwapSell = useCallback(() => {
+    setActiveSwapAttemptType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
       exactAmount: '0',
@@ -106,7 +121,25 @@ export function TokenDetailsScreen({
       [CurrencyField.OUTPUT]: null,
     }
     navigation.push(Screens.Swap, { swapFormState })
-  }
+  }, [currency, navigation])
+
+  const onPressSwap = useCallback(
+    (swapType: SwapType) => {
+      // show warning modal speedbump if token has a warning level and user has not dismissed
+      if (tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed) {
+        setActiveSwapAttemptType(swapType)
+      } else {
+        if (swapType === SwapType.BUY) {
+          navigateToSwapBuy()
+        }
+        if (swapType === SwapType.SELL) {
+          navigateToSwapSell()
+        }
+        return
+      }
+    },
+    [navigateToSwapBuy, navigateToSwapSell, tokenWarningDismissed, tokenWarningLevel]
+  )
 
   const onPressSend = () => {
     const transferFormState: TransactionState = {
@@ -144,7 +177,7 @@ export function TokenDetailsScreen({
                 label={t('Buy')}
                 name={ElementName.BuyToken}
                 textVariant="mediumLabel"
-                onPress={onPressBuy}
+                onPress={() => onPressSwap(SwapType.BUY)}
               />
               <PrimaryButton
                 disabled={!balance || tokenWarningLevel === TokenWarningLevel.BLOCKED}
@@ -153,7 +186,7 @@ export function TokenDetailsScreen({
                 name={ElementName.SellToken}
                 textVariant="mediumLabel"
                 variant="gray"
-                onPress={onPressSell}
+                onPress={() => onPressSwap(SwapType.SELL)}
               />
               <IconButton
                 bg="deprecated_gray100"
@@ -172,7 +205,7 @@ export function TokenDetailsScreen({
                 onPress={onPressSend}
               />
             </Flex>
-            {tokenWarningLevel && !tokenWarningDismissed && (
+            {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
               <Box mx="lg">
                 <TokenWarningCard
                   tokenWarningLevel={tokenWarningLevel}
@@ -183,6 +216,18 @@ export function TokenDetailsScreen({
           </Box>
         </Flex>
       </ScrollView>
+      <BottomSheetModal
+        isVisible={
+          activeSwapAttemptType === SwapType.BUY || activeSwapAttemptType === SwapType.SELL
+        }
+        name={ModalName.TokenWarningModal}
+        onClose={() => setActiveSwapAttemptType(undefined)}>
+        <TokenWarningModalContent
+          currency={currency}
+          onAccept={activeSwapAttemptType === SwapType.BUY ? navigateToSwapBuy : navigateToSwapSell}
+          onClose={() => setActiveSwapAttemptType(undefined)}
+        />
+      </BottomSheetModal>
     </Screen>
   )
 }

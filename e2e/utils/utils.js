@@ -23,3 +23,11 @@ export async function quickOnboarding() {
   await element(by.id('import_account_form/input')).typeText(Accounts.managed.name)
   await element(by.id(ElementName.Submit)).tap()
 }
+
+export async function maybeDismissTokenWarning() {
+  try {
+    await element(by.id(ElementName.TokenWarningAccept)).tap()
+  } catch (e) {
+    // no-op
+  }
+}

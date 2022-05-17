@@ -2,14 +2,15 @@ import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
-import XOctagon from 'src/assets/icons/x-octagon.svg'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
-import { Theme } from 'src/styles/theme'
+import WarningIcon from 'src/components/tokens/WarningIcon'
+import {
+  TokenWarningLevel,
+  useTokenWarningLevelColors,
+} from 'src/features/tokens/useTokenWarningLevel'
 import { opacify } from 'src/utils/colors'
 
 function getHeaderText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
@@ -38,22 +39,6 @@ function getBodyText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
   }
 }
 
-function getColors(
-  tokenWarningLevel: TokenWarningLevel,
-  theme: Theme
-): [string, keyof Theme['colors']] {
-  switch (tokenWarningLevel) {
-    case TokenWarningLevel.LOW:
-      return [theme.colors.deprecated_yellow, 'deprecated_yellow']
-    case TokenWarningLevel.MEDIUM:
-      return [theme.colors.deprecated_red, 'deprecated_red']
-    case TokenWarningLevel.BLOCKED:
-      return [theme.colors.deprecated_gray400, 'deprecated_gray400']
-    default:
-      return [theme.colors.deprecated_gray400, 'deprecated_gray400']
-  }
-}
-
 export default function TokenWarningCard({
   tokenWarningLevel,
   onDismiss,
@@ -61,27 +46,22 @@ export default function TokenWarningCard({
   tokenWarningLevel: TokenWarningLevel
   onDismiss?: () => void
 }) {
-  const theme = useAppTheme()
   const { t } = useTranslation()
-
-  const [backgroundColor, mainColor] = getColors(tokenWarningLevel, theme)
+  const theme = useAppTheme()
+  const warningColor = useTokenWarningLevelColors(tokenWarningLevel)
 
   return (
     <Flex
-      borderColor={mainColor}
+      borderColor={warningColor}
       borderRadius="lg"
       borderWidth={1}
       gap="sm"
       padding="md"
-      style={{ backgroundColor: opacify(16, backgroundColor) }}>
+      style={{ backgroundColor: opacify(16, theme.colors[warningColor]) }}>
       <Flex row justifyContent="space-between">
         <Flex alignItems="center" flexDirection="row" gap="xs">
-          {tokenWarningLevel === TokenWarningLevel.BLOCKED ? (
-            <XOctagon color={backgroundColor} />
-          ) : (
-            <AlertTriangle color={backgroundColor} />
-          )}
-          <Text color={mainColor} variant="body1">
+          <WarningIcon tokenWarningLevel={tokenWarningLevel} />
+          <Text color={warningColor} variant="body1">
             {getHeaderText(tokenWarningLevel, t)}
           </Text>
         </Flex>
@@ -92,7 +72,7 @@ export default function TokenWarningCard({
             height={20}
             icon={<CloseIcon size={8} />}
             justifyContent="center"
-            style={{ backgroundColor: opacify(40, backgroundColor) }}
+            style={{ backgroundColor: opacify(40, theme.colors[warningColor]) }}
             width={20}
             onPress={onDismiss}
           />

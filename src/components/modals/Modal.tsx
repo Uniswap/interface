@@ -13,7 +13,7 @@ interface Props extends ModalProps {
   hide?: () => void
   dismissable?: boolean
   showCloseButton?: boolean
-  width?: number
+  width?: number | '100%'
   dimBackground?: boolean
 }
 
@@ -49,7 +49,10 @@ React.PropsWithChildren<Props>) {
         justifyContent={justifyContent}
         style={dimBackground && style.bgDimmed}
         onPress={dismissable ? hide : undefined}>
-        <Box backgroundColor="mainBackground" style={style.modalBox} width={width}>
+        <Box
+          backgroundColor="mainBackground"
+          style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
+          width={width}>
           {title && (
             <Text mb="sm" px="md" variant="h3">
               {title}
@@ -67,6 +70,24 @@ React.PropsWithChildren<Props>) {
   )
 }
 
+const modalBoxBaseStyle = StyleSheet.create({
+  base: {
+    alignItems: 'center',
+    borderRadius: 15,
+    elevation: 5,
+    margin: 20,
+    padding: 20,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {
+      height: 2,
+      width: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+})
+
 const style = StyleSheet.create({
   bgDimmed: {
     backgroundColor: 'rgba(0,0,0,0.3)',
@@ -76,19 +97,9 @@ const style = StyleSheet.create({
     right: 20,
     top: 20,
   },
-  modalBox: {
-    alignItems: 'center',
-    borderRadius: 15,
-    elevation: 5,
-    margin: 20,
-    padding: 20,
-    position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+  modalBox: modalBoxBaseStyle.base,
+  modalBoxFullWidth: {
+    ...modalBoxBaseStyle.base,
+    margin: 0,
   },
 })

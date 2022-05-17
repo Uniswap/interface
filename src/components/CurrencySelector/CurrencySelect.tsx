@@ -4,9 +4,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
-import { Option } from 'src/components/CurrencySelector/Option'
+import { WarningOption } from 'src/components/CurrencySelector/WarningOption'
 import { Flex } from 'src/components/layout'
 import { SearchBar } from 'src/components/SearchBar'
+import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
 import { useFilteredCurrencies } from './hooks'
 import { CurrencySearchResultList } from './SearchResults'
 
@@ -37,6 +38,8 @@ export function CurrencySelect({
 
   const { t } = useTranslation()
 
+  const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
+
   return (
     <Flex gap="lg" px="md">
       <SearchBar
@@ -58,10 +61,10 @@ export function CurrencySelect({
         renderItem={({ item }: ListRenderItemInfo<Fuse.FuseResult<Currency>>) => {
           const currency = item.item
           return (
-            <Option
+            <WarningOption
               currency={currency}
               matches={item.matches}
-              metadataType="balance"
+              tokenWarningLevelMap={tokenWarningLevelMap}
               onPress={() => onSelectCurrency?.(currency)}
             />
           )

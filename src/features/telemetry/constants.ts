@@ -34,6 +34,7 @@ export const enum ModalName {
   NetworkSelector = 'network-selector-modal',
   WalletQRCode = 'wallet-qr-code-modal',
   NFTAsset = 'nft-asset',
+  TokenWarningModal = 'token-warning-modal',
   WalletConnectScan = 'wallet-connect-scan-modal',
   WCSignRequest = 'wc-sign-request-modal',
 }
@@ -93,6 +94,8 @@ export const enum ElementName {
   Submit = 'submit',
   Swap = 'swap',
   SwapArrow = 'swap-arrow',
+  TabBarSwap = 'tab-bar-swap',
+  TokenWarningAccept = 'token-warning-accept',
   SwapQuickDetails = 'swap-quick-details',
   TransactionSummaryHash = 'transaction-summary',
   TryAgain = 'try-again',

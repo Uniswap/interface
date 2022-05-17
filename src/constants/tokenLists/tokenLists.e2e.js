@@ -1,6 +1,8 @@
 // Replaces tokenLists.ts in e2e (Detox) tests
 // Avoid ens domains and reduces number of list for performance.
 
+import { UNI_LIST } from './tokenLists'
+
 const BA_LIST =
   'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
@@ -11,7 +13,7 @@ export const UNSUPPORTED_LIST_URLS = [BA_LIST]
 
 // this is the default list of lists that are exposed to users
 // lower index == higher priority for token import
-const DEFAULT_LIST_OF_LISTS_TO_DISPLAY = [ARBITRUM_LIST, OPTIMISM_LIST, GEMINI_LIST]
+const DEFAULT_LIST_OF_LISTS_TO_DISPLAY = [UNI_LIST, ARBITRUM_LIST, OPTIMISM_LIST, GEMINI_LIST]
 
 export const DEFAULT_LIST_OF_LISTS = [
   ...DEFAULT_LIST_OF_LISTS_TO_DISPLAY,
