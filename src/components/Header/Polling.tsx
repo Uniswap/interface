@@ -118,7 +118,7 @@ export default function Polling() {
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
-  const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.fee)
+  //const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.fee)
 
   const result = useV3PositionFromTokenId(BigNumber.from('154097'))
   console.log('result -------')
