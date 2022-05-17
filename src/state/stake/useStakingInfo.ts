@@ -19,7 +19,6 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
   const currentBlockTimestamp = useCurrentBlockTimestamp()
 
   const info = useStakingPools(pairToFilterBy, stakingAddress)
-
   // These are the staking pools
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 

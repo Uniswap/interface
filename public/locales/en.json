@@ -230,6 +230,13 @@
   "youHaveUnclaimedRewards": "You have {{count}} farms with unclaimed rewards",
   "claimAllRewards": "Claim all rewards",
   "featuredPools": "Featured Pools",
+  "importedPools": "Imported Pools",
+  "ImportFarm": "Import Farm",
+  "TheFarmAlreadyExists": "The Farm Already Exists",
+  "EnterFarmAddress": "Enter farm address",
+  "EnterValidFarmAddress": "Enter valid farm address",
+  "TheFarmHasAlreadyBeenImported": "The farm has already been imported",
+  "AreYouSure": "Are you sure?",
   "limitOrder": "Limit Order",
   "price": "Price",
   "placeOrder": "Place Order"

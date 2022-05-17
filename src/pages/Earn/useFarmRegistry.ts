@@ -1,9 +1,12 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
+import { parseEther } from '@ethersproject/units'
+import { TokenAmount } from '@ubeswap/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect } from 'react'
 import { AbiItem, fromWei, toBN } from 'web3-utils'
 
 import farmRegistryAbi from '../../constants/abis/FarmRegistry.json'
+import { useCustomStakingInfo } from './useCustomStakingInfo'
 
 type FarmData = {
   tvlUSD: string
@@ -19,6 +22,8 @@ export type FarmSummary = {
   token0Address: string
   token1Address: string
   isFeatured: boolean
+  isImported: boolean
+  totalRewardRates?: TokenAmount[]
 }
 
 const blacklist: Record<string, boolean> = {
@@ -90,6 +95,7 @@ export const useFarmRegistry = () => {
           tvlUSD: farmData[e.returnValues.stakingAddress].tvlUSD,
           rewardsUSDPerYear: farmData[e.returnValues.stakingAddress].rewardsUSDPerYear,
           isFeatured: !!featuredPoolWhitelist[e.returnValues.stakingAddress],
+          isImported: false,
         })
       })
 
@@ -107,9 +113,29 @@ export const useFarmRegistry = () => {
   return farmSummaries
 }
 
+export const useImportedFarmRegistry = (farmAddress: string): FarmSummary | undefined => {
+  const { stakingToken, totalRewardRates, valueOfTotalStakedAmountInCUSD, tokens } = useCustomStakingInfo(farmAddress)
+
+  if (stakingToken && totalRewardRates && valueOfTotalStakedAmountInCUSD && tokens) {
+    const farmSummary: FarmSummary = {
+      farmName: '',
+      stakingAddress: farmAddress,
+      lpAddress: stakingToken?.address,
+      token0Address: tokens[0].address,
+      token1Address: tokens[1].address,
+      isFeatured: false,
+      tvlUSD: parseEther(valueOfTotalStakedAmountInCUSD).toString(),
+      rewardsUSDPerYear: '0',
+      isImported: true,
+      totalRewardRates,
+    }
+    return farmSummary
+  }
+  return undefined
+}
+
 export const useUniqueBestFarms = () => {
   const farmSummaries = useFarmRegistry()
-
   const farmsUniqueByBestFarm = farmSummaries.reduce((prev: Record<string, FarmSummary>, current) => {
     if (!prev[current.lpAddress]) {
       prev[current.lpAddress] = current

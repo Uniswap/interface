@@ -2,6 +2,7 @@ import { useProvider } from '@celo-tools/use-contractkit'
 import { Pair, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
 import { useDoTransaction } from 'components/swap/routing'
+import { CustomStakingInfo } from 'pages/Earn/useCustomStakingInfo'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -37,7 +38,7 @@ const ContentWrapper = styled(AutoColumn)`
 interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
-  stakingInfo: StakingInfo
+  stakingInfo: StakingInfo | CustomStakingInfo
   userLiquidityUnstaked: TokenAmount | undefined
 }
 
@@ -53,7 +54,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   let hypotheticalRewardRates: TokenAmount[] | undefined = stakingInfo?.totalRewardRates?.map(
     (rewardRate) => new TokenAmount(rewardRate.token, '0')
   )
-  if (parsedAmountWrapped?.greaterThan('0')) {
+  if (parsedAmountWrapped?.greaterThan('0') && stakingInfo?.totalStakedAmount) {
     hypotheticalRewardRates = stakingInfo.getHypotheticalRewardRate(
       stakingInfo.stakedAmount ? parsedAmountWrapped.add(stakingInfo.stakedAmount) : parsedAmountWrapped,
       stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
@@ -71,8 +72,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   }, [onDismiss])
 
   // pair contract for this token to be staked
-  const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
-  const pairContract = usePairContract(dummyPair.liquidityToken.address)
+  const dummyPair = stakingInfo.tokens
+    ? new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
+    : undefined
+  const pairContract = usePairContract(dummyPair ? dummyPair.liquidityToken.address : undefined)
 
   // approval data for stake
   const deadline = useTransactionDeadline()
@@ -110,7 +113,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
-    if (!pairContract || !library || !deadline) throw new Error('missing dependencies')
+    if ((dummyPair && !pairContract) || !library || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmount
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
@@ -130,7 +133,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             onUserInput={onUserInput}
             onMax={handleMax}
             showMaxButton={!atMaxAmount}
-            currency={stakingInfo.totalStakedAmount.token}
+            currency={stakingInfo.totalStakedAmount?.token}
             pair={dummyPair}
             label={''}
             disableCurrencySelect={true}
@@ -187,7 +190,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>{t('DepositingLiquidity')}</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} UBE LP</TYPE.body>
+            <TYPE.body fontSize={20}>
+              {parsedAmount?.toSignificant(4)}{' '}
+              {stakingInfo.stakingToken?.symbol === 'ULP' ? 'UBE LP' : stakingInfo.stakingToken?.symbol}
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -195,7 +201,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>{t('TransactionSubmitted')}</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} UBE LP</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Deposited {parsedAmount?.toSignificant(4)}{' '}
+              {stakingInfo.stakingToken?.symbol === 'ULP' ? 'UBE LP' : stakingInfo.stakingToken?.symbol}
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

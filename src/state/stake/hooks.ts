@@ -289,14 +289,14 @@ export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: s
           ]
         }, [])
         .filter((stakingRewardInfo) => {
+          if (stakingAddress) {
+            return stakingAddress.toLowerCase() === stakingRewardInfo.stakingRewardAddress.toLowerCase()
+          }
           if (pairToFilterBy === undefined) {
             return true
           }
           if (pairToFilterBy === null) {
             return false
-          }
-          if (stakingAddress) {
-            return stakingAddress.toLowerCase() === stakingRewardInfo.stakingRewardAddress.toLowerCase()
           }
           return (
             stakingRewardInfo.tokens &&
@@ -539,7 +539,7 @@ export function useFarmRewardsInfo(stakingAddresses: string[]): readonly Staking
 // based on typed value
 export function useDerivedStakeInfo(
   typedValue: string,
-  stakingToken: Token,
+  stakingToken: Token | null | undefined,
   userLiquidityUnstaked: TokenAmount | undefined
 ): {
   parsedAmount?: TokenAmount
@@ -547,7 +547,7 @@ export function useDerivedStakeInfo(
 } {
   const { address } = useContractKit()
 
-  const parsedInput: TokenAmount | undefined = tryParseAmount(typedValue, stakingToken)
+  const parsedInput: TokenAmount | undefined = tryParseAmount(typedValue, stakingToken ?? undefined)
 
   const parsedAmount =
     parsedInput && userLiquidityUnstaked && JSBI.lessThanOrEqual(parsedInput.raw, userLiquidityUnstaked.raw)

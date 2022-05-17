@@ -1,5 +1,6 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { useDoTransaction } from 'components/swap/routing'
+import { CustomStakingInfo } from 'pages/Earn/useCustomStakingInfo'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -22,7 +23,7 @@ const ContentWrapper = styled(AutoColumn)`
 interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
-  stakingInfo: StakingInfo
+  stakingInfo: StakingInfo | CustomStakingInfo
 }
 
 export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
@@ -107,7 +108,10 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UBE-LP</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)}{' '}
+              {stakingInfo.stakingToken?.symbol === 'ULP' ? 'UBE-LP' : stakingInfo.stakingToken?.symbol}
+            </TYPE.body>
             <TYPE.body fontSize={20}>
               Claiming{' '}
               {stakingInfo?.earnedAmounts
@@ -121,7 +125,9 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Withdrew UBE-LP!</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Withdrew {stakingInfo.stakingToken?.symbol === 'ULP' ? 'UBE-LP' : stakingInfo.stakingToken?.symbol}!
+            </TYPE.body>
             <TYPE.body fontSize={20}>
               Claimed {stakingInfo?.rewardTokens.map((rewardToken) => rewardToken.symbol).join(' + ')}!
             </TYPE.body>
