@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-05-17 10:11\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -1507,7 +1507,7 @@ msgstr "Delež sklada:"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
-msgstr "Oddaja preklicana"
+msgstr "Prikaz preklican"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
@@ -1598,7 +1598,7 @@ msgstr "Izpolnite 10-minutno anketo in nam pomagajte izboljšati vašo izkušnjo
 
 #: src/components/WalletModal/index.tsx
 msgid "Tally"
-msgstr "Tally"
+msgstr "Povzetek"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -1642,7 +1642,7 @@ msgstr "Aplikacija na varen način prebere naslov vaše denarnice in ga deli s T
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
-msgstr "Poskus povezave ni uspel. Kliknite Poskusi znova in sledite korakom za povezavo v denarnici."
+msgstr "Poskus povezave ni uspel. Kliknite Poskusi znova in sledite navodilom za povezavo v svoji denarnici."
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."
