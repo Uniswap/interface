@@ -112,8 +112,13 @@ export default function useSendSwapTransaction(
 
         return library
           .getSigner()
-          .signMessage(calldata)
+          .signMessage(calldata) // sign하고 서버에 날리고 서버가 제출한 트랜잭션 정보를 response로 가져와야함
           .then((response) => {
+            /* TODO */
+            // 1. encrypt tx by 147.46.240.248:27100/cryptography/encrypt
+            // 2. send tx by 147.46.240.248:27100/txs/signTx
+            // 3. fetch/track transaction by Provider api
+            // [just for typescript logic] 4. change response type to Promise<TransactionResponse>
             return response
           })
           .catch((error) => {

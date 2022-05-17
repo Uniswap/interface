@@ -41,6 +41,7 @@ export function useSwapCallback(
     }
     return () =>
       libCallback().then((response) => {
+        /* can't get TransactionResponse yet, response is signed message(string) */
         // addTransaction(
         //   response,
         //   trade.tradeType === TradeType.EXACT_INPUT
