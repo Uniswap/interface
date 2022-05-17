@@ -1,10 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
+import { WETH9 } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
+import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
 import useUSDCPrice from 'hooks/useUSDCPrice'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
@@ -118,11 +122,13 @@ export default function Polling() {
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
-  //const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.fee)
+  const kromToken = chainId ? KROM[chainId] : undefined
+  const eth = chainId ? WETH9[chainId] : undefined
+  const [, pool] = usePool(kromToken, eth, FeeAmount.MEDIUM)
 
-  const result = useV3PositionFromTokenId(BigNumber.from('154097'))
-  console.log('result -------')
-  console.log(result)
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from('154097'), false)
+
+  console.log(feeValue0?.toFixed(0, { groupSeparator: ',' }))
 
   return (
     <>
@@ -136,7 +142,7 @@ export default function Polling() {
             <RowFixed style={{ marginRight: '8px' }}>
               <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
                 <span>🔥</span>
-                1.423.000 KROM
+                {feeValue0?.toFixed(0, { groupSeparator: ',' })} KROM
               </TYPE.main>
               <StyledGasDot />
             </RowFixed>

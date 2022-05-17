@@ -390,8 +390,13 @@ export default function Header() {
                   >
                     <Trans>
                       {' '}
-                      <img src={tokenLogo} width="20px" height="20px" style={{ position: 'relative', top: '2px' }} />
-                      <StyledPrice>: {kromPrice?.toSignificant(3)}$</StyledPrice>
+                      <img
+                        src={tokenLogo}
+                        width="20px"
+                        height="20px"
+                        style={{ position: 'relative', top: '2px', marginRight: '5px' }}
+                      />
+                      <StyledPrice> {kromPrice?.toSignificant(3)}$</StyledPrice>
                     </Trans>
                   </BalanceText>
                 ) : null}
