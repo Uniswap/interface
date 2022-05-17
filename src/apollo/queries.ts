@@ -364,3 +364,29 @@ export const TRANSACTION_SWAP_AMOUNT_USD = gql`
     }
   }
 `
+
+export const GET_POOL_VALUES_AFTER_MINTS_SUCCESS = gql`
+  query getPoolValuesAfterMintsSuccess($poolAddress: String!) {
+    pool(id: $poolAddress) {
+      id
+      reserve0
+      reserve1
+      mints(orderBy: timestamp, orderDirection: desc, first: 20) {
+        id
+      }
+    }
+  }
+`
+
+export const GET_POOL_VALUES_AFTER_BURNS_SUCCESS = gql`
+  query getPoolValuesAfterBurnsSuccess($poolAddress: String!) {
+    pool(id: $poolAddress) {
+      id
+      reserve0
+      reserve1
+      burns(orderBy: timestamp, orderDirection: desc, first: 20) {
+        id
+      }
+    }
+  }
+`

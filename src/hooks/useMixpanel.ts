@@ -240,22 +240,11 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.ADD_LIQUIDITY_COMPLETED: {
-          const { token_1, token_2, add_liquidity_method, amp } = payload
-          mixpanel.track('Add Liquidity Completed', {
-            token_1,
-            token_2,
-            add_liquidity_method,
-            amp,
-          })
+          mixpanel.track('Add Liquidity Completed', payload)
           break
         }
         case MIXPANEL_TYPE.REMOVE_LIQUIDITY_COMPLETED: {
-          const { token_1, token_2, remove_liquidity_method } = payload
-          mixpanel.track('Remove Liquidity Completed', {
-            token_1,
-            token_2,
-            remove_liquidity_method,
-          })
+          mixpanel.track('Remove Liquidity Completed', payload)
           break
         }
         case MIXPANEL_TYPE.REMOVE_LIQUIDITY_INITIATED: {
