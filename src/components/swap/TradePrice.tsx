@@ -36,8 +36,8 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   /*
    * calculate needed amount of decimal prices, for prices between 0.95-1.05 use 4 decimal places
    */
-  const p = Number(usdcPrice?.toFixed(3))
-  const visibleDecimalPlaces = p >= 0.95 && p <= 1.05 ? 4 : 2
+  const p = Number(usdcPrice?.toFixed())
+  const visibleDecimalPlaces = p < 0.95 ? 4 : 2
 
   let formattedPrice: string
   try {
