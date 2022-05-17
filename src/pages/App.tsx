@@ -1,4 +1,5 @@
 import Loader from 'components/Loader'
+import ScrollToTop from 'components/ScrollToTop'
 import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
@@ -78,6 +79,7 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
+            <ScrollToTop />
             <Suspense fallback={<Loader />}>
               <Switch>
                 <Route strict path="/vote" component={Vote} />
