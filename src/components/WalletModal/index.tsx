@@ -109,6 +109,16 @@ const HoverText = styled.div`
   }
 `
 
+const LinkCard = styled(Card)`
+  background-color: ${({ theme }) => theme.bg1};
+  color: ${({ theme }) => theme.text3};
+
+  :hover {
+    cursor: pointer;
+    filter: brightness(0.9);
+  }
+`
+
 const WALLET_VIEWS = {
   OPTIONS: 'options',
   OPTIONS_SECONDARY: 'options_secondary',
