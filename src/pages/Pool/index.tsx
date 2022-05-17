@@ -194,14 +194,6 @@ export default function Pool() {
             </TitleRow>
 
             <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
-            <div>
-              <span style={{ float: 'left' }}>Total ETH burned:</span>
-              <span style={{ float: 'right' }}>20.3 ETH</span>
-            </div>
-            <div>
-              <span style={{ float: 'left' }}>Total KROM burned:</span>
-              <span style={{ float: 'right' }}>2.9 KROM</span>
-            </div>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>

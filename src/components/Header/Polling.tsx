@@ -1,9 +1,11 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
 import useUSDCPrice from 'hooks/useUSDCPrice'
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
@@ -116,6 +118,14 @@ export default function Polling() {
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
+
+  const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.fee)
+
+
+  const result = useV3PositionFromTokenId(BigNumber.from('154097'))
+  console.log('result -------')
+  console.log(result)
+
   return (
     <>
       <StyledPolling
@@ -123,14 +133,16 @@ export default function Polling() {
         onMouseLeave={() => setIsHover(false)}
         warning={chainConnectivityWarning}
       >
-        {priceGwei ? (
-          <RowFixed style={{ marginRight: '8px' }}>
-            <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
-              <span>🔥</span>
-              1.423.000 KROM
-            </TYPE.main>
-            <StyledGasDot />
-          </RowFixed>
+        {chainId === 1 ? (
+          <ExternalLink href={'https://app.uniswap.org/#/pool/154097?chain=mainnet'}>
+            <RowFixed style={{ marginRight: '8px' }}>
+              <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+                <span>🔥</span>
+                1.423.000 KROM
+              </TYPE.main>
+              <StyledGasDot />
+            </RowFixed>
+          </ExternalLink>
         ) : null}
         <ExternalLink href={'https://etherscan.io/gastracker'}>
           {priceGwei ? (

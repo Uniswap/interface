@@ -17,10 +17,11 @@ import styled from 'styled-components/macro'
 
 import ComingSoon from '../../../src/assets/images/coming-soon.png'
 import ComingSoonLight from '../../../src/assets/images/coming-soon-light.png'
+import tokenLogo from '../../assets/images/krom_logo.png'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ReactComponent as PhoneScreenLogo } from '../../assets/svg/phone-logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, MEDIA_WIDTHS, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
@@ -173,6 +174,13 @@ const UNIAmount = styled(AccountElement)`
   background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
 `
 
+const KromPriceStyled = styled.div`
+  font-weight: 500;
+  width: 110px;
+  display: flex;
+  justify-content: center;
+`
+
 const UNIWrapper = styled.span`
   width: fit-content;
   position: relative;
@@ -280,6 +288,12 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   }
 `
 
+
+const StyledPrice = styled.span`
+  position: relative;
+  top: -2px;
+`
+
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -301,6 +315,13 @@ export default function Header() {
 
   const kromPrice = useUSDCPrice(kromToken)
 
+  const pools: { [chainId: number]: string } = {
+    [SupportedChainId.MAINNET]: 'https://info.uniswap.org/#/pools/0x6ae0cdc5d2b89a8dcb99ad6b3435b3e7f7290077',
+    [SupportedChainId.ARBITRUM_ONE]:
+      'https://info.uniswap.org/#/arbitrum/pools/0x54651ca452ad2d7e35babcff40760b7af0404213',
+    [SupportedChainId.OPTIMISM]: 'https://info.uniswap.org/#/optimism/pools/0xe62bd99a9501ca33d98913105fc2bec5bae6e5dd',
+    [SupportedChainId.POLYGON]: ' https://info.uniswap.org/#/polygon/pools/0xba589ba3af52975a12acc6de69c9ab3ac1ae7804',
+  }
   const {
     infoLink,
     addNetworkInfo: {
@@ -353,13 +374,31 @@ export default function Header() {
 
       <HeaderControls>
         <HeaderElement>
-          <AccountElement active={!!account}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                <Trans> Krom: {kromPrice?.toSignificant(4)}$</Trans>
-              </BalanceText>
-            ) : null}
-          </AccountElement>
+          {chainId && (
+            <ExternalLink href={pools[chainId]}>
+              <KromPriceStyled>
+                {kromPrice ? (
+                  <BalanceText
+                    style={{
+                      flexShrink: 0,
+                      userSelect: 'none',
+                      backgroundColor: '#212429',
+                      borderRadius: '10px',
+                      padding: '9px 8px',
+                      color: 'white',
+                    }}
+                    fontWeight={500}
+                  >
+                    <Trans>
+                      {' '}
+                      <img src={tokenLogo} width="20px" height="20px" style={{ position: 'relative', top: '2px' }} />
+                      <StyledPrice>: {kromPrice?.toSignificant(3)}$</StyledPrice>
+                    </Trans>
+                  </BalanceText>
+                ) : null}
+              </KromPriceStyled>
+            </ExternalLink>
+          )}
         </HeaderElement>
         <HeaderElement>
           <NetworkSelector />
