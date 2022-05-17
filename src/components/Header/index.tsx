@@ -288,7 +288,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   }
 `
 
-
 const StyledPrice = styled.span`
   position: relative;
   top: -2px;
