@@ -213,10 +213,11 @@ export default function Updater(): null {
               )
                 break
               if (res.data.pool.mints.every((mint: { id: string }) => !mint.id.startsWith(transaction.hash))) break
-
+              const { reserve0, reserve1, reserveUSD } = res.data.pool
               mixpanelHandler(MIXPANEL_TYPE.ADD_LIQUIDITY_COMPLETED, {
-                token_1_pool_qty: res.data.pool.reserve0,
-                token_2_pool_qty: res.data.pool.reserve1,
+                token_1_pool_qty: reserve0,
+                token_2_pool_qty: reserve1,
+                liquidity_USD: reserveUSD,
                 token_1: transaction.arbitrary.token_1,
                 token_2: transaction.arbitrary.token_2,
                 add_liquidity_method: transaction.arbitrary.add_liquidity_method,
@@ -241,10 +242,11 @@ export default function Updater(): null {
               )
                 break
               if (res.data.pool.burns.every((mint: { id: string }) => !mint.id.startsWith(transaction.hash))) break
-
+              const { reserve0, reserve1, reserveUSD } = res.data.pool
               mixpanelHandler(MIXPANEL_TYPE.REMOVE_LIQUIDITY_COMPLETED, {
-                token_1_pool_qty: res.data.pool.reserve0,
-                token_2_pool_qty: res.data.pool.reserve1,
+                token_1_pool_qty: reserve0,
+                token_2_pool_qty: reserve1,
+                liquidity_USD: reserveUSD,
                 token_1: transaction.arbitrary.token_1,
                 token_2: transaction.arbitrary.token_2,
                 remove_liquidity_method: transaction.arbitrary.remove_liquidity_method,
