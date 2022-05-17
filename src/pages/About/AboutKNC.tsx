@@ -192,8 +192,8 @@ function AboutKNC() {
           >
             <Trans>
               KNC is a utility and governance token and an integral part of Kyber Network and its product KyberSwap -
-              the multi-chain decentralized exchange (DEX) protocol that provides the best rates for traders and highest
-              passive income for liquidity providers
+              the multi-chain decentralized exchange (DEX) protocol that provides the best rates for traders and
+              maximizes earnings for liquidity providers.
             </Trans>
           </Text>
 
@@ -209,7 +209,7 @@ function AboutKNC() {
           <Text as="h2" marginTop="12px" fontWeight="500" fontSize={['28px', '36px']} textAlign="center">
             <Trans>What is KNC used for?</Trans>
           </Text>
-          <Text color={theme.subText} marginTop={['40px', '48px']} fontSize="1rem" textAlign="center">
+          <Text color={theme.subText} marginTop={['40px', '48px']} fontSize="1rem" textAlign="center" lineHeight={1.5}>
             <Trans>
               KNC allows token holders to play a critical role in building a wide base of stakeholders and capturing
               value created by products like KyberSwap on Kyber Network. KNC holders stake and vote to receive trading
@@ -217,7 +217,7 @@ function AboutKNC() {
               for KNC holders.
             </Trans>
           </Text>
-          <Text color={theme.subText} marginTop={['20px', '24px']} fontSize="1rem" textAlign="center">
+          <Text color={theme.subText} marginTop={['20px', '24px']} fontSize="1rem" textAlign="center" lineHeight={1.5}>
             <Trans>
               KNC is dynamic and can be upgraded, minted, or burned by KyberDAO to better support liquidity and growth.
               Holding KNC means having a stake in all the important innovation and liquidity protocols created for DeFi.
