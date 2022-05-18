@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Tooltip from '../Tooltip'
 import { Flex } from 'rebass'
 
-const QuestionWrapper = styled.div`
+const QuestionWrapper = styled.div<{ useCurrentColor?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +13,7 @@ const QuestionWrapper = styled.div`
   outline: none;
   cursor: default;
   border-radius: 36px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme, useCurrentColor }) => (useCurrentColor ? 'inherit' : theme.text2)};
 
   :hover,
   :focus {
@@ -46,7 +46,7 @@ const QuestionMark = styled.span`
   font-size: 1rem;
 `
 
-export default function QuestionHelper({ text }: { text: string }) {
+export default function QuestionHelper({ text, useCurrentColor }: { text: string; useCurrentColor?: boolean }) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
@@ -55,7 +55,7 @@ export default function QuestionHelper({ text }: { text: string }) {
   return (
     <Flex as="span" marginLeft="0.25rem" alignItems="center">
       <Tooltip text={text} show={show}>
-        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
+        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} useCurrentColor={useCurrentColor}>
           <Info size={12} />
         </QuestionWrapper>
       </Tooltip>

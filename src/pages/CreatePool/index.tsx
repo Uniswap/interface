@@ -57,6 +57,8 @@ import {
   FeeSelector,
 } from './styled'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import FeeTypeSelector from './FeeTypeSelector'
+import StaticFeeSelector from './StaticFeeSelector'
 
 export default function CreatePool({
   match: {
@@ -130,6 +132,9 @@ export default function CreatePool({
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
   const [txHash, setTxHash] = useState<string>('')
 
+  // fee types
+  const [feeType, setFeeType] = useState<string>('static')
+  const [staticFee, setStaticFee] = useState<string>(chainId ? FEE_OPTIONS[chainId][0].toString() : '1')
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -574,28 +579,24 @@ export default function CreatePool({
                     amplification={ampConvertedInBps}
                   />
                 )}
-
-                {chainId && FEE_OPTIONS[chainId] ? (
-                  <AutoColumn gap="16px">
-                    <AutoRow>
-                      <ActiveText>Fee</ActiveText>
-                      <QuestionHelper
-                        text={t`You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee.`}
-                      />
-                    </AutoRow>
-                    <FeeSelector>
-                      {FEE_OPTIONS[chainId].map(fee => (
-                        <FeeOption
-                          role="button"
-                          key={fee}
-                          onClick={() => setSelectedFee(fee)}
-                          active={selectedFee === fee}
-                        >
-                          {fee / 100}%
-                        </FeeOption>
-                      ))}
-                    </FeeSelector>
-                  </AutoColumn>
+                {/* <StaticFeeSelector
+                      active={staticFee.toString()}
+                      onChange={(name: string) => setStaticFee(name)}
+                      options={FEE_OPTIONS[chainId].map((fee: number) => {
+                        return { name: fee.toString(), title: (fee / 100).toString() + '%' }
+                      })}
+                    /> */}
+                {chainId && FEE_OPTIONS[chainId] && (
+                  <FeeTypeSelector active={feeType} onChange={(type: string) => setFeeType(type)} />
+                )}
+                {chainId && FEE_OPTIONS[chainId] && feeType === 'static' ? (
+                  <StaticFeeSelector
+                    active={staticFee.toString()}
+                    onChange={(name: string) => setStaticFee(name)}
+                    options={FEE_OPTIONS[chainId].map((fee: number) => {
+                      return { name: fee.toString(), title: (fee / 100).toString() + '%' }
+                    })}
+                  />
                 ) : (
                   <Section>
                     <AutoRow>
