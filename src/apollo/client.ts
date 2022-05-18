@@ -191,7 +191,7 @@ const arbitrumBlockClient = new ApolloClient({
 })
 
 const bttcBlockClient = new ApolloClient({
-  uri: 'https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/bttc-blocks',
+  uri: 'https://bttc-graph.kyberengineering.io/subgraphs/name/kybernetwork/bttc-blocks',
   cache: new InMemoryCache(),
 })
 
