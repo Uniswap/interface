@@ -74,9 +74,7 @@ function ConfirmationPendingContent({
           <Text fontWeight={400} fontSize={16} textAlign="center">
             {pendingText}
           </Text>
-          <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
-            <Trans>Confirm this transaction in your wallet</Trans>
-          </Text>
+          <div style={{ marginBottom: 12 }} />
         </AutoColumn>
       </AutoColumn>
     </Wrapper>

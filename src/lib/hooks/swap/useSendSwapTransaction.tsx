@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Signature, splitSignature } from '@ethersproject/bytes'
 import { JsonRpcProvider } from '@ethersproject/providers'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
@@ -36,6 +37,25 @@ interface FailedCall extends SwapCallEstimate {
   error: Error
 }
 
+interface EncryptedTx {
+  routeContractAddress: string
+  amountIn: number
+  amountoutMin: number
+  path: string
+  senderAddress: string
+  deadline: number
+  chainId: number
+  nonce: string
+  gasPrice: string
+  gasLimit: string
+  value: string
+}
+
+export interface SendData {
+  sig: Signature
+  encryptedTx: EncryptedTx
+}
+
 // returns a function that will execute a swap, if the parameters are all valid
 export default function useSendSwapTransaction(
   account: string | null | undefined,
@@ -43,13 +63,13 @@ export default function useSendSwapTransaction(
   library: JsonRpcProvider | undefined,
   trade: AnyTrade | undefined, // trade to execute, required
   swapCalls: SwapCall[]
-): { callback: null | (() => Promise<string>) } {
+): { callback: null | (() => Promise<SendData>) } {
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { callback: null }
     }
     return {
-      callback: async function onSwap(): Promise<string> {
+      callback: async function onSwap(): Promise<SendData> {
         const estimatedCalls: SwapCallEstimate[] = await Promise.all(
           swapCalls.map((call) => {
             const { address, calldata, value } = call
@@ -110,16 +130,22 @@ export default function useSendSwapTransaction(
           call: { address, calldata, value },
         } = bestCallOption
 
-        return library
+        const signInput = {
+          data: calldata,
+          to: address,
+          chainId,
+          nonce: '0x10',
+          gasPrice: '0x01',
+          gasLimit: '0x989680',
+          value,
+        }
+
+        const sig = await library
           .getSigner()
-          .signMessage(calldata) // sign하고 서버에 날리고 서버가 제출한 트랜잭션 정보를 response로 가져와야함
+          .signMessage(JSON.stringify(signInput)) // sign하고 서버에 날리고 서버가 제출한 트랜잭션 정보를 response로 가져와야함
           .then((response) => {
-            /* TODO */
-            // 1. encrypt tx by 147.46.240.248:27100/cryptography/encrypt
-            // 2. send tx by 147.46.240.248:27100/txs/signTx
-            // 3. fetch/track transaction by Provider api
-            // [just for typescript logic] 4. change response type to Promise<TransactionResponse>
-            return response
+            const sig = splitSignature(response)
+            return sig
           })
           .catch((error) => {
             // if the user rejected the tx, pass this along
@@ -132,6 +158,32 @@ export default function useSendSwapTransaction(
               throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
             }
           })
+
+        const headers = new Headers({ 'Content-Type': 'application/json' })
+
+        const encryptedTx = await fetch('http://147.46.240.248:27100/cryptography/encrypt', {
+          method: 'POST',
+          // headers,
+          // mode: 'no-cors',
+          body: JSON.stringify({
+            useVdfZkp: true,
+            useEncryptionZkp: false,
+            plainText: '123123123',
+          }),
+        })
+          .then((res) => {
+            console.log(res)
+            return res
+          })
+          .catch((error) => {
+            console.log(error)
+            return error
+          })
+
+        return {
+          sig,
+          encryptedTx,
+        }
       },
     }
   }, [account, chainId, library, swapCalls, trade])

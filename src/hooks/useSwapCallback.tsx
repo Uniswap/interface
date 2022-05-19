@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Percent } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { SendData } from 'lib/hooks/swap/useSendSwapTransaction'
 import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/hooks/swap/useSwapCallback'
 import { ReactNode, useMemo } from 'react'
 
@@ -19,7 +20,7 @@ export function useSwapCallback(
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null
-): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
+): { state: SwapCallbackState; callback: null | (() => Promise<SendData>); error: ReactNode | null } {
   const { account } = useActiveWeb3React()
 
   const deadline = useTransactionDeadline()

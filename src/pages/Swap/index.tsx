@@ -179,18 +179,20 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [history])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, sendReady }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
+    sendReady: boolean
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined,
+    sendReady: false,
   })
 
   const formattedAmounts = useMemo(
@@ -282,10 +284,44 @@ export default function Swap({ history }: RouteComponentProps) {
     if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({
+      attemptingTxn: false,
+      tradeToConfirm,
+      showConfirm,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+      sendReady,
+    })
     swapCallback()
-      .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+      .then(async (res) => {
+        // const headers = new Headers({ 'Content-Type': 'application/json' })
+        // const hash = await fetch('http://147.46.240.248:27100/txs/sendTx', {
+        //   method: 'POST',
+        //   headers,
+        //   mode: 'no-cors',
+        //   body: JSON.stringify({
+        //     txType: 'swap',
+        //     encryptedTx: res.encryptedTx,
+        //     sig: res.sig,
+        //   }),
+        // })
+        //   .then((res) => {
+        //     console.log(res)
+        //     return res
+        //   })
+        //   .catch((error) => {
+        //     console.log(error)
+        //     return error
+        //   })
+
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          swapErrorMessage: undefined,
+          txHash: undefined,
+          sendReady,
+        })
         ReactGA.event({
           category: 'Swap',
           action:
@@ -309,6 +345,7 @@ export default function Swap({ history }: RouteComponentProps) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
+          sendReady: false,
         })
       })
   }, [
@@ -352,7 +389,7 @@ export default function Swap({ history }: RouteComponentProps) {
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, sendReady })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -360,7 +397,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, sendReady })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
@@ -387,6 +424,34 @@ export default function Swap({ history }: RouteComponentProps) {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+
+  const handle = () => {
+    const headers = new Headers({ 'Content-Type': 'application/json' })
+    fetch('http://147.46.240.248:27100/cryptography/encrypt', {
+      method: 'POST',
+      headers,
+      mode: 'no-cors',
+      body: JSON.stringify({
+        useVdfZkp: true,
+        useEncryptionZkp: false,
+        plainText: '123123123',
+      }),
+    })
+      .then((res) => {
+        console.log(res)
+        setSwapState({
+          tradeToConfirm: trade,
+          attemptingTxn: false,
+          swapErrorMessage: undefined,
+          showConfirm: true,
+          txHash: undefined,
+          sendReady,
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
   return (
     <>
@@ -568,6 +633,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             swapErrorMessage: undefined,
                             showConfirm: true,
                             txHash: undefined,
+                            sendReady,
                           })
                         }
                       }}
@@ -606,6 +672,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         swapErrorMessage: undefined,
                         showConfirm: true,
                         txHash: undefined,
+                        sendReady,
                       })
                     }
                   }}
