@@ -19,6 +19,7 @@ import { ClientDetails } from 'src/features/walletConnect/WCRequestModal/ClientD
 import { toSupportedChainId } from 'src/utils/chainId'
 import { opacify } from 'src/utils/colors'
 import { logger } from 'src/utils/logger'
+
 interface Props {
   isVisible: boolean
   onClose: () => void
@@ -26,7 +27,6 @@ interface Props {
 }
 
 const isPotentiallyUnsafeMethod = (type: EthMethod) => type === EthMethod.EthSign
-const methodCostsGas = (type: EthMethod) => type === EthMethod.EthSign
 
 const getMessage = (request: WalletConnectRequest) => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
@@ -162,18 +162,15 @@ export function WCRequestModal({ isVisible, onClose, request }: Props) {
         ) : null}
 
         <Flex
-          column
+          row
           backgroundColor="deprecated_gray50"
           borderRadius="lg"
           justifyContent="space-between"
-          gap="xs"
           p="md">
-          <AddressDisplay address={request.account} alwaysShowAddress />
-          {methodCostsGas(request.type) ? null : (
-            <Text fontStyle="italic" color="neutralTextTertiary" fontSize={12}>
-              This request will not cost any gas fees.
-            </Text>
-          )}
+          <Text color="deprecated_gray600" variant="body1">
+            {t('Signing as')}
+          </Text>
+          <AddressDisplay address={request.account} />
         </Flex>
         <Flex row gap="sm">
           <PrimaryButton

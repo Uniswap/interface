@@ -32,7 +32,7 @@ export function ClientDetails({ dapp, method }: { dapp: DappInfo; method: EthMet
       </Flex>
       <Flex centered gap="none">
         <Text variant="subHead1">{getReadableMethodName(method)}</Text>
-        <Text textAlign="center" variant="subHead1" fontWeight="bold">
+        <Text textAlign="center" variant="subHead1">
           {dapp.name}
         </Text>
         <LinkButton mt="xs" textColor="deprecated_blue" url={dapp.url}>
