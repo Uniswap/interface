@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Connector } from '@web3-react/types'
+import CopyHelper from 'components/AccountDetails/Copy'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
@@ -17,7 +18,6 @@ import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { AutoRow } from '../Row'
-import Copy from './Copy'
 import Transaction from './Transaction'
 
 const HeaderRow = styled.div`
@@ -310,11 +310,11 @@ export default function AccountDetails({
                     <AccountControl>
                       <div>
                         {account && (
-                          <Copy toCopy={account}>
+                          <CopyHelper toCopy={account} iconPosition="left">
                             <span style={{ marginLeft: '4px' }}>
                               <Trans>Copy Address</Trans>
                             </span>
-                          </Copy>
+                          </CopyHelper>
                         )}
                         {chainId && account && (
                           <AddressLink
@@ -336,11 +336,11 @@ export default function AccountDetails({
                     <AccountControl>
                       <div>
                         {account && (
-                          <Copy toCopy={account}>
+                          <CopyHelper toCopy={account} iconPosition="left">
                             <span style={{ marginLeft: '4px' }}>
                               <Trans>Copy Address</Trans>
                             </span>
-                          </Copy>
+                          </CopyHelper>
                         )}
                         {chainId && account && (
                           <AddressLink
