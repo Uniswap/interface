@@ -15,6 +15,7 @@ import {
   importAccountSaga,
   importAccountSagaName,
 } from 'src/features/import/importAccountSaga'
+import { notificationWatcher } from 'src/features/notifications/notificationWatcher'
 import { initProviders } from 'src/features/providers/providerSaga'
 import {
   swapActions,
@@ -63,6 +64,7 @@ const sagas: any[] = [
   deepLinkWatcher,
   transactionWatcher,
   firebaseDataWatcher,
+  notificationWatcher,
   walletConnectSaga,
   signWcRequestSaga,
 ]

@@ -25,7 +25,6 @@ import { BiometricCheck } from 'src/features/biometrics'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { ElementName } from 'src/features/telemetry/constants'
-import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { WalletConnectScanSheet } from 'src/features/walletConnect/WalletConnectScanSheet'
@@ -99,7 +98,6 @@ export function HomeScreen({ navigation }: Props) {
                 </Button>
               </Flex>
             </Box>
-            <TransactionStatusBanner />
             <Flex centered gap="xxs">
               <TotalBalance balances={balances} />
               <RelativeChange change={4.2} variant="body1" />

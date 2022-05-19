@@ -68,8 +68,8 @@ export function DevScreen({ navigation }: any) {
   const onPressShowError = () => {
     dispatch(
       pushNotification({
-        title: 'A scary new error has happened. Be afraid!!',
-        type: AppNotificationType.Default,
+        type: AppNotificationType.Error,
+        errorMessage: 'A scary new error has happened. Be afraid!!',
       })
     )
   }

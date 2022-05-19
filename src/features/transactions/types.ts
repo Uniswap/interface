@@ -118,7 +118,7 @@ export interface SendTokenTransactionInfo extends BaseTransactionInfo {
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Receive
   assetType: AssetType
-  currencyAmountRaw: string
+  currencyAmountRaw?: string
   sender: string
   tokenAddress: string
   tokenId?: string // optional. NFT token id

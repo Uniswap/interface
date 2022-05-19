@@ -1,6 +1,6 @@
 import React, { ComponentProps, PropsWithChildren } from 'react'
 import { Box } from 'src/components/layout/Box'
-import { NotificationToastWrapper } from 'src/features/notifications/NotificationToast'
+import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 
 type Props = ComponentProps<typeof Box>
 
@@ -11,9 +11,8 @@ type Props = ComponentProps<typeof Box>
 export function SheetScreen(props: PropsWithChildren<Props>) {
   return (
     <Box bg="mainBackground" flex={1} py="lg" {...props}>
-      {props.children}
       {/* Need to include toast here because nothing can be rendered on top of `SheetScreen` */}
-      <NotificationToastWrapper />
+      <NotificationToastWrapper>{props.children}</NotificationToastWrapper>
     </Box>
   )
 }

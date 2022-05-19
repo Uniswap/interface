@@ -67,10 +67,10 @@ export function* attemptReplaceTransaction(
     logger.error('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
     yield* put(
       pushNotification({
-        title: isCancellation
+        type: AppNotificationType.Error,
+        errorMessage: isCancellation
           ? i18n.t('Unable to cancel transaction')
           : i18n.t('Unable to replace transaction'),
-        type: AppNotificationType.Default,
       })
     )
   }

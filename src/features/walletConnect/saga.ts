@@ -42,6 +42,11 @@ import { logger } from 'src/utils/logger'
 import { createSaga } from 'src/utils/saga'
 import { call, fork, put, take } from 'typed-redux-saga'
 
+export enum WalletConnectEvent {
+  Connected,
+  Disconnected,
+}
+
 function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {
     const sessionConnectedHandler = (req: SessionConnectedEvent) => {
@@ -54,7 +59,8 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       emit(
         pushNotification({
           type: AppNotificationType.WalletConnect,
-          title: i18n.t('Connected to {{dappName}}', { dappName: req.dapp.name }),
+          event: WalletConnectEvent.Connected,
+          dappName: req.dapp.name,
           imageUrl: req.dapp.icon,
           chainId: req.dapp.chain_id,
         })
@@ -68,7 +74,8 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       emit(
         pushNotification({
           type: AppNotificationType.WalletConnect,
-          title: i18n.t('Connected to {{dappName}}', { dappName: req.dapp.name }),
+          event: WalletConnectEvent.Connected,
+          dappName: req.dapp.name,
           imageUrl: req.dapp.icon,
           chainId: req.dapp.chain_id,
         })
@@ -80,7 +87,8 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       emit(
         pushNotification({
           type: AppNotificationType.WalletConnect,
-          title: i18n.t('Disconnected from {{dappName}}', { dappName: req.dapp.name }),
+          dappName: req.dapp.name,
+          event: WalletConnectEvent.Disconnected,
           imageUrl: req.dapp.icon,
           chainId: req.dapp.chain_id,
         })
@@ -132,10 +140,8 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           if (req.dapp) {
             emit(
               pushNotification({
-                type: AppNotificationType.WalletConnect,
-                title: i18n.t('Failed to switch network, chain is not supported'),
-                imageUrl: req.dapp.icon,
-                chainId: req.dapp.chain_id,
+                type: AppNotificationType.Error,
+                errorMessage: i18n.t('Failed to switch network, chain is not supported'),
               })
             )
           }
@@ -237,10 +243,8 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     yield* call(rejectRequest, requestInternalId, account.address)
     yield* put(
       pushNotification({
-        type: AppNotificationType.WalletConnect,
-        title: i18n.t('There was an issue submitting your transaction.'),
-        imageUrl: params.dapp.icon,
-        chainId: params.dapp.chain_id,
+        type: AppNotificationType.Error,
+        errorMessage: i18n.t('There was an issue submitting your transaction.'),
       })
     )
     logger.info('wcSaga', 'signMessage', 'signing error:', err)

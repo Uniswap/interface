@@ -5,10 +5,11 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Flex } from 'src/components/layout'
-import { ChainId } from 'src/constants/chains'
-import { NotificationToast } from 'src/features/notifications/NotificationToast'
+import {
+  NotificationContent,
+  NotificationContentProps,
+} from 'src/features/notifications/NotificationToast'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
-import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -56,33 +57,19 @@ export function NotificationsSetupScreen({ navigation }: Props) {
   )
 }
 
-function SampleNotification({ value }: { value: AppNotification }) {
-  return <NotificationToast appNotification={value} onPress={() => {}} />
-}
-
 function SampleNotifications() {
   const { t } = useTranslation()
 
-  const sampleNotifications: AppNotification[] = useMemo(
+  const sampleNotifications: NotificationContentProps[] = useMemo(
     () => [
       {
-        type: AppNotificationType.WalletConnect,
         title: t('Send or receive assets'),
-        imageUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/dapps/aave.com.png',
-        chainId: ChainId.ArbitrumOne.toString(),
       },
       {
-        type: AppNotificationType.WalletConnect,
         title: t('Connected to {{dappName}}', { dappName: 'Uniswap' }),
-        imageUrl: 'https://app.uniswap.org/images/192x192_App_Icon.png',
-        chainId: ChainId.Mainnet.toString(),
       },
       {
-        type: AppNotificationType.WalletConnect,
         title: t('Approve tokens for use with apps'),
-        imageUrl:
-          'https://raw.githubusercontent.com/trustwallet/assets/master/dapps/app.compound.finance.png',
-        chainId: ChainId.Polygon.toString(),
       },
     ],
     [t]
@@ -90,8 +77,8 @@ function SampleNotifications() {
 
   return (
     <Flex>
-      {sampleNotifications.map((s, i) => (
-        <SampleNotification key={i} value={s} />
+      {sampleNotifications.map((value, i) => (
+        <NotificationContent key={i} title={value.title} />
       ))}
     </Flex>
   )

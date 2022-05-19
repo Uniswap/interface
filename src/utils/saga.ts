@@ -129,7 +129,7 @@ export function createMonitoredSaga<SagaParams = void>(
         const errorMessage = errorToString(error)
         yield put(errorAction(errorMessage))
         if (!options?.suppressErrorNotification) {
-          yield put(pushNotification({ title: errorMessage, type: AppNotificationType.Default }))
+          yield put(pushNotification({ type: AppNotificationType.Error, errorMessage }))
         }
       }
     }

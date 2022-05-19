@@ -1,11 +1,15 @@
+import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20, Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
-import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
+import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { AssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
+import { AppNotificationType } from 'src/features/notifications/types'
+import { finalizeTransaction } from 'src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
   TransactionDetails,
@@ -14,6 +18,7 @@ import {
 } from 'src/features/transactions/types'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 
 export const account: Account = {
   type: AccountType.Local,
@@ -142,4 +147,80 @@ export const txDetailsConfirmed: TransactionDetails = {
     confirmedTime: 1487076808000,
     confirmations: 1,
   },
+}
+
+export const finalizedTxAction: ReturnType<typeof finalizeTransaction> = {
+  payload: {
+    id: '1',
+    chainId: ChainId.Mainnet,
+    status: TransactionStatus.Success,
+    receipt: { ...txReceipt, confirmedTime: Date.now() },
+  },
+  type: '',
+}
+
+export const swapNotification = {
+  type: AppNotificationType.Transaction,
+  chainId: ChainId.Mainnet,
+  txHash: '0x01',
+  txType: TransactionType.Swap,
+  txStatus: TransactionStatus.Success,
+  inputCurrencyId: `1-${NATIVE_ADDRESS}`,
+  outputCurrencyId: '1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+  inputCurrencyAmountRaw: '230000000000000000',
+  outputCurrencyAmountRaw: '123000000000000000000',
+  tradeType: TradeType.EXACT_INPUT,
+}
+
+export const transferCurrencyNotification = {
+  type: AppNotificationType.Transaction,
+  chainId: ChainId.Mainnet.toString(),
+  txHash: '0x000',
+  txType: TransactionType.Send,
+  txStatus: TransactionStatus.Success,
+  assetType: AssetType.Currency,
+  tokenAddress: '0x4d224452801ACEd8B2F0aebE155379bb5D594381',
+  currencyAmountRaw: '1000000000000000000',
+  recipient: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
+  // sender: '0x939C8d89EBC11fA45e576215E2353673AD0bA18A',
+}
+
+export const transferNFTNotification = {
+  type: AppNotificationType.Transaction,
+  chainId: ChainId.Mainnet.toString(),
+  txHash: '0x000',
+  txType: TransactionType.Send,
+  txStatus: TransactionStatus.Success,
+  assetType: AssetType.ERC1155,
+  tokenAddress: '0x7Bd29408f11D2bFC23c34f18275bBf23bB716Bc7',
+  tokenId: '4334',
+  recipient: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
+  // sender: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
+}
+
+export const wcNotification = {
+  type: AppNotificationType.WalletConnect,
+  chainId: ChainId.Mainnet.toString(),
+  event: WalletConnectEvent.Connected,
+  dappName: 'Uniswap',
+  imageUrl: 'https://app.uniswap.org/images/192x192_App_Icon.png',
+}
+
+export const approveNotification = {
+  type: AppNotificationType.Transaction,
+  chainId: ChainId.Mainnet.toString(),
+  txHash: '0x000',
+  txType: TransactionType.Approve,
+  txStatus: TransactionStatus.Success,
+  tokenAddress: '0x4d224452801ACEd8B2F0aebE155379bb5D594381',
+  spender: '0x939C8d89EBC11fA45e576215E2353673AD0bA18A',
+}
+
+export const unknownNotification = {
+  type: AppNotificationType.Transaction,
+  chainId: ChainId.Mainnet.toString(),
+  txHash: '0x000',
+  txType: TransactionType.Unknown,
+  txStatus: TransactionStatus.Success,
+  tokenAddress: '0x939C8d89EBC11fA45e576215E2353673AD0bA18A',
 }

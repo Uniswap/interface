@@ -11,6 +11,7 @@ import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
+import { selectTransactions } from 'src/features/transactions/selectors'
 import {
   addTransaction,
   cancelTransaction,
@@ -38,7 +39,7 @@ export function* transactionWatcher() {
 
   // First, fork off watchers for any pending txs that are already in store
   // This allows us to detect completions if a user closed the app before a tx finished
-  const txsByChainId = yield* appSelect((state) => state.transactions.byChainId)
+  const txsByChainId = yield* appSelect(selectTransactions)
   const pendingTransactions = getPendingTransactions(flattenObjectOfObjects(txsByChainId))
   for (const pendingTx of pendingTransactions) {
     yield* fork(watchTransaction, pendingTx)
@@ -67,8 +68,8 @@ export function* transactionWatcher() {
       )
       yield* put(
         pushNotification({
-          title: i18n.t('Error while checking transaction status'),
-          type: AppNotificationType.Default,
+          type: AppNotificationType.Error,
+          errorMessage: i18n.t('Error while checking transaction status'),
         })
       )
     }
@@ -94,8 +95,8 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
     yield* call(finalizeTransaction, chainId, id, null)
     yield* put(
       pushNotification({
-        title: i18n.t('Your transaction has failed.'),
-        type: AppNotificationType.Default,
+        type: AppNotificationType.Error,
+        errorMessage: i18n.t('Your transaction has failed.'),
       })
     )
     return
