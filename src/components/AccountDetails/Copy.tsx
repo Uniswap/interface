@@ -10,7 +10,6 @@ const CopyIcon = styled(LinkStyledButton)`
   flex-shrink: 0;
   display: flex;
   text-decoration: none;
-  font-size: 12px;
   :hover,
   :active,
   :focus {
@@ -18,20 +17,36 @@ const CopyIcon = styled(LinkStyledButton)`
     color: ${({ color, theme }) => color || theme.text2};
   }
 `
-const TransactionStatusText = styled.span`
+const StyledText = styled.span`
   margin-left: 0.25rem;
-  font-size: 12px;
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
 `
 
+const Copied = ({ iconSize }: { iconSize?: number }) => (
+  <StyledText>
+    <CheckCircle size={iconSize ?? '16'} />
+    <StyledText>
+      <Trans>Copied</Trans>
+    </StyledText>
+  </StyledText>
+)
+
+const Icon = ({ iconSize }: { iconSize?: number }) => (
+  <StyledText>
+    <Copy size={iconSize ?? '16'} />
+  </StyledText>
+)
+
 interface BaseProps {
   toCopy: string
   color?: string
+  iconSize?: number
+  iconPosition?: 'left' | 'right'
 }
 export type CopyHelperProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
-export default function CopyHelper({ color, toCopy, children }: CopyHelperProps) {
+export default function CopyHelper({ color, toCopy, children, iconSize, iconPosition }: CopyHelperProps) {
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(toCopy)
@@ -39,20 +54,11 @@ export default function CopyHelper({ color, toCopy, children }: CopyHelperProps)
 
   return (
     <CopyIcon onClick={copy} color={color}>
+      {iconPosition === 'left' ? isCopied ? <Copied iconSize={iconSize} /> : <Icon iconSize={iconSize} /> : null}
+      {iconPosition === 'left' && <>&nbsp;</>}
       {isCopied ? '' : children}
-      &nbsp;
-      {isCopied ? (
-        <TransactionStatusText>
-          <CheckCircle size={'12'} />
-          <TransactionStatusText>
-            <Trans>Copied</Trans>
-          </TransactionStatusText>
-        </TransactionStatusText>
-      ) : (
-        <TransactionStatusText>
-          <Copy size={'12'} />
-        </TransactionStatusText>
-      )}
+      {iconPosition === 'right' && <>&nbsp;</>}
+      {iconPosition === 'right' ? isCopied ? <Copied iconSize={iconSize} /> : <Icon iconSize={iconSize} /> : null}
     </CopyIcon>
   )
 }
