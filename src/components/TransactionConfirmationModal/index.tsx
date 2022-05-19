@@ -59,52 +59,7 @@ function ConfirmationPendingContent({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
-  return (
-    <Wrapper>
-      <AutoColumn gap="md">
-        {!inline && (
-          <RowBetween>
-            <div />
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
-        )}
-        <ConfirmedIcon inline={inline}>
-          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
-        </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20} textAlign="center">
-            <Trans>Waiting For Confirmation</Trans>
-          </Text>
-          <Text fontWeight={400} fontSize={16} textAlign="center">
-            {pendingText}
-          </Text>
-          <div style={{ marginBottom: 12 }} />
-        </AutoColumn>
-      </AutoColumn>
-    </Wrapper>
-  )
-}
-function TransactionSubmittedContent({
-  onDismiss,
-  chainId,
-  hash,
-  currencyToAdd,
-  inline,
-}: {
-  onDismiss: () => void
-  hash: string | undefined
-  chainId: number
-  currencyToAdd?: Currency | undefined
-  inline?: boolean // not in modal
-}) {
-  const theme = useContext(ThemeContext)
-
-  const { library } = useActiveWeb3React()
-
-  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
-
   const [progressBarValue, setProgressBarValue] = useState<number>(0)
-  const [vdfReady, setVdfReady] = useState<boolean>(false)
 
   useInterval(() => {
     if (progressBarValue < 100) {
@@ -114,7 +69,7 @@ function TransactionSubmittedContent({
 
   return (
     <Wrapper>
-      <Section inline={inline}>
+      <AutoColumn gap="md">
         {!inline && (
           <RowBetween>
             <div />
@@ -129,10 +84,10 @@ function TransactionSubmittedContent({
             <QuestionHelper text="Your VDF is currently being generated. Once the VDF is generated, you will be able to confirm your swap. Please wait for the progress bar to reach the end." />
           </RowFixed>
           <RowFixed>
-            {vdfReady ? (
-              <ThemedText.Blue fontSize={14}>{'Ready'}</ThemedText.Blue>
-            ) : (
+            {progressBarValue < 100 ? (
               <ThemedText.Blue fontSize={14}>{'In Progress'}</ThemedText.Blue>
+            ) : (
+              <ThemedText.Blue fontSize={14}>{'Complete'}</ThemedText.Blue>
             )}
           </RowFixed>
         </RowBetween>
@@ -144,6 +99,83 @@ function TransactionSubmittedContent({
           labelAlignment={'outside'}
           labelColor={'#6a1b9a'}
         />
+        {/* <ConfirmedIcon inline={inline}>
+          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+        </ConfirmedIcon>
+        <AutoColumn gap="12px" justify={'center'}>
+          <Text fontWeight={500} fontSize={20} textAlign="center">
+            <Trans>Waiting For Confirmation</Trans>
+          </Text>
+          <Text fontWeight={400} fontSize={16} textAlign="center">
+            {pendingText}
+          </Text>
+          <div style={{ marginBottom: 12 }} />
+        </AutoColumn> */}
+      </AutoColumn>
+    </Wrapper>
+  )
+}
+function TransactionSubmittedContent({
+  onDismiss,
+  chainId,
+  hash,
+  currencyToAdd,
+  inline,
+  vdfReady,
+}: {
+  onDismiss: () => void
+  hash: string | undefined
+  chainId: number
+  currencyToAdd?: Currency | undefined
+  inline?: boolean // not in modal
+  vdfReady?: boolean
+}) {
+  const theme = useContext(ThemeContext)
+
+  const { library } = useActiveWeb3React()
+
+  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
+
+  // const [progressBarValue, setProgressBarValue] = useState<number>(0)
+
+  // useInterval(() => {
+  //   if (progressBarValue < 100) {
+  //     setProgressBarValue(progressBarValue + 1)
+  //   }
+  // }, 100)
+
+  return (
+    <Wrapper>
+      <Section inline={inline}>
+        {!inline && (
+          <RowBetween>
+            <div />
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+        )}
+        {/* <RowBetween>
+          <RowFixed>
+            <ThemedText.Black fontSize={14} fontWeight={400} color={'#565A69'}>
+              {'VDF Generation'}
+            </ThemedText.Black>
+            <QuestionHelper text="Your VDF is currently being generated. Once the VDF is generated, you will be able to confirm your swap. Please wait for the progress bar to reach the end." />
+          </RowFixed>
+          <RowFixed>
+            {progressBarValue < 100 ? (
+              <ThemedText.Blue fontSize={14}>{'In Progress'}</ThemedText.Blue>
+            ) : (
+              <ThemedText.Blue fontSize={14}>{'Complete'}</ThemedText.Blue>
+            )}
+          </RowFixed>
+        </RowBetween>
+
+        <ProgressBar
+          completed={progressBarValue}
+          labelSize={'12px'}
+          transitionDuration={'0.2s'}
+          labelAlignment={'outside'}
+          labelColor={'#6a1b9a'}
+        /> */}
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
         </ConfirmedIcon>
@@ -352,6 +384,7 @@ interface ConfirmationModalProps {
   attemptingTxn: boolean
   pendingText: ReactNode
   currencyToAdd?: Currency | undefined
+  vdfReady?: boolean
 }
 
 export default function TransactionConfirmationModal({
@@ -362,6 +395,7 @@ export default function TransactionConfirmationModal({
   pendingText,
   content,
   currencyToAdd,
+  vdfReady,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -382,6 +416,7 @@ export default function TransactionConfirmationModal({
           hash={hash}
           onDismiss={onDismiss}
           currencyToAdd={currencyToAdd}
+          vdfReady={vdfReady}
         />
       ) : (
         content()

@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexlify, Signature, splitSignature } from '@ethersproject/bytes'
 import { NonceManager } from '@ethersproject/experimental'
 import { keccak256 } from '@ethersproject/keccak256'
-import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { serialize, UnsignedTransaction } from '@ethersproject/transactions'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
@@ -62,12 +62,14 @@ export interface RadiusSwapRequest {
 
 export interface RadiusSwapResponse {
   data: {
+    round: number
     order: number
     mmr_size: number
     proof: string[]
     hash: string
   }
   msg: string
+  txHash: string
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -78,22 +80,15 @@ export default function useSendSwapTransaction(
   trade: AnyTrade | undefined, // trade to execute, required
   swapCalls: SwapCall[],
   deadline: BigNumber | undefined,
-  allowedSlippage: Percent
-): { callback: null | (() => Promise<TransactionResponse>) } {
-  function stateChange(newState: TransactionResponse) {
-    setTimeout(function () {
-      if (newState === null) {
-        alert('VIDEO HAS STOPPED')
-      }
-    }, 5000)
-  }
-
+  allowedSlippage: Percent,
+  sigHandler: () => void
+): { callback: null | (() => Promise<RadiusSwapResponse>) } {
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { callback: null }
     }
     return {
-      callback: async function onSwap(): Promise<TransactionResponse> {
+      callback: async function onSwap(): Promise<RadiusSwapResponse> {
         const estimatedCalls: SwapCallEstimate[] = await Promise.all(
           swapCalls.map((call) => {
             const { address, calldata, value } = call
@@ -193,6 +188,8 @@ export default function useSendSwapTransaction(
             }
           })
 
+        sigHandler()
+
         const headers = new Headers({ 'content-type': 'application/json', accept: 'application/json' })
 
         const token1 = v2trade.inputAmount.currency as Token
@@ -204,9 +201,7 @@ export default function useSendSwapTransaction(
         const signedRawtx = serialize(signInput, sig)
         const txHash = keccak256(signedRawtx)
 
-        console.log(txHash)
-
-        const finalResponse = await fetch('http://147.46.240.248:27100/cryptography/encrypt', {
+        const encryptedPath = await fetch('http://147.46.240.248:27100/cryptography/encrypt', {
           method: 'POST',
           headers,
           body: JSON.stringify({
@@ -217,49 +212,55 @@ export default function useSendSwapTransaction(
         })
           .then((res) => res.json())
           .then(async (res) => {
-            const encryptedTx: EncryptedTx = {
-              routeContractAddress: address,
-              amountIn: JSBI.toNumber(v2trade.inputAmount.decimalScale),
-              amountoutMin: JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).decimalScale),
-              path: JSON.stringify(res.data),
-              senderAddress: account,
-              deadline: deadline ? deadline.toNumber() : 0,
-              chainId,
-              nonce: hexlify(nonce),
-              gasPrice,
-              gasLimit: hexlify(100000),
-              value,
-            }
-
-            fetch('http://147.46.240.248:27100/txs/sendTx', {
-              method: 'POST',
-              headers,
-              body: JSON.stringify({
-                txType: 'swap',
-                encryptedTx,
-                sig,
-              }),
-            }).then(async (res) => {
-              console.log(res)
-              // const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
-
-              // while (true) {
-              //   await sleep(100000)
-              //   //   const response = await library.getTransaction(txHash)
-              //   //       if (response)
-              //   break
-              // }
-              library.getTransaction(txHash).then((response) => {
-                console.log('transaction response by hash:' + response)
-                return response
-              })
-            })
+            return res.data
           })
           .catch((error) => {
             console.log(error)
             return error
           })
 
+        const encryptedTx: EncryptedTx = {
+          routeContractAddress: address,
+          amountIn: JSBI.toNumber(v2trade.inputAmount.decimalScale),
+          amountoutMin: JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).decimalScale),
+          path: JSON.stringify(encryptedPath),
+          senderAddress: account,
+          deadline: deadline ? deadline.toNumber() : 0,
+          chainId,
+          nonce: hexlify(nonce),
+          gasPrice,
+          gasLimit: hexlify(100000),
+          value,
+        }
+
+        const sendResponse: { data: RadiusSwapResponse['data']; msg: RadiusSwapResponse['msg'] } = await fetch(
+          'http://147.46.240.248:27100/txs/sendTx',
+          {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              txType: 'swap',
+              encryptedTx,
+              sig,
+            }),
+          }
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            return res
+          })
+          .catch((error) => {
+            console.log(error)
+            return error
+          })
+
+        const finalResponse = {
+          data: sendResponse.data,
+          msg: sendResponse.msg,
+          txHash,
+        }
+
+        console.log('final response here! : ' + finalResponse)
         return finalResponse
       },
     }

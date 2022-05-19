@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
+// import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
@@ -10,7 +10,7 @@ import { SignatureData } from 'hooks/useERC20Permit'
 import { AnyTrade, useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
 
-import useSendSwapTransaction from './useSendSwapTransaction'
+import useSendSwapTransaction, { RadiusSwapResponse } from './useSendSwapTransaction'
 
 export enum SwapCallbackState {
   INVALID,
@@ -20,7 +20,7 @@ export enum SwapCallbackState {
 
 interface UseSwapCallbackReturns {
   state: SwapCallbackState
-  callback?: () => Promise<TransactionResponse>
+  callback?: () => Promise<RadiusSwapResponse>
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
@@ -30,6 +30,7 @@ interface UseSwapCallbackArgs {
   signatureData: SignatureData | null | undefined
   deadline: BigNumber | undefined
   feeOptions?: FeeOptions
+  sigHandler: () => void
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -41,6 +42,7 @@ export function useSwapCallback({
   signatureData,
   deadline,
   feeOptions,
+  sigHandler,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -52,7 +54,16 @@ export function useSwapCallback({
     deadline,
     feeOptions
   )
-  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls, deadline, allowedSlippage)
+  const { callback } = useSendSwapTransaction(
+    account,
+    chainId,
+    library,
+    trade,
+    swapCalls,
+    deadline,
+    allowedSlippage,
+    sigHandler
+  )
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
