@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { BigNumber } from '@ethersproject/bignumber'
-// import { TransactionResponse } from '@ethersproject/providers'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
@@ -10,7 +10,7 @@ import { SignatureData } from 'hooks/useERC20Permit'
 import { AnyTrade, useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
 
-import useSendSwapTransaction, { SendData } from './useSendSwapTransaction'
+import useSendSwapTransaction from './useSendSwapTransaction'
 
 export enum SwapCallbackState {
   INVALID,
@@ -20,7 +20,7 @@ export enum SwapCallbackState {
 
 interface UseSwapCallbackReturns {
   state: SwapCallbackState
-  callback?: () => Promise<SendData>
+  callback?: () => Promise<TransactionResponse>
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
@@ -52,7 +52,7 @@ export function useSwapCallback({
     deadline,
     feeOptions
   )
-  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls)
+  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls, deadline, allowedSlippage)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress

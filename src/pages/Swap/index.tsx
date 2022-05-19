@@ -293,27 +293,7 @@ export default function Swap({ history }: RouteComponentProps) {
       sendReady,
     })
     swapCallback()
-      .then(async (res) => {
-        // const headers = new Headers({ 'Content-Type': 'application/json' })
-        // const hash = await fetch('http://147.46.240.248:27100/txs/sendTx', {
-        //   method: 'POST',
-        //   headers,
-        //   mode: 'no-cors',
-        //   body: JSON.stringify({
-        //     txType: 'swap',
-        //     encryptedTx: res.encryptedTx,
-        //     sig: res.sig,
-        //   }),
-        // })
-        //   .then((res) => {
-        //     console.log(res)
-        //     return res
-        //   })
-        //   .catch((error) => {
-        //     console.log(error)
-        //     return error
-        //   })
-
+      .then((res) => {
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,

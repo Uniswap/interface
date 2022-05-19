@@ -1,15 +1,18 @@
 import { Trans } from '@lingui/macro'
+import ProgressBar from '@ramonak/react-progress-bar'
 import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
-import { ReactNode, useContext } from 'react'
+import useInterval from 'lib/hooks/useInterval'
+import { ReactNode, useContext, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
@@ -20,6 +23,7 @@ import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
+import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
@@ -99,6 +103,15 @@ function TransactionSubmittedContent({
 
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
 
+  const [progressBarValue, setProgressBarValue] = useState<number>(0)
+  const [vdfReady, setVdfReady] = useState<boolean>(false)
+
+  useInterval(() => {
+    if (progressBarValue < 100) {
+      setProgressBarValue(progressBarValue + 1)
+    }
+  }, 100)
+
   return (
     <Wrapper>
       <Section inline={inline}>
@@ -108,6 +121,29 @@ function TransactionSubmittedContent({
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
+        <RowBetween>
+          <RowFixed>
+            <ThemedText.Black fontSize={14} fontWeight={400} color={'#565A69'}>
+              {'VDF Generation'}
+            </ThemedText.Black>
+            <QuestionHelper text="Your VDF is currently being generated. Once the VDF is generated, you will be able to confirm your swap. Please wait for the progress bar to reach the end." />
+          </RowFixed>
+          <RowFixed>
+            {vdfReady ? (
+              <ThemedText.Blue fontSize={14}>{'Ready'}</ThemedText.Blue>
+            ) : (
+              <ThemedText.Blue fontSize={14}>{'In Progress'}</ThemedText.Blue>
+            )}
+          </RowFixed>
+        </RowBetween>
+
+        <ProgressBar
+          completed={progressBarValue}
+          labelSize={'12px'}
+          transitionDuration={'0.2s'}
+          labelAlignment={'outside'}
+          labelColor={'#6a1b9a'}
+        />
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
         </ConfirmedIcon>

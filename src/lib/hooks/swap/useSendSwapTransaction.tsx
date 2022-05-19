@@ -1,12 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Signature, splitSignature } from '@ethersproject/bytes'
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { hexlify, Signature, splitSignature } from '@ethersproject/bytes'
+import { NonceManager } from '@ethersproject/experimental'
+import { keccak256 } from '@ethersproject/keccak256'
+import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
+import { serialize, UnsignedTransaction } from '@ethersproject/transactions'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 // import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
@@ -51,9 +55,19 @@ interface EncryptedTx {
   value: string
 }
 
-export interface SendData {
+export interface RadiusSwapRequest {
   sig: Signature
   encryptedTx: EncryptedTx
+}
+
+export interface RadiusSwapResponse {
+  data: {
+    order: number
+    mmr_size: number
+    proof: string[]
+    hash: string
+  }
+  msg: string
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -62,14 +76,24 @@ export default function useSendSwapTransaction(
   chainId: number | undefined,
   library: JsonRpcProvider | undefined,
   trade: AnyTrade | undefined, // trade to execute, required
-  swapCalls: SwapCall[]
-): { callback: null | (() => Promise<SendData>) } {
+  swapCalls: SwapCall[],
+  deadline: BigNumber | undefined,
+  allowedSlippage: Percent
+): { callback: null | (() => Promise<TransactionResponse>) } {
+  function stateChange(newState: TransactionResponse) {
+    setTimeout(function () {
+      if (newState === null) {
+        alert('VIDEO HAS STOPPED')
+      }
+    }, 5000)
+  }
+
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { callback: null }
     }
     return {
-      callback: async function onSwap(): Promise<SendData> {
+      callback: async function onSwap(): Promise<TransactionResponse> {
         const estimatedCalls: SwapCallEstimate[] = await Promise.all(
           swapCalls.map((call) => {
             const { address, calldata, value } = call
@@ -130,13 +154,23 @@ export default function useSendSwapTransaction(
           call: { address, calldata, value },
         } = bestCallOption
 
-        const signInput = {
+        const successfulCallOption = bestCallOption as SuccessfulCall
+        const gasPrice = successfulCallOption.gasEstimate.toHexString()
+
+        const v2trade = trade as V2Trade<Currency, Currency, TradeType>
+
+        const signer = library.getSigner()
+        const nonceManager = new NonceManager(signer)
+
+        const nonce = await nonceManager.getTransactionCount()
+
+        const signInput: UnsignedTransaction = {
           data: calldata,
           to: address,
           chainId,
-          nonce: '0x10',
-          gasPrice: '0x01',
-          gasLimit: '0x989680',
+          nonce,
+          gasPrice,
+          gasLimit: hexlify(100000),
           value,
         }
 
@@ -159,31 +193,74 @@ export default function useSendSwapTransaction(
             }
           })
 
-        const headers = new Headers({ 'Content-Type': 'application/json' })
+        const headers = new Headers({ 'content-type': 'application/json', accept: 'application/json' })
 
-        const encryptedTx = await fetch('http://147.46.240.248:27100/cryptography/encrypt', {
+        const token1 = v2trade.inputAmount.currency as Token
+        const address1 = token1.address
+        const token2 = v2trade.outputAmount.currency as Token
+        const address2 = token2.address
+        const path = `${address1},${address2}`
+
+        const signedRawtx = serialize(signInput, sig)
+        const txHash = keccak256(signedRawtx)
+
+        console.log(txHash)
+
+        const finalResponse = await fetch('http://147.46.240.248:27100/cryptography/encrypt', {
           method: 'POST',
-          // headers,
-          // mode: 'no-cors',
+          headers,
           body: JSON.stringify({
             useVdfZkp: true,
             useEncryptionZkp: false,
-            plainText: '123123123',
+            plainText: path,
           }),
         })
-          .then((res) => {
-            console.log(res)
-            return res
+          .then((res) => res.json())
+          .then(async (res) => {
+            const encryptedTx: EncryptedTx = {
+              routeContractAddress: address,
+              amountIn: JSBI.toNumber(v2trade.inputAmount.decimalScale),
+              amountoutMin: JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).decimalScale),
+              path: JSON.stringify(res.data),
+              senderAddress: account,
+              deadline: deadline ? deadline.toNumber() : 0,
+              chainId,
+              nonce: hexlify(nonce),
+              gasPrice,
+              gasLimit: hexlify(100000),
+              value,
+            }
+
+            fetch('http://147.46.240.248:27100/txs/sendTx', {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({
+                txType: 'swap',
+                encryptedTx,
+                sig,
+              }),
+            }).then(async (res) => {
+              console.log(res)
+              // const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
+
+              // while (true) {
+              //   await sleep(100000)
+              //   //   const response = await library.getTransaction(txHash)
+              //   //       if (response)
+              //   break
+              // }
+              library.getTransaction(txHash).then((response) => {
+                console.log('transaction response by hash:' + response)
+                return response
+              })
+            })
           })
           .catch((error) => {
             console.log(error)
             return error
           })
 
-        return {
-          sig,
-          encryptedTx,
-        }
+        return finalResponse
       },
     }
   }, [account, chainId, library, swapCalls, trade])

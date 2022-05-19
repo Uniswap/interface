@@ -14,7 +14,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import Logo from '../../assets/images/radius_sun.png'
 import { ExternalLink, ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
@@ -272,7 +272,7 @@ export default function Header() {
       <ClaimModal />
       <Title href=".">
         <UniIcon>
-          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <img src={Logo} width="28px" height="100%" alt="logo" />
           <HolidayOrnament />
         </UniIcon>
       </Title>
