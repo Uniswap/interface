@@ -54,22 +54,6 @@ export const OASIS_TOKEN_LIST = {
     },
     {
       chainId: 42262,
-      address: '0x6Cb9750a92643382e020eA9a170AbB83Df05F30B',
-      symbol: 'USDT',
-      name: 'Tether USD',
-      decimals: 6,
-      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
-    },
-    {
-      chainId: 42262,
-      address: '0x94fbfFe5698DB6f54d6Ca524DbE673a7729014Be',
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
-    },
-    {
-      chainId: 42262,
       address: '0x010CDf0Db2737f9407F8CFcb4dCaECA4dE54c815',
       symbol: 'BTC',
       name: 'Bitcoin',

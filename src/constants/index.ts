@@ -397,7 +397,13 @@ export const USDC: { [chainId in ChainId]: Token } = {
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0xCa424b845497f7204D9301bd13Ff87C0E2e86FCF', 18, 'USDC_b', 'USD Coin_BSC'),
   [ChainId.AURORA]: new Token(ChainId.AURORA, '0xB12BFcA5A55806AaF64E99521918A4bf0fC40802', 6, 'USDC', 'USD Coin'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0xe2C120f188eBd5389F71Cf4d9C16d05b62A58993', 6, 'USDC', 'Multichain USDC'),
-  [ChainId.OASIS]: new Token(ChainId.OASIS, '0x94fbffe5698db6f54d6ca524dbe673a7729014be', 6, 'USDC', 'USD Coin'),
+  [ChainId.OASIS]: new Token(
+    ChainId.OASIS,
+    '0x80a16016cc4a2e6a2caca8a4a498b1699ff0f844',
+    6,
+    'USDC',
+    'USD Coin (Multichain)',
+  ),
 }
 
 export const USDT: { [chainId in ChainId]: Token } = {
