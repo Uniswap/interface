@@ -288,6 +288,11 @@ export default function Swap({ history }: RouteComponentProps) {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
         ReactGA.event({
           category: 'Swap',
+          action: 'transaction hash',
+          label: hash,
+        })
+        ReactGA.event({
+          category: 'Swap',
           action:
             recipient === null
               ? 'Swap w/o Send'
