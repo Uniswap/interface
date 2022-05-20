@@ -430,6 +430,8 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
+  console.log(routeNotFound, userHasSpecifiedInputOutput, !routeIsLoading, !routeIsSyncing)
+
   return (
     <>
       <TokenWarningModal

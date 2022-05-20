@@ -47,7 +47,6 @@ const initialState: ListsState = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
-      console.log('pending: ' + fetchTokenList.pending)
       const current = state.byUrl[url]?.current ?? null
       const pendingUpdate = state.byUrl[url]?.pendingUpdate ?? null
 
@@ -59,8 +58,6 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
-      console.log('fulfilled: ' + fetchTokenList.fulfilled + ', url:' + url + ', tokenList: ' + tokenList)
-
       const current = state.byUrl[url]?.current
       const loadingRequestId = state.byUrl[url]?.loadingRequestId
 
@@ -92,8 +89,6 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {
-      console.log('rejected: ' + fetchTokenList.rejected + ', url:' + url)
-
       if (state.byUrl[url]?.loadingRequestId !== requestId) {
         // no-op since it's not the latest request
         return

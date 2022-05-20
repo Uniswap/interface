@@ -10,6 +10,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { solidityKeccak256 } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 // import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -197,6 +198,7 @@ export default function useSendSwapTransaction(
         const token2 = v2trade.outputAmount.currency as Token
         const address2 = token2.address
         const path = `${address1},${address2}`
+        const pathArray = [address1, address2]
 
         const signedRawtx = serialize(signInput, sig)
         const txHash = keccak256(signedRawtx)
@@ -219,13 +221,22 @@ export default function useSendSwapTransaction(
             return error
           })
 
+        const amountIn = JSBI.toNumber(v2trade.inputAmount.numerator)
+        const amountoutMin = JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).numerator)
+        const deadlineNumber = deadline ? deadline.toNumber() : 0
+
+        const h = solidityKeccak256(
+          ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
+          [account, `${amountIn}`, `${amountoutMin}`, pathArray, address, deadlineNumber]
+        )
+
         const encryptedTx: EncryptedTx = {
           routeContractAddress: address,
-          amountIn: JSBI.toNumber(v2trade.inputAmount.numerator),
-          amountoutMin: JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).numerator),
+          amountIn,
+          amountoutMin,
           path: JSON.stringify(encryptedPath),
           senderAddress: account,
-          deadline: deadline ? deadline.toNumber() : 0,
+          deadline: deadlineNumber,
           chainId,
           nonce: hexlify(nonce),
           gasPrice,

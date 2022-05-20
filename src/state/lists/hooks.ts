@@ -54,9 +54,33 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
       .sort(sortByListPriority)
     // console.log(sorted)
     const a = sorted.reduce((allTokens, currentUrl) => {
-      const current = lists[currentUrl]?.current
+      let current = lists[currentUrl]?.current
       // console.log(currentUrl)
       if (currentUrl === 'http://147.46.240.248:27100/tex.tokenlist.json') {
+        current = {
+          name: 'Tex',
+          logoURI: 'https://ethereum-optimism.github.io/logos/optimism.svg',
+          keywords: ['scaling', 'layer2', 'infrastructure'],
+          timestamp: '2021-03-22T10:01:21.042+00:00',
+          tokens: [
+            {
+              chainId: 420,
+              address: '0xDadd1125B8Df98A66Abd5EB302C0d9Ca5A061dC2',
+              name: 'USD Coin',
+              symbol: 'USDC',
+              decimals: 6,
+              logoURI: 'https://ethereum-optimism.github.io/logos/USDC.svg',
+              extensions: {
+                optimismBridgeAddress: '0x22F24361D548e5FaAfb36d1437839f080363982B',
+              },
+            },
+          ],
+          version: {
+            major: 4,
+            minor: 2,
+            patch: 0,
+          },
+        }
         // debugger
       }
       if (!current) return allTokens
@@ -68,7 +92,6 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
       }
     }, {})
 
-    debugger
     return a
   }, [lists, urls])
 }

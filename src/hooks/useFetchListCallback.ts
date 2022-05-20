@@ -35,7 +35,6 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
       sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
       return getTokenList(listUrl, ensResolver)
         .then((tokenList) => {
-          console.log('tokenList: ' + tokenList)
           sendDispatch && dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
           // debugger
           return tokenList
