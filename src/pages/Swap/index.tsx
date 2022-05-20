@@ -285,6 +285,8 @@ export default function Swap({ history }: RouteComponentProps) {
       swapResponse: undefined,
       showVdf: true,
     })
+    console.log('sigHandler called')
+    console.log(showVdf)
   }
 
   // the callback to execute the swap

@@ -48,28 +48,36 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
   const lists = useAllLists()
   return useMemo(() => {
     if (!urls) return {}
-    return (
-      urls
-        .slice()
-        // sort by priority so top priority goes last
-        .sort(sortByListPriority)
-        .reduce((allTokens, currentUrl) => {
-          const current = lists[currentUrl]?.current
-          if (!current) return allTokens
-          try {
-            return combineMaps(allTokens, tokensToChainTokenMap(current))
-          } catch (error) {
-            console.error('Could not show token list due to error', error)
-            return allTokens
-          }
-        }, {})
-    )
+    const sorted = urls
+      .slice()
+      // sort by priority so top priority goes last
+      .sort(sortByListPriority)
+    // console.log(sorted)
+    const a = sorted.reduce((allTokens, currentUrl) => {
+      const current = lists[currentUrl]?.current
+      // console.log(currentUrl)
+      if (currentUrl === 'http://147.46.240.248:27100/tex.tokenlist.json') {
+        // debugger
+      }
+      if (!current) return allTokens
+      try {
+        return combineMaps(allTokens, tokensToChainTokenMap(current))
+      } catch (error) {
+        console.error('Could not show token list due to error', error)
+        return allTokens
+      }
+    }, {})
+
+    debugger
+    return a
   }, [lists, urls])
 }
 
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
-  const activeListUrls = useAppSelector((state) => state.lists.activeListUrls)
+  const activeListUrls = useAppSelector((state) => {
+    return state.lists.activeListUrls
+  })
   return useMemo(() => activeListUrls?.filter((url) => !UNSUPPORTED_LIST_URLS.includes(url)), [activeListUrls])
 }
 
@@ -86,6 +94,7 @@ export function useInactiveListUrls(): string[] {
 export function useCombinedActiveList(): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
+  // debugger
   return activeTokens
 }
 
