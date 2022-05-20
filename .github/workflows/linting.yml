@@ -40,7 +40,7 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-v1
 
       - name: Yarn Install
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 3
           retry_wait_seconds: 30
@@ -48,7 +48,7 @@ jobs:
           command: yarn --no-audit --prefer-offline
 
       - name: Typechain
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 3
           retry_wait_seconds: 20
@@ -56,7 +56,7 @@ jobs:
           command: yarn contracts:compile
 
       - name: Lint
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 3
           retry_wait_seconds: 10
@@ -93,7 +93,7 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-v1
 
       - name: Yarn Install
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 3
           retry_wait_seconds: 30
@@ -101,7 +101,7 @@ jobs:
           command: yarn --no-audit --prefer-offline
 
       - name: Typechain
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 3
           retry_wait_seconds: 20

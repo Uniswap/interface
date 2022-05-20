@@ -52,7 +52,7 @@ jobs:
           max-size: 400M
 
       - name: Yarn Install
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 10
           retry_wait_seconds: 2
@@ -60,7 +60,7 @@ jobs:
           command: yarn
 
       - name: Update Ruby build tools
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 2
           retry_wait_seconds: 2
@@ -76,7 +76,7 @@ jobs:
           restore-keys: ${{ runner.os }}-pods-v2
 
       - name: Pod Install
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 20
           retry_wait_seconds: 2

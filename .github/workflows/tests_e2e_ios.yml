@@ -68,7 +68,7 @@ jobs:
           max-size: 400M
 
       - name: Yarn Install
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 10
           retry_wait_seconds: 60
@@ -76,7 +76,7 @@ jobs:
           command: yarn --no-audit --prefer-offline
 
       - name: Typechain
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 3
           retry_wait_seconds: 20
@@ -84,7 +84,7 @@ jobs:
           command: yarn contracts:compile
 
       - name: Update Ruby build tools
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 2
           retry_wait_seconds: 60
@@ -100,7 +100,7 @@ jobs:
           restore-keys: ${{ runner.os }}-pods-v2
 
       - name: Pod Install
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 10
           retry_wait_seconds: 30
@@ -123,7 +123,7 @@ jobs:
         shell: bash
 
       - name: Install applesimutils
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 5
           retry_wait_seconds: 60

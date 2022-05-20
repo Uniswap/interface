@@ -9,7 +9,7 @@ jobs:
       # uses v1 to get full git history to track changes
       - uses: actions/checkout@v1
       - name: Yarn Install
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 10
           retry_wait_seconds: 60
