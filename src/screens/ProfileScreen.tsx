@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import QRIcon from 'src/assets/icons/qr-code.svg'
 import Scan from 'src/assets/icons/scan.svg'
@@ -18,7 +18,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
-import { WalletConnectScanSheet } from 'src/components/WalletConnect/ScanSheet/WalletConnectScanSheet'
+import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { ChainId } from 'src/constants/chains'
 import { useFavoriteCurrencyBalances } from 'src/features/balances/hooks'
 import { PortfolioBalance } from 'src/features/dataApi/types'
@@ -26,6 +26,7 @@ import { useENS } from 'src/features/ens/useENS'
 import { selectFollowedAddressSet } from 'src/features/favorites/selectors'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { setWalletConnectModalState } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 import { opacify } from 'src/utils/colors'
@@ -34,10 +35,9 @@ import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
 export function ProfileScreen({ navigation }: Props) {
+  const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const { t } = useTranslation()
-
-  const [showWalletConnectModal, setShowWalletConnectModal] = useState(false)
 
   const activeAccount = useActiveAccount()
   const address = activeAccount?.address
@@ -48,15 +48,23 @@ export function ProfileScreen({ navigation }: Props) {
 
   const onPressScan = () => {
     selectionAsync()
-    setShowWalletConnectModal(true)
+    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ScanQr }))
+  }
+
+  const onPressWalletQr = () => {
+    selectionAsync()
+    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.WalletQr }))
   }
 
   const onPressFriend = (friendAddres: string) => {
+    selectionAsync()
     navigation.navigate(Screens.User, { address: friendAddres })
   }
 
-  const onPressSettings = () =>
+  const onPressSettings = () => {
+    selectionAsync()
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
+  }
 
   if (!activeAccount || !address)
     return (
@@ -98,7 +106,7 @@ export function ProfileScreen({ navigation }: Props) {
             icon={<QRIcon color={theme.colors.accentText1} height={16} width={16} />}
             p="md"
             style={{ backgroundColor: opacify(6, theme.colors.deprecated_blue) }}
-            onPress={() => setShowWalletConnectModal(true)}
+            onPress={onPressWalletQr}
           />
           <IconButton
             borderColor={'deprecated_gray100'}
@@ -145,11 +153,6 @@ export function ProfileScreen({ navigation }: Props) {
           />
         </Flex>
       </Flex>
-      {/* modals */}
-      <WalletConnectScanSheet
-        isVisible={showWalletConnectModal}
-        onClose={() => setShowWalletConnectModal(false)}
-      />
     </Screen>
   )
 }

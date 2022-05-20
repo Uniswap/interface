@@ -11,7 +11,7 @@ import { DrawerNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
-import { WalletConnectRequestWrapper } from 'src/components/WalletConnect/WalletConnectRequestWrapper'
+import { WalletConnectWrapper } from 'src/components/WalletConnect/WalletConnectWrapper'
 import { config } from 'src/config'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
@@ -46,9 +46,9 @@ export function App() {
                 <WalletContextProvider>
                   <DataUpdaters />
                   <BottomSheetModalProvider>
-                    <WalletConnectRequestWrapper>
+                    <WalletConnectWrapper>
                       <NavStack isDarkMode={isDarkMode} />
-                    </WalletConnectRequestWrapper>
+                    </WalletConnectWrapper>
                   </BottomSheetModalProvider>
                 </WalletContextProvider>
               </ErrorBoundary>

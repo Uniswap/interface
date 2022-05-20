@@ -21,7 +21,8 @@ import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSl
 import { shortenAddress } from 'src/utils/addresses'
 import { opacify } from 'src/utils/colors'
 
-enum ScanSheetScreenState {
+export enum WalletConnectModalState {
+  Hidden,
   ScanQr,
   ConnectedDapps,
   WalletQr,
@@ -29,12 +30,12 @@ enum ScanSheetScreenState {
 
 type Props = {
   isVisible: boolean
-  initialScreenState?: ScanSheetScreenState
+  initialScreenState?: WalletConnectModalState
   onClose: () => void
 }
 
-export function WalletConnectScanSheet({
-  initialScreenState = ScanSheetScreenState.ScanQr,
+export function WalletConnectModal({
+  initialScreenState = WalletConnectModalState.ScanQr,
   isVisible,
   onClose,
 }: Props) {
@@ -45,7 +46,7 @@ export function WalletConnectScanSheet({
   const address = activeAccount?.address
 
   const [currentScreenState, setCurrentScreenState] =
-    useState<ScanSheetScreenState>(initialScreenState)
+    useState<WalletConnectModalState>(initialScreenState)
 
   const [showNetworkModal, setShowNetworkModal] = useState(false)
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
@@ -64,21 +65,21 @@ export function WalletConnectScanSheet({
 
   const onPressBottomToggle = () => {
     selectionAsync()
-    if (currentScreenState === ScanSheetScreenState.ScanQr) {
-      setCurrentScreenState(ScanSheetScreenState.WalletQr)
+    if (currentScreenState === WalletConnectModalState.ScanQr) {
+      setCurrentScreenState(WalletConnectModalState.WalletQr)
     } else {
-      setCurrentScreenState(ScanSheetScreenState.ScanQr)
+      setCurrentScreenState(WalletConnectModalState.ScanQr)
     }
   }
 
   const onPressShowConnectedDapps = () => {
     selectionAsync()
-    setCurrentScreenState(ScanSheetScreenState.ConnectedDapps)
+    setCurrentScreenState(WalletConnectModalState.ConnectedDapps)
   }
 
   const onPressShowScanQr = () => {
     selectionAsync()
-    setCurrentScreenState(ScanSheetScreenState.ScanQr)
+    setCurrentScreenState(WalletConnectModalState.ScanQr)
   }
 
   if (!activeAccount || !address) return null
@@ -91,7 +92,7 @@ export function WalletConnectScanSheet({
       isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
-      {currentScreenState === ScanSheetScreenState.ConnectedDapps && (
+      {currentScreenState === WalletConnectModalState.ConnectedDapps && (
         <ConnectedDappsList
           goBack={onPressShowScanQr}
           sessions={sessions}
@@ -99,14 +100,14 @@ export function WalletConnectScanSheet({
           setShowNetworkModal={setShowNetworkModal}
         />
       )}
-      {currentScreenState === ScanSheetScreenState.ScanQr && (
+      {currentScreenState === WalletConnectModalState.ScanQr && (
         <QRCodeScanner
           numConnections={sessions.length}
           onPressConnections={onPressShowConnectedDapps}
           onScanCode={onScanCode}
         />
       )}
-      {currentScreenState === ScanSheetScreenState.WalletQr && (
+      {currentScreenState === WalletConnectModalState.WalletQr && (
         <WalletQRCode address={activeAccount.address} />
       )}
       <Flex mb="xl" mt="md" mx="md">
@@ -122,12 +123,12 @@ export function WalletConnectScanSheet({
             </Flex>
             <Flex flexGrow={1} gap="xxs">
               <Text color="neutralTextPrimary" variant="subHead1">
-                {currentScreenState === ScanSheetScreenState.ScanQr
+                {currentScreenState === WalletConnectModalState.ScanQr
                   ? t('Show my QR code')
                   : t('Scan a QR code')}
               </Text>
               <Text color="neutralTextSecondary" variant="body2">
-                {currentScreenState === ScanSheetScreenState.ScanQr
+                {currentScreenState === WalletConnectModalState.ScanQr
                   ? shortenAddress(activeAccount.address)
                   : t('Connect to an app with WalletConnect')}
               </Text>

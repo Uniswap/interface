@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import {
   DappInfo,
   EthSignMethod,
@@ -41,11 +42,13 @@ export interface WalletConnectState {
   }
 
   pendingRequests: WalletConnectRequest[]
+  modalState: WalletConnectModalState
 }
 
 const initialWalletConnectState: Readonly<WalletConnectState> = {
   byAccount: {},
   pendingRequests: [],
+  modalState: WalletConnectModalState.Hidden,
 }
 
 const slice = createSlice({
@@ -93,8 +96,23 @@ const slice = createSlice({
         (req) => req.internalId !== requestInternalId
       )
     },
+
+    setWalletConnectModalState: (
+      state,
+      action: PayloadAction<{ modalState: WalletConnectModalState }>
+    ) => {
+      const { modalState } = action.payload
+      state.modalState = modalState
+    },
   },
 })
 
-export const { addSession, updateSession, removeSession, addRequest, removeRequest } = slice.actions
+export const {
+  addSession,
+  updateSession,
+  removeSession,
+  addRequest,
+  removeRequest,
+  setWalletConnectModalState,
+} = slice.actions
 export const { reducer: walletConnectReducer, actions: walletConnectActions } = slice

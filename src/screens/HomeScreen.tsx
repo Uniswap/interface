@@ -1,10 +1,10 @@
 import { DrawerActions } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, useColorScheme } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList, useHomeStackNavigation } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
 import Scan from 'src/assets/icons/scan.svg'
@@ -20,7 +20,7 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { WalletConnectScanSheet } from 'src/components/WalletConnect/ScanSheet/WalletConnectScanSheet'
+import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { BiometricCheck } from 'src/features/biometrics'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -28,6 +28,7 @@ import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { setWalletConnectModalState } from 'src/features/walletConnect/walletConnectSlice'
 import { NFTMasonry } from 'src/screens/PortfolioNFTs'
 import { PortfolioTokens } from 'src/screens/PortfolioTokens'
 import { Screens } from 'src/screens/Screens'
@@ -39,6 +40,7 @@ export function HomeScreen({ navigation }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
 
+  const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const darkMode = useColorScheme() === 'dark'
 
@@ -47,13 +49,11 @@ export function HomeScreen({ navigation }: Props) {
 
   const { balances } = useAllBalancesByChainId(activeAccount?.address, currentChains)
 
-  const [showWalletConnectModal, setShowWalletConnectModal] = useState(false)
-
   const onPressNotifications = () => navigation.navigate(Screens.Notifications)
 
   const onPressScan = () => {
     selectionAsync()
-    setShowWalletConnectModal(true)
+    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ScanQr }))
   }
 
   const onPressAccountHeader = () => {
@@ -103,10 +103,6 @@ export function HomeScreen({ navigation }: Props) {
               <RelativeChange change={4.2} variant="body1" />
             </Flex>
             <QuickActions />
-            <WalletConnectScanSheet
-              isVisible={showWalletConnectModal}
-              onClose={() => setShowWalletConnectModal(false)}
-            />
           </Flex>
           <Flex gap="md">
             <PortfolioTokens count={4} />

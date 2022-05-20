@@ -1,12 +1,13 @@
 import { utils } from 'ethers'
 import React from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
+import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useENS } from 'src/features/ens/useENS'
@@ -39,6 +40,7 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { activeAccountAddressSelector } from 'src/features/wallet/walletSlice'
+import { setWalletConnectModalState } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
@@ -67,8 +69,8 @@ function TxNotificationToast({
 }
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
-  // TODO: Define onPress to handle navigating to relevant screen
   const { imageUrl, chainId: chainIdString } = notification
+  const dispatch = useAppDispatch()
   const chainId = toSupportedChainId(chainIdString)
   const title = formWCNotificationTitle(notification)
   const icon = (
@@ -87,7 +89,11 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
     </>
   )
 
-  return <NotificationToast icon={icon} title={title} />
+  const onPressNotification = () => {
+    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ConnectedDapps }))
+  }
+
+  return <NotificationToast icon={icon} title={title} onPress={onPressNotification} />
 }
 
 export function ApproveNotification({
