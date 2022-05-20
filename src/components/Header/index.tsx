@@ -396,7 +396,7 @@ export default function Header() {
                         height="20px"
                         style={{ position: 'relative', top: '2px', marginRight: '5px' }}
                       />
-                      <StyledPrice> {kromPrice?.toSignificant(3)}$</StyledPrice>
+                      <StyledPrice> {kromPrice?.toSignificant(2)}$</StyledPrice>
                     </Trans>
                   </BalanceText>
                 ) : null}

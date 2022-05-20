@@ -128,8 +128,6 @@ export default function Polling() {
 
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from('154097'), false)
 
-  console.log(feeValue0?.toFixed(0, { groupSeparator: ',' }))
-
   return (
     <>
       <StyledPolling
