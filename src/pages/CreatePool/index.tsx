@@ -134,7 +134,9 @@ export default function CreatePool({
 
   // fee types
   const [feeType, setFeeType] = useState<string>('static')
-  const [staticFee, setStaticFee] = useState<string>(chainId ? FEE_OPTIONS[chainId][0].toString() : '1')
+  const [staticFee, setStaticFee] = useState<string>(
+    chainId && FEE_OPTIONS[chainId] ? FEE_OPTIONS[chainId][0].toString() : '1',
+  )
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
