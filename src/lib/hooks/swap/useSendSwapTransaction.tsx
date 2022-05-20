@@ -221,8 +221,8 @@ export default function useSendSwapTransaction(
 
         const encryptedTx: EncryptedTx = {
           routeContractAddress: address,
-          amountIn: JSBI.toNumber(v2trade.inputAmount.decimalScale),
-          amountoutMin: JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).decimalScale),
+          amountIn: JSBI.toNumber(v2trade.inputAmount.numerator),
+          amountoutMin: JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).numerator),
           path: JSON.stringify(encryptedPath),
           senderAddress: account,
           deadline: deadline ? deadline.toNumber() : 0,
@@ -259,10 +259,8 @@ export default function useSendSwapTransaction(
           msg: sendResponse.msg,
           txHash,
         }
-
-        console.log('final response here! : ' + finalResponse)
         return finalResponse
       },
     }
-  }, [account, chainId, library, swapCalls, trade])
+  }, [account, chainId, library, swapCalls, trade, allowedSlippage, deadline, sigHandler])
 }

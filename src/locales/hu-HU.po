@@ -1877,7 +1877,7 @@ msgid "Uniswap Labs' Terms of Service"
 msgstr "Az Uniswap Labs szolgáltatási feltételei"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
+msgid "TEX available in: <0>{0}</0>"
 msgstr "Az Uniswap itt érhető el: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx

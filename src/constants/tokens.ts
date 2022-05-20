@@ -81,6 +81,13 @@ export const USDC_POLYGON_MUMBAI = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_TEX_PRIVATE = new Token(
+  SupportedChainId.TEX_PRIVATE,
+  '0xDadd1125B8Df98A66Abd5EB302C0d9Ca5A061dC2',
+  6,
+  'USDC',
+  'USD/C'
+)
 
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
@@ -122,6 +129,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
   [SupportedChainId.KOVAN]: USDC_KOVAN,
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
+  [SupportedChainId.TEX_PRIVATE]: USDC_TEX_PRIVATE,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -256,6 +264,20 @@ export const WETH_POLYGON_MUMBAI = new Token(
   'WETH',
   'Wrapped Ether'
 )
+export const UNI_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0x3aB204db1cb9006B5938AfEDBd69d6A8b68Da95e',
+  18,
+  'UNI',
+  'Uniswap'
+)
+export const rMATIC_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xA510e8077EA0cC32Ff393905fdA20CDdC97B909F',
+  18,
+  'MATIC',
+  'rMATIC'
+)
 
 export const WETH_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -315,6 +337,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WMATIC',
     'Wrapped MATIC'
+  ),
+  [SupportedChainId.TEX_PRIVATE]: new Token(
+    SupportedChainId.TEX_PRIVATE,
+    '0xD499f5F7d3C918D0e553BA03954c4E02af16B6e4',
+    18,
+    'WETH',
+    'Wrapped ETH'
   ),
 }
 

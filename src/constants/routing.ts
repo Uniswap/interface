@@ -15,9 +15,11 @@ import {
   nativeOnChain,
   renBTC,
   rETH2,
+  rMATIC_POLYGON_MUMBAI,
   sETH2,
   SWISE,
   TRIBE,
+  UNI_POLYGON_MUMBAI,
   USDC_ARBITRUM,
   USDC_MAINNET,
   USDC_OPTIMISM,
@@ -162,6 +164,8 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI] as Token,
     WETH_POLYGON_MUMBAI,
+    UNI_POLYGON_MUMBAI,
+    rMATIC_POLYGON_MUMBAI,
   ],
 }
 

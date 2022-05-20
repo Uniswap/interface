@@ -11,6 +11,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
+import { RadiusSwapResponse } from 'lib/hooks/swap/useSendSwapTransaction'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga4'
@@ -179,20 +180,25 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [history])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, vdfReady }, setSwapState] = useState<{
+  const [
+    { showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, swapResponse, showVdf },
+    setSwapState,
+  ] = useState<{
     showConfirm: boolean
     tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
-    vdfReady: boolean
+    swapResponse: RadiusSwapResponse | undefined
+    showVdf: boolean
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined,
-    vdfReady: false,
+    swapResponse: undefined,
+    showVdf: false,
   })
 
   const formattedAmounts = useMemo(
@@ -276,7 +282,8 @@ export default function Swap({ history }: RouteComponentProps) {
       showConfirm,
       swapErrorMessage: undefined,
       txHash,
-      vdfReady: true,
+      swapResponse: undefined,
+      showVdf: true,
     })
   }
 
@@ -297,23 +304,24 @@ export default function Swap({ history }: RouteComponentProps) {
       return
     }
     setSwapState({
-      attemptingTxn: false,
+      attemptingTxn: true,
       tradeToConfirm,
       showConfirm,
       swapErrorMessage: undefined,
       txHash: undefined,
-      vdfReady: false,
+      swapResponse: undefined,
+      showVdf: false,
     })
     swapCallback()
       .then((res) => {
-        console.log('from Swap index, get response: ' + res)
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,
           showConfirm,
           swapErrorMessage: undefined,
           txHash: res.txHash,
-          vdfReady: false,
+          swapResponse: res,
+          showVdf,
         })
         ReactGA.event({
           category: 'Swap',
@@ -338,7 +346,8 @@ export default function Swap({ history }: RouteComponentProps) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
-          vdfReady: false,
+          swapResponse: undefined,
+          showVdf,
         })
       })
   }, [
@@ -352,6 +361,7 @@ export default function Swap({ history }: RouteComponentProps) {
     approvalOptimizedTradeString,
     approvalOptimizedTrade?.inputAmount?.currency?.symbol,
     approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+    showVdf,
   ])
 
   // errors
@@ -382,7 +392,7 @@ export default function Swap({ history }: RouteComponentProps) {
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, vdfReady })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, swapResponse, showVdf })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -390,7 +400,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, vdfReady })
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, swapResponse, showVdf })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
@@ -418,34 +428,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
-  const handle = () => {
-    const headers = new Headers({ 'Content-Type': 'application/json' })
-    fetch('http://147.46.240.248:27100/cryptography/encrypt', {
-      method: 'POST',
-      headers,
-      mode: 'no-cors',
-      body: JSON.stringify({
-        useVdfZkp: true,
-        useEncryptionZkp: false,
-        plainText: '123123123',
-      }),
-    })
-      .then((res) => {
-        console.log(res)
-        setSwapState({
-          tradeToConfirm: trade,
-          attemptingTxn: false,
-          swapErrorMessage: undefined,
-          showConfirm: true,
-          txHash: undefined,
-          vdfReady,
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
-
   return (
     <>
       <TokenWarningModal
@@ -469,7 +451,8 @@ export default function Swap({ history }: RouteComponentProps) {
             onConfirm={handleSwap}
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
-            vdfReady={vdfReady}
+            swapResponse={swapResponse}
+            showVdf={showVdf}
           />
 
           <AutoColumn gap={'sm'}>
@@ -627,7 +610,8 @@ export default function Swap({ history }: RouteComponentProps) {
                             swapErrorMessage: undefined,
                             showConfirm: true,
                             txHash: undefined,
-                            vdfReady,
+                            swapResponse: undefined,
+                            showVdf: false,
                           })
                         }
                       }}
@@ -666,7 +650,8 @@ export default function Swap({ history }: RouteComponentProps) {
                         swapErrorMessage: undefined,
                         showConfirm: true,
                         txHash: undefined,
-                        vdfReady,
+                        swapResponse: undefined,
+                        showVdf: false,
                       })
                     }
                   }}
