@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styled from 'styled-components'
 import { X } from 'react-feather'
@@ -19,6 +19,10 @@ import B2_Mobile from 'assets/banners/banner_2_mobile.png'
 import LM_Desktop from 'assets/banners/LM-desktop.png'
 import LM_Tablet from 'assets/banners/LM-tablet.png'
 import LM_Mobile from 'assets/banners/LM-mobile-300dpi.png'
+
+import ReferralCampaignDesktop from 'assets/banners/referral-campaign-desktop.png'
+import ReferralCampaignTablet from 'assets/banners/referral-campaign-tablet.png'
+import ReferralCampaignMobile from 'assets/banners/referral-campaign-mobile.png'
 
 const BannerWrapper = styled(Flex)`
   --swiper-navigation-size: 12px;
@@ -89,7 +93,17 @@ const Close = styled(X)`
   border-bottom-left-radius: 8px;
 `
 
-function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: string; maxWidth?: string }) {
+function Banner({
+  margin,
+  padding,
+  maxWidth,
+  isInModal = false,
+}: {
+  margin?: string
+  padding?: string
+  maxWidth?: string
+  isInModal?: boolean
+}) {
   const size = useWindowSize()
   const w = size?.width || 0
   const theme = useTheme()
@@ -98,28 +112,56 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
 
   const banners = [
     {
-      img: w >= 768 ? B2_Desktop : w >= 500 ? B2_Tablet : B2_Mobile,
+      // REFERRAL CAMPAIGN
+      start: new Date(1653004800000), // May 20, 2022 0:00:00
+      end: new Date(1653609599000), // May 26, 2022 23:59:59
+      img: isInModal
+        ? ReferralCampaignMobile
+        : w >= 768
+        ? ReferralCampaignDesktop
+        : w >= 500
+        ? ReferralCampaignTablet
+        : ReferralCampaignMobile,
+      link: isInModal
+        ? 'https://blog.kyber.network/introducing-kyberswaps-referral-campaign-2000-in-knc-rewards-up-for-grabs-when-you-share-1966da343e28#%2Fswap%3FnetworkId=1&utm_source=onsite-banner&utm_medium=window-popup&utm_campaign=referral-May2022'
+        : 'https://blog.kyber.network/introducing-kyberswaps-referral-campaign-2000-in-knc-rewards-up-for-grabs-when-you-share-1966da343e28#%2Fswap%3FnetworkId=1&utm_source=onsite-banner&utm_medium=home-top-banner&utm_campaign=referral-May2022',
+    },
+    {
+      // BTTC Liquidity Mining.
+      start: new Date(1650585600000), // April 22, 2022 0:00:00
+      end: new Date(1654041599000), // May 31, 2022 23:59:59
+      img: isInModal ? B2_Mobile : w >= 768 ? B2_Desktop : w >= 500 ? B2_Tablet : B2_Mobile,
+      // img: B2_Mobile,
       link:
         'https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------',
     },
     {
-      img: w >= 768 ? B1_Desktop : w >= 500 ? B1_Tablet : B1_Mobile,
+      // BTTC Liquidity Mining.
+      start: new Date(1650585600000), // April 22, 2022 0:00:00
+      end: new Date(1654041599000), // May 31, 2022 23:59:59
+      img: isInModal ? B1_Mobile : w >= 768 ? B1_Desktop : w >= 500 ? B1_Tablet : B1_Mobile,
       link:
         'https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------',
     },
     {
-      img: w >= 768 ? LM_Desktop : w >= 500 ? LM_Tablet : LM_Mobile,
+      // AVAX LM
+      start: new Date(1647820800000), // March 21, 2022 0:00:00
+      end: new Date(1654041599000), // May 31, 2022 23:59:59
+      img: isInModal ? LM_Mobile : w >= 768 ? LM_Desktop : w >= 500 ? LM_Tablet : LM_Mobile,
       link:
         'https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=avaxphase2&utm_content=lm#/farms?networkId=43114',
     },
-  ]
+  ].filter(b => {
+    const date = new Date()
+    return date >= b.start && date <= b.end
+  })
 
   if (!showBanner) return null
 
   return (
     <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1394px'} width="100%">
       <Swiper
-        autoplay={{ delay: 20000 }}
+        autoplay={{ delay: isInModal ? 2000 : 20000 }}
         slidesPerView={1}
         navigation={true}
         pagination={true}
