@@ -84,7 +84,7 @@ export function HomeScreen({ navigation }: Props) {
       <RadialGradientBox opacity={darkMode ? 0.4 : 0.2} stops={stops} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Box mt="xl" mx="md">
-          <Flex gap="lg" mt="lg">
+          <Flex gap="lg" my="lg">
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
               <AccountHeader onPress={onPressAccountHeader} />
               <Flex centered row>
