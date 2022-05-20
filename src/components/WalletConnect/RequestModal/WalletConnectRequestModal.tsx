@@ -9,13 +9,13 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { ClientDetails } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import { EthMethod } from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { ClientDetails } from 'src/features/walletConnect/WCRequestModal/ClientDetails'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { opacify } from 'src/utils/colors'
 import { logger } from 'src/utils/logger'
@@ -45,7 +45,7 @@ const getMessage = (request: WalletConnectRequest) => {
       const message = JSON.parse(request.message)
       return JSON.stringify(message, null, 4)
     } catch (e) {
-      logger.error('WCRequestModal', 'getMessage', 'invalid JSON message', e)
+      logger.error('WalletConnectRequestModal', 'getMessage', 'invalid JSON message', e)
     }
   }
 
@@ -60,7 +60,7 @@ const VALID_REQUEST_TYPES = [
   EthMethod.EthSendTransaction,
 ]
 
-export function WCRequestModal({ isVisible, onClose, request }: Props) {
+export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
   const theme = useAppTheme()
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()

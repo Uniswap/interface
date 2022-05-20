@@ -20,9 +20,13 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: 
 
   // Restyle variants do not have any mechanism for using a variant value on a child
   // This extracts the color style to apply it on the child Text
+
   const textColor = useMemo(
-    () => rest.textColor || flattenStyleProp(style)?.color || theme.colors.white,
-    [rest.textColor, style, theme.colors.white]
+    () =>
+      (rest.textColor && theme.colors[rest.textColor]) ||
+      flattenStyleProp(style)?.color ||
+      theme.colors.neutralTextPrimary,
+    [theme.colors, rest.textColor, style]
   )
 
   return (

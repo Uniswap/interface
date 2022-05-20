@@ -1,4 +1,5 @@
 import React, { ComponentProps, useMemo } from 'react'
+import { withAnimated } from 'src/components/animated'
 import { Box } from 'src/components/layout/Box'
 import { Spacer } from 'src/components/layout/Spacer'
 import { Theme } from 'src/styles/theme'
@@ -84,3 +85,5 @@ export function Flex({
     </Box>
   )
 }
+
+export const AnimatedFlex = withAnimated(Flex)

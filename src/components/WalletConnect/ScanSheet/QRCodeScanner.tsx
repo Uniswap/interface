@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, StyleSheet } from 'react-native'
-import { runOnJS } from 'react-native-reanimated'
+import { FadeIn, FadeOut, runOnJS } from 'react-native-reanimated'
 import {
   Camera,
   CameraPermissionRequestResult,
@@ -13,8 +13,7 @@ import CameraScan from 'src/assets/icons/camera-scan.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { opacify } from 'src/utils/colors'
@@ -80,7 +79,7 @@ export function QRCodeScanner({
 
   if (permission === 'authorized' && backCamera) {
     return (
-      <Box borderRadius="md" flexGrow={1} overflow="hidden">
+      <AnimatedFlex grow borderRadius="md" entering={FadeIn} exiting={FadeOut} overflow="hidden">
         <Camera
           isActive
           device={backCamera}
@@ -89,7 +88,18 @@ export function QRCodeScanner({
           onLayout={(event) => setLayout(event.nativeEvent.layout)}
         />
         {layout && (
-          <Flex centered gap="lg" style={StyleSheet.absoluteFill}>
+          <Flex centered gap="xxl" style={StyleSheet.absoluteFill}>
+            <Flex centered gap="xs">
+              <Text color="white" variant="largeLabel">
+                {t('Scan a QR code')}
+              </Text>
+              <Flex centered row gap="sm">
+                {<WalletConnectLogo height={16} width={16} />}
+                <Text color="white" variant="body2">
+                  {t('Connect to an app with WalletConnect')}
+                </Text>
+              </Flex>
+            </Flex>
             <CameraScan
               color={theme.colors.white}
               height={layout.width * SCAN_ICON_WIDTH_RATIO}
@@ -103,7 +113,7 @@ export function QRCodeScanner({
                 borderRadius="full"
                 px="lg"
                 py="sm"
-                style={{ backgroundColor: opacify(60, theme.colors.black) }}>
+                style={{ backgroundColor: opacify(40, theme.colors.black) }}>
                 <WalletConnectLogo height={30} width={30} />
                 <Text color="white" variant="mediumLabel">
                   {numConnections === 1
@@ -114,19 +124,24 @@ export function QRCodeScanner({
             </Button>
           </Flex>
         )}
-      </Box>
+      </AnimatedFlex>
     )
   }
 
   return (
-    <Flex centered backgroundColor="deprecated_background1" flexGrow={1} gap="md">
-      <Text variant="mediumLabel">📸</Text>
-      <Text variant="mediumLabel">{t('Please enable your camera.')}</Text>
-      <PrimaryButton
-        label="Open settings"
-        name={ElementName.OpenSettingsButton}
-        onPress={openSettings}
-      />
+    <Flex centered grow backgroundColor="deprecated_background1" gap="md">
+      {permission === 'denied' ||
+        (permission === 'restricted' && (
+          <>
+            <Text variant="mediumLabel">📸</Text>
+            <Text variant="mediumLabel">{t('Please enable your camera.')}</Text>
+            <PrimaryButton
+              label="Open settings"
+              name={ElementName.OpenSettingsButton}
+              onPress={openSettings}
+            />
+          </>
+        ))}
     </Flex>
   )
 }
