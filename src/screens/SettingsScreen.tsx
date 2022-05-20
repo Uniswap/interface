@@ -12,14 +12,14 @@ import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
 import StarIcon from 'src/assets/icons/star.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { BackX } from 'src/components/buttons/BackX'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { BlueToPinkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout/Box'
-import { SheetScreen } from 'src/components/layout/SheetScreen'
+import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -100,11 +100,11 @@ export function SettingsScreen() {
   )
 
   return (
-    <SheetScreen px="lg">
+    <Screen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
-          <Text variant="body1">{t('Settings')}</Text>
-          <BackX size={16} onPressBack={() => navigation.goBack()} />
+        <Box alignItems="center" flexDirection="row" mb="lg">
+          <BackButton mr="md" />
+          <Text variant="subHead1">{t('Settings')}</Text>
         </Box>
         {<ActiveAccountSummary />}
         {pages.map((o) => (
@@ -112,7 +112,7 @@ export function SettingsScreen() {
         ))}
         <OnboardingRow />
       </ScrollView>
-    </SheetScreen>
+    </Screen>
   )
 }
 

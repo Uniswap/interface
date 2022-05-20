@@ -259,12 +259,12 @@ export function AppStackNavigator() {
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
       <AppStack.Screen component={UserScreen} name={Screens.User} />
+      <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
         <AppStack.Screen component={SwapScreen} name={Screens.Swap} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
         <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
-        <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
         <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />
         <AppStack.Screen component={TransferTokenScreen} name={Screens.Transfer} />
         <AppStack.Screen component={EducationScreen} name={Screens.Education} />
