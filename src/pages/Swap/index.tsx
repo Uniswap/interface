@@ -285,8 +285,6 @@ export default function Swap({ history }: RouteComponentProps) {
       swapResponse: undefined,
       showVdf: true,
     })
-    console.log('sigHandler called')
-    console.log(showVdf)
   }
 
   // the callback to execute the swap
@@ -429,8 +427,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-
-  console.log(routeNotFound, userHasSpecifiedInputOutput, !routeIsLoading, !routeIsSyncing)
 
   return (
     <>

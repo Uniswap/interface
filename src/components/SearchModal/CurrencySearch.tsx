@@ -82,8 +82,6 @@ export function CurrencySearch({
 
   const allTokens = useAllTokens()
 
-  console.log(allTokens)
-
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
 
@@ -104,8 +102,6 @@ export function CurrencySearch({
   const filteredTokens: Token[] = useMemo(() => {
     return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
   }, [allTokens, debouncedQuery])
-
-  console.log(filteredTokens)
 
   const balances = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
