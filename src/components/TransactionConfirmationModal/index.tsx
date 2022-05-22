@@ -124,7 +124,7 @@ function TransactionSubmittedContent({
     if (progressBarValue < 100) {
       setProgressBarValue(progressBarValue + 1)
     }
-  }, 100)
+  }, 80)
 
   return (
     <Wrapper>

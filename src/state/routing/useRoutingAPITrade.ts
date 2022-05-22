@@ -57,6 +57,10 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
 
+  // if (quoteResult) {
+  //   debugger
+  // }
+
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 

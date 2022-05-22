@@ -70,8 +70,6 @@ export function useTokenBalancesWithLoadingIndicator(
     tokenBalancesGasRequirement
   )
 
-  console.log('balances :' + balances)
-
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
 
   return useMemo(

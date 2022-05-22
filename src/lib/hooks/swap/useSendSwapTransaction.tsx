@@ -5,7 +5,7 @@ import { keccak256 } from '@ethersproject/keccak256'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { serialize, UnsignedTransaction } from '@ethersproject/transactions'
 // eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -13,8 +13,9 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { solidityKeccak256 } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 // import { calculateGasMargin } from 'utils/calculateGasMargin'
-import isZero from 'utils/isZero'
+// import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 type AnyTrade =
@@ -90,72 +91,75 @@ export default function useSendSwapTransaction(
     }
     return {
       callback: async function onSwap(): Promise<RadiusSwapResponse> {
-        const estimatedCalls: SwapCallEstimate[] = await Promise.all(
-          swapCalls.map((call) => {
-            const { address, calldata, value } = call
+        // const estimatedCalls: SwapCallEstimate[] = await Promise.all(
+        //   swapCalls.map((call) => {
+        //     const { address, calldata, value } = call
 
-            const tx =
-              !value || isZero(value)
-                ? { from: account, to: address, data: calldata }
-                : {
-                    from: account,
-                    to: address,
-                    data: calldata,
-                    value,
-                  }
+        //     const tx =
+        //       !value || isZero(value)
+        //         ? { from: account, to: address, data: calldata }
+        //         : {
+        //             from: account,
+        //             to: address,
+        //             data: calldata,
+        //             value,
+        //           }
 
-            return library
-              .estimateGas(tx)
-              .then((gasEstimate) => {
-                return {
-                  call,
-                  gasEstimate,
-                }
-              })
-              .catch((gasError) => {
-                console.debug('Gas estimate failed, trying eth_call to extract error', call)
+        //     return library
+        //       .estimateGas(tx)
+        //       .then((gasEstimate) => {
+        //         return {
+        //           call,
+        //           gasEstimate,
+        //         }
+        //       })
+        //       .catch((gasError) => {
+        //         console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return library
-                  .call(tx)
-                  .then((result) => {
-                    console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: <Trans>Unexpected issue with estimating the gas. Please try again.</Trans> }
-                  })
-                  .catch((callError) => {
-                    console.debug('Call threw error', call, callError)
-                    return { call, error: swapErrorToUserReadableMessage(callError) }
-                  })
-              })
-          })
-        )
+        //         return library
+        //           .call(tx)
+        //           .then((result) => {
+        //             console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
+        //             return { call, error: <Trans>Unexpected issue with estimating the gas. Please try again.</Trans> }
+        //           })
+        //           .catch((callError) => {
+        //             console.debug('Call threw error', call, callError)
+        //             return { call, error: swapErrorToUserReadableMessage(callError) }
+        //           })
+        //       })
+        //   })
+        // )
 
-        // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
-        let bestCallOption: SuccessfulCall | SwapCallEstimate | undefined = estimatedCalls.find(
-          (el, ix, list): el is SuccessfulCall =>
-            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
-        )
+        // // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
+        // let bestCallOption: SuccessfulCall | SwapCallEstimate | undefined = estimatedCalls.find(
+        //   (el, ix, list): el is SuccessfulCall =>
+        //     'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
+        // )
 
-        // check if any calls errored with a recognizable error
-        if (!bestCallOption) {
-          const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
-          if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          const firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
-            (call): call is SwapCallEstimate => !('error' in call)
-          )
-          if (!firstNoErrorCall) throw new Error(t`Unexpected error. Could not estimate gas for the swap.`)
-          bestCallOption = firstNoErrorCall
-        }
+        // // check if any calls errored with a recognizable error
+        // if (!bestCallOption) {
+        //   const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
+        //   if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
+        //   const firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
+        //     (call): call is SwapCallEstimate => !('error' in call)
+        //   )
+        //   if (!firstNoErrorCall) throw new Error(t`Unexpected error. Could not estimate gas for the swap.`)
+        //   bestCallOption = firstNoErrorCall
+        // }
 
-        const {
-          call: { address, calldata, value },
-        } = bestCallOption
+        const { address, calldata, value } = swapCalls[0]
 
-        const successfulCallOption = bestCallOption as SuccessfulCall
-        const gasPrice = successfulCallOption.gasEstimate.toHexString()
+        // const successfulCallOption = bestCallOption as SuccessfulCall
+        // const gasPrice = successfulCallOption.gasEstimate.toHexString()
 
-        const v2trade = trade as V2Trade<Currency, Currency, TradeType>
+        const gasPrice = '0x3B9ACA000'
+
+        // debugger
+
+        const v2trade = trade as InterfaceTrade<Currency, Currency, TradeType>
 
         const signer = library.getSigner()
+        console.log(signer)
         const nonceManager = new NonceManager(signer)
 
         const nonce = await nonceManager.getTransactionCount()
@@ -170,8 +174,9 @@ export default function useSendSwapTransaction(
           value,
         }
 
-        const sig = await library
-          .getSigner()
+        console.log(signInput)
+
+        const sig = await signer
           .signMessage(JSON.stringify(signInput)) // sign하고 서버에 날리고 서버가 제출한 트랜잭션 정보를 response로 가져와야함
           .then((response) => {
             const sig = splitSignature(response)
@@ -198,6 +203,7 @@ export default function useSendSwapTransaction(
         const token2 = v2trade.outputAmount.currency as Token
         const address2 = token2.address
         const path = `${address1},${address2}`
+        console.log('path string: ' + path)
         const pathArray = [address1, address2]
 
         const signedRawtx = serialize(signInput, sig)
@@ -221,14 +227,16 @@ export default function useSendSwapTransaction(
             return error
           })
 
-        const amountIn = JSBI.toNumber(v2trade.inputAmount.numerator)
-        const amountoutMin = JSBI.toNumber(v2trade.minimumAmountOut(allowedSlippage).numerator)
+        const amountIn = JSBI.toNumber(v2trade.swaps[0].inputAmount.numerator)
+        const amountoutMin = JSBI.toNumber(v2trade.swaps[0].outputAmount.numerator)
         const deadlineNumber = deadline ? deadline.toNumber() : 0
 
-        const h = solidityKeccak256(
+        const txId = solidityKeccak256(
           ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
-          [account, `${amountIn}`, `${amountoutMin}`, pathArray, address, deadlineNumber]
+          [account, `${amountIn}`, `${amountoutMin}`, pathArray, account, `${deadlineNumber}`]
         )
+
+        console.log(account, amountIn, amountoutMin, pathArray, account, deadlineNumber)
 
         const encryptedTx: EncryptedTx = {
           routeContractAddress: address,
@@ -251,6 +259,7 @@ export default function useSendSwapTransaction(
             headers,
             body: JSON.stringify({
               txType: 'swap',
+              txId,
               encryptedTx,
               sig,
             }),
