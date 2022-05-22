@@ -28,6 +28,8 @@ const MobileHeader = styled.div`
   font-size: 16px;
   font-weight: 500;
   padding: 8px;
+  display: flex;
+  justify-content: space-between;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     display: none;
   }
@@ -57,6 +59,9 @@ export default function PositionList({
       </DesktopHeader>
       <MobileHeader>
         <Trans>Your positions</Trans>
+        <ButtonText style={{ opacity: 0.6 }} onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
+          <Trans>Hide closed positions</Trans>
+        </ButtonText>
       </MobileHeader>
       {positions.map((p) => {
         return <PositionListItem key={p.tokenId.toString()} positionDetails={p} />
