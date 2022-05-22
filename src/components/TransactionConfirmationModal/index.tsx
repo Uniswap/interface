@@ -143,7 +143,7 @@ function TransactionSubmittedContent({
         <RowBetween>
           <RowFixed>
             <ThemedText.Black fontSize={14} fontWeight={400} color={'#565A69'}>
-              {'VDF Generation'}
+              {'Encryption Progress'}
             </ThemedText.Black>
             <QuestionHelper text="Your VDF is currently being generated. Once the VDF is generated, your transaction would be submitted. Please wait for the progress bar to reach the end." />
           </RowFixed>
@@ -167,7 +167,7 @@ function TransactionSubmittedContent({
           bgColor={'#ef9231'}
         />
 
-        <div style={{ marginBottom: 20 }} />
+        <div style={{ marginBottom: 30 }} />
 
         {showConfirmMessage && (
           <>

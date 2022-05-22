@@ -52,10 +52,8 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
       .slice()
       // sort by priority so top priority goes last
       .sort(sortByListPriority)
-    // console.log(sorted)
     const a = sorted.reduce((allTokens, currentUrl) => {
       let current = lists[currentUrl]?.current
-      // console.log(currentUrl)
       if (currentUrl === 'http://147.46.240.248:27100/tex.tokenlist.json') {
         current = {
           name: 'Tex',

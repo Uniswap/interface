@@ -266,7 +266,7 @@ export const WETH_POLYGON_MUMBAI = new Token(
 )
 export const UNI_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
-  '0x3aB204db1cb9006B5938AfEDBd69d6A8b68Da95e',
+  '0x8F4EAf4475a45DDDf70A8c9132b72Cf0BA036FE8',
   18,
   'UNI',
   'Uniswap'

@@ -15,7 +15,6 @@ export function computeRoutes(
   tradeType: TradeType,
   quoteResult: Pick<GetQuoteResult, 'route'> | undefined
 ) {
-  // console.log(quoteResult, currencyIn, currencyOut)
   if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
 
   if (quoteResult.route.length === 0) return []
@@ -24,11 +23,9 @@ export function computeRoutes(
   const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
   if (parsedTokenIn.address !== currencyIn.wrapped.address) {
-    // console.log(parsedTokenIn.address, currencyIn.wrapped.address)
     return undefined
   }
   if (parsedTokenOut.address !== currencyOut.wrapped.address) {
-    // console.log(parsedTokenOut.address, currencyOut.wrapped.address)
     return undefined
   }
 
