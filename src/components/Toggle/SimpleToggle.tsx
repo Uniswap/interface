@@ -38,8 +38,8 @@ interface ToggleProps {
 export default function SimpleToggle({ id, isActive, toggle }: ToggleProps) {
   return (
     <Wrapper id={id} isActive={isActive} onClick={toggle}>
-      <ToggleElement isActive={isActive} isOnSwitch={false} style={{ left: '4px' }} />
-      <ToggleElement isActive={!isActive} isOnSwitch={true} style={{ right: '4px' }} />
+      <ToggleElement isActive={!isActive} isOnSwitch={false} style={{ left: '4px' }} />
+      <ToggleElement isActive={isActive} isOnSwitch={true} style={{ right: '4px' }} />
     </Wrapper>
   )
 }
