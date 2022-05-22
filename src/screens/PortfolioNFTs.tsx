@@ -1,4 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
+import { utils } from 'ethers'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -68,7 +69,7 @@ export function NFTMasonry({
     (asset: NFTAsset.Asset) => {
       navigation.navigate(Screens.NFTItem, {
         owner: activeAddress ?? '',
-        address: asset.asset_contract.address,
+        address: utils.getAddress(asset.asset_contract.address),
         token_id: asset.token_id,
       })
     },
