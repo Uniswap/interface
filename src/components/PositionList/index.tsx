@@ -59,7 +59,10 @@ export default function PositionList({
       </DesktopHeader>
       <MobileHeader>
         <Trans>Your positions</Trans>
-        <ButtonText style={{ opacity: 0.6 }} onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
+        <ButtonText
+          style={{ opacity: 0.6, fontSize: '14px' }}
+          onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
+        >
           <Trans>Hide closed positions</Trans>
         </ButtonText>
       </MobileHeader>
