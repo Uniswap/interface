@@ -20,7 +20,7 @@ export const theme = createTheme({
   colors: {
     mainBackground: colorsLight.white,
     mainForeground: colorsLight.black,
-    tabBackground: opacify(50, colorsLight.neutralBackground),
+    translucentBackground: opacify(50, colorsLight.neutralBackground),
     imageTintBackground: opacify(80, colorsLight.deprecated_background1),
     tokenSelector: colorsLight.deprecated_gray50,
     shimmer: colorsLight.white,
@@ -40,7 +40,7 @@ export const darkTheme: Theme = {
   colors: {
     mainBackground: colorsDark.deprecated_background1,
     mainForeground: colorsDark.white,
-    tabBackground: opacify(20, colorsDark.deprecated_gray50),
+    translucentBackground: opacify(5, colorsDark.white),
     imageTintBackground: opacify(80, colorsDark.deprecated_background1),
     tokenSelector: colorsDark.deprecated_gray50,
     shimmer: colorsDark.deprecated_gray100,

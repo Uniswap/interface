@@ -133,7 +133,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
         </Flex>
         <Flex gap="sm">
           <Box
-            bg="tabBackground"
+            bg="translucentBackground"
             borderColor="deprecated_gray100"
             borderRadius="md"
             borderWidth={1}>
@@ -145,7 +145,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
               />
             )}
             <Flex
-              bg={collectionImageUrl ? 'imageTintBackground' : 'tabBackground'}
+              bg={collectionImageUrl ? 'imageTintBackground' : 'translucentBackground'}
               borderColor="deprecated_gray100"
               borderRadius="md"
               borderWidth={1}

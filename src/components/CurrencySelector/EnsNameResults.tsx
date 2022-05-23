@@ -17,7 +17,7 @@ export default function EnsNameResults({ names }: { names: { name: string; addre
       {Object.values(names).map((item, index) => (
         <Button
           key={index}
-          backgroundColor="tabBackground"
+          backgroundColor="translucentBackground"
           borderRadius="lg"
           padding="md"
           onPress={() => onPress(item)}>

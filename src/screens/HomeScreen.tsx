@@ -139,7 +139,7 @@ function QuickActions() {
         label={t('Buy')}
         name={ElementName.NavigateBuy}
         py="sm"
-        style={{ backgroundColor: theme.colors.tabBackground }}
+        style={{ backgroundColor: theme.colors.translucentBackground }}
         testID={ElementName.NavigateBuy}
         variant="gray"
         onPress={onPressSwap}
@@ -153,7 +153,7 @@ function QuickActions() {
         label={t('Swap')}
         name={ElementName.NavigateSwap}
         py="sm"
-        style={{ backgroundColor: theme.colors.tabBackground }}
+        style={{ backgroundColor: theme.colors.translucentBackground }}
         testID={ElementName.NavigateSwap}
         variant="gray"
         onPress={onPressSwap}
@@ -167,7 +167,7 @@ function QuickActions() {
         label={t('Send')}
         name={ElementName.NavigateSend}
         py="sm"
-        style={{ backgroundColor: theme.colors.tabBackground }}
+        style={{ backgroundColor: theme.colors.translucentBackground }}
         testID={ElementName.NavigateSend}
         variant="gray"
         onPress={onPressSend}

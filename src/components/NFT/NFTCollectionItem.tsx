@@ -52,7 +52,7 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
           />
         )}
         <Flex
-          bg={image_url ? 'imageTintBackground' : 'tabBackground'}
+          bg={image_url ? 'imageTintBackground' : 'translucentBackground'}
           borderRadius="md"
           gap="md"
           py="md">

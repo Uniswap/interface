@@ -8,7 +8,7 @@ import { Text } from 'src/components/Text'
 
 export function Container({ children }: PropsWithChildren<{}>) {
   return (
-    <Flex bg="tabBackground" borderRadius="md" p="md">
+    <Flex bg="translucentBackground" borderRadius="md" p="md">
       {children}
     </Flex>
   )

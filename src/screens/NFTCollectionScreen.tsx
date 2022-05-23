@@ -57,7 +57,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             />
           )}
           <Flex
-            bg={collection?.image_url ? 'imageTintBackground' : 'tabBackground'}
+            bg={collection?.image_url ? 'imageTintBackground' : 'translucentBackground'}
             borderColor="deprecated_gray100"
             borderRadius="md"
             borderWidth={1}

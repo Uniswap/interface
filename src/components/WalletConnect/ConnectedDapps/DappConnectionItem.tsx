@@ -41,7 +41,7 @@ export function DappConnectionItem({
 
   return (
     <Flex
-      bg="deprecated_gray50"
+      bg="translucentBackground"
       borderRadius="md"
       gap="none"
       justifyContent="space-between"

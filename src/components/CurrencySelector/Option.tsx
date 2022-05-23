@@ -48,7 +48,7 @@ export function Option({ currency, onPress, matches, metadataType, icon }: Optio
         {metadataType !== 'disabled' ? (
           <TokenMetadata currency={currency} metadataType={metadataType} />
         ) : (
-          <Flex backgroundColor="tabBackground" borderRadius="md" padding="sm">
+          <Flex backgroundColor="translucentBackground" borderRadius="md" padding="sm">
             <Text variant="mediumLabel">{t('Not available')}</Text>
           </Flex>
         )}
