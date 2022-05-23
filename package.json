@@ -144,7 +144,7 @@
     "graphql": "^15.6.1",
     "hamburger-react": "^2.4.1",
     "hash.js": "^1.1.7",
-    "jsbi": "^3.1.5",
+    "jsbi": "^4.3.0",
     "prop-types": "^15.7.2",
     "randombytes": "^2.1.0",
     "rc-drawer": "^4.4.3",
