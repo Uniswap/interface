@@ -167,11 +167,13 @@ export function PrivacyPolicy() {
               </AutoColumn>
             </DarkGreyCard>
           ))}
-          <Row justify="center" marginBottom="1rem">
-            <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
-              <Trans>Learn more</Trans>
-            </ExternalLink>
-          </Row>
+          <ThemedText.Body fontSize={12}>
+            <Row justify="center" marginBottom="1rem">
+              <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
+                <Trans>Learn more</Trans>
+              </ExternalLink>
+            </Row>
+          </ThemedText.Body>
         </AutoColumn>
       </AutoColumn>
     </Wrapper>

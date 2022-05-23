@@ -68,11 +68,11 @@ export default function PendingView({
               <ThemedText.MediumHeader marginBottom={12}>
                 <Trans>Error connecting</Trans>
               </ThemedText.MediumHeader>
-              <ThemedText.Small marginBottom={36} textAlign="center">
+              <ThemedText.Body fontSize={14} marginBottom={36} textAlign="center">
                 <Trans>
                   The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
                 </Trans>
-              </ThemedText.Small>
+              </ThemedText.Body>
               <ButtonPrimary
                 $borderRadius="12px"
                 padding="12px"
