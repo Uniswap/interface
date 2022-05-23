@@ -219,14 +219,14 @@ function marketErrorToUserReadableMessage(error: any): ReactNode {
           <Trans>
             An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If
             that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer
-            and rebase tokens are incompatible with Uniswap V3.
+            and rebase tokens are incompatible with Kromatika.
           </Trans>
         )
       }
       return (
         <Trans>
           Unknown error{reason ? `: "${reason}"` : ''}. Try increasing your slippage tolerance. Note: fee on transfer
-          and rebase tokens are incompatible with Uniswap V3.
+          and rebase tokens are incompatible with Kromatika.
         </Trans>
       )
   }

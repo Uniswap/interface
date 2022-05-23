@@ -17,12 +17,16 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 
 #: src/pages/Pool/PositionPage.tsx
-#: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr ""
+
 #: src/components/earn/PoolCard.tsx
-#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
@@ -51,16 +55,23 @@ msgstr "(모두 지우기)"
 msgid "(edit)"
 msgstr "(편집)"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- 받는 사람 제거"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / 주"
+
+#: src/pages/Earn/Manage.tsx
+msgid "0 sKrom / week"
+msgstr ""
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -99,29 +110,34 @@ msgstr "<0/> 투표"
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0> 계정 분석 및 발생 수수료</0> <1> ↗</1>"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-msgstr "<0> 현재 가격 :</0> <1> <2 /></1> <3>{0} 당 {1}</3>"
+#: 
+#~ msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
+#~ msgstr "<0> 현재 가격 :</0> <1> <2 /></1> <3>{0} 당 {1}</3>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0> 팁 :</0> 풀 토큰을 제거하면 풀 쉐어에 비례하여 현재 요율로 포지션을 기본 토큰으로 다시 전환합니다. 미지급 수수료는 귀하가 받는 금액에 포함됩니다."
 
-#: src/pages/CreateProposal/index.tsx
-msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0> 팁 :</0> 조치를 선택하고 커뮤니티에 대한 제안을 설명하십시오. 제안서는 제출 후 수정할 수 없으므로 제출하기 전에 모든 정보를 확인하십시오. 투표 기간은 즉시 시작되어 7 일 동안 지속됩니다. 사용자 지정 작업을 제안하려면 <1> 문서 읽기</1> ."
+#: 
+#~ msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+#~ msgstr "<0> 팁 :</0> 조치를 선택하고 커뮤니티에 대한 제안을 설명하십시오. 제안서는 제출 후 수정할 수 없으므로 제출하기 전에 모든 정보를 확인하십시오. 투표 기간은 즉시 시작되어 7 일 동안 지속됩니다. 사용자 지정 작업을 제안하려면 <1> 문서 읽기</1> ."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
 msgstr "<0> 팁 :</0> 이 도구를 사용하여 인터페이스에 자동으로 표시되지 않는 v2 풀을 찾습니다."
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0> 팁 :</0> 유동성을 추가하면 귀하의 포지션을 나타내는 풀 토큰을 받게됩니다. 이 토큰은 풀의 쉐어에 비례하여 자동으로 수수료를 획득하며 언제든지 사용할 수 있습니다."
+#: 
+#~ msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
+#~ msgstr "<0> 팁 :</0> 유동성을 추가하면 귀하의 포지션을 나타내는 풀 토큰을 받게됩니다. 이 토큰은 풀의 쉐어에 비례하여 자동으로 수수료를 획득하며 언제든지 사용할 수 있습니다."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0> 투표 잠금 해제</0> 다음 제안을 준비합니다."
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "<0>{0} per {1}</0>"
+msgstr ""
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -131,28 +147,60 @@ msgstr "<0> 🎉</0> Unicorn 팀에 오신 것을 환영합니다. :) <1> 🎉</
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "제안서를 제출하려면 총 UNI 공급량의 최소 0.25 %가 필요합니다."
 
+#: src/pages/Stake/index.tsx
+msgid "APY"
+msgstr ""
+
+#: src/pages/Earn/Manage.tsx
+msgid "APY - add explanational tooltip"
+msgstr ""
+
+#: src/pages/Stake/index.tsx
+msgid "APY is calculated as a participation percentage compared to the overall staked balance.It is updated every 2 weeks."
+msgstr ""
+
+#: src/components/Stake/index.tsx
+msgid "APY is calculated as a participation percentage in relation to the overall staked balance pool.It is updated every 2 weeks."
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "APY is calculated as participating percentage in the total value staked. The APY percentage is therefore applied on total amount collected in the Fee Treasury."
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+#: src/components/Stake/index.tsx
+msgid "APY:"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "정보"
 
+#: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
 msgstr "수락"
 
 #: src/components/AccountDetails/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Account"
 msgstr "계정"
 
+#: src/components/PositionCard/index.tsx
+msgid "Account Status:"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "활성"
 
-#: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
-msgid "Add"
-msgstr "추가"
+#: 
+#: 
+#: 
+#~ msgid "Add"
+#~ msgstr "추가"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Kromatika V2"
@@ -162,10 +210,10 @@ msgstr "Kromatika V2에 <0/> 및 <1/> 추가"
 msgid "Add Delegate +"
 msgstr "대리인 추가 +"
 
-#: src/components/NavigationTabs/index.tsx
-#: src/pages/AddLiquidity/index.tsx
-msgid "Add Liquidity"
-msgstr "유동성 추가"
+#: 
+#: 
+#~ msgid "Add Liquidity"
+#~ msgstr "유동성 추가"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
@@ -175,15 +223,16 @@ msgstr "V2 유동성 추가"
 msgid "Add liquidity."
 msgstr "유동성 추가"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Add more liquidity"
-msgstr "더 많은 유동성 추가"
+#: 
+#~ msgid "Add more liquidity"
+#~ msgstr "더 많은 유동성 추가"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
 msgstr "{0}을(를) Metamask에 추가<0/>"
 
 #: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "{0}-{1} 유동성 추가"
 
@@ -203,52 +252,72 @@ msgstr "주소에 사용 가능한 청구가 없습니다."
 msgid "Against"
 msgstr "반대"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Allow LP token migration"
-msgstr "LP 토큰 마이그레이션 허용"
-
-#: src/components/Settings/index.tsx
-msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁니다. 자신의 책임하에 사용하십시오."
-
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
-msgid "Allow the Kromatika Protocol to use your {0}"
-msgstr "Kromatika 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
+#: src/pages/Swap/index.tsx
+msgid "Allow Kromatika to use your {0}"
+msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Allowed"
-msgstr "허용됨"
+#: 
+#~ msgid "Allow LP token migration"
+#~ msgstr "LP 토큰 마이그레이션 허용"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
+#: 
+#~ msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+#~ msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁니다. 자신의 책임하에 사용하십시오."
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "Allow the Kromatika Aggregator to use your {0}"
+msgstr ""
+
+#: 
+#~ msgid "Allow the Kromatika Protocol to use your {0}"
+#~ msgstr "Kromatika 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
+
+#: 
+#~ msgid "Allowed"
+#~ msgstr "허용됨"
+
+#: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
 msgstr "허용된 미끄러짐"
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/Stake/StakingModal.tsx
 msgid "Amount"
 msgstr "금액"
 
+#: src/pages/Pool/PositionPage.tsx
+msgid "Amounts"
+msgstr ""
+
+#: 
+#~ msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
+
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgstr ""
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "분석"
+#: 
+#~ msgid "Analytics"
+#~ msgstr "분석"
 
-#: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "승인"
 
-#: src/pages/CreateProposal/ProposalActionSelector.tsx
-msgid "Approve Token"
-msgstr "토큰 승인"
+#: 
+#~ msgid "Approve Token"
+#~ msgstr "토큰 승인"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Stake/StakingModal.tsx
 msgid "Approve {0}"
 msgstr "{0} 승인"
 
@@ -256,15 +325,12 @@ msgstr "{0} 승인"
 msgid "Approved"
 msgstr "승인됨"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
 msgstr "승인 중"
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Stake/StakingModal.tsx
 msgid "Approving {0}"
 msgstr "{0} 승인 중"
 
@@ -288,21 +354,21 @@ msgstr "확실합니까?"
 msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Kromatika 커뮤니티의 회원으로서 UNI가 투표 및 거버넌스에 사용되도록 청구할 수 있습니다. <0/> <1/> <2> UN에 대해 자세히 알아보기</2>"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "선택한 가격 범위로 인해 최소 {0} {1} 및 {2} {3} 이 지갑으로 환불됩니다."
+#: 
+#~ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
+#~ msgstr "선택한 가격 범위로 인해 최소 {0} {1} 및 {2} {3} 이 지갑으로 환불됩니다."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "자동"
 
-#: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "자동 라우터"
+#: 
+#~ msgid "Auto Router"
+#~ msgstr "자동 라우터"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Available to deposit: {0}"
-msgstr "입금 가능 : {0}"
+#: 
+#~ msgid "Available to deposit: {0}"
+#~ msgstr "입금 가능 : {0}"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -324,6 +390,7 @@ msgstr "대부분의 쌍에 가장 적합합니다."
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "안정적인 쌍에 가장 적합합니다."
 
@@ -336,6 +403,7 @@ msgid "Bridge"
 msgstr "다리"
 
 #: src/components/PositionCard/index.tsx
+#: src/components/Stake/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "유동성을 추가하면 풀 쉐어에 비례하여이 쌍에 대한 모든 거래의 0.3%를 벌 수 있습니다. 수수료는 풀에 추가되고 실시간으로 발생하며 유동성을 인출하여 청구할 수 있습니다."
 
@@ -343,21 +411,43 @@ msgstr "유동성을 추가하면 풀 쉐어에 비례하여이 쌍에 대한 �
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
 msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적으로 신뢰하게 됩니다. 기존 목록의 가짜 버전 및 목록이 없는 프로젝트를 나타낸다고 주장하는 목록을 만드는 등 누구나 목록을 만들 수 있습니다."
 
-#: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
-msgstr "지갑을 연결하면 Kromatika Labs의 <0> 서비스 약관</0>에 동의하고 <1>Kromatika 프로토콜 면책 조항</1>을 읽고 이해했음을 인정하는 것입니다."
+#: 
+#~ msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
+#~ msgstr "지갑을 연결하면 Kromatika Labs의 <0> 서비스 약관</0>에 동의하고 <1>Kromatika 프로토콜 면책 조항</1>을 읽고 이해했음을 인정하는 것입니다."
 
+#: src/pages/Pool/PositionPage.tsx
+msgid "Cancel"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Cancel Trade"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
 msgstr "취소 된"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Canceling the trade will withdraw available amounts for you."
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Cancelling"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Cancelling trade"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "변경"
 
-#: src/components/Header/index.tsx
-msgid "Charts"
-msgstr "차트"
+#: 
+#~ msgid "Charts"
+#~ msgstr "차트"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
@@ -369,7 +459,6 @@ msgstr "v3 LP 연습 및 마이그레이션 가이드를 확인하세요."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/Earn/Manage.tsx
 msgid "Claim"
 msgstr "청구"
 
@@ -377,8 +466,11 @@ msgstr "청구"
 msgid "Claim <0/> for {0}"
 msgstr "제 <0 />에 대한 {0}"
 
+#: src/pages/Earn/Manage.tsx
+msgid "Claim KROM"
+msgstr ""
+
 #: src/components/Header/index.tsx
-#: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -393,9 +485,9 @@ msgstr "UNI 토큰 청구"
 msgid "Claim UNI reward for {0}"
 msgstr "{0}대한 UNI 보상 받기"
 
-#: src/pages/Pool/PositionPage.tsx
-msgid "Claim fees"
-msgstr "청구 수수료"
+#: 
+#~ msgid "Claim fees"
+#~ msgstr "청구 수수료"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -428,9 +520,9 @@ msgstr "UNI 청구"
 msgid "Claiming {0} UNI"
 msgstr "{0} UNI 청구 중"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Clear All"
-msgstr "모두 지우기"
+#: 
+#~ msgid "Clear All"
+#~ msgstr "모두 지우기"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
@@ -441,7 +533,6 @@ msgstr "모두 지우기"
 msgid "Close"
 msgstr "닫기"
 
-#: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "닫힘"
@@ -451,17 +542,17 @@ msgid "Code"
 msgstr "코드"
 
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "수집"
 
-#: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
 msgstr "WETH로 수집"
 
-#: src/pages/Pool/PositionPage.tsx
-msgid "Collect fees"
-msgstr "수수료 징수"
+#: 
+#~ msgid "Collect fees"
+#~ msgstr "수수료 징수"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
@@ -472,35 +563,57 @@ msgid "Collected"
 msgstr "수집됨"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "Collecting"
-msgstr "수집 중"
+msgid "Collected {0} {1}{2} and {3} {4}{5}"
+msgstr ""
+
+#: 
+#~ msgid "Collecting"
+#~ msgstr "수집 중"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "Collecting fees"
-msgstr "수수료 징수"
+msgid "Collecting amounts will withdraw currently available amounts for you."
+msgstr ""
+
+#: 
+#~ msgid "Collecting fees"
+#~ msgstr "수수료 징수"
+
+#: 
+#~ msgid "Collecting fees will withdraw currently available fees for you."
+#~ msgstr "수수료를 징수하면 현재 사용 가능한 수수료가 인출됩니다."
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "수수료를 징수하면 현재 사용 가능한 수수료가 인출됩니다."
+msgid "Collecting tokens"
+msgstr ""
+
+#: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
+msgid "Coming Soon"
+msgstr ""
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
 msgstr "공통 기준"
 
+#: src/components/swap/SwapModalFooter.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "확인"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "생성 확인"
-
-#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
-msgid "Confirm Supply"
-msgstr "공급 확인"
+#: 
+#~ msgid "Confirm Create"
+#~ msgstr "생성 확인"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Limit Order"
+msgstr ""
+
+#: 
+#~ msgid "Confirm Supply"
+#~ msgstr "공급 확인"
+
+#: src/components/market/ConfirmMarketModal.tsx
+#: src/components/market/MarketModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "스왑 확인"
 
@@ -518,11 +631,17 @@ msgstr "지갑에서 거래 확인"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/Stake/StakingModal.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
+#: src/state/market/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/stake/hooks.tsx
@@ -531,10 +650,15 @@ msgid "Connect Wallet"
 msgstr "지갑 연결"
 
 #: src/components/earn/UnstakingModal.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Connect a wallet"
 msgstr "지갑 연결"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
@@ -544,9 +668,9 @@ msgstr "지갑에 연결"
 msgid "Connect to a wallet to find pools"
 msgstr "지갑에 연결하여 풀 찾기"
 
-#: src/pages/MigrateV2/index.tsx
-msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "V2 유동성을 보려면 지갑에 연결하십시오."
+#: 
+#~ msgid "Connect to a wallet to view your V2 liquidity."
+#~ msgstr "V2 유동성을 보려면 지갑에 연결하십시오."
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
@@ -565,15 +689,14 @@ msgstr "복사 됨"
 msgid "Copy Address"
 msgstr "주소 복사"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "창조하다"
+#: 
+#~ msgid "Create"
+#~ msgstr "창조하다"
 
-#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
-msgid "Create Pool & Supply"
-msgstr "풀 생성 및 공급"
+#: 
+#~ msgid "Create Pool & Supply"
+#~ msgstr "풀 생성 및 공급"
 
-#: src/pages/CreateProposal/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "제안 생성"
@@ -583,9 +706,9 @@ msgstr "제안 생성"
 msgid "Create a pair"
 msgstr "쌍 만들기"
 
-#: src/pages/Pool/index.tsx
-msgid "Create a pool"
-msgstr "풀 만들기"
+#: 
+#~ msgid "Create a pool"
+#~ msgstr "풀 만들기"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -603,18 +726,43 @@ msgstr "풀을 만듭니다."
 msgid "Create {0}/{1} V3 pool"
 msgstr "작성 {0}/{1} V3 풀을"
 
+#: src/pages/Pool/PositionPage.tsx
+msgid "Created Limit Trade {0} {1} {2}for {3} {4}{5}↗"
+msgstr ""
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Current Price"
+msgstr ""
+
+#: src/components/PositionListItem/index.tsx
+msgid "Current Price:"
+msgstr ""
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Current Price: 0"
+msgstr ""
+
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
 msgstr "현재 가격"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Current {0} Price:"
-msgstr "현재 {0} 가격 :"
+#: 
+#~ msgid "Current {0} Price:"
+#~ msgstr "현재 {0} 가격 :"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "어두운 테마"
+
+#: src/components/Header/index.tsx
+msgid "Dashboard"
+msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -637,21 +785,31 @@ msgid "Delegating votes"
 msgstr "투표 위임"
 
 #: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/components/earn/StakingModal.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
 msgid "Deposit"
 msgstr "예치"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Deposit Amounts"
-msgstr "입금액"
+#: 
+#~ msgid "Deposit Amounts"
+#~ msgstr "입금액"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "예금 자산"
 
+#: src/components/PositionCard/index.tsx
+msgid "Deposit Balance:"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/index.tsx
+msgid "Deposit KROM"
+msgstr ""
+
 #: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP 토큰 예치"
 
@@ -660,20 +818,32 @@ msgid "Deposit liquidity"
 msgstr "예금 유동성"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
-msgstr "유동성 제공자 토큰을 예치하여 Kromatika 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
+msgid "Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token."
+msgstr ""
+
+#: 
+#~ msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
+#~ msgstr "유동성 제공자 토큰을 예치하여 Kromatika 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Deposit {0}"
+msgstr ""
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "예금 유동성 :"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
-msgstr "{0} UNI-V2 입금"
+#: 
+#~ msgid "Deposited {0} UNI-V2"
+#~ msgstr "{0} UNI-V2 입금"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Depositing Liquidity"
-msgstr "유동성 입금"
+#: src/pages/AddLiquidity/index.tsx
+msgid "Depositing KROM will allow the system to automatically process trades"
+msgstr ""
+
+#: 
+#~ msgid "Depositing Liquidity"
+#~ msgstr "유동성 입금"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -703,26 +873,41 @@ msgstr "해제"
 msgid "Docs"
 msgstr "문서"
 
-#: src/pages/MigrateV2/index.tsx
-msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "v2 포지션 중 하나가 보이지 않습니까? <0>가져 오십시오.</0>"
+#: 
+#~ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
+#~ msgstr "v2 포지션 중 하나가 보이지 않습니까? <0>가져 오십시오.</0>"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/Stake/index.tsx
+msgid "Earned Balance:"
+msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Kromatika governance."
 msgstr "획득한 UNI 토큰은 Kromatika 거버넌스의 의결권을 나타냅니다."
 
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
+msgid "Earned sKrom"
+msgstr ""
+
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
 msgstr "편집하다"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Efficiency Comparison"
-msgstr "효율성 비교"
+#: 
+#~ msgid "Efficiency Comparison"
+#~ msgstr "효율성 비교"
+
+#: src/components/Settings/index.tsx
+msgid "Enables gasless transactions by compensating them with KROM."
+msgstr ""
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "퍼센트를 입력하세요."
 
+#: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "수령인을 입력하세요."
@@ -738,6 +923,7 @@ msgstr "UNI 청구를 트리거할 주소를 입력하십시오. 주소에 청�
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/state/burn/hooks.tsx
+#: src/state/market/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/stake/hooks.tsx
@@ -772,6 +958,10 @@ msgstr "연결 오류. 페이지를 새로 고침 해보세요."
 msgid "Error importing list"
 msgstr "목록을 가져 오는 중에 오류가 발생했습니다."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr ""
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "실행"
@@ -780,13 +970,13 @@ msgstr "실행"
 msgid "Expanded results from inactive Token Lists"
 msgstr "비활성 토큰 목록에서 확장된 결과"
 
-#: src/components/Settings/index.tsx
-msgid "Expert Mode"
-msgstr "전문가 모드"
+#: 
+#~ msgid "Expert Mode"
+#~ msgstr "전문가 모드"
 
-#: src/components/Settings/index.tsx
-msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "전문가 모드를 사용하면 거래 확인창이 꺼지고 안 좋은 요율과 자금 손실을 초래하는 높은 슬리피지 거래를 허용할 수 있습니다."
+#: 
+#~ msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+#~ msgstr "전문가 모드를 사용하면 거래 확인창이 꺼지고 안 좋은 요율과 자금 손실을 초래하는 높은 슬리피지 거래를 허용할 수 있습니다."
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
@@ -796,9 +986,9 @@ msgstr "만료 됨"
 msgid "Explore popular pools on Kromatika Analytics."
 msgstr "Kromatika Analytics에서 인기있는 풀을 살펴보십시오."
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Explorer"
-msgstr "탐침"
+#: 
+#~ msgid "Explorer"
+#~ msgstr "탐침"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -808,30 +998,61 @@ msgstr "수수료 등급"
 msgid "Fee tier"
 msgstr "수수료 등급"
 
+#: src/components/Badge/RangeBadge.tsx
+msgid "Filling"
+msgstr ""
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "찬성"
 
-#: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
-msgstr "아래 표시된 각 풀에 대해 마이그레이션을 클릭하여 Kromatika V2에서 유동성을 제거하고 Kromatika V3에 입금하십시오."
+#: 
+#~ msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
+#~ msgstr "아래 표시된 각 풀에 대해 마이그레이션을 클릭하여 Kromatika V2에서 유동성을 제거하고 Kromatika V3에 입금하십시오."
 
+#: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "스왑 전"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
 msgstr "스왑 전(최대)"
+
+#: src/components/Settings/index.tsx
+msgid "Frontrun Protection"
+msgstr ""
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "전체 범위"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "전체 범위 포지션은 집중 포지션보다 적은 수수료를 받을 수 있습니다. 여기에서 <0>자세히 알아보기</0> ."
+#: 
+#~ msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
+#~ msgstr "전체 범위 포지션은 집중 포지션보다 적은 수수료를 받을 수 있습니다. 여기에서 <0>자세히 알아보기</0> ."
+
+#: src/components/Settings/index.tsx
+msgid "Gasless Mode"
+msgstr ""
+
+#: src/components/Settings/index.tsx
+msgid "Gasless mode enables users to send blockchain transactions without paying network gas fees."
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Get KROM tokens here<0>↗</0>"
+msgstr ""
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -845,12 +1066,11 @@ msgstr "지원 센터"
 msgid "Hide"
 msgstr "숨는 장소"
 
-#: src/pages/Swap/index.tsx
-msgid "High Price Impact"
-msgstr "높은 가격 영향"
+#: 
+#~ msgid "High Price Impact"
+#~ msgstr "높은 가격 영향"
 
 #: src/components/SearchModal/ImportList.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "알겠습니다"
 
@@ -881,23 +1101,23 @@ msgstr "V2 풀 가져 오기"
 msgid "Import at your own risk"
 msgstr "자신의 책임하에 가져오기"
 
-#: src/components/Badge/RangeBadge.tsx
-msgid "In range"
-msgstr "범위 내"
+#: 
+#~ msgid "In range"
+#~ msgstr "범위 내"
 
-#: src/pages/Pool/PositionPage.tsx
-msgid "Increase Liquidity"
-msgstr "유동성 증가"
+#: 
+#~ msgid "Increase Liquidity"
+#~ msgstr "유동성 증가"
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Initial prices and pool share"
-msgstr "초기 가격 및 풀 쉐어"
+#: 
+#~ msgid "Initial prices and pool share"
+#~ msgstr "초기 가격 및 풀 쉐어"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "초기화 중 ..."
 
-#: src/components/swap/SwapModalHeader.tsx
+#: src/components/market/MarketModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "입력이 추정됩니다. 최대 <0>{0} {1}</0>을(를) 팔거나 그렇지 않으면 거래가 취소됩니다."
 
@@ -905,24 +1125,32 @@ msgstr "입력이 추정됩니다. 최대 <0>{0} {1}</0>을(를) 팔거나 그�
 msgid "Install Metamask"
 msgstr "메타 마스크 설치"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
 
+#: src/state/market/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
-#: src/state/mint/v3/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Insufficient {0} balance"
 msgstr "부족한 {0} 잔액"
 
-#: src/components/Settings/index.tsx
-msgid "Interface Settings"
-msgstr "인터페이스 설정"
+#: src/state/mint/v3/hooks.tsx
+msgid "Insufficient {0} deposit"
+msgstr ""
+
+#: 
+#~ msgid "Interface Settings"
+#~ msgstr "인터페이스 설정"
 
 #: src/state/mint/hooks.tsx
-#: src/state/mint/v3/hooks.tsx
 msgid "Invalid pair"
 msgstr "잘못된 쌍"
 
@@ -930,27 +1158,53 @@ msgstr "잘못된 쌍"
 msgid "Invalid pair."
 msgstr "잘못된 쌍"
 
-#: src/state/mint/v3/hooks.tsx
-msgid "Invalid price input"
-msgstr "잘못된 가격 입력"
+#: 
+#~ msgid "Invalid price input"
+#~ msgstr "잘못된 가격 입력"
 
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "잘못된 범위를 선택했습니다. 최소 가격은 최대 가격보다 낮아야합니다."
+#: 
+#: 
+#~ msgid "Invalid range selected. The min price must be lower than the max price."
+#~ msgstr "잘못된 범위를 선택했습니다. 최소 가격은 최대 가격보다 낮아야합니다."
 
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
+#: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "잘못된 수령인"
+
+#: src/pages/Vote/index.tsx
+msgid "Kromatika Governance"
+msgstr "Kromatika 거버넌스"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Kromatika available in: <0>{0}</0>"
+msgstr "Kromatika 사용 가능 : <0>{0}</0>"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Kromatika 거버넌스는 레이어 1에서만 사용할 수 있습니다. 제안 및 투표를 보려면 네트워크를 이더 리움 메인 넷으로 전환하십시오."
+
+#: src/pages/Earn/index.tsx
+msgid "Kromatika liquidity mining"
+msgstr "Kromatika 유동성 채굴"
+
+#: 
+#~ msgid "Kromatika migration contract↗"
+#~ msgstr "Kromatika 마이그레이션 계약 ↗"
+
+#: 
+#~ msgid "Kromatika on {0}"
+#~ msgstr "{0}Kromatika"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "언어"
 
-#: src/pages/Pool/index.tsx
-msgid "Learn"
-msgstr "학습"
+#: 
+#~ msgid "Learn"
+#~ msgstr "학습"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
@@ -964,14 +1218,21 @@ msgstr "유동성 제공에 대해 알아보기"
 msgid "Light Theme"
 msgstr "밝은 테마"
 
+#: src/components/Header/index.tsx
+msgid "Limit"
+msgstr ""
+
+#: src/pages/Pool/index.tsx
+msgid "Limit Orders"
+msgstr ""
+
 #: src/components/claim/ClaimModal.tsx
-#: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "유동성"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "유동성 제공자 수수료"
+#: 
+#~ msgid "Liquidity Provider Fee"
+#~ msgstr "유동성 제공자 수수료"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -995,27 +1256,27 @@ msgstr "로딩 됨"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
-#: src/components/PositionCard/index.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-#: src/pages/MigrateV2/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "로딩 중"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
-#: src/components/PositionCard/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "관리"
 
-#: src/components/PositionCard/index.tsx
-msgid "Manage Liquidity in Rewards Pool"
-msgstr "보상 풀에서 유동성 관리"
+#: 
+#~ msgid "Manage Liquidity in Rewards Pool"
+#~ msgstr "보상 풀에서 유동성 관리"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -1034,15 +1295,15 @@ msgstr "최대"
 msgid "Max Price"
 msgstr "최고 가격"
 
-#: src/pages/Pool/PositionPage.tsx
-msgid "Max price"
-msgstr "최고 가격"
+#: 
+#~ msgid "Max price"
+#~ msgstr "최고 가격"
 
-#: src/components/PositionListItem/index.tsx
-msgid "Max:"
-msgstr "최대 :"
+#: 
+#~ msgid "Max:"
+#~ msgstr "최대 :"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/market/AdvancedMarketDetails.tsx
 msgid "Maximum sent"
 msgstr "최대 이체"
 
@@ -1052,82 +1313,106 @@ msgstr "메뉴"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
-#: src/components/PositionCard/index.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-#: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "마이그레이션"
 
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "유동성 마이그레이션"
+#: 
+#~ msgid "Migrate Liquidity"
+#~ msgstr "유동성 마이그레이션"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
 msgstr "유동성을 V3로 마이그레이션"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-#: src/pages/MigrateV2/index.tsx
-msgid "Migrate V2 Liquidity"
-msgstr "V2 유동성 마이그레이션"
+#: 
+#: 
+#~ msgid "Migrate V2 Liquidity"
+#~ msgstr "V2 유동성 마이그레이션"
 
-#: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
-msgstr "유동성 토큰을 Kromatika V2에서 Kromatika V3로 마이그레이션하십시오."
+#: 
+#~ msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
+#~ msgstr "유동성 토큰을 Kromatika V2에서 Kromatika V3로 마이그레이션하십시오."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "마이그레이션 {0}/{1} V3 유동성"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Migrating"
-msgstr "마이그레이션 중"
+#: 
+#~ msgid "Migrating"
+#~ msgstr "마이그레이션 중"
 
-#: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Min Price"
 msgstr "최소 가격"
 
-#: src/pages/Pool/PositionPage.tsx
-msgid "Min price"
-msgstr "최저 가격"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Min Price: 0"
+msgstr ""
 
-#: src/components/PositionListItem/index.tsx
-msgid "Min:"
-msgstr "최소 :"
+#: 
+#~ msgid "Min price"
+#~ msgstr "최저 가격"
 
+#: 
+#~ msgid "Min:"
+#~ msgstr "최소 :"
+
+#: src/components/PositionCard/index.tsx
+msgid "Minimum Balance:"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx
+msgid "Minimum Price"
+msgstr ""
+
+#: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "최소 수령됨"
 
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "누락된 종속성"
 
-#: src/pages/Pool/index.tsx
-msgid "More"
-msgstr "추가"
+#: 
+#~ msgid "More"
+#~ msgstr "추가"
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "My limit orders"
+msgstr ""
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "네트워크 경고"
 
 #: src/pages/Pool/index.tsx
-msgid "New Position"
-msgstr "새로운 위치"
+msgid "New Limit Order"
+msgstr ""
 
-#: src/pages/MigrateV2/index.tsx
-msgid "No V2 Liquidity found."
-msgstr "V2 유동성이 없습니다."
+#: 
+#~ msgid "New Position"
+#~ msgstr "새로운 위치"
+
+#: 
+#~ msgid "No V2 Liquidity found."
+#~ msgstr "V2 유동성이 없습니다."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "활성 풀 없음"
 
-#: src/components/FeeSelector/index.tsx
-msgid "No data"
-msgstr "데이터 없음"
+#: 
+#~ msgid "No data"
+#~ msgstr "데이터 없음"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1149,9 +1434,13 @@ msgstr "제안이 없습니다."
 msgid "No results found."
 msgstr "결과가 없습니다."
 
-#: src/components/FeeSelector/index.tsx
-msgid "Not created"
-msgstr "생성되지 않음"
+#: src/components/Badge/RangeBadge.tsx
+msgid "Not Processing"
+msgstr ""
+
+#: 
+#~ msgid "Not created"
+#~ msgstr "생성되지 않음"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
@@ -1162,8 +1451,12 @@ msgid "ON"
 msgstr "ON"
 
 #: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "수행중인 작업을 알고 있는 경우에만 이 모드를 사용하십시오."
+msgid "ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA."
+msgstr ""
+
+#: 
+#~ msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+#~ msgstr "수행중인 작업을 알고 있는 경우에만 이 모드를 사용하십시오."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1173,9 +1466,9 @@ msgstr "Off"
 msgid "On"
 msgstr "On"
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Once you are happy with the rate click supply to review."
-msgstr "요율에 만족하면 공급을 클릭하여 검토하십시오."
+#: 
+#~ msgid "Once you are happy with the rate click supply to review."
+#~ msgstr "요율에 만족하면 공급을 클릭하여 검토하십시오."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
@@ -1197,34 +1490,47 @@ msgstr "낙관적 이더리움은 베타 버전이며 가동 중지 시간이 �
 msgid "Optimistic Etherscan"
 msgstr "낙관적 Etherscan"
 
-#: src/components/Badge/RangeBadge.tsx
-msgid "Out of range"
-msgstr "범위를 벗어남"
+#: 
+#~ msgid "Out of range"
+#~ msgstr "범위를 벗어남"
 
-#: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "산출은 추정됩니다. 가격이 {0}% 이상 변경되면 거래가 취소됩니다."
 
-#: src/components/swap/SwapModalHeader.tsx
+#: src/components/market/MarketModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "산출은 추정됩니다. 최소한 <0>{0} {1}</0>을(를) 받거나 그렇지 않으면 거래가 취소됩니다."
 
 #: src/components/swap/SwapModalHeader.tsx
+msgid "Output is estimated. You will receive at least <0>{0} {1}</0> when the current market price reaches your target price."
+msgstr ""
+
+#: src/components/market/MarketModalHeader.tsx
+#: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "산출은 <0>{0}</0>(으)로 이체됩니다"
 
+#: 
+#~ msgid "Owner"
+#~ msgstr "소유자"
+
 #: src/pages/Pool/PositionPage.tsx
-msgid "Owner"
-msgstr "소유자"
+msgid "Paid {0} {1} {2}service fees ↗"
+msgstr ""
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "참여 풀"
 
+#: src/components/Badge/RangeBadge.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "보류 중"
+
+#: src/state/swap/hooks.tsx
+msgid "Place limit order above the minimum price"
+msgstr ""
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
@@ -1238,11 +1544,26 @@ msgstr "레이어 1 이더 리움에 연결하세요"
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "적절한 이더리움 네트워크에 연결하십시오."
 
-#: src/components/Settings/index.tsx
-msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-msgstr "전문가 모드를 사용하려면{confirmWord}\"이라는 단어를 입력하십시오."
+#: src/components/PositionCard/index.tsx
+msgid "Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the minimum balance."
+msgstr ""
 
-#: src/components/Header/index.tsx
+#: 
+#~ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+#~ msgstr "전문가 모드를 사용하려면{confirmWord}\"이라는 단어를 입력하십시오."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
+msgstr ""
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr ""
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr ""
+
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "풀"
@@ -1251,23 +1572,20 @@ msgstr "풀"
 msgid "Pool Found!"
 msgstr "풀을 찾았습니다!"
 
-#: src/pages/Earn/Manage.tsx
-msgid "Pool Rate"
-msgstr "풀 요율"
+#: 
+#~ msgid "Pool Rate"
+#~ msgstr "풀 요율"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
 msgstr "풀 요율"
 
 #: src/components/PositionCard/V2.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
 msgstr "보상 풀의 풀 토큰 :"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
-#: src/components/PositionCard/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1275,58 +1593,72 @@ msgstr "보상 풀의 풀 토큰 :"
 msgid "Pooled {0}:"
 msgstr "{0} 풀링 됨:"
 
-#: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "풀 개요"
+#: 
+#~ msgid "Pools Overview"
+#~ msgstr "풀 개요"
+
+#: src/components/Settings/index.tsx
+msgid "Prevents front-running of swaps"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/Stake/StakingModal.tsx
 msgid "Preview"
 msgstr "시사"
 
-#: src/components/swap/SwapModalHeader.tsx
+#: src/components/market/MarketModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "가격"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Price Difference:"
-msgstr "가격 차이:"
+#: src/pages/Pool/PositionPage.tsx
+msgid "Price Details"
+msgstr ""
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Price Impact"
-msgstr "가격 영향"
+#: 
+#~ msgid "Price Difference:"
+#~ msgstr "가격 차이:"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "가격 영향이 너무 높음"
+#: 
+#~ msgid "Price Impact"
+#~ msgstr "가격 영향"
 
+#: 
+#~ msgid "Price Impact Too High"
+#~ msgstr "가격 영향이 너무 높음"
+
+#: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "가격 업데이트됨"
 
-#: src/pages/Pool/PositionPage.tsx
-msgid "Price range"
-msgstr "가격 범위"
+#: 
+#~ msgid "Price range"
+#~ msgstr "가격 범위"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "가격:"
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Prices and pool share"
-msgstr "가격 및 풀 쉐어"
+#: 
+#~ msgid "Prices and pool share"
+#~ msgstr "가격 및 풀 쉐어"
 
-#: src/pages/CreateProposal/ProposalEditor.tsx
-msgid "Proposal"
-msgstr "신청"
+#: src/components/Badge/RangeBadge.tsx
+msgid "Processed"
+msgstr ""
 
-#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "Proposal Submitted"
-msgstr "제출 된 제안"
+#: 
+#~ msgid "Proposal"
+#~ msgstr "신청"
 
-#: src/pages/CreateProposal/ProposalEditor.tsx
-msgid "Proposal Title"
-msgstr "제안 제목"
+#: 
+#~ msgid "Proposal Submitted"
+#~ msgstr "제출 된 제안"
+
+#: 
+#~ msgid "Proposal Title"
+#~ msgstr "제안 제목"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1336,9 +1668,9 @@ msgstr "제안"
 msgid "Proposals submitted by community members will appear here."
 msgstr "커뮤니티 멤버가 제출한 제안이 여기에 표시됩니다."
 
-#: src/pages/CreateProposal/ProposalActionSelector.tsx
-msgid "Proposed Action"
-msgstr "제안 된 조치"
+#: 
+#~ msgid "Proposed Action"
+#~ msgstr "제안 된 조치"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1348,17 +1680,21 @@ msgstr "제안자"
 msgid "Queued"
 msgstr "대기 중"
 
-#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
-msgid "Rates"
-msgstr "요율"
+#: 
+#~ msgid "Rates"
+#~ msgstr "요율"
 
 #: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "UNI에 대해 자세히 알아보기"
+msgid "Read more about KROM"
+msgstr ""
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Kromatika governance"
 msgstr "Kromatika 거버넌스에 대해 자세히 알아보기"
+
+#: 
+#~ msgid "Read more about UNI"
+#~ msgstr "UNI에 대해 자세히 알아보기"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1377,7 +1713,6 @@ msgid "Recipient"
 msgstr "받는 사람"
 
 #: src/components/PositionCard/V2.tsx
-#: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1396,8 +1731,6 @@ msgstr "금액 제거"
 msgid "Remove Delegate"
 msgstr "위임 제거하기"
 
-#: src/components/NavigationTabs/index.tsx
-#: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
 msgstr "유동성 제거"
@@ -1416,7 +1749,6 @@ msgstr "{0} {1} 및{2} {3}제거"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "반환"
 
@@ -1424,9 +1756,9 @@ msgstr "반환"
 msgid "Search name or paste address"
 msgstr "이름 검색 또는 주소 붙여 넣기"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Select Pair"
-msgstr "쌍 선택"
+#: 
+#~ msgid "Select Pair"
+#~ msgstr "쌍 선택"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Select a network"
@@ -1436,6 +1768,7 @@ msgstr "네트워크 선택"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "토큰 선택"
@@ -1444,13 +1777,13 @@ msgstr "토큰 선택"
 msgid "Select a token to find your v2 liquidity."
 msgstr "v2 유동성을 찾으려면 토큰을 선택하십시오."
 
-#: src/pages/CreateProposal/ProposalActionSelector.tsx
-msgid "Select an action"
-msgstr "작업 선택"
+#: 
+#~ msgid "Select an action"
+#~ msgstr "작업 선택"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Selected Range"
-msgstr "선택한 범위"
+#: 
+#~ msgid "Selected Range"
+#~ msgstr "선택한 범위"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
@@ -1460,31 +1793,35 @@ msgstr "본인"
 msgid "Self Delegate"
 msgstr "셀프 위임"
 
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Set Price Range"
-msgstr "가격 범위 설정"
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Service Fee"
+msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Set Starting Price"
-msgstr "시작 가격 설정"
+#: 
+#: 
+#: 
+#~ msgid "Set Price Range"
+#~ msgstr "가격 범위 설정"
 
-#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
-msgid "Share of Pool"
-msgstr "풀 쉐어"
+#: 
+#~ msgid "Set Starting Price"
+#~ msgstr "시작 가격 설정"
 
-#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
-msgid "Share of Pool:"
-msgstr "풀 쉐어:"
+#: 
+#~ msgid "Share of Pool"
+#~ msgstr "풀 쉐어"
+
+#: 
+#~ msgid "Share of Pool:"
+#~ msgstr "풀 쉐어:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Portis 표시"
 
-#: src/pages/Pool/index.tsx
-msgid "Show closed positions"
-msgstr "마감된 위치 표시"
+#: 
+#~ msgid "Show closed positions"
+#~ msgstr "마감된 위치 표시"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1494,6 +1831,11 @@ msgstr "단순한"
 msgid "Slippage tolerance"
 msgstr "슬리피지 허용 오차"
 
+#: src/components/swap/SwapRoute.tsx
+#: src/components/swap/SwapRoute.tsx
+msgid "Smart Route"
+msgstr ""
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "일부 자산은 스마트 계약과 잘 작동하지 않거나 법적 이유로 거래를 허용할 수 없기 때문에 이 인터페이스를 통해 사용할 수 없습니다."
@@ -1502,11 +1844,44 @@ msgstr "일부 자산은 스마트 계약과 잘 작동하지 않거나 법적 �
 msgid "Something went wrong"
 msgstr "문제가 발생했습니다"
 
+#: src/pages/Stake/StakingModal.tsx
+msgid "Stake"
+msgstr ""
+
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
+msgid "Stake KROM"
+msgstr ""
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Stake Summary called"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+#: src/components/Stake/index.tsx
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
+msgid "Staked Balance:"
+msgstr ""
+
+#: src/pages/Earn/Manage.tsx
+msgid "Staking - make it bigger, maybe positioned at the centre"
+msgstr ""
+
+#: src/pages/Stake/index.tsx
+msgid "Staking - style it. Commafy values."
+msgstr ""
+
+#: src/pages/Stake/StakingModal.tsx
+msgid "Staking KROM will allow the system to automatically process trades"
+msgstr ""
+
 #: src/components/PositionList/index.tsx
 msgid "Status"
 msgstr "상태"
 
 #: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1 단계. UNI-V2 유동성 토큰 받기"
 
@@ -1514,9 +1889,9 @@ msgstr "1 단계. UNI-V2 유동성 토큰 받기"
 msgid "Submit new proposal"
 msgstr "새 제안 제출"
 
-#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "Submitting Proposal"
-msgstr "제안 제출"
+#: 
+#~ msgid "Submitting Proposal"
+#~ msgstr "제안 제출"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1530,19 +1905,20 @@ msgstr "성공"
 msgid "Success"
 msgstr "성공"
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Supply"
-msgstr "공급"
+#: 
+#~ msgid "Supply"
+#~ msgstr "공급"
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "{0} {1} 및{2} {3}공급"
+#: 
+#~ msgid "Supplying {0} {1} and{2} {3}"
+#~ msgstr "{0} {1} 및{2} {3}공급"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
-#: src/components/swap/SwapHeader.tsx
-#: src/pages/Swap/index.tsx
-#: src/pages/Swap/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 msgid "Swap"
 msgstr "스왑"
 
@@ -1550,23 +1926,41 @@ msgstr "스왑"
 msgid "Swap <0/> for exactly <1/>"
 msgstr "<0/>을 정확히 <1/>로 바꿉니다."
 
-#: src/pages/Swap/index.tsx
-#: src/pages/Swap/index.tsx
-msgid "Swap Anyway"
-msgstr "어쨌든 스왑"
+#: 
+#: 
+#~ msgid "Swap Anyway"
+#~ msgstr "어쨌든 스왑"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "<1/>에 대해 정확히 <0/> 스왑"
 
+#: src/hooks/useMarketCallback.tsx
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Swap failed: {0}"
 msgstr "스왑 실패: {0}"
 
-#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/market/ConfirmMarketModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} 을 {2} {3}(으)로 스왑"
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Target Price"
+msgstr ""
+
+#: src/components/PositionListItem/index.tsx
+msgid "Target Price:"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Target price"
+msgstr ""
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Kromatika community <0/>"
@@ -1580,6 +1974,15 @@ msgstr "수수료로받을 수있는 %입니다."
 msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Kromatika 불변 x * y = k가 스왑에 의해 충족되지 않았습니다. 이는 일반적으로 스와핑하는 토큰 중 하나가 이체시 사용자 지정 동작을 통합함을 의미합니다."
 
+#: src/hooks/useMarketCallback.tsx
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr ""
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency Ether (ETH) and denominated in gwei."
+msgstr ""
+
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 있을 수 있습니다."
@@ -1588,26 +1991,52 @@ msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "시장 가격이 지정된 가격 범위를 벗어났습니다. 단일 자산 예금만."
 
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr ""
+
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다."
 
+#: 
+#~ msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다. 참고: 이체 수수료 및 리베이스 토큰이 Kromatika V3와 호환되지 않습니다."
+
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다. 참고: 이체 수수료 및 리베이스 토큰이 Kromatika V3와 호환되지 않습니다."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgstr ""
+
+#: src/hooks/useMarketCallback.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr ""
+
+#: 
+#~ msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
+#~ msgstr "이 풀의 가격이 선택한 범위를 벗어났습니다. 귀하의 포지션은 현재 수수료를 벌고 있지 않습니다."
+
+#: 
+#~ msgid "The price of this pool is within your selected range. Your position is currently earning fees."
+#~ msgstr "이 풀의 가격은 선택한 범위 내에 있습니다. 귀하의 포지션은 현재 수수료를 받고 있습니다."
+
+#: 
+#~ msgid "The ratio of tokens you add will set the price of this pool."
+#~ msgstr "추가하는 토큰의 요율이 이 풀의 가격을 설정합니다."
 
 #: src/components/Badge/RangeBadge.tsx
-msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "이 풀의 가격이 선택한 범위를 벗어났습니다. 귀하의 포지션은 현재 수수료를 벌고 있지 않습니다."
+msgid "The trade has been processed"
+msgstr ""
 
 #: src/components/Badge/RangeBadge.tsx
-msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "이 풀의 가격은 선택한 범위 내에 있습니다. 귀하의 포지션은 현재 수수료를 받고 있습니다."
+msgid "The trade is filling in."
+msgstr ""
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "추가하는 토큰의 요율이 이 풀의 가격을 설정합니다."
+#: src/components/Badge/RangeBadge.tsx
+msgid "The trade is pending, waiting for the current market price to reach the specified target price."
+msgstr ""
 
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "기한이 지났기 때문에 거래를 보낼 수 없습니다. 거래 기한이 너무 낮지 않은지 확인하십시오."
@@ -1620,13 +2049,13 @@ msgstr "유동성 데이터가 없습니다."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "이러한 토큰은 일반적으로 다른 토큰과 쌍을 이룹니다."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "유동성을 추가하려면 이 풀을 초기화해야 합니다. 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오. 초기화 트랜잭션으로 인해 가스 요금이 평소보다 높아집니다."
+#: 
+#~ msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+#~ msgstr "유동성을 추가하려면 이 풀을 초기화해야 합니다. 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오. 초기화 트랜잭션으로 인해 가스 요금이 평소보다 높아집니다."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "유동성을 추가하려면 이 풀을 {0} 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오."
+#: 
+#~ msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
+#~ msgstr "유동성을 추가하려면 이 풀을 {0} 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1636,14 +2065,23 @@ msgstr "이 경로는 분할 경로, 다중 홉 및 가스 비용을 고려하�
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "이 토큰은 활성 토큰 목록에 표시되지 않습니다. 이것이 거래하려는 토큰인지 확인하십시오."
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "이 도구로 {0} 유동성을 V3로 안전하게 마이그레이션할 수 있습니다. 이 과정은 다음 덕분에 신뢰할 수 있습니다."
+#: 
+#~ msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
+#~ msgstr "이 도구로 {0} 유동성을 V3로 안전하게 마이그레이션할 수 있습니다. 이 과정은 다음 덕분에 신뢰할 수 있습니다."
+
+#: 
+#~ msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgstr "이 거래는 가격 변동으로 인해 성공하지 못합니다. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-msgstr "이 거래는 가격 변동으로 인해 성공하지 못합니다. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgstr ""
 
+#: src/hooks/useMarketCallback.tsx
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr ""
+
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "이 거래는 가격 변동이나 이체 수수료로 인해 성공하지 못합니다. 슬리피지 허용치를 높이십시오."
@@ -1652,13 +2090,21 @@ msgstr "이 거래는 가격 변동이나 이체 수수료로 인해 성공하�
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "팁 : 사용자 지정 토큰은 브라우저에 로컬로 저장됩니다."
 
-#: src/components/swap/SwapModalHeader.tsx
-#: src/pages/CreateProposal/ProposalActionDetail.tsx
-#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/components/market/MarketModalHeader.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
 msgstr "스왑 후"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "스왑 후(최소)"
@@ -1683,18 +2129,62 @@ msgstr "상위 풀"
 msgid "Total Supply"
 msgstr "총 공급"
 
+#: src/pages/Stake/index.tsx
+msgid "Total Value Locked"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Total Value Locked:"
+msgstr ""
+
+#: src/pages/Earn/Manage.tsx
+msgid "Total Value Staked"
+msgstr ""
+
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
 msgstr "총 입금"
 
-#: src/pages/Earn/Manage.tsx
-msgid "Total deposits"
-msgstr "총 입금"
+#: 
+#~ msgid "Total deposits"
+#~ msgstr "총 입금"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Trade"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Trade History"
+msgstr ""
 
 #: src/components/swap/RouterLabel.tsx
-msgid "Trade Route"
-msgstr "무역로"
+msgid "Trade Pool"
+msgstr ""
 
+#: 
+#~ msgid "Trade Route"
+#~ msgstr "무역로"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Trades not processing. Please fund your account with KROM."
+msgstr ""
+
+#: src/state/swap/hooks.tsx
+msgid "Trading pair not available"
+msgstr ""
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Trading {0} {1} for {2} {3}"
+msgstr ""
+
+#: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Transaction Details"
 msgstr "상세 거래 내역"
@@ -1707,7 +2197,6 @@ msgstr "거래 설정"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1718,26 +2207,32 @@ msgstr "제출된 거래"
 msgid "Transaction completed in"
 msgstr "거래 완료"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Transaction deadline"
-msgstr "거래 마감 시간"
+#: 
+#~ msgid "Transaction deadline"
+#~ msgstr "거래 마감 시간"
 
+#: src/hooks/useMarketCallback.tsx
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Transaction rejected."
 msgstr "거래가 거부되었습니다."
 
-#: src/pages/CreateProposal/ProposalActionSelector.tsx
-msgid "Transfer Token"
-msgstr "이전 토큰"
+#: 
+#~ msgid "Transfer Token"
+#~ msgstr "이전 토큰"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "다시 시도하십시오"
 
+#: 
+#~ msgid "Turn On Expert Mode"
+#~ msgstr "전문가 모드 켜기"
+
 #: src/components/Settings/index.tsx
-msgid "Turn On Expert Mode"
-msgstr "전문가 모드 켜기"
+msgid "Turn On Gasless Mode"
+msgstr ""
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -1760,30 +2255,40 @@ msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} 버닝"
 
 #: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
 msgstr "UNI-V2 LP 토큰이 필요합니다. 유동성을 {0}-{1}풀에 추가하면 이 페이지에 귀하의 유동성 토큰을 스테이크할 수 있습니다."
 
-#: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
+#: 
+#~ msgid "UNI-V2 {0}-{1}"
+#~ msgstr "UNI-V2 {0}-{1}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "UnStake Summary called"
+msgstr ""
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
 msgstr "미 청구 UNI"
 
-#: src/pages/Pool/PositionPage.tsx
-msgid "Unclaimed fees"
-msgstr "미 청구 수수료"
+#: 
+#~ msgid "Unclaimed fees"
+#~ msgstr "미 청구 수수료"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
 msgstr "미 청구:"
 
+#: src/components/PositionCard/index.tsx
+msgid "Underfunded"
+msgstr ""
+
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
 msgstr "분명치 않은"
 
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "예기치 않은 오류. 스왑을 위한 가스를 추정할 수 없습니다."
@@ -1792,37 +2297,18 @@ msgstr "예기치 않은 오류. 스왑을 위한 가스를 추정할 수 없습
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "가스 추정에 예상치 못한 문제가 있습니다. 다시 시도해 주세요."
 
-#: src/pages/Vote/index.tsx
-msgid "Kromatika Governance"
-msgstr "Kromatika 거버넌스"
-
-#: src/components/SwitchLocaleLink/index.tsx
-msgid "Kromatika available in: <0>{0}</0>"
-msgstr "Kromatika 사용 가능 : <0>{0}</0>"
-
-#: src/components/vote/ProposalEmptyState.tsx
-msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Kromatika 거버넌스는 레이어 1에서만 사용할 수 있습니다. 제안 및 투표를 보려면 네트워크를 이더 리움 메인 넷으로 전환하십시오."
-
-#: src/pages/Earn/index.tsx
-msgid "Kromatika liquidity mining"
-msgstr "Kromatika 유동성 채굴"
-
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Kromatika migration contract↗"
-msgstr "Kromatika 마이그레이션 계약 ↗"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Kromatika on {0}"
-msgstr "{0}Kromatika"
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "알 수 없는 출처"
 
+#: 
+#~ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
+#~ msgstr "알 수 없는 오류 {0}. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
+
+#: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-msgstr "알 수 없는 오류 {0}. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Kromatika V3와 호환되지 않습니다."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
+msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1837,8 +2323,24 @@ msgstr "투표 잠금 해제"
 msgid "Unlocking Votes"
 msgstr "투표 잠금 해제"
 
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Stake/StakingModal.tsx
+msgid "Unstake"
+msgstr ""
+
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
+msgid "Unstake KROM"
+msgstr ""
+
+#: src/pages/Stake/StakingModal.tsx
+msgid "Unstaking KROM may prevent the system to calculate rewards"
+msgstr ""
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
 msgstr "지원되지 않는 자산"
@@ -1851,13 +2353,22 @@ msgstr "지원되지 않는 자산"
 msgid "Untitled"
 msgstr "제목 없음"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "언랩"
 
+#: 
+#~ msgid "Unwrap <0/> to ETH"
+#~ msgstr "<0/>을 ETH로 풀기"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Unwrap <0/> to ETH"
-msgstr "<0/>을 ETH로 풀기"
+msgid "Unwrap <0/> to {0}"
+msgstr ""
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1867,54 +2378,54 @@ msgstr "위임 업데이트"
 msgid "Update list"
 msgstr "목록 업데이트"
 
-#: src/components/Settings/index.tsx
-msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
-msgstr "Kromatika Labs API를 사용하여 보다 효율적인 경로를 통해 더 나은 가격을 얻으십시오."
+#: 
+#~ msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
+#~ msgstr "Kromatika Labs API를 사용하여 보다 효율적인 경로를 통해 더 나은 가격을 얻으십시오."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "사용자"
 
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
+#: 
+#~ msgid "V2"
+#~ msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
 msgstr "V2는 레이어 2에서 사용할 수 없습니다. 레이어 1 이더 리움으로 전환합니다."
 
-#: src/pages/Pool/index.tsx
-msgid "V2 liquidity"
-msgstr "V2 유동성"
+#: 
+#~ msgid "V2 liquidity"
+#~ msgstr "V2 유동성"
 
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
+#: 
+#~ msgid "V3"
+#~ msgstr "V3"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "V3 {0} Price:"
-msgstr "V3 {0} 가격 :"
+#: 
+#: 
+#~ msgid "V3 {0} Price:"
+#~ msgstr "V3 {0} 가격 :"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
 msgstr "UNI 분석보기"
 
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "V2 유동성보기"
+#: 
+#~ msgid "View V2 Liquidity"
+#~ msgstr "V2 유동성보기"
 
-#: src/components/PositionCard/index.tsx
-msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "발생한 수수료 및 분석 보기 <0> ↗</0>"
+#: 
+#~ msgid "View accrued fees and analytics<0>↗</0>"
+#~ msgstr "발생한 수수료 및 분석 보기 <0> ↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "목록 보기"
 
-#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Etherscan에서보기"
+#: 
+#~ msgid "View on Etherscan"
+#~ msgstr "Etherscan에서보기"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -1930,9 +2441,9 @@ msgstr "Explorer에서 보기"
 msgid "View transaction on Explorer"
 msgstr "Explorer에서 거래 보기"
 
-#: src/components/Header/index.tsx
-msgid "Vote"
-msgstr "투표"
+#: 
+#~ msgid "Vote"
+#~ msgstr "투표"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -1997,9 +2508,17 @@ msgstr "확인을 기다리는 중"
 msgid "Wallet Address or ENS name"
 msgstr "지갑 주소 또는 ENS 이름"
 
-#: src/components/earn/StakingModal.tsx
-msgid "Weekly Rewards"
-msgstr "주간 보상"
+#: src/pages/AddLiquidity/index.tsx
+msgid "Wallet: {0}, Balance: {1}"
+msgstr ""
+
+#: src/pages/Stake/StakingModal.tsx
+msgid "Wallet: {0}, Staked: {stakedBalance}"
+msgstr ""
+
+#: 
+#~ msgid "Weekly Rewards"
+#~ msgstr "주간 보상"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -2009,16 +2528,18 @@ msgstr "Team Unicorn에 오신 것을 환영합니다. :)"
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
 msgstr "유동성을 인출하지 않고 청구하면 유동성이 채굴 풀에 남아 있습니다."
 
-#: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "인출하면 계약이 자동으로 귀하를 대신하여 UNI를 청구합니다!"
+#: 
+#~ msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+#~ msgstr "인출하면 계약이 자동으로 귀하를 대신하여 UNI를 청구합니다!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
 msgstr "인출하면 UNI가 청구되고 유동성이 채굴 풀에서 제거됩니다."
 
 #: src/components/earn/UnstakingModal.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
 msgid "Withdraw"
 msgstr "인출"
 
@@ -2026,9 +2547,22 @@ msgstr "인출"
 msgid "Withdraw & Claim"
 msgstr "인출 및 청구"
 
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/index.tsx
+msgid "Withdraw KROM"
+msgstr ""
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "예치된 유동성 인출"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Withdraw {0}"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Withdrawing KROM may prevent the system to automatically processing trades"
+msgstr ""
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -2038,46 +2572,63 @@ msgstr "{0} UNI-V2 인출"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 인출!"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "랩"
 
+#: 
+#~ msgid "Wrap <0/> to WETH"
+#~ msgstr "<0/>을 WETH로 래핑"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Wrap <0/> to WETH"
-msgstr "<0/>을 WETH로 래핑"
+msgid "Wrap <0/> to {0}"
+msgstr ""
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
 
-#: src/pages/CreateProposal/index.tsx
-msgid "You already have an active or pending proposal"
-msgstr "이미 활성 또는 보류중인 제안이 있습니다."
+#: 
+#~ msgid "You already have an active or pending proposal"
+#~ msgstr "이미 활성 또는 보류중인 제안이 있습니다."
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "You are creating a pool"
-msgstr "풀을 만들고 있습니다."
+#: 
+#~ msgid "You are creating a pool"
+#~ msgstr "풀을 만들고 있습니다."
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "귀하는 이 Kromatika V3 풀의 최초 유동성 제공자입니다. 유동성은 현재 {0} 가격으로 마이그레이션됩니다."
+#: 
+#~ msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
+#~ msgstr "귀하는 이 Kromatika V3 풀의 최초 유동성 제공자입니다. 유동성은 현재 {0} 가격으로 마이그레이션됩니다."
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "You are the first liquidity provider."
-msgstr "귀하는 최초의 유동성 제공자입니다."
+#: 
+#~ msgid "You are the first liquidity provider."
+#~ msgstr "귀하는 최초의 유동성 제공자입니다."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "각 제안에 대해 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You can now swap {0}"
+msgstr ""
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
 msgstr "{0}을(를) 거래할 수 있습니다."
 
-#: src/pages/CreateProposal/index.tsx
-msgid "You don't have enough votes to submit a proposal"
-msgstr "제안서를 제출할 수있는 표가 충분하지 않습니다."
+#: 
+#~ msgid "You don't have enough votes to submit a proposal"
+#~ msgstr "제안서를 제출할 수있는 표가 충분하지 않습니다."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -2091,27 +2642,43 @@ msgstr "네트워크 연결이 끊어졌거나 {label} 이 다운되었을 수 �
 msgid "You may have lost your network connection."
 msgstr "네트워크 연결이 끊어졌을 수 있습니다."
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You must connect an account."
-msgstr "계정을 연결해야합니다."
+#: 
+#~ msgid "You must connect an account."
+#~ msgstr "계정을 연결해야합니다."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
+msgstr ""
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "{0}을 사용하려면 Kromatika 스마트 계약에 권한을 부여해야합니다. 토큰 당 한 번만 이 작업을 수행하면 됩니다."
 
-#: src/pages/CreateProposal/index.tsx
-msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-msgstr "제안서를 제출 {formattedProposalThreshold} 표가 있어야합니다."
+#: 
+#~ msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+#~ msgstr "제안서를 제출 {formattedProposalThreshold} 표가 있어야합니다."
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "유동성을 Kromatika V3에 정확하다고 생각하는 가격으로 예치해야합니다. <0/> 가격이 잘못된 것 같으면 교환하여 가격을 이동하거나 다른 사람이 이동하기를 기다릴 수 있습니다."
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You save:"
+msgstr ""
+
+#: 
+#~ msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+#~ msgstr "유동성을 Kromatika V3에 정확하다고 생각하는 가격으로 예치해야합니다. <0/> 가격이 잘못된 것 같으면 교환하여 가격을 이동하거나 다른 사람이 이동하기를 기다릴 수 있습니다."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "이 포지션에서 얻은 수수료도 징수합니다."
 
-#: src/pages/AddLiquidityV2/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is to deposit at least twice the minimum balance."
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "다음을 받게 됩니다"
@@ -2124,27 +2691,38 @@ msgstr "UNI 고장"
 msgid "Your V2 liquidity"
 msgstr "V2 유동성"
 
-#: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "V3 유동성 포지션이 여기에 표시됩니다."
+#: 
+#~ msgid "Your V3 liquidity positions will appear here."
+#~ msgstr "V3 유동성 포지션이 여기에 표시됩니다."
 
-#: src/pages/Earn/Manage.tsx
-msgid "Your liquidity deposits"
-msgstr "유동성 예금"
+#: src/components/PositionCard/index.tsx
+msgid "Your account is actively processing trades. Recommendation is to deposit at least twice the minimum balance."
+msgstr ""
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Pool/index.tsx
+msgid "Your limit orders will appear here."
+msgstr ""
+
+#: 
+#~ msgid "Your liquidity deposits"
+#~ msgstr "유동성 예금"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
-#: src/components/PositionCard/index.tsx
+#: src/components/Stake/index.tsx
 msgid "Your pool share:"
 msgstr "내 풀 쉐어:"
 
 #: src/components/PositionCard/index.tsx
+#: src/components/Stake/index.tsx
 msgid "Your position"
 msgstr "내 위치"
 
-#: src/components/Badge/RangeBadge.tsx
-msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "귀하의 포지션에는 유동성이 없으며, 수수료를 벌지 않습니다."
+#: 
+#~ msgid "Your position has 0 liquidity, and is not earning fees."
+#~ msgstr "귀하의 포지션에는 유동성이 없으며, 수수료를 벌지 않습니다."
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
@@ -2155,33 +2733,37 @@ msgstr "귀하의 위치가 여기에 표시됩니다."
 msgid "Your position will be 100% composed of {0} at this price"
 msgstr "이 가격에서 귀하의 포지션은 100% {0}(으)로 구성됩니다"
 
-#: src/pages/Pool/PositionPage.tsx
-#: src/pages/Pool/PositionPage.tsx
-msgid "Your position will be 100% {0} at this price."
-msgstr "이 가격에서 귀하의 포지션은 100% {0}이(가) 됩니다."
+#: 
+#: 
+#~ msgid "Your position will be 100% {0} at this price."
+#~ msgstr "이 가격에서 귀하의 포지션은 100% {0}이(가) 됩니다."
 
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "귀하의 포지션은 시장 가격이 귀하의 범위로 이동할 때까지 수수료를 받거나 거래에 사용되지 않습니다."
+#: 
+#: 
+#~ msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
+#~ msgstr "귀하의 포지션은 시장 가격이 귀하의 범위로 이동할 때까지 수수료를 받거나 거래에 사용되지 않습니다."
 
-#: src/components/PositionList/index.tsx
-#: src/components/PositionList/index.tsx
-msgid "Your positions"
-msgstr "내 포지션"
+#: 
+#: 
+#~ msgid "Your positions"
+#~ msgstr "내 포지션"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
 msgstr "내 요율"
 
 #: src/components/PositionCard/V2.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
 msgstr "총 풀 토큰 :"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "풀을 만드는 데 필요한 가스가 포함되어 있으므로 거래 비용이 훨씬 더 높을 것입니다."
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Your trade will appear here."
+msgstr ""
+
+#: 
+#~ msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
+#~ msgstr "풀을 만드는 데 필요한 가스가 포함되어 있으므로 거래 비용이 훨씬 더 높을 것입니다."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -2191,9 +2773,9 @@ msgstr "귀하의 거래는 프론트런일 수 있습니다"
 msgid "Your transaction may fail"
 msgstr "거래가 실패할 수 있습니다"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "이 기간 이상 보류중인 거래는 취소됩니다."
+#: 
+#~ msgid "Your transaction will revert if it is pending for more than this period of time."
+#~ msgstr "이 기간 이상 보류중인 거래는 취소됩니다."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
@@ -2203,17 +2785,25 @@ msgstr "가격이 이 요율 이상으로 불리하게 변경되면 거래가 �
 msgid "Your transactions will appear here..."
 msgstr "거래 내역이 여기에 표시됩니다 ..."
 
-#: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "내 미 청구 UNI"
+#: 
+#~ msgid "Your unclaimed UNI"
+#~ msgstr "내 미 청구 UNI"
 
-#: src/components/Settings/index.tsx
-msgid "confirm"
-msgstr "확인"
+#: 
+#~ msgid "confirm"
+#~ msgstr "확인"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0}에 찬성"
+
+#: src/components/Settings/index.tsx
+msgid "gasless"
+msgstr ""
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr ""
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2227,9 +2817,9 @@ msgstr "여기."
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// 또는 ipfs:// 또는 ENS 이름"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "minutes"
-msgstr "분"
+#: 
+#~ msgid "minutes"
+#~ msgstr "분"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2243,32 +2833,44 @@ msgstr "{0} 토큰 목록을 통해"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {토큰 가져 오기} other {토큰 가져 오기}}"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Stake/StakingModal.tsx
 msgid "{0}"
 msgstr "{0}"
 
-#: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "{0} %"
 msgstr "{0} %"
 
 #: src/components/PositionListItem/index.tsx
+msgid "{0} <0/>  per <1/> <2>{1} </2>"
+msgstr ""
+
+#: 
+#: 
+#~ msgid "{0} <0/> per <1/>"
+#~ msgstr "{0} <0/> / <1/>"
+
 #: src/components/PositionListItem/index.tsx
-msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/> / <1/>"
+msgid "{0} <0/> per <1/> <2>{1} </2>"
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} 사용자 지정 토큰"
 
-#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
-#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
-msgid "{0} Deposited"
-msgstr "{0} 예치됨"
+#: 
+#: 
+#~ msgid "{0} Deposited"
+#~ msgstr "{0} 예치됨"
 
-#: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
@@ -2294,17 +2896,15 @@ msgstr "{0} UNI"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
-#: src/components/earn/StakingModal.tsx
-#: src/pages/Earn/Manage.tsx
-#: src/pages/Earn/Manage.tsx
 msgid "{0} UNI / week"
 msgstr "{0} UNI / 주"
 
-#: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
+#: 
+#~ msgid "{0} UNI-V2"
+#~ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
+#: src/pages/Stake/index.tsx
 msgid "{0} UNI-V2 LP tokens available"
 msgstr "{0} UNI-V2 LP 토큰 사용 가능"
 
@@ -2315,33 +2915,33 @@ msgstr "{0} 투표"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
-#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
-#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
-#: src/pages/Pool/PositionPage.tsx
-#: src/pages/Pool/PositionPage.tsx
-#: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
 msgstr "{0}/{1}"
+
+#: src/pages/Earn/Manage.tsx
+msgid "{0} sKrom / week"
+msgstr ""
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 토큰"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "{0} {1} Price:"
-msgstr "{0} {1} 가격 :"
+#: 
+#: 
+#~ msgid "{0} {1} Price:"
+#~ msgstr "{0} {1} 가격 :"
+
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr ""
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • 사용자가 추가"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
-#: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
-#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -2352,21 +2952,21 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% 수수료 등급"
 
-#: src/components/FeeSelector/index.tsx
-msgid "{0}% select"
-msgstr "{0}% 선택"
+#: 
+#~ msgid "{0}% select"
+#~ msgstr "{0}% 선택"
 
-#: src/pages/Earn/Manage.tsx
-msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} 유동성 채굴"
+#: 
+#~ msgid "{0}-{1} Liquidity Mining"
+#~ msgstr "{0}-{1} 유동성 채굴"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "{0}/{1} LP NFT"
-msgstr "{0}/{1} LP NFT"
+#: 
+#~ msgid "{0}/{1} LP NFT"
+#~ msgstr "{0}/{1} LP NFT"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LP 토큰"
+#: 
+#~ msgid "{0}/{1} LP Tokens"
+#~ msgstr "{0}/{1} LP 토큰"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -2388,11 +2988,14 @@ msgstr "{percentForSlider}%"
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} / {tokenA}"
 
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~ $ <0/>"
+#: 
+#~ msgid "~$ <0/>"
+#~ msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← 풀 개요로 돌아 가기"
+msgid "← Back to Limit Orders"
+msgstr ""
 
+#: 
+#~ msgid "← Back to Pools Overview"
+#~ msgstr "← 풀 개요로 돌아 가기"

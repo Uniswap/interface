@@ -1,7 +1,15 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
+import { WETH9 } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { KROM } from 'constants/tokens'
+import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
+import useUSDCPrice from 'hooks/useUSDCPrice'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
@@ -114,6 +122,12 @@ export default function Polling() {
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
+  const kromToken = chainId ? KROM[chainId] : undefined
+  const eth = chainId ? WETH9[chainId] : undefined
+  const [, pool] = usePool(kromToken, eth, FeeAmount.MEDIUM)
+
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from('154097'), false)
+
   return (
     <>
       <StyledPolling
@@ -121,6 +135,17 @@ export default function Polling() {
         onMouseLeave={() => setIsHover(false)}
         warning={chainConnectivityWarning}
       >
+        {chainId === 1 ? (
+          <ExternalLink href={'https://app.uniswap.org/#/pool/154097?chain=mainnet'}>
+            <RowFixed style={{ marginRight: '8px' }}>
+              <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+                <span>🔥</span>
+                {feeValue0?.toFixed(0, { groupSeparator: ',' })} KROM
+              </TYPE.main>
+              <StyledGasDot />
+            </RowFixed>
+          </ExternalLink>
+        ) : null}
         <ExternalLink href={'https://etherscan.io/gastracker'}>
           {priceGwei ? (
             <RowFixed style={{ marginRight: '8px' }}>

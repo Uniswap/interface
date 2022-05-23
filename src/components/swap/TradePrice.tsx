@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { Text } from 'rebass'
 import { tryParseAmount } from 'state/swap/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -28,7 +28,6 @@ const StyledPriceContainer = styled.button`
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
-
   const usdcPrice = useUSDCPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
 
   let formattedPrice: string
@@ -51,7 +50,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       </Text>{' '}
       {usdcPrice && (
         <TYPE.darkGray>
-          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>
+          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>{' '}
         </TYPE.darkGray>
       )}
     </StyledPriceContainer>
