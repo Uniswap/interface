@@ -662,3 +662,22 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
 
   return token.symbol || 'ETH'
 }
+
+export const nativeNameFromETH = (chainId: any) => {
+  if (!chainId) return 'ETH'
+  return [137, 80001].includes(chainId)
+    ? 'MATIC'
+    : [97, 56].includes(chainId)
+    ? 'BNB'
+    : [43113, 43114].includes(chainId)
+    ? 'AVAX'
+    : [250].includes(chainId)
+    ? 'FTM'
+    : [25, 338].includes(chainId)
+    ? 'CRO'
+    : chainId === ChainId.BTTC
+    ? 'BTT'
+    : chainId === ChainId.VELAS
+    ? 'VLX'
+    : 'ETH'
+}

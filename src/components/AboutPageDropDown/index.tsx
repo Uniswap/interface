@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 
 import { Trans } from '@lingui/macro'
-import { ChevronDown } from 'react-feather'
 import styled from 'styled-components'
 import { Flex } from 'rebass'
-import { isMobile } from 'react-device-detect'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
 

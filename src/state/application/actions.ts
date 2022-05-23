@@ -20,6 +20,13 @@ export type PopupContent =
         auto: boolean
       }
     }
+  | {
+      simple: {
+        title: string
+        success: boolean
+        summary: string
+      }
+    }
 
 export enum ApplicationModal {
   NETWORK,
@@ -44,6 +51,7 @@ export enum ApplicationModal {
   TRENDING_SOON_TOKEN_DETAIL,
   COMMUNITY,
   CONTRACT_ADDRESS,
+  FAUCET_POPUP,
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')

@@ -13,6 +13,7 @@ import { useETHPrice } from 'state/application/hooks'
 import { AppState } from 'state'
 import { formatUnits, isAddress } from 'ethers/lib/utils'
 import { useLocation } from 'react-router-dom'
+import { nativeNameFromETH } from 'utils'
 export enum MIXPANEL_TYPE {
   PAGE_VIEWED,
   WALLET_CONNECTED,
@@ -62,25 +63,9 @@ export enum MIXPANEL_TYPE {
   DISCOVER_SWAP_BUY_NOW_CLICKED,
   DISCOVER_SWAP_MORE_INFO_CLICKED,
   DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED,
-}
-
-export const nativeNameFromETH = (chainId: any) => {
-  if (!chainId) return 'ETH'
-  return [137, 80001].includes(chainId)
-    ? 'MATIC'
-    : [97, 56].includes(chainId)
-    ? 'BNB'
-    : [43113, 43114].includes(chainId)
-    ? 'AVAX'
-    : [250].includes(chainId)
-    ? 'FTM'
-    : [25, 338].includes(chainId)
-    ? 'CRO'
-    : chainId === ChainId.BTTC
-    ? 'BTT'
-    : chainId === ChainId.VELAS
-    ? 'VLX'
-    : 'ETH'
+  FAUCET_MENU_CLICKED,
+  FAUCET_REQUEST_INITIATED,
+  FAUCET_REQUEST_COMPLETED,
 }
 
 export default function useMixpanel(trade?: Aggregator | undefined, currencies?: { [field in Field]?: Currency }) {
@@ -263,7 +248,6 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.CLAIM_REWARDS_INITIATED: {
           mixpanel.track('Claim Rewards Initiated')
-
           break
         }
         case MIXPANEL_TYPE.IMPORT_POOL_INITIATED: {
@@ -396,6 +380,18 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Discover - "Buy Now" clicked in pop-up after \'More Info\' on Swap page', {
             trending_token,
           })
+          break
+        }
+        case MIXPANEL_TYPE.FAUCET_MENU_CLICKED: {
+          mixpanel.track('Faucet feature - Faucet button clicked on Menu')
+          break
+        }
+        case MIXPANEL_TYPE.FAUCET_REQUEST_INITIATED: {
+          mixpanel.track('Faucet feature - Request faucet Initiated')
+          break
+        }
+        case MIXPANEL_TYPE.FAUCET_REQUEST_COMPLETED: {
+          mixpanel.track('Faucet feature - Request faucet Completed')
           break
         }
       }
