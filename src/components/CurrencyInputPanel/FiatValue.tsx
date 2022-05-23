@@ -27,13 +27,16 @@ export function FiatValue({
     return theme.red1
   }, [priceImpact, theme.green1, theme.red1, theme.text3, theme.yellow1])
 
+  const p = Number(fiatValue?.toFixed())
+  const visibleDecimalPlaces = p < 1.05 ? 4 : 2
+
   return (
     <ThemedText.Body fontSize={14} color={fiatValue ? theme.text3 : theme.text4}>
       {fiatValue ? (
         <Trans>
           $
           <HoverInlineText
-            text={fiatValue?.toSignificant(6, { groupSeparator: ',' })}
+            text={fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}
             textColor={fiatValue ? theme.text3 : theme.text4}
           />
         </Trans>
