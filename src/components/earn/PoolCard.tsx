@@ -1,6 +1,6 @@
-import { gql, useQuery } from '@apollo/client'
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { JSBI, Percent, TokenAmount } from '@ubeswap/sdk'
+import { formatEther } from '@ethersproject/units'
+import { JSBI, TokenAmount } from '@ubeswap/sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useToken } from 'hooks/Tokens'
 import { useStakingContract } from 'hooks/useContract'
@@ -13,7 +13,6 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import { updateUserAprMode } from 'state/user/actions'
 import { useIsAprMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
-import { fromWei, toBN, toWei } from 'web3-utils'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { CloseIcon, StyledInternalLink, TYPE } from '../../theme'
@@ -99,16 +98,6 @@ interface Props {
   onRemoveImportedFarm?: (farmAddress: string) => void
 }
 
-const pairDataGql = gql`
-  query getPairHourData($id: String!) {
-    pair(id: $id) {
-      pairHourData(first: 24, orderBy: hourStartUnix, orderDirection: desc) {
-        hourStartUnix
-        hourlyVolumeUSD
-      }
-    }
-  }
-`
 const COMPOUNDS_PER_YEAR = 2
 
 export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }: Props) => {
@@ -119,9 +108,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
   const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false)
   const token0 = useToken(farmSummary.token0Address) || undefined
   const token1 = useToken(farmSummary.token1Address) || undefined
-  const { data, loading, error } = useQuery(pairDataGql, {
-    variables: { id: farmSummary.lpAddress.toLowerCase() },
-  })
+
   const theme = useTheme()
 
   const stakingContract = useStakingContract(farmSummary.stakingAddress)
@@ -133,34 +120,12 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
       : undefined
 
   const { userValueCUSD, userAmountTokenA, userAmountTokenB } = useLPValue(stakedAmount ?? 0, farmSummary)
-  let swapRewardsUSDPerYear = 0
-  if (!loading && !error && data && data.pair) {
-    const lastDayVolumeUsd = data.pair.pairHourData.reduce(
-      (acc: number, curr: { hourlyVolumeUSD: string }) => acc + Number(curr.hourlyVolumeUSD),
-      0
-    )
-    swapRewardsUSDPerYear = Math.floor(lastDayVolumeUsd * 365 * 0.0025)
-  }
-  const rewardApr = new Percent(farmSummary.rewardsUSDPerYear, farmSummary.tvlUSD)
-  const swapApr = new Percent(toWei(swapRewardsUSDPerYear.toString()), farmSummary.tvlUSD)
-  const apr = new Percent(
-    toBN(toWei(swapRewardsUSDPerYear.toString())).add(toBN(farmSummary.rewardsUSDPerYear)).toString(),
-    farmSummary.tvlUSD
-  )
 
-  let compoundedAPY: React.ReactNode | undefined = <>🤯</>
-  if (!farmSummary.isImported) {
-    try {
-      compoundedAPY = annualizedPercentageYield(apr, COMPOUNDS_PER_YEAR)
-    } catch (e) {
-      console.error('apy calc overflow', farmSummary.farmName, e)
-    }
-  }
-
-  const displayedPercentageReturn =
-    apr.denominator.toString() !== '0'
-      ? `${userAprMode ? apr.toFixed(0, { groupSeparator: ',' }) : compoundedAPY}%`
+  const displayedPercentageReturn = farmSummary.apr
+    ? farmSummary.apr.denominator.toString() !== '0'
+      ? `${userAprMode ? farmSummary.apr.toFixed(0, { groupSeparator: ',' }) : farmSummary.apy}%`
       : '-'
+    : '-'
 
   const onRemoveFarm = () => {
     setShowRemoveModal(false)
@@ -169,7 +134,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
 
   if (
     !farmSummary.isImported &&
-    Number(fromWei(farmSummary.rewardsUSDPerYear)) < 100 &&
+    Number(formatEther(farmSummary.rewardsUSDPerYear)) < 100 &&
     !userValueCUSD?.greaterThan('0')
   ) {
     return null
@@ -225,7 +190,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
                   </span>
                 ))}
             </>
-          ) : apr && apr.greaterThan('0') ? (
+          ) : farmSummary.apr && farmSummary.apr.greaterThan('0') ? (
             <span
               aria-label="Toggle APR/APY"
               onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}
@@ -253,7 +218,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
       <StatContainer>
         <PoolStatRow
           statName={t('totalDeposited')}
-          statValue={Number(fromWei(farmSummary.tvlUSD)).toLocaleString(undefined, {
+          statValue={Number(formatEther(farmSummary.tvlUSD)).toLocaleString(undefined, {
             style: 'currency',
             currency: 'USD',
             maximumFractionDigits: 0,
@@ -272,16 +237,17 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
                   ' / Week'
               )}
           />
-        ) : apr && apr.greaterThan('0') ? (
+        ) : farmSummary.apr && farmSummary.apr.greaterThan('0') ? (
           <div aria-label="Toggle APR/APY" onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
             <PoolStatRow
               helperText={
-                farmSummary.tvlUSD === '0' ? (
+                farmSummary.tvlUSD.isZero() ? (
                   'Pool is empty'
                 ) : (
                   <>
-                    Reward APR: {rewardApr?.greaterThan('0') && rewardApr?.toSignificant(4)}%<br />
-                    Swap APR: {swapApr?.greaterThan('0') && swapApr?.toSignificant(4)}%<br />
+                    Reward APR: {farmSummary.rewardApr?.greaterThan('0') && farmSummary.rewardApr?.toSignificant(4)}%
+                    <br />
+                    Swap APR: {farmSummary.swapApr?.greaterThan('0') && farmSummary.swapApr?.toSignificant(4)}%<br />
                     <small>APY assumes compounding {COMPOUNDS_PER_YEAR}/year</small>
                     <br />
                   </>
@@ -321,15 +287,6 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
       )}
     </Wrapper>
   )
-}
-
-// formula is 1 + ((nom/compoundsPerYear)^compoundsPerYear) - 1
-function annualizedPercentageYield(nominal: Percent, compounds: number) {
-  const ONE = 1
-  const divideNominalByNAddOne = nominal.divide(BigInt(compounds)).add(BigInt(ONE))
-  if (Number(divideNominalByNAddOne.denominator) === 0 && Number(divideNominalByNAddOne.numerator) === 0) return '0'
-  // multiply 100 to turn decimal into percent, to fixed since we only display integer
-  return ((Number(divideNominalByNAddOne.toFixed(10)) ** compounds - ONE) * 100).toFixed(0)
 }
 
 const PoolInfo = styled.div`

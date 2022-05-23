@@ -204,6 +204,7 @@
   "WithdrawDepositedLiquidity": "Withdraw deposited liquidity",
   "withdrawTip": "When you withdraw, the contract will automagically claim UBE on your behalf!",
   "wrongNetwork": "You are on the wrong network",
+  "yield": "Yield",
   "youAreAdding": "You are adding",
   "youAreBuying": "You are buying",
   "youAreRemoving": "You are removing between",

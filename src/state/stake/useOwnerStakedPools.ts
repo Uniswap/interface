@@ -4,7 +4,6 @@ import partition from 'lodash/partition'
 import { FarmSummary } from 'pages/Earn/useFarmRegistry'
 import { useMemo } from 'react'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
-import { toBN } from 'web3-utils'
 
 import DUAL_REWARDS_ABI from '../../constants/abis/moola/MoolaStakingRewards.json'
 
@@ -41,7 +40,7 @@ function unique(farmSummaries: FarmSummary[]): FarmSummary[] {
       bestFarms[fs.lpAddress] = fs
     }
     const currentBest = bestFarms[fs.lpAddress]
-    if (toBN(fs.rewardsUSDPerYear).gt(toBN(currentBest.rewardsUSDPerYear))) {
+    if (fs.rewardsUSDPerYear.gt(currentBest.rewardsUSDPerYear)) {
       bestFarms[fs.lpAddress] = fs
     }
   })

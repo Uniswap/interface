@@ -1,4 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
+import { formatEther } from '@ethersproject/units'
+import { faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ErrorBoundary } from '@sentry/react'
 import { Token } from '@ubeswap/sdk'
 import { ButtonPrimary } from 'components/Button'
@@ -18,11 +21,17 @@ import styled from 'styled-components'
 import { AutoColumn, ColumnCenter, TopSection } from '../../components/Column'
 import { PoolCard } from '../../components/earn/PoolCard'
 import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { RowBetween } from '../../components/Row'
+import { RowBetween, RowStart } from '../../components/Row'
 import { IMPORTED_FARMS } from '../../constants'
 import { ExternalLink, TYPE } from '../../theme'
 import LiquidityWarning from '../Pool/LiquidityWarning'
 import { FarmSummary, useFarmRegistry } from './useFarmRegistry'
+
+enum FarmSort {
+  UNKNOWN,
+  DEPOSIT,
+  YIELD,
+}
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -37,6 +46,36 @@ flex-direction: column;
 
 const PoolWrapper = styled.div`
   margin-bottom: 12px;
+`
+
+const FancyButton = styled.button`
+  color: ${({ theme }) => theme.text1};
+  align-items: center;
+  height: 2.2rem;
+  padding: 0 0.7rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  width: auto;
+  min-width: 3.5rem;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  outline: none;
+  background: ${({ theme }) => theme.bg1};
+  :hover {
+    border: 1px solid ${({ theme }) => theme.bg4};
+  }
+  :focus {
+    border: 1px solid ${({ theme }) => theme.primary1};
+  }
+`
+
+const Option = styled(FancyButton)<{ active: boolean }>`
+  margin-right: 8px;
+  :hover {
+    cursor: pointer;
+  }
+  background-color: ${({ active, theme }) => active && theme.primary1};
+  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
+  font-weight: 500;
 `
 
 const Header: React.FC = ({ children }) => {
@@ -96,6 +135,7 @@ export default function Earn() {
   const [filteringToken, setFilteringToken] = useTokenFilter()
   const [showImportFarmModal, setShowImportFarmModal] = useState<boolean>(false)
   const farmSummaries = useFarmRegistry()
+  const [sortType, setSortType] = useState<FarmSort>(FarmSort.UNKNOWN)
   const { importedFarmSummaries } = useImportedFarmState()
   const { onAddImportedFarm, onRemoveImportedFarm } = useImportedFarmActionHandlers()
   useEffect(() => {
@@ -109,14 +149,22 @@ export default function Earn() {
     const importedSummaries: FarmSummary[] = importedFarmSummaries.filter(
       (summary) => summary !== undefined
     ) as unknown as FarmSummary[]
+
+    const allSummaries = [...farmSummaries, ...importedSummaries]
+    const sortedSummaries =
+      sortType === FarmSort.YIELD
+        ? allSummaries.sort((a, b) => Number(b.apy) - Number(a.apy))
+        : allSummaries.sort((a, b) => {
+            return Number(formatEther(b.tvlUSD.sub(a.tvlUSD)))
+          })
     if (filteringToken === null) {
-      return [...farmSummaries, ...importedSummaries]
+      return sortedSummaries
     } else {
-      return [...farmSummaries, ...importedSummaries].filter(
+      return sortedSummaries.filter(
         (farm) => farm?.token0Address === filteringToken?.address || farm?.token1Address === filteringToken?.address
       )
     }
-  }, [filteringToken, farmSummaries, importedFarmSummaries])
+  }, [importedFarmSummaries, farmSummaries, sortType, filteringToken])
 
   const { stakedFarms, featuredFarms, unstakedFarms, importedFarms } = useOwnerStakedPools(filteredFarms)
 
@@ -181,7 +229,28 @@ export default function Earn() {
         </MobileContainer>
         <RowBetween>
           <AutoColumn>
-            <TokenSelect onTokenSelect={setFilteringToken} token={filteringToken} />
+            <RowStart>
+              <TokenSelect onTokenSelect={setFilteringToken} token={filteringToken} />
+              <Option
+                style={{ marginLeft: '8px', marginBottom: '10px' }}
+                onClick={() => {
+                  setSortType(sortType === FarmSort.DEPOSIT ? FarmSort.UNKNOWN : FarmSort.DEPOSIT)
+                }}
+                active={sortType === FarmSort.DEPOSIT}
+              >
+                <FontAwesomeIcon icon={faArrowDownWideShort} />
+                &nbsp;{t('deposit')}
+              </Option>
+              <Option
+                onClick={() => {
+                  setSortType(sortType === FarmSort.YIELD ? FarmSort.UNKNOWN : FarmSort.YIELD)
+                }}
+                active={sortType === FarmSort.YIELD}
+              >
+                <FontAwesomeIcon icon={faArrowDownWideShort} />
+                &nbsp;{t('yield')}
+              </Option>
+            </RowStart>
           </AutoColumn>
           <DesktopContainer>
             {farmSummaries.length !== 0 && (
