@@ -151,7 +151,7 @@
     "react-is": "^17.0.2",
     "react-router": "^5.2.0",
     "rebass": "^4.0.7",
-    "redux": "^4.1.0",
+    "redux": "^4.2.0",
     "rlp": "^2.2.6",
     "tiny-invariant": "^1.1.0",
     "use-count-up": "^3.0.1",
