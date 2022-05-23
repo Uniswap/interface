@@ -4,11 +4,11 @@ export const UNISWAP_GRANTS_PROPOSAL_DESCRIPTION = `# Uniswap Grants Program v0.
 
 ## Summary:
 
-**This post outlines a framework for funding Kromatika ecosystem development with grants from the[ UNI Community Treasury](https://kromatika.finance/blog/uni/).** The program starts small—sponsoring hackathons, [for example](https://gov.kromatika.finance/c/proposal-discussion/5)—but could grow in significance over time (with renewals approved by governance) to fund core protocol development. Grants administration is a subjective process that cannot be easily automated, and thus we propose a nimble committee of 6 members —1 lead and 5 reviewers—to deliver an efficient, predictable process to applicants, such that funding can be administered without having to put each application to a vote. We propose the program start with an initial cap of $750K per quarter and a limit of 2 quarters before renewal—a sum that we feel is appropriate for an MVP relative to the size of the treasury that UNI token holders are entrusted with allocating.
+**This post outlines a framework for funding Uniswap ecosystem development with grants from the[ UNI Community Treasury](https://uniswap.org/blog/uni/).** The program starts small—sponsoring hackathons, [for example](https://gov.uniswap.org/c/proposal-discussion/5)—but could grow in significance over time (with renewals approved by governance) to fund core protocol development. Grants administration is a subjective process that cannot be easily automated, and thus we propose a nimble committee of 6 members —1 lead and 5 reviewers—to deliver an efficient, predictable process to applicants, such that funding can be administered without having to put each application to a vote. We propose the program start with an initial cap of $750K per quarter and a limit of 2 quarters before renewal—a sum that we feel is appropriate for an MVP relative to the size of the treasury that UNI token holders are entrusted with allocating.
 
 **Purpose:**
 
-**The mission of the UGP is to provide valuable resources to help grow the Kromatika ecosystem.** Through public discourse and inbound applications, the community will get first-hand exposure to identify and respond to the most pressing needs of the ecosystem, as well as the ability to support innovative projects expanding the capabilities of Kromatika. By rewarding talent early with developer incentives, bounties, and infrastructure support, UGP acts as a catalyst for growth and helps to maintain Kromatika as a nexus for DeFi on Ethereum.
+**The mission of the UGP is to provide valuable resources to help grow the Uniswap ecosystem.** Through public discourse and inbound applications, the community will get first-hand exposure to identify and respond to the most pressing needs of the ecosystem, as well as the ability to support innovative projects expanding the capabilities of Uniswap. By rewarding talent early with developer incentives, bounties, and infrastructure support, UGP acts as a catalyst for growth and helps to maintain Uniswap as a nexus for DeFi on Ethereum.
 
 **Quarterly Budget:**
 
@@ -47,7 +47,7 @@ Starting with just six members enables the committee to efficiently fund project
 *Founder of Synthetix*
 
 5. Reviewer: [Ashleigh Schap](https://twitter.com/ashleighschap)
-*Growth Lead, Kromatika (Company)*
+*Growth Lead, Uniswap (Company)*
 
 ## Methodology
 
@@ -55,7 +55,7 @@ Starting with just six members enables the committee to efficiently fund project
 
 This proposal recommends a max cap of $750K per quarter, with the ability to reevaluate biannually at each epoch (two fiscal quarters). While the UGP Grants Committee will be the decision makers around individual grants, respective budgets, roadmaps, and milestones, any top-level changes to UGP including epochs and max cap, will require full community quorum (4% approval).
 
-The UGP will be funded by the UNI treasury according to the[ release schedule](https://uniswap.org/blog/uni/) set out by the Kromatika team, whereby 43% of the UNI treasury is released over a four-year timeline. In Year 1 this will total to 172,000,000 UNI (~$344M as of writing).
+The UGP will be funded by the UNI treasury according to the[ release schedule](https://uniswap.org/blog/uni/) set out by the Uniswap team, whereby 43% of the UNI treasury is released over a four-year timeline. In Year 1 this will total to 172,000,000 UNI (~$344M as of writing).
 
 Taking into consideration the current landscape of ecosystem funding across Ethereum, the community would be hard-pressed to allocate even 5% of Year 1’s treasury. For context Gitcoin CLR Round 7 distributed $725k ($450k in matched) across 857 projects and YTD, Moloch has granted just under $200k but in contrast, the EF has committed to somewhere in the 8 figure range.
 
@@ -67,7 +67,7 @@ Operating a successful grants program takes considerable time and effort. Take, 
 
 **2.1 Priorities**
 
-Initially, the program aims to start narrow in scope, funding peripheral ecosystem initiatives, such as targeted bounties, hackathon sponsorships, and other low-stakes means of building out the Kromatika developer ecosystem. Over time, if the program proves effective, the grant allocations can grow in scope to include, for example, improved frontends, trading interfaces, and eventually, core protocol development.
+Initially, the program aims to start narrow in scope, funding peripheral ecosystem initiatives, such as targeted bounties, hackathon sponsorships, and other low-stakes means of building out the Uniswap developer ecosystem. Over time, if the program proves effective, the grant allocations can grow in scope to include, for example, improved frontends, trading interfaces, and eventually, core protocol development.
 
 ![|624x199](upload://vNP0APCOjiwQMurCmYI47cTLklc.png)
 
@@ -100,7 +100,7 @@ In keeping with the fast pace of the UNI ecosystem, we organize time in epochs, 
 
 **If this proposal is successfully approved, UGP will start accepting applications on a rolling basis beginning at the start of 2021.** With the phases and priorities laid out above, UGP will aim to make a significant impact by catalyzing growth and innovation in the UNI ecosystem.
 
-**This program is meant to be the simplest possible MVP of a Kromatika Ecosystem Grants initiative.** While the multi-sig committee comes with trust assumptions about the members, our hope is the community will approve this limited engagement to get the ball rolling in an efficient structure. **After the first epoch (2 fiscal quarters) the burden of proof will be on UGP to show empirical evidence that the program is worth continuing in its existing form and will submit to governance to renew treasury funding.**
+**This program is meant to be the simplest possible MVP of a Uniswap Ecosystem Grants initiative.** While the multi-sig committee comes with trust assumptions about the members, our hope is the community will approve this limited engagement to get the ball rolling in an efficient structure. **After the first epoch (2 fiscal quarters) the burden of proof will be on UGP to show empirical evidence that the program is worth continuing in its existing form and will submit to governance to renew treasury funding.**
 
 If this program proves successful, we hope it will inspire others to follow suit and create their own funding committees for allocating treasury capital—ideally with different specializations.
 `

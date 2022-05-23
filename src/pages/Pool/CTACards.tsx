@@ -144,7 +144,7 @@ export default function CTACards() {
             <Trans>Top pools</Trans> ↗
           </HeaderText>
           <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
-            <Trans>Explore popular pools on Kromatika Analytics.</Trans>
+            <Trans>Explore popular pools on Uniswap Analytics.</Trans>
           </TYPE.body>
         </ResponsiveColumn>
       </CTA2>

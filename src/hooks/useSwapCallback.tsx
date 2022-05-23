@@ -311,7 +311,7 @@ function swapErrorToUserReadableMessage(error: any): ReactNode {
     case 'UniswapV2: K':
       return (
         <Trans>
-          The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are
+          The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are
           swapping incorporates custom behavior on transfer.
         </Trans>
       )

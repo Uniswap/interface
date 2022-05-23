@@ -50,9 +50,9 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       <Text fontWeight={500} fontSize={14} color={theme.text1}>
         {text}
       </Text>{' '}
-      {usdValue && (
+      {usdcPrice && (
         <TYPE.darkGray>
-          <Trans>(${Number(usdValue)})</Trans>
+          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>{' '}
         </TYPE.darkGray>
       )}
     </StyledPriceContainer>

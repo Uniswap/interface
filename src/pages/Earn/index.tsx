@@ -64,13 +64,13 @@ export default function Earn() {
             <AutoColumn gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={600}>
-                  <Trans>Kromatika liquidity mining</Trans>
+                  <Trans>Uniswap liquidity mining</Trans>
                 </TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
                   <Trans>
-                    Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token.
+                    Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
                   </Trans>
                 </TYPE.white>
               </RowBetween>{' '}
