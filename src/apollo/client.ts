@@ -166,7 +166,7 @@ const avaxMainnetBlockClient = new ApolloClient({
 })
 
 const fantomBlockClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/fantom-blocks',
+  uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/fantom-blocks',
   cache: new InMemoryCache(),
 })
 
