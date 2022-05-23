@@ -1,8 +1,15 @@
 import React, { ReactElement, useCallback, useEffect } from 'react'
+import {
+  Directions,
+  FlingGestureHandler,
+  FlingGestureHandlerGestureEvent,
+  State,
+} from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { AnimatedBox, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
@@ -28,6 +35,10 @@ export interface NotificationContentProps {
     assetIncrease: string
     usdIncrease: string | undefined
   }
+  actionButton?: {
+    title: string
+    onPress: () => void
+  }
 }
 
 export interface NotificationToastProps extends NotificationContentProps {
@@ -41,6 +52,7 @@ export function NotificationToast({
   balanceUpdate,
   onPress,
   hideDelay,
+  actionButton,
 }: NotificationToastProps) {
   const dispatch = useAppDispatch()
   const notificationQueue = useAppSelector((state) => state.notifications.notificationQueue)
@@ -70,6 +82,13 @@ export function NotificationToast({
   const delay = hideDelay ?? DEFAULT_HIDE_DELAY
   const cancelDismiss = useTimeout(dismissLatest, delay)
 
+  const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent) => {
+    if (nativeEvent.state === State.ACTIVE) {
+      cancelDismiss?.()
+      dismissLatest()
+    }
+  }
+
   const onNotificationPress = () => {
     cancelDismiss?.()
     if (onPress) {
@@ -80,31 +99,54 @@ export function NotificationToast({
     }
   }
 
+  const onActionButtonPress = () => {
+    cancelDismiss?.()
+    dismissLatest()
+    actionButton?.onPress()
+  }
+
   return (
-    <AnimatedBox
-      left={0}
-      marginHorizontal="md"
-      position="absolute"
-      right={0}
-      style={animatedStyle}
-      zIndex="modal">
-      <Button
-        alignItems="center"
-        bg="neutralBackground"
+    <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
+      <AnimatedBox
+        borderColor="neutralContainer"
         borderRadius="lg"
-        flex={1}
-        flexDirection="row"
-        height={NOTIFICATION_HEIGHT}
-        px="md"
-        py="md"
-        onPress={onNotificationPress}>
-        <NotificationContent balanceUpdate={balanceUpdate} icon={icon} title={title} />
-      </Button>
-    </AnimatedBox>
+        borderWidth={1}
+        left={0}
+        marginHorizontal="md"
+        position="absolute"
+        right={0}
+        style={animatedStyle}
+        zIndex="modal">
+        <Button
+          alignItems="center"
+          bg="neutralBackground"
+          borderRadius="lg"
+          flex={1}
+          flexDirection="row"
+          height={NOTIFICATION_HEIGHT}
+          px="md"
+          py="md"
+          onPress={onNotificationPress}>
+          <NotificationContent
+            actionButton={
+              actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
+            }
+            balanceUpdate={balanceUpdate}
+            icon={icon}
+            title={title}
+          />
+        </Button>
+      </AnimatedBox>
+    </FlingGestureHandler>
   )
 }
 
-export function NotificationContent({ title, icon, balanceUpdate }: NotificationContentProps) {
+export function NotificationContent({
+  title,
+  icon,
+  balanceUpdate,
+  actionButton,
+}: NotificationContentProps) {
   return (
     <Flex centered row gap="sm">
       {icon && (
@@ -137,6 +179,17 @@ export function NotificationContent({ title, icon, balanceUpdate }: Notification
             variant="smallLabel">
             {balanceUpdate.usdIncrease}
           </Text>
+        </Flex>
+      )}
+      {actionButton && !balanceUpdate && (
+        <Flex alignItems="flex-end" gap="xxs">
+          <TextButton
+            px="xs"
+            py="xs"
+            textColor="accentBackgroundActive"
+            onPress={actionButton.onPress}>
+            {actionButton.title}
+          </TextButton>
         </Flex>
       )}
     </Flex>

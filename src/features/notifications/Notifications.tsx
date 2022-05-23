@@ -1,5 +1,6 @@
 import { utils } from 'ethers'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
@@ -14,7 +15,6 @@ import { useENS } from 'src/features/ens/useENS'
 import { useNFT } from 'src/features/nfts/hooks'
 import {
   NotificationToast,
-  NotificationToastProps,
   NOTIFICATION_SIZING,
 } from 'src/features/notifications/NotificationToast'
 import {
@@ -45,29 +45,6 @@ import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
-interface TxNotificationToastProps extends NotificationToastProps {
-  txHash: string
-}
-
-function TxNotificationToast({
-  title,
-  icon,
-  balanceUpdate,
-  onPress,
-  txHash,
-}: TxNotificationToastProps) {
-  const defaultOnPress = () => navigate(Screens.Notifications, { txHash })
-  const onTxPress = onPress ? onPress : defaultOnPress
-  return (
-    <NotificationToast
-      balanceUpdate={balanceUpdate}
-      icon={icon}
-      title={title}
-      onPress={onTxPress}
-    />
-  )
-}
-
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
   const { imageUrl, chainId: chainIdString } = notification
   const dispatch = useAppDispatch()
@@ -97,7 +74,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
 }
 
 export function ApproveNotification({
-  notification: { chainId, tokenAddress, spender, txStatus, txHash, txType },
+  notification: { chainId, tokenAddress, spender, txStatus, txType },
 }: {
   notification: ApproveTxNotification
 }) {
@@ -113,7 +90,7 @@ export function ApproveNotification({
     />
   )
 
-  return <TxNotificationToast icon={icon} title={title} txHash={txHash} />
+  return <NotificationToast icon={icon} title={title} />
 }
 
 export function SwapNotification({
@@ -146,9 +123,13 @@ export function SwapNotification({
 
   const swapFormState = useCreateSwapFormState(chainId, txHash)
 
-  const onPress =
+  const { t } = useTranslation()
+  const retryButton =
     txStatus === TransactionStatus.Failed
-      ? () => navigate(Screens.Swap, swapFormState ? { swapFormState } : undefined)
+      ? {
+          title: t('Retry'),
+          onPress: () => navigate(Screens.Swap, swapFormState ? { swapFormState } : undefined),
+        }
       : undefined
 
   const { spotPrices } = useSpotPrices([outputCurrency])
@@ -186,12 +167,11 @@ export function SwapNotification({
     )
 
   return (
-    <TxNotificationToast
+    <NotificationToast
+      actionButton={retryButton}
       balanceUpdate={balanceUpdate}
       icon={icon}
       title={title}
-      txHash={txHash}
-      onPress={onPress}
     />
   )
 }
@@ -201,8 +181,7 @@ export function TransferCurrencyNotification({
 }: {
   notification: TransferCurrencyTxNotification
 }) {
-  const { assetType, chainId, tokenAddress, currencyAmountRaw, txType, txStatus, txHash } =
-    notification
+  const { assetType, chainId, tokenAddress, currencyAmountRaw, txType, txStatus } = notification
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const { name: ensName } = useENS(chainId, senderOrRecipient)
@@ -228,9 +207,7 @@ export function TransferCurrencyNotification({
     />
   )
 
-  return (
-    <TxNotificationToast balanceUpdate={balanceUpdate} icon={icon} title={title} txHash={txHash} />
-  )
+  return <NotificationToast balanceUpdate={balanceUpdate} icon={icon} title={title} />
 }
 
 export function TransferNFTNotification({
@@ -238,7 +215,7 @@ export function TransferNFTNotification({
 }: {
   notification: TransferNFTTxNotification
 }) {
-  const { assetType, chainId, tokenAddress, tokenId, txType, txStatus, txHash } = notification
+  const { assetType, chainId, tokenAddress, tokenId, txType, txStatus } = notification
   const userAddress = useAppSelector(activeAccountAddressSelector) || ''
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
@@ -264,11 +241,11 @@ export function TransferNFTNotification({
     />
   )
 
-  return <TxNotificationToast icon={icon} title={title} txHash={txHash} />
+  return <NotificationToast icon={icon} title={title} />
 }
 
 export function UnknownTxNotification({
-  notification: { chainId, tokenAddress, txStatus, txType, txHash },
+  notification: { chainId, tokenAddress, txStatus, txType },
 }: {
   notification: TransactionNotificationBase
 }) {
@@ -285,7 +262,7 @@ export function UnknownTxNotification({
     />
   )
 
-  return <TxNotificationToast icon={icon} title={title} txHash={txHash} />
+  return <NotificationToast icon={icon} title={title} />
 }
 
 export function ErrorNotification({

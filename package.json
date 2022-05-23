@@ -83,7 +83,7 @@
     "react-i18next": "^11.12.0",
     "react-native": "0.66.0",
     "react-native-ble-plx": "https://github.com/below/react-native-ble-plx",
-    "react-native-gesture-handler": "^1.10.2",
+    "react-native-gesture-handler": "^2.4.2",
     "react-native-get-random-values": "^1.7.0",
     "react-native-image-colors": "^1.5.0",
     "react-native-onesignal": "^4.3.7",
