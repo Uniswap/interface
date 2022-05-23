@@ -51,7 +51,7 @@ export default function DowntimeWarning() {
           </div>
         )
       case SupportedChainId.ARBITRUM_ONE:
-    case SupportedChainId.ARBITRUM_RINKEBY:
+      case SupportedChainId.ARBITRUM_RINKEBY:
         return (
           <div>
             <Trans>
