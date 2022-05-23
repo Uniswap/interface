@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { CurrencyAmount, ETHER, TokenAmount, Trade } from '@dynamic-amm/sdk'
+import { CurrencyAmount, ETHER, TokenAmount, Trade, ZERO } from '@dynamic-amm/sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESSES, ROUTER_ADDRESSES_V2 } from 'constants/index'
 import { useTokenAllowance } from 'data/Allowances'
@@ -39,7 +39,14 @@ export function useApproveCallback(
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
-    // amountToApprove will be defined if currentAllowance is
+    // Handle farm approval.
+    if (amountToApprove.raw.toString() === MaxUint256.toString()) {
+      return currentAllowance.equalTo(ZERO)
+        ? pendingApproval
+          ? ApprovalState.PENDING
+          : ApprovalState.NOT_APPROVED
+        : ApprovalState.APPROVED
+    }
 
     return currentAllowance.lessThan(amountToApprove)
       ? pendingApproval
