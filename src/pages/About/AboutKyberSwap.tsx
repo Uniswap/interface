@@ -39,7 +39,7 @@ import AttackIcon from 'assets/svg/prevent_attack.svg'
 import KNCBlack from 'assets/svg/knc_black.svg'
 import SeamlessImg from 'assets/svg/seamless.svg'
 import { useMedia } from 'react-use'
-import { ExternalLink } from 'theme'
+import { ExternalLink, StyledInternalLink } from 'theme'
 import { useDarkModeManager } from 'state/user/hooks'
 import githubImg from 'assets/svg/about_icon_github.png'
 import githubImgLight from 'assets/svg/about_icon_github_light.png'
@@ -1017,7 +1017,7 @@ function AboutKyberSwap() {
             {!above500 ? <div /> : <VerticalDivider />}
             <ExternalLink href={`https://kyber.network`}>Kyber Network</ExternalLink>
             <VerticalDivider />
-            <ExternalLink href={`https://kyber.network/about/knc`}>KNC</ExternalLink>
+            <StyledInternalLink to={`/about/knc`}>KNC</StyledInternalLink>
           </Flex>
           <FooterSocialLink />
         </FooterContainer>
