@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-05-24 21:07\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -282,7 +282,7 @@ msgstr "Доступно для внесения: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
-msgstr "Вернуться к выбору кошелька"
+msgstr "Назад к выбору кошелька"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -855,7 +855,7 @@ msgstr "Я понимаю"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "If you believe this is an error, please send an email including your address to"
-msgstr "Если вы считаете, что это ошибка, отправьте электронное письмо с указанием вашего адреса на адрес"
+msgstr "Если вы считаете, что это ошибка, отправьте электронное письмо с указанием вашего адреса на"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
@@ -1507,7 +1507,7 @@ msgstr "Доля в пуле:"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
-msgstr "Показать отменено"
+msgstr "Показать отменённые"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
@@ -1598,7 +1598,7 @@ msgstr "Пройдите 10-минутный опрос — это поможе�
 
 #: src/components/WalletModal/index.tsx
 msgid "Tally"
-msgstr "счет"
+msgstr "Подсчёт"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
