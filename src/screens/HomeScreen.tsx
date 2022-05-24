@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView, useColorScheme } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList, useHomeStackNavigation } from 'src/app/navigation/types'
-import Clock from 'src/assets/icons/clock.svg'
 import Scan from 'src/assets/icons/scan.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
@@ -25,6 +24,7 @@ import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { BiometricCheck } from 'src/features/biometrics'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import { NotificationCenterLogo } from 'src/features/notifications/NotificationCenterLogo'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -94,7 +94,7 @@ export function HomeScreen({ navigation }: Props) {
                   </Button>
                 )}
                 <Button name={ElementName.Notifications} onPress={onPressNotifications}>
-                  <Clock color={theme.colors.neutralTextTertiary} height={24} width={24} />
+                  <NotificationCenterLogo />
                 </Button>
               </Flex>
             </Box>

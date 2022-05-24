@@ -1,6 +1,7 @@
 import {
   BackgroundColorProps,
   BackgroundColorShorthandProps,
+  BorderProps,
   SpacingProps,
   SpacingShorthandProps,
 } from '@shopify/restyle'
@@ -13,7 +14,8 @@ import { Theme } from 'src/styles/theme'
 type Props = {
   size: number
   color?: string
-} & BackgroundColorProps<Theme> &
+} & BorderProps<Theme> &
+  BackgroundColorProps<Theme> &
   BackgroundColorShorthandProps<Theme> &
   SpacingProps<Theme> &
   SpacingShorthandProps<Theme>

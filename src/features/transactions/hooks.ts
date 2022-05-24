@@ -4,7 +4,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { selectTransactions } from 'src/features/transactions/selectors'
+import { selectPendingTransactions, selectTransactions } from 'src/features/transactions/selectors'
 import {
   CurrencyField,
   TransactionState,
@@ -16,13 +16,20 @@ import { flattenObjectOfObjects } from 'src/utils/objects'
 import { tryParseAmount } from 'src/utils/tryParseAmount'
 
 export function useSortedTransactions(newestFirst = false) {
-  const txsByChainId = useAppSelector((state) => state.transactions.byChainId)
+  const txsByChainId = useAppSelector(selectTransactions)
   return useMemo(() => {
     const txDetails = flattenObjectOfObjects(txsByChainId)
     return txDetails.sort((a, b) =>
       newestFirst ? b.addedTime - a.addedTime : a.addedTime - b.addedTime
     )
   }, [txsByChainId, newestFirst])
+}
+
+export function useSortedPendingTransactions() {
+  const pendingTransactions = useAppSelector(selectPendingTransactions)
+  return useMemo(() => {
+    return pendingTransactions.sort((a, b) => a.addedTime - b.addedTime)
+  }, [pendingTransactions])
 }
 
 export function useCreateSwapFormState(chainId: ChainId, txHash: string) {

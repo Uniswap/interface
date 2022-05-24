@@ -87,6 +87,7 @@
     "react-native-get-random-values": "^1.7.0",
     "react-native-image-colors": "^1.5.0",
     "react-native-onesignal": "^4.3.7",
+    "react-native-progress": "^5.0.0",
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-reanimated": "^2.4.1.",
     "react-native-redash": "^16.2.3",

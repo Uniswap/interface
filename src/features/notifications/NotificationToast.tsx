@@ -5,7 +5,7 @@ import {
   FlingGestureHandlerGestureEvent,
   State,
 } from 'react-native-gesture-handler'
-import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
@@ -66,7 +66,7 @@ export function NotificationToast({
 
   useEffect(() => {
     if (currentNotification) {
-      bannerOffset.value = withSpring(showOffset, SPRING_ANIMATION)
+      bannerOffset.value = withDelay(500, withSpring(showOffset, SPRING_ANIMATION))
     }
   }, [showOffset, bannerOffset, currentNotification])
 
@@ -78,7 +78,7 @@ export function NotificationToast({
     bannerOffset.value = withSpring(HIDE_OFFSET_Y, SPRING_ANIMATION)
     setTimeout(() => dispatch(popNotification({ address: activeAddress })), 500)
     if (notifications.length > 1) {
-      setTimeout(() => (bannerOffset.value = withSpring(showOffset, SPRING_ANIMATION)), 500)
+      bannerOffset.value = withDelay(500, withSpring(showOffset, SPRING_ANIMATION))
     }
   }, [dispatch, bannerOffset, notifications, showOffset, activeAddress])
 
