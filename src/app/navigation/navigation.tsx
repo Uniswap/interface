@@ -45,6 +45,7 @@ import { PortfolioTokensScreen } from 'src/screens/PortfolioTokens'
 import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
+import { SettingsHelpCenterScreen } from 'src/screens/SettingsHelpCenterScreen'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
@@ -115,6 +116,10 @@ function SettingsStackGroup() {
   return (
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
+      <SettingsStack.Screen
+        component={SettingsHelpCenterScreen}
+        name={Screens.SettingsHelpCenter}
+      />
       <SettingsStack.Screen component={SettingsChainsScreen} name={Screens.SettingsChains} />
       <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
       <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />

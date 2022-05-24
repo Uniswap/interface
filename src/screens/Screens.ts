@@ -20,6 +20,7 @@ export enum Screens {
   RecipientSelector = 'RecipientSelector',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
+  SettingsHelpCenter = 'SettingsHelpCenter',
   SettingsChains = 'SettingsChains',
   SettingsStack = 'SettingsStack',
   SettingsSupport = 'SettingsSupport',
