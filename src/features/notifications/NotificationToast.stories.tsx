@@ -24,6 +24,7 @@ export const WallectConnectNotification: ComponentStory<typeof WCNotification> =
     <WCNotification
       notification={{
         type: AppNotificationType.WalletConnect,
+        address: '0x000000',
         event: WalletConnectEvent.Connected,
         dappName: 'Uniswap',
         imageUrl: 'https://app.uniswap.org/images/192x192_App_Icon.png',

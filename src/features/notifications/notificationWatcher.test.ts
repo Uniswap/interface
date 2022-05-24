@@ -22,7 +22,9 @@ import {
   TransactionTypeInfo,
   UnknownTransactionInfo,
 } from 'src/features/transactions/types'
-import { finalizedTxAction, txDetailsPending } from 'src/test/fixtures'
+import { account, finalizedTxAction, txDetailsPending } from 'src/test/fixtures'
+
+const { address } = account
 
 // Seems to be an issue with testing `takeLatest` from `typed-redux-saga`
 describe(notificationWatcher, () => {
@@ -46,7 +48,7 @@ describe(notificationWatcher, () => {
 const createTxDetails = (typeInfo: TransactionTypeInfo): TransactionDetails => ({
   chainId: ChainId.Mainnet,
   id: finalizedTxAction.payload.id,
-  from: '0x',
+  from: address,
   options: {
     request: {
       from: '0x123',
@@ -83,6 +85,7 @@ describe(pushTransactionNotification, () => {
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
+          address,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -120,6 +123,7 @@ describe(pushTransactionNotification, () => {
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
+          address,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -158,6 +162,7 @@ describe(pushTransactionNotification, () => {
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
+          address,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -195,6 +200,7 @@ describe(pushTransactionNotification, () => {
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
+          address,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -232,6 +238,7 @@ describe(pushTransactionNotification, () => {
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
+          address,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -269,6 +276,7 @@ describe(pushTransactionNotification, () => {
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
+          address,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -303,6 +311,7 @@ describe(pushTransactionNotification, () => {
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
+          address,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,

@@ -59,6 +59,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       emit(
         pushNotification({
           type: AppNotificationType.WalletConnect,
+          address: req.account,
           event: WalletConnectEvent.Connected,
           dappName: req.dapp.name,
           imageUrl: req.dapp.icon,
@@ -74,6 +75,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       emit(
         pushNotification({
           type: AppNotificationType.WalletConnect,
+          address: req.account,
           event: WalletConnectEvent.Connected,
           dappName: req.dapp.name,
           imageUrl: req.dapp.icon,
@@ -87,6 +89,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       emit(
         pushNotification({
           type: AppNotificationType.WalletConnect,
+          address: req.account,
           dappName: req.dapp.name,
           event: WalletConnectEvent.Disconnected,
           imageUrl: req.dapp.icon,
@@ -137,14 +140,16 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
     const errorHandler = (req: WCError) => {
       switch (req.type) {
         case WCErrorType.UnsupportedChainError:
-          if (req.dapp) {
-            emit(
-              pushNotification({
-                type: AppNotificationType.Error,
-                errorMessage: i18n.t('Failed to switch network, chain is not supported'),
-              })
-            )
-          }
+          // TODO: add req.account to the WCError type
+          // if (req.dapp && req.account) {
+          //   emit(
+          //     pushNotification({
+          //       type: AppNotificationType.Error,
+          //       address: req.account,
+          //       errorMessage: i18n.t('Failed to switch network, chain is not supported'),
+          //     })
+          //   )
+          // }
           break
         default:
           logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
@@ -244,6 +249,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     yield* put(
       pushNotification({
         type: AppNotificationType.Error,
+        address: account.address,
         errorMessage: i18n.t('There was an issue submitting your transaction.'),
       })
     )

@@ -69,6 +69,7 @@ export function* transactionWatcher() {
       yield* put(
         pushNotification({
           type: AppNotificationType.Error,
+          address: transaction.from,
           errorMessage: i18n.t('Error while checking transaction status'),
         })
       )
@@ -96,6 +97,7 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
     yield* put(
       pushNotification({
         type: AppNotificationType.Error,
+        address: from,
         errorMessage: i18n.t('Your transaction has failed.'),
       })
     )

@@ -1,5 +1,5 @@
 import { ElementName } from '../../src/features/telemetry/constants'
-import { by, expect, element, device } from 'detox'
+import { by, element, device } from 'detox'
 import { sleep } from '../../src/utils/timing'
 import { maybeDismissTokenWarning } from '../utils/utils'
 

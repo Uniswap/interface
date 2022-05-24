@@ -25,6 +25,7 @@ import {
   toggleFlashbots,
 } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
+import { logger } from 'src/utils/logger'
 
 export function DevScreen({ navigation }: any) {
   const dispatch = useAppDispatch()
@@ -66,9 +67,20 @@ export function DevScreen({ navigation }: any) {
   const blockTimestamp = useCurrentBlockTimestamp(currentChain)
 
   const onPressShowError = () => {
+    const address = activeAccount?.address
+    if (!address) {
+      logger.error(
+        'DevScreen',
+        'onPressShowError',
+        'Cannot show error if activeAccount is undefined'
+      )
+      return
+    }
+
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
+        address,
         errorMessage: 'A scary new error has happened. Be afraid!!',
       })
     )

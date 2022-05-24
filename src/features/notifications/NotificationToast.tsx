@@ -14,6 +14,8 @@ import { AnimatedBox, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { popNotification } from 'src/features/notifications/notificationSlice'
+import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
+import { activeAccountAddressSelector } from 'src/features/wallet/walletSlice'
 import { flex } from 'src/styles/flex'
 import { useTimeout } from 'src/utils/timing'
 
@@ -55,8 +57,9 @@ export function NotificationToast({
   actionButton,
 }: NotificationToastProps) {
   const dispatch = useAppDispatch()
-  const notificationQueue = useAppSelector((state) => state.notifications.notificationQueue)
-  const currentNotification = notificationQueue[0]
+  const activeAddress = useAppSelector(activeAccountAddressSelector)
+  const notifications = useAppSelector(selectActiveAccountNotifications)
+  const currentNotification = notifications[0]
 
   const showOffset = useSafeAreaInsets().top
   const bannerOffset = useSharedValue(HIDE_OFFSET_Y)
@@ -73,11 +76,11 @@ export function NotificationToast({
 
   const dismissLatest = useCallback(() => {
     bannerOffset.value = withSpring(HIDE_OFFSET_Y, SPRING_ANIMATION)
-    setTimeout(() => dispatch(popNotification()), 500)
-    if (notificationQueue.length > 1) {
+    setTimeout(() => dispatch(popNotification({ address: activeAddress })), 500)
+    if (notifications.length > 1) {
       setTimeout(() => (bannerOffset.value = withSpring(showOffset, SPRING_ANIMATION)), 500)
     }
-  }, [dispatch, bannerOffset, notificationQueue, showOffset])
+  }, [dispatch, bannerOffset, notifications, showOffset, activeAddress])
 
   const delay = hideDelay ?? DEFAULT_HIDE_DELAY
   const cancelDismiss = useTimeout(dismissLatest, delay)
@@ -92,7 +95,7 @@ export function NotificationToast({
   const onNotificationPress = () => {
     cancelDismiss?.()
     if (onPress) {
-      dispatch(popNotification())
+      dispatch(popNotification({ address: activeAddress }))
       onPress()
     } else {
       dismissLatest()

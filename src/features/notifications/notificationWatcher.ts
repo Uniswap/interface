@@ -35,7 +35,8 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
     return
   }
 
-  const { typeInfo, hash } = transactionDetails
+  const { typeInfo, hash, from } = transactionDetails
+  const address = from
 
   const baseNotificationData = {
     txStatus: status,
@@ -49,6 +50,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
+          address,
           txType: TransactionType.Approve,
           tokenAddress: typeInfo.tokenAddress,
           spender: typeInfo.spender,
@@ -69,6 +71,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
+          address,
           txType: TransactionType.Swap,
           inputCurrencyId: typeInfo.inputCurrencyId,
           outputCurrencyId: typeInfo.outputCurrencyId,
@@ -84,6 +87,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
+            address,
             txType: TransactionType.Send,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -99,6 +103,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
+            address,
             txType: TransactionType.Send,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -118,6 +123,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
+            address,
             txType: TransactionType.Receive,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -133,6 +139,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
+            address,
             txType: TransactionType.Receive,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -147,6 +154,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
+          address,
           txType: TransactionType.Unknown,
           tokenAddress: typeInfo?.tokenAddress,
         })

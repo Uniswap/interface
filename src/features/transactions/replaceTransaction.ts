@@ -68,6 +68,7 @@ export function* attemptReplaceTransaction(
     yield* put(
       pushNotification({
         type: AppNotificationType.Error,
+        address: transaction.from,
         errorMessage: isCancellation
           ? i18n.t('Unable to cancel transaction')
           : i18n.t('Unable to replace transaction'),

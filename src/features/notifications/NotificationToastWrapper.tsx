@@ -11,12 +11,13 @@ import {
   UnknownTxNotification,
   WCNotification,
 } from 'src/features/notifications/Notifications'
+import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { TransactionType } from 'src/features/transactions/types'
 
 export function NotificationToastWrapper({ children }: PropsWithChildren<any>) {
-  const notificationQueue = useAppSelector((state) => state.notifications.notificationQueue)
-  const notification = notificationQueue[0]
+  const notifications = useAppSelector(selectActiveAccountNotifications)
+  const notification = notifications[0]
   return (
     <>
       {notification && <NotificationToastRouter notification={notification} />}
