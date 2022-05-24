@@ -88,6 +88,7 @@ export interface SignRequestEvent {
 }
 
 export interface WCError {
+  account: string
   type: WCErrorType
   message?: string
   dapp?: DappInfo

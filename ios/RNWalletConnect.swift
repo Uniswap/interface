@@ -53,7 +53,7 @@ class RNWalletConnect: RCTEventEmitter {
   func initialize(_ supportedChainIds: [Int]) {
     self.supportedChainIds = supportedChainIds
   }
-
+  
   func getServer(_ account: String) -> WalletConnectAccountServer {
     guard self.accountToWcServer[account] == nil else { return self.accountToWcServer[account]! }
     
@@ -65,7 +65,7 @@ class RNWalletConnect: RCTEventEmitter {
   @objc
   func connect(_ url: String, account: String) {
     guard let wcUrl = WCURL(url) else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcInvalidUrl ])
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcInvalidUrl, "account": account ])
     }
     
     let server = self.getServer(account)
@@ -79,7 +79,7 @@ class RNWalletConnect: RCTEventEmitter {
   @objc
   func disconnect(_ topic: String, account: String) {
     guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
     }
     accountServer.disconnect(topic)
   }
@@ -87,7 +87,7 @@ class RNWalletConnect: RCTEventEmitter {
   @objc
   func sendSignature(_ requestInternalId: String, signature: String, account: String) {
     guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
     }
     
     accountServer.sendSignature(requestInternalId: requestInternalId, signature: signature)
@@ -96,7 +96,7 @@ class RNWalletConnect: RCTEventEmitter {
   @objc
   func changeChainId(_ topic: String, chainId: Int, account: String) {
     guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
     }
     guard let session: Session = accountServer.topicToSession[topic] else { return }
     
@@ -106,7 +106,7 @@ class RNWalletConnect: RCTEventEmitter {
   @objc
   func rejectRequest(_ requestInternalId: String, account: String) {
     guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue])
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
     }
     
     accountServer.rejectRequest(requestInternalId: requestInternalId)

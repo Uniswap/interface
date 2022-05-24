@@ -37,7 +37,7 @@ class WalletConnectAccountServer {
     do {
       try self.server.disconnect(from: session)
     } catch {
-      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcDisconnectError.rawValue, "message": error.localizedDescription])
+      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcDisconnectError.rawValue, "message": error.localizedDescription, "account": self.account])
     }
   }
   
@@ -45,7 +45,7 @@ class WalletConnectAccountServer {
     do {
       try self.server.connect(to: to)
     } catch {
-      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue, "message": error.localizedDescription ])
+      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue, "message": error.localizedDescription, "account": self.account])
     }
   }
   
@@ -55,7 +55,8 @@ class WalletConnectAccountServer {
         withName: EventType.error.rawValue,
         body: [
           "type": ErrorType.invalidRequestId.rawValue,
-          "message": "Are you sure you are using request_internal_id and not request.id?"
+          "message": "Are you sure you are using request_internal_id and not request.id?",
+          "account": self.account
         ]
       )
     }
@@ -66,7 +67,8 @@ class WalletConnectAccountServer {
       self.eventEmitter.sendEvent(
         withName: EventType.error.rawValue,
         body: [
-          "type": ErrorType.wcSendSignatureError.rawValue
+          "type": ErrorType.wcSendSignatureError.rawValue,
+          "account": self.account
         ]
       )
     }
@@ -84,6 +86,7 @@ class WalletConnectAccountServer {
         let icons = session.dAppInfo.peerMeta.icons
         self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: [
           "type": ErrorType.wcUnsupportedChainError.rawValue,
+          "account": self.account,
           "dapp": [
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
@@ -96,6 +99,7 @@ class WalletConnectAccountServer {
           withName: EventType.error.rawValue,
           body: [
             "type": ErrorType.wcRejectRequestError.rawValue,
+            "account": self.account
           ]
         )
       }
@@ -137,7 +141,8 @@ class WalletConnectAccountServer {
       self.eventEmitter.sendEvent(
         withName: EventType.error.rawValue,
         body: [
-          "type": ErrorType.wcSwitchChainError.rawValue
+          "type": ErrorType.wcSwitchChainError.rawValue,
+          "account": self.account
         ]
       )
     }
@@ -149,6 +154,7 @@ class WalletConnectAccountServer {
         withName: EventType.error.rawValue,
         body: [
           "type": ErrorType.invalidRequestId.rawValue,
+          "account": self.account,
           "message": "Are you sure you are using request_internal_id and not request.id?"
         ]
       )
@@ -160,7 +166,8 @@ class WalletConnectAccountServer {
       self.eventEmitter.sendEvent(
         withName: EventType.error.rawValue,
         body: [
-          "type": ErrorType.wcRejectRequestError.rawValue
+          "type": ErrorType.wcRejectRequestError.rawValue,
+          "account": self.account
         ]
       )
     }
@@ -183,7 +190,7 @@ class WalletConnectAccountServer {
 
 extension WalletConnectAccountServer: ServerDelegate {
   func server(_ server: Server, didFailToConnect url: WCURL) {
-    self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue ])
+    self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue, "account": self.account ])
   }
   
   func server(_ server: Server, shouldStart session: Session, completion: @escaping (Session.WalletInfo) -> Void) {
