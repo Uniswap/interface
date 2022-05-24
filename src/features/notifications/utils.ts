@@ -29,11 +29,11 @@ export const formApproveNotificationTitle = (
   const currencySymbol = getCurrencySymbol(currency, tokenAddress)
   const address = shortenAddress(spender)
   return txStatus === TransactionStatus.Success
-    ? i18n.t('You approved {{currencySymbol}} for use with {{address}}.', {
+    ? i18n.t('Approved {{currencySymbol}} for use with {{address}}.', {
         currencySymbol,
         address,
       })
-    : i18n.t('Your approval of {{currencySymbol}} for use with {{address}} failed.', {
+    : i18n.t('Failed to approve {{currencySymbol}} for use with {{address}}.', {
         currencySymbol,
         address,
       })
@@ -70,11 +70,11 @@ export const formSwapNotificationTitle = (
   const outputAssetInfo = `${outputAmount}${outputCurrencySymbol}`
 
   return txStatus === TransactionStatus.Success
-    ? i18n.t('You swapped {{inputAssetInfo}} for {{outputAssetInfo}}.', {
+    ? i18n.t('Swapped {{inputAssetInfo}} for {{outputAssetInfo}}.', {
         inputAssetInfo,
         outputAssetInfo,
       })
-    : i18n.t('Your swap of {{inputAssetInfo}} for {{outputAssetInfo}} failed.', {
+    : i18n.t('Failed to swap {{inputAssetInfo}} for {{outputAssetInfo}}.', {
         inputAssetInfo,
         outputAssetInfo,
       })
@@ -123,8 +123,8 @@ export const formUnknownTxTitle = (
   }
 
   return txStatus === TransactionStatus.Success
-    ? i18n.t('You made an unknown transaction{{addressText}}.', { addressText })
-    : i18n.t('Your transaction{{addressText}} failed.', { addressText })
+    ? i18n.t('Completed unknown transaction{{addressText}}.', { addressText })
+    : i18n.t('Failed to complete unknown transaction{{addressText}}.', { addressText })
 }
 
 const formTransferTxTitle = (
@@ -135,14 +135,14 @@ const formTransferTxTitle = (
 ) => {
   if (txType === TransactionType.Send) {
     return txStatus === TransactionStatus.Success
-      ? i18n.t('You sent {{assetInfo}} to {{senderOrRecipient}}.', { assetInfo, senderOrRecipient })
-      : i18n.t('Your transfer of {{assetInfo}} to {{senderOrRecipient}} failed.', {
+      ? i18n.t('Sent {{assetInfo}} to {{senderOrRecipient}}.', { assetInfo, senderOrRecipient })
+      : i18n.t('Failed to send {{assetInfo}} to {{senderOrRecipient}}.', {
           assetInfo,
           senderOrRecipient,
         })
   }
 
-  return i18n.t('You received {{assetInfo}} from {{senderOrRecipient}}.', {
+  return i18n.t('Received {{assetInfo}} from {{senderOrRecipient}}.', {
     assetInfo,
     senderOrRecipient,
   })
