@@ -13,8 +13,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
-import { ExternalLink } from '../../theme'
-import { CloseIcon, CustomLightSpinner } from '../../theme'
+import { CloseIcon, CustomLightSpinner, ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
@@ -82,6 +81,7 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
+
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
@@ -102,7 +102,7 @@ function TransactionSubmittedContent({
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
 
   return (
-    <Wrapper>
+    <Wrapper data-testid="transaction-submitted-content">
       <Section inline={inline}>
         {!inline && (
           <RowBetween>

@@ -97,6 +97,7 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "ethereum-input-data-decoder": "^0.4.1",
     "firebase": "^9.1.3",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",

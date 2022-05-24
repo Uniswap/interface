@@ -1,4 +1,12 @@
+import { SWAP_ROUTER_ADDRESSES } from '../../src/constants/addresses'
+import { SupportedChainId } from '../../src/constants/chains'
+import { getSwapRouterHandler } from '../utils/ethbridge/abihandlers/SwapRouter'
+import { CustomizedBridge } from '../utils/ethbridge/CustomizedBridge'
+
 describe('Swap', () => {
+  const WETH = '0xc778417E063141139Fce010982780140Aa0cD5Ab'
+  const DAI = '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'
+
   beforeEach(() => {
     cy.visit('/swap')
   })
@@ -33,15 +41,31 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .token-amount-input').type('0.0', { delay: 200 }).should('have.value', '0.0')
   })
 
-  it.skip('can swap ETH for DAI', () => {
+  it('can swap ETH for DAI', () => {
+    const swapHandler = getSwapRouterHandler()
+    cy.window().then((win) => {
+      // @ts-ignore
+      const bridge = win.ethereum as CustomizedBridge
+      cy.spy(swapHandler, 'swapSpy')
+      bridge.setHandler(SWAP_ROUTER_ADDRESSES[SupportedChainId.RINKEBY], swapHandler)
+    })
     cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').should('be.visible')
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').click({ force: true })
+    cy.get(`.token-item-${DAI}`).should('be.visible')
+    cy.get(`.token-item-${DAI}`).click({ force: true })
     cy.get('#swap-currency-input .token-amount-input').should('be.visible')
     cy.get('#swap-currency-input .token-amount-input').type('0.001', { force: true, delay: 200 })
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
     cy.get('#swap-button').click()
-    cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
+    cy.get('#confirm-swap-or-send').click()
+    cy.get('[data-testid=transaction-submitted-content]')
+      .should('exist')
+      .then(() => {
+        expect(swapHandler.swapSpy).to.have.calledWith({
+          tokenId: WETH,
+          tokenOut: DAI,
+          amountIn: '1000000000000000',
+        })
+      })
   })
 
   it.skip('add a recipient does not exist unless in expert mode', () => {
