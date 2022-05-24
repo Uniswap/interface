@@ -99,7 +99,7 @@ export const StackedItem = styled.div<{ zIndex?: number }>`
 
 export const MediumOnly = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
+    display: block;
   `};
 `
 
