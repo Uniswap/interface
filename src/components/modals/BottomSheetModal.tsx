@@ -12,7 +12,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
-import { dimensions } from 'src/styles/sizing'
+import { dimensions, spacing } from 'src/styles/sizing'
 
 type Props = {
   children: PropsWithChildren<any>
@@ -137,7 +137,68 @@ export function BottomSheetScrollModal({
   )
 }
 
+export function BottomSheetDetachedModal({
+  isVisible,
+  children,
+  name,
+  onClose,
+  snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
+  stackBehavior = 'push',
+  fullScreen,
+  hideHandlebar,
+  backgroundColor,
+}: Props) {
+  const modalRef = useRef<BaseModal>(null)
+  const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
+    useBottomSheetDynamicSnapPoints(snapPoints)
+  const theme = useAppTheme()
+
+  useEffect(() => {
+    if (isVisible) {
+      modalRef.current?.present()
+    } else {
+      modalRef.current?.close()
+    }
+  }, [isVisible])
+
+  if (!isVisible) return null
+
+  const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
+
+  return (
+    <BaseModal
+      ref={modalRef}
+      backdropComponent={Backdrop}
+      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.mainBackground }}
+      bottomInset={theme.spacing.xxl}
+      contentHeight={animatedContentHeight}
+      detached={true}
+      handleComponent={hideHandlebar ? null : HandleBar}
+      handleHeight={animatedHandleHeight}
+      snapPoints={animatedSnapPoints}
+      stackBehavior={stackBehavior}
+      style={BottomSheetStyle.detached}
+      onDismiss={onClose}>
+      <Trace logImpression section={name}>
+        <BottomSheetView
+          style={[
+            {
+              height: fullScreen ? fullScreenContentHeight : undefined,
+            },
+            BottomSheetStyle.view,
+          ]}
+          onLayout={handleContentLayout}>
+          {children}
+        </BottomSheetView>
+      </Trace>
+    </BaseModal>
+  )
+}
+
 const BottomSheetStyle = StyleSheet.create({
+  detached: {
+    marginHorizontal: spacing.sm,
+  },
   view: {
     flex: 1,
   },

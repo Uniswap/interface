@@ -46,7 +46,6 @@ enum WCSwiftError: Error {
 
 @objc(RNWalletConnect)
 class RNWalletConnect: RCTEventEmitter {
-  // TODO: Persist accountToWcServer to persist active connections
   private var accountToWcServer: [String: WalletConnectAccountServer]! = [:]
   var supportedChainIds: [Int] = []
   
@@ -54,13 +53,12 @@ class RNWalletConnect: RCTEventEmitter {
   func initialize(_ supportedChainIds: [Int]) {
     self.supportedChainIds = supportedChainIds
   }
-  
+
   func getServer(_ account: String) -> WalletConnectAccountServer {
     guard self.accountToWcServer[account] == nil else { return self.accountToWcServer[account]! }
     
     let accountServer = WalletConnectAccountServer(eventEmitter: self, account: account, supportedChainIds: supportedChainIds)
     self.accountToWcServer.updateValue(accountServer, forKey: account)
-    
     return accountServer
   }
   

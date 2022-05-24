@@ -7,12 +7,16 @@ export const initializeWalletConnect = () => {
   RNWalletConnect.initialize(ALL_SUPPORTED_CHAIN_IDS)
 }
 
+export const reconnectAccountSessions = (accounts: string[]) => {
+  RNWalletConnect.reconnectAccountSessions(accounts)
+}
+
 export const connectToApp = (uri: string, account: string) => {
   RNWalletConnect.connect(uri, account)
 }
 
-export const disconnectFromApp = (sessionId: string, account: string) => {
-  RNWalletConnect.disconnect(sessionId, account)
+export const disconnectFromApp = (topic: string, account: string) => {
+  RNWalletConnect.disconnect(topic, account)
 }
 
 export const changeChainId = (topic: string, chainId: number, account: string) => {

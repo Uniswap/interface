@@ -53,7 +53,7 @@ export function AddressDisplay({
   )
 }
 
-function useDisplayName(address?: string, fallback?: string) {
+export function useDisplayName(address?: string, fallback?: string) {
   const ens = useENS(ChainId.Mainnet, address)
 
   // if address is a local account with a name
