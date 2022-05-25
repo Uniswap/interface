@@ -1,17 +1,19 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
-import { Action } from '@reduxjs/toolkit'
+import { Action, PayloadAction } from '@reduxjs/toolkit'
 import { providers, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { NativeEventEmitter, NativeModules } from 'react-native'
+import { REHYDRATE } from 'redux-persist'
 import { eventChannel } from 'redux-saga'
 import { i18n } from 'src/app/i18n'
+import { RootState } from 'src/app/rootReducer'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { signAndSendTransaction } from 'src/features/transactions/sendTransaction'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
-import { Account } from 'src/features/wallet/accounts/types'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import {
   DappInfo,
   EthMethod,
@@ -28,6 +30,7 @@ import {
 } from 'src/features/walletConnect/types'
 import {
   initializeWalletConnect,
+  reconnectAccountSessions,
   rejectRequest,
   sendSignature,
 } from 'src/features/walletConnect/WalletConnect'
@@ -56,16 +59,18 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           account: req.account,
         })
       )
-      emit(
-        pushNotification({
-          type: AppNotificationType.WalletConnect,
-          address: req.account,
-          event: WalletConnectEvent.Connected,
-          dappName: req.dapp.name,
-          imageUrl: req.dapp.icon,
-          chainId: req.dapp.chain_id,
-        })
-      )
+      if (req.show_notification) {
+        emit(
+          pushNotification({
+            type: AppNotificationType.WalletConnect,
+            address: req.account,
+            event: WalletConnectEvent.Connected,
+            dappName: req.dapp.name,
+            imageUrl: req.dapp.icon,
+            chainId: req.dapp.chain_id,
+          })
+        )
+      }
     }
 
     const sessionUpdatedHandler = (req: SessionUpdatedEvent) => {
@@ -178,6 +183,12 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
 
 export function* walletConnectSaga() {
   yield* call(initializeWalletConnect)
+  const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
+  const addressToAccounts = persisted.payload.wallet.accounts
+  const signerAddresses = Object.values(addressToAccounts)
+    .filter((a) => a.type !== AccountType.Readonly)
+    .map((account) => account.address)
+  yield* call(reconnectAccountSessions, signerAddresses)
   yield* fork(watchWalletConnectEvents)
 }
 

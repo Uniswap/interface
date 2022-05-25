@@ -54,6 +54,34 @@ class RNWalletConnect: RCTEventEmitter {
     self.supportedChainIds = supportedChainIds
   }
   
+  @objc
+  func reconnectAccountSessions(_ accounts: [String]) {
+    // Load cache of all sessions for given account addresses
+    for account in accounts {
+      let accountServer = getServer(account)
+      
+      if let accountSessionObjects = UserDefaults.standard.object(forKey: account) as? [String: Data] {
+      
+        // Copy accountSessions to remove failed reconnections from UserDefaults
+        var updatedAccountSessions = accountSessionObjects
+       
+        // Attempt to reconnect to all cached sessions for given account
+        for (_, sessionObject) in accountSessionObjects {
+          if let session = try? JSONDecoder().decode(Session.self, from: sessionObject) {
+            do {
+              try accountServer.server.reconnect(to: session)
+            } catch {
+              // Remove session from UserDefaults cache
+              updatedAccountSessions.removeValue(forKey: session.url.topic)
+            }
+          }
+        }
+       
+        UserDefaults.standard.set(updatedAccountSessions, forKey: account)
+      }
+    }
+  }
+
   func getServer(_ account: String) -> WalletConnectAccountServer {
     guard self.accountToWcServer[account] == nil else { return self.accountToWcServer[account]! }
     

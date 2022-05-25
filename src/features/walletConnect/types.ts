@@ -38,6 +38,7 @@ interface BaseSessionEvent {
 
 export interface SessionConnectedEvent extends BaseSessionEvent {
   session_name: string
+  show_notification: boolean
 }
 
 export interface SessionUpdatedEvent extends BaseSessionEvent {

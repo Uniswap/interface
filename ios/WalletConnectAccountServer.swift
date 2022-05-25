@@ -194,9 +194,6 @@ extension WalletConnectAccountServer: ServerDelegate {
   }
   
   func server(_ server: Server, shouldStart session: Session, completion: @escaping (Session.WalletInfo) -> Void) {
-    
-    let icons = session.dAppInfo.peerMeta.icons
-    
     // Default to chain 1 if dapp chainId is unsupported
     let chainId = supportedChainIds.contains(session.dAppInfo.chainId ?? -1) ? session.dAppInfo.chainId! : 1
 
@@ -211,30 +208,50 @@ extension WalletConnectAccountServer: ServerDelegate {
                                         peerId: UUID().uuidString,
                                         peerMeta: walletMeta)
     
-    
-    self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: [
-      "session_name": session.dAppInfo.peerMeta.name,
-      "session_id": session.url.topic,
-      "account": self.account!,
-      "dapp": [
-        "name": session.dAppInfo.peerMeta.name,
-        "url": session.dAppInfo.peerMeta.url.absoluteString,
-        "icon": icons.isEmpty ? "" : icons[0].absoluteString,
-        "chain_id": chainId,
-      ]
-    ])
-    
     completion(walletInfo)
   }
   
   func server(_ server: Server, didConnect session: Session) {
+    var sessionDatas = UserDefaults.standard.object(forKey: account) as? [String: Data] ?? [:]
+    var showNotification = false
+
+    // Add new session to UserDefaults cache if it doesn't already exist (ignores reconnections)
+    if (sessionDatas[session.url.topic] == nil) {
+      let sessionData = try! JSONEncoder().encode(session) as Data
+      sessionDatas.updateValue(sessionData, forKey: session.url.topic)
+      UserDefaults.standard.set(sessionDatas, forKey: account)
+    
+      showNotification = true
+    }
+    
+    // Send connected event back to React Native (no notification if reconnection)
+    let icons = session.dAppInfo.peerMeta.icons
+    self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: [
+      "session_name": session.dAppInfo.peerMeta.name,
+      "session_id": session.url.topic,
+      "account": self.account!,
+      "show_notification": showNotification,
+      "dapp": [
+        "name": session.dAppInfo.peerMeta.name,
+        "url": session.dAppInfo.peerMeta.url.absoluteString,
+        "icon": icons.isEmpty ? "" : icons[0].absoluteString,
+        "chain_id": session.walletInfo?.chainId ?? 1, 
+      ]
+    ])
+
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }
   
   func server(_ server: Server, didDisconnect session: Session) {
-    self.topicToSession.removeValue(forKey: session.url.topic)
-    let icons = session.dAppInfo.peerMeta.icons
+    // Remove session from UserDefaults cache
+    var newSessionDatas = UserDefaults.standard.object(forKey: account) as? [String: Data]
+    newSessionDatas?.removeValue(forKey: session.url.topic)
+    UserDefaults.standard.set(newSessionDatas, forKey: account)
     
+    self.topicToSession.removeValue(forKey: session.url.topic)
+    
+    // Send disconnected event back to React Native
+    let icons = session.dAppInfo.peerMeta.icons
     self.eventEmitter.sendEvent(withName: EventType.sessionDisconnected.rawValue, body: [
       "session_id": session.url.topic,
       "session_name": session.url.topic,
