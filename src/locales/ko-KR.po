@@ -616,7 +616,6 @@ msgid "Discover"
 msgstr ""
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
-#: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
 msgid "Discover more"
 msgstr ""
 
@@ -1366,6 +1365,10 @@ msgstr "최소 수령 금액을 받을 수 없다면 거래는 진행 되지 않
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Minimum received"
 msgstr "최소 수령"
+
+#: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
+msgid "More"
+msgstr ""
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem.tsx
 msgid "More info"

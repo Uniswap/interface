@@ -616,7 +616,6 @@ msgid "Discover"
 msgstr ""
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
-#: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
 msgid "Discover more"
 msgstr ""
 
@@ -1366,6 +1365,10 @@ msgstr "您将收到的最低金额，否则您的交易将被退回"
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Minimum received"
 msgstr "收到的最小值"
+
+#: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
+msgid "More"
+msgstr ""
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem.tsx
 msgid "More info"

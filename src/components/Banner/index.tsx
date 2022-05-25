@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styled from 'styled-components'
 import { X } from 'react-feather'

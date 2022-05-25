@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
@@ -10,9 +10,9 @@ import DropIcon from 'components/Icons/DropIcon'
 import { Link } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
-import { useDeepCompareEffect } from 'react-use'
 import { setFarmsData } from 'state/farms/actions'
 import { useAppDispatch } from 'state/hooks'
+import useMarquee from 'hooks/useMarquee'
 
 const MarqueeItem = ({ token0, token1 }: { token0: Token; token1: Token }) => {
   const theme = useTheme()
@@ -54,30 +54,13 @@ const MarqueeItem = ({ token0, token1 }: { token0: Token; token1: Token }) => {
 const FarmingPoolsMarquee = () => {
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
 
-  const increaseRef = useRef<HTMLDivElement>(null)
-
   const dispatch = useAppDispatch()
   const { chainId } = useActiveWeb3React()
   useEffect(() => {
     dispatch(setFarmsData({}))
   }, [dispatch, chainId])
 
-  useDeepCompareEffect(() => {
-    let itv: NodeJS.Timeout | undefined
-    if (increaseRef && increaseRef.current) {
-      itv = setInterval(() => {
-        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
-          increaseRef.current.scrollTo({
-            left: increaseRef.current.scrollLeft + 1,
-          })
-        }
-      }, 50)
-    }
-
-    return () => {
-      itv && clearInterval(itv)
-    }
-  }, [uniqueAndActiveFarms])
+  const increaseRef = useMarquee(uniqueAndActiveFarms)
 
   if (uniqueAndActiveFarms.length === 0) return null
 

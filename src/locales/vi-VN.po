@@ -616,7 +616,6 @@ msgid "Discover"
 msgstr ""
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
-#: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
 msgid "Discover more"
 msgstr ""
 
@@ -1366,6 +1365,10 @@ msgstr "Số lượng tối thiểu bạn sẽ nhận được hoặc giao dịc
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Minimum received"
 msgstr "Tối thiểu nhận được"
+
+#: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
+msgid "More"
+msgstr ""
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem.tsx
 msgid "More info"
