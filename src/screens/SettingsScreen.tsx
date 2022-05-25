@@ -1,13 +1,15 @@
 import { BaseTheme, useTheme } from '@shopify/restyle'
-import React, { ReactElement, useMemo } from 'react'
+import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
   useSettingsStackNavigation,
 } from 'src/app/navigation/types'
+import TestnetsIcon from 'src/assets/icons/testnets.svg'
 import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import TwitterIcon from 'src/assets/icons/twitter.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
@@ -15,6 +17,7 @@ import StarIcon from 'src/assets/icons/star.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
+import { Switch } from 'src/components/buttons/Switch'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { BlueToPinkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
@@ -23,18 +26,24 @@ import { PopoutArrow } from 'src/components/icons/PopoutArrow'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
+import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
+import { useActiveChainIds } from 'src/features/chains/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { shortenAddress } from 'src/utils/addresses'
 import { openUri } from 'src/utils/linking'
+import { Flex } from 'src/components/layout'
 
 interface SettingsSubPage {
   screen?: keyof SettingsStackParamList
   externalLink?: string
+  action?: ReactElement
   text: string
+  subText?: string
   icon: ReactElement
 }
 interface SettingsPage {
@@ -46,19 +55,48 @@ export function SettingsScreen() {
   const navigation = useSettingsStackNavigation()
   const theme = useTheme()
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+
+  const activeChains = useActiveChainIds()
+  const isRinkebyActive = activeChains.includes(ChainId.Rinkeby)
+  const onToggleTestnets = useCallback(() => {
+    // always rely on the state of rinkeby
+    TESTNET_CHAIN_IDS.forEach((chainId) =>
+      dispatch(setChainActiveStatus({ chainId, isActive: !isRinkebyActive }))
+    )
+  }, [dispatch, isRinkebyActive])
 
   // Defining them inline instead of outside component b.c. they need t()
   const pages: SettingsPage[] = useMemo(
     () => [
       {
-        subTitle: 'Support and feedback',
+        subTitle: t('App settings'),
+        subItems: [
+          {
+            action: <Switch value={isRinkebyActive} onValueChange={onToggleTestnets} />,
+            text: t('Testnets'),
+            subText: t('Allow connections to test networks'),
+            icon: (
+              <TestnetsIcon
+                color={theme.colors.neutralTextSecondary}
+                height={20}
+                strokeLinecap="round"
+                strokeWidth="1.5"
+                width={20}
+              />
+            ),
+          },
+        ],
+      },
+      {
+        subTitle: t('Support and feedback'),
         subItems: [
           {
             screen: Screens.SettingsHelpCenter,
             text: t('Help Center'),
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.deprecated_textColor}
+                color={theme.colors.neutralTextSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -71,7 +109,7 @@ export function SettingsScreen() {
             text: t('Uniswap Labs Twitter'),
             icon: (
               <TwitterIcon
-                color={theme.colors.deprecated_textColor}
+                color={theme.colors.neutralTextSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -90,7 +128,7 @@ export function SettingsScreen() {
             // TODO use chains icon when available
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.deprecated_textColor}
+                color={theme.colors.neutralTextSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -103,7 +141,7 @@ export function SettingsScreen() {
             text: t('Support'),
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.deprecated_textColor}
+                color={theme.colors.neutralTextSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -116,7 +154,7 @@ export function SettingsScreen() {
             text: 'Test Configs',
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.deprecated_textColor}
+                color={theme.colors.neutralTextSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -129,7 +167,7 @@ export function SettingsScreen() {
             text: t('Dev Options'),
             icon: (
               <CoffeeIcon
-                color={theme.colors.deprecated_textColor}
+                color={theme.colors.neutralTextSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -140,7 +178,7 @@ export function SettingsScreen() {
         ],
       },
     ],
-    [t, theme]
+    [isRinkebyActive, onToggleTestnets, t, theme]
   )
 
   return (
@@ -153,7 +191,7 @@ export function SettingsScreen() {
         {<ActiveAccountSummary />}
         {pages.map((o) => (
           <Box flexDirection="column" mb="md">
-            <Text color="deprecated_gray200" mb="sm">
+            <Text color="neutralTextTertiary" mb="sm">
               {o.subTitle}
             </Text>
             {o.subItems.map((item) => (
@@ -186,7 +224,7 @@ function OnboardingRow() {
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
           <StarIcon
-            color={theme.colors.deprecated_textColor}
+            color={theme.colors.neutralTextSecondary}
             height={20}
             strokeLinecap="round"
             strokeWidth="1.5"
@@ -196,7 +234,7 @@ function OnboardingRow() {
             {t('Onboarding')}
           </Text>
         </Box>
-        <Chevron color={theme.colors.deprecated_gray200} direction="e" height={16} width={16} />
+        <Chevron color={theme.colors.neutralTextTertiary} direction="e" height={16} width={16} />
       </Box>
     </Button>
   )
@@ -209,7 +247,7 @@ interface SettingsRowProps {
 }
 
 function SettingsRow({
-  page: { screen, icon, text, externalLink },
+  page: { screen, externalLink, action, icon, text, subText },
   navigation,
   theme,
 }: SettingsRowProps) {
@@ -223,16 +261,25 @@ function SettingsRow({
   return (
     <Button name="DEBUG_Settings_Navigate" px="sm" py="sm" onPress={handleRow}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
-        <Box alignItems="center" flexDirection="row">
+        <Flex row>
           {icon}
-          <Text fontWeight="500" ml="md" variant="subHead1">
-            {text}
-          </Text>
-        </Box>
+          <Flex gap="none">
+            <Text fontWeight="500" variant="subHead1">
+              {text}
+            </Text>
+            {subText && (
+              <Text color="neutralTextSecondary" variant="caption">
+                {subText}
+              </Text>
+            )}
+          </Flex>
+        </Flex>
         {screen ? (
-          <Chevron color={theme.colors.deprecated_gray200} direction="e" height={16} width={16} />
+          <Chevron color={theme.colors.neutralTextTertiary} direction="e" height={16} width={16} />
+        ) : externalLink ? (
+          <PopoutArrow color={theme.colors.neutralTextTertiary} size={24} />
         ) : (
-          <PopoutArrow color={theme.colors.deprecated_gray200} size={24} />
+          action
         )}
       </Box>
     </Button>
