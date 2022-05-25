@@ -8,11 +8,12 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { ALL_ACCOUNTS, fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useAllTokens } from 'src/features/tokens/useTokens'
+import { selectAccounts } from 'src/features/wallet/selectors'
 import { getKeys } from 'src/utils/objects'
 
 export function BalancesScreen() {
   const dispatch = useAppDispatch()
-  const accounts = useAppSelector((state) => state.wallet.accounts)
+  const accounts = useAppSelector(selectAccounts)
 
   const chainIdToTokens = useAllTokens()
 

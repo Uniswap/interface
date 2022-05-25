@@ -1,7 +1,7 @@
 import { appSelect } from 'src/app/hooks'
 import { Account, BackupType } from 'src/features/wallet/accounts/types'
+import { selectAccounts } from 'src/features/wallet/selectors'
 import {
-  accountsSelector,
   editAccount as editInStore,
   removeAccount as removeInStore,
 } from 'src/features/wallet/walletSlice'
@@ -38,7 +38,7 @@ export type EditAccountParams = AddBackupMethodParams | RenameParams | RemovePar
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params
 
-  const accounts = yield* appSelect(accountsSelector)
+  const accounts = yield* appSelect(selectAccounts)
   const account = accounts[address]
 
   if (!account) throw new Error(`No account found for ${address}`)

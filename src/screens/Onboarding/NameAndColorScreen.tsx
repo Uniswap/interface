@@ -12,7 +12,7 @@ import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { activeAccountSelector } from 'src/features/wallet/walletSlice'
+import { selectActiveAccount } from 'src/features/wallet/selectors'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -23,7 +23,7 @@ export function NameAndColorScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   // avoids `useActiveAccount` since response may be null
-  const activeAccount = useAppSelector(activeAccountSelector)
+  const activeAccount = useAppSelector(selectActiveAccount)
   const [newAccountName, setNewAccountName] = useState(activeAccount?.name ?? '')
 
   const onPressNext = () => {

@@ -3,7 +3,7 @@ import { call, delay, Effect, put, race, take } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { activeAccountAddressSelector } from 'src/features/wallet/walletSlice'
+import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { logger } from 'src/utils/logger'
 import { errorToString } from 'src/utils/validation'
 
@@ -130,7 +130,7 @@ export function createMonitoredSaga<SagaParams = void>(
         logger.error('saga', 'monitoredSaga', `${name} error`, error)
         const errorMessage = errorToString(error)
         yield put(errorAction(errorMessage))
-        const activeAddress = yield* appSelect(activeAccountAddressSelector)
+        const activeAddress = yield* appSelect(selectActiveAccountAddress)
         if (!options?.suppressErrorNotification && activeAddress) {
           yield put(
             pushNotification({

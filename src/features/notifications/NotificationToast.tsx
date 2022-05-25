@@ -15,7 +15,7 @@ import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { popNotification } from 'src/features/notifications/notificationSlice'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import { activeAccountAddressSelector } from 'src/features/wallet/walletSlice'
+import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { flex } from 'src/styles/flex'
 import { useTimeout } from 'src/utils/timing'
 
@@ -57,7 +57,7 @@ export function NotificationToast({
   actionButton,
 }: NotificationToastProps) {
   const dispatch = useAppDispatch()
-  const activeAddress = useAppSelector(activeAccountAddressSelector)
+  const activeAddress = useAppSelector(selectActiveAccountAddress)
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const currentNotification = notifications[0]
 

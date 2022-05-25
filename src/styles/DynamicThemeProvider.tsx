@@ -4,7 +4,7 @@ import { useColorScheme } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { useAddressColor } from 'src/components/accounts/Identicon'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { selectUserPalette } from 'src/features/wallet/walletSlice'
+import { selectUserPalette } from 'src/features/wallet/selectors'
 import { darkTheme, theme as lightTheme, Theme } from './theme'
 
 /** Provides app theme based on active account */

@@ -18,7 +18,7 @@ import {
 } from 'src/features/transactions/utils'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
-import { selectFlashbotsEnabled } from 'src/features/wallet/walletSlice'
+import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'
 

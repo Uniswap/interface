@@ -8,7 +8,7 @@ import { signAndSendTransaction } from 'src/features/transactions/sendTransactio
 import { updateTransaction } from 'src/features/transactions/slice'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { getSerializableTransactionRequest } from 'src/features/transactions/utils'
-import { accountsSelector } from 'src/features/wallet/walletSlice'
+import { selectAccounts } from 'src/features/wallet/selectors'
 import { normalizeAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { assert } from 'src/utils/validation'
@@ -28,7 +28,7 @@ export function* attemptReplaceTransaction(
       `Cannot replace invalid transaction: ${hash}`
     )
 
-    const accounts = yield* appSelect(accountsSelector)
+    const accounts = yield* appSelect(selectAccounts)
     const account = accounts[normalizeAddress(from)]
     assert(account, `Cannot replace transaction, account missing: ${hash}`)
 

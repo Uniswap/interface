@@ -5,6 +5,7 @@ import { ChainId } from 'src/constants/chains'
 import { Balance } from 'src/features/balances/types'
 import { selectActiveChainIds } from 'src/features/chains/utils'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
+import { selectAccounts } from 'src/features/wallet/selectors'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call, put } from 'typed-redux-saga'
@@ -15,7 +16,7 @@ export const ALL_ACCOUNTS = '__all_accounts__'
 
 export function* fetchBalances(address: Address) {
   const manager = yield* call(getProviderManager)
-  const accounts = yield* appSelect((state) => state.wallet.accounts)
+  const accounts = yield* appSelect(selectAccounts)
   const allAddresses = Object.keys(accounts)
   const addrsToFetch = address === ALL_ACCOUNTS ? allAddresses : [address]
   const activeChains = yield* selectActiveChainIds()

@@ -39,7 +39,7 @@ import {
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
-import { activeAccountAddressSelector } from 'src/features/wallet/walletSlice'
+import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { setWalletConnectModalState } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
@@ -216,7 +216,7 @@ export function TransferNFTNotification({
   notification: TransferNFTTxNotification
 }) {
   const { assetType, chainId, tokenAddress, tokenId, txType, txStatus } = notification
-  const userAddress = useAppSelector(activeAccountAddressSelector) || ''
+  const userAddress = useAppSelector(selectActiveAccountAddress) || ''
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress

@@ -1,10 +1,9 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useColorScheme } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
-import { selectAccountLocalPfp } from 'src/features/wallet/walletSlice'
+import { useSelectLocalPfp } from 'src/features/wallet/hooks'
 import { colorsDark, colorsLight } from 'src/styles/color'
 import { theme, Theme } from 'src/styles/theme'
 import { isValidAddress } from 'src/utils/addresses'
@@ -20,8 +19,7 @@ export function Identicon({ address, size = 36, ...rest }: Props) {
 
   const isDarkMode = useColorScheme() === 'dark'
   const color = useAddressColor(address, isDarkMode)
-  const pfpSelector = useMemo(() => selectAccountLocalPfp(address), [address])
-  const userPfp = useAppSelector(pfpSelector)
+  const userPfp = useSelectLocalPfp(address)
 
   return (
     <Box

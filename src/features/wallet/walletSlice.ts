@@ -1,5 +1,4 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from 'src/app/rootReducer'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Account } from 'src/features/wallet/accounts/types'
 import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
 
@@ -85,27 +84,6 @@ const slice = createSlice({
     resetWallet: () => initialState,
   },
 })
-
-export const accountsSelector = (state: RootState) => state.wallet.accounts
-
-export const activeAccountAddressSelector = (state: RootState) => state.wallet.activeAccountAddress
-export const activeAccountSelector = createSelector(
-  accountsSelector,
-  activeAccountAddressSelector,
-  (accounts, activeAccountAddress) =>
-    (activeAccountAddress ? accounts[activeAccountAddress] : null) ?? null
-)
-
-export const selectUserPalette = createSelector(
-  activeAccountSelector,
-  (activeAccount) => activeAccount?.customizations?.palette
-)
-
-export const selectAccountLocalPfp = (address: Address) => (state: RootState) =>
-  state.wallet.accounts[address]?.customizations?.localPfp
-
-export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
-export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
 
 export const {
   addAccount,

@@ -4,7 +4,8 @@ import { appSelect } from 'src/app/hooks'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
 import { logEvent } from 'src/features/telemetry'
-import { accountsSelector, activateAccount } from 'src/features/wallet/walletSlice'
+import { selectAccounts } from 'src/features/wallet/selectors'
+import { activateAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
 import { call, put, takeLatest } from 'typed-redux-saga'
 
@@ -53,7 +54,7 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
     throw new Error('No `userAddress` provided')
   }
 
-  const userAccounts = yield* appSelect(accountsSelector)
+  const userAccounts = yield* appSelect(selectAccounts)
   const matchingAccount = Object.values(userAccounts).find(
     (account) => account.address.toLowerCase() === userAddress.toLowerCase()
   )

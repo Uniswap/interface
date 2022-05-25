@@ -19,11 +19,8 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import {
-  resetWallet,
-  selectFlashbotsEnabled,
-  toggleFlashbots,
-} from 'src/features/wallet/walletSlice'
+import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
+import { resetWallet, toggleFlashbots } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 

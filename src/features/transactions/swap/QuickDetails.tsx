@@ -13,7 +13,7 @@ import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { formatExecutionPrice } from 'src/features/transactions/swap/utils'
-import { selectFlashbotsEnabled } from 'src/features/wallet/walletSlice'
+import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { useNetworkColors } from 'src/utils/colors'
 import { formatPrice } from 'src/utils/format'
 

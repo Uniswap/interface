@@ -15,7 +15,8 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
-import { activeAccountSelector, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
+import { selectActiveAccount } from 'src/features/wallet/selectors'
+import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
@@ -41,7 +42,7 @@ export function LandingScreen({ navigation }: Props) {
   }
 
   // avoids `useActiveAccount` since response may be null
-  const activeAccount = useAppSelector(activeAccountSelector)
+  const activeAccount = useAppSelector(selectActiveAccount)
 
   // create account on mount
   useEffect(() => {

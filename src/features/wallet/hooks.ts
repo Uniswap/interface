@@ -1,31 +1,37 @@
+import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
-  accountsSelector,
-  activeAccountAddressSelector,
-  activeAccountSelector,
-} from 'src/features/wallet/walletSlice'
+  makeSelectLocalPfp,
+  selectAccounts,
+  selectActiveAccount,
+  selectActiveAccountAddress,
+} from 'src/features/wallet/selectors'
 
 export function useAccounts() {
-  return useAppSelector(accountsSelector)
+  return useAppSelector(selectAccounts)
 }
 
 export function useActiveAccount(): Account | null {
-  return useAppSelector(activeAccountSelector)
+  return useAppSelector(selectActiveAccount)
 }
 
 export function useActiveAccountAddress(): Address | null {
-  return useAppSelector(activeAccountAddressSelector)
+  return useAppSelector(selectActiveAccountAddress)
 }
 
 export function useActiveAccountAddressWithThrow(): Address {
-  const activeAccountAddress = useAppSelector(activeAccountAddressSelector)
+  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
   if (!activeAccountAddress) throw new Error('No active account address')
   return activeAccountAddress
 }
 
 export function useActiveAccountWithThrow(): Account {
-  const activeAccount = useAppSelector(activeAccountSelector)
+  const activeAccount = useAppSelector(selectActiveAccount)
   if (!activeAccount) throw new Error('No active account')
   return activeAccount
+}
+
+export function useSelectLocalPfp(address: Address) {
+  return useAppSelector(useMemo(() => makeSelectLocalPfp(address), [address]))
 }
