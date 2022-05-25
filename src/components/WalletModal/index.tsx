@@ -100,6 +100,7 @@ const HoverText = styled.div`
   color: ${({ theme }) => theme.text1};
   display: flex;
   align-items: center;
+
   :hover {
     cursor: pointer;
   }

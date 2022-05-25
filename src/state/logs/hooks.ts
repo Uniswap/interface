@@ -1,10 +1,11 @@
+import { Filter } from '@ethersproject/providers'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
-import { EventFilter, filterToKey, Log } from './utils'
+import { filterToKey, isHistoricalLog, Log } from './utils'
 
 export enum LogsState {
   // The filter is invalid
@@ -26,10 +27,10 @@ export interface UseLogsResult {
 
 /**
  * Returns the logs for the given filter as of the latest block, re-fetching from the library every block.
- * @param filter The logs filter, without `blockHash`, `fromBlock` or `toBlock` defined.
+ * @param filter The logs filter, with `fromBlock` or `toBlock` optionally specified.
  * The filter parameter should _always_ be memoized, or else will trigger constant refetching
  */
-export function useLogs(filter: EventFilter | undefined): UseLogsResult {
+export function useLogs(filter: Filter | undefined): UseLogsResult {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
 
@@ -45,17 +46,16 @@ export function useLogs(filter: EventFilter | undefined): UseLogsResult {
     }
   }, [chainId, dispatch, filter])
 
-  const filterKey = useMemo(() => (filter ? filterToKey(filter) : undefined), [filter])
-
   return useMemo(() => {
-    if (!chainId || !filterKey || !blockNumber)
+    if (!chainId || !filter || !blockNumber)
       return {
         logs: undefined,
         state: LogsState.INVALID,
       }
 
-    const state = logs[chainId]?.[filterKey]
+    const state = logs[chainId]?.[filterToKey(filter)]
     const result = state?.results
+
     if (!result) {
       return {
         state: LogsState.LOADING,
@@ -71,8 +71,13 @@ export function useLogs(filter: EventFilter | undefined): UseLogsResult {
     }
 
     return {
-      state: result.blockNumber >= blockNumber ? LogsState.SYNCED : LogsState.SYNCING,
+      // if we're only fetching logs until a block that has already elapsed, we're synced regardless of result.blockNumber
+      state: isHistoricalLog(filter, blockNumber)
+        ? LogsState.SYNCED
+        : result.blockNumber >= blockNumber
+        ? LogsState.SYNCED
+        : LogsState.SYNCING,
       logs: result.logs,
     }
-  }, [blockNumber, chainId, filterKey, logs])
+  }, [blockNumber, chainId, filter, logs])
 }

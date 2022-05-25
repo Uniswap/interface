@@ -18,6 +18,9 @@ const WarningIcon = styled(AlertOctagon)`
   min-width: 22px;
   color: ${({ theme }) => theme.warning};
 `
+const Copy = styled(CopyHelper)`
+  font-size: 12px;
+`
 
 interface ConnectedAccountBlockedProps {
   account: string | null | undefined
@@ -46,9 +49,9 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
         <ThemedText.Main fontSize={12}>
           <Trans>If you believe this is an error, please send an email including your address to </Trans>{' '}
         </ThemedText.Main>
-        <CopyHelper toCopy="compliance@uniswap.org" color={theme.primary1}>
-          compliance@uniswap.org.
-        </CopyHelper>
+        <Copy iconSize={12} toCopy="compliance@uniswap.org" color={theme.primary1} iconPosition="right">
+          compliance@uniswap.org
+        </Copy>
       </ContentWrapper>
     </Modal>
   )

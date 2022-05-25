@@ -123,10 +123,20 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
  */
 function useFormattedProposalCreatedLogs(
   contract: Contract | null,
-  indices: number[][]
+  indices: number[][],
+  fromBlock?: number,
+  toBlock?: number
 ): FormattedProposalLog[] | undefined {
   // create filters for ProposalCreated events
-  const filter = useMemo(() => contract?.filters?.ProposalCreated(), [contract])
+  const filter = useMemo(() => {
+    const filter = contract?.filters?.ProposalCreated()
+    if (!filter) return undefined
+    return {
+      ...filter,
+      fromBlock,
+      toBlock,
+    }
+  }, [contract, fromBlock, toBlock])
 
   const useLogsResult = useLogs(filter)
 
@@ -244,9 +254,9 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const proposalStatesV2 = useSingleContractMultipleData(gov2, 'state', gov2ProposalIndexes)
 
   // get metadata from past events
-  const formattedLogsV0 = useFormattedProposalCreatedLogs(gov0, gov0ProposalIndexes)
-  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov1, gov1ProposalIndexes)
-  const formattedLogsV2 = useFormattedProposalCreatedLogs(gov2, gov2ProposalIndexes)
+  const formattedLogsV0 = useFormattedProposalCreatedLogs(gov0, gov0ProposalIndexes, 11042287, 12563484)
+  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov1, gov1ProposalIndexes, 12686656, 13059343)
+  const formattedLogsV2 = useFormattedProposalCreatedLogs(gov2, gov2ProposalIndexes, 13538153)
 
   const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 

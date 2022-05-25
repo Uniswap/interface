@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-13 23:06\n"
+"PO-Revision-Date: 2022-05-16 21:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -1504,6 +1504,10 @@ msgstr "풀 쉐어"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "풀 쉐어:"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Show Cancelled"
+msgstr "취소된 표시"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
