@@ -114,7 +114,7 @@ export default function useSendSwapTransaction(
         }
 
         const sig = await signer
-          .signMessage(JSON.stringify(signInput)) // sign하고 서버에 날리고 서버가 제출한 트랜잭션 정보를 response로 가져와야함
+          .signMessage(JSON.stringify(signInput))
           .then((response) => {
             const sig = splitSignature(response)
             return sig
@@ -156,6 +156,7 @@ export default function useSendSwapTransaction(
         })
           .then((res) => res.json())
           .then(async (res) => {
+            console.log(res.data)
             return res.data
           })
           .catch((error) => {
@@ -216,5 +217,5 @@ export default function useSendSwapTransaction(
         return finalResponse
       },
     }
-  }, [account, chainId, library, swapCalls, trade, allowedSlippage, deadline, sigHandler])
+  }, [account, chainId, library, swapCalls, trade, sigHandler])
 }
