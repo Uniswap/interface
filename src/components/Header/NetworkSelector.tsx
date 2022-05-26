@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { fortmatic } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -321,9 +322,13 @@ export default function NetworkSelector() {
               <Trans>Select a network</Trans>
             </FlyoutHeader>
             <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MAINNET} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.POLYGON} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.OPTIMISM} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.ARBITRUM_ONE} />
+            {connector !== fortmatic && (
+              <>
+                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.POLYGON} />
+                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.OPTIMISM} />
+                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.ARBITRUM_ONE} />
+              </>
+            )}
           </FlyoutMenuContents>
         </FlyoutMenu>
       )}
