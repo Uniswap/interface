@@ -46,10 +46,10 @@ import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
-import { SettingsHelpCenterScreen } from 'src/screens/SettingsHelpCenterScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
+import { SettingsWebviewOptionScreen } from 'src/screens/SettingsWebviewOptionScreen'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
@@ -117,8 +117,8 @@ function SettingsStackGroup() {
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
       <SettingsStack.Screen
-        component={SettingsHelpCenterScreen}
-        name={Screens.SettingsHelpCenter}
+        component={SettingsWebviewOptionScreen}
+        name={Screens.SettingsWebviewOption}
       />
       <SettingsStack.Screen component={SettingsChainsScreen} name={Screens.SettingsChains} />
       <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
