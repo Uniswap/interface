@@ -144,7 +144,7 @@ export function TokenDetailsScreen({
   const onPressSend = () => {
     const transferFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmount: '1',
+      exactAmount: '',
       [CurrencyField.INPUT]: {
         address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,
