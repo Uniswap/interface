@@ -381,10 +381,10 @@ export default function Header() {
                     style={{
                       flexShrink: 0,
                       userSelect: 'none',
-                      backgroundColor: '#212429',
+                      backgroundColor: darkMode ? '#212429' : '#F5F5F5',
                       borderRadius: '10px',
                       padding: '9px 8px',
-                      color: 'white',
+                      color: darkMode ? 'white' : 'black',
                     }}
                     fontWeight={500}
                   >
@@ -396,7 +396,7 @@ export default function Header() {
                         height="20px"
                         style={{ position: 'relative', top: '2px', marginRight: '5px' }}
                       />
-                      <StyledPrice> {kromPrice?.toSignificant(2)}$</StyledPrice>
+                      <StyledPrice> ${kromPrice?.toSignificant(2)}</StyledPrice>
                     </Trans>
                   </BalanceText>
                 ) : null}
