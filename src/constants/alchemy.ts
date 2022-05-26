@@ -13,7 +13,7 @@ if (!ALCHEMY_MAINNET_KEY || !ALCHEMY_OPTIMISM_KEY || !ALCHEMY_ARBITRUM_KEY || !A
  * These are the network URLs used by the interface when there is not another available source of chain data
  */
 export const ALCHEMY_NETWORK_URLS = {
-  [SupportedChainId.MAINNET]: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_MAINNET_KEY}`,
+  [SupportedChainId.MAINNET]: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_MAINNET_KEY}`,
   [SupportedChainId.OPTIMISM]: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_OPTIMISM_KEY}`,
   [SupportedChainId.ARBITRUM_ONE]: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_ARBITRUM_KEY}`,
   [SupportedChainId.POLYGON]: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_POLYGON_KEY}`,
