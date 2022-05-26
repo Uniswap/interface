@@ -2,6 +2,7 @@ import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import {
   coinbaseWallet,
   createOrderedConnectors,
+  fortmatic,
   gnosisSafe,
   injected,
   Wallet,
@@ -36,6 +37,9 @@ function Web3Updater() {
   const walletConnectIsActive = hooks.useSelectedIsActive(walletConnect)
   const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
 
+  const fortmaticIsActive = hooks.useSelectedIsActive(fortmatic)
+  const previousFortmaticIsActive = usePrevious(fortmaticIsActive)
+
   const [eagerlyConnectingWallets, setEagerlyConnectingWallets] = useState(new Set())
 
   useEffect(() => {
@@ -59,10 +63,15 @@ function Web3Updater() {
       isActive: walletConnectIsActive,
       previousIsActive: previousWalletConnectIsActive,
     }
+    const fortmaticState: ConnectorState = {
+      isActive: fortmaticIsActive,
+      previousIsActive: previousFortmaticIsActive,
+    }
     const isActiveMap = new Map<Wallet, ConnectorState>([
       [Wallet.INJECTED, injectedState],
       [Wallet.COINBASE_WALLET, coinbaseWalletState],
       [Wallet.WALLET_CONNECT, walletConnectState],
+      [Wallet.FORTMATIC, fortmaticState],
     ])
 
     isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
@@ -92,6 +101,8 @@ function Web3Updater() {
     previousInjectedIsActive,
     previousCoinbaseWalletIsActive,
     previousWalletConnectIsActive,
+    fortmaticIsActive,
+    previousFortmaticIsActive,
     eagerlyConnectingWallets,
     setEagerlyConnectingWallets,
   ])
