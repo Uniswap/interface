@@ -1385,8 +1385,8 @@ export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
   [ChainId.ROPSTEN]: 'claim-reward-data.json',
   [ChainId.AVAXMAINNET]:
     'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/develop/results/reward_proof.json',
-  [ChainId.BSCMAINNET]:
-    'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json',
+  [ChainId.MATIC]:
+    'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/latest_merkle_data.json',
   [ChainId.BTTC]:
     'https://raw.githubusercontent.com/KyberNetwork/trading-contest-reward-distribution/main/bttc/results/reward_proof.json',
 }
