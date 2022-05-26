@@ -1,6 +1,8 @@
 # E2E Tests
 
-The e2e tests use [detox](https://github.com/wix/Detox). To run them, terminate metro and then,
+The e2e tests use [detox](https://github.com/wix/Detox). Install the [cli](https://wix.github.io/Detox/docs/introduction/getting-started/) first.
+
+To run tests, **terminate metro and quit the simulator app** and then,
 
 ```
 # Build and start metro
