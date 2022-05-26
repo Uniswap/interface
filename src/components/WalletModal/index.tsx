@@ -15,7 +15,15 @@ import styled from 'styled-components/macro'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { coinbaseWallet, getWalletForConnector, injected, network, Wallet, walletConnect } from '../../connectors'
+import {
+  coinbaseWallet,
+  fortmatic,
+  getWalletForConnector,
+  injected,
+  network,
+  Wallet,
+  walletConnect,
+} from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
@@ -129,6 +137,7 @@ export default function WalletModal({
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
     [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(walletConnect),
+    [Wallet.FORTMATIC]: hooks.useSelectedIsActive(fortmatic),
   }
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)

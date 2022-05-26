@@ -2,9 +2,10 @@ import { Connector } from '@web3-react/types'
 
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
+import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
-import { coinbaseWallet, injected, Wallet, walletConnect } from '../connectors'
+import { coinbaseWallet, fortmatic, injected, Wallet, walletConnect } from '../connectors'
 
 interface WalletInfo {
   connector?: Connector
@@ -67,5 +68,15 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#315CF5',
     mobile: true,
     mobileOnly: true,
+  },
+  FORTMATIC: {
+    connector: fortmatic,
+    wallet: Wallet.FORTMATIC,
+    name: 'Fortmatic',
+    iconURL: FORTMATIC_ICON_URL,
+    description: 'Login using Fortmatic hosted wallet',
+    href: null,
+    color: '#6748FF',
+    mobile: true,
   },
 }

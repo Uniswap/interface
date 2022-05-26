@@ -1,5 +1,6 @@
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
+import { EIP1193 } from '@web3-react/eip1193'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
@@ -7,6 +8,7 @@ import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
+import Fortmatic from 'fortmatic'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 
@@ -14,9 +16,10 @@ export enum Wallet {
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',
+  FORTMATIC = 'FORTMATIC',
 }
 
-export const WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED]
+export const WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED, Wallet.FORTMATIC]
 
 export const getWalletForConnector = (connector: Connector) => {
   switch (connector) {
@@ -26,6 +29,8 @@ export const getWalletForConnector = (connector: Connector) => {
       return Wallet.COINBASE_WALLET
     case walletConnect:
       return Wallet.WALLET_CONNECT
+    case fortmatic:
+      return Wallet.FORTMATIC
     default:
       throw Error('unsupported connector')
   }
@@ -39,6 +44,8 @@ export const getConnectorForWallet = (wallet: Wallet) => {
       return coinbaseWallet
     case Wallet.WALLET_CONNECT:
       return walletConnect
+    case Wallet.FORTMATIC:
+      return fortmatic
   }
 }
 
@@ -57,6 +64,8 @@ export const getHooksForWallet = (wallet: Wallet) => {
       return coinbaseWalletHooks
     case Wallet.WALLET_CONNECT:
       return walletConnectHooks
+    case Wallet.FORTMATIC:
+      return fortmaticHooks
   }
 }
 
@@ -80,6 +89,14 @@ export const [walletConnect, walletConnectHooks] = initializeConnector<WalletCon
     }),
   ALL_SUPPORTED_CHAIN_IDS
 )
+
+const fm = new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY ?? 'pk_test_0F3A03D568B79EA6')
+const fmProvider = fm.getProvider()
+fmProvider.on = () => {
+  return
+}
+
+export const [fortmatic, fortmaticHooks] = initializeConnector<EIP1193>((actions) => new EIP1193(actions, fmProvider))
 
 export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
