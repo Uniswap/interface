@@ -8,6 +8,7 @@ import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
+import { QUICK_NODE_NETWORK_URLS } from 'constants/quickNode'
 import Fortmatic from 'fortmatic'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
@@ -69,9 +70,14 @@ export const getHooksForWallet = (wallet: Wallet) => {
   }
 }
 
-export const [network, networkHooks] = initializeConnector<Network>(
+export const [infura, infuraHooks] = initializeConnector<Network>(
   (actions) => new Network(actions, INFURA_NETWORK_URLS, true, 1),
   Object.keys(INFURA_NETWORK_URLS).map((chainId) => Number(chainId))
+)
+
+export const [quickNode, quickNodeHooks] = initializeConnector<Network>(
+  (actions) => new Network(actions, QUICK_NODE_NETWORK_URLS, true, 1),
+  Object.keys(QUICK_NODE_NETWORK_URLS).map((chainId) => Number(chainId))
 )
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>(
@@ -117,7 +123,8 @@ export const createOrderedConnectors = (walletOverride: Wallet | undefined) => {
   WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
     connectors.push(getConnectorListItemForWallet(wallet))
   })
-  connectors.push({ connector: network, hooks: networkHooks })
+  connectors.push({ connector: quickNode, hooks: quickNodeHooks })
+  connectors.push({ connector: infura, hooks: infuraHooks })
   const web3ReactConnectors: [Connector, Web3ReactHooks][] = connectors.map(({ connector, hooks }) => [
     connector,
     hooks,

@@ -19,8 +19,9 @@ import {
   coinbaseWallet,
   fortmatic,
   getWalletForConnector,
+  infura,
   injected,
-  network,
+  quickNode,
   Wallet,
   walletConnect,
 } from '../../connectors'
@@ -143,13 +144,15 @@ export default function WalletModal({
   const previousWalletView = usePrevious(walletView)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
-  // Need to pass network as a default case because useSelectedError requirse a connector
-  const pendingError = hooks.useSelectedError(pendingConnector || network)
+  // Need to pass infura as a default case because useSelectedError requirse a connector
+  const pendingError = hooks.useSelectedError(pendingConnector || infura)
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
 
   const previousConnector = usePrevious(connector)
+
+  const isNetworkConnector = connector === infura || connector === quickNode
 
   const resetAccountView = useCallback(() => {
     setWalletView(WALLET_VIEWS.ACCOUNT)
@@ -163,9 +166,9 @@ export default function WalletModal({
 
   useEffect(() => {
     if (walletModalOpen) {
-      setWalletView(connector === network ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
+      setWalletView(isNetworkConnector ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
     }
-  }, [walletModalOpen, setWalletView, connector])
+  }, [walletModalOpen, setWalletView, isNetworkConnector])
 
   const tryActivation = async (connector: Connector) => {
     const name = Object.values(SUPPORTED_WALLETS).find(
