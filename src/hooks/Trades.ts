@@ -230,6 +230,7 @@ export function useTradeExactInV2(
   }, [chainId])
 
   const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
+
   const onUpdateCallback = useCallback(
     async (resetRoute = false) => {
       if (

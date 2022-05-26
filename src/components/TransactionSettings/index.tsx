@@ -410,8 +410,9 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
   const toggleTopTrendingTokens = useToggleTopTrendingTokens()
   const { mixpanelHandler } = useMixpanel()
 
-  const topTrendingSoonTokens = useTopTrendingSoonTokensInCurrentNetwork()
+  const { data: topTrendingSoonTokens } = useTopTrendingSoonTokensInCurrentNetwork()
   const isShowTrendingSoonSetting = topTrendingSoonTokens.length > 0
+
   return (
     <>
       <Modal

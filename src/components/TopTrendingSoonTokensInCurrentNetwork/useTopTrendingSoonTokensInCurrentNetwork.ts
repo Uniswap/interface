@@ -66,5 +66,11 @@ export default function useTopTrendingSoonTokensInCurrentNetwork() {
     return res
   }, [isTrendingSoon1dDataLoading, trendingSoon1dData])
 
-  return trendingSoonTokens
+  return useMemo(
+    () => ({
+      data: trendingSoonTokens,
+      isLoading: isTrendingSoon1dDataLoading,
+    }),
+    [isTrendingSoon1dDataLoading, trendingSoonTokens],
+  )
 }

@@ -383,8 +383,7 @@ export const MobileModalWrapper = styled(Modal)<{ height?: string }>`
   }
 `
 
-export const IconButton = styled.button`
-  cursor: pointer;
+export const IconButton = styled.button<{ enableClickToRefresh: boolean }>`
   height: 36px;
   width: 36px;
   border-radius: 4px;
@@ -398,12 +397,18 @@ export const IconButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.buttonBlack};
-  }
+  ${({ enableClickToRefresh }) =>
+    enableClickToRefresh &&
+    css`
+      cursor: pointer;
+
+      :hover,
+      :focus {
+        cursor: pointer;
+        outline: none;
+        background-color: ${({ theme }) => theme.buttonBlack};
+      }
+    `}
 `
 
 export const ShareButton = styled(IconButton)`
