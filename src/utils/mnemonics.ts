@@ -1,15 +1,43 @@
 import { utils } from 'ethers'
+import { TFunction } from 'i18next'
 import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'src/constants/accounts'
 
-export function isValidMnemonic(mnemonic: string | null | undefined) {
-  if (!mnemonic) return false
+export function isValidMnemonic(
+  mnemonic: Nullable<string>,
+  t: TFunction
+): {
+  valid: boolean
+  errorText?: string
+} {
+  if (!mnemonic)
+    return {
+      valid: false,
+      errorText: t('Enter value'),
+    }
   const formatted = normalizeMnemonic(mnemonic)
   const split = formatted.split(' ')
-  return (
-    utils.isValidMnemonic(formatted) &&
-    split.length >= MNEMONIC_LENGTH_MIN &&
-    split.length <= MNEMONIC_LENGTH_MAX
-  )
+
+  if (split.length < MNEMONIC_LENGTH_MIN)
+    return {
+      valid: false,
+      errorText: t('Seed phrases must be at least 12 words'),
+    }
+
+  if (split.length > MNEMONIC_LENGTH_MAX)
+    return {
+      valid: false,
+      errorText: t('Seed phrases must be less than 24 words'),
+    }
+
+  if (!utils.isValidMnemonic(formatted)) {
+    return {
+      valid: false,
+      errorText: t('Invalid phrase'),
+    }
+  }
+  return {
+    valid: true,
+  }
 }
 
 export function isValidDerivationPath(derivationPath: string) {

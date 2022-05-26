@@ -30,9 +30,10 @@ export function OnboardingScreen({
   return (
     <Screen>
       <Flex grow px="md" py="lg">
+        {/* header */}
         <Flex row alignItems="center">
           <Box alignItems="flex-start" flex={1}>
-            <BackButton />
+            <BackButton size={16} />
           </Box>
           {stepCount !== undefined && stepNumber !== undefined ? (
             <Indicator currentStep={stepNumber} stepCount={stepCount} />
@@ -40,17 +41,19 @@ export function OnboardingScreen({
           <Box flex={1}>{/* ensures indicator is centered */}</Box>
         </Flex>
 
+        {/* Text content */}
         <Flex centered gap="sm" m="sm">
-          <Text fontWeight="600" textAlign="center" variant="mediumLabel">
+          <Text fontWeight="600" textAlign="center" variant="largeLabel">
             {title}
           </Text>
           {subtitle ? (
-            <Text color="deprecated_gray400" textAlign="center" variant="body1">
+            <Text color="neutralTextSecondary" textAlign="center" variant="body1">
               {subtitle}
             </Text>
           ) : null}
         </Flex>
 
+        {/* page content */}
         <Flex grow justifyContent="space-between">
           {children}
         </Flex>

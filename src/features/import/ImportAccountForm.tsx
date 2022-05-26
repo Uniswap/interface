@@ -40,10 +40,12 @@ interface Props {
 
 export function ImportAccountForm({ onSuccess }: Props) {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
+
   const onSubmit = useCallback(
     ({ input: rawInput, resolvedAddress }: FormValues) => {
       const input = normalizeTextInput(rawInput)
-      const inputType = validateInput(input, resolvedAddress)
+      const inputType = validateInput(input, resolvedAddress, t)
       if (inputType === ImportAccountInputType.Address) {
         dispatch(importAccountActions.trigger({ type: ImportAccountType.Address, address: input }))
       } else if (inputType === ImportAccountInputType.ENS && resolvedAddress) {
@@ -63,10 +65,9 @@ export function ImportAccountForm({ onSuccess }: Props) {
         )
       }
     },
-    [dispatch]
+    [dispatch, t]
   )
 
-  const { t } = useTranslation()
   return (
     <Formik initialValues={initialValues} validate={validateForm(t)} onSubmit={onSubmit}>
       {({ handleChange, handleBlur, values, touched, errors }) => (
@@ -189,18 +190,18 @@ function validateForm(t: TFunction) {
     const { input, resolvedAddress } = values
     if (!input) {
       errors.input = t('Value required')
-    } else if (!validateInput(normalizeTextInput(input), resolvedAddress)) {
+    } else if (!validateInput(normalizeTextInput(input), resolvedAddress, t)) {
       errors.input = t('Invalid account info')
     }
     return errors
   }
 }
 
-function validateInput(input: string, resolvedAddress: string | null) {
+function validateInput(input: string, resolvedAddress: string | null, t: TFunction) {
   if (!input) return false
   if (isValidAddress(input)) return ImportAccountInputType.Address
   if (isValidEnsName(input) && resolvedAddress) return ImportAccountInputType.ENS
   if (isValidPrivateKey(input)) return ImportAccountInputType.PrivateKey
-  if (isValidMnemonic(input)) return ImportAccountInputType.Mnemonic
+  if (isValidMnemonic(input, t)) return ImportAccountInputType.Mnemonic
   return false
 }

@@ -1,7 +1,6 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
-import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { importAccount } from 'src/features/import/importAccountSaga'
 import {
   ImportAccountType,
@@ -60,7 +59,6 @@ describe(importAccount, () => {
         name: 'WALLET',
       }),
       activateAccount(SAMPLE_SEED_ADDRESS),
-      fetchBalancesActions.trigger(SAMPLE_SEED_ADDRESS),
       unlockWallet(),
     ])
   })
@@ -92,7 +90,6 @@ describe(importAccount, () => {
     expect(dispatched).toEqual([
       addAccount({ type: AccountType.Readonly, address: NATIVE_ADDRESS, name: 'READONLY' }),
       activateAccount(NATIVE_ADDRESS),
-      fetchBalancesActions.trigger(NATIVE_ADDRESS),
       unlockWallet(),
     ])
   })

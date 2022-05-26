@@ -30,11 +30,10 @@ export function LandingScreen({ navigation }: Props) {
   const gradientStops = usePinkToBlueLinearGradient()
 
   const onPressCreateWallet = () => {
-    navigation.navigate(OnboardingScreens.NameAndColor)
+    navigation.navigate(OnboardingScreens.EditName)
   }
   const onPressImportWallet = () => {
-    // TODO Implement import wallet flow
-    dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+    navigation.navigate(OnboardingScreens.ImportMethod)
   }
   const onPressExplore = () => {
     // TODO Build any tooltips/guides for "explore"
@@ -47,15 +46,15 @@ export function LandingScreen({ navigation }: Props) {
   // create account on mount
   useEffect(() => {
     if (!activeAccount) {
-      dispatch(createAccountActions.trigger())
+      dispatch(createAccountActions.trigger(0))
     }
   }, [activeAccount, dispatch])
 
   return (
     <Screen edges={['bottom']}>
       <LinearGradientBox opacity={0.2} stops={gradientStops} />
-      <Box flex={1} justifyContent={'flex-end'}>
-        <Box alignItems="center" flex={1} justifyContent={'center'}>
+      <Box flex={1} justifyContent="flex-end">
+        <Box alignItems="center" flex={1} justifyContent="center">
           <Box>
             <LinearGradientBox radius="lg" stops={RainbowLinearGradientStops}>
               <View style={styles.padded}>
@@ -121,6 +120,7 @@ export function LandingScreen({ navigation }: Props) {
             justifyContent="center"
             name={ElementName.OnboardingExplore}
             pt="sm"
+            testID={ElementName.OnboardingExplore}
             onPress={onPressExplore}>
             <Text variant="caption">{t('Not ready? Try')}</Text>
             <Text color="deprecated_purple" variant="caption">

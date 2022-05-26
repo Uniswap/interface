@@ -2,6 +2,7 @@ export enum ImportAccountType {
   Address = 'address',
   Mnemonic = 'mnemonic',
   PrivateKey = 'privateKey',
+  Indexed = 'indexed',
 }
 
 export enum ImportAccountEnsType {
@@ -24,6 +25,7 @@ export interface ImportAddressAccountParams extends BaseImportAccountParams {
 export interface ImportMnemonicAccountParams extends BaseImportAccountParams {
   type: ImportAccountType.Mnemonic
   mnemonic: string
+  indexes?: number[]
 }
 
 export interface ImportPrivateKeyAccountParams extends BaseImportAccountParams {

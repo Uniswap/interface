@@ -26,6 +26,9 @@ import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
+import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
+import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
+import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
@@ -34,12 +37,13 @@ import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
 import { CloudBackupScreen } from 'src/screens/Onboarding/CloudBackupScreen'
+import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
-import { NameAndColorScreen } from 'src/screens/Onboarding/NameAndColorScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
+import { SelectColorScreen } from 'src/screens/Onboarding/SelectColorScreen'
 import { PortfolioNFTsScreen } from 'src/screens/PortfolioNFTs'
 import { PortfolioTokensScreen } from 'src/screens/PortfolioTokens'
 import { ProfileScreen } from 'src/screens/ProfileScreen'
@@ -223,38 +227,50 @@ export function AppStackNavigator() {
       {finishedOnboarding ? (
         <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       ) : (
-        <>
-          <AppStack.Group>
-            <OnboardingStack.Screen component={LandingScreen} name={OnboardingScreens.Landing} />
-            <OnboardingStack.Screen
-              component={NameAndColorScreen}
-              name={OnboardingScreens.NameAndColor}
-            />
-            <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
-            <OnboardingStack.Screen
-              component={NotificationsSetupScreen}
-              name={OnboardingScreens.Notifications}
-            />
-            <OnboardingStack.Screen
-              component={SecuritySetupScreen}
-              name={OnboardingScreens.Security}
-            />
-            <OnboardingStack.Screen
-              component={ManualBackupScreen}
-              name={OnboardingScreens.BackupManual}
-            />
-            <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} />
-            <OnboardingStack.Screen
-              component={CloudBackupScreen}
-              name={OnboardingScreens.BackupCloud}
-            />
-            <OnboardingStack.Screen
-              component={CloudBackupProcessingScreen}
-              name={OnboardingScreens.BackupCloudProcessing}
-            />
-          </AppStack.Group>
-        </>
+        <AppStack.Group>
+          <OnboardingStack.Screen component={LandingScreen} name={OnboardingScreens.Landing} />
+          <OnboardingStack.Screen component={EditNameScreen} name={OnboardingScreens.EditName} />
+          <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
+          <OnboardingStack.Screen
+            component={NotificationsSetupScreen}
+            name={OnboardingScreens.Notifications}
+          />
+          <OnboardingStack.Screen
+            component={SecuritySetupScreen}
+            name={OnboardingScreens.Security}
+          />
+          <OnboardingStack.Screen
+            component={ManualBackupScreen}
+            name={OnboardingScreens.BackupManual}
+          />
+          <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} />
+          <OnboardingStack.Screen
+            component={CloudBackupScreen}
+            name={OnboardingScreens.BackupCloud}
+          />
+          <OnboardingStack.Screen
+            component={CloudBackupProcessingScreen}
+            name={OnboardingScreens.BackupCloudProcessing}
+          />
+          <OnboardingStack.Screen
+            component={ImportMethodScreen}
+            name={OnboardingScreens.ImportMethod}
+          />
+          <OnboardingStack.Screen
+            component={SeedPhraseInputScreen}
+            name={OnboardingScreens.SeedPhraseInput}
+          />
+          <OnboardingStack.Screen
+            component={SelectWalletScreen}
+            name={OnboardingScreens.SelectWallet}
+          />
+          <OnboardingStack.Screen
+            component={SelectColorScreen}
+            name={OnboardingScreens.SelectColor}
+          />
+        </AppStack.Group>
       )}
+
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
         <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />

@@ -16,7 +16,7 @@ export function WelcomeScreen() {
   const navigation = useNavigation<any>()
 
   const onPressCreate = () => {
-    dispatch(createAccountActions.trigger())
+    dispatch(createAccountActions.trigger(0))
     dispatch(unlockWallet())
   }
 

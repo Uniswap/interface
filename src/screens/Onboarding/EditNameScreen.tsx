@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
-import QRCode from 'react-native-qrcode-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -16,9 +15,9 @@ import { selectActiveAccount } from 'src/features/wallet/selectors'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.NameAndColor>
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
-export function NameAndColorScreen({ navigation }: Props) {
+export function EditNameScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -27,7 +26,7 @@ export function NameAndColorScreen({ navigation }: Props) {
   const [newAccountName, setNewAccountName] = useState(activeAccount?.name ?? '')
 
   const onPressNext = () => {
-    navigation.navigate(OnboardingScreens.Backup)
+    navigation.navigate(OnboardingScreens.SelectColor)
 
     if (activeAccount) {
       dispatch(
@@ -43,11 +42,9 @@ export function NameAndColorScreen({ navigation }: Props) {
   return (
     <OnboardingScreen
       stepCount={4}
-      stepNumber={0}
-      subtitle={t(
-        'Your wallet is your ticket to the world of crypto and web3--give it a nickname and color to get started.'
-      )}
-      title={t('Say hello to your new wallet')}>
+      stepNumber={1}
+      subtitle={t('Easily identify your wallet in the app by giving it a nickname and color.')}
+      title={t('Give your wallet a nickname')}>
       <Box>
         {activeAccount ? (
           <CustomizationSection
@@ -64,7 +61,11 @@ export function NameAndColorScreen({ navigation }: Props) {
         <PrimaryButton
           label={t('Next')}
           name={ElementName.Next}
+          py="md"
           testID={ElementName.Next}
+          textColor="white"
+          textVariant="mediumLabel"
+          variant="blue"
           onPress={onPressNext}
         />
       </Flex>
@@ -84,21 +85,20 @@ function CustomizationSection({
   return (
     <Flex centered gap="lg">
       <Flex centered gap="none" width="100%">
-        <TextInput
-          fontSize={28}
-          placeholder="Nickname"
-          testID="customize/name"
-          textAlign="center"
-          value={accountName}
-          width="100%"
-          onChangeText={(newName) => setAccountName(newName)}
-        />
+        <Flex centered row gap="sm" width="100%">
+          <TextInput
+            fontSize={28}
+            placeholder="Nickname"
+            testID="customize/name"
+            textAlign="center"
+            value={accountName}
+            width="100%"
+            onChangeText={(newName) => setAccountName(newName)}
+          />
+        </Flex>
         <Text color="deprecated_textColor" opacity={0.7} variant="body1">
           {shortenAddress(address)}
         </Text>
-      </Flex>
-      <Flex centered bg="deprecated_gray50" borderRadius="lg" p="lg">
-        <QRCode size={180} value={address} />
       </Flex>
     </Flex>
   )

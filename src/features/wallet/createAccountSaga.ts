@@ -5,9 +5,10 @@ import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call, put } from 'typed-redux-saga'
 
-export function* createAccount() {
+// default to first index in derivation array
+export function* createAccount(derivationIndex = 0) {
   const mnemonicId = yield* call(generateAndStoreMnemonic)
-  const address = yield* call(generateAndStorePrivateKey, mnemonicId, 0)
+  const address = yield* call(generateAndStorePrivateKey, mnemonicId, derivationIndex)
   const type = AccountType.Native
   yield* put(addAccount({ type, address }))
   yield* put(activateAccount(address))
@@ -19,4 +20,4 @@ export const {
   wrappedSaga: createAccountSaga,
   reducer: createAccountReducer,
   actions: createAccountActions,
-} = createMonitoredSaga<void>(createAccount, 'createAccount')
+} = createMonitoredSaga<number>(createAccount, 'createAccount')

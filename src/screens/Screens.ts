@@ -41,10 +41,16 @@ export enum OnboardingScreens {
   BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
   BackupManual = 'OnboardingBackupManual',
   Landing = 'OnboardingLanding',
-  NameAndColor = 'OnboardingNameAndColor',
+  EditName = 'EditName',
+  SelectColor = 'SelectColor',
   Notifications = 'OnboardingNotifications',
   Outro = 'OnboardingOutro',
   Security = 'OnboardingSecurity',
+
+  // import
+  ImportMethod = 'ImportMethod',
+  SeedPhraseInput = 'SeedPhraseInput',
+  SelectWallet = 'SelectWallet',
 }
 
 export enum Tabs {

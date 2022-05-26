@@ -8,6 +8,7 @@ import {
   CovalentBalances,
   CovalentHistoricalPriceItem,
   CovalentHistoricalPrices,
+  CovalentWalletBalanceItem,
 } from 'src/features/dataApi/covalentTypes'
 import {
   DailyPrice,
@@ -20,6 +21,25 @@ import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
 import { percentDifference } from 'src/utils/statistics'
 
 const COVALENT_API = 'https://api.covalenthq.com/v1/'
+
+// Extracted to be used in multiple response transformations.
+function reduceItemResponse(items: CovalentWalletBalanceItem[], chainId: ChainId) {
+  return items.reduce<{
+    [currencyId: CurrencyId]: SerializablePortfolioBalance
+  }>((memo, item) => {
+    if (item.quote === 0) return memo
+    const contract_address = utils.getAddress(item.contract_address)
+    memo[buildCurrencyId(chainId, contract_address)] = {
+      balance: item.balance,
+      balanceUSD: item.quote,
+      contract_address,
+      contract_ticker_symbol: item.contract_ticker_symbol,
+      quote_rate: item.quote_rate,
+      quote_rate_24h: item.quote_rate_24h,
+    }
+    return memo
+  }, {})
+}
 
 const baseQueryOptions = {
   ['quote-currency']: 'USD',
@@ -45,25 +65,9 @@ export const dataApi = createApi({
     >({
       query: ({ chainId, address }) =>
         `${chainId}/address/${address}/balances_v2/?${serializedBaseQueryOptions}`,
-      transformResponse: (response: { data: CovalentBalances }, _, args) =>
-        response.data.items.reduce<{ [currencyId: CurrencyId]: SerializablePortfolioBalance }>(
-          (memo, item) => {
-            if (item.quote === 0) return memo
-
-            // PERF: ideally address could be left lower case to avoid checksumming it
-            const contract_address = utils.getAddress(item.contract_address)
-            memo[buildCurrencyId(args.chainId, contract_address)] = {
-              balance: item.balance,
-              balanceUSD: item.quote,
-              contract_address,
-              contract_ticker_symbol: item.contract_ticker_symbol,
-              quote_rate: item.quote_rate,
-              quote_rate_24h: item.quote_rate_24h,
-            }
-            return memo
-          },
-          {}
-        ),
+      transformResponse: (response: { data: CovalentBalances }, _, args) => {
+        return reduceItemResponse(response.data.items, args.chainId)
+      },
     }),
 
     /**

@@ -7,8 +7,8 @@ import { sleep } from '../../src/utils/timing'
 export async function quickOnboarding() {
   await device.setBiometricEnrollment(true)
 
-  await element(by.id(ElementName.OnboardingImportWallet)).tap()
-
+  // open app, open account drawer, and start import flow
+  await element(by.id(ElementName.OnboardingExplore)).tap()
   await element(by.id(ElementName.Manage)).tap()
   await element(by.id(ElementName.ImportAccount)).tap()
 

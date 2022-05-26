@@ -42,31 +42,7 @@ function useChainBalances(
       balances: !data
         ? {}
         : // Filter out unknown currencies and transform output for ease of use
-          Object.values(data).reduce<PortfolioBalances>(
-            (portfolioBalances: PortfolioBalances, item: SerializablePortfolioBalance) => {
-              const id = buildCurrencyId(chainId, item.contract_address)
-              const currency = knownCurrencies[id]
-
-              if (!currency) {
-                logger.debug(
-                  'balances',
-                  'useChainBalances',
-                  'Ignoring item with balance: ',
-                  id,
-                  item.contract_ticker_symbol
-                )
-              } else {
-                portfolioBalances[id] = {
-                  amount: CurrencyAmount.fromRawAmount(currency, item.balance),
-                  balanceUSD: item.balanceUSD,
-                  relativeChange24: percentDifference(item.quote_rate, item.quote_rate_24h),
-                }
-              }
-
-              return portfolioBalances
-            },
-            {}
-          ),
+          formatSerializedBalanceItems(data, chainId, knownCurrencies),
     }),
     [chainId, knownCurrencies, data, loading]
   )
@@ -153,5 +129,37 @@ export function useSingleBalance(currency: Currency): PortfolioBalance | null {
           }
         : null,
     [balance, currency]
+  )
+}
+
+function formatSerializedBalanceItems(
+  data: {
+    [currencyId: string]: SerializablePortfolioBalance
+  },
+  chainId: ChainId,
+  knownCurrencies: Record<CurrencyId, Currency> = {}
+) {
+  return Object.values(data).reduce<PortfolioBalances>(
+    (portfolioBalances: PortfolioBalances, item: SerializablePortfolioBalance) => {
+      const id = buildCurrencyId(chainId, item.contract_address)
+      const currency = knownCurrencies[id]
+      if (!currency) {
+        logger.debug(
+          'balances',
+          'useChainBalances',
+          'Ignoring item with balance: ',
+          id,
+          item.contract_ticker_symbol
+        )
+      } else {
+        portfolioBalances[id] = {
+          amount: CurrencyAmount.fromRawAmount(currency, item.balance),
+          balanceUSD: item.balanceUSD,
+          relativeChange24: percentDifference(item.quote_rate, item.quote_rate_24h),
+        }
+      }
+      return portfolioBalances
+    },
+    {}
   )
 }

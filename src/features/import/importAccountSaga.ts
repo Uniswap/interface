@@ -1,5 +1,4 @@
 import { Wallet } from 'ethers'
-import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { ImportAccountParams, ImportAccountType } from 'src/features/import/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount, unlockWallet } from 'src/features/wallet/walletSlice'
@@ -8,7 +7,7 @@ import { ensureLeading0x, normalizeAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { call, put } from 'typed-redux-saga'
+import { all, call, put } from 'typed-redux-saga'
 
 export function* importAccount(params: ImportAccountParams) {
   const { type, name } = params
@@ -17,7 +16,7 @@ export function* importAccount(params: ImportAccountParams) {
   if (type === ImportAccountType.Address) {
     yield* call(importAddressAccount, params.address, name)
   } else if (type === ImportAccountType.Mnemonic) {
-    yield* call(importMnemonicAccount, params.mnemonic, name)
+    yield* call(importMnemonicAccounts, params.mnemonic, name, params.indexes)
   } else if (type === ImportAccountType.PrivateKey) {
     yield* call(importPrivateKeyAccount, params.privateKey, name)
   } else {
@@ -31,12 +30,25 @@ function* importAddressAccount(address: string, name?: string) {
   yield* call(onAccountImport, account)
 }
 
-function* importMnemonicAccount(mnemonic: string, name?: string) {
+function* importMnemonicAccounts(mnemonic: string, name?: string, indexes = [0]) {
   const formattedMnemonic = normalizeMnemonic(mnemonic)
-  const address = yield* call(importMnemonic, formattedMnemonic)
-  yield* call(generateAndStorePrivateKey, address, 0)
-  const account: Account = { type: AccountType.Native, address, name }
-  yield* call(onAccountImport, account)
+  const mnemonicId = yield* call(importMnemonic, formattedMnemonic)
+  // generate private keys and return addresses for all derivation indexes
+  const addresses = yield* all(
+    indexes.map((index) => {
+      return call(generateAndStorePrivateKey, mnemonicId, index)
+    })
+  )
+  // add all accounts to store, but ignore address to be used in onAccountImport (to avoid redundant import)
+  yield* all(
+    addresses.slice(1, addresses.length).map((address) => {
+      const account: Account = { type: AccountType.Native, address }
+      return put(addAccount(account))
+    })
+  )
+  // activate account at first derivation index
+  const activeAccount: Account = { type: AccountType.Native, address: addresses[0], name }
+  yield* call(onAccountImport, activeAccount)
 }
 
 function* importPrivateKeyAccount(privateKey: string, name?: string) {
@@ -48,9 +60,10 @@ function* importPrivateKeyAccount(privateKey: string, name?: string) {
 }
 
 function* onAccountImport(account: Account) {
+  // const account: Account = { type: AccountType.Native, address }
+  // return put(addAccount(account))
   yield* put(addAccount(account))
   yield* put(activateAccount(account.address))
-  yield* put(fetchBalancesActions.trigger(account.address))
   yield* put(unlockWallet())
   logger.info('importAccount', '', `New ${account.type} account imported: ${account.address}`)
 }

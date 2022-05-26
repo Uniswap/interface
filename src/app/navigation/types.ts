@@ -60,10 +60,16 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.BackupManual]: undefined
   [OnboardingScreens.Backup]: undefined
   [OnboardingScreens.Landing]: undefined
-  [OnboardingScreens.NameAndColor]: undefined
+  [OnboardingScreens.EditName]: undefined
+  [OnboardingScreens.SelectColor]: undefined
   [OnboardingScreens.Notifications]: undefined
   [OnboardingScreens.Outro]: undefined
   [OnboardingScreens.Security]: undefined
+
+  // import
+  [OnboardingScreens.ImportMethod]: undefined
+  [OnboardingScreens.SeedPhraseInput]: undefined
+  [OnboardingScreens.SelectWallet]: { addresses: Address[] }
 }
 
 export type AppStackParamList = {
@@ -90,6 +96,7 @@ export type AppStackParamList = {
     setSelectedRecipient: (newRecipient: string) => void
   }
   [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
+
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.Swap]: { swapFormState?: TransactionState } | undefined
   [Screens.SwapConfig]: undefined
