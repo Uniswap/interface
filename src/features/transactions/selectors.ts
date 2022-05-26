@@ -25,6 +25,9 @@ export const selectRecentRecipients = createSelector(selectTransactions, (txsByC
     .slice(0, 15)
 )
 
+export const selectlastTxHistoryUpdate = (state: RootState) =>
+  state.transactions.lastTxHistoryUpdate
+
 export const selectPendingTransactions = createSelector(selectTransactions, (txsByChainId) =>
   flattenObjectOfObjects(txsByChainId).filter(
     (txDetails) => txDetails.status === TransactionStatus.Pending

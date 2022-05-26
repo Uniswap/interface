@@ -13,6 +13,7 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { WalletConnectWrapper } from 'src/components/WalletConnect/WalletConnectWrapper'
 import { config } from 'src/config'
+import { TransactionHistoryUpdater } from 'src/features/dataApi/zerion/updater'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
@@ -63,6 +64,7 @@ export function App() {
 function DataUpdaters() {
   return (
     <>
+      <TransactionHistoryUpdater />
       <MulticallUpdaters />
       <TokenListUpdater />
     </>

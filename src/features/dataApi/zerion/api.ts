@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { Namespace, RequestBody, Scope, Transaction } from 'src/features/dataApi/zerion/types'
-import { initSocket } from 'src/features/dataApi/zerion/utils'
+import { ACTION_TYPE, initSocket } from 'src/features/dataApi/zerion/utils'
 
 export const zerionApi = createApi({
   reducerPath: 'zerionApi',
@@ -8,15 +8,18 @@ export const zerionApi = createApi({
     return { data: {} }
   },
   endpoints: (builder) => ({
-    transactionHistory: builder.query<{ info: Transaction[] | null }, { requestBody: RequestBody }>(
-      {
-        queryFn() {
-          return { data: { info: null } }
-        },
-        onCacheEntryAdded: (
-          { requestBody },
-          { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
-        ) => {
+    transactionHistory: builder.query<
+      { info: { [address: Address]: Transaction[] | null } },
+      { requestBodies: Array<RequestBody>; actionType?: ACTION_TYPE }
+    >({
+      queryFn() {
+        return { data: { info: {} } }
+      },
+      onCacheEntryAdded: (
+        { requestBodies, actionType },
+        { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
+      ) => {
+        requestBodies.forEach((requestBody) =>
           initSocket(
             Namespace.Address,
             requestBody,
@@ -25,13 +28,14 @@ export const zerionApi = createApi({
             (data: { payload: { [Scope.Transactions]: Transaction[] } }) => {
               updateCachedData((draft) => {
                 // TODO: verify payload
-                draft.info = data.payload[Scope.Transactions]
+                draft.info[requestBody.payload.address as string] = data.payload[Scope.Transactions]
               })
-            }
+            },
+            actionType
           )
-        },
-      }
-    ),
+        )
+      },
+    }),
   }),
 })
 

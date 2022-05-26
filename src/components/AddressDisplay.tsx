@@ -1,5 +1,6 @@
 import React from 'react'
 import { Identicon } from 'src/components/accounts/Identicon'
+import { IdenticonWithNotificationBadge } from 'src/components/accounts/IdenticonWithNotificationBadge'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -16,6 +17,7 @@ type AddressDisplayProps = {
   size?: number
   variant?: keyof Theme['textVariants']
   verticalGap?: keyof Theme['spacing']
+  showNotificationBadge?: boolean
 }
 
 /** Helper component to display identicon and formatted address */
@@ -26,6 +28,7 @@ export function AddressDisplay({
   variant = 'body1',
   verticalGap = 'xxs',
   alwaysShowAddress,
+  showNotificationBadge,
 }: AddressDisplayProps) {
   const { name, address: validatedAddress } = useDisplayName(address, fallback)
 
@@ -35,7 +38,11 @@ export function AddressDisplay({
 
   return (
     <Flex row alignItems="center" gap="sm">
-      <Identicon address={validatedAddress} size={size} />
+      {showNotificationBadge ? (
+        <IdenticonWithNotificationBadge address={validatedAddress} size={size} />
+      ) : (
+        <Identicon address={validatedAddress} size={size} />
+      )}
       <Flex gap={verticalGap}>
         <Text
           color="deprecated_textColor"

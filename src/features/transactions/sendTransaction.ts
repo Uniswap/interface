@@ -5,6 +5,7 @@ import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
 import { logEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
+import { selectTransactions } from 'src/features/transactions/selectors'
 import { transactionActions } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -78,7 +79,7 @@ function* addTransaction(
   populatedRequest: providers.TransactionRequest,
   isFlashbots?: boolean
 ) {
-  const txsByChainId = yield* appSelect((state) => state.transactions.byChainId)
+  const txsByChainId = yield* appSelect(selectTransactions)
   const txCount = getTransactionCount(txsByChainId)
   const id = txCount.toString() // 0 indexed so count is actually next id
   const request = getSerializableTransactionRequest(populatedRequest, chainId)

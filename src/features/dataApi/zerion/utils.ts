@@ -3,17 +3,23 @@ import { config } from 'src/config'
 import { Namespace, RequestBody, Scope } from 'src/features/dataApi/zerion/types'
 
 const BASE_URL = 'wss://api-v4.zerion.io/'
+export type ACTION_TYPE = 'get' | 'subscribe'
 
 export const requests = {
   [Namespace.Address]: {
-    transactions: (address: string, currency = 'usd'): { requestBody: RequestBody } => ({
-      requestBody: {
+    transactions: (
+      addresses: string[],
+      actionType?: ACTION_TYPE,
+      currency = 'usd'
+    ): { requestBodies: Array<RequestBody>; actionType?: ACTION_TYPE } => ({
+      actionType,
+      requestBodies: addresses.map((address) => ({
         scope: [Scope.Transactions],
         payload: {
           address,
           currency,
         },
-      },
+      })),
     }),
   },
 }

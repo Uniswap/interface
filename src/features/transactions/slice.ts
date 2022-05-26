@@ -8,13 +8,16 @@ import {
   TransactionStatus,
 } from 'src/features/transactions/types'
 import { assert } from 'src/utils/validation'
-
 export interface TransactionState {
   byChainId: ChainIdToTxIdToDetails
+  lastTxHistoryUpdate: {
+    [address: Address]: number
+  }
 }
 
 export const initialState: TransactionState = {
   byChainId: {},
+  lastTxHistoryUpdate: {},
 }
 
 const slice = createSlice({
@@ -71,6 +74,13 @@ const slice = createSlice({
       state.byChainId[chainId]![id].status = TransactionStatus.Replacing
     },
     resetTransactions: () => initialState,
+    setLastTxHistoryUpdate: (
+      state,
+      { payload }: PayloadAction<{ address: Address; timestamp: number }>
+    ) => {
+      const { address, timestamp } = payload
+      state.lastTxHistoryUpdate[address] = timestamp
+    },
   },
 })
 
@@ -81,5 +91,6 @@ export const {
   cancelTransaction,
   replaceTransaction,
   resetTransactions,
+  setLastTxHistoryUpdate,
 } = slice.actions
 export const { reducer: transactionReducer, actions: transactionActions } = slice

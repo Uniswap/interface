@@ -1,21 +1,22 @@
-import OneSignal, { OpenedEvent } from 'react-native-onesignal'
+import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
 import { config } from 'src/config'
 import { openUri } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 
 interface NotificationAttachments {
   app_url?: string
+  data?: {
+    address?: Address
+  }
 }
 
 export const initOneSignal = () => {
   OneSignal.setLogLevel(6, 0)
   OneSignal.setAppId(config.onesignalAppId)
 
-  // TODO: figure out which account this notif is referring to, if it's the non-active account then
-  // apply visual cues (e.g., notifcation badge)
-  OneSignal.setNotificationWillShowInForegroundHandler((notificationReceivedEvent) => {
+  OneSignal.setNotificationWillShowInForegroundHandler((event: NotificationReceivedEvent) => {
     // Complete with undefined means don't show OS notifications while app is in foreground
-    notificationReceivedEvent.complete()
+    event.complete()
   })
 
   OneSignal.setNotificationOpenedHandler((event: OpenedEvent) => {

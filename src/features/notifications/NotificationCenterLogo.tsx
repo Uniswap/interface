@@ -2,22 +2,28 @@ import React from 'react'
 import * as Progress from 'react-native-progress'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import AlertCircle from 'src/assets/icons/alert-circle.svg'
-import Clock from 'src/assets/icons/clock.svg'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
+import { ClockWithStatus } from 'src/components/icons/ClockWithStatus'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useSelectAddressNotificationCount } from 'src/features/notifications/hooks'
+import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionStatus } from 'src/features/transactions/types'
+import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
 
 export function NotificationCenterLogo({ size = 24 }: { size?: number }) {
   const theme = useAppTheme()
+  const activeAddress = useAppSelector(selectActiveAccountAddress)
   const pendingTransactions = useSortedPendingTransactions()
-  const notificationQueue = useAppSelector((state) => state.notifications.notificationQueue)
+  const notifications = useAppSelector(selectActiveAccountNotifications)
+  const addressNotificationCount = useSelectAddressNotificationCount(activeAddress)
+  const hasUnreadNotifications = !!(addressNotificationCount && addressNotificationCount > 0)
 
-  const currentNotification = notificationQueue[0]
+  const currentNotification = notifications[0]
   if (currentNotification?.type === AppNotificationType.Transaction) {
     const { txStatus } = currentNotification
     if (txStatus === TransactionStatus.Success) {
@@ -65,5 +71,11 @@ export function NotificationCenterLogo({ size = 24 }: { size?: number }) {
     )
   }
 
-  return <Clock color={theme.colors.neutralTextTertiary} height={size} width={size} />
+  return (
+    <ClockWithStatus
+      pendingTxCount={pendingTransactionCount}
+      size={size}
+      unreadNotifications={hasUnreadNotifications}
+    />
+  )
 }

@@ -3,10 +3,14 @@ import { AppNotification } from 'src/features/notifications/types'
 
 interface NotificationState {
   notificationQueue: AppNotification[]
+  notificationCount: {
+    [userAddress: Address]: number
+  }
 }
 
 const initialState: NotificationState = {
   notificationQueue: [],
+  notificationCount: {},
 }
 
 const slice = createSlice({
@@ -23,9 +27,24 @@ const slice = createSlice({
       if (indexToRemove !== -1) state.notificationQueue.splice(indexToRemove, 1)
     },
     resetNotifications: () => initialState,
+    addToNotificationCount: (state, action: PayloadAction<{ address: Address; count: number }>) => {
+      const { address, count } = action.payload
+      state.notificationCount[address] = (state.notificationCount[address] ?? 0) + count
+    },
+    clearNotificationCount: (state, action: PayloadAction<{ address: Address | null }>) => {
+      const { address } = action.payload
+      if (!address || !state.notificationCount[address]) return
+      state.notificationCount[address] = 0
+    },
   },
 })
 
-export const { pushNotification, popNotification, resetNotifications } = slice.actions
+export const {
+  pushNotification,
+  popNotification,
+  resetNotifications,
+  addToNotificationCount,
+  clearNotificationCount,
+} = slice.actions
 
 export const notificationReducer = slice.reducer

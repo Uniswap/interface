@@ -93,7 +93,7 @@ export function HomeScreen({ navigation }: Props) {
                     <Scan color={theme.colors.neutralTextTertiary} height={20} width={20} />
                   </Button>
                 )}
-                <Button name={ElementName.Notifications} onPress={onPressNotifications}>
+                <Button name={ElementName.Notifications} width={28} onPress={onPressNotifications}>
                   <NotificationCenterLogo />
                 </Button>
               </Flex>

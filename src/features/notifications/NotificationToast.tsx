@@ -26,7 +26,7 @@ export const NOTIFICATION_SIZING = {
   secondaryImage: NOTIFICATION_ICON_SIZE * (2 / 3) * (2 / 3),
 }
 
-const DEFAULT_HIDE_DELAY = 3000 // 3 seconds
+const DEFAULT_HIDE_DELAY = 5000 // 5 seconds
 const HIDE_OFFSET_Y = -150
 const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 
