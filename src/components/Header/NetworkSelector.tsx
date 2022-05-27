@@ -250,10 +250,10 @@ export default function NetworkSelector() {
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
   const handleChainSwitch = useCallback(
-    (targetChain: number, skipToggle?: boolean) => {
+    async (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
-      connector.activate(targetChain)
+      await connector.activate(targetChain)
 
       if (!skipToggle) {
         toggle()

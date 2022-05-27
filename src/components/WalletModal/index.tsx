@@ -180,7 +180,7 @@ export default function WalletModal({
       label: name,
     })
 
-    connector.activate()
+    await connector.activate()
     const wallet = getWalletForConnector(connector)
     if (isActiveMap[wallet]) {
       dispatch(updateWalletOverride({ wallet }))
