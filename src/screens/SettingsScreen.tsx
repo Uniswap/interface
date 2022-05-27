@@ -2,6 +2,7 @@ import { BaseTheme, useTheme } from '@shopify/restyle'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
+import { useDispatch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
 import {
   SettingsStackNavigationProp,
@@ -10,7 +11,9 @@ import {
 } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
+import CoffeeIcon from 'src/assets/icons/coffee.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
+import StarIcon from 'src/assets/icons/star.svg'
 import TestnetsIcon from 'src/assets/icons/testnets.svg'
 import TwitterIcon from 'src/assets/logos/twitter.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -24,9 +27,16 @@ import { Text } from 'src/components/Text'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
+import { isEnabled } from 'src/features/remoteConfig'
+import { TestConfig } from 'src/features/remoteConfig/testConfigs'
+import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { openUri } from 'src/utils/linking'
+
+interface SettingsSectionItemComponent {
+  component: ReactElement
+}
 
 interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList
@@ -39,7 +49,8 @@ interface SettingsSectionItem {
 }
 interface SettingsSection {
   subTitle: string
-  subItems: SettingsSectionItem[]
+  subItems: (SettingsSectionItem | SettingsSectionItemComponent)[]
+  isHidden?: boolean
 }
 
 export function SettingsScreen() {
@@ -153,6 +164,66 @@ export function SettingsScreen() {
           },
         ],
       },
+      {
+        subTitle: t('Developer settings'),
+        isHidden: !isEnabled(TestConfig.ShowDevSettings),
+        subItems: [
+          {
+            screen: Screens.SettingsChains,
+            text: t('Chains'),
+            // TODO use chains icon when available
+            icon: (
+              <ChatBubbleIcon
+                color={theme.colors.neutralTextSecondary}
+                height={20}
+                strokeLinecap="round"
+                strokeWidth="1.5"
+                width={20}
+              />
+            ),
+          },
+          {
+            screen: Screens.SettingsSupport,
+            text: t('Support'),
+            icon: (
+              <ChatBubbleIcon
+                color={theme.colors.neutralTextSecondary}
+                height={20}
+                strokeLinecap="round"
+                strokeWidth="1.5"
+                width={20}
+              />
+            ),
+          },
+          {
+            screen: Screens.SettingsTestConfigs,
+            text: 'Test Configs',
+            icon: (
+              <ChatBubbleIcon
+                color={theme.colors.neutralTextSecondary}
+                height={20}
+                strokeLinecap="round"
+                strokeWidth="1.5"
+                width={20}
+              />
+            ),
+          },
+          {
+            screen: Screens.Dev,
+            text: t('Dev Options'),
+            icon: (
+              <CoffeeIcon
+                color={theme.colors.neutralTextSecondary}
+                height={20}
+                strokeLinecap="round"
+                strokeWidth="1.5"
+                width={20}
+              />
+            ),
+          },
+          { component: <OnboardingRow /> },
+        ],
+      },
     ],
     [isRinkebyActive, onToggleTestnets, t, theme]
   )
@@ -165,19 +236,67 @@ export function SettingsScreen() {
           <Text variant="largeLabel">{t('Settings')}</Text>
         </Flex>
         <Flex>
-          {pages.map((o) => (
-            <Flex>
-              <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
-                {o.subTitle}
-              </Text>
-              {o.subItems.map((item) => (
-                <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
-              ))}
-            </Flex>
-          ))}
+          {pages.map((o) => {
+            if (o.isHidden) {
+              return null
+            }
+            return (
+              <Flex>
+                <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+                  {o.subTitle}
+                </Text>
+                {o.subItems.map((item) => {
+                  if ('component' in item) {
+                    return item.component
+                  }
+                  return (
+                    <SettingsRow
+                      key={item.screen}
+                      navigation={navigation}
+                      page={item}
+                      theme={theme}
+                    />
+                  )
+                })}
+              </Flex>
+            )
+          })}
         </Flex>
       </ScrollView>
     </Screen>
+  )
+}
+
+function OnboardingRow() {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigation = useSettingsStackNavigation()
+
+  return (
+    <Button
+      name="DEBUG_Settings_Navigate"
+      px="sm"
+      onPress={() => {
+        navigation.goBack()
+        dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
+      }}>
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+        <Box alignItems="center" flexDirection="row">
+          <StarIcon
+            height={20}
+            stroke={theme.colors.neutralTextSecondary}
+            strokeLinecap="round"
+            strokeWidth="1.5"
+            width={20}
+          />
+          <Text fontWeight="500" ml="md" variant="subHead1">
+            {t('Onboarding')}
+          </Text>
+        </Box>
+        <Chevron color={theme.colors.neutralTextTertiary} direction="e" height={16} width={16} />
+      </Box>
+    </Button>
   )
 }
 

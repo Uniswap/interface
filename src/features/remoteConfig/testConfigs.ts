@@ -17,10 +17,12 @@ export enum TestConfig {
   BiometricPrompt = 'Biometric Prompt (__DEV__)',
   DisplayExtractedNFTColors = 'extract-nft-colors',
   RinkebyNFTs = 'rinkeby-nfts',
+  ShowDevSettings = 'show_dev_settings',
 }
 
 export const TestConfigValues: Record<TestConfig, ConfigValue> = {
   [TestConfig.BiometricPrompt]: __DEV__ ? 'disabled' : 'enabled',
   [TestConfig.DisplayExtractedNFTColors]: __DEV__ ? 'enabled' : 'disabled',
   [TestConfig.RinkebyNFTs]: 'disabled',
+  [TestConfig.ShowDevSettings]: __DEV__ ? 'enabled' : 'disabled',
 }
