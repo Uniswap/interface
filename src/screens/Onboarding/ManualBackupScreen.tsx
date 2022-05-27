@@ -11,7 +11,6 @@ import { RainbowLinearGradientStops } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
 import { Box, Flex } from 'src/components/layout'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { MnemonicValidator } from 'src/components/mnemonic/MnemonicValidator'
 import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -19,32 +18,12 @@ import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { flex } from 'src/styles/flex'
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
-
-// TODO: use actual mnemonic
-const SAMPLE_SEED = [
-  'dove',
-  'lumber',
-  'quote',
-  'board',
-  'young',
-  'robust',
-  'kit',
-  'invite',
-  'plastic',
-  'regular',
-  'skull',
-  'history',
-]
 
 enum View {
   Education,
   View,
-  Confirm,
-}
-
-function useMnenonic() {
-  return SAMPLE_SEED
 }
 
 export function ManualBackupScreen({ navigation }: Props) {
@@ -53,7 +32,6 @@ export function ManualBackupScreen({ navigation }: Props) {
 
   const activeAccount = useActiveAccount()
 
-  const [inputIsInvalid, setInputIsInvalid] = useState(false)
   const [acknowledged, setAcknowledged] = useState(false)
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.Education)
 
@@ -75,8 +53,6 @@ export function ManualBackupScreen({ navigation }: Props) {
     }
   }, [activeAccount?.backups, navigation])
 
-  const mnemonic = useMnenonic()
-
   switch (view) {
     case View.Education:
       return (
@@ -88,6 +64,7 @@ export function ManualBackupScreen({ navigation }: Props) {
 
             <Flex row>
               <Switch
+                testID={ElementName.Switch}
                 value={acknowledged}
                 onValueChange={(newValue: boolean) => setAcknowledged(newValue)}
               />
@@ -102,6 +79,7 @@ export function ManualBackupScreen({ navigation }: Props) {
                 disabled={!acknowledged}
                 label={t('Continue')}
                 name={ElementName.Next}
+                testID={ElementName.Next}
                 onPress={nextView}
               />
             </Flex>
@@ -114,33 +92,16 @@ export function ManualBackupScreen({ navigation }: Props) {
           subtitle={t('Remember that the order of the words matters.')}
           title={t('Write down your seed phrase')}>
           <Flex justifyContent="space-between">
-            <MnemonicDisplay mnemonic={mnemonic} />
-
+            <MnemonicDisplay address={activeAccount!.address} style={flex.fill} />
             <Flex justifyContent="flex-end">
-              <PrimaryButton label={t('Next')} name={ElementName.Next} onPress={nextView} />
+              <PrimaryButton
+                label={t('Continue')}
+                name={ElementName.Next}
+                testID={ElementName.Next}
+                onPress={onValidationSuccessful}
+              />
             </Flex>
           </Flex>
-        </OnboardingScreen>
-      )
-    case View.Confirm:
-      return (
-        <OnboardingScreen
-          subtitle={t(
-            'Confirm that you correctly wrote down your seed phrase by filling in the missing words.'
-          )}
-          title={t('Confirm your seed phrase')}>
-          {inputIsInvalid ? (
-            <Text color="deprecated_red" textAlign="center" variant="body1">
-              {t('Incorrect order. Please try again.')}
-            </Text>
-          ) : null}
-
-          <MnemonicValidator
-            mnemonic={mnemonic}
-            onFailure={() => setInputIsInvalid(true)}
-            onPress={() => setInputIsInvalid(false)}
-            onSuccess={onValidationSuccessful}
-          />
         </OnboardingScreen>
       )
   }

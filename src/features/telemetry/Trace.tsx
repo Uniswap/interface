@@ -20,7 +20,7 @@ export interface ITraceContext {
   // Element name mostly used to identify events sources
   // Does not need to be unique given the parent screen and section
   elementName?: ElementName | string
-  elementType?: 'button'
+  elementType?: 'button' | 'switch'
 }
 
 export const TraceContext = createContext<ITraceContext>({})

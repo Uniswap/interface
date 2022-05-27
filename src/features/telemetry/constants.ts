@@ -94,6 +94,7 @@ export const enum ElementName {
   Submit = 'submit',
   Swap = 'swap',
   SwapArrow = 'swap-arrow',
+  Switch = 'switch',
   TabBarSwap = 'tab-bar-swap',
   TokenWarningAccept = 'token-warning-accept',
   SwapQuickDetails = 'swap-quick-details',

@@ -1,6 +1,6 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
-import { Switch as BaseSwitch } from 'react-native'
+import { Switch as BaseSwitch, ViewProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
@@ -11,7 +11,8 @@ export type SwitchProps = {
   value: boolean
   onValueChange: (newValue: boolean) => void
   disabled?: boolean
-} & RestyleProps
+} & RestyleProps &
+  ViewProps
 
 // A themed switch toggle
 // TODO may need to replace with a custom switch implementation to match designs

@@ -17,6 +17,15 @@ export function Create() {
     await element(by.id(ElementName.Next)).tap()
 
     // Backups
+
+    // Manual Backup
+    await element(by.id(ElementName.AddManualBackup)).tap()
+    await element(by.id(ElementName.Switch)).tap()
+    // view native mnemonic
+    await element(by.id(ElementName.Next)).tap()
+    // finish viewing native mnemonic
+    await element(by.id(ElementName.Next)).tap()
+
     // iCloud Backup
     await element(by.id(ElementName.AddiCloudBackup)).tap()
 

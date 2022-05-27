@@ -20,7 +20,7 @@ class RNEthersRS: NSObject {
   private let keychain = KeychainSwift(keyPrefix: prefix)
   // TODO: LRU cache to ensure we don't create too many (unlikely to happen)
   private var walletCache: [String: OpaquePointer] = [:]
-
+  
   @objc static func requiresMainQueueSetup() -> Bool {
     return false
   }

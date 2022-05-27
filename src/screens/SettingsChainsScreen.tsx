@@ -41,7 +41,7 @@ export function SettingsChainsScreen() {
                 justifyContent="space-between"
                 mt="lg">
                 <Text variant="body1">{CHAIN_INFO[chainId].label}</Text>
-                <Switch value={isActive} onValueChange={onToggleChain(chainId)} />
+                <Switch value={isActive} onValueChange={() => onToggleChain(chainId)} />
               </Box>
             )
           })}
