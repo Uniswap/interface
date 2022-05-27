@@ -146,7 +146,7 @@ export default function WalletModal({
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   // Need to pass infura as a default case because useSelectedError requirse a connector
-  const pendingError = hooks.useSelectedError(pendingConnector || alchemy)
+  const pendingError = hooks.useSelectedError(pendingConnector || infura)
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()

@@ -123,8 +123,8 @@ export const createOrderedConnectors = (walletOverride: Wallet | undefined) => {
   WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
     connectors.push(getConnectorListItemForWallet(wallet))
   })
-  // connectors.push({ connector: infura, hooks: infuraHooks })
   connectors.push({ connector: alchemy, hooks: alchemyHooks })
+  connectors.push({ connector: infura, hooks: infuraHooks })
   const web3ReactConnectors: [Connector, Web3ReactHooks][] = connectors.map(({ connector, hooks }) => [
     connector,
     hooks,
