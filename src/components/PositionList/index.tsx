@@ -49,9 +49,16 @@ const ToggleWrap = styled.div`
   align-items: center;
 `
 
-const ToggleLabelWrap = styled.div`
+const ToggleLabel = styled.div`
   opacity: 0.6;
   margin-right: 10px;
+`
+
+const MobileTogglePosition = styled.div`
+  @media screen and (max-width: ${MEDIA_WIDTHS.upToExtraSmall}px) {
+    position: absolute;
+    right: 20px;
+  }
 `
 
 type PositionListProps = React.PropsWithChildren<{
@@ -73,9 +80,9 @@ export default function PositionList({
           {positions && ' (' + positions.length + ')'}
         </div>
         <ToggleWrap>
-          <ToggleLabelWrap>
+          <ToggleLabel>
             <Trans>Show closed positions</Trans>
-          </ToggleLabelWrap>
+          </ToggleLabel>
           <SimpleToggle
             id="desktop-hide-closed-positions"
             isActive={!userHideClosedPositions}
@@ -88,16 +95,18 @@ export default function PositionList({
       <MobileHeader>
         <Trans>Your positions</Trans>
         <ToggleWrap>
-          <ToggleLabelWrap>
+          <ToggleLabel>
             <Trans>Show closed positions</Trans>
-          </ToggleLabelWrap>
-          <SimpleToggle
-            id="mobile-hide-closed-positions"
-            isActive={!userHideClosedPositions}
-            toggle={() => {
-              setUserHideClosedPositions(!userHideClosedPositions)
-            }}
-          />
+          </ToggleLabel>
+          <MobileTogglePosition>
+            <SimpleToggle
+              id="mobile-hide-closed-positions"
+              isActive={!userHideClosedPositions}
+              toggle={() => {
+                setUserHideClosedPositions(!userHideClosedPositions)
+              }}
+            />
+          </MobileTogglePosition>
         </ToggleWrap>
       </MobileHeader>
       {positions.map((p) => {
