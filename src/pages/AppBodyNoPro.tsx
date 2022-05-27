@@ -6,7 +6,7 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   position: end;
   margin-top: ${({ margin }) => margin ?? '0px'};
   max-height: 100%;
-  height: 532px;
+  height: auto;
   width: 100%;
   max-width: 480px;
   background: ${({ theme }) => theme.bg0};
@@ -14,7 +14,7 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
   z-index: ${Z_INDEX.deprecated_content};
-  flex-grow: 0;
+  flex-grow: 1;
   overflow-x: hidden;
   overflow-y: hidden;
   flex: 1;
