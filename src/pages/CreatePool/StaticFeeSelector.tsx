@@ -42,17 +42,17 @@ const ToggleWrapper = styled.button<{ background?: string }>`
   width: 100%;
 `
 
-export interface FeeTypeSelectorProps {
-  active?: string
-  onChange: (name: string) => void
-  options: { name: string; title: string }[]
+export interface StaticFeeSelectorProps {
+  active?: number
+  onChange: (name: number) => void
+  options: { name: number; title: string }[]
 }
 
-export default function FeeTypeSelector({
-  active = 'static',
+export default function StaticFeeSelector({
+  active = 1,
   onChange,
-  options = [{ name: '1', title: '0.01%' }],
-}: FeeTypeSelectorProps) {
+  options = [{ name: 1, title: '0.01%' }],
+}: StaticFeeSelectorProps) {
   const buttonsRef = useRef<any>({})
   const [activeElement, setActiveElement] = useState()
   const firstRender = useRef<boolean>(true)

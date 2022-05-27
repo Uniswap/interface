@@ -18,7 +18,7 @@ import {
   TokenAmount,
   WETH,
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES, AMP_HINT, ONLY_STATIC_FEE_OPTIONS } from 'constants/index'
+import { ZAP_ADDRESSES, AMP_HINT, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
@@ -612,7 +612,7 @@ const ZapIn = ({
                         <AutoRow>
                           <Text fontWeight={500} fontSize={12} color={theme.subText}>
                             <UppercaseText>
-                              {chainId && ONLY_STATIC_FEE_OPTIONS[chainId] ? (
+                              {chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId) ? (
                                 <Trans>Fee</Trans>
                               ) : (
                                 <Trans>Dynamic Fee Range</Trans>
@@ -621,14 +621,14 @@ const ZapIn = ({
                           </Text>
                           <QuestionHelper
                             text={
-                              chainId && ONLY_STATIC_FEE_OPTIONS[chainId]
+                              chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
                                 ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
                                 : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`
                             }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
-                          {chainId && ONLY_STATIC_FEE_OPTIONS[chainId]
+                          {chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
                             ? pair?.fee
                               ? +new Fraction(pair.fee)
                                   .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))

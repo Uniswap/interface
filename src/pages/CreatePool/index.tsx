@@ -16,12 +16,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import {
-  ROUTER_ADDRESSES,
-  CREATE_POOL_AMP_HINT,
-  ONLY_STATIC_FEE_OPTIONS,
-  WITH_STATIC_FEE_OPTIONS,
-} from '../../constants'
+import { ROUTER_ADDRESSES, CREATE_POOL_AMP_HINT, STATIC_FEE_OPTIONS, ONLY_STATIC_FEE_CHAINS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -64,14 +59,11 @@ import {
   NumericalInput2,
   USDPrice,
   Warning,
-  FeeOption,
-  FeeSelector,
 } from './styled'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import FeeTypeSelector from './FeeTypeSelector'
 import StaticFeeSelector from './StaticFeeSelector'
 
-const FEE_OPTIONS = { ...ONLY_STATIC_FEE_OPTIONS, ...WITH_STATIC_FEE_OPTIONS }
 export default function CreatePool({
   match: {
     params: { currencyIdA, currencyIdB },
@@ -82,9 +74,9 @@ export default function CreatePool({
   const theme = useContext(ThemeContext)
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
-  const [selectedFee, setSelectedFee] = useState(FEE_OPTIONS[chainId as ChainId]?.[0])
+  const [selectedFee, setSelectedFee] = useState(STATIC_FEE_OPTIONS[chainId as ChainId]?.[0])
 
-  const withoutDynamicFee = !!chainId && !!ONLY_STATIC_FEE_OPTIONS[chainId]
+  const withoutDynamicFee = !!chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
 
   const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
@@ -146,9 +138,6 @@ export default function CreatePool({
 
   // fee types
   const [feeType, setFeeType] = useState<string>('static')
-  const [staticFee, setStaticFee] = useState<string>(
-    chainId && FEE_OPTIONS[chainId] ? FEE_OPTIONS[chainId][0].toString() : '1',
-  )
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -179,18 +168,10 @@ export default function CreatePool({
   const addTransactionWithType = useTransactionAdder()
   const addPair = usePairAdderByTokens()
 
-  useEffect(() => {
-    if (!chainId || !library || !account) return
-    const factory = getKSFactoryContract(chainId, library, account)
-    const method = factory.getFeeConfiguration
-    console.log('1234124142')
-    method({}).then((res: any) => console.log(`test ${res}`))
-  }, [chainId, library, account])
-
   async function onAdd() {
     // if (!pair) return
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    const router = getRouterContract(chainId, library, feeType, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -213,7 +194,7 @@ export default function CreatePool({
       method = router.addLiquidityNewPoolETH
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        withoutDynamicFee
+        withoutDynamicFee || (!withoutDynamicFee && feeType === 'static')
           ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
           : ampConvertedInBps.toSignificant(5), //ampBps
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
@@ -400,6 +381,12 @@ export default function CreatePool({
 
   const showSanityPriceWarning = !!(poolRatio && marketRatio && Math.abs(poolRatio - marketRatio) / marketRatio > 0.05)
   const { mixpanelHandler } = useMixpanel()
+
+  useEffect(() => {
+    if (chainId) {
+      setSelectedFee(STATIC_FEE_OPTIONS[chainId]?.[0])
+    }
+  }, [chainId])
 
   return (
     <PageWrapper>
@@ -608,38 +595,59 @@ export default function CreatePool({
                         return { name: fee.toString(), title: (fee / 100).toString() + '%' }
                       })}
                     /> */}
-                {chainId && WITH_STATIC_FEE_OPTIONS[chainId] && (
-                  <FeeTypeSelector active={feeType} onChange={(type: string) => setFeeType(type)} />
-                )}
+
                 {chainId &&
-                ((WITH_STATIC_FEE_OPTIONS[chainId] && feeType === 'static') || ONLY_STATIC_FEE_OPTIONS[chainId]) ? (
-                  <StaticFeeSelector
-                    active={staticFee.toString()}
-                    onChange={(name: string) => setStaticFee(name)}
-                    options={WITH_STATIC_FEE_OPTIONS[chainId].map((fee: number) => {
-                      return { name: fee.toString(), title: (fee / 100).toString() + '%' }
-                    })}
-                  />
-                ) : (
-                  <Section>
-                    <AutoRow>
-                      <Text fontWeight={500} fontSize={14} color={theme.subText}>
-                        <Trans>Dynamic Fee Range</Trans>:{' '}
-                        {currencies[Field.CURRENCY_A] &&
-                        currencies[Field.CURRENCY_B] &&
-                        pairState !== PairState.INVALID &&
-                        +amp >= 1
-                          ? feeRangeCalc(
-                              !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp,
-                            )
-                          : '-'}
-                      </Text>
-                      <QuestionHelper
-                        text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
+                  (withoutDynamicFee ? (
+                    <>
+                      <AutoRow>
+                        <ActiveText>Fee</ActiveText>
+                        <QuestionHelper
+                          text={t`You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee.`}
+                        />
+                      </AutoRow>
+                      <StaticFeeSelector
+                        active={selectedFee}
+                        onChange={(name: number) => setSelectedFee(name)}
+                        options={STATIC_FEE_OPTIONS[chainId].map((fee: number) => {
+                          return { name: fee, title: (fee / 100).toString() + '%' }
+                        })}
                       />
-                    </AutoRow>
-                  </Section>
-                )}
+                    </>
+                  ) : (
+                    <>
+                      <FeeTypeSelector active={feeType} onChange={(type: string) => setFeeType(type)} />
+                      {feeType === 'static' ? (
+                        <StaticFeeSelector
+                          active={selectedFee}
+                          onChange={(name: number) => setSelectedFee(name)}
+                          options={STATIC_FEE_OPTIONS[chainId].map((fee: number) => {
+                            return { name: fee, title: (fee / 1000).toString() + '%' }
+                          })}
+                        />
+                      ) : (
+                        <Section>
+                          <AutoRow>
+                            <Text fontWeight={500} fontSize={14} color={theme.subText}>
+                              <Trans>Dynamic Fee Range</Trans>:{' '}
+                              {currencies[Field.CURRENCY_A] &&
+                              currencies[Field.CURRENCY_B] &&
+                              pairState !== PairState.INVALID &&
+                              +amp >= 1
+                                ? feeRangeCalc(
+                                    !!pair?.amp
+                                      ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                      : +amp,
+                                  )
+                                : '-'}
+                            </Text>
+                            <QuestionHelper
+                              text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
+                            />
+                          </AutoRow>
+                        </Section>
+                      )}
+                    </>
+                  ))}
 
                 {showSanityPriceWarning && (
                   <Warning>

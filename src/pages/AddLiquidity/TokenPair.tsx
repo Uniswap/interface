@@ -16,7 +16,7 @@ import TransactionConfirmationModal, {
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, AMP_HINT, WITH_STATIC_FEE_OPTIONS, ONLY_STATIC_FEE_OPTIONS } from '../../constants'
+import { ROUTER_ADDRESSES, AMP_HINT, STATIC_FEE_OPTIONS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -55,7 +55,6 @@ import {
   DynamicFeeRangeWrapper,
 } from './styled'
 
-const FEE_OPTIONS = { ...WITH_STATIC_FEE_OPTIONS, ...ONLY_STATIC_FEE_OPTIONS }
 const TokenPair = ({
   currencyIdA,
   currencyIdB,
@@ -565,19 +564,23 @@ const TokenPair = ({
                         <AutoRow>
                           <Text fontWeight={500} fontSize={12} color={theme.subText}>
                             <UppercaseText>
-                              {chainId && FEE_OPTIONS[chainId] ? <Trans>Fee</Trans> : <Trans>Dynamic Fee Range</Trans>}
+                              {chainId && STATIC_FEE_OPTIONS[chainId] ? (
+                                <Trans>Fee</Trans>
+                              ) : (
+                                <Trans>Dynamic Fee Range</Trans>
+                              )}
                             </UppercaseText>
                           </Text>
                           <QuestionHelper
                             text={
-                              chainId && FEE_OPTIONS[chainId]
+                              chainId && STATIC_FEE_OPTIONS[chainId]
                                 ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
                                 : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`
                             }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
-                          {chainId && FEE_OPTIONS[chainId]
+                          {chainId && STATIC_FEE_OPTIONS[chainId]
                             ? pair?.fee
                               ? +new Fraction(pair.fee)
                                   .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))

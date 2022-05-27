@@ -1399,25 +1399,30 @@ export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
 export const sentryRequestId = uuid()
 
 // Fee options instead of dynamic fee
-export const ONLY_STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
-  [ChainId.ARBITRUM]: [1, 5, 30, 50, 100],
-  [ChainId.ARBITRUM_TESTNET]: [1, 5, 30, 50, 100],
-  [ChainId.AURORA]: [1, 5, 30, 50, 100],
-  [ChainId.VELAS]: [1, 5, 30, 50, 100],
-  [ChainId.OASIS]: [1, 5, 30, 50, 100],
+export const STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
+  [ChainId.ARBITRUM]: [1, 5, 10, 30, 100],
+  [ChainId.ARBITRUM_TESTNET]: [1, 5, 10, 30, 100],
+  [ChainId.AURORA]: [1, 5, 10, 30, 100],
+  [ChainId.VELAS]: [1, 5, 10, 30, 100],
+  [ChainId.OASIS]: [1, 5, 10, 30, 100],
+  [ChainId.MAINNET]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.ROPSTEN]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.RINKEBY]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.MATIC]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.AVAXMAINNET]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.FANTOM]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.BSCMAINNET]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.CRONOS]: [8, 10, 50, 100, 300, 1000],
+  [ChainId.BTTC]: [8, 10, 50, 100, 300, 1000],
 }
 
-export const WITH_STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
-  [ChainId.MAINNET]: [1, 5, 30, 50, 100],
-  [ChainId.ROPSTEN]: [1, 5, 30, 50, 100],
-  [ChainId.RINKEBY]: [1, 5, 30, 50, 100],
-  [ChainId.MATIC]: [1, 5, 30, 50, 100],
-  [ChainId.AVAXMAINNET]: [1, 5, 30, 50, 100],
-  [ChainId.FANTOM]: [1, 5, 30, 50, 100],
-  [ChainId.BSCMAINNET]: [1, 5, 30, 50, 100],
-  [ChainId.CRONOS]: [1, 5, 30, 50, 100],
-  [ChainId.BTTC]: [1, 5, 30, 50, 100],
-}
+export const ONLY_STATIC_FEE_CHAINS = [
+  ChainId.ARBITRUM,
+  ChainId.ARBITRUM_TESTNET,
+  ChainId.AURORA,
+  ChainId.VELAS,
+  ChainId.OASIS,
+]
 
 export const TRENDING_SOON_ITEM_PER_PAGE = 10
 export const TRENDING_SOON_MAX_ITEMS = 50

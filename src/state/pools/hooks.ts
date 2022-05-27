@@ -17,7 +17,7 @@ import { setError, setLoading, setSharedPoolId, updatePools } from './actions'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { useETHPrice, useExchangeClient } from 'state/application/hooks'
-import { ONLY_STATIC_FEE_OPTIONS } from 'constants/index'
+import { ONLY_STATIC_FEE_CHAINS } from 'constants/index'
 
 export interface SubgraphPoolData {
   id: string
@@ -273,7 +273,7 @@ export async function getBulkPoolDataWithPagination(
     } else {
       const [{ number: b1 }] = blocks
 
-      const withoutDynamicFee = !!(chainId && ONLY_STATIC_FEE_OPTIONS[chainId])
+      const withoutDynamicFee = chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
 
       const [oneDayResult, current] = await Promise.all(
         [b1]

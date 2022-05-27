@@ -20,7 +20,7 @@ import {
   Fraction,
   JSBI,
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES, ONLY_STATIC_FEE_OPTIONS } from 'constants/index'
+import { ZAP_ADDRESSES, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -179,7 +179,7 @@ export default function ZapOut({
       return approveCallback()
     }
 
-    const isWithoutDynamicFee = !!(chainId && ONLY_STATIC_FEE_OPTIONS[chainId])
+    const isWithoutDynamicFee = chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)
 

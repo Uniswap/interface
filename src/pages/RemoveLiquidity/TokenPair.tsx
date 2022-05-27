@@ -8,7 +8,7 @@ import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
 import { Currency, CurrencyAmount, currencyEquals, ETHER, JSBI, Percent, Token, WETH, Fraction } from '@dynamic-amm/sdk'
-import { ROUTER_ADDRESSES, ONLY_STATIC_FEE_OPTIONS } from 'constants/index'
+import { ROUTER_ADDRESSES, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -143,7 +143,7 @@ export default function TokenPair({
       return approveCallback()
     }
 
-    const isWithoutDynamicFee = !!(chainId && ONLY_STATIC_FEE_OPTIONS[chainId])
+    const isWithoutDynamicFee = !!(chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId))
 
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)

@@ -1,6 +1,6 @@
 import ItemCardInfoRow, { ItemCardInfoRowPriceRange } from 'components/PoolList/ItemCard/ItemCardInfoRow'
 import { t } from '@lingui/macro'
-import { AMP_LIQUIDITY_HINT, SUBGRAPH_AMP_MULTIPLIER, ONLY_STATIC_FEE_OPTIONS } from 'constants/index'
+import { AMP_LIQUIDITY_HINT, SUBGRAPH_AMP_MULTIPLIER, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
 import { feeRangeCalc } from 'utils/dmm'
 import React from 'react'
 import { SubgraphPoolData } from 'state/pools/hooks'
@@ -13,7 +13,7 @@ export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolDa
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
   const ampLiquidity = formattedNum(`${parseFloat(amp.toSignificant(5)) * parseFloat(poolData.reserveUSD)}`, true)
 
-  const isWithoutDynamicFee = chainId && ONLY_STATIC_FEE_OPTIONS[chainId]
+  const isWithoutDynamicFee = chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
 
   return (
     <>
@@ -21,7 +21,7 @@ export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolDa
       <ItemCardInfoRowPriceRange poolData={poolData} />
       <ItemCardInfoRow
         infoHelperText={
-          chainId && ONLY_STATIC_FEE_OPTIONS[chainId]
+          chainId && ONLY_STATIC_FEE_CHAINS[chainId]
             ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
             : undefined
         }

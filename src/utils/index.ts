@@ -22,8 +22,7 @@ import {
   AGGREGATION_EXECUTOR,
   DEFAULT_GAS_LIMIT_MARGIN,
   CLAIM_REWARD_SC_ADDRESS,
-  ONLY_STATIC_FEE_OPTIONS,
-  WITH_STATIC_FEE_OPTIONS,
+  ONLY_STATIC_FEE_CHAINS,
   ZERO_ADDRESS,
   KS_FACTORY_ADDRESSES,
   KS_ROUTER_ADDRESSES,
@@ -260,19 +259,16 @@ export function getRouterContract(
   feeType: string,
   account?: string,
 ): Contract {
-  if (ONLY_STATIC_FEE_OPTIONS[chainId]) {
+  if (ONLY_STATIC_FEE_CHAINS.includes(chainId)) {
     return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI_WITHOUT_DYNAMIC_FEE, library, account)
-  }
-  if (WITH_STATIC_FEE_OPTIONS[chainId]) {
+  } else {
     return getContract(
       feeType === 'static' ? KS_ROUTER_ADDRESSES[chainId] : ROUTER_ADDRESSES[chainId],
-      KS_ROUTER_ABI,
+      feeType === 'static' ? KS_ROUTER_ABI : ROUTER_ABI,
       library,
       account,
     )
   }
-
-  return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
 }
 
 export function getKSFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
