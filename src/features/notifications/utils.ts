@@ -149,12 +149,15 @@ const formTransferTxTitle = (
 }
 
 export const createBalanceUpdate = (
+  txType: TransactionType.Send | TransactionType.Receive | TransactionType.Swap,
   txStatus: TransactionStatus.Success | TransactionStatus.Failed,
   currency: Nullable<Currency>,
   currencyAmountRaw: string,
   spotPrices?: SpotPrices // despite what typescript says about `useSpotPrices`, `spotPrices` can be undefined while loading
 ) => {
-  if (!currency || txStatus === TransactionStatus.Failed) return undefined
+  if (!currency || txStatus === TransactionStatus.Failed || txType === TransactionType.Send) {
+    return undefined
+  }
 
   const currencyAmount = getFormattedCurrencyAmount(currency, currencyAmountRaw)
   return {

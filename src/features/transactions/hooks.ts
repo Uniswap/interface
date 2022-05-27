@@ -13,7 +13,7 @@ import { TransactionStatus, TransactionType } from 'src/features/transactions/ty
 import { currencyIdToAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { flattenObjectOfObjects } from 'src/utils/objects'
-import { tryParseAmount } from 'src/utils/tryParseAmount'
+import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
 export function useSortedTransactions(newestFirst = false) {
   const txsByChainId = useAppSelector(selectTransactions)
@@ -65,7 +65,9 @@ export function useCreateSwapFormState(chainId: ChainId, txHash: string) {
     const { status: txStatus, typeInfo } = transaction
 
     if (typeInfo.type !== TransactionType.Swap) {
-      throw new Error(`Tx hash ${txHash} does not correspond to a swap tx`)
+      throw new Error(
+        `Tx hash ${txHash} does not correspond to a swap tx. It is of type ${typeInfo.type}`
+      )
     }
 
     if (txStatus !== TransactionStatus.Failed) {
@@ -109,8 +111,8 @@ export function useCreateSwapFormState(chainId: ChainId, txHash: string) {
 
     const exactAmount =
       exactCurrencyField === CurrencyField.INPUT
-        ? tryParseAmount(inputCurrencyAmountRaw, inputCurrency)
-        : tryParseAmount(outputCurrencyAmountRaw, outputCurrency)
+        ? tryParseRawAmount(inputCurrencyAmountRaw, inputCurrency)
+        : tryParseRawAmount(outputCurrencyAmountRaw, outputCurrency)
 
     const swapFormState: TransactionState = {
       [CurrencyField.INPUT]: inputAsset,

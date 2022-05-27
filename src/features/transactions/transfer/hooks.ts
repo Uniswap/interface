@@ -21,7 +21,7 @@ import { TransferTokenParams } from 'src/features/transactions/transfer/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { SagaStatus } from 'src/utils/saga'
-import { tryParseAmount } from 'src/utils/tryParseAmount'
+import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
@@ -61,7 +61,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const { balance: nativeInBalance } = useNativeCurrencyBalance(chainId, activeAccount?.address)
 
   const amountSpecified = useMemo(
-    () => tryParseAmount(exactAmount, currencyIn),
+    () => tryParseExactAmount(exactAmount, currencyIn),
     [currencyIn, exactAmount]
   )
   const currencyAmounts = {

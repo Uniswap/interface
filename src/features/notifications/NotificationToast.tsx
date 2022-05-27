@@ -151,41 +151,40 @@ export function NotificationContent({
   actionButton,
 }: NotificationContentProps) {
   return (
-    <Flex centered row gap="sm">
-      {icon && (
-        <Box
-          alignItems="center"
-          height={NOTIFICATION_ICON_SIZE}
-          justifyContent="center"
-          width={NOTIFICATION_ICON_SIZE}>
-          {icon}
-        </Box>
-      )}
-      <Flex shrink>
-        <Text fontWeight="500" style={flex.shrink} variant="body2">
+    <Flex row gap="xs" justifyContent="space-between" width={'100%'}>
+      <Flex centered row gap="xs">
+        {icon && (
+          <Box
+            alignItems="center"
+            height={NOTIFICATION_ICON_SIZE}
+            justifyContent="center"
+            width={NOTIFICATION_ICON_SIZE}>
+            {icon}
+          </Box>
+        )}
+        <Text fontWeight="500" style={flex.shrink} variant="subHead2">
           {title}
         </Text>
       </Flex>
-      {balanceUpdate && (
-        <Flex alignItems="flex-end" gap="xxs">
-          <Text
-            color="accentBackgroundSuccess"
-            fontWeight="600"
-            style={flex.shrink}
-            variant="body1">
-            {balanceUpdate.assetIncrease}
-          </Text>
-          <Text
-            color="neutralTextSecondary"
-            fontWeight="500"
-            style={flex.shrink}
-            variant="smallLabel">
-            {balanceUpdate.usdIncrease}
-          </Text>
-        </Flex>
-      )}
-      {actionButton && !balanceUpdate && (
-        <Flex alignItems="flex-end" gap="xxs">
+      <Flex alignItems="flex-end" gap="xxs" justifyContent="center">
+        {balanceUpdate ? (
+          <>
+            <Text
+              color="accentBackgroundSuccess"
+              fontWeight="600"
+              style={flex.shrink}
+              variant="body1">
+              {balanceUpdate.assetIncrease}
+            </Text>
+            <Text
+              color="neutralTextSecondary"
+              fontWeight="500"
+              style={flex.shrink}
+              variant="smallLabel">
+              {balanceUpdate.usdIncrease}
+            </Text>
+          </>
+        ) : actionButton ? (
           <TextButton
             px="xs"
             py="xs"
@@ -193,8 +192,8 @@ export function NotificationContent({
             onPress={actionButton.onPress}>
             {actionButton.title}
           </TextButton>
-        </Flex>
-      )}
+        ) : null}
+      </Flex>
     </Flex>
   )
 }

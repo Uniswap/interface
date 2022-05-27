@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import { selectActiveChainIds } from 'src/features/chains/utils'
@@ -52,7 +53,7 @@ export function* parseAndValidateSwapParams(url: URL) {
   const inputCurrencyId = url.searchParams.get('inputCurrencyId')
   const outputCurrencyId = url.searchParams.get('outputCurrencyId')
   const currencyField = url.searchParams.get('currencyField')
-  const exactAmount = url.searchParams.get('amount')
+  const exactAmount = url.searchParams.get('amount') ?? '0'
 
   if (!inputCurrencyId) {
     throw new Error('No inputCurrencyId')
@@ -94,7 +95,9 @@ export function* parseAndValidateSwapParams(url: URL) {
     throw new Error('Invalid outputCurrencyId. Chain ID is not currently active')
   }
 
-  if (!exactAmount || isNaN(Number(exactAmount))) {
+  try {
+    BigNumber.from(exactAmount).toNumber() // throws if exactAmount string is not a valid number
+  } catch (error) {
     throw new Error('Invalid swap amount')
   }
 

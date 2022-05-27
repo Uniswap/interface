@@ -32,7 +32,7 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId, currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
-import { tryParseAmount } from 'src/utils/tryParseAmount'
+import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
@@ -104,7 +104,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   // amountSpecified, otherCurrency, tradeType fully defines a trade
   const amountSpecified = useMemo(
-    () => tryParseAmount(exactAmount, isExactIn ? currencyIn : currencyOut),
+    () => tryParseExactAmount(exactAmount, isExactIn ? currencyIn : currencyOut),
     [currencyIn, currencyOut, exactAmount, isExactIn]
   )
   const otherCurrency = isExactIn ? currencyOut : currencyIn

@@ -134,6 +134,7 @@ export function SwapNotification({
 
   const { spotPrices } = useSpotPrices([outputCurrency])
   const balanceUpdate = createBalanceUpdate(
+    txType,
     txStatus,
     outputCurrency,
     outputCurrencyAmountRaw,
@@ -187,7 +188,13 @@ export function TransferCurrencyNotification({
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
   const { spotPrices } = useSpotPrices([currency])
-  const balanceUpdate = createBalanceUpdate(txStatus, currency, currencyAmountRaw, spotPrices)
+  const balanceUpdate = createBalanceUpdate(
+    txType,
+    txStatus,
+    currency,
+    currencyAmountRaw,
+    spotPrices
+  )
   const title = formTransferCurrencyNotificationTitle(
     txType,
     txStatus,
