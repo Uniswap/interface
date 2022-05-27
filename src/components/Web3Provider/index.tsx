@@ -7,6 +7,7 @@ import {
   injected,
   Wallet,
   walletConnect,
+  WALLETS,
 } from 'connectors'
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
@@ -44,8 +45,11 @@ function Web3Updater() {
   useEffect(() => {
     if (walletOverride) {
       getConnectorForWallet(walletOverride).connectEagerly()
+      setEagerlyConnectingWallets(new Set(walletOverride))
+    } else if (!walletOverrideBackfilled) {
+      WALLETS.map(getConnectorForWallet).forEach((connector) => connector.connectEagerly())
+      setEagerlyConnectingWallets(new Set(WALLETS))
     }
-    setEagerlyConnectingWallets(new Set(walletOverride))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
