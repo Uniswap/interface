@@ -4589,11 +4589,6 @@
   resolved "https://registry.yarnpkg.com/@types/d3-time/-/d3-time-3.0.0.tgz#e1ac0f3e9e195135361fa1a1d62f795d87e6e819"
   integrity sha512-sZLCdHvBUcNby1cB6Fd3ZBrABbjz3v1Vm90nysCQ6Vt7vd6e/h9Lt7SiJUoEX0l4Dzc7P5llKyhqSi1ycSf1Hg==
 
-"@types/detox@^17.14.2":
-  version "17.14.2"
-  resolved "https://registry.yarnpkg.com/@types/detox/-/detox-17.14.2.tgz#2e3979fdd72c2e38600e5c7100cec412b6b66682"
-  integrity sha512-jkq/4Zk+YnVn3dCoPyPIdz3tiu/akUYy2JajGeEJdoD+tbA4rV2HRwVGRxidri8GlbUR/KDqs8BstY0iVzU4TA==
-
 "@types/glob@*", "@types/glob@^7.1.1":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
@@ -8330,10 +8325,10 @@ detect-port@^1.3.0:
     address "^1.0.1"
     debug "^2.6.0"
 
-detox@^19.6.5:
-  version "19.6.9"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-19.6.9.tgz#56a9115a4d80c8681aeec05402c71e28edc61f15"
-  integrity sha512-2kPoeSoDjC0xWYsH1WJBtMx7ogoKSXsci0gslRK7Nnn6Vb1WVGpF1A/SoKtTsE8uLGdh9u82g3eH35ZEVblsng==
+detox@^19.7.0:
+  version "19.7.0"
+  resolved "https://registry.yarnpkg.com/detox/-/detox-19.7.0.tgz#278994beb98b959d21f1d4f393c628005c893122"
+  integrity sha512-70a6IQCBQCJI21ITdK+qGUQ7fQL/CeOW+i0Vdr0ZFN5B5RylSE9d5shoJBtg2nb8XYG+S9BLqhn+uE02Nqymng==
   dependencies:
     ajv "^8.6.3"
     bunyan "^1.8.12"
