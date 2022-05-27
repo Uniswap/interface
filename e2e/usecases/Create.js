@@ -8,9 +8,12 @@ export function Create() {
 
     await element(by.id(ElementName.OnboardingCreateWallet)).tap()
 
-    // Name and color
+    // Name
     await element(by.id('customize/name')).typeText(`${Accounts.managed.name}`)
     await element(by.id('customize/name')).tapReturnKey()
+    await element(by.id(ElementName.Next)).tap()
+
+    // Choose a color
     await element(by.id(ElementName.Next)).tap()
 
     // Backups

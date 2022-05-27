@@ -184,7 +184,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
 export function* walletConnectSaga() {
   yield* call(initializeWalletConnect)
   const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
-  const addressToAccounts = persisted.payload.wallet.accounts
+  const addressToAccounts = persisted.payload?.wallet?.accounts ?? {}
   const signerAddresses = Object.values(addressToAccounts)
     .filter((a) => a.type !== AccountType.Readonly)
     .map((account) => account.address)
