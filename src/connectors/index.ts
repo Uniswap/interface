@@ -79,7 +79,7 @@ export const [injected, injectedHooks] = initializeConnector<MetaMask>(
   ALL_SUPPORTED_CHAIN_IDS
 )
 
-export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe(actions))
+export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe(actions, true))
 
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>
@@ -95,7 +95,7 @@ fortmaticProvider.on = () => {
   return
 }
 export const [fortmatic, fortmaticHooks] = initializeConnector<EIP1193>(
-  (actions) => new EIP1193(actions, fortmaticProvider, true)
+  (actions) => new EIP1193(actions, fortmaticProvider)
 )
 
 export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(

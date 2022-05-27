@@ -3,11 +3,10 @@ import {
   coinbaseWallet,
   createOrderedConnectors,
   fortmatic,
-  gnosisSafe,
+  getConnectorForWallet,
   injected,
   Wallet,
   walletConnect,
-  WALLETS,
 } from 'connectors'
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
@@ -43,11 +42,10 @@ function Web3Updater() {
   const [eagerlyConnectingWallets, setEagerlyConnectingWallets] = useState(new Set())
 
   useEffect(() => {
-    gnosisSafe.connectEagerly()
-    injected.connectEagerly()
-    walletConnect.connectEagerly()
-    coinbaseWallet.connectEagerly()
-    setEagerlyConnectingWallets(new Set(WALLETS))
+    if (walletOverride) {
+      getConnectorForWallet(walletOverride).connectEagerly()
+    }
+    setEagerlyConnectingWallets(new Set(walletOverride))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
