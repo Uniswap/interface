@@ -90,12 +90,8 @@ export const [walletConnect, walletConnectHooks] = initializeConnector<WalletCon
   ALL_SUPPORTED_CHAIN_IDS
 )
 
-const fortmaticProvider = new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY ?? 'pk_live_357F77728B8EB880').getProvider()
-fortmaticProvider.on = () => {
-  return
-}
 export const [fortmatic, fortmaticHooks] = initializeConnector<EIP1193>(
-  (actions) => new EIP1193(actions, fortmaticProvider)
+  (actions) => new EIP1193(actions, new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY).getProvider())
 )
 
 export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
