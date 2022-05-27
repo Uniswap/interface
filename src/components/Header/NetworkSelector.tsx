@@ -11,13 +11,10 @@ import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { addPopup, ApplicationModal } from 'state/application/reducer'
+import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-import { switchToNetwork } from 'utils/switchToNetwork'
-
-import { useAppDispatch } from '../../state/hooks'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -252,37 +249,17 @@ export default function NetworkSelector() {
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
-  const dispatch = useAppDispatch()
-
   const handleChainSwitch = useCallback(
     (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
-      switchToNetwork(connector, targetChain)
-        .then(() => {
-          if (!skipToggle) {
-            toggle()
-          }
-          history.replace({
-            search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
-          })
-        })
-        .catch((error) => {
-          console.error('Failed to switch networks', error)
+      connector.activate(targetChain)
 
-          // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
-          // but the request fails, revert the URL back to current chainId
-          if (chainId) {
-            history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-          }
-
-          if (!skipToggle) {
-            toggle()
-          }
-          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
-        })
+      if (!skipToggle) {
+        toggle()
+      }
     },
-    [dispatch, connector, toggle, history, chainId]
+    [connector, toggle]
   )
 
   useEffect(() => {

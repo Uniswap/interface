@@ -133,6 +133,7 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, error, hooks } = useWeb3React()
+  console.log(hooks.useSelectedError(network))
   const isActiveMap: Record<Wallet, boolean> = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
