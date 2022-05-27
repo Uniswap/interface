@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH, ChainId } from '@dynamic-amm/sdk'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Plus, AlertTriangle } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text, Flex } from 'rebass'
@@ -16,7 +16,12 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, CREATE_POOL_AMP_HINT, FEE_OPTIONS } from '../../constants'
+import {
+  ROUTER_ADDRESSES,
+  CREATE_POOL_AMP_HINT,
+  ONLY_STATIC_FEE_OPTIONS,
+  WITH_STATIC_FEE_OPTIONS,
+} from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -29,7 +34,13 @@ import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, usePairAdderByTokens, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from '../../utils'
+import {
+  calculateGasMargin,
+  calculateSlippageAmount,
+  formattedNum,
+  getKSFactoryContract,
+  getRouterContract,
+} from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { Dots, Wrapper } from '../Pool/styleds'
@@ -60,6 +71,7 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import FeeTypeSelector from './FeeTypeSelector'
 import StaticFeeSelector from './StaticFeeSelector'
 
+const FEE_OPTIONS = { ...ONLY_STATIC_FEE_OPTIONS, ...WITH_STATIC_FEE_OPTIONS }
 export default function CreatePool({
   match: {
     params: { currencyIdA, currencyIdB },
@@ -72,7 +84,7 @@ export default function CreatePool({
   const currencyB = useCurrency(currencyIdB)
   const [selectedFee, setSelectedFee] = useState(FEE_OPTIONS[chainId as ChainId]?.[0])
 
-  const withoutDynamicFee = !!chainId && !!FEE_OPTIONS[chainId]
+  const withoutDynamicFee = !!chainId && !!ONLY_STATIC_FEE_OPTIONS[chainId]
 
   const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
@@ -166,6 +178,14 @@ export default function CreatePool({
 
   const addTransactionWithType = useTransactionAdder()
   const addPair = usePairAdderByTokens()
+
+  useEffect(() => {
+    if (!chainId || !library || !account) return
+    const factory = getKSFactoryContract(chainId, library, account)
+    const method = factory.getFeeConfiguration
+    console.log('1234124142')
+    method({}).then((res: any) => console.log(`test ${res}`))
+  }, [chainId, library, account])
 
   async function onAdd() {
     // if (!pair) return
@@ -588,14 +608,15 @@ export default function CreatePool({
                         return { name: fee.toString(), title: (fee / 100).toString() + '%' }
                       })}
                     /> */}
-                {chainId && FEE_OPTIONS[chainId] && (
+                {chainId && WITH_STATIC_FEE_OPTIONS[chainId] && (
                   <FeeTypeSelector active={feeType} onChange={(type: string) => setFeeType(type)} />
                 )}
-                {chainId && FEE_OPTIONS[chainId] && feeType === 'static' ? (
+                {chainId &&
+                ((WITH_STATIC_FEE_OPTIONS[chainId] && feeType === 'static') || ONLY_STATIC_FEE_OPTIONS[chainId]) ? (
                   <StaticFeeSelector
                     active={staticFee.toString()}
                     onChange={(name: string) => setStaticFee(name)}
-                    options={FEE_OPTIONS[chainId].map((fee: number) => {
+                    options={WITH_STATIC_FEE_OPTIONS[chainId].map((fee: number) => {
                       return { name: fee.toString(), title: (fee / 100).toString() + '%' }
                     })}
                   />

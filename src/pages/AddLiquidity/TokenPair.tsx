@@ -16,7 +16,7 @@ import TransactionConfirmationModal, {
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, AMP_HINT, FEE_OPTIONS } from '../../constants'
+import { ROUTER_ADDRESSES, AMP_HINT, WITH_STATIC_FEE_OPTIONS, ONLY_STATIC_FEE_OPTIONS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -55,6 +55,7 @@ import {
   DynamicFeeRangeWrapper,
 } from './styled'
 
+const FEE_OPTIONS = { ...WITH_STATIC_FEE_OPTIONS, ...ONLY_STATIC_FEE_OPTIONS }
 const TokenPair = ({
   currencyIdA,
   currencyIdB,

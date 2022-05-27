@@ -96,6 +96,17 @@ export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
   [ChainId.OASIS]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
 }
 
+export const KS_ROUTER_ADDRESSES: { [chainId: number]: string } = {
+  [ChainId.RINKEBY]: '0x89F138263B698D0708689e0aD10dC0E65C2B02BB',
+  [ChainId.ROPSTEN]: '0xE757A71b5d94Dc680ed4fc2ACD98B2061c8b7A15',
+  [ChainId.ARBITRUM_TESTNET]: '0x78Ad9A49327D73C6E3B9881eCD653232cF3E480C',
+}
+export const KS_FACTORY_ADDRESSES: { [chainId: number]: string } = {
+  [ChainId.RINKEBY]: '0x1811E801C09CCDa73b50fB3493254d05e9aE641F',
+  [ChainId.ROPSTEN]: '0xf81D0a69E1470C1f547c19Ed64894d9BA49fffbB',
+  [ChainId.ARBITRUM_TESTNET]: '0x9D4ffbf49cc21372c2115Ae4C155a1e5c0aACf36',
+}
+
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
@@ -1388,12 +1399,24 @@ export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
 export const sentryRequestId = uuid()
 
 // Fee options instead of dynamic fee
-export const FEE_OPTIONS: { [chainId: number]: number[] } = {
+export const ONLY_STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
   [ChainId.ARBITRUM]: [1, 5, 30, 50, 100],
   [ChainId.ARBITRUM_TESTNET]: [1, 5, 30, 50, 100],
   [ChainId.AURORA]: [1, 5, 30, 50, 100],
   [ChainId.VELAS]: [1, 5, 30, 50, 100],
   [ChainId.OASIS]: [1, 5, 30, 50, 100],
+}
+
+export const WITH_STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
+  [ChainId.MAINNET]: [1, 5, 30, 50, 100],
+  [ChainId.ROPSTEN]: [1, 5, 30, 50, 100],
+  [ChainId.RINKEBY]: [1, 5, 30, 50, 100],
+  [ChainId.MATIC]: [1, 5, 30, 50, 100],
+  [ChainId.AVAXMAINNET]: [1, 5, 30, 50, 100],
+  [ChainId.FANTOM]: [1, 5, 30, 50, 100],
+  [ChainId.BSCMAINNET]: [1, 5, 30, 50, 100],
+  [ChainId.CRONOS]: [1, 5, 30, 50, 100],
+  [ChainId.BTTC]: [1, 5, 30, 50, 100],
 }
 
 export const TRENDING_SOON_ITEM_PER_PAGE = 10

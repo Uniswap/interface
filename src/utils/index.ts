@@ -22,12 +22,17 @@ import {
   AGGREGATION_EXECUTOR,
   DEFAULT_GAS_LIMIT_MARGIN,
   CLAIM_REWARD_SC_ADDRESS,
-  FEE_OPTIONS,
+  ONLY_STATIC_FEE_OPTIONS,
+  WITH_STATIC_FEE_OPTIONS,
   ZERO_ADDRESS,
+  KS_FACTORY_ADDRESSES,
+  KS_ROUTER_ADDRESSES,
 } from 'constants/index'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import ROUTER_ABI_WITHOUT_DYNAMIC_FEE from '../constants/abis/dmm-router-without-dynamic-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
+import KS_FACTORY_ABI from '../constants/abis/ks-factory.json'
+import KS_ROUTER_ABI from '../constants/abis/ks-router-static-fee.json'
 import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
@@ -249,13 +254,29 @@ export function getContractForReading(address: string, ABI: any, library: ethers
 }
 
 // account is optional
-export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(
-    ROUTER_ADDRESSES[chainId],
-    FEE_OPTIONS[chainId] ? ROUTER_ABI_WITHOUT_DYNAMIC_FEE : ROUTER_ABI,
-    library,
-    account,
-  )
+export function getRouterContract(
+  chainId: ChainId,
+  library: Web3Provider,
+  feeType: string,
+  account?: string,
+): Contract {
+  if (ONLY_STATIC_FEE_OPTIONS[chainId]) {
+    return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI_WITHOUT_DYNAMIC_FEE, library, account)
+  }
+  if (WITH_STATIC_FEE_OPTIONS[chainId]) {
+    return getContract(
+      feeType === 'static' ? KS_ROUTER_ADDRESSES[chainId] : ROUTER_ADDRESSES[chainId],
+      KS_ROUTER_ABI,
+      library,
+      account,
+    )
+  }
+
+  return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
+}
+
+export function getKSFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(KS_FACTORY_ADDRESSES[chainId] || '', KS_FACTORY_ABI, library, account)
 }
 
 export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {

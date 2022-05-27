@@ -1,0 +1,180 @@
+[
+  {
+    "inputs": [{ "internalType": "address", "name": "_feeToSetter", "type": "address" }],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "uint24", "name": "feeUnits", "type": "uint24" }],
+    "name": "DisableFeeOption",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "uint24", "name": "feeUnits", "type": "uint24" }],
+    "name": "EnableFeeOption",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "contract IERC20", "name": "token0", "type": "address" },
+      { "indexed": true, "internalType": "contract IERC20", "name": "token1", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "pool", "type": "address" },
+      { "indexed": false, "internalType": "uint32", "name": "ampBps", "type": "uint32" },
+      { "indexed": false, "internalType": "uint24", "name": "feeUnits", "type": "uint24" },
+      { "indexed": false, "internalType": "uint256", "name": "totalPool", "type": "uint256" }
+    ],
+    "name": "PoolCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "feeTo", "type": "address" },
+      { "indexed": false, "internalType": "uint24", "name": "governmentFeeUnits", "type": "uint24" }
+    ],
+    "name": "SetFeeConfiguration",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "feeToSetter", "type": "address" }],
+    "name": "SetFeeToSetter",
+    "type": "event"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "allPools",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "allPoolsLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "tokenA", "type": "address" },
+      { "internalType": "contract IERC20", "name": "tokenB", "type": "address" },
+      { "internalType": "uint32", "name": "ampBps", "type": "uint32" },
+      { "internalType": "uint24", "name": "feeUnits", "type": "uint24" }
+    ],
+    "name": "createPool",
+    "outputs": [{ "internalType": "address", "name": "pool", "type": "address" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint24", "name": "_feeUnits", "type": "uint24" }],
+    "name": "disableFeeOption",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint24", "name": "_feeUnits", "type": "uint24" }],
+    "name": "enableFeeOption",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint24", "name": "", "type": "uint24" }],
+    "name": "feeOptions",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeToSetter",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeConfiguration",
+    "outputs": [
+      { "internalType": "address", "name": "_feeTo", "type": "address" },
+      { "internalType": "uint24", "name": "_governmentFeeUnits", "type": "uint24" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "token0", "type": "address" },
+      { "internalType": "contract IERC20", "name": "token1", "type": "address" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "getPoolAtIndex",
+    "outputs": [{ "internalType": "address", "name": "pool", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "token0", "type": "address" },
+      { "internalType": "contract IERC20", "name": "token1", "type": "address" }
+    ],
+    "name": "getPools",
+    "outputs": [{ "internalType": "address[]", "name": "_tokenPools", "type": "address[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "token0", "type": "address" },
+      { "internalType": "contract IERC20", "name": "token1", "type": "address" }
+    ],
+    "name": "getPoolsLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "", "type": "address" },
+      { "internalType": "contract IERC20", "name": "", "type": "address" }
+    ],
+    "name": "getUnamplifiedPool",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "token0", "type": "address" },
+      { "internalType": "contract IERC20", "name": "token1", "type": "address" },
+      { "internalType": "address", "name": "pool", "type": "address" }
+    ],
+    "name": "isPool",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_feeTo", "type": "address" },
+      { "internalType": "uint24", "name": "_governmentFeeUnits", "type": "uint24" }
+    ],
+    "name": "setFeeConfiguration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_feeToSetter", "type": "address" }],
+    "name": "setFeeToSetter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
