@@ -1,6 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import QuoterJson from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
 import TickLensJson from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
@@ -14,6 +13,7 @@ import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
+import TEX_JSON from 'abis/tex-router.json'
 import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
 import {
@@ -35,7 +35,7 @@ import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
-const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
+const { abi: TEX_ABI } = TEX_JSON
 const { abi: QuoterABI } = QuoterJson
 const { abi: TickLensABI } = TickLensJson
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson
@@ -115,7 +115,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useV2RouterContract(): Contract | null {
-  return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
+  return useContract(V2_ROUTER_ADDRESS, TEX_ABI, true)
 }
 
 export function useInterfaceMulticall() {
