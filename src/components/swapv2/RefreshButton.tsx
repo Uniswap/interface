@@ -4,7 +4,7 @@ import { TIME_TO_REFRESH_SWAP_RATE } from '../../constants'
 import { Aggregator } from '../../utils/aggregator'
 import { IconButton } from './styleds'
 
-const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
+const ArrowLocatorLoading = React.forwardRef<any, any>((props, ref) => {
   return (
     <svg
       ref={ref}
@@ -48,7 +48,7 @@ const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
           <animate
             attributeName="stroke-dashoffset"
             values="0;-30"
-            begin="arrow_loading.click; 0.7s"
+            begin={props.enable_click_to_refresh ? 'arrow_loading.click; 0.7s' : '0s'}
             repeatCount="indefinite"
             dur={`${TIME_TO_REFRESH_SWAP_RATE}s`}
           />
@@ -63,7 +63,7 @@ const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
         from="0 0 0"
         to="-10 0 0"
         dur="0.07s"
-        begin="arrow_loading.click;"
+        begin={props.enable_click_to_refresh ? 'arrow_loading.click;' : 'transform_0.start'}
         repeatCount="1"
       />
       <animateTransform
@@ -91,9 +91,10 @@ const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
     </svg>
   )
 })
+
 ArrowLocatorLoading.displayName = 'ArrowLocatorLoading'
 
-const StyledArrowLocatorLoading = styled(ArrowLocatorLoading)`
+const StyledArrowLocatorLoading = styled(ArrowLocatorLoading)<{ enable_click_to_refresh: number }>`
   color: ${({ theme }) => theme.text};
   .background-path {
     fill: ${({ theme }) => theme.disableText};
@@ -133,9 +134,11 @@ export default function RefreshButton({ isConfirming, trade, onRefresh }: Refres
     }
   }, [hasOutput, isConfirming, onRefresh])
 
+  const enableClickToRefresh = false
+
   return (
-    <IconButton onClick={() => onRefresh(false)}>
-      <StyledArrowLocatorLoading ref={svgLoadingRef} />
+    <IconButton enableClickToRefresh={enableClickToRefresh} onClick={() => enableClickToRefresh && onRefresh(false)}>
+      <StyledArrowLocatorLoading enable_click_to_refresh={enableClickToRefresh ? 1 : 0} ref={svgLoadingRef} />
     </IconButton>
   )
 }

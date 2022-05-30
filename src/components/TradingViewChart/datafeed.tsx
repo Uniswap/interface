@@ -11,7 +11,7 @@ import {
 import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
-import { nativeNameFromETH } from 'hooks/useMixpanel'
+import { nativeNameFromETH } from 'utils'
 import { USDC, USDT, DAI } from 'constants/index'
 import { Field } from 'state/swap/actions'
 import { Bar } from './charting_library'

@@ -56,7 +56,7 @@ const ButtonWithOptions = ({
       height="36px"
       padding="0 36px"
       fontSize="14px"
-      style={{ position: 'relative', zIndex: 2, ...style }}
+      style={{ position: 'relative', zIndex: 1, ...style }}
       onClick={e => {
         e.stopPropagation()
         setIsShowNetworks(prev => !prev)

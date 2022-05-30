@@ -453,6 +453,7 @@ msgstr "Confirm Swap"
 msgid "Confirm this transaction in your wallet"
 msgstr "Confirm this transaction in your wallet"
 
+#: src/components/Menu/FaucetModal.tsx
 #: src/components/Web3Status/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
@@ -798,6 +799,11 @@ msgstr "Farm"
 msgid "Farming Pools"
 msgstr "Farming Pools"
 
+#: src/components/Menu/FaucetModal.tsx
+#: src/components/Menu/index.tsx
+msgid "Faucet"
+msgstr "Faucet"
+
 #: src/components/PoolList/ItemCard/TabDetailsItems.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -949,6 +955,10 @@ msgstr "If you purchase a token from this list, you may not be able to sell it b
 #: src/components/Menu/ClaimRewardModal.tsx
 msgid "If your wallet is eligible, you will be able to claim your reward below. You can claim:"
 msgstr "If your wallet is eligible, you will be able to claim your reward below. You can claim:"
+
+#: src/components/Menu/FaucetModal.tsx
+msgid "If your wallet is eligible, you will be able to request for some {tokenSymbol} tokens for free below. Each wallet can only request for the tokens once. You can claim:"
+msgstr "If your wallet is eligible, you will be able to request for some {tokenSymbol} tokens for free below. Each wallet can only request for the tokens once. You can claim:"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -1792,7 +1802,15 @@ msgstr "Removing pool tokens converts your position back into underlying tokens 
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "Removing {0} {1} and {2} {3}"
+msgstr "Removing {0} {1} and {2} {3}<<<<<<< HEAD======="
+
+#: src/components/Menu/FaucetModal.tsx
+msgid "Request"
+msgstr "Request"
+
+#: src/components/Menu/FaucetModal.tsx
+msgid "Request to Faucet - Submitted"
+msgstr "Request to Faucet - Submitted>>>>>>> main"
 
 #: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx
@@ -1913,6 +1931,10 @@ msgstr "Show more pools"
 #: src/components/LiquidityProviderMode/index.tsx
 msgid "Single Token"
 msgstr "Single Token"
+
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Slippage"
+msgstr "Slippage"
 
 #: src/hooks/useClaimReward.ts
 msgid "Something is wrong. Please try again later!"
@@ -2534,6 +2556,10 @@ msgstr "You save"
 msgid "You will receive"
 msgstr "You will receive"
 
+#: src/components/Menu/FaucetModal.tsx
+msgid "You will receive {0} {tokenSymbol} soon!"
+msgstr "You will receive {0} {tokenSymbol} soon!"
+
 #: src/components/PositionCard/index.tsx
 msgid "Your Current Position"
 msgstr "Your Current Position"
@@ -2624,6 +2650,7 @@ msgid "Your transactions will appear here..."
 msgstr "Your transactions will appear here..."
 
 #: src/components/Menu/ClaimRewardModal.tsx
+#: src/components/Menu/FaucetModal.tsx
 msgid "Your wallet address"
 msgstr "Your wallet address"
 

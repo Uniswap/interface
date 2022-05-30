@@ -20,7 +20,7 @@ import { Flex, Text } from 'rebass'
 import { useDarkModeManager } from 'state/user/hooks'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
-import { ExternalLink } from 'theme'
+import { ExternalLink, StyledInternalLink } from 'theme'
 import {
   AboutPage,
   BtnPrimary,
@@ -444,7 +444,7 @@ function AboutKNC() {
             {!above500 ? <div /> : <VerticalDivider />}
             <ExternalLink href={`https://kyber.network`}>Kyber Network</ExternalLink>
             <VerticalDivider />
-            <ExternalLink href={`https://kyber.network/about/knc`}>KNC</ExternalLink>
+            <StyledInternalLink to={`/about/knc`}>KNC</StyledInternalLink>
           </Flex>
           <FooterSocialLink />
         </FooterContainer>

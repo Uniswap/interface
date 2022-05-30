@@ -35,11 +35,10 @@ import Loader from 'components/Loader'
 import ForTraderImage from 'assets/svg/for_trader.svg'
 import ForTraderImageLight from 'assets/svg/for_trader_light.svg'
 import KNCGraphic from 'assets/images/knc-graphic.png'
-import AttackIcon from 'assets/svg/prevent_attack.svg'
 import KNCBlack from 'assets/svg/knc_black.svg'
 import SeamlessImg from 'assets/svg/seamless.svg'
 import { useMedia } from 'react-use'
-import { ExternalLink } from 'theme'
+import { ExternalLink, StyledInternalLink } from 'theme'
 import { useDarkModeManager } from 'state/user/hooks'
 import githubImg from 'assets/svg/about_icon_github.png'
 import githubImgLight from 'assets/svg/about_icon_github_light.png'
@@ -79,8 +78,6 @@ import { dexListConfig } from 'constants/dexes'
 import { SUPPORTED_NETWORKS } from 'constants/networks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import Banner from 'components/Banner'
-import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
-import { Pagination, FreeMode } from 'swiper'
 
 const KNC_NOT_AVAILABLE_IN = [
   ChainId.CRONOS,
@@ -1017,7 +1014,7 @@ function AboutKyberSwap() {
             {!above500 ? <div /> : <VerticalDivider />}
             <ExternalLink href={`https://kyber.network`}>Kyber Network</ExternalLink>
             <VerticalDivider />
-            <ExternalLink href={`https://kyber.network/about/knc`}>KNC</ExternalLink>
+            <StyledInternalLink to={`/about/knc`}>KNC</StyledInternalLink>
           </Flex>
           <FooterSocialLink />
         </FooterContainer>

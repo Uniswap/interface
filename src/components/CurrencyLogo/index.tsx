@@ -32,7 +32,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   object-fit: contain;
 `
 
-const logo: { readonly [chainId in ChainId]?: string } = {
+export const logo: { readonly [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.ROPSTEN]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,

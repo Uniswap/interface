@@ -112,6 +112,16 @@ export default function SwapModalFooter({
             {trade.priceImpact > 0.01 ? trade.priceImpact.toFixed(3) : '< 0.01'}%
           </TYPE.black>
         </RowBetween>
+
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
+              <Trans>Slippage</Trans>
+            </TYPE.black>
+          </RowFixed>
+          <TYPE.black fontSize={14}>{allowedSlippage / 100}%</TYPE.black>
+        </RowBetween>
+
         {feeConfig && (
           <RowBetween>
             <RowFixed>

@@ -453,6 +453,7 @@ msgstr "确认兑换"
 msgid "Confirm this transaction in your wallet"
 msgstr "在您的钱包中确认此交易"
 
+#: src/components/Menu/FaucetModal.tsx
 #: src/components/Web3Status/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
@@ -798,6 +799,11 @@ msgstr "挖矿"
 msgid "Farming Pools"
 msgstr ""
 
+#: src/components/Menu/FaucetModal.tsx
+#: src/components/Menu/index.tsx
+msgid "Faucet"
+msgstr ""
+
 #: src/components/PoolList/ItemCard/TabDetailsItems.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -948,6 +954,10 @@ msgstr "如果您从此列表中购买了代币，则可能无法将其卖回。
 
 #: src/components/Menu/ClaimRewardModal.tsx
 msgid "If your wallet is eligible, you will be able to claim your reward below. You can claim:"
+msgstr ""
+
+#: src/components/Menu/FaucetModal.tsx
+msgid "If your wallet is eligible, you will be able to request for some {tokenSymbol} tokens for free below. Each wallet can only request for the tokens once. You can claim:"
 msgstr ""
 
 #: src/components/SearchModal/ImportList.tsx
@@ -1792,7 +1802,15 @@ msgstr "删除池代币会将您的头寸以当前比率转换回基础代币，
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "删除 {0} {1} 和 {2} {3}"
+msgstr "删除 {0} {1} 和 {2} {3}<<<<<<< HEAD======="
+
+#: src/components/Menu/FaucetModal.tsx
+msgid "Request"
+msgstr ""
+
+#: src/components/Menu/FaucetModal.tsx
+msgid "Request to Faucet - Submitted"
+msgstr ">>>>>>> main"
 
 #: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx
@@ -1913,6 +1931,10 @@ msgstr ""
 #: src/components/LiquidityProviderMode/index.tsx
 msgid "Single Token"
 msgstr "单一代币"
+
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Slippage"
+msgstr ""
 
 #: src/hooks/useClaimReward.ts
 msgid "Something is wrong. Please try again later!"
@@ -2534,6 +2556,10 @@ msgstr "您节省"
 msgid "You will receive"
 msgstr "您将收到"
 
+#: src/components/Menu/FaucetModal.tsx
+msgid "You will receive {0} {tokenSymbol} soon!"
+msgstr ""
+
 #: src/components/PositionCard/index.tsx
 msgid "Your Current Position"
 msgstr "您目前的头寸"
@@ -2624,6 +2650,7 @@ msgid "Your transactions will appear here..."
 msgstr "您的交易将显示在此处..."
 
 #: src/components/Menu/ClaimRewardModal.tsx
+#: src/components/Menu/FaucetModal.tsx
 msgid "Your wallet address"
 msgstr ""
 

@@ -4,7 +4,6 @@ import Numeral from 'numeral'
 
 export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, significant = 6): string => {
   const amount = new Fraction(balance.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
-
   if (amount.lessThan(new Fraction('1'))) {
     return amount.toSignificant(significant)
   }

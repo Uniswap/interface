@@ -7,7 +7,7 @@ import { X } from 'react-feather'
 import { ButtonEmpty } from 'components/Button'
 
 const Container = styled.div`
-  z-index: 30;
+  z-index: 1;
   position: relative;
 
   @media screen and (max-width: 600px) {

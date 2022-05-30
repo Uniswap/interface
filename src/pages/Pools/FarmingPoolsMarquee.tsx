@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
@@ -10,9 +10,10 @@ import DropIcon from 'components/Icons/DropIcon'
 import { Link } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
-import { useDeepCompareEffect } from 'react-use'
 import { setFarmsData } from 'state/farms/actions'
 import { useAppDispatch } from 'state/hooks'
+import useMarquee from 'hooks/useMarquee'
+import { FadeInAnimation } from 'components/Animation'
 
 const MarqueeItem = ({ token0, token1 }: { token0: Token; token1: Token }) => {
   const theme = useTheme()
@@ -54,73 +55,48 @@ const MarqueeItem = ({ token0, token1 }: { token0: Token; token1: Token }) => {
 const FarmingPoolsMarquee = () => {
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
 
-  const increaseRef = useRef<HTMLDivElement>(null)
-
   const dispatch = useAppDispatch()
   const { chainId } = useActiveWeb3React()
   useEffect(() => {
     dispatch(setFarmsData({}))
   }, [dispatch, chainId])
 
-  useDeepCompareEffect(() => {
-    let itv: NodeJS.Timeout | undefined
-    if (increaseRef && increaseRef.current) {
-      itv = setInterval(() => {
-        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
-          increaseRef.current.scrollTo({
-            left: increaseRef.current.scrollLeft + 1,
-          })
-        }
-      }, 50)
-    }
-
-    return () => {
-      itv && clearInterval(itv)
-    }
-  }, [uniqueAndActiveFarms])
+  const increaseRef = useMarquee(uniqueAndActiveFarms)
 
   if (uniqueAndActiveFarms.length === 0) return null
 
   return (
-    <Container>
-      <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2 }}>
-        <MouseoverTooltip text="Available for yield farming">
-          <DropIcon />
-        </MouseoverTooltip>
-      </div>
-      <Title>
-        <Trans>Farming Pools</Trans>
-      </Title>
-      <MarqueeSection>
-        <MarqueeWrapper ref={increaseRef} id="mq">
-          <Marquee>
-            {uniqueAndActiveFarms.map(farm => (
-              <MarqueeItem
-                key={`${farm.token0?.symbol}-${farm.token1?.symbol}`}
-                token0={{ ...farm.token0, address: farm.token0.id }}
-                token1={{ ...farm.token1, address: farm.token1.id }}
-              />
-            ))}
-          </Marquee>
-        </MarqueeWrapper>
-      </MarqueeSection>
-    </Container>
+    <FadeInAnimation>
+      <Container>
+        <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2 }}>
+          <MouseoverTooltip text="Available for yield farming">
+            <DropIcon />
+          </MouseoverTooltip>
+        </div>
+        <Title>
+          <Trans>Farming Pools</Trans>
+        </Title>
+        <MarqueeSection>
+          <MarqueeWrapper ref={increaseRef} id="mq">
+            <Marquee>
+              {uniqueAndActiveFarms.map(farm => (
+                <MarqueeItem
+                  key={`${farm.token0?.symbol}-${farm.token1?.symbol}`}
+                  token0={{ ...farm.token0, address: farm.token0.id }}
+                  token1={{ ...farm.token1, address: farm.token1.id }}
+                />
+              ))}
+            </Marquee>
+          </MarqueeWrapper>
+        </MarqueeSection>
+      </Container>
+    </FadeInAnimation>
   )
 }
 
 export default FarmingPoolsMarquee
 
 const Container = styled.div`
-  @keyframes fadeInOpacity {
-    0% {
-      opacity: 0;
-      transform: translateY(-10%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0%);
-    }
-  }
   overflow: hidden;
   display: flex;
   gap: 16px;
@@ -130,10 +106,6 @@ const Container = styled.div`
   align-items: center;
   position: relative;
   margin-bottom: 24px;
-  animation-name: fadeInOpacity;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in;
-  animation-duration: 1s;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 16px;

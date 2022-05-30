@@ -18,6 +18,7 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 import SEO from './components/SEO'
 import ReactGA from 'react-ga'
+import TagManager from 'react-gtm-module'
 import * as Sentry from '@sentry/react'
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
@@ -64,8 +65,17 @@ const initGoogleAnalytics = () => {
   ReactGA.initialize('UA-207888714-1')
 }
 
+const initGoogleTagManager = () => {
+  const tagManagerArgs = {
+    gtmId: 'GTM-TRQCJ8F',
+  }
+
+  TagManager.initialize(tagManagerArgs)
+}
+
 if (process.env.REACT_APP_MAINNET_ENV === 'production') {
   initGoogleAnalytics()
+  initGoogleTagManager()
 }
 
 if (window.location.href.includes('kyberswap')) {

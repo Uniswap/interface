@@ -3,21 +3,19 @@ import React, { useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Trans } from '@lingui/macro'
 import Modal from '../Modal'
-import { ExternalLink } from '../../theme'
+import { ExternalLink } from 'theme'
 import { Text } from 'rebass'
-import { CloseIcon, CustomLightSpinner } from '../../theme/components'
+import { CloseIcon, CustomLightSpinner } from 'theme/components'
 import { RowBetween, RowFixed } from '../Row'
 import { ArrowUpCircle } from 'react-feather'
-import { ReactComponent as Alert } from '../../assets/images/alert.svg'
+import { ReactComponent as Alert } from 'assets/images/alert.svg'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
-import Circle from '../../assets/images/blue-loader.svg'
-import MetaMaskLogo from '../../assets/images/metamask.png'
-import TxBanner from '../../assets/banners/tx-banner.png'
-
-import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from '../../utils'
-import { useActiveWeb3React } from '../../hooks'
-
+import Circle from 'assets/images/blue-loader.svg'
+import MetaMaskLogo from 'assets/images/metamask.png'
+import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from 'utils'
+import { useActiveWeb3React } from 'hooks'
+import Banner from 'components/Banner'
 import { errorFriendly } from 'utils/dmm'
 
 const Wrapper = styled.div`
@@ -110,16 +108,12 @@ function AddTokenToMetaMask({ token, chainId }: { token: Token; chainId: ChainId
   )
 }
 
-const BannerWrapper = styled.img`
-  border-radius: 8px;
-  cursor: pointer;
-`
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
   tokenAddToMetaMask,
-  showTxBanner = false,
+  showTxBanner = true,
 }: {
   onDismiss: () => void
   hash: string | undefined
@@ -138,9 +132,9 @@ function TransactionSubmittedContent({
           </RowBetween>
         )}
         {showTxBanner && (
-          <ExternalLink href="https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------">
-            <BannerWrapper src={TxBanner} alt="" width="100%" />
-          </ExternalLink>
+          <>
+            <Banner isInModal />
+          </>
         )}
 
         <ConfirmedIcon>
@@ -287,7 +281,6 @@ export default function TransactionConfirmationModal({
 
   if (!chainId) return null
 
-  // confirmation screen
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
       {attemptingTxn ? (
