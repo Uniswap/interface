@@ -3,7 +3,7 @@ import 'inter-ui'
 import React, { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { NetworkContextName, sentryRequestId } from './constants'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import { LanguageProvider } from './i18n'
@@ -107,7 +107,7 @@ const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
       />
       <FixedGlobalStyle />
       <Provider store={store}>
-        <HashRouter>
+        <BrowserRouter>
           <LanguageProvider>
             <Web3ReactProvider getLibrary={getLibrary}>
               <Web3ProviderNetwork getLibrary={getLibrary}>
@@ -119,7 +119,7 @@ const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
               </Web3ProviderNetwork>
             </Web3ReactProvider>
           </LanguageProvider>
-        </HashRouter>
+        </BrowserRouter>
       </Provider>
     </StrictMode>
   )
