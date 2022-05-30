@@ -131,8 +131,9 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                     padding="7px 8px"
                     borderRadius="20px"
                     margin="0 0 0 12px"
+                    style={{ whiteSpace: 'nowrap' }}
                   >
-                    <Trans>More</Trans>
+                    <Trans>Discover more</Trans>
                   </ButtonLight>
                 </ExternalLink>
               </Flex>
