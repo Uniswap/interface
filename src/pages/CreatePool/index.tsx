@@ -210,7 +210,7 @@ export default function CreatePool({
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
         wrappedCurrency(currencyB, chainId)?.address ?? '',
-        withoutDynamicFee
+        withoutDynamicFee || (!withoutDynamicFee && feeType === 'static')
           ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
           : ampConvertedInBps.toSignificant(5), //ampBps
         parsedAmountA.raw.toString(),
