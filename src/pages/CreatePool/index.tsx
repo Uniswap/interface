@@ -707,7 +707,7 @@ export default function CreatePool({
                         !isValid ||
                         approvalA !== ApprovalState.APPROVED ||
                         approvalB !== ApprovalState.APPROVED ||
-                        (withoutDynamicFee ? !selectedFee : false)
+                        (feeType === 'static' ? !selectedFee : false)
                       }
                       error={
                         !isValid &&
@@ -720,7 +720,7 @@ export default function CreatePool({
                         {error ??
                           (+amp < 1
                             ? t`Enter amp (>=1)`
-                            : withoutDynamicFee && !selectedFee
+                            : feeType === 'static' && !selectedFee
                             ? t`Please select fee`
                             : t`Create`)}
                       </Text>
