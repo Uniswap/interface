@@ -1,7 +1,7 @@
 {
   "name": "@dmm/interface",
   "description": "KyberSwap Interface",
-  "homepage": ".",
+  "homepage": "/",
   "private": true,
   "devDependencies": {
     "@dynamic-amm/sdk": "3.0.33",
