@@ -229,6 +229,7 @@ export default function Swap({ history }: RouteComponentProps) {
       try {
         await gatherPermitSignature()
       } catch (error) {
+        console.log('FAILED!!!!!! WTF', error)
         // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
         if (error?.code !== 4001) {
           await approveCallback()
