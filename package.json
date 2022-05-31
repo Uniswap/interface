@@ -113,7 +113,7 @@
     "prettier": "^2.3.0"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.16",
+    "@apollo/client": "^3.6.5",
     "@celo-tools/use-contractkit": "npm:@poofcash/use-contractkit@^1.0.10",
     "@celo/contractkit": "^1.2.0",
     "@celo/utils": "^1.2.1",
