@@ -15,6 +15,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
+import { switchChain } from 'utils/switchToNetwork'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -249,11 +250,11 @@ export default function NetworkSelector() {
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
-  const handleChainSwitch = useCallback(
+  const onSelectChain = useCallback(
     async (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
-      await connector.activate(targetChain)
+      switchChain(connector, targetChain)
 
       if (!skipToggle) {
         toggle()
@@ -270,9 +271,9 @@ export default function NetworkSelector() {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
     } else if (urlChainId && urlChainId !== chainId) {
-      handleChainSwitch(urlChainId, true)
+      onSelectChain(urlChainId, true)
     }
-  }, [chainId, urlChainId, prevChainId, handleChainSwitch, history])
+  }, [chainId, urlChainId, prevChainId, onSelectChain, history])
 
   // set chain parameter on initial load if not there
   useEffect(() => {
@@ -298,12 +299,12 @@ export default function NetworkSelector() {
             <FlyoutHeader>
               <Trans>Select a network</Trans>
             </FlyoutHeader>
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MAINNET} />
+            <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.MAINNET} />
             {connector !== fortmatic && (
               <>
-                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.POLYGON} />
-                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.OPTIMISM} />
-                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.ARBITRUM_ONE} />
+                <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.POLYGON} />
+                <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.OPTIMISM} />
+                <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.ARBITRUM_ONE} />
               </>
             )}
           </FlyoutMenuContents>
