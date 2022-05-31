@@ -130,7 +130,6 @@ jobs:
     needs:
       - prepare
       - docker
-      - upload-gcs
     runs-on: ubuntu-18.04
     env:
       VERSION_TAG: ${{ needs.prepare.outputs.version_tag }}
