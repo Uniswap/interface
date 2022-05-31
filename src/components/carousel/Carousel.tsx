@@ -1,8 +1,16 @@
-import React, { ComponentProps, createContext, ReactElement, ReactNode, useCallback } from 'react'
+import React, {
+  ComponentProps,
+  createContext,
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useRef,
+} from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { AnimatedIndicator } from 'src/components/carousel/Indicator'
 import { Flex } from 'src/components/layout'
+import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { dimensions } from 'src/styles/sizing'
 
 const { fullWidth } = dimensions
@@ -24,8 +32,9 @@ type CarouselProps = {
   slides: ReactElement[]
 } & Pick<ComponentProps<typeof Animated.FlatList>, 'scrollEnabled'>
 
-export function Carousel({ slides, ...flatListProps }: CarouselProps) {
+export const Carousel = ({ slides, ...flatListProps }: CarouselProps) => {
   const scroll = useSharedValue(0)
+  const myRef = useRef<Animated.FlatList<any>>(null)
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -34,24 +43,36 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps) {
   })
 
   const goToNext = useCallback(() => {
-    // TODO: implement
-  }, [])
+    // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/2976
+    myRef.current?._listRef._scrollRef.scrollTo({
+      x: scroll.value + fullWidth,
+    })
+  }, [scroll.value])
+
+  const goToPrev = useCallback(() => {
+    // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/2976
+    myRef.current?._listRef._scrollRef.scrollTo({
+      x: scroll.value - fullWidth,
+    })
+  }, [scroll.value])
 
   return (
-    <CarouselContext.Provider value={{ goToNext, goToPrev: goToNext, current: 0 }}>
+    <CarouselContext.Provider value={{ goToNext, goToPrev, current: 0 }}>
       <Flex grow mb="lg">
         <AnimatedIndicator scroll={scroll} stepCount={slides.length} />
-        <Animated.FlatList
+        <AnimatedFlatList
           horizontal
           pagingEnabled
           data={slides}
           keyExtractor={key}
           {...flatListProps}
+          ref={myRef}
           renderItem={({ item }: ListRenderItemInfo<ReactNode>) => (
             <Flex centered grow p="lg" width={fullWidth}>
               {item}
             </Flex>
           )}
+          scrollEnabled={true}
           scrollEventThrottle={32}
           showsHorizontalScrollIndicator={false}
           onScroll={scrollHandler}

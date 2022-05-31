@@ -4,12 +4,18 @@ import { Pressable } from 'react-native'
 import { CarouselContext } from 'src/components/carousel/Carousel'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { dimensions } from 'src/styles/sizing'
+
+const { fullWidth } = dimensions
 
 function Page({ text }: { text: ReactNode }) {
   return (
     <CarouselContext.Consumer>
       {(context) => (
-        <Pressable onPress={() => context.goToNext()}>
+        <Pressable
+          onPress={(event) =>
+            event.nativeEvent.locationX < fullWidth * 0.33 ? context.goToPrev() : context.goToNext()
+          }>
           <Flex centered>
             <Box flex={0.2} />
             <Box flex={0.8}>
