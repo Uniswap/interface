@@ -40,7 +40,7 @@ const TopTrendingSoonTokenItem = ({
 
   return (
     <Container>
-      <Flex style={{ gap: '6px' }} alignItems="center">
+      <Flex style={{ gap: '4px' }} alignItems="center">
         <Image
           src={tokenData.logo_url}
           minWidth="16px"
