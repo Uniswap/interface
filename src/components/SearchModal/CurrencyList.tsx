@@ -222,8 +222,7 @@ export default function CurrencyList({
   }
 
   const kromToken = currencies[index]
-  currencies.splice(index, 1)
-  if (chainId && itemData[0] != KROM[chainId]) {
+  if (chainId && itemData[0] != KROM[chainId] && itemData[0] != kromToken) {
     index != 0 ? itemData.unshift(kromToken) : chainId && itemData.unshift(KROM[chainId])
   }
 
