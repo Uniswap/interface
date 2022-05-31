@@ -31,10 +31,19 @@ export function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
 }
 
 /** Sorts tokens by query, giving precedence to exact matches and partial matches. */
-export function useSortTokensByQuery<T extends Token | TokenInfo>(query: string, tokens?: T[]): T[] {
+export function useSortTokensByQuery<T extends Token | TokenInfo>(
+  query: string,
+  tokens?: T[],
+  sortedTokensLoading = false
+): T[] {
   return useMemo(() => {
     if (!tokens) {
       return []
+    }
+
+    // Data needed to sort tokens completely is still loading so exit early.
+    if (sortedTokensLoading) {
+      return tokens
     }
 
     const matches = query
@@ -62,5 +71,5 @@ export function useSortTokensByQuery<T extends Token | TokenInfo>(query: string,
     })
 
     return [...exactMatches, ...symbolSubtrings, ...rest]
-  }, [tokens, query])
+  }, [tokens, query, sortedTokensLoading])
 }

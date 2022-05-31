@@ -22,7 +22,7 @@ import Loader from '../Loader'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
 import ImportRow from './ImportRow'
-import { MenuItem } from './styleds'
+import { LoadingRows, MenuItem } from './styleds'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -195,6 +195,7 @@ export default function CurrencyList({
   showImportView,
   setImportToken,
   showCurrencyAmount,
+  isLoading,
 }: {
   height: number
   currencies: Currency[]
@@ -206,6 +207,7 @@ export default function CurrencyList({
   showImportView: () => void
   setImportToken: (token: Token) => void
   showCurrencyAmount?: boolean
+  isLoading: boolean
 }) {
   const itemData: (Currency | BreakLine)[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
@@ -232,7 +234,13 @@ export default function CurrencyList({
 
       const showImport = index > currencies.length
 
-      if (showImport && token) {
+      if (isLoading) {
+        return (
+          <LoadingRows>
+            <div />
+          </LoadingRows>
+        )
+      } else if (showImport && token) {
         return (
           <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
@@ -259,6 +267,7 @@ export default function CurrencyList({
       setImportToken,
       showImportView,
       showCurrencyAmount,
+      isLoading,
     ]
   )
 

@@ -1,3 +1,4 @@
+import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
 import styled from 'styled-components/macro'
 
 import { AutoColumn } from '../Column'
@@ -71,4 +72,13 @@ export const SeparatorDark = styled.div`
   width: 100%;
   height: 1px;
   background-color: ${({ theme }) => theme.bg3};
+`
+
+export const LoadingRows = styled(BaseLoadingRows)`
+  min-width: 75%;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  max-width: 960px;
+  grid-column-gap: 0.5em;
+  grid-row-gap: 0.8em;
 `

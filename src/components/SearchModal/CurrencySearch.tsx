@@ -103,12 +103,12 @@ export function CurrencySearch({
     return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
   }, [allTokens, debouncedQuery])
 
-  const balances = useAllTokenBalances()
+  const [balances, balancesIsLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
     return filteredTokens.sort(tokenComparator.bind(null, balances))
   }, [balances, filteredTokens])
 
-  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
+  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens, balancesIsLoading)
 
   const native = useNativeCurrency()
 
@@ -173,6 +173,40 @@ export function CurrencySearch({
     filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
   )
 
+  function TokenSelector() {
+    return searchToken && !searchTokenIsAdded ? (
+      <Column style={{ padding: '20px 0', height: '100%' }}>
+        <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
+      </Column>
+    ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
+      <div style={{ flex: '1' }}>
+        <AutoSizer disableWidth>
+          {({ height }) => (
+            <CurrencyList
+              height={height}
+              currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
+              otherListTokens={filteredInactiveTokens}
+              onCurrencySelect={handleCurrencySelect}
+              otherCurrency={otherSelectedCurrency}
+              selectedCurrency={selectedCurrency}
+              fixedListRef={fixedList}
+              showImportView={showImportView}
+              setImportToken={setImportToken}
+              showCurrencyAmount={showCurrencyAmount}
+              isLoading={balancesIsLoading}
+            />
+          )}
+        </AutoSizer>
+      </div>
+    ) : (
+      <Column style={{ padding: '20px', height: '100%' }}>
+        <ThemedText.Main color={theme.text3} textAlign="center" mb="20px">
+          <Trans>No results found.</Trans>
+        </ThemedText.Main>
+      </Column>
+    )
+  }
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="16px">
@@ -199,36 +233,7 @@ export function CurrencySearch({
         )}
       </PaddedColumn>
       <Separator />
-      {searchToken && !searchTokenIsAdded ? (
-        <Column style={{ padding: '20px 0', height: '100%' }}>
-          <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
-        </Column>
-      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-        <div style={{ flex: '1' }}>
-          <AutoSizer disableWidth>
-            {({ height }) => (
-              <CurrencyList
-                height={height}
-                currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
-                otherListTokens={filteredInactiveTokens}
-                onCurrencySelect={handleCurrencySelect}
-                otherCurrency={otherSelectedCurrency}
-                selectedCurrency={selectedCurrency}
-                fixedListRef={fixedList}
-                showImportView={showImportView}
-                setImportToken={setImportToken}
-                showCurrencyAmount={showCurrencyAmount}
-              />
-            )}
-          </AutoSizer>
-        </div>
-      ) : (
-        <Column style={{ padding: '20px', height: '100%' }}>
-          <ThemedText.Main color={theme.text3} textAlign="center" mb="20px">
-            <Trans>No results found.</Trans>
-          </ThemedText.Main>
-        </Column>
-      )}
+      {TokenSelector()}
       <Footer>
         <Row justify="center">
           <ButtonText onClick={showManageView} color={theme.primary1} className="list-token-manage-button">
