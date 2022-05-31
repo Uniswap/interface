@@ -14,7 +14,7 @@ interface Props {
   value: string | undefined
   error: string | undefined
   onChange: (text: string | undefined) => void
-  placeholderLabel: string
+  placeholderLabel: string | undefined
 }
 
 export function GenericImportForm({ value, onChange, error, placeholderLabel }: Props) {
@@ -58,9 +58,11 @@ export function GenericImportForm({ value, onChange, error, placeholderLabel }: 
               {t('Type or')}
             </Text>
             <PasteButton onPress={onChange} />
-            <Text color="accentText2" variant="body1">
-              {placeholderLabel}
-            </Text>
+            {placeholderLabel ? (
+              <Text color="accentText2" variant="body1">
+                {placeholderLabel}
+              </Text>
+            ) : null}
           </Flex>
         )}
         <Flex height={28}>

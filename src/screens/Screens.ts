@@ -52,6 +52,7 @@ export enum OnboardingScreens {
   SeedPhraseInput = 'SeedPhraseInput',
   PrivateKeyInput = 'PrivateKeyInput',
   SelectWallet = 'SelectWallet',
+  WatchWallet = 'WatchWallet',
 }
 
 export enum Tabs {

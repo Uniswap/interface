@@ -30,6 +30,7 @@ import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { PrivateKeyInputScreen } from 'src/screens/Import/PrivateKeyInputScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
+import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
@@ -272,6 +273,10 @@ export function AppStackNavigator() {
           <OnboardingStack.Screen
             component={SelectColorScreen}
             name={OnboardingScreens.SelectColor}
+          />
+          <OnboardingStack.Screen
+            component={WatchWalletScreen}
+            name={OnboardingScreens.WatchWallet}
           />
         </AppStack.Group>
       )}

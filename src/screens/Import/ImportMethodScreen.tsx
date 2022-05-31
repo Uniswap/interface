@@ -44,7 +44,7 @@ const options: {
     title: (t: TFunction) => t('Watch a wallet address'),
     blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
     icon: <EyeIcon />,
-    nav: OnboardingScreens.SeedPhraseInput,
+    nav: OnboardingScreens.WatchWallet,
   },
 ]
 

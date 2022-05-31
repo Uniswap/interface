@@ -71,6 +71,7 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.SeedPhraseInput]: undefined
   [OnboardingScreens.PrivateKeyInput]: undefined
   [OnboardingScreens.SelectWallet]: { addresses: Address[] }
+  [OnboardingScreens.WatchWallet]: undefined
 }
 
 export type AppStackParamList = {
