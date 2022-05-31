@@ -21,3 +21,9 @@ export const makeSelectLocalPfp = (address: Address) =>
 
 export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
+
+export const selectInactiveAccountAddresses = createSelector(
+  selectActiveAccountAddress,
+  selectAccounts,
+  (activeAddress, accounts) => Object.keys(accounts).filter((address) => address !== activeAddress)
+)

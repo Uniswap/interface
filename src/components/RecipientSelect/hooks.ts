@@ -3,26 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { SectionListData } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { selectRecipientsByRecency } from 'src/features/transactions/selectors'
-import { Account } from 'src/features/wallet/accounts/types'
-import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
+import { selectInactiveAccountAddresses } from 'src/features/wallet/selectors'
 import { parseAddress } from 'src/utils/addresses'
 import { unique } from 'src/utils/array'
 
-const RECENT_RECIPIENTS_MAX = 15
-
-// TODO: refactor as a selector
-export function useWalletRecipients(): string[] {
-  const activeAccount = useActiveAccount()
-  const wallets = Object.values(useAccounts())
-    .filter((a) => a.address && a.address !== activeAccount?.address)
-    .map((a: Account) => {
-      const ret = [a.address]
-      if (a.name) ret.concat(a.name)
-      return ret
-    })
-    .flat()
-  return unique(wallets)
-}
+const MAX_RECENT_RECIPIENTS = 15
 
 export function useFullAddressRecipient(searchTerm: string | null): string[] {
   const validatedAddress = parseAddress(searchTerm)
@@ -34,8 +19,8 @@ export function useRecipients() {
 
   const [pattern, setPattern] = useState<string | null>(null)
 
-  const walletsRecipients = useWalletRecipients()
-  const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, RECENT_RECIPIENTS_MAX)
+  const inactiveLocalAddresses = useAppSelector(selectInactiveAccountAddresses)
+  const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
   const validatedAddressRecipient = useFullAddressRecipient(pattern)
 
@@ -43,24 +28,24 @@ export function useRecipients() {
     () =>
       [
         ...(recentRecipients.length > 0 ? [{ title: t('Recent'), data: recentRecipients }] : []),
-        ...(walletsRecipients.length > 0
+        ...(inactiveLocalAddresses.length > 0
           ? [
               {
                 title: t('Your Wallets'),
-                data: walletsRecipients,
+                data: inactiveLocalAddresses,
               },
             ]
           : []),
       ] as SectionListData<string>[],
-    [recentRecipients, t, walletsRecipients]
+    [recentRecipients, t, inactiveLocalAddresses]
   )
 
   const searchableRecipientOptions = useMemo(
     () =>
-      unique([...validatedAddressRecipient, ...walletsRecipients, ...recentRecipients]).map(
+      unique([...validatedAddressRecipient, ...inactiveLocalAddresses, ...recentRecipients]).map(
         (item) => ({ data: item, key: item })
       ),
-    [recentRecipients, validatedAddressRecipient, walletsRecipients]
+    [recentRecipients, validatedAddressRecipient, inactiveLocalAddresses]
   )
 
   const onChangePattern = useCallback((newPattern) => setPattern(newPattern), [])
