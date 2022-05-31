@@ -23,7 +23,7 @@ interface ConnectorState {
 // It also checks for Coinbase Wallet, Wallet Connect, or Injected wallets to become active.
 function Web3Updater() {
   const dispatch = useAppDispatch()
-  const { hooks } = useWeb3React()
+  const { error, hooks } = useWeb3React()
 
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)
@@ -41,6 +41,12 @@ function Web3Updater() {
   const previousFortmaticIsActive = usePrevious(fortmaticIsActive)
 
   const [eagerlyConnectingWallets, setEagerlyConnectingWallets] = useState(new Set())
+
+  useEffect(() => {
+    if (error) {
+      console.error(`web3-react error: ${error}`)
+    }
+  }, [error])
 
   useEffect(() => {
     if (walletOverride) {
