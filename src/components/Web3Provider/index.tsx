@@ -53,7 +53,9 @@ function Web3Updater() {
       getConnectorForWallet(walletOverride).connectEagerly()
       setEagerlyConnectingWallets(new Set(walletOverride))
     } else if (!walletOverrideBackfilled) {
-      WALLETS.map(getConnectorForWallet).forEach((connector) => connector.connectEagerly())
+      WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC)
+        .map(getConnectorForWallet)
+        .forEach((connector) => connector.connectEagerly())
       setEagerlyConnectingWallets(new Set(WALLETS))
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
