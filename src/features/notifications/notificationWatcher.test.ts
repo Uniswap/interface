@@ -1,14 +1,9 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
-import { takeLatest } from 'redux-saga/effects'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
-import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import {
-  notificationWatcher,
-  pushTransactionNotification,
-} from 'src/features/notifications/notificationWatcher'
+import { pushTransactionNotification } from 'src/features/notifications/notificationWatcher'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import {
@@ -16,50 +11,31 @@ import {
   ExactOutputSwapTransactionInfo,
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
-  TransactionDetails,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
   UnknownTransactionInfo,
 } from 'src/features/transactions/types'
-import { account, finalizedTxAction, txDetailsPending } from 'src/test/fixtures'
-
-const { address } = account
+import { finalizedTxAction } from 'src/test/fixtures'
 
 // Seems to be an issue with testing `takeLatest` from `typed-redux-saga`
-describe(notificationWatcher, () => {
-  it.skip('Triggers watcher successfully', () => {
-    return expectSaga(notificationWatcher)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              '0': txDetailsPending,
-            },
-          },
-        },
-      })
-      .dispatch(finalizeTransaction(finalizedTxAction.payload))
-      .fork(takeLatest, finalizeTransaction.type, pushTransactionNotification)
-      .silentRun()
-  })
-})
+// describe(notificationWatcher, () => {
+//   it.skip('Triggers watcher successfully', () => {
+//     return expectSaga(notificationWatcher)
+//       .dispatch(finalizeTransaction(finalizedTxAction.payload))
+//       .fork(takeLatest, finalizeTransaction.type, pushTransactionNotification)
+//       .silentRun()
+//   })
+// })
 
-const createTxDetails = (typeInfo: TransactionTypeInfo): TransactionDetails => ({
-  chainId: ChainId.Mainnet,
-  id: finalizedTxAction.payload.id,
-  from: address,
-  options: {
-    request: {
-      from: '0x123',
-      to: '0x456',
-      value: '0x0',
-    },
+const createFinalizedTxAction = (
+  typeInfo: TransactionTypeInfo
+): ReturnType<typeof finalizeTransaction> => ({
+  payload: {
+    ...finalizedTxAction.payload,
+    typeInfo: typeInfo,
   },
-  typeInfo: typeInfo,
-  status: TransactionStatus.Success,
-  addedTime: 100,
-  hash: '0x01',
+  type: '',
 })
 
 describe(pushTransactionNotification, () => {
@@ -69,23 +45,14 @@ describe(pushTransactionNotification, () => {
       tokenAddress: '0xUniswapToken',
       spender: '0xUniswapDeployer',
     }
-    const approveTxDetails = createTxDetails(approveTypeInfo)
-    const { chainId, id, hash } = approveTxDetails
+    const finalizedApproveAction = createFinalizedTxAction(approveTypeInfo)
+    const { chainId, from, hash } = finalizedApproveAction.payload
 
-    return expectSaga(pushTransactionNotification, finalizedTxAction)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              [id]: approveTxDetails,
-            },
-          },
-        },
-      })
+    return expectSaga(pushTransactionNotification, finalizedApproveAction)
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
-          address,
+          address: from,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -107,23 +74,14 @@ describe(pushTransactionNotification, () => {
       expectedInputCurrencyAmountRaw: '12000000000000000',
       maximumInputCurrencyAmountRaw: '12000000000000000',
     }
-    const swapTxDetails = createTxDetails(swapTypeInfo)
-    const { chainId, id, hash } = swapTxDetails
+    const finalizedSwapAction = createFinalizedTxAction(swapTypeInfo)
+    const { chainId, from, hash } = finalizedSwapAction.payload
 
-    return expectSaga(pushTransactionNotification, finalizedTxAction)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              [id]: swapTxDetails,
-            },
-          },
-        },
-      })
+    return expectSaga(pushTransactionNotification, finalizedSwapAction)
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
-          address,
+          address: from,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -146,23 +104,14 @@ describe(pushTransactionNotification, () => {
       recipient: '0x123abc456def',
       tokenAddress: '0xUniswapToken',
     }
-    const sendCurrencyTxDetails = createTxDetails(sendCurrencyTypeInfo)
-    const { chainId, id, hash } = sendCurrencyTxDetails
+    const finalizedSendCurrencyAction = createFinalizedTxAction(sendCurrencyTypeInfo)
+    const { chainId, from, hash } = finalizedSendCurrencyAction.payload
 
-    return expectSaga(pushTransactionNotification, finalizedTxAction)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              [id]: sendCurrencyTxDetails,
-            },
-          },
-        },
-      })
+    return expectSaga(pushTransactionNotification, finalizedSendCurrencyAction)
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
-          address,
+          address: from,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -184,23 +133,14 @@ describe(pushTransactionNotification, () => {
       tokenAddress: '0xUniswapToken',
       tokenId: '420',
     }
-    const sendNftTxDetails = createTxDetails(sendNftTypeInfo)
-    const { chainId, id, hash } = sendNftTxDetails
+    const finalizedSendNftAction = createFinalizedTxAction(sendNftTypeInfo)
+    const { chainId, from, hash } = finalizedSendNftAction.payload
 
-    return expectSaga(pushTransactionNotification, finalizedTxAction)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              [id]: sendNftTxDetails,
-            },
-          },
-        },
-      })
+    return expectSaga(pushTransactionNotification, finalizedSendNftAction)
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
-          address,
+          address: from,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -222,23 +162,14 @@ describe(pushTransactionNotification, () => {
       sender: '0x000123abc456def',
       tokenAddress: '0xUniswapToken',
     }
-    const receiveCurrencyTxDetails = createTxDetails(receiveCurrencyTypeInfo)
-    const { chainId, id, hash } = receiveCurrencyTxDetails
+    const finalizedReceiveCurrencyAction = createFinalizedTxAction(receiveCurrencyTypeInfo)
+    const { chainId, from, hash } = finalizedReceiveCurrencyAction.payload
 
-    return expectSaga(pushTransactionNotification, finalizedTxAction)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              [id]: receiveCurrencyTxDetails,
-            },
-          },
-        },
-      })
+    return expectSaga(pushTransactionNotification, finalizedReceiveCurrencyAction)
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
-          address,
+          address: from,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -260,23 +191,14 @@ describe(pushTransactionNotification, () => {
       tokenAddress: '0xUniswapToken',
       tokenId: '420',
     }
-    const receiveNftTxDetails = createTxDetails(receiveNftTypeInfo)
-    const { chainId, id, hash } = receiveNftTxDetails
+    const finalizedReceiveNftAction = createFinalizedTxAction(receiveNftTypeInfo)
+    const { chainId, from, hash } = finalizedReceiveNftAction.payload
 
-    return expectSaga(pushTransactionNotification, finalizedTxAction)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              [id]: receiveNftTxDetails,
-            },
-          },
-        },
-      })
+    return expectSaga(pushTransactionNotification, finalizedReceiveNftAction)
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
-          address,
+          address: from,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,
@@ -295,23 +217,14 @@ describe(pushTransactionNotification, () => {
       type: TransactionType.Unknown,
       tokenAddress: '0xUniswapToken',
     }
-    const unknownTxDetails = createTxDetails(unknownTxTypeInfo)
-    const { chainId, id, hash } = unknownTxDetails
+    const finalizedUnknownAction = createFinalizedTxAction(unknownTxTypeInfo)
+    const { chainId, from, hash } = finalizedUnknownAction.payload
 
-    return expectSaga(pushTransactionNotification, finalizedTxAction)
-      .withState({
-        transactions: {
-          byChainId: {
-            [ChainId.Mainnet]: {
-              [id]: unknownTxDetails,
-            },
-          },
-        },
-      })
+    return expectSaga(pushTransactionNotification, finalizedUnknownAction)
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
-          address,
+          address: from,
           chainId,
           txHash: hash,
           type: AppNotificationType.Transaction,

@@ -2,28 +2,17 @@ import { TradeType } from '@uniswap/sdk-core'
 import { AssetType } from 'src/entities/assets'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { selectTransaction } from 'src/features/transactions/selectors'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
-import { put, select, takeLatest } from 'typed-redux-saga'
+import { put, takeLatest } from 'typed-redux-saga'
 
 export function* notificationWatcher() {
   yield* takeLatest(finalizeTransaction.type, pushTransactionNotification)
 }
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
-  const { chainId, id, status } = action.payload
-  const transactionDetails = yield* select(selectTransaction(chainId, id))
-
-  if (!transactionDetails) {
-    logger.error(
-      'notificationWatcher',
-      'pushTransactionNotification',
-      'Transaction was finalized but no details for it were found in the Redux store'
-    )
-    return
-  }
+  const { chainId, status, typeInfo, hash, from } = action.payload
 
   // TODO: Build notifications for `cancelled` txs
   if (status === TransactionStatus.Cancelled) {
@@ -35,13 +24,11 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
     return
   }
 
-  const { typeInfo, hash, from } = transactionDetails
-  const address = from
-
   const baseNotificationData = {
     txStatus: status,
     chainId,
     txHash: hash,
+    address: from,
   }
 
   switch (typeInfo.type) {
@@ -50,7 +37,6 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
-          address,
           txType: TransactionType.Approve,
           tokenAddress: typeInfo.tokenAddress,
           spender: typeInfo.spender,
@@ -71,7 +57,6 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
-          address,
           txType: TransactionType.Swap,
           inputCurrencyId: typeInfo.inputCurrencyId,
           outputCurrencyId: typeInfo.outputCurrencyId,
@@ -87,7 +72,6 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
-            address,
             txType: TransactionType.Send,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -103,7 +87,6 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
-            address,
             txType: TransactionType.Send,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -123,7 +106,6 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
-            address,
             txType: TransactionType.Receive,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -139,7 +121,6 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           pushNotification({
             ...baseNotificationData,
             type: AppNotificationType.Transaction,
-            address,
             txType: TransactionType.Receive,
             assetType: typeInfo.assetType,
             tokenAddress: typeInfo.tokenAddress,
@@ -154,7 +135,6 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         pushNotification({
           ...baseNotificationData,
           type: AppNotificationType.Transaction,
-          address,
           txType: TransactionType.Unknown,
           tokenAddress: typeInfo?.tokenAddress,
         })

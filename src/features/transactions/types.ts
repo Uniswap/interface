@@ -31,6 +31,10 @@ export interface TransactionDetails extends TransactionId {
   isFlashbots?: boolean
 }
 
+export interface FinalizedTransactionDetails extends TransactionDetails {
+  status: TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Cancelled
+}
+
 export enum TransactionStatus {
   Cancelled = 'cancelled',
   Cancelling = 'cancelling',

@@ -104,6 +104,7 @@ export function SwapNotification({
     outputCurrencyId,
     outputCurrencyAmountRaw,
     tradeType,
+    address,
   },
 }: {
   notification: SwapTxNotification
@@ -121,7 +122,7 @@ export function SwapNotification({
     outputCurrencyAmountRaw
   )
 
-  const swapFormState = useCreateSwapFormState(chainId, txHash)
+  const swapFormState = useCreateSwapFormState(address, chainId, txHash)
 
   const { t } = useTranslation()
   const retryButton =

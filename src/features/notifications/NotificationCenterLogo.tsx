@@ -17,10 +17,10 @@ const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
 
 export function NotificationCenterLogo({ size = 24 }: { size?: number }) {
   const theme = useAppTheme()
-  const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const pendingTransactions = useSortedPendingTransactions()
+  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
+  const pendingTransactions = useSortedPendingTransactions(activeAccountAddress) ?? []
   const notifications = useAppSelector(selectActiveAccountNotifications)
-  const addressNotificationCount = useSelectAddressNotificationCount(activeAddress)
+  const addressNotificationCount = useSelectAddressNotificationCount(activeAccountAddress)
   const hasUnreadNotifications = !!(addressNotificationCount && addressNotificationCount > 0)
 
   const currentNotification = notifications[0]

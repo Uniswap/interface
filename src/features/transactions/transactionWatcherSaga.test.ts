@@ -19,6 +19,7 @@ import {
 } from 'src/features/transactions/transactionWatcherSaga'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import {
+  finalizedTxAction,
   mockProvider,
   mockProviderManager,
   provider,
@@ -62,7 +63,7 @@ describe(watchFlashbotsTransaction, () => {
     dateNowSpy?.mockRestore()
   })
 
-  const { chainId, id, hash } = txDetailsPending
+  const { chainId, hash } = txDetailsPending
 
   it('Finalizes successful transactions', () => {
     return expectSaga(watchFlashbotsTransaction, txDetailsPending)
@@ -72,20 +73,7 @@ describe(watchFlashbotsTransaction, () => {
         [call(waitForReceipt, hash, provider), txReceipt],
         [call(getFlashbotsTxConfirmation, hash, chainId), TransactionStatus.Success],
       ])
-      .put(
-        finalizeTransaction({
-          chainId,
-          id,
-          status: TransactionStatus.Success,
-          receipt: {
-            blockHash: txReceipt.blockHash,
-            blockNumber: txReceipt.blockNumber,
-            transactionIndex: txReceipt.transactionIndex,
-            confirmations: txReceipt.confirmations,
-            confirmedTime: 1400000000000,
-          },
-        })
-      )
+      .put(finalizeTransaction(finalizedTxAction.payload))
       .silentRun()
   })
 
@@ -97,7 +85,13 @@ describe(watchFlashbotsTransaction, () => {
         [call(waitForReceipt, hash, provider), txReceipt],
         [call(getFlashbotsTxConfirmation, hash, chainId), TransactionStatus.Failed],
       ])
-      .put(finalizeTransaction({ chainId, id, status: TransactionStatus.Failed, receipt: null }))
+      .put(
+        finalizeTransaction({
+          ...finalizedTxAction.payload,
+          status: TransactionStatus.Failed,
+          receipt: undefined,
+        })
+      )
       .silentRun()
   })
 })
@@ -123,20 +117,7 @@ describe(watchTransaction, () => {
     }
     return expectSaga(watchTransaction, txDetailsPending)
       .provide([[call(getProvider, chainId), receiptProvider]])
-      .put(
-        finalizeTransaction({
-          chainId,
-          id,
-          status: TransactionStatus.Success,
-          receipt: {
-            blockHash: txReceipt.blockHash,
-            blockNumber: txReceipt.blockNumber,
-            transactionIndex: txReceipt.transactionIndex,
-            confirmations: txReceipt.confirmations,
-            confirmedTime: 1400000000000,
-          },
-        })
-      )
+      .put(finalizeTransaction(finalizedTxAction.payload))
       .silentRun()
   })
 
@@ -152,7 +133,7 @@ describe(watchTransaction, () => {
         [call(getProvider, chainId), receiptProvider],
         [call(attemptCancelTransaction, txDetailsPending), true],
       ])
-      .dispatch(cancelTransaction({ chainId, id }))
+      .dispatch(cancelTransaction({ chainId, id, address: from }))
       .call(attemptCancelTransaction, txDetailsPending)
       .silentRun()
   })
@@ -166,10 +147,10 @@ describe(watchTransaction, () => {
       ])
       .put(
         finalizeTransaction({
-          chainId,
-          id,
+          ...finalizedTxAction.payload,
           status: TransactionStatus.Failed,
-          receipt: null,
+          receipt: undefined,
+          addedTime: oldTx.addedTime,
         })
       )
       .silentRun()
@@ -178,20 +159,7 @@ describe(watchTransaction, () => {
   it('Finalizes successful timed out transaction', () => {
     return expectSaga(watchTransaction, oldTx)
       .provide([[call(getProvider, chainId), mockProvider]])
-      .put(
-        finalizeTransaction({
-          chainId,
-          id,
-          status: TransactionStatus.Success,
-          receipt: {
-            blockHash: txReceipt.blockHash,
-            blockNumber: txReceipt.blockNumber,
-            transactionIndex: txReceipt.transactionIndex,
-            confirmations: txReceipt.confirmations,
-            confirmedTime: 1400000000000,
-          },
-        })
-      )
+      .put(finalizeTransaction({ ...finalizedTxAction.payload, addedTime: oldTx.addedTime }))
       .silentRun()
   })
 })

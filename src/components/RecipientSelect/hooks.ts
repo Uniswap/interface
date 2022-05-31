@@ -2,12 +2,15 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionListData } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
-import { selectRecentRecipients } from 'src/features/transactions/selectors'
+import { selectRecipientsByRecency } from 'src/features/transactions/selectors'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { parseAddress } from 'src/utils/addresses'
 import { unique } from 'src/utils/array'
 
+const RECENT_RECIPIENTS_MAX = 15
+
+// TODO: refactor as a selector
 export function useWalletRecipients(): string[] {
   const activeAccount = useActiveAccount()
   const wallets = Object.values(useAccounts())
@@ -21,11 +24,6 @@ export function useWalletRecipients(): string[] {
   return unique(wallets)
 }
 
-export function useRecentRecipients(): string[] {
-  const recentRecipients = useAppSelector(selectRecentRecipients)
-  return unique(recentRecipients)
-}
-
 export function useFullAddressRecipient(searchTerm: string | null): string[] {
   const validatedAddress = parseAddress(searchTerm)
   return useMemo(() => (validatedAddress ? [validatedAddress] : []), [validatedAddress])
@@ -37,7 +35,7 @@ export function useRecipients() {
   const [pattern, setPattern] = useState<string | null>(null)
 
   const walletsRecipients = useWalletRecipients()
-  const recentRecipients = useRecentRecipients()
+  const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, RECENT_RECIPIENTS_MAX)
 
   const validatedAddressRecipient = useFullAddressRecipient(pattern)
 

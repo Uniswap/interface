@@ -5,7 +5,7 @@ import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
 import { logEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
-import { selectTransactions } from 'src/features/transactions/selectors'
+import { selectTransactionCount } from 'src/features/transactions/selectors'
 import { transactionActions } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -13,10 +13,7 @@ import {
   TransactionStatus,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
-import {
-  getSerializableTransactionRequest,
-  getTransactionCount,
-} from 'src/features/transactions/utils'
+import { getSerializableTransactionRequest } from 'src/features/transactions/utils'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
@@ -79,8 +76,7 @@ function* addTransaction(
   populatedRequest: providers.TransactionRequest,
   isFlashbots?: boolean
 ) {
-  const txsByChainId = yield* appSelect(selectTransactions)
-  const txCount = getTransactionCount(txsByChainId)
+  const txCount = yield* appSelect(selectTransactionCount)
   const id = txCount.toString() // 0 indexed so count is actually next id
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
   const transaction: TransactionDetails = {

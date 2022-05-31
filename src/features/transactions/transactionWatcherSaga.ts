@@ -11,7 +11,7 @@ import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransaction'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
-import { selectTransactions } from 'src/features/transactions/selectors'
+import { selectIncompleteTransactions } from 'src/features/transactions/selectors'
 import {
   addTransaction,
   cancelTransaction,
@@ -24,9 +24,7 @@ import {
   TransactionReceipt,
   TransactionStatus,
 } from 'src/features/transactions/types'
-import { getPendingTransactions } from 'src/features/transactions/utils'
 import { logger } from 'src/utils/logger'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 import { sleep } from 'src/utils/timing'
 import { call, delay, fork, put, race, take } from 'typed-redux-saga'
 
@@ -37,12 +35,11 @@ export function* transactionWatcher() {
   yield* call(waitForProvidersInitialized)
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
 
-  // First, fork off watchers for any pending txs that are already in store
+  // First, fork off watchers for any incomplete txs that are already in store
   // This allows us to detect completions if a user closed the app before a tx finished
-  const txsByChainId = yield* appSelect(selectTransactions)
-  const pendingTransactions = getPendingTransactions(flattenObjectOfObjects(txsByChainId))
-  for (const pendingTx of pendingTransactions) {
-    yield* fork(watchTransaction, pendingTx)
+  const incompleteTransactions = yield* appSelect(selectIncompleteTransactions)
+  for (const transaction of incompleteTransactions) {
+    yield* fork(watchTransaction, transaction)
   }
 
   // Next, start watching for new or updated transactions dispatches
@@ -89,11 +86,11 @@ export function* getFlashbotsTxConfirmation(txHash: string, chainId: ChainId) {
 }
 
 export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
-  const { chainId, hash, id, options, from } = transaction
+  const { chainId, hash, options, from } = transaction
 
   const txStatus = yield* call(getFlashbotsTxConfirmation, hash, chainId)
   if (txStatus === TransactionStatus.Failed || txStatus === TransactionStatus.Unknown) {
-    yield* call(finalizeTransaction, chainId, id, null)
+    yield* call(finalizeTransaction, transaction, null, TransactionStatus.Failed)
     yield* put(
       pushNotification({
         type: AppNotificationType.Error,
@@ -106,7 +103,7 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
 
   const provider = yield* call(getProvider, chainId)
   const receipt = yield* call(waitForReceipt, hash, provider)
-  yield* call(finalizeTransaction, chainId, id, receipt, txStatus)
+  yield* call(finalizeTransaction, transaction, receipt, txStatus)
 
   if (options.fetchBalanceOnSuccess) {
     yield* put(fetchBalancesActions.trigger(from))
@@ -152,7 +149,7 @@ export function* watchTransaction(transaction: TransactionDetails) {
   }
 
   // Update the store with tx receipt details
-  yield* call(finalizeTransaction, chainId, id, receipt)
+  yield* call(finalizeTransaction, transaction, receipt)
 
   if (options.fetchBalanceOnSuccess) {
     yield* put(fetchBalancesActions.trigger(from))
@@ -182,13 +179,11 @@ function* waitForReplacement(chainId: ChainId, id: string) {
 }
 
 function* handleTimedOutTransaction(transaction: TransactionDetails, provider: providers.Provider) {
-  const { hash, id, chainId, from, options } = transaction
+  const { hash, from, options } = transaction
   // Check if tx was actually mined
   // Just a backup to ensure wallet doesn't incorrectly report a failed tx
-  const txReceipt = yield* call([provider, provider.getTransactionReceipt], hash)
-  if (txReceipt) {
-    yield* call(finalizeTransaction, chainId, id, txReceipt)
-  }
+  const receipt = yield* call([provider, provider.getTransactionReceipt], hash)
+  if (receipt) yield* call(finalizeTransaction, transaction, receipt)
 
   // Next, check if tx is still pending. If so, cancel it
   // TODO blocked by https://github.com/Uniswap/mobile/issues/377
@@ -202,14 +197,13 @@ function* handleTimedOutTransaction(transaction: TransactionDetails, provider: p
     yield* call(attemptCancelTransaction, transaction)
   } else {
     // Otherwise, mark it as failed
-    yield* call(finalizeTransaction, chainId, id, null)
+    yield* call(finalizeTransaction, transaction)
   }
 }
 
 function* finalizeTransaction(
-  chainId: ChainId,
-  id: string,
-  ethersReceipt: providers.TransactionReceipt | null,
+  transaction: TransactionDetails,
+  ethersReceipt?: providers.TransactionReceipt | null,
   statusOverride?:
     | TransactionStatus.Success
     | TransactionStatus.Failed
@@ -217,7 +211,7 @@ function* finalizeTransaction(
 ) {
   const status =
     statusOverride ?? (ethersReceipt?.status ? TransactionStatus.Success : TransactionStatus.Failed)
-  const receipt: TransactionReceipt | null = ethersReceipt
+  const receipt: TransactionReceipt | undefined = ethersReceipt
     ? {
         blockHash: ethersReceipt.blockHash,
         blockNumber: ethersReceipt.blockNumber,
@@ -225,12 +219,11 @@ function* finalizeTransaction(
         confirmations: ethersReceipt.confirmations,
         confirmedTime: Date.now(),
       }
-    : null
+    : undefined
 
   yield* put(
     transactionActions.finalizeTransaction({
-      chainId,
-      id,
+      ...transaction,
       status,
       receipt,
     })

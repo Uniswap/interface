@@ -32,8 +32,6 @@ export function NotificationsScreen() {
     openUri(`https://etherscan.io/address/${activeAccountAddress}`)
   }
 
-  const transactions = useSortedTransactions(true)
-
   useClearNotificationCount(activeAccountAddress)
 
   const { currentData: txData } = useTransactionHistoryQuery(
@@ -42,7 +40,8 @@ export function NotificationsScreen() {
       : skipToken
   )
 
-  const historicalTransactions = txData?.info?.[activeAccountAddress ?? ''] ?? []
+  const allTransactionsFromApi = txData?.info?.[activeAccountAddress ?? ''] ?? []
+  const localTransactions = useSortedTransactions(activeAccountAddress)?.reverse() ?? []
 
   const { t } = useTranslation()
   return (
@@ -63,13 +62,13 @@ export function NotificationsScreen() {
       )}
 
       {/* TODO: remove this ternary once local and remote txs are combined */}
-      {transactions.length || historicalTransactions.length ? (
+      {localTransactions.length || allTransactionsFromApi.length ? (
         <Flex mt="sm">
-          <FlatList data={transactions} keyExtractor={getTxKey} renderItem={ListItem} />
+          <FlatList data={localTransactions} keyExtractor={getTxKey} renderItem={ListItem} />
           <Text variant="body1">{t('All transactions')}</Text>
           <FlatList
             ItemSeparatorComponent={() => <Spacer y="sm" />}
-            data={historicalTransactions}
+            data={allTransactionsFromApi}
             keyExtractor={(item) => item.hash}
             renderItem={({ item }) => <HistoricalTransactionSummaryCard tx={item} />}
           />

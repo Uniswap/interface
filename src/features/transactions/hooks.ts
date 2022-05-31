@@ -4,7 +4,10 @@ import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { selectPendingTransactions, selectTransactions } from 'src/features/transactions/selectors'
+import {
+  makeSelectAddressTransactions,
+  makeSelectTransaction,
+} from 'src/features/transactions/selectors'
 import {
   CurrencyField,
   TransactionState,
@@ -12,33 +15,46 @@ import {
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
-export function useSortedTransactions(newestFirst = false) {
-  const txsByChainId = useAppSelector(selectTransactions)
+// sorted oldest to newest
+export function useSortedTransactions(address: Address | null) {
+  const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
-    const txDetails = flattenObjectOfObjects(txsByChainId)
-    return txDetails.sort((a, b) =>
-      newestFirst ? b.addedTime - a.addedTime : a.addedTime - b.addedTime
-    )
-  }, [txsByChainId, newestFirst])
+    if (!transactions) return
+    return transactions.sort((a, b) => a.addedTime - b.addedTime)
+  }, [transactions])
 }
 
-export function useSortedPendingTransactions() {
-  const pendingTransactions = useAppSelector(selectPendingTransactions)
+export function usePendingTransactions(address: Address | null) {
+  const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
-    return pendingTransactions.sort((a, b) => a.addedTime - b.addedTime)
-  }, [pendingTransactions])
+    if (!transactions) return
+    return transactions.filter((tx) => tx.status === TransactionStatus.Pending)
+  }, [transactions])
 }
 
-export function useCreateSwapFormState(chainId: ChainId, txHash: string) {
-  const transactionsByChainId = useAppSelector(selectTransactions)
+// sorted oldest to newest
+export function useSortedPendingTransactions(address: Address | null) {
+  const transactions = usePendingTransactions(address)
+  return useMemo(() => {
+    if (!transactions) return
+    return transactions.sort((a, b) => a.addedTime - b.addedTime)
+  }, [transactions])
+}
 
-  const transactions = transactionsByChainId[chainId] ?? {}
-  const transaction = Object.values(transactions).find(
-    (txDetails) => txDetails.hash.toLowerCase() === txHash.toLowerCase()
+export function useSelectTransaction(address: Address | null, chainId: ChainId, txHash: string) {
+  return useAppSelector(
+    useMemo(() => makeSelectTransaction(address, chainId, txHash), [address, chainId, txHash])
   )
+}
+
+export function useSelectAddressTransactions(address: Address | null) {
+  return useAppSelector(useMemo(() => makeSelectAddressTransactions(address), [address]))
+}
+
+export function useCreateSwapFormState(address: Address, chainId: ChainId, txHash: string) {
+  const transaction = useSelectTransaction(address, chainId, txHash)
 
   const inputCurrencyId =
     transaction?.typeInfo.type === TransactionType.Swap
@@ -54,12 +70,10 @@ export function useCreateSwapFormState(chainId: ChainId, txHash: string) {
   const outputCurrency = useCurrency(outputCurrencyId)
 
   try {
-    if (!Object.values(transactions).length) {
-      throw new Error(`No transactions found for chainId ${chainId}`)
-    }
-
     if (!transaction) {
-      throw new Error(`No transaction found for tx hash ${txHash}`)
+      throw new Error(
+        `No transaction found for address: ${address}, chainId: ${chainId}, and tx hash ${txHash}`
+      )
     }
 
     const { status: txStatus, typeInfo } = transaction

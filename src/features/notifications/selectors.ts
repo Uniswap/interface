@@ -1,10 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
-import { selectPendingTransactions } from 'src/features/transactions/selectors'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
-export const selectNotificationQueue = (state: RootState) => state.notifications.notificationQueue
-const selectNotificationCount = (state: RootState) => state.notifications.notificationCount
+const selectNotificationQueue = (state: RootState) => state.notifications.notificationQueue
 
 export const selectActiveAccountNotifications = createSelector(
   selectNotificationQueue,
@@ -15,20 +13,18 @@ export const selectActiveAccountNotifications = createSelector(
   }
 )
 
-export const makeSelectAddressNotificationCount = (address: Address | null) =>
-  createSelector(selectNotificationCount, (notificationCount) => {
+export const makeSelectAddressNotificationCount =
+  (address: Address | null) => (state: RootState) => {
     if (!address) return undefined
-    return notificationCount[address]
-  })
-
-export const selectHasUnreadNotifications = createSelector(
-  selectNotificationCount,
-  selectPendingTransactions,
-  (notificationCount, pendingTxs) => {
-    const sumOfUnreadNotifications = Object.values(notificationCount).reduce(
-      (accum, count) => (accum += count),
-      0
-    )
-    return sumOfUnreadNotifications + pendingTxs.length > 0
+    return state.notifications.notificationCount?.[address]
   }
-)
+
+export const selectHasUnreadNotifications = (state: RootState) => {
+  for (const count of Object.values(state.notifications.notificationCount)) {
+    if (count) return true
+  }
+  return false
+}
+
+export const selectLastTxNotificationUpdate = (state: RootState) =>
+  state.notifications.lastTxNotificationUpdate

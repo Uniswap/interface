@@ -1,11 +1,14 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { ChainId } from 'src/constants/chains'
 import { useTransactionHistoryQuery } from 'src/features/dataApi/zerion/api'
 import { Namespace, Transaction } from 'src/features/dataApi/zerion/types'
 import { requests } from 'src/features/dataApi/zerion/utils'
-import { addToNotificationCount } from 'src/features/notifications/notificationSlice'
-import { selectlastTxHistoryUpdate } from 'src/features/transactions/selectors'
-import { setLastTxHistoryUpdate } from 'src/features/transactions/slice'
+import {
+  addToNotificationCount,
+  setLastTxNotificationUpdate,
+} from 'src/features/notifications/notificationSlice'
+import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { useAccounts } from 'src/features/wallet/hooks'
 
 export function TransactionHistoryUpdater() {
@@ -23,7 +26,8 @@ export function TransactionHistoryUpdater() {
 function useProcessNewTransactions(transactions?: { [address: Address]: Transaction[] | null }) {
   // TODO: look for "receive" transactions for the active account and push a notification for it
   const dispatch = useAppDispatch()
-  const lastTxHistoryUpdate = useAppSelector(selectlastTxHistoryUpdate)
+  const chainId = ChainId.Mainnet // hard coding this for now because it's the only chain Zerion supports
+  const lastTxNotificationUpdate = useAppSelector(selectLastTxNotificationUpdate)
 
   if (!transactions) return
 
@@ -33,12 +37,18 @@ function useProcessNewTransactions(transactions?: { [address: Address]: Transact
     const transactionsForAddress = transactions[address]
     if (!transactionsForAddress?.length) continue
 
-    const lastUpdateTime = lastTxHistoryUpdate[address]
+    const lastUpdateTime = lastTxNotificationUpdate?.[address]?.[chainId]
     const countOfNewTransactions = lastUpdateTime
       ? transactionsForAddress.findIndex((transaction) => transaction.mined_at === lastUpdateTime)
       : transactionsForAddress.length
 
-    dispatch(setLastTxHistoryUpdate({ address, timestamp: transactionsForAddress[0].mined_at }))
+    dispatch(
+      setLastTxNotificationUpdate({
+        address,
+        timestamp: transactionsForAddress[0].mined_at,
+        chainId,
+      })
+    )
     dispatch(addToNotificationCount({ address, count: countOfNewTransactions }))
   }
 }

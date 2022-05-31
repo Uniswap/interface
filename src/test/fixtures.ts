@@ -141,21 +141,16 @@ export const txDetailsConfirmed: TransactionDetails = {
   ...txDetailsPending,
   status: TransactionStatus.Success,
   receipt: {
-    transactionIndex: 0,
-    blockHash: '0x123',
-    blockNumber: 456,
-    confirmedTime: 1487076808000,
-    confirmations: 1,
+    blockHash: txReceipt.blockHash,
+    blockNumber: txReceipt.blockNumber,
+    transactionIndex: txReceipt.transactionIndex,
+    confirmations: txReceipt.confirmations,
+    confirmedTime: 1400000000000,
   },
 }
 
 export const finalizedTxAction: ReturnType<typeof finalizeTransaction> = {
-  payload: {
-    id: '1',
-    chainId: ChainId.Mainnet,
-    status: TransactionStatus.Success,
-    receipt: { ...txReceipt, confirmedTime: Date.now() },
-  },
+  payload: { ...txDetailsConfirmed, status: TransactionStatus.Success },
   type: '',
 }
 

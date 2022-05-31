@@ -1,28 +1,7 @@
 import { providers } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
-import {
-  ChainIdToTxIdToDetails,
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'src/features/transactions/types'
-import { getKeys } from 'src/utils/objects'
-
-export function getPendingTransactions(transactions: TransactionDetails[]) {
-  return transactions.filter(
-    (transaction: TransactionDetails) =>
-      Boolean(!transaction.receipt) && transaction.status !== TransactionStatus.Failed
-  )
-}
-
-export function getTransactionCount(txsByChainId: ChainIdToTxIdToDetails) {
-  if (!txsByChainId) return 0
-  return getKeys(txsByChainId).reduce<number>((sum, chainId) => {
-    sum += Object.keys(txsByChainId[chainId]!).length
-    return sum
-  }, 0)
-}
+import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
