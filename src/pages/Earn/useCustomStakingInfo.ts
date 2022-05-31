@@ -12,7 +12,8 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import { getProviderOrSigner } from 'utils'
 import { isAddress } from 'web3-utils'
 
-import { useCUSDPrice, useCUSDPriceOfULP } from './../../utils/useCUSDPrice'
+import { BIG_INT_SECONDS_IN_YEAR } from './../../constants/index'
+import { useCUSDPrice, useCUSDPriceOfULP, useCUSDPrices } from './../../utils/useCUSDPrice'
 
 type PairToken = {
   token0Address: string
@@ -36,6 +37,7 @@ export interface CustomStakingInfo {
   ) => TokenAmount[]
   tokens: Token[] | undefined
   rewardRates: TokenAmount[]
+  rewardsUSDPerYear: string
 }
 
 export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => {
@@ -161,6 +163,7 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
         )
       : []
 
+  const cusdPriceOfRewardTokens = useCUSDPrices(rewardTokens)
   const earnedAmounts: TokenAmount[] =
     rewardTokens && isAddress(farmAddress)
       ? rewardTokens?.map(
@@ -181,6 +184,17 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
 
   const tvlUSD = totalStakedAmount && lpPrice ? lpPrice.quote(totalStakedAmount).toSignificant(6) : undefined
   const userValueCUSD = stakedAmount && lpPrice ? lpPrice.quote(stakedAmount).toExact() : undefined
+  const rewardsUSDPerYear = cusdPriceOfRewardTokens
+    ? totalRewardRates.reduce((totalRewardsUSDPerYear: string, rewardRate, index) => {
+        return JSBI.add(
+          JSBI.BigInt(totalRewardsUSDPerYear),
+          JSBI.multiply(
+            cusdPriceOfRewardTokens[index]?.quote(rewardRate).raw ?? JSBI.BigInt(0),
+            JSBI.BigInt(BIG_INT_SECONDS_IN_YEAR)
+          )
+        ).toString()
+      }, '0')
+    : '0'
 
   const getHypotheticalRewardRate = (
     _stakedAmount: TokenAmount,
@@ -227,5 +241,6 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
     tokens: pairToken && token0 && token1 ? [token0, token1] : stakingToken ? [stakingToken, stakingToken] : undefined,
     earnedAmounts,
     rewardRates: userRewardRates,
+    rewardsUSDPerYear,
   }
 }

@@ -1,4 +1,4 @@
-import { ApolloQueryResult, gql, useApolloClient } from '@apollo/client'
+import { ApolloQueryResult, gql, useApolloClient, useQuery } from '@apollo/client'
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
@@ -126,31 +126,7 @@ export const useFarmRegistry = () => {
         return client.query({ query: pairDataGql, variables: { id: summary.lpAddress.toLowerCase() } })
       })
     )
-    const farmInfos = results.map((result: ApolloQueryResult<any>, index) => {
-      let swapRewardsUSDPerYear: BigNumber = BigNumber.from(0)
-      const summary: FarmSummary = farmSummaries[index]
-      const { loading, error, data } = result
-      if (!loading && !error && data) {
-        const lastDayVolumeUsd = data.pair.pairHourData.reduce(
-          (acc: number, curr: { hourlyVolumeUSD: string }) => acc + Number(curr.hourlyVolumeUSD),
-          0
-        )
-        swapRewardsUSDPerYear = parseEther(Math.floor(lastDayVolumeUsd * 365 * 0.0025).toString())
-      }
-      const rewardApr = new Percent(summary.rewardsUSDPerYear.toString(), summary.tvlUSD.toString())
-      const swapApr = new Percent(swapRewardsUSDPerYear.toString(), summary.tvlUSD.toString())
-      const apr = new Percent(
-        swapRewardsUSDPerYear.add(summary.rewardsUSDPerYear).toString(),
-        summary.tvlUSD.toString()
-      )
-      const apy = annualizedPercentageYield(apr, COMPOUNDS_PER_YEAR)
-      return {
-        rewardApr,
-        swapApr,
-        apr,
-        apy,
-      }
-    })
+    const farmInfos = results.map((result: ApolloQueryResult<any>, index) => calcAPR(result, farmSummaries[index]))
     setFarmSummaries(
       farmSummaries.map((summary, index) => ({
         ...summary,
@@ -167,7 +143,12 @@ export const useFarmRegistry = () => {
 }
 
 export const useImportedFarmRegistry = (farmAddress: string): FarmSummary | undefined => {
-  const { stakingToken, totalRewardRates, valueOfTotalStakedAmountInCUSD, tokens } = useCustomStakingInfo(farmAddress)
+  const { stakingToken, totalRewardRates, valueOfTotalStakedAmountInCUSD, tokens, rewardsUSDPerYear } =
+    useCustomStakingInfo(farmAddress)
+
+  const result = useQuery(pairDataGql, {
+    variables: { id: stakingToken?.address.toLowerCase() },
+  })
 
   if (stakingToken && totalRewardRates && valueOfTotalStakedAmountInCUSD && tokens) {
     const farmSummary: FarmSummary = {
@@ -178,11 +159,12 @@ export const useImportedFarmRegistry = (farmAddress: string): FarmSummary | unde
       token1Address: tokens[1].address,
       isFeatured: false,
       tvlUSD: parseEther(valueOfTotalStakedAmountInCUSD),
-      rewardsUSDPerYear: BigNumber.from(0),
+      rewardsUSDPerYear: BigNumber.from(rewardsUSDPerYear),
       isImported: true,
       totalRewardRates,
     }
-    return farmSummary
+    const farmInfo = calcAPR(result, farmSummary)
+    return { ...farmSummary, ...farmInfo }
   }
   return undefined
 }
@@ -209,4 +191,42 @@ function annualizedPercentageYield(nominal: Percent, compounds: number) {
 
   // multiply 100 to turn decimal into percent, to fixed since we only display integer
   return ((divideNominalByNAddOne ** compounds - ONE) * 100).toFixed(0)
+}
+
+// calculate rewardAPR, swapAPR, APY & APR from a farmSummary
+function calcAPR(
+  result: ApolloQueryResult<any>,
+  summary: FarmSummary
+): {
+  rewardApr: Percent
+  swapApr: Percent
+  apr: Percent
+  apy: string
+} {
+  let swapRewardsUSDPerYear: BigNumber = BigNumber.from(0)
+  const { loading, error, data } = result
+  if (!loading && !error && data?.pair) {
+    const lastDayVolumeUsd = data.pair.pairHourData.reduce(
+      (acc: number, curr: { hourlyVolumeUSD: string }) => acc + Number(curr.hourlyVolumeUSD),
+      0
+    )
+    swapRewardsUSDPerYear = parseEther(Math.floor(lastDayVolumeUsd * 365 * 0.0025).toString())
+  }
+  const rewardApr = new Percent(summary.rewardsUSDPerYear.toString(), summary.tvlUSD.toString())
+  const swapApr = new Percent(swapRewardsUSDPerYear.toString(), summary.tvlUSD.toString())
+  const apr = new Percent(swapRewardsUSDPerYear.add(summary.rewardsUSDPerYear).toString(), summary.tvlUSD.toString())
+  let apy = '0'
+  if (summary.tvlUSD.gt(0)) {
+    try {
+      apy = annualizedPercentageYield(apr, COMPOUNDS_PER_YEAR)
+    } catch (e) {
+      console.error('apy calc overflow', summary.farmName, e)
+    }
+  }
+  return {
+    rewardApr,
+    swapApr,
+    apr,
+    apy,
+  }
 }
