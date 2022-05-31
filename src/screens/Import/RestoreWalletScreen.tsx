@@ -7,63 +7,43 @@ import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloud>
 
 const PIN_LENGTH = 6
 
-function isPinConfirmationValid(expected: string, actual: string) {
-  return expected === actual
-}
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreWallet>
 
-export function CloudBackupScreen({
-  navigation,
-  route: {
-    params: { pin },
-  },
-}: Props) {
+export function RestoreWalletScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   const [enteredPin, setEnteredPin] = useState('')
   const [error, setError] = useState(false)
 
-  // detects valid confirmation
+  /**
+   * @TODO
+   * 1. detect icloud pin and validate input against it
+   * 2. load addresses for recovered wallets
+   * 3. load wallets in low level RS code if succesful pin (accounts need to be imported)
+   * 3. navigate to select wallet page with wallets ^ if succesful pin
+   */
+  const expectedPin = '00Dummy'
   useEffect(() => {
-    if (!pin) return
     if (enteredPin.length !== PIN_LENGTH) return
-
-    if (isPinConfirmationValid(pin, enteredPin)) {
-      navigation.navigate(OnboardingScreens.BackupCloudProcessing, {
-        pin,
-        type: 'backup',
+    if (enteredPin === expectedPin) {
+      navigation.navigate(OnboardingScreens.SelectWallet, {
+        addresses: [],
       })
     } else {
       setEnteredPin('')
       setError(true)
     }
-  }, [enteredPin, navigation, pin])
-
-  // detects user pin form complete
-  useEffect(() => {
-    if (pin) return
-    if (enteredPin.length !== PIN_LENGTH) return
-
-    // push same screen with pin filled
-    navigation.push(OnboardingScreens.BackupCloud, { pin: enteredPin })
-  }, [enteredPin, navigation, pin])
-
-  if (!pin) {
-    return (
-      <OnboardingScreen
-        subtitle={t('Set up your iCloud backup PIN')}
-        title={t("You'll use this PIN to restore your wallet from iCloud.")}>
-        <PinInput length={PIN_LENGTH} setValue={setEnteredPin} value={enteredPin} />
-      </OnboardingScreen>
-    )
-  }
+  }, [enteredPin, navigation])
 
   return (
-    <OnboardingScreen title={t('Confirm your iCloud backup PIN')}>
-      {/* keep spacing consistent when no errors with minHeight */}
+    <OnboardingScreen
+      stepCount={2}
+      stepNumber={0}
+      subtitle={t('This PIN is required to recover your backed up recovery phrase from iCloud.')}
+      title={t('Enter your iCloud backup PIN')}>
       <Box minHeight={30}>
         {error ? (
           <Text color="deprecated_red" textAlign="center" variant="body1">

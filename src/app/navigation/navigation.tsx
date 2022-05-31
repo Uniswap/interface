@@ -28,6 +28,7 @@ import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { PrivateKeyInputScreen } from 'src/screens/Import/PrivateKeyInputScreen'
+import { RestoreWalletScreen } from 'src/screens/Import/RestoreWalletScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
@@ -261,6 +262,10 @@ export function AppStackNavigator() {
           <OnboardingStack.Screen
             component={PrivateKeyInputScreen}
             name={OnboardingScreens.PrivateKeyInput}
+          />
+          <OnboardingStack.Screen
+            component={RestoreWalletScreen}
+            name={OnboardingScreens.RestoreWallet}
           />
           <OnboardingStack.Screen
             component={SeedPhraseInputScreen}

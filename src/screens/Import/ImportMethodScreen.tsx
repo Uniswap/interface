@@ -4,10 +4,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import CloudIcon from 'src/assets/icons/cloud.svg'
 import EyeIcon from 'src/assets/icons/eyeball.svg'
 import KeyIcon from 'src/assets/icons/key-icon.svg'
 import SeedPhraseIcon from 'src/assets/icons/seed-phrase-icon.svg'
-import BluetoothIcon from 'src/assets/logos/bluetooth.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -15,6 +15,13 @@ import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { opacify } from 'src/utils/colors'
+
+const backupOption = {
+  title: (t: TFunction) => t('Restore from iCloud'),
+  blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
+  icon: <CloudIcon />,
+  nav: OnboardingScreens.RestoreWallet,
+}
 
 const options: {
   title: (t: TFunction) => string
@@ -35,12 +42,6 @@ const options: {
     nav: OnboardingScreens.PrivateKeyInput,
   },
   {
-    title: (t: TFunction) => t('Connect a Ledger Nano X'),
-    blurb: (t: TFunction) => t('Via Bluetooth'),
-    icon: <BluetoothIcon />,
-    nav: OnboardingScreens.SeedPhraseInput,
-  },
-  {
     title: (t: TFunction) => t('Watch a wallet address'),
     blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
     icon: <EyeIcon />,
@@ -53,10 +54,15 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function ImportMethodScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
+  /**
+   * @TODO include check icloud backups and conditionally render restore option
+   */
+  const backupFound = true
+
   return (
     <OnboardingScreen title={t('Choose how to connect your wallet')}>
       <Flex grow gap="md">
-        {options.map(({ title, blurb, icon, nav }) => (
+        {[...(backupFound ? [backupOption] : []), ...options].map(({ title, blurb, icon, nav }) => (
           <OptionCard
             key={'connection-option-' + title}
             blurb={blurb(t)}
