@@ -6,8 +6,8 @@ import {
   selectSessions,
 } from 'src/features/walletConnect/selectors'
 
-export function useWalletConnect(account?: string) {
-  const sessionSelector = useMemo(() => selectSessions(account), [account])
+export function useWalletConnect(address: Nullable<string>) {
+  const sessionSelector = useMemo(() => selectSessions(address), [address])
   const sessions = useAppSelector(sessionSelector)
   const pendingRequests = useAppSelector(selectPendingRequests)
   const modalState = useAppSelector(selectModalState)

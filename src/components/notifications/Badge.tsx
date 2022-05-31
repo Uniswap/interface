@@ -32,8 +32,8 @@ function _NotificationBadge({
         minWidth={size}
         position="absolute"
         px="xxxs"
-        right={-size / 3}
-        top={-size / 3}>
+        right={-size / 3.5}
+        top={-size / 3.5}>
         {notificationCount ? (
           <Text numberOfLines={1} textAlign="center" variant="badge">
             {formatNotificationCount(notificationCount)}

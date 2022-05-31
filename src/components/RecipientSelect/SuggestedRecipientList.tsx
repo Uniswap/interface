@@ -47,7 +47,7 @@ interface RecipientProps {
 export function RecipientRow({ recipient, onPress }: RecipientProps) {
   return (
     <Button onPress={() => onPress(recipient)}>
-      <AddressDisplay alwaysShowAddress address={recipient} size={35} />
+      <AddressDisplay showAddressAsSubtitle address={recipient} size={35} />
     </Button>
   )
 }

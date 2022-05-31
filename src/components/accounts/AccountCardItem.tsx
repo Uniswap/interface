@@ -49,7 +49,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
         testID={`account_item/${address.toLowerCase()}`}>
         <Flex row alignItems="center" borderRadius="sm" justifyContent="space-between">
           <AddressDisplay
-            alwaysShowAddress
+            showAddressAsSubtitle
             address={address}
             showNotificationBadge={true}
             size={36}

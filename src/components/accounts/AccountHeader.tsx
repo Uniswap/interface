@@ -1,5 +1,4 @@
 import React, { PropsWithChildren } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
@@ -15,7 +14,6 @@ type AccountHeaderProps = PropsWithChildren<{
 export function AccountHeader({ children, onPress }: AccountHeaderProps) {
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const hasUnreadNotifications = useAppSelector(selectHasUnreadNotifications)
-  const { t } = useTranslation()
 
   return (
     <>
@@ -31,11 +29,7 @@ export function AccountHeader({ children, onPress }: AccountHeaderProps) {
           name={ElementName.Manage}
           testID={ElementName.Manage}
           onPress={onPress}>
-          <AddressDisplay
-            address={activeAddress ?? undefined}
-            fallback={t('Connect Wallet')}
-            variant="mediumLabel"
-          />
+          {activeAddress ? <AddressDisplay address={activeAddress} variant="mediumLabel" /> : null}
         </Button>
         <Box alignItems="center" flexDirection="row" justifyContent="flex-end">
           {children}

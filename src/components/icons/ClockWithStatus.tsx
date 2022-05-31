@@ -39,7 +39,7 @@ function _ClockWithStatus({
           borderWidth={2}
           height={NOTIFICATION_DOT_SIZE}
           position="absolute"
-          right={-NOTIFICATION_DOT_SIZE / 10}
+          right={NOTIFICATION_DOT_SIZE / 6}
           top={-NOTIFICATION_DOT_SIZE / 10}
           width={NOTIFICATION_DOT_SIZE}
         />

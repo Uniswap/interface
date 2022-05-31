@@ -167,7 +167,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
           gap="xs"
           justifyContent="space-between"
           p="md">
-          <AddressDisplay alwaysShowAddress address={request.account} />
+          <AddressDisplay showAddressAsSubtitle address={request.account} />
           {methodCostsGas(request.type) ? null : (
             <Text color="neutralTextTertiary" fontSize={12} fontStyle="italic">
               This request will not cost any gas fees.

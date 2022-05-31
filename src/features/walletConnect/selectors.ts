@@ -6,11 +6,11 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 
 export const selectSessions =
-  (account?: string) =>
+  (address: Nullable<string>) =>
   (state: RootState): WalletConnectSession[] => {
-    if (!account || !state.walletConnect.byAccount[account]) return []
+    if (!address || !state.walletConnect.byAccount[address]) return []
 
-    return Object.values(state.walletConnect.byAccount[account].sessions)
+    return Object.values(state.walletConnect.byAccount[address].sessions)
   }
 
 export const selectPendingRequests = (state: RootState): WalletConnectRequest[] => {

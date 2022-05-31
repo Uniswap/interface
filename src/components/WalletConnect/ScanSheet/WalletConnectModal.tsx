@@ -3,9 +3,8 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-native-qrcode-svg'
 import 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
-import { useDisplayName } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -15,7 +14,8 @@ import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/
 import { QRCodeScanner } from 'src/components/WalletConnect/ScanSheet/QRCodeScanner'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useDisplayName } from 'src/features/wallet/hooks'
+import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp } from 'src/features/walletConnect/WalletConnect'
 import { opacify } from 'src/utils/colors'
@@ -39,20 +39,19 @@ export function WalletConnectModal({
   onClose,
 }: Props) {
   const { t } = useTranslation()
-  const activeAccount = useActiveAccount()
-  const { name, address } = useDisplayName(activeAccount?.address)
-  const { sessions } = useWalletConnect(activeAccount?.address)
+  const theme = useAppTheme()
+  const activeAddress = useAppSelector(selectActiveAccountAddress)
+  const displayName = useDisplayName(activeAddress)
+  const { sessions } = useWalletConnect(activeAddress)
 
   const [currentScreenState, setCurrentScreenState] =
     useState<WalletConnectModalState>(initialScreenState)
 
-  const theme = useAppTheme()
-
   const onScanCode = (uri: string) => {
     notificationAsync()
 
-    if (!activeAccount) return
-    connectToApp(uri, activeAccount.address)
+    if (!activeAddress) return
+    connectToApp(uri, activeAddress)
     onClose()
   }
 
@@ -75,7 +74,7 @@ export function WalletConnectModal({
     setCurrentScreenState(WalletConnectModalState.ScanQr)
   }
 
-  if (!activeAccount || !address) return null
+  if (!activeAddress) return null
 
   return (
     <BottomSheetModal
@@ -96,7 +95,7 @@ export function WalletConnectModal({
         />
       )}
       {currentScreenState === WalletConnectModalState.WalletQr && (
-        <WalletQRCode address={activeAccount.address} />
+        <WalletQRCode address={activeAddress} />
       )}
       <Flex mb="xl" mt="md" mx="md">
         <Button
@@ -108,7 +107,7 @@ export function WalletConnectModal({
           <Flex row gap="sm">
             {currentScreenState === WalletConnectModalState.ScanQr ? (
               <Flex centered backgroundColor="white" borderRadius="sm" padding="xs">
-                <QRCode size={30} value={activeAccount.address} />
+                <QRCode size={30} value={activeAddress} />
               </Flex>
             ) : (
               <Flex centered>
@@ -123,7 +122,7 @@ export function WalletConnectModal({
               </Text>
               <Text color="neutralTextSecondary" variant="body2">
                 {currentScreenState === WalletConnectModalState.ScanQr
-                  ? name
+                  ? displayName?.name
                   : t('Connect to an app with WalletConnect')}
               </Text>
             </Flex>

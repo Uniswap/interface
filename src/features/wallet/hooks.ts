@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
+import { ChainId } from 'src/constants/chains'
+import { useENS } from 'src/features/ens/useENS'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
   makeSelectLocalPfp,
@@ -7,6 +9,7 @@ import {
   selectActiveAccount,
   selectActiveAccountAddress,
 } from 'src/features/wallet/selectors'
+import { shortenAddress } from 'src/utils/addresses'
 
 export function useAccounts() {
   return useAppSelector(selectAccounts)
@@ -34,4 +37,20 @@ export function useActiveAccountWithThrow(): Account {
 
 export function useSelectLocalPfp(address: Address) {
   return useAppSelector(useMemo(() => makeSelectLocalPfp(address), [address]))
+}
+
+export function useDisplayName(address: Nullable<string>):
+  | {
+      name: string
+      type: 'local' | 'ens' | 'address'
+    }
+  | undefined {
+  const maybeLocalName = useAccounts()[address ?? '']?.name // if address is a local account with a name
+  const ens = useENS(ChainId.Mainnet, address)
+
+  if (!address) return
+
+  if (maybeLocalName) return { name: maybeLocalName, type: 'local' }
+  if (ens.name) return { name: ens.name, type: 'ens' }
+  return { name: shortenAddress(address), type: 'address' }
 }
