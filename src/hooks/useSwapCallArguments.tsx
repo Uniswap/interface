@@ -1,15 +1,15 @@
+import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
-import { SwapRouter, Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
+import { Contract } from '@ethersproject/contracts'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { FeeOptions, Trade as V3Trade } from '@uniswap/v3-sdk'
+import TEX_JSON from 'abis/tex-router.json'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import approveAmountCalldata from 'utils/approveAmountCalldata'
 
-import { useArgentWalletContract } from './useArgentWalletContract'
-import { useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 
@@ -18,10 +18,14 @@ export type AnyTrade =
   | V3Trade<Currency, Currency, TradeType>
   | Trade<Currency, Currency, TradeType>
 
-interface SwapCall {
+export interface SwapCall {
   address: string
   calldata: string
   value: string
+  deadline: number
+  amountIn: number
+  amountoutMin: number
+  path: string[]
 }
 
 /**
@@ -33,152 +37,53 @@ interface SwapCall {
  */
 export function useSwapCallArguments(
   trade: AnyTrade | undefined,
-  allowedSlippage: Percent,
+  _allowedSlippage: Percent,
   recipientAddressOrName: string | null | undefined,
-  signatureData: SignatureData | null | undefined,
+  _signatureData: SignatureData | null | undefined,
   deadline: BigNumber | undefined,
-  feeOptions: FeeOptions | undefined
-): SwapCall[] {
+  _feeOptions: FeeOptions | undefined
+): Promise<SwapCall[]> {
   const { account, chainId, library } = useActiveWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
-  const routerContract = useV2RouterContract()
-  const argentWalletContract = useArgentWalletContract()
 
-  return useMemo(() => {
+  return useMemo(async () => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
-    if (trade instanceof V2Trade) {
-      if (!routerContract) return []
-      const swapMethods = []
+    const v2trade = trade as V2Trade<Currency, Currency, TradeType>
 
-      swapMethods.push(
-        V2SwapRouter.swapCallParameters(trade, {
-          feeOnTransfer: false,
-          allowedSlippage,
-          recipient,
-          deadline: deadline.toNumber(),
-        })
-      )
+    const amountIn = JSBI.toNumber(trade.inputAmount.numerator)
+    const amountoutMin = 0
+    const deadlineNumber = 1753105128
 
-      if (trade.tradeType === TradeType.EXACT_INPUT) {
-        swapMethods.push(
-          V2SwapRouter.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage,
-            recipient,
-            deadline: deadline.toNumber(),
-          })
-        )
-      }
-      return swapMethods.map(({ methodName, args, value }) => {
-        if (argentWalletContract && trade.inputAmount.currency.isToken) {
-          return {
-            address: argentWalletContract.address,
-            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
-              [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), routerContract.address),
-                {
-                  to: routerContract.address,
-                  value,
-                  data: routerContract.interface.encodeFunctionData(methodName, args),
-                },
-              ],
-            ]),
-            value: '0x0',
-          }
-        } else {
-          return {
-            address: routerContract.address,
-            calldata: routerContract.interface.encodeFunctionData(methodName, args),
-            value,
-          }
-        }
-      })
-    } else {
-      // swap options shared by v3 and v2+v3 swap routers
-      const sharedSwapOptions = {
-        fee: feeOptions,
-        recipient,
-        slippageTolerance: allowedSlippage,
-        ...(signatureData
-          ? {
-              inputTokenPermit:
-                'allowed' in signatureData
-                  ? {
-                      expiry: signatureData.deadline,
-                      nonce: signatureData.nonce,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    }
-                  : {
-                      deadline: signatureData.deadline,
-                      amount: signatureData.amount,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    },
-            }
-          : {}),
-      }
+    const token1 = v2trade.inputAmount.currency as Token
+    const address1 = token1.address
+    const token2 = v2trade.outputAmount.currency as Token
+    const address2 = token2.address
+    const path = [address1, address2]
 
-      const swapRouterAddress = chainId
-        ? trade instanceof V3Trade
-          ? V3_ROUTER_ADDRESS[chainId]
-          : SWAP_ROUTER_ADDRESSES[chainId]
-        : undefined
-      if (!swapRouterAddress) return []
+    const { abi: TEX_ABI } = TEX_JSON
+    const texContract = new Contract('0x0a2786fE3fbFFC12f3853682C50A1d6df43C35F7', TEX_ABI, library)
 
-      const { value, calldata } =
-        trade instanceof V3Trade
-          ? V3SwapRouter.swapCallParameters(trade, {
-              ...sharedSwapOptions,
-              deadline: deadline.toString(),
-            })
-          : SwapRouter.swapCallParameters(trade, {
-              ...sharedSwapOptions,
-              deadlineOrPreviousBlockhash: deadline.toString(),
-            })
+    const txRequest: TransactionRequest = await texContract.populateTransaction.swapExactTokensForTokens(
+      `${amountIn}`,
+      `${amountoutMin}`,
+      path,
+      account,
+      deadlineNumber
+    )
 
-      if (argentWalletContract && trade.inputAmount.currency.isToken) {
-        return [
-          {
-            address: argentWalletContract.address,
-            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
-              [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
-                {
-                  to: swapRouterAddress,
-                  value,
-                  data: calldata,
-                },
-              ],
-            ]),
-            value: '0x0',
-          },
-        ]
-      }
-      return [
-        {
-          address: swapRouterAddress,
-          calldata,
-          value,
-        },
-      ]
-    }
-  }, [
-    account,
-    allowedSlippage,
-    argentWalletContract,
-    chainId,
-    deadline,
-    feeOptions,
-    library,
-    recipient,
-    routerContract,
-    signatureData,
-    trade,
-  ])
+    return [
+      {
+        address: texContract.address,
+        calldata: txRequest.data ? txRequest.data.toString() : '',
+        value: txRequest.value ? txRequest.value.toString() : '0x0',
+        deadline: deadlineNumber,
+        amountIn,
+        amountoutMin,
+        path,
+      },
+    ]
+  }, [account, chainId, deadline, library, recipient, trade])
 }

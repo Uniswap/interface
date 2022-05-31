@@ -6,9 +6,6 @@ import { RadiusSwapResponse } from 'lib/hooks/swap/useSendSwapTransaction'
 import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/hooks/swap/useSwapCallback'
 import { ReactNode, useMemo } from 'react'
 
-// import { TransactionType } from 'state/transactions/types'
-// import { currencyId } from 'utils/currencyId'
-import { useTransactionAdder } from '../state/transactions/hooks'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 import { AnyTrade } from './useSwapCallArguments'
@@ -22,12 +19,14 @@ export function useSwapCallback(
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null,
   sigHandler: () => void
-): { state: SwapCallbackState; callback: null | (() => Promise<RadiusSwapResponse>); error: ReactNode | null } {
+): {
+  state: SwapCallbackState
+  callback: null | (() => Promise<RadiusSwapResponse>)
+  error: ReactNode | null
+} {
   const { account } = useActiveWeb3React()
 
   const deadline = useTransactionDeadline()
-
-  const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
@@ -51,31 +50,9 @@ export function useSwapCallback(
     }
     return () =>
       libCallback().then((response) => {
-        // addTransaction(
-        //   response,
-        //   trade.tradeType === TradeType.EXACT_INPUT
-        //     ? {
-        //         type: TransactionType.SWAP,
-        //         tradeType: TradeType.EXACT_INPUT,
-        //         inputCurrencyId: currencyId(trade.inputAmount.currency),
-        //         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        //         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-        //         outputCurrencyId: currencyId(trade.outputAmount.currency),
-        //         minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-        //       }
-        //     : {
-        //         type: TransactionType.SWAP,
-        //         tradeType: TradeType.EXACT_OUTPUT,
-        //         inputCurrencyId: currencyId(trade.inputAmount.currency),
-        //         maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-        //         outputCurrencyId: currencyId(trade.outputAmount.currency),
-        //         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-        //         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        //       }
-        // )
         return response
       })
-  }, [allowedSlippage, libCallback, trade])
+  }, [libCallback, trade])
 
   return {
     state,
