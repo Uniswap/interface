@@ -1,4 +1,4 @@
-name: 'DMM Interface Release'
+name: 'KyberSwap Interface Release'
 
 on:
   workflow_dispatch:
@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-18.04
     outputs:
       version_tag: ${{ steps.version_tag.outputs.value }}
+      build_date: ${{ steps.build_date.outputs.value }}
     steps:
       - name: Format version tag
         shell: bash
@@ -22,6 +23,10 @@ jobs:
         run: |
           TAG=${INPUT_TAG#v}
           echo "::set-output name=value::v$TAG"
+      - name: Build date
+        shell: bash
+        id: build_date
+        run: echo "::set-output name=value::$(date +%FT%T%z)"
 
   build:
     needs:
@@ -31,10 +36,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up Node.js 12.x
+      - name: Set up Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
 
       - name: Restore node_modules
         uses: actions/cache@v2
@@ -63,8 +68,9 @@ jobs:
       - prepare
       - build
     env:
-      SERVICE: dmm-interface
+      SERVICE: kyberswap-interface
       VERSION_TAG: ${{ needs.prepare.outputs.version_tag }}
+      BUILD_DATE: ${{ needs.prepare.outputs.build_date }}
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -120,34 +126,6 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-  upload-gcs:
-    needs:
-      - build
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Restore build
-        uses: actions/download-artifact@v2
-        with:
-          name: build-production
-          path: build
-
-      - name: Setup GCloud
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-
-      - name: Upload to GCS
-        env:
-          BUCKET: kyberswap.com
-        run: |
-          gsutil -m rsync -r $PWD/build gs://$BUCKET
-          gsutil setmeta -h "Cache-Control: no-cache" gs://$BUCKET/*.html
-
   release:
     needs:
       - prepare
@@ -167,13 +145,14 @@ jobs:
 
       - name: Create tag
         run: |
-          git tag --annotate --message "DMM Interface - $VERSION_TAG" "$VERSION_TAG"
+          git tag -d "$VERSION_TAG" 2> /dev/null || echo "Release tag '$VERSION_TAG' does NOT exist"
+          git tag --annotate --message "KyberSwap Interface - $VERSION_TAG" "$VERSION_TAG"
           git push origin "refs/tags/$VERSION_TAG"
 
       - name: Create release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: ${{ secrets.GH_PAT }}
-          automatic_release_tag: ${{ env.VERSION_TAG }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.VERSION_TAG }}
           prerelease: false
-          title: 'DMM Interface - ${{ env.VERSION_TAG }}'
+          title: 'KyberSwap Interface - ${{ env.VERSION_TAG }}'
