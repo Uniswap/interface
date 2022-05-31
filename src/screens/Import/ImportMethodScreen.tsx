@@ -32,7 +32,7 @@ const options: {
     title: (t: TFunction) => t('Import a private key'),
     blurb: (t: TFunction) => t('Enter, paste, or scan your key'),
     icon: <KeyIcon />,
-    nav: OnboardingScreens.SeedPhraseInput,
+    nav: OnboardingScreens.PrivateKeyInput,
   },
   {
     title: (t: TFunction) => t('Connect a Ledger Nano X'),

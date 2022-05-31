@@ -67,6 +67,7 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
           <Flex pt="lg">
             <GenericImportForm
               error={errorText}
+              placeholderLabel={t('seed phrase')}
               value={value}
               onChange={(text: string | undefined) => setValue(text)}
             />

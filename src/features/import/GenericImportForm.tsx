@@ -14,9 +14,10 @@ interface Props {
   value: string | undefined
   error: string | undefined
   onChange: (text: string | undefined) => void
+  placeholderLabel: string
 }
 
-export function GenericImportForm({ value, onChange, error }: Props) {
+export function GenericImportForm({ value, onChange, error, placeholderLabel }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [focused, setFocused] = useState(false)
@@ -58,7 +59,7 @@ export function GenericImportForm({ value, onChange, error }: Props) {
             </Text>
             <PasteButton onPress={onChange} />
             <Text color="accentText2" variant="body1">
-              {t('seed phrase')}
+              {placeholderLabel}
             </Text>
           </Flex>
         )}

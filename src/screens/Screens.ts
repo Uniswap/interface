@@ -50,6 +50,7 @@ export enum OnboardingScreens {
   // import
   ImportMethod = 'ImportMethod',
   SeedPhraseInput = 'SeedPhraseInput',
+  PrivateKeyInput = 'PrivateKeyInput',
   SelectWallet = 'SelectWallet',
 }
 

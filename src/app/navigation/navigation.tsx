@@ -27,6 +27,7 @@ import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
+import { PrivateKeyInputScreen } from 'src/screens/Import/PrivateKeyInputScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
@@ -255,6 +256,10 @@ export function AppStackNavigator() {
           <OnboardingStack.Screen
             component={ImportMethodScreen}
             name={OnboardingScreens.ImportMethod}
+          />
+          <OnboardingStack.Screen
+            component={PrivateKeyInputScreen}
+            name={OnboardingScreens.PrivateKeyInput}
           />
           <OnboardingStack.Screen
             component={SeedPhraseInputScreen}

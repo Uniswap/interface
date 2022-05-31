@@ -69,6 +69,7 @@ export type OnboardingStackParamList = {
   // import
   [OnboardingScreens.ImportMethod]: undefined
   [OnboardingScreens.SeedPhraseInput]: undefined
+  [OnboardingScreens.PrivateKeyInput]: undefined
   [OnboardingScreens.SelectWallet]: { addresses: Address[] }
 }
 
