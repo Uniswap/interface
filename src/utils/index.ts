@@ -26,6 +26,7 @@ import {
   ZERO_ADDRESS,
   KS_FACTORY_ADDRESSES,
   KS_ROUTER_ADDRESSES,
+  STATIC_FEE_OPTIONS,
 } from 'constants/index'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import ROUTER_ABI_WITHOUT_DYNAMIC_FEE from '../constants/abis/dmm-router-without-dynamic-fee.json'
@@ -253,22 +254,25 @@ export function getContractForReading(address: string, ABI: any, library: ethers
 }
 
 // account is optional
-export function getRouterContract(
-  chainId: ChainId,
-  library: Web3Provider,
-  feeType: string,
-  account?: string,
-): Contract {
+export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(
+    ROUTER_ADDRESSES[chainId],
+    STATIC_FEE_OPTIONS[chainId] ? ROUTER_ABI_WITHOUT_DYNAMIC_FEE : ROUTER_ABI,
+    library,
+    account,
+  )
+}
+// account is optional
+export function getStaticFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   if (ONLY_STATIC_FEE_CHAINS.includes(chainId)) {
     return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI_WITHOUT_DYNAMIC_FEE, library, account)
   } else {
-    return getContract(
-      feeType === 'static' ? KS_ROUTER_ADDRESSES[chainId] : ROUTER_ADDRESSES[chainId],
-      feeType === 'static' ? KS_ROUTER_ABI : ROUTER_ABI,
-      library,
-      account,
-    )
+    return getContract(KS_ROUTER_ADDRESSES[chainId], KS_ROUTER_ABI, library, account)
   }
+}
+// account is optional
+export function getDynamicFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
 }
 
 export function getKSFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {

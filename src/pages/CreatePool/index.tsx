@@ -16,7 +16,13 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, CREATE_POOL_AMP_HINT, STATIC_FEE_OPTIONS, ONLY_STATIC_FEE_CHAINS } from '../../constants'
+import {
+  ROUTER_ADDRESSES,
+  CREATE_POOL_AMP_HINT,
+  STATIC_FEE_OPTIONS,
+  ONLY_STATIC_FEE_CHAINS,
+  KS_ROUTER_ADDRESSES,
+} from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -33,8 +39,10 @@ import {
   calculateGasMargin,
   calculateSlippageAmount,
   formattedNum,
+  getDynamicFeeRouterContract,
   getKSFactoryContract,
   getRouterContract,
+  getStaticFeeRouterContract,
 } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -63,6 +71,11 @@ import {
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import FeeTypeSelector from './FeeTypeSelector'
 import StaticFeeSelector from './StaticFeeSelector'
+
+export enum FEE_TYPE {
+  STATIC = 'static',
+  DYNAMIC = 'dynamic',
+}
 
 export default function CreatePool({
   match: {
@@ -137,7 +150,7 @@ export default function CreatePool({
   const [txHash, setTxHash] = useState<string>('')
 
   // fee types
-  const [feeType, setFeeType] = useState<string>('static')
+  const [feeType, setFeeType] = useState<string>(FEE_TYPE.STATIC)
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -155,15 +168,14 @@ export default function CreatePool({
     {},
   )
 
+  const routerAddress = !!chainId
+    ? !ONLY_STATIC_FEE_CHAINS.includes(chainId) && feeType === FEE_TYPE.STATIC
+      ? KS_ROUTER_ADDRESSES[chainId]
+      : ROUTER_ADDRESSES[chainId]
+    : undefined
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_A],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
-  )
-  const [approvalB, approveBCallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_B],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
-  )
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], routerAddress)
 
   const addTransactionWithType = useTransactionAdder()
   const addPair = usePairAdderByTokens()
@@ -171,7 +183,11 @@ export default function CreatePool({
   async function onAdd() {
     // if (!pair) return
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, feeType, account)
+
+    const router =
+      feeType === FEE_TYPE.STATIC
+        ? getStaticFeeRouterContract(chainId, library, account)
+        : getDynamicFeeRouterContract(chainId, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -194,7 +210,7 @@ export default function CreatePool({
       method = router.addLiquidityNewPoolETH
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        withoutDynamicFee || (!withoutDynamicFee && feeType === 'static')
+        withoutDynamicFee || (!withoutDynamicFee && feeType === FEE_TYPE.STATIC)
           ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
           : ampConvertedInBps.toSignificant(5), //ampBps
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
@@ -210,7 +226,7 @@ export default function CreatePool({
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
         wrappedCurrency(currencyB, chainId)?.address ?? '',
-        withoutDynamicFee || (!withoutDynamicFee && feeType === 'static')
+        withoutDynamicFee || (!withoutDynamicFee && feeType === FEE_TYPE.STATIC)
           ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
           : ampConvertedInBps.toSignificant(5), //ampBps
         parsedAmountA.raw.toString(),
@@ -616,7 +632,7 @@ export default function CreatePool({
                   ) : (
                     <>
                       <FeeTypeSelector active={feeType} onChange={(type: string) => setFeeType(type)} />
-                      {feeType === 'static' ? (
+                      {feeType === FEE_TYPE.STATIC ? (
                         <StaticFeeSelector
                           active={selectedFee}
                           onChange={(name: number) => setSelectedFee(name)}
@@ -707,7 +723,7 @@ export default function CreatePool({
                         !isValid ||
                         approvalA !== ApprovalState.APPROVED ||
                         approvalB !== ApprovalState.APPROVED ||
-                        (feeType === 'static' ? !selectedFee : false)
+                        (feeType === FEE_TYPE.STATIC ? !selectedFee : false)
                       }
                       error={
                         !isValid &&
@@ -720,7 +736,7 @@ export default function CreatePool({
                         {error ??
                           (+amp < 1
                             ? t`Enter amp (>=1)`
-                            : feeType === 'static' && !selectedFee
+                            : feeType === FEE_TYPE.STATIC && !selectedFee
                             ? t`Please select fee`
                             : t`Create`)}
                       </Text>

@@ -126,10 +126,10 @@ export function AddRemoveTabs({
   return (
     <Tabs>
       <Wrapper>
-        <ButtonBack width="fit-content" padding="0" onClick={goBack}>
+        <ButtonBack width="fit-content" padding="0" onClick={goBack} flex={1}>
           <StyledArrowLeft />
         </ButtonBack>
-        <Flex>
+        <Flex flex={2} justifyContent="center">
           <ActiveText>{creating ? t`Create a new pool` : adding ? t`Add Liquidity` : t`Remove Liquidity`}</ActiveText>
           <QuestionHelper
             text={
@@ -139,7 +139,7 @@ export function AddRemoveTabs({
             }
           />
         </Flex>
-        <Flex style={{ gap: '8px' }}>
+        <Flex style={{ gap: '8px' }} flex={1} justifyContent="flex-end">
           <TransactionSettings />
           <ShareButtonWithModal onShared={onShared} />
         </Flex>
