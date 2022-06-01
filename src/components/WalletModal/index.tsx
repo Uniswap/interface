@@ -160,8 +160,6 @@ export default function WalletModal({
     }
   }, [walletModalOpen, resetAccountView])
 
-  // close modal when a connection is successful
-
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map((key) => {
