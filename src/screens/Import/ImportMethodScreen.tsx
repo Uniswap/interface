@@ -12,6 +12,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { opacify } from 'src/utils/colors'
@@ -71,6 +72,9 @@ export function ImportMethodScreen({ navigation }: Props) {
             onPress={() => navigation.navigate(nav)}
           />
         ))}
+        <Flex grow justifyContent="flex-end">
+          <Disclaimer />
+        </Flex>
       </Flex>
     </OnboardingScreen>
   )

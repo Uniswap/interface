@@ -85,6 +85,7 @@ export const enum ElementName {
   Rename = 'rename',
   Reset = 'reset',
   Restart = 'restart',
+  SelectColor = 'select-color',
   SelectRecipient = 'select-recipient',
   SellToken = 'sell-token',
   Send = 'send',

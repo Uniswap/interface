@@ -8,6 +8,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
@@ -42,7 +43,7 @@ export function EditNameScreen({ navigation }: Props) {
   return (
     <OnboardingScreen
       stepCount={4}
-      stepNumber={1}
+      stepNumber={0}
       subtitle={t('Easily identify your wallet in the app by giving it a nickname and color.')}
       title={t('Give your wallet a nickname')}>
       <Box>
@@ -56,7 +57,9 @@ export function EditNameScreen({ navigation }: Props) {
           <ActivityIndicator />
         )}
       </Box>
-
+      <Flex grow justifyContent="flex-end">
+        <Disclaimer />
+      </Flex>
       <Flex justifyContent="flex-end">
         <PrimaryButton
           label={t('Next')}

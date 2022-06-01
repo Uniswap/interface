@@ -14,6 +14,7 @@ export function Create() {
     await element(by.id(ElementName.Next)).tap()
 
     // Choose a color
+    await element(by.id(ElementName.SelectColor + '-' + '#FC72FF')).tap()
     await element(by.id(ElementName.Next)).tap()
 
     // Backups
