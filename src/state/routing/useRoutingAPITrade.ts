@@ -78,14 +78,16 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
 
-    const otherAmount =
-      tradeType === TradeType.EXACT_INPUT
-        ? currencyOut && quoteResult
-          ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
-          : undefined
-        : currencyIn && quoteResult
-        ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
-        : undefined
+    let otherAmount = undefined
+    if (quoteResult) {
+      if (tradeType === TradeType.EXACT_INPUT && currencyOut) {
+        otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
+      }
+
+      if (tradeType === TradeType.EXACT_OUTPUT && currencyIn) {
+        otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
+      }
+    }
 
     if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {
       return {
