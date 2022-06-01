@@ -93,6 +93,13 @@ const FlyoutRowActiveIndicator = styled.div`
   height: 9px;
   width: 9px;
 `
+
+const CircleContainer = styled.div`
+  width: 20px;
+  display: flex;
+  justify-content: center;
+`
+
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 16px;
@@ -188,7 +195,11 @@ function Row({
     <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
       <Logo src={logoUrl} />
       <NetworkLabel>{label}</NetworkLabel>
-      {chainId === targetChain && <FlyoutRowActiveIndicator />}
+      {chainId === targetChain && (
+        <CircleContainer>
+          <FlyoutRowActiveIndicator />
+        </CircleContainer>
+      )}
     </FlyoutRow>
   )
 
@@ -197,21 +208,30 @@ function Row({
       <ActiveRowWrapper>
         {rowContent}
         <ActiveRowLinkList>
-          {bridge ? (
+          {bridge && (
             <ExternalLink href={bridge}>
-              <BridgeLabel chainId={chainId} /> <LinkOutCircle />
+              <BridgeLabel chainId={chainId} />
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
-          {explorer ? (
+          )}
+          {explorer && (
             <ExternalLink href={explorer}>
-              <ExplorerLabel chainId={chainId} /> <LinkOutCircle />
+              <ExplorerLabel chainId={chainId} />
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
-          {helpCenterUrl ? (
+          )}
+          {helpCenterUrl && (
             <ExternalLink href={helpCenterUrl}>
-              <Trans>Help Center</Trans> <LinkOutCircle />
+              <Trans>Help Center</Trans>
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
+          )}
         </ActiveRowLinkList>
       </ActiveRowWrapper>
     )
