@@ -106,22 +106,24 @@ export function QRCodeScanner({
               strokeWidth={5}
               width={layout.width * SCAN_ICON_WIDTH_RATIO}
             />
-            <Button onPress={onPressConnections}>
-              <Flex
-                row
-                alignItems="center"
-                borderRadius="full"
-                px="lg"
-                py="sm"
-                style={{ backgroundColor: opacify(40, theme.colors.black) }}>
-                <WalletConnectLogo height={30} width={30} />
-                <Text color="white" variant="mediumLabel">
-                  {numConnections === 1
-                    ? t('1 app connected')
-                    : t('{{numConnections}} apps connected', { numConnections })}
-                </Text>
-              </Flex>
-            </Button>
+            {numConnections && (
+              <Button onPress={onPressConnections}>
+                <Flex
+                  row
+                  alignItems="center"
+                  borderRadius="full"
+                  px="lg"
+                  py="sm"
+                  style={{ backgroundColor: opacify(40, theme.colors.black) }}>
+                  <WalletConnectLogo height={30} width={30} />
+                  <Text color="white" variant="mediumLabel">
+                    {numConnections === 1
+                      ? t('1 site connected')
+                      : t('{{numConnections}} sites connected', { numConnections })}
+                  </Text>
+                </Flex>
+              </Button>
+            )}
           </Flex>
         )}
       </AnimatedFlex>

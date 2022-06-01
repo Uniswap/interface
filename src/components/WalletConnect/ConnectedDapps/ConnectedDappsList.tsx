@@ -35,13 +35,6 @@ export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
           </Text>
         </Flex>
         <FlatList
-          ListEmptyComponent={
-            <Flex centered mt="lg">
-              <Text color="neutralTextSecondary" variant="body1">
-                {t('No connected dApps')}
-              </Text>
-            </Flex>
-          }
           columnWrapperStyle={{ marginHorizontal: theme.spacing.sm }}
           data={sessions}
           keyExtractor={(item) => item.id}
