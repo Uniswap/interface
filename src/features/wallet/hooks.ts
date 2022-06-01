@@ -8,11 +8,16 @@ import {
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
+  selectSignerAccounts,
 } from 'src/features/wallet/selectors'
 import { shortenAddress } from 'src/utils/addresses'
 
 export function useAccounts() {
   return useAppSelector(selectAccounts)
+}
+
+export function useSignerAccounts() {
+  return useAppSelector(selectSignerAccounts)
 }
 
 export function useActiveAccount(): Account | null {

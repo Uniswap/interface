@@ -53,6 +53,7 @@ import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
+import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
@@ -123,6 +124,7 @@ function SettingsStackGroup() {
   return (
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
+      <SettingsStack.Screen component={SettingsWallet} name={Screens.SettingsWallet} />
       <SettingsStack.Screen
         component={SettingsWebviewOptionScreen}
         name={Screens.SettingsWebviewOption}

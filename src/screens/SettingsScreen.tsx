@@ -1,14 +1,10 @@
-import { BaseTheme, useTheme } from '@shopify/restyle'
-import React, { ReactElement, useCallback, useMemo } from 'react'
+import { useTheme } from '@shopify/restyle'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
+import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
-import {
-  SettingsStackNavigationProp,
-  SettingsStackParamList,
-  useSettingsStackNavigation,
-} from 'src/app/navigation/types'
+import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
@@ -16,42 +12,28 @@ import LockIcon from 'src/assets/icons/lock.svg'
 import StarIcon from 'src/assets/icons/star.svg'
 import TestnetsIcon from 'src/assets/icons/testnets.svg'
 import TwitterIcon from 'src/assets/logos/twitter.svg'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { Chevron } from 'src/components/icons/Chevron'
-import { PopoutArrow } from 'src/components/icons/PopoutArrow'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import {
+  SettingsRow,
+  SettingsSection,
+  SettingsSectionItem,
+  SettingsSectionItemComponent,
+} from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
+import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
-import { flex } from 'src/styles/flex'
-import { openUri } from 'src/utils/linking'
-
-interface SettingsSectionItemComponent {
-  component: ReactElement
-}
-
-interface SettingsSectionItem {
-  screen?: keyof SettingsStackParamList
-  screenProps?: any
-  externalLink?: string
-  action?: ReactElement
-  text: string
-  subText?: string
-  icon: ReactElement
-}
-interface SettingsSection {
-  subTitle: string
-  subItems: (SettingsSectionItem | SettingsSectionItemComponent)[]
-  isHidden?: boolean
-}
 
 export function SettingsScreen() {
   const navigation = useSettingsStackNavigation()
@@ -69,11 +51,11 @@ export function SettingsScreen() {
   }, [dispatch, isRinkebyActive])
 
   // Defining them inline instead of outside component b.c. they need t()
-  const pages: SettingsSection[] = useMemo(
+  const sections: SettingsSection[] = useMemo(
     () => [
       {
         subTitle: t('App settings'),
-        subItems: [
+        data: [
           {
             action: <Switch value={isRinkebyActive} onValueChange={onToggleTestnets} />,
             text: t('Testnets'),
@@ -92,7 +74,7 @@ export function SettingsScreen() {
       },
       {
         subTitle: t('Support and feedback'),
-        subItems: [
+        data: [
           {
             screen: Screens.SettingsWebviewOption,
             screenProps: {
@@ -127,7 +109,7 @@ export function SettingsScreen() {
       },
       {
         subTitle: t('About'),
-        subItems: [
+        data: [
           {
             screen: Screens.SettingsWebviewOption,
             screenProps: {
@@ -167,7 +149,7 @@ export function SettingsScreen() {
       {
         subTitle: t('Developer settings'),
         isHidden: !isEnabled(TestConfig.ShowDevSettings),
-        subItems: [
+        data: [
           {
             screen: Screens.SettingsChains,
             text: t('Chains'),
@@ -228,41 +210,35 @@ export function SettingsScreen() {
     [isRinkebyActive, onToggleTestnets, t, theme]
   )
 
+  const renderItem = ({
+    item,
+  }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>) => {
+    if ('component' in item) {
+      return item.component
+    }
+    return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
+  }
+
   return (
     <Screen p="lg">
-      <ScrollView contentContainerStyle={flex.fill}>
-        <Flex alignItems="center" flexDirection="row" mb="xl">
-          <BackButton color="neutralTextSecondary" />
-          <Text variant="largeLabel">{t('Settings')}</Text>
-        </Flex>
-        <Flex>
-          {pages.map((o) => {
-            if (o.isHidden) {
-              return null
-            }
-            return (
-              <Flex>
-                <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
-                  {o.subTitle}
-                </Text>
-                {o.subItems.map((item) => {
-                  if ('component' in item) {
-                    return item.component
-                  }
-                  return (
-                    <SettingsRow
-                      key={item.screen}
-                      navigation={navigation}
-                      page={item}
-                      theme={theme}
-                    />
-                  )
-                })}
-              </Flex>
-            )
-          })}
-        </Flex>
-      </ScrollView>
+      <Flex alignItems="center" flexDirection="row" mb="xl">
+        <BackButton color="neutralTextSecondary" />
+        <Text variant="largeLabel">{t('Settings')}</Text>
+      </Flex>
+      <SectionList
+        ListHeaderComponent={<WalletSettings />}
+        keyExtractor={(_item, index) => 'settings' + index}
+        renderItem={renderItem}
+        renderSectionHeader={({ section: { subTitle } }) => (
+          <Box bg="mainBackground" pb="md">
+            <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+              {subTitle}
+            </Text>
+          </Box>
+        )}
+        sections={sections.filter((p) => !p.isHidden)}
+        showsVerticalScrollIndicator={false}
+      />
     </Screen>
   )
 }
@@ -300,48 +276,62 @@ function OnboardingRow() {
   )
 }
 
-interface SettingsRowProps {
-  page: SettingsSectionItem
-  navigation: SettingsStackNavigationProp
-  theme: BaseTheme
-}
+function WalletSettings() {
+  const DEFAULT_ACCOUNTS_TO_DISPLAY = 5
 
-function SettingsRow({
-  page: { screen, screenProps, externalLink, action, icon, text, subText },
-  navigation,
-  theme,
-}: SettingsRowProps) {
-  const handleRow = () => {
-    if (screen) {
-      navigation.navigate(screen, screenProps)
-    } else {
-      openUri(externalLink!)
-    }
+  const { t } = useTranslation()
+  const theme = useTheme()
+  const navigation = useSettingsStackNavigation()
+  const signerAccounts = useSignerAccounts()
+  const [showAll, setShowAll] = useState(false)
+
+  const toggleViewAll = () => {
+    setShowAll(!showAll)
   }
+
+  const handleNavigation = (address: Address) => {
+    navigation.navigate(Screens.SettingsWallet, { address })
+  }
+
   return (
-    <Button name="DEBUG_Settings_Navigate" px="sm" onPress={handleRow}>
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
-        <Flex row>
-          {icon}
-          <Flex gap="none">
-            <Text fontWeight="500" variant="subHead1">
-              {text}
+    <Box flexDirection="column" mb="md">
+      <Flex row justifyContent="space-between">
+        <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+          {t('Wallet settings')}
+        </Text>
+        {signerAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
+          <Button onPress={toggleViewAll}>
+            <Text color="neutralTextTertiary" mb="sm" variant="subHead2">
+              {showAll ? t('Hide') : t('View all')}
             </Text>
-            {subText && (
-              <Text color="neutralTextSecondary" variant="caption">
-                {subText}
-              </Text>
-            )}
-          </Flex>
-        </Flex>
-        {screen ? (
-          <Chevron color={theme.colors.neutralTextTertiary} direction="e" height={16} width={16} />
-        ) : externalLink ? (
-          <PopoutArrow color={theme.colors.neutralTextTertiary} size={24} />
-        ) : (
-          action
+          </Button>
         )}
-      </Box>
-    </Button>
+      </Flex>
+      {signerAccounts
+        .slice(0, showAll ? signerAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
+        .map((account) => (
+          <Button
+            key={account.address}
+            px="sm"
+            py="sm"
+            onPress={() => handleNavigation(account.address)}>
+            <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+              <AddressDisplay
+                showAddressAsSubtitle
+                address={account.address}
+                size={36}
+                variant="body1"
+                verticalGap="none"
+              />
+              <Chevron
+                color={theme.colors.neutralTextTertiary}
+                direction="e"
+                height={16}
+                width={16}
+              />
+            </Box>
+          </Button>
+        ))}
+    </Box>
   )
 }

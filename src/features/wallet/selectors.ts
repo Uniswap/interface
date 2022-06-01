@@ -1,7 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
+import { AccountType } from './accounts/types'
 
 export const selectAccounts = (state: RootState) => state.wallet.accounts
+
+export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
+  Object.values(accounts).filter((a) => a.type !== AccountType.Readonly)
+)
 
 export const selectActiveAccountAddress = (state: RootState) => state.wallet.activeAccountAddress
 export const selectActiveAccount = createSelector(
