@@ -139,6 +139,7 @@ export default function WalletModal({
     [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(walletConnect),
     [Wallet.FORTMATIC]: hooks.useSelectedIsActive(fortmatic),
   }
+
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
 
