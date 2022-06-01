@@ -80,11 +80,11 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
     let otherAmount = undefined
     if (quoteResult) {
-      if (tradeType === TradeType.EXACT_INPUT) {
+      if (tradeType === TradeType.EXACT_INPUT && currencyOut) {
         otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
       }
 
-      if (tradeType === TradeType.EXACT_OUTPUT) {
+      if (tradeType === TradeType.EXACT_OUTPUT && currencyIn) {
         otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
       }
     }
