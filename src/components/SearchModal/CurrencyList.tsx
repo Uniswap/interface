@@ -216,15 +216,17 @@ export default function CurrencyList({
   }, [currencies, otherListTokens])
   const { chainId } = useActiveWeb3React()
 
-  let index = 0
-  for (let i = 0; i < currencies.length; i++) {
-    chainId && currencies[i].symbol == KROM[chainId].symbol ? (index = i) : ''
-  }
+  chainId
+    ? itemData[0] != KROM[chainId] && itemData.length > 3
+      ? itemData.unshift(KROM[chainId])
+      : ''
+    : itemData.unshift(KROM[1])
 
-  const kromToken = currencies[index]
-  if (chainId && itemData[0] != KROM[chainId] && itemData[0] != kromToken) {
-    index != 0 ? itemData.unshift(kromToken) : chainId && itemData.unshift(KROM[chainId])
+  /*if (itemData[0] != KROM[chainId]) {
+    chainId ? itemData.unshift(KROM[chainId]) : itemData.unshift(KROM[1])
+    //chainId && itemData.unshift(KROM[chainId])
   }
+   */
 
   const Row = useCallback(
     function TokenRow({ data, index, style }) {

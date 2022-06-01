@@ -1,15 +1,16 @@
 import { SupportedChainId } from '../constants/chains'
 
 const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
-  [SupportedChainId.MAINNET]: '',
+  [SupportedChainId.MAINNET]: 'https://etherscan.io',
   [SupportedChainId.ROPSTEN]: 'ropsten.',
   [SupportedChainId.RINKEBY]: 'rinkeby.',
   [SupportedChainId.GOERLI]: 'goerli.',
   [SupportedChainId.KOVAN]: 'kovan.',
-  [SupportedChainId.OPTIMISM]: 'optimistic.',
+  [SupportedChainId.OPTIMISM]: 'https://optimistic.etherscan.io/.',
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'kovan-optimistic.',
   [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
   [SupportedChainId.POLYGON]: 'https://polygonscan.com',
+  [SupportedChainId.ARBITRUM_ONE]: 'https://arbiscan.io',
 }
 
 export enum ExplorerDataType {
