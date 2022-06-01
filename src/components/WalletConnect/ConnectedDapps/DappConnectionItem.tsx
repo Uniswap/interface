@@ -50,14 +50,14 @@ export function DappConnectionItem({
           {dapp.icon && (
             <Flex>
               <RemoteImage
-                borderRadius={theme.borderRadii.full}
+                borderRadius={theme.borderRadii.none}
                 height={40}
                 imageUrl={dapp.icon}
                 width={40}
               />
             </Flex>
           )}
-          <Text textAlign="center" variant="mediumLabel">
+          <Text numberOfLines={2} textAlign="center" variant="mediumLabel">
             {dapp.name}
           </Text>
           <Text color="deprecated_blue" numberOfLines={1} textAlign="center" variant="caption">

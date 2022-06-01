@@ -25,7 +25,7 @@ export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
 
   return (
     <>
-      <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mt="lg" pt="lg">
+      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} mt="lg" pt="lg">
         <Flex row alignItems="center" mx="lg">
           <Button onPress={goBack}>
             <Chevron color={theme.colors.neutralTextPrimary} direction="w" height={18} width={18} />
