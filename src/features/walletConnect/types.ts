@@ -51,7 +51,7 @@ export interface DappInfo {
   name: string
   url: string
   icon: string
-  chain_id: string
+  chain_id: number
 }
 
 export interface EthTransaction {

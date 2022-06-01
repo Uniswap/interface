@@ -28,7 +28,7 @@ export const WallectConnectNotification: ComponentStory<typeof WCNotification> =
         event: WalletConnectEvent.Connected,
         dappName: 'Uniswap',
         imageUrl: 'https://app.uniswap.org/images/192x192_App_Icon.png',
-        chainId: ChainId.Mainnet.toString(),
+        chainId: ChainId.Mainnet,
       }}
     />
   )

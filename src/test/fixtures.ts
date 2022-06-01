@@ -169,7 +169,7 @@ export const swapNotification = {
 
 export const transferCurrencyNotification = {
   type: AppNotificationType.Transaction,
-  chainId: ChainId.Mainnet.toString(),
+  chainId: ChainId.Mainnet,
   txHash: '0x000',
   txType: TransactionType.Send,
   txStatus: TransactionStatus.Success,
@@ -182,7 +182,7 @@ export const transferCurrencyNotification = {
 
 export const transferNFTNotification = {
   type: AppNotificationType.Transaction,
-  chainId: ChainId.Mainnet.toString(),
+  chainId: ChainId.Mainnet,
   txHash: '0x000',
   txType: TransactionType.Send,
   txStatus: TransactionStatus.Success,
@@ -195,7 +195,7 @@ export const transferNFTNotification = {
 
 export const wcNotification = {
   type: AppNotificationType.WalletConnect,
-  chainId: ChainId.Mainnet.toString(),
+  chainId: ChainId.Mainnet,
   event: WalletConnectEvent.Connected,
   dappName: 'Uniswap',
   imageUrl: 'https://app.uniswap.org/images/192x192_App_Icon.png',
@@ -203,7 +203,7 @@ export const wcNotification = {
 
 export const approveNotification = {
   type: AppNotificationType.Transaction,
-  chainId: ChainId.Mainnet.toString(),
+  chainId: ChainId.Mainnet,
   txHash: '0x000',
   txType: TransactionType.Approve,
   txStatus: TransactionStatus.Success,
@@ -213,7 +213,7 @@ export const approveNotification = {
 
 export const unknownNotification = {
   type: AppNotificationType.Transaction,
-  chainId: ChainId.Mainnet.toString(),
+  chainId: ChainId.Mainnet,
   txHash: '0x000',
   txType: TransactionType.Unknown,
   txStatus: TransactionStatus.Success,

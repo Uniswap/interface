@@ -1,6 +1,8 @@
 import { notificationAsync, selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
+import Check from 'src/assets/icons/check.svg'
 import { Button } from 'src/components/buttons/Button'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box, Flex } from 'src/components/layout'
@@ -12,6 +14,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { changeChainId, disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { toSupportedChainId } from 'src/utils/chainId'
 
 interface DappSwitchNetworkModalProps {
   selectedSession: WalletConnectSession
@@ -24,6 +27,7 @@ function Separator() {
 
 export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchNetworkModalProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
   const activeChains = useActiveChainIds()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -59,7 +63,11 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
                   <Text color="neutralTextPrimary" variant="subHead1">
                     {info.label}
                   </Text>
-                  <Box height={24} width={24} />
+                  <Box height={24} width={24}>
+                    {chainId === toSupportedChainId(selectedSession.dapp.chain_id) && (
+                      <Check color={theme.colors.neutralTextSecondary} height={24} width={24} />
+                    )}
+                  </Box>
                 </Flex>
               </Button>
             )

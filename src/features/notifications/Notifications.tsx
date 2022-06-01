@@ -46,9 +46,9 @@ import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
-  const { imageUrl, chainId: chainIdString } = notification
+  const { imageUrl, chainId } = notification
   const dispatch = useAppDispatch()
-  const chainId = toSupportedChainId(chainIdString)
+  const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
   const icon = (
     <>
@@ -58,9 +58,9 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
         imageUrl={imageUrl}
         width={NOTIFICATION_SIZING.primaryImage}
       />
-      {chainId && (
+      {validChainId && (
         <Box bottom={0} position="absolute" right={0}>
-          <NetworkLogo chainId={chainId} size={NOTIFICATION_SIZING.secondaryImage} />
+          <NetworkLogo chainId={validChainId} size={NOTIFICATION_SIZING.secondaryImage} />
         </Box>
       )}
     </>
