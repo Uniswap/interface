@@ -24,7 +24,8 @@ interface BaseRequest {
 
 interface SignRequest extends BaseRequest {
   type: EthSignMethod
-  message: string
+  message: string | null
+  rawMessage: string
 }
 
 interface TransactionRequest extends BaseRequest {

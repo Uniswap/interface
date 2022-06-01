@@ -25,12 +25,14 @@ interface Props {
   request: WalletConnectRequest | null
 }
 
-const isPotentiallyUnsafeMethod = (type: EthMethod) => type === EthMethod.EthSign
+const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
+  request.type === EthMethod.EthSign && !request.message
+
 const methodCostsGas = (type: EthMethod) => type === EthMethod.EthSendTransaction
 
 const getMessage = (request: WalletConnectRequest) => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
-    return request.message
+    return request.message || request.rawMessage
   }
 
   if (
@@ -42,7 +44,7 @@ const getMessage = (request: WalletConnectRequest) => {
 
   if (request.type === EthMethod.SignTypedData) {
     try {
-      const message = JSON.parse(request.message)
+      const message = JSON.parse(request.rawMessage)
       return JSON.stringify(message, null, 4)
     } catch (e) {
       logger.error('WalletConnectRequestModal', 'getMessage', 'invalid JSON message', e)
@@ -71,7 +73,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     return null
   }
 
-  const canSubmit = !isPotentiallyUnsafeMethod(request.type) || maybeUnsafeConfirmation
+  const canSubmit = !isPotentiallyUnsafe(request) || maybeUnsafeConfirmation
 
   const onReject = () => {
     if (!activeAccount) return
@@ -110,7 +112,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
           requestInternalId: request.internalId,
           method: request.type,
           // @ts-ignore this is EthSignMessage type
-          message: request.message,
+          message: request.message || request.rawMessage,
           account: activeAccount,
           dapp: request.dapp,
         })
@@ -141,7 +143,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             </Flex>
           </ScrollView>
         </Flex>
-        {isPotentiallyUnsafeMethod(request.type) ? (
+        {isPotentiallyUnsafe(request) ? (
           <Flex
             centered
             borderRadius="lg"

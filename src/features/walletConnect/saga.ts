@@ -109,6 +109,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           account: req.account,
           request: {
             type: req.type as EthSignMethod,
+            rawMessage: req.raw_message,
             message: req.message,
             internalId: req.request_internal_id,
             account: req.account,

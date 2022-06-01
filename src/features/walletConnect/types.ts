@@ -83,7 +83,8 @@ export interface TransactionRequestEvent {
 export interface SignRequestEvent {
   account: string
   type: EthMethod
-  message: string
+  raw_message: string
+  message: string | null
   request_internal_id: string
   dapp: DappInfo
 }

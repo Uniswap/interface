@@ -29,19 +29,20 @@ class WalletConnectSignRequestHandler: RequestHandler {
   // request is a wrapped array and WalletConnect changes the position of the message
   // based on the eth method
   // https://docs.walletconnect.com/json-rpc-api-methods/ethereum
-  func getMessage(_ request: Request) throws -> String {
+  // returns [raw message, maybe decoded message]
+  func getMessage(_ request: Request) throws -> (String, String?) {
     if (request.method == EthMethod.personalSign.rawValue) {
       let rawMessage = try request.parameter(of: String.self, at: 0)
-      return String(data: Data(hex: rawMessage), encoding: .utf8) ?? rawMessage
+      return (rawMessage, String(data: Data(hex: rawMessage), encoding: .utf8) ?? nil)
     }
     
     if (request.method == EthMethod.ethSign.rawValue) {
       let rawMessage = try request.parameter(of: String.self, at: 1)
-      return String(data: Data(hex: rawMessage), encoding: .utf8) ?? rawMessage
+      return (rawMessage, String(data: Data(hex: rawMessage), encoding: .utf8) ?? nil)
     }
     
     // signTypedData case
-    return try request.parameter(of: String.self, at: 1)
+    return try (request.parameter(of: String.self, at: 1), nil)
   }
   
   func handle(request: Request) {
@@ -54,12 +55,13 @@ class WalletConnectSignRequestHandler: RequestHandler {
       let session = try self.accountServer.getSessionFromTopic(request.url.topic)
       let icons = session.dAppInfo.peerMeta.icons
       
-      let message = try getMessage(request)
+      let (rawMessage, decodedMessage) = try getMessage(request)
       self.eventEmitter.sendEvent(
         withName: EventType.signRequest.rawValue, body: [
           "type": request.method,
           "request": request.jsonString,
-          "message": message,
+          "raw_message": rawMessage,
+          "message": decodedMessage ?? nil,
           "request_internal_id": internalId,
           "account": self.account!,
           "dapp": [
