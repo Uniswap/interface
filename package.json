@@ -27,7 +27,7 @@
     "tsc:compile": "tsc --project ."
   },
   "dependencies": {
-    "@cmcewen/ethers-rs-mobile": "0.0.5",
+    "@cmcewen/ethers-rs-mobile": "0.0.7",
     "@ethersproject/shims": "^5.5.0",
     "@formatjs/intl-datetimeformat": "^4.5.1",
     "@formatjs/intl-getcanonicallocales": "^1.9.0",

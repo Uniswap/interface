@@ -138,6 +138,18 @@ class RNEthersRS: NSObject {
     string_free(signedMessage)
     resolve(result)
   }
+  
+  @objc(signHashForAddress:hash:chainId:eip155:resolve:reject:)
+  func signHashForAddress(
+    address: String, hash: String, chainId: NSNumber, eip155: Bool, resolve: RCTPromiseResolveBlock,
+    reject: RCTPromiseRejectBlock
+  ) {
+    let wallet = retrieveOrCreateWalletForAddress(address: address)
+    let signedHash = sign_hash_with_wallet(wallet, hash, UInt64(chainId), eip155)
+    let result = String(cString: signedHash!)
+    string_free(signedHash)
+    resolve(result)
+  }
 
   func retrieveOrCreateWalletForAddress(address: String) -> OpaquePointer {
     if walletCache[address] != nil {

@@ -38,4 +38,11 @@ RCT_EXTERN_METHOD(signMessageForAddress: (NSString *)address
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(signHashForAddress: (NSString *)address
+                  hash: (NSString *)hash
+                  chainId: NSNumber
+                  eip155: BOOL
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
 @end

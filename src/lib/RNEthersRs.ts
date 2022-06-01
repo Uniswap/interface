@@ -1,4 +1,3 @@
-import { utils } from 'ethers'
 import { NativeModules } from 'react-native'
 
 const { RNEthersRS } = NativeModules
@@ -37,9 +36,14 @@ export function signTransactionHashForAddress(
   return RNEthersRS.signTransactionHashForAddress(address, hash, chainId)
 }
 
-export function signMessageForAddress(
-  address: string,
-  message: string | utils.Bytes
-): Promise<string> {
+export function signMessageForAddress(address: string, message: string): Promise<string> {
   return RNEthersRS.signMessageForAddress(address, message)
+}
+
+export function signHashForAddress(
+  address: string,
+  hash: string,
+  chainId: number
+): Promise<string> {
+  return RNEthersRS.signHashForAddress(address, hash, chainId, true)
 }

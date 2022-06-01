@@ -347,7 +347,7 @@ PODS:
   - BoringSSL-GRPC/Interface (0.0.7)
   - CryptoSwift (1.4.3)
   - DoubleConversion (1.1.6)
-  - EthersRS (0.0.5)
+  - EthersRS (0.0.7)
   - EXApplication (4.0.0):
     - ExpoModulesCore
   - EXBlur (10.0.3):
@@ -1157,7 +1157,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   CryptoSwift: a0799ee936271bd2253a006f1e4523df21845000
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  EthersRS: d9bd4b6d742bfc017670e52badf9cb08cf8715fe
+  EthersRS: d87489b09ddab860c26cb0db355724591fd582ba
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
   EXBlur: 71eea96f591726398c1d41f0a8eb527b6c65660e
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
@@ -1180,7 +1180,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 60edbf7e11d91ae4c751d26c200dfd037099abe0
   FirebaseRemoteConfig: f6365883d7950d784ee97bcdbbf1e442d4fa6119
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 5337263514dd6f09803962437687240c5dc39aa4
+  glog: 476ee3e89abb49e07f822b48323c51c57124b572
   GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleMLKit: 755661c46990a85e42278015f26400286d98ad95
@@ -1202,7 +1202,7 @@ SPEC CHECKSUMS:
   OneSignalXCFramework: fe027712118f2862ab193b72270487f11450ea63
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
-  RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
+  RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: e4a18a90004e0ed97bba9081099104fd0f658dc9
   RCTTypeSafety: 8a3c31d38de58e1a6a7df6e4e643644a60b00e22
   React: 2b1d0dc3c23e01b754588a74a5b265282d9eb61e
