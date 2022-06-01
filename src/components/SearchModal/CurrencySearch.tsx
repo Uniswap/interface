@@ -74,6 +74,8 @@ export function CurrencySearch({
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
+  const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
+
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
 
@@ -174,6 +176,14 @@ export function CurrencySearch({
     filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
   )
 
+  // timeout token loader after 2 seconds
+  useEffect(() => {
+    const tokenLoaderTimer = setTimeout(() => {
+      setTokenLoaderTimerElapsed(true)
+    }, 2000)
+    return () => clearTimeout(tokenLoaderTimer)
+  }, [])
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="16px">
@@ -219,7 +229,7 @@ export function CurrencySearch({
                 showImportView={showImportView}
                 setImportToken={setImportToken}
                 showCurrencyAmount={showCurrencyAmount}
-                isLoading={balancesIsLoading && !timeoutElapsed}
+                isLoading={balancesIsLoading && !tokenLoaderTimerElapsed}
               />
             )}
           </AutoSizer>
