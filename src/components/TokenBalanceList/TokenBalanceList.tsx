@@ -1,7 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { ReactElement, useCallback, useMemo } from 'react'
-import { ListRenderItemInfo, ScrollView, SectionList } from 'react-native'
-import { Flex, Inset } from 'src/components/layout'
+import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
+import { SharedElement } from 'react-navigation-shared-element'
+import { Inset } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Loading } from 'src/components/loading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -31,15 +32,17 @@ type NetworkViewProps = {
 type ViewProps = FlatViewProps | NetworkViewProps
 
 type TokenBalanceListProps = {
-  loading: boolean
+  empty?: ReactElement | null
   header: ReactElement | null
-  refreshing?: boolean
-  onRefresh?: () => void
+  loading: boolean
   onPressToken: (currency: Currency) => void
+  onRefresh?: () => void
+  refreshing?: boolean
 } & ViewProps
 
 export function TokenBalanceList({
   balances,
+  empty,
   header,
   loading,
   onPressToken,
@@ -53,23 +56,24 @@ export function TokenBalanceList({
     )
   }
 
-  if (view === ViewType.Flat) {
-    return (
-      <FlatBalanceList
-        balances={balances as FlatViewProps['balances']}
-        header={header}
-        onPressToken={onPressToken}
-      />
-    )
-  } else {
-    return (
-      <NetworkBalanceList
-        balances={balances as NetworkViewProps['balances']}
-        header={header}
-        onPressToken={onPressToken}
-      />
-    )
-  }
+  return (
+    <SharedElement id="portfolio-tokens-content">
+      {view === ViewType.Flat ? (
+        <FlatBalanceList
+          balances={balances as FlatViewProps['balances']}
+          empty={empty}
+          header={header}
+          onPressToken={onPressToken}
+        />
+      ) : (
+        <NetworkBalanceList
+          balances={balances as NetworkViewProps['balances']}
+          header={header}
+          onPressToken={onPressToken}
+        />
+      )}
+    </SharedElement>
+  )
 }
 
 function key({ amount }: PortfolioBalance) {
@@ -78,22 +82,25 @@ function key({ amount }: PortfolioBalance) {
 
 function FlatBalanceList({
   balances,
+  empty,
   header,
   onPressToken,
-}: Pick<FlatViewProps, 'balances'> & Pick<TokenBalanceListProps, 'onPressToken' | 'header'>) {
+}: Pick<FlatViewProps, 'balances'> &
+  Pick<TokenBalanceListProps, 'onPressToken' | 'empty' | 'header'>) {
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <Flex gap="none">
-        {header}
-        {balances.map((balance) => (
-          <TokenBalanceItem
-            key={currencyId(balance.amount.currency)}
-            balance={balance}
-            onPressToken={onPressToken}
-          />
-        ))}
-      </Flex>
-    </ScrollView>
+    <FlatList
+      ListEmptyComponent={empty}
+      ListHeaderComponent={header}
+      data={balances}
+      keyExtractor={(item: PortfolioBalance) => currencyId(item.amount.currency)}
+      renderItem={({ item }) => (
+        <TokenBalanceItem
+          key={currencyId(item.amount.currency)}
+          balance={item}
+          onPressToken={onPressToken}
+        />
+      )}
+    />
   )
 }
 

@@ -16,13 +16,14 @@ import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { Screens, Tabs } from 'src/screens/Screens'
+import { currencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
   const currencies = useAllCurrencies()
 
   const onPressCurrency = (currency: Currency) => {
-    navigation.navigate(Screens.TokenDetails, { currency })
+    navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
   }
 
   return (

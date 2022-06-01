@@ -1,9 +1,8 @@
 import { DrawerActions } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, useColorScheme } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList, useHomeStackNavigation } from 'src/app/navigation/types'
 import Scan from 'src/assets/icons/scan.svg'
@@ -13,11 +12,11 @@ import WalletIcon from 'src/assets/icons/wallet.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { getStops } from 'src/components/gradients'
-import { RadialGradientBox } from 'src/components/gradients/RadialGradient'
+import { AppBackground } from 'src/components/gradients'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
+import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
@@ -42,7 +41,6 @@ export function HomeScreen({ navigation }: Props) {
 
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
-  const darkMode = useColorScheme() === 'dark'
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
@@ -60,16 +58,6 @@ export function HomeScreen({ navigation }: Props) {
     navigation.dispatch(DrawerActions.toggleDrawer())
   }
 
-  const stops = useMemo(
-    () =>
-      getStops(
-        theme.colors.deprecated_primary1,
-        theme.colors.mainBackground,
-        theme.colors.mainBackground
-      ),
-    [theme.colors.deprecated_primary1, theme.colors.mainBackground]
-  )
-
   if (!activeAccount)
     return (
       <Screen>
@@ -81,9 +69,9 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['left', 'right']}>
-      <RadialGradientBox opacity={darkMode ? 0.4 : 0.2} stops={stops} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Box mt="xl" mx="md">
+      <AppBackground />
+      <Box mt="xl" mx="md">
+        <VirtualizedList>
           <Flex gap="lg" my="lg">
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
               <AccountHeader onPress={onPressAccountHeader} />
@@ -108,8 +96,8 @@ export function HomeScreen({ navigation }: Props) {
             <PortfolioTokens count={4} />
             <NFTMasonry count={16} />
           </Flex>
-        </Box>
-      </ScrollView>
+        </VirtualizedList>
+      </Box>
       {/* TODO: remove when app secures funds  */}
       <BiometricCheck />
     </Screen>

@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { AppStackScreenProp } from 'src/app/navigation/types'
+import { AppStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -25,6 +25,7 @@ import { useSingleBalance } from 'src/features/dataApi/balances'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { useCurrency } from 'src/features/tokens/useCurrency'
 import { TokenWarningLevel, useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
   CurrencyField,
@@ -73,12 +74,17 @@ enum SwapType {
   SELL,
 }
 
-export function TokenDetailsScreen({
-  route,
-  navigation,
-}: AppStackScreenProp<Screens.TokenDetails>) {
-  const { currency } = route.params
+export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
+  const { currencyId: _currencyId } = route.params
 
+  const currency = useCurrency(_currencyId)
+
+  if (!currency) return null
+  return <TokenDetails currency={currency} />
+}
+
+function TokenDetails({ currency }: { currency: Currency }) {
+  const navigation = useHomeStackNavigation()
   const balance = useSingleBalance(currency)
 
   const theme = useAppTheme()
@@ -144,7 +150,7 @@ export function TokenDetailsScreen({
   const onPressSend = () => {
     const transferFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmount: '',
+      exactAmount: '1',
       [CurrencyField.INPUT]: {
         address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,

@@ -2,12 +2,13 @@ import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { utils } from 'ethers'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SharedElement } from 'react-navigation-shared-element'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
+import { AppBackground } from 'src/components/gradients'
 import { Box, Flex } from 'src/components/layout'
 import { Masonry } from 'src/components/layout/Masonry'
+import { Screen } from 'src/components/layout/Screen'
 import { Section } from 'src/components/layout/Section'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
@@ -24,20 +25,13 @@ export function PortfolioNFTsScreen({
     params: { owner },
   },
 }: HomeStackScreenProp<Screens.PortfolioNFTs>) {
-  // avoid relayouts which causes an jitter with shared elements
-  const insets = useSafeAreaInsets()
-
   return (
-    <Box
-      bg="mainBackground"
-      flex={1}
-      style={{
-        paddingTop: insets.top,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}>
-      <NFTMasonry expanded count={50} owner={owner} />
-    </Box>
+    <Screen withSharedElementTransition>
+      <AppBackground />
+      <Box mx="md">
+        <NFTMasonry expanded count={50} owner={owner} />
+      </Box>
+    </Screen>
   )
 }
 export function NFTMasonry({
@@ -102,8 +96,8 @@ export function NFTMasonry({
           }}
         />
       ) : (
-        <SharedElement id="portfolio-nfts-header">
-          <Flex gap="xs">
+        <Flex gap="xs">
+          <SharedElement id="portfolio-nfts-header">
             <Section.Header
               buttonLabel={t('View all')}
               expanded={Boolean(expanded)}
@@ -111,6 +105,8 @@ export function NFTMasonry({
               onMaximize={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
               onMinimize={() => navigation.canGoBack() && navigation.goBack()}
             />
+          </SharedElement>
+          <SharedElement id="portfolio-nfts-content">
             <Masonry
               data={nftItems}
               getKey={({ asset_contract, token_id }) =>
@@ -119,8 +115,8 @@ export function NFTMasonry({
               loading={loading}
               renderItem={renderItem}
             />
-          </Flex>
-        </SharedElement>
+          </SharedElement>
+        </Flex>
       )}
     </Section.Container>
   )

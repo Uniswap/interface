@@ -106,7 +106,7 @@ export type AppStackParamList = {
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.Transfer]: { transferFormState?: TransactionState } | undefined
-  [Screens.TokenDetails]: { currency: Currency }
+  [Screens.TokenDetails]: { currencyId: string }
   [Screens.User]: { address: string }
 }
 

@@ -53,10 +53,10 @@ import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
-import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
+import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsWebviewOptionScreen } from 'src/screens/SettingsWebviewOptionScreen'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
@@ -209,16 +209,24 @@ export function HomeStackNavigator() {
       <HomeStack.Screen
         component={PortfolioTokensScreen}
         name={Screens.PortfolioTokens}
-        sharedElements={() => {
-          return [{ id: 'portfolio-tokens-header', animation: 'fade' }]
-        }}
+        // TODO: re-enable
+        // sharedElements={() => {
+        //   return [
+        //     { id: 'portfolio-tokens-header', animation: 'fade' },
+        //     { id: 'portfolio-tokens-content', animation: 'fade' },
+        //   ]
+        // }}
       />
       <HomeStack.Screen
         component={PortfolioNFTsScreen}
         name={Screens.PortfolioNFTs}
-        sharedElements={() => {
-          return [{ id: 'portfolio-nfts-header', animation: 'fade' }]
-        }}
+        // TODO: re-enable
+        // sharedElements={() => {
+        //   return [
+        //     { id: 'portfolio-nfts-header', animation: 'fade' },
+        //     { id: 'portfolio-nfts-content', animation: 'fade' },
+        //   ]
+        // }}
       />
     </HomeStack.Navigator>
   )

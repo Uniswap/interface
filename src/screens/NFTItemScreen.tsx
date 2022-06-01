@@ -1,17 +1,16 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ScrollView, StyleSheet } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TextButton } from 'src/components/buttons/TextButton'
-import { Chevron } from 'src/components/icons/Chevron'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box, Flex } from 'src/components/layout'
+import { Screen } from 'src/components/layout/Screen'
+import { Section } from 'src/components/layout/Section'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette'
 import { Text } from 'src/components/Text'
@@ -40,9 +39,6 @@ export function NFTItemScreen({
   const theme = useAppTheme()
   const { t } = useTranslation()
 
-  // avoid relayouts which causes an jitter with shared elements
-  const insets = useSafeAreaInsets()
-
   const onPressToggle = () => {
     navigation.goBack()
   }
@@ -68,111 +64,100 @@ export function NFTItemScreen({
   }
 
   return (
-    <Box
-      bg="mainBackground"
-      flex={1}
-      style={{
-        paddingTop: insets.top,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}>
+    <Screen withSharedElementTransition>
+      {asset.collection.image_url && (
+        <Image
+          blurRadius={5}
+          source={{ uri: asset.collection.image_url }}
+          style={[StyleSheet.absoluteFill, nftCollectionBlurBackgroundImageStyle]}
+        />
+      )}
+
+      <Box mt="md" mx="md">
+        <Section.Header
+          buttonLabel={''}
+          expanded={true}
+          title="Back"
+          onMaximize={() => {}}
+          onMinimize={onPressToggle}
+        />
+      </Box>
+
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Flex m="none">
-          <Flex bg="neutralBackground" borderRadius="md" p="md">
-            {asset.collection.image_url && (
-              <Image
-                blurRadius={5}
-                source={{ uri: asset.collection.image_url }}
-                style={[StyleSheet.absoluteFill, nftCollectionBlurBackgroundImageStyle]}
-              />
-            )}
-            <TextButton p="none" onPress={onPressToggle}>
-              <Flex row alignItems="center" justifyContent="space-between" width={'100%'}>
-                <Text color="neutralTextSecondary" variant="body2">
-                  {'Back'}
-                </Text>
-                <Chevron
-                  color={theme.colors.neutralTextSecondary}
-                  direction="s"
-                  height={12}
-                  width={12}
+        <Flex borderRadius="md" p="md">
+          <Flex centered>
+            <NFTAssetItem
+              id={getNFTAssetKey(address, token_id)}
+              mx="sm"
+              nft={asset}
+              size={dimensions.fullWidth}
+            />
+
+            <Flex
+              alignItems="flex-end"
+              justifyContent="space-between"
+              mx="none"
+              my="lg"
+              style={StyleSheet.absoluteFill}>
+              <ApplyNFTPaletteButton asset={asset} />
+              {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={asset} />}
+            </Flex>
+          </Flex>
+
+          {/* Collection info */}
+          <Flex gap="xs">
+            <Text variant="h2">{asset?.name}</Text>
+            <Flex row alignItems="center" gap="xxs">
+              {asset.collection.image_url ? (
+                <RemoteImage
+                  borderRadius={theme.borderRadii.full}
+                  height={16}
+                  imageUrl={asset.collection.image_url}
+                  width={16}
                 />
-              </Flex>
-            </TextButton>
-
-            <Flex centered>
-              <NFTAssetItem
-                id={getNFTAssetKey(address, token_id)}
-                mx="sm"
-                nft={asset}
-                size={dimensions.fullWidth}
-              />
-
-              <Flex
-                alignItems="flex-end"
-                justifyContent="space-between"
-                mx="none"
-                my="lg"
-                style={StyleSheet.absoluteFill}>
-                <ApplyNFTPaletteButton asset={asset} />
-                {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={asset} />}
-              </Flex>
+              ) : null}
+              <Text color="neutralTextSecondary" ml="xs" variant="subHead2">
+                {asset.collection.name}
+              </Text>
+              {asset.collection.safelist_request_status === 'verified' && (
+                <VerifiedIcon height={25} width={25} />
+              )}
             </Flex>
+          </Flex>
 
-            <Flex gap="xs">
-              <Text variant="h2">{asset?.name}</Text>
-              <Flex row alignItems="center" gap="xxs">
-                {asset.collection.image_url ? (
-                  <RemoteImage
-                    borderRadius={theme.borderRadii.full}
-                    height={16}
-                    imageUrl={asset.collection.image_url}
-                    width={16}
-                  />
-                ) : null}
-                <Text color="neutralTextSecondary" ml="xs" variant="subHead2">
-                  {asset.collection.name}
-                </Text>
-                {asset.collection.safelist_request_status === 'verified' && (
-                  <VerifiedIcon height={25} width={25} />
-                )}
-              </Flex>
-            </Flex>
+          {/* Action buttons */}
+          <Flex centered row>
+            <PrimaryButton
+              flex={1}
+              icon={<OpenSeaIcon color={theme.colors.white} height={20} width={20} />}
+              label={t('View')}
+              name={ElementName.NFTAssetViewOnOpensea}
+              testID={ElementName.NFTAssetViewOnOpensea}
+              variant="black"
+              onPress={() => openUri(asset.permalink)}
+            />
+            <PrimaryButton
+              flex={1}
+              icon={<SendIcon height={20} stroke={theme.colors.white} strokeWidth={2} width={20} />}
+              label={t('Send')}
+              name={ElementName.Send}
+              testID={ElementName.Send}
+              variant="black"
+              onPress={onPressSend}
+            />
+          </Flex>
 
-            <Flex centered row>
-              <PrimaryButton
-                flex={1}
-                icon={<OpenSeaIcon color={theme.colors.white} height={20} width={20} />}
-                label={t('View')}
-                name={ElementName.NFTAssetViewOnOpensea}
-                testID={ElementName.NFTAssetViewOnOpensea}
-                variant="black"
-                onPress={() => openUri(asset.permalink)}
-              />
-              <PrimaryButton
-                flex={1}
-                icon={
-                  <SendIcon height={20} stroke={theme.colors.white} strokeWidth={2} width={20} />
-                }
-                label={t('Send')}
-                name={ElementName.Send}
-                testID={ElementName.Send}
-                variant="black"
-                onPress={onPressSend}
-              />
-            </Flex>
-
-            <Flex gap="sm">
-              <Flex gap="md">
-                <Text color="neutralTextSecondary" variant="subHead1">{t`About this NFT`}</Text>
-                <Text color="neutralTextSecondary" variant="caption">
-                  {asset.collection.description}
-                </Text>
-              </Flex>
+          {/* Metadata */}
+          <Flex gap="sm">
+            <Flex gap="md">
+              <Text color="neutralTextSecondary" variant="subHead1">{t`About this NFT`}</Text>
+              <Text color="neutralTextSecondary" variant="caption">
+                {asset.collection.description}
+              </Text>
             </Flex>
           </Flex>
         </Flex>
       </ScrollView>
-    </Box>
+    </Screen>
   )
 }
