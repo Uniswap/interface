@@ -75,10 +75,18 @@ export const SeparatorDark = styled.div`
 `
 
 export const LoadingRows = styled(BaseLoadingRows)`
-  min-width: 75%;
-  margin-bottom: 1em;
-  margin-top: 0.5em;
-  max-width: 960px;
+  display: block
   grid-column-gap: 0.5em;
-  grid-row-gap: 0.8em;
+  max-width: 960px;
+  padding: 12px 20px;
+
+  & > div:nth-child(4n + 1) {
+    height: 1em;
+    margin-bottom: 4px;
+    width: 55%;
+  }
+  & > div:nth-child(4n + 2) {
+    height: 0.75em;
+    width: 20%;
+  }
 `

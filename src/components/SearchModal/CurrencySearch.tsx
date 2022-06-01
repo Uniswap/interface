@@ -24,7 +24,7 @@ import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
-import CurrencyList from './CurrencyList'
+import CurrencyList from './CurrencyList/CurrencyList'
 import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
@@ -105,10 +105,11 @@ export function CurrencySearch({
 
   const [balances, balancesIsLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
-    return filteredTokens.sort(tokenComparator.bind(null, balances))
-  }, [balances, filteredTokens])
+    void balancesIsLoading // creates a new array once balances load to update hooks
+    return [...filteredTokens].sort(tokenComparator.bind(null, balances))
+  }, [balances, filteredTokens, balancesIsLoading])
 
-  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens, balancesIsLoading)
+  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
 
@@ -218,7 +219,7 @@ export function CurrencySearch({
                 showImportView={showImportView}
                 setImportToken={setImportToken}
                 showCurrencyAmount={showCurrencyAmount}
-                isLoading={balancesIsLoading}
+                isLoading={balancesIsLoading && !timeoutElapsed}
               />
             )}
           </AutoSizer>

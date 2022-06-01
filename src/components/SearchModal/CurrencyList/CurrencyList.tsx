@@ -9,20 +9,20 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
-import TokenListLogo from '../../assets/svg/tokenlist.svg'
-import { useIsUserAddedToken } from '../../hooks/Tokens'
-import { useCombinedActiveList } from '../../state/lists/hooks'
-import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { ThemedText } from '../../theme'
-import { isTokenOnList } from '../../utils'
-import Column from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
-import Loader from '../Loader'
-import { RowBetween, RowFixed } from '../Row'
-import { MouseoverTooltip } from '../Tooltip'
-import ImportRow from './ImportRow'
-import { LoadingRows, MenuItem } from './styleds'
+import TokenListLogo from '../../../assets/svg/tokenlist.svg'
+import { useIsUserAddedToken } from '../../../hooks/Tokens'
+import { useCombinedActiveList } from '../../../state/lists/hooks'
+import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
+import { useCurrencyBalance } from '../../../state/wallet/hooks'
+import { ThemedText } from '../../../theme'
+import { isTokenOnList } from '../../../utils'
+import Column from '../../Column'
+import CurrencyLogo from '../../CurrencyLogo'
+import Loader from '../../Loader'
+import { RowBetween, RowFixed } from '../../Row'
+import { MouseoverTooltip } from '../../Tooltip'
+import ImportRow from '../ImportRow'
+import { LoadingRows, MenuItem } from '../styleds'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -237,6 +237,7 @@ export default function CurrencyList({
       if (isLoading) {
         return (
           <LoadingRows>
+            <div />
             <div />
           </LoadingRows>
         )
