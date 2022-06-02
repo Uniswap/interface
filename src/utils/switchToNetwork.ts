@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import { network, walletConnect } from 'connectors'
+import { alchemy, infura, walletConnect } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
@@ -31,7 +31,7 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
 }
 
 export const switchChain = async (connector: Connector, chainId: number) => {
-  if (connector === walletConnect || connector === network) {
+  if (connector === walletConnect || connector === infura || connector === alchemy) {
     await connector.activate(chainId)
   } else {
     const info = CHAIN_INFO[chainId]
