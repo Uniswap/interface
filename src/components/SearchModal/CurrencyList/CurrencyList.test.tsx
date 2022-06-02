@@ -25,13 +25,10 @@ jest.mock(
 jest.mock('hooks/useActiveWeb3React', () => {
   return {
     __esModule: true,
-    default: () => {
-      const val = {
-        account: '123',
-        active: true,
-      }
-      return val
-    },
+    default: () => ({
+      account: '123',
+      active: true,
+    }),
   }
 })
 
