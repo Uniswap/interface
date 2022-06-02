@@ -125,7 +125,8 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   const message = getMessage(request)
 
   return (
-    <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={onClose}>
+    // TODO: rather than rejecting on close maintain a list of pending transactions that the user can return to.
+    <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={onReject}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails dapp={request.dapp} method={request.type} />
         <Flex
