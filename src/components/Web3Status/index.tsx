@@ -5,6 +5,7 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
+import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
@@ -86,8 +87,8 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
     `}
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg0)};
+const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; darkMode?: boolean }>`
+  background-color: ${({ darkMode }) => (darkMode ? '#212429 ' : '#F5F5F5')};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
   font-weight: 500;
@@ -188,10 +189,17 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
+  const [darkMode] = useDarkModeManager()
 
   if (account) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+      <Web3StatusConnected
+        id="web3-status-connected"
+        onClick={toggleWalletModal}
+        pending={hasPendingTransactions}
+        darkMode={darkMode}
+      >
+        {' '}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
