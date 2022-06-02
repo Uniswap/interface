@@ -154,8 +154,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   let permitInfo = getPermitInfo(request)
 
   return (
-    // TODO: rather than rejecting on close maintain a list of pending transactions that the user can return to.
-    <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={onReject}>
+    <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={onClose}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails permitInfo={permitInfo} request={request} />
         {!permitInfo && (
