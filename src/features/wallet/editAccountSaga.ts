@@ -14,6 +14,8 @@ export enum EditAccountAction {
   AddBackupMethod = 'addbackupmethod',
   Rename = 'rename',
   Remove = 'remove',
+  EnablePushNotification = 'enablepushnotification',
+  DisablePushNotification = 'disablepushnotification',
   // May need a reorder action here eventually
 }
 interface EditParamsBase {
@@ -32,8 +34,19 @@ interface AddBackupMethodParams extends EditParamsBase {
   type: EditAccountAction.AddBackupMethod
   backupMethod: BackupType
 }
+interface EnablePushNotificationParams extends EditParamsBase {
+  type: EditAccountAction.EnablePushNotification
+}
+interface DisablePushNotificationParams extends EditParamsBase {
+  type: EditAccountAction.DisablePushNotification
+}
 
-export type EditAccountParams = AddBackupMethodParams | RenameParams | RemoveParams
+export type EditAccountParams =
+  | AddBackupMethodParams
+  | RenameParams
+  | RemoveParams
+  | EnablePushNotificationParams
+  | DisablePushNotificationParams
 
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params
@@ -52,6 +65,9 @@ function* editAccount(params: EditAccountParams) {
       break
     case EditAccountAction.AddBackupMethod:
       yield* call(addBackupMethod, params, account)
+      break
+    case EditAccountAction.EnablePushNotification:
+    case EditAccountAction.DisablePushNotification:
       break
     default:
       throw new Error(`Invalid edit action type: ${type}`)
