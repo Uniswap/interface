@@ -130,7 +130,7 @@ export default function MigrateV2() {
               For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
               Uniswap V3.
             </Trans>
-		  </ThemedText.Body>
+          </ThemedText.Body>
 
           {!account ? (
             <LightCard padding="40px">
