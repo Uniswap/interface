@@ -10,6 +10,7 @@ import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import {
   AccountStackParamList,
   AppStackParamList,
+  ExploreStackParamList,
   HomeStackParamList,
   OnboardingStackParamList,
   ProfileStackParamList,
@@ -19,12 +20,14 @@ import {
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
+import { AppBackground } from 'src/components/gradients'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
+import { ExploreTokensScreen } from 'src/screens/ExploreTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { PrivateKeyInputScreen } from 'src/screens/Import/PrivateKeyInputScreen'
@@ -68,6 +71,7 @@ const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const HomeStack = createSharedElementStackNavigator<HomeStackParamList>()
+const ExploreStack = createSharedElementStackNavigator<ExploreStackParamList>()
 const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 
@@ -100,7 +104,7 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        component={ExploreScreen}
+        component={ExploreStackNavigator}
         name={Tabs.Explore}
         options={{
           tabBarLabel: t('Explore'),
@@ -148,7 +152,10 @@ function ProfileStackGroup() {
         component={PortfolioTokensScreen}
         name={Screens.PortfolioTokens}
         sharedElements={() => {
-          return [{ id: 'portfolio-tokens-header', animation: 'fade' }]
+          return [
+            { id: 'portfolio-tokens-header', animation: 'move' },
+            { id: 'portfolio-tokens-content', animation: 'move' },
+          ]
         }}
       />
       <ProfileStack.Screen
@@ -198,14 +205,10 @@ export function HomeStackNavigator() {
         cardStyleInterpolator: forFade,
         gestureEnabled: false,
       }}>
+      <AppBackground />
       <HomeStack.Screen component={HomeScreen} name={Screens.Home} />
-      <HomeStack.Screen
-        component={NFTItemScreen}
-        name={Screens.NFTItem}
-        sharedElements={({ params: { address, token_id } }) => {
-          return [getNFTAssetKey(address, token_id)]
-        }}
-      />
+
+      {/* Tokens */}
       <HomeStack.Screen
         component={PortfolioTokensScreen}
         name={Screens.PortfolioTokens}
@@ -217,6 +220,9 @@ export function HomeStackNavigator() {
         //   ]
         // }}
       />
+      <HomeStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+
+      {/* NFTS */}
       <HomeStack.Screen
         component={PortfolioNFTsScreen}
         name={Screens.PortfolioNFTs}
@@ -228,7 +234,36 @@ export function HomeStackNavigator() {
         //   ]
         // }}
       />
+      <HomeStack.Screen
+        component={NFTItemScreen}
+        name={Screens.NFTItem}
+        sharedElements={({ params: { address, token_id } }) => {
+          return [{ id: getNFTAssetKey(address, token_id), animation: 'fade' }]
+        }}
+      />
     </HomeStack.Navigator>
+  )
+}
+
+export function ExploreStackNavigator() {
+  return (
+    <ExploreStack.Navigator
+      initialRouteName={Screens.Explore}
+      screenOptions={{
+        ...navOptions.noHeader,
+        cardStyleInterpolator: forFade,
+        gestureEnabled: false,
+      }}>
+      <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
+      <ExploreStack.Screen
+        component={ExploreTokensScreen}
+        name={Screens.ExploreTokens}
+        sharedElements={() => {
+          return [{ id: 'explore-tokens-header', animation: 'fade' }]
+        }}
+      />
+      <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+    </ExploreStack.Navigator>
   )
 }
 
@@ -301,7 +336,6 @@ export function AppStackNavigator() {
         <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />
       </AppStack.Group>
       <AppStack.Group>
-        <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
       <AppStack.Screen component={UserScreen} name={Screens.User} />

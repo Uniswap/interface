@@ -23,7 +23,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
     clearIcon,
     disableClearable,
     endAdornment = (
-      <SearchIcon color={theme.colors.deprecated_gray600} height={20} strokeWidth={2} width={20} />
+      <SearchIcon color={theme.colors.deprecated_gray100} height={20} strokeWidth={2} width={20} />
     ),
     onChangeText,
     placeholder,
@@ -49,7 +49,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
         fontSize={16}
         fontWeight="500"
         placeholder={placeholder}
-        placeholderTextColor="deprecated_gray400"
+        placeholderTextColor={theme.colors.neutralTextTertiary}
         value={value ?? undefined}
         onChangeText={onChangeText}
       />
@@ -75,6 +75,12 @@ function ClearButton(props: ClearButtonProps) {
   } = props
 
   return (
-    <IconButton bg="deprecated_gray200" borderRadius="full" icon={clearIcon} onPress={onPress} />
+    <IconButton
+      bg="deprecated_gray100"
+      borderRadius="full"
+      icon={clearIcon}
+      p="xs"
+      onPress={onPress}
+    />
   )
 }

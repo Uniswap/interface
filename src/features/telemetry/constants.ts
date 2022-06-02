@@ -20,6 +20,7 @@ export const enum SectionName {
   NameAccountForm = 'name-account-form',
   QuickDetails = 'quick-details',
   TokenBalance = 'token-balance',
+  ExploreTokens = 'explore-tokens',
   NFTCollectionHeader = 'nft-collection-header',
   OnboardingBackup = 'onboarding-backup',
   OnboardingNotifications = 'onboarding-notifications',

@@ -25,7 +25,7 @@ export function PortfolioTokensScreen({
   return (
     <Screen withSharedElementTransition>
       <AppBackground />
-      <Box mb="md" mx="md">
+      <Box mx="md">
         <PortfolioTokens expanded count={15} owner={owner} />
       </Box>
     </Screen>

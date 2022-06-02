@@ -7,10 +7,13 @@ export enum Namespace {
 
 export enum Scope {
   Transactions = 'transactions',
+  Info = 'info',
 }
 
 export type RequestBody = AddressRequestBody | AssetsRequestBody
-type AnyPayload = { [key: string]: string | string[] }
+
+type PayloadBodyTypes = string | string[] | { market_cap: string } | number
+type AnyPayload = { [key: string]: PayloadBodyTypes }
 
 interface AddressRequestBody {
   scope: [Scope]
@@ -31,7 +34,8 @@ export type Price = {
 
 export type AssetType = string
 
-export type Asset = {
+export type AssetData = {
+  id: string
   asset_code: string
   name: string
   symbol: string
@@ -41,6 +45,11 @@ export type Asset = {
   price?: Price
   is_displayable: boolean
   is_verified: boolean
+  market_cap?: number
+}
+
+export type Asset = {
+  asset: AssetData
 }
 
 export type Transaction = {

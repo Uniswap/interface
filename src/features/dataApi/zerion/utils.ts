@@ -22,6 +22,56 @@ export const requests = {
       })),
     }),
   },
+  [Namespace.Assets]: {
+    info: ({
+      asset_codes = [],
+      chain = 'ethereum',
+      currency = 'usd',
+      limit = 30,
+      order_by = { market_cap: 'desc' },
+    }: {
+      asset_codes: string[]
+      chain?: string
+      currency?: string
+      limit?: number
+      order_by?: any
+    }): { requestBody: RequestBody } => ({
+      requestBody: {
+        scope: [Scope.Info],
+        payload: {
+          asset_codes,
+          chain,
+          currency,
+          limit,
+          order_by,
+        },
+      },
+    }),
+    market: ({
+      category_id = 'market',
+      chain = 'ethereum',
+      currency = 'usd',
+      limit = 30,
+      order_by = { market_cap: 'desc' },
+    }: {
+      category_id?: string
+      chain?: string
+      currency?: string
+      limit?: number
+      order_by?: any
+    }): { requestBody: RequestBody } => ({
+      requestBody: {
+        scope: [Scope.Info],
+        payload: {
+          category_id,
+          chain,
+          currency,
+          limit,
+          order_by,
+        },
+      },
+    }),
+  },
 }
 
 export async function initSocket<T>(

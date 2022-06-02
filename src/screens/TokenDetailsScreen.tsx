@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { AppStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
+import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -74,7 +74,7 @@ enum SwapType {
   SELL,
 }
 
-export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
+export function TokenDetailsScreen({ route }: HomeStackScreenProp<Screens.TokenDetails>) {
   const { currencyId: _currencyId } = route.params
 
   const currency = useCurrency(_currencyId)

@@ -1,5 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { Namespace, RequestBody, Scope, Transaction } from 'src/features/dataApi/zerion/types'
+import {
+  Asset,
+  Namespace,
+  RequestBody,
+  Scope,
+  Transaction,
+} from 'src/features/dataApi/zerion/types'
 import { ACTION_TYPE, initSocket } from 'src/features/dataApi/zerion/utils'
 
 export const zerionApi = createApi({
@@ -36,7 +42,29 @@ export const zerionApi = createApi({
         )
       },
     }),
+    assetInfo: builder.query<{ info: Asset[] | null }, { requestBody: RequestBody }>({
+      queryFn() {
+        return { data: { info: null } }
+      },
+      onCacheEntryAdded: (
+        { requestBody },
+        { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
+      ) => {
+        initSocket(
+          Namespace.Assets,
+          requestBody,
+          cacheDataLoaded,
+          cacheEntryRemoved,
+          (data: { payload: { [Scope.Info]: Asset[] } }) => {
+            updateCachedData((draft) => {
+              // TODO: verify payload
+              draft.info = data.payload[Scope.Info]
+            })
+          }
+        )
+      },
+    }),
   }),
 })
 
-export const { useTransactionHistoryQuery } = zerionApi
+export const { useTransactionHistoryQuery, useAssetInfoQuery } = zerionApi
