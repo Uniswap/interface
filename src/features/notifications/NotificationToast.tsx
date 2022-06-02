@@ -10,13 +10,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { AnimatedBox, Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
+import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { popNotification } from 'src/features/notifications/notificationSlice'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { flex } from 'src/styles/flex'
 import { useTimeout } from 'src/utils/timing'
 
 const NOTIFICATION_HEIGHT = 72
@@ -126,7 +124,7 @@ export function NotificationToast({
           borderRadius="lg"
           flex={1}
           flexDirection="row"
-          height={NOTIFICATION_HEIGHT}
+          minHeight={NOTIFICATION_HEIGHT}
           px="md"
           py="md"
           onPress={onNotificationPress}>
@@ -151,36 +149,36 @@ export function NotificationContent({
   actionButton,
 }: NotificationContentProps) {
   return (
-    <Flex row gap="xs" justifyContent="space-between" width={'100%'}>
-      <Flex centered row gap="xs">
+    <Flex row alignItems="center" gap="xs" justifyContent="space-between" width="100%">
+      <Flex row shrink alignItems="center" flexBasis="75%" gap="xs" justifyContent="flex-start">
         {icon && (
-          <Box
-            alignItems="center"
-            height={NOTIFICATION_ICON_SIZE}
-            justifyContent="center"
-            width={NOTIFICATION_ICON_SIZE}>
+          <Box height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
             {icon}
           </Box>
         )}
-        <Text fontWeight="500" style={flex.shrink} variant="subHead2">
-          {title}
-        </Text>
+        <Flex row shrink alignItems="center">
+          <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="body2">
+            {title}
+          </Text>
+        </Flex>
       </Flex>
-      <Flex alignItems="flex-end" gap="xxs" justifyContent="center">
+      <Flex shrink alignItems="flex-end" flexBasis="25%" gap="xxs">
         {balanceUpdate ? (
           <>
             <Text
+              adjustsFontSizeToFit
               color="accentBackgroundSuccess"
               fontWeight="600"
-              style={flex.shrink}
-              variant="body1">
+              numberOfLines={1}
+              variant="smallLabel">
               {balanceUpdate.assetIncrease}
             </Text>
             <Text
+              adjustsFontSizeToFit
               color="neutralTextSecondary"
               fontWeight="500"
-              style={flex.shrink}
-              variant="smallLabel">
+              numberOfLines={1}
+              variant="code">
               {balanceUpdate.usdIncrease}
             </Text>
           </>
