@@ -145,7 +145,7 @@ export default function WalletModal({
   const previousWalletView = usePrevious(walletView)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
-  // Need to pass infura as a default case because useSelectedError requirse a connector
+  // Need to pass infura as a default case because useSelectedError requires a connector
   const pendingError = hooks.useSelectedError(pendingConnector || infura)
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
