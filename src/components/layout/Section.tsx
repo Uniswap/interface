@@ -1,7 +1,8 @@
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
-import { FlatList, FlatListProps } from 'react-native'
+import { FlatListProps } from 'react-native'
 import {
   Directions,
+  FlatList,
   FlingGestureHandler,
   FlingGestureHandlerGestureEvent,
   State,
@@ -18,7 +19,7 @@ import { Trace } from 'src/features/telemetry/Trace'
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
   return (
     <Trace {...trace}>
-      <Flex bg="translucentBackground" borderRadius="md" p="md">
+      <Flex bg="neutralBackground" borderRadius="md" p="md">
         {children}
       </Flex>
     </Trace>

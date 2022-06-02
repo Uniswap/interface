@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FlatListProps } from 'react-native'
 import { SharedElement } from 'react-navigation-shared-element'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
-import { Box, Inset } from 'src/components/layout'
+import { Box } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Loading } from 'src/components/loading'
 import { Asset } from 'src/features/dataApi/zerion/types'
@@ -63,7 +63,6 @@ export function GenericTokenSection({
         </Box>
       ) : (
         <Section.List
-          ItemSeparatorComponent={Separator}
           data={fixedCount ? assets?.slice(0, fixedCount) : assets}
           horizontal={horizontal}
           keyExtractor={key}
@@ -73,10 +72,6 @@ export function GenericTokenSection({
       )}
     </Section.Container>
   )
-}
-
-function Separator() {
-  return <Inset all="xs" />
 }
 
 function key(asset: Asset) {
