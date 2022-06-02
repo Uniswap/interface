@@ -8,7 +8,7 @@
 import Foundation
 import WalletConnectSwift
 
-let EthSignMethods = [EthMethod.personalSign.rawValue, EthMethod.signTypedData.rawValue, EthMethod.ethSign.rawValue]
+let EthSignMethods = [EthMethod.personalSign.rawValue, EthMethod.signTypedData.rawValue, EthMethod.ethSign.rawValue, EthMethod.signTypedData_v4.rawValue]
 
 class WalletConnectSignRequestHandler: RequestHandler {
   var accountServer: WalletConnectAccountServer!

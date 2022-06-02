@@ -236,7 +236,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     let signature = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
       signature = yield* call(signMessage, params.message, account, signerManager)
-    } else if (method === EthMethod.SignTypedData) {
+    } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
       signature = yield* call(signTypedData, params.message, account, signerManager)
     } else if (method === EthMethod.EthSignTransaction) {
       signature = yield* call(signTransaction, params.transaction, account, signerManager)

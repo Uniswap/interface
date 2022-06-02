@@ -9,16 +9,20 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { ClientDetails } from 'src/components/WalletConnect/RequestModal/ClientDetails'
+import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
-import { EthMethod } from 'src/features/walletConnect/types'
+import { EthMethod, isPrimaryTypePermit, PermitMessage } from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { opacify } from 'src/utils/colors'
+import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+
+const MAX_MODAL_MESSAGE_HEIGHT = 200
+
 interface Props {
   isVisible: boolean
   onClose: () => void
@@ -54,9 +58,33 @@ const getMessage = (request: WalletConnectRequest) => {
   return ''
 }
 
+/** If the request is a permit then parse the relevant information otherwise return undefined. */
+const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined => {
+  if (request.type !== EthMethod.SignTypedDataV4) {
+    return undefined
+  }
+
+  try {
+    const message = JSON.parse(request.rawMessage)
+    if (!isPrimaryTypePermit(message)) {
+      return undefined
+    }
+
+    const { domain, message: permitPayload } = message as PermitMessage
+    const currencyId = buildCurrencyId(domain.chainId, domain.verifyingContract)
+    const amount = permitPayload.value
+
+    return { currencyId, amount }
+  } catch (e) {
+    logger.info('WalletConnectRequestModal', 'getPermitInfo', 'invalid JSON message', e)
+    return undefined
+  }
+}
+
 const VALID_REQUEST_TYPES = [
   EthMethod.PersonalSign,
   EthMethod.SignTypedData,
+  EthMethod.SignTypedDataV4,
   EthMethod.EthSign,
   EthMethod.EthSignTransaction,
   EthMethod.EthSendTransaction,
@@ -122,28 +150,31 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     onClose()
   }
 
-  const message = getMessage(request)
+  let message = getMessage(request)
+  let permitInfo = getPermitInfo(request)
 
   return (
     // TODO: rather than rejecting on close maintain a list of pending transactions that the user can return to.
     <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={onReject}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
-        <ClientDetails dapp={request.dapp} method={request.type} />
-        <Flex
-          borderColor="deprecated_gray100"
-          borderRadius="lg"
-          borderWidth={1}
-          gap="sm"
-          /* need a fixed height here or else modal gets confused about total height */
-          maxHeight={200}
-          overflow="hidden">
-          <ScrollView>
-            <Flex p="md">
-              <Text variant="caption">{t('Message')}</Text>
-              <Text variant="body1">{message}</Text>
-            </Flex>
-          </ScrollView>
-        </Flex>
+        <ClientDetails permitInfo={permitInfo} request={request} />
+        {!permitInfo && (
+          <Flex
+            borderColor="deprecated_gray100"
+            borderRadius="lg"
+            borderWidth={1}
+            gap="sm"
+            /* need a fixed height here or else modal gets confused about total height */
+            maxHeight={MAX_MODAL_MESSAGE_HEIGHT}
+            overflow="hidden">
+            <ScrollView>
+              <Flex p="md">
+                <Text variant="caption">{t('Message')}</Text>
+                <Text variant="body1">{message}</Text>
+              </Flex>
+            </ScrollView>
+          </Flex>
+        )}
         {isPotentiallyUnsafe(request) ? (
           <Flex
             centered

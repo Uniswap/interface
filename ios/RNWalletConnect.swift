@@ -16,6 +16,7 @@ enum EthMethod: String {
   case switchChain = "wallet_switchEthereumChain"
   case addChain = "wallet_addEthereumChain"
   case signTypedData = "eth_signTypedData"
+  case signTypedData_v4 = "eth_signTypedData_v4"
 }
 
 enum EventType: String, CaseIterable {

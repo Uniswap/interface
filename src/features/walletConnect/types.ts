@@ -4,6 +4,7 @@ export enum EthMethod {
   EthSignTransaction = 'eth_signTransaction',
   EthSendTransaction = 'eth_sendTransaction',
   SignTypedData = 'eth_signTypedData',
+  SignTypedDataV4 = 'eth_signTypedData_v4',
   PersonalSign = 'personal_sign',
 }
 
@@ -27,7 +28,11 @@ export enum WCEventType {
   TransactionRequest = 'transaction_request',
 }
 
-export type EthSignMethod = EthMethod.PersonalSign | EthMethod.SignTypedData | EthMethod.EthSign
+export type EthSignMethod =
+  | EthMethod.PersonalSign
+  | EthMethod.SignTypedData
+  | EthMethod.EthSign
+  | EthMethod.SignTypedDataV4
 export type EthTransactionMethod = EthMethod.EthSignTransaction | EthMethod.EthSendTransaction
 
 interface BaseSessionEvent {
@@ -94,4 +99,25 @@ export interface WCError {
   type: WCErrorType
   message?: string
   dapp?: DappInfo
+}
+
+export interface PermitMessage {
+  primaryType: 'Permit'
+  domain: {
+    name: string
+    version: string
+    chainId: number
+    verifyingContract: string
+  }
+  message: {
+    owner: string
+    spender: string
+    value: number
+    nonce: number
+    deadline: number
+  }
+}
+
+export function isPrimaryTypePermit(message: any): message is PermitMessage {
+  return message.primaryType === 'Permit'
 }
