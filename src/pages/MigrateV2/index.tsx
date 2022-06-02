@@ -131,6 +131,11 @@ export default function MigrateV2() {
               Uniswap V3.
             </Trans>
           </ThemedText.Body>
+		  <ThemedText.Body style={{ marginBottom: 8, fontWeight: 400 }}>
+		  	<Trans>
+			  Remember Fee on Transfer (FOT), Rebase, and Reflection tokens will fail in V3, and can result in loss
+			</Trans>
+		  </ThemedText.Body>
 
           {!account ? (
             <LightCard padding="40px">

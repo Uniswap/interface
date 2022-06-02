@@ -573,6 +573,11 @@ export default function AddLiquidity({
                           <Trans>Select Pair</Trans>
                         </ThemedText.Label>
                       </RowBetween>
+					  <RowBetween paddingBottom="20px">
+					    <ThemedText.Label>
+                          <Trans>FOT (fee on transfer), Rebase, and Reflection tokens not supported in V3!</Trans>
+                        </ThemedText.Label>
+                      </RowBetween>
                       <RowBetween>
                         <CurrencyDropdown
                           value={formattedAmounts[Field.CURRENCY_A]}
@@ -632,6 +637,7 @@ export default function AddLiquidity({
                     <ThemedText.Label>
                       {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
                     </ThemedText.Label>
+					  
 
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_A]}
