@@ -32,6 +32,7 @@ export type ExploreStackParamList = {
   [Screens.Explore]: undefined
   [Screens.ExploreTokens]: undefined
   [Screens.TokenDetails]: { currencyId: string }
+  [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 
 export type AccountStackParamList = {
@@ -47,7 +48,7 @@ export type SettingsStackParamList = {
   [Screens.SettingsChains]: undefined
   [Screens.SettingsSupport]: undefined
   [Screens.SettingsTestConfigs]: undefined
-  [Screens.SettingsWebviewOption]: { headerTitle: string; uriLink: string }
+  [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.Dev]: undefined
   [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings
 }

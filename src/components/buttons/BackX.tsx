@@ -22,8 +22,7 @@ export function BackX({ onPressBack, size, ...rest }: Props) {
       <X
         color={theme.colors.deprecated_textColor}
         height={size ?? 20}
-        strokeLinecap="round"
-        strokeWidth="2"
+        strokeWidth={2}
         width={size ?? 20}
       />
     </Button>

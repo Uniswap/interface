@@ -5,6 +5,7 @@ import { SharedElement } from 'react-navigation-shared-element'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
+import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Asset } from 'src/features/dataApi/zerion/types'
 import { Screens } from 'src/screens/Screens'
@@ -63,6 +64,7 @@ export function GenericTokenSection({
         </Box>
       ) : (
         <Section.List
+          ItemSeparatorComponent={() => <Separator />}
           data={fixedCount ? assets?.slice(0, fixedCount) : assets}
           horizontal={horizontal}
           keyExtractor={key}

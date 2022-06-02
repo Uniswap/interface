@@ -28,3 +28,11 @@ export function useTokenInfo(chainId?: ChainId) {
   )
   return { topTokens, isLoading }
 }
+
+export function useTokenSearchResults(searchQuery: string, limit?: number) {
+  const { currentData: tokens, isLoading } = useAssetInfoQuery(
+    requests[Namespace.Assets].search({ search_query: searchQuery, limit })
+  )
+
+  return { tokens, isLoading }
+}

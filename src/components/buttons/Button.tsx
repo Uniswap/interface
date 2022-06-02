@@ -1,6 +1,7 @@
 import { createBox } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren } from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { withAnimated } from 'src/components/animated'
 import { ActionProps, ElementName } from 'src/features/telemetry/constants'
 import { TraceEvent } from 'src/features/telemetry/TraceEvent'
 import { defaultHitslopInset } from 'src/styles/sizing'
@@ -29,3 +30,5 @@ export function Button({ children, name: elementName, ...rest }: ButtonProps) {
     </TraceEvent>
   )
 }
+
+export const AnimatedButton = withAnimated(Button)

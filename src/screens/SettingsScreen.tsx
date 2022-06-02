@@ -76,7 +76,7 @@ export function SettingsScreen() {
         subTitle: t('Support and feedback'),
         data: [
           {
-            screen: Screens.SettingsWebviewOption,
+            screen: Screens.WebView,
             screenProps: {
               uriLink: 'https://help.uniswap.org',
               headerTitle: t('Help Center'),
@@ -111,7 +111,7 @@ export function SettingsScreen() {
         subTitle: t('About'),
         data: [
           {
-            screen: Screens.SettingsWebviewOption,
+            screen: Screens.WebView,
             screenProps: {
               uriLink: 'https://uniswap.org/terms-of-service',
               headerTitle: t('Uniswap Labs Privacy Policy'),
@@ -128,7 +128,7 @@ export function SettingsScreen() {
             ),
           },
           {
-            screen: Screens.SettingsWebviewOption,
+            screen: Screens.WebView,
             screenProps: {
               uriLink: 'https://uniswap.org/terms-of-service',
               headerTitle: t('Uniswap Labs Terms of Service'),

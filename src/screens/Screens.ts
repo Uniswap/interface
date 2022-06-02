@@ -27,13 +27,13 @@ export enum Screens {
   SettingsStack = 'SettingsStack',
   SettingsSupport = 'SettingsSupport',
   SettingsTestConfigs = 'SettingsTestConfigs',
-  SettingsWebviewOption = 'SettingsWebviewOption',
   Swap = 'Swap',
   SwapConfig = 'SwapConfig',
   TabNavigator = 'TabNavigator',
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',
   User = 'User',
+  WebView = 'WebView',
   Welcome = 'Welcome',
 }
 

@@ -1,25 +1,32 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import EnsNameResults from 'src/components/CurrencySelector/EnsNameResults'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AppBackground } from 'src/components/gradients'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
-import { useENS } from 'src/features/ens/useENS'
 import { FavoriteTokensSection } from 'src/features/explore/FavoriteTokensSection'
+import { SearchResultsSection } from 'src/features/explore/SearchResultsSection'
 import { TopTokensSection } from 'src/features/explore/TopTokensSection'
 
 export function ExploreScreen() {
   const { t } = useTranslation()
 
-  const [searchFilter, setSearchFilter] = useState<string>('')
-  const { address: ensAddress, name: ensName } = useENS(ChainId.Mainnet, searchFilter)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
 
   const onChangeFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter)
+    setSearchQuery(newSearchFilter)
+  }
+
+  const onSearchFocus = () => {
+    setIsSearchMode(true)
+  }
+
+  const onSearchBlur = () => {
+    setIsSearchMode(false)
   }
 
   return (
@@ -32,24 +39,24 @@ export function ExploreScreen() {
           </Flex>
           <Flex mx="md">
             <SearchTextInput
-              placeholder={t('Search token symbols or address')}
-              value={searchFilter}
+              backgroundColor="translucentBackground"
+              placeholder={t('Search for tokens or address')}
+              value={searchQuery}
+              onBlur={onSearchBlur}
               onChangeText={onChangeFilter}
+              onFocus={onSearchFocus}
             />
-          </Flex>
-          {ensName && ensAddress ? (
-            <EnsNameResults
-              names={[
-                {
-                  name: ensName,
-                  address: ensAddress,
-                },
-              ]}
-            />
-          ) : null}
-          <Flex mx="md">
-            <FavoriteTokensSection fixedCount={5} />
-            <TopTokensSection fixedCount={5} />
+
+            {isSearchMode ? (
+              <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+                <SearchResultsSection searchQuery={searchQuery} />
+              </AnimatedFlex>
+            ) : (
+              <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+                <FavoriteTokensSection fixedCount={5} />
+                <TopTokensSection fixedCount={10} />
+              </AnimatedFlex>
+            )}
           </Flex>
         </Flex>
       </VirtualizedList>

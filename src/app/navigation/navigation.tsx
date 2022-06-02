@@ -60,11 +60,11 @@ import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SettingsWallet } from 'src/screens/SettingsWallet'
-import { SettingsWebviewOptionScreen } from 'src/screens/SettingsWebviewOptionScreen'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
 import { UserScreen } from 'src/screens/UserScreen'
+import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { dimensions } from 'src/styles/sizing'
 
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -129,10 +129,7 @@ function SettingsStackGroup() {
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
       <SettingsStack.Screen component={SettingsWallet} name={Screens.SettingsWallet} />
-      <SettingsStack.Screen
-        component={SettingsWebviewOptionScreen}
-        name={Screens.SettingsWebviewOption}
-      />
+      <SettingsStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <SettingsStack.Screen component={SettingsChainsScreen} name={Screens.SettingsChains} />
       <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
       <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />
@@ -262,6 +259,7 @@ export function ExploreStackNavigator() {
           return [{ id: 'explore-tokens-header', animation: 'fade' }]
         }}
       />
+      <ExploreStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
     </ExploreStack.Navigator>
   )

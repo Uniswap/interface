@@ -5,6 +5,7 @@ import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box, Flex } from 'src/components/layout'
+import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { CHAIN_INFO } from 'src/constants/chains'
@@ -18,10 +19,6 @@ import { toSupportedChainId } from 'src/utils/chainId'
 interface DappSwitchNetworkModalProps {
   selectedSession: WalletConnectSession
   onClose: () => void
-}
-
-function Separator() {
-  return <Box bg="neutralOutline" height={1} />
 }
 
 export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchNetworkModalProps) {

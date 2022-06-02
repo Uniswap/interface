@@ -71,6 +71,33 @@ export const requests = {
         },
       },
     }),
+    search: ({
+      category_id = 'market',
+      chain = '',
+      currency = 'usd',
+      limit = 10,
+      order_by = { market_cap: 'desc' },
+      search_query,
+    }: {
+      category_id?: string
+      chain?: string
+      currency?: string
+      limit?: number
+      order_by?: any
+      search_query: string
+    }): { requestBody: RequestBody } => ({
+      requestBody: {
+        scope: [Scope.Info],
+        payload: {
+          category_id,
+          chain,
+          currency,
+          limit,
+          order_by,
+          search_query,
+        },
+      },
+    }),
   },
 }
 
