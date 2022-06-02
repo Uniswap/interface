@@ -1,9 +1,11 @@
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import {
+  alchemy,
   coinbaseWallet,
   createOrderedConnectors,
   fortmatic,
   getConnectorForWallet,
+  infura,
   injected,
   Wallet,
   walletConnect,
@@ -24,6 +26,15 @@ interface ConnectorState {
 function Web3Updater() {
   const dispatch = useAppDispatch()
   const { error, hooks } = useWeb3React()
+
+  const infuraError = hooks.useSelectedError(infura)
+  const infuraIsActive = hooks.useSelectedIsActive(infura)
+  useEffect(() => {
+    if (infuraError && infuraIsActive) {
+      infura.deactivate()
+      alchemy.activate()
+    }
+  }, [infuraError, infuraIsActive])
 
   const walletOverride = useAppSelector((state) => state.user.walletOverride)
   const walletOverrideBackfilled = useAppSelector((state) => state.user.walletOverrideBackfilled)

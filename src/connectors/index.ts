@@ -76,7 +76,7 @@ export const [infura, infuraHooks] = initializeConnector<Network>(
 )
 
 export const [alchemy, alchemyHooks] = initializeConnector<Network>(
-  (actions) => new Network(actions, ALCHEMY_NETWORK_URLS, true, 1),
+  (actions) => new Network(actions, ALCHEMY_NETWORK_URLS, false, 1),
   Object.keys(ALCHEMY_NETWORK_URLS).map((chainId) => Number(chainId))
 )
 
@@ -123,8 +123,8 @@ export const createOrderedConnectors = (walletOverride: Wallet | undefined) => {
   WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
     connectors.push(getConnectorListItemForWallet(wallet))
   })
-  connectors.push({ connector: alchemy, hooks: alchemyHooks })
   connectors.push({ connector: infura, hooks: infuraHooks })
+  connectors.push({ connector: alchemy, hooks: alchemyHooks })
   const web3ReactConnectors: [Connector, Web3ReactHooks][] = connectors.map(({ connector, hooks }) => [
     connector,
     hooks,
