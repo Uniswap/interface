@@ -2,9 +2,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import AaveIcon from 'src/assets/icons/aave-check.svg'
+import DaiEthIcon from 'src/assets/icons/dai-eth.svg'
+import EthIcon from 'src/assets/icons/eth-download.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import {
   NotificationContent,
   NotificationContentProps,
@@ -31,17 +34,17 @@ export function NotificationsSetupScreen({ navigation }: Props) {
     <OnboardingScreen
       stepCount={4}
       stepNumber={2}
-      subtitle={t('Stay up-to-date on the status of your transactions.')}
+      subtitle={t('Receive transaction status updates when you:')}
       title={t('Turn on push notifications')}>
       <Flex grow justifyContent="space-between">
         <SampleNotifications />
-
-        <Flex alignItems="center" justifyContent="flex-end" width={'100%'}>
+        <Flex alignItems="center" gap="xl" justifyContent="flex-end" width={'100%'}>
           <PrimaryButton
             alignSelf="stretch"
             label={t('Turn on notifications')}
             name={ElementName.Enable}
             testID={ElementName.Enable}
+            variant="onboard"
             onPress={onPressEnableNotifications}
           />
           <TextButton
@@ -49,7 +52,7 @@ export function NotificationsSetupScreen({ navigation }: Props) {
             textColor="deprecated_textColor"
             textVariant="mediumLabel"
             onPress={onPressNext}>
-            {t('Skip for now')}
+            {t('Maybe later')}
           </TextButton>
         </Flex>
       </Flex>
@@ -63,22 +66,27 @@ function SampleNotifications() {
   const sampleNotifications: NotificationContentProps[] = useMemo(
     () => [
       {
-        title: t('Send or receive assets'),
+        title: t('Send or receive tokens or NFTs'),
+        icon: <EthIcon />,
       },
       {
-        title: t('Connected to {{dappName}}', { dappName: 'Uniswap' }),
+        title: t('Swap tokens'),
+        icon: <DaiEthIcon />,
       },
       {
         title: t('Approve tokens for use with apps'),
+        icon: <AaveIcon />,
       },
     ],
     [t]
   )
 
   return (
-    <Flex>
+    <Flex gap="md">
       {sampleNotifications.map((value, i) => (
-        <NotificationContent key={i} title={value.title} />
+        <Box backgroundColor="neutralSurface" borderRadius="lg" padding="sm">
+          <NotificationContent key={i} icon={value.icon} title={value.title} />
+        </Box>
       ))}
     </Flex>
   )

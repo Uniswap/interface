@@ -36,6 +36,11 @@ export const primaryButtonVariants = {
     backgroundColor: 'deprecated_yellow',
     color: 'white',
   },
+  // used in full screen onboarding views
+  onboard: {
+    py: 'md',
+    backgroundColor: 'accentBackgroundActive',
+  },
 }
 
 export const iconButtonVariants = {

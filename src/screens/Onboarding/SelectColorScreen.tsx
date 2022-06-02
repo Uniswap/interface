@@ -107,11 +107,8 @@ export function SelectColorScreen({ navigation }: Props) {
           disabled={!selectedColor}
           label={t('Next')}
           name={ElementName.Next}
-          py="md"
           testID={ElementName.Next}
-          textColor="white"
-          textVariant="mediumLabel"
-          variant="blue"
+          variant="onboard"
           onPress={onPressNext}
         />
       </Flex>

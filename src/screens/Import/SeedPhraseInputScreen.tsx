@@ -77,10 +77,7 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
       <PrimaryButton
         disabled={!valid || loadingAccounts}
         label={t('Next')}
-        py="md"
-        textColor="white"
-        textVariant="mediumLabel"
-        variant="blue"
+        variant="onboard"
         onPress={() => onSubmit()}
       />
     </OnboardingScreen>

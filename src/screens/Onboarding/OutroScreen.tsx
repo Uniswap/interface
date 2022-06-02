@@ -51,6 +51,7 @@ export function OutroScreen({}: Props) {
           label={t('Next')}
           name={ElementName.Next}
           testID={ElementName.Next}
+          variant="onboard"
           onPress={onPressNext}
         />
       </Flex>

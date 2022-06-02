@@ -35,7 +35,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
       stepCount={4}
       stepNumber={3}
       subtitle={t(
-        'Add an extra layer of security by ensuring that you, and only you, can access your wallet.'
+        'Make sure that you’re the only person who can access your app and make transactions.'
       )}
       title={t('Turn on FaceID')}>
       <Flex grow alignItems="center" justifyContent="space-between">
@@ -49,6 +49,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
             label={t('Turn on FaceID')}
             name={ElementName.Enable}
             testID={ElementName.Enable}
+            variant="onboard"
             onPress={onPressEnableSecurity}
           />
           <TextButton
@@ -56,7 +57,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
             textColor="deprecated_textColor"
             textVariant="mediumLabel"
             onPress={onPressNext}>
-            {t('Skip for now')}
+            {t('Maybe later')}
           </TextButton>
         </Flex>
       </Flex>

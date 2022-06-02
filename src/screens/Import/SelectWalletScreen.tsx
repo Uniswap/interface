@@ -72,10 +72,7 @@ export function SelectWalletScreen({
       <PrimaryButton
         disabled={selectedAddresses.length === 0}
         label={t('Next')}
-        py="md"
-        textColor="white"
-        textVariant="mediumLabel"
-        variant="blue"
+        variant="onboard"
         onPress={onSubmit}
       />
     </OnboardingScreen>

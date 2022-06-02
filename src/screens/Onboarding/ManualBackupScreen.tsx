@@ -2,18 +2,20 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ReactNode, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import CloudIcon from 'src/assets/icons/cloud.svg'
+import BriefcaseIcon from 'src/assets/icons/briefcase.svg'
+import EyeIcon from 'src/assets/icons/eye-off.svg'
+import LockIcon from 'src/assets/icons/lock.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Switch } from 'src/components/buttons/Switch'
 import { RainbowLinearGradientStops } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
 import { Box, Flex } from 'src/components/layout'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
+import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -32,7 +34,8 @@ export function ManualBackupScreen({ navigation }: Props) {
 
   const activeAccount = useActiveAccount()
 
-  const [acknowledged, setAcknowledged] = useState(false)
+  const [showTermsModal, setShowTermsModal] = useState(false)
+  const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.Education)
 
   const onValidationSuccessful = () => {
@@ -57,30 +60,32 @@ export function ManualBackupScreen({ navigation }: Props) {
     case View.Education:
       return (
         <OnboardingScreen
-          subtitle={t('Prepare to back up your seed phrase by keeping these steps in mind.')}
+          subtitle={t('Keep the following steps in mind before backing up your recovery phrase:')}
           title={t('Back up manually')}>
-          <Flex grow justifyContent="space-between" px="sm">
-            <EducationSection />
+          <WarningModal
+            caption={t(
+              'It’s up to you to backup your recovery phrase by storing it in a safe and memorable place.'
+            )}
+            closeText={t('Cancel')}
+            confirmText={t('I understand')}
+            isVisible={showTermsModal}
+            modalName={ModalName.RecoveryWarning}
+            title={t('If your lose your recovery phrase, Uniswap Labs can’t restore your wallet')}
+            onClose={() => setShowTermsModal(false)}
+            onConfirm={nextView}
+          />
 
-            <Flex row>
-              <Switch
-                testID={ElementName.Switch}
-                value={acknowledged}
-                onValueChange={(newValue: boolean) => setAcknowledged(newValue)}
-              />
-              <Text color="deprecated_gray600" style={styles.switchLabel} variant="caption">
-                {t(
-                  'I acknowledge that if I lose my seed phrase, Uniswap Labs can’t recover my wallet.'
-                )}
-              </Text>
+          <Flex grow alignItems="center" justifyContent="space-between" px="sm">
+            <Flex width="90%">
+              <EducationSection />
             </Flex>
-            <Flex justifyContent="flex-end">
+            <Flex justifyContent="flex-end" width="100%">
               <PrimaryButton
-                disabled={!acknowledged}
-                label={t('Continue')}
+                label={t('Backup')}
                 name={ElementName.Next}
                 testID={ElementName.Next}
-                onPress={nextView}
+                variant="onboard"
+                onPress={() => setShowTermsModal(true)}
               />
             </Flex>
           </Flex>
@@ -89,16 +94,28 @@ export function ManualBackupScreen({ navigation }: Props) {
     case View.View:
       return (
         <OnboardingScreen
-          subtitle={t('Remember that the order of the words matters.')}
-          title={t('Write down your seed phrase')}>
-          <Flex justifyContent="space-between">
+          subtitle={t('Remember to record your words in the same order as they are below.')}
+          title={t('Write down your recovery phrase')}>
+          <WarningModal
+            caption={t(
+              'Storing your recovery phrase as a screenshot is easy, but it allows anyone with access to your device access to your wallet. We encourage you to delete the screenshot and write down your recovery phrase instead.'
+            )}
+            confirmText={t('OK')}
+            isVisible={showScreenShotWarningModal}
+            modalName={ModalName.ScreenshotWarning}
+            title={t('Screenshots aren’t secure')}
+            onClose={() => setShowScreenShotWarningModal(false)}
+            onConfirm={onValidationSuccessful}
+          />
+          <Flex grow justifyContent="space-between">
             <MnemonicDisplay address={activeAccount!.address} style={flex.fill} />
-            <Flex justifyContent="flex-end">
+            <Flex grow justifyContent="flex-end">
               <PrimaryButton
                 label={t('Continue')}
                 name={ElementName.Next}
                 testID={ElementName.Next}
-                onPress={onValidationSuccessful}
+                variant="onboard"
+                onPress={() => setShowScreenShotWarningModal(true)}
               />
             </Flex>
           </Flex>
@@ -111,12 +128,12 @@ export function ManualBackupScreen({ navigation }: Props) {
 
 function EducationSection() {
   const { t } = useTranslation()
-  const spacer = <Box borderTopColor="deprecated_gray50" borderTopWidth={1} />
+  const spacer = <Box borderTopColor="translucentBackground" borderTopWidth={1} />
+  const theme = useAppTheme()
   return (
-    <Flex gap="lg">
-      {spacer}
+    <Flex gap="lg" py="xl">
       <EducationRow
-        icon={<CloudIcon color="white" height={20} width={20} />}
+        icon={<EyeIcon color={theme.colors.neutralTextPrimary} height={16} width={16} />}
         label={t('Write it down in private')}
         sublabel={t(
           "Ensure that you're in a private location and write down your seed phrase's words in order."
@@ -124,19 +141,18 @@ function EducationSection() {
       />
       {spacer}
       <EducationRow
-        icon={<CloudIcon color="white" height={20} width={20} />}
+        icon={<BriefcaseIcon color={theme.colors.neutralTextPrimary} height={16} width={16} />}
         label={t('Keep it somewhere safe')}
-        sublabel={t('Remember that anyone who has your seed phrase can access your wallet.')}
+        sublabel={t('Remember that anyone who has your recovery phrase can access your wallet.')}
       />
       {spacer}
       <EducationRow
-        icon={<CloudIcon color="white" height={20} width={20} />}
+        icon={<LockIcon color={theme.colors.neutralTextPrimary} height={16} width={16} />}
         label={t("Don't lose it")}
         sublabel={t(
-          "If you lose your seed phrase, you'll lose access to your wallet and its contents."
+          'If you lose your recovery phrase, you’ll lose access to your wallet and its contents.'
         )}
       />
-      {spacer}
     </Flex>
   )
 }
@@ -156,15 +172,15 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
             <LinearGradientBox radius="md" stops={RainbowLinearGradientStops}>
               {/* TODO: simplify Rainbow border */}
               <Box alignItems="center" justifyContent="center" style={styles.padded}>
-                <Box bg="deprecated_gray50" borderRadius="md" height={38} p="sm" width={38}>
+                <Flex centered bg="neutralBackground" borderRadius="md" height={38} width={38}>
                   {icon}
-                </Box>
+                </Flex>
               </Box>
             </LinearGradientBox>
           </Box>
           <Flex flex={1} gap="none">
-            <Text variant="body1">{label}</Text>
-            <Text color="deprecated_gray600" variant="caption">
+            <Text variant="subHead1">{label}</Text>
+            <Text color="neutralTextSecondary" variant="caption">
               {sublabel}
             </Text>
           </Flex>
@@ -177,9 +193,5 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
 const styles = StyleSheet.create({
   padded: {
     padding: 1,
-  },
-  switchLabel: {
-    flex: 1,
-    flexWrap: 'wrap',
   },
 })

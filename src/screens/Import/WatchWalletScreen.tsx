@@ -73,15 +73,7 @@ export function WatchWalletScreen({ navigation }: Props) {
           />
         </Flex>
       </KeyboardAvoidingView>
-      <PrimaryButton
-        disabled={!isValid}
-        label={t('Next')}
-        py="md"
-        textColor="white"
-        textVariant="mediumLabel"
-        variant="blue"
-        onPress={onSubmit}
-      />
+      <PrimaryButton disabled={!isValid} label={t('Next')} variant="onboard" onPress={onSubmit} />
     </OnboardingScreen>
   )
 }

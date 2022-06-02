@@ -54,8 +54,8 @@ export function CloudBackupScreen({
   if (!pin) {
     return (
       <OnboardingScreen
-        subtitle={t('Set up your iCloud backup PIN')}
-        title={t("You'll use this PIN to restore your wallet from iCloud.")}>
+        subtitle={t('You’ll use this PIN to restore your wallet from iCloud.')}
+        title={t('Set your iCloud backup PIN')}>
         <PinInput length={PIN_LENGTH} setValue={setEnteredPin} value={enteredPin} />
       </OnboardingScreen>
     )

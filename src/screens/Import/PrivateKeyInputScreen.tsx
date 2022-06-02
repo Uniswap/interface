@@ -55,10 +55,7 @@ export function PrivateKeyInputScreen({ navigation }: Props) {
       <PrimaryButton
         disabled={!valid}
         label={t('Next')}
-        py="md"
-        textColor="white"
-        textVariant="mediumLabel"
-        variant="blue"
+        variant="onboard"
         onPress={() => onSubmit()}
       />
     </OnboardingScreen>

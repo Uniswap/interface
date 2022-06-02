@@ -64,11 +64,8 @@ export function EditNameScreen({ navigation }: Props) {
         <PrimaryButton
           label={t('Next')}
           name={ElementName.Next}
-          py="md"
           testID={ElementName.Next}
-          textColor="white"
-          textVariant="mediumLabel"
-          variant="blue"
+          variant="onboard"
           onPress={onPressNext}
         />
       </Flex>
