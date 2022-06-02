@@ -60,6 +60,7 @@ export const enum ElementName {
   Copy = 'copy',
   CreateAccount = 'create-account',
   CurrencySelectorToggle = 'currency-selector-toggle',
+  Disconnect = 'disconnect',
   Done = 'done',
   Edit = 'edit',
   EditCancel = 'edit-cancel',

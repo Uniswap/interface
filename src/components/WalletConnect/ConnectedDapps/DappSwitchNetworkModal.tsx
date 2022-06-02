@@ -1,12 +1,11 @@
 import { notificationAsync, selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
-import { Button } from 'src/components/buttons/Button'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box, Flex } from 'src/components/layout'
-import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
+import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -31,32 +30,20 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
   const activeChains = useActiveChainIds()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  return (
-    <BottomSheetDetachedModal
-      hideHandlebar
-      backgroundColor="transparent"
-      isVisible={selectedSession !== null}
-      name={ModalName.NetworkSelector}
-      onClose={onClose}>
-      <Flex centered bg="neutralSurface" borderRadius="lg" gap="none">
-        <Flex centered gap="xxs" py="md">
-          <Text variant="mediumLabel">{t('Switch Network')}</Text>
-          <Text color="deprecated_blue" variant="caption">
-            {selectedSession.dapp.url}
-          </Text>
-        </Flex>
-        <Flex gap="none" width="100%">
-          {activeChains.map((chainId) => {
-            const info = CHAIN_INFO[chainId]
-            return (
-              <Button
-                key={chainId}
-                name={`${ElementName.NetworkButton}-${chainId}`}
-                onPress={() => {
-                  selectionAsync()
-                  changeChainId(selectedSession.id, chainId, activeAccountAddress)
-                  onClose()
-                }}>
+  const options = useMemo(
+    () =>
+      activeChains
+        .map((chainId) => {
+          const info = CHAIN_INFO[chainId]
+          return {
+            key: `${ElementName.NetworkButton}-${chainId}`,
+            onPress: () => {
+              selectionAsync()
+              changeChainId(selectedSession.id, chainId, activeAccountAddress)
+              onClose()
+            },
+            render: () => (
+              <>
                 <Separator />
                 <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                   <NetworkLogo chainId={chainId} size={24} />
@@ -69,35 +56,55 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
                     )}
                   </Box>
                 </Flex>
-              </Button>
-            )
-          })}
-          <Button
-            onPress={() => {
+              </>
+            ),
+          }
+        })
+        .concat([
+          {
+            key: ElementName.Disconnect,
+            onPress: () => {
               notificationAsync()
               disconnectFromApp(selectedSession.id, activeAccountAddress)
               onClose()
-            }}>
-            <Separator />
-            <Flex centered row px="lg" py="md">
-              <Text color="accentBackgroundFailure" variant="subHead1">
-                {t('Disconnect')}
-              </Text>
-            </Flex>
-          </Button>
-        </Flex>
-      </Flex>
-      <Button
-        onPress={() => {
-          selectionAsync()
-          onClose()
-        }}>
-        <Flex centered bg="neutralSurface" borderRadius="lg" mt="md" py="md">
-          <Text color="neutralTextPrimary" variant="subHead1">
-            {t('Cancel')}
+            },
+            render: () => (
+              <>
+                <Separator />
+                <Flex centered row px="lg" py="md">
+                  <Text color="accentBackgroundFailure" variant="subHead1">
+                    {t('Disconnect')}
+                  </Text>
+                </Flex>
+              </>
+            ),
+          },
+        ]),
+    [
+      activeAccountAddress,
+      activeChains,
+      onClose,
+      selectedSession.dapp.chain_id,
+      selectedSession.id,
+      t,
+      theme.colors.neutralTextSecondary,
+    ]
+  )
+
+  return (
+    <ActionSheetModal
+      header={
+        <Flex centered gap="xxs" py="md">
+          <Text variant="mediumLabel">{t('Switch Network')}</Text>
+          <Text color="deprecated_blue" variant="caption">
+            {selectedSession.dapp.url}
           </Text>
         </Flex>
-      </Button>
-    </BottomSheetDetachedModal>
+      }
+      isVisible={selectedSession !== null}
+      name={ModalName.NetworkSelector}
+      options={options}
+      onClose={onClose}
+    />
   )
 }
