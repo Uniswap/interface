@@ -159,11 +159,7 @@ export default function WalletModal({
 
   // close on connection/disconnection
   useEffect(() => {
-    if (account && !previousAccount && walletModalOpen) {
-      toggleWalletModal()
-    }
-
-    if (!account && previousAccount && walletModalOpen) {
+    if (walletModalOpen && account !== previousAccount) {
       toggleWalletModal()
     }
   }, [account, previousAccount, toggleWalletModal, walletModalOpen])
