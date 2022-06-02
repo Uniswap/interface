@@ -20,7 +20,7 @@ interface ConnectorState {
 }
 
 // This component handles state changes in web3-react. It eagerly connects to all wallets.
-// It also checks for Coinbase Wallet, Wallet Connect, or Injected wallets to become active.
+// It also checks for Coinbase Wallet, Wallet Connect Fortmatic or Injected wallets to become active.
 function Web3Updater() {
   const dispatch = useAppDispatch()
   const { error, hooks } = useWeb3React()
