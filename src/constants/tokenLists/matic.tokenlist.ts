@@ -200,6 +200,23 @@ export const MATIC_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://i.imgur.com/0uZyC7M.png',
     },
+
+    {
+      chainId: 137,
+      address: '0xD81F558b71A5323e433729009D55159955F8A7f9',
+      symbol: 'UNB',
+      name: 'Unbound',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7846.png',
+    },
+    {
+      chainId: 137,
+      address: '0x1eBA4B44C4F8cc2695347C6a78F0B7a002d26413',
+      symbol: 'UND',
+      name: 'Unbound Dollar',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png',
+    },
   ],
   version: {
     major: 0,
