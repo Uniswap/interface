@@ -176,11 +176,11 @@ export function CurrencySearch({
     filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
   )
 
-  // timeout token loader after 2 seconds
+  // timeout token loader after 3 seconds
   useEffect(() => {
     const tokenLoaderTimer = setTimeout(() => {
       setTokenLoaderTimerElapsed(true)
-    }, 2000)
+    }, 3000)
     return () => clearTimeout(tokenLoaderTimer)
   }, [])
 
