@@ -632,7 +632,6 @@ export default function AddLiquidity({
                     <ThemedText.Label>
                       {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
                     </ThemedText.Label>
-					  
 
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_A]}
