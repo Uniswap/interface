@@ -132,7 +132,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, error, hooks } = useWeb3React()
+  const { connector, error, hooks, account } = useWeb3React()
   const isActiveMap: Record<Wallet, boolean> = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
@@ -151,10 +151,22 @@ export default function WalletModal({
   const toggleWalletModal = useWalletModalToggle()
 
   const previousConnector = usePrevious(connector)
+  const previousAccount = usePrevious(account)
 
   const resetAccountView = useCallback(() => {
     setWalletView(WALLET_VIEWS.ACCOUNT)
   }, [setWalletView])
+
+  // close on connection/disconnection
+  useEffect(() => {
+    if (account && !previousAccount && walletModalOpen) {
+      toggleWalletModal()
+    }
+
+    if (!account && previousAccount && walletModalOpen) {
+      toggleWalletModal()
+    }
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
 
   useEffect(() => {
     if (walletModalOpen && connector && connector !== previousConnector && !error) {
