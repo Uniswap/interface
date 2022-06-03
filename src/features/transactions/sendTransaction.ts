@@ -20,7 +20,7 @@ import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'
 
-interface SendTransactionParams {
+export interface SendTransactionParams {
   chainId: ChainId
   account: Account
   options: TransactionOptions
@@ -54,6 +54,7 @@ export function* sendTransaction(params: SendTransactionParams) {
 
   // Register the tx in the store
   yield* call(addTransaction, params, transactionResponse.hash, populatedRequest, isFlashbots)
+  return { transactionResponse }
 }
 
 export async function signAndSendTransaction(

@@ -7,10 +7,12 @@ import { REHYDRATE } from 'redux-persist'
 import { eventChannel } from 'redux-saga'
 import { i18n } from 'src/app/i18n'
 import { RootState } from 'src/app/rootReducer'
-import { getProvider, getSignerManager } from 'src/app/walletContext'
+import { getSignerManager } from 'src/app/walletContext'
+import { ChainId } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { signAndSendTransaction } from 'src/features/transactions/sendTransaction'
+import { sendTransaction, SendTransactionParams } from 'src/features/transactions/sendTransaction'
+import { TransactionType } from 'src/features/transactions/types'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
@@ -241,14 +243,15 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     } else if (method === EthMethod.EthSignTransaction) {
       signature = yield* call(signTransaction, params.transaction, account, signerManager)
     } else if (method === EthMethod.EthSendTransaction) {
-      const provider = yield* call(getProvider, params.transaction.chainId || 1)
-      const { transactionResponse } = yield* call(
-        signAndSendTransaction,
-        params.transaction,
+      const txParams: SendTransactionParams = {
+        chainId: params.transaction.chainId || ChainId.Mainnet,
         account,
-        provider,
-        signerManager
-      )
+        options: {
+          request: params.transaction,
+        },
+        typeInfo: { type: TransactionType.Unknown },
+      }
+      const { transactionResponse } = yield* call(sendTransaction, txParams)
       signature = transactionResponse.hash
     }
 
