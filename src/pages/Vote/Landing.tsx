@@ -7,7 +7,7 @@ import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Loader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import SimpleToggle from 'components/Toggle/SimpleToggle'
+import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -250,10 +250,7 @@ export default function Landing() {
                 <ThemedText.Main>
                   <Trans>Show Cancelled</Trans>
                 </ThemedText.Main>
-                <SimpleToggle
-                  isActive={!hideCancelled}
-                  toggle={() => setHideCancelled((hideCancelled) => !hideCancelled)}
-                />
+                <Toggle isActive={!hideCancelled} toggle={() => setHideCancelled((hideCancelled) => !hideCancelled)} />
               </RowBetween>
             </AutoColumn>
           )}

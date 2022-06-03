@@ -12,7 +12,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
-import SimpleToggle from 'components/Toggle/SimpleToggle'
+import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { useToken } from 'hooks/Tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -809,7 +809,7 @@ export function PositionPage({
                         <ThemedText.Main>
                           <Trans>Collect as {nativeWrappedSymbol}</Trans>
                         </ThemedText.Main>
-                        <SimpleToggle
+                        <Toggle
                           id="receive-as-weth"
                           isActive={receiveWETH}
                           toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
