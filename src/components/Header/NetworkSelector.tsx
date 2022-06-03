@@ -300,6 +300,7 @@ export default function NetworkSelector() {
               <Trans>Select a network</Trans>
             </FlyoutHeader>
             <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.MAINNET} />
+            {/* Formatic is only supported on mainnet, so we hide the other chains */}
             {connector !== fortmatic && (
               <>
                 <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.POLYGON} />
