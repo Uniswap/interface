@@ -48,6 +48,7 @@ function Web3Updater() {
     }
   }, [error])
 
+  // The dependency list is empty so this is only run once on mount
   useEffect(() => {
     if (walletOverride) {
       getConnectorForWallet(walletOverride).connectEagerly()
