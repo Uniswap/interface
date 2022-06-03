@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 15:09\n"
+"PO-Revision-Date: 2022-06-03 22:06\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Ausgeführt"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Erweiterte Ergebnisse aus inaktiven Token-Listen"
 
@@ -1764,7 +1764,7 @@ msgstr "Token nicht unterstützt"
 msgid "Tokens"
 msgstr "Token"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Token aus inaktiven Listen. Importieren Sie unten bestimmte Token oder klicken Sie auf Verwalten, um weitere Listen zu aktivieren."
 
@@ -2407,7 +2407,7 @@ msgstr "{0} {1} Preis:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Vom Benutzer hinzugefügt"
 

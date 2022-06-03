@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 15:09\n"
+"PO-Revision-Date: 2022-06-03 22:06\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -763,7 +763,7 @@ msgstr "อีเธอร์สแกน"
 msgid "Executed"
 msgstr "ถูกประหารชีวิต"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "ขยายผลจากรายการโทเค็นที่ไม่ได้ใช้งาน"
 
@@ -1764,7 +1764,7 @@ msgstr "ไม่รองรับโทเค็น"
 msgid "Tokens"
 msgstr "โทเค็น"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "โทเค็นจากรายการที่ไม่ใช้งาน นำเข้าโทเค็นเฉพาะด้านล่างหรือคลิกจัดการเพื่อเปิดใช้งานรายการเพิ่มเติม"
 
@@ -2407,7 +2407,7 @@ msgstr "{0} {1} ราคา:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • เพิ่มโดย user"
 
