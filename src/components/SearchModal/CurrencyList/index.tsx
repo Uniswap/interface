@@ -243,12 +243,10 @@ export default function CurrencyList({
           </LoadingRows>
         )
       } else if (showImport && token) {
-        console.log('shows import row')
         return (
           <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
       } else if (currency) {
-        console.log('currency row')
         return (
           <CurrencyRow
             style={style}
