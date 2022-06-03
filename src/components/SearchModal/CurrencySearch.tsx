@@ -24,7 +24,7 @@ import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
-import CurrencyList from './CurrencyList/CurrencyList'
+import CurrencyList from './CurrencyList'
 import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
