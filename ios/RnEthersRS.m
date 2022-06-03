@@ -41,7 +41,7 @@ RCT_EXTERN_METHOD(signMessageForAddress: (NSString *)address
 RCT_EXTERN_METHOD(signHashForAddress: (NSString *)address
                   hash: (NSString *)hash
                   chainId: NSNumber
-                  eip155: BOOL
+                  eip155: (BOOL)eip155
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
