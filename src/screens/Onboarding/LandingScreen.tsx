@@ -2,14 +2,14 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, View } from 'react-native'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_SPLASH_LOGO } from 'src/assets'
-import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Button } from 'src/components/buttons/Button'
-import { RainbowLinearGradientStops, usePinkToBlueLinearGradient } from 'src/components/gradients'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { TextButton } from 'src/components/buttons/TextButton'
+import { RainbowLinearGradientStops } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -23,11 +23,8 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function LandingScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
 
   const { t } = useTranslation()
-
-  const gradientStops = usePinkToBlueLinearGradient()
 
   const onPressCreateWallet = () => {
     navigation.navigate(OnboardingScreens.EditName)
@@ -52,69 +49,36 @@ export function LandingScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['bottom']}>
-      <LinearGradientBox opacity={0.2} stops={gradientStops} />
       <Box flex={1} justifyContent="flex-end">
         <Box alignItems="center" flex={1} justifyContent="center">
           <Box>
-            <LinearGradientBox radius="lg" stops={RainbowLinearGradientStops}>
+            <LinearGradientBox radius="xl" stops={RainbowLinearGradientStops}>
               <View style={styles.padded}>
-                <Box bg="deprecated_background1" borderRadius="lg">
-                  <Image
-                    source={UNISWAP_SPLASH_LOGO}
-                    style={{ tintColor: theme.colors.deprecated_textColor }}
-                  />
+                <Box bg="neutralBackground" borderRadius="xl">
+                  <Image source={UNISWAP_SPLASH_LOGO} />
                 </Box>
               </View>
             </LinearGradientBox>
           </Box>
         </Box>
-        <Flex gap="sm" mx="md" my="sm">
-          <Button
+        <Flex centered gap="lg" mx="md" my="sm">
+          <PrimaryButton
+            flexGrow={1}
+            label={t('Create a wallet')}
             name={ElementName.OnboardingCreateWallet}
             testID={ElementName.OnboardingCreateWallet}
-            onPress={onPressCreateWallet}>
-            <Flex
-              row
-              alignItems="center"
-              bg="deprecated_background1"
-              borderColor="deprecated_gray100"
-              borderRadius="md"
-              borderWidth={1}
-              gap="sm"
-              px="lg"
-              py="md">
-              <WalletIcon color={theme.colors.deprecated_purple} height={15} width={15} />
-              <Text color="deprecated_textColor" variant="mediumLabel">
-                {t('Create a Wallet')}
-              </Text>
-            </Flex>
-          </Button>
-          <Button
+            variant="onboard"
+            width="100%"
+            onPress={onPressCreateWallet}
+          />
+          <TextButton
             name={ElementName.OnboardingImportWallet}
             testID={ElementName.OnboardingImportWallet}
             onPress={onPressImportWallet}>
-            <Flex
-              row
-              alignItems="center"
-              bg="deprecated_background1"
-              borderColor="deprecated_gray100"
-              borderRadius="md"
-              borderWidth={1}
-              gap="sm"
-              px="lg"
-              py="md">
-              <Chevron
-                color={theme.colors.deprecated_purple}
-                direction="s"
-                height={15}
-                width={15}
-              />
-              <Text color="deprecated_textColor" variant="mediumLabel">
-                {t('I Already Have a Wallet')}
-              </Text>
-            </Flex>
-          </Button>
-
+            <Text color="deprecated_textColor" variant="mediumLabel">
+              {t('I Already Have a Wallet')}
+            </Text>
+          </TextButton>
           <Button
             flexDirection="row"
             justifyContent="center"

@@ -57,6 +57,10 @@ export function WatchWalletScreen({ navigation }: Props) {
     }
   }, [dispatch, isValid, navigation, normalizedValue, resolvedAddress, value])
 
+  const onChange = (text: string | undefined) => {
+    setValue(text ? text.trim() : undefined)
+  }
+
   return (
     <OnboardingScreen
       stepCount={4}
@@ -68,8 +72,10 @@ export function WatchWalletScreen({ navigation }: Props) {
           <GenericImportForm
             error={errorText}
             placeholderLabel="address or ENS"
+            showSuccess={Boolean(isValid)}
             value={value}
-            onChange={(text: string | undefined) => setValue(text)}
+            onChange={onChange}
+            onSubmit={onSubmit}
           />
         </Flex>
       </KeyboardAvoidingView>

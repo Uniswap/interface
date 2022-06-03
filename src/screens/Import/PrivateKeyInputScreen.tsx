@@ -36,6 +36,10 @@ export function PrivateKeyInputScreen({ navigation }: Props) {
     }
   }, [dispatch, navigation, valid, value])
 
+  const onChange = (text: string | undefined) => {
+    setValue(text ? text.trim() : undefined)
+  }
+
   return (
     <OnboardingScreen
       stepCount={4}
@@ -47,8 +51,10 @@ export function PrivateKeyInputScreen({ navigation }: Props) {
           <GenericImportForm
             error={errorText}
             placeholderLabel={t('private key')}
+            showSuccess={valid}
             value={value}
-            onChange={(text: string | undefined) => setValue(text)}
+            onChange={onChange}
+            onSubmit={onSubmit}
           />
         </Flex>
       </KeyboardAvoidingView>

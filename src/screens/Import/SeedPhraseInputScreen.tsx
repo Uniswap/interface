@@ -19,7 +19,7 @@ import { SagaStatus } from 'src/utils/saga'
 import { normalizeTextInput } from 'src/utils/string'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
-const IMPORT_WALLET_AMOUNT = 5
+const IMPORT_WALLET_AMOUNT = 3
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
@@ -49,7 +49,9 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
   const [submitted, setSubmitted] = useState(false)
   useEffect(() => {
     if (finishedAddingAccounts && submitted && nativeAccountAddresses) {
-      navigation.navigate(OnboardingScreens.SelectWallet, { addresses: nativeAccountAddresses })
+      navigation.navigate(OnboardingScreens.SelectWallet, {
+        addresses: nativeAccountAddresses.reverse(), //show first imported first
+      })
     }
   }, [finishedAddingAccounts, nativeAccountAddresses, navigation, submitted])
 
@@ -81,8 +83,10 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
             <GenericImportForm
               error={errorText}
               placeholderLabel={t('seed phrase')}
+              showSuccess={valid}
               value={value}
               onChange={(text: string | undefined) => setValue(text)}
+              onSubmit={onSubmit}
             />
           </Flex>
         </KeyboardAvoidingView>

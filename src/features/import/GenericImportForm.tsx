@@ -15,58 +15,82 @@ interface Props {
   error: string | undefined
   onChange: (text: string | undefined) => void
   placeholderLabel: string | undefined
+  onSubmit?: () => void
+  showSuccess?: boolean // show succes indicator
 }
 
-export function GenericImportForm({ value, onChange, error, placeholderLabel }: Props) {
+export function GenericImportForm({
+  value,
+  onChange,
+  error,
+  placeholderLabel,
+  onSubmit,
+  showSuccess,
+}: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [focused, setFocused] = useState(false)
 
+  const handleSubmit = () => {
+    onSubmit && onSubmit()
+    Keyboard.dismiss()
+  }
+
   return (
     <Trace section={SectionName.ImportAccountForm}>
-      <Flex
-        alignItems={'center'}
-        backgroundColor="neutralSurface"
-        borderColor={error && focused && value ? 'accentBackgroundFailure' : 'neutralContainer'}
-        borderRadius="lg"
-        borderWidth={1}
-        flexShrink={1}
-        gap="xs"
-        minHeight={140}
-        p="md"
-        width="100%">
-        <TextInput
-          autoCapitalize="none"
+      <Flex gap="md">
+        <Flex
+          centered
           backgroundColor="neutralSurface"
-          flex={2}
-          fontSize={18}
-          multiline={true}
-          numberOfLines={5}
-          returnKeyType="done"
-          testID="import_account_form/input"
-          textAlign="center"
-          value={value}
-          width="100%"
-          onBlur={() => setFocused(false)}
-          onChangeText={onChange}
-          onFocus={() => setFocused(true)}
-          onSubmitEditing={() => Keyboard.dismiss()}
-        />
-        {!value && (
-          <Flex centered row gap="xs" position="absolute" top={14}>
-            <Text color="accentText2" variant="body1">
-              {t('Type or')}
-            </Text>
-            <PasteButton onPress={onChange} />
-            {placeholderLabel ? (
+          borderColor={
+            showSuccess
+              ? 'accentBackgroundSuccess'
+              : error && focused && value
+              ? 'accentBackgroundFailure'
+              : 'neutralContainer'
+          }
+          borderRadius="lg"
+          borderWidth={1}
+          flexShrink={1}
+          height={160}
+          p="sm"
+          width="100%">
+          <TextInput
+            autoFocus
+            autoCapitalize="none"
+            backgroundColor="neutralSurface"
+            blurOnSubmit={true}
+            fontSize={18}
+            multiline={true}
+            numberOfLines={5}
+            returnKeyType="done"
+            spellCheck={false}
+            testID="import_account_form/input"
+            textAlign="center"
+            value={value}
+            width={'100%'}
+            onBlur={() => setFocused(false)}
+            onChangeText={onChange}
+            onFocus={() => setFocused(true)}
+            onSubmitEditing={handleSubmit}
+          />
+
+          {!value && (
+            <Flex centered row gap="xs" position="absolute" top={52}>
               <Text color="accentText2" variant="body1">
-                {placeholderLabel}
+                {t('Type or')}
               </Text>
-            ) : null}
-          </Flex>
-        )}
-        <Flex height={28}>
-          {error && focused && value && (
+              <PasteButton onPress={onChange} />
+              {placeholderLabel && (
+                <Text color="accentText2" variant="body1">
+                  {placeholderLabel}
+                </Text>
+              )}
+            </Flex>
+          )}
+        </Flex>
+        <Flex>
+          {error && value && (
             <Flex centered row gap="sm">
               <AlertTriangle color={theme.colors.accentBackgroundFailure} />
               <Text color="accentBackgroundFailure" fontWeight="600" variant="body1">
