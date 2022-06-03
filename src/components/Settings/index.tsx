@@ -19,7 +19,7 @@ import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
-import Toggle from '../Toggle'
+import SimpleToggle from '../Toggle/SimpleToggle'
 import TransactionSettings from '../TransactionSettings'
 
 const StyledMenuIcon = styled(Settings)`
@@ -207,7 +207,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   </ThemedText.Black>
                   <QuestionHelper text={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>} />
                 </RowFixed>
-                <Toggle
+                <SimpleToggle
                   id="toggle-optimized-router-button"
                   isActive={!clientSideRouter}
                   toggle={() => {
@@ -231,7 +231,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   }
                 />
               </RowFixed>
-              <Toggle
+              <SimpleToggle
                 id="toggle-expert-mode-button"
                 isActive={expertMode}
                 toggle={

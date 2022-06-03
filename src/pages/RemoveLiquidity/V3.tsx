@@ -15,7 +15,7 @@ import Loader from 'components/Loader'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
-import Toggle from 'components/Toggle'
+import SimpleToggle from 'components/Toggle/SimpleToggle'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
@@ -399,7 +399,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   <ThemedText.Main>
                     <Trans>Collect as {nativeWrappedSymbol}</Trans>
                   </ThemedText.Main>
-                  <Toggle
+                  <SimpleToggle
                     id="receive-as-weth"
                     isActive={receiveWETH}
                     toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
