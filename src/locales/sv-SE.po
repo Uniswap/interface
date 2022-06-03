@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -840,10 +840,6 @@ msgstr "Hjälpcenter"
 msgid "Hide"
 msgstr "Dölj"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Dölj stängda positioner"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Hög prispåverkan"
@@ -1509,6 +1505,8 @@ msgstr "Andel av Pool:"
 msgid "Show Cancelled"
 msgstr "Visa inställd"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Visa stängda positioner"

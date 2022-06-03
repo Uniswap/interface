@@ -9,20 +9,20 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
-import TokenListLogo from '../../assets/svg/tokenlist.svg'
-import { useIsUserAddedToken } from '../../hooks/Tokens'
-import { useCombinedActiveList } from '../../state/lists/hooks'
-import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { ThemedText } from '../../theme'
-import { isTokenOnList } from '../../utils'
-import Column from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
-import Loader from '../Loader'
-import { RowBetween, RowFixed } from '../Row'
-import { MouseoverTooltip } from '../Tooltip'
-import ImportRow from './ImportRow'
-import { MenuItem } from './styleds'
+import TokenListLogo from '../../../assets/svg/tokenlist.svg'
+import { useIsUserAddedToken } from '../../../hooks/Tokens'
+import { useCombinedActiveList } from '../../../state/lists/hooks'
+import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
+import { useCurrencyBalance } from '../../../state/wallet/hooks'
+import { ThemedText } from '../../../theme'
+import { isTokenOnList } from '../../../utils'
+import Column from '../../Column'
+import CurrencyLogo from '../../CurrencyLogo'
+import Loader from '../../Loader'
+import { RowBetween, RowFixed } from '../../Row'
+import { MouseoverTooltip } from '../../Tooltip'
+import ImportRow from '../ImportRow'
+import { LoadingRows, MenuItem } from '../styleds'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -195,6 +195,7 @@ export default function CurrencyList({
   showImportView,
   setImportToken,
   showCurrencyAmount,
+  isLoading,
 }: {
   height: number
   currencies: Currency[]
@@ -206,6 +207,7 @@ export default function CurrencyList({
   showImportView: () => void
   setImportToken: (token: Token) => void
   showCurrencyAmount?: boolean
+  isLoading: boolean
 }) {
   const itemData: (Currency | BreakLine)[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
@@ -232,7 +234,15 @@ export default function CurrencyList({
 
       const showImport = index > currencies.length
 
-      if (showImport && token) {
+      if (isLoading) {
+        return (
+          <LoadingRows>
+            <div />
+            <div />
+            <div />
+          </LoadingRows>
+        )
+      } else if (showImport && token) {
         return (
           <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
@@ -259,6 +269,7 @@ export default function CurrencyList({
       setImportToken,
       showImportView,
       showCurrencyAmount,
+      isLoading,
     ]
   )
 

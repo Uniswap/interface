@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -840,10 +840,6 @@ msgstr "Центар за помоћ"
 msgid "Hide"
 msgstr "Сакрити"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Сакриј затворене позиције"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Утицај високе цене"
@@ -1509,6 +1505,8 @@ msgstr "Удео фонда:"
 msgid "Show Cancelled"
 msgstr "Схов Цанцеллед"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Покажите затворене позиције"

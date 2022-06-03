@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -840,10 +840,6 @@ msgstr "帮助中心"
 msgid "Hide"
 msgstr "隐藏"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "隐藏已关闭的仓位"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "对兑换率有高度影响"
@@ -1509,6 +1505,8 @@ msgstr "流动池份额："
 msgid "Show Cancelled"
 msgstr "节目取消"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "显示已关闭的仓位"
