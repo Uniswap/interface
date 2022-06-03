@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { ButtonText } from 'components/Button'
 import PositionListItem from 'components/PositionListItem'
+import SimpleToggle from 'components/Toggle/SimpleToggle'
 import React from 'react'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
@@ -28,8 +28,36 @@ const MobileHeader = styled.div`
   font-size: 16px;
   font-weight: 500;
   padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     display: none;
+  }
+
+  @media screen and (max-width: ${MEDIA_WIDTHS.upToExtraSmall}px) {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+`
+
+const ToggleWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+const ToggleLabel = styled.div`
+  opacity: 0.6;
+  margin-right: 10px;
+`
+
+const MobileTogglePosition = styled.div`
+  @media screen and (max-width: ${MEDIA_WIDTHS.upToExtraSmall}px) {
+    position: absolute;
+    right: 20px;
   }
 `
 
@@ -51,12 +79,35 @@ export default function PositionList({
           <Trans>Your positions</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
-        <ButtonText style={{ opacity: 0.6 }} onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-          <Trans>Hide closed positions</Trans>
-        </ButtonText>
+        <ToggleWrap>
+          <ToggleLabel>
+            <Trans>Show closed positions</Trans>
+          </ToggleLabel>
+          <SimpleToggle
+            id="desktop-hide-closed-positions"
+            isActive={!userHideClosedPositions}
+            toggle={() => {
+              setUserHideClosedPositions(!userHideClosedPositions)
+            }}
+          />
+        </ToggleWrap>
       </DesktopHeader>
       <MobileHeader>
         <Trans>Your positions</Trans>
+        <ToggleWrap>
+          <ToggleLabel>
+            <Trans>Show closed positions</Trans>
+          </ToggleLabel>
+          <MobileTogglePosition>
+            <SimpleToggle
+              id="mobile-hide-closed-positions"
+              isActive={!userHideClosedPositions}
+              toggle={() => {
+                setUserHideClosedPositions(!userHideClosedPositions)
+              }}
+            />
+          </MobileTogglePosition>
+        </ToggleWrap>
       </MobileHeader>
       {positions.map((p) => {
         return <PositionListItem key={p.tokenId.toString()} positionDetails={p} />
