@@ -89,6 +89,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
           entering={FadeIn}
           exiting={FadeOut}
           onPress={() => {
+            setIsEditing(false)
             onChangeText('')
             Keyboard.dismiss()
           }}>
@@ -115,12 +116,6 @@ function ClearButton(props: ClearButtonProps) {
   } = props
 
   return (
-    <IconButton
-      bg="translucentBackground"
-      borderRadius="full"
-      icon={clearIcon}
-      p="xs"
-      onPress={onPress}
-    />
+    <IconButton bg="neutralSurface" borderRadius="full" icon={clearIcon} p="xs" onPress={onPress} />
   )
 }

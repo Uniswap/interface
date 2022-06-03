@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
@@ -12,8 +11,10 @@ import { Identicon } from 'src/components/accounts/Identicon'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
+import { AppBackground } from 'src/components/gradients'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
 import { selectFollowedAddressSet } from 'src/features/favorites/selectors'
 import { addFollow, removeFollow } from 'src/features/favorites/slice'
@@ -64,13 +65,14 @@ export function UserScreen({
     )
 
   return (
-    <Screen>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Flex gap="lg">
+    <Screen edges={['top', 'left', 'right']}>
+      <AppBackground />
+      <VirtualizedList>
+        <Flex gap="md" mx="md">
           {/* header */}
-          <Flex row alignItems="center" justifyContent="space-between" mt="lg" px="lg">
+          <Flex row alignItems="center" justifyContent="space-between">
             <BackButton color="deprecated_gray600" />
-            <Flex centered row gap="xs">
+            <Flex row gap="xs">
               <IconButton
                 icon={
                   <SendIcon
@@ -82,26 +84,19 @@ export function UserScreen({
                 }
               />
               <IconButton
-                icon={<ShareIcon height={28} stroke={theme.colors.deprecated_gray600} width={28} />}
+                icon={<ShareIcon height={24} stroke={theme.colors.deprecated_gray600} width={24} />}
                 onPress={onShare}
               />
             </Flex>
           </Flex>
 
           {/* profile info */}
-          <Flex
-            row
-            alignItems="center"
-            justifyContent="space-between"
-            mt="md"
-            px="lg"
-            width={'100%'}>
+          <Flex row alignItems="center" justifyContent="space-between" mb="md">
             {/* address group */}
             <Flex centered row gap="sm">
               <Identicon address={address} size={50} />
               <AddressEnsDisplay address={address} mainSize={20} secondarySize={14} />
             </Flex>
-
             {/* follow button */}
             <Button
               alignItems="center"
@@ -117,16 +112,10 @@ export function UserScreen({
               </Text>
             </Button>
           </Flex>
-
-          {/* user token info */}
-          <Flex px="md">
-            <PortfolioTokens count={5} owner={address} />
-          </Flex>
-          <Flex px="md">
-            <NFTMasonry count={5} owner={address} />
-          </Flex>
+          <PortfolioTokens count={4} />
+          <NFTMasonry count={16} />
         </Flex>
-      </ScrollView>
+      </VirtualizedList>
     </Screen>
   )
 }

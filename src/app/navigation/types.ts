@@ -32,7 +32,6 @@ export type ExploreStackParamList = {
   [Screens.Explore]: undefined
   [Screens.ExploreTokens]: undefined
   [Screens.TokenDetails]: { currencyId: string }
-  [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 
 export type AccountStackParamList = {
@@ -114,6 +113,7 @@ export type AppStackParamList = {
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.Transfer]: { transferFormState?: TransactionState } | undefined
+  [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.User]: { address: string }
 }
 

@@ -59,7 +59,7 @@ export function TokenItem({ token, onPress }: TokenItemProps) {
   return (
     <Swipeable overshootRight={false} renderRightActions={renderRightActions}>
       <Pressable testID={`token-item-${token.asset.symbol}`} onPress={onPress}>
-        <Flex row alignItems="center" bg="neutralBackground" justifyContent="space-between" p="sm">
+        <Flex row alignItems="center" justifyContent="space-between" py="sm">
           <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
             <Image source={{ uri: token.asset.icon_url }} style={tokenLogoStyle} />
             <Flex alignItems="flex-start" flexShrink={1} gap="xxs">

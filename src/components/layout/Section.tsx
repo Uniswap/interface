@@ -19,7 +19,7 @@ import { Trace } from 'src/features/telemetry/Trace'
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
   return (
     <Trace {...trace}>
-      <Flex bg="neutralBackground" borderRadius="md" p="md">
+      <Flex bg="neutralBackground" borderRadius="md" gap="xs" p="md">
         {children}
       </Flex>
     </Trace>

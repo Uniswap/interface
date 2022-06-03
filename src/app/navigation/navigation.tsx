@@ -259,7 +259,6 @@ export function ExploreStackNavigator() {
           return [{ id: 'explore-tokens-header', animation: 'fade' }]
         }}
       />
-      <ExploreStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
     </ExploreStack.Navigator>
   )
@@ -336,6 +335,7 @@ export function AppStackNavigator() {
       <AppStack.Group>
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
+      <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={UserScreen} name={Screens.User} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Group screenOptions={navOptions.presentationModal}>

@@ -17,7 +17,7 @@ export function ExploreScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
 
-  const onChangeFilter = (newSearchFilter: string) => {
+  const onChangeSearchFilter = (newSearchFilter: string) => {
     setSearchQuery(newSearchFilter)
   }
 
@@ -26,7 +26,9 @@ export function ExploreScreen() {
   }
 
   const onSearchBlur = () => {
-    setIsSearchMode(false)
+    if (searchQuery.length === 0) {
+      setIsSearchMode(false)
+    }
   }
 
   return (
@@ -39,11 +41,11 @@ export function ExploreScreen() {
           </Flex>
           <Flex mx="md">
             <SearchTextInput
-              backgroundColor="translucentBackground"
+              backgroundColor="neutralBackground"
               placeholder={t('Search for tokens or address')}
               value={searchQuery}
               onBlur={onSearchBlur}
-              onChangeText={onChangeFilter}
+              onChangeText={onChangeSearchFilter}
               onFocus={onSearchFocus}
             />
 

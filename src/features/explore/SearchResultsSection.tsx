@@ -13,11 +13,11 @@ import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { TokenItem } from 'src/components/TokenList/TokenItem'
 import { ChainId } from 'src/constants/chains'
 import { Asset } from 'src/features/dataApi/zerion/types'
 import { useENS } from 'src/features/ens/useENS'
 import { useTokenSearchResults } from 'src/features/explore/hooks'
+import { TokenItem } from 'src/features/explore/TokenItem'
 import { Screens } from 'src/screens/Screens'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
 import { buildCurrencyId } from 'src/utils/currencyId'
@@ -66,19 +66,19 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
 
   return (
     <>
-      <Flex gap="lg" mx="sm">
+      <Flex gap="md">
         {searchQuery.length > 0 &&
           (isLoading ? (
             <Box padding="sm">
               <Loading repeat={4} type="box" />
             </Box>
           ) : (
-            <Flex gap="md">
+            <Flex gap="xs">
               <Text color="neutralTextSecondary" variant="body2">
                 {t('Tokens')}
               </Text>
               <Section.List
-                ItemSeparatorComponent={() => <Separator my="sm" />}
+                ItemSeparatorComponent={() => <Separator />}
                 data={tokens?.info}
                 keyExtractor={key}
                 renderItem={renderTokenItem}
@@ -87,12 +87,12 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
           ))}
 
         {ensName && ensAddress && (
-          <Flex gap="md">
+          <Flex gap="xs">
             <Text color="neutralTextSecondary" variant="body2">
               {t('Profiles and wallets')}
             </Text>
             <Button onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}>
-              <Flex row alignItems="center" gap="sm" justifyContent="space-between">
+              <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
                 <Flex centered row gap="sm">
                   <Identicon address={ensAddress} size={35} />
                   <Flex gap="xxs">
@@ -109,12 +109,12 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
         )}
 
         {etherscanAddress && (
-          <Flex gap="md">
+          <Flex gap="xs">
             <Text color="neutralTextSecondary" variant="body2">
               {t('View on Etherscan')}
             </Text>
             <Button onPress={() => onPressViewEtherscan(etherscanAddress)}>
-              <Flex row alignItems="center" gap="sm" justifyContent="space-between">
+              <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
                 <Flex centered row gap="sm">
                   <Image source={ETHERSCAN_LOGO} style={etherscanLogoStyle} />
                   <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
