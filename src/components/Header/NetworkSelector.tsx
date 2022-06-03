@@ -15,7 +15,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-import { switchChain } from 'utils/switchToNetwork'
+import { switchChain } from 'utils/switchChain'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
