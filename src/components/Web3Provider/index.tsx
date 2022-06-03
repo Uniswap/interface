@@ -40,7 +40,7 @@ function Web3Updater() {
   const fortmaticIsActive = hooks.useSelectedIsActive(fortmatic)
   const previousFortmaticIsActive = usePrevious(fortmaticIsActive)
 
-  const [eagerlyConnectingWallets, setEagerlyConnectingWallets] = useState(new Set())
+  const [isEagerlyConnecting, setIsEagerlyConnecting] = useState(false)
 
   useEffect(() => {
     if (error) {
@@ -52,12 +52,12 @@ function Web3Updater() {
   useEffect(() => {
     if (walletOverride) {
       getConnectorForWallet(walletOverride).connectEagerly()
-      setEagerlyConnectingWallets(new Set(walletOverride))
+      setIsEagerlyConnecting(true)
     } else if (!walletOverrideBackfilled) {
       WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC)
         .map(getConnectorForWallet)
         .forEach((connector) => connector.connectEagerly())
-      setEagerlyConnectingWallets(new Set(WALLETS))
+      setIsEagerlyConnecting(true)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -87,7 +87,6 @@ function Web3Updater() {
 
     isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
       const { isActive, previousIsActive } = state
-      const isEagerlyConnecting = eagerlyConnectingWallets.has(wallet)
       if (isActive && !previousIsActive) {
         // When a user manually sets their new connection, set a wallet override.
         // Also set an override when they were a user prior to this state being introduced.
@@ -97,8 +96,7 @@ function Web3Updater() {
 
         // Reset the eagerly connecting state.
         if (isEagerlyConnecting) {
-          eagerlyConnectingWallets.delete(wallet)
-          setEagerlyConnectingWallets(new Set([...eagerlyConnectingWallets]))
+          setIsEagerlyConnecting(false)
         }
       }
     })
@@ -114,8 +112,8 @@ function Web3Updater() {
     previousWalletConnectIsActive,
     fortmaticIsActive,
     previousFortmaticIsActive,
-    eagerlyConnectingWallets,
-    setEagerlyConnectingWallets,
+    isEagerlyConnecting,
+    setIsEagerlyConnecting,
   ])
 
   return null
