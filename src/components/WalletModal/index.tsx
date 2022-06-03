@@ -150,25 +150,21 @@ export default function WalletModal({
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
 
-  const previousConnector = usePrevious(connector)
   const previousAccount = usePrevious(account)
 
   const resetAccountView = useCallback(() => {
     setWalletView(WALLET_VIEWS.ACCOUNT)
   }, [setWalletView])
 
-  // close on connection/disconnection
   useEffect(() => {
-    if (walletModalOpen && account !== previousAccount) {
-      toggleWalletModal()
+    if (walletModalOpen) {
+      if (!account && previousAccount) {
+        setWalletView(WALLET_VIEWS.OPTIONS)
+      } else if (account !== previousAccount && !error) {
+        toggleWalletModal()
+      }
     }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
-
-  useEffect(() => {
-    if (walletModalOpen && connector && connector !== previousConnector && !error) {
-      setWalletView(WALLET_VIEWS.ACCOUNT)
-    }
-  }, [setWalletView, error, connector, walletModalOpen, previousConnector])
+  }, [account, previousAccount, error, toggleWalletModal, walletModalOpen])
 
   useEffect(() => {
     if (walletModalOpen) {
