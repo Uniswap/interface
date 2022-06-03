@@ -34,7 +34,6 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/v3/actions'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useIsGaslessMode } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -75,7 +74,8 @@ export default function AddLiquidity({
 
   const { onFieldAInput } = useV3MintActionHandlers(true)
 
-  const isExpertMode = useIsGaslessMode()
+  // FIXME disabled
+  const isExpertMode = false
 
   const isValid = !errorMessage
 

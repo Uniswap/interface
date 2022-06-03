@@ -7,7 +7,7 @@ import { useCallback, useMemo } from 'react'
 import { SwapTransaction } from 'state/routing/types'
 
 import {
-  KROMATIKA_ROUTER_ADDRESSES,
+  KROMATIKA_METASWAP_ADDRESSES,
   LIMIT_ORDER_MANAGER_ADDRESSES,
   SWAP_ROUTER_ADDRESSES,
   V2_ROUTER_ADDRESS,
@@ -115,6 +115,7 @@ export function useApproveCallbackFromTrade(
 ) {
   const { chainId } = useActiveWeb3React()
   const v3SwapRouterAddress = chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
+  const kromatikaMetaswap = chainId ? KROMATIKA_METASWAP_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? (allowedSlippage ? trade.maximumAmountIn(allowedSlippage) : trade.inputAmount) : undefined),
     [allowedSlippage, trade]
@@ -124,7 +125,7 @@ export function useApproveCallbackFromTrade(
     amountToApprove,
     chainId
       ? swapTransaction
-        ? swapTransaction?.to
+        ? kromatikaMetaswap
         : trade instanceof V3Trade
         ? v3SwapRouterAddress
         : undefined

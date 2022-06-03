@@ -133,8 +133,7 @@
     "web-vitals": "^2.1.0",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
-    "workbox-routing": "^6.1.0",
-    "@biconomy/mexa": "^2.0.28"
+    "workbox-routing": "^6.1.0"
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "1.7.1"
@@ -175,6 +174,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@biconomy/mexa": "https://github.com/Kromatika-Finance/mexa-sdk",
     "@chakra-ui/react": "^1.8.7",
     "@emotion/react": "^11.8.2",
     "@material-ui/core": "^4.12.3",

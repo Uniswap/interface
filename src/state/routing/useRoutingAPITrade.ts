@@ -106,7 +106,7 @@ function useSwapAPIArguments({
       fromAddress: account.toString(),
       slippage: allowedSlippage.toSignificant(6),
       destReceiver: recipient ? recipient : account.toString(),
-      disableEstimate: false,
+      disableEstimate: true,
     },
   }
 }

@@ -1,15 +1,19 @@
+import { defaultAbiCoder } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { SupportedChainId } from 'constants/chains'
+import { poll } from 'ethers/lib/utils'
 import { ReactNode, useMemo } from 'react'
 import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
 import { SwapTransaction, V3TradeState } from 'state/routing/types'
 import { useInchSwapAPITrade } from 'state/routing/useRoutingAPITrade'
+import { useIsGaslessMode } from 'state/user/hooks'
 
-import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
+import { KROMATIKA_METASWAP_ADDRESSES, SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
@@ -17,9 +21,10 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useKromatikaRouter, useV2RouterContract } from './useContract'
+import { useKromatikaMetaswap, useKromatikaRouter, useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
+import { useGaslessCallback } from './useGaslessCallback'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useActiveWeb3React } from './web3'
 
@@ -76,6 +81,7 @@ function useMarketCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const argentWalletContract = useArgentWalletContract()
+  const kromatikaMetaswap = useKromatikaMetaswap()
 
   // 1 - 0xProtocol ; 2-1inch
 
@@ -112,7 +118,41 @@ function useMarketCallArguments(
         marketcall: [],
       }
     // trade is V3Trade
-    const swapRouterAddress = updatedSwapTxn.tx?.to
+    let swapRouterAddress
+    let callData
+    if (kromatikaMetaswap) {
+      swapRouterAddress = kromatikaMetaswap.address
+      const tokenFrom = trade?.inputAmount.currency.isNative
+        ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+        : trade?.inputAmount.currency.wrapped.address
+      const amountFrom = trade?.inputAmount.quotient.toString()
+
+      callData = kromatikaMetaswap.interface.encodeFunctionData('swap', [
+        tokenFrom,
+        toHex(amountFrom),
+        {
+          adapterId: 'SwapAggregator',
+          data: defaultAbiCoder.encode(
+            ['tuple(address tokenFrom,address tokenTo,uint256 amountFrom,address aggregator,bytes aggregatorData)'],
+            [
+              {
+                tokenFrom,
+                tokenTo: trade.outputAmount.currency.isNative
+                  ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+                  : trade.outputAmount.currency.wrapped.address,
+                amountFrom: toHex(amountFrom),
+                aggregator: updatedSwapTxn.tx.to,
+                aggregatorData: updatedSwapTxn.tx.data,
+              },
+            ]
+          ),
+        },
+      ])
+    } else {
+      callData = updatedSwapTxn.tx.data
+      swapRouterAddress = updatedSwapTxn.tx?.to
+    }
+
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return {
         state: updatedSwapTxn.state,
@@ -127,7 +167,7 @@ function useMarketCallArguments(
                 {
                   to: swapRouterAddress,
                   value: updatedSwapTxn.tx.value,
-                  data: updatedSwapTxn.tx.data,
+                  data: callData,
                 },
               ],
             ]),
@@ -145,12 +185,23 @@ function useMarketCallArguments(
         {
           address: swapRouterAddress,
           value: toHex(updatedSwapTxn.tx.value),
-          calldata: updatedSwapTxn.tx.data,
+          calldata: callData,
           gas: updatedSwapTxn.tx.gas,
         },
       ],
     }
-  }, [trade, recipient, library, account, chainId, deadline, updatedSwapTxn, argentWalletContract, allowedSlippage])
+  }, [
+    trade,
+    recipient,
+    library,
+    account,
+    chainId,
+    deadline,
+    updatedSwapTxn,
+    kromatikaMetaswap,
+    argentWalletContract,
+    allowedSlippage,
+  ])
 }
 
 /**
@@ -244,6 +295,13 @@ export function useMarketCallback(
 ): { state: MarketCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
+  const { gaslessCallback } = useGaslessCallback()
+
+  // TODO enable this
+  const isExpertMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
+
+  const kromatikaRouter = useKromatikaRouter()
+
   const swapCalls = useMarketCallArguments(
     trade,
     allowedSlippage,
@@ -301,7 +359,7 @@ export function useMarketCallback(
                 }
               })
               .catch((gasError) => {
-                console.debug('Gas estimate failed, trying eth_call to extract error', call, gasError)
+                console.log('Gas estimate failed, trying eth_call to extract error', call, gasError)
 
                 return {
                   call,
@@ -332,55 +390,124 @@ export function useMarketCallback(
           call: { address, calldata, value },
         } = bestCallOption
 
-        return library
-          .getSigner()
-          .sendTransaction({
+        if (isExpertMode && kromatikaRouter) {
+          const routerCalldata = kromatikaRouter.interface.encodeFunctionData('executeCall', [
+            KROMATIKA_METASWAP_ADDRESSES[chainId],
+            calldata,
+          ])
+
+          const gasLimit =
+            'gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) } : {}
+          const txParams = {
+            data: routerCalldata,
+            to: kromatikaRouter.address,
             from: account,
-            to: address,
-            data: calldata,
-            // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption
-              ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
-              : {}),
+            gasLimit: gasLimit ? gasLimit?.gasLimit?.add(200000).toHexString() : 700000,
+            signatureType: 'EIP712_SIGN',
             ...(value && !isZero(value) ? { value } : {}),
-          })
-          .then((response) => {
-            addTransaction(
-              response,
-              trade.tradeType === TradeType.EXACT_INPUT
-                ? {
-                    type: TransactionType.SWAP,
-                    tradeType: TradeType.EXACT_INPUT,
-                    inputCurrencyId: currencyId(trade.inputAmount.currency),
-                    inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                    expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                    outputCurrencyId: currencyId(trade.outputAmount.currency),
-                    minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-                  }
-                : {
-                    type: TransactionType.SWAP,
-                    tradeType: TradeType.EXACT_OUTPUT,
-                    inputCurrencyId: currencyId(trade.inputAmount.currency),
-                    maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-                    outputCurrencyId: currencyId(trade.outputAmount.currency),
-                    outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-                    expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-                  }
-            )
+          }
+          // sending gasless txn
+          return gaslessCallback()
+            .then((gaslessProvider) => {
+              if (!gaslessProvider) return
+              return gaslessProvider.send('eth_sendTransaction', [txParams]).then(async (response: any) => {
+                const txResponse = await poll(
+                  async () => {
+                    const tx = await gaslessProvider.getTransaction(response)
+                    if (tx === null) {
+                      return undefined
+                    }
+                    const blockNumber = await gaslessProvider._getInternalBlockNumber(
+                      100 + 2 * gaslessProvider.pollingInterval
+                    )
+                    return gaslessProvider._wrapTransaction(tx, response, blockNumber)
+                  },
+                  { oncePoll: gaslessProvider }
+                )
+                if (txResponse) {
+                  addTransaction(
+                    txResponse,
+                    trade.tradeType === TradeType.EXACT_INPUT
+                      ? {
+                          type: TransactionType.SWAP,
+                          tradeType: TradeType.EXACT_INPUT,
+                          inputCurrencyId: currencyId(trade.inputAmount.currency),
+                          inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                          expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                          outputCurrencyId: currencyId(trade.outputAmount.currency),
+                          minimumOutputCurrencyAmountRaw: '',
+                        }
+                      : {
+                          type: TransactionType.SWAP,
+                          tradeType: TradeType.EXACT_OUTPUT,
+                          inputCurrencyId: currencyId(trade.inputAmount.currency),
+                          maximumInputCurrencyAmountRaw: '',
+                          outputCurrencyId: currencyId(trade.outputAmount.currency),
+                          outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                          expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                        }
+                  )
+                }
 
-            return response.hash
-          })
-          .catch((error) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error(t`Transaction rejected.`)
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
+                return response
+              })
+            })
+            .catch((error) => {
+              // TODO
+              console.log(error)
+              throw new Error(t`Transaction rejected: ${marketErrorToUserReadableMessage(error)}`)
+            })
+        } else {
+          return library
+            .getSigner()
+            .sendTransaction({
+              from: account,
+              to: address,
+              data: calldata,
+              // let the wallet try if we can't estimate the gas
+              ...('gasEstimate' in bestCallOption
+                ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
+                : {}),
+              ...(value && !isZero(value) ? { value } : {}),
+            })
+            .then((response) => {
+              addTransaction(
+                response,
+                trade.tradeType === TradeType.EXACT_INPUT
+                  ? {
+                      type: TransactionType.SWAP,
+                      tradeType: TradeType.EXACT_INPUT,
+                      inputCurrencyId: currencyId(trade.inputAmount.currency),
+                      inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                      expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                      outputCurrencyId: currencyId(trade.outputAmount.currency),
+                      minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+                    }
+                  : {
+                      type: TransactionType.SWAP,
+                      tradeType: TradeType.EXACT_OUTPUT,
+                      inputCurrencyId: currencyId(trade.inputAmount.currency),
+                      maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+                      outputCurrencyId: currencyId(trade.outputAmount.currency),
+                      outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                      expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                    }
+              )
 
-              throw new Error(t`Swap failed: ${marketErrorToUserReadableMessage(error)}`)
-            }
-          })
+              return response.hash
+            })
+            .catch((error) => {
+              // if the user rejected the tx, pass this along
+              if (error?.code === 4001) {
+                throw new Error(t`Transaction rejected.`)
+              } else {
+                // otherwise, the error was unexpected and we need to convey that
+                console.error(`Swap failed`, error, address, calldata, value)
+
+                throw new Error(t`Swap failed: ${marketErrorToUserReadableMessage(error)}`)
+              }
+            })
+        }
       },
       error: null,
     }
@@ -391,8 +518,12 @@ export function useMarketCallback(
     chainId,
     swapTransaction,
     recipient,
+    swapCalls.state,
+    swapCalls.marketcall,
     recipientAddressOrName,
-    swapCalls,
+    isExpertMode,
+    kromatikaRouter,
+    gaslessCallback,
     addTransaction,
     allowedSlippage,
   ])

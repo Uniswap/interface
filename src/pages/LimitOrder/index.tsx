@@ -597,7 +597,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     if (txHash) {
       history.push('/limitorder/')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, history, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
@@ -958,6 +958,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                               id="swap-button"
                               disabled={
                                 !isValid ||
+                                !approvalState ||
                                 (approvalState !== ApprovalState.APPROVED &&
                                   signatureState !== UseERC20PermitState.SIGNED)
                               }
