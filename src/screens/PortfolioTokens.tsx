@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { SharedElement } from 'react-navigation-shared-element'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AppBackground } from 'src/components/gradients'
-import { Box } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Section } from 'src/components/layout/Section'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
@@ -25,9 +25,9 @@ export function PortfolioTokensScreen({
   return (
     <Screen withSharedElementTransition>
       <AppBackground />
-      <Box mx="md">
+      <Flex grow m="sm">
         <PortfolioTokens expanded count={15} owner={owner} />
-      </Box>
+      </Flex>
     </Screen>
   )
 }
@@ -65,37 +65,39 @@ export function PortfolioTokens({
     navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
 
   return (
-    <Section.Container>
-      <TokenBalanceList
-        balances={balances as PortfolioBalance[]}
-        empty={
-          <Section.EmptyState
-            buttonLabel={t('Explore')}
-            description={t(
-              'Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet.'
-            )}
-            title={t('Explore Tokens')}
-            onPress={() => {
-              // TODO: figure out how to navigate to explore
-            }}
-          />
-        }
-        header={
-          <SharedElement id="portfolio-tokens-header">
-            <Section.Header
-              buttonLabel={t('View all')}
-              expanded={expanded ?? false}
-              subtitle={<TotalBalance balances={balanceData} variant="h3" />}
-              title={t('Tokens')}
-              onMaximize={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
-              onMinimize={() => navigation.canGoBack() && navigation.goBack()}
+    <SharedElement id="portfolio-tokens-background">
+      <Section.Container>
+        <TokenBalanceList
+          balances={balances as PortfolioBalance[]}
+          empty={
+            <Section.EmptyState
+              buttonLabel={t('Explore')}
+              description={t(
+                'Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet.'
+              )}
+              title={t('Explore Tokens')}
+              onPress={() => {
+                // TODO: figure out how to navigate to explore
+              }}
             />
-          </SharedElement>
-        }
-        loading={loading}
-        view={viewType}
-        onPressToken={onPressToken}
-      />
-    </Section.Container>
+          }
+          header={
+            <SharedElement id="portfolio-tokens-header">
+              <Section.Header
+                buttonLabel={t('View all')}
+                expanded={expanded ?? false}
+                subtitle={<TotalBalance balances={balanceData} variant="h3" />}
+                title={t('Tokens')}
+                onMaximize={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
+                onMinimize={() => navigation.canGoBack() && navigation.goBack()}
+              />
+            </SharedElement>
+          }
+          loading={loading}
+          view={viewType}
+          onPressToken={onPressToken}
+        />
+      </Section.Container>
+    </SharedElement>
   )
 }

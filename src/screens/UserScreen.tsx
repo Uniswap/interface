@@ -112,8 +112,8 @@ export function UserScreen({
               </Text>
             </Button>
           </Flex>
-          <PortfolioTokens count={4} />
-          <NFTMasonry count={16} />
+          <PortfolioTokens count={4} owner={address} />
+          <NFTMasonry count={16} owner={address} />
         </Flex>
       </VirtualizedList>
     </Screen>

@@ -36,7 +36,7 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
     [navigation]
   )
 
-  return (
+  return favorites ? (
     <GenericTokenSection
       {...props}
       horizontal
@@ -46,5 +46,5 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
       renderItem={renderItem}
       title={t('Favorites')}
     />
-  )
+  ) : null
 }

@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PortfolioBalance } from 'src/features/dataApi/types'
@@ -23,8 +23,21 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
   }
 
   return (
-    <Button bg="none" flexDirection="row" justifyContent="space-between" py="xs" onPress={onPress}>
-      <Flex row alignItems={'center'} flexShrink={1} gap="xs" overflow="hidden">
+    <Button
+      bg="none"
+      flexDirection="row"
+      justifyContent="space-between"
+      px="sm"
+      py="xs"
+      onPress={onPress}>
+      <AnimatedFlex
+        row
+        alignItems="center"
+        entering={FadeIn}
+        exiting={FadeOut}
+        flexShrink={1}
+        gap="xs"
+        overflow="hidden">
         <CurrencyLogo currency={currency} size={36} />
         <Flex alignItems="flex-start" flexShrink={1} gap="none">
           <Text ellipsizeMode="tail" numberOfLines={1} variant="subHead1">
@@ -34,11 +47,13 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
             amount
           )} `}</Text>
         </Flex>
-      </Flex>
-      <Box alignItems="flex-end" flexBasis="auto" flexShrink={1}>
-        <Text variant="subHead1">{formatUSDPrice(balance.balanceUSD)}</Text>
-        <RelativeChange change={relativeChange24} />
-      </Box>
+      </AnimatedFlex>
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
+        <Box alignItems="flex-end" flexBasis="auto" flexShrink={1}>
+          <Text variant="subHead1">{formatUSDPrice(balance.balanceUSD)}</Text>
+          <RelativeChange change={relativeChange24} />
+        </Box>
+      </AnimatedFlex>
     </Button>
   )
 }

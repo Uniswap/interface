@@ -6,7 +6,7 @@ import { SharedElement } from 'react-navigation-shared-element'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { AppBackground } from 'src/components/gradients'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Masonry } from 'src/components/layout/Masonry'
 import { Screen } from 'src/components/layout/Screen'
 import { Section } from 'src/components/layout/Section'
@@ -28,9 +28,9 @@ export function PortfolioNFTsScreen({
   return (
     <Screen withSharedElementTransition>
       <AppBackground />
-      <Box mx="md">
+      <Flex grow m="sm">
         <NFTMasonry expanded count={50} owner={owner} />
-      </Box>
+      </Flex>
     </Screen>
   )
 }

@@ -1,10 +1,13 @@
 import React from 'react'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { Star } from 'src/components/icons/Star'
 import { Box } from 'src/components/layout/Box'
+import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { ChainId } from 'src/constants/chains'
@@ -13,10 +16,9 @@ import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
-import { Flex } from '../../components/layout'
-
 interface TokenItemProps {
   token: Asset
+  isSearchResult?: boolean
   onPress: () => void
 }
 
@@ -31,7 +33,7 @@ interface FavoriteButtonProps {
 
 function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
   return (
-    <Flex centered bg={'neutralAction'} width={60}>
+    <Flex centered bg={'neutralAction'} width={80}>
       <IconButton
         icon={<Star active={active} size={24} />}
         variant="transparent"
@@ -41,7 +43,7 @@ function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
   )
 }
 
-export function TokenItem({ token, onPress }: TokenItemProps) {
+export function TokenItem({ token, isSearchResult = false, onPress }: TokenItemProps) {
   const dispatch = useAppDispatch()
 
   const assetId = buildCurrencyId(ChainId.Mainnet, token.asset.asset_code)
@@ -52,14 +54,24 @@ export function TokenItem({ token, onPress }: TokenItemProps) {
     else dispatch(addFavoriteToken({ currencyId: assetId }))
   }
 
-  const renderRightActions = () => (
-    <FavoriteButton active={isFavoriteToken} asset={token} onPress={onFavoriteToken} />
-  )
+  const renderRightActions = () => {
+    return isSearchResult ? null : (
+      <FavoriteButton active={isFavoriteToken} asset={token} onPress={onFavoriteToken} />
+    )
+  }
 
   return (
     <Swipeable overshootRight={false} renderRightActions={renderRightActions}>
-      <Pressable testID={`token-item-${token.asset.symbol}`} onPress={onPress}>
-        <Flex row alignItems="center" justifyContent="space-between" py="sm">
+      <Button testID={`token-item-${token.asset.symbol}`} onPress={onPress}>
+        <AnimatedFlex
+          row
+          alignItems="center"
+          bg={isSearchResult ? 'none' : 'neutralBackground'}
+          entering={FadeIn}
+          exiting={FadeOut}
+          justifyContent="space-between"
+          px={isSearchResult ? 'xs' : 'md'}
+          py="sm">
           <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
             <Image source={{ uri: token.asset.icon_url }} style={tokenLogoStyle} />
             <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
@@ -77,8 +89,8 @@ export function TokenItem({ token, onPress }: TokenItemProps) {
               sub={<RelativeChange change={token?.asset.price?.relative_change_24h} />}
             />
           </Flex>
-        </Flex>
-      </Pressable>
+        </AnimatedFlex>
+      </Button>
     </Swipeable>
   )
 }

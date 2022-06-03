@@ -41,7 +41,7 @@ export function GenericTokenSection({
   // TODO: refactor
   const onToggle = () => {
     if (expanded) {
-      navigation.goBack()
+      navigation.navigate(Screens.Explore)
     } else {
       navigation.navigate(Screens.ExploreTokens)
     }
@@ -64,7 +64,7 @@ export function GenericTokenSection({
         </Box>
       ) : (
         <Section.List
-          ItemSeparatorComponent={() => <Separator />}
+          ItemSeparatorComponent={() => <Separator ml="md" />}
           data={fixedCount ? assets?.slice(0, fixedCount) : assets}
           horizontal={horizontal}
           keyExtractor={key}

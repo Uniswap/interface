@@ -20,7 +20,7 @@ export function ExploreTokensScreen({}: ExploreStackScreenProp<Screens.ExploreTo
   return (
     <Screen withSharedElementTransition>
       <AppBackground />
-      <Box flex={1} mb="md" mx="md">
+      <Box flex={1} m="sm">
         {display === Display.Market ? (
           <TopTokensSection expanded />
         ) : (

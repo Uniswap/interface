@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AppBackground } from 'src/components/gradients'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
@@ -42,7 +41,7 @@ export function ExploreScreen() {
           <Flex mx="md">
             <SearchTextInput
               backgroundColor="neutralBackground"
-              placeholder={t('Search for tokens or address')}
+              placeholder={t('Search for tokens, ENS, or address')}
               value={searchQuery}
               onBlur={onSearchBlur}
               onChangeText={onChangeSearchFilter}
@@ -50,14 +49,12 @@ export function ExploreScreen() {
             />
 
             {isSearchMode ? (
-              <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-                <SearchResultsSection searchQuery={searchQuery} />
-              </AnimatedFlex>
+              <SearchResultsSection searchQuery={searchQuery} />
             ) : (
-              <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-                <FavoriteTokensSection fixedCount={5} />
+              <>
+                <FavoriteTokensSection />
                 <TopTokensSection fixedCount={10} />
-              </AnimatedFlex>
+              </>
             )}
           </Flex>
         </Flex>

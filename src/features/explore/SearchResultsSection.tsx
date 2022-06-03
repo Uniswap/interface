@@ -1,6 +1,7 @@
 import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ImageStyle, ListRenderItemInfo } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ETHERSCAN_LOGO } from 'src/assets'
@@ -8,7 +9,7 @@ import ArrowDown from 'src/assets/icons/arrow-down.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -44,6 +45,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     ({ item: token }: ListRenderItemInfo<Asset>) => {
       return (
         <TokenItem
+          isSearchResult={true}
           token={token}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
@@ -65,73 +67,73 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   }
 
   return (
-    <>
-      <Flex gap="md">
-        {searchQuery.length > 0 &&
-          (isLoading ? (
-            <Box padding="sm">
-              <Loading repeat={4} type="box" />
-            </Box>
-          ) : (
-            <Flex gap="xs">
-              <Text color="neutralTextSecondary" variant="body2">
-                {t('Tokens')}
-              </Text>
-              <Section.List
-                ItemSeparatorComponent={() => <Separator />}
-                data={tokens?.info}
-                keyExtractor={key}
-                renderItem={renderTokenItem}
+    <Flex grow borderRadius="md" gap="md">
+      {searchQuery.length > 0 &&
+        (isLoading ? (
+          <Box padding="sm">
+            <Loading repeat={4} type="box" />
+          </Box>
+        ) : (
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
+            <Section.List
+              ItemSeparatorComponent={() => <Separator mx="xs" />}
+              ListHeaderComponent={
+                <Text color="neutralTextSecondary" mx="xs" variant="body2">
+                  {t('Tokens')}
+                </Text>
+              }
+              data={tokens?.info}
+              keyExtractor={key}
+              renderItem={renderTokenItem}
+            />
+          </AnimatedFlex>
+        ))}
+
+      {ensName && ensAddress && (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
+          <Text color="neutralTextSecondary" variant="body2">
+            {t('Profiles and wallets')}
+          </Text>
+          <Button onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}>
+            <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
+              <Flex centered row gap="sm">
+                <Identicon address={ensAddress} size={35} />
+                <Flex gap="xxs">
+                  <Text variant="mediumLabel">{ensName}</Text>
+                  <Text color="neutralTextSecondary" variant="caption">
+                    {shortenAddress(ensAddress)}
+                  </Text>
+                </Flex>
+              </Flex>
+              <ProfileIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
+            </Flex>
+          </Button>
+        </AnimatedFlex>
+      )}
+
+      {etherscanAddress && (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
+          <Text color="neutralTextSecondary" variant="body2">
+            {t('View on Etherscan')}
+          </Text>
+          <Button onPress={() => onPressViewEtherscan(etherscanAddress)}>
+            <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
+              <Flex centered row gap="sm">
+                <Image source={ETHERSCAN_LOGO} style={etherscanLogoStyle} />
+                <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
+              </Flex>
+              <ArrowDown
+                color={theme.colors.neutralTextSecondary}
+                height={24}
+                strokeWidth={2}
+                style={{ transform: [{ rotate: '225deg' }] }}
+                width={24}
               />
             </Flex>
-          ))}
-
-        {ensName && ensAddress && (
-          <Flex gap="xs">
-            <Text color="neutralTextSecondary" variant="body2">
-              {t('Profiles and wallets')}
-            </Text>
-            <Button onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}>
-              <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
-                <Flex centered row gap="sm">
-                  <Identicon address={ensAddress} size={35} />
-                  <Flex gap="xxs">
-                    <Text variant="mediumLabel">{ensName}</Text>
-                    <Text color="neutralTextSecondary" variant="caption">
-                      {shortenAddress(ensAddress)}
-                    </Text>
-                  </Flex>
-                </Flex>
-                <ProfileIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
-              </Flex>
-            </Button>
-          </Flex>
-        )}
-
-        {etherscanAddress && (
-          <Flex gap="xs">
-            <Text color="neutralTextSecondary" variant="body2">
-              {t('View on Etherscan')}
-            </Text>
-            <Button onPress={() => onPressViewEtherscan(etherscanAddress)}>
-              <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
-                <Flex centered row gap="sm">
-                  <Image source={ETHERSCAN_LOGO} style={etherscanLogoStyle} />
-                  <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
-                </Flex>
-                <ArrowDown
-                  color={theme.colors.neutralTextSecondary}
-                  height={24}
-                  strokeWidth={2}
-                  style={{ transform: [{ rotate: '225deg' }] }}
-                  width={24}
-                />
-              </Flex>
-            </Button>
-          </Flex>
-        )}
-      </Flex>
-    </>
+          </Button>
+        </AnimatedFlex>
+      )}
+    </Flex>
   )
 }
 

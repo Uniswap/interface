@@ -15,7 +15,7 @@ export function Masonry<T>({ data, getKey, loading, renderItem }: MasonryProps<T
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <Flex row>
+      <Flex row mx="sm">
         <Flex flex={1} gap="sm">
           {data
             .filter((_, i) => i % 2 === 0)

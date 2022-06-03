@@ -31,7 +31,6 @@ export function Screen(props: PropsWithChildren<Props>) {
           paddingTop: insets.top,
           paddingLeft: insets.left,
           paddingRight: insets.right,
-          paddingBottom: insets.bottom,
         }}>
         {props.children}
       </Box>

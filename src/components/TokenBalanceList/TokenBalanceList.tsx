@@ -100,6 +100,7 @@ function FlatBalanceList({
           onPressToken={onPressToken}
         />
       )}
+      showsVerticalScrollIndicator={false}
     />
   )
 }

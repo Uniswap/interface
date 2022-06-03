@@ -19,7 +19,7 @@ import { Trace } from 'src/features/telemetry/Trace'
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
   return (
     <Trace {...trace}>
-      <Flex bg="neutralBackground" borderRadius="md" gap="xs" p="md">
+      <Flex bg="neutralBackground" borderRadius="md" gap="xs" py="md">
         {children}
       </Flex>
     </Trace>
@@ -51,7 +51,7 @@ function Header({ buttonLabel, expanded, onMaximize, onMinimize, subtitle, title
     <FlingGestureHandler
       direction={expanded ? Directions.DOWN : Directions.UP}
       onHandlerStateChange={onFling}>
-      <Box>
+      <Box mx="md">
         <TextButton onPress={onPress}>
           <Flex gap="xxs" width="100%">
             <Flex row alignItems="center" justifyContent="space-between" width="100%">
