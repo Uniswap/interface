@@ -217,6 +217,14 @@ export const MATIC_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png',
     },
+    {
+      chainId: 137,
+      address: '0x9111D6446Ac5b88A84cf06425c6286658368542F',
+      symbol: 'FLAG-PoS',
+      name: 'ForLootAndGlory',
+      decimals: 18,
+      logoURI: 'https://app.forlootandglory.io/token_logo.png',
+    },
   ],
   version: {
     major: 0,
