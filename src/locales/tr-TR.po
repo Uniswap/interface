@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -840,10 +840,6 @@ msgstr "Yardım Merkezi"
 msgid "Hide"
 msgstr "Saklamak"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Kapalı pozisyonları gizle"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Yüksek Fiyat Etkisi"
@@ -1509,6 +1505,8 @@ msgstr "Havuz Payı:"
 msgid "Show Cancelled"
 msgstr "İptal Edilenleri Göster"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Kapalı pozisyonları göster"

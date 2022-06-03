@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -840,10 +840,6 @@ msgstr "Pusat Bantuan"
 msgid "Hide"
 msgstr "Menyembunyikan"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Sembunyikan posisi tertutup"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Dampak Harga Tinggi"
@@ -1509,6 +1505,8 @@ msgstr "Bagian dari Pool:"
 msgid "Show Cancelled"
 msgstr "Tampilkan Dibatalkan"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Tampilkan posisi tertutup"

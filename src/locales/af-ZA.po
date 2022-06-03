@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:08\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -840,10 +840,6 @@ msgstr "Hulp Sentrum"
 msgid "Hide"
 msgstr "Steek weg"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Versteek geslote posisies"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Hoë prysimpak"
@@ -1509,6 +1505,8 @@ msgstr "Aandeel van die poel:"
 msgid "Show Cancelled"
 msgstr "Vertoning is gekanselleer"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Toon geslote posisies"

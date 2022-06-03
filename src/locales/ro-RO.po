@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:08\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -840,10 +840,6 @@ msgstr "Centru de ajutor"
 msgid "Hide"
 msgstr "Ascunde"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Ascunde pozițiile închise"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Impact Preț Ridicat"
@@ -1509,6 +1505,8 @@ msgstr "Cota de Grup:"
 msgid "Show Cancelled"
 msgstr "Show Anulat"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Afișați pozițiile închise"

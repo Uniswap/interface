@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -840,10 +840,6 @@ msgstr "מרכז עזרה"
 msgid "Hide"
 msgstr "להתחבא"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "הסתר עמדות סגורות"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "השפעה על מחיר גבוה"
@@ -1509,6 +1505,8 @@ msgstr "נתח המאגר:"
 msgid "Show Cancelled"
 msgstr "ההצגה בוטלה"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "הראה עמדות סגורות"

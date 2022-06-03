@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -840,10 +840,6 @@ msgstr "Hilfezentrum"
 msgid "Hide"
 msgstr "Ausblenden"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Geschlossene Positionen ausblenden"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Hoher Preiseinfluss"
@@ -1509,6 +1505,8 @@ msgstr "Anteil am Pool:"
 msgid "Show Cancelled"
 msgstr "Show abgesagt"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Geschlossene Positionen anzeigen"

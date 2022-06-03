@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-17 10:11\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -840,10 +840,6 @@ msgstr "Center za pomoč"
 msgid "Hide"
 msgstr "Skrij"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Skrij zaprte pozicije"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Visok vpliv na ceno"
@@ -1509,6 +1505,8 @@ msgstr "Delež sklada:"
 msgid "Show Cancelled"
 msgstr "Prikaz preklican"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Pokaži zaprte položaje"

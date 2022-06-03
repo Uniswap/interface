@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -840,10 +840,6 @@ msgstr "Kituo cha Usaidizi"
 msgid "Hide"
 msgstr "Ficha"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Ficha nafasi zilizofungwa"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Athari ya Bei ya Juu"
@@ -1509,6 +1505,8 @@ msgstr "Shiriki la Dimbwi:"
 msgid "Show Cancelled"
 msgstr "Onyesho Limeghairiwa"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Onyesha nafasi zilizofungwa"

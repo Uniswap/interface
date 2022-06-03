@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -840,10 +840,6 @@ msgstr "Trung tâm trợ giúp"
 msgid "Hide"
 msgstr "Ẩn giấu"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Ẩn các vị trí đã đóng"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Tác động giá cao"
@@ -1509,6 +1505,8 @@ msgstr "Chia sẻ của Pool:"
 msgid "Show Cancelled"
 msgstr "Hiển thị Đã bị Hủy"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Hiển thị các vị trí đã đóng"

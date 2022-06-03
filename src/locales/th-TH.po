@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-03 15:09\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -840,10 +840,6 @@ msgstr "ศูนย์ช่วยเหลือ"
 msgid "Hide"
 msgstr "ซ่อน"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "ซ่อนตำแหน่งที่ปิด"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "ผลกระทบราคาสูง"
@@ -1509,6 +1505,8 @@ msgstr "ส่วนแบ่งของพูล:"
 msgid "Show Cancelled"
 msgstr "ยกเลิกการแสดง"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "แสดงตำแหน่งที่ปิด"
