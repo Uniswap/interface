@@ -9,6 +9,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { editAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -28,16 +29,34 @@ const COLORS = [
   '#C0C0C0',
 ]
 
+// Detect next view based on import account type
+function useNextOnboardingScreen(currentScreen: OnboardingScreens) {
+  const activeAccount = useActiveAccount()
+
+  switch (currentScreen) {
+    case OnboardingScreens.SelectColor:
+      if (activeAccount?.type === AccountType.Native) {
+        return OnboardingScreens.Backup
+      }
+      return OnboardingScreens.Notifications
+    default:
+      undefined
+  }
+}
+
 export function SelectColorScreen({ navigation }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
 
+  // only show backup flow if importing accounts from seed phrase, assume new accounts activated.
+  const nextScreen = useNextOnboardingScreen(OnboardingScreens.SelectColor)
+
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined)
 
   const onPressNext = useCallback(() => {
-    if (activeAccount && selectedColor) {
+    if (activeAccount && selectedColor && nextScreen) {
       dispatch(
         editAccount({
           address: activeAccount.address,
@@ -57,9 +76,9 @@ export function SelectColorScreen({ navigation }: Props) {
           },
         })
       )
+      navigation.navigate(nextScreen)
     }
-    navigation.navigate(OnboardingScreens.Backup)
-  }, [activeAccount, dispatch, navigation, selectedColor])
+  }, [activeAccount, dispatch, navigation, nextScreen, selectedColor])
 
   const renderItem = useCallback(
     ({ item: color }: ListRenderItemInfo<string>) => (

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -36,10 +36,22 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
     .map((a) => a.address)
 
   // when accounts finished adding, navigate to wallet selection page
-  const { status } = useSagaStatus(importAccountSagaName, () =>
-    navigation.navigate(OnboardingScreens.SelectWallet, { addresses: nativeAccountAddresses })
-  )
+  const { status } = useSagaStatus(importAccountSagaName)
   const loadingAccounts = status === SagaStatus.Started
+  const finishedAddingAccounts = status === SagaStatus.Success
+  /**
+   * @TODO remove this dummy flag, and instead improve saga monitoriing to include some unique id
+   * or strategy to monitor a specfic event. The current issue is that the saga triggers the success
+   * callback here even before the import action action is dispatched (from a previous succesful import).
+   *
+   * Submitted flag here is used for demoing purposes as a workaround.
+   */
+  const [submitted, setSubmitted] = useState(false)
+  useEffect(() => {
+    if (finishedAddingAccounts && submitted && nativeAccountAddresses) {
+      navigation.navigate(OnboardingScreens.SelectWallet, { addresses: nativeAccountAddresses })
+    }
+  }, [finishedAddingAccounts, nativeAccountAddresses, navigation, submitted])
 
   // add all accounst from mnemonic
   const onSubmit = useCallback(() => {
@@ -51,6 +63,7 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
           indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
         })
       )
+      setSubmitted(true) // remove this when we have unique saga monitoring
     }
   }, [dispatch, valid, value])
 
