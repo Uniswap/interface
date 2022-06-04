@@ -1,9 +1,9 @@
-import styled from 'styled-components/macro'
-import { darken } from 'polished'
+import { ButtonProps as ButtonPropsOriginal, Button as RebassButton } from 'rebass/styled-components'
+import { Check, ChevronDown } from 'react-feather'
 
 import { RowBetween } from '../Row'
-import { ChevronDown, Check } from 'react-feather'
-import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
+import { darken } from 'polished'
+import styled from 'styled-components/macro'
 import useTheme from 'hooks/useTheme'
 
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
@@ -62,6 +62,8 @@ export const ButtonPrimary = styled(Base)`
   }
   &:hover {
     border: 1px solid #B0B0B3;
+    background: ${({theme}) => darken(0.05, theme.primary1)};
+    transition: ease all 0.1s;
   }
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.bg3)};

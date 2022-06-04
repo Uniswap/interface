@@ -205,7 +205,12 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         tokenData?.txCount :
         (tokenData && tokenData?.totalTransactions) ? tokenData?.totalTransactions
             : undefined, [tokenData])
-
+    const clearRemoveFilter = () => setFilterAddress(undefined);
+    const filterAccountClick = (item:any ) => {
+        setFilterAddress(item.account)
+    }
+    const hideRemoveFilter=() => setShowRemoveFilter(undefined);
+    const clearTooltipShown = () => setTooltipShown(undefined);
     React.useEffect(() => {
         // log selected wallet
         ReactGA.event({
@@ -339,18 +344,16 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                         alignItems: 'center'
                                     }}>
                                         <span style={{ cursor: 'pointer' }} title={`Filter transactions by ${item.account}`}>
-                                            {!isMobile && !filterAddress && <Filter fill={filterAddress ? 'purple' : 'gray'} onClick={() => {
-                                                setFilterAddress(item.account)
-                                            }} />}
+                                            {!isMobile && !filterAddress && <Filter fill={filterAddress ? 'purple' : 'gray'} onClick={() => filterAccountClick(item)} />}
                                             {!isMobile && (
                                                 <React.Fragment>
                                                     {!!filterAddress && (
 
                                                         <X fill={'red'}
                                                             style={{ cursor: 'pointer' }}
-                                                            onClick={() => setFilterAddress(undefined)}
+                                                            onClick={clearRemoveFilter}
                                                             onMouseEnter={() => setShowRemoveFilter(item)}
-                                                            onMouseLeave={() => setShowRemoveFilter(undefined)} />
+                                                            onMouseLeave={hideRemoveFilter} />
                                                     )}
                                                 </React.Fragment>
                                             )}
@@ -362,7 +365,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                                 tooltipShown?.transaction?.id === item?.transaction?.id}>
                                             <Badge style={{ cursor: 'pointer' }}
                                                 onMouseEnter={() => setTooltipShown(item)}
-                                                onMouseLeave={() => setTooltipShown(undefined)}
+                                                onMouseLeave={clearTooltipShown}
                                                 variant={BadgeVariant.PRIMARY}>
                                                 {item.count}
                                             </Badge>
@@ -420,6 +423,8 @@ export const Chart = () => {
     const [collapsed, setCollapsed] = React.useState(false)
     const gridTemplateStyle = React.useMemo(() => isMobile ? '100%' : (collapsed ? '5% 95%' : '25% 75%'), [isMobile, collapsed])
     const gridColumnGap = 10
+    const setChartView = () => setView('chart')
+    const setMarketView = () => setView('market')
     return (
         <FrameWrapper style={{
             background: '#252632',
@@ -501,7 +506,7 @@ export const Chart = () => {
                                     display: 'flex'
                                 }}>
                                     {/* Nav Items */}
-                                    <StyledDiv onClick={() => setView('chart')} style={{
+                                    <StyledDiv onClick={setChartView} style={{
                                         cursor: 'pointer',
                                         marginRight: 10,
                                         textDecoration: view === 'chart' ? 'underline' : ''
@@ -513,7 +518,7 @@ export const Chart = () => {
                                         cursor: 'pointer',
                                         marginRight: 10,
                                         textDecoration: view === 'market' ? 'underline' : ''
-                                    }} onClick={() => setView('market')}>
+                                    }} onClick={setMarketView}>
                                         MarketView
                                     </StyledDiv>
                                 </div>

@@ -31,24 +31,27 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange }: { al
    const [showBridgeTip, setShowBridgeTip] = React.useState(false)
    const {chainId} = useWeb3React()
   const tipMessage = `Contract interaction fees will still occur when using the bridge, just like any other transactions (buys, transfers, sells). Redistribution fees will still occur.`
+  const onBridgeClick = ( ) => onViewChange('bridge');
+  const onLimitClick = ( ) => onViewChange('limit');
+  const onSwapClick = ( ) => onViewChange('swap') 
   return (
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed style={{display:'flex', alignItems:'center'}}>
-          <HeaderType  onClick={( ) => onViewChange('swap')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer', marginRight: '8px' }}>
+          <HeaderType  onClick={onSwapClick} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer', marginRight: '8px' }}>
             <Trans>Swap</Trans>
           </HeaderType>
 
 
         
           
-          {<HeaderType  onClick={( ) => onViewChange('limit')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
+          {<HeaderType  onClick={onLimitClick} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
             <Trans>Limit</Trans>
           </HeaderType>}
           
                
                     
-          {<HeaderType  onClick={( ) => onViewChange('bridge')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
+          {<HeaderType  onClick={onBridgeClick} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
             <Trans>Bridge</Trans>
           </HeaderType>}
           

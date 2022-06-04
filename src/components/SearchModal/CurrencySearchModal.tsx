@@ -69,7 +69,11 @@ const {  isOpen,
 
   // change min height if not searching
   const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
-
+    const showManageView = () => setModalView(CurrencyModalView.manage)
+    const showImportView = () => setModalView(CurrencyModalView.importToken)
+    const onBackImportTokenFn =() =>
+    setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search)
+  
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
       {modalView === CurrencyModalView.search ? (
@@ -83,18 +87,16 @@ const {  isOpen,
           showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
           disableNonToken={disableNonToken}
-          showImportView={() => setModalView(CurrencyModalView.importToken)}
+          showImportView={showImportView}
           setImportToken={setImportToken}
-          showManageView={() => setModalView(CurrencyModalView.manage)}
+          showManageView={showManageView}
         />
       ) : modalView === CurrencyModalView.importToken && importToken ? (
         <ImportToken
           tokens={[importToken]}
           onDismiss={onDismiss}
           list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-          onBack={() =>
-            setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search)
-          }
+          onBack={onBackImportTokenFn}
           handleCurrencySelect={handleCurrencySelect}
         />
       ) : modalView === CurrencyModalView.importList && importList && listURL ? (

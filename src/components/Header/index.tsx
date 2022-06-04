@@ -386,6 +386,9 @@ export default function Header() {
   }
 
   const [showGasTt, setShowGasTt] = React.useState(false)
+  const onMouseEnterGasIcon = () => setShowGasTt(true);
+  const onMouseExitGasIcon = () => setShowGasTt(false)
+  const setEThVisible = () => () => setEthBalanceVisisbleCallback(!showETHValue);
   useInterval(promise, 15000, true)
   return (
     <>
@@ -462,8 +465,8 @@ export default function Header() {
                               cursor: 'pointer', 
                               marginLeft: 5
                             }}
-                            onMouseEnter={() => setShowGasTt(true)}
-                            onMouseLeave={() => setShowGasTt(false)}
+                            onMouseEnter={onMouseEnterGasIcon}
+                            onMouseLeave={onMouseExitGasIcon}
               /> : 
             <CheckCircle fill={showNotify ? 'green' : 'red'} 
                          color={'#fff'} 
@@ -503,8 +506,8 @@ export default function Header() {
             )}
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {!isMobile && (account && userEthBalance ? <small style={{position:'relative', left:5, cursor: 'pointer'}}> 
-              {showETHValue && <Eye style={{width: 19, height: 19}} onClick={() => setEthBalanceVisisbleCallback(!showETHValue)}  />}
-              {!showETHValue && <EyeOff style={{width: 19, height: 19}}  onClick={() => setEthBalanceVisisbleCallback(!showETHValue)} />}
+              {showETHValue && <Eye style={{width: 19, height: 19}} onClick={setEThVisible}  />}
+              {!showETHValue && <EyeOff style={{width: 19, height: 19}}  onClick={setEThVisible} />}
               </small> : null)}
               {account && userEthBalance ? (
                 <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>

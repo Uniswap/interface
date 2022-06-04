@@ -1,3 +1,5 @@
+import './styles.css'
+
 import { ButtonPrimary, ButtonSecondary } from 'components/Button'
 import { CardBGImage, CardNoise } from 'components/earn/styled'
 import { ExternalLink, Info, Star } from 'react-feather'
@@ -62,11 +64,18 @@ export const Mint: React.FC<any> = () => {
     
     //state
     const [hasEnoughTokensForEarlyMint, setHasEnoughTokensForEarlyMint] = React.useState(false)
-    const [amountToMint, setAmountToMint] = React.useState(0)
+    const [amountToMint, setAmountToMint] = React.useState(1)
     const [activeTab, setActiveTab] = React.useState<'mint' | 'nfts'>('mint')
     const [isMintingLive, setIsMintingLive] = React.useState(false)
     const [flex, setFlex] = React.useState({flexFlow: 'row wrap'})
-
+    const MAX = 5;
+    const getBackgroundSize = () => {
+        return {
+            backgroundSize: `${(amountToMint * 100) / MAX}% 100%`,
+            height: `auto`,
+            marginLeft: 30
+        };
+    };
     //sideffects
     useEffect(() => {
         if (kibaNftContract && account) {
@@ -177,8 +186,9 @@ export const Mint: React.FC<any> = () => {
                         <div style={{ padding: window.innerWidth <= 768 ? 0 : `9px 14px`, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexFlow: 'column wrap', gap: 5 }}>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                                 <Badge style={{ marginRight: window.innerWidth <= 768 ? 20 : 15 }}>Amount to Mint </Badge>
-
+                                
                                 <input
+                                    readOnly
                                     id="mintRef"
                                     style={{ height: '50px', fontSize: 18, zIndex: 500000 }}
                                     type="number"
@@ -192,8 +202,19 @@ export const Mint: React.FC<any> = () => {
                                             setAmountToMint(5)
                                     }} />
                             </div>
+                            <div style={{columnGap: 15, display:'flex', flexFlow: 'column', marginTop:25, zIndex: 123123}}>
+                                <label><input type="range"	
+                                        style={getBackgroundSize()}
+                                        max={5} 
+                                        min={1}  
+                                        onInput={value => setAmountToMint((parseInt(value.currentTarget.value.toString(), 10) as any as number))} 
+                                        value={amountToMint}  />
+                                {amountToMint} Kiba NFT{amountToMint > 1 && 's'}</label>
+                            </div>
+
                             <div style={{ maxWidth: 400, marginTop: 15 }}>
                                 <ButtonPrimary
+
                                     onClick={onMintClick}
                                     disabled={isMintingDisabled}>
                                     MINT

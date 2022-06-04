@@ -456,7 +456,31 @@ export default function Swap({ history }: RouteComponentProps) {
   const increaseRef = React.useRef<HTMLDivElement>(null)
   // const [pauseAnimation, setPauseAnimation] = useState(false)
   // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
+  const resetToStepTwo = () => {
+    setApprovalSubmitted(false) // reset 2 step UI for approvals
+    onSwitchTokens()
+  };
 
+  const removeSend = () => {
+    onChangeRecipient('')
+    onSwitchUseChangeRecipient(false)
+  };
+  const onDismiss = () => setShowChart(false);
+  const swapBtnClick = () => {
+    if (isExpertMode) {
+      handleSwap()
+    } else {
+      setSwapState({
+        tradeToConfirm: trade,
+        attemptingTxn: false,
+        swapErrorMessage: undefined,
+        showConfirm: true,
+        txHash: undefined,
+      })
+    }
+  }
+const toggleShowChart = () => setShowChart(!showChart)
+  const onViewChangeFn = (view:any) => setView(view)
   const items = [{ title: "Kiba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Kiba Inu is a token infused with Kiba Swap" }, { title: "Swally Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Learn more" }, { title: "KIBA INU", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Learn more" }, { title: "Jabba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Jabba Inu is a meme coin offering culture to its holders." }];
   return (
     <>
@@ -468,7 +492,7 @@ export default function Swap({ history }: RouteComponentProps) {
       />
 
       <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
-        <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
+        <SwapHeader view={view} onViewChange={onViewChangeFn} allowedSlippage={allowedSlippage} />
     
         {!isBinance && (
           <>
@@ -515,11 +539,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   <ArrowWrapper clickable>
                     < Majgic 
                       
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }
-                      }  
+                      onClick={resetToStepTwo}  
                     />
                   </ArrowWrapper>
                   <CurrencyInputPanel
@@ -545,10 +565,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       <ArrowWrapper clickable={false}>
                         <ArrowDown size="16" color={theme.text2} />
                       </ArrowWrapper>
-                      <LinkStyledButton id="remove-recipient-button" onClick={() => {
-                        onChangeRecipient('')
-                        onSwitchUseChangeRecipient(false)
-                      }}>
+                      <LinkStyledButton id="remove-recipient-button" onClick={removeSend}>
                         <Trans>- Remove send</Trans>
                       </LinkStyledButton>
                     </AutoRow>
@@ -633,9 +650,9 @@ export default function Swap({ history }: RouteComponentProps) {
                   </Row>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && window.location.href.includes('swap') && <p style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
-                  <Modal onDismiss={() => setShowChart(false)} isOpen={showChart && !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'}>
-                    {!cannotUseFeature && <ChartModal onDismiss={() => setShowChart(false)} isOpen={showChart && !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'} />}
+                  {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && window.location.href.includes('swap') && <p style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={toggleShowChart}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
+                  <Modal onDismiss={onDismiss} isOpen={showChart && !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'}>
+                    {!cannotUseFeature && <ChartModal onDismiss={onDismiss} isOpen={showChart && !!currencies[Field.OUTPUT]?.name && (currencies[Field.OUTPUT]?.name as string) === 'Kiba Inu'} />}
                     {cannotUseFeature && <div style={{ padding: '3rem 6rem', display: 'flex', flexFlow: 'row wrap' }}>
                       <AlertOctagon /> You must hold Kiba Inu tokens to use this feature.
                     </div>}
@@ -729,19 +746,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           </AutoRow>
                         </ButtonConfirmed>
                         <ButtonError style={{ marginTop: 15 }}
-                          onClick={() => {
-                            if (isExpertMode) {
-                              handleSwap()
-                            } else {
-                              setSwapState({
-                                tradeToConfirm: trade,
-                                attemptingTxn: false,
-                                swapErrorMessage: undefined,
-                                showConfirm: true,
-                                txHash: undefined,
-                              })
-                            }
-                          }}
+                          onClick={swapBtnClick}
                           width="100%"
                           id="swap-button"
                           disabled={
@@ -765,19 +770,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     </AutoRow>
                   ) : (
                     <ButtonError style={{ marginTop: 15 }}
-                      onClick={() => {
-                        if (isExpertMode) {
-                          handleSwap()
-                        } else {
-                          setSwapState({
-                            tradeToConfirm: trade,
-                            attemptingTxn: false,
-                            swapErrorMessage: undefined,
-                            showConfirm: true,
-                            txHash: undefined,
-                          })
-                        }
-                      }}
+                      onClick={swapBtnClick}
                       id="swap-button"
                       disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
                       error={isValid && priceImpactSeverity > 2 && !swapCallbackError}

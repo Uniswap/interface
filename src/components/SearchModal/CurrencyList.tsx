@@ -119,13 +119,13 @@ const CurrencyRow = React.memo((props: {
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency.isToken ? currency : undefined)
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
-
+  const currencyItemClick =() => (isSelected ? null : onSelect());
   // only show add or remove buttons if not on selected list
   return (
     <MenuItem
       style={style}
       className={`token-item-${key}`}
-      onClick={() => (isSelected ? null : onSelect())}
+      onClick={currencyItemClick}
       disabled={isSelected}
       selected={otherSelected}
     >
@@ -204,8 +204,8 @@ export const CurrencyList = React.memo((props: CurrrencyListProps) => {
     return currencies
   }, [currencies, otherListTokens])
 
-  const Row = useCallback(
-    function TokenRow({ data, index, style }) {
+  const Row = useMemo(
+  () =>   function TokenRow({ data, index, style }: any) {
       const row: Currency | BreakLine = data[index]
 
       if (isBreakLine(row)) {

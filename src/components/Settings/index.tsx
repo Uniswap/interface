@@ -134,11 +134,38 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
   const [showConfirmation, setShowConfirmation] = useState(false)
 
   useOnClickOutside(node, open ? toggle : undefined)
+  const onDismissClick = () => setShowConfirmation(false);
+  const toggleFunction  = expertMode
+  ? () => {
+      toggleExpertMode()
+      setShowConfirmation(false)
+    }
+  : () => {
+      toggle()
+      setShowConfirmation(true)
+    };
+    const toggleSlippageFunction = () => {
+      ReactGA.event({
+        category: 'Routing',
+        action: useAutoSlippage ? 'disable auto slippage' : 'enable auto slippage',
+      })
+      setUseAutoSlippage(!useAutoSlippage)
+    };
+    const toggleSingleHopFn = () => {
+      ReactGA.event({
+        category: 'Routing',
+        action: singleHopOnly ? 'disable single hop' : 'enable single hop',
+      })
+      setSingleHopOnly(!singleHopOnly)
+    }
 
+    const specifyReceiver = () => {
+      onSwitchUseChangeRecipient(!useOtherAddress)
+    };
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
+      <Modal isOpen={showConfirmation} onDismiss={onDismissClick} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
@@ -146,7 +173,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
               <Text fontWeight={500} fontSize={20}>
                 <Trans>Are you sure?</Trans>
               </Text>
-              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
+              <StyledCloseIcon onClick={onDismissClick} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
@@ -214,15 +241,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
                 id="toggle-expert-mode-button"
                 isActive={expertMode}
                 toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
+                  toggleFunction
                 }
               />
             </RowBetween>
@@ -240,13 +259,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
               <Toggle
                 id="toggle-auto-slippage"
                 isActive={useAutoSlippage}
-                toggle={() => {
-                  ReactGA.event({
-                    category: 'Routing',
-                    action: useAutoSlippage ? 'disable auto slippage' : 'enable auto slippage',
-                  })
-                  setUseAutoSlippage(!useAutoSlippage)
-                }}
+                toggle={toggleSlippageFunction}
               />
               </RowBetween>
                 <RowBetween>
@@ -259,13 +272,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
               <Toggle
                 id="toggle-disable-multihop-button"
                 isActive={singleHopOnly}
-                toggle={() => {
-                  ReactGA.event({
-                    category: 'Routing',
-                    action: singleHopOnly ? 'disable single hop' : 'enable single hop',
-                  })
-                  setSingleHopOnly(!singleHopOnly)
-                }}
+                toggle={toggleSingleHopFn}
               />
             </RowBetween>
             <RowBetween>
@@ -278,9 +285,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
               <Toggle
                 id="toggle-disable-multihop-button"
                 isActive={useOtherAddress}
-                toggle={() => {
-                  onSwitchUseChangeRecipient(!useOtherAddress)
-                }}
+                toggle={specifyReceiver}
               />
             </RowBetween>
           </AutoColumn>

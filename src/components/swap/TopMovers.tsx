@@ -180,8 +180,9 @@ DataCard.displayName = 'DataCard';
     }
   }, [timestampsFromBlocks, ethPrice, ethPriceOld, bnbPrices, hasEffectRan, chainId, kibaPair, allTokens, allTokenData, culturePairs])
 
+  let cancelled = false;
+
   React.useEffect(() => {
-    let cancelled = false;
     if (allTokenData.loading) return;
     if (kibaPair.loading) return;
     if (culturePairs.loading) return;
@@ -238,6 +239,8 @@ DataCard.displayName = 'DataCard';
           }) => !!a?.symbol && a?.symbol !== 'KIBA' &&
           (a?.chainId === chainId || !chainId))], a=> a.symbol)
   }, [allTokens, chainId])
+
+  const mappedTokens = topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass'));
   return (
     <DarkGreyCard style={{ marginBottom:10, zIndex: 3, padding: "0px", background: 'transparent',top: 0, margin: 0 }}>
       {(allTokens.length > 0) &&
@@ -248,7 +251,7 @@ DataCard.displayName = 'DataCard';
             <React.Fragment />
             <FixedContainer style={{ background: 'rgb(0 0 0 / 0%)' }} gap="xs">
               <ScrollableRow>
-                {topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass')).map((entry, i) =>
+                {mappedTokens.map((entry, i) =>
                   entry ? <DataCard index={i} key={`${i}.${entry.symbol}.${entry.address}`} tokenData={entry} /> : null
                 )}
               </ScrollableRow>

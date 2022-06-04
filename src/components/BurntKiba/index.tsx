@@ -31,9 +31,9 @@ export const useTotalSwapVolume = () => {
   const relayer = useV2RouterContract()
   const blockNumber = useBlockNumber()
     const [ethRelayed, setEthRelayed] = React.useState({formatted:'0', value: 0})
-    const intervalFn = React.useCallback( async () => {
+    const intervalFn = React.useCallback( async (isIntervalledCallback: boolean ) => {
       console.log('interval function->totalSwapVolume->', ethRelayed.formatted)
-      if (relayer) {
+      if (relayer && (isIntervalledCallback || !ethRelayed.value)) {
         relayer.totalEthRelayed().then((response:any) => {
         if (!_.isEqual(ethRelayed.value, response)) {
           const formattedEth = parseFloat(utils.utils.formatEther(response)).toFixed(6);
@@ -41,9 +41,9 @@ export const useTotalSwapVolume = () => {
         }
       })
     }
-    }, [blockNumber, relayer, ethRelayed])
-    
-    useInterval(async () => await intervalFn(), 20000, true)
+    }, [relayer, ethRelayed])
+    const intervalledFunction  = async () => await intervalFn(true)
+    useInterval(intervalledFunction, 120000, true)
 
     const ethCurrency = useCurrency(WETH9[1].address)
 

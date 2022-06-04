@@ -1,14 +1,13 @@
-import { Trans } from '@lingui/macro'
-import { Text } from 'rebass'
-import { Currency } from '@uniswap/sdk-core'
-import styled from 'styled-components/macro'
-
-import { COMMON_BASES } from '../../constants/routing'
-import { currencyId } from '../../utils/currencyId'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
+import { COMMON_BASES } from '../../constants/routing'
+import { Currency } from '@uniswap/sdk-core'
 import CurrencyLogo from '../CurrencyLogo'
+import QuestionHelper from '../QuestionHelper'
+import { Text } from 'rebass'
+import { Trans } from '@lingui/macro'
+import { currencyId } from '../../utils/currencyId'
+import styled from 'styled-components/macro'
 
 const MobileWrapper = styled(AutoColumn)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -43,7 +42,6 @@ export default function CommonBases({
   onSelect: (currency: Currency) => void
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
-
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
       <AutoRow>
@@ -55,9 +53,11 @@ export default function CommonBases({
       <AutoRow gap="4px">
         {bases.map((currency: Currency) => {
           const isSelected = selectedCurrency?.equals(currency)
+          const currencyClick = () => !isSelected && onSelect(currency)
+
           return (
             <BaseWrapper
-              onClick={() => !isSelected && onSelect(currency)}
+              onClick={currencyClick}
               disable={isSelected}
               key={currencyId(currency)}
             >
