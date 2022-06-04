@@ -1,30 +1,29 @@
-import { useContext, useMemo } from 'react'
-import styled, { ThemeContext } from 'styled-components/macro'
-import JSBI from 'jsbi'
-import { Link } from 'react-router-dom'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
-import FullPositionCard from '../../components/PositionCard'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE, HideSmall } from '../../theme'
-import { Text } from 'rebass'
-import Card from '../../components/Card'
+import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ExternalLink, HideSmall, TYPE } from '../../theme'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary, ButtonOutlined } from '../../components/Button'
-import { ChevronsRight } from 'react-feather'
+import styled, { ThemeContext } from 'styled-components/macro'
+import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { useContext, useMemo } from 'react'
 
 import { AutoColumn } from '../../components/Column'
-
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useV2Pairs } from '../../hooks/useV2Pairs'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { Dots } from '../../components/swap/styleds'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants/misc'
-import { Pair } from '@uniswap/v2-sdk'
-import { Trans } from '@lingui/macro'
+import Card from '../../components/Card'
+import { ChevronsRight } from 'react-feather'
+import { Dots } from '../../components/swap/styleds'
+import FullPositionCard from '../../components/PositionCard'
+import JSBI from 'jsbi'
 import { L2_CHAIN_IDS } from 'constants/chains'
+import { Link } from 'react-router-dom'
+import { Pair } from '@uniswap/v2-sdk'
+import { SwapPoolTabs } from '../../components/NavigationTabs'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import { Text } from 'rebass'
+import { Trans } from '@lingui/macro'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useStakingInfo } from '../../state/stake/hooks'
+import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
+import { useV2Pairs } from '../../hooks/useV2Pairs'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -83,7 +82,7 @@ const EmptyProposals = styled.div`
   background:radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95));
 `
 
-const Layer2Prompt = styled(EmptyProposals)`
+export const Layer2Prompt = styled(EmptyProposals)`
   margin-top: 16px;
 `
 

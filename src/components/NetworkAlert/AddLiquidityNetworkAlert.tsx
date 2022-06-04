@@ -1,17 +1,18 @@
-import { Trans } from '@lingui/macro'
 import {
   ArbitrumWrapperBackgroundDarkMode,
   ArbitrumWrapperBackgroundLightMode,
   OptimismWrapperBackgroundDarkMode,
   OptimismWrapperBackgroundLightMode,
 } from 'components/NetworkAlert/NetworkAlert'
+import { ArrowDownCircle, CheckCircle } from 'react-feather'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
-import { useActiveWeb3React } from 'hooks/web3'
-import { ArrowDownCircle } from 'react-feather'
+import { ExternalLink, MEDIA_WIDTHS, StyledInternalLink } from 'theme'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
-import styled from 'styled-components/macro'
-import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+
 import { ReadMoreLink } from './styles'
+import { Trans } from '@lingui/macro'
+import styled from 'styled-components/macro'
+import { useActiveWeb3React } from 'hooks/web3'
 
 const L2Icon = styled.img`
   display: none;
@@ -77,6 +78,31 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   height: 20px;
   margin-left: 12px;
 `
+const LinkInToNfts = styled(StyledInternalLink)`
+align-items: center;
+font-family: Sans-serif;
+  background-color: black;
+  border-radius: 16px;
+  color: white;
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+  margin: 0;
+  max-height: 47px;
+  padding: 16px 12px;
+  text-decoration: none;
+  width: auto;
+  :hover,
+  :focus,
+  :active {
+    background-color: black;
+  }
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
+    margin: auto 0 auto auto;
+    padding: 14px 16px;
+    min-width: 226px;
+  }
+`
 const LinkOutToBridge = styled(ExternalLink)`
   align-items: center;
   background-color: black;
@@ -101,6 +127,33 @@ const LinkOutToBridge = styled(ExternalLink)`
     min-width: 226px;
   }
 `
+
+export function KibaNftAlert() {
+  const { chainId } = useActiveWeb3React()
+  const [darkMode] = useDarkModeManager()
+  const [arbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
+  if (!chainId) return null;
+  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+  const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+    ? `${info.bridge}?chainId=1`
+    : info.bridge
+  return (
+    <Wrapper style={{marginBottom: 10}} chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
+      <L2Icon src={info.logoUrl} />
+      <Body>
+        <Trans>This is an alpha release of Kiba Inu NFTs <CheckCircle /> </Trans>
+        <DesktopTextBreak /> <Trans> If you have early minting access, you will be able to mint soon!</Trans>{' '}
+        <ReadMoreLink href="https://docs.kiba.app">
+          <Trans>Read more</Trans>
+        </ReadMoreLink>
+      </Body>
+      <LinkInToNfts to={'/nfts'}>
+        <Trans>Mint yours now</Trans>
+        <LinkOutCircle />
+      </LinkInToNfts>
+    </Wrapper>
+  )
+}
 export function AddLiquidityNetworkAlert() {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()

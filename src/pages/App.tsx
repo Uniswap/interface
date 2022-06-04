@@ -35,6 +35,7 @@ import { Flex } from 'rebass'
 import { GainsTracker } from './GainsTracker/GainsTracker'
 import Header from 'components/Header';
 import { HoneyPotBsc } from 'components/HoneyPotBSC';
+import { KibaNftAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert';
 import { LifetimeReflections } from './Swap/LifetimeReflections'
 import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
@@ -534,6 +535,8 @@ export default function App() {
                   <SwapVolume />
                 </>}
                 <TopLevelModals />
+                {/*<KibaNftAlert />*/}
+
                 <Switch>
                   <Route exact strict path="/nfts" component={Mint} />
                   <Route exact strict path="/nfts/mint/:referrer" component={Mint} />

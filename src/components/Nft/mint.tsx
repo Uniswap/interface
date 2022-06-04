@@ -7,6 +7,7 @@ import React, { useEffect } from 'react'
 
 import Badge from 'components/Badge'
 import { DarkCard } from 'components/Card'
+import Marquee from "react-marquee-slider";
 import { TYPE } from 'theme'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
@@ -68,6 +69,8 @@ export const Mint: React.FC<any> = () => {
     const [activeTab, setActiveTab] = React.useState<'mint' | 'nfts'>('mint')
     const [isMintingLive, setIsMintingLive] = React.useState(false)
     const [flex, setFlex] = React.useState({flexFlow: 'row wrap'})
+    const[totalSupply,setTotalSupply] = React.useState(5000);
+    const [currentSupply, setCurrentSupply] = React.useState(0);
     const MAX = 5;
     const getBackgroundSize = () => {
         return {
@@ -89,6 +92,14 @@ export const Mint: React.FC<any> = () => {
             kibaNftContract.mintingLive().then((response:any) => setIsMintingLive(new Date(response) >= new Date()))
         }
     }, [account, kibaNftContract])
+
+    useEffect(() => {
+        if (kibaNftContract && currentSupply == 0) {
+            kibaNftContract.totalSupply().then((response: any) => {
+                setCurrentSupply(response)
+            })
+        }
+    }, [kibaNftContract, currentSupply])
 
     useEffect(() => {
         // initially focus the mint textbox
@@ -137,7 +148,7 @@ export const Mint: React.FC<any> = () => {
         await mintAmount(amountToMint)
     }, [isMintingDisabled])
     
-
+function noop () { return }
 
     return (
         <DarkCard style={{
@@ -156,7 +167,7 @@ export const Mint: React.FC<any> = () => {
                     {activeTab !== 'nfts' && <ExternalLink height={15} />}
                 </Panel>
             </div>
-            <TYPE.body style={{ marginTop: 15, color: '#F76C1D' }}>
+            <TYPE.body style={{ marginTop: 5, color: '#F76C1D' }}>
                 {activeTab === 'nfts' ? "View your NFTs" : "Mint your NFTs"}
             </TYPE.body>
             <ConfirmOrLoadingWrapper activeBG={true}>
@@ -184,6 +195,15 @@ export const Mint: React.FC<any> = () => {
                         <>
                         {referrerText}
                         <div style={{ padding: window.innerWidth <= 768 ? 0 : `9px 14px`, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexFlow: 'column wrap', gap: 5 }}>
+                            <p style={{margin:0}}>Total Supply: {currentSupply}/5000</p>
+                            <Marquee direction={'ltr'} 
+                           resetAfterTries={200} 
+                           scatterRandomly={false} 
+                            onInit={noop}
+                           onFinish={noop}
+                           velocity={10}>
+                    <></>
+                    <div className="punks-slider_content"><div className="punks-slider_list"><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23caff-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590834fccbdaa618315612_nft10.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590834fccbdaa618315612_nft10-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590834fccbdaa618315612_nft10.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb01-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835fcc89052847fa0d8_nft8.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835fcc89052847fa0d8_nft8-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835fcc89052847fa0d8_nft8.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb03-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835cb8fb9affc530f42_nft9.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835cb8fb9affc530f42_nft9-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835cb8fb9affc530f42_nft9.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb05-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835d4f84104f1771b19_nft1.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835d4f84104f1771b19_nft1-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835d4f84104f1771b19_nft1.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb07-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835a696a555a46ff1ce_nft6.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835a696a555a46ff1ce_nft6-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835a696a555a46ff1ce_nft6.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb09-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835d3d34c66d491544a_nft3.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835d3d34c66d491544a_nft3-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835d3d34c66d491544a_nft3.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb0b-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/625908351a33c2163bd4d100_nft5.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/625908351a33c2163bd4d100_nft5-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/625908351a33c2163bd4d100_nft5.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb0d-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835dd14c228970e3a3e_nft2.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835dd14c228970e3a3e_nft2-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590835dd14c228970e3a3e_nft2.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb0f-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590834fccbda727f315613_nft7.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590834fccbda727f315613_nft7-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590834fccbda727f315613_nft7.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb11-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/625908354b316c839be408de_nft4.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/625908354b316c839be408de_nft4-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/625908354b316c839be408de_nft4.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb13-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/6259094b7852ac005ac98f16_nft11.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/6259094b7852ac005ac98f16_nft11-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/6259094b7852ac005ac98f16_nft11.png 640w" alt="" className="punks-slider_image"/></div><div id="w-node-_20257ea0-8b21-f1dd-5945-6c5abc23cb15-5bd195dd" className="punks-slider_image-wrapper"><img src="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590960d654fc80cfbe9672_nft12.png" loading="lazy" sizes="160px" srcSet="https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590960d654fc80cfbe9672_nft12-p-500.png 500w, https://assets.website-files.com/6258d681a5d8ce7f406b2c21/62590960d654fc80cfbe9672_nft12.png 640w" alt="" className="punks-slider_image"/></div></div></div></Marquee>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                                 <Badge style={{ marginRight: window.innerWidth <= 768 ? 20 : 15 }}>Amount to Mint </Badge>
                                 
@@ -203,7 +223,7 @@ export const Mint: React.FC<any> = () => {
                                     }} />
                             </div>
                             <div style={{columnGap: 15, display:'flex', flexFlow: 'column', marginTop:25, zIndex: 123123}}>
-                                <label><input type="range"	
+                                <label className="input-range-label"><input type="range"	
                                         style={getBackgroundSize()}
                                         max={5} 
                                         min={1}  

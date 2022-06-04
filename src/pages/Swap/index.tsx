@@ -35,6 +35,8 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/swap/actions'
 import JSBI from 'jsbi'
+import { KibaNftAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert'
+import { Layer2Prompt } from 'pages/Pool/v2'
 import { LimitOrders } from 'state/transactions/hooks'
 import Loader from '../../components/Loader'
 import { ReactComponent as Majgic } from '../../assets/svg/arrows.svg'
@@ -490,10 +492,9 @@ const toggleShowChart = () => setShowChart(!showChart)
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-
-      <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
-        <SwapHeader view={view} onViewChange={onViewChangeFn} allowedSlippage={allowedSlippage} />
     
+      <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
+        <SwapHeader view={view} onViewChange={onViewChangeFn} allowedSlippage={allowedSlippage} />
         {!isBinance && (
           <>
          
