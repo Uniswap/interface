@@ -1,15 +1,17 @@
-import { SupportedChainId } from 'constants/chains'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Route, SwapQuoter, Route as V3Route } from '@uniswap/v3-sdk'
+import useToggledVersion, { Version } from '../hooks/useToggledVersion'
+
 import JSBI from 'jsbi'
+import { SupportedChainId } from 'constants/chains'
+import { Trade } from '@uniswap/router-sdk'
+import { V3TradeState as TradeState } from './useBestV3Trade'
+import { Route as V2Route } from '@uniswap/v2-sdk'
+import { useActiveWeb3React } from './web3'
+import { useAllV3Routes } from './useAllV3Routes'
 import { useMemo } from 'react'
 import { useSingleContractWithCallData } from 'state/multicall/hooks'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { Route as V2Route } from '@uniswap/v2-sdk'
-import { Route, Route as V3Route, SwapQuoter } from '@uniswap/v3-sdk'
-import { useAllV3Routes } from './useAllV3Routes'
-import { V3TradeState as TradeState } from './useBestV3Trade'
 import { useV3Quoter } from './useContract'
-import { useActiveWeb3React } from './web3'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.ARBITRUM_ONE]: 25_000_000,
@@ -57,8 +59,11 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): { state: TradeState; trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined } {
+  
+  const toggledVersion = useToggledVersion()
+  
   const [currencyIn, currencyOut] = useMemo(
-    () =>
+    () => toggledVersion ==  Version.v2 ? [] :
       tradeType === TradeType.EXACT_INPUT
         ? [amountSpecified?.currency, otherCurrency]
         : [otherCurrency, amountSpecified?.currency],
@@ -77,8 +82,11 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
       gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
     }
   )
-
-  return useMemo(() => {
+  if (toggledVersion == Version.v2) 
+  return { 
+    state: TradeState.INVALID,
+    trade: undefined
+  };
     if (
       !amountSpecified ||
       !currencyIn ||
@@ -165,5 +173,4 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         tradeType,
       }),
     }
-  }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
 }

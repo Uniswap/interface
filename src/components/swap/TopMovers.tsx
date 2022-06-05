@@ -217,7 +217,7 @@ DataCard.displayName = 'DataCard';
   const topPriceIncrease = useMemo(() => {
     const ourTokens =  [
       ...allTokens.filter((a:any) => ["kiba"].includes(a?.symbol?.toLowerCase()) || a?.name?.toLowerCase() === 'kiba inu'),
-      ...allTokens.filter((a: any) => cultureTokens.map(a => a.address.toLowerCase()).includes(a?.id.toLowerCase()) || cultureTokens.map(a => a.name.toLowerCase()).includes(a?.name?.toLowerCase())),
+      ...allTokens.filter((a: any) => cultureTokens.map(a => a?.address?.toLowerCase()).includes(a?.id?.toLowerCase()) || cultureTokens.map(b =>b?.name?.toLowerCase()) .includes(a?.name?.toLowerCase())),
     ];
     return _.uniqBy([
       // slot kiba and any paying / partnerships at #1 always

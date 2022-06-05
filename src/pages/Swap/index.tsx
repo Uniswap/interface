@@ -22,6 +22,7 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import { useUSDCValue, useUSDCValueV2AndV3 } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -70,7 +71,6 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useKiba } from 'pages/Vote/VotePage'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useTokenData } from 'state/logs/utils'
-import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { warningSeverity } from '../../utils/prices'
 
@@ -227,9 +227,10 @@ export default function Swap({ history }: RouteComponentProps) {
     library, 
     useAutoSlippage
   ])
-  const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
-  const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
+
+  const fiatValueInput = useUSDCValueV2AndV3(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useUSDCValueV2AndV3(parsedAmounts[Field.OUTPUT])
+  const priceImpact = computeFiatValuePriceImpact(fiatValueInput as any, fiatValueOutput as any)
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onSwitchUseChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -237,7 +238,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
-    },
+    },    
     [onUserInput]
   )
   const handleTypeOutput = useCallback(

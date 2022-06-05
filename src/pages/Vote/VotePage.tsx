@@ -151,12 +151,8 @@ export const useKiba = (account?: string | null) => {
   }, [kiba, account, isBinance, bKiba.balance]);
 };
 
-
-
-export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
-  const kibaBalance = useKiba(account)
-  const { library } = useWeb3React()
-  const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState('')
+export const useRouterABI = () => {
+  const { chainId } = useWeb3React()
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const { routerADD, routerABI } = React.useMemo(() => {
     return isBinance ? {
@@ -164,6 +160,14 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
       routerABI: pancakeAbi
     } : { routerADD: routerAddress, routerABI: routerAbi }
   }, [isBinance])
+  return {isBinance, routerABI, routerADD}
+}
+
+export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
+  const kibaBalance = useKiba(account)
+  const { library } = useWeb3React()
+  const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState('')
+  const {routerADD, isBinance, routerABI } = useRouterABI();
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
     isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",

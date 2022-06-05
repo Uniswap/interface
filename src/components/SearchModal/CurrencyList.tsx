@@ -205,7 +205,7 @@ export const CurrencyList = React.memo((props: CurrrencyListProps) => {
   }, [currencies, otherListTokens])
 
   const Row = useMemo(
-  () =>   function TokenRow({ data, index, style }: any) {
+  () =>  function TokenRow({ data, index, style }: any) {
       const row: Currency | BreakLine = data[index]
 
       if (isBreakLine(row)) {
@@ -252,11 +252,11 @@ export const CurrencyList = React.memo((props: CurrrencyListProps) => {
     ]
   )
 
-  const itemKey = useCallback((index: number, data: typeof itemData) => {
+  const itemKey = (index: number, data: typeof itemData) => {
     const currency = data[index]
     if (isBreakLine(currency)) return BREAK_LINE
     return currencyKey(currency)
-  }, [])
+  }
 
   return (
     <FixedSizeList
@@ -271,7 +271,7 @@ export const CurrencyList = React.memo((props: CurrrencyListProps) => {
       {Row}
     </FixedSizeList>
   )
-})
+}, (prevProps, newProps) => true)
 CurrencyList.displayName = 'clist';
   CurrencyRow.displayName = 'crow';
 export default CurrencyList ;

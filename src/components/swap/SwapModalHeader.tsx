@@ -1,26 +1,25 @@
+import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useContext, useState } from 'react'
-import { ArrowDown, AlertTriangle } from 'react-feather'
-import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { useUSDCValue } from '../../hooks/useUSDCPrice'
-import { TYPE } from '../../theme'
-import { ButtonPrimary } from '../Button'
-import { isAddress, shortenAddress } from '../../utils'
-import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
-import { AutoColumn } from '../Column'
-import { FiatValue } from '../CurrencyInputPanel/FiatValue'
-import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
-import { TruncatedText, SwapShowAcceptChanges } from './styleds'
-import { Trans } from '@lingui/macro'
+import { SwapShowAcceptChanges, TruncatedText } from './styleds'
+import { isAddress, shortenAddress } from '../../utils'
+import styled, { ThemeContext } from 'styled-components/macro'
+import { useContext, useState } from 'react'
+import { useUSDCPriceWithV3, useUSDCValue } from '../../hooks/useUSDCPrice'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
+import { AutoColumn } from '../Column'
+import { ButtonPrimary } from '../Button'
+import CurrencyLogo from '../CurrencyLogo'
+import { FiatValue } from '../CurrencyInputPanel/FiatValue'
 import { LightCard } from '../Card'
-
+import { TYPE } from '../../theme'
+import { Text } from 'rebass'
 import TradePrice from '../swap/TradePrice'
+import { Trans } from '@lingui/macro'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -57,8 +56,9 @@ export default function SwapModalHeader({
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const fiatValueInput = useUSDCValue(trade.inputAmount)
-  const fiatValueOutput = useUSDCValue(trade.outputAmount)
+  const fiatValueInput = useUSDCPriceWithV3(trade.inputAmount as any) as any
+  const fiatValueOutput = useUSDCPriceWithV3(trade.outputAmount as any) as any
+  
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -101,7 +101,7 @@ export default function SwapModalHeader({
             <TYPE.body fontSize={14} color={theme.text3}>
               <FiatValue
                 fiatValue={fiatValueOutput}
-                priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
+                priceImpact={computeFiatValuePriceImpact(fiatValueInput as any, fiatValueOutput as any)}
               />
             </TYPE.body>
           </RowBetween>

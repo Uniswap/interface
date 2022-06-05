@@ -43,6 +43,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.KOVAN,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.BINANCE
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
@@ -56,7 +57,6 @@ export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
-  SupportedChainId.BINANCE
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
@@ -76,7 +76,7 @@ export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.POLYGON]: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.POLYGON_MUMBAI]: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.BINANCE]: ``
+  [SupportedChainId.BINANCE]: 'https://bsc-dataseed1.binance.org'
 }
 
 /**
@@ -127,11 +127,12 @@ export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainIn
 
  
 export const CHAIN_INFO: ChainInfoMap = {
-  [SupportedChainId.BINANCE]: {
+  [SupportedChainId.BINANCE]:  {
     networkType: NetworkType.L1,
-    defaultListUrl: 'https://tokens.pancakeswap.finance/pancakeswap-extended.json',
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: 'https://wallet.polygon.technology/bridge',
     docs: 'https://binance.org',
-    explorer: 'https://bscscan.io',
+    explorer: 'https://bscscan.com',
     infoLink: 'https://binance.org',
     label: 'BSC',
     logoUrl: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
@@ -139,7 +140,19 @@ export const CHAIN_INFO: ChainInfoMap = {
       nativeCurrency: {name: "Binance Token", symbol: "BNB", decimals: 18},
       rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.BINANCE]
     },
-   } as any,
+  },
+  // [SupportedChainId.BINANCE]: {
+  //   networkType: NetworkType.L1,
+  //   docs: 'https://binance.org',
+  //   explorer: 'https://bscscan.io',
+  //   infoLink: 'https://binance.org',
+  //   label: 'BSC',
+  //   logoUrl: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
+  //   addNetworkInfo: {
+  //     nativeCurrency: {name: "Binance Token", symbol: "BNB", decimals: 18},
+  //     rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.BINANCE]
+  //   },
+  //  } as any,
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
