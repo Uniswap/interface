@@ -217,7 +217,7 @@ export default function CurrencyList({
   }, [currencies, otherListTokens])
   const { chainId } = useActiveWeb3React()
 
-  if (chainId && currencies[0].wrapped == WRAPPED_NATIVE_CURRENCY[chainId]) {
+  if (chainId && currencies[0]?.wrapped == WRAPPED_NATIVE_CURRENCY[chainId]) {
     chainId && itemData.unshift(KROM[chainId].wrapped)
   }
 
