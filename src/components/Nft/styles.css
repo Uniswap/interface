@@ -3,13 +3,99 @@
 *::after {
   box-sizing: border-box;
 }
+
+input[type=range] {
+  height: 25px;
+  -webkit-appearance: none;
+  margin: 10px 0;
+  width: 100%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    box-shadow: 0px 0px 0px #000000;
+    background-image: linear-gradient(#ff4500, #ff4500);
+    border-radius: 1px;
+    border: 0px solid #000000;
+  }
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 1px solid #eee;
+  height: 18px;
+  width: 18px;
+  border-radius: 25px;
+  background-image: linear-gradient(#ff4500, #ff4500);
+  cursor: pointer !important;
+  -webkit-appearance: none;
+  margin-top: -7px;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000;
+  background-image: linear-gradient(#ff4500, #ff4500);
+  border-radius: 1px;
+  border: 0px solid #000000;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 1px solid #eee;
+  height: 18px;
+  width: 18px;
+  border-radius: 25px;
+  background-image: linear-gradient(#ff4500, #ff4500);
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background-image: linear-gradient(#ff4500, #ff4500);
+  border: 0px solid #000000;
+  border-radius: 2px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range]::-ms-fill-upper {
+  background-image: linear-gradient(#ff4500, #ff4500);
+  border: 0px solid #000000;
+  border-radius: 2px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range]::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 0px #000000;
+  border: 1px solid #ff4500;
+  height: 18px;
+  width: 18px;
+  border-radius: 25px;
+  background-image: linear-gradient(#ff4500, #ff4500);
+  cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #ff4500;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #ff4500;
+}
+
+
 input[type="range"] {
     -webkit-appearance: none;
     margin-right: 15px;
     width: 200px;
     height: 7px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 5px;
+      border-radius: 5px;
     background-image: linear-gradient(#ff4500, #ff4500);
     background-size: 70% 100%;
     background-repeat: no-repeat;
@@ -21,7 +107,7 @@ input[type="range"] {
     width: 20px;
     border-radius: 50%;
     background: #ff4500;
-    cursor: ew-resize;
+    cursor:pointer;
     box-shadow: 0 0 2px 0 #555;
     transition: background .3s ease-in-out;
   }
