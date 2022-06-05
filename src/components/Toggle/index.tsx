@@ -1,5 +1,5 @@
 import { darken } from 'polished'
-import styled from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components/macro'
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
@@ -13,6 +13,28 @@ const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   width: fit-content;
 `
 
+const turnOnToggle = keyframes`
+  from {
+    margin-left: 0em;
+    margin-right: 2.2em;
+  }
+  to {
+    margin-left: 2.2em;
+    margin-right: 0em;
+  }
+`
+
+const turnOffToggle = keyframes`
+  from {
+    margin-left: 2.2em;
+    margin-right: 0em;
+  }
+  to {
+    margin-left: 0em;
+    margin-right: 2.2em;
+  }
+`
+
 const ToggleElementHoverStyle = (hasBgColor: boolean, theme: any, isActive?: boolean) =>
   hasBgColor
     ? {
@@ -24,6 +46,7 @@ const ToggleElementHoverStyle = (hasBgColor: boolean, theme: any, isActive?: boo
       }
 
 const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string }>`
+  animation: 0.1s ${({ isActive }) => (isActive ? turnOnToggle : turnOffToggle)} ease-in;
   background: ${({ theme, bgColor, isActive }) =>
     isActive ? bgColor ?? theme.primary1 : !!bgColor ? theme.bg4 : theme.text3};
   border-radius: 50%;
