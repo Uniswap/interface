@@ -167,7 +167,7 @@ export const Mint: React.FC<any> = () => {
                     {activeTab !== 'nfts' && <ExternalLink height={15} />}
                 </Panel>
             </div>
-            <TYPE.body style={{ marginTop: 5, color: '#F76C1D' }}>
+            <TYPE.body className="m-b-sm" style={{ marginTop: 5, color: '#F76C1D' }}>
                 {activeTab === 'nfts' ? "View your NFTs" : "Mint your NFTs"}
             </TYPE.body>
             <ConfirmOrLoadingWrapper activeBG={true}>

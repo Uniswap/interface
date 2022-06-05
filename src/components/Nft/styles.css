@@ -118,6 +118,12 @@ input[type="range"] {
     border: none;
     background: transparent;
   }
+
+  @media(max-width:768px) {
+  .m-b-sm {
+    margin-bottom:10px;
+  }
+}
 :root {
   --input-border: #8b8a8b;
   --input-focus-h: 245;
