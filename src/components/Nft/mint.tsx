@@ -25,7 +25,7 @@ display:block;
 `
 const ConfirmOrLoadingWrapper = styled.div<{ activeBG: boolean }>`
   width: 100%;
-  padding: 24px;
+  padding: 3px;
   position: relative;
   background: #252632;
 `
