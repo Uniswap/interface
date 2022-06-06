@@ -1,7 +1,6 @@
 import { providers } from 'ethers'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -10,6 +9,7 @@ import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
+import { RequestMessage } from 'src/components/WalletConnect/RequestModal/RequestMessage'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
@@ -33,30 +33,6 @@ const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
   request.type === EthMethod.EthSign && !request.message
 
 const methodCostsGas = (type: EthMethod) => type === EthMethod.EthSendTransaction
-
-const getMessage = (request: WalletConnectRequest) => {
-  if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
-    return request.message || request.rawMessage
-  }
-
-  if (
-    request.type === EthMethod.EthSignTransaction ||
-    request.type === EthMethod.EthSendTransaction
-  ) {
-    return request.transaction.data
-  }
-
-  if (request.type === EthMethod.SignTypedData) {
-    try {
-      const message = JSON.parse(request.rawMessage)
-      return JSON.stringify(message, null, 4)
-    } catch (e) {
-      logger.error('WalletConnectRequestModal', 'getMessage', 'invalid JSON message', e)
-    }
-  }
-
-  return ''
-}
 
 /** If the request is a permit then parse the relevant information otherwise return undefined. */
 const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined => {
@@ -150,7 +126,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     onClose()
   }
 
-  let message = getMessage(request)
   let permitInfo = getPermitInfo(request)
 
   return (
@@ -166,12 +141,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             /* need a fixed height here or else modal gets confused about total height */
             maxHeight={MAX_MODAL_MESSAGE_HEIGHT}
             overflow="hidden">
-            <ScrollView>
-              <Flex p="md">
-                <Text variant="caption">{t('Message')}</Text>
-                <Text variant="body1">{message}</Text>
-              </Flex>
-            </ScrollView>
+            <RequestMessage request={request} />
           </Flex>
         )}
         {isPotentiallyUnsafe(request) ? (
