@@ -1,5 +1,5 @@
-import { Currency, Price } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Currency, Price } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useCallback, useContext } from 'react'
 import { Text } from 'rebass'

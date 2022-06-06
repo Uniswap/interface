@@ -1,5 +1,5 @@
-import { Percent } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { ReactNode } from 'react'

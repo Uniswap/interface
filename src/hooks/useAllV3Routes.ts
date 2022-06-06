@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
 import { Pool, Route } from '@cndllabs/v3-sdk'
+import { Currency } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 

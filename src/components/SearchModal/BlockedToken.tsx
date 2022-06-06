@@ -1,5 +1,5 @@
-import { Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AlertCircle, ArrowLeft } from 'react-feather'
 import styled from 'styled-components/macro'

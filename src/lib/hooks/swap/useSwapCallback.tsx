@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
-import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@cndllabs/v3-sdk'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'

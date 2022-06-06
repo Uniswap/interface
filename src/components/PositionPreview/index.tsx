@@ -1,6 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
 import { Position } from '@cndllabs/v3-sdk'
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
