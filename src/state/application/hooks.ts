@@ -114,6 +114,10 @@ export function useTrendingSoonTokenDetailModalToggle(): () => void {
   return useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
 }
 
+export function useTrueSightUnsubscribeModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.UNSUBSCRIBE_TRUESIGHT)
+}
+
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()

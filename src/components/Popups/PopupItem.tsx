@@ -134,6 +134,11 @@ export default function PopupItem({
       simple: { title, success, summary },
     } = content
     popupContent = <SimplePopup title={title} success={success} summary={summary} />
+  } else if ('truesightNoti' in content) {
+    const {
+      truesightNoti: { title, body },
+    } = content
+    popupContent = <SimplePopup title={title} />
   }
 
   const faderStyle = useSpring({

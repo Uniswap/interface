@@ -27,6 +27,12 @@ export type PopupContent =
         summary: string
       }
     }
+  | {
+      truesightNoti: {
+        title: string
+        body: string
+      }
+    }
 
 export enum ApplicationModal {
   NETWORK,
@@ -52,6 +58,7 @@ export enum ApplicationModal {
   COMMUNITY,
   CONTRACT_ADDRESS,
   FAUCET_POPUP,
+  UNSUBSCRIBE_TRUESIGHT,
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
