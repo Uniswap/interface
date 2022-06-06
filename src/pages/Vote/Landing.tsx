@@ -1,5 +1,5 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'

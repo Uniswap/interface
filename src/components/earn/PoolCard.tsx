@@ -1,5 +1,5 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import styled from 'styled-components/macro'
 

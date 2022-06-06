@@ -1,5 +1,5 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'

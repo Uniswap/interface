@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@cndllabs/v3-sdk'
+import { Currency } from '@uniswap/sdk-core'
 import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { useCallback, useMemo } from 'react'
 
