@@ -89,7 +89,7 @@ export const ADD_NETWORK_PARAMS: {
   },
   [ChainId.BSCMAINNET]: {
     chainId: '0x38',
-    chainName: 'BSC',
+    chainName: 'BNB Chain',
     nativeCurrency: {
       name: 'BNB',
       symbol: 'BNB',

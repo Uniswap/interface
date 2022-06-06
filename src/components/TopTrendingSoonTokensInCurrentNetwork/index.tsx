@@ -98,7 +98,6 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                 style={{
                   gap: '4px',
                   minWidth: 'fit-content',
-                  flex: 1,
                 }}
               >
                 <Text color={theme.subText} fontWeight={500}>
@@ -112,31 +111,33 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                 ml="24px"
                 backgroundColor={theme.buttonBlack}
                 overflow="auto"
-                style={{ borderRadius: '40px', paddingLeft: '8px' }}
+                style={{ borderRadius: '40px', paddingLeft: '8px', flex: 1 }}
               >
-                {topTrendingSoonTokens.map(tokenData => (
+                {topTrendingSoonTokens.map((tokenData, index) => (
                   <React.Fragment key={tokenData.token_id}>
                     <TopTrendingSoonTokenItem tokenData={tokenData} setSelectedToken={setSelectedToken} />
-                    <div style={{ height: '16px', width: '0px', borderRight: '1px solid #40505A' }} />
+                    {index !== topTrendingSoonTokens.length - 1 && (
+                      <div style={{ height: '16px', width: '0px', borderRight: '1px solid #40505A' }} />
+                    )}
                   </React.Fragment>
                 ))}
-                <ExternalLink
-                  href={window.location.origin + '/discover?tab=trending_soon'}
-                  onClickCapture={() => mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_DISCOVER_MORE_CLICKED)}
-                >
-                  <ButtonLight
-                    minWidth="fit-content"
-                    width="fit-content"
-                    height="100%"
-                    padding="7px 8px"
-                    borderRadius="20px"
-                    margin="0 0 0 12px"
-                    style={{ fontSize: '14px', whiteSpace: 'nowrap' }}
-                  >
-                    <Trans>Discover more</Trans>
-                  </ButtonLight>
-                </ExternalLink>
               </Flex>
+              <ExternalLink
+                href={window.location.origin + '/discover?tab=trending_soon'}
+                onClickCapture={() => mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_DISCOVER_MORE_CLICKED)}
+              >
+                <ButtonLight
+                  minWidth="fit-content"
+                  width="fit-content"
+                  height="100%"
+                  padding="7px 8px"
+                  borderRadius="20px"
+                  margin="0 0 0 12px"
+                  style={{ fontSize: '14px', whiteSpace: 'nowrap' }}
+                >
+                  <Trans>Discover more</Trans>
+                </ButtonLight>
+              </ExternalLink>
             </TrendingSoonTokensContainer>
             <TextNote>
               <Trans>
