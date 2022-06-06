@@ -1,6 +1,6 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'

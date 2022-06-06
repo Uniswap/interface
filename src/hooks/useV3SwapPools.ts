@@ -1,5 +1,5 @@
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { Currency, Token } from '@uniswap/sdk-core'
+import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
