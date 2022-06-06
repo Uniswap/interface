@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
@@ -73,6 +73,12 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   const dispatch = useAppDispatch()
   const [maybeUnsafeConfirmation, setMaybeUnsafeConfirmation] = useState(false)
 
+  /**
+   * TODO: implement this behavior in a less janky way. Ideally if we can distinguish between `onClose` being called programmatically and `onClose` as a results of a user dismissing the modal then we can determine what this value should be without this class variable.
+   * Indicates that the modal can reject the request when the modal happens. This will be false when the modal closes as a result of the user explicitly confirming or rejecting a request and true otherwise.
+   */
+  const rejectOnCloseRef = useRef(true)
+
   if (!request?.type || !VALID_REQUEST_TYPES.includes(request?.type)) {
     return null
   }
@@ -83,6 +89,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     if (!activeAccount) return
 
     rejectRequest(request.internalId, activeAccount.address)
+    rejectOnCloseRef.current = false
     onClose()
   }
 
@@ -123,13 +130,22 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
       )
     }
 
+    rejectOnCloseRef.current = false
     onClose()
+  }
+
+  const handleClose = () => {
+    if (rejectOnCloseRef.current) {
+      onReject()
+    } else {
+      onClose()
+    }
   }
 
   let permitInfo = getPermitInfo(request)
 
   return (
-    <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={onClose}>
+    <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={handleClose}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails permitInfo={permitInfo} request={request} />
         {!permitInfo && (
