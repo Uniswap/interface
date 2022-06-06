@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -1162,25 +1162,9 @@ msgstr "Nincs találat."
 msgid "Not created"
 msgstr "Nincs létrehozva"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "KI"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "BE"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "CSAK AKKOR HASZNÁLJA EZT A MÓDOT, HOGY TUDJA, MIT CSINÁL."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Ki"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Be"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
