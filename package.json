@@ -175,7 +175,7 @@
     "@fontsource/inter": "^4.5.1",
     "@popperjs/core": "^2.4.4",
     "@reduxjs/toolkit": "^1.6.1",
-    "@cndllabs/redux-multicall": "^1.1.1",
+    "@uniswap/redux-multicall": "^1.1.1",
     "@uniswap/router-sdk": "^1.0.3",
     "@cndllabs/sdk-core": "^3.0.1",
     "@uniswap/smart-order-router": "^2.5.26",
