@@ -79,7 +79,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ],
   [SupportedChainId.CANDLE]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.CANDLE],
-    DAI_CANDLE,
     USDC_CANDLE,
     USDT_CANDLE,
     WETH_CANDLE,
