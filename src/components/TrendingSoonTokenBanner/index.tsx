@@ -51,9 +51,7 @@ const TrendingSoonTokenBanner = ({
           {currencySymbol} <Trans>could be trending very soon!</Trans> <Trans>View</Trans>{' '}
           <ExternalLink
             href={
-              window.location.origin +
-              '/#/discover?tab=trending_soon&token_id=' +
-              (trendingToken0Id ?? trendingToken1Id)
+              window.location.origin + '/discover?tab=trending_soon&token_id=' + (trendingToken0Id ?? trendingToken1Id)
             }
             target="_blank"
             onClickCapture={() => {

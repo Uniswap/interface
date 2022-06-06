@@ -328,7 +328,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const shareUrl =
     currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]
       ? window.location.origin +
-        `/#/swap?inputCurrency=${currencyId(currencies[Field.INPUT] as Currency, chainId)}&outputCurrency=${currencyId(
+        `/swap?inputCurrency=${currencyId(currencies[Field.INPUT] as Currency, chainId)}&outputCurrency=${currencyId(
           currencies[Field.OUTPUT] as Currency,
           chainId,
         )}&networkId=${chainId}`

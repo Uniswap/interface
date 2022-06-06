@@ -121,7 +121,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                   </React.Fragment>
                 ))}
                 <ExternalLink
-                  href={window.location.origin + '/#/discover?tab=trending_soon'}
+                  href={window.location.origin + '/discover?tab=trending_soon'}
                   onClickCapture={() => mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_DISCOVER_MORE_CLICKED)}
                 >
                   <ButtonLight
@@ -192,7 +192,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
               </TextTooltip>
             </MouseoverTooltip>
             <ExternalLink
-              href={window.location.origin + '/#/discover?tab=trending_soon'}
+              href={window.location.origin + '/discover?tab=trending_soon'}
               target="_blank"
               style={{
                 fontSize: '12px',

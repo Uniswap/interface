@@ -110,7 +110,7 @@ const ButtonWithOptions = ({
                   key={platform}
                   alignItems="center"
                   as={ExternalLink}
-                  href={`/#/swap?inputCurrency=ETH&outputCurrency=${getAddress(
+                  href={`/swap?inputCurrency=ETH&outputCurrency=${getAddress(
                     platforms.get(platform) ?? '',
                   )}&networkId=${mappedChainId}`}
                   onClick={() => {

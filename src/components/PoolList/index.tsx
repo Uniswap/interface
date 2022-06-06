@@ -330,7 +330,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
   const shareUrl = sharedPoolId
-    ? window.location.origin + '/#/pools?search=' + sharedPoolId + '&networkId=' + chainId
+    ? window.location.origin + '/pools?search=' + sharedPoolId + '&networkId=' + chainId
     : undefined
 
   useEffect(() => {
