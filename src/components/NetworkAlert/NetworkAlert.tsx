@@ -52,6 +52,8 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   dark: {
     [SupportedChainId.POLYGON]:
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
+    [SupportedChainId.CANDLE]:
+      'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
     [SupportedChainId.POLYGON_MUMBAI]:
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
     [SupportedChainId.OPTIMISM]:
@@ -65,6 +67,8 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   },
   light: {
     [SupportedChainId.POLYGON]:
+      'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
+    [SupportedChainId.CANDLE]:
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
     [SupportedChainId.POLYGON_MUMBAI]:
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
@@ -128,6 +132,7 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
 
 const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
+  [SupportedChainId.CANDLE]: 'rgba(130, 71, 229)',
   [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
   [SupportedChainId.OPTIMISM]: '#ff3856',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',

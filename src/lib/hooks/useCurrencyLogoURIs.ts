@@ -6,6 +6,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
+import CandleLogo from '../../assets/svg/candle-logo.svg'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism'
 
@@ -27,6 +28,8 @@ function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET):
     case SupportedChainId.POLYGON_MUMBAI:
     case SupportedChainId.POLYGON:
       return MaticLogo
+    case SupportedChainId.CANDLE:
+      return CandleLogo
     default:
       return EthereumLogo
   }
