@@ -39,6 +39,13 @@ export const USDC_KOVAN = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_CANDLE = new Token(
+  SupportedChainId.CANDLE,
+  '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
