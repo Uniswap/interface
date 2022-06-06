@@ -72,7 +72,7 @@ export const dexListConfig: DexList = {
   },
   quickswap: {
     name: 'QuickSwap',
-    icon: 'https://quickswap.exchange/logo_circle.png',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/200x200/8206.png',
     chainIds: [ChainId.MATIC],
   },
   dfyn: {
