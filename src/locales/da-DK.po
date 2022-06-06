@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -1161,25 +1161,9 @@ msgstr "Ingen resultater fundet."
 msgid "Not created"
 msgstr "Ikke oprettet"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "FRA"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "TIL"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "KUN BRUG DENNE TILSTAND, HVIS DU VED, HVAD DU LAVER."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Fra"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Til"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."

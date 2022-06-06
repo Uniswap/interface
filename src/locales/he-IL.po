@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -1161,25 +1161,9 @@ msgstr "לא נמצאו תוצאות."
 msgid "Not created"
 msgstr "לא נוצר"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "כבוי"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "דלוק"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "השתמש במצב זה בלבד אם אתה יודע מה אתה עושה."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "כבוי"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "דלוק"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."

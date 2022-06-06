@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -1161,25 +1161,9 @@ msgstr "Nici un rezultat găsit."
 msgid "Not created"
 msgstr "Nu a fost creat"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "DEZACTIVAT"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "PORNIT"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "UTILIZEAZĂ DOAR ACEST MOD DACĂ ȘTII CE TREBUIE SĂ FACI."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Dezactivat"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Activat"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."

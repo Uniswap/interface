@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -1161,25 +1161,9 @@ msgstr "Aucun résultat trouvé."
 msgid "Not created"
 msgstr "Non créé"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "DÉSACTIVÉ"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "AU"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "UTILISEZ CE MODE UNIQUEMENT SI VOUS SAVEZ CE QUE VOUS FAITES."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Désactivé"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Au"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
