@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@cndllabs/v3-sdk'
+import { Trans } from '@lingui/macro'
 import Badge from 'components/Badge'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'

@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@cndllabs/sdk-core'
 import { FeeAmount } from '@cndllabs/v3-sdk'
+import { Trans } from '@lingui/macro'
 import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'

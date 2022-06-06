@@ -1,6 +1,6 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, Token } from '@cndllabs/sdk-core'
 import { FeeAmount } from '@cndllabs/v3-sdk'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useMemo } from 'react'

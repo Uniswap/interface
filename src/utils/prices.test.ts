@@ -1,7 +1,7 @@
-import { Trade } from '@uniswap/router-sdk'
 import { CurrencyAmount, Percent, Token, TradeType } from '@cndllabs/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@cndllabs/v3-sdk'
+import { Trade } from '@uniswap/router-sdk'
+import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 
 import { computeRealizedLPFeeAmount, warningSeverity } from './prices'

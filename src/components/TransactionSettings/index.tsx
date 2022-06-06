@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Percent } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
