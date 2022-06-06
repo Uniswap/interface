@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'

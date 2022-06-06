@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token, TradeType } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@cndllabs/v3-sdk'
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'

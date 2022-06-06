@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
-import { Currency, Token } from '@cndllabs/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Currency, Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'

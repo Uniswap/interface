@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@cndllabs/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'

@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@cndllabs/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@cndllabs/v3-sdk'
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'

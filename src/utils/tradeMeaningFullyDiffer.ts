@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@cndllabs/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/router-sdk'
 
 /**

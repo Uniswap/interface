@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { MERKLE_DISTRIBUTOR_ADDRESS } from 'constants/addresses'

@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@cndllabs/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { ReactNode } from 'react'

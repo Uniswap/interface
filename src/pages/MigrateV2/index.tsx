@@ -1,4 +1,4 @@
-import { Token } from '@cndllabs/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256, pack } from '@ethersproject/solidity'
 import { Trans } from '@lingui/macro'

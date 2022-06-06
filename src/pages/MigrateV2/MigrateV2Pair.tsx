@@ -1,4 +1,4 @@
-import { CurrencyAmount, Fraction, Percent, Price, Token } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@cndllabs/v3-sdk'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'

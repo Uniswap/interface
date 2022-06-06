@@ -1,4 +1,4 @@
-import { Currency } from '@cndllabs/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { Position } from '@cndllabs/v3-sdk'
 import { Trans } from '@lingui/macro'
 import RangeBadge from 'components/Badge/RangeBadge'

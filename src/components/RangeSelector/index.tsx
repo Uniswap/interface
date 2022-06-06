@@ -1,4 +1,4 @@
-import { Currency, Price, Token } from '@cndllabs/sdk-core'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'

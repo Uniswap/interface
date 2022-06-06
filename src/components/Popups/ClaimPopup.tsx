@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useEffect } from 'react'

@@ -1,4 +1,4 @@
-import { Currency } from '@cndllabs/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@cndllabs/v3-sdk'
 import { Trans } from '@lingui/macro'
 import { ButtonGray } from 'components/Button'

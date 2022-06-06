@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { parseUnits } from '@ethersproject/units'
 import JSBI from 'jsbi'
 

@@ -1,4 +1,4 @@
-import { BigintIsh, Currency, Token } from '@cndllabs/sdk-core'
+import { BigintIsh, Currency, Token } from '@uniswap/sdk-core'
 import { computePoolAddress } from '@cndllabs/v3-sdk'
 import { FeeAmount, Pool } from '@cndllabs/v3-sdk'
 import { Interface } from '@ethersproject/abi'

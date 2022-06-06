@@ -1,4 +1,4 @@
-import { Currency, Token } from '@cndllabs/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'

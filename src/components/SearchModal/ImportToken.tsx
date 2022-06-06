@@ -1,4 +1,4 @@
-import { Currency, Token } from '@cndllabs/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { Plural, Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
 import { ButtonPrimary } from 'components/Button'

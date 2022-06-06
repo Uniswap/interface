@@ -1,4 +1,4 @@
-import { Percent } from '@cndllabs/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { Text } from 'rebass'
 

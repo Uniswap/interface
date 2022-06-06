@@ -1,4 +1,4 @@
-import { CurrencyAmount, Percent } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@cndllabs/v3-sdk'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'

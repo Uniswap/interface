@@ -1,4 +1,4 @@
-import { Fraction, TradeType } from '@cndllabs/sdk-core'
+import { Fraction, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import JSBI from 'jsbi'
 

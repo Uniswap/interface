@@ -1,4 +1,4 @@
-import { CurrencyAmount, Fraction, Token } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { useActiveLocale } from 'hooks/useActiveLocale'

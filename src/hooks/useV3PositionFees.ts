@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@cndllabs/v3-sdk'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useSingleCallResult } from 'lib/hooks/multicall'

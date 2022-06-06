@@ -1,4 +1,4 @@
-import { Currency, Percent } from '@cndllabs/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@cndllabs/v3-sdk'
 import { Protocol } from '@uniswap/router-sdk'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
