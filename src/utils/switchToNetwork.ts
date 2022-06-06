@@ -28,6 +28,8 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
       return ['https://rinkeby.arbitrum.io/rpc']
     case SupportedChainId.POLYGON:
       return ['https://polygon-rpc.com/']
+    case SupportedChainId.CANDLE:
+      return ['https://rpc.cndlchain.com/']
     case SupportedChainId.POLYGON_MUMBAI:
       return ['https://rpc-endpoints.superfluid.dev/mumbai']
     default:
