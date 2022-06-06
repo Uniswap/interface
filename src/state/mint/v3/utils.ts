@@ -1,4 +1,3 @@
-import { Price, Token } from '@uniswap/sdk-core'
 import {
   encodeSqrtRatioX96,
   FeeAmount,
@@ -7,6 +6,7 @@ import {
   TICK_SPACINGS,
   TickMath,
 } from '@cndllabs/v3-sdk'
+import { Price, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
 export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: string) {

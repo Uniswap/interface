@@ -1,5 +1,5 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'

@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'

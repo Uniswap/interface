@@ -1,5 +1,5 @@
-import { Fraction, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Fraction, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
 import { nativeOnChain } from '../../constants/tokens'

@@ -1,6 +1,6 @@
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@cndllabs/v3-sdk'
 import { Trade } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 

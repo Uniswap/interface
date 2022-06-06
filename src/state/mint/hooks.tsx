@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'

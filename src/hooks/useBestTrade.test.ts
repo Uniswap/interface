@@ -1,5 +1,5 @@
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { renderHook } from '@testing-library/react-hooks'
+import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { TradeState } from 'state/routing/types'
 
