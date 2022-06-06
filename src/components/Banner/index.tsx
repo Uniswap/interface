@@ -24,6 +24,10 @@ import ReferralCampaignDesktop from 'assets/banners/referral-campaign-desktop.pn
 import ReferralCampaignTablet from 'assets/banners/referral-campaign-tablet.png'
 import ReferralCampaignMobile from 'assets/banners/referral-campaign-mobile.png'
 
+import CommunityAMALivestreamWithCEODesktop from 'assets/banners/community-ama-livestream-with-ceo-desktop.png'
+import CommunityAMALivestreamWithCEOTablet from 'assets/banners/community-ama-livestream-with-ceo-tablet.png'
+import CommunityAMALivestreamWithCEOMobile from 'assets/banners/community-ama-livestream-with-ceo-mobile.png'
+
 const BannerWrapper = styled(Flex)`
   --swiper-navigation-size: 12px;
 
@@ -111,6 +115,19 @@ function Banner({
   const [showBanner, setShowBanner] = useLocalStorage('put-up-banner', true)
 
   const banners = [
+    {
+      // Community AMA livestream with CEO
+      start: new Date(1654473600000), // June 6, 2022 0:00:00
+      end: new Date(1654819199000), // June 9, 2022 23:59:59
+      img: isInModal
+        ? CommunityAMALivestreamWithCEOMobile
+        : w >= 768
+        ? CommunityAMALivestreamWithCEODesktop
+        : w >= 500
+        ? CommunityAMALivestreamWithCEOTablet
+        : CommunityAMALivestreamWithCEOMobile,
+      link: 'https://twitter.com/KyberNetwork/status/1533697331463303169',
+    },
     {
       // REFERRAL CAMPAIGN
       start: new Date(1653004800000), // May 20, 2022 0:00:00
