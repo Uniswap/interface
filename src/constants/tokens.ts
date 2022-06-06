@@ -117,6 +117,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY,
   [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN,
   [SupportedChainId.POLYGON]: USDC_POLYGON,
+  [SupportedChainId.CANDLE]: USDC_CANDLE,
   [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
   [SupportedChainId.GOERLI]: USDC_GOERLI,
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
@@ -264,6 +265,14 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
+
+export const WETH_CANDLE = new Token(
+  SupportedChainId.CANDLE,
+  '0xb750990F953B36F806d0327678eCFB4eEFd16979',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
@@ -301,6 +310,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WETH',
     'Wrapped Ether'
+  ),
+  [SupportedChainId.CANDLE]: new Token(
+    SupportedChainId.CANDLE,
+    '0x85FA00f55492B0437b3925381fAaf0E024747627',
+    18,
+    'WCNDL',
+    'Wrapped Candle'
   ),
   [SupportedChainId.POLYGON]: new Token(
     SupportedChainId.POLYGON,
