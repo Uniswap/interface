@@ -50,6 +50,7 @@ export default function CommonBases({
           return (
             <BaseWrapper
               tabIndex={0}
+              onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
               onClick={() => !isSelected && onSelect(currency)}
               disable={isSelected}
               key={currencyId(currency)}
