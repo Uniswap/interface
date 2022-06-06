@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@cndllabs/sdk-core'
 import { RowBetween } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { Info } from 'react-feather'

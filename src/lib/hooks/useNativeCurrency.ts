@@ -1,4 +1,4 @@
-import { NativeCurrency } from '@uniswap/sdk-core'
+import { NativeCurrency } from '@cndllabs/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'

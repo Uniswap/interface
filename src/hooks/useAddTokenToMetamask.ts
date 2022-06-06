@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@cndllabs/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useCallback, useState } from 'react'
