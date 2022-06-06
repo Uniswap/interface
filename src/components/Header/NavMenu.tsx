@@ -23,7 +23,7 @@ export const StyledNavMenu = styled('div')`
     margin: 0 8px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  @media (max-width: 550px) {
     display: none;
-  `}
+  }
 `

@@ -86,7 +86,7 @@ export default function ImportFarmModal({ isOpen, onDismiss, farmSummaries }: Im
         <AutoColumn gap="12px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
-              Import Farm
+              {t('ImportFarm')}
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>

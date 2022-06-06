@@ -45,12 +45,13 @@ const HeaderFrame = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 2;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+
+  @media (max-width: 1115px) {
     grid-template-columns: 1fr;
     padding: 0 1rem;
     width: calc(100%);
     position: relative;
-  `};
+  }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         padding: 0.5rem 1rem;
@@ -63,12 +64,12 @@ const HeaderControls = styled.div`
   align-items: center;
   justify-self: flex-end;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media (max-width: 1115px) {
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
     width: 100%;
-    max-width: 960px;
+    max-width: 1115px;
     padding: 1rem;
     position: fixed;
     bottom: 0px;
@@ -78,7 +79,7 @@ const HeaderControls = styled.div`
     height: 72px;
     border-radius: 12px 12px 0 0;
     background-color: ${({ theme }) => theme.bg1};
-  `};
+  }
 `
 
 const HeaderElement = styled.div`
@@ -102,17 +103,17 @@ const HeaderElementWrap = styled.div`
 `
 
 const HeaderRow = styled(RowFixed)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
+  @media (max-width: 1115px) {
+    width: 100%;
+  }
 `
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media (max-width: 1115px) {
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
-`};
+  }
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -212,9 +213,9 @@ export const StyledNavLink = styled(NavLink).attrs({
 export const StyledNavLinkExtraSmall = styled(StyledNavLink).attrs({
   activeClassName,
 })`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  @media (max-width: 550px) {
     display: none;
-  `}
+  }
 `
 
 const StyledExternalLink = styled(ExternalLink).attrs({
@@ -279,35 +280,47 @@ export const StyledMenuButton = styled.button`
 
 export const StyledDesktopLogo = styled.img`
   display: inline;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;  
-  `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: inline;  
-  `};
-  @media (max-width: 385px) {
+  @media (max-width: 1225px) {
+    display: none;
+  }
+  @media (max-width: 1115px) {
+    display: inline;
+  }
+  @media (max-width: 655px) {
+    display: none;
+  }
+  @media (max-width: 550px) {
+    display: inline;
+  }
+  @media (max-width: 415px) {
     display: none;
   }
 `
 
 export const StyledMobileLogo = styled.img`
   display: none;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: inline;  
-  `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;  
-  `};
-  @media (max-width: 385px) {
+  @media (max-width: 1225px) {
+    display: inline;
+  }
+  @media (max-width: 1115px) {
+    display: none;
+  }
+  @media (max-width: 655px) {
+    display: inline;
+  }
+  @media (max-width: 550px) {
+    display: none;
+  }
+  @media (max-width: 415px) {
     display: inline;
   }
 `
 
 export const BurgerElement = styled(HeaderElement)`
   display: none;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: flex;  
-  `};
+  @media (max-width: 550px) {
+    display: flex;
+  }
 `
 
 export const StyledDrawer = styled(Drawer)`

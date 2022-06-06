@@ -264,7 +264,7 @@ export default function Earn() {
                   }}
                 >
                   <ButtonPrimary padding="8px 16px" borderRadius="8px">
-                    {'Import Farm'}
+                    {t('ImportFarm')}
                   </ButtonPrimary>
                 </Text>
               </AutoColumn>
