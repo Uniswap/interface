@@ -1,7 +1,7 @@
+import { Currency, CurrencyAmount, Percent } from '@cndllabs/sdk-core'
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent } from '@cndllabs/sdk-core'
 import HoverInlineText from 'components/HoverInlineText'
 import { useMemo } from 'react'
 

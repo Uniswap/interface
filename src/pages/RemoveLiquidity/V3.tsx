@@ -1,7 +1,7 @@
+import { CurrencyAmount, Percent } from '@cndllabs/sdk-core'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Percent } from '@cndllabs/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'

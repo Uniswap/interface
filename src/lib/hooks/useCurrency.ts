@@ -1,6 +1,6 @@
+import { Currency, Token } from '@cndllabs/sdk-core'
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, Token } from '@cndllabs/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'

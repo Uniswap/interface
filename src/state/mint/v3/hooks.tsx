@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import {
   encodeSqrtRatioX96,
   FeeAmount,

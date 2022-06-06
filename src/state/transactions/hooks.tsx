@@ -1,5 +1,5 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@cndllabs/sdk-core'
+import { TransactionResponse } from '@ethersproject/providers'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'

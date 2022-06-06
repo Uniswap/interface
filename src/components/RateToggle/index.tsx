@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
 
 // the order of displayed base currencies from left to right is always in sort order

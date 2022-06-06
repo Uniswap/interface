@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'

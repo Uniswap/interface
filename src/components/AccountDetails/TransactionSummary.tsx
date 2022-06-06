@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import JSBI from 'jsbi'
 
 import { nativeOnChain } from '../../constants/tokens'

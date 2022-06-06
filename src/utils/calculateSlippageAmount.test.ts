@@ -1,5 +1,5 @@
-import { AddressZero } from '@ethersproject/constants'
 import { CurrencyAmount, Percent, Token } from '@cndllabs/sdk-core'
+import { AddressZero } from '@ethersproject/constants'
 
 import { calculateSlippageAmount } from './calculateSlippageAmount'
 
