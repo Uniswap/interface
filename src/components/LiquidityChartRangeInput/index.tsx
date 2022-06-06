@@ -1,4 +1,4 @@
-import { FeeAmount } from '@cndllabs/v3-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { AutoColumn, ColumnCenter } from 'components/Column'

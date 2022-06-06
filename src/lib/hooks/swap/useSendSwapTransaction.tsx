@@ -1,4 +1,4 @@
-import { Trade as V3Trade } from '@cndllabs/v3-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 // eslint-disable-next-line no-restricted-imports

@@ -1,4 +1,4 @@
-import { FeeAmount } from '@cndllabs/v3-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from '@lingui/macro'
 import Badge from 'components/Badge'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'

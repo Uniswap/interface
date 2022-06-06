@@ -1,4 +1,4 @@
-import { Position } from '@cndllabs/v3-sdk'
+import { Position } from '@uniswap/v3-sdk'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import { PositionPreview } from 'components/PositionPreview'

@@ -1,4 +1,4 @@
-import { FeeAmount } from '@cndllabs/v3-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, Token } from '@uniswap/sdk-core'
 import useBlockNumber from 'lib/hooks/useBlockNumber'

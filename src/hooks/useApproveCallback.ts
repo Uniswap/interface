@@ -1,4 +1,4 @@
-import { Trade as V3Trade } from '@cndllabs/v3-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'

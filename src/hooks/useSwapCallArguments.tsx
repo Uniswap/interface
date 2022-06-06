@@ -1,4 +1,4 @@
-import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@cndllabs/v3-sdk'
+import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { BigNumber } from '@ethersproject/bignumber'
 import { SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'

@@ -8,7 +8,7 @@ import {
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
-} from '@cndllabs/v3-sdk'
+} from '@uniswap/v3-sdk'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'

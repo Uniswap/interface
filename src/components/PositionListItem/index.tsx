@@ -1,4 +1,4 @@
-import { Position } from '@cndllabs/v3-sdk'
+import { Position } from '@uniswap/v3-sdk'
 import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'

@@ -1,4 +1,4 @@
-import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@cndllabs/v3-sdk'
+import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'

@@ -1,4 +1,4 @@
-import { FeeAmount, TICK_SPACINGS } from '@cndllabs/v3-sdk'
+import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { TickData, TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'

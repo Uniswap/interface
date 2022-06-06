@@ -1,4 +1,4 @@
-import { Route, SwapQuoter } from '@cndllabs/v3-sdk'
+import { Route, SwapQuoter } from '@uniswap/v3-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'

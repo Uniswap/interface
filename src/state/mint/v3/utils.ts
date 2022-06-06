@@ -5,7 +5,7 @@ import {
   priceToClosestTick,
   TICK_SPACINGS,
   TickMath,
-} from '@cndllabs/v3-sdk'
+} from '@uniswap/v3-sdk'
 import { Price, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
