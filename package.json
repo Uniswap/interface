@@ -1,7 +1,7 @@
 {
   "name": "@uniswap/widgets",
   "version": "1.0.7",
-  "description": "Uniswap Interface",
+  "description": "Carthage Interface",
   "homepage": ".",
   "files": [
     "dist"

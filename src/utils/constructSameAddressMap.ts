@@ -2,6 +2,7 @@ import { SupportedChainId } from '../constants/chains'
 
 const DEFAULT_NETWORKS = [
   SupportedChainId.MAINNET,
+  SupportedChainId.CANDLE,
   SupportedChainId.ROPSTEN,
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,

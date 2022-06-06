@@ -1,6 +1,7 @@
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
+import candleLogoUrl from 'assets/svg/candle_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import ms from 'ms.macro'
 
@@ -144,6 +145,17 @@ export const CHAIN_INFO: ChainInfoMap = {
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Rinkeby Arbitrum Ether', symbol: 'rinkArbETH', decimals: 18 },
+  },
+  [SupportedChainId.CANDLE]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: 'https://bridge.candlelabs.org',
+    docs: 'https://candlelabs.org/',
+    explorer: 'https://candleexplorer.com/',
+    infoLink: 'https://info.carthage.org/#/candle/',
+    label: 'Candle',
+    logoUrl: candleLogoUrl,
+    nativeCurrency: { name: 'Candle', symbol: 'CNDL', decimals: 18 },
   },
   [SupportedChainId.POLYGON]: {
     networkType: NetworkType.L1,
