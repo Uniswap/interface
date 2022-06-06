@@ -1,5 +1,5 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@cndllabs/sdk-core'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'

@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@cndllabs/v3-sdk'
+import { Trans } from '@lingui/macro'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { ReactNode } from 'react'
 

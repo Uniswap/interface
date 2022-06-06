@@ -1,7 +1,7 @@
+import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import StakingRewardsJson from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'

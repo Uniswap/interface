@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'

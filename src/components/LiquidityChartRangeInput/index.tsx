@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@cndllabs/sdk-core'
 import { FeeAmount } from '@cndllabs/v3-sdk'
+import { Trans } from '@lingui/macro'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
 import { format } from 'd3'

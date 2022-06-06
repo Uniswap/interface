@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Token, TradeType } from '@cndllabs/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@cndllabs/v3-sdk'
+import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 
 import { nativeOnChain } from '../../constants/tokens'
 import { GetQuoteResult, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'

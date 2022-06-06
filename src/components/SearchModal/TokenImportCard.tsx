@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Token } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'

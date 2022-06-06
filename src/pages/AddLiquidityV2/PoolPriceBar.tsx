@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Percent, Price } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'

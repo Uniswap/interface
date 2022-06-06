@@ -1,6 +1,6 @@
+import { Currency, CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'

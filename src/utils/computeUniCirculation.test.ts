@@ -1,5 +1,5 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
+import { BigNumber } from '@ethersproject/bignumber'
 import JSBI from 'jsbi'
 
 import { ZERO_ADDRESS } from '../constants/misc'

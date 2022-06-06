@@ -1,6 +1,6 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@cndllabs/sdk-core'
 import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@cndllabs/v3-sdk'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'

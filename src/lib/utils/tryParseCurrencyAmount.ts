@@ -1,5 +1,5 @@
-import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@cndllabs/sdk-core'
+import { parseUnits } from '@ethersproject/units'
 import JSBI from 'jsbi'
 
 /**

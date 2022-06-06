@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
