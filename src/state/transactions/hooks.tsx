@@ -1,19 +1,16 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useTransactionMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { addTransaction, TransactionInfo, TransactionType } from './actions'
-import { TransactionDetails } from './reducer'
+import { addTransaction } from './reducer'
+import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (response: TransactionResponse, info: TransactionInfo) => void {
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-
-  const logMonitoringEvent = useTransactionMonitoringEventCallback()
 
   return useCallback(
     (response: TransactionResponse, info: TransactionInfo) => {
@@ -25,10 +22,8 @@ export function useTransactionAdder(): (response: TransactionResponse, info: Tra
         throw Error('No transaction hash found.')
       }
       dispatch(addTransaction({ hash, from: account, info, chainId }))
-
-      logMonitoringEvent(info, response)
     },
-    [account, chainId, dispatch, logMonitoringEvent]
+    [account, chainId, dispatch]
   )
 }
 

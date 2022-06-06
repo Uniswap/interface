@@ -10,7 +10,6 @@ import { useMemo } from 'react'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
-import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -71,6 +70,8 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
   ])
 }
 
+type TokenMap = { [address: string]: Token }
+
 /**
  * Returns a Token from the tokenAddress.
  * Returns null if token is loading or null was passed.
@@ -83,16 +84,6 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
   const tokenFromNetwork = useTokenFromNetwork(token ? undefined : address ? address : undefined)
 
   return tokenFromNetwork ?? token
-}
-
-/**
- * Returns a Token from the tokenAddress.
- * Returns null if token is loading or null was passed.
- * Returns undefined if tokenAddress is invalid or token does not exist.
- */
-export function useToken(tokenAddress?: string | null): Token | null | undefined {
-  const tokens = useTokenMap()
-  return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
 /**
@@ -118,14 +109,4 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
 
   return isNative ? nativeCurrency : token
-}
-
-/**
- * Returns a Currency from the currencyId.
- * Returns null if currency is loading or null was passed.
- * Returns undefined if currencyId is invalid or token does not exist.
- */
-export default function useCurrency(currencyId?: string | null): Currency | null | undefined {
-  const tokens = useTokenMap()
-  return useCurrencyFromMap(tokens, currencyId)
 }

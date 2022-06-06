@@ -1,10 +1,11 @@
+import { Filter } from '@ethersproject/providers'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { fetchedLogs, fetchedLogsError, fetchingLogs } from './slice'
-import { EventFilter, keyToFilter } from './utils'
+import { isHistoricalLog, keyToFilter } from './utils'
 
 export default function Updater(): null {
   const dispatch = useAppDispatch()
@@ -13,7 +14,7 @@ export default function Updater(): null {
 
   const blockNumber = useBlockNumber()
 
-  const filtersNeedFetch: EventFilter[] = useMemo(() => {
+  const filtersNeedFetch: Filter[] = useMemo(() => {
     if (!chainId || typeof blockNumber !== 'number') return []
 
     const active = state[chainId]
@@ -25,6 +26,8 @@ export default function Updater(): null {
         if (listeners === 0) return false
         if (typeof fetchingBlockNumber === 'number' && fetchingBlockNumber >= blockNumber) return false
         if (results && typeof results.blockNumber === 'number' && results.blockNumber >= blockNumber) return false
+        // this condition ensures that if a log is historical, and it's already fetched, we don't re-fetch it
+        if (isHistoricalLog(keyToFilter(key), blockNumber) && results?.logs !== undefined) return false
         return true
       })
       .map((key) => keyToFilter(key))
@@ -35,11 +38,16 @@ export default function Updater(): null {
 
     dispatch(fetchingLogs({ chainId, filters: filtersNeedFetch, blockNumber }))
     filtersNeedFetch.forEach((filter) => {
+      // provide defaults if {from,to}Block are missing
+      let fromBlock = filter.fromBlock ?? 0
+      let toBlock = filter.toBlock ?? blockNumber
+      if (typeof fromBlock === 'string') fromBlock = Number.parseInt(fromBlock)
+      if (typeof toBlock === 'string') toBlock = Number.parseInt(toBlock)
       library
         .getLogs({
           ...filter,
-          fromBlock: 0,
-          toBlock: blockNumber,
+          fromBlock,
+          toBlock,
         })
         .then((logs) => {
           dispatch(

@@ -18,8 +18,6 @@ import {
   addSerializedPair,
   addSerializedToken,
   removeSerializedToken,
-  SerializedPair,
-  SerializedToken,
   updateHideClosedPositions,
   updateShowDonationLink,
   updateShowSurveyPopup,
@@ -29,7 +27,8 @@ import {
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
-} from './actions'
+} from './reducer'
+import { SerializedPair, SerializedToken } from './types'
 
 function serializeToken(token: Token): SerializedToken {
   return {

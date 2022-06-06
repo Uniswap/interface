@@ -288,6 +288,11 @@ export default function Swap({ history }: RouteComponentProps) {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
         ReactGA.event({
           category: 'Swap',
+          action: 'transaction hash',
+          label: hash,
+        })
+        ReactGA.event({
+          category: 'Swap',
           action:
             recipient === null
               ? 'Swap w/o Send'
@@ -421,7 +426,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 }
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={showMaxButton}
-                currency={currencies[Field.INPUT]}
+                currency={currencies[Field.INPUT] ?? null}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
                 fiatValue={fiatValueInput ?? undefined}
@@ -449,7 +454,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
                 priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
+                currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}

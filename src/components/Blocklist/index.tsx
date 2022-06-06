@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ReactNode, useMemo } from 'react'
 
-// SDN OFAC addresses
 const BLOCKED_ADDRESSES: string[] = [
   '0x7Db418b5D567A4e0E8c59Ad71BE1FcE48f3E6107',
   '0x72a5843cc08275C8171E582972Aa4fDa8C397B2A',
@@ -24,16 +23,18 @@ const BLOCKED_ADDRESSES: string[] = [
   '0x6acdfba02d390b97ac2b2d42a63e85293bcc1',
   '0x48549a34ae37b12f6a30566245176994e17c6',
   '0x5512d943ed1f7c8a43f3435c85f7ab68b30121',
-  '0xc455f7fd3e0e12afd51fba5c106909934d8a0e',
-  '0x3cbded43efdaf0fc77b9c55f6fc9988fcc9b757d',
+  '0xC455f7fd3e0e12afd51fba5c106909934D8A0e4a',
+  '0x3CBdeD43EFdAf0FC77b9C55F6fC9988fCC9b757d',
   '0x67d40EE1A85bf4a4Bb7Ffae16De985e8427B6b45',
-  '0x6f1ca141a28907f78ebaa64fb83a9088b02a8352',
-  '0x6acdfba02d390b97ac2b2d42a63e85293bcc160e',
+  '0x6F1cA141A28907F78Ebaa64fb83A9088b02A8352',
+  '0x6aCDFBA02D390b97Ac2b2d42A63E85293BCc160e',
   '0x48549a34ae37b12f6a30566245176994e17c6b4a',
   '0x5512d943ed1f7c8a43f3435c85f7ab68b30121b0',
-  '0xc455f7fd3e0e12afd51fba5c106909934d8a0e4a',
+  '0xC455f7fd3e0e12afd51fba5c106909934D8A0e4a',
   '0x629e7Da20197a5429d30da36E77d06CdF796b71A',
   '0x7FF9cFad3877F21d41Da833E2F775dB0569eE3D9',
+  '0x098B716B8Aaf21512996dC57EB0615e2383E2f96',
+  '0xfEC8A60023265364D066a1212fDE3930F6Ae8da7',
 ]
 
 export default function Blocklist({ children }: { children: ReactNode }) {

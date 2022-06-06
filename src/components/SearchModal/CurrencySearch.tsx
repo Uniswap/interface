@@ -74,6 +74,8 @@ export function CurrencySearch({
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
+  const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
+
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
 
@@ -103,10 +105,11 @@ export function CurrencySearch({
     return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
   }, [allTokens, debouncedQuery])
 
-  const balances = useAllTokenBalances()
+  const [balances, balancesIsLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
-    return filteredTokens.sort(tokenComparator.bind(null, balances))
-  }, [balances, filteredTokens])
+    void balancesIsLoading // creates a new array once balances load to update hooks
+    return [...filteredTokens].sort(tokenComparator.bind(null, balances))
+  }, [balances, filteredTokens, balancesIsLoading])
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
@@ -173,6 +176,14 @@ export function CurrencySearch({
     filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
   )
 
+  // Timeout token loader after 3 seconds to avoid hanging in a loading state.
+  useEffect(() => {
+    const tokenLoaderTimer = setTimeout(() => {
+      setTokenLoaderTimerElapsed(true)
+    }, 3000)
+    return () => clearTimeout(tokenLoaderTimer)
+  }, [])
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="16px">
@@ -218,6 +229,7 @@ export function CurrencySearch({
                 showImportView={showImportView}
                 setImportToken={setImportToken}
                 showCurrencyAmount={showCurrencyAmount}
+                isLoading={balancesIsLoading && !tokenLoaderTimerElapsed}
               />
             )}
           </AutoSizer>

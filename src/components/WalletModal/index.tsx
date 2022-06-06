@@ -1,10 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
-import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useWalletConnectMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
-import { useEffect, useState } from 'react'
-import { ArrowLeft, ArrowRight, Info } from 'react-feather'
+import Row, { AutoRow } from 'components/Row'
+import { useCallback, useEffect, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
 import { AbstractConnector } from 'web3-react-abstract-connector'
@@ -12,8 +11,9 @@ import { UnsupportedChainIdError, useWeb3React } from 'web3-react-core'
 import { WalletConnectConnector } from 'web3-react-walletconnect-connector'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
+import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis } from '../../connectors'
+import { fortmatic, injected } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
@@ -22,7 +22,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
-import Card, { LightCard } from '../Card'
+import { LightCard } from '../Card'
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
@@ -109,16 +109,6 @@ const HoverText = styled.div`
   }
 `
 
-const LinkCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg1};
-  color: ${({ theme }) => theme.text3};
-
-  :hover {
-    cursor: pointer;
-    filter: brightness(0.9);
-  }
-`
-
 const WALLET_VIEWS = {
   OPTIONS: 'options',
   OPTIONS_SECONDARY: 'options_secondary',
@@ -137,7 +127,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   // important that these are destructed from the account-specific web3-react context
-  const { active, account, connector, activate, error } = useWeb3React()
+  const { account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
@@ -151,7 +141,10 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const logMonitoringEvent = useWalletConnectMonitoringEventCallback()
+  const resetAccountView = useCallback(() => {
+    setPendingError(false)
+    setWalletView(WALLET_VIEWS.ACCOUNT)
+  }, [setPendingError, setWalletView])
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -163,19 +156,9 @@ export default function WalletModal({
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
-      setPendingError(false)
-      setWalletView(WALLET_VIEWS.ACCOUNT)
+      resetAccountView()
     }
-  }, [walletModalOpen])
-
-  // close modal when a connection is successful
-  const activePrevious = usePrevious(active)
-  const connectorPrevious = usePrevious(connector)
-  useEffect(() => {
-    if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
-      setWalletView(WALLET_VIEWS.ACCOUNT)
-    }
-  }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
+  }, [walletModalOpen, resetAccountView])
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
@@ -200,18 +183,13 @@ export default function WalletModal({
     }
 
     connector &&
-      activate(connector, undefined, true)
-        .then(async () => {
-          const walletAddress = await connector.getAccount()
-          logMonitoringEvent({ walletAddress })
-        })
-        .catch((error) => {
-          if (error instanceof UnsupportedChainIdError) {
-            activate(connector) // a little janky...can't use setError because the connector isn't set
-          } else {
-            setPendingError(true)
-          }
-        })
+      activate(connector, undefined, true).catch((error) => {
+        if (error instanceof UnsupportedChainIdError) {
+          activate(connector) // a little janky...can't use setError because the connector isn't set
+        } else {
+          setPendingError(true)
+        }
+      })
   }
 
   // close wallet modal if fortmatic modal is active
@@ -223,16 +201,12 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetamask = window.ethereum && window.ethereum.isMetaMask
+    const isMetamask = !!window.ethereum?.isMetaMask
+    const isTally = !!window.ethereum?.isTally
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        //disable portis on mobile for now
-        if (option.connector === portis) {
-          return null
-        }
-
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
@@ -280,6 +254,24 @@ export default function WalletModal({
         // likewise for generic
         else if (option.name === 'Injected' && isMetamask) {
           return null
+        } else if (option.name === 'Injected' && isTally) {
+          return (
+            <Option
+              id={`connect-${key}`}
+              key={key}
+              onClick={() => {
+                option.connector === connector
+                  ? setWalletView(WALLET_VIEWS.ACCOUNT)
+                  : !option.href && tryActivation(option.connector)
+              }}
+              color={'#E8831D'}
+              header={<Trans>Tally</Trans>}
+              active={option.connector === connector}
+              subheader={null}
+              link={null}
+              icon={TallyIcon}
+            />
+          )
         }
       }
 
@@ -371,12 +363,7 @@ export default function WalletModal({
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
           <HeaderRow color="blue">
-            <HoverText
-              onClick={() => {
-                setPendingError(false)
-                setWalletView(WALLET_VIEWS.ACCOUNT)
-              }}
-            >
+            <HoverText onClick={resetAccountView}>
               <ArrowLeft />
             </HoverText>
           </HeaderRow>
@@ -390,39 +377,38 @@ export default function WalletModal({
 
         <ContentWrapper>
           <AutoColumn gap="16px">
-            <LightCard>
-              <AutoRow style={{ flexWrap: 'nowrap' }}>
-                <ThemedText.Black fontSize={14}>
-                  <Trans>
-                    By connecting a wallet, you agree to Uniswap Labs’{' '}
-                    <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                    acknowledge that you have read and understand the Uniswap{' '}
-                    <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
-                  </Trans>
-                </ThemedText.Black>
-              </AutoRow>
-            </LightCard>
-            {walletView === WALLET_VIEWS.PENDING ? (
+            {walletView === WALLET_VIEWS.PENDING && (
               <PendingView
                 connector={pendingWallet}
                 error={pendingError}
                 setPendingError={setPendingError}
                 tryActivation={tryActivation}
+                resetAccountView={resetAccountView}
               />
-            ) : (
-              <OptionGrid>{getOptions()}</OptionGrid>
             )}
-            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
-              <RowBetween>
-                <AutoRow gap="4px">
-                  <Info size={20} />
-                  <ThemedText.Label fontSize={14}>
-                    <Trans>How this app uses APIs</Trans>
-                  </ThemedText.Label>
+            {walletView !== WALLET_VIEWS.PENDING && <OptionGrid>{getOptions()}</OptionGrid>}
+            {!pendingError && (
+              <LightCard>
+                <AutoRow style={{ flexWrap: 'nowrap' }}>
+                  <ThemedText.Body fontSize={12}>
+                    <Trans>
+                      By connecting a wallet, you agree to Uniswap Labs’{' '}
+                      <ExternalLink
+                        style={{ textDecoration: 'underline' }}
+                        href="https://uniswap.org/terms-of-service/"
+                      >
+                        Terms of Service
+                      </ExternalLink>{' '}
+                      and acknowledge that you have read and understand the Uniswap{' '}
+                      <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
+                        Protocol Disclaimer
+                      </ExternalLink>
+                      .
+                    </Trans>
+                  </ThemedText.Body>
                 </AutoRow>
-                <ArrowRight size={16} />
-              </RowBetween>
-            </LinkCard>
+              </LightCard>
+            )}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
