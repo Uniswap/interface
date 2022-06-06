@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -1161,25 +1161,9 @@ msgstr "결과가 없습니다."
 msgid "Not created"
 msgstr "생성되지 않음"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "OFF"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ON"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "수행중인 작업을 알고 있는 경우에만 이 모드를 사용하십시오."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Off"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "On"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
