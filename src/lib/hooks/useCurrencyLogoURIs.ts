@@ -6,7 +6,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import CandleLogo from '../../assets/svg/candle-logo.svg'
+import CandleLogo from '../../assets/svg/candle_logo.svg'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism'
 
