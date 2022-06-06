@@ -171,7 +171,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@babel/runtime": "^7.17.0",
-    "@uniswap/sdk-core": "^3.0.1",
+    "@cndllabs/sdk-core": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.2",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",

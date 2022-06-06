@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@cndllabs/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 
 import { ONE_HUNDRED_PERCENT, ZERO_PERCENT } from '../constants/misc'

@@ -1,5 +1,5 @@
 import { Plural, Trans } from '@lingui/macro'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@cndllabs/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'

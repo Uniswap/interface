@@ -1,5 +1,5 @@
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@cndllabs/sdk-core'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it

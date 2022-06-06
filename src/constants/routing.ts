@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@cndllabs/sdk-core'
 
 import { SupportedChainId } from './chains'
 import {
@@ -159,6 +159,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     DAI_POLYGON,
     USDT_POLYGON,
     WBTC_POLYGON,
+  ],
+  [SupportedChainId.CANDLE]: [
+    nativeOnChain(SupportedChainId.CANDLE),
+    WETH_CANDLE,
+    USDC_CANDLE,
+    DAI_CANDLE,
   ],
   [SupportedChainId.POLYGON_MUMBAI]: [
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),

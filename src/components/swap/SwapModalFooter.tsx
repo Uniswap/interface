@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@cndllabs/sdk-core'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
 

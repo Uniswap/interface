@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@cndllabs/sdk-core'
 import { ImportToken } from 'components/SearchModal/ImportToken'
 
 import Modal from '../Modal'
