@@ -4543,7 +4543,7 @@
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/swap-router-contracts" "1.1.0"
     "@uniswap/v2-sdk" "^3.0.1"
-    "@uniswap/v3-sdk" "^3.7.1"
+    "@cndllabs/v3-sdk" "^3.7.1"
 
 "@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1":
   version "3.0.1"
@@ -4573,7 +4573,7 @@
     "@uniswap/swap-router-contracts" "1.2.0"
     "@uniswap/token-lists" "^1.0.0-beta.25"
     "@uniswap/v2-sdk" "^3.0.1"
-    "@uniswap/v3-sdk" "^3.7.0"
+    "@cndllabs/v3-sdk" "^3.7.0"
     async-retry "^1.3.1"
     await-timeout "^1.1.1"
     axios "^0.21.1"
@@ -4662,9 +4662,9 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-sdk@^3.7.0", "@uniswap/v3-sdk@^3.7.1", "@uniswap/v3-sdk@^3.8.2":
+"@cndllabs/v3-sdk@^3.7.0", "@cndllabs/v3-sdk@^3.7.1", "@cndllabs/v3-sdk@^3.8.2":
   version "3.8.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.8.2.tgz#6e10eebe0da851a4f6a5036a1e70a896a5c239d4"
+  resolved "https://registry.yarnpkg.com/@cndllabs/v3-sdk/-/v3-sdk-3.8.2.tgz#6e10eebe0da851a4f6a5036a1e70a896a5c239d4"
   integrity sha512-JVrs1ZuWKP8JmYi5hxFliOnCFAEREwMpE7qB6rKPCo155/pIRyQ90lJfQZCJO7pP/webx5t5JFxCOytmDIp29Q==
   dependencies:
     "@ethersproject/abi" "^5.0.12"

@@ -10,7 +10,7 @@ import {
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
-} from '@uniswap/v3-sdk'
+} from '@cndllabs/v3-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
