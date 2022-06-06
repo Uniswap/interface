@@ -5,6 +5,7 @@ import ExternalLinkIcon from 'src/assets/icons/external-link.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useENS } from 'src/features/ens/useENS'
 import { EthMethod } from 'src/features/walletConnect/types'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
@@ -24,6 +25,23 @@ const getStrMessage = (request: WalletConnectRequest) => {
   }
 
   return ''
+}
+
+const AddressButton = ({ address, chainId }: { address: string; chainId: number }) => {
+  const { name } = useENS(chainId, address, false)
+  return (
+    <Button
+      backgroundColor="neutralContainer"
+      borderRadius="xs"
+      px="md"
+      py="xxs"
+      onPress={() => openUri(getExplorerLink(chainId, address, ExplorerDataType.ADDRESS))}>
+      <Flex row alignItems="center" gap="xs">
+        <Text variant="body2">{name || shortenAddress(address)}</Text>
+        <ExternalLinkIcon height={14} width={14} />
+      </Flex>
+    </Button>
+  )
 }
 
 const MAX_TYPED_DATA_PARSE_DEPTH = 3
@@ -56,19 +74,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): any => {
               <Text color="accentText2">{objKey}</Text>
               <Flex flexShrink={1}>
                 {isValidAddress(childValue, true) ? (
-                  <Button
-                    backgroundColor="neutralContainer"
-                    borderRadius="xs"
-                    px="md"
-                    py="xxs"
-                    onPress={() =>
-                      openUri(getExplorerLink(chainId, childValue, ExplorerDataType.ADDRESS))
-                    }>
-                    <Flex row alignItems="center" gap="xs">
-                      <Text variant="body2">{shortenAddress(childValue)}</Text>
-                      <ExternalLinkIcon height={14} width={14} />
-                    </Flex>
-                  </Button>
+                  <AddressButton address={childValue} chainId={chainId} />
                 ) : (
                   <Text variant="body2">{childValue}</Text>
                 )}
