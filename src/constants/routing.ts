@@ -22,16 +22,16 @@ import {
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
-  WETH_POLYGON,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
   USDT_POLYGON,
-  WBTC_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
+  WBTC_POLYGON,
   WETH_CANDLE,
+  WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
 } from './tokens'
@@ -79,10 +79,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT_POLYGON,
     WETH_POLYGON,
   ],
-  [SupportedChainId.CANDLE]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.CANDLE],
-    WETH_CANDLE,
-  ],
+  [SupportedChainId.CANDLE]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.CANDLE], WETH_CANDLE],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
