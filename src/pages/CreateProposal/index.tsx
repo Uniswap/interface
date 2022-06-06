@@ -1,7 +1,7 @@
+import { Currency, CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'

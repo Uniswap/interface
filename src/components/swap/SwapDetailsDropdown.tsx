@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'

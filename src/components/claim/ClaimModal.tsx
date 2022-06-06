@@ -1,6 +1,6 @@
+import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'

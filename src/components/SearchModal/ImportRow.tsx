@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Token } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'

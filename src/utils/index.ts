@@ -1,8 +1,8 @@
+import { Token } from '@cndllabs/sdk-core'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
-import { Token } from '@cndllabs/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChainTokenMap } from 'lib/hooks/useTokenList/utils'
 

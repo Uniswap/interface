@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'

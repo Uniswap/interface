@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Percent } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { ReactNode } from 'react'

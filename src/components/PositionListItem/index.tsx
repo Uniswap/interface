@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'

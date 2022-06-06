@@ -1,7 +1,7 @@
+import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { Interface } from '@ethersproject/abi'
 import { Trans } from '@lingui/macro'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'

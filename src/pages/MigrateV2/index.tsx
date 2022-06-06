@@ -1,7 +1,7 @@
+import { Token } from '@cndllabs/sdk-core'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256, pack } from '@ethersproject/solidity'
 import { Trans } from '@lingui/macro'
-import { Token } from '@cndllabs/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'

@@ -160,12 +160,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_POLYGON,
     WBTC_POLYGON,
   ],
-  [SupportedChainId.CANDLE]: [
-    nativeOnChain(SupportedChainId.CANDLE),
-    WETH_CANDLE,
-    USDC_CANDLE,
-    DAI_CANDLE,
-  ],
+  [SupportedChainId.CANDLE]: [nativeOnChain(SupportedChainId.CANDLE), WETH_CANDLE, USDC_CANDLE, DAI_CANDLE],
   [SupportedChainId.POLYGON_MUMBAI]: [
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI] as Token,

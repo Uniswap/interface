@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent } from '@cndllabs/sdk-core'
+import { Trans } from '@lingui/macro'
 import { Text } from 'rebass'
 
 import { ButtonPrimary } from '../../components/Button'
