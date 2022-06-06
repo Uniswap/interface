@@ -62,11 +62,10 @@ export function* editAccountDataInFirebase(
     case EditAccountAction.AddBackupMethod:
       // no-op
       break
-    case EditAccountAction.EnablePushNotification:
-      yield* call(mapAddressesToPushToken, [address])
-      break
-    case EditAccountAction.DisablePushNotification:
-      yield* call(disassociateAddressesFromPushToken, [address])
+    case EditAccountAction.TogglePushNotificationParams:
+      yield* call(payload.enabled ? mapAddressesToPushToken : disassociateAddressesFromPushToken, [
+        address,
+      ])
       break
     default:
       throw new Error(`Invalid EditAccountAction ${type}`)

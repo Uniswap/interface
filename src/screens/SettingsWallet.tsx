@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SectionList, ListRenderItemInfo, Alert } from 'react-native'
+import { SectionList, ListRenderItemInfo } from 'react-native'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Box } from 'src/components/layout/Box'
@@ -34,34 +34,15 @@ export function SettingsWallet({
   const navigation = useSettingsStackNavigation()
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
 
-  const handleNotificationSettingsChanged = (enable: boolean) => {
+  const onChangeNotificationSettings = (enabled: boolean) => {
+    setNotificationsEnabled(enabled)
     dispatch(
       editAccountActions.trigger({
-        type: enable
-          ? EditAccountAction.EnablePushNotification
-          : EditAccountAction.DisablePushNotification,
+        type: EditAccountAction.TogglePushNotificationParams,
+        enabled,
         address,
       })
     )
-  }
-
-  const onChangeNotificationSettings = (val: boolean) => {
-    setNotificationsEnabled(val)
-    if (val) {
-      Alert.alert('Uniswap Wallet would like to send you notifications.', '', [
-        {
-          text: "Don't Allow",
-          onPress: () => setNotificationsEnabled(false),
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => handleNotificationSettingsChanged(true),
-        },
-      ])
-    } else {
-      handleNotificationSettingsChanged(false)
-    }
   }
 
   const sections: SettingsSection[] = [
