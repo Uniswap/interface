@@ -117,11 +117,13 @@ export async function initSocket<T>(
 
     socket.emit(action, requestBody)
     socket.on(`received ${namespace} ${model}`, handleReceive)
+    socket.on(`appended ${namespace} ${model}`, handleReceive)
 
     // cacheEntryRemoved will resolve when the cache subscription is no longer active
     await cacheEntryRemoved
 
     socket.off(`received ${namespace} ${model}`)
+    socket.off(`appended ${namespace} ${model}`)
   } catch (e) {
     // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
     // in which case `cacheDataLoaded` will throw

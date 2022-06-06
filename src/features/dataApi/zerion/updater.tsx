@@ -1,4 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { useTransactionHistoryQuery } from 'src/features/dataApi/zerion/api'
@@ -29,26 +30,34 @@ function useProcessNewTransactions(transactions?: { [address: Address]: Transact
   const chainId = ChainId.Mainnet // hard coding this for now because it's the only chain Zerion supports
   const lastTxNotificationUpdate = useAppSelector(selectLastTxNotificationUpdate)
 
-  if (!transactions) return
+  useEffect(() => {
+    if (!transactions) return
+    const addresses = Object.keys(transactions)
 
-  const addresses = Object.keys(transactions)
+    for (const address of addresses) {
+      const transactionsForAddress = transactions[address]
+      if (!transactionsForAddress?.length) continue
 
-  for (const address of addresses) {
-    const transactionsForAddress = transactions[address]
-    if (!transactionsForAddress?.length) continue
+      const lastUpdateTime = lastTxNotificationUpdate?.[address]?.[chainId] ?? 0
+      const indexOfLastSeenTx = transactionsForAddress.findIndex(
+        (transaction) => transaction.mined_at === lastUpdateTime
+      )
+      const countOfNewTransactions =
+        indexOfLastSeenTx === -1 ? transactionsForAddress.length : indexOfLastSeenTx
 
-    const lastUpdateTime = lastTxNotificationUpdate?.[address]?.[chainId]
-    const countOfNewTransactions = lastUpdateTime
-      ? transactionsForAddress.findIndex((transaction) => transaction.mined_at === lastUpdateTime)
-      : transactionsForAddress.length
+      if (lastUpdateTime !== transactionsForAddress[0].mined_at) {
+        dispatch(
+          setLastTxNotificationUpdate({
+            address,
+            timestamp: transactionsForAddress[0].mined_at,
+            chainId,
+          })
+        )
+      }
 
-    dispatch(
-      setLastTxNotificationUpdate({
-        address,
-        timestamp: transactionsForAddress[0].mined_at,
-        chainId,
-      })
-    )
-    dispatch(addToNotificationCount({ address, count: countOfNewTransactions }))
-  }
+      if (countOfNewTransactions > 0) {
+        dispatch(addToNotificationCount({ address, count: countOfNewTransactions }))
+      }
+    }
+  }, [chainId, dispatch, lastTxNotificationUpdate, transactions])
 }
