@@ -25,7 +25,6 @@ export function isValidAddress(address: Nullable<Address>, allowZero = true) {
     if (allowZero) return !!isValid
     else return !!isValid && address !== NATIVE_ADDRESS
   } catch (error) {
-    logger.warn('addresses', 'isValidAddress', 'Invalid address', error, address)
     return false
   }
 }
