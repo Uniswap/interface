@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useContext, useRef, useState } from 'react'
