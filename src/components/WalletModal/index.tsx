@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ChainIdNotAllowedError } from '@web3-react/store'
 import { Connector } from '@web3-react/types'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
@@ -132,7 +131,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, error, hooks, account } = useWeb3React()
+  const { connector, hooks, account, chainId } = useWeb3React()
   const isActiveMap: Record<Wallet, boolean> = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
@@ -144,8 +143,7 @@ export default function WalletModal({
   const previousWalletView = usePrevious(walletView)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
-  // Need to pass network as a default case because useSelectedError requires a connector
-  const pendingError = hooks.useSelectedError(pendingConnector || network)
+  const [error, setError] = useState<Error | undefined>(undefined)
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
@@ -160,11 +158,11 @@ export default function WalletModal({
     if (walletModalOpen) {
       if (!account && previousAccount) {
         setWalletView(WALLET_VIEWS.OPTIONS)
-      } else if (account !== previousAccount && !error) {
+      } else if (account !== previousAccount) {
         toggleWalletModal()
       }
     }
-  }, [account, previousAccount, error, toggleWalletModal, walletModalOpen])
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
 
   useEffect(() => {
     if (walletModalOpen) {
@@ -184,14 +182,20 @@ export default function WalletModal({
       label: name,
     })
 
-    await connector.activate()
-    const wallet = getWalletForConnector(connector)
-    if (isActiveMap[wallet]) {
-      dispatch(updateWalletOverride({ wallet }))
-      setWalletView(WALLET_VIEWS.ACCOUNT)
-    } else {
-      setPendingConnector(connector)
-      setWalletView(WALLET_VIEWS.PENDING)
+    try {
+      await connector.activate()
+      setError(undefined)
+
+      const wallet = getWalletForConnector(connector)
+      if (isActiveMap[wallet]) {
+        dispatch(updateWalletOverride({ wallet }))
+        setWalletView(WALLET_VIEWS.ACCOUNT)
+      } else {
+        setPendingConnector(connector)
+        setWalletView(WALLET_VIEWS.PENDING)
+      }
+    } catch (error) {
+      setError(error)
     }
   }
 
@@ -370,12 +374,12 @@ export default function WalletModal({
               <PendingView
                 resetAccountView={resetAccountView}
                 connector={pendingConnector}
-                error={!!pendingError}
+                error={!!error}
                 tryActivation={tryActivation}
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-cy="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && (
+            {!error && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>
                   <ThemedText.Body fontSize={12}>

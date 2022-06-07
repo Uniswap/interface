@@ -6,7 +6,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import Fortmatic from 'fortmatic'
 
@@ -70,38 +70,40 @@ export const getHooksForWallet = (wallet: Wallet) => {
 }
 
 export const [network, networkHooks] = initializeConnector<Network>(
-  (actions) => new Network(actions, INFURA_NETWORK_URLS, true, 1),
-  Object.keys(INFURA_NETWORK_URLS).map((chainId) => Number(chainId))
+  (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, connectEagerly: true, defaultChainId: 1 })
 )
 
-export const [injected, injectedHooks] = initializeConnector<MetaMask>(
-  (actions) => new MetaMask(actions),
-  ALL_SUPPORTED_CHAIN_IDS
-)
+export const [injected, injectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))
 
-export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe(actions, true))
+export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>(
+  (actions) => new GnosisSafe({ actions, connectEagerly: true })
+)
 
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>
-    new WalletConnect(actions, {
-      rpc: INFURA_NETWORK_URLS,
-      qrcode: true,
-    }),
-  ALL_SUPPORTED_CHAIN_IDS
+    new WalletConnect({
+      actions,
+      options: {
+        rpc: INFURA_NETWORK_URLS,
+        qrcode: true,
+      },
+    })
 )
 
 export const [fortmatic, fortmaticHooks] = initializeConnector<EIP1193>(
-  (actions) => new EIP1193(actions, new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY).getProvider())
+  (actions) => new EIP1193({ actions, provider: new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY).getProvider() })
 )
 
 export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
-    new CoinbaseWallet(actions, {
-      url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
-      appName: 'Uniswap',
-      appLogoUrl: UNISWAP_LOGO_URL,
-    }),
-  ALL_SUPPORTED_CHAIN_IDS
+    new CoinbaseWallet({
+      actions,
+      options: {
+        url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
+        appName: 'Uniswap',
+        appLogoUrl: UNISWAP_LOGO_URL,
+      },
+    })
 )
 
 interface ConnectorListItem {

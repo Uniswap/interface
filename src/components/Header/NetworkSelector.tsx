@@ -254,11 +254,12 @@ export default function NetworkSelector() {
     async (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
-      switchChain(connector, targetChain)
-
-      if (!skipToggle) {
-        toggle()
-      }
+      try {
+        await switchChain(connector, targetChain)
+        if (!skipToggle) {
+          toggle()
+        }
+      } catch (error) {}
     },
     [connector, toggle]
   )
