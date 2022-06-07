@@ -21,9 +21,10 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
   const { currentData: favorites, isLoading } = useFavoriteTokenInfo()
 
   const renderItem = useCallback(
-    ({ item: token }: ListRenderItemInfo<Asset>) => {
+    ({ item: token, index }: ListRenderItemInfo<Asset>) => {
       return (
         <TokenItemBox
+          index={index}
           token={token}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {

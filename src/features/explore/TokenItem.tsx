@@ -17,9 +17,10 @@ import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/sl
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 interface TokenItemProps {
-  token: Asset
+  index?: number
   isSearchResult?: boolean
   onPress: () => void
+  token: Asset
 }
 
 const tokenLogoStyle: ImageStyle = { width: 35, height: 35, borderRadius: 35 / 2 }
@@ -33,7 +34,7 @@ interface FavoriteButtonProps {
 
 function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
   return (
-    <Flex centered bg={'neutralAction'} width={80}>
+    <Flex centered bg="neutralAction" width={80}>
       <IconButton
         icon={<Star active={active} size={24} />}
         variant="transparent"
@@ -43,7 +44,7 @@ function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
   )
 }
 
-export function TokenItem({ token, isSearchResult = false, onPress }: TokenItemProps) {
+export function TokenItem({ index, token, isSearchResult = false, onPress }: TokenItemProps) {
   const dispatch = useAppDispatch()
 
   const assetId = buildCurrencyId(ChainId.Mainnet, token.asset.asset_code)
@@ -73,6 +74,14 @@ export function TokenItem({ token, isSearchResult = false, onPress }: TokenItemP
           px={isSearchResult ? 'xs' : 'md'}
           py="sm">
           <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
+            {index && (
+              <Box minWidth={18}>
+                <Text color="neutralTextSecondary" variant="badge">
+                  {index + 1}
+                </Text>
+              </Box>
+            )}
+
             <Image source={{ uri: token.asset.icon_url }} style={tokenLogoStyle} />
             <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
               <Flex row>

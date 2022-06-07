@@ -21,9 +21,10 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
   const { topTokens, isLoading } = useTokenInfo()
 
   const renderItem = useCallback(
-    ({ item: token }: ListRenderItemInfo<Asset>) => {
+    ({ item: token, index }: ListRenderItemInfo<Asset>) => {
       return (
         <TokenItem
+          index={index}
           token={token}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
