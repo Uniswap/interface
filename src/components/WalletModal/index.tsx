@@ -19,6 +19,7 @@ import {
   fortmatic,
   getWalletForConnector,
   injected,
+  isChainAllowed,
   network,
   Wallet,
   walletConnect,
@@ -309,17 +310,16 @@ export default function WalletModal({
   }
 
   function getModalContent() {
-    if (error) {
+    const chainNotAllowed = chainId && !isChainAllowed(connector, chainId)
+    if (error || chainNotAllowed) {
       return (
         <UpperSection>
           <CloseIcon onClick={toggleWalletModal}>
             <CloseColor />
           </CloseIcon>
-          <HeaderRow>
-            {error instanceof ChainIdNotAllowedError ? <Trans>Wrong Network</Trans> : <Trans>Error connecting</Trans>}
-          </HeaderRow>
+          <HeaderRow>{chainNotAllowed ? <Trans>Wrong Network</Trans> : <Trans>Error connecting</Trans>}</HeaderRow>
           <ContentWrapper>
-            {error instanceof ChainIdNotAllowedError ? (
+            {chainNotAllowed ? (
               <h5>
                 <Trans>Please connect to a supported network in the dropdown menu or in your wallet.</Trans>
               </h5>

@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/smart-order-router'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
@@ -6,7 +7,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { SupportedChainId } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import Fortmatic from 'fortmatic'
 
@@ -20,6 +21,21 @@ export enum Wallet {
 }
 
 export const WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED, Wallet.FORTMATIC]
+
+export const isChainAllowed = (connector: Connector, chainId: number) => {
+  switch (connector) {
+    case fortmatic:
+      return chainId === ChainId.MAINNET
+    case injected:
+    case coinbaseWallet:
+    case walletConnect:
+    case network:
+    case gnosisSafe:
+      return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
+    default:
+      throw Error('unsupported connector')
+  }
+}
 
 export const getWalletForConnector = (connector: Connector) => {
   switch (connector) {
