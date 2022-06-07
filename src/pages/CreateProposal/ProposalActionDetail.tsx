@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import React from 'react'

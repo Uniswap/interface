@@ -1,5 +1,5 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
