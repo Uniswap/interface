@@ -183,7 +183,14 @@ export default function WalletModal({
     })
 
     try {
+      // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
+      // collision into the WalletModal, so we special case by closing the modal.
+      if (connector === fortmatic) {
+        toggleWalletModal()
+      }
+
       await connector.activate()
+
       setError(undefined)
 
       const wallet = getWalletForConnector(connector)
