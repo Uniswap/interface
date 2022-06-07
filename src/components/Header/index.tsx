@@ -77,11 +77,6 @@ const HeaderElement = styled.div`
     margin-left: 0.5em;
   }
 
-  /* addresses safari's lack of support for "gap" */
-  & > *:not(:first-child) {
-    margin-left: 8px;
-  }
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: center;
   `};

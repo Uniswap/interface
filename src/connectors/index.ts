@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/smart-order-router'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
@@ -25,7 +24,7 @@ export const WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.IN
 export const isChainAllowed = (connector: Connector, chainId: number) => {
   switch (connector) {
     case fortmatic:
-      return chainId === ChainId.MAINNET
+      return chainId === SupportedChainId.MAINNET
     case injected:
     case coinbaseWallet:
     case walletConnect:
@@ -33,7 +32,7 @@ export const isChainAllowed = (connector: Connector, chainId: number) => {
     case gnosisSafe:
       return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
     default:
-      throw Error('unsupported connector')
+      return false
   }
 }
 
