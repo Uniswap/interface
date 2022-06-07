@@ -1,4 +1,4 @@
-import { danger, markdown, message, warn } from 'danger'
+import { danger, fail, markdown, message, warn } from 'danger'
 
 // Other ideas:
 //  - verify TODO have work items linked
@@ -53,13 +53,15 @@ const bigPRThreshold = 500
 if (danger.github.pr.additions + danger.github.pr.deletions > bigPRThreshold) {
   warn(':exclamation: Big PR')
   markdown(
-    '> Pull Request size seems relatively large. If PR contains multiple changes, split each into separate PR will helps faster, easier review.'
+    '> Pull Request size seems relatively large. If PR contains multiple changes, split each into separate PRs for faster, easier reviews.'
   )
 }
 
 // No PR is too small to warrant a paragraph or two of summary
-if (danger.github.pr.body.length === 0) {
-  warn('There is no PR description. Get faster and better reviews by explaining what changed.')
+if (danger.github.pr.body.length < 50) {
+  warn(
+    'The PR description is looking sparse. Please consider explaining more about this PRs goal and implementation decisions.'
+  )
 }
 
 // Congratulate when code was deleted
@@ -72,4 +74,63 @@ if (danger.github.pr.additions < danger.github.pr.deletions) {
 const stories = danger.git.fileMatch('**/*stories*')
 if (stories.edited) {
   message('🙌 Thanks for keeping stories up to date!')
+}
+
+// Migrations + schema warnings
+const updatedSchemaFile = danger.git.modified_files.find((file) =>
+  file.includes('src/app/schema.ts')
+)
+
+const updatedMigrationsFile = danger.git.modified_files.find((file) =>
+  file.includes('src/app/migrations.ts')
+)
+
+const updatedMigrationsTestFile = danger.git.modified_files.find((file) =>
+  file.includes('src/app/migrations.test.ts')
+)
+
+const createdSliceFile = danger.git.created_files.find((file) =>
+  file.toLowerCase().includes('slice')
+)
+
+const modifiedSliceFile = danger.git.modified_files.find((file) =>
+  file.toLowerCase().includes('slice')
+)
+
+const deletedSliceFile = danger.git.deleted_files.find((file) =>
+  file.toLowerCase().includes('slice')
+)
+
+if (modifiedSliceFile && (!updatedSchemaFile || !updatedMigrationsFile)) {
+  warn(
+    'You modified a slice file. If you only added properties to state, then make sure to also add it to the latest schema version. If you removed or edited properties, make sure to define a new schema and a new migration.'
+  )
+}
+
+if (updatedSchemaFile && !updatedMigrationsFile) {
+  warn(
+    'You updated the schema file but not the migrations file. This is ok so long as you only added properties to state. Otherwise, you must also define a migration.'
+  )
+}
+
+if (!updatedSchemaFile && updatedMigrationsFile) {
+  warn(
+    'You updated the migrations file but not the schema. Schema always needs to be updated when a new migration is defined.'
+  )
+}
+
+if (createdSliceFile && !updatedSchemaFile) {
+  fail(
+    'You created a new slice file. Please update the latest schema with the new state properties.'
+  )
+}
+
+if (deletedSliceFile && (!updatedSchemaFile || !updatedMigrationsFile)) {
+  fail('You deleted a slice file. Make sure to define a new schema and a new migration.')
+}
+
+if (updatedMigrationsFile && !updatedMigrationsTestFile) {
+  fail(
+    'You updated the migrations file but did not write any new tests. Each migration must have a test!'
+  )
 }

@@ -25,7 +25,7 @@ const NEW_LIST_STATE: TokenListState = {
   pendingUpdate: null,
 }
 
-const BY_URL_DEFAULT_LISTS = DEFAULT_LIST_OF_LISTS.reduce(
+export const BY_URL_DEFAULT_LISTS = DEFAULT_LIST_OF_LISTS.reduce(
   (memo: Record<string, TokenListState>, listUrl) => {
     memo[listUrl] = NEW_LIST_STATE
     return memo

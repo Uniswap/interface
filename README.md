@@ -40,17 +40,32 @@ See [stories/README.md](https://github.com/Uniswap/mobile/tree/main/src/stories/
 
 Start the mobile app by running `yarn ios` or `yarn android`. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.
 
-You can also run the app from Xcode, which is necessary for any Swift related changes. Xcode will automatically start the metro bundler. 
+You can also run the app from Xcode, which is necessary for any Swift related changes. Xcode will automatically start the metro bundler.
 
 To run the app on device:
+
 1. Ask to be added to the Apple Developer team and ensure that you have access to "Certificates, Identifiers & Profiles".
 2. Then, add the Apple ID associated with your developer account in Xcode > Preferences > Accounts. You should see `Universal Navigation Inc.` as a Team.
-3. In Xcode, navigate to `Signing & Capabilities` in project settings and select `Universal Navigation Inc.` as the team with `Automatically manage signing` checked. This should generate and download all necessary development signing certificates. 
+3. In Xcode, navigate to `Signing & Capabilities` in project settings and select `Universal Navigation Inc.` as the team with `Automatically manage signing` checked. This should generate and download all necessary development signing certificates.
 
+### Migrations
+
+We use `redux-persist` to persist Redux state between user sessions. When the Redux state schema is altered, a migration may be needed to transfer the existing persisted state to the new Redux schema. Failing to define a migration results in the app defaulting to the persisted schema, which will very likely cause `undefined` errors because the code has references to Redux state properties that were dropped in favor the the persisted schema.
+
+#### When to define a migration
+
+Anytime Redux state properties are renamed or deleted. Migrations are not necessary when properties are added, though you should update the latest schema within the `schema.ts` file.
+
+#### How to migrate
+
+1. Increment the `version` of `persistConfig` defined within `store.ts`
+2. Create a migration function within `migrations.ts`. The migration key should be the same as the `version` defined in the previous step
+3. Write a test for your migration within `migrations.test.ts`
+4. Create a new schema within `schema.ts` and ensure it is being exported by the `getSchema` function at the bottom of the file
 
 ### Troubleshooting
 
-* `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`. Resolve this issue by navigating to the `ios/` directory and running `pod update`.
+- `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`. Resolve this issue by navigating to the `ios/` directory and running `pod update`.
 
 ### I18n
 

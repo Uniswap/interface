@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
 import {
+  createMigrate,
   FLUSH,
   PAUSE,
   PERSIST,
@@ -11,6 +12,7 @@ import {
   REHYDRATE,
 } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
+import { migrations } from 'src/app/migrations'
 import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
@@ -30,7 +32,7 @@ const sagaMiddleware = createSagaMiddleware({
   },
 })
 
-const persistConfig = {
+export const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: [
@@ -42,6 +44,8 @@ const persistConfig = {
     'tokens',
     'notifications',
   ],
+  version: 0,
+  migrate: createMigrate(migrations),
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
