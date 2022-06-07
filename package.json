@@ -3,28 +3,6 @@
   "version": "1.0.7",
   "description": "Uniswap Interface",
   "homepage": ".",
-  "files": [
-    "dist"
-  ],
-  "type": "module",
-  "types": "dist/index.d.ts",
-  "main": "dist/cjs/index.cjs",
-  "module": "dist/index.js",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/cjs/index.cjs"
-    },
-    "./locales/*": {
-      "import": "./dist/locales/*.js",
-      "require": "./dist/cjs/locales/*.cjs"
-    },
-    "./fonts.css": {
-      "import": "./dist/fonts.css",
-      "require": "./dist/fonts.css"
-    }
-  },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -153,7 +131,7 @@
     "prepare": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=./custom-test-env.cjs",
+    "test": "react-scripts test",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
   },
   "browserslist": {
