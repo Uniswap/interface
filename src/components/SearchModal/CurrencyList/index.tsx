@@ -124,8 +124,10 @@ function CurrencyRow({
   // only show add or remove buttons if not on selected list
   return (
     <MenuItem
+      tabIndex={0}
       style={style}
       className={`token-item-${key}`}
+      onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect() : null)}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       selected={otherSelected}
