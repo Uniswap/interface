@@ -44,4 +44,8 @@ export default class GoogleAnalyticsProvider {
   public static ga(...args: any[]) {
     ReactGA.ga(...args)
   }
+
+  public static gaCommandSendTiming(timingCategory: any, timingVar: any, timingValue: any, timingLabel: any) {
+    ReactGA._gaCommandSendTiming(timingCategory, timingVar, timingValue, timingLabel)
+  }
 }
