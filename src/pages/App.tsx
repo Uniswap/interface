@@ -25,6 +25,7 @@ import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+import ScrollToTop from './ScrollToTop'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
@@ -79,6 +80,7 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
+              <ScrollToTop />
               <Switch>
                 <Route strict path="/vote" component={Vote} />
                 <Route exact strict path="/create-proposal">
