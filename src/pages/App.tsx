@@ -2,7 +2,9 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
+import { useEffect } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -25,7 +27,6 @@ import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
-import ScrollToTop from './ScrollToTop'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
@@ -64,6 +65,21 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
+const ScrollToTop = ({ history }: { history: any }) => {
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0)
+    })
+    return () => {
+      unlisten()
+    }
+  }, [history])
+
+  return null
+}
+
+const ScrollToTopWithRouter = withRouter(ScrollToTop)
+
 export default function App() {
   return (
     <ErrorBoundary>
@@ -80,7 +96,7 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
-              <ScrollToTop />
+              <ScrollToTopWithRouter />
               <Switch>
                 <Route strict path="/vote" component={Vote} />
                 <Route exact strict path="/create-proposal">
