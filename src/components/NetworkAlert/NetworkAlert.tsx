@@ -42,6 +42,7 @@ const SHOULD_SHOW_ALERT = {
   [SupportedChainId.ARBITRUM_RINKEBY]: true,
   [SupportedChainId.POLYGON]: true,
   [SupportedChainId.POLYGON_MUMBAI]: true,
+  [SupportedChainId.CANDLE]: true,
 }
 
 type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
