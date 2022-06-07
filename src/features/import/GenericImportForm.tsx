@@ -17,6 +17,7 @@ interface Props {
   placeholderLabel: string | undefined
   onSubmit?: () => void
   showSuccess?: boolean // show succes indicator
+  endAdornment?: string //text to auto to end of input string
 }
 
 export function GenericImportForm({
@@ -26,6 +27,7 @@ export function GenericImportForm({
   placeholderLabel,
   onSubmit,
   showSuccess,
+  endAdornment,
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -55,26 +57,35 @@ export function GenericImportForm({
           height={160}
           p="sm"
           width="100%">
-          <TextInput
-            autoFocus
-            autoCapitalize="none"
-            backgroundColor="neutralSurface"
-            blurOnSubmit={true}
-            fontSize={18}
-            multiline={true}
-            numberOfLines={5}
-            returnKeyType="done"
-            spellCheck={false}
-            testID="import_account_form/input"
-            textAlign="center"
-            value={value}
-            width={'100%'}
-            onBlur={() => setFocused(false)}
-            onChangeText={onChange}
-            onFocus={() => setFocused(true)}
-            onSubmitEditing={handleSubmit}
-          />
-
+          <Flex row alignItems={'flex-end'} gap="none">
+            <TextInput
+              autoFocus
+              autoCapitalize="none"
+              autoCorrect={false}
+              backgroundColor="neutralSurface"
+              blurOnSubmit={true}
+              fontSize={18}
+              justifyContent="center"
+              multiline={true}
+              numberOfLines={5}
+              px={'none'}
+              py={'none'}
+              returnKeyType="done"
+              spellCheck={false}
+              testID="import_account_form/input"
+              textAlign="center"
+              value={value}
+              onBlur={() => setFocused(false)}
+              onChangeText={onChange}
+              onFocus={() => setFocused(true)}
+              onSubmitEditing={handleSubmit}
+            />
+            {endAdornment && value && !value.includes(endAdornment) && (
+              <Text color="neutralTextSecondary" fontSize={18} lineHeight={18} variant="body1">
+                {endAdornment}
+              </Text>
+            )}
+          </Flex>
           {!value && (
             <Flex centered row gap="xs" position="absolute" top={52}>
               <Text color="accentText2" variant="body1">

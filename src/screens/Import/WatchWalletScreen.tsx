@@ -7,8 +7,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { ChainId } from 'src/constants/chains'
-import { isValidEnsName } from 'src/features/ens/parseENSAddress'
-import { useENSAddress } from 'src/features/ens/useENSAddress'
+import { useENS } from 'src/features/ens/useENS'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
@@ -29,11 +28,11 @@ export function WatchWalletScreen({ navigation }: Props) {
 
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
-  const name = isValidEnsName(normalizedValue) ? normalizedValue : undefined
-  const { address: resolvedAddress } = useENSAddress(ChainId.Mainnet, name)
+  const { address: resolvedAddress, name } = useENS(ChainId.Mainnet, normalizedValue, true)
+  const isAddress = isValidAddress(normalizedValue)
 
   // Form validation.
-  const isValid = isValidAddress(normalizedValue) || (name && resolvedAddress)
+  const isValid = isAddress || name
   const errorText = !isValid ? t('Address does not exist') : undefined
 
   const onSubmit = useCallback(() => {
@@ -58,7 +57,7 @@ export function WatchWalletScreen({ navigation }: Props) {
   }, [dispatch, isValid, navigation, normalizedValue, resolvedAddress, value])
 
   const onChange = (text: string | undefined) => {
-    setValue(text ? text.trim() : undefined)
+    setValue(text?.trim())
   }
 
   return (
@@ -70,6 +69,7 @@ export function WatchWalletScreen({ navigation }: Props) {
       <KeyboardAvoidingView behavior="padding" style={flex.fill}>
         <Flex pt="lg">
           <GenericImportForm
+            endAdornment={isAddress ? undefined : '.eth'}
             error={errorText}
             placeholderLabel="address or ENS"
             showSuccess={Boolean(isValid)}
