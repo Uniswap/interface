@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price, Rounding, Token } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import {
   encodeSqrtRatioX96,

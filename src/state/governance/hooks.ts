@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { isAddress } from '@ethersproject/address'
 import { Contract } from '@ethersproject/contracts'

@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@cndllabs/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 // eslint-disable-next-line no-restricted-imports

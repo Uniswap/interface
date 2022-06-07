@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token, TradeType } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { RowBetween } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'

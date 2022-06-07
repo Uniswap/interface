@@ -1,4 +1,4 @@
-import { Currency, Percent, Price } from '@cndllabs/sdk-core'
+import { Currency, Percent, Price } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { useContext } from 'react'
 import { Text } from 'rebass'

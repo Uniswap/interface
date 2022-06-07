@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, Token } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'

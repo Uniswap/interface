@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { Position } from '@uniswap/v3-sdk'
 import { useToken } from 'hooks/Tokens'

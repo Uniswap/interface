@@ -1,4 +1,4 @@
-import { CurrencyAmount, Fraction, Percent, Price, Token } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'

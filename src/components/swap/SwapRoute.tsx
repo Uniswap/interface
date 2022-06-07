@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@cndllabs/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { Protocol } from '@uniswap/router-sdk'
 import { Pair } from '@uniswap/v2-sdk'

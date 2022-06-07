@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@cndllabs/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { BigNumber } from '@ethersproject/bignumber'
 import JSBI from 'jsbi'
 

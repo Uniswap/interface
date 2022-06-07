@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { Percent } from '@cndllabs/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { t, Trans } from '@lingui/macro'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'

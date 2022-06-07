@@ -1,4 +1,4 @@
-import { Currency } from '@cndllabs/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
 

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token, TradeType } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/router-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'

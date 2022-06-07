@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@cndllabs/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Interface } from '@ethersproject/abi'
 import { toHex } from '@uniswap/v3-sdk'
 

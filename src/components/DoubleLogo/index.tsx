@@ -1,4 +1,4 @@
-import { Currency } from '@cndllabs/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
 import CurrencyLogo from '../CurrencyLogo'

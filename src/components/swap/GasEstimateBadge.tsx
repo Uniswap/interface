@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@cndllabs/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
