@@ -3,7 +3,6 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
-import ReactGA from 'react-ga4'
 import styled, { keyframes } from 'styled-components/macro'
 
 import tokenLogo from '../../assets/images/token-logo.png'
@@ -16,6 +15,7 @@ import {
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { ThemedText } from '../../theme'
+import GoogleAnalyticsProvider from '../analytics/GoogleAnalyticsProvider'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import { CardBGImage, CardNoise } from '../earn/styled'
@@ -65,7 +65,7 @@ export default function ClaimPopup() {
   const showClaimModal = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
   const handleToggleSelfClaimModal = useCallback(() => {
-    ReactGA.event({
+    GoogleAnalyticsProvider.sendEvent({
       category: 'MerkleDrop',
       action: 'Toggle self claim modal',
     })
@@ -79,7 +79,7 @@ export default function ClaimPopup() {
   // listen for available claim and show popup if needed
   useEffect(() => {
     if (userHasAvailableclaim) {
-      ReactGA.event({
+      GoogleAnalyticsProvider.sendEvent({
         category: 'MerkleDrop',
         action: 'Show claim popup',
       })

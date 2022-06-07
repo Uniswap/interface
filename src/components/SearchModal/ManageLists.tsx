@@ -9,7 +9,6 @@ import parseENSAddress from 'lib/utils/parseENSAddress'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle, Settings } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { usePopper } from 'react-popper'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
@@ -22,6 +21,7 @@ import { acceptListUpdate, disableList, enableList, removeList } from '../../sta
 import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'
 import { ExternalLink, IconWrapper, LinkStyledButton, ThemedText } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
+import GoogleAnalyticsProvider from '../analytics/GoogleAnalyticsProvider'
 import { ButtonEmpty, ButtonPrimary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
@@ -126,7 +126,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return
-    ReactGA.event({
+    GoogleAnalyticsProvider.sendEvent({
       category: 'Lists',
       action: 'Update List from List Select',
       label: listUrl,
@@ -135,13 +135,13 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   }, [dispatch, listUrl, pending])
 
   const handleRemoveList = useCallback(() => {
-    ReactGA.event({
+    GoogleAnalyticsProvider.sendEvent({
       category: 'Lists',
       action: 'Start Remove List',
       label: listUrl,
     })
     if (window.prompt(t`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
-      ReactGA.event({
+      GoogleAnalyticsProvider.sendEvent({
         category: 'Lists',
         action: 'Confirm Remove List',
         label: listUrl,
@@ -151,7 +151,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   }, [dispatch, listUrl])
 
   const handleEnableList = useCallback(() => {
-    ReactGA.event({
+    GoogleAnalyticsProvider.sendEvent({
       category: 'Lists',
       action: 'Enable List',
       label: listUrl,
@@ -160,7 +160,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   }, [dispatch, listUrl])
 
   const handleDisableList = useCallback(() => {
-    ReactGA.event({
+    GoogleAnalyticsProvider.sendEvent({
       category: 'Lists',
       action: 'Disable List',
       label: listUrl,

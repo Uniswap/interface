@@ -13,13 +13,13 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
+import GoogleAnalyticsProvider from '../../components/analytics/GoogleAnalyticsProvider'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -237,7 +237,7 @@ export default function Swap({ history }: RouteComponentProps) {
     } else {
       await approveCallback()
 
-      ReactGA.event({
+      GoogleAnalyticsProvider.sendEvent({
         category: 'Swap',
         action: 'Approve',
         label: [approvalOptimizedTradeString, approvalOptimizedTrade?.inputAmount?.currency.symbol].join('/'),
@@ -286,12 +286,12 @@ export default function Swap({ history }: RouteComponentProps) {
     swapCallback()
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-        ReactGA.event({
+        GoogleAnalyticsProvider.sendEvent({
           category: 'Swap',
           action: 'transaction hash',
           label: hash,
         })
-        ReactGA.event({
+        GoogleAnalyticsProvider.sendEvent({
           category: 'Swap',
           action:
             recipient === null
@@ -378,7 +378,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    ReactGA.event({
+    GoogleAnalyticsProvider.sendEvent({
       category: 'Swap',
       action: 'Max',
     })
