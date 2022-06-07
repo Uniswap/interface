@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import React, { ErrorInfo } from 'react'
-import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
 
 import store, { AppState } from '../../state'
 import { ExternalLink, ThemedText } from '../../theme'
 import { userAgent } from '../../utils/userAgent'
+import GoogleAnalyticsProvider from '../analytics/GoogleAnalyticsProvider'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
@@ -85,7 +85,10 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    ReactGA.event('exception', { description: error.toString() + errorInfo.toString(), fatal: true })
+    GoogleAnalyticsProvider.sendEvent('exception', {
+      description: error.toString() + errorInfo.toString(),
+      fatal: true,
+    })
   }
 
   render() {
