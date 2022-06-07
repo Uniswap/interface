@@ -45,12 +45,14 @@ export default function MarketModalHeader({
   recipient,
   showAcceptChanges,
   onAcceptChanges,
+  referer,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  referer: string
 }) {
   const theme = useContext(ThemeContext)
 
@@ -127,7 +129,7 @@ export default function MarketModalHeader({
       </RowBetween>
 
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedMarketDetails trade={trade} allowedSlippage={allowedSlippage} />
+        <AdvancedMarketDetails trade={trade} allowedSlippage={allowedSlippage} referer={referer} />
       </LightCard>
 
       {showAcceptChanges ? (

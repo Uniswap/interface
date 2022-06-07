@@ -21,11 +21,12 @@ import { LoadingRows } from 'pages/Pool/styleds'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
 import { V3TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { shortenAddress } from 'utils'
 
 import GasIconLight from '../../assets/images/gas-pump.svg'
 import GasIconDark from '../../assets/images/gas-pump-dark.png'
@@ -70,6 +71,61 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { MemoizedCandleSticks } from '../LimitOrder/CandleSticks'
+
+const RefferalStylePro = styled.div`
+  margin: 5px 0px;
+  width: 100%;
+  position: end;
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+`
+
+const RefferalStyle = styled.div`
+  margin: 10px 10px;
+  width: 100%;
+  position: end;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  vertical-align: middle;
+`
+
+const ReferralElement2 = styled.div`
+  margin-left: 10px;
+`
+
+const ReferralElement1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const ReferralContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 5px;
+  vertical-align: middle;
+`
+
+const NoWalletStyle = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 5px;
+`
 
 const StyledInfo = styled(Info)`
   height: 16px;
@@ -156,7 +212,7 @@ export const FlexItemRight = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 500px; //todo
+  width: 500px;
 
   @media screen and (max-width: 1592px) {
     flex-direction: row-reverse;
@@ -206,8 +262,28 @@ export default function Market({ history }: RouteComponentProps) {
   // for expert mode
   const [isExpertMode] = [false]
 
-  // get version from the url
+  const obj = sessionStorage.getItem('referral')
+
+  const [copied, setCopied] = useState(false)
+
+  const [referer, setReferer] = useState('')
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(`https://app.kromatika.finance/#/swap/r/${account}`)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 15000)
+  }
+
+  if (obj && obj != '' && referer == '') setReferer(obj)
+
   const toggledVersion = Version.v2
+  if (window.location.hash.includes('/r/0x')) {
+    const index = window.location.hash.search('0x')
+    const ref = window.location.hash.substring(index, index + 42)
+
+    sessionStorage.setItem('referral', ref)
+    window.location.hash = '#/swap'
+  }
 
   // swap state
   const { independentField, typedValue, recipient } = useMarketState()
@@ -492,6 +568,7 @@ export default function Market({ history }: RouteComponentProps) {
                     onConfirm={handleSwap}
                     swapErrorMessage={swapErrorMessage}
                     onDismiss={handleConfirmDismiss}
+                    referer={referer}
                   />
 
                   <AutoColumn gap={'sm'}>
@@ -634,6 +711,7 @@ export default function Market({ history }: RouteComponentProps) {
                                     trade={trade}
                                     allowedSlippage={allowedSlippage}
                                     syncing={routeIsSyncing}
+                                    referer={referer}
                                   />
                                 </ResponsiveTooltipContainer>
                               }
@@ -823,6 +901,82 @@ export default function Market({ history }: RouteComponentProps) {
                   currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
                 />
               )}
+              <RefferalStylePro>
+                <AppBody>
+                  {' '}
+                  {account ? (
+                    <Trans>
+                      <ReferralContainer>
+                        <ReferralElement1>
+                          <svg
+                            width="40px"
+                            height="40px"
+                            viewBox="0 0 23 23"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            style={{ marginRight: '30px' }}
+                          >
+                            <rect
+                              x="2"
+                              y="21"
+                              width="7"
+                              height="5"
+                              rx="0.6"
+                              transform="rotate(-90 2 21)"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                            <rect
+                              x="17"
+                              y="15.5"
+                              width="7"
+                              height="5"
+                              rx="0.6"
+                              transform="rotate(-90 17 15.5)"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                            <rect
+                              x="2"
+                              y="10"
+                              width="7"
+                              height="5"
+                              rx="0.6"
+                              transform="rotate(-90 2 10)"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                            <path
+                              d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                            <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
+                          </svg>
+                        </ReferralElement1>
+                        <ReferralElement2>
+                          Earn crypto by sharing the following referral link{' '}
+                          <div>
+                            <a onClick={handleCopy} id="walletAddress">
+                              {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
+                            </a>
+                          </div>
+                        </ReferralElement2>
+                      </ReferralContainer>
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      <NoWalletStyle>
+                        {' '}
+                        Connect wallet to generate referral link. How it works ?{' '}
+                        <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
+                          Read More
+                        </a>
+                      </NoWalletStyle>
+                    </Trans>
+                  )}
+                </AppBody>
+              </RefferalStylePro>
             </StyledSwap>
           </FlexItemRight>
         </FlexContainer>
@@ -854,6 +1008,7 @@ export default function Market({ history }: RouteComponentProps) {
               onConfirm={handleSwap}
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
+              referer={referer}
             />
 
             <AutoColumn gap={'sm'}>
@@ -987,6 +1142,7 @@ export default function Market({ history }: RouteComponentProps) {
                               trade={trade}
                               allowedSlippage={allowedSlippage}
                               syncing={routeIsSyncing}
+                              referer={referer}
                             />
                           </ResponsiveTooltipContainer>
                         }
@@ -1173,6 +1329,82 @@ export default function Market({ history }: RouteComponentProps) {
             currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
           />
         )}
+        <RefferalStyle>
+          <AppBody>
+            {' '}
+            {account ? (
+              <Trans>
+                <ReferralContainer>
+                  <ReferralElement1>
+                    <svg
+                      width="40px"
+                      height="40px"
+                      viewBox="0 0 23 23"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{ marginRight: '30px' }}
+                    >
+                      <rect
+                        x="2"
+                        y="21"
+                        width="7"
+                        height="5"
+                        rx="0.6"
+                        transform="rotate(-90 2 21)"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <rect
+                        x="17"
+                        y="15.5"
+                        width="7"
+                        height="5"
+                        rx="0.6"
+                        transform="rotate(-90 17 15.5)"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <rect
+                        x="2"
+                        y="10"
+                        width="7"
+                        height="5"
+                        rx="0.6"
+                        transform="rotate(-90 2 10)"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                  </ReferralElement1>
+                  <ReferralElement2>
+                    Earn crypto by sharing the following referral link{' '}
+                    <div>
+                      <a onClick={handleCopy} id="walletAddress">
+                        {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
+                      </a>
+                    </div>
+                  </ReferralElement2>
+                </ReferralContainer>
+              </Trans>
+            ) : (
+              <Trans>
+                <NoWalletStyle>
+                  {' '}
+                  Connect wallet to generate referral link. How it works ?{' '}
+                  <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
+                    Read More
+                  </a>
+                </NoWalletStyle>
+              </Trans>
+            )}
+          </AppBody>
+        </RefferalStyle>
       </ClassicModeContainer>
     </MarketContainer>
   )

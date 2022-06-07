@@ -7,6 +7,7 @@ import { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
+import { shortenAddress } from '../../utils'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
@@ -17,6 +18,7 @@ interface AdvancedMarketDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
+  referer: string
 }
 
 function TextWithLoadingPlaceholder({
@@ -37,7 +39,12 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedMarketDetails({ trade, allowedSlippage, syncing = false }: AdvancedMarketDetailsProps) {
+export function AdvancedMarketDetails({
+  trade,
+  allowedSlippage,
+  syncing = false,
+  referer,
+}: AdvancedMarketDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const { realizedLPFee, priceImpact } = useMemo(() => {
@@ -79,6 +86,16 @@ export function AdvancedMarketDetails({ trade, allowedSlippage, syncing = false 
             {trade.tradeType === TradeType.EXACT_INPUT
               ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+          </TYPE.black>
+        </TextWithLoadingPlaceholder>
+      </RowBetween>
+      <RowBetween>
+        <RowFixed>
+          <TYPE.subHeader color={theme.text1}>Referer:</TYPE.subHeader>
+        </RowFixed>
+        <TextWithLoadingPlaceholder syncing={syncing} width={70}>
+          <TYPE.black textAlign="right" fontSize={14}>
+            {referer ? shortenAddress(referer) : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>

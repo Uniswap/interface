@@ -42,6 +42,7 @@ export default function ConfirmMarketModal({
   isOpen,
   attemptingTxn,
   txHash,
+  referer,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -54,6 +55,7 @@ export default function ConfirmMarketModal({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
+  referer: string
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -76,6 +78,7 @@ export default function ConfirmMarketModal({
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
+        referer={referer}
       />
     ) : null
   }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
