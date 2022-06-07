@@ -39,7 +39,7 @@ interface GlobalData {
 export function useGlobalData() {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
-  const apolloClient = useExchangeClient()
+  //const apolloClient = useExchangeClient()
   const [globalData, setGlobalData] = useState<GlobalData>()
   const aggregatorData = useAggregatorVolume()
   const aggregatorAPR = useAggregatorAPR()
@@ -102,7 +102,7 @@ export function useGlobalData() {
     }
 
     getGlobalData()
-  }, [chainId, blockNumber, apolloClient, aggregatorData, aggregatorAPR])
+  }, [chainId, blockNumber, aggregatorData, aggregatorAPR])
 
   return globalData
 }

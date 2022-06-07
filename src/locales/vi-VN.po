@@ -1802,7 +1802,7 @@ msgstr "Việc rút token khỏi Pool sẽ chuyển đổi vị trí của bạn
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "Xóa {0} {1} và {2} {3}<<<<<<< HEAD======="
+msgstr "Xóa {0} {1} và {2} {3}"
 
 #: src/components/Menu/FaucetModal.tsx
 msgid "Request"
@@ -1810,7 +1810,7 @@ msgstr ""
 
 #: src/components/Menu/FaucetModal.tsx
 msgid "Request to Faucet - Submitted"
-msgstr ">>>>>>> main"
+msgstr ""
 
 #: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx

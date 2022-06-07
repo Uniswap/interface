@@ -127,6 +127,20 @@ export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
   [ChainId.OASIS]: oasisExchangeClient,
 }
 
+export const defaultKSExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/xiaoyhun/ks-exchange-ropsten',
+  cache: new InMemoryCache(),
+})
+
+const ropstenKSExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/xiaoyhun/ks-exchange-ropsten',
+  cache: new InMemoryCache(),
+})
+
+export const ksExchangeClients: { [chainId: number]: ApolloClient<NormalizedCacheObject> } = {
+  [ChainId.ROPSTEN]: ropstenKSExchangeClient,
+}
+
 const ropstenBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/edwardevans094/ropsten-blocks',
   cache: new InMemoryCache(),

@@ -16,7 +16,7 @@ import { AppState } from '../index'
 import { setError, setLoading, setSharedPoolId, updatePools } from './actions'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 import { useActiveWeb3React } from 'hooks'
-import { useETHPrice, useExchangeClient } from 'state/application/hooks'
+import { useETHPrice, useExchangeClient, useKSExchangeClient } from 'state/application/hooks'
 import { ONLY_STATIC_FEE_CHAINS } from 'constants/index'
 
 export interface SubgraphPoolData {
@@ -263,6 +263,7 @@ export async function getBulkPoolDataWithPagination(
   apolloClient: ApolloClient<NormalizedCacheObject>,
   ethPrice?: string,
   chainId?: ChainId,
+  includeStaticFee?: boolean,
 ): Promise<any> {
   try {
     let poolData
@@ -273,20 +274,20 @@ export async function getBulkPoolDataWithPagination(
     } else {
       const [{ number: b1 }] = blocks
 
-      const withoutDynamicFee = chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
+      const onlyStaticFee = (chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)) || includeStaticFee
 
       const [oneDayResult, current] = await Promise.all(
         [b1]
           .map(async block => {
             const result = apolloClient.query({
-              query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(first, skip, block, withoutDynamicFee),
+              query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(first, skip, block, onlyStaticFee),
               fetchPolicy: 'network-only',
             })
             return result
           })
           .concat(
             apolloClient.query({
-              query: POOLS_BULK_WITH_PAGINATION(first, skip, withoutDynamicFee),
+              query: POOLS_BULK_WITH_PAGINATION(first, skip, onlyStaticFee),
               fetchPolicy: 'network-only',
             }),
           ),
@@ -335,6 +336,7 @@ export function useResetPools(chainId: ChainId | undefined) {
 
 export function usePoolCountInSubgraph(): number {
   const [poolCount, setPoolCount] = useState(0)
+  // Todo
   const apolloClient = useExchangeClient()
 
   useEffect(() => {
@@ -352,6 +354,26 @@ export function usePoolCountInSubgraph(): number {
   return poolCount
 }
 
+export function usePoolCountInKSSubgraph(): number {
+  const [poolCount, setPoolCount] = useState(0)
+  // Todo
+  const ksApolloClient = useKSExchangeClient()
+
+  useEffect(() => {
+    const getPoolCount = async () => {
+      const result = await ksApolloClient.query({
+        query: POOL_COUNT,
+        fetchPolicy: 'network-only',
+      })
+      setPoolCount(result?.data.dmmFactories[0]?.poolCount || 0)
+    }
+
+    getPoolCount()
+  }, [ksApolloClient])
+
+  return poolCount
+}
+
 export function useAllPoolsData(): {
   loading: AppState['pools']['loading']
   error: AppState['pools']['error']
@@ -359,7 +381,9 @@ export function useAllPoolsData(): {
 } {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
+  // Todo
   const apolloClient = useExchangeClient()
+  const ksApolloClient = useKSExchangeClient()
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
   const loading = useSelector((state: AppState) => state.pools.loading)
@@ -368,6 +392,7 @@ export function useAllPoolsData(): {
   const { currentPrice: ethPrice } = useETHPrice()
 
   const poolCountSubgraph = usePoolCountInSubgraph()
+  const poolCountKSSubgraph = usePoolCountInKSSubgraph()
 
   useEffect(() => {
     let cancelled = false
@@ -377,9 +402,15 @@ export function useAllPoolsData(): {
         if (poolCountSubgraph > 0 && poolsData.length === 0 && !error && ethPrice) {
           dispatch(setLoading(true))
           const ITEM_PER_CHUNK = Math.min(1000, poolCountSubgraph) // GraphNode can handle max 1000 records per query.
+          const ITEM_PER_CHUNK2 = Math.min(1000, poolCountKSSubgraph) // GraphNode can handle max 1000 records per query.
           const promises = []
           for (let i = 0, j = poolCountSubgraph; i < j; i += ITEM_PER_CHUNK) {
             promises.push(() => getBulkPoolDataWithPagination(ITEM_PER_CHUNK, i, apolloClient, ethPrice, chainId))
+          }
+          for (let i = 0, j = poolCountKSSubgraph; i < j; i += ITEM_PER_CHUNK2) {
+            promises.push(() =>
+              getBulkPoolDataWithPagination(ITEM_PER_CHUNK2, i, ksApolloClient, ethPrice, chainId, true),
+            )
           }
           const pools = (await Promise.all(promises.map(callback => callback()))).flat()
           !cancelled && dispatch(updatePools({ pools }))
@@ -414,6 +445,7 @@ export function useSinglePoolData(
   data?: SubgraphPoolData
 } {
   const { chainId } = useActiveWeb3React()
+  // Todo
   const apolloClient = useExchangeClient()
 
   const [loading, setLoading] = useState<boolean>(false)

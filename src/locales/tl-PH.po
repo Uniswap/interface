@@ -1802,7 +1802,7 @@ msgstr ""
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "<<<<<<< HEAD======="
+msgstr ""
 
 #: src/components/Menu/FaucetModal.tsx
 msgid "Request"

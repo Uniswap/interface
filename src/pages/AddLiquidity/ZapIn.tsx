@@ -106,6 +106,7 @@ const ZapIn = ({
     insufficientLiquidity,
     error,
     unAmplifiedPairAddress,
+    isStaticFeePair,
   } = useDerivedZapInInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
 
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
@@ -612,35 +613,31 @@ const ZapIn = ({
                         <AutoRow>
                           <Text fontWeight={500} fontSize={12} color={theme.subText}>
                             <UppercaseText>
-                              {chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId) ? (
-                                <Trans>Fee</Trans>
-                              ) : (
-                                <Trans>Dynamic Fee Range</Trans>
-                              )}
+                              {isStaticFeePair || !pair ? <Trans>Fee</Trans> : <Trans>Dynamic Fee Range</Trans>}
                             </UppercaseText>
                           </Text>
                           <QuestionHelper
                             text={
-                              chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
+                              isStaticFeePair || !pair
                                 ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
                                 : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`
                             }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
-                          {chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
-                            ? pair?.fee
+                          {!!pair
+                            ? isStaticFeePair && pair?.fee
                               ? +new Fraction(pair.fee)
                                   .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
                                   .toSignificant(6) *
                                   100 +
                                 '%'
-                              : ''
-                            : feeRangeCalc(
-                                !!pair?.amp
-                                  ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
-                                  : +amp,
-                              )}
+                              : feeRangeCalc(
+                                  !!pair?.amp
+                                    ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                    : +amp,
+                                )
+                            : ''}
                         </Text>
                       </DynamicFeeRangeWrapper>
                     )}

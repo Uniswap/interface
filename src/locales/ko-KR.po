@@ -1802,7 +1802,7 @@ msgstr "풀 토큰을 제거하면 풀 지분에 비례하는 현재 비율로 �
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "{0} {1} 및 {2} {3} 제거<<<<<<< HEAD======="
+msgstr "{0} {1} 및 {2} {3} 제거"
 
 #: src/components/Menu/FaucetModal.tsx
 msgid "Request"
@@ -1810,7 +1810,7 @@ msgstr ""
 
 #: src/components/Menu/FaucetModal.tsx
 msgid "Request to Faucet - Submitted"
-msgstr ">>>>>>> main"
+msgstr ""
 
 #: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx

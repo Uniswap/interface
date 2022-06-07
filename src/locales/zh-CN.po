@@ -1802,7 +1802,7 @@ msgstr "删除池代币会将您的头寸以当前比率转换回基础代币，
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "删除 {0} {1} 和 {2} {3}<<<<<<< HEAD======="
+msgstr "删除 {0} {1} 和 {2} {3}"
 
 #: src/components/Menu/FaucetModal.tsx
 msgid "Request"

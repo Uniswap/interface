@@ -12,9 +12,7 @@ export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolDa
   const { chainId } = useActiveWeb3React()
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
   const ampLiquidity = formattedNum(`${parseFloat(amp.toSignificant(5)) * parseFloat(poolData.reserveUSD)}`, true)
-
-  const isWithoutDynamicFee = chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
-
+  const isFeeUnit = chainId && !ONLY_STATIC_FEE_CHAINS.includes(chainId)
   return (
     <>
       <ItemCardInfoRow name={t`AMP Liquidity`} value={ampLiquidity as string} infoHelperText={AMP_LIQUIDITY_HINT} />
@@ -25,8 +23,8 @@ export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolDa
             ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
             : undefined
         }
-        name={isWithoutDynamicFee ? t`Fee` : t`Fee Range`}
-        value={isWithoutDynamicFee ? poolData.fee / 100 + '%' : feeRangeCalc(+amp.toSignificant(5))}
+        name={poolData.fee ? t`Fee` : t`Fee Range`}
+        value={poolData.fee ? poolData.fee / (isFeeUnit ? 1000 : 100) + '%' : feeRangeCalc(+amp.toSignificant(5))}
       />
     </>
   )

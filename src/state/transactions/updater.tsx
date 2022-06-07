@@ -42,6 +42,7 @@ export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
+  // Todo
   const apolloClient = useExchangeClient()
 
   const dispatch = useDispatch<AppDispatch>()

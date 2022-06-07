@@ -50,6 +50,7 @@ export function useDerivedMintInfo(
   poolTokenPercentage?: Percent
   error?: string
   unAmplifiedPairAddress?: string
+  isStaticFeePair?: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -68,7 +69,7 @@ export function useDerivedMintInfo(
   // pair
   const tokenA = wrappedCurrency(currencies[Field.CURRENCY_A], chainId)
   const tokenB = wrappedCurrency(currencies[Field.CURRENCY_B], chainId)
-  const [pairState, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const [pairState, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
   const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
@@ -206,6 +207,7 @@ export function useDerivedMintInfo(
     poolTokenPercentage,
     error,
     unAmplifiedPairAddress,
+    isStaticFeePair,
   }
 }
 
@@ -254,6 +256,7 @@ export function useDerivedZapInInfo(
   insufficientLiquidity?: boolean
   error?: string
   unAmplifiedPairAddress?: string
+  isStaticFeePair?: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -272,7 +275,7 @@ export function useDerivedZapInInfo(
   // pair
   const tokenA = wrappedCurrency(currencies[Field.CURRENCY_A], chainId)
   const tokenB = wrappedCurrency(currencies[Field.CURRENCY_B], chainId)
-  const [pairState, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const [pairState, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
   const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const noLiquidity: boolean =
@@ -435,6 +438,7 @@ export function useDerivedZapInInfo(
     insufficientLiquidity,
     error,
     unAmplifiedPairAddress,
+    isStaticFeePair,
   }
 }
 

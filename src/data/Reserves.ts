@@ -1,3 +1,4 @@
+import { KS_FACTORY_ADDRESSES, ONLY_STATIC_FEE_CHAINS } from './../constants/index'
 import { TokenAmount, Pair, Currency, JSBI, Token, DMMPool } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { Interface } from '@ethersproject/abi'
@@ -98,7 +99,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
 
 export function usePairsByAddress(
   pairInfo: { address: string | undefined; currencies: [Currency | undefined, Currency | undefined] }[],
-): [PairState, Pair | null][] {
+): [PairState, Pair | null, boolean?][] {
   const { chainId } = useActiveWeb3React()
   const results = useMultipleContractSingleData(
     pairInfo.map(info => info.address),
@@ -110,11 +111,17 @@ export function usePairsByAddress(
     new Interface(DMMPool.abi),
     'ampBps',
   )
+  const factories = useMultipleContractSingleData(
+    pairInfo.map(info => info.address),
+    new Interface(DMMPool.abi),
+    'factory',
+  )
 
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result
       const { result: amp, loading: loadingAmp } = ampResults[i]
+      const { result: factoryAddresses } = factories[i]
       const tokenA = wrappedCurrency(pairInfo[i].currencies[0], chainId)
       const tokenB = wrappedCurrency(pairInfo[i].currencies[1], chainId)
 
@@ -124,6 +131,10 @@ export function usePairsByAddress(
       if (!reserves) return [PairState.NOT_EXISTS, null]
       const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+      const isStaticFeePair =
+        chainId &&
+        ((factoryAddresses && factoryAddresses[0] === KS_FACTORY_ADDRESSES[chainId]) ||
+          ONLY_STATIC_FEE_CHAINS.includes(chainId))
       return [
         PairState.EXISTS,
         new Pair(
@@ -135,16 +146,17 @@ export function usePairsByAddress(
           JSBI.BigInt(feeInPrecision),
           JSBI.BigInt(amp[0]),
         ),
+        isStaticFeePair,
       ]
     })
-  }, [results])
+  }, [results, ampResults, factories])
 }
 
 export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null][] {
   return usePairs([[tokenA, tokenB]])[0]
 }
 
-export function usePairByAddress(tokenA?: Token, tokenB?: Token, address?: string): [PairState, Pair | null] {
+export function usePairByAddress(tokenA?: Token, tokenB?: Token, address?: string): [PairState, Pair | null, boolean?] {
   return usePairsByAddress([{ address, currencies: [tokenA, tokenB] }])[0]
 }
 
@@ -177,7 +189,7 @@ export function useUnAmplifiedPairs(currencies: [Currency | undefined, Currency 
 
 export function useUnAmplifiedPairsFull(
   currencies: [Currency | undefined, Currency | undefined][],
-): [PairState, Pair | null][] {
+): [PairState, Pair | null, boolean?][] {
   const pairAddresses = useUnAmplifiedPairs(currencies)
   return usePairsByAddress(pairAddresses.map((address, index) => ({ address, currencies: currencies[index] })))
 }
