@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList, useHomeStackNavigation } from 'src/app/navigation/types'
 import Scan from 'src/assets/icons/scan.svg'
 import SendIcon from 'src/assets/icons/send.svg'
@@ -24,6 +24,7 @@ import { BiometricCheck } from 'src/features/biometrics'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { NotificationCenterLogo } from 'src/features/notifications/NotificationCenterLogo'
+import { selectHasUnreadNotifications } from 'src/features/notifications/selectors'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -31,7 +32,10 @@ import { setWalletConnectModalState } from 'src/features/walletConnect/walletCon
 import { NFTMasonry } from 'src/screens/PortfolioNFTs'
 import { PortfolioTokens } from 'src/screens/PortfolioTokens'
 import { Screens } from 'src/screens/Screens'
+import { spacing } from 'src/styles/sizing'
 import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
+
+const NOTIFICATION_INDICATOR_SIZE = 8
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
@@ -71,6 +75,7 @@ export function HomeScreen({ navigation }: Props) {
     <Screen edges={['left', 'right']}>
       <AppBackground />
       <Box mt="xl" mx="md">
+        <NotificationIndicator />
         <VirtualizedList>
           <Flex gap="lg" my="lg">
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
@@ -101,6 +106,21 @@ export function HomeScreen({ navigation }: Props) {
       {/* TODO: remove when app secures funds  */}
       <BiometricCheck />
     </Screen>
+  )
+}
+
+function NotificationIndicator() {
+  const hasUnreadNotifications = useAppSelector(selectHasUnreadNotifications)
+  return (
+    <Box
+      backgroundColor={hasUnreadNotifications ? 'accentBackgroundAction' : 'neutralTextTertiary'}
+      borderRadius="full"
+      height={NOTIFICATION_INDICATOR_SIZE}
+      left={-(NOTIFICATION_INDICATOR_SIZE / 2) + -spacing.md} // half of inicator width + `mx` of Home Screen
+      position="absolute"
+      top={-(NOTIFICATION_INDICATOR_SIZE / 2) + spacing.xl} // half of inicator height + `mt` of Home Screen
+      width={NOTIFICATION_INDICATOR_SIZE}
+    />
   )
 }
 

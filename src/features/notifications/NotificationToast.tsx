@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { popNotification } from 'src/features/notifications/notificationSlice'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
@@ -148,13 +148,20 @@ export function NotificationContent({
   balanceUpdate,
   actionButton,
 }: NotificationContentProps) {
+  const endAdornment = balanceUpdate || actionButton
   return (
     <Flex row alignItems="center" gap="xs" justifyContent="space-between" width="100%">
-      <Flex row shrink alignItems="center" flexBasis="75%" gap="xs" justifyContent="flex-start">
+      <Flex
+        row
+        shrink
+        alignItems="center"
+        flexBasis={endAdornment ? '75%' : '100%'}
+        gap="xs"
+        justifyContent="flex-start">
         {icon && (
-          <Box height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
+          <Flex centered height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
             {icon}
-          </Box>
+          </Flex>
         )}
         <Flex row shrink alignItems="center">
           <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="body2">
@@ -162,36 +169,38 @@ export function NotificationContent({
           </Text>
         </Flex>
       </Flex>
-      <Flex shrink alignItems="flex-end" flexBasis="25%" gap="xxs">
-        {balanceUpdate ? (
-          <>
-            <Text
-              adjustsFontSizeToFit
-              color="accentBackgroundSuccess"
-              fontWeight="600"
-              numberOfLines={1}
-              variant="smallLabel">
-              {balanceUpdate.assetIncrease}
-            </Text>
-            <Text
-              adjustsFontSizeToFit
-              color="neutralTextSecondary"
-              fontWeight="500"
-              numberOfLines={1}
-              variant="code">
-              {balanceUpdate.usdIncrease}
-            </Text>
-          </>
-        ) : actionButton ? (
-          <TextButton
-            px="xs"
-            py="xs"
-            textColor="accentBackgroundActive"
-            onPress={actionButton.onPress}>
-            {actionButton.title}
-          </TextButton>
-        ) : null}
-      </Flex>
+      {endAdornment ? (
+        <Flex shrink alignItems="flex-end" flexBasis="25%" gap="xxs">
+          {balanceUpdate ? (
+            <>
+              <Text
+                adjustsFontSizeToFit
+                color="accentBackgroundSuccess"
+                fontWeight="600"
+                numberOfLines={1}
+                variant="smallLabel">
+                {balanceUpdate.assetIncrease}
+              </Text>
+              <Text
+                adjustsFontSizeToFit
+                color="neutralTextSecondary"
+                fontWeight="500"
+                numberOfLines={1}
+                variant="code">
+                {balanceUpdate.usdIncrease}
+              </Text>
+            </>
+          ) : actionButton ? (
+            <TextButton
+              px="xs"
+              py="xs"
+              textColor="accentBackgroundActive"
+              onPress={actionButton.onPress}>
+              {actionButton.title}
+            </TextButton>
+          ) : null}
+        </Flex>
+      ) : null}
     </Flex>
   )
 }
