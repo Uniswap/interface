@@ -3,8 +3,8 @@ import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import { withRouter } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -65,22 +65,22 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
-const ScrollToTop = ({ history }: { history: any }) => {
-  useEffect(() => {
-    const unlisten = history.listen(() => {
-      window.scrollTo(0, 0)
-    })
-    return () => {
-      unlisten()
-    }
-  }, [history])
-
-  return null
-}
-
-const ScrollToTopWithRouter = withRouter(ScrollToTop)
-
 export default function App() {
+  const history = useHistory()
+
+  const ScrollToTop = () => {
+    useEffect(() => {
+      const unlisten = history.listen(() => {
+        window.scrollTo(0, 0)
+      })
+      return () => {
+        unlisten()
+      }
+    }, [])
+
+    return null
+  }
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -96,7 +96,7 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
-              <ScrollToTopWithRouter />
+              <ScrollToTop />
               <Switch>
                 <Route strict path="/vote" component={Vote} />
                 <Route exact strict path="/create-proposal">
