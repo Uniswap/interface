@@ -17,12 +17,15 @@ export enum WCErrorType {
   SwitchChainError = 'wc_switch_chain_eror',
   UnsupportedChainError = 'wc_unsupported_chain_error',
   InvalidRequestId = 'invalid_request_id',
+  InvalidAccount = 'invalid_account',
+  PendingSessionNotFound = 'pending_session_not_found',
 }
 
 export enum WCEventType {
   SessionConnected = 'session_connected',
   SessionUpdated = 'session_updated',
   SessionDisconnected = 'session_disconnected',
+  SessionPending = 'session_pending',
   Error = 'error',
   SignRequest = 'sign_request',
   TransactionRequest = 'transaction_request',
@@ -51,6 +54,8 @@ export interface SessionUpdatedEvent extends BaseSessionEvent {
 }
 
 export interface SessionDisconnectedEvent extends BaseSessionEvent {}
+
+export interface SessionPendingEvent extends BaseSessionEvent {}
 
 export interface DappInfo {
   name: string
@@ -116,6 +121,12 @@ export interface PermitMessage {
     nonce: number
     deadline: number
   }
+}
+
+export enum DappSourceInfo { // for future use in WalletConnectModal when we have a list of trusted dapps
+  Trusted,
+  Unknown,
+  Malicious,
 }
 
 export function isPrimaryTypePermit(message: any): message is PermitMessage {

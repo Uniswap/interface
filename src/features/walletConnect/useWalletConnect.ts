@@ -3,6 +3,7 @@ import { useAppSelector } from 'src/app/hooks'
 import {
   selectModalState,
   selectPendingRequests,
+  selectPendingSession,
   selectSessions,
 } from 'src/features/walletConnect/selectors'
 
@@ -11,6 +12,7 @@ export function useWalletConnect(address: Nullable<string>) {
   const sessions = useAppSelector(sessionSelector)
   const pendingRequests = useAppSelector(selectPendingRequests)
   const modalState = useAppSelector(selectModalState)
+  const pendingSession = useAppSelector(selectPendingSession)
 
-  return { sessions, pendingRequests, modalState }
+  return { sessions, pendingRequests, modalState, pendingSession }
 }

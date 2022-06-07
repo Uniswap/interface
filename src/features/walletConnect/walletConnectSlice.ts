@@ -41,13 +41,14 @@ export interface WalletConnectState {
       sessions: SessionMapping
     }
   }
-
+  pendingSession: WalletConnectSession | null
   pendingRequests: WalletConnectRequest[]
   modalState: WalletConnectModalState
 }
 
 const initialWalletConnectState: Readonly<WalletConnectState> = {
   byAccount: {},
+  pendingSession: null,
   pendingRequests: [],
   modalState: WalletConnectModalState.Hidden,
 }
@@ -63,6 +64,7 @@ const slice = createSlice({
       const { wcSession, account } = action.payload
       state.byAccount[account] ??= { sessions: {} }
       state.byAccount[account].sessions[wcSession.id] = wcSession
+      state.pendingSession = null
     },
 
     updateSession: (
@@ -78,6 +80,15 @@ const slice = createSlice({
       if (state.byAccount[account]) {
         delete state.byAccount[account].sessions[sessionId]
       }
+    },
+
+    addPendingSession: (state, action: PayloadAction<{ wcSession: WalletConnectSession }>) => {
+      const { wcSession } = action.payload
+      state.pendingSession = wcSession
+    },
+
+    removePendingSession: (state) => {
+      state.pendingSession = null
     },
 
     addRequest: (
@@ -112,6 +123,8 @@ export const {
   addSession,
   updateSession,
   removeSession,
+  addPendingSession,
+  removePendingSession,
   addRequest,
   removeRequest,
   setWalletConnectModalState,

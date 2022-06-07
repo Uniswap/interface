@@ -8,6 +8,7 @@ import {
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
+  removePendingSession,
   removeRequest,
   setWalletConnectModalState,
 } from 'src/features/walletConnect/walletConnectSlice'
@@ -33,9 +34,10 @@ export function WalletConnectWrapper({ children }: PropsWithChildren<any>) {
         <WalletConnectModal
           initialScreenState={modalState}
           isVisible={true}
-          onClose={() =>
+          onClose={() => {
+            dispatch(removePendingSession())
             dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.Hidden }))
-          }
+          }}
         />
       )}
       {currRequest && (

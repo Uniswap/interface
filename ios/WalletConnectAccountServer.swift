@@ -14,6 +14,8 @@ class WalletConnectAccountServer {
   var server: Server!
   var supportedChainIds: [Int]!
   
+  var settlePendingSession: ((Session.WalletInfo) -> Void)? = nil
+  
   var topicToSession: [String: Session]! = [:]
   
   // mapping of internal id (uuid) => request
@@ -47,6 +49,25 @@ class WalletConnectAccountServer {
     } catch {
       self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue, "message": error.localizedDescription, "account": self.account])
     }
+  }
+  
+  func settlePendingSession(chainId: Int, approved: Bool) throws -> Void {
+    guard let completePendingSession = self.settlePendingSession else {
+      throw WCSwiftError.pendingSessionNotFound
+    }
+    // TODO: pass in client info on initialization, also update these values when link is ready
+
+    let walletMeta = Session.ClientMeta(name: "Uniswap Wallet",
+                                        description: "A very cool wallet!",
+                                        icons: [],
+                                        url: URL(string: "https://uniswap.org")!)
+    let walletInfo = Session.WalletInfo(approved: approved,
+                                        accounts: [self.account],
+                                        chainId: chainId,
+                                        peerId: UUID().uuidString,
+                                        peerMeta: walletMeta)
+    completePendingSession(walletInfo)
+    self.settlePendingSession = nil
   }
   
   func sendSignature(requestInternalId: String, signature: String) {
@@ -194,21 +215,19 @@ extension WalletConnectAccountServer: ServerDelegate {
   }
   
   func server(_ server: Server, shouldStart session: Session, completion: @escaping (Session.WalletInfo) -> Void) {
-    // Default to chain 1 if dapp chainId is unsupported
-    let chainId = supportedChainIds.contains(session.dAppInfo.chainId ?? -1) ? session.dAppInfo.chainId! : 1
-
-    // TODO: pass in client info on initialization, also update these values when link is ready
-    let walletMeta = Session.ClientMeta(name: "Uniswap Wallet",
-                                        description: "A very cool wallet!",
-                                        icons: [],
-                                        url: URL(string: "https://uniswap.org")!)
-    let walletInfo = Session.WalletInfo(approved: true,
-                                        accounts: [self.account],
-                                        chainId: chainId,
-                                        peerId: UUID().uuidString,
-                                        peerMeta: walletMeta)
-    
-    completion(walletInfo)
+    self.settlePendingSession = completion
+    let icons = session.dAppInfo.peerMeta.icons
+    self.eventEmitter.sendEvent(withName: EventType.sessionPending.rawValue, body: [
+      "session_name": session.dAppInfo.peerMeta.name,
+      "session_id": session.url.topic,
+      "account": self.account!,
+      "dapp": [
+        "name": session.dAppInfo.peerMeta.name,
+        "url": session.dAppInfo.peerMeta.url.absoluteString,
+        "icon": icons.isEmpty ? "" : icons[0].absoluteString,
+        "chain_id": session.walletInfo?.chainId ?? 1,
+      ]
+    ])
   }
   
   func server(_ server: Server, didConnect session: Session) {

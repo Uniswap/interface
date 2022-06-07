@@ -26,6 +26,7 @@ enum EventType: String, CaseIterable {
   case sessionConnected = "session_connected"
   case sessionUpdated = "session_updated"
   case sessionDisconnected = "session_disconnected"
+  case sessionPending = "session_pending"
 }
 
 enum ErrorType: String {
@@ -38,11 +39,13 @@ enum ErrorType: String {
   case wcUnsupportedChainError = "wc_unsupported_chain_error"
   case invalidRequestId = "invalid_request_id"
   case invalidAccount = "invalid_account"
+  case pendingSessionNotFound = "pending_session_not_found"
 }
 
 enum WCSwiftError: Error {
   case invalidChainId
   case invalidSessionTopic
+  case pendingSessionNotFound
 }
 
 @objc(RNWalletConnect)
@@ -99,6 +102,17 @@ class RNWalletConnect: RCTEventEmitter {
     
     let server = self.getServer(account)
     server.connect(to: wcUrl)
+  }
+  
+  @objc
+  func settlePendingSession(_ chainId: Int, account: String, approved: Bool) {
+    
+    let server = self.getServer(account)
+    do {
+      try server.settlePendingSession(chainId: chainId, approved: approved)
+    } catch {
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.pendingSessionNotFound.rawValue, "account": account])
+    }
   }
   
   override func supportedEvents() -> [String]! {

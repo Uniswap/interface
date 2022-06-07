@@ -20,3 +20,7 @@ export const selectPendingRequests = (state: RootState): WalletConnectRequest[] 
 export const selectModalState = (state: RootState): WalletConnectModalState => {
   return state.walletConnect.modalState
 }
+
+export const selectPendingSession = (state: RootState): WalletConnectSession | null => {
+  return state.walletConnect.pendingSession
+}

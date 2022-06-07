@@ -13,6 +13,7 @@
 RCT_EXTERN_METHOD(initialize: (NSArray *)supportedChainIds)
 RCT_EXTERN_METHOD(reconnectAccountSessions: (NSArray *)accounts)
 RCT_EXTERN_METHOD(connect: (NSString *)url account: (NSString *) account)
+RCT_EXTERN_METHOD(settlePendingSession: (NSInteger)chainId account: (NSString *)account approved: (BOOL)approved)
 RCT_EXTERN_METHOD(disconnect: (NSString *)topic account: (NSString *) account)
 RCT_EXTERN_METHOD(changeChainId: (NSString *)topic chainId: (NSInteger)chainId account: (NSString *)account)
 RCT_EXTERN_METHOD(sendSignature: (NSString *)requestInternalId

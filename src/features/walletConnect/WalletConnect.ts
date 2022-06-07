@@ -19,6 +19,10 @@ export const disconnectFromApp = (topic: string, account: string) => {
   RNWalletConnect.disconnect(topic, account)
 }
 
+export const settlePendingSession = (chainId: number, account: string, approved: boolean) => {
+  RNWalletConnect.settlePendingSession(chainId, account, approved)
+}
+
 export const changeChainId = (topic: string, chainId: number, account: string) => {
   RNWalletConnect.changeChainId(topic, chainId, account)
 }

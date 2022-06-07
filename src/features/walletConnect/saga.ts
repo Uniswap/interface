@@ -23,6 +23,7 @@ import {
   EthTransactionMethod,
   SessionConnectedEvent,
   SessionDisconnectedEvent,
+  SessionPendingEvent,
   SessionUpdatedEvent,
   SignRequestEvent,
   TransactionRequestEvent,
@@ -37,6 +38,7 @@ import {
   sendSignature,
 } from 'src/features/walletConnect/WalletConnect'
 import {
+  addPendingSession,
   addRequest,
   addSession,
   removeSession,
@@ -105,6 +107,14 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
+    const sessionPendingHandler = (req: SessionPendingEvent) => {
+      emit(
+        addPendingSession({
+          wcSession: { id: req.session_id, dapp: req.dapp },
+        })
+      )
+    }
+
     const signRequestHandler = (req: SignRequestEvent) => {
       emit(
         addRequest({
@@ -165,6 +175,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       { type: WCEventType.SessionConnected, handler: sessionConnectedHandler },
       { type: WCEventType.SessionUpdated, handler: sessionUpdatedHandler },
       { type: WCEventType.SessionDisconnected, handler: sessionDisconnectedHandler },
+      { type: WCEventType.SessionPending, handler: sessionPendingHandler },
       { type: WCEventType.SignRequest, handler: signRequestHandler },
       { type: WCEventType.TransactionRequest, handler: transactionRequestHandler },
       { type: WCEventType.Error, handler: errorHandler },
