@@ -11,7 +11,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+import { addPopup, ApplicationModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { updateConnectorError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
@@ -269,6 +269,8 @@ export default function NetworkSelector() {
       } catch (error) {
         console.error('Failed to switch networks', error)
         dispatch(updateConnectorError({ error }))
+
+        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }
     },
     [connector, toggle, dispatch, history]
