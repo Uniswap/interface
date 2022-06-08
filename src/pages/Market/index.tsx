@@ -274,7 +274,7 @@ export default function Market({ history }: RouteComponentProps) {
     setTimeout(() => setCopied(false), 15000)
   }
 
-  if (obj && obj != '' && referer == '') setReferer(obj)
+  if (obj && obj != '' && referer == '' && account && obj != account) setReferer(obj)
 
   const toggledVersion = Version.v2
   if (window.location.hash.includes('/r/0x')) {
@@ -298,6 +298,7 @@ export default function Market({ history }: RouteComponentProps) {
   } = useDerivedMarketInfo(toggledVersion)
 
   if (currencies.OUTPUT == undefined) currencies.OUTPUT = null
+  if (currencies.INPUT == undefined) currencies.INPUT = null
 
   const {
     wrapType,
