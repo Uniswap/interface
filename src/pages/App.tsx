@@ -58,6 +58,7 @@ import { SelectiveChart } from './Swap/SelectiveCharting';
 import { Suite } from './Suite/Suite';
 import Swal from 'sweetalert2'
 import SwapVolume from 'components/SwapVolume'
+import { SwapVolumeContextProvider } from 'context/SwapVolumeContext';
 import { TYPE } from 'theme'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import Tooltip from 'components/Tooltip';
@@ -495,185 +496,187 @@ export default function App() {
   }, [])
   const { chainId, account, library } = useWeb3React()
   const noop = () => { return };
+  const innerWidth = window.innerWidth;
   const isMobile = React.useMemo(() => {
     return window.innerWidth <= 768
-  }, [window.innerWidth])
+  }, [innerWidth])
   const GainsPage = (props: any) => <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
-      <Route component={DarkModeQueryParamReader} />
-      <Route component={ApeModeQueryParamReader} />
-      <Web3ReactManager>
-        <GelatoProvider
-          library={library}
-          chainId={chainId ? chainId : 1}
-          account={account ?? undefined}
-          useDefaultTheme={false}
-          useDarkMode
-        >
-          <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
-            <AppWrapper>
-              {Video}
-              <HeaderWrapper>
-                {!isMobile && <TopTokenMovers />}
+      <SwapVolumeContextProvider chainId={chainId}>
+        <Route component={DarkModeQueryParamReader} />
+        <Route component={ApeModeQueryParamReader} />
+        <Web3ReactManager>
+          <GelatoProvider
+            library={library}
+            chainId={chainId ? chainId : 1}
+            account={account ?? undefined}
+            useDefaultTheme={false}
+            useDarkMode
+          >
+            <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
+              <AppWrapper>
+                {Video}
+                <HeaderWrapper>
+                  <TopTokenMovers />
 
-                <Header />
+                  <Header />
 
-              </HeaderWrapper>
+                </HeaderWrapper>
 
 
-              {/* <div style={{position:'absolute', top:'25%', left:'5%'}}>
+                {/* <div style={{position:'absolute', top:'25%', left:'5%'}}>
               <img style={{maxWidth:200}} src={'https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-07-22.25.47.jpeg'} />
           </div>
           <div style={{position:'absolute', top:'25%', right:'5%'}}>
               <img style={{maxWidth:200}} src={'https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-07-22.25.47.jpeg'} />
           </div> */}
-              <BodyWrapper>
-                <Popups />
-                {!isMobile && <>
-                  <Polling />
-                  <SwapVolume />
-                </>}
-                <TopLevelModals />
-                {/*<KibaNftAlert />*/}
+                <BodyWrapper>
+                  <Popups />
+                  {!isMobile && <>
+                    <Polling />
+                    <SwapVolume />
+                  </>}
+                  <TopLevelModals />
+                  {/*<KibaNftAlert />*/}
 
-                <Switch>
-                  <Route exact strict path="/nfts" component={Mint} />
-                  <Route exact strict path="/nfts/mint/:referrer" component={Mint} />
-                  <Route exact strict path="/reflections" component={LifetimeReflections} />
-                  <Route exact strict path="/details" component={AccountPage} />
-                  <Route exact strict path="/details/:account" component={AccountPageWithAccount} />
-                  <Route exact strict path="/limit" component={LimitOrders} />
-                  {/* Chart page can allow for different entry points hence multiple routes */}
-                  <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charting/:tokenAddress" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charting" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charts/:tokenAddress" component={SelectiveChart} />
-                  <Route exact strict path="/selective-charts" component={SelectiveChart} />
+                  <Switch>
+                    <Route exact strict path="/nfts" component={Mint} />
+                    <Route exact strict path="/nfts/mint/:referrer" component={Mint} />
+                    <Route exact strict path="/reflections" component={LifetimeReflections} />
+                    <Route exact strict path="/details" component={AccountPage} />
+                    <Route exact strict path="/details/:account" component={AccountPageWithAccount} />
+                    <Route exact strict path="/limit" component={LimitOrders} />
+                    {/* Chart page can allow for different entry points hence multiple routes */}
+                    <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charting/:tokenAddress" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charting" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charts/:tokenAddress" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charts" component={SelectiveChart} />
 
 
-                  <Route exact strict path="/fomo" component={FomoPage} />
-                  <Route exact strict path="/donation-tracker" component={DonationTracker} />
-                  <Route exact strict path="/proposal/create" component={AddProposal} />
-                  <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
-                  <Route exact strict path="/tracker" component={GainsTracker} />
-                  <Route exact strict path="/suite" component={Suite} />
-                  <Route exact strict path="/transactions" component={Transactions} />
-                  <Route exact strict path="/gains" component={GainsPage} />
-                  <Route exact strict path="/honeypot-checker" component={HoneyPotDetector} />
-                  <Route exact strict path="/dashboard" component={VotePage} />
-                  <Route exact strict path="/vote" component={Vote} />
-                  <Route exact strict path="/vote/:id" component={VotePageV2} />
-                  <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-                  <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                  <Route exact strict path="/swap" component={Swap} />
-                  <Route exact strict path="/pool/v2/find" component={PoolFinder} />
-                  <Route exact strict path="/pool/v2" component={PoolV2} />
-                  <Route exact strict path="/pool" component={Pool} />
-                  <Route exact strict path="/pool/:tokenId" component={PositionPage} />
-                  <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
-                  <Route
-                    exact
-                    strict
-                    path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                    component={RedirectDuplicateTokenIds}
-                  />
+                    <Route exact strict path="/fomo" component={FomoPage} />
+                    <Route exact strict path="/donation-tracker" component={DonationTracker} />
+                    <Route exact strict path="/proposal/create" component={AddProposal} />
+                    <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
+                    <Route exact strict path="/tracker" component={GainsTracker} />
+                    <Route exact strict path="/suite" component={Suite} />
+                    <Route exact strict path="/transactions" component={Transactions} />
+                    <Route exact strict path="/gains" component={GainsPage} />
+                    <Route exact strict path="/honeypot-checker" component={HoneyPotDetector} />
+                    <Route exact strict path="/dashboard" component={VotePage} />
+                    <Route exact strict path="/vote" component={Vote} />
+                    <Route exact strict path="/vote/:id" component={VotePageV2} />
+                    <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
+                    <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+                    <Route exact strict path="/swap" component={Swap} />
+                    <Route exact strict path="/pool/v2/find" component={PoolFinder} />
+                    <Route exact strict path="/pool/v2" component={PoolV2} />
+                    <Route exact strict path="/pool" component={Pool} />
+                    <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+                    <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
+                    <Route
+                      exact
+                      strict
+                      path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                      component={RedirectDuplicateTokenIds}
+                    />
 
-                  <Route
-                    exact
-                    strict
-                    path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
-                    component={AddLiquidity}
-                  />
+                    <Route
+                      exact
+                      strict
+                      path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
+                      component={AddLiquidity}
+                    />
 
-                  <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                  <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+                    <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                    <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
 
-                  <Route exact strict path="/migrate/v2" component={MigrateV2} />
-                  <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
+                    <Route exact strict path="/migrate/v2" component={MigrateV2} />
+                    <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
 
-                  <Route exact strict path="/proposals" component={CreateProposal} />
-                  <Route exact strict path="/charts" component={ChartPage} />
+                    <Route exact strict path="/proposals" component={CreateProposal} />
+                    <Route exact strict path="/charts" component={ChartPage} />
 
-                  <Route component={RedirectPathToSwapOnly} />
-                </Switch>
-                <AppBody style={{ position: 'relative', padding: '9px 14px', justifyContent: 'end', backgroundColor: 'theme.bg0', height: 'flex', width: 'flex', minWidth: '45%' }}>
-                  <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '10px', paddingTop: '10px' }}>Kibaswap Featured Sponsors
-                  </StyledDiv>
-                  <Marquee direction={'ltr'} 
-                           resetAfterTries={200} 
-                           scatterRandomly={false} 
-                           onInit={noop} 
-                           onFinish={noop} 
-                           velocity={10}>
-                    <></>
-                    <FixedContainer style={{ backgroundColor: 'transparent', width: '100%', paddingBottom: '10px' }} gap="xs">
-                      <ScrollableRow>
-                        {[
-                          {
-                            title: "Kiba Inu",
-                            img: logo,
-                            text: "Kiba Inu is a token infused with Kiba Swap",
-                            link: '#',
-                            style: {}
-                          },
-                          {
-                            title: "CryptoCart",
-                            img: cart,
-                            text: "Learn more",
-                            link: 'https://cryptocart.cc/',
-                            style: {}
-                          },
-                          {
-                            title: "KIBA INU",
-                            img: logo,
-                            text: "Learn more",
-                            link: '#',
-                            style: {}
-                          },
-                          {
-                            title: "Btok",
-                            img: btok,
-                            text: "Jabba Inu is a meme coin offering culture to its holders.",
-                            link: 'https://www.btok.com/',
-                            style: {}
-                          }].map((sponsor) => (
-                            <CardWrapper key={sponsor.title} href={sponsor.link}>
-                              <DarkGreyCard style={{ padding: 3 }}>
-                                <Flex flexDirection="column" alignItems={'center'} justifyContent={'center'}>
-                                  <Flex alignItems={'center'} flexDirection={'row'}>
+                    <Route component={RedirectPathToSwapOnly} />
+                  </Switch>
+                  <AppBody style={{ position: 'relative', padding: '9px 14px', justifyContent: 'end', backgroundColor: 'theme.bg0', height: 'flex', width: 'flex', minWidth: '45%' }}>
+                    <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '10px', paddingTop: '10px' }}>Kibaswap Featured Sponsors
+                    </StyledDiv>
+                    <Marquee direction={'ltr'}
+                      resetAfterTries={200}
+                      scatterRandomly={false}
+                      onInit={noop}
+                      onFinish={noop}
+                      velocity={10}>
+                      <></>
+                      <FixedContainer style={{ backgroundColor: 'transparent', width: '100%', paddingBottom: '10px' }} gap="xs">
+                        <ScrollableRow>
+                          {[
+                            {
+                              title: "Kiba Inu",
+                              img: logo,
+                              text: "Kiba Inu is a token infused with Kiba Swap",
+                              link: '#',
+                              style: {}
+                            },
+                            {
+                              title: "CryptoCart",
+                              img: cart,
+                              text: "Learn more",
+                              link: 'https://cryptocart.cc/',
+                              style: {}
+                            },
+                            {
+                              title: "KIBA INU",
+                              img: logo,
+                              text: "Learn more",
+                              link: '#',
+                              style: {}
+                            },
+                            {
+                              title: "Btok",
+                              img: btok,
+                              text: "Jabba Inu is a meme coin offering culture to its holders.",
+                              link: 'https://www.btok.com/',
+                              style: {}
+                            }].map((sponsor) => (
+                              <CardWrapper key={sponsor.title} href={sponsor.link}>
+                                <DarkGreyCard style={{ padding: 3 }}>
+                                  <Flex flexDirection="column" alignItems={'center'} justifyContent={'center'}>
+                                    <Flex alignItems={'center'} flexDirection={'row'}>
 
+                                    </Flex>
+                                    <Flex style={{ height: 'flex', padding: '5' }} alignItems={'center'} justifyContent={'space-between'}>
+                                      <a href={sponsor.link}>
+                                        <img style={{ maxWidth: 80, ...sponsor?.style }} src={sponsor.img} />
+                                      </a>
+                                      <TYPE.small alignItems={'center'} justifyContent={'center'}></TYPE.small>
+                                    </Flex>
                                   </Flex>
-                                  <Flex style={{ height: 'flex', padding: '5' }} alignItems={'center'} justifyContent={'space-between'}>
-                                    <a href={sponsor.link}>
-                                      <img style={{ maxWidth: 80, ...sponsor?.style }} src={sponsor.img} />
-                                    </a>
-                                    <TYPE.small alignItems={'center'} justifyContent={'center'}></TYPE.small>
-                                  </Flex>
-                                </Flex>
-                              </DarkGreyCard>
-                            </CardWrapper>
-                          ))}
-                      </ScrollableRow>
-                    </FixedContainer>
-                  </Marquee>
-                </AppBody>
-                <Marginer />
+                                </DarkGreyCard>
+                              </CardWrapper>
+                            ))}
+                        </ScrollableRow>
+                      </FixedContainer>
+                    </Marquee>
+                  </AppBody>
+                  <Marginer />
 
 
-              </BodyWrapper>
+                </BodyWrapper>
 
-            </AppWrapper>
-          </ApolloProvider>
-        </GelatoProvider>
+              </AppWrapper>
+            </ApolloProvider>
+          </GelatoProvider>
 
-      </Web3ReactManager>
-
+        </Web3ReactManager>
+      </SwapVolumeContextProvider>
     </ErrorBoundary>
   )
 }

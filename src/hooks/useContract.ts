@@ -105,10 +105,10 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
   return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
 }
 
-export function useV2RouterContract(): Contract | null {
-  const {chainId} = useWeb3React()
-  const routerAddress = chainId ? V2_ROUTER_ADDRESS[chainId] : V2_ROUTER_ADDRESS[1];
-  return useContract(V2_ROUTER_ADDRESS, IKibaSwapRelayerABI, false)
+export function useV2RouterContract(chainId?: number): Contract | null {
+  let routerAddress = V2_ROUTER_ADDRESS;
+  if (chainId) routerAddress = V2_ROUTER_ADDRESS[chainId]
+  return useContract(routerAddress, IKibaSwapRelayerABI, false)
 }
 
 export function useMulticall2Contract() {

@@ -12,7 +12,7 @@ const alwaysTrue = () => true
  * Create a filter function to apply to a token for whether it matches a particular search query
  * @param search the search query to apply to the token
  */
-export function createTokenFilterFunction<T extends Token | TokenInfo>(search: string): (tokens: T) => boolean {
+export function   createTokenFilterFunction<T extends Token | TokenInfo>(search: string): (tokens: T) => boolean {
   const searchingAddress = isAddress(search)
 
   if (searchingAddress) {
@@ -40,7 +40,12 @@ export function createTokenFilterFunction<T extends Token | TokenInfo>(search: s
 }
 
 export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: string): T[] {
-  return tokens.filter(createTokenFilterFunction(search))
+    if (!search) return tokens;
+    return tokens.filter((token) => {
+    if (isAddress(search)) return token?.address?.toLowerCase() === search?.toLowerCase()
+    return token?.name?.toLowerCase().includes(search) || token.symbol?.toLowerCase().includes(search)
+  })
+  //return tokens.filter(createTokenFilterFunction(search))
 }
 
 export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string, showOnlyTrumpCoins?:boolean): Token[] {

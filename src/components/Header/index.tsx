@@ -29,6 +29,7 @@ import Tooltip from 'components/Tooltip'
 import { Trans } from '@lingui/macro'
 import UniBalanceContent from './UniBalanceContent'
 import Web3Status from '../Web3Status'
+import { constantToCode } from 'multicodec/src/maps'
 import { darken } from 'polished'
 import logo from '../../assets/svg/logo.svg'
 import styled from 'styled-components/macro'
@@ -304,62 +305,60 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
-
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account?.toLowerCase() ?? '']
-  const [darkMode] = useDarkModeManager()
-
-  const toggleClaimModal = useToggleSelfClaimModal()
-
-  const availableClaim: boolean = useUserHasAvailableClaim(account)
-
-  const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
-
-  const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
-  const showClaimPopup = useShowClaimPopup()
-
-  const scrollY = useScrollPosition()
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-  const [ethPrice] = useEthPrice()
-  const [showContracts, setShowContracts] = useState(false)
-  const [clip, setClip] = useCopyClipboard()
-  const href = 'https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104'
+  // state
   const [width, setWidth] = useState<number>(window.innerWidth)
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth)
-  }
+  const [showGasTt, setShowGasTt] = React.useState(false)
+  const onMouseEnterGasIcon = () => setShowGasTt(true);
+  const onMouseExitGasIcon = () => setShowGasTt(false)  
+  const [showETHValue, setShowETHValue] = React.useState(!!localStorage.getItem('show_balance'))
+  const setEThVisible = () => setEthBalanceVisisbleCallback(!showETHValue);
+  const isMobile: boolean = width <= 768
+  const [gas, setGas] = React.useState<any>()
+  const [showNotify, setShowNotify] = React.useState(!!localStorage.getItem('subscribed') && localStorage.getItem('subscribed') !== 'false');
+  const dateString = localStorage.getItem('notificationDate') as string;
+  const [lastNotified, setLastNotified] = React.useState<Date | undefined>(dateString ? new Date(+dateString) : undefined)
+ 
+  // side effect
+  React.useEffect(() => {
+    const dateMath = lastNotified ? new Date(lastNotified?.getTime() + 5 * 60000) : undefined
+    if (showNotify && Math.trunc(gas?.FastGasPrice) <= 85 && (!dateMath || dateMath < new Date())) {
+      const dateNotified = new Date();
+      localStorage.setItem('notificationDate', dateNotified.valueOf().toString())
+      setLastNotified(dateNotified)
+      Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        timer: 10000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        icon: 'success',
+        title: 'GWEI is currently at ' + Math.trunc(gas?.FastGasPrice)
+      })
+    }
+  }, [gas, showNotify])
+
   React.useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange)
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange)
     }
   }, [])
-  const isMobile: boolean = width <= 768
-  const [showETHValue, setShowETHValue] = React.useState(!!localStorage.getItem('show_balance'))
-  const [gas, setGas] = React.useState<any>()
-  const [showNotify, setShowNotify] = React.useState(!!localStorage.getItem('subscribed') && localStorage.getItem('subscribed') !== 'false');
-  React.useEffect(() => {
-      if (showNotify && Math.trunc(gas?.FastGasPrice) <= 85) {
-        Swal.fire({
-          toast: true,
-          position: 'bottom-end',
-          timer: 10000,
-          showConfirmButton: false,
-          timerProgressBar: true,
-          icon: 'success',
-          title: 'GWEI is currently at ' + Math.trunc(gas?.FastGasPrice )
-        })
-      } 
-  }, [gas, showNotify])
-  const promise = () => {
-    const error = (e:unknown) => console.error(e)
+
+  // callbacks
+  const promise = React.useCallback(() => {
+    const error = (e: unknown) => console.error(e)
     console.log(`fetching gas prices`)
     fetch(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`, { method: 'GET' })
-    .then((res) => res.json())
-    .then((response) => {
-      setGas(response.result)
-    }).catch(error)
-  } 
+      .then((res) => res.json())
+      .then((response) => {
+        setGas(response.result)
+      }).catch(error)
+  },[])
+
+  const handleWindowSizeChange = React.useCallback(() => {
+    setWidth(window.innerWidth)
+  }, [])
+
   const onNotify = React.useCallback(() => {
     Swal.fire({
       title: showNotify ? "Cancel notifications" : 'Subscribe to notifications',
@@ -367,7 +366,7 @@ export default function Header() {
       showConfirmButton: true,
       confirmButtonText: showNotify ? 'Unsubscribe' : "Subscribe",
       showCancelButton: true,
-      icon: 'question',
+      icon: showNotify ? 'info' :  'question',
     }).then(({ isConfirmed }) => {
       if (showNotify && isConfirmed) {
         setShowNotify(() => false)
@@ -379,24 +378,22 @@ export default function Header() {
     })
   }, [showNotify])
 
-  const setEthBalanceVisisbleCallback = (visible: boolean ) => {
+  const setEthBalanceVisisbleCallback = React.useCallback((visible: boolean) => {
     if (!visible) localStorage.removeItem('show_balance')
     else localStorage.setItem('show_balance', visible.toString());
     setShowETHValue(visible);
-  }
+  }, [])
 
-  const [showGasTt, setShowGasTt] = React.useState(false)
-  const onMouseEnterGasIcon = () => setShowGasTt(true);
-  const onMouseExitGasIcon = () => setShowGasTt(false)
-  const setEThVisible = () => () => setEthBalanceVisisbleCallback(!showETHValue);
-  useInterval(promise, 15000, true)
+  // hooks
+  useInterval(promise, 45000, true)
+  const { account, chainId } = useActiveWeb3React()
+  const userEthBalance = useETHBalances(account ? [account] : [])?.[account?.toLowerCase() ?? '']
+  const [darkMode] = useDarkModeManager()
+  
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
-        <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
-          <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
-        </Modal>
-        <Title style={{textDecoration:"none"}} href="/">
+        <Title style={{ textDecoration: "none" }} href="/">
           <UniIcon>
             <img
               width={isMobile ? '50px' : '70px'}
@@ -405,11 +402,8 @@ export default function Header() {
             />
 
           </UniIcon>
-
         </Title>
-        
         <HeaderLinks>
-          
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>
           </StyledNavLink>
@@ -448,7 +442,7 @@ export default function Header() {
             }}
           >
             {' '}
-            <span style={{ cursor: 'pointer', display: 'flex', flexFlow:'row wrap', alignItems: 'center' }}>
+            <span style={{ cursor: 'pointer', display: 'flex', flexFlow: 'row wrap', alignItems: 'center' }}>
               <img style={{ filter: 'sepia(1)', maxWidth: 15 }} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
               />
               {gas && (
@@ -457,62 +451,41 @@ export default function Header() {
                 </span>
               )}
             </span>
-            {gas && Math.trunc(gas?.FastGasPrice) > 85 ? 
-              <AlertOctagon fill={showNotify ? 'green' : 'red'} 
-                            color={'#fff'} 
-                            onClick={onNotify} 
-                            style={{ 
-                              cursor: 'pointer', 
-                              marginLeft: 5
-                            }}
-                            onMouseEnter={onMouseEnterGasIcon}
-                            onMouseLeave={onMouseExitGasIcon}
-              /> : 
-            <CheckCircle fill={showNotify ? 'green' : 'red'} 
-                         color={'#fff'} 
-                         onClick={onNotify} 
-                         style={{
-                          cursor: 'pointer',
-                          marginLeft: 5 
-                        }} />
-              }
+            {gas && Math.trunc(gas?.FastGasPrice) > 85 ?
+              <AlertOctagon fill={showNotify ? 'green' : 'red'}
+                color={'#fff'}
+                onClick={onNotify}
+                style={{
+                  cursor: 'pointer',
+                  marginLeft: 5
+                }}
+                onMouseEnter={onMouseEnterGasIcon}
+                onMouseLeave={onMouseExitGasIcon}
+              /> :
+              <CheckCircle fill={showNotify ? 'green' : 'red'}
+                color={'#fff'}
+                onClick={onNotify}
+                style={{
+                  cursor: 'pointer',
+                  marginLeft: 5
+                }} />
+            }
           </div>
-
         </HeaderLinks>
-
-            
         <HeaderControls>
-
-
-        {!!account ? <NetworkCard /> : ''} 
+          {!!account ? <NetworkCard /> : ''}
 
           <HeaderElement>
             <BurntKiba />
-            {availableClaim && !showClaimPopup && (
-              <UNIWrapper onClick={toggleClaimModal}>
-                <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                  <TYPE.white padding="0 2px">
-                    {claimTxn && !claimTxn?.receipt ? (
-                      <Dots>
-                        <Trans>Claiming UNI</Trans>
-                      </Dots>
-                    ) : (
-                      <></>
-                    )}
-                  </TYPE.white>
-                </UNIAmount>
-                <CardNoise />
-              </UNIWrapper>
-            )}
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {!isMobile && (account && userEthBalance ? <small style={{position:'relative', left:5, cursor: 'pointer'}}> 
-              {showETHValue && <Eye style={{width: 19, height: 19}} onClick={setEThVisible}  />}
-              {!showETHValue && <EyeOff style={{width: 19, height: 19}}  onClick={setEThVisible} />}
+              {!isMobile && (account && userEthBalance ? <small style={{ position: 'relative', left: 5, cursor: 'pointer' }}>
+                {showETHValue && <Eye style={{ width: 19, height: 19 }} onClick={setEThVisible} />}
+                {!showETHValue && <EyeOff style={{ width: 19, height: 19 }} onClick={setEThVisible} />}
               </small> : null)}
               {account && userEthBalance ? (
                 <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                   <Trans>{showETHValue ? userEthBalance?.toSignificant(3) : '...'} ETH</Trans>
-  
+
                 </BalanceText>
               ) : null}
               <Web3Status />
