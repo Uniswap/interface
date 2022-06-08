@@ -112,13 +112,12 @@ function Banner({
   const w = size?.width || 0
   const theme = useTheme()
 
-  const [showBanner, setShowBanner] = useLocalStorage('put-up-banner', true)
-
-  const banners = [
+  const ALL_BANNERS = [
     {
       // Community AMA livestream with CEO
+      id: 'community-ama-livestream-with-ceo',
       start: new Date(1654473600000), // June 6, 2022 0:00:00
-      end: new Date(1654819199000), // June 9, 2022 23:59:59
+      end: new Date(1654905599000), // June 10, 2022 23:59:59
       img: isInModal
         ? CommunityAMALivestreamWithCEOMobile
         : w >= 768
@@ -130,6 +129,7 @@ function Banner({
     },
     {
       // REFERRAL CAMPAIGN
+      id: 'referral-campaign',
       start: new Date(1653004800000), // May 20, 2022 0:00:00
       end: new Date(1653609599000), // May 26, 2022 23:59:59
       img: isInModal
@@ -145,6 +145,7 @@ function Banner({
     },
     {
       // BTTC Liquidity Mining.
+      id: 'bttc-liquidity-mining',
       start: new Date(1650585600000), // April 22, 2022 0:00:00
       end: new Date(1654041599000), // May 31, 2022 23:59:59
       img: isInModal ? B2_Mobile : w >= 768 ? B2_Desktop : w >= 500 ? B2_Tablet : B2_Mobile,
@@ -154,6 +155,7 @@ function Banner({
     },
     {
       // BTTC Liquidity Mining.
+      id: 'bttc-liquidity-mining-2',
       start: new Date(1650585600000), // April 22, 2022 0:00:00
       end: new Date(1654041599000), // May 31, 2022 23:59:59
       img: isInModal ? B1_Mobile : w >= 768 ? B1_Desktop : w >= 500 ? B1_Tablet : B1_Mobile,
@@ -162,13 +164,18 @@ function Banner({
     },
     {
       // AVAX LM
+      id: 'avax-lm',
       start: new Date(1647820800000), // March 21, 2022 0:00:00
       end: new Date(1654041599000), // May 31, 2022 23:59:59
       img: isInModal ? LM_Mobile : w >= 768 ? LM_Desktop : w >= 500 ? LM_Tablet : LM_Mobile,
       link:
         'https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=avaxphase2&utm_content=lm#/farms?networkId=43114',
     },
-  ].filter(b => {
+  ]
+
+  const [showBanner, setShowBanner] = useLocalStorage('show-banner-' + ALL_BANNERS[0].id, true)
+
+  const banners = ALL_BANNERS.filter(b => {
     const date = new Date()
     return date >= b.start && date <= b.end
   })
@@ -178,7 +185,7 @@ function Banner({
   return (
     <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1394px'} width="100%">
       <Swiper
-        autoplay={{ delay: isInModal ? 2000 : 20000 }}
+        autoplay={banners.length > 1 ? { delay: isInModal ? 2000 : 20000 } : false}
         slidesPerView={1}
         navigation={true}
         pagination={true}
