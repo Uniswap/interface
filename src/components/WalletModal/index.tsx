@@ -203,6 +203,15 @@ export default function WalletModal({
         setWalletView(WALLET_VIEWS.PENDING)
       }
     } catch (error) {
+      if (connector === fortmatic && error.message === 'User denied account access.') {
+        return
+      }
+
+      if (connector === walletConnect && error.message === 'User closed modal') {
+        setWalletView(WALLET_VIEWS.OPTIONS)
+        return
+      }
+
       dispatch(updateConnectorError({ error }))
     }
   }
