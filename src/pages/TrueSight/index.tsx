@@ -108,17 +108,17 @@ export default function TrueSight({ history }: RouteComponentProps) {
 
   const handleOnSubscribe = async () => {
     close()
+    mixpanelHandler(MIXPANEL_TYPE.DISCOVER_CLICK_SUBSCRIBE_TRENDING_SOON)
     setIsLoading(true)
     await handleSubscribe()
-    mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SUBSCRIBE_TRENDING_SOON)
     setIsLoading(false)
   }
 
   const handleOnUnSubscribe = async () => {
+    mixpanelHandler(MIXPANEL_TYPE.DISCOVER_CLICK_UNSUBSCRIBE_TRENDING_SOON)
     setIsLoading(true)
     await handleUnSubscribe()
     setIsLoading(false)
-    mixpanelHandler(MIXPANEL_TYPE.DISCOVER_UNSUBSCRIBE_TRENDING_SOON)
     toggleUnsubscribeModal()
   }
 

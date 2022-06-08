@@ -1,3 +1,4 @@
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useLocalStorage } from 'react-use'
 import { checkChrome } from 'utils/checkChrome'
 import { fetchToken } from 'utils/firebase'
@@ -5,6 +6,7 @@ import { fetchToken } from 'utils/firebase'
 export const useNotification = () => {
   const [subscribe, setSubscribe] = useLocalStorage('true-sight-subscribe', false)
   const isChrome = checkChrome()
+  const { mixpanelHandler } = useMixpanel()
 
   const handleSubscribe = async () => {
     if (!isChrome) return
@@ -21,6 +23,7 @@ export const useNotification = () => {
     })
 
     if (response.status === 200) {
+      mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SUBSCRIBE_TRENDING_SOON_SUCCESS)
       setSubscribe(true)
     }
   }
@@ -37,6 +40,7 @@ export const useNotification = () => {
     })
 
     if (response.status === 200) {
+      mixpanelHandler(MIXPANEL_TYPE.DISCOVER_UNSUBSCRIBE_TRENDING_SOON_SUCCESS)
       setSubscribe(false)
     }
   }
