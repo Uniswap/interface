@@ -160,7 +160,7 @@ class WalletConnectServerWrapper {
       var newSession = session
       newSession.walletInfo = newWalletInfo
       self.topicToSession.updateValue(newSession, forKey: session.url.topic)
-      
+      self.updateStoredSession(newSession)
     } catch {
       self.eventEmitter.sendEvent(
         withName: EventType.error.rawValue,
@@ -208,6 +208,15 @@ class WalletConnectServerWrapper {
     
     return session
   }
+  
+  func updateStoredSession(_ session: Session) {
+    var sessionDatas = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data] ?? [:]
+    let sessionData = try! JSONEncoder().encode(session) as Data
+    
+    sessionDatas.updateValue(sessionData, forKey: session.url.topic)
+    UserDefaults.standard.set(sessionDatas, forKey: WALLET_CONNECT_SESSION_STORAGE_KEY)
+  }
+  
 }
 
 extension WalletConnectServerWrapper: ServerDelegate {
@@ -231,15 +240,12 @@ extension WalletConnectServerWrapper: ServerDelegate {
   }
   
   func server(_ server: Server, didConnect session: Session) {
-    var sessionDatas = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data] ?? [:]
+    let sessionDatas = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data] ?? [:]
     var showNotification = false
     
     // Add new session to UserDefaults cache if it doesn't already exist (ignores reconnections)
     if (sessionDatas[session.url.topic] == nil) {
-      let sessionData = try! JSONEncoder().encode(session) as Data
-      sessionDatas.updateValue(sessionData, forKey: session.url.topic)
-      UserDefaults.standard.set(sessionDatas, forKey: WALLET_CONNECT_SESSION_STORAGE_KEY)
-      
+      self.updateStoredSession(session)
       showNotification = true
     }
     
