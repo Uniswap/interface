@@ -99,7 +99,7 @@ export class DocumentRoute extends Route {
  */
 // TODO(xtine): Send a GA beacon from the client to record cache usage / metrics.
 export class CachedDocument extends Response {
-  constructor(public response: Response) {
+  private static toCachedReadableStream(response: Response) {
     const reader = response.body?.getReader()
     const stream = new ReadableStream({
       async start(controller) {
@@ -115,6 +115,10 @@ export class CachedDocument extends Response {
         controller.close()
       },
     })
-    super(stream, response)
+    return stream
+  }
+
+  constructor(public response: Response) {
+    super(CachedDocument.toCachedReadableStream(response), response)
   }
 }
