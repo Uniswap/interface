@@ -85,14 +85,12 @@ export const getHooksForWallet = (wallet: Wallet) => {
 }
 
 export const [network, networkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, connectEagerly: true, defaultChainId: 1 })
+  (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, defaultChainId: 1 })
 )
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))
 
-export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>(
-  (actions) => new GnosisSafe({ actions, connectEagerly: true })
-)
+export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
 
 export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>

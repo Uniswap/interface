@@ -1,10 +1,13 @@
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
+import { Connector } from '@web3-react/types'
 import {
   coinbaseWallet,
   createOrderedConnectors,
   fortmatic,
   getConnectorForWallet,
+  gnosisSafe,
   injected,
+  network,
   Wallet,
   walletConnect,
   WALLETS,
@@ -13,6 +16,14 @@ import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/wallet/reducer'
+
+const eagerlyConnect = async (connector: Connector) => {
+  try {
+    await connector.activate()
+  } catch (error) {
+    console.debug(`web3-react error: ${typeof connector}, ${error}`)
+  }
+}
 
 interface ConnectorState {
   isActive: boolean
@@ -44,13 +55,16 @@ function Web3Updater() {
 
   // The dependency list is empty so this is only run once on mount
   useEffect(() => {
+    eagerlyConnect(gnosisSafe)
+    eagerlyConnect(network)
+
     if (walletOverride) {
-      getConnectorForWallet(walletOverride).connectEagerly()
+      eagerlyConnect(getConnectorForWallet(walletOverride))
       setIsEagerlyConnecting(true)
     } else if (!walletOverrideBackfilled) {
       WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC)
         .map(getConnectorForWallet)
-        .forEach((connector) => connector.connectEagerly())
+        .forEach(eagerlyConnect)
       setIsEagerlyConnecting(true)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
