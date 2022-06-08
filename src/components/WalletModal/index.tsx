@@ -150,21 +150,9 @@ export default function WalletModal({
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
 
-  const previousAccount = usePrevious(account)
-
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
   }, [setWalletView])
-
-  useEffect(() => {
-    if (walletModalOpen) {
-      if (!account && previousAccount) {
-        setWalletView(WALLET_VIEWS.OPTIONS)
-      } else if (account !== previousAccount) {
-        toggleWalletModal()
-      }
-    }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
 
   useEffect(() => {
     if (walletModalOpen) {
