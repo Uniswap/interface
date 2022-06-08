@@ -6,7 +6,7 @@ import { Route } from 'workbox-routing'
 import { isLocalhost } from './utils'
 
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$')
-const DOCUMENT = process.env.PUBLIC_URL + '/index.html'
+export const DOCUMENT = process.env.PUBLIC_URL + '/index.html'
 
 /**
  * Matches with App Shell-style routing, so that navigation requests are fulfilled with an index.html shell.
@@ -32,6 +32,10 @@ export function matchDocument({ request, url }: RouteMatchCallbackOptions) {
   return true
 }
 
+type HandlerContext = {
+  offlineDocument?: Response
+} | void
+
 /**
  * The returned document should always be fresh, so this handler uses a custom strategy:
  *
@@ -48,10 +52,10 @@ export function matchDocument({ request, url }: RouteMatchCallbackOptions) {
  */
 export async function handleDocument(this: HandlerContext, { event, request }: RouteHandlerCallbackOptions) {
   // If we are offline, serve the offline document.
-  if (!navigator.onLine) return this.offlineDocument?.clone() || fetch(request)
+  if ('onLine' in navigator && !navigator.onLine) return this?.offlineDocument?.clone() || fetch(request)
 
-  // Always use index.html, as its already been matched.
-  const cachedResponse = await matchPrecache('./index.html')
+  // Always use index.html, as its already been matched for App Shell-style routing (@see {@link matchDocument}).
+  const cachedResponse = await matchPrecache(DOCUMENT)
   const { preloadResponse } = event as unknown as { preloadResponse: Promise<Response | undefined> }
 
   // Responses will throw if offline, but if cached the cached response should still be returned.
@@ -82,10 +86,6 @@ export async function handleDocument(this: HandlerContext, { event, request }: R
   return response
 }
 
-interface HandlerContext {
-  offlineDocument?: Response
-}
-
 export class DocumentRoute extends Route {
   constructor(offlineDocument?: Response) {
     navigationPreload.enable()
@@ -99,7 +99,7 @@ export class DocumentRoute extends Route {
  */
 // TODO(xtine): Send a GA beacon from the client to record cache usage / metrics.
 export class CachedDocument extends Response {
-  constructor(response: Response) {
+  constructor(public response: Response) {
     const reader = response.body?.getReader()
     const stream = new ReadableStream({
       async start(controller) {
