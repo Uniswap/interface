@@ -35,11 +35,7 @@ const walletSlice = createSlice({
       state.walletOverrideBackfilled = true
     },
     updateWalletError(state, { payload: { wallet, error } }) {
-      if (error) {
-        state.errorByWallet = { ...state.errorByWallet, [wallet]: error }
-      } else {
-        state.errorByWallet = { ...state.errorByWallet, [wallet]: undefined }
-      }
+      state.errorByWallet = { ...state.errorByWallet, [wallet]: error }
     },
   },
 })
