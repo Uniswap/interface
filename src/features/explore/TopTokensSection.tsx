@@ -4,11 +4,13 @@ import { ListRenderItemInfo } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ChainId } from 'src/constants/chains'
 import { Asset } from 'src/features/dataApi/zerion/types'
+import { SortingGroup } from 'src/features/explore/FilterGroup'
 import {
   BaseTokenSectionProps,
   GenericTokenSection,
 } from 'src/features/explore/GenericTokenSection'
-import { useTokenInfo } from 'src/features/explore/hooks'
+import { useMarketTokens } from 'src/features/explore/hooks'
+import { useOrderByModal } from 'src/features/explore/Modals'
 import { TokenItem } from 'src/features/explore/TokenItem'
 import { Screens } from 'src/screens/Screens'
 import { buildCurrencyId } from 'src/utils/currencyId'
@@ -18,7 +20,8 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
 
-  const { topTokens, isLoading } = useTokenInfo()
+  const { orderBy, toggleModalVisible, orderByModal } = useOrderByModal()
+  const { topTokens, isLoading } = useMarketTokens(orderBy)
 
   const renderItem = useCallback(
     ({ item: token, index }: ListRenderItemInfo<Asset>) => {
@@ -38,13 +41,17 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
   )
 
   return (
-    <GenericTokenSection
-      {...props}
-      assets={topTokens?.info}
-      id="explore-tokens-header"
-      loading={isLoading}
-      renderItem={renderItem}
-      title={t('Top Tokens')}
-    />
+    <>
+      <GenericTokenSection
+        {...props}
+        assets={topTokens?.info}
+        id="explore-tokens-header"
+        loading={isLoading}
+        renderItem={renderItem}
+        subtitle={props.expanded ? <SortingGroup onPressOrderBy={toggleModalVisible} /> : undefined}
+        title={t('Top Tokens')}
+      />
+      {orderByModal}
+    </>
   )
 }

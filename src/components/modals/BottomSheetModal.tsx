@@ -20,7 +20,7 @@ type Props = {
   hideHandlebar?: boolean
   isVisible: boolean
   name: ModalName
-  onClose: () => void
+  onClose?: () => void
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean

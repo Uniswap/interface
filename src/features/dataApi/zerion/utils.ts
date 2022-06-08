@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 import { config } from 'src/config'
-import { Namespace, RequestBody, Scope } from 'src/features/dataApi/zerion/types'
+import { Namespace, OrderBy, RequestBody, Scope } from 'src/features/dataApi/zerion/types'
 
 const BASE_URL = 'wss://api-v4.zerion.io/'
 export type ACTION_TYPE = 'get' | 'subscribe'
@@ -28,13 +28,13 @@ export const requests = {
       chain = 'ethereum',
       currency = 'usd',
       limit = 30,
-      order_by = { market_cap: 'desc' },
+      order_by = OrderBy.MarketCap,
     }: {
       asset_codes: string[]
       chain?: string
       currency?: string
       limit?: number
-      order_by?: any
+      order_by?: OrderBy
     }): { requestBody: RequestBody } => ({
       requestBody: {
         scope: [Scope.Info],
@@ -43,7 +43,7 @@ export const requests = {
           chain,
           currency,
           limit,
-          order_by,
+          order_by: { [order_by]: 'desc' },
         },
       },
     }),
@@ -52,13 +52,13 @@ export const requests = {
       chain = 'ethereum',
       currency = 'usd',
       limit = 30,
-      order_by = { market_cap: 'desc' },
+      order_by = OrderBy.MarketCap,
     }: {
       category_id?: string
       chain?: string
       currency?: string
       limit?: number
-      order_by?: any
+      order_by?: OrderBy
     }): { requestBody: RequestBody } => ({
       requestBody: {
         scope: [Scope.Info],
@@ -67,7 +67,7 @@ export const requests = {
           chain,
           currency,
           limit,
-          order_by,
+          order_by: { [order_by]: 'desc' },
         },
       },
     }),

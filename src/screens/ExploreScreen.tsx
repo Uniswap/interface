@@ -52,8 +52,8 @@ export function ExploreScreen() {
               <SearchResultsSection searchQuery={searchQuery} />
             ) : (
               <>
-                <FavoriteTokensSection />
-                <TopTokensSection fixedCount={10} />
+                <FavoriteTokensSection fixedCount={5} />
+                <TopTokensSection fixedCount={5} />
               </>
             )}
           </Flex>

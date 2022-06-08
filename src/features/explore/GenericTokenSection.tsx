@@ -1,4 +1,4 @@
-import { default as React } from 'react'
+import { default as React, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatListProps } from 'react-native'
 import { SharedElement } from 'react-navigation-shared-element'
@@ -7,12 +7,13 @@ import { Box } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
-import { Asset } from 'src/features/dataApi/zerion/types'
+import { Asset, OrderBy } from 'src/features/dataApi/zerion/types'
 import { Screens } from 'src/screens/Screens'
 
 export interface BaseTokenSectionProps {
   expanded?: boolean
   fixedCount?: number
+  orderBy?: OrderBy
 }
 
 type GenericTokenSectionProps = BaseTokenSectionProps & {
@@ -21,6 +22,7 @@ type GenericTokenSectionProps = BaseTokenSectionProps & {
   id: string
   loading?: boolean
   title: string
+  subtitle?: string | ReactNode
   renderItem: FlatListProps<Asset>['renderItem']
 }
 
@@ -29,11 +31,12 @@ export function GenericTokenSection({
   assets,
   expanded,
   fixedCount,
+  horizontal,
   id,
   loading,
   title,
   renderItem,
-  horizontal,
+  subtitle,
 }: GenericTokenSectionProps) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
@@ -53,6 +56,7 @@ export function GenericTokenSection({
         <Section.Header
           buttonLabel={t('View all')}
           expanded={!!expanded}
+          subtitle={subtitle}
           title={title}
           onMaximize={onToggle}
           onMinimize={onToggle}

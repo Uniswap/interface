@@ -77,8 +77,7 @@ export function ActionSheetModal({ isVisible, ...rest }: ActionSheetModalProps) 
       hideHandlebar
       backgroundColor="transparent"
       isVisible={isVisible}
-      name={ModalName.NetworkSelector}
-      onClose={rest.onClose}>
+      name={ModalName.NetworkSelector}>
       <ActionSheetModalContent {...rest} />
     </BottomSheetDetachedModal>
   )

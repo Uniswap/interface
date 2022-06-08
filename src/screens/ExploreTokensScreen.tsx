@@ -1,4 +1,4 @@
-import { default as React, useState } from 'react'
+import React, { useState } from 'react'
 import { ExploreStackScreenProp } from 'src/app/navigation/types'
 import { AppBackground } from 'src/components/gradients'
 import { Box } from 'src/components/layout'
@@ -13,9 +13,7 @@ enum Display {
 }
 
 export function ExploreTokensScreen({}: ExploreStackScreenProp<Screens.ExploreTokens>) {
-  // TODO: add favorites filter && chain filter
   const [display] = useState(Display.Market)
-  // const [chainFilter, setChainFilter] = useState<ChainId | null>(null)
 
   return (
     <Screen withSharedElementTransition>

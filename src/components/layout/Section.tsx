@@ -1,19 +1,14 @@
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
-import { FlatListProps } from 'react-native'
-import {
-  Directions,
-  FlatList,
-  FlingGestureHandler,
-  FlingGestureHandlerGestureEvent,
-  State,
-} from 'react-native-gesture-handler'
+import { FlatList, FlatListProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Trace } from 'src/features/telemetry/Trace'
+
+const TOGGLE_ICON_SIZE = 12
 
 // Container
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
@@ -41,51 +36,45 @@ function Header({ buttonLabel, expanded, onMaximize, onMinimize, subtitle, title
   const theme = useAppTheme()
 
   const onPress = () => (expanded ? onMinimize?.() : onMaximize?.())
-  const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent) => {
-    if (nativeEvent.state === State.ACTIVE) {
-      onPress()
-    }
-  }
 
   return (
-    <FlingGestureHandler
-      direction={expanded ? Directions.DOWN : Directions.UP}
-      onHandlerStateChange={onFling}>
-      <Box mx="md">
-        <TextButton onPress={onPress}>
-          <Flex gap="xxs" width="100%">
-            <Flex row alignItems="center" justifyContent="space-between" width="100%">
-              <Text color="neutralTextSecondary" variant="body2">
-                {title}
-              </Text>
+    <TextButton mx="md" onPress={onPress}>
+      <Flex gap="xxs" width="100%">
+        <Flex row alignItems="center" justifyContent="space-between" width="100%">
+          <Text color="neutralTextSecondary" variant="body2">
+            {title}
+          </Text>
 
-              {expanded ? (
-                <Chevron color={theme.colors.neutralAction} direction="s" height={12} width={12} />
-              ) : (
-                <Flex row gap="xs">
-                  <Text color="neutralTextSecondary" variant="body2">
-                    {buttonLabel}
-                  </Text>
-                  <Chevron
-                    color={theme.colors.neutralTextSecondary}
-                    direction="e"
-                    height={10}
-                    width={10}
-                  />
-                </Flex>
-              )}
+          {expanded ? (
+            <Chevron
+              color={theme.colors.neutralAction}
+              direction="s"
+              height={TOGGLE_ICON_SIZE}
+              width={TOGGLE_ICON_SIZE}
+            />
+          ) : (
+            <Flex row gap="xs">
+              <Text color="neutralTextSecondary" variant="body2">
+                {buttonLabel}
+              </Text>
+              <Chevron
+                color={theme.colors.neutralTextSecondary}
+                direction="e"
+                height={TOGGLE_ICON_SIZE}
+                width={TOGGLE_ICON_SIZE}
+              />
             </Flex>
-            {subtitle ? (
-              typeof subtitle === 'string' ? (
-                <Text variant="subHead1">{subtitle}</Text>
-              ) : (
-                subtitle
-              )
-            ) : null}
-          </Flex>
-        </TextButton>
-      </Box>
-    </FlingGestureHandler>
+          )}
+        </Flex>
+        {subtitle ? (
+          typeof subtitle === 'string' ? (
+            <Text variant="subHead1">{subtitle}</Text>
+          ) : (
+            subtitle
+          )
+        ) : null}
+      </Flex>
+    </TextButton>
   )
 }
 

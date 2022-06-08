@@ -1,15 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useMemo } from 'react'
-import { ChainId } from 'src/constants/chains'
 import { useAssetInfoQuery } from 'src/features/dataApi/zerion/api'
-import { Namespace } from 'src/features/dataApi/zerion/types'
+import { Namespace, OrderBy } from 'src/features/dataApi/zerion/types'
 import { requests } from 'src/features/dataApi/zerion/utils'
 import { useFavoriteCurrencies } from 'src/features/favorites/hooks'
-import { getInfuraChainName } from 'src/features/providers/utils'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
-export function useFavoriteTokenInfo() {
+export function useFavoriteTokenInfo(orderBy?: OrderBy) {
   const currencies = useAllCurrencies()
   const currenciesFlat = useMemo(() => flattenObjectOfObjects(currencies), [currencies])
   const favorites = useFavoriteCurrencies(currenciesFlat ?? []).map((c) =>
@@ -17,14 +15,18 @@ export function useFavoriteTokenInfo() {
   )
 
   return useAssetInfoQuery(
-    favorites.length > 0 ? requests[Namespace.Assets].info({ asset_codes: favorites }) : skipToken
+    favorites.length > 0
+      ? requests[Namespace.Assets].info({ asset_codes: favorites, order_by: orderBy })
+      : skipToken
   )
 }
 
-export function useTokenInfo(chainId?: ChainId) {
+export function useMarketTokens(orderBy?: OrderBy) {
   // TODO: filter out tokens not in token list
   const { currentData: topTokens, isLoading } = useAssetInfoQuery(
-    requests[Namespace.Assets].market({ chain: chainId ? getInfuraChainName(chainId) : undefined })
+    requests[Namespace.Assets].market({
+      order_by: orderBy,
+    })
   )
   return { topTokens, isLoading }
 }

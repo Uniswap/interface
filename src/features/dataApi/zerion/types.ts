@@ -12,7 +12,7 @@ export enum Scope {
 
 export type RequestBody = AddressRequestBody | AssetsRequestBody
 
-type PayloadBodyTypes = string | string[] | { market_cap: string } | number
+type PayloadBodyTypes = string | string[] | Partial<Record<OrderBy, 'asc' | 'desc'>> | number
 type AnyPayload = { [key: string]: PayloadBodyTypes }
 
 interface AddressRequestBody {
@@ -24,6 +24,15 @@ interface AssetsRequestBody {
   scope: [Scope]
   payload: AnyPayload
 }
+
+// These map to fields in asset/address types
+export enum OrderBy {
+  MarketCap = 'market_cap',
+  RelativeChange1D = 'relative_changes.1d',
+  RelativeChange1M = 'relative_changes.1m',
+  RelativeChange3M = 'relative_changes.3m',
+}
+
 /** Models */
 
 export type Price = {
