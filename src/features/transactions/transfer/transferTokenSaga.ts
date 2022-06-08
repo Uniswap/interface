@@ -61,8 +61,6 @@ export function* transferToken(params: TransferTokenParams) {
 
   const options: TransactionOptions = {
     request: transactionRequest,
-    // TODO: fix fetch balance
-    fetchBalanceOnSuccess: true,
   }
 
   yield* call(sendTransaction, {

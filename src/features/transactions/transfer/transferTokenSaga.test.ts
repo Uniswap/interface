@@ -63,7 +63,6 @@ describe('transferTokenSaga', () => {
             to: nativeTranferParams.toAddress,
             value: nativeTranferParams.amountInWei,
           },
-          fetchBalanceOnSuccess: true,
         },
         typeInfo: {
           ...typeInfo,
@@ -88,7 +87,6 @@ describe('transferTokenSaga', () => {
         account: erc20TranferParams.account,
         options: {
           request: txRequest,
-          fetchBalanceOnSuccess: true,
         },
         typeInfo,
       })
@@ -106,7 +104,6 @@ describe('transferTokenSaga', () => {
         account: erc721TransferParams.account,
         options: {
           request: txRequest,
-          fetchBalanceOnSuccess: true,
         },
         typeInfo: {
           assetType: AssetType.ERC721,
@@ -130,7 +127,6 @@ describe('transferTokenSaga', () => {
         account: erc1155TransferParams.account,
         options: {
           request: txRequest,
-          fetchBalanceOnSuccess: true,
         },
         typeInfo: {
           assetType: AssetType.ERC1155,

@@ -70,7 +70,6 @@ export function* wrap(params: Params) {
 
   const options: TransactionOptions = {
     request,
-    fetchBalanceOnSuccess: true,
   }
 
   yield* call(sendTransaction, {

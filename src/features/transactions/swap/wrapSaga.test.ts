@@ -49,7 +49,7 @@ describe(wrap, () => {
         chainId: ChainId.Rinkeby,
         account: params.account,
         typeInfo: wrapTxInfo,
-        options: { request: transaction, fetchBalanceOnSuccess: true },
+        options: { request: transaction },
       })
       .next()
       .isDone()
@@ -75,7 +75,7 @@ describe(wrap, () => {
         chainId: ChainId.Rinkeby,
         account: params.account,
         typeInfo: unwrapTxInfo,
-        options: { request: transaction, fetchBalanceOnSuccess: true },
+        options: { request: transaction },
       })
       .next()
       .isDone()

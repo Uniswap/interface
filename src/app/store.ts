@@ -35,15 +35,7 @@ const sagaMiddleware = createSagaMiddleware({
 export const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: [
-    'wallet',
-    'balances',
-    'chains',
-    'transactions',
-    'tokenLists',
-    'tokens',
-    'notifications',
-  ],
+  whitelist: ['wallet', 'chains', 'transactions', 'tokenLists', 'tokens', 'notifications'],
   version: 0,
   migrate: createMigrate(migrations),
 }

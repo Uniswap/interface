@@ -61,7 +61,6 @@ export function* approveAndSwap(params: SwapParams) {
 
     const options: TransactionOptions = {
       request,
-      fetchBalanceOnSuccess: true,
     }
 
     yield* call(sendTransaction, {

@@ -80,7 +80,7 @@ describe(approveAndSwap, () => {
         chainId: approveParams.chainId,
         account: approveParams.account,
         typeInfo: transactionTypeInfo,
-        options: { request: transaction, fetchBalanceOnSuccess: true },
+        options: { request: transaction },
       })
       .next()
       .isDone()
@@ -96,7 +96,7 @@ describe(approveAndSwap, () => {
         chainId: approveParams.chainId,
         account: approveParams.account,
         typeInfo: transactionTypeInfo,
-        options: { request: transactionWithValue, fetchBalanceOnSuccess: true },
+        options: { request: transactionWithValue },
       })
       .next()
       .isDone()
@@ -111,7 +111,7 @@ describe(approveAndSwap, () => {
         chainId: approveParams.chainId,
         account: approveParams.account,
         typeInfo: transactionTypeInfo,
-        options: { request: transaction, fetchBalanceOnSuccess: true },
+        options: { request: transaction },
       })
       .next()
       .isDone()

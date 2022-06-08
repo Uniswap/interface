@@ -4,7 +4,6 @@ import { i18n } from 'src/app/i18n'
 import { getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { TRANSACTION_TIMEOUT_DURATION } from 'src/constants/transactions'
-import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider'
@@ -86,7 +85,7 @@ export function* getFlashbotsTxConfirmation(txHash: string, chainId: ChainId) {
 }
 
 export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
-  const { chainId, hash, options, from } = transaction
+  const { chainId, hash, from } = transaction
 
   const txStatus = yield* call(getFlashbotsTxConfirmation, hash, chainId)
   if (txStatus === TransactionStatus.Failed || txStatus === TransactionStatus.Unknown) {
@@ -104,14 +103,10 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
   const provider = yield* call(getProvider, chainId)
   const receipt = yield* call(waitForReceipt, hash, provider)
   yield* call(finalizeTransaction, transaction, receipt, txStatus)
-
-  if (options.fetchBalanceOnSuccess) {
-    yield* put(fetchBalancesActions.trigger(from))
-  }
 }
 
 export function* watchTransaction(transaction: TransactionDetails) {
-  const { chainId, id, hash, options, from, addedTime } = transaction
+  const { chainId, id, hash, options, addedTime } = transaction
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
@@ -150,10 +145,6 @@ export function* watchTransaction(transaction: TransactionDetails) {
 
   // Update the store with tx receipt details
   yield* call(finalizeTransaction, transaction, receipt)
-
-  if (options.fetchBalanceOnSuccess) {
-    yield* put(fetchBalancesActions.trigger(from))
-  }
 }
 
 export async function waitForReceipt(hash: string, provider: providers.Provider) {

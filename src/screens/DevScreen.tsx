@@ -10,7 +10,6 @@ import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -40,11 +39,6 @@ export function DevScreen({ navigation }: any) {
 
   const activateWormhole = (s: Screens) => {
     navigation.navigate(s)
-  }
-
-  const onPressGetBalance = async () => {
-    if (!activeAccount) return
-    dispatch(fetchBalancesActions.trigger(activeAccount.address))
   }
 
   const activeChains = useActiveChainIds()
@@ -131,13 +125,6 @@ export function DevScreen({ navigation }: any) {
             textColor="deprecated_textColor"
             onPress={onPressCreate}>
             Create Account
-          </TextButton>
-          <TextButton
-            mt="sm"
-            name="DEBUG_GetBalance"
-            textColor="deprecated_textColor"
-            onPress={onPressGetBalance}>
-            Get Balance
           </TextButton>
           <TextButton
             mt="sm"

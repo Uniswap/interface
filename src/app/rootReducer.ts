@@ -1,6 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
-import { balancesReducer } from 'src/features/balances/balancesSlice'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { dataApi } from 'src/features/dataApi/slice'
@@ -22,7 +21,6 @@ export const rootReducer = combineReducers({
   [nftApi.reducerPath]: nftApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
   [zerionApi.reducerPath]: zerionApi.reducer,
-  balances: balancesReducer,
   blocks: blocksReducer,
   chains: chainsReducer,
   favorites: favoritesReducer,

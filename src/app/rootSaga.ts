@@ -1,11 +1,5 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'redux-saga/effects'
-import {
-  fetchBalancesActions,
-  fetchBalancesReducer,
-  fetchBalancesSaga,
-  fetchBalancesSagaName,
-} from 'src/features/balances/fetchBalances'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLink'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
@@ -91,12 +85,6 @@ export const monitoredSagas: {
     wrappedSaga: editAccountSaga,
     reducer: editAccountReducer,
     actions: editAccountActions,
-  },
-  [fetchBalancesSagaName]: {
-    name: fetchBalancesSagaName,
-    wrappedSaga: fetchBalancesSaga,
-    reducer: fetchBalancesReducer,
-    actions: fetchBalancesActions,
   },
   [importAccountSagaName]: {
     name: importAccountSagaName,

@@ -49,7 +49,6 @@ export enum TransactionStatus {
 export interface TransactionOptions {
   request: providers.TransactionRequest
   timeoutMs?: number
-  fetchBalanceOnSuccess?: boolean
 }
 
 export interface TransactionReceipt {
