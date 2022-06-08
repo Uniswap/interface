@@ -72,6 +72,7 @@ function useSwapAPIArguments({
   amount,
   tradeType,
   recipient,
+  affiliate,
 }: {
   swapTransaction: SwapTransaction | null | undefined
   tokenIn: Currency | undefined
@@ -79,6 +80,7 @@ function useSwapAPIArguments({
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
   recipient: string | null | undefined
+  affiliate: string | null | undefined
 }) {
   const { chainId, account } = useActiveWeb3React()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
@@ -106,6 +108,8 @@ function useSwapAPIArguments({
       fromAddress: account.toString(),
       slippage: allowedSlippage.toSignificant(6),
       destReceiver: recipient ? recipient : account.toString(),
+      referrerAddress: affiliate ?? null,
+      fee: affiliate ? '0.01' : null,
       disableEstimate: true,
     },
   }
@@ -264,6 +268,7 @@ export function useInchSwapAPITrade(
   swapTransaction: SwapTransaction | null | undefined,
   tradeType: TradeType,
   recipient: string | null | undefined,
+  affiliate: string | null | undefined,
   showConfirm: boolean,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
@@ -287,6 +292,7 @@ export function useInchSwapAPITrade(
     amount: amountSpecified,
     tradeType,
     recipient,
+    affiliate,
   })
 
   const { isLoading, isError, data } = useGetSwapInchQuery(queryArgs ?? skipToken, {

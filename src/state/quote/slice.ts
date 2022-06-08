@@ -59,6 +59,8 @@ export const routingApi0x = createApi({
           buyAmount: string | null
           slippagePercentage: string
           takerAddress: string | null
+          feeRecipient: string | null
+          buyTokenPercentageFee: string | null
           skipValidation: boolean
         }
       }

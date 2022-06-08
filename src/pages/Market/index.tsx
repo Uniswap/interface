@@ -433,6 +433,7 @@ export default function Market({ history }: RouteComponentProps) {
     trade,
     allowedSlippage,
     recipient,
+    referer,
     signatureData,
     swapTransaction,
     showConfirm

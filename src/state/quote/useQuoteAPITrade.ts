@@ -30,6 +30,7 @@ function useRoutingAPIArguments({
   amount,
   tradeType,
   recipient,
+  affiliate,
   skipValidation,
 }: {
   tokenIn: Currency | undefined
@@ -37,6 +38,7 @@ function useRoutingAPIArguments({
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
   recipient: string | null | undefined
+  affiliate: string | null | undefined
   skipValidation: boolean
 }) {
   const { chainId, account } = useActiveWeb3React()
@@ -60,6 +62,8 @@ function useRoutingAPIArguments({
       buyAmount: tradeType == TradeType.EXACT_OUTPUT ? amount.quotient.toString() : null,
       slippagePercentage: allowedSlippage.divide(1_000).toSignificant(6),
       takerAddress: recipient ? recipient : account.toString(),
+      feeRecipient: affiliate ?? null,
+      buyTokenPercentageFee: affiliate ? '0.01' : null,
       skipValidation,
     },
   }
@@ -74,6 +78,7 @@ function useRoutingAPIArguments({
 export function use0xQuoteAPITrade(
   tradeType: TradeType,
   recipient: string | null | undefined,
+  affiliate: string | null | undefined,
   skipValidation: boolean,
   showConfirm: boolean,
   amountSpecified?: CurrencyAmount<Currency>,
@@ -98,6 +103,7 @@ export function use0xQuoteAPITrade(
     amount: amountSpecified,
     tradeType,
     recipient,
+    affiliate,
     skipValidation,
   })
 

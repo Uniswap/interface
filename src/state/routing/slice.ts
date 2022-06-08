@@ -26,6 +26,8 @@ export const routingApiInch = createApi({
           fromAddress: string
           slippage: string
           destReceiver: string
+          referrerAddress: string | null
+          fee: string | null
           disableEstimate: boolean
         }
       }

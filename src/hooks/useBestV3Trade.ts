@@ -35,6 +35,7 @@ export function useBestMarketTrade(
   const routingAPITrade = use0xQuoteAPITrade(
     tradeType,
     null,
+    null,
     true,
     false,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,

@@ -66,6 +66,7 @@ function useMarketCallArguments(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  referer: string | null,
   signatureData: SignatureData | null | undefined,
   swapTransaction: SwapTransaction | null | undefined,
   showConfirm: boolean
@@ -79,6 +80,7 @@ function useMarketCallArguments(
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
+  const affiliate = referer === null || referer == account ? null : referer
   const deadline = useTransactionDeadline()
   const argentWalletContract = useArgentWalletContract()
   const kromatikaMetaswap = useKromatikaMetaswap()
@@ -89,6 +91,7 @@ function useMarketCallArguments(
     swapTransaction,
     swapTransaction?.type == 1 ? TradeType.EXACT_OUTPUT : trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
     recipient,
+    affiliate,
     showConfirm,
     trade?.inputAmount,
     trade?.outputAmount.currency
@@ -97,6 +100,7 @@ function useMarketCallArguments(
   const routingAPITrade = use0xQuoteAPITrade(
     trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
     recipient,
+    affiliate,
     true,
     showConfirm,
     trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
@@ -130,6 +134,7 @@ function useMarketCallArguments(
       callData = kromatikaMetaswap.interface.encodeFunctionData('swap', [
         tokenFrom,
         toHex(amountFrom),
+        recipient,
         {
           adapterId: 'SwapAggregator',
           data: defaultAbiCoder.encode(
@@ -289,6 +294,7 @@ export function useMarketCallback(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  referer: string | null,
   signatureData: SignatureData | undefined | null,
   swapTransaction: SwapTransaction | undefined | null,
   showConfirm: boolean
@@ -306,6 +312,7 @@ export function useMarketCallback(
     trade,
     allowedSlippage,
     recipientAddressOrName,
+    referer,
     signatureData,
     swapTransaction,
     showConfirm
