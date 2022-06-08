@@ -14,7 +14,7 @@ export function WebViewScreen({
   const { headerTitle, uriLink } = route.params
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <Flex alignItems="center" flexDirection="row" px="lg" py="md">
+      <Flex alignItems="center" flexDirection="row" px="lg" py="sm">
         <BackButton color="neutralTextSecondary" />
         <Text variant="largeLabel">{headerTitle}</Text>
       </Flex>

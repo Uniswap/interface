@@ -43,6 +43,7 @@ export type AccountStackParamList = {
 export type SettingsStackParamList = {
   [Screens.Settings]: undefined
   [Screens.SettingsWallet]: { address: Address }
+  [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.SettingsHelpCenter]: undefined
   [Screens.SettingsChains]: undefined
   [Screens.SettingsSupport]: undefined

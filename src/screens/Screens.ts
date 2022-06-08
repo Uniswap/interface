@@ -22,6 +22,7 @@ export enum Screens {
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
   SettingsWallet = 'SettingsWallet',
+  SettingsWalletManageConnection = 'SettingsWalletManageConnection',
   SettingsHelpCenter = 'SettingsHelpCenter',
   SettingsChains = 'SettingsChains',
   SettingsStack = 'SettingsStack',

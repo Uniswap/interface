@@ -220,7 +220,7 @@ export function SettingsScreen() {
   }
 
   return (
-    <Screen p="lg">
+    <Screen px="lg" py="sm">
       <Flex alignItems="center" flexDirection="row" mb="xl">
         <BackButton color="neutralTextSecondary" />
         <Text variant="largeLabel">{t('Settings')}</Text>

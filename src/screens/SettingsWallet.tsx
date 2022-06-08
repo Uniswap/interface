@@ -16,6 +16,7 @@ import {
 import { Text } from 'src/components/Text'
 import { Screens } from './Screens'
 import NotificationIcon from 'src/assets/icons/bell.svg'
+import GlobalIcon from 'src/assets/icons/global.svg'
 import { Switch } from 'src/components/buttons/Switch'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { useAppDispatch } from 'src/app/hooks'
@@ -55,6 +56,12 @@ export function SettingsWallet({
           ),
           text: t('Notifications'),
           icon: <NotificationIcon color={theme.colors.neutralTextSecondary} strokeWidth="1.5" />,
+        },
+        {
+          screen: Screens.SettingsWalletManageConnection,
+          text: t('Manage connections'),
+          icon: <GlobalIcon color={theme.colors.neutralTextSecondary} strokeWidth="1.5" />,
+          screenProps: { address },
         },
       ],
     },
