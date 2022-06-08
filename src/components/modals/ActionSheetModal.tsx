@@ -1,11 +1,14 @@
 import { selectionAsync } from 'expo-haptics'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native-gesture-handler'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
+import { flex } from 'src/styles/flex'
+import { dimensions } from 'src/styles/sizing'
 
 interface MenuItemProp {
   key: string
@@ -26,8 +29,8 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
   const { header, closeButtonLabel = t('Cancel'), options, onClose } = props
 
   return (
-    <Flex>
-      <Flex centered bg="neutralSurface" borderRadius="lg" gap="none">
+    <Flex justifyContent="flex-end">
+      <Flex centered bg="neutralSurface" borderRadius="lg" gap="none" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="xxs" py="md">
             <Text variant="mediumLabel">{header}</Text>
@@ -35,20 +38,23 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
         ) : (
           header
         )}
-        <Flex gap="none" width="100%">
-          {options.map(({ key, onPress, render }) => {
-            return (
-              <Button
-                key={key}
-                name={key}
-                onPress={() => {
-                  selectionAsync()
-                  onPress()
-                }}>
-                {render()}
-              </Button>
-            )
-          })}
+
+        <Flex gap="none" maxHeight={dimensions.fullHeight * 0.5} width="100%">
+          <ScrollView style={flex.grow}>
+            {options.map(({ key, onPress, render }) => {
+              return (
+                <Button
+                  key={key}
+                  name={key}
+                  onPress={() => {
+                    selectionAsync()
+                    onPress()
+                  }}>
+                  {render()}
+                </Button>
+              )
+            })}
+          </ScrollView>
         </Flex>
       </Flex>
       <Button
