@@ -18,9 +18,12 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/wallet/reducer'
 
 const connectEagerly = async (connector: Connector) => {
-  if (!connector.connectEagerly) return
   try {
-    await connector.connectEagerly()
+    if (connector === network) {
+      await connector.activate()
+    } else if (connector.connectEagerly) {
+      await connector.connectEagerly()
+    }
   } catch (error) {
     console.debug(`web3-react error: ${typeof connector}, ${error}`)
   }

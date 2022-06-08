@@ -152,7 +152,7 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const resetOptionsView = useCallback(() => {
+  const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
   }, [setWalletView])
 
@@ -351,7 +351,7 @@ export default function WalletModal({
           pendingTransactions={pendingTransactions}
           confirmedTransactions={confirmedTransactions}
           ENSName={ENSName}
-          openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
+          openOptions={openOptions}
         />
       )
     }
@@ -369,7 +369,7 @@ export default function WalletModal({
           <AutoColumn gap="16px">
             {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
               <PendingView
-                resetOptionsView={resetOptionsView}
+                openOptions={openOptions}
                 connector={pendingConnector}
                 error={!!pendingError}
                 tryActivation={tryActivation}

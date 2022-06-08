@@ -271,6 +271,7 @@ export default function AccountDetails({
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
                         dispatch(updateWalletOverride({ wallet: undefined }))
+                        openOptions()
                         connector.deactivate()
                       }}
                       data-cy="wallet-disconnect"
