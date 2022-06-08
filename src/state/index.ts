@@ -18,7 +18,7 @@ import transactions from './transactions/reducer'
 import user from './user/reducer'
 import wallet from './wallet/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'wallet']
 
 const store = configureStore({
   reducer: {
