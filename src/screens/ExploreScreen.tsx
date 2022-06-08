@@ -7,6 +7,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
 import { FavoriteTokensSection } from 'src/features/explore/FavoriteTokensSection'
+import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
 import { SearchResultsSection } from 'src/features/explore/SearchResultsSection'
 import { TopTokensSection } from 'src/features/explore/TopTokensSection'
 
@@ -30,6 +31,8 @@ export function ExploreScreen() {
     }
   }
 
+  const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
+
   return (
     <Screen edges={['left', 'right']}>
       <AppBackground />
@@ -52,8 +55,16 @@ export function ExploreScreen() {
               <SearchResultsSection searchQuery={searchQuery} />
             ) : (
               <>
-                <FavoriteTokensSection fixedCount={5} />
-                <TopTokensSection fixedCount={5} />
+                <FavoriteTokensSection
+                  fixedCount={5}
+                  metadataDisplayType={tokenMetadataDisplayType}
+                  onCycleMetadata={cycleTokenMetadataDisplayType}
+                />
+                <TopTokensSection
+                  fixedCount={10}
+                  metadataDisplayType={tokenMetadataDisplayType}
+                  onCycleMetadata={cycleTokenMetadataDisplayType}
+                />
               </>
             )}
           </Flex>

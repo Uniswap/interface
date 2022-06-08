@@ -74,7 +74,11 @@ export function formatUSDPrice(price?: number | string) {
   return formatPrice(price, options)
 }
 
-export function formatNumber(num: number) {
+export function formatNumber(num?: number) {
+  if (!num) {
+    return '-'
+  }
+
   const formatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     maximumSignificantDigits: 2,

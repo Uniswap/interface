@@ -1,7 +1,7 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -15,10 +15,13 @@ import { Asset } from 'src/features/dataApi/zerion/types'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { buildCurrencyId } from 'src/utils/currencyId'
-import { formatUSDPrice } from 'src/utils/format'
+import { formatNumber, formatUSDPrice } from 'src/utils/format'
+
 interface TokenItemProps {
+  onCycleMetadata?: () => void
   index?: number
   isSearchResult?: boolean
+  metadataDisplayType?: string
   onPress: () => void
   token: Asset
 }
@@ -44,8 +47,16 @@ function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
   )
 }
 
-export function TokenItem({ index, token, isSearchResult = false, onPress }: TokenItemProps) {
+export function TokenItem({
+  onCycleMetadata,
+  index,
+  metadataDisplayType,
+  token,
+  isSearchResult = false,
+  onPress,
+}: TokenItemProps) {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
 
   const assetId = buildCurrencyId(ChainId.Mainnet, token.asset.asset_code)
   const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(assetId)
@@ -56,6 +67,7 @@ export function TokenItem({ index, token, isSearchResult = false, onPress }: Tok
   }
 
   const renderRightActions = () => {
+    // TODO: fade in on drag
     return isSearchResult ? null : (
       <FavoriteButton active={isFavoriteToken} asset={token} onPress={onFavoriteToken} />
     )
@@ -68,8 +80,6 @@ export function TokenItem({ index, token, isSearchResult = false, onPress }: Tok
           row
           alignItems="center"
           bg={isSearchResult ? 'none' : 'neutralBackground'}
-          entering={FadeIn}
-          exiting={FadeOut}
           justifyContent="space-between"
           px={isSearchResult ? 'xs' : 'md'}
           py="sm">
@@ -93,10 +103,20 @@ export function TokenItem({ index, token, isSearchResult = false, onPress }: Tok
             </Flex>
           </Flex>
           <Flex row justifyContent="flex-end">
-            <TokenMetadata
-              main={formatUSDPrice(token.asset.price?.value)}
-              sub={<RelativeChange change={token?.asset.price?.relative_change_24h} />}
-            />
+            <Button onPress={onCycleMetadata}>
+              <TokenMetadata
+                main={formatUSDPrice(token.asset.price?.value)}
+                sub={
+                  metadataDisplayType === 'market_cap' ? (
+                    <Text variant="caption">
+                      {t('MCap {{marketCap}}', { marketCap: formatNumber(token?.market_cap) })}
+                    </Text>
+                  ) : (
+                    <RelativeChange change={token?.asset.price?.relative_change_24h} />
+                  )
+                }
+              />
+            </Button>
           </Flex>
         </AnimatedFlex>
       </Button>

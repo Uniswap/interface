@@ -28,7 +28,9 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
       return (
         <TokenItem
           index={index}
+          metadataDisplayType={props.metadataDisplayType}
           token={token}
+          onCycleMetadata={props.onCycleMetadata}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
               currencyId: buildCurrencyId(ChainId.Mainnet, token.asset.asset_code),
@@ -37,7 +39,7 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
         />
       )
     },
-    [navigation]
+    [navigation, props.onCycleMetadata, props.metadataDisplayType]
   )
 
   return (

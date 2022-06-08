@@ -54,11 +54,11 @@ export type AssetData = {
   price?: Price
   is_displayable: boolean
   is_verified: boolean
-  market_cap?: number
 }
 
 export type Asset = {
   asset: AssetData
+  market_cap?: number
 }
 
 export type Transaction = {

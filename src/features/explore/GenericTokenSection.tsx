@@ -11,8 +11,10 @@ import { Asset, OrderBy } from 'src/features/dataApi/zerion/types'
 import { Screens } from 'src/screens/Screens'
 
 export interface BaseTokenSectionProps {
+  onCycleMetadata: () => void
   expanded?: boolean
   fixedCount?: number
+  metadataDisplayType: string
   orderBy?: OrderBy
 }
 

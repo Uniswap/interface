@@ -28,7 +28,9 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
       return (
         <TokenItemBox
           index={index}
+          metadataDisplayType={props.metadataDisplayType}
           token={token}
+          onCycleMetadata={props.onCycleMetadata}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
               currencyId: buildCurrencyId(ChainId.Mainnet, token.asset.asset_code),
@@ -37,7 +39,7 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
         />
       )
     },
-    [navigation]
+    [navigation, props.onCycleMetadata, props.metadataDisplayType]
   )
 
   if (!favorites?.info?.length) return null
