@@ -23,11 +23,16 @@ const slice = createSlice({
     pushNotification: (state, action: PayloadAction<AppNotification>) => {
       state.notificationQueue.push(action.payload)
     },
-    popNotification: (state, action: PayloadAction<{ address: Address | null }>) => {
+    popNotification: (state, action: PayloadAction<{ address: Nullable<Address> }>) => {
       const { address } = action.payload
-      if (!address) return
-      const indexToRemove = state.notificationQueue.findIndex((notif) => notif.address === address)
-      if (indexToRemove !== -1) state.notificationQueue.splice(indexToRemove, 1)
+      if (!address) {
+        state.notificationQueue.shift()
+      } else {
+        const indexToRemove = state.notificationQueue.findIndex(
+          (notif) => notif.address === address
+        )
+        if (indexToRemove !== -1) state.notificationQueue.splice(indexToRemove, 1)
+      }
     },
     resetNotifications: () => initialState,
     addToNotificationCount: (state, action: PayloadAction<{ address: Address; count: number }>) => {

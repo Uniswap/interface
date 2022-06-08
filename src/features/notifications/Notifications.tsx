@@ -46,7 +46,7 @@ import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
-  const { imageUrl, chainId } = notification
+  const { imageUrl, chainId, address } = notification
   const dispatch = useAppDispatch()
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
@@ -70,11 +70,13 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
     dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ConnectedDapps }))
   }
 
-  return <NotificationToast icon={icon} title={title} onPress={onPressNotification} />
+  return (
+    <NotificationToast address={address} icon={icon} title={title} onPress={onPressNotification} />
+  )
 }
 
 export function ApproveNotification({
-  notification: { chainId, tokenAddress, spender, txStatus, txType },
+  notification: { address, chainId, tokenAddress, spender, txStatus, txType },
 }: {
   notification: ApproveTxNotification
 }) {
@@ -90,7 +92,7 @@ export function ApproveNotification({
     />
   )
 
-  return <NotificationToast icon={icon} title={title} />
+  return <NotificationToast address={address} icon={icon} title={title} />
 }
 
 export function SwapNotification({
@@ -171,6 +173,7 @@ export function SwapNotification({
   return (
     <NotificationToast
       actionButton={retryButton}
+      address={address}
       balanceUpdate={balanceUpdate}
       icon={icon}
       title={title}
@@ -183,7 +186,8 @@ export function TransferCurrencyNotification({
 }: {
   notification: TransferCurrencyTxNotification
 }) {
-  const { assetType, chainId, tokenAddress, currencyAmountRaw, txType, txStatus } = notification
+  const { address, assetType, chainId, tokenAddress, currencyAmountRaw, txType, txStatus } =
+    notification
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const { name: ensName } = useENS(chainId, senderOrRecipient)
@@ -215,7 +219,9 @@ export function TransferCurrencyNotification({
     />
   )
 
-  return <NotificationToast balanceUpdate={balanceUpdate} icon={icon} title={title} />
+  return (
+    <NotificationToast address={address} balanceUpdate={balanceUpdate} icon={icon} title={title} />
+  )
 }
 
 export function TransferNFTNotification({
@@ -223,7 +229,7 @@ export function TransferNFTNotification({
 }: {
   notification: TransferNFTTxNotification
 }) {
-  const { assetType, chainId, tokenAddress, tokenId, txType, txStatus } = notification
+  const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus } = notification
   const userAddress = useAppSelector(selectActiveAccountAddress) || ''
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
@@ -249,11 +255,11 @@ export function TransferNFTNotification({
     />
   )
 
-  return <NotificationToast icon={icon} title={title} />
+  return <NotificationToast address={address} icon={icon} title={title} />
 }
 
 export function UnknownTxNotification({
-  notification: { chainId, tokenAddress, txStatus, txType },
+  notification: { address, chainId, tokenAddress, txStatus, txType },
 }: {
   notification: TransactionNotificationBase
 }) {
@@ -270,21 +276,21 @@ export function UnknownTxNotification({
     />
   )
 
-  return <NotificationToast icon={icon} title={title} />
+  return <NotificationToast address={address} icon={icon} title={title} />
 }
 
 export function ErrorNotification({
-  notification: { errorMessage },
+  notification: { address, errorMessage },
 }: {
   notification: AppErrorNotification
 }) {
-  return <NotificationToast title={errorMessage} />
+  return <NotificationToast address={address} title={errorMessage} />
 }
 
 export function DefaultNotification({
-  notification: { title },
+  notification: { address, title },
 }: {
   notification: AppNotificationDefault
 }) {
-  return <NotificationToast title={title} />
+  return <NotificationToast address={address} title={title} />
 }

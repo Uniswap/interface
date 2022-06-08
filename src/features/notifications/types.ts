@@ -13,7 +13,7 @@ export enum AppNotificationType {
 
 interface AppNotificationBase {
   type: AppNotificationType
-  address: Address
+  address?: Address
 }
 
 export interface AppNotificationDefault extends AppNotificationBase {

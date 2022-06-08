@@ -53,8 +53,12 @@ export function useSelectAddressTransactions(address: Address | null) {
   return useAppSelector(useMemo(() => makeSelectAddressTransactions(address), [address]))
 }
 
-export function useCreateSwapFormState(address: Address, chainId: ChainId, txHash: string) {
-  const transaction = useSelectTransaction(address, chainId, txHash)
+export function useCreateSwapFormState(
+  address: Address | undefined,
+  chainId: ChainId,
+  txHash: string
+) {
+  const transaction = useSelectTransaction(address ?? null, chainId, txHash)
 
   const inputCurrencyId =
     transaction?.typeInfo.type === TransactionType.Swap
