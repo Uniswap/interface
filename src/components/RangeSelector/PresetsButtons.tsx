@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import { ButtonOutlined } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import React from 'react'
@@ -20,7 +20,7 @@ export default function PresetsButtons({ setFullRange }: { setFullRange: () => v
       <Button
         onClick={() => {
           setFullRange()
-          GoogleAnalyticsProvider.sendEvent({
+          sendEvent({
             category: 'Liquidity',
             action: 'Full Range Clicked',
           })

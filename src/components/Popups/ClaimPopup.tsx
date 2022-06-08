@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { sendEvent } from 'components/analytics'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
@@ -15,7 +16,6 @@ import {
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { ThemedText } from '../../theme'
-import GoogleAnalyticsProvider from '../analytics/GoogleAnalyticsProvider'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import { CardBGImage, CardNoise } from '../earn/styled'
@@ -65,7 +65,7 @@ export default function ClaimPopup() {
   const showClaimModal = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
   const handleToggleSelfClaimModal = useCallback(() => {
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'MerkleDrop',
       action: 'Toggle self claim modal',
     })
@@ -79,7 +79,7 @@ export default function ClaimPopup() {
   // listen for available claim and show popup if needed
   useEffect(() => {
     if (userHasAvailableclaim) {
-      GoogleAnalyticsProvider.sendEvent({
+      sendEvent({
         category: 'MerkleDrop',
         action: 'Show claim popup',
       })

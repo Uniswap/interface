@@ -3,7 +3,7 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
@@ -275,7 +275,7 @@ export default function RemoveLiquidity({
 
           setTxHash(response.hash)
 
-          GoogleAnalyticsProvider.sendEvent({
+          sendEvent({
             category: 'Liquidity',
             action: 'Remove',
             label: [currencyA.symbol, currencyB.symbol].join('/'),

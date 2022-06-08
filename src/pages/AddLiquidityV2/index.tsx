@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -201,7 +201,7 @@ export default function AddLiquidity({
 
           setTxHash(response.hash)
 
-          GoogleAnalyticsProvider.sendEvent({
+          sendEvent({
             category: 'Liquidity',
             action: 'Add',
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),

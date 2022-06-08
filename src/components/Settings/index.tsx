@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useContext, useRef, useState } from 'react'
@@ -211,7 +211,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   id="toggle-optimized-router-button"
                   isActive={!clientSideRouter}
                   toggle={() => {
-                    GoogleAnalyticsProvider.sendEvent({
+                    sendEvent({
                       category: 'Routing',
                       action: clientSideRouter ? 'enable routing API' : 'disable routing API',
                     })

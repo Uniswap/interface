@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
@@ -85,7 +85,7 @@ export default function GasEstimateBadge({
       }
       placement="bottom"
       onOpen={() =>
-        GoogleAnalyticsProvider.sendEvent({
+        sendEvent({
           category: 'Gas',
           action: 'Gas Details Tooltip Open',
         })

@@ -3,6 +3,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -19,7 +20,6 @@ import { TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
-import GoogleAnalyticsProvider from '../../components/analytics/GoogleAnalyticsProvider'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -237,7 +237,7 @@ export default function Swap({ history }: RouteComponentProps) {
     } else {
       await approveCallback()
 
-      GoogleAnalyticsProvider.sendEvent({
+      sendEvent({
         category: 'Swap',
         action: 'Approve',
         label: [approvalOptimizedTradeString, approvalOptimizedTrade?.inputAmount?.currency.symbol].join('/'),
@@ -286,12 +286,12 @@ export default function Swap({ history }: RouteComponentProps) {
     swapCallback()
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-        GoogleAnalyticsProvider.sendEvent({
+        sendEvent({
           category: 'Swap',
           action: 'transaction hash',
           label: hash,
         })
-        GoogleAnalyticsProvider.sendEvent({
+        sendEvent({
           category: 'Swap',
           action:
             recipient === null
@@ -378,7 +378,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'Swap',
       action: 'Max',
     })

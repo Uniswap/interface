@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { sendEvent } from 'components/analytics'
 import React, { ErrorInfo } from 'react'
 import styled from 'styled-components/macro'
 
 import store, { AppState } from '../../state'
 import { ExternalLink, ThemedText } from '../../theme'
 import { userAgent } from '../../utils/userAgent'
-import GoogleAnalyticsProvider from '../analytics/GoogleAnalyticsProvider'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
@@ -85,7 +85,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    GoogleAnalyticsProvider.sendEvent('exception', {
+    sendEvent('exception', {
       description: error.toString() + errorInfo.toString(),
       fatal: true,
     })

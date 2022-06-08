@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { sendEvent } from 'components/analytics'
 import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -10,12 +11,11 @@ import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
 import styled, { keyframes } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import GoogleAnalyticsProvider from '../analytics/GoogleAnalyticsProvider'
 import { FeeOption } from './FeeOption'
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from './shared'
@@ -101,7 +101,7 @@ export default function FeeSelector({
 
   const handleFeePoolSelectWithEvent = useCallback(
     (fee: FeeAmount) => {
-      GoogleAnalyticsProvider.sendEvent({
+      sendEvent({
         category: 'FeePoolSelect',
         action: 'Manual',
       })
@@ -122,7 +122,7 @@ export default function FeeSelector({
       setShowOptions(false)
 
       recommended.current = true
-      GoogleAnalyticsProvider.sendEvent({
+      sendEvent({
         category: 'FeePoolSelect',
         action: ' Recommended',
       })

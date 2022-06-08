@@ -3,7 +3,6 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
@@ -149,7 +148,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           .getSigner()
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
-            GoogleAnalyticsProvider.sendEvent({
+            sendEvent({
               category: 'Liquidity',
               action: 'RemoveV3',
               label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),

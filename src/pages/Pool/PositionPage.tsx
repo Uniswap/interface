@@ -3,7 +3,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -470,7 +470,7 @@ export function PositionPage({
             setCollectMigrationHash(response.hash)
             setCollecting(false)
 
-            GoogleAnalyticsProvider.sendEvent({
+            sendEvent({
               category: 'Liquidity',
               action: 'CollectV3',
               label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),

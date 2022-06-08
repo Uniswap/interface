@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
 import { format } from 'd3'
@@ -158,7 +158,7 @@ export default function LiquidityChartRangeInput({
   )
 
   if (isError) {
-    GoogleAnalyticsProvider.sendEvent('exception', { description: error.toString(), fatal: false })
+    sendEvent('exception', { description: error.toString(), fatal: false })
   }
 
   return (

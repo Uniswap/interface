@@ -1,7 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { gaCommandSendTiming } from 'components/analytics'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import useIsValidBlock from 'lib/hooks/useIsValidBlock'
@@ -127,7 +127,7 @@ class GAMetric extends IMetric {
   }
 
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    GoogleAnalyticsProvider.gaCommandSendTiming('Routing API', `${key} | ${unit}`, value, 'client')
+    gaCommandSendTiming('Routing API', `${key} | ${unit}`, value, 'client')
   }
 }
 

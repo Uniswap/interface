@@ -5,7 +5,7 @@ import { lazy, Suspense } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
+import { GoogleAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'

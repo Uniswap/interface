@@ -5,11 +5,11 @@ import { GaOptions, InitOptions, UaEventOptions } from 'react-ga4/types/ga4'
  * Google Analytics Provider containing all methods used throughout app to log events to Google Analytics.
  */
 export default class GoogleAnalyticsProvider {
-  public static sendEvent(event: string | UaEventOptions, params?: any) {
+  public sendEvent(event: string | UaEventOptions, params?: any) {
     ReactGA.event(event, params)
   }
 
-  public static initialize(
+  public initialize(
     GA_MEASUREMENT_ID: InitOptions[] | string,
     options?: {
       legacyDimensionMetric?: boolean
@@ -22,11 +22,11 @@ export default class GoogleAnalyticsProvider {
     ReactGA.initialize(GA_MEASUREMENT_ID, options)
   }
 
-  public static set(fieldsObject: any) {
+  public set(fieldsObject: any) {
     ReactGA.set(fieldsObject)
   }
 
-  public static outboundLink(
+  public outboundLink(
     {
       label,
     }: {
@@ -37,15 +37,15 @@ export default class GoogleAnalyticsProvider {
     ReactGA.outboundLink({ label }, hitCallback)
   }
 
-  public static pageview(path?: string, _?: string[], title?: string) {
+  public pageview(path?: string, _?: string[], title?: string) {
     ReactGA.pageview(path, _, title)
   }
 
-  public static ga(...args: any[]) {
+  public ga(...args: any[]) {
     ReactGA.ga(...args)
   }
 
-  public static gaCommandSendTiming(timingCategory: any, timingVar: any, timingValue: any, timingLabel: any) {
+  public gaCommandSendTiming(timingCategory: any, timingVar: any, timingValue: any, timingLabel: any) {
     ReactGA._gaCommandSendTiming(timingCategory, timingVar, timingValue, timingLabel)
   }
 }

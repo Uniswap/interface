@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -62,7 +62,7 @@ export default function SurveyPopup() {
       if (Math.random() < 0.01) {
         setShowSurveyPopup(true)
         // log a case of succesful view
-        GoogleAnalyticsProvider.sendEvent({
+        sendEvent({
           category: 'Survey',
           action: 'Saw Survey',
         })
@@ -80,7 +80,7 @@ export default function SurveyPopup() {
         <Wrapper gap="10px">
           <WrappedCloseIcon
             onClick={() => {
-              GoogleAnalyticsProvider.sendEvent({
+              sendEvent({
                 category: 'Survey',
                 action: 'Clicked Survey Link',
               })

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -54,7 +54,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
     setAddError(null)
     fetchList(listURL)
       .then(() => {
-        GoogleAnalyticsProvider.sendEvent({
+        sendEvent({
           category: 'Lists',
           action: 'Add List',
           label: listURL,
@@ -66,7 +66,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
         setModalView(CurrencyModalView.manage)
       })
       .catch((error) => {
-        GoogleAnalyticsProvider.sendEvent({
+        sendEvent({
           category: 'Lists',
           action: 'Add List Failed',
           label: listURL,

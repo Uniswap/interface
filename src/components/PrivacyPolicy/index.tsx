@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import Card, { DarkGreyCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
@@ -87,7 +87,7 @@ export function PrivacyPolicyModal() {
   useEffect(() => {
     if (!open) return
 
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'Modal',
       action: 'Show Legal',
     })

@@ -1,4 +1,4 @@
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { outboundLink } from 'components/analytics'
 import React, { HTMLProps } from 'react'
 import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -175,13 +175,13 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
 
   // don't prevent default, don't redirect if it's a new tab
   if (target === '_blank' || event.ctrlKey || event.metaKey) {
-    GoogleAnalyticsProvider.outboundLink({ label: anonymizedHref }, () => {
+    outboundLink({ label: anonymizedHref }, () => {
       console.debug('Fired outbound link event', anonymizedHref)
     })
   } else {
     event.preventDefault()
     // send a ReactGA event and then trigger a location change
-    GoogleAnalyticsProvider.outboundLink({ label: anonymizedHref }, () => {
+    outboundLink({ label: anonymizedHref }, () => {
       window.location.href = anonymizedHref
     })
   }

@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
+import { sendEvent } from 'components/analytics'
 import Card from 'components/Card'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -21,7 +22,6 @@ import { acceptListUpdate, disableList, enableList, removeList } from '../../sta
 import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'
 import { ExternalLink, IconWrapper, LinkStyledButton, ThemedText } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
-import GoogleAnalyticsProvider from '../analytics/GoogleAnalyticsProvider'
 import { ButtonEmpty, ButtonPrimary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
@@ -126,7 +126,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'Lists',
       action: 'Update List from List Select',
       label: listUrl,
@@ -135,13 +135,13 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   }, [dispatch, listUrl, pending])
 
   const handleRemoveList = useCallback(() => {
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'Lists',
       action: 'Start Remove List',
       label: listUrl,
     })
     if (window.prompt(t`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
-      GoogleAnalyticsProvider.sendEvent({
+      sendEvent({
         category: 'Lists',
         action: 'Confirm Remove List',
         label: listUrl,
@@ -151,7 +151,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   }, [dispatch, listUrl])
 
   const handleEnableList = useCallback(() => {
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'Lists',
       action: 'Enable List',
       label: listUrl,
@@ -160,7 +160,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   }, [dispatch, listUrl])
 
   const handleDisableList = useCallback(() => {
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'Lists',
       action: 'Disable List',
       label: listUrl,

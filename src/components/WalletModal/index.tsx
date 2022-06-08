@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow } from 'components/Row'
@@ -169,7 +169,7 @@ export default function WalletModal({
       return true
     })
     // log selected wallet
-    GoogleAnalyticsProvider.sendEvent({
+    sendEvent({
       category: 'Wallet',
       action: 'Change Wallet',
       label: name,

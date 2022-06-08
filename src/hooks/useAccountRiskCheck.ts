@@ -1,4 +1,4 @@
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import { useEffect } from 'react'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
@@ -18,7 +18,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
         .then((data) => {
           if (data.block) {
             dispatch(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
-            GoogleAnalyticsProvider.sendEvent({
+            sendEvent({
               category: 'Address Screening',
               action: 'blocked',
               label: account,

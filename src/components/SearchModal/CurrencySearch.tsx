@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
+import { sendEvent } from 'components/analytics'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -93,7 +93,7 @@ export function CurrencySearch({
 
   useEffect(() => {
     if (isAddressSearch) {
-      GoogleAnalyticsProvider.sendEvent({
+      sendEvent({
         category: 'Currency Select',
         action: 'Search by address',
         label: isAddressSearch,

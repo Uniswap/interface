@@ -1,4 +1,3 @@
-import GoogleAnalyticsProvider from 'components/analytics/GoogleAnalyticsProvider'
 import { SupportedLocale } from 'constants/locales'
 import { LocationDescriptor } from 'history'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -26,7 +25,7 @@ export function useLocationLinkProps(locale: SupportedLocale | null): {
               search: stringify({ ...qs, lng: locale }),
             },
             onClick: () => {
-              GoogleAnalyticsProvider.sendEvent({
+              sendEvent({
                 category: 'Localization',
                 action: 'Switch Locale',
                 label: `${activeLocale} -> ${locale}`,
