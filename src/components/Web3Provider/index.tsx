@@ -15,7 +15,7 @@ import {
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { updateWalletOverride } from 'state/wallet/reducer'
+import { updateConnectorError, updateWalletOverride } from 'state/wallet/reducer'
 
 const connectEagerly = async (connector: Connector) => {
   if (!connector.connectEagerly) return
@@ -56,6 +56,8 @@ function Web3Updater() {
 
   // The dependency list is empty so this is only run once on mount
   useEffect(() => {
+    dispatch(updateConnectorError({ error: undefined }))
+
     connectEagerly(gnosisSafe)
     connectEagerly(network)
 

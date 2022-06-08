@@ -9,7 +9,7 @@ export interface WalletState {
   walletOverrideBackfilled: boolean
   walletOverride?: Wallet
 
-  connectorError?: Error
+  connectorError?: string
 }
 
 export const initialState: WalletState = {

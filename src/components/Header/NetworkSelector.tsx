@@ -288,7 +288,7 @@ export default function NetworkSelector() {
         })
       } catch (error) {
         console.error('Failed to switch networks', error)
-        dispatch(updateConnectorError({ error }))
+        dispatch(updateConnectorError({ error: error.message }))
 
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }

@@ -19,7 +19,6 @@ import {
   fortmatic,
   getWalletForConnector,
   injected,
-  isChainAllowed,
   network,
   Wallet,
   walletConnect,
@@ -132,7 +131,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, hooks, account, chainId } = useWeb3React()
+  const { connector, hooks, account } = useWeb3React()
   const isActiveMap: Record<Wallet, boolean> = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
@@ -190,18 +189,19 @@ export default function WalletModal({
         toggleWalletModal()
       }
 
-      await connector.activate()
-
-      dispatch(updateConnectorError({ error: undefined }))
+      setPendingConnector(connector)
+      setWalletView(WALLET_VIEWS.PENDING)
 
       const wallet = getWalletForConnector(connector)
       if (isActiveMap[wallet]) {
-        dispatch(updateWalletOverride({ wallet }))
+        await connector.activate()
         setWalletView(WALLET_VIEWS.ACCOUNT)
+        dispatch(updateWalletOverride({ wallet }))
       } else {
-        setPendingConnector(connector)
-        setWalletView(WALLET_VIEWS.PENDING)
+        await connector.activate()
       }
+
+      dispatch(updateConnectorError({ error: undefined }))
     } catch (error) {
       if (
         connector === fortmatic &&
@@ -210,12 +210,7 @@ export default function WalletModal({
         return
       }
 
-      if (connector === walletConnect && error.message === 'User closed modal') {
-        setWalletView(WALLET_VIEWS.OPTIONS)
-        return
-      }
-
-      dispatch(updateConnectorError({ error }))
+      dispatch(updateConnectorError({ error: error.message }))
     }
   }
 
@@ -322,26 +317,6 @@ export default function WalletModal({
   }
 
   function getModalContent() {
-    const chainNotAllowed = chainId && !isChainAllowed(connector, chainId)
-    if (connectorError || chainNotAllowed) {
-      return (
-        <UpperSection>
-          <CloseIcon onClick={toggleWalletModal}>
-            <CloseColor />
-          </CloseIcon>
-          <HeaderRow>{chainNotAllowed ? <Trans>Wrong Network</Trans> : <Trans>Error connecting</Trans>}</HeaderRow>
-          <ContentWrapper>
-            {chainNotAllowed ? (
-              <h5>
-                <Trans>Please connect to a supported network in the dropdown menu or in your wallet.</Trans>
-              </h5>
-            ) : (
-              <Trans>Error connecting. Try refreshing the page.</Trans>
-            )}
-          </ContentWrapper>
-        </UpperSection>
-      )
-    }
     if (walletView === WALLET_VIEWS.LEGAL) {
       return (
         <UpperSection>
@@ -389,7 +364,7 @@ export default function WalletModal({
         </HeaderRow>
         <ContentWrapper>
           <AutoColumn gap="16px">
-            {walletView === WALLET_VIEWS.PENDING && (
+            {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
               <PendingView
                 resetAccountView={resetAccountView}
                 connector={pendingConnector}

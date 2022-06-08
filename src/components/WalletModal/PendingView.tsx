@@ -52,7 +52,7 @@ export default function PendingView({
   tryActivation,
   resetAccountView,
 }: {
-  connector?: Connector
+  connector: Connector
   error?: boolean
   tryActivation: (connector: Connector) => void
   resetAccountView: () => void
@@ -75,7 +75,7 @@ export default function PendingView({
                 $borderRadius="12px"
                 padding="12px"
                 onClick={() => {
-                  connector && tryActivation(connector)
+                  tryActivation(connector)
                 }}
               >
                 <Trans>Try Again</Trans>
