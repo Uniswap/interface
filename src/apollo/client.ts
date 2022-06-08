@@ -70,7 +70,7 @@ const cronosTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Apo
 })
 
 const cronosExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://cronos-subgraph.kyberswap.com/subgraphs/name/kyberswap/kyberswap-cronos',
+  uri: 'https://cronos-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-cronos',
   cache: new InMemoryCache(),
 })
 
@@ -176,7 +176,7 @@ const cronosTestnetBlockClient = new ApolloClient({
 })
 
 const cronosBlockClient = new ApolloClient({
-  uri: 'https://cronos-subgraph.kyberswap.com/subgraphs/name/dynamic-amm/ethereum-blocks-cronos',
+  uri: 'https://cronos-graph.kyberengineering.io/subgraphs/name/kybernetwork/cronos-blocks',
   cache: new InMemoryCache(),
 })
 
