@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "実行済"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "あなたが利用していないトークンリストからの検索結果"
 
@@ -839,10 +839,6 @@ msgstr "ヘルプセンター"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "非表示"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "決済したポジションを隠す"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "結果が見つかりませんでした。"
 msgid "Not created"
 msgstr "未作成"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "OFF"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ON"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "このモードは、あなたが何をしているかを理解している場合にのみご使用ください。"
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "OFF"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "ON"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "プールのシェア:"
 msgid "Show Cancelled"
 msgstr "キャンセルされた表示"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "決済したポジションを表示"
@@ -1766,7 +1748,7 @@ msgstr "トークンは対応していません"
 msgid "Tokens"
 msgstr "トークン"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "あなたが利用していないリストにあるトークンです。以下の特定のトークンをインポートするか、[管理] をクリックして他のリストを有効にしてください。"
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} 価格:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • ユーザーにより追加"
 

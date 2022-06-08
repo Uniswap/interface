@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Henrettet"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Ekspanderte resultater fra inaktive pollettlister"
 
@@ -839,10 +839,6 @@ msgstr "Hjelpesenter"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Gjemme seg"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Skjul avsluttede posisjoner"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Ingen resultater."
 msgid "Not created"
 msgstr "Ikke opprettet"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "AV"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "PÅ"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "BARE BRUK DENNE MODUSEN DERSOM DU VET HVA DU GJØR."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Av"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "På"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Deling av pott:"
 msgid "Show Cancelled"
 msgstr "Vis avbrutt"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Vis lukkede stillinger"
@@ -1766,7 +1748,7 @@ msgstr "Token støttes ikke"
 msgid "Tokens"
 msgstr "Polletter"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Polletter fra inaktive lister. Importer spesifikke polleter nedenfor, eller klikk på administrer for å aktivere flere lister."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Pris:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Lagt til av bruker"
 

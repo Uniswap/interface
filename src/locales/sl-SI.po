@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-17 10:11\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Izvršena"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Razširjeni rezultati z onemogočenih seznamov žetonov"
 
@@ -839,10 +839,6 @@ msgstr "Center za pomoč"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Skrij"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Skrij zaprte pozicije"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Ni rezultatov."
 msgid "Not created"
 msgstr "Ni ustvarjeno"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "Izklopljeno"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "Vklopljeno"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "Ta način uporabljajte SAMO, ČE VESTE, KAJ POČNETE."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Izklopljeno"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Vklopljeno"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Delež sklada:"
 msgid "Show Cancelled"
 msgstr "Prikaz preklican"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Pokaži zaprte položaje"
@@ -1766,7 +1748,7 @@ msgstr "Žeton ni podprt"
 msgid "Tokens"
 msgstr "Žetoni"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Žetoni z neaktivnih seznamov. Specifične žetone lahko uvozite spodaj ali pa kliknite Upravljaj in omogočite več seznamov."
 
@@ -2409,7 +2391,7 @@ msgstr "Cena {0} {1}:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Dodal uporabnik"
 

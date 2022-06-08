@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Ejecutado"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Resultados ampliados de listas de token inactivas"
 
@@ -839,10 +839,6 @@ msgstr "Centro de ayuda"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Esconder"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Ocultar posiciones cerradas"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "No se han encontrado resultados."
 msgid "Not created"
 msgstr "No creado"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "APAGADO"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ENCENDIDO"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "UTILICE ESTE MODO ÚNICAMENTE SI SABE LO QUE ESTÁ HACIENDO."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Apagado"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Encendido"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Participación del fondo común:"
 msgid "Show Cancelled"
 msgstr "Mostrar cancelado"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Mostrar posiciones cerradas"
@@ -1766,7 +1748,7 @@ msgstr "Token no admitido"
 msgid "Tokens"
 msgstr "Tokens"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Tokens de listas inactivas. Importe tokens específicos a continuación o haga clic en Administrar para activar más listas."
 
@@ -2409,7 +2391,7 @@ msgstr "Precio {0} {1}:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Agregado por el usuario"
 

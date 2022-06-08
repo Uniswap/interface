@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Henrettet"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Ekspanderede resultater fra inaktive token-lister"
 
@@ -839,10 +839,6 @@ msgstr "Hjælpecenter"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Skjule"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Skjul lukkede positioner"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Ingen resultater fundet."
 msgid "Not created"
 msgstr "Ikke oprettet"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "FRA"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "TIL"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "KUN BRUG DENNE TILSTAND, HVIS DU VED, HVAD DU LAVER."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Fra"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Til"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Andel i pulje:"
 msgid "Show Cancelled"
 msgstr "Show annulleret"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Vis lukkede positioner"
@@ -1766,7 +1748,7 @@ msgstr "Token understøttes ikke"
 msgid "Tokens"
 msgstr "Tokens"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Tokens fra inaktive lister. Importer specifikke tokens nedenfor, eller klik på Administrer for at aktivere flere lister."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Pris:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Tilføjet af bruger"
 

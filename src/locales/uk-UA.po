@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Страчений"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Розширені результати з неактивних списків токенів"
 
@@ -839,10 +839,6 @@ msgstr "Центр допомоги"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Сховати"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Приховати закриті позиції"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Результатів не знайдено."
 msgid "Not created"
 msgstr "Не створено"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "ВИМК"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "УВІМК"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ВИКОРИСТОВУЙТЕ ЦИЙ ЛИШЕ РЕЖИМ, ЯкЩО ВИ ЗНАЄТЕ, ЩО РОБИТЕ."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Вимк."
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Увімк."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Частка пулу:"
 msgid "Show Cancelled"
 msgstr "Показати скасовано"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Показати закриті позиції"
@@ -1766,7 +1748,7 @@ msgstr "Токен не підтримується"
 msgid "Tokens"
 msgstr "Токени"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Токени з неактивних списків. Імпортуйте конкретні токени нижче або натисніть \"Керувати\", аби активувати більше списків."
 
@@ -2409,7 +2391,7 @@ msgstr "Ціна {0} {1}:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Додано користувачем"
 

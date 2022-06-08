@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Executat"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Resultats ampliats de llistes de fitxes inactives"
 
@@ -839,10 +839,6 @@ msgstr "Centre d'ajuda"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Amaga"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Amaga les posicions tancades"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Sense resultats."
 msgid "Not created"
 msgstr "No creat"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "DESACTIVAT"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ACTIVAT"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ÚTILITZEU AQUEST MODE NOMÉS SI SABEU EL QUE FEREU."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Desactivat"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Encès"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Quota de grup:"
 msgid "Show Cancelled"
 msgstr "Mostra cancel·lada"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Mostra posicions tancades"
@@ -1766,7 +1748,7 @@ msgstr "El testimoni no és compatible"
 msgid "Tokens"
 msgstr "Fitxes"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Fitxes de llistes inactives. Importeu fitxes específiques a continuació o feu clic a Gestiona per activar més llistes."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Preu:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Afegit per l'usuari"
 

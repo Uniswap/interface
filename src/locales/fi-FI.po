@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Suoritettu"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Laajennetut tulokset passiivisista rahakeluetteloista"
 
@@ -839,10 +839,6 @@ msgstr "Ohjekeskus"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Piilottaa"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Piilota suljetut positiot"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Tuloksia ei löytynyt."
 msgid "Not created"
 msgstr "Ei luotu"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "OFF"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ON"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "KÄYTÄ TÄTÄ TILAA VAIN, JOS TIEDÄT MITÄ TEET."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Off"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "On"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Poolin osuus:"
 msgid "Show Cancelled"
 msgstr "Esitys peruutettu"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Näytä suljetut sijainnit"
@@ -1766,7 +1748,7 @@ msgstr "Tunnusta ei tueta"
 msgid "Tokens"
 msgstr "Rahakkeet"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Rahakkeita passiivisista luetteloista. Tuo tietyt rahakkeet alla tai aktivoi lisää luetteloita napsauttamalla \"Hallitse\"."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Hinta:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Käyttäjän lisäämä"
 

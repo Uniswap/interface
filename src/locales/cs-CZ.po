@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Popraven"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Rozšířené výsledky z neaktivních seznamů žetonů"
 
@@ -839,10 +839,6 @@ msgstr "Centrum nápovědy"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Skrýt"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Skrýt zavřené pozice"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Nebyly nalezeny žádné výsledky."
 msgid "Not created"
 msgstr "Není vytvořeno"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "VYPNUTO"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ZAPNUTO"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "TENTO REŽIM POUŽIJTE JEN TEHDY, JESTLIŽE VÍTE, CO DĚLÁTE."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Vypnuto"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Zapnuto"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Podíl na fondu:"
 msgid "Show Cancelled"
 msgstr "Zobrazit zrušeno"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Zobrazit uzavřené pozice"
@@ -1766,7 +1748,7 @@ msgstr "Token není podporován"
 msgid "Tokens"
 msgstr "Žetony"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Žetony z neaktivních seznamů. Buď importujte konkrétní žetony níže nebo kliknutím na Správa aktivujte další seznamy."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} cena:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Přidáno uživatelem"
 
