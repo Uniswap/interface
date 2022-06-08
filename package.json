@@ -113,6 +113,7 @@
     "web3-react-walletconnect-connector": "npm:@web3-react/walletconnect-connector@^7.0.2-alpha.0",
     "web3-react-walletlink-connector": "npm:@web3-react/walletlink-connector@^6.2.13",
     "workbox-core": "^6.1.0",
+    "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"
   },

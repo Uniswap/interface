@@ -1,4 +1,4 @@
-import { TEST_ADDRESS_NEVER_USE_SHORTENED } from '../support/commands'
+import { TEST_ADDRESS_NEVER_USE_SHORTENED } from '../support/ethereum'
 
 describe('Landing Page', () => {
   beforeEach(() => cy.visit('/'))

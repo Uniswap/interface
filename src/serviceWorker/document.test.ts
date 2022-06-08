@@ -1,57 +1,29 @@
-import { PrecacheEntry } from 'workbox-precaching/_types'
 import { RouteHandlerCallbackOptions, RouteMatchCallbackOptions } from 'workbox-core'
 
-import { filterManifest, matchDocument, handleDocument } from './serviceWorker'
+import { CachedDocument, DocumentRoute, handleDocument, matchDocument } from './document'
 
-describe('service-worker', () => {
-  describe('filter manifest files', () => {
-    const TEST_ENTRIES = [
-      [
-        {
-          url: 'index.html',
-        },
-        false,
-      ],
-      ['inter-roman.var.woff2', true],
-      ['comicsans.woff2', false],
-      ['main.12345.chunk.js', true],
-    ]
+jest.mock('workbox-navigation-preload', () => ({ enable: jest.fn() }))
+jest.mock('workbox-precaching', () => ({ matchPrecache: jest.fn() }))
+jest.mock('workbox-routing', () => ({ Route: class {} }))
 
-    test.each(TEST_ENTRIES)('filterManifest(%p)', (entry: PrecacheEntry | string, expected: boolean) => {
-      expect(filterManifest(entry)).toBe(expected)
-    })
-  })
-
-  describe('match documents', () => {
-    const oldWindowLocation = window.location
-    beforeAll(() => {
-      delete window.location
-    })
-
+describe('document', () => {
+  describe('matchDocument', () => {
     const TEST_DOCUMENTS = [
       [{ request: {}, url: { hostname: 'app.uniswap.org', pathname: '' } }, false],
       [{ request: { mode: 'navigate' }, url: { hostname: 'app.uniswap.org', pathname: '' } }, true],
-      [{ request: { mode: 'navigate' }, url: { hostname: 'app.uniswap.org', pathname: '/test.gif' } }, false],
-      [{ request: { mode: 'navigate' }, url: { hostname: 'random-url.org', pathname: '' } }, false],
-    ]
+      [{ request: { mode: 'navigate' }, url: { hostname: 'app.uniswap.org', pathname: '/path.gif' } }, false],
+      [{ request: { mode: 'navigate' }, url: { hostname: 'example.com', pathname: '' } }, false],
+      [{ request: {}, url: { hostname: 'localhost', pathname: '' } }, false],
+      [{ request: { mode: 'navigate' }, url: { hostname: 'localhost', pathname: '' } }, true],
+    ] as [RouteMatchCallbackOptions, boolean][]
 
-    test.each(TEST_DOCUMENTS)('matchDocument(%o)', (document: RouteMatchCallbackOptions, expected: boolean) => {
-      window.location = { hostname: '' }
+    it.each(TEST_DOCUMENTS)('%o', (document: RouteMatchCallbackOptions, expected: boolean) => {
+      jest.spyOn(window, 'location', 'get').mockReturnValue({ hostname: document.url.hostname } as Location)
       expect(matchDocument(document)).toBe(expected)
-    })
-
-    it('localhost', () => {
-      window.location = { hostname: 'localhost' }
-      expect(matchDocument({ request: {}, url: { hostname: '', pathname: '' } })).toBe(false)
-      expect(matchDocument({ request: { mode: 'navigate' }, url: { hostname: '', pathname: '' } })).toBe(true)
-    })
-
-    afterAll(() => {
-      window.location = oldWindowLocation
     })
   })
 
-  describe('handle document', () => {
+  describe('handleDocument', () => {
     const abortSpy = jest.spyOn(AbortController.prototype, 'abort')
     const openSpy = jest.fn()
     const fetchSpy = jest.fn()
@@ -83,7 +55,7 @@ describe('service-worker', () => {
         clone: cloneSpy,
       }
 
-      const result = await handleDocument({
+      const result = await handle({
         event: {
           preloadResponse: Promise.resolve(response),
         },
@@ -119,7 +91,7 @@ describe('service-worker', () => {
 
       fetchSpy.mockReturnValue(Promise.resolve(response))
 
-      const result = await handleDocument({
+      const result = await handle({
         event: {
           preloadResponse: Promise.resolve(),
         },
