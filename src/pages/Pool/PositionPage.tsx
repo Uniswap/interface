@@ -418,9 +418,9 @@ export function PositionPage({
 
   if (fiatValueOfFees?.greaterThan(new Fraction(1, 100))) {
     localStorage.setItem(tokenId ? tokenId.toString() : '', fiatValueOfFees.toFixed(2))
-  } else {
-    const fiatValueOfFeesCached = localStorage.getItem(tokenId ? tokenId.toString() : '')
   }
+  const feesCached = localStorage.getItem(tokenId ? tokenId.toString() : '')
+  const fiatValueOfFeesCached = feesCached ? feesCached : '-'
   const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !position) return null
     const amount0 = price0.quote(position.amount0)
@@ -739,7 +739,7 @@ export function PositionPage({
                           </ThemedText.LargeHeader>
                         ) : (
                           <ThemedText.LargeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
-                            <Trans>${fiatValueOfFeesCached ? fiatValueOfFeesCached : '-'}</Trans>
+                            <Trans>${fiatValueOfFeesCached}</Trans>
                           </ThemedText.LargeHeader>
                         )}
                       </AutoColumn>
