@@ -12,6 +12,8 @@ import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { useAppDispatch } from 'state/hooks'
+import { updateConnectorError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
@@ -237,6 +239,7 @@ const getChainNameFromId = (id: string | number) => {
 }
 
 export default function NetworkSelector() {
+  const dispatch = useAppDispatch()
   const { chainId, provider, connector } = useActiveWeb3React()
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
@@ -255,13 +258,16 @@ export default function NetworkSelector() {
       if (!connector) return
 
       try {
+        dispatch(updateConnectorError({ error: undefined }))
         await switchChain(connector, targetChain)
         if (!skipToggle) {
           toggle()
         }
-      } catch (error) {}
+      } catch (error) {
+        dispatch(updateConnectorError({ error }))
+      }
     },
-    [connector, toggle]
+    [connector, toggle, dispatch]
   )
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { isChainAllowed } from 'connectors'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
+import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 
 import useENSName from '../../hooks/useENSName'
@@ -140,7 +141,7 @@ function WrappedStatusIcon({ connector }: { connector: Connector }) {
 
 function Web3StatusInner() {
   const { account, connector, chainId } = useWeb3React()
-  const error = undefined
+  const error = useAppSelector((state) => state.wallet.connectorError)
 
   const chainNotAllowed = chainId && !isChainAllowed(connector, chainId)
 

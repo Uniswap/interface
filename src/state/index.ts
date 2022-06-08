@@ -16,6 +16,7 @@ import { routingApi } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
+import wallet from './wallet/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -23,6 +24,7 @@ const store = configureStore({
   reducer: {
     application,
     user,
+    wallet,
     transactions,
     swap,
     mint,

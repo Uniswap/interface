@@ -7,8 +7,8 @@ import Row, { AutoRow } from 'components/Row'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga4'
-import { useAppDispatch } from 'state/hooks'
-import { updateWalletOverride } from 'state/user/reducer'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { updateConnectorError, updateWalletOverride } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -144,7 +144,7 @@ export default function WalletModal({
   const previousWalletView = usePrevious(walletView)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
-  const [error, setError] = useState<Error | undefined>(undefined)
+  const connectorError = useAppSelector((state) => state.wallet.connectorError)
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
@@ -192,7 +192,7 @@ export default function WalletModal({
 
       await connector.activate()
 
-      setError(undefined)
+      dispatch(updateConnectorError({ error: undefined }))
 
       const wallet = getWalletForConnector(connector)
       if (isActiveMap[wallet]) {
@@ -203,7 +203,7 @@ export default function WalletModal({
         setWalletView(WALLET_VIEWS.PENDING)
       }
     } catch (error) {
-      setError(error)
+      dispatch(updateConnectorError({ error }))
     }
   }
 
@@ -311,7 +311,7 @@ export default function WalletModal({
 
   function getModalContent() {
     const chainNotAllowed = chainId && !isChainAllowed(connector, chainId)
-    if (error || chainNotAllowed) {
+    if (connectorError || chainNotAllowed) {
       return (
         <UpperSection>
           <CloseIcon onClick={toggleWalletModal}>
@@ -381,12 +381,12 @@ export default function WalletModal({
               <PendingView
                 resetAccountView={resetAccountView}
                 connector={pendingConnector}
-                error={!!error}
+                error={!!connectorError}
                 tryActivation={tryActivation}
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-cy="option-grid">{getOptions()}</OptionGrid>}
-            {!error && (
+            {!connectorError && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>
                   <ThemedText.Body fontSize={12}>
