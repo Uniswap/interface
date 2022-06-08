@@ -203,7 +203,10 @@ export default function WalletModal({
         setWalletView(WALLET_VIEWS.PENDING)
       }
     } catch (error) {
-      if (connector === fortmatic && error.message === 'User denied account access.') {
+      if (
+        connector === fortmatic &&
+        error.message === 'Fortmatic RPC Error: [-32603] Fortmatic: User denied account access.'
+      ) {
         return
       }
 
