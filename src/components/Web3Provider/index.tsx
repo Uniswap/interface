@@ -17,9 +17,10 @@ import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/wallet/reducer'
 
-const eagerlyConnect = async (connector: Connector) => {
+const connectEagerly = async (connector: Connector) => {
+  if (!connector.connectEagerly) return
   try {
-    await connector.activate()
+    await connector.connectEagerly()
   } catch (error) {
     console.debug(`web3-react error: ${typeof connector}, ${error}`)
   }
@@ -55,16 +56,16 @@ function Web3Updater() {
 
   // The dependency list is empty so this is only run once on mount
   useEffect(() => {
-    eagerlyConnect(gnosisSafe)
-    eagerlyConnect(network)
+    connectEagerly(gnosisSafe)
+    connectEagerly(network)
 
     if (walletOverride) {
-      eagerlyConnect(getConnectorForWallet(walletOverride))
+      connectEagerly(getConnectorForWallet(walletOverride))
       setIsEagerlyConnecting(true)
     } else if (!walletOverrideBackfilled) {
       WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC)
         .map(getConnectorForWallet)
-        .forEach(eagerlyConnect)
+        .forEach(connectEagerly)
       setIsEagerlyConnecting(true)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
