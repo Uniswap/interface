@@ -131,7 +131,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, hooks, account } = useWeb3React()
+  const { connector, hooks } = useWeb3React()
   const isActiveMap: Partial<Record<Wallet, boolean>> = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
