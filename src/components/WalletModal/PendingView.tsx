@@ -50,12 +50,12 @@ export default function PendingView({
   connector,
   error = false,
   tryActivation,
-  resetAccountView,
+  resetOptionsView,
 }: {
   connector: Connector
   error?: boolean
   tryActivation: (connector: Connector) => void
-  resetAccountView: () => void
+  resetOptionsView: () => void
 }) {
   return (
     <PendingSection>
@@ -81,7 +81,7 @@ export default function PendingView({
                 <Trans>Try Again</Trans>
               </ButtonPrimary>
               <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-                <ThemedText.Link fontSize={12} onClick={resetAccountView}>
+                <ThemedText.Link fontSize={12} onClick={resetOptionsView}>
                   <Trans>Back to wallet selection</Trans>
                 </ThemedText.Link>
               </ButtonEmpty>

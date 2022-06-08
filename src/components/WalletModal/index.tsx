@@ -150,8 +150,8 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const resetAccountView = useCallback(() => {
-    setWalletView(WALLET_VIEWS.ACCOUNT)
+  const resetOptionsView = useCallback(() => {
+    setWalletView(WALLET_VIEWS.OPTIONS)
   }, [setWalletView])
 
   useEffect(() => {
@@ -366,7 +366,7 @@ export default function WalletModal({
           <AutoColumn gap="16px">
             {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
               <PendingView
-                resetAccountView={resetAccountView}
+                resetOptionsView={resetOptionsView}
                 connector={pendingConnector}
                 error={!!connectorError}
                 tryActivation={tryActivation}
