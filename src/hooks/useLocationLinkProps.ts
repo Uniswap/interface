@@ -1,3 +1,4 @@
+import { sendEvent } from 'components/analytics'
 import { SupportedLocale } from 'constants/locales'
 import { LocationDescriptor } from 'history'
 import useParsedQueryString from 'hooks/useParsedQueryString'
