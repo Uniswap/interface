@@ -102,6 +102,7 @@ export const [walletConnect, walletConnectHooks] = initializeConnector<WalletCon
         rpc: INFURA_NETWORK_URLS,
         qrcode: true,
       },
+      treatModalCloseAsError: true,
     })
 )
 
