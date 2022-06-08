@@ -68,18 +68,14 @@ const Marginer = styled.div`
 export default function App() {
   const history = useHistory()
 
-  const ScrollToTop = () => {
-    useEffect(() => {
-      const unlisten = history.listen(() => {
-        window.scrollTo(0, 0)
-      })
-      return () => {
-        unlisten()
-      }
-    }, [])
-
-    return null
-  }
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0)
+    })
+    return () => {
+      unlisten()
+    }
+  }, [history])
 
   return (
     <ErrorBoundary>
@@ -96,7 +92,6 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
-              <ScrollToTop />
               <Switch>
                 <Route strict path="/vote" component={Vote} />
                 <Route exact strict path="/create-proposal">
