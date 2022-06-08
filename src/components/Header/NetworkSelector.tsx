@@ -263,11 +263,15 @@ export default function NetworkSelector() {
         if (!skipToggle) {
           toggle()
         }
+        history.replace({
+          search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
+        })
       } catch (error) {
+        console.error('Failed to switch networks', error)
         dispatch(updateConnectorError({ error }))
       }
     },
-    [connector, toggle, dispatch]
+    [connector, toggle, dispatch, history]
   )
 
   useEffect(() => {
