@@ -66,8 +66,8 @@ export enum MIXPANEL_TYPE {
   FAUCET_MENU_CLICKED,
   FAUCET_REQUEST_INITIATED,
   FAUCET_REQUEST_COMPLETED,
-  SUBSCRIBE_TRENDING_SOON,
-  UNSUBSCRIBE_TRENDING_SOON,
+  DISCOVER_SUBSCRIBE_TRENDING_SOON,
+  DISCOVER_UNSUBSCRIBE_TRENDING_SOON,
 }
 
 export default function useMixpanel(trade?: Aggregator | undefined, currencies?: { [field in Field]?: Currency }) {
@@ -347,11 +347,11 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Discover - Trending Tab Clicked')
           break
         }
-        case MIXPANEL_TYPE.SUBSCRIBE_TRENDING_SOON: {
+        case MIXPANEL_TYPE.DISCOVER_SUBSCRIBE_TRENDING_SOON: {
           mixpanel.track(`Discover - 'Subscribe' clicked on Trending Soon`)
           break
         }
-        case MIXPANEL_TYPE.UNSUBSCRIBE_TRENDING_SOON: {
+        case MIXPANEL_TYPE.DISCOVER_UNSUBSCRIBE_TRENDING_SOON: {
           mixpanel.track(`Discover - 'Unsubscribe' clicked on Trending Soon`)
           break
         }
