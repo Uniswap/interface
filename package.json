@@ -156,6 +156,27 @@
     "test": "react-scripts test --env=./custom-test-env.cjs",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
   },
+  "jest": {
+    "collectCoverageFrom": 
+    [
+      "src/components/**/*.ts*", 
+      "src/hooks/**/*.ts*", 
+      "src/lib/hooks/**/*.ts*", 
+      "src/lib/state/**/*.ts*", 
+      "src/lib/utils/**/*.ts*", 
+      "src/pages/**/*.ts*",
+      "src/state/**/*.ts*",
+      "src/utils/**/*.ts*"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",
