@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { fortmatic } from 'connectors'
+import { fortmatic, getWalletForConnector } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { updateConnectorError } from 'state/wallet/reducer'
+import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
@@ -277,8 +277,10 @@ export default function NetworkSelector() {
     async (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
+      const wallet = getWalletForConnector(connector)
+
       try {
-        dispatch(updateConnectorError({ error: undefined }))
+        dispatch(updateWalletError({ wallet, error: undefined }))
         await switchChain(connector, targetChain)
         if (!skipToggle) {
           toggle()
@@ -288,7 +290,7 @@ export default function NetworkSelector() {
         })
       } catch (error) {
         console.error('Failed to switch networks', error)
-        dispatch(updateConnectorError({ error: error.message }))
+        dispatch(updateWalletError({ wallet, error: error.message }))
 
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }

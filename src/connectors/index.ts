@@ -17,9 +17,13 @@ export enum Wallet {
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',
   FORTMATIC = 'FORTMATIC',
+  NETWORK = 'NETWORK',
+  GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
 
-export const WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED, Wallet.FORTMATIC]
+export type ModalWallet = Exclude<Wallet, Wallet.NETWORK | Wallet.GNOSIS_SAFE>
+
+export const MODAL_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED, Wallet.FORTMATIC]
 
 export const isChainAllowed = (connector: Connector, chainId: number) => {
   switch (connector) {
@@ -46,6 +50,10 @@ export const getWalletForConnector = (connector: Connector) => {
       return Wallet.WALLET_CONNECT
     case fortmatic:
       return Wallet.FORTMATIC
+    case network:
+      return Wallet.NETWORK
+    case gnosisSafe:
+      return Wallet.GNOSIS_SAFE
     default:
       throw Error('unsupported connector')
   }
@@ -61,6 +69,10 @@ export const getConnectorForWallet = (wallet: Wallet) => {
       return walletConnect
     case Wallet.FORTMATIC:
       return fortmatic
+    case Wallet.NETWORK:
+      return network
+    case Wallet.GNOSIS_SAFE:
+      return gnosisSafe
   }
 }
 
@@ -81,6 +93,10 @@ export const getHooksForWallet = (wallet: Wallet) => {
       return walletConnectHooks
     case Wallet.FORTMATIC:
       return fortmaticHooks
+    case Wallet.NETWORK:
+      return networkHooks
+    case Wallet.GNOSIS_SAFE:
+      return gnosisSafeHooks
   }
 }
 
@@ -130,7 +146,7 @@ export const createOrderedConnectors = (walletOverride: Wallet | undefined) => {
   if (walletOverride) {
     connectors.push(getConnectorListItemForWallet(walletOverride))
   }
-  WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
+  MODAL_WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
     connectors.push(getConnectorListItemForWallet(wallet))
   })
   connectors.push({ connector: network, hooks: networkHooks })

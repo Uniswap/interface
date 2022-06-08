@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga4'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { updateConnectorError, updateWalletOverride } from 'state/wallet/reducer'
+import { updateWalletError, updateWalletOverride } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -132,7 +132,7 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, hooks, account } = useWeb3React()
-  const isActiveMap: Record<Wallet, boolean> = {
+  const isActiveMap: Partial<Record<Wallet, boolean>> = {
     [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
     [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
     [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(walletConnect),
@@ -143,7 +143,9 @@ export default function WalletModal({
   const previousWalletView = usePrevious(walletView)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
-  const connectorError = useAppSelector((state) => state.wallet.connectorError)
+  const pendingError = useAppSelector((state) =>
+    pendingConnector ? state.wallet.errorByWallet[getWalletForConnector(pendingConnector)] : undefined
+  )
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
@@ -182,6 +184,8 @@ export default function WalletModal({
       label: name,
     })
 
+    const wallet = getWalletForConnector(connector)
+
     try {
       // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
       // collision into the WalletModal, so we special case by closing the modal.
@@ -192,7 +196,6 @@ export default function WalletModal({
       setPendingConnector(connector)
       setWalletView(WALLET_VIEWS.PENDING)
 
-      const wallet = getWalletForConnector(connector)
       if (isActiveMap[wallet]) {
         await connector.activate()
         setWalletView(WALLET_VIEWS.ACCOUNT)
@@ -201,7 +204,7 @@ export default function WalletModal({
         await connector.activate()
       }
 
-      dispatch(updateConnectorError({ error: undefined }))
+      dispatch(updateWalletError({ wallet, error: undefined }))
     } catch (error) {
       if (
         connector === fortmatic &&
@@ -210,7 +213,7 @@ export default function WalletModal({
         return
       }
 
-      dispatch(updateConnectorError({ error: error.message }))
+      dispatch(updateWalletError({ wallet, error: error.message }))
     }
   }
 
@@ -368,12 +371,12 @@ export default function WalletModal({
               <PendingView
                 resetOptionsView={resetOptionsView}
                 connector={pendingConnector}
-                error={!!connectorError}
+                error={!!pendingError}
                 tryActivation={tryActivation}
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-cy="option-grid">{getOptions()}</OptionGrid>}
-            {!connectorError && (
+            {!pendingError && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>
                   <ThemedText.Body fontSize={12}>

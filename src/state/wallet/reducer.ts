@@ -9,14 +9,21 @@ export interface WalletState {
   walletOverrideBackfilled: boolean
   walletOverride?: Wallet
 
-  connectorError?: string
+  errorByWallet: Record<Wallet, string | undefined>
 }
 
 export const initialState: WalletState = {
   walletOverride: undefined,
   walletOverrideBackfilled: false,
 
-  connectorError: undefined,
+  errorByWallet: {
+    [Wallet.INJECTED]: undefined,
+    [Wallet.FORTMATIC]: undefined,
+    [Wallet.WALLET_CONNECT]: undefined,
+    [Wallet.COINBASE_WALLET]: undefined,
+    [Wallet.NETWORK]: undefined,
+    [Wallet.GNOSIS_SAFE]: undefined,
+  },
 }
 
 const walletSlice = createSlice({
@@ -27,11 +34,15 @@ const walletSlice = createSlice({
       state.walletOverride = wallet
       state.walletOverrideBackfilled = true
     },
-    updateConnectorError(state, { payload: { error } }) {
-      state.connectorError = error
+    updateWalletError(state, { payload: { wallet, error } }) {
+      if (error) {
+        state.errorByWallet = { ...state.errorByWallet, [wallet]: error }
+      } else {
+        state.errorByWallet = { ...state.errorByWallet, [wallet]: undefined }
+      }
     },
   },
 })
 
-export const { updateWalletOverride, updateConnectorError } = walletSlice.actions
+export const { updateWalletOverride, updateWalletError } = walletSlice.actions
 export default walletSlice.reducer
