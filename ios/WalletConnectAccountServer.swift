@@ -8,29 +8,34 @@
 import Foundation
 import WalletConnectSwift
 
-class WalletConnectAccountServer {
+extension Session {
+  func getAccount() -> String? {
+    guard self.walletInfo != nil && !self.walletInfo!.accounts.isEmpty else {
+      return nil
+    }
+    
+    return self.walletInfo!.accounts[0]
+  }
+}
+
+class WalletConnectServerWrapper {
   var eventEmitter: RCTEventEmitter!
-  var account: String!
   var server: Server!
   var supportedChainIds: [Int]!
-  
   var settlePendingSession: ((Session.WalletInfo) -> Void)? = nil
-  
   var topicToSession: [String: Session]! = [:]
-  
   // mapping of internal id (uuid) => request
   private var pendingRequests: [String: Request]! = [:]
   
-  init(eventEmitter: RCTEventEmitter, account: String, supportedChainIds: [Int]) {
+  init(eventEmitter: RCTEventEmitter, supportedChainIds: [Int]) {
     self.server = Server(delegate: self)
     self.eventEmitter = eventEmitter
-    self.account = account
     self.supportedChainIds = supportedChainIds
     
-    self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
-    self.server.register(handler: WalletConnectSignTransactionHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
-    self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
-    self.server.register(handler: WalletConnectAddChainHandler(eventEmitter: eventEmitter, accountServer: self, account: account))
+    self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, serverWrapper: self))
+    self.server.register(handler: WalletConnectSignTransactionHandler(eventEmitter: eventEmitter, serverWrapper: self))
+    self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, serverWrapper: self))
+    self.server.register(handler: WalletConnectAddChainHandler(eventEmitter: eventEmitter, serverWrapper: self))
   }
   
   func disconnect(_ topic: String) {
@@ -39,7 +44,7 @@ class WalletConnectAccountServer {
     do {
       try self.server.disconnect(from: session)
     } catch {
-      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcDisconnectError.rawValue, "message": error.localizedDescription, "account": self.account])
+      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcDisconnectError.rawValue, "message": error.localizedDescription, "account": session.getAccount()])
     }
   }
   
@@ -47,22 +52,22 @@ class WalletConnectAccountServer {
     do {
       try self.server.connect(to: to)
     } catch {
-      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue, "message": error.localizedDescription, "account": self.account])
+      self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue, "message": error.localizedDescription])
     }
   }
   
-  func settlePendingSession(chainId: Int, approved: Bool) throws -> Void {
+  func settlePendingSession(chainId: Int, account: String, approved: Bool) throws -> Void {
     guard let completePendingSession = self.settlePendingSession else {
       throw WCSwiftError.pendingSessionNotFound
     }
     // TODO: pass in client info on initialization, also update these values when link is ready
-
+    
     let walletMeta = Session.ClientMeta(name: "Uniswap Wallet",
                                         description: "A very cool wallet!",
                                         icons: [],
                                         url: URL(string: "https://uniswap.org")!)
     let walletInfo = Session.WalletInfo(approved: approved,
-                                        accounts: [self.account],
+                                        accounts: [account],
                                         chainId: chainId,
                                         peerId: UUID().uuidString,
                                         peerMeta: walletMeta)
@@ -76,8 +81,7 @@ class WalletConnectAccountServer {
         withName: EventType.error.rawValue,
         body: [
           "type": ErrorType.invalidRequestId.rawValue,
-          "message": "Are you sure you are using request_internal_id and not request.id?",
-          "account": self.account
+          "message": "Invalid request id",
         ]
       )
     }
@@ -89,7 +93,6 @@ class WalletConnectAccountServer {
         withName: EventType.error.rawValue,
         body: [
           "type": ErrorType.wcSendSignatureError.rawValue,
-          "account": self.account
         ]
       )
     }
@@ -107,7 +110,7 @@ class WalletConnectAccountServer {
         let icons = session.dAppInfo.peerMeta.icons
         self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: [
           "type": ErrorType.wcUnsupportedChainError.rawValue,
-          "account": self.account,
+          "account": session.getAccount(),
           "dapp": [
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
@@ -120,7 +123,7 @@ class WalletConnectAccountServer {
           withName: EventType.error.rawValue,
           body: [
             "type": ErrorType.wcRejectRequestError.rawValue,
-            "account": self.account
+            "account": session.getAccount()
           ]
         )
       }
@@ -144,7 +147,7 @@ class WalletConnectAccountServer {
       self.eventEmitter.sendEvent(withName: EventType.sessionUpdated.rawValue, body: [
         "session_name": session.dAppInfo.peerMeta.name,
         "session_id": session.url.topic,
-        "account": self.account!,
+        "account": session.getAccount(),
         "dapp": [
           "name": session.dAppInfo.peerMeta.name,
           "url": session.dAppInfo.peerMeta.url.absoluteString,
@@ -163,7 +166,7 @@ class WalletConnectAccountServer {
         withName: EventType.error.rawValue,
         body: [
           "type": ErrorType.wcSwitchChainError.rawValue,
-          "account": self.account
+          "account": session.getAccount()
         ]
       )
     }
@@ -175,7 +178,6 @@ class WalletConnectAccountServer {
         withName: EventType.error.rawValue,
         body: [
           "type": ErrorType.invalidRequestId.rawValue,
-          "account": self.account,
           "message": "Are you sure you are using request_internal_id and not request.id?"
         ]
       )
@@ -188,7 +190,6 @@ class WalletConnectAccountServer {
         withName: EventType.error.rawValue,
         body: [
           "type": ErrorType.wcRejectRequestError.rawValue,
-          "account": self.account
         ]
       )
     }
@@ -209,9 +210,9 @@ class WalletConnectAccountServer {
   }
 }
 
-extension WalletConnectAccountServer: ServerDelegate {
+extension WalletConnectServerWrapper: ServerDelegate {
   func server(_ server: Server, didFailToConnect url: WCURL) {
-    self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue, "account": self.account ])
+    self.eventEmitter.sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcConnectError.rawValue])
   }
   
   func server(_ server: Server, shouldStart session: Session, completion: @escaping (Session.WalletInfo) -> Void) {
@@ -220,7 +221,6 @@ extension WalletConnectAccountServer: ServerDelegate {
     self.eventEmitter.sendEvent(withName: EventType.sessionPending.rawValue, body: [
       "session_name": session.dAppInfo.peerMeta.name,
       "session_id": session.url.topic,
-      "account": self.account!,
       "dapp": [
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
@@ -231,15 +231,15 @@ extension WalletConnectAccountServer: ServerDelegate {
   }
   
   func server(_ server: Server, didConnect session: Session) {
-    var sessionDatas = UserDefaults.standard.object(forKey: account) as? [String: Data] ?? [:]
+    var sessionDatas = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data] ?? [:]
     var showNotification = false
-
+    
     // Add new session to UserDefaults cache if it doesn't already exist (ignores reconnections)
     if (sessionDatas[session.url.topic] == nil) {
       let sessionData = try! JSONEncoder().encode(session) as Data
       sessionDatas.updateValue(sessionData, forKey: session.url.topic)
-      UserDefaults.standard.set(sessionDatas, forKey: account)
-    
+      UserDefaults.standard.set(sessionDatas, forKey: WALLET_CONNECT_SESSION_STORAGE_KEY)
+      
       showNotification = true
     }
     
@@ -248,24 +248,24 @@ extension WalletConnectAccountServer: ServerDelegate {
     self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: [
       "session_name": session.dAppInfo.peerMeta.name,
       "session_id": session.url.topic,
-      "account": self.account!,
+      "account": session.getAccount(),
       "show_notification": showNotification,
       "dapp": [
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
-        "chain_id": session.walletInfo?.chainId ?? 1, 
+        "chain_id": session.walletInfo?.chainId ?? 1,
       ]
     ])
-
+    
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }
   
   func server(_ server: Server, didDisconnect session: Session) {
     // Remove session from UserDefaults cache
-    var newSessionDatas = UserDefaults.standard.object(forKey: account) as? [String: Data]
+    var newSessionDatas = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data]
     newSessionDatas?.removeValue(forKey: session.url.topic)
-    UserDefaults.standard.set(newSessionDatas, forKey: account)
+    UserDefaults.standard.set(newSessionDatas, forKey: WALLET_CONNECT_SESSION_STORAGE_KEY)
     
     self.topicToSession.removeValue(forKey: session.url.topic)
     
@@ -274,7 +274,7 @@ extension WalletConnectAccountServer: ServerDelegate {
     self.eventEmitter.sendEvent(withName: EventType.sessionDisconnected.rawValue, body: [
       "session_id": session.url.topic,
       "session_name": session.url.topic,
-      "account": self.account!,
+      "account": session.getAccount(),
       "dapp": [
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,

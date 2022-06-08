@@ -46,70 +46,58 @@ enum WCSwiftError: Error {
   case invalidChainId
   case invalidSessionTopic
   case pendingSessionNotFound
+  case missingSessionAccount
 }
+
+let WALLET_CONNECT_SESSION_STORAGE_KEY = "wallet_connect"
 
 @objc(RNWalletConnect)
 class RNWalletConnect: RCTEventEmitter {
-  private var accountToWcServer: [String: WalletConnectAccountServer]! = [:]
+  var serverWrapper: WalletConnectServerWrapper!
   var supportedChainIds: [Int] = []
   
   @objc
   func initialize(_ supportedChainIds: [Int]) {
     self.supportedChainIds = supportedChainIds
+    self.serverWrapper = WalletConnectServerWrapper(eventEmitter: self, supportedChainIds: supportedChainIds)
   }
   
   @objc
-  func reconnectAccountSessions(_ accounts: [String]) {
-    // Load cache of all sessions for given account addresses
-    for account in accounts {
-      let accountServer = getServer(account)
+  func reconnectAccountSessions() {
+    if let sessionObjects = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data] {
       
-      if let accountSessionObjects = UserDefaults.standard.object(forKey: account) as? [String: Data] {
+      // Copy sessions to remove failed reconnections from UserDefaults
+      var updatedSessions = sessionObjects
       
-        // Copy accountSessions to remove failed reconnections from UserDefaults
-        var updatedAccountSessions = accountSessionObjects
-       
-        // Attempt to reconnect to all cached sessions for given account
-        for (_, sessionObject) in accountSessionObjects {
-          if let session = try? JSONDecoder().decode(Session.self, from: sessionObject) {
-            do {
-              try accountServer.server.reconnect(to: session)
-            } catch {
-              // Remove session from UserDefaults cache
-              updatedAccountSessions.removeValue(forKey: session.url.topic)
-            }
+      // Attempt to reconnect to all cached sessions
+      for (_, sessionObject) in sessionObjects {
+        if let session = try? JSONDecoder().decode(Session.self, from: sessionObject) {
+          do {
+            try self.serverWrapper.server.reconnect(to: session)
+          } catch {
+            // Remove session from UserDefaults cache
+            updatedSessions.removeValue(forKey: session.url.topic)
           }
         }
-       
-        UserDefaults.standard.set(updatedAccountSessions, forKey: account)
       }
+      
+      UserDefaults.standard.set(updatedSessions, forKey: WALLET_CONNECT_SESSION_STORAGE_KEY)
     }
-  }
-
-  func getServer(_ account: String) -> WalletConnectAccountServer {
-    guard self.accountToWcServer[account] == nil else { return self.accountToWcServer[account]! }
-    
-    let accountServer = WalletConnectAccountServer(eventEmitter: self, account: account, supportedChainIds: supportedChainIds)
-    self.accountToWcServer.updateValue(accountServer, forKey: account)
-    return accountServer
   }
   
   @objc
-  func connect(_ url: String, account: String) {
+  func connect(_ url: String) {
     guard let wcUrl = WCURL(url) else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcInvalidUrl, "account": account ])
+      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcInvalidUrl ])
     }
     
-    let server = self.getServer(account)
-    server.connect(to: wcUrl)
+    self.serverWrapper.connect(to: wcUrl)
   }
   
   @objc
   func settlePendingSession(_ chainId: Int, account: String, approved: Bool) {
-    
-    let server = self.getServer(account)
     do {
-      try server.settlePendingSession(chainId: chainId, approved: approved)
+      try self.serverWrapper.settlePendingSession(chainId: chainId, account: account, approved: approved)
     } catch {
       return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.pendingSessionNotFound.rawValue, "account": account])
     }
@@ -120,39 +108,25 @@ class RNWalletConnect: RCTEventEmitter {
   }
   
   @objc
-  func disconnect(_ topic: String, account: String) {
-    guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
-    }
-    accountServer.disconnect(topic)
+  func disconnect(_ topic: String) {
+    self.serverWrapper.disconnect(topic)
   }
   
   @objc
-  func sendSignature(_ requestInternalId: String, signature: String, account: String) {
-    guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
-    }
-    
-    accountServer.sendSignature(requestInternalId: requestInternalId, signature: signature)
+  func sendSignature(_ requestInternalId: String, signature: String) {
+    self.serverWrapper.sendSignature(requestInternalId: requestInternalId, signature: signature)
   }
   
   @objc
-  func changeChainId(_ topic: String, chainId: Int, account: String) {
-    guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
-    }
-    guard let session: Session = accountServer.topicToSession[topic] else { return }
+  func changeChainId(_ topic: String, chainId: Int) {
+    guard let session: Session = self.serverWrapper.topicToSession[topic] else { return }
     
-    accountServer.switchChainId(session: session, chainId: chainId)
+    self.serverWrapper.switchChainId(session: session, chainId: chainId)
   }
   
   @objc
   func rejectRequest(_ requestInternalId: String, account: String) {
-    guard let accountServer = self.accountToWcServer[account] else {
-      return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.invalidAccount.rawValue, "account": account])
-    }
-    
-    accountServer.rejectRequest(requestInternalId: requestInternalId)
+    self.serverWrapper.rejectRequest(requestInternalId: requestInternalId)
   }
   
   @objc override static func requiresMainQueueSetup() -> Bool {

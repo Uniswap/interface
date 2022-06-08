@@ -9,15 +9,12 @@ import Foundation
 import WalletConnectSwift
 
 class WalletConnectSignTransactionHandler: RequestHandler {
-  var accountServer: WalletConnectAccountServer!
+  var serverWrapper: WalletConnectServerWrapper!
   var eventEmitter: RCTEventEmitter!
   
-  private var account: String!
-  
-  init(eventEmitter: RCTEventEmitter, accountServer: WalletConnectAccountServer, account: String) {
+  init(eventEmitter: RCTEventEmitter, serverWrapper: WalletConnectServerWrapper) {
     self.eventEmitter = eventEmitter
-    self.accountServer = accountServer
-    self.account = account
+    self.serverWrapper = serverWrapper
   }
   
   func canHandle(request: Request) -> Bool {
@@ -26,18 +23,18 @@ class WalletConnectSignTransactionHandler: RequestHandler {
   
   func handle(request: Request) {
     let internalId = UUID().uuidString
-    self.accountServer.setPendingRequest(request: request, internalId: internalId)
+    self.serverWrapper.setPendingRequest(request: request, internalId: internalId)
     
     do {
-      let session = try self.accountServer.getSessionFromTopic(request.url.topic)
+      let session = try self.serverWrapper.getSessionFromTopic(request.url.topic)
       let icons = session.dAppInfo.peerMeta.icons
       let transaction = try request.parameter(of: EthereumTransaction.self, at: 0)
-
+      
       self.eventEmitter.sendEvent(
         withName: EventType.transactionRequest.rawValue, body: [
           "type": request.method,
           "request_internal_id": internalId,
-          "account": self.account!,
+          "account": session.getAccount(),
           "transaction": [
             "data": transaction.data,
             "from": transaction.from,
@@ -57,7 +54,7 @@ class WalletConnectSignTransactionHandler: RequestHandler {
         ]
       )
     } catch {
-      self.accountServer.server.send(.invalid(request))
+      self.serverWrapper.server.send(.invalid(request))
     }
   }
 }

@@ -86,9 +86,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   const canSubmit = !isPotentiallyUnsafe(request) || maybeUnsafeConfirmation
 
   const onReject = () => {
-    if (!activeAccount) return
-
-    rejectRequest(request.internalId, activeAccount.address)
+    rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
     onClose()
   }

@@ -9,15 +9,12 @@ import Foundation
 import WalletConnectSwift
 
 class WalletConnectAddChainHandler: RequestHandler {
-  var accountServer: WalletConnectAccountServer!
+  var serverWrapper: WalletConnectServerWrapper!
   var eventEmitter: RCTEventEmitter!
   
-  private var account: String!
-  
-  init(eventEmitter: RCTEventEmitter, accountServer: WalletConnectAccountServer, account: String) {
+  init(eventEmitter: RCTEventEmitter, serverWrapper: WalletConnectServerWrapper) {
     self.eventEmitter = eventEmitter
-    self.accountServer = accountServer
-    self.account = account
+    self.serverWrapper = serverWrapper
   }
   
   func canHandle(request: Request) -> Bool {
@@ -29,9 +26,9 @@ class WalletConnectAddChainHandler: RequestHandler {
       // Can use WalletSwitchEthereumChainObject because chainId is the first param of wallet_addEthereumChain, and we handle add by attempting to switch chain
       let chainIdRequest = try request.parameter(of: WalletSwitchEthereumChainObject.self, at: 0)
       let chainIdInt = try chainIdRequest.toInt()
-      self.accountServer.requestSwitchChainId(request: request, chainId: chainIdInt)
+      self.serverWrapper.requestSwitchChainId(request: request, chainId: chainIdInt)
     } catch {
-      self.accountServer.server.send(.invalid(request))
+      self.serverWrapper.server.send(.invalid(request))
     }
   }
 }

@@ -11,7 +11,6 @@ import { Text } from 'src/components/Text'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { changeChainId, disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { toSupportedChainId } from 'src/utils/chainId'
@@ -25,7 +24,6 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeChains = useActiveChainIds()
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const options = useMemo(
     () =>
@@ -36,7 +34,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
             key: `${ElementName.NetworkButton}-${chainId}`,
             onPress: () => {
               selectionAsync()
-              changeChainId(selectedSession.id, chainId, activeAccountAddress)
+              changeChainId(selectedSession.id, chainId)
               onClose()
             },
             render: () => (
@@ -62,7 +60,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
             key: ElementName.Disconnect,
             onPress: () => {
               notificationAsync()
-              disconnectFromApp(selectedSession.id, activeAccountAddress)
+              disconnectFromApp(selectedSession.id)
               onClose()
             },
             render: () => (
@@ -78,7 +76,6 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
           },
         ]),
     [
-      activeAccountAddress,
       activeChains,
       onClose,
       selectedSession.dapp.chain_id,

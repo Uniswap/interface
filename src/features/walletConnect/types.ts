@@ -100,7 +100,7 @@ export interface SignRequestEvent {
 }
 
 export interface WCError {
-  account: string
+  account: string | null
   type: WCErrorType
   message?: string
   dapp?: DappInfo

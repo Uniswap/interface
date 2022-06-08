@@ -11,15 +11,12 @@ import WalletConnectSwift
 let EthSignMethods = [EthMethod.personalSign.rawValue, EthMethod.signTypedData.rawValue, EthMethod.ethSign.rawValue, EthMethod.signTypedData_v4.rawValue]
 
 class WalletConnectSignRequestHandler: RequestHandler {
-  var accountServer: WalletConnectAccountServer!
+  var serverWrapper: WalletConnectServerWrapper!
   var eventEmitter: RCTEventEmitter!
   
-  private var account: String!
-  
-  init(eventEmitter: RCTEventEmitter, accountServer: WalletConnectAccountServer, account: String) {
+  init(eventEmitter: RCTEventEmitter, serverWrapper: WalletConnectServerWrapper) {
     self.eventEmitter = eventEmitter
-    self.accountServer = accountServer
-    self.account = account
+    self.serverWrapper = serverWrapper
   }
   
   func canHandle(request: Request) -> Bool {
@@ -49,10 +46,10 @@ class WalletConnectSignRequestHandler: RequestHandler {
     // use our own UUID to index requests beacuse request.id may not always be defined, and is not
     // guaranteed to be a string
     let internalId = UUID().uuidString
-    self.accountServer.setPendingRequest(request: request, internalId: internalId)
+    self.serverWrapper.setPendingRequest(request: request, internalId: internalId)
     
     do {
-      let session = try self.accountServer.getSessionFromTopic(request.url.topic)
+      let session = try self.serverWrapper.getSessionFromTopic(request.url.topic)
       let icons = session.dAppInfo.peerMeta.icons
       
       let (rawMessage, decodedMessage) = try getMessage(request)
@@ -63,7 +60,7 @@ class WalletConnectSignRequestHandler: RequestHandler {
           "raw_message": rawMessage,
           "message": decodedMessage ?? nil,
           "request_internal_id": internalId,
-          "account": self.account!,
+          "account": session.getAccount(),
           "dapp": [
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
@@ -74,7 +71,7 @@ class WalletConnectSignRequestHandler: RequestHandler {
         ]
       )
     } catch {
-      self.accountServer.server.send(.invalid(request))
+      self.serverWrapper.server.send(.invalid(request))
     }
   }
 }

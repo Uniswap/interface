@@ -1,12 +1,10 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
-import { Action, PayloadAction } from '@reduxjs/toolkit'
+import { Action } from '@reduxjs/toolkit'
 import { providers, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { NativeEventEmitter, NativeModules } from 'react-native'
-import { REHYDRATE } from 'redux-persist'
 import { eventChannel } from 'redux-saga'
 import { i18n } from 'src/app/i18n'
-import { RootState } from 'src/app/rootReducer'
 import { getSignerManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
@@ -15,7 +13,7 @@ import { sendTransaction, SendTransactionParams } from 'src/features/transaction
 import { TransactionType } from 'src/features/transactions/types'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { Account } from 'src/features/wallet/accounts/types'
 import {
   DappInfo,
   EthMethod,
@@ -28,7 +26,6 @@ import {
   SignRequestEvent,
   TransactionRequestEvent,
   WCError,
-  WCErrorType,
   WCEventType,
 } from 'src/features/walletConnect/types'
 import {
@@ -156,19 +153,8 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
     }
 
     const errorHandler = (req: WCError) => {
-      switch (req.type) {
-        case WCErrorType.UnsupportedChainError:
-          emit(
-            pushNotification({
-              type: AppNotificationType.Error,
-              address: req.account,
-              errorMessage: i18n.t('Failed to switch network, chain is not supported'),
-            })
-          )
-          break
-        default:
-          logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
-      }
+      // TODO: add push notification on WCErrorType.UnsupportedChainError when global push notifs are supported
+      logger.error('wcSaga', 'native module', 'errorHandler', req.type, req.message || '')
     }
 
     const eventEmitters = [
@@ -197,12 +183,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
 
 export function* walletConnectSaga() {
   yield* call(initializeWalletConnect)
-  const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
-  const addressToAccounts = persisted.payload?.wallet?.accounts ?? {}
-  const signerAddresses = Object.values(addressToAccounts)
-    .filter((a) => a.type !== AccountType.Readonly)
-    .map((account) => account.address)
-  yield* call(reconnectAccountSessions, signerAddresses)
+  yield* call(reconnectAccountSessions)
   yield* fork(watchWalletConnectEvents)
 }
 
@@ -266,9 +247,9 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = transactionResponse.hash
     }
 
-    yield* call(sendSignature, requestInternalId, signature, account.address)
+    yield* call(sendSignature, requestInternalId, signature)
   } catch (err) {
-    yield* call(rejectRequest, requestInternalId, account.address)
+    yield* call(rejectRequest, requestInternalId)
     yield* put(
       pushNotification({
         type: AppNotificationType.Error,

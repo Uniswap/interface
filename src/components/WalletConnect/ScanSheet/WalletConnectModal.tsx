@@ -49,7 +49,7 @@ export function WalletConnectModal({
 
   const onScanCode = (uri: string) => {
     if (!activeAddress) return
-    connectToApp(uri, activeAddress)
+    connectToApp(uri)
   }
 
   const onPressBottomToggle = () => {
