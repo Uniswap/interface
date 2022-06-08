@@ -1,5 +1,5 @@
 import { selectionAsync } from 'expo-haptics'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-native-qrcode-svg'
 import 'react-native-reanimated'
@@ -46,6 +46,12 @@ export function WalletConnectModal({
   const { sessions, pendingSession } = useWalletConnect(activeAddress)
   const [currentScreenState, setCurrentScreenState] =
     useState<WalletConnectModalState>(initialScreenState)
+
+  useEffect(() => {
+    if (!pendingSession) return
+
+    selectionAsync()
+  }, [pendingSession])
 
   const onScanCode = (uri: string) => {
     if (!activeAddress) return
