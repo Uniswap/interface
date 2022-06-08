@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
-import { KROM } from 'constants/tokens'
+import { KROM, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
@@ -17,6 +17,7 @@ import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { isTokenOnList } from '../../utils'
+import { unwrappedToken } from '../../utils/unwrappedToken'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
@@ -216,15 +217,8 @@ export default function CurrencyList({
   }, [currencies, otherListTokens])
   const { chainId } = useActiveWeb3React()
 
-  let index = 0
-  for (let i = 0; i < currencies.length; i++) {
-    chainId && currencies[i].symbol == KROM[chainId].symbol ? (index = i) : ''
-  }
-
-  const kromToken = currencies[index]
-  currencies.splice(index, 1)
-  if (chainId && itemData[0] != KROM[chainId]) {
-    index != 0 ? itemData.unshift(kromToken) : chainId && itemData.unshift(KROM[chainId])
+  if (chainId && currencies[0]?.wrapped == WRAPPED_NATIVE_CURRENCY[chainId]) {
+    chainId && itemData.unshift(KROM[chainId].wrapped)
   }
 
   const Row = useCallback(
