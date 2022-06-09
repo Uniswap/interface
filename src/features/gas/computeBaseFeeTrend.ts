@@ -39,7 +39,7 @@ export function computeBaseFeeTrend(baseFees: number[], currentBaseFee: BigNumbe
       return BaseFeeTrend.Raising
     } else if (maxByMedian < THRESHOLDS.RAISING && minByMedian > THRESHOLDS.FALLING) {
       // In this case, check the median slope of a smaller subset
-      const baseFeesNewerHalf = baseFees.splice(baseFees.length / 2)
+      const baseFeesNewerHalf = baseFees.slice(baseFees.length / 2)
       const subsetSizeNewerHalf = Math.floor(baseFeesNewerHalf.length / 10)
       const feeStatsNewerHalf = getStatsForSubsets(baseFeesNewerHalf, subsetSizeNewerHalf)
       if (feeStatsNewerHalf.medianSlope < THRESHOLDS.MEDIAN_SLOPE) {
