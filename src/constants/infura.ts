@@ -1,3 +1,5 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
+
 import { SupportedChainId } from './chains'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
@@ -21,3 +23,5 @@ export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.POLYGON]: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.POLYGON_MUMBAI]: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
 }
+
+export const MAINNET_PROVIDER = new JsonRpcProvider(INFURA_NETWORK_URLS[SupportedChainId.MAINNET])

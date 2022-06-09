@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { MAINNET_PROVIDER } from 'constants/infura'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
@@ -8,20 +8,12 @@ import { useAppDispatch } from 'state/hooks'
 
 import { fetchTokenList } from '../state/lists/actions'
 
-export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
-  const { provider } = useActiveWeb3React()
-  const dispatch = useAppDispatch()
+const ensResolver = async (ensName: string) => {
+  return resolveENSContentHash(ensName, MAINNET_PROVIDER)
+}
 
-  const ensResolver = useCallback(
-    async (ensName: string) => {
-      if (provider) {
-        return resolveENSContentHash(ensName, provider)
-      } else {
-        return Promise.resolve('')
-      }
-    },
-    [provider]
-  )
+export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
+  const dispatch = useAppDispatch()
 
   // note: prevent dispatch if using for list search or unsupported list
   return useCallback(
@@ -39,6 +31,6 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
           throw error
         })
     },
-    [dispatch, ensResolver]
+    [dispatch]
   )
 }
