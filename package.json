@@ -17,9 +17,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:cypress": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress open'",
-    "pretest:cypress:ci": "yarn build",
-    "test:cypress:ci": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
+    "build:e2e": "env-cmd -f .env yarn build",
+    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress open'",
+    "test:e2e:ci": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
   },
   "browserslist": {
     "production": [
@@ -107,9 +107,9 @@
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
-    "cross-env": "^7.0.3",
     "cypress": "^7.7.0",
     "d3": "^7.0.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-better-styled-components": "^1.1.2",

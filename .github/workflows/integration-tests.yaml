@@ -37,7 +37,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - run: yarn test:cypress:ci
+      - run: yarn build:e2e
+        env:
+          CI: false # disables lint checks when building
+
+      - run: yarn test:e2e:ci
         env:
           CI: false # disables lint checks when building
           CYPRESS_INTEGRATION_TEST_PRIVATE_KEY: ${{ secrets.CYPRESS_INTEGRATION_TEST_PRIVATE_KEY }}
