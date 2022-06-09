@@ -9,7 +9,6 @@ import { Activity } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 
-import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
@@ -140,12 +139,10 @@ function WrappedStatusIcon({ connector }: { connector: Connector }) {
 }
 
 function Web3StatusInner() {
-  const { account, connector, chainId } = useWeb3React()
+  const { account, connector, chainId, ENSName } = useWeb3React()
   const error = useAppSelector((state) => state.wallet.errorByWallet[getWalletForConnector(connector)])
 
   const chainNotAllowed = chainId && !isChainAllowed(connector, chainId)
-
-  const { ENSName } = useENSName(account ?? undefined)
 
   const allTransactions = useAllTransactions()
 
@@ -209,9 +206,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { account } = useWeb3React()
-
-  const { ENSName } = useENSName(account ?? undefined)
+  const { ENSName } = useWeb3React()
 
   const allTransactions = useAllTransactions()
 
