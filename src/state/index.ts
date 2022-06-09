@@ -17,14 +17,16 @@ import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
 import wallet from './wallet/reducer'
+import walletOverride from './walletOverride/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'wallet']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'walletOverride']
 
 const store = configureStore({
   reducer: {
     application,
     user,
     wallet,
+    walletOverride,
     transactions,
     swap,
     mint,

@@ -15,7 +15,7 @@ import {
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { updateWalletOverride } from 'state/wallet/reducer'
+import { updateWalletOverride } from 'state/walletOverride/reducer'
 
 const connect = async (connector: Connector) => {
   try {
@@ -40,8 +40,8 @@ function Web3Updater() {
   const dispatch = useAppDispatch()
   const { hooks } = useWeb3React()
 
-  const walletOverride = useAppSelector((state) => state.wallet.walletOverride)
-  const walletOverrideBackfilled = useAppSelector((state) => state.wallet.walletOverrideBackfilled)
+  const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
+  const walletOverrideBackfilled = useAppSelector((state) => state.walletOverride.walletOverrideBackfilled)
 
   const injectedIsActive = hooks.useSelectedIsActive(injected)
   const previousInjectedIsActive = usePrevious(injectedIsActive)
@@ -136,7 +136,7 @@ interface Props {
 }
 
 export default function Web3Provider({ children }: Props) {
-  const walletOverride = useAppSelector((state) => state.wallet.walletOverride)
+  const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
   const connectors = createOrderedConnectors(walletOverride)
   return (
     <Web3ReactProvider connectors={connectors}>
