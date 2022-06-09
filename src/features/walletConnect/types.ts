@@ -23,7 +23,7 @@ export enum WCErrorType {
 
 export enum WCEventType {
   SessionConnected = 'session_connected',
-  SessionUpdated = 'session_updated',
+  NetworkChanged = 'network_changed',
   SessionDisconnected = 'session_disconnected',
   SessionPending = 'session_pending',
   Error = 'error',

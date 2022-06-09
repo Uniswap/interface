@@ -49,6 +49,7 @@ import { call, fork, put, take } from 'typed-redux-saga'
 export enum WalletConnectEvent {
   Connected,
   Disconnected,
+  NetworkChanged,
 }
 
 function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
@@ -74,7 +75,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       }
     }
 
-    const sessionUpdatedHandler = (req: SessionUpdatedEvent) => {
+    const networkChangedHandler = (req: SessionUpdatedEvent) => {
       emit(
         updateSession({ wcSession: { id: req.session_id, dapp: req.dapp }, account: req.account })
       )
@@ -82,7 +83,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
         pushNotification({
           type: AppNotificationType.WalletConnect,
           address: req.account,
-          event: WalletConnectEvent.Connected,
+          event: WalletConnectEvent.NetworkChanged,
           dappName: req.dapp.name,
           imageUrl: req.dapp.icon,
           chainId: req.dapp.chain_id,
@@ -159,7 +160,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
 
     const eventEmitters = [
       { type: WCEventType.SessionConnected, handler: sessionConnectedHandler },
-      { type: WCEventType.SessionUpdated, handler: sessionUpdatedHandler },
+      { type: WCEventType.NetworkChanged, handler: networkChangedHandler },
       { type: WCEventType.SessionDisconnected, handler: sessionDisconnectedHandler },
       { type: WCEventType.SessionPending, handler: sessionPendingHandler },
       { type: WCEventType.SignRequest, handler: signRequestHandler },

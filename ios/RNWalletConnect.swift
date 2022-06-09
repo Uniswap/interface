@@ -24,7 +24,7 @@ enum EventType: String, CaseIterable {
   case signRequest = "sign_request" // personal_sign, eth_sign, eth_signTypedData requests
   case transactionRequest = "transaction_request" // eth_signTransaction and eth_sendTransaction requests
   case sessionConnected = "session_connected"
-  case sessionUpdated = "session_updated"
+  case networkChanged = "network_changed"
   case sessionDisconnected = "session_disconnected"
   case sessionPending = "session_pending"
 }

@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { i18n } from 'src/app/i18n'
+import { CHAIN_INFO } from 'src/constants/chains'
 import { SpotPrices } from 'src/features/dataApi/types'
 import { NFTAsset } from 'src/features/nfts/types'
 import { WalletConnectNotification } from 'src/features/notifications/types'
@@ -10,13 +11,16 @@ import { buildCurrencyId, currencyIdToAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification) => {
-  const { event, dappName } = appNotification
+  const { event, dappName, chainId } = appNotification
 
   switch (event) {
     case WalletConnectEvent.Connected:
       return i18n.t('Connected to {{dappName}}', { dappName })
     case WalletConnectEvent.Disconnected:
       return i18n.t('Disconnected from {{dappName}}', { dappName })
+    case WalletConnectEvent.NetworkChanged:
+      const networkName = CHAIN_INFO[chainId]?.label
+      return i18n.t('{{dappName}} switched to {{networkName}}', { dappName, networkName })
   }
 }
 

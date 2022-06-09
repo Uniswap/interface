@@ -144,7 +144,7 @@ class WalletConnectServerWrapper {
       
       let icons = session.dAppInfo.peerMeta.icons
       
-      self.eventEmitter.sendEvent(withName: EventType.sessionUpdated.rawValue, body: [
+      self.eventEmitter.sendEvent(withName: EventType.networkChanged.rawValue, body: [
         "session_name": session.dAppInfo.peerMeta.name,
         "session_id": session.url.topic,
         "account": session.getAccount(),
