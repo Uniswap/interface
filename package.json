@@ -19,7 +19,7 @@
     "test": "react-scripts test",
     "test:cypress": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress open'",
     "pretest:cypress:ci": "yarn build",
-    "test:cypress:ci": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'"
+    "test:cypress:ci": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
   },
   "browserslist": {
     "production": [
