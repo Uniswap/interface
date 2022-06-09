@@ -416,7 +416,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
             ? Math.floor(new Date().getTime() / monthTs) * monthTs
             : Math.floor(new Date().getTime() / weekTs) * weekTs
         const data = await getCandles(ts, resolution === '1M' ? 'month' : 'week', '15m')
-        if (!data) return
+        if (!data || !data.candles) return
         const { candles } = data
         let lastCandle: any = {}
         let timeTs = 0
@@ -457,6 +457,7 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
         } else {
           lastCandle = candles[candles.length - 1]
         }
+        if (!lastCandle) return
         if (isReverse) {
           lastCandle = {
             ...lastCandle,
