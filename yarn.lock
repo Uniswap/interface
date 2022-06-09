@@ -4603,9 +4603,9 @@
     hardhat-watcher "^2.1.1"
 
 "@uniswap/token-lists@^1.0.0-beta.25", "@uniswap/token-lists@^1.0.0-beta.27":
-  version "1.0.0-beta.28"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.28.tgz#76bb6ec25e76ae6bece9efc11b9b68079b2b9402"
-  integrity sha512-MmVeoOd/HlZYOn5NT2mlDoOUYjnZb+3V7aCD5/YwSgsqeDRXZmKfKHafEEhiZoMvXuZdqSBg4L/ythvzAf9cwA==
+  version "1.0.0-beta.29"
+  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.29.tgz#7be3b62aeab84c710a153a115df3bb8480027684"
+  integrity sha512-b19mDY5G94GW9tKjvoNEbdApWM1GNahh5EFYs7LsBE7J3r7qNsJ6MqZYoPg73KS6GOrp8/2XdcSXRBUt6NHjZg==
 
 "@uniswap/v2-core@1.0.0":
   version "1.0.0"
