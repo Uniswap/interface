@@ -5,7 +5,7 @@ import { Swipeable } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { Star } from 'src/components/icons/Star'
+import { Heart } from 'src/components/icons/Heart'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -39,7 +39,7 @@ function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
   return (
     <Flex centered bg="neutralAction" width={80}>
       <IconButton
-        icon={<Star active={active} size={24} />}
+        icon={<Heart active={active} size={24} />}
         variant="transparent"
         onPress={onPress}
       />

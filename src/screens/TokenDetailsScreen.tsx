@@ -9,7 +9,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { Star } from 'src/components/icons/Star'
+import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
@@ -60,7 +60,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
         <Text variant="h2">{currency.symbol ?? t('Unknown token')}</Text>
       </Flex>
       <IconButton
-        icon={<Star active={isFavoriteToken} size={24} />}
+        icon={<Heart active={isFavoriteToken} size={24} />}
         mr="sm"
         variant="transparent"
         onPress={onFavoritePress}

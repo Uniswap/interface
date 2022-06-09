@@ -2,8 +2,8 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppTheme } from 'src/app/hooks'
-import StarIcon from 'src/assets/icons/star.svg'
 import { Button } from 'src/components/buttons/Button'
+import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
 import { NetworkButtonGroup, NetworkButtonType } from 'src/components/Network/NetworkButtonGroup'
 import { Pill } from 'src/components/text/Pill'
@@ -47,14 +47,7 @@ export function FilterGroup({
               borderColor={selected === 'favorites' ? 'neutralOutline' : 'neutralSurface'}
               foregroundColor={theme.colors.deprecated_textColor}
               height={36}
-              icon={
-                <StarIcon
-                  fill={theme.colors.deprecated_yellow}
-                  height={20}
-                  stroke={theme.colors.deprecated_yellow}
-                  width={20}
-                />
-              }
+              icon={<Heart active size={20} />}
               label=""
             />
           </Button>

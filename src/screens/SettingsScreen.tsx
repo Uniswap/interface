@@ -8,8 +8,8 @@ import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
+import HeartIcon from 'src/assets/icons/heart.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
-import StarIcon from 'src/assets/icons/star.svg'
 import TestnetsIcon from 'src/assets/icons/testnets.svg'
 import TwitterIcon from 'src/assets/logos/twitter.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -259,9 +259,9 @@ function OnboardingRow() {
       }}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
-          <StarIcon
+          <HeartIcon
+            color={theme.colors.neutralTextSecondary}
             height={20}
-            stroke={theme.colors.neutralTextSecondary}
             strokeLinecap="round"
             strokeWidth="1.5"
             width={20}
