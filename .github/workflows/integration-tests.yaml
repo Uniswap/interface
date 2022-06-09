@@ -43,6 +43,5 @@ jobs:
 
       - run: yarn test:e2e:ci
         env:
-          CI: false # disables lint checks when building
           CYPRESS_INTEGRATION_TEST_PRIVATE_KEY: ${{ secrets.CYPRESS_INTEGRATION_TEST_PRIVATE_KEY }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
