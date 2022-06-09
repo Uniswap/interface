@@ -125,7 +125,7 @@ class RNWalletConnect: RCTEventEmitter {
   }
   
   @objc
-  func rejectRequest(_ requestInternalId: String, account: String) {
+  func rejectRequest(_ requestInternalId: String) {
     self.serverWrapper.rejectRequest(requestInternalId: requestInternalId)
   }
   
