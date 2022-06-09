@@ -1,5 +1,5 @@
 describe('ServiceWorker', () => {
-  it('installs a ServiceWorker', () => {
+  it('installs and serves a document from the ServiceWorker', () => {
     cy.visit('/').get('#swap-page')
     cy.window().its('__isDocumentCached').should('equal', undefined)
     cy.log('activate ServiceWorker').then(
@@ -18,10 +18,7 @@ describe('ServiceWorker', () => {
           }
         })
     )
-    cy.wait(2000)
-  })
 
-  it('serves a cached document from the ServiceWorker', () => {
     cy.reload().get('#swap-page')
     cy.window().its('__isDocumentCached').should('equal', true)
   })
