@@ -82,6 +82,8 @@
   "Connect to an app with WalletConnect": "Connect to an app with WalletConnect",
   "1 site connected": "1 site connected",
   "{{numConnections}} sites connected": "{{numConnections}} sites connected",
+  "No sites connected": "No sites connected",
+  "Connect to a site by scanning a code via WalletConnect": "Connect to a site by scanning a code via WalletConnect",
   "Show my QR code": "Show my QR code",
   "Secure your account": "Secure your account",
   "Face ID": "Face ID",

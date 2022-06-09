@@ -34,20 +34,31 @@ export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
             {t('Manage connections')}
           </Text>
         </Flex>
-        <FlatList
-          columnWrapperStyle={{ marginHorizontal: theme.spacing.sm }}
-          data={sessions}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          renderItem={(item) => (
-            <DappConnectionItem
-              wrapped={item}
-              onPressChangeNetwork={() => {
-                setSelectedSession(item.item)
-              }}
-            />
-          )}
-        />
+        {sessions.length > 0 ? (
+          <FlatList
+            columnWrapperStyle={{ marginHorizontal: theme.spacing.sm }}
+            data={sessions}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            renderItem={(item) => (
+              <DappConnectionItem
+                wrapped={item}
+                onPressChangeNetwork={() => {
+                  setSelectedSession(item.item)
+                }}
+              />
+            )}
+          />
+        ) : (
+          <Flex centered fill gap="xs" mx="xl">
+            <Text color="neutralTextPrimary" variant="body1">
+              {t('No sites connected')}
+            </Text>
+            <Text color="neutralTextSecondary" textAlign="center" variant="body2">
+              {t('Connect to a site by scanning a code via WalletConnect')}
+            </Text>
+          </Flex>
+        )}
       </AnimatedFlex>
       {selectedSession && (
         <DappSwitchNetworkModal
