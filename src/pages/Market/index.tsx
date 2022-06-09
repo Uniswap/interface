@@ -269,7 +269,7 @@ export default function Market({ history }: RouteComponentProps) {
   const [referer, setReferer] = useState('')
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`https://app.kromatika.finance/#/swap/r/${account}`)
+    navigator.clipboard.writeText(`${window.location.href}/r/${account}`)
     setCopied(true)
     setTimeout(() => setCopied(false), 15000)
   }
