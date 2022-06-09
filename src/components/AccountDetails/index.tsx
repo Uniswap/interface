@@ -266,13 +266,13 @@ export default function AccountDetails({
                 {formatConnectorName()}
                 <div>
                   {/* Coinbase Wallet reloads the page right now, which breaks the walletOverride from being set properly on localStorage */}
-                  {connector !== coinbaseWallet && (
+                  {connector?.deactivate && connector !== coinbaseWallet && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        dispatch(updateWalletOverride({ wallet: undefined }))
+                        connector.deactivate?.()
                         openOptions()
-                        connector.deactivate()
+                        dispatch(updateWalletOverride({ wallet: undefined }))
                       }}
                       data-cy="wallet-disconnect"
                     >
