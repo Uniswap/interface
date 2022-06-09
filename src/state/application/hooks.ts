@@ -19,7 +19,7 @@ import {
 import { getPercentChange, getBlockFromTimestamp } from 'utils'
 import { useDeepCompareEffect } from 'react-use'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { defaultExchangeClient, defaultKSExchangeClient } from 'apollo/client'
+import { defaultExchangeClient } from 'apollo/client'
 
 export function useExchangeClient() {
   const { chainId } = useActiveWeb3React()
@@ -29,15 +29,6 @@ export function useExchangeClient() {
     if (!chainId) return defaultExchangeClient
     return exchangeSubgraphClients[chainId] || defaultExchangeClient
   }, [chainId, exchangeSubgraphClients])
-}
-export function useKSExchangeClient() {
-  const { chainId } = useActiveWeb3React()
-  const ksExchangeSubgraphClients = useSelector((state: AppState) => state.application.ksExchangeSubgraphClients)
-
-  return useMemo(() => {
-    if (!chainId) return defaultKSExchangeClient
-    return ksExchangeSubgraphClients[chainId] || defaultKSExchangeClient
-  }, [chainId, ksExchangeSubgraphClients])
 }
 
 export function useBlockNumber(): number | undefined {

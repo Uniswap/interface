@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { GLOBAL_DATA } from 'apollo/queries'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from '@dynamic-amm/sdk'
-import { useBlockNumber, useExchangeClient } from 'state/application/hooks'
+import { useBlockNumber } from 'state/application/hooks'
 import { getExchangeSubgraphUrls } from 'apollo/manager'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
@@ -39,7 +39,6 @@ interface GlobalData {
 export function useGlobalData() {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
-  //const apolloClient = useExchangeClient()
   const [globalData, setGlobalData] = useState<GlobalData>()
   const aggregatorData = useAggregatorVolume()
   const aggregatorAPR = useAggregatorAPR()

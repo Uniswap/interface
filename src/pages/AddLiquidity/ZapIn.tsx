@@ -18,7 +18,7 @@ import {
   TokenAmount,
   WETH,
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES, AMP_HINT, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
+import { ZAP_ADDRESSES, AMP_HINT } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'

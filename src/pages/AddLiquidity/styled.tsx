@@ -146,8 +146,8 @@ export const PoolRatioWrapper = styled.div`
 `
 
 export const DynamicFeeRangeWrapper = styled(AutoColumn)`
-  flex: 2;
-  justify-content: flex-end;
+  flex: 1;
+  justify-content: flex-start;
 `
 
 export const USDPrice = styled.div`

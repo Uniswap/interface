@@ -40,8 +40,6 @@ import {
   calculateSlippageAmount,
   formattedNum,
   getDynamicFeeRouterContract,
-  getKSFactoryContract,
-  getRouterContract,
   getStaticFeeRouterContract,
 } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'

@@ -12,10 +12,9 @@ import {
   updateKNCPrice,
   updateChainIdWhenNotConnected,
   setExchangeSubgraphClient,
-  setKSExchangeSubgraphClient,
   setGasPrice,
 } from './actions'
-import { exchangeClients, ksExchangeClients } from 'apollo/client'
+import { exchangeClients } from 'apollo/client'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
@@ -34,7 +33,6 @@ export interface ApplicationState {
   readonly kncPrice?: string
   readonly chainIdWhenNotConnected: ChainId
   exchangeSubgraphClients: { [key: string]: ApolloClient<NormalizedCacheObject> }
-  ksExchangeSubgraphClients: { [key: string]: ApolloClient<NormalizedCacheObject> }
   readonly gasPrice?: GasPrice
 }
 
@@ -46,7 +44,6 @@ const initialState: ApplicationState = {
   kncPrice: '',
   chainIdWhenNotConnected: ChainId.MAINNET,
   exchangeSubgraphClients: exchangeClients,
-  ksExchangeSubgraphClients: ksExchangeClients,
 }
 
 export default createReducer(initialState, builder =>
@@ -92,9 +89,6 @@ export default createReducer(initialState, builder =>
     })
     .addCase(setExchangeSubgraphClient, (state, { payload: exchangeSubgraphClients }) => {
       state.exchangeSubgraphClients = exchangeSubgraphClients as any
-    })
-    .addCase(setKSExchangeSubgraphClient, (state, { payload: ksExchangeSubgraphClients }) => {
-      state.ksExchangeSubgraphClients = ksExchangeSubgraphClients as any
     })
     .addCase(setGasPrice, (state, { payload: gasPrice }) => {
       state.gasPrice = gasPrice as GasPrice

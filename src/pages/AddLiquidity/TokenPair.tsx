@@ -16,7 +16,7 @@ import TransactionConfirmationModal, {
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, AMP_HINT, STATIC_FEE_OPTIONS } from '../../constants'
+import { ROUTER_ADDRESSES, AMP_HINT } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
