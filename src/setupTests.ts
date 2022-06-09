@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom' // jest custom assertions
 
 import { Readable } from 'stream'
 import { TextDecoder, TextEncoder } from 'util'

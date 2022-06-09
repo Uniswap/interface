@@ -40,6 +40,5 @@ jobs:
       - run: yarn test:cypress:ci
         env:
           CI: false # disables lint checks when building
-          REACT_APP_SERVICE_WORKER: false
           CYPRESS_INTEGRATION_TEST_PRIVATE_KEY: ${{ secrets.CYPRESS_INTEGRATION_TEST_PRIVATE_KEY }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
