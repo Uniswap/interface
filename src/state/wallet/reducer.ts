@@ -20,8 +20,11 @@ const walletSlice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
-    updateWalletError(state, { payload: { wallet, error } }) {
-      state.errorByWallet = { ...state.errorByWallet, [wallet]: error }
+    updateWalletError(
+      state,
+      { payload: { wallet, error } }: { payload: { wallet: Wallet; error: string | undefined } }
+    ) {
+      state.errorByWallet[wallet] = error
     },
   },
 })

@@ -162,10 +162,11 @@ export default function WalletModal({
   }, [walletModalOpen, setWalletView, connector])
 
   useEffect(() => {
-    if (walletView !== WALLET_VIEWS.ACCOUNT) {
+    if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
+      updateWalletError({ wallet: getWalletForConnector(pendingConnector), error: undefined })
       setPendingConnector(undefined)
     }
-  }, [walletView])
+  }, [pendingConnector, walletView])
 
   const tryActivation = async (connector: Connector) => {
     const name = Object.values(SUPPORTED_WALLETS).find(
