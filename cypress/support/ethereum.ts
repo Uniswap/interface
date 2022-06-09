@@ -76,7 +76,7 @@ class CustomizedBridge extends Eip1193Bridge {
 Cypress.Commands.overwrite('visit', (original, url, options) => {
   return original(url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url, {
     ...options,
-    async onBeforeLoad(win: Window & { ethereum?: CustomizedBridge }) {
+    onBeforeLoad(win: Window & { ethereum?: CustomizedBridge }) {
       options?.onBeforeLoad?.(win)
       win.localStorage.clear()
       const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
