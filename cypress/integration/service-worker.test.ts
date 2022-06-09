@@ -1,14 +1,8 @@
 describe('ServiceWorker', () => {
-  beforeEach(() => {
-    cy.visit('/')
-  })
-
-  it('serves a cached document from the ServiceWorker', () => {
-    cy.window().then((window) => {
-      expect((window as any).__isDocumentCached).to.equal(undefined)
-    })
-
-    cy.then(
+  it('installs a ServiceWorker', () => {
+    cy.visit('/').get('#swap-page')
+    cy.window().its('__isDocumentCached').should('equal', undefined)
+    cy.log('activate ServiceWorker').then(
       () =>
         new Cypress.Promise((resolve) => {
           waitForServiceWorkerRegistration()
@@ -18,17 +12,17 @@ describe('ServiceWorker', () => {
               .getRegistration()
               .then((serviceWorker) => serviceWorker?.active)
               .then((active) => {
-                if (!active) throw new Error('ServiceWorker not active')
+                if (active) return resolve()
+                waitForServiceWorkerRegistration()
               })
-              .then(resolve)
-              .catch(waitForServiceWorkerRegistration)
           }
         })
     )
-    cy.reload()
+    cy.wait(2000)
+  })
 
-    cy.window().then((window) => {
-      expect((window as any).__isDocumentCached).to.equal(true)
-    })
+  it('serves a cached document from the ServiceWorker', () => {
+    cy.reload().get('#swap-page')
+    cy.window().its('__isDocumentCached').should('equal', true)
   })
 })

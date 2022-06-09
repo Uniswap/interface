@@ -111,7 +111,7 @@ export class CachedDocument extends Response {
             controller.enqueue(result.value)
           }
         }
-        controller.enqueue(new TextEncoder().encode('\n<script>__isDocumentCached = true</script>\n'))
+        controller.enqueue(new TextEncoder().encode('\n<script>window.__isDocumentCached = true</script>\n'))
         controller.close()
       },
     })
