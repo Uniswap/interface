@@ -220,7 +220,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
             <Flex
               ref={marqueeContainerRef}
               alignItems="center"
-              style={{ overflow: 'auto', background: theme.buttonBlack, borderRadius: '40px' }}
+              style={{ overflow: 'hidden', background: theme.buttonBlack, borderRadius: '40px' }}
             >
               {topTrendingSoonTokens.map((tokenData, index) => (
                 <React.Fragment key={tokenData.token_id}>
