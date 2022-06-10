@@ -18,10 +18,11 @@ import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 
 interface TokenItemProps {
-  onCycleMetadata?: () => void
+  gesturesEnabled?: boolean
   index?: number
   isSearchResult?: boolean
   metadataDisplayType?: string
+  onCycleMetadata?: () => void
   onPress: () => void
   token: Asset
 }
@@ -48,12 +49,13 @@ function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
 }
 
 export function TokenItem({
-  onCycleMetadata,
+  gesturesEnabled,
   index,
-  metadataDisplayType,
-  token,
   isSearchResult = false,
+  metadataDisplayType,
+  onCycleMetadata,
   onPress,
+  token,
 }: TokenItemProps) {
   const { t } = useTranslation()
 
@@ -69,7 +71,10 @@ export function TokenItem({
   }
 
   return (
-    <Swipeable overshootRight={false} renderRightActions={renderRightActions}>
+    <Swipeable
+      enabled={gesturesEnabled}
+      overshootRight={false}
+      renderRightActions={renderRightActions}>
       <Button testID={`token-item-${token.asset.symbol}`} onPress={onPress}>
         <AnimatedFlex
           row
@@ -79,7 +84,7 @@ export function TokenItem({
           px={isSearchResult ? 'xs' : 'md'}
           py="sm">
           <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
-            {index && (
+            {index !== undefined && (
               <Box minWidth={18}>
                 <Text color="neutralTextSecondary" variant="badge">
                   {index + 1}
@@ -122,7 +127,7 @@ export function TokenItem({
 export function TokenItemBox({ token, onPress }: TokenItemProps) {
   return (
     <Pressable testID={`token-box-${token.asset.symbol}`} onPress={onPress}>
-      <Box bg="translucentBackground" borderRadius="lg" justifyContent="space-between">
+      <Box bg="neutralContainer" borderRadius="lg" justifyContent="space-between">
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
             <Text variant="body1">{token.asset.symbol ?? ''}</Text>

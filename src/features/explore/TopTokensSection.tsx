@@ -23,14 +23,16 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
   const { orderBy, toggleModalVisible, orderByModal } = useOrderByModal()
   const { topTokens, isLoading } = useMarketTokens(orderBy)
 
+  const { onCycleMetadata, metadataDisplayType, expanded } = props
   const renderItem = useCallback(
     ({ item: token, index }: ListRenderItemInfo<Asset>) => {
       return (
         <TokenItem
+          gesturesEnabled={!!expanded}
           index={index}
-          metadataDisplayType={props.metadataDisplayType}
+          metadataDisplayType={metadataDisplayType}
           token={token}
-          onCycleMetadata={props.onCycleMetadata}
+          onCycleMetadata={onCycleMetadata}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
               currencyId: buildCurrencyId(ChainId.Mainnet, token.asset.asset_code),
@@ -39,7 +41,7 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
         />
       )
     },
-    [navigation, props.onCycleMetadata, props.metadataDisplayType]
+    [expanded, metadataDisplayType, onCycleMetadata, navigation]
   )
 
   return (
@@ -51,7 +53,7 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
         loading={isLoading}
         renderItem={renderItem}
         subtitle={props.expanded ? <SortingGroup onPressOrderBy={toggleModalVisible} /> : undefined}
-        title={t('Top Tokens')}
+        title={t('Tokens')}
       />
       {orderByModal}
     </>

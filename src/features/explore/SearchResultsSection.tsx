@@ -45,6 +45,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     ({ item: token }: ListRenderItemInfo<Asset>) => {
       return (
         <TokenItem
+          gesturesEnabled={false}
           isSearchResult={true}
           token={token}
           onPress={() => {

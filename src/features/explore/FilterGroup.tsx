@@ -1,8 +1,10 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
-import { IconButton } from 'src/components/buttons/IconButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 
 interface FilterGroupProps {
   onPressOrderBy: () => void
@@ -10,14 +12,15 @@ interface FilterGroupProps {
 
 export function SortingGroup({ onPressOrderBy }: FilterGroupProps) {
   const theme = useAppTheme()
+  const { t } = useTranslation()
   return (
-    <Flex row justifyContent="flex-end">
-      <IconButton
-        icon={<SwapArrow color={theme.colors.neutralTextTertiary} height={20} width={20} />}
-        m="none"
-        p="none"
-        onPress={onPressOrderBy}
-      />
-    </Flex>
+    <TextButton mt="md" onPress={onPressOrderBy}>
+      <Flex row gap="xs">
+        <SwapArrow color={theme.colors.neutralTextTertiary} height={20} width={20} />
+        <Text color="neutralTextSecondary" variant="subHead1">
+          {t('Market cap')}
+        </Text>
+      </Flex>
+    </TextButton>
   )
 }

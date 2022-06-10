@@ -1,7 +1,6 @@
 import { default as React, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatListProps } from 'react-native'
-import { SharedElement } from 'react-navigation-shared-element'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
@@ -54,29 +53,29 @@ export function GenericTokenSection({
 
   return (
     <Section.Container>
-      <SharedElement id={id}>
-        <Section.Header
-          buttonLabel={t('View all')}
-          expanded={!!expanded}
-          subtitle={subtitle}
-          title={title}
-          onMaximize={onToggle}
-          onMinimize={onToggle}
-        />
-      </SharedElement>
+      <Section.Header
+        buttonLabel={t('View all')}
+        expanded={!!expanded}
+        subtitle={subtitle}
+        title={title}
+        onMaximize={onToggle}
+        onMinimize={onToggle}
+      />
       {loading ? (
         <Box padding="sm">
           <Loading repeat={4} type="box" />
         </Box>
       ) : (
-        <Section.List
-          ItemSeparatorComponent={() => <Separator ml="md" />}
-          data={fixedCount ? assets?.slice(0, fixedCount) : assets}
-          horizontal={horizontal}
-          keyExtractor={key}
-          listKey={id}
-          renderItem={renderItem}
-        />
+        <Box ml={horizontal ? 'sm' : 'none'}>
+          <Section.List
+            ItemSeparatorComponent={() => <Separator ml="md" />}
+            data={fixedCount ? assets?.slice(0, fixedCount) : assets}
+            horizontal={horizontal}
+            keyExtractor={key}
+            listKey={id}
+            renderItem={renderItem}
+          />
+        </Box>
       )}
     </Section.Container>
   )

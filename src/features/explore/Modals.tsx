@@ -3,11 +3,14 @@ import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { OrderBy } from 'src/features/dataApi/zerion/types'
 import { ModalName } from 'src/features/telemetry/constants'
+import { flex } from 'src/styles/flex'
+
+const CheckmarkSize = 18
 
 export function useOrderByModal() {
   const { t } = useTranslation()
@@ -33,13 +36,14 @@ export function useOrderByModal() {
     orderByModal: useMemo(
       () => (
         <ActionSheetModal
+          header={t('Sort tokens by')}
           isVisible={isVisible}
           name={ModalName.Account}
           options={options}
           onClose={() => toggleModalVisible()}
         />
       ),
-      [isVisible, options]
+      [isVisible, options, t]
     ),
   }
 }
@@ -47,9 +51,21 @@ export function useOrderByModal() {
 function ModalOption({ isSelected, label }: { isSelected: boolean; label: string }) {
   const theme = useAppTheme()
   return (
-    <Flex row flex={1} justifyContent="space-between" p="md">
-      <Text variant="body1">{label}</Text>
-      {isSelected && <Check color={theme.colors.neutralTextSecondary} height={18} width={18} />}
+    <Flex row justifyContent="space-between" p="md">
+      {/* fake element to center the label  */}
+      <Box height={CheckmarkSize} width={CheckmarkSize} />
+      <Text style={flex.fill} textAlign="center" variant="body1">
+        {label}
+      </Text>
+      <Box height={CheckmarkSize} width={CheckmarkSize}>
+        {isSelected && (
+          <Check
+            color={theme.colors.neutralTextSecondary}
+            height={CheckmarkSize}
+            width={CheckmarkSize}
+          />
+        )}
+      </Box>
     </Flex>
   )
 }
@@ -69,14 +85,6 @@ const getOrderByModalOptions = (
         <ModalOption isSelected={selected === OrderBy.MarketCap} label={t('Market Cap')} />
       ),
     },
-    // TODO: support by volume
-    // {
-    //   key: OrderBy.Volume,
-    //   onPress: () => {
-    //     setOrderBy(OrderBy.Volume)
-    //   },
-    //   render: () => <ModalOption isSelected={selected === OrderBy.Volume} label={t('Volume')} />,
-    // },
     {
       key: OrderBy.RelativeChange1D,
       onPress: () => {

@@ -41,7 +41,9 @@ function Header({ buttonLabel, expanded, onMaximize, onMinimize, subtitle, title
     <TextButton mx="md" onPress={onPress}>
       <Flex gap="xxs" width="100%">
         <Flex row alignItems="center" justifyContent="space-between" width="100%">
-          <Text color="neutralTextSecondary" variant="body2">
+          <Text
+            color={expanded ? 'neutralTextPrimary' : 'neutralTextSecondary'}
+            variant={expanded ? 'h3' : 'body2'}>
             {title}
           </Text>
 
