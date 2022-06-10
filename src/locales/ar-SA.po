@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -763,7 +763,7 @@ msgstr "إثيرسكان"
 msgid "Executed"
 msgstr "أعدم"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "النتائج الموسعة من قوائم الرموز غير النشطة"
 
@@ -839,10 +839,6 @@ msgstr "مركز المساعدة"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "يخفي"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "إخفاء المراكز المغلقة"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "لا توجد نتائج."
 msgid "Not created"
 msgstr "لم يتم إنشاؤه"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "إيقاف"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "على"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "فقط استخدم هذا الخيار مع ما تعلمونه من أمور."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "إيقاف"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "تشغيل"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "مشاركة المجموعة:"
 msgid "Show Cancelled"
 msgstr "إظهار الملغاة"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "إظهار المراكز المغلقة"
@@ -1766,7 +1748,7 @@ msgstr "رمز غير مدعوم"
 msgid "Tokens"
 msgstr "الرموز"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "الرموز من القوائم غير النشطة. قم باستيراد الرموز المميزة المحددة أدناه أو انقر فوق \"إدارة\" لتنشيط المزيد من القوائم."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} السعر:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • أضيفت من قبل المستخدم"
 

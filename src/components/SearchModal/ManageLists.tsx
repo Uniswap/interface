@@ -26,7 +26,7 @@ import { ButtonEmpty, ButtonPrimary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
 import Row, { RowBetween, RowFixed } from '../Row'
-import ListToggle from '../Toggle/ListToggle'
+import Toggle from '../Toggle'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
@@ -215,7 +215,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
           </StyledMenu>
         </RowFixed>
       </Column>
-      <ListToggle
+      <Toggle
         isActive={isActive}
         bgColor={listColor}
         toggle={() => {

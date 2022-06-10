@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "已执行"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "从待用代币列表中扩展出的结果"
 
@@ -839,10 +839,6 @@ msgstr "帮助中心"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "隐藏"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "隐藏已关闭的仓位"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "未找到结果。"
 msgid "Not created"
 msgstr "未创建"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "关闭"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "开启"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "务必在详细了解此模式应用后才使用此模式操作。"
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "关闭"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "开启"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "流动池份额："
 msgid "Show Cancelled"
 msgstr "节目取消"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "显示已关闭的仓位"
@@ -1766,7 +1748,7 @@ msgstr "不支持该代币"
 msgid "Tokens"
 msgstr "代币"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "待用代币列表中的代币。在下面导入特定代币或单击“管理”以激活更多列表。"
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} 兑换率："
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • 由用户添加"
 

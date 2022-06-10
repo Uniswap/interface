@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -763,7 +763,7 @@ msgstr "eter tarama"
 msgid "Executed"
 msgstr "yürütüldü"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Aktif olmayan Jeton Listelerinden genişletilmiş sonuçlar"
 
@@ -839,10 +839,6 @@ msgstr "Yardım Merkezi"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Saklamak"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Kapalı pozisyonları gizle"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Sonuç bulunamadı."
 msgid "Not created"
 msgstr "oluşturulmadı"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "KAPALI"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "AÇIK"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "BU MODU YALNIZCA NE YAPTIĞINIZI BİLİYORSANIZ KULLANIN."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Kapalı"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Açık"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Havuz Payı:"
 msgid "Show Cancelled"
 msgstr "İptal Edilenleri Göster"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Kapalı pozisyonları göster"
@@ -1766,7 +1748,7 @@ msgstr "Jeton desteklenmiyor"
 msgid "Tokens"
 msgstr "Jetonlar"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Aktif olmayan listelerden gelen jetonlar. Aşağıdan belirli jetonları içe aktarın veya daha fazla listeyi etkinleştirmek için Yönet'e tıklayın."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Fiyat:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Kullanıcı tarafından eklendi"
 

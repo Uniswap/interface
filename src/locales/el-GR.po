@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Εκτελέστηκε"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Εκτεταμένα αποτελέσματα από ανενεργές Λίστες Μάρκας"
 
@@ -839,10 +839,6 @@ msgstr "Κέντρο βοηθείας"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Κρύβω"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Απόκρυψη κλειστών θέσεων"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Δεν βρέθηκαν αποτελέσματα."
 msgid "Not created"
 msgstr "Δεν δημιουργήθηκε"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "ΚΛΕΙΣΤΟ"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ΑΝΟΙΚΤΟ"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ΧΡΗΣΙΜΟΠΟΙΗΣΤΕ ΑΥΤΟ ΤΟΝ ΤΡΟΠΟ ΜΟΝΟ ΕΑΝ ΓΝΩΡΙΖΕΤΕ ΤΙ ΚΑΝΕΤΕ."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Μακριά από"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Ανοικτο"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Μερίδιο από τη Δεξαμενή:"
 msgid "Show Cancelled"
 msgstr "Εμφάνιση ακυρώθηκε"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Εμφάνιση κλειστών θέσεων"
@@ -1766,7 +1748,7 @@ msgstr "Το διακριτικό δεν υποστηρίζεται"
 msgid "Tokens"
 msgstr "Μάρκες"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Μάρκες από ανενεργές λίστες. Εισαγάγετε συγκεκριμένες μάρκες παρακάτω ή κάντε κλικ στην επιλογή Διαχείριση για να ενεργοποιήσετε περισσότερες λίστες."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Τιμή:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Προστέθηκε από τον χρήστη"
 

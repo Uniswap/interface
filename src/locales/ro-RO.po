@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Executat"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Rezultate extinse din Listele de Jetoane/Grupuri inactive"
 
@@ -839,10 +839,6 @@ msgstr "Centru de ajutor"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Ascunde"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Ascunde pozițiile închise"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Nici un rezultat găsit."
 msgid "Not created"
 msgstr "Nu a fost creat"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "DEZACTIVAT"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "PORNIT"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "UTILIZEAZĂ DOAR ACEST MOD DACĂ ȘTII CE TREBUIE SĂ FACI."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Dezactivat"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Activat"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Cota de Grup:"
 msgid "Show Cancelled"
 msgstr "Show Anulat"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Afișați pozițiile închise"
@@ -1766,7 +1748,7 @@ msgstr "Tokenul nu este acceptat"
 msgid "Tokens"
 msgstr "Jetoane"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Jetoane din liste inactive. Importă jetoanele specifice de mai jos sau fă clic pe Gestionare pentru a activa mai multe liste."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Preț:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Adăugat de utilizator"
 

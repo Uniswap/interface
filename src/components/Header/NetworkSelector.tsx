@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { fortmatic } from 'connectors'
+import { fortmatic, getWalletForConnector } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -11,11 +11,13 @@ import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+import { addPopup, ApplicationModal } from 'state/application/reducer'
+import { useAppDispatch } from 'state/hooks'
+import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-import { switchChain } from 'utils/switchToNetwork'
+import { switchChain } from 'utils/switchChain'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -92,6 +94,13 @@ const FlyoutRowActiveIndicator = styled.div`
   height: 9px;
   width: 9px;
 `
+
+const CircleContainer = styled.div`
+  width: 20px;
+  display: flex;
+  justify-content: center;
+`
+
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 16px;
@@ -187,7 +196,11 @@ function Row({
     <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
       <Logo src={logoUrl} />
       <NetworkLabel>{label}</NetworkLabel>
-      {chainId === targetChain && <FlyoutRowActiveIndicator />}
+      {chainId === targetChain && (
+        <CircleContainer>
+          <FlyoutRowActiveIndicator />
+        </CircleContainer>
+      )}
     </FlyoutRow>
   )
 
@@ -196,21 +209,30 @@ function Row({
       <ActiveRowWrapper>
         {rowContent}
         <ActiveRowLinkList>
-          {bridge ? (
+          {bridge && (
             <ExternalLink href={bridge}>
-              <BridgeLabel chainId={chainId} /> <LinkOutCircle />
+              <BridgeLabel chainId={chainId} />
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
-          {explorer ? (
+          )}
+          {explorer && (
             <ExternalLink href={explorer}>
-              <ExplorerLabel chainId={chainId} /> <LinkOutCircle />
+              <ExplorerLabel chainId={chainId} />
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
-          {helpCenterUrl ? (
+          )}
+          {helpCenterUrl && (
             <ExternalLink href={helpCenterUrl}>
-              <Trans>Help Center</Trans> <LinkOutCircle />
+              <Trans>Help Center</Trans>
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
+          )}
         </ActiveRowLinkList>
       </ActiveRowWrapper>
     )
@@ -237,6 +259,7 @@ const getChainNameFromId = (id: string | number) => {
 }
 
 export default function NetworkSelector() {
+  const dispatch = useAppDispatch()
   const { chainId, provider, connector } = useActiveWeb3React()
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
@@ -254,13 +277,35 @@ export default function NetworkSelector() {
     async (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
-      switchChain(connector, targetChain)
+      const wallet = getWalletForConnector(connector)
 
-      if (!skipToggle) {
-        toggle()
+      try {
+        dispatch(updateWalletError({ wallet, error: undefined }))
+        await switchChain(connector, targetChain)
+        if (!skipToggle) {
+          toggle()
+        }
+        history.replace({
+          search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
+        })
+      } catch (error) {
+        console.error('Failed to switch networks', error)
+
+        // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
+        // but the request fails, revert the URL back to current chainId
+        if (chainId) {
+          history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+        }
+
+        if (!skipToggle) {
+          toggle()
+        }
+
+        dispatch(updateWalletError({ wallet, error: error.message }))
+        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }
     },
-    [connector, toggle]
+    [connector, toggle, dispatch, history, chainId]
   )
 
   useEffect(() => {
@@ -300,6 +345,7 @@ export default function NetworkSelector() {
               <Trans>Select a network</Trans>
             </FlyoutHeader>
             <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.MAINNET} />
+            {/* Formatic is only supported on mainnet, so we hide the other chains */}
             {connector !== fortmatic && (
               <>
                 <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.POLYGON} />

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:14\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Uitgevoer"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Uitgebreide resultate van onaktiewe tekenlyste"
 
@@ -839,10 +839,6 @@ msgstr "Hulp Sentrum"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Steek weg"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Versteek geslote posisies"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Geen resultate gevind."
 msgid "Not created"
 msgstr "Nie geskep nie"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "AF"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "AAN"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "GEBRUIK SLEGS hierdie modus as u weet wat u doen."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Af"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Aan"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Aandeel van die poel:"
 msgid "Show Cancelled"
 msgstr "Vertoning is gekanselleer"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Toon geslote posisies"
@@ -1766,7 +1748,7 @@ msgstr "Token word nie ondersteun nie"
 msgid "Tokens"
 msgstr "Tekens"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Tekens uit onaktiewe lyste. Voer spesifieke tekens hieronder in of klik op Bestuur om meer lyste te aktiveer."
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} Prys:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Bygevoeg deur gebruiker"
 

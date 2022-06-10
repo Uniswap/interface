@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Végrehajtott"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Az inaktív tokenlisták kibővített eredményei"
 
@@ -840,10 +840,6 @@ msgstr "Segítség Központ"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Elrejt"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Zárt pozíciók elrejtése"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1166,25 +1162,9 @@ msgstr "Nincs találat."
 msgid "Not created"
 msgstr "Nincs létrehozva"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "KI"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "BE"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "CSAK AKKOR HASZNÁLJA EZT A MÓDOT, HOGY TUDJA, MIT CSINÁL."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Ki"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Be"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1510,6 +1490,8 @@ msgstr "Pool részesedése:"
 msgid "Show Cancelled"
 msgstr "Show Canceled"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Zárt pozíciók megjelenítése"
@@ -1767,7 +1749,7 @@ msgstr "A token nem támogatott"
 msgid "Tokens"
 msgstr "Tokenek"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Tokenek az inaktív listákról. Importáljon konkrét tokeneket az alábbiakban, vagy kattintson a Kezelés gombra további listák aktiválásához."
 
@@ -2411,7 +2393,7 @@ msgstr "{0} {1} á\n"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • felhasználó hozzáadta"
 

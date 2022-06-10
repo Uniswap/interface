@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -763,7 +763,7 @@ msgstr "อีเธอร์สแกน"
 msgid "Executed"
 msgstr "ถูกประหารชีวิต"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "ขยายผลจากรายการโทเค็นที่ไม่ได้ใช้งาน"
 
@@ -839,10 +839,6 @@ msgstr "ศูนย์ช่วยเหลือ"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "ซ่อน"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "ซ่อนตำแหน่งที่ปิด"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "ไม่พบผลลัพธ์."
 msgid "Not created"
 msgstr "ไม่ได้สร้าง"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "ปิด"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "บน"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ใช้โหมดนี้เฉพาะเมื่อคุณรู้ว่ากำลังทำอะไรอยู่"
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "ปิด"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "บน"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "ส่วนแบ่งของพูล:"
 msgid "Show Cancelled"
 msgstr "ยกเลิกการแสดง"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "แสดงตำแหน่งที่ปิด"
@@ -1766,7 +1748,7 @@ msgstr "ไม่รองรับโทเค็น"
 msgid "Tokens"
 msgstr "โทเค็น"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "โทเค็นจากรายการที่ไม่ใช้งาน นำเข้าโทเค็นเฉพาะด้านล่างหรือคลิกจัดการเพื่อเปิดใช้งานรายการเพิ่มเติม"
 
@@ -2409,7 +2391,7 @@ msgstr "{0} {1} ราคา:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • เพิ่มโดย user"
 

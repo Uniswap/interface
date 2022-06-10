@@ -50,12 +50,12 @@ export default function PendingView({
   connector,
   error = false,
   tryActivation,
-  resetAccountView,
+  openOptions,
 }: {
-  connector?: Connector
+  connector: Connector
   error?: boolean
   tryActivation: (connector: Connector) => void
-  resetAccountView: () => void
+  openOptions: () => void
 }) {
   return (
     <PendingSection>
@@ -75,13 +75,13 @@ export default function PendingView({
                 $borderRadius="12px"
                 padding="12px"
                 onClick={() => {
-                  connector && tryActivation(connector)
+                  tryActivation(connector)
                 }}
               >
                 <Trans>Try Again</Trans>
               </ButtonPrimary>
               <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-                <ThemedText.Link fontSize={12} onClick={resetAccountView}>
+                <ThemedText.Link fontSize={12} onClick={openOptions}>
                   <Trans>Back to wallet selection</Trans>
                 </ThemedText.Link>
               </ButtonEmpty>

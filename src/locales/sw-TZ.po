@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:06\n"
+"PO-Revision-Date: 2022-06-06 00:15\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -763,7 +763,7 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Wanyongwa"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Matokeo yaliyopanuliwa kutoka kwa Orodha za Ishara ambazo hazifanyi kazi"
 
@@ -839,10 +839,6 @@ msgstr "Kituo cha Usaidizi"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Ficha"
-
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Ficha nafasi zilizofungwa"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1165,25 +1161,9 @@ msgstr "Hakuna matokeo yaliyopatikana."
 msgid "Not created"
 msgstr "Haijaundwa"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "ZIMA"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "Washa"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "TUMIA Modi hii tu ikiwa unajua unachofanya."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Imezimwa"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Washa"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1509,6 +1489,8 @@ msgstr "Shiriki la Dimbwi:"
 msgid "Show Cancelled"
 msgstr "Onyesho Limeghairiwa"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Onyesha nafasi zilizofungwa"
@@ -1766,7 +1748,7 @@ msgstr "Tokeni haitumiki"
 msgid "Tokens"
 msgstr "Ishara"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Ishara kutoka orodha zisizotumika. Leta ishara maalum hapa chini au bofya Dhibiti ili kuamsha orodha zaidi."
 
@@ -2409,7 +2391,7 @@ msgstr "Bei {0} {1}"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Imeongezwa na mtumiaji"
 
