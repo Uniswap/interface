@@ -28,7 +28,7 @@ export const dexListConfig: DexList = {
     ],
   },
   kyberswapv2: {
-    name: 'KyberSwapV2',
+    name: 'KyberSwap Elastic',
     icon: 'https://kyberswap.com/favicon.ico',
     chainIds: [
       ChainId.RINKEBY,
@@ -210,7 +210,7 @@ export const dexListConfig: DexList = {
   },
   spookyswap: {
     name: 'SpookySwap',
-    icon: 'https://spookyswap.finance/favicon.ico',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9608.png',
     chainIds: [ChainId.FANTOM],
   },
   spiritswap: {

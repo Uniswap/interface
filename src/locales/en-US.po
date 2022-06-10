@@ -651,6 +651,7 @@ msgid "Connect to a wallet to find pools"
 msgstr "Connect to a wallet to find pools"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/ProAmmPool/index.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Connect to a wallet to view your liquidity."
 
