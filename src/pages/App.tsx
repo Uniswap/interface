@@ -3,11 +3,10 @@ import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
+import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
@@ -67,6 +66,7 @@ const Marginer = styled.div`
 
 export default function App() {
   const history = useHistory()
+  useAnalyticsReporter(useLocation())
 
   useEffect(() => {
     const unlisten = history.listen(() => {
@@ -79,7 +79,6 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
