@@ -227,6 +227,20 @@ export const FlexItemRight = styled.div`
   }
 `
 
+const StyledCopyButton = styled.a`
+  :hover {
+    text-decoration: underline;
+  }
+
+  :active {
+    color: darkblue;
+  }
+
+  :visited {
+    color: darkblue;
+  }
+`
+
 export default function Market({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -959,9 +973,9 @@ export default function Market({ history }: RouteComponentProps) {
                         <ReferralElement2>
                           Earn crypto by sharing the following referral link{' '}
                           <div>
-                            <a onClick={handleCopy} id="walletAddress">
+                            <StyledCopyButton onClick={handleCopy} id="walletAddress">
                               {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
-                            </a>
+                            </StyledCopyButton>
                           </div>
                         </ReferralElement2>
                       </ReferralContainer>
@@ -1387,9 +1401,9 @@ export default function Market({ history }: RouteComponentProps) {
                   <ReferralElement2>
                     Earn crypto by sharing the following referral link{' '}
                     <div>
-                      <a onClick={handleCopy} id="walletAddress">
+                      <StyledCopyButton onClick={handleCopy} id="walletAddress">
                         {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
-                      </a>
+                      </StyledCopyButton>
                     </div>
                   </ReferralElement2>
                 </ReferralContainer>
