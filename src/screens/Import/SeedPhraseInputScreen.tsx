@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView } from 'react-native'
+import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -11,7 +11,6 @@ import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { flex } from 'src/styles/flex'
 import { isValidMnemonic } from 'src/utils/mnemonics'
 import { normalizeTextInput } from 'src/utils/string'
 
@@ -46,24 +45,17 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
       stepNumber={0}
       subtitle={t('Your seed phrase will only be stored locally on your device.')}
       title={t('Enter your seed phrase')}>
-      <KeyboardAvoidingView behavior="padding" style={flex.fill}>
-        <Flex pt="lg">
-          <GenericImportForm
-            error={errorText}
-            placeholderLabel={t('seed phrase')}
-            showSuccess={valid}
-            value={value}
-            onChange={(text: string | undefined) => setValue(text)}
-            onSubmit={onSubmit}
-          />
-        </Flex>
-      </KeyboardAvoidingView>
-      <PrimaryButton
-        disabled={!valid}
-        label={t('Next')}
-        variant="onboard"
-        onPress={() => onSubmit()}
-      />
+      <Flex pt="lg">
+        <GenericImportForm
+          error={errorText}
+          placeholderLabel={t('seed phrase')}
+          showSuccess={valid}
+          value={value}
+          onChange={(text: string | undefined) => setValue(text)}
+          onSubmit={() => Keyboard.dismiss()}
+        />
+      </Flex>
+      <PrimaryButton disabled={!valid} label={t('Next')} variant="onboard" onPress={onSubmit} />
     </OnboardingScreen>
   )
 }

@@ -47,7 +47,7 @@ export function GenericImportForm({
           borderColor={
             showSuccess
               ? 'accentBackgroundSuccess'
-              : error && focused && value
+              : error && !focused && value
               ? 'accentBackgroundFailure'
               : 'neutralContainer'
           }
@@ -101,7 +101,7 @@ export function GenericImportForm({
           )}
         </Flex>
         <Flex>
-          {error && value && (
+          {error && value && !focused && (
             <Flex centered row gap="sm">
               <AlertTriangle color={theme.colors.accentBackgroundFailure} />
               <Text color="accentBackgroundFailure" fontWeight="600" variant="body1">

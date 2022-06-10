@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from 'react'
+import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Indicator } from 'src/components/carousel/Indicator'
 import { Box, Flex } from 'src/components/layout'
@@ -29,35 +30,44 @@ export function OnboardingScreen({
 }: PropsWithChildren<OnboardingScreenProps>) {
   return (
     <Screen>
-      <Flex grow px="md" py="lg">
-        {/* header */}
-        <Flex row alignItems="center">
-          <Box alignItems="flex-start" flex={1}>
-            <BackButton size={16} />
-          </Box>
-          {stepCount !== undefined && stepNumber !== undefined ? (
-            <Indicator currentStep={stepNumber} stepCount={stepCount} />
-          ) : null}
-          <Box flex={1}>{/* ensures indicator is centered */}</Box>
-        </Flex>
+      <KeyboardAvoidingView behavior="padding" style={WrapperStyle.base}>
+        <Flex grow px="md" py="lg">
+          {/* header */}
+          <Flex row alignItems="center">
+            <Box alignItems="flex-start" flex={1}>
+              <BackButton size={16} />
+            </Box>
+            {stepCount !== undefined && stepNumber !== undefined ? (
+              <Indicator currentStep={stepNumber} stepCount={stepCount} />
+            ) : null}
+            <Box flex={1}>{/* ensures indicator is centered */}</Box>
+          </Flex>
 
-        {/* Text content */}
-        <Flex centered gap="sm" m="sm">
-          <Text fontWeight="600" textAlign="center" variant="largeLabel">
-            {title}
-          </Text>
-          {subtitle ? (
-            <Text color="neutralTextSecondary" textAlign="center" variant="body1">
-              {subtitle}
+          {/* Text content */}
+          <Flex centered gap="sm" m="sm">
+            <Text fontWeight="600" textAlign="center" variant="largeLabel">
+              {title}
             </Text>
-          ) : null}
-        </Flex>
+            {subtitle ? (
+              <Text color="neutralTextSecondary" textAlign="center" variant="body1">
+                {subtitle}
+              </Text>
+            ) : null}
+          </Flex>
 
-        {/* page content */}
-        <Flex grow justifyContent="space-between">
-          {children}
+          {/* page content */}
+          <Flex grow justifyContent="space-between">
+            {children}
+          </Flex>
         </Flex>
-      </Flex>
+      </KeyboardAvoidingView>
     </Screen>
   )
 }
+
+const WrapperStyle = StyleSheet.create({
+  base: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+})

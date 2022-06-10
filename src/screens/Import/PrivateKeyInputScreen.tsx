@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView } from 'react-native'
+import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -11,7 +11,6 @@ import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { flex } from 'src/styles/flex'
 import { isValidPrivateKey } from 'src/utils/privateKeys'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.PrivateKeyInput>
@@ -46,24 +45,17 @@ export function PrivateKeyInputScreen({ navigation }: Props) {
       stepNumber={0}
       subtitle={t('Your private key will only be stored locally on your device.')}
       title={t('Enter your private key')}>
-      <KeyboardAvoidingView behavior="padding" style={flex.fill}>
-        <Flex pt="lg">
-          <GenericImportForm
-            error={errorText}
-            placeholderLabel={t('private key')}
-            showSuccess={valid}
-            value={value}
-            onChange={onChange}
-            onSubmit={onSubmit}
-          />
-        </Flex>
-      </KeyboardAvoidingView>
-      <PrimaryButton
-        disabled={!valid}
-        label={t('Next')}
-        variant="onboard"
-        onPress={() => onSubmit()}
-      />
+      <Flex pt="lg">
+        <GenericImportForm
+          error={errorText}
+          placeholderLabel={t('private key')}
+          showSuccess={valid}
+          value={value}
+          onChange={onChange}
+          onSubmit={() => Keyboard.dismiss()}
+        />
+      </Flex>
+      <PrimaryButton disabled={!valid} label={t('Next')} variant="onboard" onPress={onSubmit} />
     </OnboardingScreen>
   )
 }

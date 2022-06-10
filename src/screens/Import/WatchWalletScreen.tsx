@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView } from 'react-native'
+import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -13,7 +13,6 @@ import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { flex } from 'src/styles/flex'
 import { isValidAddress } from 'src/utils/addresses'
 import { normalizeTextInput } from 'src/utils/string'
 
@@ -66,19 +65,17 @@ export function WatchWalletScreen({ navigation }: Props) {
       stepNumber={0}
       subtitle={t('Enter an Ethereum wallet address or ENS name.')}
       title={t('Enter a wallet address')}>
-      <KeyboardAvoidingView behavior="padding" style={flex.fill}>
-        <Flex pt="lg">
-          <GenericImportForm
-            endAdornment={isAddress ? undefined : '.eth'}
-            error={errorText}
-            placeholderLabel="address or ENS"
-            showSuccess={Boolean(isValid)}
-            value={value}
-            onChange={onChange}
-            onSubmit={onSubmit}
-          />
-        </Flex>
-      </KeyboardAvoidingView>
+      <Flex pt="lg">
+        <GenericImportForm
+          endAdornment={isAddress ? undefined : '.eth'}
+          error={errorText}
+          placeholderLabel="address or ENS"
+          showSuccess={Boolean(isValid)}
+          value={value}
+          onChange={onChange}
+          onSubmit={() => Keyboard.dismiss()}
+        />
+      </Flex>
       <PrimaryButton disabled={!isValid} label={t('Next')} variant="onboard" onPress={onSubmit} />
     </OnboardingScreen>
   )
