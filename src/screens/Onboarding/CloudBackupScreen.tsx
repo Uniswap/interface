@@ -55,7 +55,8 @@ export function CloudBackupScreen({
     return (
       <OnboardingScreen
         subtitle={t('You’ll use this PIN to restore your wallet from iCloud.')}
-        title={t('Set your iCloud backup PIN')}>
+        title={t('Set your iCloud backup PIN')}
+        onSkip={() => navigation.navigate(OnboardingScreens.Backup)}>
         <PinInput length={PIN_LENGTH} setValue={setEnteredPin} value={enteredPin} />
       </OnboardingScreen>
     )

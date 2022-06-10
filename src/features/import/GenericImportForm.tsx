@@ -64,6 +64,7 @@ export function GenericImportForm({
               autoCorrect={false}
               backgroundColor="neutralSurface"
               blurOnSubmit={true}
+              caretHidden={!value}
               fontSize={18}
               justifyContent="center"
               multiline={true}

@@ -1,6 +1,8 @@
 import React, { PropsWithChildren } from 'react'
+import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { Indicator } from 'src/components/carousel/Indicator'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -19,15 +21,19 @@ type StepProps =
 type OnboardingScreenProps = {
   subtitle?: string
   title: string
+  onSkip?: () => void
 } & StepProps
 
 export function OnboardingScreen({
   title,
   subtitle,
+  onSkip,
   stepCount,
   stepNumber,
   children,
 }: PropsWithChildren<OnboardingScreenProps>) {
+  const { t } = useTranslation()
+
   return (
     <Screen>
       <KeyboardAvoidingView behavior="padding" style={WrapperStyle.base}>
@@ -39,8 +45,16 @@ export function OnboardingScreen({
             </Box>
             {stepCount !== undefined && stepNumber !== undefined ? (
               <Indicator currentStep={stepNumber} stepCount={stepCount} />
-            ) : null}
-            <Box flex={1}>{/* ensures indicator is centered */}</Box>
+            ) : (
+              <Box flex={1} /> // ensure centered items
+            )}
+            <Box alignItems="flex-end" flex={1}>
+              {onSkip ? (
+                <TextButton textColor="neutralTextSecondary" textVariant="body2" onPress={onSkip}>
+                  {t('Skip')}
+                </TextButton>
+              ) : null}
+            </Box>
           </Flex>
 
           {/* Text content */}
