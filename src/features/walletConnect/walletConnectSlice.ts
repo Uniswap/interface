@@ -28,7 +28,7 @@ interface SignRequest extends BaseRequest {
   rawMessage: string
 }
 
-interface TransactionRequest extends BaseRequest {
+export interface TransactionRequest extends BaseRequest {
   type: EthTransactionMethod
   transaction: EthTransaction
 }

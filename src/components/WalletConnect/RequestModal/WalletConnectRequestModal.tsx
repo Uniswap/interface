@@ -9,13 +9,18 @@ import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
+import { NetworkFee } from 'src/components/WalletConnect/RequestModal/NetworkFee'
 import { RequestMessage } from 'src/components/WalletConnect/RequestModal/RequestMessage'
+import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import { EthMethod, isPrimaryTypePermit, PermitMessage } from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
-import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  TransactionRequest,
+  WalletConnectRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { opacify } from 'src/utils/colors'
 import { buildCurrencyId } from 'src/utils/currencyId'
@@ -32,7 +37,11 @@ interface Props {
 const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
   request.type === EthMethod.EthSign && !request.message
 
-const methodCostsGas = (type: EthMethod) => type === EthMethod.EthSendTransaction
+const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
+  request.type === EthMethod.EthSendTransaction
+
+const isTransactionRequest = (request: WalletConnectRequest): request is TransactionRequest =>
+  request.type === EthMethod.EthSendTransaction || request.type === EthMethod.EthSignTransaction
 
 /** If the request is a permit then parse the relevant information otherwise return undefined. */
 const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined => {
@@ -83,6 +92,8 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     return null
   }
 
+  const chainId = toSupportedChainId(request?.dapp.chain_id) ?? undefined
+
   const canSubmit = !isPotentiallyUnsafe(request) || maybeUnsafeConfirmation
 
   const onReject = () => {
@@ -104,7 +115,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
         gasPrice,
         data,
         nonce,
-        chainId: toSupportedChainId(request.dapp.chain_id) ?? undefined,
+        chainId,
       }
       dispatch(
         signWcRequestActions.trigger({
@@ -178,6 +189,18 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
           </Flex>
         ) : null}
 
+        {isTransactionRequest(request) && (
+          <SpendingDetails chainId={chainId} transaction={request.transaction} />
+        )}
+
+        {methodCostsGas(request) && chainId ? (
+          <NetworkFee chainId={chainId} transaction={request.transaction} />
+        ) : (
+          <Text color="neutralTextTertiary" fontSize={12} fontStyle="italic">
+            This request will not cost any gas fees.
+          </Text>
+        )}
+
         <Flex
           backgroundColor="deprecated_gray50"
           borderRadius="lg"
@@ -185,11 +208,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
           justifyContent="space-between"
           p="md">
           <AddressDisplay showAddressAsSubtitle address={request.account} />
-          {methodCostsGas(request.type) ? null : (
-            <Text color="neutralTextTertiary" fontSize={12} fontStyle="italic">
-              This request will not cost any gas fees.
-            </Text>
-          )}
         </Flex>
         <Flex row gap="sm">
           <PrimaryButton
