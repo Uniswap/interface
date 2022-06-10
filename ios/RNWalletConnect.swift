@@ -102,6 +102,15 @@ class RNWalletConnect: RCTEventEmitter {
       return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.pendingSessionNotFound.rawValue, "account": account])
     }
   }
+
+  @objc
+  func isValidWCUrl(_ url: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    print(url)
+    guard let wcUrl = WCURL(url) else {
+      return resolve(false)
+    }
+    return resolve(true)
+  }
   
   override func supportedEvents() -> [String]! {
     return EventType.allCases.map { $0.rawValue }

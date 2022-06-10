@@ -28,7 +28,10 @@ import { selectHasUnreadNotifications } from 'src/features/notifications/selecto
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { setWalletConnectModalState } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  removePendingSession,
+  setWalletConnectModalState,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { NFTMasonry } from 'src/screens/PortfolioNFTs'
 import { PortfolioTokens } from 'src/screens/PortfolioTokens'
 import { Screens } from 'src/screens/Screens'
@@ -55,6 +58,8 @@ export function HomeScreen({ navigation }: Props) {
 
   const onPressScan = () => {
     selectionAsync()
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
     dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ScanQr }))
   }
 

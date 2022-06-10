@@ -19,5 +19,7 @@ RCT_EXTERN_METHOD(changeChainId: (NSString *)topic chainId: (NSInteger)chainId)
 RCT_EXTERN_METHOD(sendSignature: (NSString *)requestInternalId
                   signature: (NSString *)signature)
 RCT_EXTERN_METHOD(rejectRequest: (NSString* )requestInternalId)
+RCT_EXTERN_METHOD(isValidWCUrl: (NSString *)url resolver: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
 
 @end

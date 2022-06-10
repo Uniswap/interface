@@ -22,6 +22,7 @@ type QRCodeScannerProps = {
   numConnections: number
   onPressConnections: () => void
   onScanCode: (data: string) => void
+  shouldFreezeCamera: boolean
 }
 
 const SCAN_ICON_WIDTH_RATIO = 0.8
@@ -30,6 +31,7 @@ export function QRCodeScanner({
   numConnections,
   onPressConnections,
   onScanCode,
+  shouldFreezeCamera,
 }: QRCodeScannerProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -100,9 +102,9 @@ export function QRCodeScanner({
       onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
       {backCamera && (
         <Camera
-          isActive
           device={backCamera}
           frameProcessor={frameProcessor}
+          isActive={!shouldFreezeCamera}
           style={StyleSheet.absoluteFill}
         />
       )}

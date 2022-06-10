@@ -34,3 +34,7 @@ export const rejectRequest = (requestInternalId: string) => {
 export const sendSignature = (requestInternalId: string, signature: string) => {
   RNWalletConnect.sendSignature(requestInternalId, signature)
 }
+
+export const isValidWCUrl = (uri: string) => {
+  return RNWalletConnect.isValidWCUrl(uri)
+}

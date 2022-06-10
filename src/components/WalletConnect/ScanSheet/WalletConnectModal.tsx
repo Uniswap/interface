@@ -1,6 +1,7 @@
 import { selectionAsync } from 'expo-haptics'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -15,11 +16,13 @@ import { PendingConnection } from 'src/components/WalletConnect/ScanSheet/Pendin
 import { QRCodeScanner } from 'src/components/WalletConnect/ScanSheet/QRCodeScanner'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useDisplayName } from 'src/features/wallet/hooks'
+import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { connectToApp } from 'src/features/walletConnect/WalletConnect'
+import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { opacify } from 'src/utils/colors'
+
+const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
 export enum WalletConnectModalState {
   Hidden,
@@ -46,16 +49,32 @@ export function WalletConnectModal({
   const { sessions, pendingSession } = useWalletConnect(activeAddress)
   const [currentScreenState, setCurrentScreenState] =
     useState<WalletConnectModalState>(initialScreenState)
+  const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
+    useWCTimeoutError(pendingSession, WC_TIMEOUT_DURATION_MS)
 
-  useEffect(() => {
-    if (!pendingSession) return
-
+  const onScanCode = async (uri: string) => {
+    // don't scan any QR codes if there is an error popup open or camera is frozen
+    if (!activeAddress || hasScanError || shouldFreezeCamera) return
     selectionAsync()
-  }, [pendingSession])
 
-  const onScanCode = (uri: string) => {
-    if (!activeAddress) return
-    connectToApp(uri)
+    if (await isValidWCUrl(uri.toString())) {
+      setShouldFreezeCamera(true)
+      connectToApp(uri)
+    } else {
+      setHasScanError(true)
+      Alert.alert(
+        t('Invalid QR Code'),
+        t('Please scan a WalletConnect or Ethereum address QR code.'),
+        [
+          {
+            text: t('Try again'),
+            onPress: () => {
+              setHasScanError(false)
+            },
+          },
+        ]
+      )
+    }
   }
 
   const onPressBottomToggle = () => {
@@ -97,6 +116,7 @@ export function WalletConnectModal({
           {currentScreenState === WalletConnectModalState.ScanQr && (
             <QRCodeScanner
               numConnections={sessions.length}
+              shouldFreezeCamera={shouldFreezeCamera}
               onPressConnections={onPressShowConnectedDapps}
               onScanCode={onScanCode}
             />

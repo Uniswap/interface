@@ -1,4 +1,6 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
@@ -11,6 +13,7 @@ import {
   selectPendingAccounts,
   selectSignerAccounts,
 } from 'src/features/wallet/selectors'
+import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { shortenAddress } from 'src/utils/addresses'
 
 export function useAccounts() {
@@ -63,4 +66,55 @@ export function useDisplayName(address: Nullable<string>):
   if (maybeLocalName) return { name: maybeLocalName, type: 'local' }
   if (ens.name) return { name: ens.name, type: 'ens' }
   return { name: shortenAddress(address), type: 'address' }
+}
+
+export function useWCTimeoutError(
+  pendingSession: WalletConnectSession | null,
+  timeoutDurationInMs: number
+) {
+  // hook used in WalletConnectModal for WC timeout error logic
+  const { t } = useTranslation()
+  const [hasScanError, setHasScanError] = useState<boolean>(false)
+  const [shouldFreezeCamera, setShouldFreezeCamera] = useState<boolean>(false)
+  const pendingSessionRef = useRef(pendingSession)
+  const hasScanErrorRef = useRef(hasScanError)
+  const shouldFreezeCameraRef = useRef(shouldFreezeCamera)
+
+  pendingSessionRef.current = pendingSession
+  hasScanErrorRef.current = hasScanError
+  shouldFreezeCameraRef.current = shouldFreezeCamera
+
+  useEffect(() => {
+    if (pendingSession) {
+      setShouldFreezeCamera(false)
+    }
+  }, [pendingSession])
+
+  useEffect(() => {
+    if (!shouldFreezeCamera) return
+    // camera freezes when we attempt to connect, show timeout error if no response after 10 seconds
+    const timer = setTimeout(() => {
+      // don't show error if we were sent to pending session screen or already error showing
+      if (pendingSessionRef.current || hasScanErrorRef.current || !shouldFreezeCameraRef.current)
+        return
+
+      setHasScanError(true)
+      setShouldFreezeCamera(false)
+      Alert.alert(
+        t('WalletConnect error'),
+        t('Please refresh the dapp and try connecting again.'),
+        [
+          {
+            text: t('Try again'),
+            onPress: () => {
+              setHasScanError(false)
+            },
+          },
+        ]
+      )
+    }, timeoutDurationInMs)
+    return () => clearTimeout(timer)
+  }, [shouldFreezeCamera, t, timeoutDurationInMs])
+
+  return { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera }
 }
