@@ -280,7 +280,7 @@ export default function Market({ history }: RouteComponentProps) {
 
   const [copied, setCopied] = useState(false)
 
-  const [referer, setReferer] = useState('')
+  const [referer, setReferer] = useState<string | null>(null)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(`${window.location.href}/r/${account}`)
@@ -449,6 +449,7 @@ export default function Market({ history }: RouteComponentProps) {
     recipient,
     referer,
     signatureData,
+    parsedAmounts[Field.INPUT],
     swapTransaction,
     showConfirm
   )

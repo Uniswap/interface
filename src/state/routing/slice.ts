@@ -34,7 +34,7 @@ export const routingApiInch = createApi({
     >({
       query: (args) => {
         const { chainId, queryArg } = args
-        return `/${chainId}/swap?${qs.stringify(queryArg)}`
+        return `/${chainId}/swap?${qs.stringify(queryArg, { skipNulls: true })}`
       },
       extraOptions: { maxRetries: 1 }, // You can o
     }),

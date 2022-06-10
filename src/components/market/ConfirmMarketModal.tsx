@@ -55,7 +55,7 @@ export default function ConfirmMarketModal({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
-  referer: string
+  referer: string | null
 }) {
   const showAcceptChanges = useMemo(
     () =>

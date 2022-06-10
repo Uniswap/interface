@@ -52,7 +52,7 @@ export default function MarketModalHeader({
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
-  referer: string
+  referer: string | null
 }) {
   const theme = useContext(ThemeContext)
 

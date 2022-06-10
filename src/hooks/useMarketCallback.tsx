@@ -2,7 +2,7 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
@@ -68,6 +68,7 @@ function useMarketCallArguments(
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   referer: string | null,
   signatureData: SignatureData | null | undefined,
+  parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | null | undefined,
   showConfirm: boolean
 ): {
@@ -114,7 +115,17 @@ function useMarketCallArguments(
   }, [routingAPITrade, swapAPITrade, swapTransaction?.type])
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline || !updatedSwapTxn || !updatedSwapTxn.tx)
+    if (
+      !trade ||
+      !recipient ||
+      !library ||
+      !account ||
+      !chainId ||
+      !deadline ||
+      !parsedAmount ||
+      !updatedSwapTxn ||
+      !updatedSwapTxn.tx
+    )
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -125,33 +136,86 @@ function useMarketCallArguments(
     let swapRouterAddress
     let callData
     if (kromatikaMetaswap) {
+      const calldatas: string[] = []
+
+      if (signatureData) {
+        // create call data
+        const inputTokenPermit =
+          'allowed' in signatureData
+            ? {
+                expiry: signatureData.deadline,
+                nonce: signatureData.nonce,
+                s: signatureData.s,
+                r: signatureData.r,
+                v: signatureData.v as any,
+              }
+            : {
+                deadline: signatureData.deadline,
+                amount: signatureData.amount,
+                s: signatureData.s,
+                r: signatureData.r,
+                v: signatureData.v as any,
+              }
+
+        if ('nonce' in inputTokenPermit) {
+          calldatas.push(
+            kromatikaMetaswap.interface.encodeFunctionData('selfPermitAllowed', [
+              parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
+              inputTokenPermit.nonce,
+              inputTokenPermit.expiry,
+              inputTokenPermit.v,
+              inputTokenPermit.r,
+              inputTokenPermit.s,
+            ])
+          )
+        } else {
+          calldatas.push(
+            kromatikaMetaswap.interface.encodeFunctionData('selfPermit', [
+              parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
+              inputTokenPermit.amount,
+              inputTokenPermit.deadline,
+              inputTokenPermit.v,
+              inputTokenPermit.r,
+              inputTokenPermit.s,
+            ])
+          )
+        }
+      }
+
       swapRouterAddress = kromatikaMetaswap.address
       const tokenFrom = trade?.inputAmount.currency.isNative
         ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
         : trade?.inputAmount.currency.wrapped.address
       const amountFrom = trade?.inputAmount.quotient.toString()
 
-      callData = kromatikaMetaswap.interface.encodeFunctionData('swap', [
-        tokenFrom,
-        toHex(amountFrom),
-        recipient,
-        {
-          adapterId: 'SwapAggregator',
-          data: defaultAbiCoder.encode(
-            ['tuple(address tokenFrom,address tokenTo,uint256 amountFrom,address aggregator,bytes aggregatorData)'],
-            [
-              {
-                tokenFrom,
-                tokenTo: trade.outputAmount.currency.isNative
-                  ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
-                  : trade.outputAmount.currency.wrapped.address,
-                amountFrom: toHex(amountFrom),
-                aggregator: updatedSwapTxn.tx.to,
-                aggregatorData: updatedSwapTxn.tx.data,
-              },
-            ]
-          ),
-        },
+      calldatas.push(
+        kromatikaMetaswap.interface.encodeFunctionData('swap', [
+          tokenFrom,
+          toHex(amountFrom),
+          recipient,
+          {
+            adapterId: 'SwapAggregator',
+            data: defaultAbiCoder.encode(
+              ['tuple(address tokenFrom,address tokenTo,uint256 amountFrom,address aggregator,bytes aggregatorData)'],
+              [
+                {
+                  tokenFrom,
+                  tokenTo: trade.outputAmount.currency.isNative
+                    ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+                    : trade.outputAmount.currency.wrapped.address,
+                  amountFrom: toHex(amountFrom),
+                  aggregator: updatedSwapTxn.tx.to,
+                  aggregatorData: updatedSwapTxn.tx.data,
+                },
+              ]
+            ),
+          },
+        ])
+      )
+
+      callData = kromatikaMetaswap.interface.encodeFunctionData('multicall(uint256,bytes[])', [
+        deadline.toString(),
+        calldatas,
       ])
     } else {
       callData = updatedSwapTxn.tx.data
@@ -202,9 +266,11 @@ function useMarketCallArguments(
     account,
     chainId,
     deadline,
+    parsedAmount,
     updatedSwapTxn,
     kromatikaMetaswap,
     argentWalletContract,
+    signatureData,
     allowedSlippage,
   ])
 }
@@ -296,6 +362,7 @@ export function useMarketCallback(
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   referer: string | null,
   signatureData: SignatureData | undefined | null,
+  parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | undefined | null,
   showConfirm: boolean
 ): { state: MarketCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
@@ -314,6 +381,7 @@ export function useMarketCallback(
     recipientAddressOrName,
     referer,
     signatureData,
+    parsedAmount,
     swapTransaction,
     showConfirm
   )

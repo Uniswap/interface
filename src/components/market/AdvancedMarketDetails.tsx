@@ -18,7 +18,7 @@ interface AdvancedMarketDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
-  referer: string
+  referer: string | null
 }
 
 function TextWithLoadingPlaceholder({
