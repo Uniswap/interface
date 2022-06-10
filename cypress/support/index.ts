@@ -9,9 +9,8 @@
 import './ethereum'
 
 // Unregister the ServiceWorker between test suites.
-// Doing this globally ensures that tests always run on the latest version of the site.
-beforeEach(() => {
-  cy.window().then(async (window) => {
-    await window.navigator.serviceWorker.getRegistration().then((sw) => sw?.unregister())
-  })
+// Cypress wraps the document to allow for cross-domain inspection, which the ServiceWorker breaks.
+beforeEach(async () => {
+  const registration = await window.navigator.serviceWorker.getRegistration()
+  registration?.unregister()
 })

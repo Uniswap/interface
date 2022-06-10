@@ -13,6 +13,18 @@ function reportWebVitals({ name, delta, id }: Metric) {
 // tracks web vitals and pageviews
 export default function GoogleAnalyticsReporter({ location: { pathname, search } }: RouteComponentProps): null {
   useEffect(() => {
+    let stale = false
+    window.navigator.serviceWorker.getRegistration().then((sw) => {
+      if (stale) return
+      const action = (window as any).__isDocumentCached ? 'CacheHit' : sw ? 'CacheMiss' : 'NoServiceWorker'
+      ReactGA.event({ category: 'ServiceWorker', action, nonInteraction: true })
+    })
+    return () => {
+      stale = true
+    }
+  }, [])
+
+  useEffect(() => {
     getFCP(reportWebVitals)
     getFID(reportWebVitals)
     getLCP(reportWebVitals)
