@@ -9,6 +9,7 @@ export enum AppNotificationType {
   Error,
   WalletConnect,
   Transaction,
+  Favorites,
 }
 
 interface AppNotificationBase {
@@ -108,8 +109,15 @@ export type TransactionNotification =
   | TransferNFTTxNotification
   | UnknownTxNotification
 
+export interface FavoriteNotification extends AppNotificationBase {
+  type: AppNotificationType.Favorites
+  isAddition: boolean
+  currencyId: string
+}
+
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
   | WalletConnectNotification
   | TransactionNotification
+  | FavoriteNotification

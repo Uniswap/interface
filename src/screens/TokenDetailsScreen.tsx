@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -22,8 +22,8 @@ import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
+import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { TokenWarningLevel, useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
@@ -40,17 +40,9 @@ interface TokenDetailsHeaderProps {
 
 function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
 
   const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(currencyId(currency))
-
-  const onFavoritePress = () => {
-    if (isFavoriteToken) {
-      dispatch(removeFavoriteToken({ currencyId: currencyId(currency) }))
-    } else {
-      dispatch(addFavoriteToken({ currencyId: currencyId(currency) }))
-    }
-  }
+  const onFavoritePress = useToggleFavoriteCallback(currencyId(currency))
 
   return (
     <CenterBox flexDirection="row" justifyContent="space-between" my="md">

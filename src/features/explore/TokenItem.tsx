@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { Heart } from 'src/components/icons/Heart'
@@ -12,8 +12,8 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { ChainId } from 'src/constants/chains'
 import { Asset } from 'src/features/dataApi/zerion/types'
+import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 
@@ -55,21 +55,16 @@ export function TokenItem({
   isSearchResult = false,
   onPress,
 }: TokenItemProps) {
-  const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
   const assetId = buildCurrencyId(ChainId.Mainnet, token.asset.asset_code)
   const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(assetId)
-
-  const onFavoriteToken = () => {
-    if (isFavoriteToken) dispatch(removeFavoriteToken({ currencyId: assetId }))
-    else dispatch(addFavoriteToken({ currencyId: assetId }))
-  }
+  const toggleFavoriteCallback = useToggleFavoriteCallback(assetId)
 
   const renderRightActions = () => {
     // TODO: fade in on drag
     return isSearchResult ? null : (
-      <FavoriteButton active={isFavoriteToken} asset={token} onPress={onFavoriteToken} />
+      <FavoriteButton active={isFavoriteToken} asset={token} onPress={toggleFavoriteCallback} />
     )
   }
 

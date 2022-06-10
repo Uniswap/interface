@@ -5,6 +5,7 @@ import {
   ApproveNotification,
   DefaultNotification,
   ErrorNotification,
+  FavoriteNotification,
   SwapNotification,
   TransferCurrencyNotification,
   TransferNFTNotification,
@@ -34,6 +35,8 @@ export function NotificationToastRouter({ notification }: { notification: AppNot
       return <ErrorNotification notification={notification} />
     case AppNotificationType.Default:
       return <DefaultNotification notification={notification} />
+    case AppNotificationType.Favorites:
+      return <FavoriteNotification notification={notification} />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

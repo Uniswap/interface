@@ -21,6 +21,7 @@ import {
   AppErrorNotification,
   AppNotificationDefault,
   ApproveTxNotification,
+  FavoriteNotification as FavoriteNotificationType,
   SwapTxNotification,
   TransactionNotificationBase,
   TransferCurrencyTxNotification,
@@ -293,4 +294,25 @@ export function DefaultNotification({
   notification: AppNotificationDefault
 }) {
   return <NotificationToast address={address} title={title} />
+}
+
+export function FavoriteNotification({
+  notification: { currencyId, isAddition },
+}: {
+  notification: FavoriteNotificationType
+}) {
+  const { t } = useTranslation()
+  const currency = useCurrency(currencyId)
+  const title = isAddition ? t('Added to favorite tokens') : t('Removed from favorite tokens')
+  const icon = (
+    <CurrencyLogoOrPlaceholder currency={currency} size={NOTIFICATION_SIZING.primaryImage} />
+  )
+  return (
+    <NotificationToast
+      icon={icon}
+      title={title}
+      // TODO: re-enable when press on toasts are supported
+      // onPress={() => navigate(Screens.TokenDetails, { currencyId })}
+    />
+  )
 }
