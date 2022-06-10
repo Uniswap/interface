@@ -1,20 +1,21 @@
 import assert = require('assert')
 
 describe('Service Worker', () => {
-  before(async () => {
+  before(() => {
     // Fail fast if there is no Service Worker on this build.
-    const sw = await fetch('./service-worker.js', { headers: { 'Service-Worker': 'script' } })
-    const isValid = isValidServiceWorker(sw)
-    if (!isValid) {
-      throw new Error(
-        '\n' +
-          'Service Worker tests must be run on a production-like build\n' +
-          'To test, build with `yarn build:e2e` and serve with `yarn serve`'
-      )
-    }
+    cy.request({ url: '/service-worker.js', headers: { 'Service-Worker': 'script' } }).then((response) => {
+      const isValid = isValidServiceWorker(response)
+      if (!isValid) {
+        throw new Error(
+          '\n' +
+            'Service Worker tests must be run on a production-like build\n' +
+            'To test, build with `yarn build:e2e` and serve with `yarn serve`'
+        )
+      }
+    })
 
-    function isValidServiceWorker(response: Response) {
-      const contentType = response.headers.get('content-type')
+    function isValidServiceWorker(response: Cypress.Response<any>) {
+      const contentType = response.headers['content-type']
       return !(response.status === 404 || (contentType != null && contentType.indexOf('javascript') === -1))
     }
   })
@@ -22,12 +23,12 @@ describe('Service Worker', () => {
   beforeEach(() => {
     cy.intercept({ hostname: 'www.google-analytics.com' }, (req) => {
       const body = req.body.toString()
-      if (body.includes('ServiceWorker')) {
-        if (body.includes('NoServiceWorker')) {
-          req.alias = 'NoServiceWorker'
-        } else if (body.includes('CacheHit')) {
+      if (body.includes('Service%20Worker')) {
+        if (body.includes('Not%20Installed')) {
+          req.alias = 'NotInstalled'
+        } else if (body.includes('Cache%20Hit')) {
           req.alias = 'CacheHit'
-        } else if (body.includes('CacheMiss')) {
+        } else if (body.includes('Cache%20Miss')) {
           req.alias = 'CacheMiss'
         }
       }
@@ -35,7 +36,7 @@ describe('Service Worker', () => {
   })
 
   it('installs a ServiceWorker', () => {
-    cy.get('#swap-page').wait('@NoServiceWorker', { timeout: 30000 })
+    cy.get('#swap-page').wait('@NotInstalled', { timeout: 30000 })
     precacheReady()
   })
 
@@ -59,7 +60,6 @@ describe('Service Worker', () => {
           const wrappedIndex = new Response(text, index)
           cache.put(key, wrappedIndex)
         })
-        .pause()
         .reload()
         .get('#swap-page')
         .wait('@CacheHit', { timeout: 30000 })

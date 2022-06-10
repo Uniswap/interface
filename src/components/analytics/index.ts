@@ -61,14 +61,11 @@ function reportWebVitals({ name, delta, id }: Metric) {
 export function useAnalyticsReporter({ pathname, search }: RouteComponentProps['location']) {
   useEffect(() => {
     let stale = false
-    if ((window as any).__isDocumentCached) {
-      sendEvent({ category: 'Service Worker', action: 'Cache hit', nonInteraction: true })
-    } else {
-      window.navigator.serviceWorker.getRegistration().then((sw) => {
-        if (stale) return
-        sendEvent({ category: 'Service Worker', action: sw ? 'Cache miss' : 'Not installed', nonInteraction: true })
-      })
-    }
+    window.navigator.serviceWorker.getRegistration().then((sw) => {
+      if (stale) return
+      const action = sw ? ((window as any).__isDocumentCached ? 'Cache hit' : 'Cache miss') : 'Not installed'
+      sendEvent({ category: 'Service Worker', action, nonInteraction: true })
+    })
     return () => {
       stale = true
     }
