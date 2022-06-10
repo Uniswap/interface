@@ -1,6 +1,7 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { nanoid } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
-import { MAINNET_PROVIDER } from 'constants/infura'
+import { networkHooks } from 'connectors'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
@@ -8,19 +9,24 @@ import { useAppDispatch } from 'state/hooks'
 
 import { fetchTokenList } from '../state/lists/actions'
 
-const ensResolver = async (ensName: string) => {
-  return resolveENSContentHash(ensName, MAINNET_PROVIDER)
+const ensResolver = async (ensName: string, provider: Web3Provider | undefined, isActive: boolean) => {
+  if (!provider || !isActive) {
+    throw Error('network is inactive')
+  }
+  return resolveENSContentHash(ensName, provider)
 }
 
 export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
   const dispatch = useAppDispatch()
+  const provider = networkHooks.useProvider()
+  const isActive = networkHooks.useIsActive()
 
   // note: prevent dispatch if using for list search or unsupported list
   return useCallback(
     async (listUrl: string, sendDispatch = true) => {
       const requestId = nanoid()
       sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
-      return getTokenList(listUrl, ensResolver)
+      return getTokenList(listUrl, (ensName: string) => ensResolver(ensName, provider, isActive))
         .then((tokenList) => {
           sendDispatch && dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
           return tokenList
@@ -31,6 +37,6 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
           throw error
         })
     },
-    [dispatch]
+    [dispatch, isActive, provider]
   )
 }
