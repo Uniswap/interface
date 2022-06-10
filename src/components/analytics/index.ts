@@ -14,19 +14,24 @@ const storedClientId = window.localStorage.getItem(GOOGLE_ANALYTICS_CLIENT_ID_ST
 
 const googleAnalytics = new GoogleAnalyticsProvider()
 
-const sendEvent = (event: string | UaEventOptions, params?: any) => googleAnalytics.sendEvent(event, params)
+export function sendEvent(event: string | UaEventOptions, params?: any) {
+  return googleAnalytics.sendEvent(event, params)
+}
 
-const outboundLink = (
+export function outboundLink(
   {
     label,
   }: {
     label: string
   },
   hitCallback: () => unknown
-) => googleAnalytics.outboundLink({ label }, hitCallback)
+) {
+  return googleAnalytics.outboundLink({ label }, hitCallback)
+}
 
-const gaCommandSendTiming = (timingCategory: any, timingVar: any, timingValue: any, timingLabel: any) =>
-  googleAnalytics.gaCommandSendTiming(timingCategory, timingVar, timingValue, timingLabel)
+export function sendTiming(timingCategory: any, timingVar: any, timingValue: any, timingLabel: any) {
+  return googleAnalytics.gaCommandSendTiming(timingCategory, timingVar, timingValue, timingLabel)
+}
 
 if (typeof GOOGLE_ANALYTICS_ID === 'string') {
   googleAnalytics.initialize(GOOGLE_ANALYTICS_ID, {
@@ -49,11 +54,11 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 }
 
 function reportWebVitals({ name, delta, id }: Metric) {
-  gaCommandSendTiming('Web Vitals', name, Math.round(name === 'CLS' ? delta * 1000 : delta), id)
+  sendTiming('Web Vitals', name, Math.round(name === 'CLS' ? delta * 1000 : delta), id)
 }
 
 // tracks web vitals and pageviews
-export function GoogleAnalyticsReporter({ location: { pathname, search } }: RouteComponentProps): null {
+export function useAnalyticsReporter({ pathname, search }: RouteComponentProps['location']) {
   useEffect(() => {
     getFCP(reportWebVitals)
     getFID(reportWebVitals)
@@ -80,9 +85,4 @@ export function GoogleAnalyticsReporter({ location: { pathname, search } }: Rout
       window.localStorage.setItem(GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY, clientId)
     })
   }, [])
-  return null
 }
-
-export { sendEvent }
-export { outboundLink }
-export { gaCommandSendTiming }

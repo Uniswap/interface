@@ -2,10 +2,10 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { GoogleAnalyticsReporter } from '../components/analytics'
+import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
@@ -64,9 +64,10 @@ const Marginer = styled.div`
 `
 
 export default function App() {
+  useAnalyticsReporter(useLocation())
+
   return (
     <ErrorBoundary>
-      <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
