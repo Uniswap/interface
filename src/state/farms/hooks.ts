@@ -79,7 +79,7 @@ export const useRewardTokenPrices = (tokens: (Token | undefined)[]) => {
   const tokenPrices = useTokensPrice(tokens)
   const marketPrices = useTokensMarketPrice(tokens)
 
-  return tokenPrices.map((price, index) => price || marketPrices[index] || 0)
+  return tokenPrices.map((price, index) => marketPrices[index] || price || 0)
 }
 
 export const useFarmsData = (isIncludeOutsideFarms = true) => {

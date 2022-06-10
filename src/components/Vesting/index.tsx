@@ -14,7 +14,7 @@ import useTheme from 'hooks/useTheme'
 import { useBlockNumber } from 'state/application/hooks'
 import { Reward, RewardLockerVersion } from 'state/farms/types'
 import { useRewardLockerAddressesWithVersion, useSchedules } from 'state/vesting/hooks'
-import { ExternalLink, TYPE } from 'theme'
+import { TYPE, StyledInternalLink } from 'theme'
 import { formattedNum } from 'utils'
 import { useFarmRewardsUSD } from 'utils/dmm'
 import { fixedFormatting } from 'utils/formatBalance'
@@ -308,11 +308,11 @@ const Vesting = ({ loading }: { loading: boolean }) => {
           </Flex>
 
           {above768 && (
-            <ExternalLink href="https://kyber.network/about/knc" style={{ textDecoration: 'none' }}>
+            <StyledInternalLink to="/about/knc" style={{ textDecoration: 'none' }}>
               <Flex justifyContent="flex-end">
                 <Trans>What can KNC be used for? </Trans> →
               </Flex>
-            </ExternalLink>
+            </StyledInternalLink>
           )}
         </RowBetween>
 
@@ -338,11 +338,11 @@ const Vesting = ({ loading }: { loading: boolean }) => {
         )}
 
         {!above768 && (
-          <ExternalLink href="https://kyber.network/about/knc" style={{ textDecoration: 'none' }}>
+          <StyledInternalLink to="/about/knc" style={{ textDecoration: 'none' }}>
             <Flex justifyContent="flex-end" style={{ marginTop: '20px' }}>
               <Trans>What can KNC be used for? </Trans> →
             </Flex>
-          </ExternalLink>
+          </StyledInternalLink>
         )}
       </VestingHeader>
 
