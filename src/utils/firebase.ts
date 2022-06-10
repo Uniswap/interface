@@ -1,5 +1,5 @@
 import firebase from 'firebase/compat/app'
-import { getMessaging, getToken, onMessage } from 'firebase/messaging'
+import { getMessaging, getToken } from 'firebase/messaging'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -11,10 +11,10 @@ const firebaseConfig = {
 }
 
 const vapidKey = process.env.REACT_APP_FIREBASE_VAPID_KEY
-const firebaseApp = firebase.initializeApp(firebaseConfig)
-const messaging = getMessaging(firebaseApp)
 
 export const fetchToken = () => {
+  const firebaseApp = firebase.initializeApp(firebaseConfig)
+  const messaging = getMessaging(firebaseApp)
   return getToken(messaging, {
     vapidKey,
   })
@@ -34,10 +34,3 @@ export const fetchToken = () => {
       return ''
     })
 }
-
-export const onMessageListener = () =>
-  new Promise(resolve => {
-    onMessage(messaging, payload => {
-      resolve(payload)
-    })
-  })
