@@ -14,12 +14,15 @@ Thank you for your interest in contributing to the Uniswap interface! 🦄
 1. `yarn install`
 1. `yarn build`
 
-## Running tests
+## Running unit tests
 
-1. Run unit tests: `yarn test`
-1. Run unit tests and show test coverage info for all tests: `yarn test --coverage --watchAll`
-1. Run unit tests and show test coverage info only for tests affected by your changes: `yarn test --coverage --watch`
-1. Run e2e cypress tests with visual interface: `yarn cypress open`
+- Run unit tests: `yarn test`
+- Run unit tests and show test coverage info for all tests: `yarn test --watchAll`
+
+## Running cypress integration tests
+
+1. `yarn build:e2e`
+2. `yarn test:e2e`
 
 ## Engineering standards
 

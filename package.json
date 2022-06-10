@@ -153,7 +153,7 @@
     "prepare": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=./custom-test-env.cjs",
+    "test": "react-scripts test --env=./custom-test-env.cjs --coverage",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
   },
   "jest": {
@@ -170,10 +170,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 70,
-        "functions": 70,
-        "lines": 70,
-        "statements": 70
+        "branches": 25,
+        "functions": 25,
+        "lines": 25,
+        "statements": 25
       }
     }
   },
