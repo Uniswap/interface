@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import {
   DappInfo,
+  EthMethod,
   EthSignMethod,
   EthTransaction,
   EthTransactionMethod,
@@ -34,6 +35,11 @@ export interface TransactionRequest extends BaseRequest {
 }
 
 export type WalletConnectRequest = SignRequest | TransactionRequest
+
+export const isTransactionRequest = (
+  request: WalletConnectRequest
+): request is TransactionRequest =>
+  request.type === EthMethod.EthSendTransaction || request.type === EthMethod.EthSignTransaction
 
 export interface WalletConnectState {
   byAccount: {

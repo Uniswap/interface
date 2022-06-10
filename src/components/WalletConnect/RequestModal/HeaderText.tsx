@@ -44,7 +44,12 @@ export function HeaderText({
   const getReadableMethodName = (ethMethod: EthMethod) => {
     switch (ethMethod) {
       case EthMethod.PersonalSign:
+      case EthMethod.EthSign:
+      case EthMethod.SignTypedData:
         return t('Signature request from')
+      case EthMethod.EthSendTransaction:
+      case EthMethod.EthSignTransaction:
+        return t('Transaction request from')
     }
 
     return t('Request from')

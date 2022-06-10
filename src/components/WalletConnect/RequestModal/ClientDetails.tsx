@@ -33,9 +33,16 @@ export function ClientDetails({
           permitCurrency={permitCurrency}
           request={request}
         />
-        <LinkButton mt="xs" textColor="deprecated_blue" url={dapp.url}>
-          {dapp.url}
-        </LinkButton>
+        <LinkButton
+          backgroundColor="neutralContainer"
+          borderRadius="xs"
+          label={dapp.url}
+          mt="xs"
+          px="md"
+          py="xxs"
+          textVariant="caption"
+          url={dapp.url}
+        />
       </Flex>
     </Flex>
   )

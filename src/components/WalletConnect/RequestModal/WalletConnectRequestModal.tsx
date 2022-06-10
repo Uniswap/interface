@@ -1,30 +1,33 @@
 import { providers } from 'ethers'
-import React, { useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
-import { AddressDisplay } from 'src/components/AddressDisplay'
+import React, { PropsWithChildren, useRef } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import { StyleProp, ViewStyle } from 'react-native'
+import { useAppDispatch } from 'src/app/hooks'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { NetworkFee } from 'src/components/WalletConnect/RequestModal/NetworkFee'
 import { RequestMessage } from 'src/components/WalletConnect/RequestModal/RequestMessage'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
+import { ChainId } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import { EthMethod, isPrimaryTypePermit, PermitMessage } from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import {
+  isTransactionRequest,
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { toSupportedChainId } from 'src/utils/chainId'
-import { opacify } from 'src/utils/colors'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200
 
@@ -39,9 +42,6 @@ const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
 
 const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction
-
-const isTransactionRequest = (request: WalletConnectRequest): request is TransactionRequest =>
-  request.type === EthMethod.EthSendTransaction || request.type === EthMethod.EthSignTransaction
 
 /** If the request is a permit then parse the relevant information otherwise return undefined. */
 const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined => {
@@ -66,6 +66,11 @@ const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined =>
   }
 }
 
+const getTransactionCurrencyAmount = (chainId: ChainId | undefined, value: string) => {
+  const nativeCurrency = NativeCurrency.onChain(chainId || ChainId.Mainnet)
+  return tryParseRawAmount(value, nativeCurrency)
+}
+
 const VALID_REQUEST_TYPES = [
   EthMethod.PersonalSign,
   EthMethod.SignTypedData,
@@ -75,12 +80,27 @@ const VALID_REQUEST_TYPES = [
   EthMethod.EthSendTransaction,
 ]
 
+function SectionContainer({
+  hasTopBorder = true,
+  children,
+  style,
+}: PropsWithChildren<{ hasTopBorder?: boolean; style?: StyleProp<ViewStyle> }>) {
+  return children ? (
+    <Box
+      borderTopColor={hasTopBorder ? 'neutralOutline' : 'none'}
+      borderTopWidth={1}
+      paddingHorizontal="lg"
+      paddingVertical="md"
+      style={style}>
+      {children}
+    </Box>
+  ) : null
+}
+
 export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
-  const theme = useAppTheme()
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const [maybeUnsafeConfirmation, setMaybeUnsafeConfirmation] = useState(false)
 
   /**
    * TODO: implement this behavior in a less janky way. Ideally if we can distinguish between `onClose` being called programmatically and `onClose` as a results of a user dismissing the modal then we can determine what this value should be without this class variable.
@@ -94,8 +114,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
   const chainId = toSupportedChainId(request?.dapp.chain_id) ?? undefined
 
-  const canSubmit = !isPotentiallyUnsafe(request) || maybeUnsafeConfirmation
-
   const onReject = () => {
     rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
@@ -103,7 +121,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   }
 
   const onConfirm = async () => {
-    if (!activeAccount || !canSubmit) return
+    if (!activeAccount) return
     if (
       request.type === EthMethod.EthSignTransaction ||
       request.type === EthMethod.EthSendTransaction
@@ -151,74 +169,69 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     }
   }
 
+  const currencyAmount =
+    isTransactionRequest(request) &&
+    getTransactionCurrencyAmount(chainId, request.transaction.value)
+
   let permitInfo = getPermitInfo(request)
 
   return (
     <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={handleClose}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails permitInfo={permitInfo} request={request} />
-        {!permitInfo && (
-          <Flex
-            borderColor="deprecated_gray100"
-            borderRadius="lg"
-            borderWidth={1}
-            gap="sm"
-            /* need a fixed height here or else modal gets confused about total height */
-            maxHeight={MAX_MODAL_MESSAGE_HEIGHT}
-            overflow="hidden">
-            <RequestMessage request={request} />
-          </Flex>
-        )}
-        {isPotentiallyUnsafe(request) ? (
-          <Flex
-            centered
-            borderRadius="lg"
-            gap="sm"
-            padding="md"
-            style={{ backgroundColor: opacify(5, theme.colors.deprecated_yellow) }}>
-            <AlertTriangle color={theme.colors.deprecated_yellow} height={22} width={22} />
-            <Text color="deprecated_yellow" textAlign="center" variant="body1">
-              {t('This method of authorization could be insecure.')}
-            </Text>
-            <PrimaryButton
-              disabled={maybeUnsafeConfirmation}
-              label={t('I understand')}
-              variant="yellow"
-              onPress={() => setMaybeUnsafeConfirmation(true)}
-            />
-          </Flex>
-        ) : null}
 
-        {isTransactionRequest(request) && (
-          <SpendingDetails chainId={chainId} transaction={request.transaction} />
-        )}
+        <Box backgroundColor="neutralContainer" borderRadius="lg">
+          {!permitInfo && (
+            <SectionContainer hasTopBorder={false} style={requestMessageStyle}>
+              <RequestMessage request={request} />
+            </SectionContainer>
+          )}
 
-        {methodCostsGas(request) && chainId ? (
-          <NetworkFee chainId={chainId} transaction={request.transaction} />
-        ) : (
-          <Text color="neutralTextTertiary" fontSize={12} fontStyle="italic">
-            This request will not cost any gas fees.
-          </Text>
-        )}
+          {isPotentiallyUnsafe(request) && (
+            <SectionContainer>
+              <Text color="accentBackgroundWarning" variant="body2">
+                <Trans t={t}>
+                  <Text fontWeight="bold">Be careful:</Text> Signing this message could allow the
+                  requesting app to perform any action with your wallet and its contents.
+                </Trans>
+              </Text>
+            </SectionContainer>
+          )}
 
-        <Flex
-          backgroundColor="deprecated_gray50"
-          borderRadius="lg"
-          gap="xs"
-          justifyContent="space-between"
-          p="md">
-          <AddressDisplay showAddressAsSubtitle address={request.account} />
-        </Flex>
+          {currencyAmount && !currencyAmount.equalTo(0) && (
+            <SectionContainer>
+              <SpendingDetails currencyAmount={currencyAmount} />
+            </SectionContainer>
+          )}
+
+          <SectionContainer>
+            {methodCostsGas(request) && chainId ? (
+              <NetworkFee chainId={chainId} transaction={request.transaction} />
+            ) : (
+              <Text variant="body2">
+                {t('This request will not trigger a blockchain transaction or cost any gas fees.')}
+              </Text>
+            )}
+          </SectionContainer>
+
+          <SectionContainer>
+            <AccountDetails address={request.account} />
+          </SectionContainer>
+        </Box>
+
         <Flex row gap="sm">
           <PrimaryButton
+            borderColor="neutralOutline"
+            borderWidth={1}
             flex={1}
             label={t('Cancel')}
-            name={ElementName.Confirm}
-            variant="gray"
+            name={ElementName.Cancel}
+            variant="black"
             onPress={onReject}
           />
           <PrimaryButton
-            disabled={!canSubmit}
+            borderRadius="md"
+            disabled={!activeAccount}
             flex={1}
             label={t('Confirm')}
             name={ElementName.Confirm}
@@ -229,4 +242,10 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
       </Flex>
     </BottomSheetModal>
   )
+}
+
+const requestMessageStyle: StyleProp<ViewStyle> = {
+  // need a fixed height here or else modal gets confused about total height
+  maxHeight: MAX_MODAL_MESSAGE_HEIGHT,
+  overflow: 'hidden',
 }
