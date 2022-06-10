@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
 import { format } from 'd3'
@@ -9,7 +10,6 @@ import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
 import React, { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
@@ -158,7 +158,7 @@ export default function LiquidityChartRangeInput({
   )
 
   if (isError) {
-    ReactGA.event('exception', { description: error.toString(), fatal: false })
+    sendEvent('exception', { description: error.toString(), fatal: false })
   }
 
   return (

@@ -3,6 +3,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
+import { sendEvent } from 'components/analytics'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
 import { BlueCard, DarkGreyCard, LightCard, YellowCard } from 'components/Card'
@@ -23,7 +24,6 @@ import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
@@ -336,7 +336,7 @@ function V2PairMigration({
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
-            ReactGA.event({
+            sendEvent({
               category: 'Migrate',
               action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
               label: `${currency0.symbol}/${currency1.symbol}`,
