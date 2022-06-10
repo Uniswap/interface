@@ -97,7 +97,6 @@ export class DocumentRoute extends Route {
  * A cache-specific version of the document.
  * This document sets the local `__isDocumentCached` variable to true.
  */
-// TODO(xtine): Send a GA beacon from the client to record cache usage / metrics.
 export class CachedDocument extends Response {
   private static toCachedReadableStream(response: Response) {
     const reader = response.body?.getReader()
