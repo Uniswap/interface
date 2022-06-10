@@ -18,8 +18,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "build:e2e": "env-cmd -f .env yarn build",
-    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress open'",
-    "test:e2e:ci": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
+    "serve": "serve build -l 3000",
+    "test:e2e": "yarn cypress open",
+    "test:e2e:ci": "start-server-and-test 'yarn serve' http://localhost:3000 'cypress run --record'"
   },
   "browserslist": {
     "production": [

@@ -1,6 +1,24 @@
 import assert = require('assert')
 
-describe('ServiceWorker', () => {
+describe('Service Worker', () => {
+  before(async () => {
+    // Fail fast if there is no Service Worker on this build.
+    const sw = await fetch('./service-worker.js', { headers: { 'Service-Worker': 'script' } })
+    const isValid = isValidServiceWorker(sw)
+    if (!isValid) {
+      throw new Error(
+        '\n' +
+          'Service Worker tests must be run on a production-like build\n' +
+          'To test, build with `yarn build:e2e` and serve with `yarn serve`'
+      )
+    }
+
+    function isValidServiceWorker(response: Response) {
+      const contentType = response.headers.get('content-type')
+      return !(response.status === 404 || (contentType != null && contentType.indexOf('javascript') === -1))
+    }
+  })
+
   beforeEach(() => {
     cy.intercept({ hostname: 'www.google-analytics.com' }, (req) => {
       const body = req.body.toString()
