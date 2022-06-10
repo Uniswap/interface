@@ -1,8 +1,6 @@
-// ***********************************************
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
+/**
+ * Updates cy.visit() to include an injected window.ethereum provider.
+ */
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import { JsonRpcProvider } from '@ethersproject/providers'
@@ -23,11 +21,11 @@ export const TEST_ADDRESS_NEVER_USE_SHORTENED = `${TEST_ADDRESS_NEVER_USE.substr
 class CustomizedBridge extends Eip1193Bridge {
   chainId = 4
 
-  async sendAsync(...args) {
+  async sendAsync(...args: any[]) {
     console.debug('sendAsync called', ...args)
     return this.send(...args)
   }
-  async send(...args) {
+  async send(...args: any[]) {
     console.debug('send called', ...args)
     const isCallbackForm = typeof args[0] === 'object' && typeof args[1] === 'function'
     let callback
@@ -78,8 +76,8 @@ class CustomizedBridge extends Eip1193Bridge {
 Cypress.Commands.overwrite('visit', (original, url, options) => {
   return original(url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url, {
     ...options,
-    onBeforeLoad(win) {
-      options && options.onBeforeLoad && options.onBeforeLoad(win)
+    onBeforeLoad(win: Window & { ethereum?: CustomizedBridge }) {
+      options?.onBeforeLoad?.(win)
       win.localStorage.clear()
       const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
       const signer = new Wallet(TEST_PRIVATE_KEY, provider)
