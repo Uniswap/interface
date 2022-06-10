@@ -68,7 +68,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
       flex={1}
       gap="none"
       overflow="hidden"
-      px="xl"
+      px="lg"
       py="xxl">
       <AppBackground />
       <Flex centered flex={1} gap="xxs">
@@ -98,7 +98,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
         </Flex>
         <Flex gap="none" px="md">
           <Text textAlign="center" variant="h3">
-            {t('"{{dappName}}" wants to connect to your wallet', {
+            {t('{{dappName}} wants to connect to your wallet', {
               dappName: pendingSession.dapp.name,
             })}
           </Text>
@@ -189,12 +189,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
           selectedChainId={selectedChainId}
           onClose={() => setShowSwitchNetworkModal(false)}
           onPressChain={(chainId) => {
-            selectionAsync()
             setSelectedChainId(chainId)
-            setShowSwitchNetworkModal(false)
-          }}
-          onPressDisconnect={() => {
-            onPressSettleConnection(false)
             setShowSwitchNetworkModal(false)
           }}
         />

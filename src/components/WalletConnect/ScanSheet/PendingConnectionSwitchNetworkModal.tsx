@@ -16,7 +16,6 @@ type Props = {
   pendingSession: WalletConnectSession
   selectedChainId: ChainId
   onPressChain: (chainId: ChainId) => void
-  onPressDisconnect: () => void
   onClose: () => void
 }
 
@@ -24,7 +23,6 @@ export const PendingConnectionSwitchNetworkModal = ({
   pendingSession,
   selectedChainId,
   onPressChain,
-  onPressDisconnect,
   onClose,
 }: Props) => {
   const activeChains = useActiveChainIds()
@@ -33,54 +31,30 @@ export const PendingConnectionSwitchNetworkModal = ({
 
   const options = useMemo(
     () =>
-      activeChains
-        .map((chainId) => {
-          const info = CHAIN_INFO[chainId]
-          return {
-            key: `${ElementName.NetworkButton}-${chainId}`,
-            onPress: () => onPressChain(chainId),
-            render: () => (
-              <>
-                <Separator />
-                <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                  <NetworkLogo chainId={chainId} size={24} />
-                  <Text color="neutralTextPrimary" variant="subHead1">
-                    {info.label}
-                  </Text>
-                  <Box height={24} width={24}>
-                    {chainId === selectedChainId && (
-                      <Check color={theme.colors.neutralTextSecondary} height={24} width={24} />
-                    )}
-                  </Box>
-                </Flex>
-              </>
-            ),
-          }
-        })
-        .concat([
-          {
-            key: ElementName.Disconnect,
-            onPress: onPressDisconnect,
-            render: () => (
-              <>
-                <Separator />
-                <Flex centered row px="lg" py="md">
-                  <Text color="accentBackgroundFailure" variant="subHead1">
-                    {t('Disconnect')}
-                  </Text>
-                </Flex>
-              </>
-            ),
-          },
-        ]),
-    [
-      activeChains,
-      selectedChainId,
-      onPressChain,
-      onPressDisconnect,
-      t,
-      theme.colors.neutralTextSecondary,
-    ]
+      activeChains.map((chainId) => {
+        const info = CHAIN_INFO[chainId]
+        return {
+          key: `${ElementName.NetworkButton}-${chainId}`,
+          onPress: () => onPressChain(chainId),
+          render: () => (
+            <>
+              <Separator />
+              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
+                <NetworkLogo chainId={chainId} size={24} />
+                <Text color="neutralTextPrimary" variant="subHead1">
+                  {info.label}
+                </Text>
+                <Box height={24} width={24}>
+                  {chainId === selectedChainId && (
+                    <Check color={theme.colors.neutralTextSecondary} height={24} width={24} />
+                  )}
+                </Box>
+              </Flex>
+            </>
+          ),
+        }
+      }),
+    [activeChains, selectedChainId, onPressChain, theme.colors.neutralTextSecondary]
   )
 
   return (

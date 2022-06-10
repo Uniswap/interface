@@ -74,7 +74,7 @@
   "<0>Be careful:</0> Signing this message could allow the requesting app to perform any action with your wallet and its contents.": "<0>Be careful:</0> Signing this message could allow the requesting app to perform any action with your wallet and its contents.",
   "This request will not trigger a blockchain transaction or cost any gas fees.": "This request will not trigger a blockchain transaction or cost any gas fees.",
   "Confirm": "Confirm",
-  "\"{{dappName}}\" wants to connect to your wallet": "\"{{dappName}}\" wants to connect to your wallet",
+  "{{dappName}} wants to connect to your wallet": "{{dappName}} wants to connect to your wallet",
   "Site permissions": "Site permissions",
   "View your wallet address and ENS name": "View your wallet address and ENS name",
   "View your token balances": "View your token balances",
