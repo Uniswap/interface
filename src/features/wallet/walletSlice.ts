@@ -50,6 +50,12 @@ const slice = createSlice({
         state.activeAccountAddress = firstAccountId
       }
     },
+    markAsNonPending: (state, action: PayloadAction<Address>) => {
+      const address = action.payload
+      const id = normalizeAddress(address)
+      if (!state.accounts[id]) throw new Error(`Cannot enable missing account ${id}`)
+      state.accounts[id].pending = false
+    },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
       const id = normalizeAddress(address)
@@ -88,6 +94,7 @@ const slice = createSlice({
 export const {
   addAccount,
   removeAccount,
+  markAsNonPending,
   editAccount,
   activateAccount,
   unlockWallet,

@@ -80,7 +80,7 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.RestoreWallet]: undefined
   [OnboardingScreens.SeedPhraseInput]: undefined
   [OnboardingScreens.PrivateKeyInput]: undefined
-  [OnboardingScreens.SelectWallet]: { addresses: Address[] }
+  [OnboardingScreens.SelectWallet]: undefined
   [OnboardingScreens.WatchWallet]: undefined
 }
 

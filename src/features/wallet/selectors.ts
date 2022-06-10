@@ -4,6 +4,14 @@ import { AccountType } from './accounts/types'
 
 export const selectAccounts = (state: RootState) => state.wallet.accounts
 
+export const selectNonPendingAccounts = createSelector(selectAccounts, (accounts) =>
+  Object.fromEntries(Object.entries(accounts).filter((a) => !a[1].pending))
+)
+
+export const selectPendingAccounts = createSelector(selectAccounts, (accounts) =>
+  Object.fromEntries(Object.entries(accounts).filter((a) => a[1].pending))
+)
+
 export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a) => a.type !== AccountType.Readonly)
 )

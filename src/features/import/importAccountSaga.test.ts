@@ -57,6 +57,7 @@ describe(importAccount, () => {
         type: AccountType.Native,
         address: SAMPLE_SEED_ADDRESS,
         name: 'WALLET',
+        pending: true,
       }),
       activateAccount(SAMPLE_SEED_ADDRESS),
       unlockWallet(),
@@ -88,7 +89,12 @@ describe(importAccount, () => {
 
     // assert on dispatched actions
     expect(dispatched).toEqual([
-      addAccount({ type: AccountType.Readonly, address: NATIVE_ADDRESS, name: 'READONLY' }),
+      addAccount({
+        type: AccountType.Readonly,
+        address: NATIVE_ADDRESS,
+        name: 'READONLY',
+        pending: true,
+      }),
       activateAccount(NATIVE_ADDRESS),
       unlockWallet(),
     ])

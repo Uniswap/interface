@@ -10,6 +10,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 
@@ -23,6 +27,8 @@ export function OutroScreen({}: Props) {
   const activeAddress = useActiveAccount()?.address
 
   const onPressNext = () => {
+    // Remove pending flag from all new accounts.
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
   }
 

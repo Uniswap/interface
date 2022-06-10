@@ -10,7 +10,7 @@ export function* createAccount(derivationIndex = 0) {
   const mnemonicId = yield* call(generateAndStoreMnemonic)
   const address = yield* call(generateAndStorePrivateKey, mnemonicId, derivationIndex)
   const type = AccountType.Native
-  yield* put(addAccount({ type, address }))
+  yield* put(addAccount({ type, address, pending: true }))
   yield* put(activateAccount(address))
   logger.info('createAccountSaga', '', 'New account created:', address)
 }

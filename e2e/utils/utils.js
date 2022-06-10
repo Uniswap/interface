@@ -9,6 +9,7 @@ export async function quickOnboarding() {
 
   // open app, open account drawer, and start import flow
   await element(by.id(ElementName.OnboardingExplore)).tap()
+  await sleep(500) // wait for account activation
   await element(by.id(ElementName.Manage)).tap()
   await element(by.id(ElementName.ImportAccount)).tap()
 
@@ -16,6 +17,7 @@ export async function quickOnboarding() {
   await element(by.id('import_account_form/input')).typeText(Accounts.managed.privateKey)
   await sleep(500)
   await element(by.id(ElementName.Submit)).tap()
+  await sleep(500) // wait for account activation
 
   await device.matchFace()
 

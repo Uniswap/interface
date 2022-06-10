@@ -5,15 +5,20 @@ import { useENS } from 'src/features/ens/useENS'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
   makeSelectLocalPfp,
-  selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
+  selectNonPendingAccounts,
+  selectPendingAccounts,
   selectSignerAccounts,
 } from 'src/features/wallet/selectors'
 import { shortenAddress } from 'src/utils/addresses'
 
 export function useAccounts() {
-  return useAppSelector(selectAccounts)
+  return useAppSelector(selectNonPendingAccounts)
+}
+
+export function usePendingAccounts(): AddressTo<Account> {
+  return useAppSelector(selectPendingAccounts)
 }
 
 export function useSignerAccounts() {

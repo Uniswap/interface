@@ -26,7 +26,12 @@ export function* importAccount(params: ImportAccountParams) {
 
 function* importAddressAccount(address: string, name?: string) {
   const formattedAddress = normalizeAddress(address)
-  const account: Account = { type: AccountType.Readonly, address: formattedAddress, name }
+  const account: Account = {
+    type: AccountType.Readonly,
+    address: formattedAddress,
+    name,
+    pending: true,
+  }
   yield* call(onAccountImport, account)
 }
 
@@ -39,29 +44,31 @@ function* importMnemonicAccounts(mnemonic: string, name?: string, indexes = [0])
       return call(generateAndStorePrivateKey, mnemonicId, index)
     })
   )
-  // add all accounts to store, but ignore address to be used in onAccountImport (to avoid redundant import)
   yield* all(
     addresses.slice(1, addresses.length).map((address) => {
-      const account: Account = { type: AccountType.Native, address }
+      const account: Account = { type: AccountType.Native, address, name, pending: true }
       return put(addAccount(account))
     })
   )
-  // activate account at first derivation index
-  const activeAccount: Account = { type: AccountType.Native, address: addresses[0], name }
+
+  const activeAccount: Account = {
+    type: AccountType.Native,
+    address: addresses[0],
+    name,
+    pending: true,
+  }
   yield* call(onAccountImport, activeAccount)
 }
 
 function* importPrivateKeyAccount(privateKey: string, name?: string) {
   const wallet = new Wallet(ensureLeading0x(privateKey))
   const address = wallet.address
-  const account: Account = { type: AccountType.Local, privateKey, name, address }
+  const account: Account = { type: AccountType.Local, privateKey, name, address, pending: true }
   // TODO save key to keychain: https://github.com/Uniswap/mobile/issues/131
   yield* call(onAccountImport, account)
 }
 
 function* onAccountImport(account: Account) {
-  // const account: Account = { type: AccountType.Native, address }
-  // return put(addAccount(account))
   yield* put(addAccount(account))
   yield* put(activateAccount(account.address))
   yield* put(unlockWallet())

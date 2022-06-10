@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import EyeIcon from 'src/assets/icons/eyeball.svg'
@@ -14,6 +14,10 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { opacify } from 'src/utils/colors'
 
@@ -54,11 +58,18 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function ImportMethodScreen({ navigation }: Props) {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
 
   /**
    * @TODO include check icloud backups and conditionally render restore option
    */
   const backupFound = true
+
+  const handleOnPress = (nav: OnboardingScreens) => {
+    // Delete any pending accounts before entering flow.
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    navigation.navigate(nav)
+  }
 
   return (
     <OnboardingScreen title={t('Choose how to connect your wallet')}>
@@ -69,7 +80,7 @@ export function ImportMethodScreen({ navigation }: Props) {
             blurb={blurb(t)}
             icon={icon}
             title={title(t)}
-            onPress={() => navigation.navigate(nav)}
+            onPress={() => handleOnPress(nav)}
           />
         ))}
         <Flex grow justifyContent="flex-end">

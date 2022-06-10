@@ -14,6 +14,10 @@ import { isValidEnsName } from 'src/features/ens/parseENSAddress'
 import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { importAccountActions, importAccountSagaName } from 'src/features/import/importAccountSaga'
 import { ImportAccountInputType, ImportAccountType } from 'src/features/import/types'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { isValidAddress } from 'src/utils/addresses'
 import { getClipboard } from 'src/utils/clipboard'
 import { isValidMnemonic } from 'src/utils/mnemonics'
@@ -64,6 +68,8 @@ export function ImportAccountForm({ onSuccess }: Props) {
           importAccountActions.trigger({ type: ImportAccountType.PrivateKey, privateKey: input })
         )
       }
+      // Activate all new accounts.
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     },
     [dispatch, t]
   )

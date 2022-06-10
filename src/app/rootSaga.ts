@@ -48,6 +48,12 @@ import {
   ledgerSaga,
   ledgerSagaName,
 } from 'src/features/wallet/ledgerSaga'
+import {
+  pendingAccountActions,
+  pendingAccountReducer,
+  pendingAccountSaga,
+  pendingAccountSagaName,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
 import { SagaActions, SagaState } from 'src/utils/saga'
 
@@ -97,6 +103,12 @@ export const monitoredSagas: {
     wrappedSaga: ledgerSaga,
     reducer: ledgerReducer,
     actions: ledgerActions,
+  },
+  [pendingAccountSagaName]: {
+    name: pendingAccountSagaName,
+    wrappedSaga: pendingAccountSaga,
+    reducer: pendingAccountReducer,
+    actions: pendingAccountActions,
   },
   [transferTokenSagaName]: {
     name: transferTokenSagaName,

@@ -29,9 +29,7 @@ export function RestoreWalletScreen({ navigation }: Props) {
   useEffect(() => {
     if (enteredPin.length !== PIN_LENGTH) return
     if (enteredPin === expectedPin) {
-      navigation.navigate(OnboardingScreens.SelectWallet, {
-        addresses: [],
-      })
+      navigation.navigate(OnboardingScreens.SelectWallet)
     } else {
       setEnteredPin('')
       setError(true)

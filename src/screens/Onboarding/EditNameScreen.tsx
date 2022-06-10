@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextInput } from 'src/components/input/TextInput'
@@ -12,7 +12,7 @@ import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { selectActiveAccount } from 'src/features/wallet/selectors'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -23,7 +23,7 @@ export function EditNameScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   // avoids `useActiveAccount` since response may be null
-  const activeAccount = useAppSelector(selectActiveAccount)
+  const activeAccount = useActiveAccount()
   const [newAccountName, setNewAccountName] = useState(activeAccount?.name ?? '')
 
   const onPressNext = () => {

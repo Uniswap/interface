@@ -19,6 +19,9 @@ export function ImportAccounts() {
     await element(by.id('import_account_form/input')).typeText(Accounts.readonly.name)
     await element(by.id(ElementName.Submit)).tap()
 
+    // Wait for import saga to complete
+    await sleep(500)
+
     await expect(element(by.id(`account_item/${Accounts.readonly.address}`))).toExist()
   })
 
@@ -36,6 +39,9 @@ export function ImportAccounts() {
     // enter account name
     await element(by.id('import_account_form/input')).typeText(Accounts.managed2.name)
     await element(by.id(ElementName.Submit)).tap()
+
+    // Wait for import saga to complete
+    await sleep(500)
 
     await expect(element(by.id(`account_item/${Accounts.managed2.address}`))).toExist()
   })

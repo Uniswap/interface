@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, View } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_SPLASH_LOGO } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
@@ -15,7 +15,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
-import { selectActiveAccount } from 'src/features/wallet/selectors'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 
@@ -27,25 +30,23 @@ export function LandingScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   const onPressCreateWallet = () => {
+    // Clear any existing pending accounts first.
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(createAccountActions.trigger(0))
     navigation.navigate(OnboardingScreens.EditName)
   }
   const onPressImportWallet = () => {
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     navigation.navigate(OnboardingScreens.ImportMethod)
   }
+
+  // Explore is no longer in spec. Keeping for dev purposes.
   const onPressExplore = () => {
-    // TODO Build any tooltips/guides for "explore"
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    dispatch(createAccountActions.trigger(0))
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
   }
-
-  // avoids `useActiveAccount` since response may be null
-  const activeAccount = useAppSelector(selectActiveAccount)
-
-  // create account on mount
-  useEffect(() => {
-    if (!activeAccount) {
-      dispatch(createAccountActions.trigger(0))
-    }
-  }, [activeAccount, dispatch])
 
   return (
     <Screen edges={['bottom']}>
