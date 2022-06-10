@@ -2,6 +2,8 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
+import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -64,6 +66,17 @@ const Marginer = styled.div`
 `
 
 export default function App() {
+  const history = useHistory()
+
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0)
+    })
+    return () => {
+      unlisten()
+    }
+  }, [history])
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
