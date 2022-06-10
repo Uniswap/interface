@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
-import ReactGA from 'react-ga4'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -85,7 +85,7 @@ export default function GasEstimateBadge({
       }
       placement="bottom"
       onOpen={() =>
-        ReactGA.event({
+        sendEvent({
           category: 'Gas',
           action: 'Gas Details Tooltip Open',
         })

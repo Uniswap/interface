@@ -3,11 +3,11 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
+import { sendEvent } from 'components/analytics'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
@@ -275,7 +275,7 @@ export default function RemoveLiquidity({
 
           setTxHash(response.hash)
 
-          ReactGA.event({
+          sendEvent({
             category: 'Liquidity',
             action: 'Remove',
             label: [currencyA.symbol, currencyB.symbol].join('/'),

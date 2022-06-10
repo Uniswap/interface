@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow } from 'components/Row'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletError } from 'state/wallet/reducer'
 import { updateWalletOverride } from 'state/walletOverride/reducer'
@@ -176,7 +176,7 @@ export default function WalletModal({
     )?.name
 
     // log selected wallet
-    ReactGA.event({
+    sendEvent({
       category: 'Wallet',
       action: 'Change Wallet',
       label: name,

@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { sendEvent } from 'components/analytics'
 import Card, { DarkGreyCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
-import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { isMobile } from 'utils/userAgent'
@@ -87,7 +87,7 @@ export function PrivacyPolicyModal() {
   useEffect(() => {
     if (!open) return
 
-    ReactGA.event({
+    sendEvent({
       category: 'Modal',
       action: 'Show Legal',
     })

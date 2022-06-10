@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import { sendEvent } from 'components/analytics'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
@@ -211,7 +211,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   id="toggle-optimized-router-button"
                   isActive={!clientSideRouter}
                   toggle={() => {
-                    ReactGA.event({
+                    sendEvent({
                       category: 'Routing',
                       action: clientSideRouter ? 'enable routing API' : 'disable routing API',
                     })
