@@ -29,7 +29,6 @@ import {
   FileText,
   Menu as MenuIcon,
   MessageCircle,
-  Monitor,
   PieChart,
   Share2,
   Triangle,
@@ -225,13 +224,6 @@ export default function Menu() {
               <Trans>Bridge Assets</Trans>
             </Text>
           </MenuItem>
-        )}
-
-        {!above768 && (
-          <NavMenuItem to="/myPools" onClick={toggle}>
-            <Monitor size={14} />
-            <Trans>My Pools</Trans>
-          </NavMenuItem>
         )}
 
         {!above768 && (
