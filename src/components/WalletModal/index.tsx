@@ -16,13 +16,15 @@ import MetamaskIcon from '../../assets/images/metamask.png'
 import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import {
-  coinbaseWallet,
+  coinbaseWalletHooks,
   fortmatic,
+  fortmaticHooks,
   getWalletForConnector,
   injected,
+  injectedHooks,
   network,
   Wallet,
-  walletConnect,
+  walletConnectHooks,
 } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
@@ -132,12 +134,12 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, hooks } = useWeb3React()
+  const { connector } = useWeb3React()
   const isActiveMap: Partial<Record<Wallet, boolean>> = {
-    [Wallet.INJECTED]: hooks.useSelectedIsActive(injected),
-    [Wallet.COINBASE_WALLET]: hooks.useSelectedIsActive(coinbaseWallet),
-    [Wallet.WALLET_CONNECT]: hooks.useSelectedIsActive(walletConnect),
-    [Wallet.FORTMATIC]: hooks.useSelectedIsActive(fortmatic),
+    [Wallet.INJECTED]: injectedHooks.useIsActive(),
+    [Wallet.COINBASE_WALLET]: coinbaseWalletHooks.useIsActive(),
+    [Wallet.WALLET_CONNECT]: walletConnectHooks.useIsActive(),
+    [Wallet.FORTMATIC]: fortmaticHooks.useIsActive(),
   }
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)

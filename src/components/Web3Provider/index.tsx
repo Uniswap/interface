@@ -1,16 +1,16 @@
-import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
+import { Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import {
-  coinbaseWallet,
+  coinbaseWalletHooks,
   createOrderedConnectors,
-  fortmatic,
+  fortmaticHooks,
   getConnectorForWallet,
   gnosisSafe,
-  injected,
+  injectedHooks,
   MODAL_WALLETS,
   network,
   Wallet,
-  walletConnect,
+  walletConnectHooks,
 } from 'connectors'
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useState } from 'react'
@@ -38,21 +38,20 @@ interface ConnectorState {
 // It also checks for Coinbase Wallet, Wallet Connect Fortmatic or Injected wallets to become active.
 function Web3Updater() {
   const dispatch = useAppDispatch()
-  const { hooks } = useWeb3React()
 
   const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
   const walletOverrideBackfilled = useAppSelector((state) => state.walletOverride.walletOverrideBackfilled)
 
-  const injectedIsActive = hooks.useSelectedIsActive(injected)
+  const injectedIsActive = injectedHooks.useIsActive()
   const previousInjectedIsActive = usePrevious(injectedIsActive)
 
-  const coinbaseWalletIsActive = hooks.useSelectedIsActive(coinbaseWallet)
+  const coinbaseWalletIsActive = coinbaseWalletHooks.useIsActive()
   const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
 
-  const walletConnectIsActive = hooks.useSelectedIsActive(walletConnect)
+  const walletConnectIsActive = walletConnectHooks.useIsActive()
   const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
 
-  const fortmaticIsActive = hooks.useSelectedIsActive(fortmatic)
+  const fortmaticIsActive = fortmaticHooks.useIsActive()
   const previousFortmaticIsActive = usePrevious(fortmaticIsActive)
 
   const [isEagerlyConnecting, setIsEagerlyConnecting] = useState(false)
