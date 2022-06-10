@@ -4,7 +4,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@dynamic-amm/sdk'
+import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from '../../hooks'
 import { useCombinedActiveList } from '../../state/lists/hooks'
 import { useCurrencyBalances } from '../../state/wallet/hooks'
@@ -18,16 +18,16 @@ import { MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList, isAddress } from '../../utils'
 import ImportRow from './ImportRow'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { LightGreyCard } from 'components/Card'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { nativeOnChain } from 'constants/tokens'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+  return currency?.isNative ? 'ETHER' : currency?.address || ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -59,7 +59,7 @@ const FixedContentRow = styled.div`
   align-items: center;
 `
 
-function Balance({ balance }: { balance: CurrencyAmount }) {
+function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(10)}</StyledBalanceText>
 }
 
@@ -110,7 +110,7 @@ function CurrencyRow({
   style,
 }: {
   currency: Currency
-  currencyBalance: CurrencyAmount
+  currencyBalance: CurrencyAmount<Currency>
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
@@ -179,13 +179,12 @@ export default function CurrencyList({
 }) {
   const { chainId, account } = useActiveWeb3React()
   const itemCurrencies: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
+    let formatted: (Currency | undefined)[] = showETH ? [nativeOnChain(chainId as number), ...currencies] : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }
     return formatted
-  }, [breakIndex, currencies, showETH])
-
+  }, [breakIndex, currencies, showETH, chainId])
   const itemCurrencyBalances = useCurrencyBalances(account || undefined, itemCurrencies)
   const itemData = { currencies: itemCurrencies, currencyBalances: itemCurrencyBalances }
 
@@ -194,12 +193,12 @@ export default function CurrencyList({
   const Row = useCallback(
     ({ data, index, style }) => {
       const currency: Currency = data.currencies[index]
-      const currencyBalance: CurrencyAmount = data.currencyBalances[index]
-      const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
-      const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
+      const currencyBalance: CurrencyAmount<Currency> = data.currencyBalances[index]
+      const isSelected = Boolean(selectedCurrency && currency && selectedCurrency.equals(currency))
+      const otherSelected = Boolean(otherCurrency && currency && otherCurrency.equals(currency))
       const handleSelect = () => onCurrencySelect(currency)
 
-      const token = wrappedCurrency(currency, chainId)
+      const token = currency?.wrapped
 
       const showImport =
         inactiveTokens.length &&
@@ -218,7 +217,7 @@ export default function CurrencyList({
                   </TYPE.main>
                 </RowFixed>
                 <QuestionHelper
-                  text={t`Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists.`}
+                  text={t`Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists`}
                 />
               </RowBetween>
             </LightGreyCard>
@@ -250,7 +249,6 @@ export default function CurrencyList({
       }
     },
     [
-      chainId,
       inactiveTokens,
       onCurrencySelect,
       otherCurrency,

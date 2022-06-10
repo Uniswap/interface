@@ -1,4 +1,4 @@
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import MULTICALL_ABI from './abi.json'
 
 const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
@@ -10,6 +10,7 @@ const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
   [ChainId.MATIC]: '0x878dFE971d44e9122048308301F540910Bbd934c',
   [ChainId.MUMBAI]: '0xc535D6463D5Bf9843aFa73bBF49bF4644a3988bA',
   [ChainId.BSCTESTNET]: '0xc535D6463D5Bf9843aFa73bBF49bF4644a3988bA',
+  // [ChainId.BSCTESTNET]: '0x6e5BB1a5Ad6F68A8D7D6A5e47750eC15773d6042',
   [ChainId.BSCMAINNET]: '0xcf591ce5574258ac4550d96c545e4f3fd49a74ec',
   [ChainId.AVAXTESTNET]: '0xFFfc5670b7b5B19f4dB99abd31252Db9B661532D',
   [ChainId.AVAXMAINNET]: '0x878dFE971d44e9122048308301F540910Bbd934c',

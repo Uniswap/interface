@@ -1,16 +1,19 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, currencyEquals, ETHER, Token } from '@dynamic-amm/sdk'
+import { Currency, Token, ChainId, NativeCurrency } from '@kyberswap/ks-sdk-core'
 import { useMemo } from 'react'
 import { TokenAddressMap, useAllLists, useCombinedActiveList, useInactiveListUrls } from 'state/lists/hooks'
-import { NEVER_RELOAD, useSingleCallResult } from 'state/multicall/hooks'
+import { NEVER_RELOAD, useSingleCallResult, useMultipleContractSingleData } from 'state/multicall/hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
 import { isAddress } from 'utils'
 import { createTokenFilterFunction } from 'components/SearchModal/filtering'
 import { useActiveWeb3React } from 'hooks/index'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { arrayify } from 'ethers/lib/utils'
-import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { nativeOnChain } from 'constants/tokens'
+import { ERC20_ABI, ERC20_BYTES32_ABI } from 'constants/abis/erc20'
+import { Interface } from '@ethersproject/abi'
+import { ZERO_ADDRESS } from 'constants/index'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -69,7 +72,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
     return false
   }
 
-  return !!userAddedTokens.find(token => currencyEquals(currency, token))
+  return !!userAddedTokens.find(token => currency.equals(token))
 }
 
 // parse a name or symbol from a token response
@@ -84,18 +87,83 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
     : defaultValue
 }
 
+export const useTokens = (addresses: string[]): { [address: string]: Token } => {
+  const { chainId } = useActiveWeb3React()
+  const tokens = useAllTokens()
+
+  const knownTokens = useMemo(() => {
+    return addresses
+      .filter(address => address === ZERO_ADDRESS || tokens[address])
+      .map(address => (address === ZERO_ADDRESS ? nativeOnChain(chainId as ChainId) : tokens[address]))
+    // eslint-disable-next-line
+  }, [JSON.stringify(addresses), tokens, chainId])
+
+  const unKnowAddresses = useMemo(
+    () => addresses.filter(address => address !== ZERO_ADDRESS && !tokens[address]),
+    // eslint-disable-next-line
+    [JSON.stringify(addresses), tokens],
+  )
+
+  const erc20Abi = useMemo(() => new Interface(ERC20_ABI), [])
+  const erc20Byte32Abi = useMemo(() => new Interface(ERC20_BYTES32_ABI), [])
+  const nameResult = useMultipleContractSingleData(unKnowAddresses, erc20Abi, 'name', undefined, NEVER_RELOAD)
+
+  const name32Result = useMultipleContractSingleData(unKnowAddresses, erc20Byte32Abi, 'name', undefined, NEVER_RELOAD)
+
+  const symbolResult = useMultipleContractSingleData(unKnowAddresses, erc20Abi, 'symbol', undefined, NEVER_RELOAD)
+
+  const symbol32Result = useMultipleContractSingleData(
+    unKnowAddresses,
+    erc20Byte32Abi,
+    'symbol',
+    undefined,
+    NEVER_RELOAD,
+  )
+
+  const decimalResult = useMultipleContractSingleData(unKnowAddresses, erc20Abi, 'decimals', undefined, NEVER_RELOAD)
+
+  return useMemo(() => {
+    const unknownTokens = unKnowAddresses.map((address, index) => {
+      const name = nameResult?.[0].result?.[index]
+      const name32 = name32Result?.[0].result?.[index]
+      const symbol = symbolResult?.[0].result?.[index]
+      const symbol32 = symbol32Result?.[0].result?.[index]
+      const decimals = decimalResult?.[0].result?.[index]
+
+      if (!symbol || !decimals || !chainId) return null
+
+      return new Token(
+        chainId,
+        address,
+        decimals,
+        parseStringOrBytes32(symbol, symbol32, 'UNKNOWN'),
+        parseStringOrBytes32(name, name32, 'Unknown Token'),
+      )
+    })
+
+    return [...unknownTokens, ...knownTokens].reduce((acc, cur) => {
+      if (!cur) return acc
+      return {
+        ...acc,
+        [cur.isNative ? ZERO_ADDRESS : cur.address]: cur,
+      }
+    }, {})
+  }, [unKnowAddresses, name32Result, nameResult, symbol32Result, symbolResult, decimalResult, knownTokens, chainId])
+}
+
 // undefined if invalid or does not exist
 // null if loading
 // otherwise returns the token
-export function useToken(tokenAddress?: string): Token | undefined | null {
+export function useToken(tokenAddress?: string): Token | NativeCurrency | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
   const address = isAddress(tokenAddress)
 
-  const tokenContract = useTokenContract(address ? address : undefined, false)
+  const tokenContract = useTokenContract(address && tokenAddress !== ZERO_ADDRESS ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
-  const token: Token | undefined = address ? tokens[address] : undefined
+  const token =
+    tokenAddress === ZERO_ADDRESS ? nativeOnChain(chainId as ChainId) : address ? tokens[address] : undefined
 
   const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(
@@ -139,9 +207,9 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
-  const isETH = chainId && currencyId?.toUpperCase() === convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol
+  const isETH = chainId && currencyId?.toUpperCase() === nativeOnChain(chainId).symbol
   const token = useToken(isETH ? undefined : currencyId)
-  return isETH ? ETHER : token
+  return isETH ? nativeOnChain(chainId as ChainId) : token
 }
 
 export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {

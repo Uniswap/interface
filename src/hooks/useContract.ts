@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, WETH } from '@dynamic-amm/sdk'
+import { ChainId, WETH } from '@kyberswap/ks-sdk-core'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
 import {
@@ -19,12 +19,23 @@ import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, FAIRLAUNCH_V2_ADDRESSES, ZAP_A
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import ZAP_ABI from 'constants/abis/zap.json'
 import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
+import PROMM_FARM_ABI from '../constants/abis/v2/farm.json'
 import FAIRLAUNCH_V2_ABI from '../constants/abis/fairlaunch-v2.json'
 import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
+import { abi as ProAmmPoolAbi } from '../constants/abis/v2/ProAmmPoolState.json'
 import REWARD_LOCKER_V2_ABI from '../constants/abis/reward-locker-v2.json'
 import { useRewardLockerAddressesWithVersion } from 'state/vesting/hooks'
 import { FairLaunchVersion, RewardLockerVersion } from 'state/farms/types'
 
+import { abi as NFTPositionManagerABI } from '../constants/abis/v2/ProAmmNFTPositionManager.json'
+import { abi as TickReaderABI } from '../constants/abis/v2/ProAmmTickReader.json'
+import { abi as QuoterABI } from '../constants/abis/v2/ProAmmQuoter.json'
+import {
+  PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  PRO_AMM_QUOTER,
+  PRO_AMM_TICK_READER,
+  FARM_CONTRACTS as PROMM_FARM_CONTRACTS,
+} from 'constants/v2'
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
@@ -170,6 +181,15 @@ export function useZapContract(): Contract | null {
   return useContract(chainId && ZAP_ADDRESSES[chainId], ZAP_ABI)
 }
 
+export function useProMMFarmContracts(): { [key: string]: Contract } | null {
+  const { chainId } = useActiveWeb3React()
+  return useMultipleContracts(chainId && PROMM_FARM_CONTRACTS[chainId], PROMM_FARM_ABI)
+}
+
+export function useProMMFarmContract(address: string): Contract | null {
+  return useContract(address, PROMM_FARM_ABI)
+}
+
 export function useFairLaunchV1Contracts(
   withSignerIfPossible?: boolean,
 ): {
@@ -276,4 +296,27 @@ export function useRewardLockerContracts(
 
 export function useRewardLockerContract(address: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(address, REWARD_LOCKER_ABI, withSignerIfPossible)
+}
+
+export function useProAmmNFTPositionManagerContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(
+    chainId && PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
+    NFTPositionManagerABI,
+    withSignerIfPossible,
+  )
+}
+
+export function useProAmmPoolContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, ProAmmPoolAbi, withSignerIfPossible)
+}
+
+export function useProAmmTickReader(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && PRO_AMM_TICK_READER[chainId], TickReaderABI, withSignerIfPossible)
+}
+
+export function useProAmmQuoter() {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && PRO_AMM_QUOTER[chainId], QuoterABI)
 }

@@ -17,11 +17,10 @@ import FilterBar from 'pages/TrueSight/components/FilterBar'
 import TrendingSoonLayout from 'pages/TrueSight/components/TrendingSoonLayout'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import TrendingLayout from 'pages/TrueSight/components/TrendingLayout'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import { t, Trans } from '@lingui/macro'
 import NotificationIcon from 'components/Icons/NotificationIcon'
-
 import useTheme from 'hooks/useTheme'
 
 import Tooltip from 'components/Tooltip'

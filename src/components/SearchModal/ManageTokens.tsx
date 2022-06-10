@@ -7,7 +7,7 @@ import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText, ExternalLink } from 'the
 import { useToken } from 'hooks/Tokens'
 import styled from 'styled-components'
 import { useUserAddedTokens, useRemoveUserAddedToken } from 'state/user/hooks'
-import { Token } from '@dynamic-amm/sdk'
+import { Token } from '@kyberswap/ks-sdk-core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getEtherscanLink, isAddress } from 'utils'
 import { useActiveWeb3React } from 'hooks'
@@ -117,7 +117,7 @@ export default function ManageTokens({
           {searchToken && (
             <Card backgroundColor={theme.bg2} padding="10px 0">
               <ImportRow
-                token={searchToken}
+                token={searchToken.wrapped}
                 showImportView={() => setModalView(CurrencyModalView.importToken)}
                 setImportToken={setImportToken}
                 style={{ height: 'fit-content' }}

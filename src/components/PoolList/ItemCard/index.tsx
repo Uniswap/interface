@@ -1,5 +1,5 @@
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, Fraction, JSBI } from '@dynamic-amm/sdk'
+import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { parseSubgraphPoolData, useCheckIsFarmingPool } from 'utils/dmm'
 import { formattedNum, shortenAddress } from 'utils'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -42,6 +42,7 @@ import TabInfoItems from 'components/PoolList/ItemCard/TabInfoItems'
 import TabDetailsItems from 'components/PoolList/ItemCard/TabDetailsItems'
 import TabYourLiquidityItems from 'components/PoolList/ItemCard/TabYourLiquidityItems'
 import TabYourStakedItems from 'components/PoolList/ItemCard/TabYourStakedItems'
+import JSBI from 'jsbi'
 import { useSharedPoolIdManager } from 'state/pools/hooks'
 import { Share2 } from 'react-feather'
 
@@ -66,10 +67,10 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
   )
   const realPercentToken0 =
     reserve0 && virtualReserve0 && reserve1 && virtualReserve1
-      ? reserve0
+      ? reserve0.asFraction
           .divide(virtualReserve0)
           .multiply('100')
-          .divide(reserve0.divide(virtualReserve0).add(reserve1.divide(virtualReserve1)))
+          .divide(reserve0.divide(virtualReserve0).asFraction.add(reserve1.divide(virtualReserve1).asFraction))
       : new Fraction('50')
   const realPercentToken1 = new Fraction('100').subtract(realPercentToken0)
   const isWarning = realPercentToken0.lessThan('10') || realPercentToken1.lessThan('10')
@@ -98,7 +99,7 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
       )}
       {isWarning && (
         <div style={{ position: 'absolute', top: -3, left: -1 }}>
-          <MouseoverTooltip text="One token is close to 0% in the poolData ratio. Pool might go inactive.">
+          <MouseoverTooltip text="One token is close to 0% in the poolData ratio. Pool might go inactive">
             <WarningLeftIcon width={48} height={48} />
           </MouseoverTooltip>
         </div>

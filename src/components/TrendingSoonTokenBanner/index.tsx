@@ -1,8 +1,7 @@
 import React, { CSSProperties, useMemo } from 'react'
-import { Currency, Token } from '@dynamic-amm/sdk'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { nativeNameFromETH } from 'utils'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { ExternalLink } from 'theme'
@@ -26,8 +25,8 @@ const TrendingSoonTokenBanner = ({
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
 
-  const token0 = useMemo(() => wrappedCurrency(currencies[Field.INPUT], chainId), [chainId, currencies])
-  const token1 = useMemo(() => wrappedCurrency(currencies[Field.OUTPUT], chainId), [chainId, currencies])
+  const token0 = currencies[Field.INPUT]?.wrapped
+  const token1 = currencies[Field.OUTPUT]?.wrapped
   const trendingToken0Id = useGetTrendingSoonTokenId(token0)
   const trendingToken1Id = useGetTrendingSoonTokenId(token1)
   const trendingSoonCurrency = useMemo(

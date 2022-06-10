@@ -1,26 +1,23 @@
 import { ethers } from 'ethers'
+import JSBI from 'jsbi'
 import {
-  ChainId,
   Currency,
   CurrencyAmount,
-  ETHER,
   Fraction,
-  JSBI,
-  ONE,
   Percent,
   Price,
-  Token,
   TokenAmount,
+  ChainId,
   TradeType,
-  WETH,
-  ZERO,
-} from '@dynamic-amm/sdk'
-import { DEX_TO_COMPARE, DexConfig, dexIds, dexListConfig, dexTypes } from '../constants/dexes'
+} from '@kyberswap/ks-sdk-core'
+import { dexIds, dexTypes, dexListConfig, DexConfig, DEX_TO_COMPARE } from '../constants/dexes'
 import invariant from 'tiny-invariant'
 import { AggregationComparer } from 'state/swap/types'
 import { GasPrice } from 'state/application/reducer'
 import { reportException } from 'utils/sentry'
-import { sentryRequestId } from 'constants/index'
+import { ETHER_ADDRESS, KYBERSWAP_SOURCE, sentryRequestId } from 'constants/index'
+import { BigNumber } from '@ethersproject/bignumber'
+import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 function dec2bin(dec: number, length: number): string {
   // let bin = (dec >>> 0).toString(2)
@@ -195,23 +192,6 @@ export function encodeSimpleModeData(data: {
 }
 
 /**
- * Given a currency amount and a chain ID, returns the equivalent representation as the token amount.
- * In other words, if the currency is ETHER, returns the WETH token amount for the given chain. Otherwise, returns
- * the input currency amount.
- */
-function wrappedAmount2(currencyAmount: CurrencyAmount, chainId: ChainId): TokenAmount {
-  if (currencyAmount instanceof TokenAmount) return currencyAmount
-  if (currencyAmount.currency === ETHER) return new TokenAmount(WETH[chainId], currencyAmount.raw)
-  invariant(false, 'CURRENCY')
-}
-
-function wrappedCurrency2(currency: Currency, chainId: ChainId): Token {
-  if (currency instanceof Token) return currency
-  if (currency === ETHER) return WETH[chainId]
-  invariant(false, 'CURRENCY')
-}
-
-/**
  */
 export class Aggregator {
   /**
@@ -221,11 +201,11 @@ export class Aggregator {
   /**
    * The input amount for the trade assuming no slippage.
    */
-  public readonly inputAmount: CurrencyAmount
+  public readonly inputAmount: CurrencyAmount<Currency>
   /**
    * The output amount for the trade assuming no slippage.
    */
-  public readonly outputAmount: CurrencyAmount
+  public readonly outputAmount: CurrencyAmount<Currency>
   /**
    */
   public readonly swaps: any[][]
@@ -235,26 +215,30 @@ export class Aggregator {
   /**
    * The price expressed in terms of output amount/input amount.
    */
-  public readonly executionPrice: Price
+  public readonly executionPrice: Price<Currency, Currency>
 
-  public readonly amountInUsd: string
-  public readonly amountOutUsd: string
-  public readonly receivedUsd: string
+  public readonly amountInUsd: number
+  public readonly amountOutUsd: number
+  public readonly receivedUsd: number
   public readonly gasUsd: number
   // -1 mean can not get price of token => can not calculate price impact
   public readonly priceImpact: number
+  public readonly encodedSwapData: string
+  public readonly routerAddress: string
 
   public constructor(
-    inputAmount: CurrencyAmount,
-    outputAmount: CurrencyAmount,
-    amountInUsd: string,
-    amountOutUsd: string,
-    receivedUsd: string,
+    inputAmount: CurrencyAmount<Currency>,
+    outputAmount: CurrencyAmount<Currency>,
+    amountInUsd: number,
+    amountOutUsd: number,
+    receivedUsd: number,
     swaps: any[][],
     tokens: any,
     tradeType: TradeType,
     gasUsd: number,
     priceImpact: number,
+    encodedSwapData: string,
+    routerAddress: string,
   ) {
     this.tradeType = tradeType
     this.inputAmount = inputAmount
@@ -265,31 +249,31 @@ export class Aggregator {
     this.executionPrice = new Price(
       this.inputAmount.currency,
       this.outputAmount.currency,
-      this.inputAmount.raw,
-      this.outputAmount.raw,
+      this.inputAmount.quotient,
+      this.outputAmount.quotient,
     )
     this.swaps = swaps
     this.tokens = tokens
     this.gasUsd = gasUsd
     this.priceImpact = priceImpact
+    this.encodedSwapData = encodedSwapData
+    this.routerAddress = routerAddress
   }
 
   /**
    * Get the minimum amount that must be received from this trade for the given slippage tolerance
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
-  public minimumAmountOut(slippageTolerance: Percent): CurrencyAmount {
-    invariant(!slippageTolerance.lessThan(ZERO), 'SLIPPAGE_TOLERANCE')
+  public minimumAmountOut(slippageTolerance: Percent): CurrencyAmount<Currency> {
+    invariant(!slippageTolerance.lessThan(JSBI.BigInt(0)), 'SLIPPAGE_TOLERANCE')
     if (this.tradeType === TradeType.EXACT_OUTPUT) {
       return this.outputAmount
     } else {
-      const slippageAdjustedAmountOut = new Fraction(ONE)
+      const slippageAdjustedAmountOut = new Fraction(JSBI.BigInt(1))
         .add(slippageTolerance)
         .invert()
-        .multiply(this.outputAmount.raw).quotient
-      return this.outputAmount instanceof TokenAmount
-        ? new TokenAmount(this.outputAmount.token, slippageAdjustedAmountOut)
-        : CurrencyAmount.ether(slippageAdjustedAmountOut)
+        .multiply(this.outputAmount.quotient).quotient
+      return TokenAmount.fromRawAmount(this.outputAmount.currency, slippageAdjustedAmountOut)
     }
   }
 
@@ -297,15 +281,15 @@ export class Aggregator {
    * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
-  public maximumAmountIn(slippageTolerance: Percent): CurrencyAmount {
-    invariant(!slippageTolerance.lessThan(ZERO), 'SLIPPAGE_TOLERANCE')
+  public maximumAmountIn(slippageTolerance: Percent): CurrencyAmount<Currency> {
+    invariant(!slippageTolerance.lessThan(JSBI.BigInt(0)), 'SLIPPAGE_TOLERANCE')
     if (this.tradeType === TradeType.EXACT_INPUT) {
       return this.inputAmount
     } else {
-      const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(this.inputAmount.raw).quotient
-      return this.inputAmount instanceof TokenAmount
-        ? new TokenAmount(this.inputAmount.token, slippageAdjustedAmountIn)
-        : CurrencyAmount.ether(slippageAdjustedAmountIn)
+      const slippageAdjustedAmountIn = new Fraction(JSBI.BigInt(1))
+        .add(slippageTolerance)
+        .multiply(this.inputAmount.quotient).quotient
+      return TokenAmount.fromRawAmount(this.inputAmount.currency, slippageAdjustedAmountIn)
     }
   }
 
@@ -314,35 +298,42 @@ export class Aggregator {
    * @param currencyAmountIn exact amount of input currency to spend
    * @param currencyOut the desired currency out
    * @param saveGas
+   * @param dexes
+   * @param gasPrice
+   * @param slippageTolerance
+   * @param deadline
+   * @param to
+   * @param feeConfig
+   * @param signal
    */
   public static async bestTradeExactIn(
     baseURL: string,
-    currencyAmountIn: CurrencyAmount,
+    currencyAmountIn: CurrencyAmount<Currency>,
     currencyOut: Currency,
     saveGas = false,
+    gasPrice: GasPrice | undefined,
     dexes = '',
-    gasPrice?: GasPrice,
-    signal?: AbortSignal,
+    slippageTolerance: number,
+    deadline: BigNumber | undefined,
+    to: string,
+    feeConfig: FeeConfig | undefined,
+    signal: AbortSignal,
   ): Promise<Aggregator | null> {
-    const chainId: ChainId | undefined =
-      currencyAmountIn instanceof TokenAmount
-        ? currencyAmountIn.token.chainId
-        : currencyOut instanceof Token
-        ? currencyOut.chainId
-        : undefined
+    const chainId: ChainId | undefined = currencyAmountIn.currency.chainId || currencyOut.chainId
 
     invariant(chainId !== undefined, 'CHAIN_ID')
 
-    const amountIn = wrappedAmount2(currencyAmountIn, chainId)
-    const tokenOut = wrappedCurrency2(currencyOut, chainId)
+    const amountIn = currencyAmountIn
+    const tokenOut = currencyOut.wrapped
 
-    const tokenInAddress = amountIn.token?.address
-    const tokenOutAddress = tokenOut.address
+    const tokenInAddress = currencyAmountIn.currency.isNative ? ETHER_ADDRESS : amountIn.currency.wrapped.address
+    const tokenOutAddress = currencyOut.isNative ? ETHER_ADDRESS : tokenOut.address
     if (tokenInAddress && tokenOutAddress) {
       const search = new URLSearchParams({
+        // Trade config
         tokenIn: tokenInAddress.toLowerCase(),
         tokenOut: tokenOutAddress.toLowerCase(),
-        amountIn: currencyAmountIn.raw?.toString(),
+        amountIn: currencyAmountIn.quotient?.toString(),
         saveGas: saveGas ? '1' : '0',
         gasInclude: saveGas ? '1' : '0',
         ...(gasPrice && !!+gasPrice.standard
@@ -351,12 +342,25 @@ export class Aggregator {
             }
           : {}),
         ...(dexes ? { dexes } : {}),
+        slippageTolerance: slippageTolerance?.toString() ?? '',
+        deadline: deadline?.toString() ?? '',
+        to,
+
+        // Fee config
+        chargeFeeBy: feeConfig?.chargeFeeBy ?? '',
+        feeReceiver: feeConfig?.feeReceiver ?? '',
+        isInBps: feeConfig?.isInBps !== undefined ? (feeConfig.isInBps ? '1' : '0') : '',
+        feeAmount: feeConfig?.feeAmount ?? '',
+
+        // Client data
+        clientData: KYBERSWAP_SOURCE,
       })
       try {
         const response = await fetch(`${baseURL}?${search}`, {
           signal,
           headers: {
             'X-Request-Id': sentryRequestId,
+            'Accept-Version': 'Latest',
           },
         })
         const result = await response.json()
@@ -369,21 +373,20 @@ export class Aggregator {
           return null
         }
 
-        const toCurrencyAmount = function(value: string, currency: Currency): CurrencyAmount {
-          return currency instanceof Token
-            ? new TokenAmount(currency, JSBI.BigInt(value))
-            : CurrencyAmount.ether(JSBI.BigInt(value))
+        const toCurrencyAmount = function(value: string, currency: Currency): CurrencyAmount<Currency> {
+          return TokenAmount.fromRawAmount(currency, JSBI.BigInt(value))
         }
 
-        const inputAmount = toCurrencyAmount(result.inputAmount, currencyAmountIn.currency)
         const outputAmount = toCurrencyAmount(result.outputAmount, currencyOut)
 
         const priceImpact = !result.amountOutUsd
           ? -1
           : ((-result.amountOutUsd + result.amountInUsd) * 100) / result.amountInUsd
 
+        const { encodedSwapData, routerAddress } = result
+
         return new Aggregator(
-          inputAmount,
+          currencyAmountIn,
           outputAmount,
           result.amountInUsd,
           result.amountOutUsd,
@@ -393,6 +396,8 @@ export class Aggregator {
           TradeType.EXACT_INPUT,
           result.gasUsd,
           priceImpact,
+          encodedSwapData,
+          routerAddress,
         )
       } catch (e) {
         console.error(e)
@@ -407,26 +412,30 @@ export class Aggregator {
    * @param baseURL
    * @param currencyAmountIn exact amount of input currency to spend
    * @param currencyOut the desired currency out
+   * @param slippageTolerance
+   * @param deadline
+   * @param to
+   * @param feeConfig
+   * @param signal
    */
   public static async compareDex(
     baseURL: string,
-    currencyAmountIn: CurrencyAmount,
+    currencyAmountIn: CurrencyAmount<Currency>,
     currencyOut: Currency,
+    slippageTolerance: number,
+    deadline: BigNumber | undefined,
+    to: string,
+    feeConfig: FeeConfig | undefined,
     signal?: AbortSignal,
   ): Promise<AggregationComparer | null> {
-    const chainId: ChainId | undefined =
-      currencyAmountIn instanceof TokenAmount
-        ? currencyAmountIn.token.chainId
-        : currencyOut instanceof Token
-        ? currencyOut.chainId
-        : undefined
+    const chainId: ChainId | undefined = currencyAmountIn.currency.chainId || currencyOut.chainId
     invariant(chainId !== undefined, 'CHAIN_ID')
 
-    const amountIn = wrappedAmount2(currencyAmountIn, chainId)
-    const tokenOut = wrappedCurrency2(currencyOut, chainId)
+    const amountIn = currencyAmountIn
+    const tokenOut = currencyOut.wrapped
 
-    const tokenInAddress = amountIn.token?.address?.toLowerCase()
-    const tokenOutAddress = tokenOut.address?.toLowerCase()
+    const tokenInAddress = currencyAmountIn.currency.isNative ? ETHER_ADDRESS : amountIn.currency.wrapped.address
+    const tokenOutAddress = currencyOut.isNative ? ETHER_ADDRESS : tokenOut.address
     const comparedDex = DEX_TO_COMPARE[chainId]
     // const basePriceURL = priceUri[chainId]
     if (
@@ -436,12 +445,25 @@ export class Aggregator {
       //  && basePriceURL
     ) {
       const search = new URLSearchParams({
-        tokenIn: tokenInAddress,
-        tokenOut: tokenOutAddress,
-        amountIn: currencyAmountIn.raw?.toString(),
+        // Trade config
+        tokenIn: tokenInAddress.toLowerCase(),
+        tokenOut: tokenOutAddress.toLowerCase(),
+        amountIn: currencyAmountIn.quotient?.toString(),
         saveGas: '0',
         gasInclude: '1',
         dexes: comparedDex.value,
+        slippageTolerance: slippageTolerance?.toString() ?? '',
+        deadline: deadline?.toString() ?? '',
+        to,
+
+        // Fee config
+        chargeFeeBy: feeConfig?.chargeFeeBy ?? '',
+        feeReceiver: feeConfig?.feeReceiver ?? '',
+        isInBps: feeConfig?.isInBps !== undefined ? (feeConfig.isInBps ? '1' : '0') : '',
+        feeAmount: feeConfig?.feeAmount ?? '',
+
+        // Client data
+        clientData: KYBERSWAP_SOURCE,
       })
       try {
         // const promises: any[] = [
@@ -458,6 +480,7 @@ export class Aggregator {
           signal,
           headers: {
             'X-Request-Id': sentryRequestId,
+            'Accept-Version': 'Latest',
           },
         })
         const swapData = await response.json()
@@ -466,10 +489,8 @@ export class Aggregator {
           return null
         }
 
-        const toCurrencyAmount = function(value: string, currency: Currency): CurrencyAmount {
-          return currency instanceof Token
-            ? new TokenAmount(currency, JSBI.BigInt(value))
-            : CurrencyAmount.ether(JSBI.BigInt(value))
+        const toCurrencyAmount = function(value: string, currency: Currency): CurrencyAmount<Currency> {
+          return TokenAmount.fromRawAmount(currency, JSBI.BigInt(value))
         }
 
         const inputAmount = toCurrencyAmount(swapData.inputAmount, currencyAmountIn.currency)

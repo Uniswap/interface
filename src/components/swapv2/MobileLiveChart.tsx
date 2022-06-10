@@ -9,7 +9,7 @@ import { MobileView } from 'react-device-detect'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { Field } from 'state/swap/actions'
-import { Currency } from '@dynamic-amm/sdk'
+import { Currency } from '@kyberswap/ks-sdk-core'
 
 function MobileLiveChart({
   handleRotateClick,

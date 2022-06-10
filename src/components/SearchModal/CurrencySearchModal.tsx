@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { TokenList } from '@uniswap/token-lists'
-import { Currency, Token } from '@dynamic-amm/sdk'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
 
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'

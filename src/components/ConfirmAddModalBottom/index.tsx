@@ -3,7 +3,8 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 import { Text, Flex } from 'rebass'
 
-import { Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent, Price } from '@dynamic-amm/sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, Price } from '@kyberswap/ks-sdk-core'
+import { Pair } from '@kyberswap/ks-sdk-classic'
 import { ONE_BIPS } from 'constants/index'
 import { ButtonPrimary } from 'components/Button'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -16,6 +17,7 @@ import { TYPE } from 'theme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import useTheme from 'hooks/useTheme'
 import { formattedNum } from 'utils'
+import JSBI from 'jsbi'
 
 const Section = styled.div`
   display: flex;
@@ -52,9 +54,9 @@ export function ConfirmAddModalBottom({
 }: {
   pair: Pair | null | undefined
   noLiquidity?: boolean
-  price?: Price
+  price?: Price<Currency, Currency>
   currencies: { [field in Field]?: Currency }
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
+  parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   poolTokenPercentage?: Percent
   onAdd: () => void
   amplification?: Fraction
@@ -63,7 +65,7 @@ export function ConfirmAddModalBottom({
 }) {
   const theme = useTheme()
   const amp = !!pair
-    ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+    ? new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
     : amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)
   const tokenA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const tokenB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)

@@ -11,7 +11,7 @@ import { Colors } from './styled'
 
 export * from './components'
 
-const MEDIA_WIDTHS = {
+export const MEDIA_WIDTHS = {
   upToExtraSmall: 576,
   upToSmall: 768,
   upToMedium: 992,
@@ -69,6 +69,7 @@ export function colors(darkMode: boolean): Colors {
     bg1: darkMode ? '#212429' : '#FFFFFF',
     bg2: darkMode ? '#222c31' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#dcdbdc',
+    bg3Opacity4: darkMode ? '#40444F69' : '#69dcdbdc69',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
     bg6: darkMode ? '#243036' : '#FFFFFF',
@@ -123,8 +124,8 @@ export function colors(darkMode: boolean): Colors {
     btnOutline: darkMode ? '#31cb9e' : '#333333',
 
     // table colors
-    oddRow: darkMode ? '#283339' : '#f4f4f4',
-    evenRow: darkMode ? '#303e46' : '#ffffff',
+    oddRow: darkMode ? '#283339' : '#ffffff',
+    evenRow: darkMode ? '#303e46' : '#f4f4f4',
 
     // other
     red: darkMode ? '#FF537B' : '#FF6871',
@@ -136,13 +137,16 @@ export function colors(darkMode: boolean): Colors {
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#31cb9e',
-    warning: '#FFAF01',
+    warning: '#FF9901',
     lightBlue: '#78d5ff',
     darkBlue: '#1183b7',
     blue: darkMode ? '#78d5ff' : '#31cb9e',
     lightGreen: '#98E5CE',
     apr: '#0faaa2',
     shadow: darkMode ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.04)',
+
+    skeleton: darkMode ? '#303E46' : '#ececec',
+    skeletonShine: darkMode ? '#303e46e6' : '#f5f5f5',
   }
 }
 
@@ -223,6 +227,9 @@ export const TYPE = {
   },
   yellow(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
+  },
+  warning(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'warning'} {...props} />
   },
   darkGray(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text3'} {...props} />

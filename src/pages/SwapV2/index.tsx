@@ -1,4 +1,5 @@
-import { Currency, CurrencyAmount, JSBI, Token } from '@dynamic-amm/sdk'
+import { CurrencyAmount, Token, Currency } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Box, Flex, Text } from 'rebass'
@@ -78,7 +79,7 @@ enum ACTIVE_TAB {
   INFO,
 }
 
-const AppBodyWrapped = styled(AppBody)`
+export const AppBodyWrapped = styled(AppBody)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   z-index: 1;
   padding: 30px 24px;
@@ -156,13 +157,13 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const parsedAmounts = showWrap
     ? {
-        [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount,
-      }
+      [Field.INPUT]: parsedAmount,
+      [Field.OUTPUT]: parsedAmount,
+    }
     : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
-      }
+      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+    }
 
   const { onSwitchTokensV2, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
@@ -233,7 +234,7 @@ export default function Swap({ history }: RouteComponentProps) {
     }
   }, [approval, approvalSubmitted])
 
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+  const maxAmountInput: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(
@@ -409,7 +410,9 @@ export default function Swap({ history }: RouteComponentProps) {
                         otherCurrency={currencies[Field.OUTPUT]}
                         id="swap-currency-input"
                         showCommonBases={true}
-                        estimatedUsd={trade?.amountInUsd ? `${formattedNum(trade.amountInUsd, true)}` : undefined}
+                        estimatedUsd={
+                          trade?.amountInUsd ? `${formattedNum(trade.amountInUsd.toString(), true)}` : undefined
+                        }
                       />
                       <AutoColumn justify="space-between">
                         <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
@@ -437,9 +440,9 @@ export default function Swap({ history }: RouteComponentProps) {
                             <Trans>You save</Trans>{' '}
                             {formattedNum(tradeComparer.tradeSaved.usd, true) +
                               ` (${tradeComparer?.tradeSaved?.percent &&
-                                (tradeComparer.tradeSaved.percent < 0.01
-                                  ? '<0.01'
-                                  : tradeComparer.tradeSaved.percent.toFixed(2))}%)`}
+                              (tradeComparer.tradeSaved.percent < 0.01
+                                ? '<0.01'
+                                : tradeComparer.tradeSaved.percent.toFixed(2))}%)`}
                             <InfoHelper
                               text={
                                 <Text>
@@ -475,7 +478,9 @@ export default function Swap({ history }: RouteComponentProps) {
                           otherCurrency={currencies[Field.INPUT]}
                           id="swap-currency-output"
                           showCommonBases={true}
-                          estimatedUsd={trade?.amountOutUsd ? `${formattedNum(trade.amountOutUsd, true)}` : undefined}
+                          estimatedUsd={
+                            trade?.amountOutUsd ? `${formattedNum(trade.amountOutUsd.toString(), true)}` : undefined
+                          }
                         />
                       </Box>
 
@@ -650,8 +655,8 @@ export default function Swap({ history }: RouteComponentProps) {
                               approval !== ApprovalState.APPROVED ||
                               (!isExpertMode && trade && (trade.priceImpact > 15 || trade.priceImpact === -1))
                             ) &&
-                            trade &&
-                            (trade.priceImpact > 5 || trade.priceImpact === -1)
+                              trade &&
+                              (trade.priceImpact > 5 || trade.priceImpact === -1)
                               ? { background: theme.red, color: theme.white }
                               : {}),
                           }}
@@ -660,10 +665,10 @@ export default function Swap({ history }: RouteComponentProps) {
                             {swapInputError
                               ? swapInputError
                               : approval !== ApprovalState.APPROVED
-                              ? t`Checking allowance...`
-                              : trade && (trade.priceImpact > 5 || trade.priceImpact === -1)
-                              ? t`Swap Anyway`
-                              : t`Swap`}
+                                ? t`Checking allowance...`
+                                : trade && (trade.priceImpact > 5 || trade.priceImpact === -1)
+                                  ? t`Swap Anyway`
+                                  : t`Swap`}
                           </Text>
                         </ButtonError>
                       )}

@@ -7,7 +7,7 @@ import { TrezorConnector } from '@web3-react/trezor-connector'
 import { LedgerConnector } from '@web3-react/ledger-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
 
@@ -17,7 +17,6 @@ const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
 // export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
 export const NETWORK_CHAIN_ID = 1
-export const NETWORK_CHAIN_NAME: string = process.env.REACT_APP_CHAIN_NAME ?? 'mainnet'
 
 if (typeof NETWORK_URL === 'undefined') {
   throw new Error('REACT_APP_NETWORK_URL must be a defined environment variable')
@@ -83,11 +82,11 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {
-  [ChainId.MAINNET]: 'https://ethereum.kyber.network/v1/mainnet/geth?appId=prod-dmm-interface',
-  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-  [ChainId.ROPSTEN]: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-  [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-  [ChainId.KOVAN]: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+  [ChainId.MAINNET]: `https://ethereum.kyber.network/v1/mainnet/geth?appId=prod-dmm-interface`,
+  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
+  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
+  [ChainId.GÖRLI]: `https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
+  [ChainId.KOVAN]: `https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.MUMBAI]: `https://rpc-mumbai.maticvigil.com`,
   [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,

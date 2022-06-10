@@ -26,7 +26,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, isOpen, ...rest }) => (
+const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, width, mobile, isOpen, ...rest }) => (
   <AnimatedDialogContent {...rest} />
 )).attrs({
   'aria-label': 'dialog',
@@ -38,7 +38,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
     background-color: ${({ theme }) => theme.bg6};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
     padding: 0px;
-    width: 50vw;
+    width: ${({ width }) => width || '50vw'};
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
     overflow-x: hidden;
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
@@ -54,9 +54,9 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
         min-height: ${minHeight}vh;
       `}
     display: flex;
-    border-radius: 20px;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-      width: 65vw;
+    border-radius: 16px;
+    ${({ theme, width }) => theme.mediaWidth.upToMedium`
+      width:  ${width || '65vw'};
       margin: 0;
     `}
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
@@ -72,12 +72,13 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
   }
 `
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean
   onDismiss: () => void
   minHeight?: number | false
   maxHeight?: number | string
   maxWidth?: number | string
+  width?: string
   initialFocusRef?: React.RefObject<any>
   className?: string
   children?: React.ReactNode
@@ -90,6 +91,7 @@ export default function Modal({
   minHeight = false,
   maxHeight = 90,
   maxWidth = 420,
+  width,
   initialFocusRef,
   className,
   children,
@@ -124,13 +126,14 @@ export default function Modal({
                 {...(isMobile
                   ? {
                       ...bind(),
-                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) },
+                      style: { transform: y.interpolate(y => `translateY(${(y as number) > 0 ? y : 0}px)`) },
                     }
                   : {})}
                 aria-label="dialog content"
                 minHeight={minHeight}
                 maxHeight={maxHeight}
                 maxWidth={maxWidth}
+                width={width}
                 mobile={isMobile}
                 className={className}
               >

@@ -519,7 +519,7 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
                 <StyledLabel>
                   <Trans>Advanced Mode</Trans>
                 </StyledLabel>
-                <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
+                <QuestionHelper text={t`Enables high slippage trades. Use at your own risk`} />
               </RowFixed>
               <Toggle
                 id="toggle-expert-mode-button"
@@ -548,7 +548,7 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
                     <RowBetween>
                       <RowFixed>
                         <StyledLabel>Trending Soon</StyledLabel>
-                        <QuestionHelper text={t`Turn on to display tokens that could be trending soon.`} />
+                        <QuestionHelper text={t`Turn on to display tokens that could be trending soon`} />
                       </RowFixed>
                       <Toggle
                         isActive={isShowTrendingSoonTokens}
@@ -562,7 +562,7 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
                   <RowBetween>
                     <RowFixed>
                       <StyledLabel>Live Chart</StyledLabel>
-                      <QuestionHelper text={t`Turn on to display live chart.`} />
+                      <QuestionHelper text={t`Turn on to display live chart`} />
                     </RowFixed>
                     <Toggle
                       isActive={isMobile ? isShowMobileLiveChart : isShowLiveChart}
@@ -585,7 +585,7 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
                       <StyledLabel>
                         <Trans>Trade Route</Trans>
                       </StyledLabel>
-                      <QuestionHelper text={t`Turn on to display trade route.`} />
+                      <QuestionHelper text={t`Turn on to display trade route`} />
                     </RowFixed>
                     <Toggle
                       isActive={isMobile ? isShowMobileTradeRoutes : isShowTradeRoutes}

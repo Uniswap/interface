@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { darken } from 'polished'
 import { NavLink, useHistory } from 'react-router-dom'
 import { ArrowLeft } from 'react-feather'
@@ -10,6 +10,8 @@ import { RowBetween } from '../Row'
 import QuestionHelper from '../QuestionHelper'
 import TransactionSettings from 'components/TransactionSettings'
 import { ShareButtonWithModal } from 'components/ShareModal'
+import ClearAllIcon from '../../assets/svg/clear_all.svg'
+import { useMedia } from 'react-use'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -64,12 +66,47 @@ const StyledArrowLeft = styled(ArrowLeft)`
 `
 
 const ButtonBack = styled(ButtonEmpty)`
-  justify-content: flex-start;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
     background-color: ${({ theme }) => theme.buttonBlack};
+  }
+`
+
+const StyledMenuButton = styled.button<{ active?: boolean }>`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  height: 35px;
+
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+
+  :hover {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
+
+  ${({ active }) =>
+    active
+      ? css`
+          cursor: pointer;
+          outline: none;
+          background-color: ${({ theme }) => theme.buttonBlack};
+        `
+      : ''}
+
+  svg {
+    margin-top: 2px;
   }
 `
 
@@ -102,46 +139,100 @@ export function FindPoolTabs() {
         <ActiveText>
           <Trans>Import Pool</Trans>
         </ActiveText>
-        <QuestionHelper text={t`Use this tool to find pairs that don't automatically appear in the interface.`} />
+        <QuestionHelper text={t`Use this tool to find pairs that don't automatically appear in the interface`} />
       </RowBetween>
     </Tabs>
   )
 }
 
+export enum LiquidityAction {
+  CREATE,
+  ADD,
+  INCREASE,
+  REMOVE,
+}
+
 export function AddRemoveTabs({
-  adding,
-  creating,
+  action,
+  showTooltip = true,
+  hideShare = false,
   onShared,
+  onCleared,
+  onBack,
+  tooltip,
 }: {
-  adding: boolean
-  creating: boolean
+  action: LiquidityAction
+  showTooltip?: boolean
+  hideShare?: boolean
   onShared?: () => void
+  onCleared?: () => void
+  onBack?: () => void
+  tooltip?: string
 }) {
   const history = useHistory()
-
+  const below768 = useMedia('(max-width: 768px)')
   const goBack = () => {
     history.goBack()
   }
-
+  const arrow = (
+    <ButtonBack width="fit-content" padding="0" onClick={!!onBack ? onBack : goBack}>
+      <StyledArrowLeft />
+    </ButtonBack>
+  )
+  const title = (
+    <Flex>
+      <ActiveText>
+        {action === LiquidityAction.CREATE
+          ? t`Create a new pool`
+          : action === LiquidityAction.ADD
+          ? t`Add Liquidity`
+          : action === LiquidityAction.INCREASE
+          ? t`Increase Liquidity`
+          : t`Remove Liquidity`}
+      </ActiveText>
+      {showTooltip && (
+        <QuestionHelper
+          size={16}
+          text={
+            tooltip ||
+            (action === LiquidityAction.CREATE
+              ? t`Create a new liquidity pool and earn fees on trades for this token pair`
+              : action === LiquidityAction.ADD
+              ? t`Add liquidity for a token pair and earn fees on the trades that are in your selected price range`
+              : action === LiquidityAction.INCREASE
+              ? t``
+              : action === LiquidityAction.REMOVE
+              ? t`Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive`
+              : t``)
+          }
+        />
+      )}
+    </Flex>
+  )
   return (
     <Tabs>
       <Wrapper>
-        <ButtonBack width="fit-content" padding="0" onClick={goBack}>
-          <StyledArrowLeft />
-        </ButtonBack>
-        <Flex>
-          <ActiveText>{creating ? t`Create a new pool` : adding ? t`Add Liquidity` : t`Remove Liquidity`}</ActiveText>
-          <QuestionHelper
-            text={
-              adding
-                ? t`Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity.`
-                : t`Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.`
-            }
-          />
-        </Flex>
-        <Flex style={{ gap: '8px' }}>
+        {below768 && (
+          <Flex alignItems={'center'}>
+            {arrow}
+            {title}
+          </Flex>
+        )}
+        {!below768 && arrow}
+        {!below768 && title}
+        <Flex style={{ gap: '0px' }}>
+          {onCleared && (
+            <StyledMenuButton
+              active={false}
+              onClick={onCleared}
+              id="open-settings-dialog-button"
+              aria-label="Transaction Settings"
+            >
+              <img src={ClearAllIcon} alt="" />
+            </StyledMenuButton>
+          )}
           <TransactionSettings />
-          <ShareButtonWithModal onShared={onShared} />
+          {!hideShare && <ShareButtonWithModal onShared={onShared} />}
         </Flex>
       </Wrapper>
     </Tabs>

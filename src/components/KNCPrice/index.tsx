@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { KNC_ADDRESS } from 'constants/index'
 import Loader from 'components/Loader'
 import { useActiveWeb3React } from 'hooks'

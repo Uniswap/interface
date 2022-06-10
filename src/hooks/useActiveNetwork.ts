@@ -5,7 +5,7 @@ import { stringify } from 'qs'
 import { SUPPORTED_NETWORKS, SupportedNetwork } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useParsedQueryString from './useParsedQueryString'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useAppDispatch } from 'state/hooks'
 import { updateChainIdWhenNotConnected } from 'state/application/actions'
 import { UnsupportedChainIdError } from '@web3-react/core'
@@ -49,6 +49,15 @@ export const SWITCH_NETWORK_PARAMS: {
   },
   [ChainId.OASIS]: {
     chainId: '0xa516',
+  },
+  [ChainId.BSCTESTNET]: {
+    chainId: '0x61',
+  },
+  [ChainId.RINKEBY]: {
+    chainId: '0x4',
+  },
+  [ChainId.ROPSTEN]: {
+    chainId: '0x3',
   },
 }
 
@@ -215,7 +224,7 @@ export function useActiveNetwork() {
         ...(keepCurrencyIds ? { inputCurrency, outputCurrency } : {}),
       }),
     }
-  }, [location])
+  }, [location, qs])
 
   const changeNetwork = useCallback(
     async (chainId: ChainId) => {
@@ -238,9 +247,9 @@ export function useActiveNetwork() {
           })
         } catch (switchError) {
           // This is a workaround solution for Coin98
-          const isSwitcherror = typeof switchError === 'object' && Object.keys(switchError)?.length === 0
+          const isSwitcherror = typeof switchError === 'object' && switchError && Object.keys(switchError)?.length === 0
           // This error code indicates that the chain has not been added to MetaMask.
-          if (switchError.code === 4902 || switchError.code === -32603 || isSwitcherror) {
+          if (switchError?.code === 4902 || switchError?.code === -32603 || isSwitcherror) {
             try {
               await library.provider.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
             } catch (addError) {

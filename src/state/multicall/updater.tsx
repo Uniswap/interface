@@ -32,9 +32,20 @@ async function fetchChunk(
 ): Promise<{ results: string[]; blockNumber: number }> {
   console.debug('Fetching chunk', multicallContract, chunk, minBlockNumber)
   let resultsBlockNumber, returnData
+
   try {
-    ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(chunk.map(obj => [obj.address, obj.callData]))
-  } catch (error) {
+    const res = await multicallContract.callStatic.aggregate(
+      chunk.map(obj => ({
+        target: obj.address,
+        callData: obj.callData,
+        gasLimit: obj.gasRequired ?? 1_000_000,
+      })),
+    )
+    resultsBlockNumber = res.blockNumber
+    returnData = res.returnData
+    // ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(chunk.map(obj => [obj.address, obj.callData]))
+  } catch (e) {
+    let error: any = e
     if (
       error.code === -32000 ||
       (error?.data?.message && error?.data?.message?.indexOf('header not found') !== -1) ||

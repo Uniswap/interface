@@ -1,10 +1,13 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
-import { ChainId, Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent, TokenAmount, Trade } from '@dynamic-amm/sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, TokenAmount, TradeType } from '@kyberswap/ks-sdk-core'
+import { Pair, Trade } from '@kyberswap/ks-sdk-classic'
+import JSBI from 'jsbi'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
-import { convertToNativeTokenFromETH } from './dmm'
 import { Aggregator } from './aggregator'
+import { AnyTrade } from 'hooks/useSwapCallback'
 
 export function computeFee(pairs?: Array<Pair>): Fraction {
   let realizedLPFee: Fraction = new Fraction(JSBI.BigInt(0))
@@ -15,7 +18,7 @@ export function computeFee(pairs?: Array<Pair>): Fraction {
     for (let i = 0; i < pairs.length; i++) {
       const fee = pairs[i].fee
       if (fee) {
-        realizedLPFee = realizedLPFee.add(new Percent(fee, JSBI.BigInt(1000000000000000000)))
+        realizedLPFee = realizedLPFee.add(new Percent(JSBI.BigInt(fee), JSBI.BigInt('1000000000000000000')))
       }
     }
   }
@@ -25,11 +28,11 @@ export function computeFee(pairs?: Array<Pair>): Fraction {
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
-  trade?: Trade,
-): { priceImpactWithoutFee?: Percent; realizedLPFee?: CurrencyAmount; accruedFeePercent: Percent } {
+  trade?: Trade<Currency, Currency, TradeType>
+): { priceImpactWithoutFee?: Percent; realizedLPFee?: CurrencyAmount<Currency>; accruedFeePercent: Percent } {
   const pairs = trade ? trade.route.pairs : undefined
   const realizedLPFee: Fraction = computeFee(pairs)
-  const accruedFeePercent: Percent = new Percent(realizedLPFee.numerator, JSBI.BigInt(1000000000000000000))
+  const accruedFeePercent: Percent = new Percent(realizedLPFee.numerator, JSBI.BigInt('1000000000000000000'))
 
   // remove lp fees from price impact
   const priceImpactWithoutFeeFraction = trade && realizedLPFee ? trade.priceImpact.subtract(realizedLPFee) : undefined
@@ -43,18 +46,20 @@ export function computeTradePriceBreakdown(
   const realizedLPFeeAmount =
     realizedLPFee &&
     trade &&
-    (trade.inputAmount instanceof TokenAmount
-      ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-      : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+    // TODO: Check again inputAmount.quotient
+    // (trade.inputAmount.currency.isToken
+    // ?
+    TokenAmount.fromRawAmount(trade.inputAmount.currency, realizedLPFee.multiply(trade.inputAmount.quotient).quotient)
+  // : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
 
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount, accruedFeePercent }
 }
 
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
 export function computeSlippageAdjustedAmounts(
-  trade: Trade | Aggregator | undefined,
-  allowedSlippage: number,
-): { [field in Field]?: CurrencyAmount } {
+  trade: AnyTrade | Aggregator | undefined,
+  allowedSlippage: number
+): { [field in Field]?: CurrencyAmount<Currency> } {
   const pct = basisPointsToPercent(allowedSlippage)
   return {
     [Field.INPUT]: trade?.maximumAmountIn(pct),
@@ -71,15 +76,13 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
   return 0
 }
 
-export function formatExecutionPrice(trade?: Trade | Aggregator, inverted?: boolean, chainId?: ChainId): string {
+export function formatExecutionPrice(trade?: AnyTrade | Aggregator, inverted?: boolean, chainId?: ChainId): string {
   if (!trade || !chainId) {
     return ''
   }
-  const nativeInput =
-    trade.inputAmount.currency && convertToNativeTokenFromETH(trade.inputAmount.currency as Currency, chainId)
+  const nativeInput = trade.inputAmount.currency
 
-  const nativeOutput =
-    trade.outputAmount.currency && convertToNativeTokenFromETH(trade.outputAmount.currency as Currency, chainId)
+  const nativeOutput = trade.outputAmount.currency
   return inverted
     ? `${trade.executionPrice.invert().toSignificant(6)} ${nativeInput?.symbol} / ${nativeOutput?.symbol}`
     : `${trade.executionPrice.toSignificant(6)} ${nativeOutput?.symbol} / ${nativeInput.symbol}`

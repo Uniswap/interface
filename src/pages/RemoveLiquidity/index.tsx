@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { t, Trans } from '@lingui/macro'
 
-import { currencyEquals, WETH, JSBI, Fraction } from '@dynamic-amm/sdk'
-import { AddRemoveTabs } from 'components/NavigationTabs'
+import { Fraction, WETH } from '@kyberswap/ks-sdk-core'
+import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
 import LiquidityProviderMode from 'components/LiquidityProviderMode'
 import { useActiveWeb3React } from 'hooks'
@@ -14,6 +14,7 @@ import TokenPair from './TokenPair'
 import { useDerivedBurnInfo } from 'state/burn/hooks'
 import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName } from './styled'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import JSBI from 'jsbi'
 
 export default function RemoveLiquidity({
   match: {
@@ -31,9 +32,7 @@ export default function RemoveLiquidity({
   const amp = pair?.amp || JSBI.BigInt(0)
 
   const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH[chainId], currencyB))),
+    chainId && ((currencyA && currencyA.equals(WETH[chainId])) || (currencyB && currencyB.equals(WETH[chainId]))),
   )
 
   const [activeTab, setActiveTab] = useState(0)
@@ -51,14 +50,14 @@ export default function RemoveLiquidity({
     <>
       <PageWrapper>
         <Container>
-          <AddRemoveTabs creating={false} adding={false} />
+          <AddRemoveTabs action={LiquidityAction.REMOVE} />
 
           <TopBar>
             <LiquidityProviderModeWrapper>
               <LiquidityProviderMode
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
-                singleTokenInfo={t`We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction.`}
+                singleTokenInfo={t`We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction`}
               />
             </LiquidityProviderModeWrapper>
             <PoolName>

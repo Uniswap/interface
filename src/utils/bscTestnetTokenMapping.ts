@@ -1,4 +1,5 @@
 import { isAddress } from 'utils'
+import { BSC_TESTNET_TOKEN_LIST } from 'constants/tokenLists/bsc.testnet.tokenlist'
 
 export const getBscTestnetTokenLogoURL = (address: string) => {
   let uri
@@ -28,6 +29,10 @@ export const getBscTestnetTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === '0xbb843a2296f9aa49070eb2dcd482f23548238f65') {
     //dai
     address = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+  }
+
+  if (!uri) {
+    uri = BSC_TESTNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address?.toLowerCase())?.logoURI
   }
 
   if (!uri) {

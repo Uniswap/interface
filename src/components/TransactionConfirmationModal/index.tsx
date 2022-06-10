@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
+import { Currency, Token, ChainId } from '@kyberswap/ks-sdk-core'
 import React, { useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Trans } from '@lingui/macro'
@@ -41,7 +41,7 @@ const StyledLogo = styled.img`
   width: 16px;
   margin-left: 6px;
 `
-function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
+function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string | React.ReactNode }) {
   return (
     <Wrapper>
       <Section>
@@ -262,7 +262,7 @@ interface ConfirmationModalProps {
   hash: string | undefined
   content: () => React.ReactNode
   attemptingTxn: boolean
-  pendingText: string
+  pendingText: string | React.ReactNode
   tokenAddToMetaMask?: Currency
   showTxBanner?: boolean
 }

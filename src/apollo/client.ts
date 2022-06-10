@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export const defaultExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:
@@ -35,7 +35,7 @@ const mumbaiExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClie
   cache: new InMemoryCache(),
 })
 const bscTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-ropsten',
+  uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging',
   cache: new InMemoryCache(),
 })
 const bscMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
@@ -210,10 +210,15 @@ const oasisBlockClient = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
+const rinkebyBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/billjhlee/rinkeby-blocks',
+  cache: new InMemoryCache(),
+})
+
 export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetBlockClient,
   [ChainId.ROPSTEN]: ropstenBlockClient,
-  [ChainId.RINKEBY]: ropstenBlockClient,
+  [ChainId.RINKEBY]: rinkebyBlockClient,
   [ChainId.GÖRLI]: ropstenBlockClient,
   [ChainId.KOVAN]: ropstenBlockClient,
   [ChainId.MATIC]: maticBlockClient,
@@ -235,17 +240,18 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
 
 //https://router.firebird.finance/bsc/route
 export const routerUri: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route`,
-  [ChainId.BSCMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/bsc/route`,
-  [ChainId.MATIC]: `${process.env.REACT_APP_AGGREGATOR_API}/polygon/route`,
-  [ChainId.AVAXMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/avalanche/route`,
-  [ChainId.FANTOM]: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/route`,
-  [ChainId.CRONOS]: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/route`,
-  [ChainId.ARBITRUM]: `${process.env.REACT_APP_AGGREGATOR_API}/arbitrum/route`,
-  [ChainId.BTTC]: `${process.env.REACT_APP_AGGREGATOR_API}/bttc/route`,
-  [ChainId.AURORA]: `${process.env.REACT_APP_AGGREGATOR_API}/aurora/route`,
-  [ChainId.VELAS]: `${process.env.REACT_APP_AGGREGATOR_API}/velas/route`,
-  [ChainId.OASIS]: `${process.env.REACT_APP_AGGREGATOR_API}/oasis/route`,
+  [ChainId.MAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route/encode`,
+  [ChainId.BSCMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/bsc/route/encode`,
+  [ChainId.MATIC]: `${process.env.REACT_APP_AGGREGATOR_API}/polygon/route/encode`,
+  [ChainId.AVAXMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/avalanche/route/encode`,
+  [ChainId.FANTOM]: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/route/encode`,
+  [ChainId.CRONOS]: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/route/encode`,
+  [ChainId.ARBITRUM]: `${process.env.REACT_APP_AGGREGATOR_API}/arbitrum/route/encode`,
+  [ChainId.BTTC]: `${process.env.REACT_APP_AGGREGATOR_API}/bttc/route/encode`,
+  [ChainId.AURORA]: `${process.env.REACT_APP_AGGREGATOR_API}/aurora/route/encode`,
+  [ChainId.VELAS]: `${process.env.REACT_APP_AGGREGATOR_API}/velas/route/encode`,
+  [ChainId.OASIS]: `${process.env.REACT_APP_AGGREGATOR_API}/oasis/route/encode`,
+  [ChainId.RINKEBY]: `https://aggregator-api.dev.kyberengineering.io/rinkeby/route/encode`,
 }
 
 // TODO-swapv2: change price uri
@@ -254,4 +260,81 @@ export const priceUri: { [chainId in ChainId]?: string } = {
   [ChainId.BSCMAINNET]: 'https://price-api.firebird.finance',
   [ChainId.MATIC]: 'https://price-api-polygon.firebird.finance',
   [ChainId.AVAXMAINNET]: '',
+}
+
+const dummy = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/promm-ropsten',
+  cache: new InMemoryCache(),
+})
+
+export const prommClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
+  [ChainId.MAINNET]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-mainnet',
+    cache: new InMemoryCache(),
+  }),
+
+  [ChainId.ROPSTEN]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/promm-ropsten',
+    cache: new InMemoryCache(),
+  }),
+
+  [ChainId.RINKEBY]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/promm-rinkeby',
+    cache: new InMemoryCache(),
+  }),
+  [ChainId.GÖRLI]: dummy,
+  [ChainId.KOVAN]: dummy,
+  [ChainId.MATIC]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-matic',
+    cache: new InMemoryCache(),
+  }),
+
+  [ChainId.MUMBAI]: dummy,
+  [ChainId.BSCTESTNET]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/promm-bsc-testnet',
+    // uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/promm-bsc-testnet',
+    cache: new InMemoryCache(),
+  }),
+
+  [ChainId.BSCMAINNET]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-bsc',
+    cache: new InMemoryCache(),
+  }),
+  [ChainId.AVAXTESTNET]: dummy,
+  [ChainId.AVAXMAINNET]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-avalanche',
+    cache: new InMemoryCache(),
+  }),
+  [ChainId.FANTOM]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-fantom',
+    cache: new InMemoryCache(),
+  }),
+  [ChainId.CRONOSTESTNET]: dummy,
+  [ChainId.CRONOS]: new ApolloClient({
+    uri: 'https://cronos-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-cronos',
+    cache: new InMemoryCache(),
+  }),
+  [ChainId.ARBITRUM_TESTNET]: dummy,
+  [ChainId.ARBITRUM]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-arbitrum-one',
+    cache: new InMemoryCache(),
+  }),
+
+  [ChainId.BTTC]: new ApolloClient({
+    uri: 'https://bttc-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-bttc',
+    cache: new InMemoryCache(),
+  }),
+  [ChainId.AURORA]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-aurora',
+    cache: new InMemoryCache(),
+  }),
+
+  [ChainId.VELAS]: new ApolloClient({
+    uri: 'https://velas-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-velas',
+    cache: new InMemoryCache(),
+  }),
+  [ChainId.OASIS]: new ApolloClient({
+    uri: 'https://oasis-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-oasis',
+    cache: new InMemoryCache(),
+  }),
 }

@@ -1,4 +1,4 @@
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 // used to mark unsupported tokens, these are hosted lists of unsupported tokens
 

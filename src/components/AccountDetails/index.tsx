@@ -10,10 +10,9 @@ import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
 
-import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic, portis, trezor, ledger } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -229,18 +228,18 @@ export default function AccountDetails({
   const { chainId, account, connector } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
-  const disableDisconnect =
-    connector !== injected && connector !== walletlink && connector !== trezor && connector !== ledger
+  // const disableDisconnect =
+  //   connector !== injected && connector !== walletlink && connector !== trezor && connector !== ledger
 
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        k =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK')),
-      )
-      .map(k => SUPPORTED_WALLETS[k].name)[0]
+    // const { ethereum } = window
+    // const isMetaMask = !!(ethereum && ethereum.isMetaMask)
+    // const name = Object.keys(SUPPORTED_WALLETS)
+    //   .filter(
+    //     k =>
+    //       SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK')),
+    //   )
+    //   .map(k => SUPPORTED_WALLETS[k].name)[0]
 
     return (
       <WalletName>

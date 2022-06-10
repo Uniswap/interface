@@ -1,7 +1,8 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { CurrencyAmount, currencyEquals, ETHER, Fraction, JSBI, Token, TokenAmount, WETH } from '@dynamic-amm/sdk'
+import { CurrencyAmount, Fraction, TokenAmount, WETH, Currency } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
 import { Plus, AlertTriangle } from 'react-feather'
 import { Text, Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -31,15 +32,13 @@ import { useIsExpertMode, usePairAdderByTokens, useUserSlippageTolerance } from 
 import { StyledInternalLink, TYPE, UppercaseText } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
-import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar, PoolPriceRangeBar, ToggleComponent } from 'components/PoolPriceBar'
 import QuestionHelper from 'components/QuestionHelper'
 import { parseUnits } from 'ethers/lib/utils'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
 import Loader from 'components/Loader'
 import CurrentPrice from 'components/CurrentPrice'
 import {
@@ -54,6 +53,7 @@ import {
   PoolRatioWrapper,
   DynamicFeeRangeWrapper,
 } from './styled'
+import { nativeOnChain } from 'constants/tokens'
 
 const TokenPair = ({
   currencyIdA,
@@ -69,10 +69,10 @@ const TokenPair = ({
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
-  const currencyAIsETHER = !!(chainId && currencyA && currencyEquals(currencyA, ETHER))
-  const currencyAIsWETH = !!(chainId && currencyA && currencyEquals(currencyA, WETH[chainId]))
-  const currencyBIsETHER = !!(chainId && currencyB && currencyEquals(currencyB, ETHER))
-  const currencyBIsWETH = !!(chainId && currencyB && currencyEquals(currencyB, WETH[chainId]))
+  const currencyAIsETHER = !!(chainId && currencyA && currencyA.isNative)
+  const currencyAIsWETH = !!(chainId && currencyA && currencyA.equals(WETH[chainId]))
+  const currencyBIsETHER = !!(chainId && currencyB && currencyB.isNative)
+  const currencyBIsWETH = !!(chainId && currencyB && currencyB.equals(WETH[chainId]))
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
@@ -166,6 +166,7 @@ const TokenPair = ({
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0],
     }
+
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
@@ -173,19 +174,15 @@ const TokenPair = ({
 
     if (!pair) return
 
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
+    if (currencyA.isNative || currencyB.isNative) {
+      const tokenBIsETH = currencyB.isNative
 
-      const virtualReserveToken = pair.virtualReserveOf(
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId) as Token,
-      )
-      const virtualReserveETH = pair.virtualReserveOf(
-        wrappedCurrency(tokenBIsETH ? currencyB : currencyA, chainId) as Token,
-      )
+      const virtualReserveToken = pair.virtualReserveOf(tokenBIsETH ? currencyA?.wrapped : currencyB?.wrapped)
+      const virtualReserveETH = pair.virtualReserveOf(tokenBIsETH ? currencyB?.wrapped : currencyA?.wrapped)
 
       const currentRate = JSBI.divide(
-        JSBI.multiply(virtualReserveETH.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-        virtualReserveToken.raw,
+        JSBI.multiply(virtualReserveETH.quotient, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+        virtualReserveToken.quotient,
       )
 
       const allowedSlippageAmount = JSBI.divide(
@@ -200,25 +197,26 @@ const TokenPair = ({
 
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
+
       args = [
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+        (tokenBIsETH ? currencyA?.wrapped : currencyB?.wrapped)?.address ?? '', // token
         pair.address,
         // 40000,                                                                              //ampBps
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        (tokenBIsETH ? parsedAmountA : parsedAmountB).quotient.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         vReserveRatioBounds,
         account,
         deadline.toHexString(),
       ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).quotient.toString())
     } else {
-      const virtualReserveA = pair.virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
-      const virtualReserveB = pair.virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
+      const virtualReserveA = pair.virtualReserveOf(currencyA?.wrapped)
+      const virtualReserveB = pair.virtualReserveOf(currencyB?.wrapped)
 
       const currentRate = JSBI.divide(
-        JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-        virtualReserveA.raw,
+        JSBI.multiply(virtualReserveB.quotient, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+        virtualReserveA.quotient,
       )
 
       const allowedSlippageAmount = JSBI.divide(
@@ -234,12 +232,12 @@ const TokenPair = ({
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = [
-        wrappedCurrency(currencyA, chainId)?.address ?? '',
-        wrappedCurrency(currencyB, chainId)?.address ?? '',
+        currencyA?.wrapped.address ?? '',
+        currencyB?.wrapped.address ?? '',
         pair.address,
         // 40000,                                                                              //ampBps
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
+        parsedAmountA.quotient.toString(),
+        parsedAmountB.quotient.toString(),
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
         vReserveRatioBounds,
@@ -265,22 +263,23 @@ const TokenPair = ({
               summary:
                 parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(cA, chainId).symbol +
+                cA.symbol +
                 ' and ' +
                 parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(cB, chainId).symbol,
+                cB.symbol,
               arbitrary: {
                 poolAddress: pairAddress,
-                token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
-                token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
+                token_1: cA.symbol,
+                token_2: cB.symbol,
                 add_liquidity_method: 'token pair',
                 amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+                txHash: response.hash,
               },
             })
             setTxHash(response.hash)
-            const tA = wrappedCurrency(cA, chainId)
-            const tB = wrappedCurrency(cB, chainId)
+            const tA = cA.wrapped
+            const tB = cB.wrapped
             if (!!tA && !!tB) {
               // In case subgraph sync is slow, doing this will show the pool in "My Pools" page.
               addPair(tA, tB)
@@ -318,10 +317,14 @@ const TokenPair = ({
   }, [onFieldAInput, txHash])
 
   const realPercentToken0 = pair
-    ? pair.reserve0
+    ? pair.reserve0.asFraction
         .divide(pair.virtualReserve0)
         .multiply('100')
-        .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
+        .divide(
+          pair.reserve0
+            .divide(pair.virtualReserve0)
+            .asFraction.add(pair.reserve1.divide(pair.virtualReserve1).asFraction),
+        )
     : new Fraction(JSBI.BigInt(50))
 
   const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
@@ -330,9 +333,8 @@ const TokenPair = ({
   const percentToken1 = realPercentToken1.toSignificant(4)
 
   const tokens = useMemo(
-    () =>
-      [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => wrappedCurrency(currency, chainId)),
-    [chainId, currencies],
+    () => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => currency?.wrapped),
+    [currencies],
   )
 
   const usdPrices = useTokensPrice(tokens)
@@ -340,12 +342,12 @@ const TokenPair = ({
 
   const estimatedUsdCurrencyA =
     parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount).toSignificant(6)) * usdPrices[0]
+      ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount<Currency>).toSignificant(6)) * usdPrices[0]
       : 0
 
   const estimatedUsdCurrencyB =
     parsedAmounts[Field.CURRENCY_B] && usdPrices[1]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_B] as CurrencyAmount).toSignificant(6)) * usdPrices[1]
+      ? parseFloat((parsedAmounts[Field.CURRENCY_B] as CurrencyAmount<Currency>).toSignificant(6)) * usdPrices[1]
       : 0
 
   const poolPrice = Number(price?.toSignificant(6))
@@ -459,7 +461,7 @@ const TokenPair = ({
                   <StyledInternalLink
                     replace
                     to={`/add/${
-                      currencyAIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                      currencyAIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
                     }/${currencyIdB}/${pairAddress}`}
                   >
                     {currencyAIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
@@ -494,7 +496,7 @@ const TokenPair = ({
                   <StyledInternalLink
                     replace
                     to={`/add/${currencyIdA}/${
-                      currencyBIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                      currencyBIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
                     }/${pairAddress}`}
                   >
                     {currencyBIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
@@ -555,7 +557,11 @@ const TokenPair = ({
                         <QuestionHelper text={AMP_HINT} />
                       </AutoRow>
                       <Text fontWeight={400} fontSize={14} color={theme.text}>
-                        {!!pair ? <>{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}
+                        {!!pair ? (
+                          <>{new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)}</>
+                        ) : (
+                          ''
+                        )}
                       </Text>
                     </AutoColumn>
 
@@ -571,14 +577,14 @@ const TokenPair = ({
                             text={
                               chainId && FEE_OPTIONS[chainId]
                                 ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
-                                : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`
+                                : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers`
                             }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
                           {chainId && FEE_OPTIONS[chainId]
                             ? pair?.fee
-                              ? +new Fraction(pair.fee)
+                              ? +new Fraction(JSBI.BigInt(pair.fee))
                                   .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
                                   .toSignificant(6) *
                                   100 +
@@ -586,7 +592,7 @@ const TokenPair = ({
                               : ''
                             : feeRangeCalc(
                                 !!pair?.amp
-                                  ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                  ? +new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
                                   : +amp,
                               )}
                         </Text>
@@ -601,7 +607,7 @@ const TokenPair = ({
                           <ActiveText>Active Price Range</ActiveText>
                         </UppercaseText>
                         <QuestionHelper
-                          text={t`Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive.`}
+                          text={t`Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive`}
                         />
                       </AutoRow>
 

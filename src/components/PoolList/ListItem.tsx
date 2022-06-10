@@ -4,7 +4,8 @@ import { Flex } from 'rebass'
 import { ChevronDown, ChevronUp, Info, Minus, Plus, Share2 } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { t, Trans } from '@lingui/macro'
-import { ChainId, Fraction, JSBI } from '@dynamic-amm/sdk'
+import { Fraction, ChainId } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
 import { ButtonEmpty } from 'components/Button'
 import DropIcon from 'components/Icons/DropIcon'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
@@ -138,10 +139,10 @@ const ListItem = ({
   )
   const realPercentToken0 =
     reserve0 && virtualReserve0 && reserve1 && virtualReserve1
-      ? reserve0
+      ? reserve0.asFraction
           .divide(virtualReserve0)
           .multiply('100')
-          .divide(reserve0.divide(virtualReserve0).add(reserve1.divide(virtualReserve1)))
+          .divide(reserve0.divide(virtualReserve0).asFraction.add(reserve1.divide(virtualReserve1).asFraction))
       : new Fraction('50')
   const realPercentToken1 = new Fraction('100').subtract(realPercentToken0)
   const isWarning = realPercentToken0.lessThan('10') || realPercentToken1.lessThan('10')
@@ -204,7 +205,7 @@ const ListItem = ({
             )}
             {isWarning && (
               <div style={{ overflow: 'hidden', borderTopLeftRadius: '8px' }}>
-                <MouseoverTooltip text={`One token is close to 0% in the pool ratio. Pool might go inactive.`}>
+                <MouseoverTooltip text={`One token is close to 0% in the pool ratio. Pool might go inactive`}>
                   <WarningLeftIcon />
                 </MouseoverTooltip>
               </div>

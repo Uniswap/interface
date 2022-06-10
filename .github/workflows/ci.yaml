@@ -118,7 +118,12 @@ jobs:
         env:
           CI: false
           REACT_APP_VERSION: ${{ github.sha }}
-        run: yarn build-production
+        run: |
+          if [[ $CURRENT_BRANCH = "main" ]]; then
+            yarn build-dev
+          else
+            yarn build-stg
+          fi
 
       - name: Docker build and push
         uses: docker/build-push-action@v2

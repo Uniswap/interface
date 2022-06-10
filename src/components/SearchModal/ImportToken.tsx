@@ -1,5 +1,5 @@
 import React from 'react'
-import { Token, Currency } from '@dynamic-amm/sdk'
+import { Token, Currency } from '@kyberswap/ks-sdk-core'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { TYPE, CloseIcon } from 'theme'

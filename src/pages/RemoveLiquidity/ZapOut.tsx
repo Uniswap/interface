@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
@@ -11,15 +11,13 @@ import {
   computePriceImpact,
   Currency,
   CurrencyAmount,
-  currencyEquals,
-  ETHER,
+  Fraction,
   Percent,
   Token,
   TokenAmount,
   WETH,
-  Fraction,
-  JSBI,
-} from '@dynamic-amm/sdk'
+} from '@kyberswap/ks-sdk-core'
+
 import { ZAP_ADDRESSES, FEE_OPTIONS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
@@ -53,9 +51,8 @@ import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { Wrapper } from '../Pool/styleds'
 import { calculateGasMargin, formattedNum, getZapContract } from 'utils'
-import { convertToNativeTokenFromETH, useCurrencyConvertedToNative } from 'utils/dmm'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import { formatJSBIValue } from 'utils/formatBalance'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
@@ -70,6 +67,8 @@ import {
   ModalDetailWrapper,
   CurrentPriceWrapper,
 } from './styled'
+import { nativeOnChain } from 'constants/tokens'
+import JSBI from 'jsbi'
 
 export default function ZapOut({
   currencyIdA,
@@ -85,11 +84,7 @@ export default function ZapOut({
 
   const nativeA = useCurrencyConvertedToNative(currencyA as Currency)
   const nativeB = useCurrencyConvertedToNative(currencyB as Currency)
-  const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
-    currencyA,
-    currencyB,
-    chainId,
-  ])
+  const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
   const theme = useContext(ThemeContext)
 
@@ -119,13 +114,13 @@ export default function ZapOut({
   const selectedCurrencyIsETHER = !!(
     chainId &&
     currencies[independentTokenField] &&
-    currencyEquals(currencies[independentTokenField] as Currency, ETHER)
+    currencies[independentTokenField]?.isNative
   )
 
   const selectedCurrencyIsWETH = !!(
     chainId &&
     currencies[independentTokenField] &&
-    currencyEquals(currencies[independentTokenField] as Currency, WETH[chainId])
+    currencies[independentTokenField]?.equals(WETH[chainId])
   )
 
   const independentToken =
@@ -167,6 +162,12 @@ export default function ZapOut({
     !!chainId ? ZAP_ADDRESSES[chainId] : undefined,
   )
 
+  // if user liquidity change => remove signature
+  useEffect(() => {
+    setSignatureData(null)
+    // eslint-disable-next-line
+  }, [userLiquidity?.toExact()])
+
   const isArgentWallet = useIsArgentWallet()
 
   async function onAttemptToApprove() {
@@ -205,7 +206,7 @@ export default function ZapOut({
     const message = {
       owner: account,
       spender: ZAP_ADDRESSES[chainId],
-      value: liquidityAmount.raw.toString(),
+      value: liquidityAmount.quotient.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber(),
     }
@@ -269,7 +270,7 @@ export default function ZapOut({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
+    const currencyBIsETH = currencyB.isNative
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -281,7 +282,7 @@ export default function ZapOut({
         methodNames = ['zapOutEth']
         args = [
           currencyBIsETH ? tokenA.address : tokenB.address,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           pairAddress,
           account,
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
@@ -294,7 +295,7 @@ export default function ZapOut({
         args = [
           independentTokenField === Field.CURRENCY_A ? tokenB.address : tokenA.address,
           independentTokenField === Field.CURRENCY_A ? tokenA.address : tokenB.address,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           pairAddress,
           account,
           independentTokenField === Field.CURRENCY_A
@@ -311,7 +312,7 @@ export default function ZapOut({
         methodNames = ['zapOutEthPermit']
         args = [
           currencyBIsETH ? tokenA.address : tokenB.address,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           pairAddress,
           account,
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
@@ -328,7 +329,7 @@ export default function ZapOut({
         args = [
           independentTokenField === Field.CURRENCY_A ? tokenB.address : tokenA.address,
           independentTokenField === Field.CURRENCY_A ? tokenA.address : tokenB.address,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           pairAddress,
           account,
           independentTokenField === Field.CURRENCY_A
@@ -393,8 +394,8 @@ export default function ZapOut({
               summary: parsedAmounts[independentTokenField]?.toSignificant(6) + ' ' + independentToken?.symbol,
               arbitrary: {
                 poolAddress: pairAddress,
-                token_1: convertToNativeTokenFromETH(currencyA, chainId).symbol,
-                token_2: convertToNativeTokenFromETH(currencyB, chainId).symbol,
+                token_1: currencyA.symbol,
+                token_2: currencyB.symbol,
                 remove_liquidity_method: 'single token',
                 amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
               },
@@ -472,7 +473,11 @@ export default function ZapOut({
     priceToSwap &&
     noZapAmounts[dependentTokenField] &&
     amountOut &&
-    computePriceImpact(priceToSwap, noZapAmounts[dependentTokenField] as CurrencyAmount, amountOut as CurrencyAmount)
+    computePriceImpact(
+      priceToSwap,
+      noZapAmounts[dependentTokenField] as CurrencyAmount<Currency>,
+      amountOut as CurrencyAmount<Currency>,
+    )
 
   const priceImpactWithoutFee = pair && priceImpact ? computePriceImpactWithoutFee([pair], priceImpact) : undefined
 
@@ -546,7 +551,7 @@ export default function ZapOut({
                 <>
                   <RowBetween style={{ paddingBottom: '12px' }}>
                     <TYPE.subHeader fontWeight={400} fontSize={14} color={theme.subText}>
-                      <Trans>Minimum received</Trans>
+                      <Trans>Minimum Received</Trans>
                     </TYPE.subHeader>
 
                     <TokenWrapper>
@@ -621,17 +626,11 @@ export default function ZapOut({
 
                   <>
                     <Slider value={innerLiquidityPercentage} onChange={setInnerLiquidityPercentage} size={18} />
-                    <RowBetween>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')} width="20%">
-                        25%
-                      </MaxButton>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')} width="20%">
-                        50%
-                      </MaxButton>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')} width="20%">
-                        75%
-                      </MaxButton>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')} width="20%">
+                    <RowBetween style={{ gap: '4px' }}>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')}>25%</MaxButton>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')}>50%</MaxButton>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')}>75%</MaxButton>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}>
                         <Trans>Max</Trans>
                       </MaxButton>
                     </RowBetween>
@@ -690,12 +689,12 @@ export default function ZapOut({
                             ? `/remove/${
                                 selectedCurrencyIsETHER
                                   ? currencyId(WETH[chainId], chainId)
-                                  : currencyId(ETHER, chainId)
+                                  : currencyId(nativeOnChain(chainId), chainId)
                               }/${currencyId(currencies[dependentTokenField] as Currency, chainId)}/${pairAddress}`
                             : `/remove/${currencyId(currencies[dependentTokenField] as Currency, chainId)}/${
                                 selectedCurrencyIsETHER
                                   ? currencyId(WETH[chainId], chainId)
-                                  : currencyId(ETHER, chainId)
+                                  : currencyId(nativeOnChain(chainId), chainId)
                               }/${pairAddress}`
                         }
                       >
@@ -723,7 +722,7 @@ export default function ZapOut({
                       <AutoColumn gap="8px">
                         <TYPE.subHeader fontWeight={500} fontSize={12} color={theme.subText}>
                           <UppercaseText>
-                            <Trans>Minimum received</Trans>
+                            <Trans>Minimum Received</Trans>
                           </UppercaseText>
                         </TYPE.subHeader>
 
@@ -754,7 +753,7 @@ export default function ZapOut({
                       style={{ display: 'flex', alignItems: 'center' }}
                     >
                       <UppercaseText>
-                        <Trans>Current Price:</Trans>
+                        <Trans>Current Price</Trans>
                       </UppercaseText>
                     </TYPE.subHeader>
                     <TYPE.black fontWeight={400} fontSize={14}>

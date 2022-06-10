@@ -5,7 +5,7 @@ import { Trans } from '@lingui/macro'
 import { NETWORK_ICON, NETWORK_LABEL, SUPPORTED_NETWORKS } from '../../constants/networks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { ButtonEmpty } from 'components/Button'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { Flex, Text } from 'rebass'

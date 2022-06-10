@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 import { BigNumber } from '@ethersproject/bignumber'
 import { t, Trans } from '@lingui/macro'
 
-import { Token } from '@dynamic-amm/sdk'
+import { Token } from '@kyberswap/ks-sdk-core'
 import { AutoRow, RowBetween } from 'components/Row'
 import InfoHelper from 'components/InfoHelper'
 import { VestingHeader, VestPeriods, MenuFlyout, Seperator, Tag, NoVestingSchedule } from 'components/Vesting/styleds'

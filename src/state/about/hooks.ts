@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { GLOBAL_DATA } from 'apollo/queries'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useBlockNumber, useExchangeClient } from 'state/application/hooks'
 import { getExchangeSubgraphUrls } from 'apollo/manager'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
@@ -47,7 +47,9 @@ export function useGlobalData() {
   useEffect(() => {
     const getSumValues = (results: { data: GlobalData }[], field: string) => {
       return results
-        .reduce((total, item) => total + parseFloat(item?.data?.dmmFactories?.[0]?.[field] || '0'), 0)
+        .reduce((total, item) => {
+          return total + parseFloat(item?.data?.dmmFactories?.[0]?.[field] || '0')
+        }, 0)
         .toString()
     }
 
@@ -58,7 +60,7 @@ export function useGlobalData() {
           .map(client =>
             client.query({
               query: GLOBAL_DATA(chain),
-              fetchPolicy: 'cache-first',
+              fetchPolicy: 'no-cache',
             }),
           )
         return subgraphPromises

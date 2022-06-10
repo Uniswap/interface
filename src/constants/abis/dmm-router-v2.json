@@ -229,7 +229,7 @@
         "internalType": "bytes",
         "name": "clientData",
         "type": "bytes"
-      }      
+      }
     ],
     "name": "swap",
     "outputs": [
@@ -260,3 +260,4 @@
     "type": "receive"
   }
 ]
+

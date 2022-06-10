@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token, TokenAmount } from '@dynamic-amm/sdk'
+import { Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { useTokenContract } from '../hooks/useContract'
 import { useSingleCallResult } from '../state/multicall/hooks'
 
@@ -10,5 +10,5 @@ export function useTotalSupply(token?: Token): TokenAmount | undefined {
 
   const totalSupply: BigNumber = useSingleCallResult(contract, 'totalSupply')?.result?.[0]
 
-  return token && totalSupply ? new TokenAmount(token, totalSupply.toString()) : undefined
+  return token && totalSupply ? TokenAmount.fromRawAmount(token, totalSupply.toString()) : undefined
 }

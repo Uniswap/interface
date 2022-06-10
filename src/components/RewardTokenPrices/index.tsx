@@ -2,22 +2,27 @@ import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import ScrollContainer from 'react-indiana-drag-scroll'
 
-import { ChainId, WETH } from '@dynamic-amm/sdk'
+import { ChainId, WETH, Token } from '@kyberswap/ks-sdk-core'
 import { KNC, ZERO_ADDRESS } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
 import useThrottle from 'hooks/useThrottle'
+import { useActiveWeb3React } from 'hooks'
 import { useRewardTokenPrices } from 'state/farms/hooks'
 import { formattedNumLong } from 'utils'
-import { useRewardTokensFullInfo } from 'utils/dmm'
+// import { useRewardTokensFullInfo } from 'utils/dmm'
 import CurrencyLogo from 'components/CurrencyLogo'
 
 export const ScrollContainerWithGradient = styled.div<{ backgroundColor?: string }>`
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   height: fit-content;
-  max-width: calc(100% - 130px);
+  width: 100%;
+  max-width: calc(100vw - 32px);
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    justify-content: flex-start;
+  `}
 
   &.left-visible:after,
   &.right-visible:before {
@@ -68,9 +73,9 @@ const TokenSymbol = styled.span`
   margin-right: 4px;
 `
 
-const RewardTokenPrices = () => {
+const RewardTokenPrices = ({ style = {}, rewardTokens }: { style?: React.CSSProperties; rewardTokens: Token[] }) => {
   const { chainId } = useActiveWeb3React()
-  let rewardTokens = useRewardTokensFullInfo()
+  // let rewardTokens = useRewardTokensFullInfo()
   const isContainETH = rewardTokens.findIndex(token => token.address === ZERO_ADDRESS) >= 0
   const isContainWETH = rewardTokens.findIndex(token => token.address === WETH[chainId as ChainId].address) >= 0
   rewardTokens =
@@ -130,8 +135,10 @@ const RewardTokenPrices = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])
 
+  if (!rewardTokens.length) return null
+
   return (
-    <ScrollContainerWithGradient ref={shadowRef}>
+    <ScrollContainerWithGradient ref={shadowRef} style={style}>
       <ScrollContainer innerRef={scrollRef} vertical={false} className="scroll-container" onScroll={handleShadow}>
         <RewardTokensList ref={contentRef}>
           {rewardTokens.map((token, index) => {

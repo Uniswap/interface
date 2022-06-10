@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
@@ -44,7 +44,7 @@ const Dropdown = styled.div`
   border-radius: 8px;
   padding: 16px;
   width: max-content;
-  top: 36px;
+  top: 32px;
   left: 50%;
   transform: translate(-50%, 0);
   gap: 16px;
@@ -99,14 +99,8 @@ export const LinkCointainer = styled(Flex)`
   gap: 16px;
 `
 
-export default function AboutPageDropwdown({}) {
-  const [isShowOptions, setIsShowOptions] = useState(false)
+export default function AboutPageDropwdown() {
   const { pathname } = useLocation()
-
-  const handleClick = (e: any) => {
-    e.preventDefault()
-    setIsShowOptions(prev => !prev)
-  }
 
   return (
     <HoverDropdown active={pathname.toLowerCase().includes('about')}>

@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 
-import { ChainId, Token, WETH } from '@dynamic-amm/sdk'
+import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { COINGECKO_API_URL, COINGECKO_NATIVE_TOKEN_ID, COINGECKO_NETWORK_ID } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 

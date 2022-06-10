@@ -12,7 +12,7 @@ const LinkCointainer = styled.div`
   padding-left: 20px;
 `
 
-export default function AboutPageDropwdown({}) {
+export default function AboutPageDropwdown() {
   const [isShowOptions, setIsShowOptions] = useState(false)
   const toggle = useToggleModal(ApplicationModal.MENU)
 

@@ -1,10 +1,11 @@
-import { Currency, ETHER, JSBI, Pair, TokenAmount } from '@dynamic-amm/sdk'
+import { Currency, TokenAmount, ChainId } from '@kyberswap/ks-sdk-core'
+import { Pair } from '@kyberswap/ks-sdk-classic'
+import JSBI from 'jsbi'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
 import { t, Trans } from '@lingui/macro'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -21,6 +22,7 @@ import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
+import { nativeOnChain } from 'constants/tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 enum Fields {
@@ -34,15 +36,15 @@ export default function PoolFinder() {
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Currency | null>(ETHER)
+  const [currency0, setCurrency0] = useState<Currency | null>(nativeOnChain(chainId as ChainId))
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   const pairs: [PairState, Pair | null][] = usePair(currency0 ?? undefined, currency1 ?? undefined)
   const addPair = usePairAdderByTokens()
   useEffect(() => {
     if (pairs.length > 0) {
-      const token0 = wrappedCurrency(currency0 || undefined, chainId)
-      const token1 = wrappedCurrency(currency1 || undefined, chainId)
+      const token0 = currency0?.wrapped
+      const token1 = currency1?.wrapped
       if (!!(token0 && token1)) {
         addPair(token0, token1)
       }
@@ -79,7 +81,7 @@ export default function PoolFinder() {
       if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
         hasPosition = Boolean(
           positions[pair.liquidityToken.address] &&
-            JSBI.greaterThanOrEqual((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0)),
+            JSBI.greaterThanOrEqual((positions[pair.liquidityToken.address] as TokenAmount).quotient, JSBI.BigInt(0)),
         )
       }
       return pairState === PairState.EXISTS && hasPosition && pair

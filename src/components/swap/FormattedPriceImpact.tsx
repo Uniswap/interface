@@ -1,4 +1,4 @@
-import { Percent } from '@dynamic-amm/sdk'
+import { Percent } from '@kyberswap/ks-sdk-core'
 import React from 'react'
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'

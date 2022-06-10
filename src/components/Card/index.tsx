@@ -6,7 +6,7 @@ import useTheme from 'hooks/useTheme'
 
 const Card = styled(Box)<{ padding?: string; border?: string; borderRadius?: string }>`
   width: 100%;
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 1.25rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
@@ -32,7 +32,7 @@ export const GreyCard = styled(Card)`
 `
 
 export const OutlineCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.border};
 `
 
 export const YellowCard = styled(Card)`
@@ -41,9 +41,9 @@ export const YellowCard = styled(Card)`
   font-weight: 500;
 `
 
-export const PinkCard = styled(Card)`
-  background-color: rgba(255, 0, 122, 0.03);
-  color: ${({ theme }) => theme.primary};
+export const WarningCard = styled(Card)`
+  background-color: rgba(255, 153, 1, 0.15);
+  color: ${({ theme }) => theme.warning};
   font-weight: 500;
 `
 
@@ -52,6 +52,10 @@ const BlueCardStyled = styled(Card)`
   color: ${({ theme }) => theme.text};
   border-radius: 12px;
   width: fit-content;
+`
+
+export const DarkCard = styled(Card)`
+  background-color: ${({ theme }) => theme.bg1};
 `
 
 export const BlueCard = ({ children, ...rest }: CardProps) => {

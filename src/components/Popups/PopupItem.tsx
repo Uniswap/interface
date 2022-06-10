@@ -136,7 +136,7 @@ export default function PopupItem({
     popupContent = <SimplePopup title={title} success={success} summary={summary} />
   } else if ('truesightNoti' in content) {
     const {
-      truesightNoti: { title, body },
+      truesightNoti: { title },
     } = content
     popupContent = <SimplePopup title={title} />
   }

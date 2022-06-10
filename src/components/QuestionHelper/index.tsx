@@ -3,6 +3,7 @@ import { Info } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
 import { Flex } from 'rebass'
+import useTheme from 'hooks/useTheme'
 
 const QuestionWrapper = styled.div`
   display: flex;
@@ -46,17 +47,18 @@ const QuestionMark = styled.span`
   font-size: 1rem;
 `
 
-export default function QuestionHelper({ text }: { text: string }) {
+export default function QuestionHelper({ text, color, size = 12 }: { text: string; color?: string; size?: number }) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
+  const theme = useTheme()
 
   return (
     <Flex as="span" marginLeft="0.25rem" alignItems="center">
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Info size={12} />
+          <Info size={size} color={color || theme.subText} />
         </QuestionWrapper>
       </Tooltip>
     </Flex>

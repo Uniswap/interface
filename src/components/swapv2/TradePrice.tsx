@@ -1,5 +1,5 @@
 import React from 'react'
-import { Currency, Price } from '@dynamic-amm/sdk'
+import { Currency, Price } from '@kyberswap/ks-sdk-core'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -8,7 +8,7 @@ import { StyledBalanceMaxMini } from './styleds'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 interface TradePriceProps {
-  price?: Price
+  price?: Price<Currency, Currency>
   showInverted: boolean
   setShowInverted: (showInverted: boolean) => void
 }
@@ -19,8 +19,8 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
 
   const show = Boolean(price?.baseCurrency && price?.quoteCurrency)
-  const nativeQuote = useCurrencyConvertedToNative(price?.quoteCurrency as Currency)
-  const nativeBase = useCurrencyConvertedToNative(price?.baseCurrency as Currency)
+  const nativeQuote = useCurrencyConvertedToNative(price?.quoteCurrency)
+  const nativeBase = useCurrencyConvertedToNative(price?.baseCurrency)
   const label = showInverted
     ? `${nativeQuote?.symbol} = 1 ${nativeBase?.symbol}`
     : `${nativeBase?.symbol} = 1 ${nativeQuote?.symbol}`

@@ -13,7 +13,7 @@ import { ArrowRight, ChevronDown } from 'react-feather'
 import TokensSelect from './TokensSelect'
 import Slider from 'components/Slider'
 import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
-import { Currency } from '@dynamic-amm/sdk'
+import { Currency, Fraction } from '@kyberswap/ks-sdk-core'
 import { useNetworkModalToggle } from 'state/application/hooks'
 import NetworkModal from 'components/NetworkModal'
 import ShareLinkModal from './ShareLinkModal'
@@ -21,7 +21,9 @@ import { currencyId } from 'utils/currencyId'
 import { useMedia } from 'react-use'
 import { isAddress } from 'utils'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { convertToNativeTokenFromETH } from 'utils/dmm'
+import JSBI from 'jsbi'
+
+const PERCENT_TO_BIP_DENOMINATOR = 100
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -74,7 +76,6 @@ const NetworkSelect = styled.div`
   border-radius: 4px;
   padding: 10px 14px;
   font-weight: 500;
-  font-size: 20px;
   color: ${({ theme }) => theme.text};
   text-align: left;
   flex: 1;
@@ -142,7 +143,7 @@ export default function CreateReferral() {
   const theme = useTheme()
   const [isShowChain, setIsShowChain] = useState(true)
   const [isShowTokens, setIsShowTokens] = useState(false)
-  const [commission, setCommission] = useState(50)
+  const [commission, setCommission] = useState(1)
   const [currencyA, setCurrencyA] = useState<Currency | undefined>()
   const [currencyB, setCurrencyB] = useState<Currency | undefined>()
   const toggleNetworkModal = useNetworkModalToggle()
@@ -198,20 +199,27 @@ export default function CreateReferral() {
     }
   }
   const { mixpanelHandler } = useMixpanel()
+
   const handleSubmit = () => {
     if (!touched) {
       setTouched(true)
     }
     if (isValidAddress && (!isShowTokens || (isShowTokens && currencyA && currencyB))) {
       mixpanelHandler(MIXPANEL_TYPE.CREATE_REFERRAL_CLICKED, {
-        referral_commission: commission / 1000,
-        input_token: currencyA && convertToNativeTokenFromETH(currencyA).symbol,
-        output_token: currencyB && convertToNativeTokenFromETH(currencyB).symbol,
+        referral_commission: commission,
+        input_token: currencyA && currencyA.symbol,
+        output_token: currencyB && currencyB.symbol,
       })
       setIsShowShareLinkModal(true)
       setTouched(false)
     }
   }
+
+  useEffect(() => {
+    setCurrencyA(undefined)
+    setCurrencyB(undefined)
+  }, [chainId])
+
   return (
     <PageWrapper>
       <BodyWrapper>
@@ -303,7 +311,7 @@ export default function CreateReferral() {
               </Text>
               <Flex justifyContent="space-between" alignItems="center">
                 <Text fontSize={36} lineHeight="42px" fontWeight={500} color={theme.text}>
-                  {commission / 1000} %
+                  {new Fraction(JSBI.BigInt(commission), JSBI.BigInt(PERCENT_TO_BIP_DENOMINATOR)).toSignificant(5)}%
                 </Text>
                 <MaxButton onClick={() => setCommission(100)}>
                   <Text fontSize={12} color={theme.green}>
@@ -313,9 +321,9 @@ export default function CreateReferral() {
               </Flex>
               <CommissionSlider
                 value={commission}
-                min={5}
-                max={100}
-                step={5}
+                min={1} // Equals 0.01%
+                max={10} // Equals 0.1%
+                step={1}
                 onChange={value => setCommission(value)}
                 size={16}
                 style={{ width: '100%' }}

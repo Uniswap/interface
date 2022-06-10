@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
-import { Currency } from '@dynamic-amm/sdk'
+import { Currency } from '@kyberswap/ks-sdk-core'
 
 import Coingecko from 'assets/svg/coingecko.svg'
 import CoingeckoLight from 'assets/svg/coingecko-light.svg'
@@ -17,7 +17,6 @@ import { Field } from 'state/swap/actions'
 import { useIsDarkMode } from 'state/user/hooks'
 import { formattedNum, shortenAddress } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { formatLongNumber } from 'utils/formatBalance'
 
 const NOT_AVAIALBLE = '--'
@@ -34,7 +33,7 @@ const TabContainer = styled.div`
   background-color: ${({ theme }) => theme.buttonBlack};
 `
 
-const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
+const Tab = styled(ButtonEmpty) <{ isActive?: boolean; isLeft?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -101,8 +100,8 @@ const TokenInfo = ({ currencies }: { currencies: { [field in Field]?: Currency }
   const { chainId } = useActiveWeb3React()
   const inputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT])
   const outputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT])
-  const inputToken = wrappedCurrency(inputNativeCurrency, chainId)
-  const outputToken = wrappedCurrency(outputNativeCurrency, chainId)
+  const inputToken = inputNativeCurrency?.wrapped
+  const outputToken = outputNativeCurrency?.wrapped
   const [activeTab, setActiveTab] = useState<string>(inputNativeCurrency?.symbol || '')
   const selectedToken = activeTab === outputNativeCurrency?.symbol ? outputToken : inputToken
   const { data: tokenInfo, loading } = useTokenInfo(selectedToken)

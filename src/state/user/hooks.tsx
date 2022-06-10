@@ -1,7 +1,6 @@
 import { useFactoryContract } from 'hooks/useContract'
-import { ChainId, Pair, Token } from '@dynamic-amm/sdk'
-import { Pair as PairUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
-import { Pair as PairSUSHI, Token as TokenSUSHI } from '@sushiswap/sdk'
+import { Pair } from '@kyberswap/ks-sdk-classic'
+import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -30,7 +29,6 @@ import {
   toggleProLiveChart,
   toggleTopTrendingTokens,
 } from './actions'
-import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { isAddress } from 'utils'
@@ -38,7 +36,7 @@ import { useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { defaultShowLiveCharts } from './reducer'
 
-function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo): SerializedToken {
+function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
   return {
     chainId: token.chainId,
     address: token.address,
@@ -53,23 +51,23 @@ function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo)
 function deserializeToken(serializedToken: SerializedToken): Token {
   return serializedToken?.logoURI && serializedToken?.list
     ? new WrappedTokenInfo(
-        {
-          chainId: serializedToken.chainId,
-          address: serializedToken.address,
-          name: serializedToken.name ?? '',
-          symbol: serializedToken.symbol ?? '',
-          decimals: serializedToken.decimals,
-          logoURI: serializedToken.logoURI,
-        },
-        serializedToken.list,
-      )
+      {
+        chainId: serializedToken.chainId,
+        address: serializedToken.address,
+        name: serializedToken.name ?? '',
+        symbol: serializedToken.symbol ?? '',
+        decimals: serializedToken.decimals,
+        logoURI: serializedToken.logoURI,
+      },
+      serializedToken.list,
+    )
     : new Token(
-        serializedToken.chainId,
-        serializedToken.address,
-        serializedToken.decimals,
-        serializedToken.symbol,
-        serializedToken.name,
-      )
+      serializedToken.chainId,
+      serializedToken.address,
+      serializedToken.decimals,
+      serializedToken.symbol,
+      serializedToken.name,
+    )
 }
 // function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
 //   return new TokenUNI(
@@ -202,18 +200,18 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-function serializePair(pair: Pair | PairUNI | PairSUSHI): SerializedPair {
+function serializePair(pair: Pair): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
     token1: serializeToken(pair.token1),
   }
 }
 
-export function usePairAdder(): (pair: PairUNI | PairSUSHI) => void {
+export function usePairAdder(): (pair: Pair) => void {
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
-    (pair: PairUNI | PairSUSHI) => {
+    (pair: Pair) => {
       dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
     [dispatch],
@@ -258,50 +256,6 @@ export function useURLWarningVisible(): boolean {
 export function useURLWarningToggle(): () => void {
   const dispatch = useDispatch()
   return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
-}
-
-/**
- * Given two tokens return the liquidity token that represents its liquidity shares
- * @param tokenA one of the two tokens
- * @param tokenB the other token
- */
-
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(
-    tokenA.chainId,
-    PairUNI.getAddress(
-      new TokenUNI(tokenA.chainId as ChainIdUNI, tokenA.address, tokenA.decimals, tokenA.symbol, tokenA.name),
-      new TokenUNI(tokenB.chainId as ChainIdUNI, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name),
-    ),
-    18,
-    'UNI-LP',
-    'UNI LP',
-  )
-}
-
-export function toV2LiquidityTokenSushi([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(
-    tokenA.chainId,
-    PairSUSHI.getAddress(
-      new TokenSUSHI(
-        convertChainIdFromDmmToSushi(tokenA.chainId),
-        tokenA.address,
-        tokenA.decimals,
-        tokenA.symbol,
-        tokenA.name,
-      ),
-      new TokenSUSHI(
-        convertChainIdFromDmmToSushi(tokenB.chainId),
-        tokenB.address,
-        tokenB.decimals,
-        tokenB.symbol,
-        tokenB.name,
-      ),
-    ),
-    18,
-    'SUSHI-LP',
-    'SUSHI LP',
-  )
 }
 
 export function useToV2LiquidityTokens(

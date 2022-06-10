@@ -1,0 +1,498 @@
+[
+  {
+    "inputs": [
+      { "internalType": "contract IERC721", "name": "_nft", "type": "address" },
+      { "internalType": "contract IKyberRewardLockerV2", "name": "_rewardLocker", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "poolAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint32", "name": "startTime", "type": "uint32" },
+      { "indexed": false, "internalType": "uint32", "name": "endTime", "type": "uint32" },
+      { "indexed": false, "internalType": "uint32", "name": "vestingDuration", "type": "uint32" },
+      { "indexed": false, "internalType": "uint256", "name": "feeTarget", "type": "uint256" }
+    ],
+    "name": "AddPool",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "EmergencyWithdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "reward", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "EmergencyWithdrawForOwner",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "bool", "name": "value", "type": "bool" }],
+    "name": "EnableWithdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "to", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "nftId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "liq", "type": "uint256" }
+    ],
+    "name": "Exit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "to", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "reward", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "Harvest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "nftId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "liq", "type": "uint256" }
+    ],
+    "name": "Join",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
+      { "indexed": false, "internalType": "uint32", "name": "startTime", "type": "uint32" },
+      { "indexed": false, "internalType": "uint32", "name": "endTime", "type": "uint32" },
+      { "indexed": false, "internalType": "uint32", "name": "vestingDuration", "type": "uint32" },
+      { "indexed": false, "internalType": "uint256", "name": "feeTarget", "type": "uint256" }
+    ],
+    "name": "RenewPool",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": true, "internalType": "bytes32", "name": "previousAdminRole", "type": "bytes32" },
+      { "indexed": true, "internalType": "bytes32", "name": "newAdminRole", "type": "bytes32" }
+    ],
+    "name": "RoleAdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "sender", "type": "address" }
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "sender", "type": "address" }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "nftId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "liq", "type": "uint256" }
+    ],
+    "name": "SyncLiq",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "Withdraw",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "poolAddress", "type": "address" },
+      { "internalType": "uint32", "name": "startTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "endTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "vestingDuration", "type": "uint32" },
+      { "internalType": "address[]", "name": "rewardTokens", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "rewardAmounts", "type": "uint256[]" },
+      { "internalType": "uint256", "name": "feeTarget", "type": "uint256" }
+    ],
+    "name": "addPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "pAddress", "type": "address" },
+      { "internalType": "address", "name": "nftContract", "type": "address" },
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "checkPool",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256[]", "name": "nftIds", "type": "uint256[]" }],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256[]", "name": "nftIds", "type": "uint256[]" }],
+    "name": "emergencyWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "emergencyWithdrawEnabled",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "rewards", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }
+    ],
+    "name": "emergencyWithdrawForOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bool", "name": "canWithdraw", "type": "bool" }],
+    "name": "enableWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "internalType": "uint256[]", "name": "nftIds", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "liqs", "type": "uint256[]" }
+    ],
+    "name": "exit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "pAddr", "type": "address" },
+      { "internalType": "address", "name": "nftContract", "type": "address" },
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "getActiveTime",
+    "outputs": [{ "internalType": "uint128", "name": "", "type": "uint128" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "getDepositedNFTs",
+    "outputs": [{ "internalType": "uint256[]", "name": "listNFTs", "type": "uint256[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "nftContract", "type": "address" },
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "getFee",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "poolAddress", "type": "address" },
+      { "internalType": "address", "name": "nftContract", "type": "address" },
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "getFeePool",
+    "outputs": [{ "internalType": "uint256", "name": "feeGrowthInside", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "nftContract", "type": "address" },
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "getLiq",
+    "outputs": [{ "internalType": "uint128", "name": "", "type": "uint128" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "pId", "type": "uint256" }],
+    "name": "getPoolInfo",
+    "outputs": [
+      { "internalType": "address", "name": "poolAddress", "type": "address" },
+      { "internalType": "uint32", "name": "startTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "endTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "vestingDuration", "type": "uint32" },
+      { "internalType": "uint256", "name": "totalSecondsClaimed", "type": "uint256" },
+      { "internalType": "uint256", "name": "feeTarget", "type": "uint256" },
+      { "internalType": "uint256", "name": "numStakes", "type": "uint256" },
+      { "internalType": "address[]", "name": "rewardTokens", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "rewardUnclaimeds", "type": "uint256[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" },
+      { "internalType": "uint256", "name": "pId", "type": "uint256" }
+    ],
+    "name": "getRewardCalculationData",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "secondsPerLiquidityNow", "type": "uint256" },
+          { "internalType": "uint256", "name": "feeNow", "type": "uint256" },
+          { "internalType": "uint256", "name": "vestingVolume", "type": "uint256" },
+          { "internalType": "uint256", "name": "totalSecondsUnclaimed", "type": "uint256" },
+          { "internalType": "uint256", "name": "secondsPerLiquidity", "type": "uint256" },
+          { "internalType": "uint256", "name": "secondsClaim", "type": "uint256" }
+        ],
+        "internalType": "struct IKyberSwapElasticLM.RewardCalculationData",
+        "name": "data",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "role", "type": "bytes32" }],
+    "name": "getRoleAdmin",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" },
+      { "internalType": "uint256", "name": "pId", "type": "uint256" }
+    ],
+    "name": "getUserInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "liquidity", "type": "uint256" },
+      { "internalType": "uint256[]", "name": "rewardPending", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "rewardLast", "type": "uint256[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256[]", "name": "nftIds", "type": "uint256[]" },
+      { "internalType": "bytes[]", "name": "datas", "type": "bytes[]" }
+    ],
+    "name": "harvestMultiplePools",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "hasRole",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "internalType": "uint256[]", "name": "nftIds", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "liqs", "type": "uint256[]" }
+    ],
+    "name": "join",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nft",
+    "outputs": [{ "internalType": "contract IERC721", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "numPools",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "poolLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "pools",
+    "outputs": [
+      { "internalType": "address", "name": "poolAddress", "type": "address" },
+      { "internalType": "uint32", "name": "startTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "endTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "vestingDuration", "type": "uint32" },
+      { "internalType": "uint256", "name": "totalSecondsClaimed", "type": "uint256" },
+      { "internalType": "uint256", "name": "feeTarget", "type": "uint256" },
+      { "internalType": "uint256", "name": "numStakes", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "positions",
+    "outputs": [
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "uint256", "name": "liquidity", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "internalType": "uint32", "name": "startTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "endTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "vestingDuration", "type": "uint32" },
+      { "internalType": "uint256[]", "name": "rewardAmounts", "type": "uint256[]" },
+      { "internalType": "uint256", "name": "feeTarget", "type": "uint256" }
+    ],
+    "name": "renewPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardLocker",
+    "outputs": [{ "internalType": "contract IKyberRewardLockerV2", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "stakes",
+    "outputs": [
+      { "internalType": "uint256", "name": "secondsPerLiquidityLast", "type": "uint256" },
+      { "internalType": "uint256", "name": "feeFirst", "type": "uint256" },
+      { "internalType": "uint256", "name": "liquidity", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }],
+    "name": "supportsInterface",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256[]", "name": "nftIds", "type": "uint256[]" }],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  { "stateMutability": "payable", "type": "receive" }
+]

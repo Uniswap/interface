@@ -5,8 +5,9 @@ import { feeRangeCalc } from 'utils/dmm'
 import React from 'react'
 import { SubgraphPoolData } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
-import { Fraction, JSBI } from '@dynamic-amm/sdk'
+import { Fraction } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
+import JSBI from 'jsbi'
 
 export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolData }) {
   const { chainId } = useActiveWeb3React()

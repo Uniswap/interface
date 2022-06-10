@@ -22,9 +22,11 @@ export default function Tooltip({ text, width, size, ...rest }: TooltipProps) {
   return (
     <Popover
       content={
-        <TooltipContainer width={width} size={size}>
-          {text}
-        </TooltipContainer>
+        text ? (
+          <TooltipContainer width={width} size={size}>
+            {text}
+          </TooltipContainer>
+        ) : null
       }
       {...rest}
     />
@@ -33,7 +35,7 @@ export default function Tooltip({ text, width, size, ...rest }: TooltipProps) {
 
 export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
-  const open = useCallback(() => setShow(true), [setShow])
+  const open = useCallback(() => !!rest.text && setShow(true), [setShow, rest.text])
   const close = useCallback(() => setShow(false), [setShow])
   return (
     <Tooltip {...rest} show={show}>

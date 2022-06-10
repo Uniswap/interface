@@ -54,7 +54,7 @@ jobs:
         env:
           CI: false
           REACT_APP_VERSION: ${{ github.sha }}
-        run: yarn build-production
+        run: yarn build-prod
 
       - name: Save build
         uses: actions/upload-artifact@v2

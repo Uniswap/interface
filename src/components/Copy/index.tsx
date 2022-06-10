@@ -6,7 +6,6 @@ import useCopyClipboard from '../../hooks/useCopyClipboard'
 
 const CopyIcon = styled.div<{ margin?: string }>`
   flex-shrink: 0;
-  margin-right: 1rem;
   margin-left: 4px;
   ${({ margin }) => `margin: ${margin};`}
   text-decoration: none;

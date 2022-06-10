@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
-import { NETWORK_ICON, NETWORK_LABEL, SUPPORTED_NETWORKS } from 'constants/networks'
+
+import { NETWORK_ICON, NETWORK_LABEL, SUPPORTED_NETWORKS } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from 'state/application/hooks'
+
 import { ApplicationModal } from 'state/application/actions'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'

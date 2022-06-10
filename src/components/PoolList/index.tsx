@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex } from 'rebass'
-import { Currency } from '@dynamic-amm/sdk'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
@@ -24,7 +24,6 @@ import { Field } from 'state/pair/actions'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
 import { getTradingFeeAPR } from 'utils/dmm'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import Pagination from 'components/Pagination'
 import { ClickableText } from 'components/YieldPools/styleds'
 import ShareModal from 'components/ShareModal'
@@ -166,7 +165,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
               setSortDirection(sortedColumn !== SORT_FIELD.APR ? true : !sortDirection)
             }}
           >
-            <Trans>APR</Trans>
+            <Trans>APY</Trans>
             {sortedColumn === SORT_FIELD.APR ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -247,7 +246,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
     const cb = currencies[Field.CURRENCY_B]
 
     if (ca) {
-      const wca = wrappedCurrency(ca, chainId)
+      const wca = ca.wrapped
       const wcaAddress = wca && wca.address.toLowerCase()
       res = res.filter(
         poolData => wcaAddress && (poolData.token0.id === wcaAddress || poolData.token1.id === wcaAddress),
@@ -255,7 +254,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
     }
 
     if (cb) {
-      const wcb = wrappedCurrency(cb, chainId)
+      const wcb = cb.wrapped
       const wcbAddress = wcb && wcb.address.toLowerCase()
       res = res.filter(
         poolData => wcbAddress && (poolData.token0.id === wcbAddress || poolData.token1.id === wcbAddress),
@@ -273,7 +272,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
     })
 
     return res
-  }, [subgraphPoolsData, listComparator, currencies, searchValue, isShowOnlyActiveFarmPools, farms, chainId])
+  }, [subgraphPoolsData, listComparator, currencies, searchValue, isShowOnlyActiveFarmPools, farms])
 
   const [currentPage, setCurrentPage] = useState(1)
   useEffect(() => {

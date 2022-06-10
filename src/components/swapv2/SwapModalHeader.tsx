@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@dynamic-amm/sdk'
+import { TradeType } from '@kyberswap/ks-sdk-core'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
@@ -37,9 +37,9 @@ export default function SwapModalHeader({
 
   const theme = useContext(ThemeContext)
 
-  const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
+  const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency)
 
-  const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
+  const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency)
 
   const { feeConfig, typedValue } = useSwapState()
   return (

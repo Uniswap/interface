@@ -10,7 +10,7 @@ import {
 } from './charting_library'
 import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
+import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { nativeNameFromETH } from 'utils'
 import { USDC, USDT, DAI } from 'constants/index'
 import { Field } from 'state/swap/actions'
@@ -108,8 +108,8 @@ export const getCandlesApi = (
       '&res=' + res}`,
   )
 }
-const checkIsUSDToken = (chainId: ChainId | undefined, currency: any) => {
-  if (currency === Currency.ETHER || !chainId) {
+const checkIsUSDToken = (chainId: ChainId | undefined, currency: Currency | undefined) => {
+  if (currency?.isNative || !chainId) {
     return false
   }
   const usdTokenAddresses = [
@@ -145,7 +145,7 @@ export const checkPairHasDextoolsData = async (
   const res = { ver: 0, pairAddress: '' }
   if (!currencyA || !currencyB) return Promise.resolve(res)
   if (
-    (currencyA === Currency.ETHER && currencyB === Currency.ETHER) ||
+    (currencyA.isNative && currencyB.isNative) ||
     (checkIsUSDToken(chainId, currencyA) && checkIsUSDToken(chainId, currencyB))
   ) {
     return Promise.resolve(res)
@@ -154,8 +154,8 @@ export const checkPairHasDextoolsData = async (
   const checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
     ? JSON.parse(cPstr)
     : {}
-  const symbolA = currencyA === Currency.ETHER ? nativeNameFromETH(chainId) : currencyA.symbol
-  const symbolB = currencyB === Currency.ETHER ? nativeNameFromETH(chainId) : currencyB.symbol
+  const symbolA = currencyA.isNative ? nativeNameFromETH(chainId) : currencyA.symbol
+  const symbolB = currencyB.isNative ? nativeNameFromETH(chainId) : currencyB.symbol
   const key: string = [symbolA, symbolB, chainId].sort().join('')
   const checkedPair = checkedPairs[key]
   if (
@@ -167,8 +167,8 @@ export const checkPairHasDextoolsData = async (
     return Promise.resolve({ ver: checkedPair.ver, pairAddress: checkedPair.pairAddress })
   }
   /// ETH pair
-  if (currencyA === Currency.ETHER || currencyB === Currency.ETHER) {
-    const token = (currencyA !== Currency.ETHER ? currencyA : currencyB) as Token
+  if (currencyA.isNative || currencyB.isNative) {
+    const token = (currencyA.isToken ? currencyA : currencyB) as Token
     if (token?.address) {
       const data1 = await searchTokenPair(token.address, chainId)
       if (data1.length > 0 && data1[0].id) {
@@ -210,14 +210,14 @@ export const checkPairHasDextoolsData = async (
   return Promise.resolve(res)
 }
 
-export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: string) => {
+export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress: string, apiVersion: string) => {
   const { chainId } = useActiveWeb3React()
   const isTokenUSD =
-    (checkIsUSDToken(chainId, currencies[0]) && currencies[1] !== Currency.ETHER) ||
-    (checkIsUSDToken(chainId, currencies[1]) && currencies[0] !== Currency.ETHER)
+    (checkIsUSDToken(chainId, currencies[0]) && currencies[1]?.isToken) ||
+    (checkIsUSDToken(chainId, currencies[1]) && currencies[0]?.isToken)
   const isEtherUSD =
-    (checkIsUSDToken(chainId, currencies[0]) && currencies[1] === Currency.ETHER) ||
-    (checkIsUSDToken(chainId, currencies[1]) && currencies[0] === Currency.ETHER)
+    (checkIsUSDToken(chainId, currencies[0]) && currencies[1]?.isNative) ||
+    (checkIsUSDToken(chainId, currencies[1]) && currencies[0]?.isNative)
   const sym = isTokenUSD || isEtherUSD ? 'usd' : 'eth'
   const [data, setData] = useState<Bar[]>([])
   const [oldestTs, setOldestTs] = useState(0)
@@ -227,8 +227,8 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
   const intervalRef = useRef<any>()
 
   const isReverse =
-    (!isEtherUSD && (currencies[0] === Currency.ETHER || checkIsUSDToken(chainId, currencies[0]))) ||
-    (isEtherUSD && currencies[1] === Currency.ETHER)
+    (!isEtherUSD && (currencies[0]?.isNative || checkIsUSDToken(chainId, currencies[0]))) ||
+    (isEtherUSD && currencies[1]?.isNative)
 
   useEffect(() => {
     stateRef.current = { data, oldestTs }
@@ -261,8 +261,8 @@ export const useDatafeed = (currencies: any, pairAddress: string, apiVersion: st
       onResolveErrorCallback: ErrorCallback,
     ) => {
       try {
-        const label1 = currencies[0] === Currency.ETHER ? nativeNameFromETH(chainId) : currencies[0].symbol
-        const label2 = currencies[1] === Currency.ETHER ? nativeNameFromETH(chainId) : currencies[1].symbol
+        const label1 = currencies[0]?.isNative ? nativeNameFromETH(chainId) : currencies[0]?.symbol
+        const label2 = currencies[1]?.isNative ? nativeNameFromETH(chainId) : currencies[1]?.symbol
 
         const label = `${label1}/${label2}`
 

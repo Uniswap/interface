@@ -39,7 +39,7 @@ const ButtonWrapper = styled.div`
 
 const InputWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg12};
-  border-radius: 4px;
+  border-radius: 999px;
   display: flex;
   width: 100%;
   input {

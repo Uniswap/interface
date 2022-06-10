@@ -3,15 +3,14 @@ import styled, { ThemeContext, keyframes } from 'styled-components'
 import { Text, Flex } from 'rebass'
 import { t, Trans } from '@lingui/macro'
 
-import { Pair, JSBI, Token, TokenAmount } from '@dynamic-amm/sdk'
-import { SwapPoolTabs } from 'components/NavigationTabs'
+import { Pair, JSBI } from '@kyberswap/ks-sdk-classic'
+import { Token, TokenAmount, ChainId } from '@kyberswap/ks-sdk-core'
 import FullPositionCard from 'components/PositionCard'
-import { DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
 import Card from 'components/Card'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { useActiveWeb3React } from 'hooks'
 import { usePairsByAddress, usePairByAddress } from 'data/Reserves'
 import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
@@ -27,10 +26,20 @@ import { ButtonPrimary } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
 import { isMobile } from 'react-device-detect'
 import { Info } from 'react-feather'
-import { OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
+import { OUTSIDE_FAIRLAUNCH_ADDRESSES, DMM_ANALYTICS, CHAIN_ROUTE } from 'constants/index'
+import { PoolElasticIcon, PoolClassicIcon } from 'components/Icons'
+import useTheme from 'hooks/useTheme'
+import { auto } from '@popperjs/core'
+import ProAmmPool from '../ProAmmPool'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useHistory, useLocation } from 'react-router-dom'
+import Wallet from 'components/Icons/Wallet'
+import { useWindowSize } from 'hooks/useWindowSize'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { ELASTIC_NOT_SUPPORTED } from 'constants/v2'
 
-const Tab = styled.div<{ active: boolean }>`
+export const Tab = styled.div<{ active: boolean }>`
   padding: 4px 0;
   color: ${({ active, theme }) => (active ? theme.text : theme.subText)};
   border-bottom: 2px solid ${({ active, theme }) => (!active ? 'transparent' : theme.primary)};
@@ -42,38 +51,37 @@ const Tab = styled.div<{ active: boolean }>`
 `
 
 export const PageWrapper = styled(AutoColumn)`
-  padding: 16px 0 100px;
+  padding: 32px 0 100px;
   width: 100%;
   max-width: 1224px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 12px 12px 100px;
+    padding: 24px 12px 100px;
     max-width: 832px;
   `}
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 12px 12px 100px;
     max-width: 392px;
   `};
 `
 
-const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
-  overflow: hidden;
-`
-
-const InstructionText = styled.div`
+export const InstructionText = styled.div`
   width: 100%;
   padding: 16px 20px;
   background-color: ${({ theme }) => theme.bg17};
   text-align: center;
-  border-radius: 5px;
+  border-radius: 999px;
   font-size: 14px;
   line-height: 1.5;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-radius: 8px;
+    text-align: start;
+    `}
 `
 
-const TitleRow = styled.div`
+export const TitleRow = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -83,7 +91,7 @@ const TitleRow = styled.div`
   `};
 `
 
-const PositionCardGrid = styled.div`
+export const PositionCardGrid = styled.div`
   display: grid;
   grid-template-columns: minmax(392px, auto) minmax(392px, auto) minmax(392px, auto);
   gap: 24px;
@@ -97,6 +105,23 @@ const PositionCardGrid = styled.div`
     grid-template-columns: 1fr;
     max-width: 392px;
   `};
+`
+
+export const FilterRow = styled(Flex)`
+  align-items: center;
+  justify-content: space-between;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    align-items: flex-start;
+    flex-direction: column-reverse;
+    >div {
+      width: 100%
+      justify-content: space-between
+      &:nth-child(1){
+        margin-top: 20px
+      }
+    }
+  `}
 `
 
 const shimmer = keyframes`
@@ -127,10 +152,92 @@ const PreloadCard = styled.div`
     content: '';
   }
 `
+export default function PoolCombination() {
+  const theme = useTheme()
+  const history = useHistory()
+  const location = useLocation()
+  const qs = useParsedQueryString()
+  const tab = (qs.tab as string) || 'dmm'
+  const setTab = (tab: 'promm' | 'dmm') => {
+    history.replace(location.pathname + '?tab=' + tab)
+  }
 
-export default function Pool() {
+  const { chainId } = useActiveWeb3React()
+
+  const notSupportedMsg = ELASTIC_NOT_SUPPORTED[chainId as ChainId]
+
+  return (
+    <>
+      <PageWrapper>
+        <AutoColumn>
+          <Flex>
+            <MouseoverTooltip text={notSupportedMsg || ''}>
+              <Flex
+                onClick={() => {
+                  if (!!notSupportedMsg) return
+                  if (tab === 'dmm') setTab('promm')
+                }}
+                alignItems="center"
+                role="button"
+              >
+                <Text
+                  fontWeight={500}
+                  fontSize={20}
+                  color={tab === 'promm' ? theme.primary : theme.subText}
+                  width={auto}
+                  marginRight={'5px'}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Trans>Elastic Pools</Trans>
+                </Text>
+                <PoolElasticIcon size={16} color={tab === 'promm' ? theme.primary : theme.subText} />
+              </Flex>
+            </MouseoverTooltip>
+            <Text
+              fontWeight={500}
+              fontSize={20}
+              color={theme.subText}
+              width={auto}
+              marginRight={'18px'}
+              marginLeft={'18px'}
+            >
+              |
+            </Text>
+
+            <Flex
+              role="button"
+              alignItems={'center'}
+              onClick={() => {
+                if (tab === 'promm') setTab('dmm')
+              }}
+            >
+              <Text
+                fontWeight={500}
+                fontSize={20}
+                color={tab === 'dmm' ? theme.primary : theme.subText}
+                width={auto}
+                marginRight={'5px'}
+                style={{ cursor: 'pointer' }}
+              >
+                <Trans>Classic Pools</Trans>
+              </Text>
+              <PoolClassicIcon size={16} color={tab === 'promm' ? theme.subText : theme.primary} />
+            </Flex>
+          </Flex>
+        </AutoColumn>
+        {tab === 'promm' ? <ProAmmPool /> : <Pool />}
+      </PageWrapper>
+      <SwitchLocaleLink />
+    </>
+  )
+}
+
+function Pool() {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const { width } = useWindowSize()
+
+  const under768 = width && width <= 768
 
   const liquidityPositionTokenPairs = useLiquidityPositionTokenPairs()
   const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
@@ -213,29 +320,16 @@ export default function Pool() {
 
   return (
     <>
-      <PageWrapper>
-        <SwapPoolTabs active={'pool'} />
-        <VoteCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardBGImage />
-          <CardNoise />
-        </VoteCard>
-
+      <PageWrapper style={{ padding: 0, marginTop: '24px' }}>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <AutoRow>
               <InstructionText>
-                <Trans>Here you can view all your liquidity and staked balances</Trans>
+                <Trans>Here you can view all your liquidity and staked balances in the Classic Pools</Trans>
               </InstructionText>
             </AutoRow>
-
-            <Text fontSize="20px" fontWeight={500}>
-              <Trans>My Pools</Trans>
-            </Text>
-
             <TitleRow>
-              <Flex justifyContent="space-between" flex={1} alignItems="center">
+              <Flex justifyContent="space-between" flex={1} alignItems="center" width="100%">
                 <Flex sx={{ gap: '1.5rem' }} alignItems="center">
                   <Tab
                     active={!showStaked}
@@ -262,29 +356,45 @@ export default function Pool() {
                     Staked Pools
                   </Tab>
                 </Flex>
-                <ButtonPrimary
-                  as={StyledInternalLink}
-                  to="/find"
-                  style={{
-                    color: theme.textReverse,
-                    padding: '10px 12px',
-                    fontSize: '14px',
-                    width: 'max-content',
-                    height: '36px',
-                    textDecoration: 'none',
-                  }}
-                >
-                  <Trans>Import Pool</Trans>
-                  {!isMobile && <InfoHelper text={t`You can manually import your pool`} color={theme.textReverse} />}
-                </ButtonPrimary>
+
+                <ExternalLink href={`${DMM_ANALYTICS}/${CHAIN_ROUTE[chainId as ChainId]}/account/${account}`}>
+                  <Flex alignItems="center">
+                    <Wallet size={16} />
+                    <Text fontSize="14px" marginLeft="4px">
+                      <Trans>Analyze Wallet</Trans> ↗
+                    </Text>
+                  </Flex>
+                </ExternalLink>
               </Flex>
+            </TitleRow>
+
+            <Flex alignItems="center" flexDirection="row" justifyContent="flex-end" sx={{ gap: '12px' }}>
               <Search
-                minWidth="254px"
+                style={{ width: 'unset', flex: under768 ? 1 : undefined }}
+                minWidth={under768 ? '224px' : '254px'}
                 searchValue={searchText}
                 onSearch={(newSearchText: string) => setSearchText(newSearchText)}
                 placeholder={t`Search by token name or pool address`}
               />
-            </TitleRow>
+
+              <ButtonPrimary
+                as={StyledInternalLink}
+                to="/find"
+                style={{
+                  color: theme.textReverse,
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  width: 'max-content',
+                  height: '36px',
+                  textDecoration: 'none',
+                }}
+              >
+                <Text>
+                  <Trans>Import Pool</Trans>
+                </Text>
+                {!isMobile && <InfoHelper text={t`You can manually import your pool`} color={theme.textReverse} />}
+              </ButtonPrimary>
+            </Flex>
 
             {!account ? (
               <Card padding="40px">
@@ -346,7 +456,8 @@ export default function Pool() {
                   <Info size={48} color={theme.subText} />
                   <Text fontSize={16} lineHeight={1.5} color={theme.subText} textAlign="center" marginTop="1rem">
                     <Trans>
-                      No liquidity found. Check out our <StyledInternalLink to="/pools">Pools.</StyledInternalLink>
+                      No liquidity found. Check out our{' '}
+                      <StyledInternalLink to="/pools?tab=dmm">Pools.</StyledInternalLink>
                     </Trans>
                     <br />
                     {t`Don't see a pool you joined?`}{' '}
@@ -420,14 +531,14 @@ const StakedPool = ({
   const token1 = useToken(farm.token1?.id) || undefined
   const { farmAPR } = useTotalApr(farm)
 
-  const pair = usePairByAddress(token0, token1, farm.id)[1]
+  const pair = usePairByAddress(token0?.wrapped, token1?.wrapped, farm.id)[1]
 
   if (!pair) return <PreloadCard />
 
   return (
     <FullPositionCard
       pair={pair}
-      stakedBalance={new TokenAmount(pair.liquidityToken, farm.userData?.stakedBalance || '0')}
+      stakedBalance={TokenAmount.fromRawAmount(pair.liquidityToken, farm.userData?.stakedBalance || '0')}
       myLiquidity={userLiquidityPositions?.find(position => position.pool.id === pair.address)}
       farmStatus={farm.isEnded ? 'FARM_ENDED' : 'FARM_ACTIVE'}
       farmAPR={farmAPR}

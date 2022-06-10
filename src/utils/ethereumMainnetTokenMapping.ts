@@ -1,10 +1,13 @@
 import { ZERO_ADDRESS } from 'constants/index'
 import { isAddress } from 'utils'
+import { MAINNET_TOKEN_LIST } from 'constants/tokenLists/mainnet.tokenlist'
 
 export const getEthereumMainnetTokenLogoURL = (address: string) => {
   let uri
 
-  if (address.toLowerCase() === ZERO_ADDRESS) {
+  if (address.toLowerCase() === '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'.toLowerCase()) {
+    uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/2396.png'
+  } else if (address.toLowerCase() === ZERO_ADDRESS) {
     // Native token
     address = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
   } else if (address.toLowerCase() === '0xd7DCd9B99787C619b4D57979521258D1A7267ad7'.toLowerCase()) {
@@ -22,6 +25,10 @@ export const getEthereumMainnetTokenLogoURL = (address: string) => {
   } else if (address.toLowerCase() === '0x9F52c8ecbEe10e00D9faaAc5Ee9Ba0fF6550F511'.toLowerCase()) {
     // SIPHER
     uri = 'https://i.imgur.com/zhZo9Bx.jpg'
+  }
+
+  if (!uri) {
+    uri = MAINNET_TOKEN_LIST.tokens.find(token => token.address.toLowerCase() === address.toLowerCase())?.logoURI
   }
 
   if (!uri) {

@@ -23,7 +23,7 @@ import {
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 import { isMobile } from 'react-device-detect'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {

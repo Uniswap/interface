@@ -1,5 +1,5 @@
 import { useActiveWeb3React } from 'hooks'
-import { Currency, TradeType } from '@dynamic-amm/sdk'
+import { TradeType, Currency } from '@kyberswap/ks-sdk-core'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -13,10 +13,11 @@ import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
-import { Aggregator } from '../../utils/aggregator'
+import { Aggregator } from 'utils/aggregator'
 import { formattedNum } from 'utils'
 import InfoHelper from 'components/InfoHelper'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
+import { getFormattedFeeAmountUsd } from 'utils/fee'
 
 export default function SwapModalFooter({
   trade,
@@ -31,7 +32,7 @@ export default function SwapModalFooter({
   onConfirm: () => void
   swapErrorMessage: string | undefined
   disabledConfirm: boolean
-  feeConfig: FeeConfig | null
+  feeConfig: FeeConfig | undefined
 }) {
   const { chainId } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -44,6 +45,9 @@ export default function SwapModalFooter({
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
 
   const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
+
+  const formattedFeeAmountUsd = useMemo(() => getFormattedFeeAmountUsd(trade, feeConfig), [trade, feeConfig])
+
   return (
     <>
       <AutoColumn gap="0.5rem" style={{ padding: '1rem', border: `1px solid ${theme.border}`, borderRadius: '8px' }}>
@@ -73,7 +77,7 @@ export default function SwapModalFooter({
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
-              {trade.tradeType === TradeType.EXACT_INPUT ? t`Minimum received` : t`Maximum sold`}
+              {trade.tradeType === TradeType.EXACT_INPUT ? t`Minimum Received` : t`Maximum Sold`}
             </TYPE.black>
             <InfoHelper size={14} text={t`Minimum amount you will receive or your transaction will revert`} />
           </RowFixed>
@@ -131,10 +135,7 @@ export default function SwapModalFooter({
               <InfoHelper size={14} text={t`Commission fee to be paid directly to your referrer`} />
             </RowFixed>
             <TYPE.black color={theme.text} fontSize={14}>
-              {formattedNum(
-                ((parseFloat(trade.amountInUsd) * parseFloat(feeConfig.feeAmount)) / 100000)?.toString(),
-                true,
-              )}
+              {formattedFeeAmountUsd}
             </TYPE.black>
           </RowBetween>
         )}

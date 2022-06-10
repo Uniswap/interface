@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import styled, { css } from 'styled-components'
 import ScrollContainer from 'react-indiana-drag-scroll'
+import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+
 import CurrencyLogo from '../CurrencyLogo'
 import { getEtherscanLink } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { Aggregator, getExchangeConfig } from 'utils/aggregator'
 import { getTradeComposition, SwapRouteV2 } from 'utils/aggregationRouting'
-import { ChainId, Currency, CurrencyAmount, TokenAmount } from '@dynamic-amm/sdk'
-import useThrottle from '../../hooks/useThrottle'
+import useThrottle from 'hooks/useThrottle'
 import { Field } from 'state/swap/actions'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { useAllTokens } from 'hooks/Tokens'
@@ -443,11 +444,11 @@ const Routing = ({ trade, currencies, formattedAmounts, maxHeight, backgroundCol
     return getTradeComposition(trade, chainId, allTokens)
   }, [trade, chainId, allTokens])
 
-  const renderTokenInfo = (currencyAmount: CurrencyAmount | string | undefined, field: Field) => {
+  const renderTokenInfo = (currencyAmount: CurrencyAmount<Currency> | string | undefined, field: Field) => {
     const isOutput = field === Field.OUTPUT
     const currency =
-      currencyAmount instanceof TokenAmount
-        ? currencyAmount.currency
+      currencyAmount instanceof CurrencyAmount
+        ? currencyAmount?.currency
         : isOutput
         ? nativeOutputCurrency
         : nativeInputCurrency

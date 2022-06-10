@@ -4,11 +4,9 @@ import AnimatingNumber from './AnimatingNumber'
 import styled, { ThemeContext } from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { Repeat } from 'react-feather'
-import { Currency } from '@dynamic-amm/sdk'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Field } from 'state/swap/actions'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { useActiveWeb3React } from 'hooks'
 import useLiveChartData, { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
 import { isMobile } from 'react-device-detect'
 import WarningIcon from './WarningIcon'
@@ -20,6 +18,7 @@ import ProChartToggle from 'components/LiveChart/ProChartToggle'
 import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
 import ProLiveChart from 'components/TradingViewChart'
 import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
+import { useActiveWeb3React } from 'hooks'
 import { useMedia } from 'react-use'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
@@ -115,15 +114,14 @@ function LiveChart({
   onRotateClick?: () => void
   mobileCloseButton?: React.ReactNode
 }) {
-  const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
+  const theme = useContext(ThemeContext)
   const nativeInputCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT] || undefined)
   const nativeOutputCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT] || undefined)
-  const tokens = useMemo(
-    () => [nativeInputCurrency, nativeOutputCurrency].map(currency => wrappedCurrency(currency, chainId)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [chainId, currencies],
-  )
+  const tokens = useMemo(() => {
+    return [nativeInputCurrency, nativeOutputCurrency].map(currency => currency?.wrapped)
+  }, [nativeInputCurrency, nativeOutputCurrency])
+
   const isWrappedToken = tokens[0]?.address === tokens[1]?.address
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)

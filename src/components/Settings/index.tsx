@@ -39,7 +39,7 @@ const StyledMenuButton = styled.button<{ active?: boolean }>`
   justify-content: center;
   color: ${({ theme }) => theme.text};
 
-  border-radius: 0.5rem;
+  border-radius: 999px;
 
   :hover {
     cursor: pointer;

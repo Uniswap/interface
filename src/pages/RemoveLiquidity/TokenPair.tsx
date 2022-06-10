@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
@@ -7,7 +7,7 @@ import { Flex, Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
-import { Currency, CurrencyAmount, currencyEquals, ETHER, JSBI, Percent, Token, WETH, Fraction } from '@dynamic-amm/sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { ROUTER_ADDRESSES, FEE_OPTIONS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
@@ -39,9 +39,7 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { Wrapper } from '../Pool/styleds'
 import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from 'utils'
-import { convertToNativeTokenFromETH, useCurrencyConvertedToNative } from 'utils/dmm'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import { formatJSBIValue } from 'utils/formatBalance'
 import {
@@ -55,6 +53,8 @@ import {
   ModalDetailWrapper,
   CurrentPriceWrapper,
 } from './styled'
+import { nativeOnChain } from 'constants/tokens'
+import JSBI from 'jsbi'
 
 export default function TokenPair({
   currencyIdA,
@@ -68,18 +68,15 @@ export default function TokenPair({
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
 
-  const nativeA = useCurrencyConvertedToNative(currencyA as Currency)
-  const nativeB = useCurrencyConvertedToNative(currencyB as Currency)
-  const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
-    currencyA,
-    currencyB,
-    chainId,
-  ])
+  // TODO: viet-nv
+  const nativeA = currencyA as Currency
+  const nativeB = currencyB as Currency
+  const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
-  const currencyAIsETHER = !!(chainId && currencyA && currencyEquals(currencyA, ETHER))
-  const currencyAIsWETH = !!(chainId && currencyA && currencyEquals(currencyA, WETH[chainId]))
-  const currencyBIsETHER = !!(chainId && currencyB && currencyEquals(currencyB, ETHER))
-  const currencyBIsWETH = !!(chainId && currencyB && currencyEquals(currencyB, WETH[chainId]))
+  const currencyAIsETHER = !!(chainId && currencyA && currencyA.isNative)
+  const currencyAIsWETH = !!(chainId && currencyA && currencyA.equals(WETH[chainId]))
+  const currencyBIsETHER = !!(chainId && currencyB && currencyB.isNative)
+  const currencyBIsWETH = !!(chainId && currencyB && currencyB.equals(WETH[chainId]))
 
   const theme = useContext(ThemeContext)
 
@@ -131,6 +128,12 @@ export default function TokenPair({
     !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
   )
 
+  // if user liquidity change => remove signature
+  useEffect(() => {
+    setSignatureData(null)
+    // eslint-disable-next-line
+  }, [userLiquidity?.toExact()])
+
   const isArgentWallet = useIsArgentWallet()
 
   async function onAttemptToApprove() {
@@ -170,7 +173,7 @@ export default function TokenPair({
     const message = {
       owner: account,
       spender: ROUTER_ADDRESSES[chainId],
-      value: liquidityAmount.raw.toString(),
+      value: liquidityAmount.quotient.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber(),
     }
@@ -241,8 +244,8 @@ export default function TokenPair({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
+    const currencyBIsETH = currencyB.isNative
+    const oneCurrencyIsETH = currencyA.isNative || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -255,7 +258,7 @@ export default function TokenPair({
         args = [
           currencyBIsETH ? tokenA.address : tokenB.address,
           pairAddress,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
@@ -269,7 +272,7 @@ export default function TokenPair({
           tokenA.address,
           tokenB.address,
           pairAddress,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           account,
@@ -285,7 +288,7 @@ export default function TokenPair({
         args = [
           currencyBIsETH ? tokenA.address : tokenB.address,
           pairAddress,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
@@ -303,7 +306,7 @@ export default function TokenPair({
           tokenA.address,
           tokenB.address,
           pairAddress,
-          liquidityAmount.raw.toString(),
+          liquidityAmount.quotient.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           account,
@@ -353,15 +356,15 @@ export default function TokenPair({
               summary:
                 parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(currencyA, chainId).symbol +
+                (currencyAIsWETH ? nativeOnChain(chainId).symbol : currencyA.symbol) +
                 ' and ' +
                 parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(currencyB, chainId).symbol,
+                (currencyBIsWETH ? nativeOnChain(chainId).symbol : currencyB.symbol),
               arbitrary: {
                 poolAddress: pairAddress,
-                token_1: convertToNativeTokenFromETH(currencyA, chainId).symbol,
-                token_2: convertToNativeTokenFromETH(currencyB, chainId).symbol,
+                token_1: currencyA.symbol,
+                token_2: currencyB.symbol,
                 remove_liquidity_method: 'token pair',
                 amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
               },
@@ -390,12 +393,12 @@ export default function TokenPair({
 
   const estimatedUsdCurrencyA =
     parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount).toSignificant(6)) * usdPrices[0]
+      ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount<Currency>).toSignificant(6)) * usdPrices[0]
       : 0
 
   const estimatedUsdCurrencyB =
     parsedAmounts[Field.CURRENCY_B] && usdPrices[1]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_B] as CurrencyAmount).toSignificant(6)) * usdPrices[1]
+      ? parseFloat((parsedAmounts[Field.CURRENCY_B] as CurrencyAmount<Currency>).toSignificant(6)) * usdPrices[1]
       : 0
 
   const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
@@ -498,7 +501,7 @@ export default function TokenPair({
                 <>
                   <RowBetween style={{ paddingBottom: '12px' }}>
                     <TYPE.subHeader fontWeight={400} fontSize={14} color={theme.subText}>
-                      <Trans>Minimum received</Trans>
+                      <Trans>Minimum Received</Trans>
                     </TYPE.subHeader>
 
                     <TokenWrapper>
@@ -578,17 +581,11 @@ export default function TokenPair({
 
                   <>
                     <Slider value={innerLiquidityPercentage} onChange={setInnerLiquidityPercentage} size={18} />
-                    <RowBetween>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')} width="20%">
-                        25%
-                      </MaxButton>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')} width="20%">
-                        50%
-                      </MaxButton>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')} width="20%">
-                        75%
-                      </MaxButton>
-                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')} width="20%">
+                    <RowBetween style={{ gap: '4px' }}>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')}>25%</MaxButton>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')}>50%</MaxButton>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')}>75%</MaxButton>
+                      <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}>
                         <Trans>Max</Trans>
                       </MaxButton>
                     </RowBetween>
@@ -637,7 +634,7 @@ export default function TokenPair({
                       <StyledInternalLink
                         replace
                         to={`/remove/${
-                          currencyAIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                          currencyAIsETHER ? currencyId(WETH[chainId], chainId) : nativeOnChain(chainId).symbol
                         }/${currencyIdB}/${pairAddress}`}
                       >
                         {currencyAIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
@@ -662,7 +659,7 @@ export default function TokenPair({
                       <StyledInternalLink
                         replace
                         to={`/remove/${currencyIdA}/${
-                          currencyBIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                          currencyBIsETHER ? currencyId(WETH[chainId], chainId) : nativeOnChain(chainId).symbol
                         }/${pairAddress}`}
                       >
                         {currencyBIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
@@ -677,7 +674,7 @@ export default function TokenPair({
                   <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
                     <TYPE.subHeader fontWeight={500} fontSize={12} color={theme.subText}>
                       <UppercaseText>
-                        <Trans>Minimum received</Trans>
+                        <Trans>Minimum Received</Trans>
                       </UppercaseText>
                     </TYPE.subHeader>
                   </AutoRow>
@@ -708,7 +705,7 @@ export default function TokenPair({
                       style={{ display: 'flex', alignItems: 'center' }}
                     >
                       <UppercaseText>
-                        <Trans>Current Price:</Trans>
+                        <Trans>Current Price</Trans>
                       </UppercaseText>
                     </TYPE.subHeader>
                     <TYPE.black fontWeight={400} fontSize={14}>

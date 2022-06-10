@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { css, ThemeContext } from 'styled-components'
 import { darken, rgba } from 'polished'
 
 import { RowBetween } from '../Row'
@@ -14,13 +14,14 @@ const Base = styled(RebassButton)<{
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '18px')};
+  padding: ${({ padding }) => (padding ? padding : '12px')};
   width: ${({ width }) => (width ? width : '100%')};
   height: ${({ height }) => (height ? height : 'auto')};
   margin: ${({ margin }) => (margin ? margin : 'unset')};
   font-weight: 500;
   text-align: center;
-  border-radius: 5.5px;
+  border-radius: 999px;
+  height: auto;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;
@@ -62,15 +63,55 @@ export const ButtonPrimary = styled(Base)`
   }
 `
 
+export const ButtonCollect = styled(Base)<{ disabled?: boolean }>`
+  background-color: ${({ theme }) => `${theme.primary}33`};
+  color: ${({ theme }) => theme.primary};
+
+  ${({ disabled }) =>
+    disabled
+      ? css`
+          background-color: ${({ theme }) => theme.buttonGray};
+          color: ${({ theme }) => theme.disableText};
+          cursor: not-allowed;
+        `
+      : css`
+          &:hover {
+            background-color: ${({ theme }) => `${theme.primary}40`};
+          }
+        `};
+`
+
+export const ButtonWarning = styled(Base)`
+  background-color: ${({ theme }) => theme.warning};
+  color: ${({ theme }) => theme.textReverse};
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.warning)};
+    background-color: ${({ theme }) => darken(0.05, theme.warning)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.warning)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.warning)};
+    background-color: ${({ theme }) => darken(0.1, theme.warning)};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.warning};
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => `${theme.primary}33`};
+  min-width: unset;
   color: ${({ theme }) => theme.primary};
   font-size: 16px;
   font-weight: 500;
-  &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
-  }
+  // &:focus {
+  //   box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
+  //   background-color: ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
+  // }
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
   }
@@ -91,8 +132,8 @@ export const ButtonLight = styled(Base)`
 `
 
 export const ButtonGray = styled(Base)`
-  background-color: ${({ theme }) => theme.bg3};
-  color: ${({ theme }) => theme.text2};
+  background-color: ${({ theme }) => theme.buttonGray};
+  color: ${({ theme }) => theme.subText};
   font-size: 16px;
   font-weight: 500;
   &:focus {
@@ -182,6 +223,7 @@ export const ButtonOutlined = styled(Base)`
   border: 1px solid ${({ theme }) => theme.btnOutline};
   background-color: transparent;
   color: ${({ theme }) => theme.btnOutline};
+  border-radius: 999px;
   font-size: 12px;
 
   &:focus {
@@ -194,8 +236,10 @@ export const ButtonOutlined = styled(Base)`
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
   }
   &:disabled {
-    opacity: 50%;
+    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
     cursor: auto;
+    box-shadow: none;
+    border: 1px solid ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
   }
 `
 

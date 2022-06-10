@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { t, Trans } from '@lingui/macro'
 
-import { ChainId, Currency, ETHER, Token } from '@dynamic-amm/sdk'
+import { Currency, Token, ChainId } from '@kyberswap/ks-sdk-core'
 import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
 import {
@@ -31,7 +31,7 @@ import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useDebounce from 'hooks/useDebounce'
-import { convertToNativeTokenFromETH } from 'utils/dmm'
+import { nativeOnChain } from 'constants/tokens'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -90,24 +90,24 @@ export function CurrencySearch({
   const searchToken = useToken(searchQuery)
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
-  const isSearchTokenActive = useIsTokenActive(searchToken)
+  const isSearchTokenActive = useIsTokenActive(searchToken?.wrapped)
 
-  const nativeToken = convertToNativeTokenFromETH(ETHER, chainId)
+  const nativeToken = chainId && nativeOnChain(chainId)
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
-    return !!nativeToken.symbol?.toLowerCase().startsWith(s)
-  }, [searchQuery, nativeToken.symbol])
+    return !!nativeToken?.symbol?.toLowerCase().startsWith(s)
+  }, [searchQuery, nativeToken])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
-    if (isAddressSearch) return searchToken ? [searchToken] : []
+    if (isAddressSearch) return searchToken ? [searchToken.wrapped] : []
     return filterTokens(Object.values(allTokens), searchQuery)
   }, [isAddressSearch, searchToken, allTokens, searchQuery])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
-    if (searchToken) return [searchToken]
+    if (searchToken) return [searchToken.wrapped]
     const sorted = filteredTokens.sort(tokenComparator)
     const symbolMatch = searchQuery
       .toLowerCase()
@@ -150,7 +150,7 @@ export function CurrencySearch({
       if (e.key === 'Enter') {
         const s = searchQuery.toLowerCase().trim()
         if (s === 'eth') {
-          handleCurrencySelect(ETHER)
+          handleCurrencySelect(nativeOnChain(chainId as ChainId))
         } else if (filteredSortedTokens.length > 0) {
           if (
             filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
@@ -161,7 +161,7 @@ export function CurrencySearch({
         }
       }
     },
-    [filteredSortedTokens, handleCurrencySelect, searchQuery],
+    [filteredSortedTokens, handleCurrencySelect, searchQuery, chainId],
   )
 
   // menu ui
@@ -179,7 +179,7 @@ export function CurrencySearch({
           <Text fontWeight={500} fontSize={16} display="flex">
             <Trans>Select a token</Trans>
             <QuestionHelper
-              text={t`Find a token by searching for its name or symbol or by pasting its address below.`}
+              text={t`Find a token by searching for its name or symbol or by pasting its address below`}
             />
           </Text>
           <CloseIcon onClick={onDismiss} />
@@ -209,7 +209,7 @@ export function CurrencySearch({
 
       {searchToken && !searchTokenIsAdded && !isSearchTokenActive ? (
         <Column style={{ padding: '20px 0', height: '100%' }}>
-          <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
+          <ImportRow token={searchToken.wrapped} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
       ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
         <div style={{ flex: '1' }}>
