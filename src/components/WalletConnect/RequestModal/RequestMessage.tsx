@@ -1,6 +1,8 @@
+import { ResponsiveValue } from '@shopify/restyle'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -10,7 +12,9 @@ import {
   isTransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { Theme } from 'src/styles/theme'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
+import { opacify } from 'src/utils/colors'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 
@@ -22,17 +26,25 @@ const getStrMessage = (request: WalletConnectRequest) => {
   return ''
 }
 
-const AddressButton = ({ address, chainId }: { address: string; chainId: number }) => {
+type AddressButtonProps = {
+  address: string
+  chainId: number
+  textVariant?: ResponsiveValue<keyof Theme['textVariants'], Theme>
+}
+
+const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
   const { name } = useENS(chainId, address, false)
+  const theme = useAppTheme()
   return (
     <LinkButton
-      backgroundColor="neutralContainer"
       borderRadius="xs"
       label={name || shortenAddress(address)}
       px="md"
       py="xxs"
+      style={{ backgroundColor: opacify(20, theme.colors.black) }}
       textVariant="body2"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
+      {...rest}
     />
   )
 }
@@ -42,7 +54,7 @@ const MAX_TYPED_DATA_PARSE_DEPTH = 3
 // recursively parses typed data objects and adds margin to left
 const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): any => {
   if (depth === MAX_TYPED_DATA_PARSE_DEPTH + 1) {
-    return <Text variant="body2">...</Text>
+    return <Text variant="code">...</Text>
   }
 
   return (
@@ -53,7 +65,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): any => {
         if (typeof childValue === 'object') {
           return (
             <Flex gap="xxs">
-              <Text color="accentText2" style={{ marginLeft: depth * 10 }} variant="body2">
+              <Text color="accentText2" style={{ marginLeft: depth * 10 }} variant="code">
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
@@ -64,12 +76,14 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): any => {
         if (typeof childValue === 'string') {
           return (
             <Flex row alignItems="center" gap="xs" style={{ marginLeft: depth * 10 }}>
-              <Text color="accentText2">{objKey}</Text>
+              <Text color="accentText2" variant="code">
+                {objKey}
+              </Text>
               <Flex flexShrink={1}>
                 {isValidAddress(childValue, true) ? (
-                  <AddressButton address={childValue} chainId={chainId} />
+                  <AddressButton address={childValue} chainId={chainId} textVariant="code" />
                 ) : (
-                  <Text variant="body2">{childValue}</Text>
+                  <Text variant="code">{childValue}</Text>
                 )}
               </Flex>
             </Flex>

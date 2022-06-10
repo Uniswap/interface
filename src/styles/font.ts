@@ -16,6 +16,7 @@ export const fontFamily = {
     medium: 'Inter-Medium',
     semibold: 'Inter-SemiBold',
     bold: 'Inter-Bold',
+    monospace: 'monospace',
   },
 }
 
@@ -75,9 +76,9 @@ export const textVariants = {
     color: 'neutralTextPrimary',
   },
   code: {
-    fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 12,
-    lineHeight: 16,
+    fontFamily: fontFamily.sansSerif.monospace,
+    fontSize: 14,
+    lineHeight: 20,
     color: 'neutralTextPrimary',
   },
   largeLabel: {
