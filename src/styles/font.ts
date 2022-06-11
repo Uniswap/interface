@@ -16,7 +16,7 @@ export const fontFamily = {
     medium: 'Inter-Medium',
     semibold: 'Inter-SemiBold',
     bold: 'Inter-Bold',
-    monospace: 'monospace',
+    monospace: 'InputMono-Regular',
   },
 }
 
