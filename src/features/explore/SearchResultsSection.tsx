@@ -1,12 +1,12 @@
 import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, ImageStyle, ListRenderItemInfo } from 'react-native'
+import { ImageStyle, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
-import { ETHERSCAN_LOGO } from 'src/assets'
 import ArrowDown from 'src/assets/icons/arrow-down.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
+import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
@@ -120,7 +120,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
           <Button onPress={() => onPressViewEtherscan(etherscanAddress)}>
             <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
               <Flex centered row gap="sm">
-                <Image source={ETHERSCAN_LOGO} style={etherscanLogoStyle} />
+                <EtherscanLogo height={35} width={35} />
                 <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
               </Flex>
               <ArrowDown
