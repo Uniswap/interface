@@ -155,7 +155,7 @@ export default function Earn() {
       sortType === FarmSort.YIELD
         ? allSummaries.sort((a, b) => Number(b.apy) - Number(a.apy))
         : allSummaries.sort((a, b) => {
-            return Number(formatEther(b.tvlUSD.sub(a.tvlUSD)))
+            return Number(a.tvlUSD && b.tvlUSD ? formatEther(b.tvlUSD.sub(a.tvlUSD)) : 0)
           })
     if (filteringToken === null) {
       return sortedSummaries

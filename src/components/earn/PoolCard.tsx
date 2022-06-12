@@ -112,12 +112,12 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
   const theme = useTheme()
 
   const stakingContract = useStakingContract(farmSummary.stakingAddress)
+  const stakingTokenAddress = useSingleCallResult(stakingContract, 'stakingToken', [])?.result?.[0]
+  const stakingToken = useToken(stakingTokenAddress)
   const stakedAmount = useSingleCallResult(stakingContract, 'balanceOf', [address || undefined]).result?.[0]
   const isStaking = Boolean(stakedAmount && stakedAmount.gt('0'))
   const stakedTokenAmount =
-    isStaking && farmSummary.token0Address === farmSummary.token1Address && token0
-      ? new TokenAmount(token0, JSBI.BigInt(stakedAmount))
-      : undefined
+    isStaking && stakingToken ? new TokenAmount(stakingToken, JSBI.BigInt(stakedAmount)) : undefined
 
   const { userValueCUSD, userAmountTokenA, userAmountTokenB } = useLPValue(stakedAmount ?? 0, farmSummary)
 
@@ -158,21 +158,21 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
 
       <TopSection singleToken={isSingleToken}>
         {isSingleToken ? (
-          <CurrencyLogo currency={token0}></CurrencyLogo>
+          <CurrencyLogo currency={stakingToken ?? undefined}></CurrencyLogo>
         ) : (
           <DoubleCurrencyLogo currency0={token0} currency1={token1} size={24} />
         )}
         <PoolInfo style={{ marginLeft: '8px' }}>
           {isSingleToken ? (
             <TYPE.white fontWeight={600} fontSize={[18, 24]}>
-              {token0?.symbol}
+              {stakingToken?.symbol}
             </TYPE.white>
           ) : (
             <TYPE.white fontWeight={600} fontSize={[18, 24]}>
               {token0?.symbol}-{token1?.symbol}
             </TYPE.white>
           )}
-          {farmSummary.apr && farmSummary.apr.greaterThan('0') && farmSummary.tvlUSD.gt('0') ? (
+          {farmSummary.apr && farmSummary.apr.greaterThan('0') && farmSummary.tvlUSD?.gt('0') ? (
             <span
               aria-label="Toggle APR/APY"
               onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}
@@ -204,7 +204,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
           ) : null}
         </PoolInfo>
         <StyledInternalLink
-          to={`/farm/${isSingleToken ? token0?.address : token0?.address + '/' + token1?.address}/${
+          to={`/farm/${isSingleToken ? stakingToken?.address : token0?.address + '/' + token1?.address}/${
             farmSummary.stakingAddress
           }`}
           style={{ width: '100%' }}
@@ -218,17 +218,26 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
       <StatContainer>
         <PoolStatRow
           statName={t('totalDeposited')}
-          statValue={Number(formatEther(farmSummary.tvlUSD)).toLocaleString(undefined, {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0,
-          })}
+          statValue={
+            farmSummary.tvlUSD
+              ? Number(formatEther(farmSummary.tvlUSD)).toLocaleString(undefined, {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumFractionDigits: 0,
+                })
+              : farmSummary.totalStakedAmount
+              ? `${Number(farmSummary.totalStakedAmount.toFixed(0)).toLocaleString(undefined, {
+                  style: 'decimal',
+                  maximumFractionDigits: 0,
+                })} ${stakingToken?.symbol}`
+              : '-'
+          }
         />
-        {farmSummary.apr && farmSummary.apr.greaterThan('0') && farmSummary.tvlUSD.gt('0') ? (
+        {farmSummary.apr && farmSummary.apr.greaterThan('0') && farmSummary.tvlUSD?.gt('0') ? (
           <div aria-label="Toggle APR/APY" onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
             <PoolStatRow
               helperText={
-                farmSummary.tvlUSD.isZero() ? (
+                farmSummary.tvlUSD?.isZero() ? (
                   'Pool is empty'
                 ) : (
                   <>
@@ -264,7 +273,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
         <>
           <Break />
           <BottomSection showBackground={true}>
-            {userValueCUSD && (
+            {stakedTokenAmount && (
               <RowBetween>
                 <TYPE.black color={'white'} fontWeight={500}>
                   <span>Your stake</span>
@@ -272,9 +281,11 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
 
                 <RowFixed>
                   <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-                    {'$' + userValueCUSD.toFixed(0, { groupSeparator: ',' })}
+                    {userValueCUSD
+                      ? '$' + userValueCUSD.toFixed(0, { groupSeparator: ',' })
+                      : `${stakedTokenAmount.toFixed(0, { groupSeparator: ',' })} ${stakingToken?.symbol}`}
                   </TYPE.black>
-                  {stakedTokenAmount ? (
+                  {isSingleToken ? (
                     <SingleStakedAmountsHelper userAmountToken={stakedTokenAmount} />
                   ) : (
                     <StakedAmountsHelper userAmountTokenA={userAmountTokenA} userAmountTokenB={userAmountTokenB} />

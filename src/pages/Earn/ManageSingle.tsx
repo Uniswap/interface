@@ -146,6 +146,11 @@ export default function ManageSingle({
                     currency: 'USD',
                     maximumFractionDigits: 0,
                   })
+                : stakingInfo.totalStakedAmount
+                ? `${Number(stakingInfo.totalStakedAmount?.toFixed(0)).toLocaleString(undefined, {
+                    style: 'decimal',
+                    maximumFractionDigits: 0,
+                  })} ${token?.symbol}`
                 : '-'}
             </TYPE.body>
           </AutoColumn>

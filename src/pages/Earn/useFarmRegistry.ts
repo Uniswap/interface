@@ -20,7 +20,8 @@ export type FarmSummary = {
   stakingAddress: string
   lpAddress: string
   rewardsUSDPerYear: BigNumber
-  tvlUSD: BigNumber
+  tvlUSD: BigNumber | undefined
+  totalStakedAmount?: TokenAmount | undefined
   token0Address: string
   token1Address: string
   isFeatured: boolean
@@ -119,7 +120,7 @@ export const useFarmRegistry = () => {
 
     farmSummaries
       .sort((a, b) => Number(formatEther(b.rewardsUSDPerYear.sub(a.rewardsUSDPerYear))))
-      .sort((a, b) => Number(formatEther(b.tvlUSD.sub(a.tvlUSD))))
+      .sort((a, b) => Number(a.tvlUSD && b.tvlUSD ? formatEther(b.tvlUSD.sub(a.tvlUSD)) : 0))
 
     const results = await Promise.all(
       farmSummaries.map((summary) => {
@@ -143,14 +144,20 @@ export const useFarmRegistry = () => {
 }
 
 export const useImportedFarmRegistry = (farmAddress: string): FarmSummary | undefined => {
-  const { stakingToken, totalRewardRates, valueOfTotalStakedAmountInCUSD, tokens, rewardsUSDPerYear } =
-    useCustomStakingInfo(farmAddress)
+  const {
+    stakingToken,
+    totalRewardRates,
+    valueOfTotalStakedAmountInCUSD,
+    tokens,
+    rewardsUSDPerYear,
+    totalStakedAmount,
+  } = useCustomStakingInfo(farmAddress)
 
   const result = useQuery(pairDataGql, {
     variables: { id: stakingToken?.address.toLowerCase() },
   })
 
-  if (stakingToken && totalRewardRates && valueOfTotalStakedAmountInCUSD && tokens) {
+  if (stakingToken && totalRewardRates && tokens) {
     const farmSummary: FarmSummary = {
       farmName: '',
       stakingAddress: farmAddress,
@@ -158,7 +165,8 @@ export const useImportedFarmRegistry = (farmAddress: string): FarmSummary | unde
       token0Address: tokens[0].address,
       token1Address: tokens[1].address,
       isFeatured: false,
-      tvlUSD: parseEther(valueOfTotalStakedAmountInCUSD),
+      tvlUSD: valueOfTotalStakedAmountInCUSD ? parseEther(valueOfTotalStakedAmountInCUSD) : undefined,
+      totalStakedAmount: totalStakedAmount,
       rewardsUSDPerYear: BigNumber.from(rewardsUSDPerYear),
       isImported: true,
       totalRewardRates,
@@ -212,11 +220,11 @@ function calcAPR(
     )
     swapRewardsUSDPerYear = parseEther(Math.floor(lastDayVolumeUsd * 365 * 0.0025).toString())
   }
-  const rewardApr = new Percent(summary.rewardsUSDPerYear.toString(), summary.tvlUSD.toString())
-  const swapApr = new Percent(swapRewardsUSDPerYear.toString(), summary.tvlUSD.toString())
-  const apr = new Percent(swapRewardsUSDPerYear.add(summary.rewardsUSDPerYear).toString(), summary.tvlUSD.toString())
+  const rewardApr = new Percent(summary.rewardsUSDPerYear.toString(), summary.tvlUSD?.toString())
+  const swapApr = new Percent(swapRewardsUSDPerYear.toString(), summary.tvlUSD?.toString())
+  const apr = new Percent(swapRewardsUSDPerYear.add(summary.rewardsUSDPerYear).toString(), summary.tvlUSD?.toString())
   let apy = '0'
-  if (summary.tvlUSD.gt(0)) {
+  if (summary.tvlUSD?.gt(0)) {
     try {
       apy = annualizedPercentageYield(apr, COMPOUNDS_PER_YEAR)
     } catch (e) {

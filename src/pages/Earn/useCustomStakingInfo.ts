@@ -1,10 +1,11 @@
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import IUniswapV2PairABI from '@ubeswap/core/build/abi/IUniswapV2Pair.json'
 import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
+import ERC20_ABI, { ERC20_BYTES32_ABI } from 'constants/abis/erc20'
 import MOOLA_STAKING_ABI from 'constants/abis/moola/MoolaStakingRewards.json'
 import { BigNumber, ContractInterface, ethers } from 'ethers'
-import { MoolaStakingRewards } from 'generated'
-import { useAllTokens, useToken } from 'hooks/Tokens'
+import { Erc20, Erc20Bytes32, MoolaStakingRewards } from 'generated'
+import { parseStringOrBytes32, useAllTokens, useToken } from 'hooks/Tokens'
 import { useMultiStakingContract, useStakingContract } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useEffect, useMemo, useState } from 'react'
@@ -49,7 +50,7 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
 
   const stakingContract = useStakingContract(isAddress(farmAddress) ? farmAddress : '')
   const multiStakingContract = useMultiStakingContract(isAddress(farmAddress) ? farmAddress : '')
-  const [externalRewardsTokens, setExternalRewardsTokens] = useState<Array<string>>([])
+  const [externalRewardsTokens, setExternalRewardsTokens] = useState<Array<Token>>([])
   const [externalRewardsRates, setExternalRewardsRates] = useState<Array<BigNumber>>([])
   const [externalEarnedAmounts, setExternalEarnedAmounts] = useState<Array<BigNumber>>([])
   const [fetchingMultiStaking, setFetchingMultiStaking] = useState<boolean>(false)
@@ -61,7 +62,7 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
       if (fetchingMultiStaking || !multiStakingContract) {
         return
       }
-      const tokens = []
+      const externalRewardsTokens = []
       const rates = []
       const amounts: BigNumber[] = []
       try {
@@ -81,11 +82,41 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
             MOOLA_STAKING_ABI as ContractInterface,
             provider
           ) as unknown as MoolaStakingRewards
-          const [externalRewardsToken, rewardRate] = await Promise.all([
+          const [rewardsTokenAddress, rewardRate] = await Promise.all([
             moolaStaking.rewardsToken(),
             moolaStaking.rewardRate(),
           ])
-          tokens.push(externalRewardsToken)
+          const token: Token | undefined = rewardsTokenAddress ? tokens[rewardsTokenAddress] : undefined
+          if (token) {
+            externalRewardsTokens.push(token)
+          } else {
+            const tokenContract = new ethers.Contract(
+              rewardsTokenAddress,
+              ERC20_ABI as ContractInterface,
+              provider
+            ) as unknown as Erc20
+            const tokenContractBytes32 = new ethers.Contract(
+              rewardsTokenAddress,
+              ERC20_BYTES32_ABI as ContractInterface,
+              provider
+            ) as unknown as Erc20Bytes32
+            const [tokenName, tokenNameBytes32, symbol, symbolBytes32, decimals] = await Promise.all([
+              tokenContract.name(),
+              tokenContractBytes32.name(),
+              tokenContract.symbol(),
+              tokenContractBytes32.symbol(),
+              tokenContract.decimals(),
+            ])
+            externalRewardsTokens.push(
+              new Token(
+                chainId as number,
+                rewardsTokenAddress,
+                decimals,
+                parseStringOrBytes32(symbol, symbolBytes32, 'UNKNOWN'),
+                parseStringOrBytes32(tokenName, tokenNameBytes32, 'Unknown Token')
+              )
+            )
+          }
           rates.push(rewardRate)
           if (i < externalEarned.length - 1) stakingRewardsAddress = await moolaStaking.externalStakingRewards()
         }
@@ -93,7 +124,7 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
         console.error(err)
       }
       setFetchingMultiStaking(false)
-      setExternalRewardsTokens(tokens)
+      setExternalRewardsTokens(externalRewardsTokens)
       setExternalRewardsRates(rates)
       setExternalEarnedAmounts(amounts)
     }
@@ -107,10 +138,9 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
   const periodFinishSeconds = periodFinish?.toNumber()
   const active =
     periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : false
-  let arrayOfRewardsTokenAddress = useSingleCallResult(stakingContract, 'rewardsToken', [])?.result
-  arrayOfRewardsTokenAddress = arrayOfRewardsTokenAddress
-    ? [...arrayOfRewardsTokenAddress, ...externalRewardsTokens]
-    : externalRewardsTokens
+
+  const rewardTokenAddress = useSingleCallResult(stakingContract, 'rewardsToken', [])?.result?.[0]
+  const rewardToken = useToken(rewardTokenAddress)
 
   let rewardRates: any = useSingleCallResult(stakingContract, 'rewardRate', [])?.result
   rewardRates = rewardRates ? [...rewardRates, ...externalRewardsRates] : externalRewardsRates
@@ -154,14 +184,7 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
 
   const lpPrice = cusdPriceOfULP1 ? cusdPriceOfULP1 : cusdPriceOfULP0
 
-  const rewardTokens: Token[] =
-    arrayOfRewardsTokenAddress && isAddress(farmAddress)
-      ? arrayOfRewardsTokenAddress?.map((rewardsTokenAddress) =>
-          tokens && tokens[rewardsTokenAddress]
-            ? tokens[rewardsTokenAddress]
-            : new Token(chainId as number, rewardsTokenAddress, 18)
-        )
-      : []
+  const rewardTokens: Token[] = rewardToken && isAddress(farmAddress) ? [rewardToken, ...externalRewardsTokens] : []
 
   const cusdPriceOfRewardTokens = useCUSDPrices(rewardTokens)
   const earnedAmounts: TokenAmount[] =

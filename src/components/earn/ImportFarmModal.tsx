@@ -34,7 +34,7 @@ export default function ImportFarmModal({ isOpen, onDismiss, farmSummaries }: Im
   const inputRef = useRef<HTMLInputElement>()
   const theme = useContext(ThemeContext)
   const [farmAddress, setFarmAddress] = useState<string>('')
-  const { stakingToken, rewardTokens, totalRewardRates, valueOfTotalStakedAmountInCUSD } =
+  const { stakingToken, rewardTokens, totalRewardRates, valueOfTotalStakedAmountInCUSD, totalStakedAmount } =
     useCustomStakingInfo(farmAddress)
   const [error, setError] = useState<string | undefined>(undefined)
 
@@ -122,6 +122,11 @@ export default function ImportFarmModal({ isOpen, onDismiss, farmSummaries }: Im
                         currency: 'USD',
                         maximumFractionDigits: 0,
                       })
+                    : totalStakedAmount && stakingToken
+                    ? `${Number(totalStakedAmount.toFixed(0)).toLocaleString(undefined, {
+                        style: 'decimal',
+                        maximumFractionDigits: 0,
+                      })} ${stakingToken.symbol}`
                     : '-'}
                 </Text>
               </RowBetween>

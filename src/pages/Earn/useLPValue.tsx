@@ -16,6 +16,7 @@ interface IStakingPoolValue {
   userValueCUSD?: TokenAmount
   userAmountTokenA?: TokenAmount
   userAmountTokenB?: TokenAmount
+  totalSupplyOfStakingToken?: TokenAmount
 }
 
 export const useLPValue = (stakedAmount: BigNumber, farmSummary: FarmSummary | undefined): IStakingPoolValue => {
@@ -104,5 +105,6 @@ export const useLPValue = (stakedAmount: BigNumber, farmSummary: FarmSummary | u
     userValueCUSD: valueOfUserStakedAmountInCUSD,
     userAmountTokenA,
     userAmountTokenB,
+    totalSupplyOfStakingToken,
   }
 }
