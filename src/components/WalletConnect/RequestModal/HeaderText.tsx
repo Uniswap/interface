@@ -35,7 +35,7 @@ export function HeaderText({
     ) : (
       <Trans t={t}>
         <Text textAlign="center" variant="h3">
-          Allow <Text fontWeight="bold">{dapp.name}</Text> to use your {permitCurrency?.name}?
+          Allow <Text fontWeight="bold">{dapp.name}</Text> to use your {permitCurrency?.symbol}?
         </Text>
       </Trans>
     )

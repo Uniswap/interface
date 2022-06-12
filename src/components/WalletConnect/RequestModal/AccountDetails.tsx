@@ -16,9 +16,11 @@ export function AccountDetails({ address }: { address: string }) {
           {displayName?.name}
         </Text>
       </Flex>
-      <Text color="neutralTextSecondary" variant="body2">
-        {shortenAddress(address)}
-      </Text>
+      {displayName?.type !== 'address' && (
+        <Text color="neutralTextSecondary" variant="body2">
+          {shortenAddress(address)}
+        </Text>
+      )}
     </Flex>
   )
 }
