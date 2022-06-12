@@ -68,7 +68,7 @@ export const Carousel = ({ slides, ...flatListProps }: CarouselProps) => {
           {...flatListProps}
           ref={myRef}
           renderItem={({ item }: ListRenderItemInfo<ReactNode>) => (
-            <Flex centered grow p="lg" width={fullWidth}>
+            <Flex centered grow p="lg" pt="none" width={fullWidth}>
               {item}
             </Flex>
           )}

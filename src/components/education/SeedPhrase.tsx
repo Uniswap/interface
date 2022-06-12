@@ -1,14 +1,22 @@
 import React, { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { Pressable } from 'react-native'
+import { useOnboardingStackNavigation } from 'src/app/navigation/types'
+import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { OnboardingScreens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 
 const { fullWidth } = dimensions
 
 function Page({ text }: { text: ReactNode }) {
+  const navigation = useOnboardingStackNavigation()
+  const onDismiss = () => {
+    navigation.navigate(OnboardingScreens.Backup)
+  }
+
   return (
     <CarouselContext.Consumer>
       {(context) => (
@@ -17,12 +25,23 @@ function Page({ text }: { text: ReactNode }) {
             event.nativeEvent.locationX < fullWidth * 0.33 ? context.goToPrev() : context.goToNext()
           }>
           <Flex centered>
-            <Box flex={0.2} />
-            <Box flex={0.8}>
+            <Flex row alignItems="center" justifyContent="space-between" px="lg" width={fullWidth}>
+              <Text color="neutralTextSecondary" variant="mediumLabel">
+                <Trans>What’s a recovery phrase?</Trans>
+              </Text>
+              <CloseButton
+                color="neutralTextSecondary"
+                size={12}
+                strokeWidth={3}
+                onPress={onDismiss}
+              />
+            </Flex>
+            <Flex flex={0.2} />
+            <Flex flex={0.8} px="lg">
               <Text fontSize={28} lineHeight={34} variant="h2">
                 {text}
               </Text>
-            </Box>
+            </Flex>
           </Flex>
         </Pressable>
       )}
