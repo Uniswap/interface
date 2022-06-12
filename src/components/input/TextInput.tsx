@@ -17,7 +17,7 @@ import {
   useRestyle,
   useTheme,
 } from '@shopify/restyle'
-import React from 'react'
+import React, { RefObject } from 'react'
 import { TextInput as TextInputBase, TextInputProps as BaseTextInputProps } from 'react-native'
 import { Theme } from 'src/styles/theme'
 
@@ -42,9 +42,9 @@ type RestyleProps = TypographyProps<Theme> &
 
 export type TextInputProps = RestyleProps &
   BaseTextInputProps &
-  Required<Pick<BaseTextInputProps, 'onChangeText'>>
+  Required<Pick<BaseTextInputProps, 'onChangeText'>> & { inputRef?: RefObject<TextInputBase> }
 
-export function TextInput({ onChangeText, onBlur, ...rest }: TextInputProps) {
+export function TextInput({ onChangeText, onBlur, inputRef, ...rest }: TextInputProps) {
   const theme = useTheme<Theme>()
 
   // Set defaults for style values
@@ -58,6 +58,7 @@ export function TextInput({ onChangeText, onBlur, ...rest }: TextInputProps) {
 
   return (
     <TextInputBase
+      ref={inputRef}
       autoCompleteType="off"
       onBlur={onBlur}
       onChangeText={onChangeText}

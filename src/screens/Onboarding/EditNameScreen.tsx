@@ -1,18 +1,22 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import { TFunction } from 'i18next'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
+import { AnimatedButton } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccount, usePendingAccounts } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -22,9 +26,11 @@ export function EditNameScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  // avoids `useActiveAccount` since response may be null
   const activeAccount = useActiveAccount()
-  const [newAccountName, setNewAccountName] = useState(activeAccount?.name ?? '')
+  // Reference pending accounts to avoid any lag in saga import.
+  const pendingAccountName = Object.values(usePendingAccounts())[0]?.name
+
+  const [newAccountName, setNewAccountName] = useState<string>(pendingAccountName ?? '')
 
   const onPressNext = () => {
     navigation.navigate(OnboardingScreens.SelectColor)
@@ -57,9 +63,6 @@ export function EditNameScreen({ navigation }: Props) {
           <ActivityIndicator />
         )}
       </Box>
-      <Flex grow justifyContent="flex-end">
-        <Disclaimer />
-      </Flex>
       <Flex justifyContent="flex-end">
         <PrimaryButton
           label={t('Next')}
@@ -73,6 +76,13 @@ export function EditNameScreen({ navigation }: Props) {
   )
 }
 
+const defaultNames = (t: TFunction) => {
+  return [
+    [t('Main Wallet'), t('Test Wallet')],
+    [t('Investing'), t('Savings'), t('NFTs')],
+  ]
+}
+
 function CustomizationSection({
   address,
   accountName,
@@ -82,23 +92,66 @@ function CustomizationSection({
   accountName: string
   setAccountName: Dispatch<SetStateAction<string>>
 }) {
+  const theme = useAppTheme()
+  const { t } = useTranslation()
+  const textInputRef = useRef<NativeTextInput>(null)
+  const [focused, setFocused] = useState(false)
+
+  const focusInputWithKeyboard = () => {
+    textInputRef.current?.focus()
+  }
+
   return (
     <Flex centered gap="lg">
       <Flex centered gap="none" width="100%">
-        <Flex centered row gap="sm" width="100%">
+        <Flex centered row gap="none">
           <TextInput
+            autoFocus={true}
             fontSize={28}
+            inputRef={textInputRef}
             placeholder="Nickname"
+            placeholderTextColor={theme.colors.neutralAction}
             testID="customize/name"
             textAlign="center"
             value={accountName}
-            width="100%"
+            onBlur={() => setFocused(false)}
             onChangeText={(newName) => setAccountName(newName)}
+            onFocus={() => setFocused(true)}
           />
+          {!focused && (
+            <AnimatedButton
+              backgroundColor="translucentBackground"
+              borderRadius="full"
+              entering={FadeIn}
+              exiting={FadeOut}
+              p="sm"
+              onPress={focusInputWithKeyboard}>
+              <PencilIcon />
+            </AnimatedButton>
+          )}
         </Flex>
-        <Text color="deprecated_textColor" opacity={0.7} variant="body1">
+        <Text color="neutralTextSecondary" opacity={0.7} variant="body1">
           {shortenAddress(address)}
         </Text>
+      </Flex>
+      <Flex centered gap="md">
+        {defaultNames(t).map((items, i) => (
+          <Flex key={i} centered row>
+            {items.map((item) => (
+              <TextButton
+                key={item}
+                backgroundColor="translucentBackground"
+                borderRadius="xl"
+                px="md"
+                py="sm"
+                textColor="white"
+                textVariant="smallLabel"
+                onPress={() => setAccountName(item)}>
+                {item}
+              </TextButton>
+            ))}
+          </Flex>
+        ))}
       </Flex>
     </Flex>
   )
