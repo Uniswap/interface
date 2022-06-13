@@ -39,7 +39,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
     <LinkButton
       borderRadius="xs"
       label={name || shortenAddress(address)}
-      px="md"
+      px="xs"
       py="xxs"
       style={{ backgroundColor: opacify(20, theme.colors.black) }}
       textVariant="body2"

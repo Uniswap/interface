@@ -38,7 +38,7 @@ export function ClientDetails({
           borderRadius="xs"
           label={dapp.url}
           mt="xs"
-          px="md"
+          px="xs"
           py="xxs"
           textVariant="caption"
           url={dapp.url}
