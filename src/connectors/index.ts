@@ -83,7 +83,7 @@ const getConnectorListItemForWallet = (wallet: Wallet) => {
   }
 }
 
-export const getHooksForWallet = (wallet: Wallet) => {
+const getHooksForWallet = (wallet: Wallet) => {
   switch (wallet) {
     case Wallet.INJECTED:
       return injectedHooks
