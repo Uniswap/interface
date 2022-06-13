@@ -155,14 +155,7 @@ export default function ImportFarmModal({ isOpen, onDismiss, farmSummaries }: Im
           </AutoColumn>
         </LightCard>
         <ButtonError
-          disabled={
-            !!error ||
-            !!farmExists ||
-            !valueOfTotalStakedAmountInCUSD ||
-            !rewardTokens ||
-            !totalRewardRates ||
-            !stakingToken
-          }
+          disabled={!!error || !!farmExists || !rewardTokens || !totalRewardRates || !stakingToken}
           onClick={onConfirm}
         >
           {error ? error : farmExists ? t('TheFarmAlreadyExists') : t('ImportFarm')}
