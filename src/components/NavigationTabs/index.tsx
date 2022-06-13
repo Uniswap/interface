@@ -129,7 +129,7 @@ export function AddRemoveTabs({
         <ButtonBack width="fit-content" padding="0" onClick={goBack} flex={1}>
           <StyledArrowLeft />
         </ButtonBack>
-        <Flex flex={2} justifyContent="center">
+        <Flex flex={3} justifyContent="center">
           <ActiveText>{creating ? t`Create a new pool` : adding ? t`Add Liquidity` : t`Remove Liquidity`}</ActiveText>
           <QuestionHelper
             text={

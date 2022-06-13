@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
+import { useMedia } from 'react-use'
 const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement; firstRender?: boolean }>`
   position: absolute;
   transition: all ${({ firstRender }) => (firstRender ? '0s' : '0.2s')} ease;
@@ -14,10 +15,10 @@ const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement; fir
 const ToggleElement = styled.span<{
   isActive?: boolean
 }>`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   height: 28px;
-  padding: 6px 12px;
+  padding: 3px 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,6 +27,11 @@ const ToggleElement = styled.span<{
   transition: all 0.2s ease;
   flex: 1;
   cursor: pointer;
+
+  @media screen and (min-width: 450px) {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
 `
 
 const ToggleWrapper = styled.button<{ background?: string }>`
@@ -34,14 +40,19 @@ const ToggleWrapper = styled.button<{ background?: string }>`
   background: ${({ theme }) => theme.buttonBlack};
   display: flex;
   align-items: center;
-  width: fit-content;
+  max-width: 100%;
   outline: none;
   padding: 4px;
-
   border: none;
-  width: 100%;
 `
 
+const SelectWrapper = styled.select`
+  padding: 10px 5px;
+  background: ${({ theme }) => theme.buttonGray};
+  color: ${({ theme }) => theme.text};
+  border-radius: 5px;
+  border: none;
+`
 export interface StaticFeeSelectorProps {
   active?: number
   onChange: (name: number) => void
@@ -56,6 +67,7 @@ export default function StaticFeeSelector({
   const buttonsRef = useRef<any>({})
   const [activeElement, setActiveElement] = useState()
   const firstRender = useRef<boolean>(true)
+  const above400 = useMedia('(min-width:400px)')
   useEffect(() => {
     setTimeout(() => {
       firstRender.current = false
@@ -65,7 +77,7 @@ export default function StaticFeeSelector({
     setActiveElement(buttonsRef.current[active])
   }, [active])
 
-  return (
+  return above400 ? (
     <ToggleWrapper>
       {options.map(option => {
         return (
@@ -83,5 +95,20 @@ export default function StaticFeeSelector({
       })}
       <ToggleButton element={activeElement} firstRender={firstRender.current} />
     </ToggleWrapper>
+  ) : (
+    <SelectWrapper
+      onChange={e => {
+        onChange(parseFloat(e.target.value))
+      }}
+      style={{ background: 'black', color: 'white' }}
+    >
+      {options.map(option => {
+        return (
+          <option key={option.name} value={option.name}>
+            {option.title}
+          </option>
+        )
+      })}
+    </SelectWrapper>
   )
 }
