@@ -1,5 +1,6 @@
 import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { isAddress } from '@ethersproject/address'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
@@ -73,7 +74,7 @@ export interface ProposalData {
   againstCount: CurrencyAmount<Token>
   startBlock: number
   endBlock: number
-  eta: number
+  eta: BigNumber
   details: ProposalDetail[]
   governorIndex: number // index in the governance address array for which this proposal pertains
 }
@@ -302,7 +303,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           againstCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.againstVotes),
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          eta: parseInt(proposal?.result?.eta?.toString()),
+          eta: proposal?.result?.eta,
           details: formattedLogs[i]?.details,
           governorIndex: i >= proposalsV0.length + proposalsV1.length ? 2 : i >= proposalsV0.length ? 1 : 0,
         }

@@ -232,9 +232,9 @@ export default function VotePage({
   const showExecuteButton =
     account &&
     proposalData?.status === ProposalState.QUEUED &&
-    currentBlock &&
+    currentTimestamp &&
     proposalData?.eta &&
-    proposalData.eta <= currentBlock
+    currentTimestamp.gte(proposalData.eta)
 
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
