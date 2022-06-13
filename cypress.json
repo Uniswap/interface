@@ -1,8 +1,0 @@
-{
-  "projectId": "yp82ef",
-  "baseUrl": "http://localhost:3000",
-  "pluginsFile": false,
-  "supportFile": "cypress/support/index.ts",
-  "video": false,
-  "defaultCommandTimeout": 10000
-}

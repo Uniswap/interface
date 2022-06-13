@@ -16,19 +16,17 @@
     "prepare": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "serve": "serve build -l 3000",
     "test": "react-scripts test --coverage",
-    "build:e2e": "env-cmd -f .env yarn build",
-    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress open'",
-    "test:e2e:ci": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
+    "cypress": "cypress"
   },
   "jest": {
-    "collectCoverageFrom": 
-    [
-      "src/components/**/*.ts*", 
-      "src/hooks/**/*.ts*", 
-      "src/lib/hooks/**/*.ts*", 
-      "src/lib/state/**/*.ts*", 
-      "src/lib/utils/**/*.ts*", 
+    "collectCoverageFrom": [
+      "src/components/**/*.ts*",
+      "src/hooks/**/*.ts*",
+      "src/lib/hooks/**/*.ts*",
+      "src/lib/state/**/*.ts*",
+      "src/lib/utils/**/*.ts*",
       "src/pages/**/*.ts*",
       "src/state/**/*.ts*",
       "src/utils/**/*.ts*"
@@ -128,7 +126,7 @@
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
-    "cypress": "^7.7.0",
+    "cypress": "^10.1.0",
     "d3": "^7.0.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
