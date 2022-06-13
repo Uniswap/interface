@@ -73,6 +73,7 @@ export interface ProposalData {
   againstCount: CurrencyAmount<Token>
   startBlock: number
   endBlock: number
+  eta: number
   details: ProposalDetail[]
   governorIndex: number // index in the governance address array for which this proposal pertains
 }
@@ -301,6 +302,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           againstCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.againstVotes),
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
+          eta: parseInt(proposal?.result?.eta?.toString()),
           details: formattedLogs[i]?.details,
           governorIndex: i >= proposalsV0.length + proposalsV1.length ? 2 : i >= proposalsV0.length ? 1 : 0,
         }
@@ -438,6 +440,68 @@ export function useVoteCallback(): {
     [account, addTransaction, latestGovernanceContract, chainId]
   )
   return { voteCallback }
+}
+
+export function useQueueCallback(): {
+  queueCallback: (proposalId: string | undefined) => undefined | Promise<string>
+} {
+  const { account, chainId } = useActiveWeb3React()
+
+  const latestGovernanceContract = useLatestGovernanceContract()
+
+  const addTransaction = useTransactionAdder()
+
+  const queueCallback = useCallback(
+    (proposalId: string | undefined) => {
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      const args = [proposalId]
+      return latestGovernanceContract.estimateGas.queue(...args, {}).then((estimatedGasLimit) => {
+        return latestGovernanceContract
+          .queue(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.QUEUE,
+              governorAddress: latestGovernanceContract.address,
+              proposalId: parseInt(proposalId),
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, latestGovernanceContract, chainId]
+  )
+  return { queueCallback }
+}
+
+export function useExecuteCallback(): {
+  executeCallback: (proposalId: string | undefined) => undefined | Promise<string>
+} {
+  const { account, chainId } = useActiveWeb3React()
+
+  const latestGovernanceContract = useLatestGovernanceContract()
+
+  const addTransaction = useTransactionAdder()
+
+  const executeCallback = useCallback(
+    (proposalId: string | undefined) => {
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      const args = [proposalId]
+      return latestGovernanceContract.estimateGas.execute(...args, {}).then((estimatedGasLimit) => {
+        return latestGovernanceContract
+          .execute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.EXECUTE,
+              governorAddress: latestGovernanceContract.address,
+              proposalId: parseInt(proposalId),
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, latestGovernanceContract, chainId]
+  )
+  return { executeCallback }
 }
 
 export function useCreateProposalCallback(): (

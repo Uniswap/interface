@@ -44,6 +44,14 @@ export function useToggleVoteModal(): () => void {
   return useToggleModal(ApplicationModal.VOTE)
 }
 
+export function useToggleQueueModal(): () => void {
+  return useToggleModal(ApplicationModal.QUEUE)
+}
+
+export function useToggleExecuteModal(): () => void {
+  return useToggleModal(ApplicationModal.EXECUTE)
+}
+
 export function useTogglePrivacyPolicy(): () => void {
   return useToggleModal(ApplicationModal.PRIVACY_POLICY)
 }

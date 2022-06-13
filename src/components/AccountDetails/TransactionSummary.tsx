@@ -17,7 +17,9 @@ import {
   DepositLiquidityStakingTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  ExecuteTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
+  QueueTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   SubmitProposalTransactionInfo,
   TransactionInfo,
@@ -124,6 +126,16 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
         )
     }
   }
+}
+
+function QueueSummary({ info }: { info: QueueTransactionInfo }) {
+  const proposalKey = `${info.governorAddress}/${info.proposalId}`
+  return <Trans>Queue proposal {proposalKey}.</Trans>
+}
+
+function ExecuteSummary({ info }: { info: ExecuteTransactionInfo }) {
+  const proposalKey = `${info.governorAddress}/${info.proposalId}`
+  return <Trans>Execute proposal {proposalKey}.</Trans>
 }
 
 function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInfo }) {
@@ -338,6 +350,12 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.REMOVE_LIQUIDITY_V3:
       return <RemoveLiquidityV3Summary info={info} />
+
+    case TransactionType.QUEUE:
+      return <QueueSummary info={info} />
+
+    case TransactionType.EXECUTE:
+      return <ExecuteSummary info={info} />
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary info={info} />

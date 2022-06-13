@@ -1,6 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
+import ExecuteModal from 'components/vote/ExecuteModal'
+import QueueModal from 'components/vote/QueueModal'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -27,7 +29,13 @@ import {
 } from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
-import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
+import {
+  useModalOpen,
+  useToggleDelegateModal,
+  useToggleExecuteModal,
+  useToggleQueueModal,
+  useToggleVoteModal,
+} from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import {
   ProposalData,
@@ -166,6 +174,14 @@ export default function VotePage({
   const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
 
+  // toggle for showing queue modal
+  const showQueueModal = useModalOpen(ApplicationModal.QUEUE)
+  const toggleQueueModal = useToggleQueueModal()
+
+  // toggle for showing execute modal
+  const showExecuteModal = useModalOpen(ApplicationModal.EXECUTE)
+  const toggleExecuteModal = useToggleExecuteModal()
+
   // get and format date from data
   const currentTimestamp = useCurrentBlockTimestamp()
   const currentBlock = useBlockNumber()
@@ -209,6 +225,17 @@ export default function VotePage({
     proposalData &&
     proposalData.status === ProposalState.ACTIVE
 
+  // we only show the button if there's an account connected and the proposal state is correct
+  const showQueueButton = account && proposalData?.status === ProposalState.SUCCEEDED
+
+  // we only show the button if there's an account connected and the proposal state is correct
+  const showExecuteButton =
+    account &&
+    proposalData?.status === ProposalState.QUEUED &&
+    currentBlock &&
+    proposalData?.eta &&
+    proposalData.eta <= currentBlock
+
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     chainId ? UNI[chainId] : undefined
@@ -242,6 +269,8 @@ export default function VotePage({
           voteOption={voteOption}
         />
         <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
+        <QueueModal isOpen={showQueueModal} onDismiss={toggleQueueModal} proposalId={proposalData?.id} />
+        <ExecuteModal isOpen={showExecuteModal} onDismiss={toggleExecuteModal} proposalId={proposalData?.id} />
         <ProposalInfo gap="lg" justify="start">
           <RowBetween style={{ width: '100%' }}>
             <ArrowWrapper to="/vote">
@@ -289,7 +318,7 @@ export default function VotePage({
               </GreyCard>
             )}
           </AutoColumn>
-          {showVotingButtons ? (
+          {showVotingButtons && (
             <RowFixed style={{ width: '100%', gap: '12px' }}>
               <ButtonPrimary
                 padding="8px"
@@ -312,8 +341,32 @@ export default function VotePage({
                 <Trans>Vote Against</Trans>
               </ButtonPrimary>
             </RowFixed>
-          ) : (
-            ''
+          )}
+          {showQueueButton && (
+            <RowFixed style={{ width: '100%', gap: '12px' }}>
+              <ButtonPrimary
+                padding="8px"
+                $borderRadius="8px"
+                onClick={() => {
+                  toggleQueueModal()
+                }}
+              >
+                <Trans>Queue</Trans>
+              </ButtonPrimary>
+            </RowFixed>
+          )}
+          {showExecuteButton && (
+            <RowFixed style={{ width: '100%', gap: '12px' }}>
+              <ButtonPrimary
+                padding="8px"
+                $borderRadius="8px"
+                onClick={() => {
+                  toggleExecuteModal()
+                }}
+              >
+                <Trans>Execute</Trans>
+              </ButtonPrimary>
+            </RowFixed>
           )}
           <CardWrapper>
             <StyledDataCard>
