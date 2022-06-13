@@ -1,22 +1,13 @@
 import { useHeaderHeight } from '@react-navigation/elements'
-import { AnyAction } from '@reduxjs/toolkit'
-import { impactAsync } from 'expo-haptics'
-import React, { PropsWithChildren, useReducer, useState } from 'react'
+import React, { PropsWithChildren, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { ChangeNetworkModal } from 'src/components/Network/ChangeNetworkModal'
-import { ChainId } from 'src/constants/chains'
-import { ModalName } from 'src/features/telemetry/constants'
-import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { HeaderWithNetworkSelector } from 'src/features/transactions/swap/HeaderWithNetworkSelector'
-import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
+import { SheetScreenHeader } from 'src/features/transactions/swap/SheetScreenHeader'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import {
-  CurrencyField,
   initialState,
   TransactionState,
   transactionStateReducer,
@@ -33,37 +24,28 @@ export function SwapScreen({ route }: AppStackScreenProp<Screens.Swap>) {
   const { t } = useTranslation()
 
   return (
-    <SheetWithNetworkSelector dispatch={dispatch} label={t('Swap')} state={state}>
+    <SheetScreenWithHeader label={t('Swap')} state={state}>
       <SwapForm dispatch={dispatch} state={state} />
-    </SheetWithNetworkSelector>
+    </SheetScreenWithHeader>
   )
 }
 
-interface SheetWithNetworkSelectorProps {
-  dispatch: React.Dispatch<AnyAction>
+interface SheetScreenWithHeaderProps {
   label: string
   state: Readonly<TransactionState>
 }
 
 // TODO: export to new file once swapform reducer is finalized
-export function SheetWithNetworkSelector({
+export function SheetScreenWithHeader({
   children,
-  dispatch,
   label,
   state,
-}: PropsWithChildren<SheetWithNetworkSelectorProps>) {
+}: PropsWithChildren<SheetScreenWithHeaderProps>) {
   const navigation = useAppStackNavigation()
 
   const headerHeight = useHeaderHeight()
-  const [showNetworkModal, setShowNetworkModal] = useState(false)
-  const onCloseNetworkModal = () => setShowNetworkModal(false)
 
   const chainId = state[state.exactCurrencyField]?.chainId
-  const { onSelectCurrency } = useSwapActionHandlers(dispatch)
-
-  const setChainId = (newChainId: ChainId) => {
-    onSelectCurrency(CurrencyField.INPUT, NativeCurrency.onChain(newChainId))
-  }
 
   return (
     <SheetScreen>
@@ -73,29 +55,15 @@ export function SheetWithNetworkSelector({
         style={flex.fill}>
         <ScrollView contentContainerStyle={flex.grow} keyboardShouldPersistTaps="always">
           <Box flex={1}>
-            <HeaderWithNetworkSelector
+            <SheetScreenHeader
               chainId={chainId}
               label={label}
               onPressBack={() => navigation.goBack()}
-              onPressNetwork={() => {
-                impactAsync()
-                setShowNetworkModal(true)
-              }}
             />
             {children}
           </Box>
         </ScrollView>
       </KeyboardAvoidingView>
-      <BottomSheetModal
-        isVisible={showNetworkModal}
-        name={ModalName.NetworkSelector}
-        onClose={onCloseNetworkModal}>
-        <ChangeNetworkModal
-          chainId={chainId}
-          setChainId={setChainId}
-          onPressClose={onCloseNetworkModal}
-        />
-      </BottomSheetModal>
     </SheetScreen>
   )
 }

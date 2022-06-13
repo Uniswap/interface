@@ -8,7 +8,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
 import { Screens } from 'src/screens/Screens'
-import { SheetWithNetworkSelector } from 'src/screens/SwapScreen'
+import { SheetScreenWithHeader } from 'src/screens/SwapScreen'
 
 export function TransferTokenScreen({ route }: AppStackScreenProp<Screens.Transfer>) {
   const [state, dispatch] = useReducer(
@@ -19,8 +19,8 @@ export function TransferTokenScreen({ route }: AppStackScreenProp<Screens.Transf
   const { t } = useTranslation()
 
   return (
-    <SheetWithNetworkSelector dispatch={dispatch} label={t('Send')} state={state}>
+    <SheetScreenWithHeader label={t('Send')} state={state}>
       <TransferTokenForm dispatch={dispatch} state={state as TransactionState} />
-    </SheetWithNetworkSelector>
+    </SheetScreenWithHeader>
   )
 }
