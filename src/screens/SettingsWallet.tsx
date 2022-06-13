@@ -22,6 +22,15 @@ import { Switch } from 'src/components/buttons/Switch'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { useAppDispatch } from 'src/app/hooks'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { opacify } from 'src/utils/colors'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { ModalName } from 'src/features/telemetry/constants'
+import { Flex } from 'src/components/layout'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
+import { useSignerAccounts } from 'src/features/wallet/hooks'
+
+const ALERT_ICON_SIZE = 32
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
 
@@ -33,8 +42,10 @@ export function SettingsWallet({
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const theme = useTheme()
+  const signerAccounts = useSignerAccounts()
   const navigation = useSettingsStackNavigation()
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
+  const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
 
   const onChangeNotificationSettings = (enabled: boolean) => {
     setNotificationsEnabled(enabled)
@@ -45,6 +56,16 @@ export function SettingsWallet({
         address,
       })
     )
+  }
+
+  const removeWallet = () => {
+    dispatch(
+      editAccountActions.trigger({
+        type: EditAccountAction.Remove,
+        address,
+      })
+    )
+    navigation.goBack()
   }
 
   const sections: SettingsSection[] = [
@@ -85,23 +106,73 @@ export function SettingsWallet({
 
   return (
     <Screen px="lg" py="sm">
-      <Box alignItems="center" flexDirection="row" mb="lg">
-        <BackButton mr="md" />
-        <AddressDisplay address={address} variant="body1" verticalGap="none" />
+      <Box flex={1}>
+        <Flex row alignItems="center" mb="lg">
+          <BackButton />
+          <AddressDisplay address={address} variant="body1" verticalGap="none" />
+        </Flex>
+        <SectionList
+          keyExtractor={(_item, index) => 'wallet_settings' + index}
+          renderItem={renderItem}
+          renderSectionHeader={({ section: { subTitle } }) => (
+            <Box bg="mainBackground" pb="md">
+              <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+                {subTitle}
+              </Text>
+            </Box>
+          )}
+          sections={sections}
+          showsVerticalScrollIndicator={false}
+        />
       </Box>
-      <SectionList
-        keyExtractor={(_item, index) => 'wallet_settings' + index}
-        renderItem={renderItem}
-        renderSectionHeader={({ section: { subTitle } }) => (
-          <Box bg="mainBackground" pb="md">
-            <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
-              {subTitle}
+      {signerAccounts.length > 1 && (
+        <PrimaryButton
+          label={t('Remove wallet')}
+          style={{ backgroundColor: opacify(15, theme.colors.accentBackgroundFailure) }}
+          textColor="accentBackgroundFailure"
+          width="100%"
+          onPress={() => setShowRemoveWalletModal(true)}
+        />
+      )}
+      <BottomSheetModal
+        backgroundColor={theme.colors.neutralSurface}
+        isVisible={showRemoveWalletModal}
+        name={ModalName.RemoveWallet}
+        onClose={() => setShowRemoveWalletModal(false)}>
+        <Flex centered gap="xl" px="md" py="lg">
+          <Flex centered gap="xs">
+            <AlertTriangle
+              color={theme.colors.accentBackgroundWarning}
+              height={ALERT_ICON_SIZE}
+              width={ALERT_ICON_SIZE}
+            />
+            <Text mt="xs" variant="mediumLabel">
+              {t('Are you sure?')}
             </Text>
-          </Box>
-        )}
-        sections={sections}
-        showsVerticalScrollIndicator={false}
-      />
+            <Text color="neutralTextSecondary" textAlign="center" variant="body2">
+              {t(
+                'You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.'
+              )}
+            </Text>
+          </Flex>
+          <Flex row mb="md">
+            <PrimaryButton
+              flex={1}
+              label={t('Cancel')}
+              style={{ backgroundColor: theme.colors.neutralContainer }}
+              textColor="neutralTextPrimary"
+              onPress={() => setShowRemoveWalletModal(false)}
+            />
+            <PrimaryButton
+              flex={1}
+              label={t('Remove')}
+              style={{ backgroundColor: opacify(10, theme.colors.accentBackgroundFailure) }}
+              textColor="accentBackgroundFailure"
+              onPress={removeWallet}
+            />
+          </Flex>
+        </Flex>
+      </BottomSheetModal>
     </Screen>
   )
 }

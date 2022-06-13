@@ -313,6 +313,8 @@
   "Edit nickname or theme": "Edit nickname or theme",
   "Nickname": "Nickname",
   "Theme": "Theme",
+  "Remove wallet": "Remove wallet",
+  "You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.": "You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.",
   "Hide": "Hide",
   "Wallet Support": "Wallet Support",
   "Recent logs": "Recent logs",
