@@ -1716,7 +1716,7 @@ msgstr ""
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Minimum Received"
-msgstr "收到的最小值<<<<<<< HEAD======="
+msgstr "收到的最小值"
 
 #: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/components/swapv2/SwapModalFooter.tsx
@@ -3141,11 +3141,11 @@ msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/pages/RemoveLiquidityProAmm/index.tsx
 msgid "You can remove your liquidity here. When you remove liquidity (even partially), you will receive 100% of your fee earnings"
-msgstr ">>>>>>> main"
+msgstr ""
 
 #: src/pages/CreatePool/FeeTypeSelector.tsx
 #: src/pages/CreatePool/index.tsx

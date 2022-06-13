@@ -19,6 +19,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import { useWindowSize } from 'hooks/useWindowSize'
 // import { MouseoverTooltip } from 'components/Tooltip'
+import AboutPageDropdown from 'components/AboutPageDropDown'
 
 const HeaderFrame = styled.div`
   display: grid;
