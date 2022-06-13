@@ -23,7 +23,7 @@ export function Container({ children, ...trace }: PropsWithChildren<ComponentPro
 
 // Header
 interface HeaderProps {
-  title: string
+  title: string | ReactNode
   subtitle?: string | ReactNode
   buttonLabel: string
   expanded: boolean
@@ -41,11 +41,15 @@ function Header({ buttonLabel, expanded, onMaximize, onMinimize, subtitle, title
     <TextButton mx="md" onPress={onPress}>
       <Flex gap="xxs" width="100%">
         <Flex row alignItems="center" justifyContent="space-between" width="100%">
-          <Text
-            color={expanded ? 'neutralTextPrimary' : 'neutralTextSecondary'}
-            variant={expanded ? 'h3' : 'body2'}>
-            {title}
-          </Text>
+          {typeof title === 'string' ? (
+            <Text
+              color={expanded ? 'neutralTextPrimary' : 'neutralTextSecondary'}
+              variant={expanded ? 'h3' : 'body2'}>
+              {title}
+            </Text>
+          ) : (
+            title
+          )}
 
           {expanded ? (
             <Chevron

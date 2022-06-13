@@ -10,10 +10,11 @@ import { Asset, OrderBy } from 'src/features/dataApi/zerion/types'
 import { Screens } from 'src/screens/Screens'
 
 export interface BaseTokenSectionProps {
-  onCycleMetadata: () => void
+  displayFavorites?: boolean
   expanded?: boolean
   fixedCount?: number
   metadataDisplayType: string
+  onCycleMetadata: () => void
   orderBy?: OrderBy
 }
 
@@ -22,7 +23,7 @@ type GenericTokenSectionProps = BaseTokenSectionProps & {
   horizontal?: boolean
   id: string
   loading?: boolean
-  title: string
+  title: string | ReactNode
   subtitle?: string | ReactNode
   renderItem: FlatListProps<Asset>['renderItem']
 }
@@ -30,6 +31,7 @@ type GenericTokenSectionProps = BaseTokenSectionProps & {
 /** Renders a token section inside a Flatlist with expand behavior */
 export function GenericTokenSection({
   assets,
+  displayFavorites,
   expanded,
   fixedCount,
   horizontal,
@@ -47,7 +49,7 @@ export function GenericTokenSection({
     if (expanded) {
       navigation.navigate(Screens.Explore)
     } else {
-      navigation.navigate(Screens.ExploreTokens)
+      navigation.navigate(Screens.ExploreTokens, { displayFavorites })
     }
   }
 

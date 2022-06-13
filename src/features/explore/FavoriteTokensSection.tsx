@@ -2,27 +2,29 @@ import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
-import { Box } from 'src/components/layout'
+import { Heart } from 'src/components/icons/Heart'
+import { Box, Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { Asset } from 'src/features/dataApi/zerion/types'
-import { SortingGroup } from 'src/features/explore/FilterGroup'
 import {
   BaseTokenSectionProps,
   GenericTokenSection,
 } from 'src/features/explore/GenericTokenSection'
 import { useFavoriteTokenInfo } from 'src/features/explore/hooks'
-import { useOrderByModal } from 'src/features/explore/Modals'
 import { TokenItemBox } from 'src/features/explore/TokenItem'
 import { Screens } from 'src/screens/Screens'
 import { buildCurrencyId } from 'src/utils/currencyId'
+
+const HEART_SIZE_EXPANDED = 20
+const HEART_SIZE_MINIMIZED = 16
 
 /** Renders the favorite tokens section on the Explore page */
 export function FavoriteTokensSection(props: BaseTokenSectionProps) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
 
-  const { orderBy, toggleModalVisible, orderByModal } = useOrderByModal()
-  const { currentData: favorites, isLoading, isFetching } = useFavoriteTokenInfo(orderBy)
+  const { currentData: favorites, isLoading, isFetching } = useFavoriteTokenInfo()
 
   const renderItem = useCallback(
     ({ item: token, index }: ListRenderItemInfo<Asset>) => {
@@ -50,15 +52,26 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
     <Box mb="sm">
       <GenericTokenSection
         {...props}
+        displayFavorites
         horizontal
         assets={favorites?.info}
         id="explore-favorites-header"
         loading={isLoading || isFetching}
         renderItem={renderItem}
-        subtitle={props.expanded ? <SortingGroup onPressOrderBy={toggleModalVisible} /> : undefined}
-        title={t('Favorites tokens')}
+        title={
+          <Flex row alignItems="center" gap="xs">
+            <Heart
+              active={true}
+              size={props.expanded ? HEART_SIZE_EXPANDED : HEART_SIZE_MINIMIZED}
+            />
+            <Text
+              color={props.expanded ? 'neutralTextPrimary' : 'neutralTextSecondary'}
+              variant={props.expanded ? 'h3' : 'body2'}>
+              {t('Favorite tokens')}
+            </Text>
+          </Flex>
+        }
       />
-      {orderByModal}
     </Box>
   )
 }
