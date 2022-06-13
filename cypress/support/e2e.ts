@@ -9,6 +9,8 @@
 import './ethereum'
 
 beforeEach(() => {
+  // Infura security policies are based on Origin headers.
+  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
   cy.intercept(/infura.io/, (res) => {
     res.headers['origin'] = 'http://localhost:3000'
     res.continue()
