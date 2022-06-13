@@ -52,7 +52,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
   const theme = useContext(ThemeContext)
 
   // wrapper to reset state on modal close
-  function wrappedOndismiss() {
+  function wrappedOnDismiss() {
     setHash(undefined)
     setAttempting(false)
     onDismiss()
@@ -76,7 +76,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOndismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
@@ -84,7 +84,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
               <ThemedText.MediumHeader fontWeight={500}>
                 <Trans>Execute Proposal {proposalId}</Trans>
               </ThemedText.MediumHeader>
-              <StyledClosed onClick={wrappedOndismiss} />
+              <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
             <RowBetween>
               <ThemedText.Body>
@@ -103,7 +103,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
         <ConfirmOrLoadingWrapper>
           <RowBetween>
             <div />
-            <StyledClosed onClick={wrappedOndismiss} />
+            <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
             <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
@@ -124,7 +124,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
         <ConfirmOrLoadingWrapper>
           <RowBetween>
             <div />
-            <StyledClosed onClick={wrappedOndismiss} />
+            <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
             <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
@@ -132,7 +132,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
               <ThemedText.LargeHeader>
-                <Trans>Transaction Submitted</Trans>
+                <Trans>Execution Submitted</Trans>
               </ThemedText.LargeHeader>
             </AutoColumn>
             {chainId && (

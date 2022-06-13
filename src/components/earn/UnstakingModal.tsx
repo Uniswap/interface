@@ -42,7 +42,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
-  function wrappedOndismiss() {
+  function wrappedOnDismiss() {
     setHash(undefined)
     setAttempting(false)
     onDismiss()
@@ -79,14 +79,14 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOndismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
             <ThemedText.MediumHeader>
               <Trans>Withdraw</Trans>
             </ThemedText.MediumHeader>
-            <CloseIcon onClick={wrappedOndismiss} />
+            <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           {stakingInfo?.stakedAmount && (
             <AutoColumn justify="center" gap="md">
@@ -117,7 +117,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         </ContentWrapper>
       )}
       {attempting && !hash && (
-        <LoadingView onDismiss={wrappedOndismiss}>
+        <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <ThemedText.Body fontSize={20}>
               <Trans>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2</Trans>
@@ -129,7 +129,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         </LoadingView>
       )}
       {hash && (
-        <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <ThemedText.LargeHeader>
               <Trans>Transaction Submitted</Trans>
