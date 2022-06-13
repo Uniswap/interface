@@ -6,6 +6,8 @@ The home of the official Uniswap mobile app for iOS and Android!
 
 ### Setup
 
+I (@judo) recommend setting up your M1 Mac without Rosetta: [link](https://medium.com/@davidjasonharding/developing-a-react-native-app-on-an-m1-mac-without-rosetta-29fcc7314d70).
+
 #### Package Manager
 
 Install the [yarn package manager](https://yarnpkg.com/getting-started/install) for Javascript,
@@ -31,6 +33,17 @@ export USE_FLIPPER=1
 ```
 
 Run `yarn` to install packages, then run `pod install` in the `/ios` directory.
+
+### Important Libraries
+
+Get familiar with the following (no particular order):
+
+* [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/): state management
+* [redux-saga](https://redux-saga.js.org/) & [typed-redux-saga](https://github.com/agiledigital/typed-redux-saga): Redux side effect manager -- used for complex/stateful network calls
+* [ethers](https://docs.ethers.io/v5/)
+* [Shopify/restyle](https://github.com/Shopify/restyle): UI framework
+* [React navigation](https://reactnavigation.org/): routing and navigation with animations and gestures
+* [react-i18next](https://react.i18next.com/): i18n
 
 #### Storybook
 
