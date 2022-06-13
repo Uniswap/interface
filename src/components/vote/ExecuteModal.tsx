@@ -86,6 +86,11 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
               </ThemedText.MediumHeader>
               <StyledClosed onClick={wrappedOndismiss} />
             </RowBetween>
+            <RowBetween>
+              <ThemedText.Body>
+                <Trans>Executing this proposal will enact the calldata on-chain.</Trans>
+              </ThemedText.Body>
+            </RowBetween>
             <ButtonPrimary onClick={onExecute}>
               <ThemedText.MediumHeader color="white">
                 <Trans>Execute</Trans>
