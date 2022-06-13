@@ -7,3 +7,10 @@
 
 // Import commands.ts using ES2015 syntax:
 import './ethereum'
+
+beforeEach(() => {
+  cy.intercept(/infura.io/, (res) => {
+    res.headers['origin'] = 'http://localhost:3000'
+    res.continue()
+  })
+})
