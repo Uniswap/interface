@@ -20,7 +20,7 @@ import {
   Fraction,
   JSBI,
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
+import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -111,6 +111,7 @@ export default function ZapOut({
     insufficientLiquidity,
     price,
     error,
+    isStaticFeePair,
   } = useDerivedZapOutInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
   const { onUserInput: _onUserInput, onSwitchField } = useZapOutActionHandlers()
 
@@ -164,7 +165,7 @@ export default function ZapOut({
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(
     parsedAmounts[Field.LIQUIDITY],
-    !!chainId ? ZAP_ADDRESSES[chainId] : undefined,
+    !!chainId ? (isStaticFeePair ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId]) : undefined,
   )
 
   const isArgentWallet = useIsArgentWallet()
@@ -204,7 +205,7 @@ export default function ZapOut({
     ]
     const message = {
       owner: account,
-      spender: ZAP_ADDRESSES[chainId],
+      spender: isStaticFeePair ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId],
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber(),
@@ -263,7 +264,7 @@ export default function ZapOut({
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
     }
-    const router = getZapContract(chainId, library, account)
+    const routerContract = getZapContract(chainId, library, account, isStaticFeePair)
 
     if (!currencyA || !currencyB) throw new Error('missing tokens')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
@@ -347,7 +348,7 @@ export default function ZapOut({
 
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
-        router.estimateGas[methodName](...args)
+        routerContract.estimateGas[methodName](...args)
           .then(calculateGasMargin)
           .catch(err => {
             // we only care if the error is something other than the user rejected the tx
@@ -381,7 +382,7 @@ export default function ZapOut({
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
       setAttemptingTxn(true)
-      await router[methodName](...args, {
+      await routerContract[methodName](...args, {
         gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {

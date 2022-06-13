@@ -1,4 +1,3 @@
-import { useFactoryContract } from 'hooks/useContract'
 import { ChainId, Pair, Token } from '@dynamic-amm/sdk'
 import { Pair as PairUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
 import { Pair as PairSUSHI, Token as TokenSUSHI } from '@sushiswap/sdk'
@@ -37,6 +36,7 @@ import { isAddress } from 'utils'
 import { useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { defaultShowLiveCharts } from './reducer'
+import { useStaticFeeFactoryContract, useDynamicFeeFactoryContract } from 'hooks/useContract'
 
 function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo): SerializedToken {
   return {
@@ -307,19 +307,42 @@ export function toV2LiquidityTokenSushi([tokenA, tokenB]: [Token, Token]): Token
 export function useToV2LiquidityTokens(
   tokenCouples: [Token, Token][],
 ): { liquidityTokens: []; tokens: [Token, Token] }[] {
-  const contract = useFactoryContract()
-  const result = useSingleContractMultipleData(
-    contract,
+  const staticContract = useStaticFeeFactoryContract()
+  const dynamicContract = useDynamicFeeFactoryContract()
+  const result1 = useSingleContractMultipleData(
+    staticContract,
     'getPools',
     tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
   )
-  return result.map((result, index) => ({
-    tokens: tokenCouples[index],
-    liquidityTokens:
-      result.result?.[0].map(
-        (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP'),
-      ) || [],
-  }))
+  const result2 = useSingleContractMultipleData(
+    dynamicContract,
+    'getPools',
+    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
+  )
+  const result = useMemo(
+    () =>
+      result1?.map((call, index) => {
+        return {
+          ...call,
+          result: [call.result?.[0].concat(result2?.[index]?.result?.[0] || [])],
+        }
+      }),
+    [result1, result2],
+  )
+  return useMemo(
+    () =>
+      result.map((result, index) => {
+        return {
+          tokens: tokenCouples[index],
+          liquidityTokens: result?.result?.[0]
+            ? result.result[0].map(
+                (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP'),
+              )
+            : [],
+        }
+      }),
+    [tokenCouples],
+  )
 }
 
 /**

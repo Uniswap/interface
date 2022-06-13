@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 import { ChainId } from '@dynamic-amm/sdk'
-import { BUNDLE_ID, FACTORY_ADDRESSES } from '../constants'
+import { BUNDLE_ID, STATIC_FEE_FACTORY_ADDRESSES, DYNAMIC_FEE_FACTORY_ADDRESSES } from '../constants'
 
 export const SUBGRAPH_BLOCK_NUMBER = () => gql`
   query block_number {
@@ -46,10 +46,14 @@ export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
 }
 
 export const GLOBAL_DATA = (chainId: ChainId, block?: number) => {
+  const factoryIdsString = [STATIC_FEE_FACTORY_ADDRESSES[chainId], DYNAMIC_FEE_FACTORY_ADDRESSES[chainId]]
+    .map(address => `"${address ? address.toLowerCase() : ''}"`)
+    .join(',')
+
   const queryString = `query dmmFactories {
     dmmFactories(
        ${block ? `block: { number: ${block}}` : ``}
-       where: { id: "${FACTORY_ADDRESSES[chainId as ChainId].toLowerCase()}" }) {
+       where: { id_in: [${factoryIdsString}] }) {
         id
         totalVolumeUSD
         totalFeeUSD

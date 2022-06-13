@@ -16,7 +16,7 @@ import TransactionConfirmationModal, {
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, AMP_HINT } from '../../constants'
+import { AMP_HINT, STATIC_FEE_ROUTER_ADDRESSES, DYNAMIC_FEE_ROUTER_ADDRESSES } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -29,7 +29,13 @@ import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, usePairAdderByTokens, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from '../../utils'
+import {
+  calculateGasMargin,
+  calculateSlippageAmount,
+  formattedNum,
+  getDynamicFeeRouterContract,
+  getStaticFeeRouterContract,
+} from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { Dots, Wrapper } from '../Pool/styleds'
@@ -140,15 +146,15 @@ const TokenPair = ({
     {},
   )
 
+  const routerAddress = chainId
+    ? isStaticFeePair
+      ? STATIC_FEE_ROUTER_ADDRESSES[chainId]
+      : DYNAMIC_FEE_ROUTER_ADDRESSES[chainId]
+    : undefined
+
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_A],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
-  )
-  const [approvalB, approveBCallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_B],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
-  )
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], routerAddress)
 
   const addTransactionWithType = useTransactionAdder()
   const addPair = usePairAdderByTokens()
@@ -156,7 +162,9 @@ const TokenPair = ({
   async function onAdd() {
     // if (!pair) return
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    const router = isStaticFeePair
+      ? getStaticFeeRouterContract(chainId, library, account)
+      : getDynamicFeeRouterContract(chainId, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {

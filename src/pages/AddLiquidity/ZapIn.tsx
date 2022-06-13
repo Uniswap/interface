@@ -18,7 +18,7 @@ import {
   TokenAmount,
   WETH,
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES, AMP_HINT } from 'constants/index'
+import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, AMP_HINT } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
@@ -172,7 +172,7 @@ const ZapIn = ({
 
   const [approval, approveCallback] = useApproveCallback(
     amountToApprove,
-    !!chainId ? ZAP_ADDRESSES[chainId] : undefined,
+    !!chainId ? (isStaticFeePair ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId]) : undefined,
   )
 
   const userInCurrencyAmount: CurrencyAmount | undefined = useMemo(() => {
@@ -190,7 +190,7 @@ const ZapIn = ({
   const addTransactionWithType = useTransactionAdder()
   async function onZapIn() {
     if (!chainId || !library || !account) return
-    const zapContract = getZapContract(chainId, library, account)
+    const zapContract = getZapContract(chainId, library, account, isStaticFeePair)
 
     if (!chainId || !account) {
       return

@@ -1,4 +1,4 @@
-import { KS_FACTORY_ADDRESSES, ONLY_STATIC_FEE_CHAINS } from './../constants/index'
+import { STATIC_FEE_FACTORY_ADDRESSES } from './../constants/index'
 import { TokenAmount, Pair, Currency, JSBI, Token, DMMPool } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { Interface } from '@ethersproject/abi'
@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../hooks'
 
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { useFactoryContract } from 'hooks/useContract'
+import { useStaticFeeFactoryContract, useDynamicFeeFactoryContract } from 'hooks/useContract'
 
 export enum PairState {
   LOADING,
@@ -15,7 +15,9 @@ export enum PairState {
   INVALID,
 }
 
-export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][][] {
+export function usePairs(
+  currencies: [Currency | undefined, Currency | undefined][],
+): [PairState, Pair | null, boolean?][][] {
   const { chainId } = useActiveWeb3React()
 
   const tokens = useMemo(
@@ -27,10 +29,18 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     [chainId, currencies],
   )
 
-  const contract = useFactoryContract()
+  const staticContract = useStaticFeeFactoryContract()
+  const dynamicContract = useDynamicFeeFactoryContract()
 
-  const ress = useSingleContractMultipleData(
-    contract,
+  const staticRess = useSingleContractMultipleData(
+    staticContract,
+    'getPools',
+    tokens
+      .filter(([tokenA, tokenB]) => tokenA && tokenB && !tokenA.equals(tokenB))
+      .map(([tokenA, tokenB]) => [tokenA?.address, tokenB?.address]),
+  )
+  const dynamicRess = useSingleContractMultipleData(
+    dynamicContract,
     'getPools',
     tokens
       .filter(([tokenA, tokenB]) => tokenA && tokenB && !tokenA.equals(tokenB))
@@ -40,7 +50,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   let start = 0
   tokens.forEach(([tokenA, tokenB]) => {
     if (!!(tokenA && tokenB && !tokenA.equals(tokenB))) {
-      result.push(ress[start])
+      result.push(staticRess[start])
+      result.push(dynamicRess[start])
       start += 1
     } else {
       result.push('')
@@ -56,6 +67,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   }, [])
   const results = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'getTradeInfo')
   const ampResults = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'ampBps')
+  const factories = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'factory')
   return useMemo(() => {
     start = 0
     const vv: any[] = []
@@ -67,6 +79,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         for (let j = 0; j < len; j++) {
           const { result: reserves, loading } = results[start]
           const { result: amp, loading: loadingAmp } = ampResults[start]
+          const { result: factoryAddresses } = factories[start]
           if (loading || loadingAmp) {
             vv[vv.length - 1].push([PairState.LOADING, null])
           } else if (!tokenA || !tokenB || tokenA.equals(tokenB)) {
@@ -76,6 +89,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
           } else {
             const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
             const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+            const isStaticFeePair =
+              chainId && factoryAddresses && factoryAddresses[0] === STATIC_FEE_FACTORY_ADDRESSES[chainId]
             vv[vv.length - 1].push([
               PairState.EXISTS,
               new Pair(
@@ -87,6 +102,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
                 JSBI.BigInt(feeInPrecision),
                 JSBI.BigInt(amp[0]),
               ),
+              isStaticFeePair,
             ])
           }
           start += 1
@@ -132,9 +148,7 @@ export function usePairsByAddress(
       const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       const isStaticFeePair =
-        chainId &&
-        ((factoryAddresses && factoryAddresses[0] === KS_FACTORY_ADDRESSES[chainId]) ||
-          ONLY_STATIC_FEE_CHAINS.includes(chainId))
+        chainId && factoryAddresses && factoryAddresses[0] === STATIC_FEE_FACTORY_ADDRESSES[chainId]
       return [
         PairState.EXISTS,
         new Pair(
@@ -152,7 +166,7 @@ export function usePairsByAddress(
   }, [results, ampResults, factories])
 }
 
-export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null][] {
+export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null, boolean?][] {
   return usePairs([[tokenA, tokenB]])[0]
 }
 
@@ -171,20 +185,28 @@ export function useUnAmplifiedPairs(currencies: [Currency | undefined, Currency 
       ]),
     [chainId, currencies],
   )
-  const contract = useFactoryContract()
-  const ress = useSingleContractMultipleData(
-    contract,
+  const staticContract = useStaticFeeFactoryContract()
+  const dynamicContract = useDynamicFeeFactoryContract()
+  const staticRess = useSingleContractMultipleData(
+    staticContract,
+    'getUnamplifiedPool',
+    tokens
+      .filter(([tokenA, tokenB]) => tokenA && tokenB && !tokenA.equals(tokenB))
+      .map(([tokenA, tokenB]) => [tokenA?.address, tokenB?.address]),
+  )
+  const dynamicRess = useSingleContractMultipleData(
+    dynamicContract,
     'getUnamplifiedPool',
     tokens
       .filter(([tokenA, tokenB]) => tokenA && tokenB && !tokenA.equals(tokenB))
       .map(([tokenA, tokenB]) => [tokenA?.address, tokenB?.address]),
   )
   return useMemo(() => {
-    return ress.map(res => {
+    return [...staticRess, ...dynamicRess].map(res => {
       const { result } = res
       return result?.[0]
     })
-  }, [tokens, ress])
+  }, [tokens, staticRess, dynamicRess])
 }
 
 export function useUnAmplifiedPairsFull(

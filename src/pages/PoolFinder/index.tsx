@@ -37,7 +37,7 @@ export default function PoolFinder() {
   const [currency0, setCurrency0] = useState<Currency | null>(ETHER)
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
-  const pairs: [PairState, Pair | null][] = usePair(currency0 ?? undefined, currency1 ?? undefined)
+  const pairs: [PairState, Pair | null, boolean?][] = usePair(currency0 ?? undefined, currency1 ?? undefined)
   const addPair = usePairAdderByTokens()
   useEffect(() => {
     if (pairs.length > 0) {

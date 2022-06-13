@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useZapContract } from 'hooks/useContract'
 
-const useZap = () => {
-  const zapContract = useZapContract()
+const useZap = (isStaticFeeContract: boolean) => {
+  const zapContract = useZapContract(isStaticFeeContract)
 
   const calculateZapInAmounts = useCallback(
     async (tokenIn: string, tokenOut: string, pool: string, userIn: BigNumber) => {
@@ -40,8 +40,14 @@ const useZap = () => {
   }
 }
 
-export const useZapInAmounts = (tokenIn?: string, tokenOut?: string, pool?: string, userIn?: BigNumber) => {
-  const { calculateZapInAmounts } = useZap()
+export const useZapInAmounts = (
+  isStaticFeeContract: boolean,
+  tokenIn?: string,
+  tokenOut?: string,
+  pool?: string,
+  userIn?: BigNumber,
+) => {
+  const { calculateZapInAmounts } = useZap(isStaticFeeContract)
   const [result, setResult] = useState<{
     amounts: {
       tokenInAmount: BigNumber
@@ -96,8 +102,14 @@ export const useZapInAmounts = (tokenIn?: string, tokenOut?: string, pool?: stri
   return result
 }
 
-export const useZapOutAmount = (tokenIn?: string, tokenOut?: string, pool?: string, lpQty?: BigNumber) => {
-  const { calculateZapOutAmount } = useZap()
+export const useZapOutAmount = (
+  isStaticFeeContract: boolean,
+  tokenIn?: string,
+  tokenOut?: string,
+  pool?: string,
+  lpQty?: BigNumber,
+) => {
+  const { calculateZapOutAmount } = useZap(isStaticFeeContract)
   const [result, setResult] = useState<{ amount: BigNumber; error?: any }>({
     amount: BigNumber.from(0),
     error: undefined,

@@ -2,7 +2,7 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, ETHER, TokenAmount, Trade, ZERO } from '@dynamic-amm/sdk'
 import { useCallback, useMemo } from 'react'
-import { ROUTER_ADDRESSES, ROUTER_ADDRESSES_V2 } from 'constants/index'
+import { DYNAMIC_FEE_ROUTER_ADDRESSES, ROUTER_ADDRESSES_V2 } from 'constants/index'
 import { useTokenAllowance } from 'data/Allowances'
 import { Field } from 'state/swap/actions'
 import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
@@ -136,7 +136,7 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage],
   )
-  return useApproveCallback(amountToApprove, !!chainId ? ROUTER_ADDRESSES[chainId] : undefined)
+  return useApproveCallback(amountToApprove, !!chainId ? DYNAMIC_FEE_ROUTER_ADDRESSES[chainId] : undefined)
 }
 
 // wraps useApproveCallback in the context of a swap

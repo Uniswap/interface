@@ -17,11 +17,11 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
 import {
-  ROUTER_ADDRESSES,
+  STATIC_FEE_ROUTER_ADDRESSES,
+  DYNAMIC_FEE_ROUTER_ADDRESSES,
   CREATE_POOL_AMP_HINT,
   STATIC_FEE_OPTIONS,
   ONLY_STATIC_FEE_CHAINS,
-  KS_ROUTER_ADDRESSES,
 } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
@@ -167,9 +167,9 @@ export default function CreatePool({
   )
 
   const routerAddress = !!chainId
-    ? !ONLY_STATIC_FEE_CHAINS.includes(chainId) && feeType === FEE_TYPE.STATIC
-      ? KS_ROUTER_ADDRESSES[chainId]
-      : ROUTER_ADDRESSES[chainId]
+    ? ONLY_STATIC_FEE_CHAINS.includes(chainId) || feeType === FEE_TYPE.STATIC
+      ? STATIC_FEE_ROUTER_ADDRESSES[chainId]
+      : DYNAMIC_FEE_ROUTER_ADDRESSES[chainId]
     : undefined
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress)

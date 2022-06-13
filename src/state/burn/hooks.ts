@@ -42,6 +42,7 @@ export function useDerivedBurnInfo(
   }
   price?: Price
   error?: string
+  isStaticFeePair?: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -62,7 +63,7 @@ export function useDerivedBurnInfo(
   let error: string | undefined
 
   // pair + totalsupply
-  const [, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const [, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -179,7 +180,7 @@ export function useDerivedBurnInfo(
     error = error ?? t`Insufficient balance`
   }
 
-  return { dependentField, currencies, pair, userLiquidity, parsedAmounts, amountsMin, price, error }
+  return { dependentField, currencies, pair, userLiquidity, parsedAmounts, amountsMin, price, error, isStaticFeePair }
 }
 
 export function useBurnActionHandlers(): {
@@ -224,6 +225,7 @@ export function useDerivedZapOutInfo(
   insufficientLiquidity: boolean
   price?: Price
   error?: string
+  isStaticFeePair?: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -248,7 +250,7 @@ export function useDerivedZapOutInfo(
   let error: string | undefined
 
   // pair + totalsupply
-  const [, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const [, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -331,7 +333,7 @@ export function useDerivedZapOutInfo(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLiquidity?.raw.toString(), percentToRemove.numerator.toString(), percentToRemove.denominator.toString()])
 
-  const zapOutAmount = useZapOutAmount(tokenIn?.address, tokenOut?.address, pair?.address, lpQty)
+  const zapOutAmount = useZapOutAmount(!!isStaticFeePair, tokenIn?.address, tokenOut?.address, pair?.address, lpQty)
 
   // amounts
   const independentTokenAmount: CurrencyAmount | undefined = tryParseAmount(
@@ -447,6 +449,7 @@ export function useDerivedZapOutInfo(
     insufficientLiquidity,
     price,
     error,
+    isStaticFeePair,
   }
 }
 

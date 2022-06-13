@@ -35,7 +35,7 @@ export function useDerivedPairInfo(
   currencyB: Currency | undefined,
 ): {
   currencies: { [field in Field]?: Currency }
-  pairs: [PairState, Pair | null][]
+  pairs: [PairState, Pair | null, boolean?][]
 } {
   const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({

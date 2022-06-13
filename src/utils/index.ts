@@ -10,10 +10,10 @@ import dayjs from 'dayjs'
 import { blockClient } from 'apollo/client'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import {
-  ROUTER_ADDRESSES,
+  DYNAMIC_FEE_ROUTER_ADDRESSES,
   ROUTER_ADDRESSES_V2,
   ZAP_ADDRESSES,
-  FACTORY_ADDRESSES,
+  STATIC_FEE_ZAP_ADDRESSES,
   ROPSTEN_TOKEN_LOGOS_MAPPING,
   MIGRATE_ADDRESS,
   KNCL_ADDRESS,
@@ -24,15 +24,13 @@ import {
   CLAIM_REWARD_SC_ADDRESS,
   ONLY_STATIC_FEE_CHAINS,
   ZERO_ADDRESS,
-  KS_FACTORY_ADDRESSES,
-  KS_ROUTER_ADDRESSES,
-  STATIC_FEE_OPTIONS,
+  STATIC_FEE_ROUTER_ADDRESSES,
 } from 'constants/index'
-import ROUTER_ABI from '../constants/abis/dmm-router.json'
-import ROUTER_ABI_WITHOUT_DYNAMIC_FEE from '../constants/abis/dmm-router-without-dynamic-fee.json'
+import ROUTER_DYNAMIC_FEE_ABI from '../constants/abis/dmm-router-dynamic-fee.json'
+import ROUTER_STATIC_FEE_ABI from '../constants/abis/dmm-router-static-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import KS_FACTORY_ABI from '../constants/abis/ks-factory.json'
-import KS_ROUTER_ABI from '../constants/abis/ks-router-static-fee.json'
+import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
 import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
@@ -254,29 +252,16 @@ export function getContractForReading(address: string, ABI: any, library: ethers
 }
 
 // account is optional
-export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(
-    ROUTER_ADDRESSES[chainId],
-    STATIC_FEE_OPTIONS[chainId] ? ROUTER_ABI_WITHOUT_DYNAMIC_FEE : ROUTER_ABI,
-    library,
-    account,
-  )
-}
-// account is optional
 export function getStaticFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   if (ONLY_STATIC_FEE_CHAINS.includes(chainId)) {
-    return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI_WITHOUT_DYNAMIC_FEE, library, account)
+    return getContract(STATIC_FEE_ROUTER_ADDRESSES[chainId], ROUTER_STATIC_FEE_ABI, library, account)
   } else {
-    return getContract(KS_ROUTER_ADDRESSES[chainId], KS_ROUTER_ABI, library, account)
+    return getContract(STATIC_FEE_ROUTER_ADDRESSES[chainId], KS_ROUTER_STATIC_FEE_ABI, library, account)
   }
 }
 // account is optional
 export function getDynamicFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
-}
-
-export function getKSFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(KS_FACTORY_ADDRESSES[chainId] || '', KS_FACTORY_ABI, library, account)
+  return getContract(DYNAMIC_FEE_ROUTER_ADDRESSES[chainId], ROUTER_DYNAMIC_FEE_ABI, library, account)
 }
 
 export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
@@ -284,8 +269,18 @@ export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, acc
 }
 
 // account is optional
-export function getZapContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(ZAP_ADDRESSES[chainId] || '', ZAP_ABI, library, account)
+export function getZapContract(
+  chainId: ChainId,
+  library: Web3Provider,
+  account?: string,
+  isStaticFeeContract?: boolean,
+): Contract {
+  return getContract(
+    isStaticFeeContract ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId] || '',
+    ZAP_ABI,
+    library,
+    account,
+  )
 }
 
 export function getClaimRewardContract(
@@ -309,9 +304,9 @@ export function getMigratorContract(_: number, library: Web3Provider, account?: 
   return getContract(MIGRATE_ADDRESS, MIGRATOR_ABI, library, account)
 }
 
-export function getFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(FACTORY_ADDRESSES[chainId], FACTORY_ABI, library, account)
-}
+// export function getFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+//   return getContract(FACTORY_ADDRESSES[chainId], FACTORY_ABI, library, account)
+// }
 
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string

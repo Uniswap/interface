@@ -301,6 +301,7 @@ export function useDerivedZapInInfo(
   }, [userInCurrencyAmount])
 
   const zapInAmounts = useZapInAmounts(
+    !!isStaticFeePair,
     dependentField === Field.CURRENCY_B ? tokenA?.address : tokenB?.address,
     dependentField === Field.CURRENCY_B ? tokenB?.address : tokenA?.address,
     pair?.address,
