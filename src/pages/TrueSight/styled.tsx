@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
+import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import { Spinner } from 'components/Header/Polling'
 
 export const TrueSightPageWrapper = styled.div`
   display: flex;
@@ -116,4 +118,43 @@ export const TextTooltip = styled(Text)<{ color: string }>`
     height: 0;
     border-bottom: ${({ color }) => `1px dashed ${color}`};
   }
+`
+
+export const SubscribeButton = styled(ButtonPrimary)<{ isDisabled: boolean }>`
+  width: 118px;
+  height: 36px;
+  padding: 6px;
+  border-radius: 4px;
+  background: ${({ theme, isDisabled }) => isDisabled && theme.buttonGray} !important;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    width: 36px;
+  `}
+`
+
+export const UnSubscribeButton = styled(ButtonEmpty)`
+  width: 118px;
+  height: 36px;
+  padding: 6px;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    width: 36px;
+  `}
+`
+
+export const ButtonText = styled(Text)`
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 6px !important;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
+`
+
+export const StyledSpinnder = styled(Spinner)<{ color: string }>`
+  border-left: ${({ color }) => `1px solid  ${color}`};
+  width: 16px;
+  height: 16px;
+  top: 0px;
+  left: 0px;
 `

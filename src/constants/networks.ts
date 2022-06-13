@@ -1,4 +1,4 @@
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import Mainnet from '../assets/networks/mainnet-network.svg'
 import Polygon from '../assets/networks/polygon-network.png'
 import BSC from '../assets/networks/bsc-network.png'
@@ -62,8 +62,8 @@ export const NETWORK_LABEL: { [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: 'Kovan',
   [ChainId.MATIC]: 'Polygon',
   [ChainId.MUMBAI]: 'Mumbai',
-  [ChainId.BSCTESTNET]: 'BSC Testnet',
-  [ChainId.BSCMAINNET]: 'BSC',
+  [ChainId.BSCTESTNET]: 'BNB Testnet',
+  [ChainId.BSCMAINNET]: 'BNB Chain',
   [ChainId.AVAXTESTNET]: 'Avalanche Testnet',
   [ChainId.AVAXMAINNET]: 'Avalanche',
   [ChainId.FANTOM]: 'Fantom',

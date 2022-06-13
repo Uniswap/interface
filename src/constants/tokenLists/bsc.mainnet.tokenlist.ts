@@ -156,6 +156,22 @@ export const BSC_MAINNET_TOKEN_LIST = {
       decimals: 8,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/18069.png',
     },
+    {
+      chainId: 56,
+      address: '0x301AF3Eff0c904Dc5DdD06FAa808f653474F7FcC',
+      symbol: 'UNB',
+      name: 'Unbound',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7846.png',
+    },
+    {
+      chainId: 56,
+      address: '0xE7C04392A3a426D532f83cA968Bcc0341E99583D',
+      symbol: 'UND',
+      name: 'Unbound Dollar',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png',
+    },
   ],
   version: {
     major: 0,

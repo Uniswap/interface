@@ -1,5 +1,5 @@
-import { ChainId } from '@dynamic-amm/sdk'
 import { FortmaticConnector as FortmaticConnectorCore } from '@web3-react/fortmatic-connector'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export const OVERLAY_READY = 'OVERLAY_READY'
 
@@ -27,7 +27,7 @@ export class FortmaticConnector extends FortmaticConnectorCore {
 
     const provider = this.fortmatic.getProvider()
 
-    const pollForOverlayReady = new Promise(resolve => {
+    const pollForOverlayReady = new Promise<void>(resolve => {
       const interval = setInterval(() => {
         if (provider.overlayReady) {
           clearInterval(interval)

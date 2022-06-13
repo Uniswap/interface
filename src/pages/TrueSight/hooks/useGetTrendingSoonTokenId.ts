@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Token } from '@dynamic-amm/sdk'
+import { Token } from '@kyberswap/ks-sdk-core'
 
 import { TRENDING_SOON_MAX_ITEMS } from 'constants/index'
 import { TrueSightTokenResponse } from 'pages/TrueSight/hooks/useGetTrendingSoonData'

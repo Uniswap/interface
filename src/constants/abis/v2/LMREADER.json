@@ -1,0 +1,17 @@
+[
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "inputs": [
+      { "internalType": "contract IKyberSwapElasticLMV2", "name": "lm", "type": "address" },
+      { "internalType": "uint256", "name": "pId", "type": "uint256" },
+      { "internalType": "uint256[]", "name": "tokenIds", "type": "uint256[]" }
+    ],
+    "name": "getPositionTokenAmounts",
+    "outputs": [
+      { "internalType": "int256", "name": "token0Amount", "type": "int256" },
+      { "internalType": "int256", "name": "token1Amount", "type": "int256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

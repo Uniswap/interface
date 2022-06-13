@@ -3,24 +3,97 @@ import { Flex, Text } from 'rebass'
 import { Switch } from '@rebass/forms'
 
 import { ButtonEmpty } from 'components/Button'
+import { StyledInternalLink } from 'theme'
+import { AutoColumn } from 'components/Column'
+
+export const PageWrapper = styled(AutoColumn)`
+  padding: 32px 24px 50px;
+  width: 100%;
+  max-width: 1500px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 24px 16px 100px;
+  `}
+`
+
+export const ProMMFarmGuideAndRewardWrapper = styled.div`
+  display: flex;
+  gap: 24px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column
+  `}
+`
+
+export const ProMMFarmGuide = styled.div`
+  padding: 16px;
+  font-size: 14px;
+  background: ${({ theme }) => theme.primary + '33'};
+  border-radius: 999px;
+  flex: 2;
+  text-align: center;
+`
+
+export const ProMMTotalRewards = styled(ProMMFarmGuide)`
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.apr + '33'};
+  flex: 1;
+`
+
+export const FarmType = styled(StyledInternalLink)<{ active: boolean; isDisable?: boolean }>`
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+  font-weight: 500;
+  color: ${({ theme, active, isDisable }) => (isDisable ? theme.subText : active ? theme.primary : theme.subText)};
+
+  :focus {
+    text-decoration: none;
+  }
+
+  :hover {
+    color: ${({ theme, isDisable }) => (isDisable ? theme.subText : theme.primary)};
+    text-decoration: none;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 18px
+  `}
+`
+
+export const FarmTypeWrapper = styled(Flex)`
+  gap: 12px;
+  align-items: center;
+`
 
 export const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  gap: 24px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column-reverse
+    align-items: flex-start
+  `}
 `
 
 export const TabContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 
   @media only screen and (min-width: 768px) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 24px;
   }
 `
 
@@ -149,7 +222,7 @@ export const HeadingContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     gap: 0;
@@ -329,6 +402,18 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-gap: 1.5rem;
   `};
+`
+
+export const ProMMFarmTableHeader = styled(TableHeader)`
+  grid-template-columns: 150px 120px 1fr 1fr 0.75fr 0.75fr 0.75fr 1fr 1fr;
+  grid-template-areas: 'token_pairs pool_fee staked_tvl ending_in apr vesting my_deposit reward action';
+  grid-gap: 2rem;
+`
+
+export const ProMMFarmTableRow = styled(ProMMFarmTableHeader)`
+  font-size: 14px;
+  background-color: ${({ theme }) => theme.tableHeader};
+  border-radius: 0;
 `
 
 export const ClickableText = styled(Text)`
@@ -543,12 +628,12 @@ export const Seperator = styled.div`
 
 export const SearchContainer = styled.div`
   background: ${({ theme }) => theme.background};
-  border-radius: 4px;
+  border-radius: 999px;
   width: 320px;
   font-size: 12px;
   display: flex;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 12px;
   gap: 8px;
 
   > svg {
@@ -561,7 +646,6 @@ export const SearchContainer = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     width: 100%;
-    margin-top: 20px;
   `}
 `
 
@@ -575,4 +659,27 @@ export const SearchInput = styled.input`
   :placeholder {
     color: ${({ theme }) => theme.disableText};
   }
+`
+
+export const ProMMFarmTableRowMobile = styled.div`
+  background: ${({ theme }) => theme.background};
+  padding: 24px 16px;
+  :not(:last-child) {
+    border-bottom: 1px solid ${({ theme }) => theme.border};
+  }
+`
+
+export const InfoRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 12px;
+`
+
+export const RewardMobileArea = styled.div`
+  background: ${({ theme }) => theme.buttonBlack};
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
 `

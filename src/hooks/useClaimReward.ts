@@ -1,5 +1,5 @@
+import { CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
-import { TokenAmount } from '@dynamic-amm/sdk'
 import { CLAIM_REWARDS_DATA_URL, KNC } from 'constants/index'
 import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
@@ -64,7 +64,7 @@ export default function useClaimReward() {
             const remainAmounts = BigNumber.from(phase.reward.amounts[0])
               .sub(BigNumber.from(res[0]))
               .toString()
-            setRewardAmounts(new TokenAmount(KNC[chainId], remainAmounts).toSignificant(6))
+            setRewardAmounts(CurrencyAmount.fromRawAmount(KNC[chainId], remainAmounts).toSignificant(6))
             if (remainAmounts !== '0') {
               setPhaseId(i)
               break
@@ -168,16 +168,7 @@ export default function useClaimReward() {
           setError(err.message || t`Something is wrong. Please try again later!`)
         })
     }
-  }, [
-    rewardContract,
-    chainId,
-    account,
-    library,
-    data,
-    rewardAmounts,
-    JSON.stringify(userRewards[phaseId]),
-    addTransactionWithType,
-  ])
+  }, [rewardContract, chainId, account, library, data, rewardAmounts, phaseId, userRewards, addTransactionWithType])
 
   return {
     isUserHasReward,

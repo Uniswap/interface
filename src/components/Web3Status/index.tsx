@@ -24,6 +24,7 @@ import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
+import { useMedia } from 'react-use'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -39,8 +40,8 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
   cursor: pointer;
   user-select: none;
   :focus {
@@ -152,6 +153,8 @@ function Web3StatusInner() {
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
 
+  const above369 = useMedia('(min-width: 369px)')
+
   if (account) {
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
@@ -165,7 +168,7 @@ function Web3StatusInner() {
         ) : (
           <>
             {hasSocks ? SOCK : null}
-            <Text>{ENSName || shortenAddress(account)}</Text>
+            <Text>{ENSName || shortenAddress(account, above369 ? undefined : 2)}</Text>
           </>
         )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
@@ -180,7 +183,7 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <ButtonLight onClick={toggleWalletModal} padding="12px">
+      <ButtonLight onClick={toggleWalletModal} padding="10px 12px">
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     )

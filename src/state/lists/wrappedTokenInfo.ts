@@ -1,7 +1,7 @@
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 
 import { isAddress } from '../../utils'
-import { Token } from '@dynamic-amm/sdk'
+import { Token } from '@kyberswap/ks-sdk-core'
 
 type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
@@ -49,7 +49,7 @@ export class WrappedTokenInfo extends Token {
   }
 
   equals(other: Token): boolean {
-    return other.chainId === this.chainId && other.address.toLowerCase() === this.address.toLowerCase()
+    return other.chainId === this.chainId && other.isToken && other.address.toLowerCase() === this.address.toLowerCase()
   }
 
   sortsBefore(other: Token): boolean {

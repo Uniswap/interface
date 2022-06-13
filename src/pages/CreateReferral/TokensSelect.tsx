@@ -3,12 +3,12 @@ import { ChevronDown, X } from 'react-feather'
 import styled from 'styled-components'
 import Modal from 'components/Modal'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { Currency, ETHER } from '@dynamic-amm/sdk'
+import { Currency, ChainId } from '@kyberswap/ks-sdk-core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { Text } from 'rebass'
 import { Trans } from '@lingui/macro'
-import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { useActiveWeb3React } from 'hooks'
+import { nativeOnChain } from 'constants/tokens'
 
 const TokensSelectWrapper = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
@@ -47,7 +47,7 @@ export default function TokensSelect({
       {currency ? (
         <>
           <CurrencyLogo currency={currency || undefined} size={'20px'} style={{ marginRight: '8px' }} />
-          {currency === ETHER ? convertToNativeTokenFromETH(currency, chainId).symbol : currency.symbol}
+          {currency.isNative ? nativeOnChain(chainId as ChainId).symbol : currency.symbol}
         </>
       ) : (
         <Text fontSize={15}>

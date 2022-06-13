@@ -3,7 +3,8 @@ import styled, { css } from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { Text } from 'rebass'
-import { ChainId } from '@dynamic-amm/sdk'
+
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ExternalLink } from 'theme'
@@ -28,12 +29,12 @@ import {
   FileText,
   Menu as MenuIcon,
   MessageCircle,
-  Monitor,
   PieChart,
   Share2,
   Triangle,
   UserPlus,
 } from 'react-feather'
+import { MoneyBag } from 'components/Icons'
 
 const sharedStylesMenuItem = css`
   flex: 1;
@@ -73,7 +74,7 @@ const StyledMenuButton = styled.button<{ active?: boolean }>`
   justify-content: center;
   color: ${({ theme }) => theme.text};
 
-  border-radius: 0.5rem;
+  border-radius: 999px;
 
   :hover {
     cursor: pointer;
@@ -153,6 +154,7 @@ export default function Menu() {
   const above1320 = useMedia('(min-width: 1320px)')
   const above1100 = useMedia('(min-width: 1100px)')
   const above768 = useMedia('(min-width: 768px)')
+  const above369 = useMedia('(min-width: 369px)')
 
   const getBridgeLink = () => {
     if (!chainId) return ''
@@ -225,13 +227,6 @@ export default function Menu() {
         )}
 
         {!above768 && (
-          <NavMenuItem to="/myPools" onClick={toggle}>
-            <Monitor size={14} />
-            <Trans>My Pools</Trans>
-          </NavMenuItem>
-        )}
-
-        {!above768 && (
           <NavMenuItem to={'/discover?tab=trending_soon'} onClick={toggle}>
             <DiscoverIcon size={14} />
             <SlideToUnlock>
@@ -244,7 +239,12 @@ export default function Menu() {
             </NewLabel>
           </NavMenuItem>
         )}
-
+        {!above369 && (
+          <NavMenuItem to="/farms" onClick={toggle}>
+            <MoneyBag size={16} />
+            <Trans>Farm</Trans>
+          </NavMenuItem>
+        )}
         {!above1320 && <AboutPageDropwdown />}
 
         <NavMenuItem to="/referral" onClick={toggle}>

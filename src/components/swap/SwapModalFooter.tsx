@@ -1,5 +1,6 @@
 import { useActiveWeb3React } from 'hooks'
-import { Currency, Trade, TradeType } from '@dynamic-amm/sdk'
+import { Trade } from '@kyberswap/ks-sdk-classic'
+import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -20,6 +21,7 @@ import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
+import { AnyTrade } from 'hooks/useSwapCallback'
 
 export default function SwapModalFooter({
   trade,
@@ -28,7 +30,7 @@ export default function SwapModalFooter({
   swapErrorMessage,
   disabledConfirm,
 }: {
-  trade: Trade
+  trade: AnyTrade
   allowedSlippage: number
   onConfirm: () => void
   swapErrorMessage: string | undefined
@@ -41,9 +43,11 @@ export default function SwapModalFooter({
     allowedSlippage,
     trade,
   ])
-  const { priceImpactWithoutFee, realizedLPFee, accruedFeePercent } = useMemo(() => computeTradePriceBreakdown(trade), [
-    trade,
-  ])
+  const { priceImpactWithoutFee, realizedLPFee, accruedFeePercent } = useMemo(() => {
+    return trade instanceof Trade
+      ? computeTradePriceBreakdown(trade)
+      : { priceImpactWithoutFee: trade.priceImpact, realizedLPFee: undefined, accruedFeePercent: undefined }
+  }, [trade])
   const severity = warningSeverity(priceImpactWithoutFee)
 
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
@@ -78,10 +82,10 @@ export default function SwapModalFooter({
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {trade.tradeType === TradeType.EXACT_INPUT ? t`Minimum received` : t`Maximum sold`}
+              {trade.tradeType === TradeType.EXACT_INPUT ? t`Minimum Received` : t`Maximum Sold`}
             </TYPE.black>
             <QuestionHelper
-              text={t`Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.`}
+              text={t`Your transaction will revert if there is a large, unfavorable price movement before it is confirmed`}
             />
           </RowFixed>
           <RowFixed>
@@ -101,26 +105,27 @@ export default function SwapModalFooter({
               Price Impact
             </TYPE.black>
             <QuestionHelper
-              text={t`The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration.`}
+              text={t`The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration`}
             />
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              <Trans>Liquidity Provider Fee</Trans>
+        {trade instanceof Trade && (
+          <RowBetween>
+            <RowFixed>
+              <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+                <Trans>Liquidity Provider Fee</Trans>
+              </TYPE.black>
+              <QuestionHelper
+                text={t`A portion of each trade (${accruedFeePercent &&
+                  accruedFeePercent.toSignificant(6)}%) goes to liquidity providers as a protocol incentive`}
+              />
+            </RowFixed>
+            <TYPE.black fontSize={14}>
+              {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + nativeInput?.symbol : '-'}
             </TYPE.black>
-            <QuestionHelper
-              text={t`A portion of each trade (${accruedFeePercent.toSignificant(
-                6,
-              )}%) goes to liquidity providers as a protocol incentive.`}
-            />
-          </RowFixed>
-          <TYPE.black fontSize={14}>
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + nativeInput?.symbol : '-'}
-          </TYPE.black>
-        </RowBetween>
+          </RowBetween>
+        )}
       </AutoColumn>
 
       <AutoRow>

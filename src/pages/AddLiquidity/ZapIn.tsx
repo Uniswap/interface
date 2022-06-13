@@ -6,18 +6,8 @@ import { AlertTriangle } from 'react-feather'
 import { Text, Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
-
-import {
-  computePriceImpact,
-  Currency,
-  CurrencyAmount,
-  currencyEquals,
-  ETHER,
-  Fraction,
-  JSBI,
-  TokenAmount,
-  WETH,
-} from '@dynamic-amm/sdk'
+import { computePriceImpact, Currency, CurrencyAmount, Fraction, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
 import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, AMP_HINT } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -50,10 +40,9 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { calculateGasMargin, formattedNum, getZapContract } from 'utils'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
 import { Dots, Wrapper } from '../Pool/styleds'
 import {
@@ -70,6 +59,7 @@ import {
   PoolRatioWrapper,
   DynamicFeeRangeWrapper,
 } from './styled'
+import { nativeOnChain } from 'constants/tokens'
 
 const ZapIn = ({
   currencyIdA,
@@ -115,16 +105,12 @@ const ZapIn = ({
   const independentToken = nativeA && nativeB ? (independentField === Field.CURRENCY_A ? nativeA : nativeB) : undefined
   const dependentToken = nativeA && nativeB ? (independentField === Field.CURRENCY_A ? nativeB : nativeA) : undefined
 
-  const selectedCurrencyIsETHER = !!(
-    chainId &&
-    currencies[independentField] &&
-    currencyEquals(currencies[independentField] as Currency, ETHER)
-  )
+  const selectedCurrencyIsETHER = !!(chainId && currencies[independentField] && currencies[independentField]?.isNative)
 
   const selectedCurrencyIsWETH = !!(
     chainId &&
     currencies[independentField] &&
-    currencyEquals(currencies[independentField] as Currency, WETH[chainId])
+    currencies[independentField]?.equals(WETH[chainId])
   )
 
   const amp = pair?.amp || JSBI.BigInt(0)
@@ -175,17 +161,17 @@ const ZapIn = ({
     !!chainId ? (isStaticFeePair ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId]) : undefined,
   )
 
-  const userInCurrencyAmount: CurrencyAmount | undefined = useMemo(() => {
-    return tryParseAmount(typedValue, currencies[independentField], true)
+  const userInCurrencyAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
+    return tryParseAmount(typedValue, currencies[independentField]?.wrapped, true)
   }, [currencies, independentField, typedValue])
 
   const userIn = useMemo(() => {
-    return userInCurrencyAmount ? BigNumber.from(userInCurrencyAmount.raw.toString()) : undefined
+    return userInCurrencyAmount ? BigNumber.from(userInCurrencyAmount.quotient.toString()) : undefined
   }, [userInCurrencyAmount])
 
   const minLPQty = !liquidityMinted
     ? JSBI.BigInt(0)
-    : JSBI.divide(JSBI.multiply(liquidityMinted?.raw, JSBI.BigInt(10000 - allowedSlippage)), JSBI.BigInt(10000))
+    : JSBI.divide(JSBI.multiply(liquidityMinted?.quotient, JSBI.BigInt(10000 - allowedSlippage)), JSBI.BigInt(10000))
 
   const addTransactionWithType = useTransactionAdder()
   async function onZapIn() {
@@ -196,8 +182,8 @@ const ZapIn = ({
       return
     }
 
-    const tokenIn = wrappedCurrency(currencies[independentField], chainId)
-    const tokenOut = wrappedCurrency(currencies[dependentField], chainId)
+    const tokenIn = currencies[independentField]?.wrapped
+    const tokenOut = currencies[dependentField]?.wrapped
 
     if (!pair || !pair.address || !deadline || !tokenIn || !tokenOut || !userIn) {
       return
@@ -215,7 +201,7 @@ const ZapIn = ({
 
     if (!pair) return
 
-    if (currencies[independentField] === ETHER) {
+    if (currencies[independentField]?.isNative) {
       estimate = zapContract.estimateGas.zapInEth
       method = zapContract.zapInEth
       args = [tokenOut.address, pair.address, account, minLPQty.toString(), deadline.toHexString()]
@@ -251,10 +237,11 @@ const ZapIn = ({
               summary: userInCurrencyAmount?.toSignificant(6) + ' ' + independentToken?.symbol,
               arbitrary: {
                 poolAddress: pairAddress,
-                token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
-                token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
+                token_1: cA.symbol,
+                token_2: cB.symbol,
                 add_liquidity_method: 'single token',
                 amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+                txHash: tx.hash,
               },
             })
             setTxHash(tx.hash)
@@ -289,10 +276,14 @@ const ZapIn = ({
   }, [onFieldInput, txHash])
 
   const realPercentToken0 = pair
-    ? pair.reserve0
+    ? pair.reserve0.asFraction
         .divide(pair.virtualReserve0)
         .multiply('100')
-        .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
+        .divide(
+          pair.reserve0
+            .divide(pair.virtualReserve0)
+            .asFraction.add(pair.reserve1.divide(pair.virtualReserve1).asFraction),
+        )
     : new Fraction(JSBI.BigInt(50))
 
   const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
@@ -301,9 +292,8 @@ const ZapIn = ({
   const percentToken1 = realPercentToken1.toSignificant(4)
 
   const tokens = useMemo(
-    () =>
-      [currencies[independentField], currencies[dependentField]].map(currency => wrappedCurrency(currency, chainId)),
-    [chainId, currencies, dependentField, independentField],
+    () => [currencies[independentField], currencies[dependentField]].map(currency => currency?.wrapped),
+    [currencies, dependentField, independentField],
   )
 
   const usdPrices = useTokensPrice(tokens)
@@ -326,13 +316,13 @@ const ZapIn = ({
     usdPrices[0] &&
     parsedAmounts &&
     parsedAmounts[independentField] &&
-    usdPrices[0] * parseFloat((parsedAmounts[independentField] as CurrencyAmount).toSignificant(6))
+    usdPrices[0] * parseFloat((parsedAmounts[independentField] as CurrencyAmount<Currency>).toSignificant(6))
 
   const tokenBPoolAllocUsd =
     usdPrices[1] &&
     parsedAmounts &&
     parsedAmounts[dependentField] &&
-    usdPrices[1] * parseFloat((parsedAmounts[dependentField] as CurrencyAmount).toSignificant(6))
+    usdPrices[1] * parseFloat((parsedAmounts[dependentField] as CurrencyAmount<Currency>).toSignificant(6))
 
   const estimatedUsdForPair: [number, number] =
     independentField === Field.CURRENCY_A
@@ -342,13 +332,13 @@ const ZapIn = ({
   const priceImpact =
     price &&
     userInCurrencyAmount &&
-    parsedAmounts[independentField] &&
-    parsedAmounts[dependentField] &&
-    !userInCurrencyAmount.lessThan(parsedAmounts[independentField] as CurrencyAmount)
+    !!parsedAmounts[independentField] &&
+    !!parsedAmounts[dependentField] &&
+    !userInCurrencyAmount.lessThan(parsedAmounts[independentField] as CurrencyAmount<Currency>)
       ? computePriceImpact(
           independentField === Field.CURRENCY_A ? price : price.invert(),
-          userInCurrencyAmount?.subtract(parsedAmounts[independentField] as CurrencyAmount),
-          parsedAmounts[dependentField] as CurrencyAmount,
+          userInCurrencyAmount?.subtract(parsedAmounts[independentField] as CurrencyAmount<Currency>),
+          parsedAmounts[dependentField] as CurrencyAmount<Currency>,
         )
       : undefined
 
@@ -475,10 +465,14 @@ const ZapIn = ({
                       to={
                         independentField === Field.CURRENCY_A
                           ? `/add/${
-                              selectedCurrencyIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                              selectedCurrencyIsETHER
+                                ? currencyId(WETH[chainId], chainId)
+                                : currencyId(nativeOnChain(chainId), chainId)
                             }/${currencyId(currencies[dependentField] as Currency, chainId)}/${pairAddress}`
                           : `/add/${currencyId(currencies[dependentField] as Currency, chainId)}/${
-                              selectedCurrencyIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                              selectedCurrencyIsETHER
+                                ? currencyId(WETH[chainId], chainId)
+                                : nativeOnChain(chainId).symbol
                             }/${pairAddress}`
                       }
                     >
@@ -604,7 +598,11 @@ const ZapIn = ({
                         <QuestionHelper text={AMP_HINT} />
                       </AutoRow>
                       <Text fontWeight={400} fontSize={14} color={theme.text}>
-                        {!!pair ? <>{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}
+                        {!!pair ? (
+                          <>{new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)}</>
+                        ) : (
+                          ''
+                        )}
                       </Text>
                     </AutoColumn>
 
@@ -620,21 +618,21 @@ const ZapIn = ({
                             text={
                               isStaticFeePair || !pair
                                 ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
-                                : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`
+                                : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers`
                             }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
                           {!!pair
                             ? isStaticFeePair && pair?.fee
-                              ? +new Fraction(pair.fee)
+                              ? +new Fraction(JSBI.BigInt(pair.fee))
                                   .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
                                   .toSignificant(6) *
                                   100 +
                                 '%'
                               : feeRangeCalc(
                                   !!pair?.amp
-                                    ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                    ? +new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
                                     : +amp,
                                 )
                             : ''}
@@ -650,7 +648,7 @@ const ZapIn = ({
                           <ActiveText>Active Price Range</ActiveText>
                         </UppercaseText>
                         <QuestionHelper
-                          text={t`Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive.`}
+                          text={t`Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive`}
                         />
                       </AutoRow>
 

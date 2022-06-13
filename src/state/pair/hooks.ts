@@ -1,5 +1,6 @@
 import { PairState, usePair } from 'data/Reserves'
-import { Currency, ETHER, Pair, Token } from '@dynamic-amm/sdk'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
+import { Pair } from '@kyberswap/ks-sdk-classic'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../index'
@@ -18,8 +19,8 @@ export function usePairActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : '',
-        }),
+          currencyId: currency instanceof Token ? currency.address : currency.isNative ? 'ETH' : ''
+        })
       )
     },
     [dispatch],

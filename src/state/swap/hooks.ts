@@ -1,6 +1,8 @@
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@dynamic-amm/sdk'
+import { Trade } from '@kyberswap/ks-sdk-classic'
+import JSBI from 'jsbi'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@kyberswap/ks-sdk-core'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,7 +28,7 @@ import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { BAD_RECIPIENT_ADDRESSES, KNC, USDC } from '../../constants'
-import { convertToNativeTokenFromETH } from 'utils/dmm'
+import { nativeOnChain } from 'constants/tokens'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 export function useSwapState(): AppState['swap'] {
@@ -48,12 +50,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId:
-            currency instanceof Token
-              ? currency.address
-              : currency === ETHER
-              ? (convertToNativeTokenFromETH(ETHER, chainId).symbol as string)
-              : '',
+          currencyId: currency.isNative ? (nativeOnChain(chainId as number).symbol as string) : currency.address,
         }),
       )
     },
@@ -100,16 +97,18 @@ export function useSwapActionHandlers(): {
 }
 
 // try to parse a user entered amount for a given token
-export function tryParseAmount(value?: string, currency?: Currency, shouldParse = true): CurrencyAmount | undefined {
+export function tryParseAmount<T extends Currency>(
+  value?: string,
+  currency?: T,
+  shouldParse = true,
+): CurrencyAmount<T> | undefined {
   if (!value || !currency) {
     return undefined
   }
   try {
     const typedValueParsed = shouldParse ? parseUnits(value, currency.decimals).toString() : value
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -124,7 +123,7 @@ export function tryParseAmount(value?: string, currency?: Currency, shouldParse 
  * @param trade to check for the given address
  * @param checksummedAddress address to check in the pairs and tokens
  */
-function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
+function involvesAddress(trade: Trade<Currency, Currency, TradeType>, checksummedAddress: string): boolean {
   return (
     trade.route.path.some(token => token.address === checksummedAddress) ||
     trade.route.pairs.some(pair => pair.liquidityToken.address === checksummedAddress)
@@ -134,12 +133,12 @@ function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount }
-  parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined
+  currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+  parsedAmount: CurrencyAmount<Currency> | undefined
+  v2Trade: Trade<Currency, Currency, TradeType> | undefined
   inputError?: string
 } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
 
   const {
     independentField,
@@ -215,7 +214,7 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = t`Insufficient ${convertToNativeTokenFromETH(amountIn.currency, chainId).symbol} balance`
+    inputError = t`Insufficient ${amountIn.currency.symbol} balance`
   }
 
   return {
@@ -231,11 +230,9 @@ function parseCurrencyFromURLParameter(urlParam: any, chainId: ChainId): string 
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === convertToNativeTokenFromETH(ETHER, chainId).symbol)
-      return convertToNativeTokenFromETH(ETHER, chainId).symbol as string
-    if (valid === false) return convertToNativeTokenFromETH(ETHER, chainId).symbol as string
+    return nativeOnChain(chainId).symbol as string
   }
-  return convertToNativeTokenFromETH(ETHER, chainId).symbol ?? ''
+  return nativeOnChain(chainId).symbol ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -269,18 +266,18 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
   }
 
   const recipient = validatedRecipient(parsedQs.recipient)
-  const feeConfig: FeeConfig | null =
+  const feeConfig: FeeConfig | undefined =
     parsedQs.referral &&
     isAddress(parsedQs.referral) &&
-    parsedQs['fee_percent'] &&
-    !isNaN(parseInt(parsedQs['fee_percent'].toString()))
+    parsedQs['fee_bip'] &&
+    !isNaN(parseInt(parsedQs['fee_bip'].toString()))
       ? {
           chargeFeeBy: 'currency_in',
           feeReceiver: parsedQs.referral.toString(),
           isInBps: true,
-          feeAmount: parsedQs['fee_percent'].toString(),
+          feeAmount: parsedQs['fee_bip'].toString(),
         }
-      : null
+      : undefined
   return {
     [Field.INPUT]: {
       currencyId: inputCurrency,

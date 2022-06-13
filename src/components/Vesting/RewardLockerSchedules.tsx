@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { Token } from '@dynamic-amm/sdk'
+import { Token } from '@kyberswap/ks-sdk-core'
 import { ButtonDropdown } from 'components/Button'
 import { useActiveWeb3React } from 'hooks'
 import useVesting from 'hooks/useVesting'
@@ -113,14 +113,6 @@ const RewardLockerSchedules = ({
     result[address].unlockedAmount = result[address].unlockedAmount.add(unlockedAmount)
     return result
   }, {})
-  console.log(
-    Object.assign(
-      {},
-      ...Object.keys(info).map(k => {
-        return { [k]: fixedFormatting(info[k].vestableAmount, info[k].token.decimals) }
-      }),
-    ),
-  )
   const onClaimAll = async () => {
     if (!chainId || !account) {
       return

@@ -1,4 +1,5 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@dynamic-amm/sdk'
+import JSBI from 'jsbi'
+import { ChainId, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
@@ -132,17 +133,17 @@ export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
 }
 
 export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.MATIC]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.AVAXMAINNET]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.MAINNET]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.FANTOM]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.CRONOS]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.BTTC]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.ARBITRUM]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
-  [ChainId.AURORA]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
-  [ChainId.VELAS]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
-  [ChainId.OASIS]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
+  [ChainId.BSCMAINNET]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.MATIC]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.AVAXMAINNET]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.MAINNET]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.FANTOM]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.CRONOS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.BTTC]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.ARBITRUM]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.AURORA]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.VELAS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
+  [ChainId.OASIS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -209,41 +210,51 @@ export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.VELAS]: '',
   [ChainId.OASIS]: '',
 }
-export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? 'https://staging-dmm-info.knstats.com'
-      : 'https://analytics.kyberswap.com/ethereum',
-  [ChainId.ROPSTEN]: 'https://dev-dmm-info.knstats.com',
-  [ChainId.RINKEBY]: 'https://analytics.kyberswap.com',
-  [ChainId.GÖRLI]: 'https://analytics.kyberswap.com',
-  [ChainId.KOVAN]: 'https://analytics.kyberswap.com',
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? 'https://staging-matic-dmm-info.knstats.com'
-      : 'https://analytics.kyberswap.com/polygon',
-  [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com',
-  [ChainId.BSCTESTNET]: 'https://mumbai-dmm-info.knstats.com',
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? 'https://staging-bsc-dmm-info.knstats.com'
-      : 'https://analytics.kyberswap.com/bsc',
+
+export const DMM_ANALYTICS = 'https://analytics.kyberswap.com/classic'
+
+export const CHAIN_ROUTE: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: 'ethereum',
+  [ChainId.ROPSTEN]: 'ropsten',
+  [ChainId.RINKEBY]: 'rinkeby',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: 'polygon',
+  [ChainId.MUMBAI]: '',
+  [ChainId.BSCTESTNET]: 'bsc-test',
+  [ChainId.BSCMAINNET]: 'bnb',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : 'https://analytics.kyberswap.com/avalanche',
-  [ChainId.FANTOM]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? 'https://staging-fantom-dmm-info.knstats.com'
-      : 'https://analytics.kyberswap.com/fantom',
-  [ChainId.CRONOSTESTNET]: 'https://cronos-testnet-analytics.kyberswap.com',
-  [ChainId.CRONOS]: 'https://analytics.kyberswap.com/cronos',
-  [ChainId.ARBITRUM_TESTNET]: 'https://dmm-info-plum.vercel.app',
-  [ChainId.ARBITRUM]: 'https://analytics.kyberswap.com/arbitrum',
-  [ChainId.BTTC]: 'https://analytics.kyberswap.com/bittorrent',
-  [ChainId.AURORA]: 'https://analytics.kyberswap.com/aurora',
-  [ChainId.VELAS]: 'https://analytics.kyberswap.com/velas',
-  [ChainId.OASIS]: 'https://analytics.kyberswap.com/oasis',
+  [ChainId.AVAXMAINNET]: 'avalanche',
+  [ChainId.FANTOM]: 'fantom',
+  [ChainId.CRONOSTESTNET]: '',
+  [ChainId.CRONOS]: 'cronos',
+  [ChainId.BTTC]: 'bittorrent',
+  [ChainId.ARBITRUM]: 'arbitrum',
+  [ChainId.ARBITRUM_TESTNET]: '',
+  [ChainId.AURORA]: 'aurora',
+  [ChainId.VELAS]: 'velas',
+  [ChainId.OASIS]: 'oasis',
 }
+
+export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = Object.keys(CHAIN_ROUTE)
+  .map(i => Number(i))
+  .reduce((acc, cur) => {
+    return {
+      ...acc,
+      [cur]: `${DMM_ANALYTICS}/${CHAIN_ROUTE[cur as ChainId]}`,
+    }
+  }, {}) as { [chainId in ChainId]: string }
+
+export const PROMM_ANALYTICS = 'https://analytics.kyberswap.com/elastic'
+
+export const PROMM_ANALYTICS_URL: { [chainId in ChainId]: string } = Object.keys(CHAIN_ROUTE)
+  .map(i => Number(i))
+  .reduce((acc, cur) => {
+    return {
+      ...acc,
+      [cur]: `${PROMM_ANALYTICS}/${CHAIN_ROUTE[cur as ChainId]}`,
+    }
+  }, {}) as { [chainId in ChainId]: string }
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -267,7 +278,7 @@ export const DAI: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.RINKEBY]: new Token(
     ChainId.RINKEBY,
-    '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
+    '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735',
     18,
     'DAI',
     'Dai Stablecoin',
@@ -362,7 +373,7 @@ export const DAI: { [chainId in ChainId]: Token } = {
 export const USDC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b', 6, 'USDC', 'USD Coin'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin'),
@@ -428,7 +439,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
 export const USDT: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02', 18, 'USDT', 'Tether USD'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', 6, 'USDT', 'Tether USD'),
@@ -1155,7 +1166,7 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.MATIC]: [],
   [ChainId.MUMBAI]: [],
   [ChainId.BSCTESTNET]: [],
-  [ChainId.BSCMAINNET]: [],
+  [ChainId.BSCMAINNET]: ['0x3474b537da4358A08f916b1587dccdD9585376A4'],
   [ChainId.AVAXTESTNET]: [],
   [ChainId.AVAXMAINNET]: [
     '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C',
@@ -1401,7 +1412,7 @@ export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'
 
 export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
-  [ChainId.ROPSTEN]: 'claim-reward-data.json',
+  [ChainId.ROPSTEN]: '/claim-reward-data.json',
   [ChainId.AVAXMAINNET]:
     'https://raw.githubusercontent.com/KyberNetwork/avax-trading-contest-reward-distribution/develop/results/reward_proof.json',
   [ChainId.MATIC]:
@@ -1459,3 +1470,6 @@ export const TOBE_EXTENDED_FARMING_POOLS: { [key: string]: number } = {
   '0xC6BC80490A3D022ac888b26A5Ae4f1fad89506Bd': 1651222800,
   '0x9dD156dF57ad44c23f6e1FCB731C640B127fE2Be': 1651222800,
 }
+
+export const ELASTIC_BASE_FEE_UNIT = 100_000
+export const KYBERSWAP_SOURCE = '{"source":"kyberswap"}'

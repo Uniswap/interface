@@ -1,7 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH, ChainId } from '@dynamic-amm/sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Currency, Fraction, TokenAmount, WETH, ChainId } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Plus, AlertTriangle } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text, Flex } from 'rebass'
@@ -13,7 +14,7 @@ import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
+import { AddRemoveTabs, LiquidityAction } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
 import {
@@ -43,7 +44,6 @@ import {
   getStaticFeeRouterContract,
 } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
@@ -51,7 +51,7 @@ import { PoolPriceBar, PoolPriceRangeBarToggle } from 'components/PoolPriceBar'
 import QuestionHelper from 'components/QuestionHelper'
 import { parseUnits } from 'ethers/lib/utils'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
 import { useDerivedPairInfo } from 'state/pair/hooks'
 import Loader from 'components/Loader'
 import {
@@ -66,6 +66,7 @@ import {
   USDPrice,
   Warning,
 } from './styled'
+import { nativeOnChain } from 'constants/tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import FeeTypeSelector from './FeeTypeSelector'
 import StaticFeeSelector from './StaticFeeSelector'
@@ -91,10 +92,10 @@ export default function CreatePool({
 
   const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
-  const currencyAIsETHER = !!(chainId && currencyA && currencyEquals(currencyA, ETHER))
-  const currencyAIsWETH = !!(chainId && currencyA && currencyEquals(currencyA, WETH[chainId]))
-  const currencyBIsETHER = !!(chainId && currencyB && currencyEquals(currencyB, ETHER))
-  const currencyBIsWETH = !!(chainId && currencyB && currencyEquals(currencyB, WETH[chainId]))
+  const currencyAIsETHER = !!(chainId && currencyA && currencyA.isNative)
+  const currencyAIsWETH = !!(chainId && currencyA && currencyA.equals(WETH[chainId]))
+  const currencyBIsETHER = !!(chainId && currencyB && currencyB.isNative)
+  const currencyBIsWETH = !!(chainId && currencyB && currencyB.equals(WETH[chainId]))
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
@@ -202,33 +203,34 @@ export default function CreatePool({
       value: BigNumber | null
 
     if (!ampConvertedInBps) return
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
+    if (currencyA.isNative || currencyB.isNative) {
+      const tokenBIsETH = currencyB.isNative
       estimate = router.estimateGas.addLiquidityNewPoolETH
       method = router.addLiquidityNewPoolETH
       args = [
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+        (tokenBIsETH ? currencyA?.wrapped : currencyB?.wrapped).address ?? '', // token
         withoutDynamicFee || (!withoutDynamicFee && feeType === FEE_TYPE.STATIC)
           ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
           : ampConvertedInBps.toSignificant(5), //ampBps
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        (tokenBIsETH ? parsedAmountA : parsedAmountB).quotient.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
         deadline.toHexString(),
       ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).quotient.toString())
     } else {
       estimate = router.estimateGas.addLiquidityNewPool
       method = router.addLiquidityNewPool
       args = [
-        wrappedCurrency(currencyA, chainId)?.address ?? '',
-        wrappedCurrency(currencyB, chainId)?.address ?? '',
+        currencyA?.wrapped.address ?? '',
+        currencyB?.wrapped.address ?? '',
+        ampConvertedInBps.toSignificant(5), //ampBps
         withoutDynamicFee || (!withoutDynamicFee && feeType === FEE_TYPE.STATIC)
           ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
           : ampConvertedInBps.toSignificant(5), //ampBps
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
+        parsedAmountA.quotient.toString(),
+        parsedAmountB.quotient.toString(),
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
         account,
@@ -253,20 +255,20 @@ export default function CreatePool({
               summary:
                 parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(cA, chainId).symbol +
+                cA.symbol +
                 ' and ' +
                 parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(cB, chainId).symbol,
+                cB.symbol,
               arbitrary: {
-                token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
-                token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
+                token_1: cA.symbol,
+                token_2: cB.symbol,
                 amp,
               },
             })
             setTxHash(response.hash)
-            const tA = wrappedCurrency(cA, chainId)
-            const tB = wrappedCurrency(cB, chainId)
+            const tA = cA.wrapped
+            const tB = cB.wrapped
             if (!!tA && !!tB) {
               // In case subgraph sync is slow, doing this will show the pool in "My Pools" page.
               addPair(tA, tB)
@@ -319,8 +321,8 @@ export default function CreatePool({
       return (
         chainId &&
         currency &&
-        ((currencyEquals(currency, ETHER) && currencyEquals(selectedCurrency, WETH[chainId])) ||
-          (currencyEquals(currency, WETH[chainId]) && currencyEquals(selectedCurrency, ETHER)))
+        ((currency.isNative && selectedCurrency.equals(WETH[chainId])) ||
+          (currency.equals(WETH[chainId]) && selectedCurrency.isNative))
       )
     },
     [chainId],
@@ -382,9 +384,8 @@ export default function CreatePool({
   // const percentToken1 = realPercentToken1.toSignificant(4)
 
   const tokens = useMemo(
-    () =>
-      [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => wrappedCurrency(currency, chainId)),
-    [chainId, currencies],
+    () => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => currency?.wrapped),
+    [currencies],
   )
 
   const usdPrices = useTokensPrice(tokens)
@@ -406,8 +407,7 @@ export default function CreatePool({
     <PageWrapper>
       <Container>
         <AddRemoveTabs
-          creating={true}
-          adding={true}
+          action={LiquidityAction.CREATE}
           onShared={() => {
             mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_LINK_SHARED, {
               token_1: nativeA?.symbol,
@@ -510,7 +510,9 @@ export default function CreatePool({
                       <StyledInternalLink
                         replace
                         to={`/create/${
-                          currencyAIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                          currencyAIsETHER
+                            ? currencyId(WETH[chainId], chainId)
+                            : currencyId(nativeOnChain(chainId), chainId)
                         }/${currencyIdB}`}
                       >
                         {currencyAIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
@@ -549,7 +551,9 @@ export default function CreatePool({
                       <StyledInternalLink
                         replace
                         to={`/create/${currencyIdA}/${
-                          currencyBIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                          currencyBIsETHER
+                            ? currencyId(WETH[chainId], chainId)
+                            : currencyId(nativeOnChain(chainId), chainId)
                         }`}
                       >
                         {currencyBIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
@@ -582,7 +586,9 @@ export default function CreatePool({
                   <ActiveText>
                     AMP
                     {!!pair ? (
-                      <>&nbsp;=&nbsp;{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</>
+                      <>
+                        &nbsp;=&nbsp;{new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)}
+                      </>
                     ) : (
                       ''
                     )}
@@ -649,7 +655,7 @@ export default function CreatePool({
                               +amp >= 1
                                 ? feeRangeCalc(
                                     !!pair?.amp
-                                      ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                      ? +new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
                                       : +amp,
                                   )
                                 : '-'}

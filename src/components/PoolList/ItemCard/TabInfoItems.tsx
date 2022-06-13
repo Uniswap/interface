@@ -22,7 +22,7 @@ export default function TabInfoItems({
     <>
       <ItemCardInfoRow name={t`Total Value Locked`} value={totalValueLocked as string} />
       <ItemCardInfoRow
-        name={t`APR`}
+        name={t`APY`}
         value={Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}
         infoHelperText={t`Estimated return based on yearly fees of the pool`}
       />

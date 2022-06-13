@@ -7,8 +7,8 @@ import { ethers } from 'ethers'
 import Numeral from 'numeral'
 import dayjs from 'dayjs'
 
-import { blockClient } from 'apollo/client'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
+import { blockClient } from 'apollo/client'
 import {
   DYNAMIC_FEE_ROUTER_ADDRESSES,
   ROUTER_ADDRESSES_V2,
@@ -30,12 +30,15 @@ import ROUTER_DYNAMIC_FEE_ABI from '../constants/abis/dmm-router-dynamic-fee.jso
 import ROUTER_STATIC_FEE_ABI from '../constants/abis/dmm-router-static-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
+import { abi as ROUTER_PRO_AMM } from '../constants/abis/v2/ProAmmRouter.json'
 import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import ZAP_ABI from '../constants/abis/zap.json'
+import JSBI from 'jsbi'
+import { Percent, Token, CurrencyAmount, Currency, WETH } from '@kyberswap/ks-sdk-core'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import CLAIM_REWARD_ABI from '../constants/abis/claim-reward.json'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from '@dynamic-amm/sdk'
-import { TokenAddressMap } from 'state/lists/hooks'
+import { TokenAddressMap } from '../state/lists/hooks'
 import { getEthereumMainnetTokenLogoURL } from './ethereumMainnetTokenMapping'
 import { getMaticTokenLogoURL } from './maticTokenMapping'
 import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
@@ -45,19 +48,21 @@ import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 import { getFantomTokenLogoURL } from './fantomTokenMapping'
 import { getCronosTokenLogoURL } from './cronosTokenMapping'
+import { PRO_AMM_ROUTERS } from 'constants/v2'
 import { getAuroraTokenLogoURL } from './auroraTokenMapping'
 import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
 import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
 import { OASIS_TOKEN_LIST } from 'constants/tokenLists/oasis.tokenlist'
 import { ARBITRUM_TOKEN_LIST } from 'constants/tokenLists/arbitrum.tokenlist'
 import { FANTOM_MAINNET_TOKEN_LIST } from 'constants/tokenLists/fantom.mainnet.tokenlist'
-import { MATIC_TOKEN_LIST } from '../constants/tokenLists/matic.tokenlist'
-import { MAINNET_TOKEN_LIST } from '../constants/tokenLists/mainnet.tokenlist'
-import { MUMBAI_TOKEN_LIST } from '../constants/tokenLists/mumbai.tokenlist'
-import { BSC_MAINNET_TOKEN_LIST } from '../constants/tokenLists/bsc.mainnet.tokenlist'
-import { AVAX_MAINNET_TOKEN_LIST } from '../constants/tokenLists/avax.mainnet.tokenlist'
-import { CRONOS_TOKEN_LIST } from '../constants/tokenLists/cronos.tokenlist'
-import { AURORA_TOKEN_LIST } from '../constants/tokenLists/aurora.tokenlist'
+import { MATIC_TOKEN_LIST } from 'constants/tokenLists/matic.tokenlist'
+import { MAINNET_TOKEN_LIST } from 'constants/tokenLists/mainnet.tokenlist'
+import { MUMBAI_TOKEN_LIST } from 'constants/tokenLists/mumbai.tokenlist'
+import { BSC_MAINNET_TOKEN_LIST } from 'constants/tokenLists/bsc.mainnet.tokenlist'
+import { AVAX_MAINNET_TOKEN_LIST } from 'constants/tokenLists/avax.mainnet.tokenlist'
+import { CRONOS_TOKEN_LIST } from 'constants/tokenLists/cronos.tokenlist'
+import { AURORA_TOKEN_LIST } from 'constants/tokenLists/aurora.tokenlist'
+import { RINKEBY_TOKEN_LIST } from 'constants/tokenLists/rinkeby.tokenlist'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -212,13 +217,13 @@ export function basisPointsToPercent(num: number): Percent {
   return new Percent(JSBI.BigInt(num), JSBI.BigInt(10000))
 }
 
-export function calculateSlippageAmount(value: CurrencyAmount, slippage: number): [JSBI, JSBI] {
+export function calculateSlippageAmount(value: CurrencyAmount<Currency>, slippage: number): [JSBI, JSBI] {
   if (slippage < 0 || slippage > 10000) {
     throw Error(`Unexpected slippage value: ${slippage}`)
   }
   return [
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 - slippage)), JSBI.BigInt(10000)),
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 + slippage)), JSBI.BigInt(10000)),
+    JSBI.divide(JSBI.multiply(value.quotient, JSBI.BigInt(10000 - slippage)), JSBI.BigInt(10000)),
+    JSBI.divide(JSBI.multiply(value.quotient, JSBI.BigInt(10000 + slippage)), JSBI.BigInt(10000)),
   ]
 }
 
@@ -260,6 +265,11 @@ export function getStaticFeeRouterContract(chainId: ChainId, library: Web3Provid
 // account is optional
 export function getDynamicFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(DYNAMIC_FEE_ROUTER_ADDRESSES[chainId], ROUTER_DYNAMIC_FEE_ABI, library, account)
+}
+
+// account is optional
+export function getProAmmRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(PRO_AMM_ROUTERS[chainId], ROUTER_PRO_AMM, library, account)
 }
 
 export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
@@ -311,7 +321,7 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency === ETHER) return true
+  if (currency?.isNative) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
 
@@ -454,7 +464,7 @@ export async function splitQuery(query: any, localClient: any, vars: any, list: 
     const sliced = list.slice(skip, end)
     const result = await localClient.query({
       query: query(...vars, sliced),
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'no-cache',
     })
     fetchedData = {
       ...fetchedData,
@@ -629,6 +639,10 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
     case ChainId.OASIS:
       imageURL =
         OASIS_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
+      break
+
+    case ChainId.RINKEBY:
+      imageURL = RINKEBY_TOKEN_LIST.tokens.find(t => t.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
       break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(

@@ -11,7 +11,7 @@ import {
   POOLS_HISTORICAL_BULK_WITH_PAGINATION,
   USER_POSITIONS,
 } from 'apollo/queries'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { AppState } from '../index'
 import { setError, setLoading, setSharedPoolId, updatePools } from './actions'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'

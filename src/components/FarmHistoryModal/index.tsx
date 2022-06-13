@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Box, Text } from 'rebass'
 import { t, Trans } from '@lingui/macro'
 
-import { ChainId, Currency, ETHER } from '@dynamic-amm/sdk'
+import { Currency, ChainId } from '@kyberswap/ks-sdk-core'
 import { ZERO_ADDRESS } from 'constants/index'
 import Modal from 'components/Modal'
 import Loader from 'components/Loader'
@@ -15,7 +15,7 @@ import { useModalOpen, useFarmHistoryModalToggle } from 'state/application/hooks
 import { Farm, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
 import { useYieldHistories } from 'state/farms/hooks'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { convertToNativeTokenFromETH } from 'utils/dmm'
+import { nativeOnChain } from 'constants/tokens'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -78,7 +78,7 @@ const LPTokenSymbol = ({ farm }: { farm: Farm }) => {
 }
 
 const NativeRewardTokenSymbol = ({ chainId }: { chainId?: ChainId }) => {
-  return <span>{convertToNativeTokenFromETH(ETHER, chainId).symbol}</span>
+  return <span>{nativeOnChain(chainId as ChainId).symbol}</span>
 }
 
 const RewardTokenSymbol = ({ address }: { address: string }) => {

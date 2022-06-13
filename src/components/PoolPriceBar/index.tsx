@@ -2,7 +2,9 @@ import { t, Trans } from '@lingui/macro'
 import { ButtonEmpty } from 'components/Button'
 import Card from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
-import { Currency, Fraction, JSBI, Pair, Percent, Price } from '@dynamic-amm/sdk'
+import { Currency, Fraction, Percent, Price } from '@kyberswap/ks-sdk-core'
+import { Pair } from '@kyberswap/ks-sdk-classic'
+import JSBI from 'jsbi'
 import React, { ReactNode, useContext } from 'react'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -15,8 +17,6 @@ import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 import { useMedia } from 'react-use'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { useActiveWeb3React } from 'hooks'
 
 const DEFAULT_MIN_PRICE = '0.00'
 const DEFAULT_MAX_PRICE = '♾️'
@@ -94,7 +94,7 @@ export function PoolPriceBar({
   currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean
   poolTokenPercentage?: Percent
-  price?: Price
+  price?: Price<Currency, Currency>
   pair: Pair | null | undefined
 }) {
   const theme = useContext(ThemeContext)
@@ -198,7 +198,7 @@ export function PoolPriceRangeBarToggle({
   amplification,
 }: {
   currencies: { [field in Field]?: Currency }
-  price?: Price | Fraction
+  price?: Price<Currency, Currency> | Fraction
   pair: Pair | null | undefined
   amplification?: Fraction
 }) {
@@ -221,16 +221,15 @@ export function PoolPriceRangeBar({
   amplification,
 }: {
   currencies: { [field in Field]?: Currency }
-  price?: Price | Fraction
+  price?: Price<Currency, Currency> | Fraction
   pair: Pair | null | undefined
   amplification?: Fraction
 }) {
   const theme = useContext(ThemeContext)
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
-  const { chainId } = useActiveWeb3React()
 
-  const wrappedA = wrappedCurrency(currencies[Field.CURRENCY_A], chainId)
+  const wrappedA = currencies[Field.CURRENCY_A]?.wrapped
 
   const existedPriceRange = () => {
     const amp = amplification?.divide(JSBI.BigInt(10000))

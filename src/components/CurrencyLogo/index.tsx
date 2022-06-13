@@ -1,4 +1,4 @@
-import { ChainId, Currency, ETHER, Token } from '@dynamic-amm/sdk'
+import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -60,7 +60,7 @@ export default function CurrencyLogo({
   size = '24px',
   style,
 }: {
-  currency?: Currency
+  currency?: Currency | null
   size?: string
   style?: React.CSSProperties
 }) {
@@ -68,9 +68,9 @@ export default function CurrencyLogo({
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
-    if (currency === ETHER) return []
+    if (currency?.isNative) return []
 
-    if (currency instanceof Token) {
+    if (currency?.isToken) {
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, getTokenLogoURL(currency.address, chainId)]
       }
@@ -80,7 +80,7 @@ export default function CurrencyLogo({
     return []
   }, [chainId, currency, uriLocations])
 
-  if (currency === ETHER && chainId) {
+  if (currency?.isNative && chainId) {
     return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} alt={`${currency.symbol}Logo`} />
   }
 

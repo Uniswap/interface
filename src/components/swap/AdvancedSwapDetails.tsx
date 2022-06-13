@@ -1,4 +1,5 @@
-import { ChainId, Currency, Trade, TradeType } from '@dynamic-amm/sdk'
+import { Trade } from '@kyberswap/ks-sdk-classic'
+import { Currency, TradeType, ChainId } from '@kyberswap/ks-sdk-core'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
@@ -25,24 +26,30 @@ const InfoLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.text10};
 `
 
-function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
+function TradeSummary({
+  trade,
+  allowedSlippage
+}: {
+  trade: Trade<Currency, Currency, TradeType>
+  allowedSlippage: number
+}) {
   const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee, accruedFeePercent } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
-  const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
-  const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
+  const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency)
+  const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency)
   return (
     <>
       <AutoColumn style={{ padding: '0 20px' }}>
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {isExactIn ? t`Minimum received` : t`Maximum sold`}
+              {isExactIn ? t`Minimum Received` : t`Maximum Sold`}
             </TYPE.black>
             <QuestionHelper
-              text={t`Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.`}
+              text={t`Your transaction will revert if there is a large, unfavorable price movement before it is confirmed`}
             />
           </RowFixed>
           <RowFixed>
@@ -59,7 +66,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
               <Trans>Price Impact</Trans>
             </TYPE.black>
             <QuestionHelper
-              text={t`The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration.`}
+              text={t`The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration`}
             />
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
@@ -73,7 +80,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             <QuestionHelper
               text={t`A portion of each trade (${accruedFeePercent.toSignificant(
                 6,
-              )}%) goes to liquidity providers as a protocol incentive.`}
+              )}%) goes to liquidity providers as a protocol incentive`}
             />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text}>
@@ -86,7 +93,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 }
 
 export interface AdvancedSwapDetailsProps {
-  trade?: Trade
+  trade?: Trade<Currency, Currency, TradeType>
 }
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
@@ -110,7 +117,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
                   <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                     <Trans>Route</Trans>
                   </TYPE.black>
-                  <QuestionHelper text={t`Routing through these tokens resulted in the best price for your trade.`} />
+                  <QuestionHelper text={t`Routing through these tokens resulted in the best price for your trade`} />
                 </RowFixed>
                 <SwapRoute trade={trade} />
               </AutoColumn>

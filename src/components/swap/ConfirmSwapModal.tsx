@@ -1,4 +1,4 @@
-import { currencyEquals, Trade, Currency } from '@dynamic-amm/sdk'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import React, { useCallback, useMemo } from 'react'
 import { t } from '@lingui/macro'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
@@ -8,18 +8,19 @@ import TransactionConfirmationModal, {
 } from '../TransactionConfirmationModal'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
+import { AnyTrade } from 'hooks/useSwapCallback'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
  * @param tradeA trade A
  * @param tradeB trade B
  */
-function tradeMeaningfullyDiffers(tradeA: Trade, tradeB: Trade): boolean {
+function tradeMeaningfullyDiffers(tradeA: AnyTrade, tradeB: AnyTrade): boolean {
   return (
     tradeA.tradeType !== tradeB.tradeType ||
-    !currencyEquals(tradeA.inputAmount.currency, tradeB.inputAmount.currency) ||
+    !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
     !tradeA.inputAmount.equalTo(tradeB.inputAmount) ||
-    !currencyEquals(tradeA.outputAmount.currency, tradeB.outputAmount.currency) ||
+    !tradeA.outputAmount.currency.equals(tradeB.outputAmount.currency) ||
     !tradeA.outputAmount.equalTo(tradeB.outputAmount)
   )
 }
@@ -40,13 +41,13 @@ export default function ConfirmSwapModal({
   showTxBanner,
 }: {
   isOpen: boolean
-  trade: Trade | undefined
-  originalTrade: Trade | undefined
+  trade: AnyTrade | undefined
+  originalTrade: AnyTrade | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
   allowedSlippage: number
-  tokenAddToMetaMask: Currency | undefined
+  tokenAddToMetaMask?: Currency | undefined
   onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: string | undefined

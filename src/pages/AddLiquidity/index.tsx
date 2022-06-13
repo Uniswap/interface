@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 
-import { currencyEquals, WETH, JSBI, Fraction } from '@dynamic-amm/sdk'
-import { AddRemoveTabs } from 'components/NavigationTabs'
+import { Fraction, WETH } from '@kyberswap/ks-sdk-core'
+import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
 import LiquidityProviderMode from 'components/LiquidityProviderMode'
 import { PairState } from 'data/Reserves'
@@ -15,6 +15,7 @@ import ZapIn from './ZapIn'
 import TokenPair from './TokenPair'
 import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName } from './styled'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import JSBI from 'jsbi'
 
 export default function AddLiquidity({
   match: {
@@ -28,8 +29,8 @@ export default function AddLiquidity({
   const nativeA = useCurrencyConvertedToNative(currencyA || undefined)
   const nativeB = useCurrencyConvertedToNative(currencyB || undefined)
 
-  const currencyAIsWETH = !!(chainId && currencyA && currencyEquals(currencyA, WETH[chainId]))
-  const currencyBIsWETH = !!(chainId && currencyB && currencyEquals(currencyB, WETH[chainId]))
+  const currencyAIsWETH = !!(chainId && currencyA && currencyA.equals(WETH[chainId]))
+  const currencyBIsWETH = !!(chainId && currencyB && currencyB.equals(WETH[chainId]))
 
   const oneCurrencyIsWETH = currencyBIsWETH || currencyAIsWETH
 
@@ -54,7 +55,7 @@ export default function AddLiquidity({
     <>
       <PageWrapper>
         <Container>
-          <AddRemoveTabs creating={false} adding={true} />
+          <AddRemoveTabs action={LiquidityAction.ADD} />
 
           <TopBar>
             <LiquidityProviderModeWrapper>

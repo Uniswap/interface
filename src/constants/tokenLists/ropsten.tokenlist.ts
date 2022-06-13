@@ -80,6 +80,31 @@ export const ROPSTEN_TOKEN_LIST = {
       name: 'AAVE',
       decimals: 18,
     },
+    {
+      chainId: 3,
+      address: '0xCc2Ba341cb4459b64c0A284abD7cd0d1fEe4Ee70',
+      symbol: 'USDT_Jensen',
+      name: 'USDT_Jensen',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
+    },
+
+    {
+      chainId: 3,
+      address: '0x2C059Ab112EB6D4bDb6105742D560876A9Fe0f54',
+      symbol: 'USDC_Jensen',
+      name: 'USDC_Jensen',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+    },
+    {
+      chainId: 3,
+      address: '0x13c8F670d3bbd4456870a2C49Bb927F166A977Bd',
+      symbol: 'DAI_Jensen',
+      name: 'DAI_Jensen',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4943.png',
+    },
   ],
   version: {
     major: 0,

@@ -53,10 +53,9 @@ const ButtonWithOptions = ({
     <ButtonPrimary
       minWidth="160px"
       width="fit-content"
-      height="36px"
       padding="0 36px"
       fontSize="14px"
-      style={{ position: 'relative', zIndex: 1, ...style }}
+      style={{ position: 'relative', zIndex: 1, height: '36px', ...style }}
       onClick={e => {
         e.stopPropagation()
         setIsShowNetworks(prev => !prev)
@@ -110,7 +109,7 @@ const ButtonWithOptions = ({
                   key={platform}
                   alignItems="center"
                   as={ExternalLink}
-                  href={`/#/swap?inputCurrency=ETH&outputCurrency=${getAddress(
+                  href={`/swap?inputCurrency=ETH&outputCurrency=${getAddress(
                     platforms.get(platform) ?? '',
                   )}&networkId=${mappedChainId}`}
                   onClick={() => {

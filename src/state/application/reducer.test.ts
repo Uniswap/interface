@@ -1,7 +1,8 @@
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createStore, Store } from 'redux'
 import { addPopup, ApplicationModal, removePopup, setOpenModal, updateBlockNumber } from './actions'
 import reducer, { ApplicationState } from './reducer'
+import { exchangeClients } from 'apollo/client'
 
 describe('application reducer', () => {
   let store: Store<ApplicationState>
@@ -13,6 +14,10 @@ describe('application reducer', () => {
         [ChainId.MAINNET]: 3,
       },
       openModal: null,
+      ethPrice: {},
+      kncPrice: '',
+      chainIdWhenNotConnected: ChainId.MAINNET,
+      exchangeSubgraphClients: exchangeClients
     })
   })
 

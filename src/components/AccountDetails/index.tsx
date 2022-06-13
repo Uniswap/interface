@@ -10,7 +10,6 @@ import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
 
-// import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
@@ -233,8 +232,8 @@ export default function AccountDetails({
   //   connector !== injected && connector !== walletlink && connector !== trezor && connector !== ledger
 
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
+    // const { ethereum } = window
+    // const isMetaMask = !!(ethereum && ethereum.isMetaMask)
     // const name = Object.keys(SUPPORTED_WALLETS)
     //   .filter(
     //     k =>

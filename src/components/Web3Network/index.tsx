@@ -20,15 +20,14 @@ const NetworkCard = styled(Card)`
   position: relative;
   background-color: ${({ theme }) => theme.bg12};
   color: ${({ theme }) => theme.primary};
-  border-radius: 8px;
-  padding: 10px 12px;
+  border-radius: 999px;
+  padding: 8px 12px;
   border: 1px solid transparent;
   min-width: 165px;
 
   &:hover {
     text-decoration: none;
     border: 1px solid ${({ theme }) => theme.primary};
-    border-radius: 8px;
     cursor: pointer;
   }
 

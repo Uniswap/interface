@@ -10,7 +10,7 @@ import { formatNumberWithPrecisionRange, formattedNum } from 'utils'
 import { Link } from 'react-router-dom'
 import { TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { MouseoverTooltipDesktopOnly } from 'components/Tooltip'
@@ -40,7 +40,7 @@ const TopTrendingSoonTokenItem = ({
 
   return (
     <Container>
-      <Flex style={{ gap: '6px' }} alignItems="center">
+      <Flex style={{ gap: '4px' }} alignItems="center">
         <Image
           src={tokenData.logo_url}
           minWidth="16px"

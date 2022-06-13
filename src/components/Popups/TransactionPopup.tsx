@@ -45,7 +45,17 @@ export const SUMMARY: {
     pending: summary => 'Creating pool ' + summary,
     failure: summary => 'Error creating pool ' + summary,
   },
+  'Elastic Create pool': {
+    success: summary => 'Created pool and added ' + summary,
+    pending: summary => 'Creating pool and adding ' + summary,
+    failure: summary => 'Error Creating ' + summary,
+  },
   'Add liquidity': {
+    success: summary => 'Added ' + summary,
+    pending: summary => 'Adding ' + summary,
+    failure: summary => 'Error adding ' + summary,
+  },
+  'Elastic Add liquidity': {
     success: summary => 'Added ' + summary,
     pending: summary => 'Adding ' + summary,
     failure: summary => 'Error adding ' + summary,
@@ -54,6 +64,21 @@ export const SUMMARY: {
     success: summary => 'Removed ' + summary,
     pending: summary => 'Removing ' + summary,
     failure: summary => 'Error removing ' + summary,
+  },
+  'Elastic Remove liquidity': {
+    success: summary => 'Removed ' + summary,
+    pending: summary => 'Removing ' + summary,
+    failure: summary => 'Error removing ' + summary,
+  },
+  'Increase liquidity': {
+    success: summary => 'Increased ' + summary,
+    pending: summary => 'Increasing ' + summary,
+    failure: summary => 'Error increasing ' + summary,
+  },
+  'Collect fee': {
+    success: summary => 'Collected ' + summary,
+    pending: summary => 'Collecting ' + summary,
+    failure: summary => 'Error collecting ' + summary,
   },
   Stake: {
     success: summary => 'Staked ' + summary,
@@ -84,6 +109,16 @@ export const SUMMARY: {
     success: summary => 'Claimed ' + summary,
     pending: summary => 'Claiming ' + summary,
     failure: summary => 'Error claiming ' + summary,
+  },
+  Deposit: {
+    success: summary => 'Deposited ' + summary,
+    pending: summary => 'Depositing ' + summary,
+    failure: summary => 'Error depositing ' + summary,
+  },
+  Withdraw: {
+    success: summary => 'Withdrawn ' + summary,
+    pending: summary => 'Withdrawing ' + summary,
+    failure: summary => 'Error withdrawing ' + summary,
   },
 }
 

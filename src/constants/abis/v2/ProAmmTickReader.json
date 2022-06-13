@@ -1,0 +1,63 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "",
+  "sourceName": "",
+  "abi": [
+    {
+      "inputs": [{ "internalType": "contract IPoolStorage", "name": "pool", "type": "address" }],
+      "name": "getAllTicks",
+      "outputs": [{ "internalType": "int24[]", "name": "allTicks", "type": "int24[]" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "contract IPoolStorage", "name": "pool", "type": "address" },
+        { "internalType": "int24", "name": "tick", "type": "int24" }
+      ],
+      "name": "getNearestInitializedTicks",
+      "outputs": [
+        { "internalType": "int24", "name": "previous", "type": "int24" },
+        { "internalType": "int24", "name": "next", "type": "int24" }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "contract IPoolStorage", "name": "pool", "type": "address" },
+        { "internalType": "int24", "name": "startTick", "type": "int24" },
+        { "internalType": "uint32", "name": "length", "type": "uint32" }
+      ],
+      "name": "getTicksInRange",
+      "outputs": [{ "internalType": "int24[]", "name": "allTicks", "type": "int24[]" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "contract IBasePositionManager", "name": "posManager", "type": "address" },
+        { "internalType": "contract IPoolStorage", "name": "pool", "type": "address" },
+        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+      ],
+      "name": "getTotalFeesOwedToPosition",
+      "outputs": [
+        { "internalType": "uint256", "name": "token0Owed", "type": "uint256" },
+        { "internalType": "uint256", "name": "token1Owed", "type": "uint256" }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "contract IBasePositionManager", "name": "posManager", "type": "address" },
+        { "internalType": "contract IPoolStorage", "name": "pool", "type": "address" },
+        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+      ],
+      "name": "getTotalRTokensOwedToPosition",
+      "outputs": [{ "internalType": "uint256", "name": "rTokenOwed", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}

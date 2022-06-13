@@ -44,7 +44,7 @@ const rotate360 = keyframes`
   }
 `
 
-const Spinner = styled.div`
+export const Spinner = styled.div`
   animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   transform: translateZ(0);
 

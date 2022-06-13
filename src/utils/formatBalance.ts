@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { CurrencyAmount, Fraction, JSBI } from '@dynamic-amm/sdk'
+import JSBI from 'jsbi'
+import { CurrencyAmount, Fraction, Currency } from '@kyberswap/ks-sdk-core'
 import Numeral from 'numeral'
 
 export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, significant = 6): string => {
@@ -76,7 +77,7 @@ export const fixedFormatting = (value: BigNumber, decimals: number) => {
   return parseFloat(res).toString()
 }
 
-export const formatCurrencyAmount = (amount: CurrencyAmount): string => {
+export const formatCurrencyAmount = (amount: CurrencyAmount<Currency>): string => {
   if (amount.lessThan(new Fraction('1'))) {
     return amount.toSignificant(3)
   }

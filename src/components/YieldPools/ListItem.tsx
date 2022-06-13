@@ -7,12 +7,13 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
 
-import { ChainId, Fraction, JSBI, Token, TokenAmount, ZERO } from '@dynamic-amm/sdk'
+import { Fraction, Token, TokenAmount, ChainId } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
 import {
-  AMP_HINT,
   DMM_ANALYTICS_URL,
-  FARMING_POOLS_CHAIN_STAKING_LINK,
   MAX_ALLOW_APY,
+  AMP_HINT,
+  FARMING_POOLS_CHAIN_STAKING_LINK,
   OUTSIDE_FAIRLAUNCH_ADDRESSES,
   TOBE_EXTENDED_FARMING_POOLS,
 } from '../../constants'
@@ -66,7 +67,7 @@ import { useWalletModalToggle } from 'state/application/hooks'
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
 
-  if (fraction.equalTo(ZERO)) {
+  if (fraction.equalTo(JSBI.BigInt(0))) {
     return '0'
   }
 
@@ -166,7 +167,7 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const amountToApprove = useMemo(
     () =>
-      new TokenAmount(
+      TokenAmount.fromRawAmount(
         new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
         MaxUint256.toString(),
       ),
@@ -341,7 +342,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               <div key={reward.token.address} style={{ marginTop: '2px' }}>
                 <Flex alignItems="center">
                   {getFullDisplayBalance(reward.amount, reward.token.decimals)}
-                  {chainId && reward.token.address && (
+                  {chainId && reward.token.wrapped.address && (
                     <CurrencyLogo currency={reward.token} size="16px" style={{ marginLeft: '3px' }} />
                   )}
                 </Flex>

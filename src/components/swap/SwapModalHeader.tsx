@@ -1,4 +1,5 @@
-import { Currency, Trade, TradeType } from '@dynamic-amm/sdk'
+import { Trade } from '@kyberswap/ks-sdk-classic'
+import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
@@ -14,6 +15,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText, SwapShowAcceptChanges } from './styleds'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { AnyTrade } from 'hooks/useSwapCallback'
 
 export default function SwapModalHeader({
   trade,
@@ -22,7 +24,7 @@ export default function SwapModalHeader({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: Trade
+  trade: AnyTrade
   allowedSlippage: number
   recipient: string | null
   showAcceptChanges: boolean
@@ -32,8 +34,10 @@ export default function SwapModalHeader({
     trade,
     allowedSlippage,
   ])
-  const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
-  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
+  const priceImpact = useMemo(() => {
+    return trade instanceof Trade ? computeTradePriceBreakdown(trade).priceImpactWithoutFee : trade.priceImpact
+  }, [trade])
+  const priceImpactSeverity = warningSeverity(priceImpact)
 
   const theme = useContext(ThemeContext)
 

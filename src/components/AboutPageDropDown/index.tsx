@@ -44,7 +44,7 @@ const Dropdown = styled.div`
   border-radius: 8px;
   padding: 16px;
   width: max-content;
-  top: 36px;
+  top: 32px;
   left: 50%;
   transform: translate(-50%, 0);
   gap: 16px;

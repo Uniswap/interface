@@ -84,7 +84,7 @@ const useFairLaunch = (address: string) => {
   )
 
   const harvest = useCallback(
-    async (pid: number, name: string) => {
+    async (pid: number, _name: string) => {
       if (!fairLaunchContract) {
         throw new Error(CONTRACT_NOT_FOUND_MSG)
       }

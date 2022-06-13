@@ -1,4 +1,4 @@
-import { Currency } from '@dynamic-amm/sdk'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
@@ -14,8 +14,8 @@ const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
 interface DoubleCurrencyLogoProps {
   margin?: boolean
   size?: number
-  currency0?: Currency
-  currency1?: Currency
+  currency0?: Currency | null
+  currency1?: Currency | null
 }
 
 const HigherLogo = styled.div`

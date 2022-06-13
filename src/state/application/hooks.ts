@@ -2,9 +2,9 @@ import { useCallback, useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
-import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
-import { ChainId, Token, WETH } from '@dynamic-amm/sdk'
-import { KNC, ZERO_ADDRESS, OUTSITE_FARM_REWARDS_QUERY } from '../../constants'
+import { ETH_PRICE, TOKEN_DERIVED_ETH, PROMM_ETH_PRICE } from 'apollo/queries'
+import { Token, ChainId, NativeCurrency } from '@kyberswap/ks-sdk-core'
+import { KNC, OUTSITE_FARM_REWARDS_QUERY } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -14,12 +14,13 @@ import {
   removePopup,
   setOpenModal,
   updateETHPrice,
+  updatePrommETHPrice,
   updateKNCPrice,
 } from './actions'
 import { getPercentChange, getBlockFromTimestamp } from 'utils'
 import { useDeepCompareEffect } from 'react-use'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { defaultExchangeClient } from 'apollo/client'
+import { defaultExchangeClient, prommClient } from 'apollo/client'
 
 export function useExchangeClient() {
   const { chainId } = useActiveWeb3React()
@@ -114,6 +115,10 @@ export function useTrendingSoonTokenDetailModalToggle(): () => void {
   return useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
 }
 
+export function useTrueSightUnsubscribeModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.UNSUBSCRIBE_TRUESIGHT)
+}
+
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()
@@ -163,6 +168,7 @@ const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<Normaliz
       query: ETH_PRICE(),
       fetchPolicy: 'network-only',
     })
+
     const resultOneDay = await apolloClient.query({
       query: ETH_PRICE(oneDayBlock),
       fetchPolicy: 'network-only',
@@ -180,27 +186,78 @@ const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<Normaliz
   return [ethPrice, ethPriceOneDay, priceChangeETH]
 }
 
-export function useETHPrice(): AppState['application']['ethPrice'] {
+const getPrommEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
+  const utcCurrentTime = dayjs()
+  const utcOneDayBack = utcCurrentTime
+    .subtract(1, 'day')
+    .startOf('minute')
+    .unix()
+
+  let ethPrice = 0
+  let ethPriceOneDay = 0
+  let priceChangeETH = 0
+
+  try {
+    const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
+    const result = await apolloClient.query({
+      query: PROMM_ETH_PRICE(),
+      fetchPolicy: 'network-only',
+    })
+
+    const resultOneDay = await apolloClient.query({
+      query: PROMM_ETH_PRICE(oneDayBlock),
+      fetchPolicy: 'network-only',
+    })
+    const currentPrice = result?.data?.bundles[0]?.ethPriceUSD
+    const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPriceUSD
+
+    priceChangeETH = getPercentChange(currentPrice, oneDayBackPrice)
+    ethPrice = currentPrice
+    ethPriceOneDay = oneDayBackPrice
+  } catch (e) {
+    console.log(e)
+  }
+
+  return [ethPrice, ethPriceOneDay, priceChangeETH]
+}
+
+export function useETHPrice(version: string = 'dmm'): AppState['application']['ethPrice'] {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
-  const blockNumber = useBlockNumber()
   const apolloClient = useExchangeClient()
 
-  const ethPrice = useSelector((state: AppState) => state.application.ethPrice)
+  const ethPrice = useSelector((state: AppState) =>
+    version === 'promm' ? state.application.prommEthPrice : state.application.ethPrice,
+  )
 
   useEffect(() => {
+    const apolloProMMClient = prommClient[chainId as ChainId]
+
     async function checkForEthPrice() {
-      const [newPrice, oneDayBackPrice, pricePercentChange] = await getEthPrice(chainId as ChainId, apolloClient)
+      let [newPrice, oneDayBackPrice, pricePercentChange] = await (version === 'promm' && apolloProMMClient
+        ? getPrommEthPrice(chainId as ChainId, apolloProMMClient)
+        : getEthPrice(chainId as ChainId, apolloClient))
+
+      // if (!newPrice && apolloProMMClient) {
+      //   ;[newPrice, oneDayBackPrice, pricePercentChange] = await getPrommEthPrice(chainId as ChainId, apolloProMMClient)
+      // }
+
       dispatch(
-        updateETHPrice({
-          currentPrice: (newPrice ? newPrice : 0).toString(),
-          oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
-          pricePercentChange,
-        }),
+        version === 'promm'
+          ? updatePrommETHPrice({
+              currentPrice: (newPrice ? newPrice : 0).toString(),
+              oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
+              pricePercentChange,
+            })
+          : updateETHPrice({
+              currentPrice: (newPrice ? newPrice : 0).toString(),
+              oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
+              pricePercentChange,
+            }),
       )
     }
     checkForEthPrice()
-  }, [ethPrice, dispatch, chainId, blockNumber, apolloClient])
+  }, [dispatch, chainId, apolloClient, version])
 
   return ethPrice
 }
@@ -284,11 +341,16 @@ const getTokenPriceByETH = async (tokenAddress: string, apolloClient: ApolloClie
   return tokenPriceByETH
 }
 
-export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
-  const ethPrice = useETHPrice()
+const cache: { [key: string]: number } = {}
+
+export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefined)[], version?: string): number[] {
+  const ethPrice = useETHPrice(version)
+
   const { chainId } = useActiveWeb3React()
   const [prices, setPrices] = useState<number[]>([])
   const apolloClient = useExchangeClient()
+
+  const client = version !== 'promm' ? apolloClient : prommClient[chainId as ChainId]
 
   useDeepCompareEffect(() => {
     async function checkForTokenPrice() {
@@ -301,12 +363,17 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
           return 0
         }
 
-        if (token?.address === ZERO_ADDRESS.toLowerCase() || token?.address === WETH[chainId as ChainId].address) {
+        if (token.isNative) {
           return parseFloat(ethPrice.currentPrice)
         }
 
-        const tokenPriceByETH = await getTokenPriceByETH(token?.address, apolloClient)
+        const key = `${token.address}_${chainId}_${version}`
+        if (cache[key]) return cache[key]
+
+        const tokenPriceByETH = await getTokenPriceByETH(token?.address, client)
         const tokenPrice = tokenPriceByETH * parseFloat(ethPrice.currentPrice)
+
+        if (tokenPrice) cache[key] = tokenPrice
 
         return tokenPrice || 0
       })
@@ -317,7 +384,7 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
     }
 
     checkForTokenPrice()
-  }, [ethPrice.currentPrice, chainId, tokens])
+  }, [ethPrice.currentPrice, chainId, tokens, version])
 
   return prices
 }

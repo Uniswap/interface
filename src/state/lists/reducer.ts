@@ -49,7 +49,6 @@ export default createReducer(initialState, builder =>
       state.byUrl[url] = {
         current: null,
         pendingUpdate: null,
-        ...state.byUrl[url],
         loadingRequestId: requestId,
         error: null,
       }

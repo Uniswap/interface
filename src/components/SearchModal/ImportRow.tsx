@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react'
 import { Trans } from '@lingui/macro'
-import { Token } from '@dynamic-amm/sdk'
+import { Token } from '@kyberswap/ks-sdk-core'
 import { AutoRow, RowFixed } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'

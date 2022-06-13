@@ -7,12 +7,15 @@ import user from './user/reducer'
 import transactions from './transactions/reducer'
 import swap from './swap/reducer'
 import mint from './mint/reducer'
+import mintV2 from './mint/proamm/reducer'
 import lists from './lists/reducer'
 import burn from './burn/reducer'
+import burnProAmm from './burn/proamm/reducer'
 import multicall from './multicall/reducer'
 import pair from './pair/reducer'
 import pools from './pools/reducer'
 import farms from './farms/reducer'
+import prommFarms from './farms/promm/reducer'
 import vesting from './vesting/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
@@ -25,22 +28,27 @@ const store = configureStore({
     transactions,
     swap,
     mint,
+    mintV2,
     burn,
+    burnProAmm,
     multicall,
     lists,
     pair,
     pools,
     farms,
+    prommFarms,
     vesting,
+    // [dataApi.reducerPath]: dataApi.reducer
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({ thunk: false, immutableCheck: false, serializableCheck: false }).concat(
-      save({ states: PERSISTED_KEYS, debounce: 1000 }),
-    ),
+    getDefaultMiddleware({ thunk: false, immutableCheck: false, serializableCheck: false })
+      // .concat(dataApi.middleware)
+      .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS }),
 })
 
 store.dispatch(updateVersion())
+// setupListeners(store.dispatch)
 
 export default store
 

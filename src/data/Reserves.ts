@@ -1,12 +1,11 @@
+import { JSBI, DMMPool, Pair } from '@kyberswap/ks-sdk-classic'
+import { TokenAmount, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { STATIC_FEE_FACTORY_ADDRESSES } from './../constants/index'
-import { TokenAmount, Pair, Currency, JSBI, Token, DMMPool } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { Interface } from '@ethersproject/abi'
-import { useActiveWeb3React } from '../hooks'
-
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
-import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useStaticFeeFactoryContract, useDynamicFeeFactoryContract } from 'hooks/useContract'
+import { useActiveWeb3React } from 'hooks'
 
 export enum PairState {
   LOADING,
@@ -20,14 +19,9 @@ export function usePairs(
 ): [PairState, Pair | null, boolean?][][] {
   const { chainId } = useActiveWeb3React()
 
-  const tokens = useMemo(
-    () =>
-      currencies.map(([currencyA, currencyB]) => [
-        wrappedCurrency(currencyA, chainId),
-        wrappedCurrency(currencyB, chainId),
-      ]),
-    [chainId, currencies],
-  )
+  const tokens = useMemo(() => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]), [
+    currencies,
+  ])
 
   const staticContract = useStaticFeeFactoryContract()
   const dynamicContract = useDynamicFeeFactoryContract()
@@ -49,7 +43,7 @@ export function usePairs(
   const result: any[] = []
   let start = 0
   tokens.forEach(([tokenA, tokenB]) => {
-    if (!!(tokenA && tokenB && !tokenA.equals(tokenB))) {
+    if (!!(tokenA && tokenB && !tokenA.equals(tokenB)) && (!!staticRess[start] || !!dynamicRess[start])) {
       result.push(staticRess[start])
       result.push(dynamicRess[start])
       start += 1
@@ -93,12 +87,13 @@ export function usePairs(
               chainId && factoryAddresses && factoryAddresses[0] === STATIC_FEE_FACTORY_ADDRESSES[chainId]
             vv[vv.length - 1].push([
               PairState.EXISTS,
+              // TODO: Check reserve
               new Pair(
                 pairAddresses[start],
-                new TokenAmount(token0, _reserve0.toString()),
-                new TokenAmount(token1, _reserve1.toString()),
-                new TokenAmount(token0, _vReserve0.toString()),
-                new TokenAmount(token1, _vReserve1.toString()),
+                TokenAmount.fromRawAmount(token0, _reserve0.toString()),
+                TokenAmount.fromRawAmount(token1, _reserve1.toString()),
+                TokenAmount.fromRawAmount(token0, _vReserve0.toString()),
+                TokenAmount.fromRawAmount(token1, _vReserve1.toString()),
                 JSBI.BigInt(feeInPrecision),
                 JSBI.BigInt(amp[0]),
               ),
@@ -138,11 +133,11 @@ export function usePairsByAddress(
       const { result: reserves, loading } = result
       const { result: amp, loading: loadingAmp } = ampResults[i]
       const { result: factoryAddresses } = factories[i]
-      const tokenA = wrappedCurrency(pairInfo[i].currencies[0], chainId)
-      const tokenB = wrappedCurrency(pairInfo[i].currencies[1], chainId)
+      const tokenA = pairInfo[i].currencies[0]?.wrapped
+      const tokenB = pairInfo[i].currencies[1]?.wrapped
 
       if (loading || loadingAmp) return [PairState.LOADING, null]
-      if (typeof pairInfo[i].address == 'undefined' || !amp) return [PairState.NOT_EXISTS, null]
+      if (typeof pairInfo[i].address === 'undefined' || !amp) return [PairState.NOT_EXISTS, null]
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
       if (!reserves) return [PairState.NOT_EXISTS, null]
       const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
@@ -153,10 +148,10 @@ export function usePairsByAddress(
         PairState.EXISTS,
         new Pair(
           pairInfo[i].address as string,
-          new TokenAmount(token0, _reserve0.toString()),
-          new TokenAmount(token1, _reserve1.toString()),
-          new TokenAmount(token0, _vReserve0.toString()),
-          new TokenAmount(token1, _vReserve1.toString()),
+          TokenAmount.fromRawAmount(token0, _reserve0.toString()),
+          TokenAmount.fromRawAmount(token1, _reserve1.toString()),
+          TokenAmount.fromRawAmount(token0, _vReserve0.toString()),
+          TokenAmount.fromRawAmount(token1, _vReserve1.toString()),
           JSBI.BigInt(feeInPrecision),
           JSBI.BigInt(amp[0]),
         ),
@@ -175,16 +170,9 @@ export function usePairByAddress(tokenA?: Token, tokenB?: Token, address?: strin
 }
 
 export function useUnAmplifiedPairs(currencies: [Currency | undefined, Currency | undefined][]): string[] {
-  const { chainId } = useActiveWeb3React()
-
-  const tokens = useMemo(
-    () =>
-      currencies.map(([currencyA, currencyB]) => [
-        wrappedCurrency(currencyA, chainId),
-        wrappedCurrency(currencyB, chainId),
-      ]),
-    [chainId, currencies],
-  )
+  const tokens = useMemo(() => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]), [
+    currencies,
+  ])
   const staticContract = useStaticFeeFactoryContract()
   const dynamicContract = useDynamicFeeFactoryContract()
   const staticRess = useSingleContractMultipleData(

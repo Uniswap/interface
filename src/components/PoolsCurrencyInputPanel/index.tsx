@@ -2,7 +2,8 @@ import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
-import { Currency, Pair } from '@dynamic-amm/sdk'
+import { Currency } from '@kyberswap/ks-sdk-core'
+import { Pair } from '@kyberswap/ks-sdk-classic'
 
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -26,10 +27,10 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   height: 2.25rem;
   font-size: 20px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.bg1)};
-  border: 1px solid ${({ theme }) => theme.border};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg6 : theme.bg6)};
+  border: 1px solid transparent;
   color: ${({ theme }) => theme.text};
-  border-radius: 4px;
+  border-radius: 40px;
   outline: none;
   cursor: pointer;
   user-select: none;

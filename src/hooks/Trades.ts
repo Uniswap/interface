@@ -1,8 +1,8 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from '@dynamic-amm/sdk'
+import { Pair, Trade } from '@kyberswap/ks-sdk-classic'
+import { Currency, CurrencyAmount, Token, TradeType } from '@kyberswap/ks-sdk-core'
 import { useMemo, useEffect, useState, useCallback } from 'react'
-import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
+import { ZERO_ADDRESS } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
-import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './index'
 import { routerUri } from '../apollo/client'
 import useDebounce from './useDebounce'
@@ -11,93 +11,13 @@ import { AggregationComparer } from '../state/swap/types'
 import useParsedQueryString from './useParsedQueryString'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
+import { useAllCurrencyCombinations } from './useAllCurrencyCombinations'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { isAddress } from 'utils'
+import { useSwapState } from 'state/swap/hooks'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][] {
-  const { chainId } = useActiveWeb3React()
-
-  const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
-
-  const [tokenA, tokenB] = chainId
-    ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
-    : [undefined, undefined]
-
-  // const basePairs: [Token, Token][] = useMemo(
-  //   () =>
-  //     flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
-  //       ([t0, t1]) => t0.address !== t1.address
-  //     ),
-  //   [bases]
-  // )
-
-  const basePairs: [Token, Token][] = useMemo(() => {
-    const res: [Token, Token][] = []
-    for (let i = 0; i < bases.length - 1; i++) {
-      for (let j = i + 1; j < bases.length; j++) {
-        res.push([bases[i], bases[j]])
-      }
-    }
-    return res
-  }, [bases])
-
-  const AAgainstAllBase = useMemo(
-    () =>
-      tokenA && bases.filter(base => base.address === tokenA?.address).length <= 0
-        ? bases.map((base): [Token, Token] => [tokenA, base])
-        : [],
-    [bases, tokenA],
-  )
-
-  const BAgainstAllBase = useMemo(
-    () =>
-      tokenB && bases.filter(base => base.address === tokenB?.address).length <= 0
-        ? bases.map((base): [Token, Token] => [tokenB, base])
-        : [],
-    [bases, tokenB],
-  )
-  const directPair = useMemo(
-    () =>
-      tokenA &&
-      tokenB &&
-      bases.filter(base => base.address === tokenA?.address).length <= 0 &&
-      bases.filter(base => base.address === tokenB?.address).length <= 0
-        ? [[tokenA, tokenB]]
-        : [],
-    [bases, tokenA, tokenB],
-  )
-
-  const allPairCombinations: [Token, Token][] = useMemo(
-    () =>
-      tokenA && tokenB
-        ? [
-            // the direct pair
-            ...directPair,
-            // token A against all bases
-            ...AAgainstAllBase,
-            // token B against all bases
-            ...BAgainstAllBase,
-            // each base against all bases
-            ...basePairs,
-          ]
-            .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
-            .filter(([t0, t1]) => t0.address !== t1.address)
-            .filter(([tokenA, tokenB]) => {
-              if (!chainId) return true
-              const customBases = CUSTOM_BASES[chainId]
-              if (!customBases) return true
-
-              const customBasesA: Token[] | undefined = customBases[tokenA.address]
-              const customBasesB: Token[] | undefined = customBases[tokenB.address]
-
-              if (!customBasesA && !customBasesB) return true
-
-              if (customBasesA && !customBasesA.find(base => tokenB.equals(base))) return false
-              if (customBasesB && !customBasesB.find(base => tokenA.equals(base))) return false
-
-              return true
-            })
-        : [],
-    [tokenA, tokenB, bases, basePairs, chainId],
-  )
+  const allPairCombinations = useAllCurrencyCombinations(currencyA, currencyB)
 
   const allPairs = usePairs(allPairCombinations)
 
@@ -125,12 +45,16 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
-export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
+export function useTradeExactIn(
+  currencyAmountIn?: CurrencyAmount<Currency>,
+  currencyOut?: Currency,
+): Trade<Currency, Currency, TradeType> | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut).filter(item => item.length > 0)
-  const [trade, setTrade] = useState<Trade | null>(null)
+  const [trade, setTrade] = useState<Trade<Currency, Currency, TradeType> | null>(null)
+
   useEffect(() => {
     let timeout: any
-    const fn = async function() {
+    const fn = async function () {
       timeout = setTimeout(() => {
         if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
           if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
@@ -151,6 +75,7 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
       clearTimeout(timeout)
     }
   }, [currencyAmountIn?.toSignificant(10), currencyAmountIn?.currency, currencyOut, allowedPairs.length])
+
   return trade
   // return useMemo(() => {
   //   if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
@@ -165,12 +90,15 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
 /**
  * Returns the best trade for the token in to the exact amount of token out
  */
-export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
+export function useTradeExactOut(
+  currencyIn?: Currency,
+  currencyAmountOut?: CurrencyAmount<Currency>,
+): Trade<Currency, Currency, TradeType> | null {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency).filter(item => item.length > 0)
-  const [trade, setTrade] = useState<Trade | null>(null)
+  const [trade, setTrade] = useState<Trade<Currency, Currency, TradeType> | null>(null)
   useEffect(() => {
     let timeout: any
-    const fn = async function() {
+    const fn = async function () {
       timeout = setTimeout(() => {
         if (currencyAmountOut && currencyIn && allowedPairs.length > 0) {
           if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
@@ -207,16 +135,18 @@ let controller = new AbortController()
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
 export function useTradeExactInV2(
-  currencyAmountIn?: CurrencyAmount,
-  currencyOut?: Currency,
-  saveGas?: boolean,
+  currencyAmountIn: CurrencyAmount<Currency> | undefined,
+  currencyOut: Currency | undefined,
+  saveGas: boolean,
+  recipient: string | null,
+  allowedSlippage: number,
 ): {
   trade: Aggregator | null
   comparer: AggregationComparer | null
   onUpdateCallback: (resetRoute?: boolean) => void
   loading: boolean
 } {
-  const { chainId } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const parsedQs: { dexes?: string } = useParsedQueryString()
 
   const [trade, setTrade] = useState<Aggregator | null>(null)
@@ -230,6 +160,9 @@ export function useTradeExactInV2(
   }, [chainId])
 
   const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
+  const deadline = useTransactionDeadline()
+
+  const { feeConfig } = useSwapState()
 
   const onUpdateCallback = useCallback(
     async (resetRoute = false) => {
@@ -250,17 +183,32 @@ export function useTradeExactInV2(
           if (!isCancelSetLoading) setLoading(true)
         }, 1000)
 
+        const to = (isAddress(recipient) ? (recipient as string) : account) ?? ZERO_ADDRESS
+
         const [state, comparedResult] = await Promise.all([
           Aggregator.bestTradeExactIn(
             routerApi,
             debounceCurrencyAmountIn,
             currencyOut,
             saveGas,
-            parsedQs.dexes,
             gasPrice,
+            parsedQs.dexes,
+            allowedSlippage,
+            deadline,
+            to,
+            feeConfig,
             signal,
           ),
-          Aggregator.compareDex(routerApi, debounceCurrencyAmountIn, currencyOut, signal),
+          Aggregator.compareDex(
+            routerApi,
+            debounceCurrencyAmountIn,
+            currencyOut,
+            allowedSlippage,
+            deadline,
+            to,
+            feeConfig,
+            signal,
+          ),
         ])
         if (!signal.aborted) {
           setTrade(state)
@@ -273,7 +221,19 @@ export function useTradeExactInV2(
         setComparer(null)
       }
     },
-    [debounceCurrencyAmountIn, currencyOut, routerApi, saveGas, gasPrice, parsedQs.dexes],
+    [
+      debounceCurrencyAmountIn,
+      currencyOut,
+      routerApi,
+      saveGas,
+      parsedQs.dexes,
+      gasPrice,
+      allowedSlippage,
+      deadline,
+      recipient,
+      account,
+      feeConfig,
+    ],
   )
 
   useEffect(() => {

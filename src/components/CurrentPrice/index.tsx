@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 
-import { Currency, Price } from '@dynamic-amm/sdk'
+import { Currency, Price } from '@kyberswap/ks-sdk-core'
 import { ButtonEmpty } from 'components/Button'
 import SwitchIcon from 'components/Icons/SwitchIcon'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 interface CurrentPriceProps {
-  price?: Price
+  price?: Price<Currency, Currency>
 }
 
 export default function CurrentPrice({ price }: CurrentPriceProps) {

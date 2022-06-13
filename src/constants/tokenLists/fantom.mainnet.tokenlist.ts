@@ -145,7 +145,7 @@ export const FANTOM_MAINNET_TOKEN_LIST = {
       address: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
       chainId: 250,
       decimals: 18,
-      logoURI: 'https://assets.spookyswap.finance/coins/0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83.png',
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/10240.png',
     },
     {
       name: 'yearn.finance',

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Token, ChainId, ETHER, WETH } from '@dynamic-amm/sdk'
+import { Token, ChainId, WETH } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { COINGECKO_NETWORK_ID } from 'constants/index'
 import useSWR from 'swr'
@@ -41,9 +41,8 @@ const generateCoingeckoUrl = (
   const timeFrom =
     timeFrame === 'live' ? timeTo - 1000 : getUnixTime(subHours(new Date(), getTimeFrameHours(timeFrame)))
 
-  return `https://api.coingecko.com/api/v3/coins/${
-    COINGECKO_NETWORK_ID[chainId || ChainId.MAINNET]
-  }/contract/${address}/market_chart/range?vs_currency=usd&from=${timeFrom}&to=${timeTo}`
+  return `https://api.coingecko.com/api/v3/coins/${COINGECKO_NETWORK_ID[chainId || ChainId.MAINNET]
+    }/contract/${address}/market_chart/range?vs_currency=usd&from=${timeFrom}&to=${timeTo}`
 }
 const getClosestPrice = (prices: any[], time: number) => {
   let closestIndex = 0
@@ -105,14 +104,13 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
     () =>
       tokens
         .filter(Boolean)
-        .map(token => (token === ETHER ? WETH[chainId || ChainId.MAINNET].address : token?.address)?.toLowerCase()),
-    [tokens, chainId],
+        .map(token => (token?.isNative ? WETH[chainId || ChainId.MAINNET].address : token?.address)?.toLowerCase()),
+    [tokens, chainId]
   )
   const { data: kyberData, error: kyberError } = useSWR(
     tokenAddresses[0] && tokenAddresses[1]
-      ? `https://price-chart.kyberswap.com/api/price-chart?chainId=${chainId}&timeWindow=${timeFrame.toLowerCase()}&tokenIn=${
-          tokenAddresses[0]
-        }&tokenOut=${tokenAddresses[1]}`
+      ? `https://price-chart.kyberswap.com/api/price-chart?chainId=${chainId}&timeWindow=${timeFrame.toLowerCase()}&tokenIn=${tokenAddresses[0]
+      }&tokenOut=${tokenAddresses[1]}`
       : null,
     fetchKyberDataSWR,
     {

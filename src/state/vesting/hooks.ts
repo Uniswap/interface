@@ -1,20 +1,25 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ChainId, Token } from '@dynamic-amm/sdk'
+import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import FAIRLAUNCH_V2_ABI from 'constants/abis/fairlaunch-v2.json'
-import { FAIRLAUNCH_ADDRESSES, FAIRLAUNCH_V2_ADDRESSES } from 'constants/index'
+import { FAIRLAUNCH_ADDRESSES, FAIRLAUNCH_V2_ADDRESSES, ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
-import { useRewardLockerContracts } from 'hooks/useContract'
+import { useRewardLockerContracts, useMultipleContracts } from 'hooks/useContract'
 import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
 import { useRewardTokensFullInfo } from 'utils/dmm'
 import { setLoading, setSchedulesByRewardLocker } from './actions'
 import { RewardLockerVersion } from 'state/farms/types'
+import { useProMMFarms, useGetProMMFarms } from 'state/farms/promm/hooks'
+import { useTokens } from 'hooks/Tokens'
+import { useTokensPrice } from 'state/application/hooks'
+import REWARD_LOCKER_V2_ABI from 'constants/abis/reward-locker-v2.json'
+import { Contract } from 'ethers'
 
 export const useRewardLockerAddressesWithVersion = (): { [rewardLockerAddress: string]: RewardLockerVersion } => {
   const { chainId } = useActiveWeb3React()
@@ -178,4 +183,121 @@ export const useSchedules = () => {
   ])
 
   return { schedulesByRewardLocker }
+}
+
+export interface Schedule {
+  startTime: number
+  endTime: number
+  index: number
+  token: Token
+  vestedQuantity: BigNumber
+  quantity: BigNumber
+  tokenPrice: number
+  contract: Contract
+}
+
+export const usePrommSchedules = () => {
+  const { account } = useActiveWeb3React()
+  const { data: farms, loading: farmLoading } = useProMMFarms()
+  const getProMMFarm = useGetProMMFarms()
+
+  const firstRender = useRef(true)
+
+  useEffect(() => {
+    if (!Object.keys(farms).length && firstRender.current) {
+      getProMMFarm()
+      firstRender.current = false
+    }
+  }, [farms, getProMMFarm])
+
+  const rewardTokenAddresses = useMemo(() => {
+    const addresses: { [address: string]: 1 } = {}
+    Object.values(farms).forEach(farms => {
+      farms.forEach(farm => {
+        farm.rewardTokens.forEach(tk => (addresses[tk] = 1))
+      })
+    })
+    return Object.keys(addresses)
+  }, [farms])
+
+  const rwTokenMap = useTokens(rewardTokenAddresses)
+
+  const tokens = useMemo(() => {
+    return Object.values(rwTokenMap)
+  }, [rwTokenMap])
+
+  const prices = useTokensPrice(tokens, 'promm')
+
+  const tokenPriceMap = useMemo(() => {
+    return prices.reduce((priceMap, price, index) => {
+      return {
+        ...priceMap,
+        [tokens[index]?.isNative ? ZERO_ADDRESS : tokens[index]?.address]: price,
+      }
+    }, {} as { [address: string]: number })
+  }, [prices, tokens])
+
+  const rewardTokensByRewardLocker = useMemo(() => {
+    const temp: { [rewardLocker: string]: string[] } = {}
+
+    Object.values(farms).forEach(farms => {
+      farms.forEach(farm => {
+        const rl = farm.rewardLocker
+        if (!temp[rl]) temp[rl] = []
+        temp[rl] = [...new Set(temp[rl].concat(farm.rewardTokens))]
+      })
+    })
+
+    return temp
+  }, [farms])
+
+  const rewardLockerAddresses = useMemo(() => Object.keys(rewardTokensByRewardLocker), [rewardTokensByRewardLocker])
+  const rewardLockerContracts = useMultipleContracts(rewardLockerAddresses, REWARD_LOCKER_V2_ABI)
+
+  const [schedulesByRewardLocker, setSchedules] = useState<{ [address: string]: Schedule[] }>({})
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const getVestingSchedules = async () => {
+      const temp: {
+        [address: string]: Array<Schedule>
+      } = {}
+      if (!rewardLockerContracts || !account) return
+
+      setLoading(true)
+      for (let i = 0; i < rewardLockerAddresses.length; i++) {
+        const address = rewardLockerAddresses[i]
+        const contract = rewardLockerContracts[address]
+
+        const schedules = await Promise.all(
+          rewardTokensByRewardLocker[address]
+            .filter(token => !!rwTokenMap[token])
+            .map(async token => {
+              const res = await contract.getVestingSchedules(account, token)
+              return res.map((item: any, index: number) => ({
+                ...item,
+                startTime: item.startTime.toNumber(),
+                endTime: item.endTime.toNumber(),
+                index,
+                token: rwTokenMap[token],
+                tokenPrice: tokenPriceMap[token] || 0,
+                contract,
+              }))
+            }),
+        )
+
+        temp[address] = schedules.flat()
+      }
+
+      setLoading(false)
+      setSchedules(temp)
+    }
+
+    getVestingSchedules()
+  }, [tokenPriceMap, rewardLockerContracts, account, rewardLockerAddresses, rewardTokensByRewardLocker, rwTokenMap])
+
+  return {
+    schedulesByRewardLocker,
+    loading: loading || farmLoading,
+  }
 }

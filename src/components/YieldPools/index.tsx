@@ -7,10 +7,8 @@ import { AMP_HINT, TOBE_EXTENDED_FARMING_POOLS } from 'constants/index'
 import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
 import InfoHelper from 'components/InfoHelper'
 import { useFarmsData } from 'state/farms/hooks'
-import { formattedNum, isAddressString } from 'utils'
-import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
+import { isAddressString } from 'utils'
 import {
-  TotalRewardsContainer,
   TableHeader,
   ClickableText,
   StakedOnlyToggleWrapper,
@@ -18,7 +16,6 @@ import {
   StakedOnlyToggleText,
   HeadingContainer,
   HeadingRight,
-  MenuFlyout,
   SearchContainer,
   SearchInput,
 } from './styleds'
@@ -28,15 +25,12 @@ import LocalLoader from 'components/LocalLoader'
 import useTheme from 'hooks/useTheme'
 import { useBlockNumber } from 'state/application/hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { ChevronUp, ChevronDown } from 'react-feather'
-import { TYPE } from 'theme'
-import { fixedFormatting } from 'utils/formatBalance'
 import Search from 'components/Icons/Search'
 import useDebounce from 'hooks/useDebounce'
 import { Farm } from 'state/farms/types'
 import { BigNumber } from 'ethers'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useHistory, useLocation } from 'react-router-dom'
 
@@ -45,8 +39,6 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
   const { chainId } = useActiveWeb3React()
   const above1000 = useMedia('(min-width: 1000px)')
   const { data: farmsByFairLaunch } = useFarmsData()
-  const totalRewards = useFarmRewards(Object.values(farmsByFairLaunch).flat())
-  const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
   const [stakedOnly, setStakedOnly] = useState({
     active: false,
     ended: false,
@@ -199,33 +191,6 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
             />
             <Search color={theme.subText} />
           </SearchContainer>
-          <TotalRewardsContainer
-            ref={ref as any}
-            onClick={() => setOpen(prev => !prev)}
-            disabled={totalRewardsUSD <= 0}
-          >
-            <Flex width="max-content">
-              <Trans>My Total Rewards</Trans>:
-              <Text marginLeft="4px">{totalRewardsUSD ? formattedNum(totalRewardsUSD.toString(), true) : '$0'}</Text>
-            </Flex>
-
-            {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-            {totalRewardsUSD > 0 && totalRewards.length > 0 && open && (
-              <MenuFlyout>
-                {totalRewards.map(reward => {
-                  if (!reward || !reward.amount || reward.amount.lte(0)) {
-                    return null
-                  }
-
-                  return (
-                    <TYPE.body key={reward.token.address} color={theme.text11} fontWeight={'normal'} fontSize={16}>
-                      {fixedFormatting(reward.amount, reward.token.decimals)} {reward.token.symbol}
-                    </TYPE.body>
-                  )
-                })}
-              </MenuFlyout>
-            )}
-          </TotalRewardsContainer>
         </HeadingRight>
       </HeadingContainer>
 
@@ -253,7 +218,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
 
           <Flex grid-area="apy" alignItems="center" justifyContent="flex-end">
             <ClickableText>
-              <Trans>APR</Trans>
+              <Trans>APY</Trans>
             </ClickableText>
             <InfoHelper
               text={

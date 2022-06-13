@@ -11,14 +11,15 @@ import { CloseIcon } from 'theme'
 import { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import Modal from 'components/Modal'
-import { ETHER, Token } from '@dynamic-amm/sdk'
+import { Fraction, ChainId } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from 'ethers'
 import { useAllTokens } from 'hooks/Tokens'
 import { filterTokens } from 'components/SearchModal/filtering'
 import Logo from 'components/Logo'
 import { logo } from 'components/CurrencyLogo'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { Fraction, JSBI } from '@dynamic-amm/sdk'
+import JSBI from 'jsbi'
+import { nativeOnChain } from 'constants/tokens'
 
 const AddressWrapper = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
@@ -55,19 +56,20 @@ function FaucetModal() {
   const allTokens = useAllTokens()
   const token = useMemo(() => {
     if (!chainId || !account) return
+    const nativeToken = nativeOnChain(chainId as ChainId)
     if (rewardData) {
-      if (rewardData.tokenAddress === '0') return ETHER as Token
+      if (rewardData.tokenAddress === '0') return nativeToken
       if (isAddress(rewardData.tokenAddress)) return filterTokens(Object.values(allTokens), rewardData.tokenAddress)[0]
     }
-    return ETHER as Token
+    return nativeToken
   }, [rewardData, chainId, account, allTokens])
   const tokenLogo = useMemo(() => {
     if (!chainId || !token) return
-    if (token === ETHER) return logo[chainId]
+    if (token.isNative) return logo[chainId]
     return getTokenLogoURL(token.address, chainId)
   }, [chainId, token])
   const tokenSymbol = useMemo(() => {
-    if (token === ETHER) return nativeNameFromETH(chainId)
+    if (token?.isNative) return nativeNameFromETH(chainId)
     return token?.symbol
   }, [token, chainId])
   const claimRewardCallBack = async () => {

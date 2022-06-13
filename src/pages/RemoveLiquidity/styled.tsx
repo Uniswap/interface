@@ -104,14 +104,15 @@ export const SecondColumn = styled(AutoColumn)`
   }
 `
 
-export const MaxButton = styled.button<{ width: string }>`
-  padding: 0.5rem 1rem;
+export const MaxButton = styled.button`
+  flex: 1;
+  padding: 0.5rem 0;
   background-color: ${({ theme }) => `${theme.primary}33`};
   border: 1px solid transparent;
   border-radius: 3px;
   font-size: 1rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0;
   `};
   font-weight: 500;
   cursor: pointer;

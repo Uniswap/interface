@@ -1,8 +1,7 @@
 import JSBI from 'jsbi'
-import { ChainId, Percent, Rounding, Token } from '@dynamic-amm/sdk'
-import { ZERO } from '@dynamic-amm/sdk'
+import { ChainId, Rounding, Percent, Token } from '@kyberswap/ks-sdk-core'
+import { ZERO } from '@kyberswap/ks-sdk-classic'
 import { Aggregator } from './aggregator'
-import { wrappedCurrencyAmount } from './wrappedCurrency'
 import { getAddress } from 'ethers/lib/utils'
 
 interface SwapPool {
@@ -108,15 +107,15 @@ export function getTradeComposition(
   if (!trade || !trade.swaps || !chainId) {
     return undefined
   }
-  const inputTokenAmount = wrappedCurrencyAmount(trade.inputAmount, chainId)
+  const inputTokenAmount = trade.inputAmount?.wrapped
 
   const calcSwapPercentage = function(tokenIn: string, amount: string): number | undefined {
     if (!tokenIn || !amount) {
       return undefined
     }
-    const exactTokenIn = tokenIn?.toLowerCase() === inputTokenAmount?.token.address?.toLowerCase()
-    if (exactTokenIn && trade.inputAmount.greaterThan(ZERO)) {
-      const percent = new Percent(JSBI.BigInt(amount || 0), trade.inputAmount.raw).toFixed(0)
+    const exactTokenIn = tokenIn?.toLowerCase() === inputTokenAmount?.currency.address?.toLowerCase()
+    if (exactTokenIn && trade.inputAmount.greaterThan(JSBI.BigInt(0))) {
+      const percent = new Percent(JSBI.BigInt(amount || 0), trade.inputAmount.quotient).toFixed(0)
       return parseInt(percent)
     }
     return undefined

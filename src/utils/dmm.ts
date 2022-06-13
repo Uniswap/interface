@@ -1,55 +1,51 @@
 import { useMemo } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
-  Fraction,
-  JSBI,
   Price,
-  Pair,
+  ChainId as ChainIdDMM,
+  Fraction,
   Token,
   Currency,
-  WETH,
-  ZERO,
-  ONE,
-  ChainId,
   CurrencyAmount,
-  ETHER,
-} from '@dynamic-amm/sdk'
+  ChainId,
+  TokenAmount,
+} from '@kyberswap/ks-sdk-core'
+import { Pair } from '@kyberswap/ks-sdk-classic'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
-import { TokenAmount as TokenAmountSUSHI, Token as TokenSUSHI, ChainId as ChainIdSUSHI } from '@sushiswap/sdk'
-import { TokenAmount as TokenAmountUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
-import { Token as TokenDMM, TokenAmount as TokenAmountDMM, ChainId as ChainIdDMM } from '@dynamic-amm/sdk'
 import { BLOCKS_PER_YEAR, SECONDS_PER_YEAR, ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { Farm, Reward, RewardPerTimeUnit } from 'state/farms/types'
 import { useAllTokens } from 'hooks/Tokens'
 import { useActiveAndUniqueFarmsData, useRewardTokenPrices, useRewardTokens } from 'state/farms/hooks'
 import { getFullDisplayBalance } from './formatBalance'
+import { nativeOnChain } from 'constants/tokens'
 import { useBlockNumber } from 'state/application/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { getAddress } from '@ethersproject/address'
 import { unwrappedToken } from 'utils/wrappedCurrency'
+import JSBI from 'jsbi'
 
-export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
+export function priceRangeCalc(
+  price?: Price<Currency, Currency> | Fraction,
+  amp?: Fraction,
+): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
-  if (amp && (amp.equalTo(ONE) || amp?.equalTo(ZERO))) return [undefined, undefined]
+  if (amp && (amp.equalTo(JSBI.BigInt(1)) || amp?.equalTo(JSBI.BigInt(0)))) return [undefined, undefined]
   const temp = amp?.divide(amp?.subtract(JSBI.BigInt(1)))
   if (!amp || !temp || !price) return [undefined, undefined]
-  return [
-    (price as Price)?.adjusted.multiply(temp).multiply(temp),
-    (price as Price)?.adjusted.divide(temp.multiply(temp)),
-  ]
+  return [temp.multiply(temp).multiply(price.asFraction), price?.asFraction.divide(temp.multiply(temp))]
 }
 
 export function parseSubgraphPoolData(
   poolData: SubgraphPoolData,
   chainId: ChainId,
 ): {
-  reserve0: CurrencyAmount | undefined
-  virtualReserve0: CurrencyAmount | undefined
-  reserve1: CurrencyAmount | undefined
-  virtualReserve1: CurrencyAmount | undefined
-  totalSupply: CurrencyAmount | undefined
+  reserve0: CurrencyAmount<Currency> | undefined
+  virtualReserve0: CurrencyAmount<Currency> | undefined
+  reserve1: CurrencyAmount<Currency> | undefined
+  virtualReserve1: CurrencyAmount<Currency> | undefined
+  totalSupply: CurrencyAmount<Currency> | undefined
   currency0: Currency
   currency1: Currency
 } {
@@ -74,7 +70,7 @@ export function parseSubgraphPoolData(
   const virtualReserve0 = tryParseAmount(poolData.vReserve0, currency0)
   const reserve1 = tryParseAmount(poolData.reserve1, currency1)
   const virtualReserve1 = tryParseAmount(poolData.vReserve1, currency1)
-  const totalSupply = tryParseAmount(poolData.totalSupply, ETHER) // Only care about decimals 18
+  const totalSupply = tryParseAmount(poolData.totalSupply, nativeOnChain(chainId)) // Only care about decimals 18
 
   return {
     reserve0,
@@ -87,21 +83,29 @@ export function parseSubgraphPoolData(
   }
 }
 
+// const temp = pool.virtualReserve1.subtract(pool.reserve1).divide(pool.reserve1.decimalScale).asFraction
+
 function getToken0MinPrice(pool: Pair | SubgraphPoolData): Fraction {
   if (pool instanceof Pair) {
-    const temp = pool.virtualReserve1.subtract(pool.reserve1)
+    const temp = pool.virtualReserve1.subtract(pool.reserve1).divide(pool.reserve1.decimalScale).asFraction
     return temp
       .multiply(temp)
-      .divide(pool.virtualReserve0)
-      .divide(pool.virtualReserve1)
+      .divide(
+        pool.virtualReserve0
+          .divide(pool.virtualReserve0.decimalScale)
+          .asFraction.multiply(pool.virtualReserve1.divide(pool.virtualReserve1.decimalScale).asFraction),
+      )
   } else {
     const { reserve0, virtualReserve0, reserve1, virtualReserve1 } = parseSubgraphPoolData(pool, 1) // chainId doesn't matter.
     if (reserve0 && virtualReserve0 && reserve1 && virtualReserve1) {
-      const temp = virtualReserve1.subtract(reserve1)
+      const temp = virtualReserve1.subtract(reserve1).divide(reserve1.decimalScale).asFraction
       return temp
         .multiply(temp)
-        .divide(virtualReserve0)
-        .divide(virtualReserve1)
+        .divide(
+          virtualReserve0
+            .divide(virtualReserve0.decimalScale)
+            .asFraction.multiply(virtualReserve1.divide(virtualReserve1.decimalScale).asFraction),
+        )
     } else {
       return new Fraction('-1')
     }
@@ -110,7 +114,7 @@ function getToken0MinPrice(pool: Pair | SubgraphPoolData): Fraction {
 
 function getToken0MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
   if (pool instanceof Pair) {
-    const temp = pool.virtualReserve0.subtract(pool.reserve0)
+    const temp = pool.virtualReserve0.subtract(pool.reserve0).divide(pool.virtualReserve0.decimalScale).asFraction
 
     // Avoid error division by 0
     if (temp.equalTo(new Fraction('0'))) {
@@ -118,13 +122,13 @@ function getToken0MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
     }
 
     return pool.virtualReserve0
-      .multiply(pool.virtualReserve1)
-      .divide(temp)
-      .divide(temp)
+      .divide(pool.virtualReserve0.decimalScale)
+      .asFraction.multiply(pool.virtualReserve1.divide(pool.virtualReserve1.decimalScale).asFraction)
+      .divide(temp.multiply(temp))
   } else {
     const { reserve0, virtualReserve0, reserve1, virtualReserve1 } = parseSubgraphPoolData(pool, 1) // chainId doesn't matter.
     if (reserve0 && virtualReserve0 && reserve1 && virtualReserve1) {
-      const temp = virtualReserve0.subtract(reserve0)
+      const temp = virtualReserve0.subtract(reserve0).divide(virtualReserve0.decimalScale).asFraction
 
       // Avoid error division by 0
       if (temp.equalTo(new Fraction('0'))) {
@@ -132,9 +136,9 @@ function getToken0MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
       }
 
       return virtualReserve0
-        .multiply(virtualReserve1)
-        .divide(temp)
-        .divide(temp)
+        .divide(virtualReserve0.decimalScale)
+        .asFraction.multiply(virtualReserve1.divide(virtualReserve1.decimalScale).asFraction)
+        .divide(temp.multiply(temp))
     } else {
       return new Fraction('-1')
     }
@@ -143,19 +147,26 @@ function getToken0MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
 
 function getToken1MinPrice(pool: Pair | SubgraphPoolData): Fraction {
   if (pool instanceof Pair) {
-    const temp = pool.virtualReserve0.subtract(pool.reserve0)
+    const temp = pool.virtualReserve0.subtract(pool.reserve0).divide(pool.reserve0.decimalScale).asFraction
+
     return temp
       .multiply(temp)
-      .divide(pool.virtualReserve0)
-      .divide(pool.virtualReserve1)
+      .divide(
+        pool.virtualReserve0
+          .divide(pool.virtualReserve0.decimalScale)
+          .asFraction.multiply(pool.virtualReserve1.divide(pool.virtualReserve1.decimalScale).asFraction),
+      )
   } else {
     const { reserve0, virtualReserve0, reserve1, virtualReserve1 } = parseSubgraphPoolData(pool, 1) // chainId doesn't matter.
     if (reserve0 && virtualReserve0 && reserve1 && virtualReserve1) {
-      const temp = virtualReserve0.subtract(reserve0)
+      const temp = virtualReserve0.subtract(reserve0).divide(reserve0.decimalScale).asFraction
       return temp
         .multiply(temp)
-        .divide(virtualReserve0)
-        .divide(virtualReserve1)
+        .divide(
+          virtualReserve0
+            .divide(virtualReserve0.decimalScale)
+            .asFraction.multiply(virtualReserve1.divide(virtualReserve1.decimalScale).asFraction),
+        )
     } else {
       return new Fraction('-1')
     }
@@ -164,7 +175,7 @@ function getToken1MinPrice(pool: Pair | SubgraphPoolData): Fraction {
 
 function getToken1MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
   if (pool instanceof Pair) {
-    const temp = pool.virtualReserve1.subtract(pool.reserve1)
+    const temp = pool.virtualReserve1.subtract(pool.reserve1).divide(pool.reserve1.decimalScale).asFraction
 
     // Avoid error division by 0
     if (temp.equalTo(new Fraction('0'))) {
@@ -172,13 +183,14 @@ function getToken1MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
     }
 
     return pool.virtualReserve0
-      .multiply(pool.virtualReserve1)
+      .divide(pool.virtualReserve0.decimalScale)
+      .asFraction.multiply(pool.virtualReserve1.divide(pool.virtualReserve1.decimalScale).asFraction)
       .divide(temp)
       .divide(temp)
   } else {
     const { reserve0, virtualReserve0, reserve1, virtualReserve1 } = parseSubgraphPoolData(pool, 1) // chainId doesn't matter.
     if (reserve0 && virtualReserve0 && reserve1 && virtualReserve1) {
-      const temp = virtualReserve1.subtract(reserve1)
+      const temp = virtualReserve1.subtract(reserve1).divide(reserve1.decimalScale).asFraction
 
       // Avoid error division by 0
       if (temp.equalTo(new Fraction('0'))) {
@@ -186,7 +198,8 @@ function getToken1MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
       }
 
       return virtualReserve0
-        .multiply(virtualReserve1)
+        .divide(virtualReserve0.decimalScale)
+        .asFraction.multiply(virtualReserve1.divide(virtualReserve1.decimalScale).asFraction)
         .divide(temp)
         .divide(temp)
     } else {
@@ -197,7 +210,7 @@ function getToken1MaxPrice(pool: Pair | SubgraphPoolData): Fraction {
 
 export const priceRangeCalcByPair = (pair?: Pair): [Fraction | undefined, Fraction | undefined][] => {
   //Ex amp = 1.23456
-  if (!pair || new Fraction(pair.amp).equalTo(JSBI.BigInt(10000)))
+  if (!pair || new Fraction(JSBI.BigInt(pair.amp)).equalTo(JSBI.BigInt(10000)))
     return [
       [undefined, undefined],
       [undefined, undefined],
@@ -256,140 +269,6 @@ export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): strin
   return formattedNum(myLiquidity.toString(), true)
 }
 
-export function convertChainIdFromDmmToSushi(chainId: ChainIdDMM) {
-  switch (chainId) {
-    case ChainIdDMM.MAINNET:
-      return ChainIdSUSHI.MAINNET
-    case ChainIdDMM.ROPSTEN:
-      return ChainIdSUSHI.ROPSTEN
-    case ChainIdDMM.RINKEBY:
-      return ChainIdSUSHI.RINKEBY
-    case ChainIdDMM.GÖRLI:
-      return ChainIdSUSHI.GÖRLI
-    case ChainIdDMM.KOVAN:
-      return ChainIdSUSHI.KOVAN
-    case ChainIdDMM.MATIC:
-      return ChainIdSUSHI.MATIC
-    case ChainIdDMM.MUMBAI:
-      return ChainIdSUSHI.MATIC_TESTNET
-    case ChainIdDMM.BSCTESTNET:
-      return ChainIdSUSHI.BSC_TESTNET
-    case ChainIdDMM.BSCMAINNET:
-      return ChainIdSUSHI.BSC
-    case ChainIdDMM.AVAXTESTNET:
-      return ChainIdSUSHI.FUJI
-    case ChainIdDMM.AVAXMAINNET:
-      return ChainIdSUSHI.AVALANCHE
-    case ChainIdDMM.FANTOM:
-      return ChainIdSUSHI.FANTOM
-    default:
-      return ChainIdSUSHI.MAINNET
-  }
-}
-
-export function convertChainIdFromUniToDMM(chainId: ChainIdUNI) {
-  switch (chainId) {
-    case ChainIdUNI.MAINNET:
-      return ChainIdDMM.MAINNET
-    case ChainIdUNI.ROPSTEN:
-      return ChainIdDMM.ROPSTEN
-    case ChainIdUNI.RINKEBY:
-      return ChainIdDMM.RINKEBY
-    case ChainIdUNI.GÖRLI:
-      return ChainIdDMM.GÖRLI
-    case ChainIdUNI.KOVAN:
-      return ChainIdDMM.KOVAN
-  }
-}
-
-export function convertChainIdFromDmmToUni(chainId: ChainIdDMM) {
-  switch (chainId) {
-    case ChainIdDMM.MAINNET:
-      return ChainIdUNI.MAINNET
-    case ChainIdDMM.ROPSTEN:
-      return ChainIdUNI.ROPSTEN
-    case ChainIdDMM.RINKEBY:
-      return ChainIdUNI.RINKEBY
-    case ChainIdDMM.GÖRLI:
-      return ChainIdUNI.GÖRLI
-    case ChainIdDMM.KOVAN:
-      return ChainIdUNI.KOVAN
-    default:
-      return undefined
-  }
-}
-
-export function convertChainIdFromSushiToDMM(chainId: ChainIdSUSHI) {
-  switch (chainId) {
-    case ChainIdSUSHI.MAINNET:
-      return ChainIdDMM.MAINNET
-    case ChainIdSUSHI.ROPSTEN:
-      return ChainIdDMM.ROPSTEN
-    case ChainIdSUSHI.RINKEBY:
-      return ChainIdDMM.RINKEBY
-    case ChainIdSUSHI.GÖRLI:
-      return ChainIdDMM.GÖRLI
-    case ChainIdSUSHI.KOVAN:
-      return ChainIdDMM.KOVAN
-    case ChainIdSUSHI.MATIC:
-      return ChainIdDMM.MATIC
-    case ChainIdSUSHI.MATIC_TESTNET:
-      return ChainIdDMM.MUMBAI
-    default:
-      return undefined
-  }
-}
-
-export function tokenSushiToDmm(tokenSushi: TokenSUSHI): TokenDMM | undefined {
-  const chainIdDMM = convertChainIdFromSushiToDMM(tokenSushi.chainId)
-  return !!chainIdDMM
-    ? new TokenDMM(chainIdDMM, tokenSushi.address, tokenSushi.decimals, tokenSushi.symbol, tokenSushi.name)
-    : undefined
-}
-export function tokenDmmToSushi(tokenDmm: TokenDMM): TokenSUSHI {
-  return new TokenSUSHI(
-    convertChainIdFromDmmToSushi(tokenDmm.chainId),
-    tokenDmm.address,
-    tokenDmm.decimals,
-    tokenDmm.symbol,
-    tokenDmm.name,
-  )
-}
-
-export function tokenUniToDmm(tokenUni: TokenUNI): TokenDMM | undefined {
-  return new TokenDMM(tokenUni.chainId as ChainId, tokenUni.address, tokenUni.decimals, tokenUni.symbol, tokenUni.name)
-}
-
-export function tokenDmmToUni(tokenDmm: TokenDMM): TokenUNI | undefined {
-  const chainIdUNI = convertChainIdFromDmmToUni(tokenDmm.chainId)
-  return !!chainIdUNI
-    ? new TokenUNI(chainIdUNI, tokenDmm.address, tokenDmm.decimals, tokenDmm.symbol, tokenDmm.name)
-    : undefined
-}
-
-export function tokenAmountDmmToSushi(amount: TokenAmountDMM): TokenAmountSUSHI {
-  return new TokenAmountSUSHI(
-    new TokenSUSHI(
-      convertChainIdFromDmmToSushi(amount.token.chainId),
-      amount.token.address,
-      amount.token.decimals,
-      amount.token.symbol,
-      amount.token.name,
-    ),
-    amount.raw,
-  )
-}
-
-export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | undefined {
-  const chainIdUNI = convertChainIdFromDmmToUni(amount.token.chainId)
-  return !!chainIdUNI
-    ? new TokenAmountUNI(
-        new TokenUNI(chainIdUNI, amount.token.address, amount.token.decimals, amount.token.symbol, amount.token.name),
-        amount.raw,
-      )
-    : undefined
-}
-
 export function useFarmRewardsPerTimeUnit(farm?: Farm): RewardPerTimeUnit[] {
   if (!farm) {
     return []
@@ -427,7 +306,6 @@ export function useFarmRewardsPerTimeUnit(farm?: Farm): RewardPerTimeUnit[] {
 
   return farmRewardsPerTimeUnit
 }
-
 /**
  * Get farm APR value in %
  * @param kncPriceUsd KNC price in USD
@@ -466,7 +344,10 @@ export function useFarmApr(farm: Farm, poolLiquidityUsd: string): number {
       }
 
       if (chainId && tokenPrices[index]) {
-        const rewardPerSecondAmount = new TokenAmountDMM(rewardPerSecond.token, rewardPerSecond.amount.toString())
+        const rewardPerSecondAmount = TokenAmount.fromRawAmount(
+          rewardPerSecond.token,
+          rewardPerSecond.amount.toString(),
+        )
         const yearlyETHRewardAllocation = parseFloat(rewardPerSecondAmount.toSignificant(6)) * SECONDS_PER_YEAR
         total += yearlyETHRewardAllocation * tokenPrices[index]
       }
@@ -494,7 +375,7 @@ export function useFarmApr(farm: Farm, poolLiquidityUsd: string): number {
       }
 
       if (chainId && tokenPrices[index]) {
-        const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
+        const rewardPerBlockAmount = TokenAmount.fromRawAmount(rewardPerBlock.token, rewardPerBlock.amount.toString())
         const yearlyETHRewardAllocation =
           parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR(chainId as ChainId)
         total += yearlyETHRewardAllocation * tokenPrices[index]
@@ -509,29 +390,14 @@ export function useFarmApr(farm: Farm, poolLiquidityUsd: string): number {
   return apr
 }
 
-export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainIdDMM): Currency {
-  if (chainId && currency === Currency.ETHER) {
-    if ([137, 80001].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
-    if ([97, 56].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BNB', 'BNB')
-    if ([43113, 43114].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'AVAX', 'AVAX')
-    if ([250].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'FTM', 'FTM')
-    if ([25, 338].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'CRO', 'CRO')
-    if ([ChainId.AURORA].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'ETH', 'ETH')
-    if ([ChainId.BTTC].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BTT', 'BTT')
-    if ([ChainId.ARBITRUM].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'ETH', 'ETH')
-    if ([ChainId.VELAS].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'VLX', 'VLX')
-    if ([ChainId.OASIS].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'ROSE', 'ROSE')
-  }
-
-  return currency
-}
-
 export function useCurrencyConvertedToNative(currency?: Currency): Currency | undefined {
   const { chainId } = useActiveWeb3React()
-  if (!!currency && !!chainId) {
-    return convertToNativeTokenFromETH(currency, chainId)
-  }
-  return undefined
+  return useMemo(() => {
+    if (!!currency && !!chainId) {
+      return currency.isNative ? nativeOnChain(chainId) : currency
+    }
+    return undefined
+  }, [chainId, currency])
 }
 
 export function useFarmRewards(farms?: Farm[], onlyCurrentUser = true): Reward[] {
@@ -628,6 +494,7 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
 export function useRewardTokensFullInfo(): Token[] {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokens()
+
   const allTokens = useAllTokens()
   const nativeName =
     chainId && [137, 80001].includes(chainId)
@@ -653,7 +520,7 @@ export function useRewardTokensFullInfo(): Token[] {
       !!rewardTokens && allTokens
         ? rewardTokens.map(address =>
             address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
-              ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
+              ? new Token(chainId as ChainIdDMM, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
               : allTokens[address],
           )
         : [],

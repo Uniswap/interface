@@ -343,7 +343,7 @@ function AboutKNC() {
               style={{ marginTop: '24px' }}
             >
               {LIST_EXCHANGES.map(exchange => (
-                <SwiperSlide key={exchange.logo}>
+                <SwiperSlide key={exchange.name}>
                   <ExchangeWrapper background={isDarkMode ? '#243036' : '#F5F5F5'}>
                     <Flex margin="auto">{exchange.logo}</Flex>
                   </ExchangeWrapper>

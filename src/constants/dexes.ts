@@ -1,4 +1,4 @@
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export type DexConfig = {
   value?: string
@@ -14,6 +14,24 @@ export const dexListConfig: DexList = {
     name: 'KyberSwap',
     icon: 'https://kyberswap.com/favicon.ico',
     chainIds: [
+      ChainId.MAINNET,
+      ChainId.MATIC,
+      ChainId.BSCMAINNET,
+      ChainId.AVAXMAINNET,
+      ChainId.FANTOM,
+      ChainId.CRONOS,
+      ChainId.ARBITRUM,
+      ChainId.BTTC,
+      ChainId.AURORA,
+      ChainId.VELAS,
+      ChainId.OASIS,
+    ],
+  },
+  kyberswapv2: {
+    name: 'KyberSwap Elastic',
+    icon: 'https://kyberswap.com/favicon.ico',
+    chainIds: [
+      ChainId.RINKEBY,
       ChainId.MAINNET,
       ChainId.MATIC,
       ChainId.BSCMAINNET,
@@ -72,7 +90,7 @@ export const dexListConfig: DexList = {
   },
   quickswap: {
     name: 'QuickSwap',
-    icon: 'https://quickswap.exchange/logo_circle.png',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/200x200/8206.png',
     chainIds: [ChainId.MATIC],
   },
   dfyn: {
@@ -192,7 +210,7 @@ export const dexListConfig: DexList = {
   },
   spookyswap: {
     name: 'SpookySwap',
-    icon: 'https://spookyswap.finance/favicon.ico',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9608.png',
     chainIds: [ChainId.FANTOM],
   },
   spiritswap: {
@@ -357,6 +375,11 @@ export const dexListConfig: DexList = {
   //   icon: 'https://sahara.exchange/static/media/sahara-logo-white.b130dd89.png',
   //   chainIds: [ChainId.OASIS],
   // },
+  dodo: {
+    name: 'DODO',
+    icon: 'https://dodoex.io/favicon.ico',
+    chainIds: [ChainId.MAINNET, ChainId.ARBITRUM, ChainId.MATIC],
+  },
 }
 
 type DexTypes = {
@@ -426,6 +449,7 @@ export const dexTypes: DexTypes = {
     axial: 4,
     beethovenx: 6,
     uniswapv3: 5,
+    kyberswapv2: 5,
   },
   [ChainId.MAINNET]: {},
   [ChainId.BSCMAINNET]: {},

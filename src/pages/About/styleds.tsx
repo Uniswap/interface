@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import { ButtonPrimary, ButtonOutlined } from 'components/Button'
 import bgimg from 'assets/images/about_background.png'
 
 export const Wrapper = styled.div`
-  max-width: 1224px;
+  max-width: 1228px;
   margin: auto;
   padding: 160px 12px 0;
   padding-bottom: 160px;
@@ -59,7 +59,7 @@ export const BtnOutlined = styled(ButtonOutlined)`
 
 export const BtnPrimary = styled(ButtonPrimary)`
   width: 216px;
-  padding: 14px;
+  padding: 12px;
   flex: 1;
   border-radius: 32px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -68,7 +68,7 @@ export const BtnPrimary = styled(ButtonPrimary)`
 `
 
 export const OverflowStatisticWrapper = styled.div`
-  margin: 160px calc(500px - 40vw) 0;
+  margin-top: 160px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 0;
     margin-right: 0;
@@ -80,7 +80,7 @@ export const StatisticWrapper = styled.div`
   gap: 16px;
   justify-content: center;
   flex-direction: row;
-  margin-top: 160px;
+  margin-top: 48px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: column;
     margin-top: 100px;
@@ -317,4 +317,24 @@ export const MoreInfoWrapper = styled.div<{ background: string }>`
     align-items:center;
     text-align:center;
   `}
+`
+
+export const Tabs = styled.div`
+  font-size: 24px;
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+  align-items: center;
+  justify-content: center;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    gap: 12px;
+    font-size: 16px;
+  `}
+`
+
+export const TabItem = styled(Text)<{ active?: boolean }>`
+  font-weight: ${({ active }) => (active ? 500 : 400)};
+  cursor: pointer;
+  color: ${({ theme, active }) => (active ? theme.primary : theme.subText)};
 `

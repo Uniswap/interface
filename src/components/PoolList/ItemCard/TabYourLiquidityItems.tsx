@@ -4,9 +4,10 @@ import { t } from '@lingui/macro'
 import { getMyLiquidity, parseSubgraphPoolData } from 'utils/dmm'
 import { ONE_BIPS } from 'constants/index'
 import React from 'react'
-import { ChainId, ETHER, Percent } from '@dynamic-amm/sdk'
+import { ChainId, Percent } from '@kyberswap/ks-sdk-core'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useActiveWeb3React } from 'hooks'
+import { nativeOnChain } from 'constants/tokens'
 
 export default function TabYourLiquidityItems({
   poolData,
@@ -19,9 +20,10 @@ export default function TabYourLiquidityItems({
 
   const { currency0, currency1, reserve0, reserve1, totalSupply } = parseSubgraphPoolData(poolData, chainId as ChainId)
 
-  const liquidityTokenBalance = myLiquidity?.liquidityTokenBalance
-    ? tryParseAmount(myLiquidity?.liquidityTokenBalance, ETHER)
-    : undefined
+  const liquidityTokenBalance =
+    myLiquidity?.liquidityTokenBalance && chainId
+      ? tryParseAmount(myLiquidity?.liquidityTokenBalance, nativeOnChain(chainId))
+      : undefined
 
   const pooledToken0 =
     liquidityTokenBalance && reserve0 && totalSupply
@@ -34,7 +36,7 @@ export default function TabYourLiquidityItems({
       : undefined
 
   const yourShareOfPool =
-    liquidityTokenBalance && totalSupply ? new Percent(liquidityTokenBalance.raw, totalSupply.raw) : undefined
+    liquidityTokenBalance && totalSupply ? new Percent(liquidityTokenBalance.quotient, totalSupply.quotient) : undefined
   return (
     <>
       <ItemCardInfoRow name={t`Your Liquidity Balance`} value={getMyLiquidity(myLiquidity)} />
