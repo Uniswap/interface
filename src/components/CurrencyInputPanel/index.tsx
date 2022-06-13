@@ -4,6 +4,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
@@ -203,6 +204,7 @@ export default function CurrencyInputPanel({
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  const spotValue = useUSDCPrice(currency ?? undefined)
   const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
@@ -274,7 +276,7 @@ export default function CurrencyInputPanel({
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} spotValue={spotValue} />
               </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import HoverInlineText from 'components/HoverInlineText'
 import { useMemo } from 'react'
 
@@ -13,9 +13,11 @@ import { MouseoverTooltip } from '../Tooltip'
 export function FiatValue({
   fiatValue,
   priceImpact,
+  spotValue,
 }: {
   fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent
+  spotValue?: Price<Currency, Token> | null | undefined
 }) {
   const theme = useTheme()
   const priceImpactColor = useMemo(() => {
@@ -38,6 +40,14 @@ export function FiatValue({
           <HoverInlineText
             text={fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}
             textColor={fiatValue ? theme.text3 : theme.text4}
+          />
+        </Trans>
+      ) : spotValue ? (
+        <Trans>
+          <span style={{ color: `${spotValue ? theme.text3 : theme.text4}` }}>~$</span>
+          <HoverInlineText
+            text={spotValue?.toSignificant(6, { groupSeparator: ',' })}
+            textColor={spotValue ? theme.text3 : theme.text4}
           />
         </Trans>
       ) : (
