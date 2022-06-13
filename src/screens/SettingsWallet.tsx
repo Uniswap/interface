@@ -15,6 +15,7 @@ import {
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
 import { Screens } from './Screens'
+import EditIcon from 'src/assets/icons/edit.svg'
 import NotificationIcon from 'src/assets/icons/bell.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
 import { Switch } from 'src/components/buttons/Switch'
@@ -50,6 +51,12 @@ export function SettingsWallet({
     {
       subTitle: t('Wallet preferences'),
       data: [
+        {
+          screen: Screens.SettingsWalletEdit,
+          text: t('Edit nickname or theme'),
+          icon: <EditIcon color={theme.colors.neutralTextSecondary} strokeWidth="1.5" />,
+          screenProps: { address },
+        },
         {
           action: (
             <Switch value={notificationsEnabled} onValueChange={onChangeNotificationSettings} />

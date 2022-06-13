@@ -60,6 +60,7 @@ import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SettingsWallet } from 'src/screens/SettingsWallet'
+import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
@@ -130,6 +131,7 @@ function SettingsStackGroup() {
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
       <SettingsStack.Screen component={SettingsWallet} name={Screens.SettingsWallet} />
+      <SettingsStack.Screen component={SettingsWalletEdit} name={Screens.SettingsWalletEdit} />
       <SettingsStack.Screen
         component={SettingsWalletManageConnection}
         name={Screens.SettingsWalletManageConnection}
