@@ -44,7 +44,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
 
   const { asset: nftIn } = useNFT(
     activeAccount?.address,
-    utils.getAddress(tradeableAsset?.address ?? ''),
+    tradeableAsset?.address && utils.getAddress(tradeableAsset.address),
     tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
       ? tradeableAsset.tokenId
       : undefined
