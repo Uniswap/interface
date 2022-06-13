@@ -65,7 +65,7 @@ function useSwapCallArguments(
         : getRouterContract(chainId, library, account)
 
     const swapCallParameters = Router.swapCallParameters(trade, {
-      feeOnTransfer: true,
+      feeOnTransfer: !(trade instanceof MoolaRouterTrade),
       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
       recipient,
       deadline: deadline.toNumber(),
