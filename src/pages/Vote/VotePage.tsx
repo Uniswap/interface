@@ -228,7 +228,7 @@ export default function VotePage({
   // we only show the button if there's an account connected and the proposal state is correct
   const showQueueButton = account && proposalData?.status === ProposalState.SUCCEEDED
 
-  // we only show the button if there's an account connected and the proposal state is correct
+  // we only show the button if there's an account connected, the proposal state is correct, and the eta has passed
   const showExecuteButton =
     account &&
     proposalData?.status === ProposalState.QUEUED &&

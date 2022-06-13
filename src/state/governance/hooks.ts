@@ -410,16 +410,15 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
   )
 }
 
-export function useVoteCallback(): {
-  voteCallback: (proposalId: string | undefined, voteOption: VoteOption) => undefined | Promise<string>
-} {
+export function useVoteCallback(): (
+  proposalId: string | undefined,
+  voteOption: VoteOption
+) => undefined | Promise<string> {
   const { account, chainId } = useActiveWeb3React()
-
   const latestGovernanceContract = useLatestGovernanceContract()
-
   const addTransaction = useTransactionAdder()
 
-  const voteCallback = useCallback(
+  return useCallback(
     (proposalId: string | undefined, voteOption: VoteOption) => {
       if (!account || !latestGovernanceContract || !proposalId || !chainId) return
       const args = [proposalId, voteOption === VoteOption.Against ? 0 : voteOption === VoteOption.For ? 1 : 2]
@@ -440,19 +439,14 @@ export function useVoteCallback(): {
     },
     [account, addTransaction, latestGovernanceContract, chainId]
   )
-  return { voteCallback }
 }
 
-export function useQueueCallback(): {
-  queueCallback: (proposalId: string | undefined) => undefined | Promise<string>
-} {
+export function useQueueCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
   const { account, chainId } = useActiveWeb3React()
-
   const latestGovernanceContract = useLatestGovernanceContract()
-
   const addTransaction = useTransactionAdder()
 
-  const queueCallback = useCallback(
+  return useCallback(
     (proposalId: string | undefined) => {
       if (!account || !latestGovernanceContract || !proposalId || !chainId) return
       const args = [proposalId]
@@ -471,19 +465,14 @@ export function useQueueCallback(): {
     },
     [account, addTransaction, latestGovernanceContract, chainId]
   )
-  return { queueCallback }
 }
 
-export function useExecuteCallback(): {
-  executeCallback: (proposalId: string | undefined) => undefined | Promise<string>
-} {
+export function useExecuteCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
   const { account, chainId } = useActiveWeb3React()
-
   const latestGovernanceContract = useLatestGovernanceContract()
-
   const addTransaction = useTransactionAdder()
 
-  const executeCallback = useCallback(
+  return useCallback(
     (proposalId: string | undefined) => {
       if (!account || !latestGovernanceContract || !proposalId || !chainId) return
       const args = [proposalId]
@@ -502,14 +491,12 @@ export function useExecuteCallback(): {
     },
     [account, addTransaction, latestGovernanceContract, chainId]
   )
-  return { executeCallback }
 }
 
 export function useCreateProposalCallback(): (
   createProposalData: CreateProposalData | undefined
 ) => undefined | Promise<string> {
   const { account, chainId } = useActiveWeb3React()
-
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 

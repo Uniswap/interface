@@ -42,7 +42,7 @@ interface ExecuteModalProps {
 
 export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteModalProps) {
   const { chainId } = useActiveWeb3React()
-  const { executeCallback } = useExecuteCallback()
+  const executeCallback = useExecuteCallback()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()

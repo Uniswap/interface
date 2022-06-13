@@ -18,7 +18,7 @@ interface SerializableTransactionReceipt {
  * These values is persisted in state and if you change the value it will cause errors
  */
 export enum TransactionType {
-  APPROVAL,
+  APPROVAL = 0,
   SWAP,
   DEPOSIT_LIQUIDITY_STAKING,
   WITHDRAW_LIQUIDITY_STAKING,

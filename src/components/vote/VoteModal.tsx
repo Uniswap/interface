@@ -45,7 +45,7 @@ interface VoteModalProps {
 
 export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }: VoteModalProps) {
   const { chainId } = useActiveWeb3React()
-  const { voteCallback } = useVoteCallback()
+  const voteCallback = useVoteCallback()
   const { votes: availableVotes } = useUserVotes()
 
   // monitor call to help UI loading state
