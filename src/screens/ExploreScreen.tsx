@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FadeIn, FadeInUp, FadeOut, FadeOutUp } from 'react-native-reanimated'
 import { AppBackground } from 'src/components/gradients'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
@@ -25,49 +26,53 @@ export function ExploreScreen() {
     setIsSearchMode(true)
   }
 
-  const onSearchBlur = () => {
-    if (searchQuery.length === 0) {
-      setIsSearchMode(false)
-    }
+  const onSearchCancel = () => {
+    setIsSearchMode(false)
   }
 
   const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
 
   return (
-    <Screen edges={['left', 'right']}>
+    <Screen edges={['top', 'left', 'right']}>
       <AppBackground />
       <VirtualizedList>
-        <Flex gap="lg" my="xl">
-          <Flex row mt="lg" mx="lg">
+        {!isSearchMode && (
+          <AnimatedFlex entering={FadeInUp} exiting={FadeOutUp} mx="md" px="xs" py="sm">
             <Text variant="h3">{t('Explore')}</Text>
-          </Flex>
-          <Flex mx="md">
-            <SearchTextInput
-              backgroundColor="neutralBackground"
-              placeholder={t('Search for tokens, ENS, or address')}
-              value={searchQuery}
-              onBlur={onSearchBlur}
-              onChangeText={onChangeSearchFilter}
-              onFocus={onSearchFocus}
-            />
+          </AnimatedFlex>
+        )}
+        <Flex gap="sm" mt="sm" mx="md">
+          <SearchTextInput
+            backgroundColor="neutralBackground"
+            placeholder={t('Search for tokens, ENS, or address')}
+            value={searchQuery}
+            onCancel={onSearchCancel}
+            onChangeText={onChangeSearchFilter}
+            onFocus={onSearchFocus}
+          />
 
-            {isSearchMode ? (
+          {isSearchMode ? (
+            <AnimatedFlex entering={FadeIn} exiting={FadeOut} mt="sm">
               <SearchResultsSection searchQuery={searchQuery} />
-            ) : (
-              <>
+            </AnimatedFlex>
+          ) : (
+            <>
+              <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
                 <FavoriteTokensSection
                   fixedCount={5}
                   metadataDisplayType={tokenMetadataDisplayType}
                   onCycleMetadata={cycleTokenMetadataDisplayType}
                 />
+              </AnimatedFlex>
+              <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
                 <TopTokensSection
                   fixedCount={10}
                   metadataDisplayType={tokenMetadataDisplayType}
                   onCycleMetadata={cycleTokenMetadataDisplayType}
                 />
-              </>
-            )}
-          </Flex>
+              </AnimatedFlex>
+            </>
+          )}
         </Flex>
       </VirtualizedList>
     </Screen>

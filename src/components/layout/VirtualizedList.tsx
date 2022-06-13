@@ -8,6 +8,7 @@ export const VirtualizedList = ({ children }: PropsWithChildren<{}>) => {
       ListHeaderComponent={<>{children}</>}
       data={[]}
       keyExtractor={() => 'key'}
+      keyboardShouldPersistTaps="always"
       renderItem={null}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}

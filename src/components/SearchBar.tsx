@@ -7,7 +7,7 @@ interface SearchBarProps extends SearchTextInputProps {}
 
 export function SearchBar(props: SearchBarProps) {
   return (
-    <Flex centered row gap="sm">
+    <Flex centered row gap="sm" mx="md">
       <BackButton />
       <SearchTextInput {...props} />
     </Flex>
