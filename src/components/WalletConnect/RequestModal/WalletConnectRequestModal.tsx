@@ -204,15 +204,11 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             </SectionContainer>
           )}
 
-          <SectionContainer>
-            {methodCostsGas(request) && chainId ? (
+          {methodCostsGas(request) && chainId && (
+            <SectionContainer>
               <NetworkFee chainId={chainId} transaction={request.transaction} />
-            ) : (
-              <Text variant="body2">
-                {t('This request will not trigger a blockchain transaction or cost any gas fees.')}
-              </Text>
-            )}
-          </SectionContainer>
+            </SectionContainer>
+          )}
 
           <SectionContainer>
             <AccountDetails address={request.account} />
