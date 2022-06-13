@@ -37,7 +37,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - run: yarn build && yarn serve &
+      - run: yarn build
+        env:
+          CI: false # disables lint checks when building
+
+      - run: yarn serve &
         env:
           CI: false # disables lint checks when building
       
