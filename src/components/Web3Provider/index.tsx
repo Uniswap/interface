@@ -2,13 +2,13 @@ import { Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import {
   coinbaseWalletHooks,
-  createOrderedConnectors,
   fortmaticHooks,
   getConnectorForWallet,
   gnosisSafe,
   injectedHooks,
   MODAL_WALLETS,
   network,
+  useConnectors,
   Wallet,
   walletConnectHooks,
 } from 'connectors'
@@ -136,7 +136,7 @@ interface Props {
 
 export default function Web3Provider({ children }: Props) {
   const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
-  const connectors = createOrderedConnectors(walletOverride)
+  const connectors = useConnectors(walletOverride)
   return (
     <Web3ReactProvider connectors={connectors}>
       <Web3Updater />

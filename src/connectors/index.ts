@@ -9,6 +9,7 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import Fortmatic from 'fortmatic'
+import { useMemo } from 'react'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 
@@ -140,18 +141,20 @@ interface ConnectorListItem {
   hooks: Web3ReactHooks
 }
 
-export const createOrderedConnectors = (walletOverride: Wallet | undefined) => {
-  const connectors: ConnectorListItem[] = [{ connector: gnosisSafe, hooks: gnosisSafeHooks }]
-  if (walletOverride) {
-    connectors.push(getConnectorListItemForWallet(walletOverride))
-  }
-  MODAL_WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
-    connectors.push(getConnectorListItemForWallet(wallet))
-  })
-  connectors.push({ connector: network, hooks: networkHooks })
-  const web3ReactConnectors: [Connector, Web3ReactHooks][] = connectors.map(({ connector, hooks }) => [
-    connector,
-    hooks,
-  ])
-  return web3ReactConnectors
+export function useConnectors(walletOverride: Wallet | undefined) {
+  return useMemo(() => {
+    const connectors: ConnectorListItem[] = [{ connector: gnosisSafe, hooks: gnosisSafeHooks }]
+    if (walletOverride) {
+      connectors.push(getConnectorListItemForWallet(walletOverride))
+    }
+    MODAL_WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
+      connectors.push(getConnectorListItemForWallet(wallet))
+    })
+    connectors.push({ connector: network, hooks: networkHooks })
+    const web3ReactConnectors: [Connector, Web3ReactHooks][] = connectors.map(({ connector, hooks }) => [
+      connector,
+      hooks,
+    ])
+    return web3ReactConnectors
+  }, [walletOverride])
 }
