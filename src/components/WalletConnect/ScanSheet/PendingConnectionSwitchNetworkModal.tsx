@@ -10,17 +10,14 @@ import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 
 type Props = {
-  pendingSession: WalletConnectSession
   selectedChainId: ChainId
   onPressChain: (chainId: ChainId) => void
   onClose: () => void
 }
 
 export const PendingConnectionSwitchNetworkModal = ({
-  pendingSession,
   selectedChainId,
   onPressChain,
   onClose,
@@ -62,9 +59,6 @@ export const PendingConnectionSwitchNetworkModal = ({
       header={
         <Flex centered gap="xxs" py="md">
           <Text variant="mediumLabel">{t('Switch Network')}</Text>
-          <Text color="accentBackgroundActive" variant="caption">
-            {pendingSession.dapp.url}
-          </Text>
         </Flex>
       }
       isVisible={true}

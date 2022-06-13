@@ -15,6 +15,7 @@ export const spacing = {
   lg: 24,
   xl: 36,
   xxl: 48,
+  xxxl: 60,
 }
 
 export const borderRadii = {

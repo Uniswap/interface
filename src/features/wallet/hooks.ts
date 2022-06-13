@@ -102,7 +102,7 @@ export function useWCTimeoutError(
       setShouldFreezeCamera(false)
       Alert.alert(
         t('WalletConnect error'),
-        t('Please refresh the dapp and try connecting again.'),
+        t('Please refresh the site and try connecting again.'),
         [
           {
             text: t('Try again'),

@@ -109,6 +109,7 @@ export const enum ElementName {
   TryAgain = 'try-again',
   Unwrap = 'unwrap',
   WCDappSwitchNetwork = 'wc-dapp-switch-network',
+  WCDappSwitchAccount = 'wc-dapp-switch-account',
   WCOpenDapp = 'wc-open-dapp',
   WCViewDappConnections = 'wc-view-dapp-connections',
   WalletConnectScan = 'wallet-connect-scan',
