@@ -27,7 +27,6 @@ export interface SearchTextInputProps {
   onChangeText: (newText: string) => void
   onFocus?: () => void
   onCancel?: () => void
-  onBlur?: () => void
   backgroundColor?: keyof Theme['colors']
   clearIcon?: ReactElement
   disableClearable?: boolean
@@ -45,7 +44,6 @@ export function SearchTextInput(props: SearchTextInputProps) {
     endAdornment = (
       <SearchIcon color={theme.colors.neutralTextTertiary} height={20} strokeWidth={2} width={20} />
     ),
-    onBlur,
     onCancel,
     onChangeText,
     onFocus,
@@ -81,11 +79,6 @@ export function SearchTextInput(props: SearchTextInputProps) {
     onFocus?.()
   }
 
-  const onTextInputBlur = () => {
-    isFocus.value = false
-    onBlur?.()
-  }
-
   const onTextInputSubmitEditing = () => {
     Keyboard.dismiss()
   }
@@ -101,6 +94,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
     },
     [showClearButton, onChangeText]
   )
+
   const textInputStyle = useAnimatedStyle(() => {
     return {
       marginRight: withSpring(isFocus.value ? cancelButtonWidth.value + 10 : 0, springConfig),
@@ -159,7 +153,6 @@ export function SearchTextInput(props: SearchTextInputProps) {
           placeholderTextColor={theme.colors.neutralTextTertiary}
           returnKeyType="search"
           value={value ?? undefined}
-          onBlur={onTextInputBlur}
           onChangeText={onChangeTextInput}
           onFocus={onTextInputFocus}
           onSubmitEditing={onTextInputSubmitEditing}

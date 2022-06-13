@@ -5,10 +5,11 @@ import { Box } from 'src/components/layout'
 import { BoxLoader } from 'src/components/loading/BoxLoader'
 import { HeaderLoader } from 'src/components/loading/HeaderLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
+import { TokenLoader } from 'src/components/loading/TokenLoader'
 import GraphCurveArea from './graph-curve-area.svg'
 import GraphCurve from './graph-curve.svg'
 
-type SkeletonType = 'box' | 'graph' | 'header'
+type SkeletonType = 'box' | 'graph' | 'header' | 'token'
 
 interface LoadingProps {
   type?: SkeletonType
@@ -31,6 +32,14 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
         <Box borderRadius="lg" overflow="hidden">
           <GraphCurve color={theme.colors.deprecated_gray100} />
           <GraphCurveArea fill={theme.colors.deprecated_gray50} style={StyleSheet.absoluteFill} />
+        </Box>
+      )
+    case 'token':
+      return (
+        <Box>
+          {new Array(repeat).fill(null).map((_, i) => (
+            <TokenLoader key={i} />
+          ))}
         </Box>
       )
     case 'box':

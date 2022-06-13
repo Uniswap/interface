@@ -44,7 +44,7 @@ export function ExploreScreen() {
         <Flex gap="sm" mt="sm" mx="md">
           <SearchTextInput
             backgroundColor="neutralBackground"
-            placeholder={t('Search for tokens, ENS, or address')}
+            placeholder={t('Search tokens, ENS, or addresses')}
             value={searchQuery}
             onCancel={onSearchCancel}
             onChangeText={onChangeSearchFilter}

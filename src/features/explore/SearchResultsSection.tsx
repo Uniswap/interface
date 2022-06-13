@@ -9,7 +9,7 @@ import ProfileIcon from 'src/assets/icons/profile.svg'
 import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -33,9 +33,13 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   const theme = useAppTheme()
   const navigation = useExploreStackNavigation()
 
-  const { tokens, isLoading } = useTokenSearchResults(searchQuery, 5)
+  const { tokens, isLoading: tokensLoading } = useTokenSearchResults(searchQuery, 5)
 
-  const { address: ensAddress, name: ensName } = useENS(ChainId.Mainnet, searchQuery, true)
+  const {
+    address: ensAddress,
+    name: ensName,
+    loading: ensLoading,
+  } = useENS(ChainId.Mainnet, searchQuery, true)
   // TODO: Check if address matches to a token on our token list
   const etherscanAddress: Address | null = isValidAddress(searchQuery)
     ? searchQuery
@@ -67,19 +71,26 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     })
   }
 
+  if (searchQuery.length === 0) {
+    return null
+  }
+
   return (
     <Flex grow borderRadius="md" gap="md">
-      {searchQuery.length > 0 &&
-        (isLoading ? (
-          <Box padding="sm">
-            <Loading repeat={4} type="box" />
-          </Box>
-        ) : (
+      {tokensLoading ? (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
+          <Text color="neutralTextSecondary" variant="body2">
+            {t('Tokens')}
+          </Text>
+          <Loading repeat={4} type="token" />
+        </AnimatedFlex>
+      ) : (
+        tokens?.info?.length && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
             <Section.List
               ItemSeparatorComponent={() => <Separator mx="xs" />}
               ListHeaderComponent={
-                <Text color="neutralTextSecondary" mx="xs" variant="body2">
+                <Text color="neutralTextSecondary" mb="xxs" mx="xs" variant="body2">
                   {t('Tokens')}
                 </Text>
               }
@@ -88,30 +99,34 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
               renderItem={renderTokenItem}
             />
           </AnimatedFlex>
-        ))}
-
-      {ensName && ensAddress && (
+        )
+      )}
+      {(ensLoading || (ensName && ensAddress)) && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
           <Text color="neutralTextSecondary" variant="body2">
-            {t('Profiles and wallets')}
+            {t('Wallets')}
           </Text>
-          <Button onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}>
-            <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
-              <Flex centered row gap="sm">
-                <Identicon address={ensAddress} size={35} />
-                <Flex gap="xxs">
-                  <Text variant="mediumLabel">{ensName}</Text>
-                  <Text color="neutralTextSecondary" variant="caption">
-                    {shortenAddress(ensAddress)}
-                  </Text>
+
+          {ensName && ensAddress ? (
+            <Button onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}>
+              <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
+                <Flex centered row gap="sm">
+                  <Identicon address={ensAddress} size={35} />
+                  <Flex gap="xxs">
+                    <Text variant="mediumLabel">{ensName}</Text>
+                    <Text color="neutralTextSecondary" variant="caption">
+                      {shortenAddress(ensAddress)}
+                    </Text>
+                  </Flex>
                 </Flex>
+                <ProfileIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
               </Flex>
-              <ProfileIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
-            </Flex>
-          </Button>
+            </Button>
+          ) : (
+            <Loading repeat={1} type="token" />
+          )}
         </AnimatedFlex>
       )}
-
       {etherscanAddress && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
           <Text color="neutralTextSecondary" variant="body2">
