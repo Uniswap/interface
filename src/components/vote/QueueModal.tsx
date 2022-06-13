@@ -3,11 +3,9 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContext, useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
-import { VoteOption } from '../../state/governance/types'
+import { useQueueCallback } from '../../state/governance/hooks'
 import { CustomLightSpinner, ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -36,17 +34,15 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
 
-interface VoteModalProps {
+interface QueueModalProps {
   isOpen: boolean
   onDismiss: () => void
-  voteOption: VoteOption | undefined
-  proposalId: string | undefined // id for the proposal to vote on
+  proposalId: string | undefined // id for the proposal to queue
 }
 
-export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }: VoteModalProps) {
+export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModalProps) {
   const { chainId } = useActiveWeb3React()
-  const voteCallback = useVoteCallback()
-  const { votes: availableVotes } = useUserVotes()
+  const queueCallback = useQueueCallback()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
@@ -62,14 +58,14 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
     onDismiss()
   }
 
-  async function onVote() {
+  async function onQueue() {
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!voteCallback || voteOption === undefined) return
+    if (!queueCallback) return
 
     // try delegation and store hash
-    const hash = await voteCallback(proposalId, voteOption)?.catch((error) => {
+    const hash = await queueCallback(proposalId)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -86,28 +82,18 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.MediumHeader fontWeight={500}>
-                {voteOption === VoteOption.Against ? (
-                  <Trans>Vote against proposal {proposalId}</Trans>
-                ) : voteOption === VoteOption.For ? (
-                  <Trans>Vote for proposal {proposalId}</Trans>
-                ) : (
-                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
-                )}
+                <Trans>Queue Proposal {proposalId}</Trans>
               </ThemedText.MediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
-            <ThemedText.LargeHeader>
-              <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
-            </ThemedText.LargeHeader>
-            <ButtonPrimary onClick={onVote}>
+            <RowBetween>
+              <ThemedText.Body>
+                <Trans>Adding this proposal to the queue will allow it to be executed, after a delay.</Trans>
+              </ThemedText.Body>
+            </RowBetween>
+            <ButtonPrimary onClick={onQueue}>
               <ThemedText.MediumHeader color="white">
-                {voteOption === VoteOption.Against ? (
-                  <Trans>Vote against proposal {proposalId}</Trans>
-                ) : voteOption === VoteOption.For ? (
-                  <Trans>Vote for proposal {proposalId}</Trans>
-                ) : (
-                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
-                )}
+                <Trans>Queue</Trans>
               </ThemedText.MediumHeader>
             </ButtonPrimary>
           </AutoColumn>
@@ -125,7 +111,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
               <ThemedText.LargeHeader>
-                <Trans>Submitting Vote</Trans>
+                <Trans>Queueing</Trans>
               </ThemedText.LargeHeader>
             </AutoColumn>
             <ThemedText.SubHeader>

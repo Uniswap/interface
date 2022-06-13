@@ -4,34 +4,59 @@ Thank you for your interest in contributing to the Uniswap interface! 🦄
 
 # Development
 
-Before anything, you'll need to install dependencies
+Before running anything, you'll need to install the dependencies:
 
-- `yarn install`
+```
+yarn install
+```
 
 ## Running the interface locally
 
-- `yarn start`
+```
+yarn start
+```
+
+The interface should automatically open. If it does not, navigate to [http://localhost:3000].
 
 ## Creating a production build
 
-- `yarn build`
+```
+yarn build
+```
+
+To serve the production build:
+
+```
+yarn serve
+```
+
+Then, navigate to [http://localhost:3000] to see it.
 
 ## Running unit tests
 
-- Run unit tests: `yarn test`
-- Run unit tests and show test coverage info for all tests: `yarn test --watchAll`
+```
+yarn test
+```
 
-## Running cypress integration tests
+By default, this runs only unit tests that have been affected since the last commit. To run _all_ unit tests:
 
-Integration tests require a running server to test against. Some tests require a production-like build (but these errors can be mostly ignored for local development).
+```
+yarn test --watchAll
+```
 
-- To start a local server (sufficient for most cases): `yarn start`
-- To start a production-like build (for service worker tests): `yarn build:e2e && yarn serve`
+## Running integration tests (cypress)
 
-You'll need to keep the server running, and then run the integration tests.
+Integration tests require a server to be running. In order to see your changes quickly, run `start` in its own tab/window:
 
-- To run interactive integration tests with a browser: `yarn test:e2e`
-- To run all integration tests (headless): `yarn cypress run`
+```
+yarn start
+```
+
+Integration tests are run using `cypress`. When developing locally, use `cypress open` for an interactive UI, and to inspect the rendered page:
+
+```
+yarn cypress open
+```
 
 ## Engineering standards
 

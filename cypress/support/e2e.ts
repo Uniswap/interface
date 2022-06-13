@@ -8,9 +8,11 @@
 // Import commands.ts using ES2015 syntax:
 import './ethereum'
 
-// Unregister the ServiceWorker between test suites.
-// Cypress wraps the document to allow for cross-domain inspection, which the ServiceWorker breaks.
-beforeEach(async () => {
-  const registration = await window.navigator.serviceWorker.getRegistration()
-  registration?.unregister()
+beforeEach(() => {
+  // Infura security policies are based on Origin headers.
+  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
+  cy.intercept(/infura.io/, (res) => {
+    res.headers['origin'] = 'http://localhost:3000'
+    res.continue()
+  })
 })

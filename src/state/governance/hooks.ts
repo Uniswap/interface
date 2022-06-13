@@ -1,5 +1,6 @@
 import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { isAddress } from '@ethersproject/address'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
@@ -73,6 +74,7 @@ export interface ProposalData {
   againstCount: CurrencyAmount<Token>
   startBlock: number
   endBlock: number
+  eta: BigNumber
   details: ProposalDetail[]
   governorIndex: number // index in the governance address array for which this proposal pertains
 }
@@ -301,6 +303,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           againstCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.againstVotes),
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
+          eta: proposal?.result?.eta,
           details: formattedLogs[i]?.details,
           governorIndex: i >= proposalsV0.length + proposalsV1.length ? 2 : i >= proposalsV0.length ? 1 : 0,
         }
@@ -407,16 +410,15 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
   )
 }
 
-export function useVoteCallback(): {
-  voteCallback: (proposalId: string | undefined, voteOption: VoteOption) => undefined | Promise<string>
-} {
+export function useVoteCallback(): (
+  proposalId: string | undefined,
+  voteOption: VoteOption
+) => undefined | Promise<string> {
   const { account, chainId } = useActiveWeb3React()
-
   const latestGovernanceContract = useLatestGovernanceContract()
-
   const addTransaction = useTransactionAdder()
 
-  const voteCallback = useCallback(
+  return useCallback(
     (proposalId: string | undefined, voteOption: VoteOption) => {
       if (!account || !latestGovernanceContract || !proposalId || !chainId) return
       const args = [proposalId, voteOption === VoteOption.Against ? 0 : voteOption === VoteOption.For ? 1 : 2]
@@ -437,14 +439,64 @@ export function useVoteCallback(): {
     },
     [account, addTransaction, latestGovernanceContract, chainId]
   )
-  return { voteCallback }
+}
+
+export function useQueueCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
+  const { account, chainId } = useActiveWeb3React()
+  const latestGovernanceContract = useLatestGovernanceContract()
+  const addTransaction = useTransactionAdder()
+
+  return useCallback(
+    (proposalId: string | undefined) => {
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      const args = [proposalId]
+      return latestGovernanceContract.estimateGas.queue(...args, {}).then((estimatedGasLimit) => {
+        return latestGovernanceContract
+          .queue(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.QUEUE,
+              governorAddress: latestGovernanceContract.address,
+              proposalId: parseInt(proposalId),
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, latestGovernanceContract, chainId]
+  )
+}
+
+export function useExecuteCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
+  const { account, chainId } = useActiveWeb3React()
+  const latestGovernanceContract = useLatestGovernanceContract()
+  const addTransaction = useTransactionAdder()
+
+  return useCallback(
+    (proposalId: string | undefined) => {
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      const args = [proposalId]
+      return latestGovernanceContract.estimateGas.execute(...args, {}).then((estimatedGasLimit) => {
+        return latestGovernanceContract
+          .execute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.EXECUTE,
+              governorAddress: latestGovernanceContract.address,
+              proposalId: parseInt(proposalId),
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, latestGovernanceContract, chainId]
+  )
 }
 
 export function useCreateProposalCallback(): (
   createProposalData: CreateProposalData | undefined
 ) => undefined | Promise<string> {
   const { account, chainId } = useActiveWeb3React()
-
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
