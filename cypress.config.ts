@@ -6,9 +6,6 @@ export default defineConfig({
   defaultCommandTimeout: 10000,
   chromeWebSecurity: false,
   e2e: {
-    setupNodeEvents(on, config) {
-      return
-    },
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   },
