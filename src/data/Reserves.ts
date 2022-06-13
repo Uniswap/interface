@@ -73,8 +73,8 @@ export function usePairs(
     const vv: any[] = []
     lens.forEach((len, index) => {
       vv.push([])
-      const tokenA = tokens[index][0]
-      const tokenB = tokens[index][1]
+      const tokenA = tokens[index]?.[0]
+      const tokenB = tokens[index]?.[1]
       if (len > 0) {
         for (let j = 0; j < len; j++) {
           const { result: reserves, loading } = results[start]
