@@ -161,7 +161,7 @@ export default function TokenPair({
       { name: 'verifyingContract', type: 'address' },
     ]
     const domain = {
-      name: isStaticFeePair ? 'KyberDMM LP' : 'KyberSwap LP',
+      name: isStaticFeePair ? 'KyberSwap LP' : 'KyberDMM LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address,

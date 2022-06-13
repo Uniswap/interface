@@ -341,7 +341,7 @@ export function useToV2LiquidityTokens(
             : [],
         }
       }),
-    [tokenCouples],
+    [tokenCouples, result],
   )
 }
 

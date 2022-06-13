@@ -69,7 +69,7 @@ export function usePairs(
   const ampResults = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'ampBps')
   const factories = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'factory')
   return useMemo(() => {
-    start = 0
+    let start = 0
     const vv: any[] = []
     lens.forEach((len, index) => {
       vv.push([])
@@ -110,7 +110,7 @@ export function usePairs(
       }
     })
     return vv
-  }, [results, tokens, lens])
+  }, [results, tokens, lens, results, ampResults, factories, pairAddresses])
 }
 
 export function usePairsByAddress(
@@ -163,7 +163,7 @@ export function usePairsByAddress(
         isStaticFeePair,
       ]
     })
-  }, [results, ampResults, factories])
+  }, [chainId, pairInfo, results, ampResults, factories])
 }
 
 export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null, boolean?][] {
@@ -206,7 +206,7 @@ export function useUnAmplifiedPairs(currencies: [Currency | undefined, Currency 
       const { result } = res
       return result?.[0]
     })
-  }, [tokens, staticRess, dynamicRess])
+  }, [staticRess, dynamicRess])
 }
 
 export function useUnAmplifiedPairsFull(

@@ -20,7 +20,7 @@ import {
   Fraction,
   JSBI,
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
+import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -180,7 +180,6 @@ export default function ZapOut({
       return approveCallback()
     }
 
-    const isWithoutDynamicFee = chainId && ONLY_STATIC_FEE_CHAINS.includes(chainId)
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)
 
@@ -191,7 +190,7 @@ export default function ZapOut({
       { name: 'verifyingContract', type: 'address' },
     ]
     const domain = {
-      name: !isWithoutDynamicFee ? 'KyberDMM LP' : 'KyberSwap LP',
+      name: isStaticFeePair ? 'KyberSwap LP' : 'KyberDMM LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address,
