@@ -1,5 +1,5 @@
 import { default as React, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { ImageStyle, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
@@ -71,8 +71,27 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     })
   }
 
+  const noTokenResults = !tokensLoading && tokens?.info?.length === 0
+  const noENSResults = !ensLoading && !ensName && !ensAddress
+  const noResults = noTokenResults && noENSResults && !etherscanAddress
+
   if (searchQuery.length === 0) {
     return null
+  }
+
+  if (noResults) {
+    return (
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
+        <Trans t={t}>
+          <Text color="neutralTextSecondary" variant="subHead1">
+            No results found for
+            <Text color="neutralTextPrimary" variant="subHead1">
+              {` ”${searchQuery}”`}
+            </Text>
+          </Text>
+        </Trans>
+      </AnimatedFlex>
+    )
   }
 
   return (
@@ -106,7 +125,6 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
           <Text color="neutralTextSecondary" variant="body2">
             {t('Wallets')}
           </Text>
-
           {ensName && ensAddress ? (
             <Button onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}>
               <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
