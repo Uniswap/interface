@@ -34,7 +34,6 @@ export interface AccountBase {
   backups?: BackupType[]
   flashbotsEnabled?: boolean
   pending?: boolean
-  importedIndex?: number
 }
 
 export interface LocalAccount extends AccountBase {

@@ -26,19 +26,7 @@ export function SelectWalletScreen({ navigation }: Props) {
   const loadingAccounts = status === SagaStatus.Started
 
   const pendingAccounts = usePendingAccounts()
-
-  // for now the importedIndex only comes from adding accounts from importMnemonicAccounts
-  // this can only be done this way for now since as far as I saw accounts from redux is an object instead of an array that's why its not ordered
-  let addresses = Object.values(pendingAccounts).reduce((addressesArray, importedAccount) => {
-    if (importedAccount.importedIndex !== undefined) {
-      addressesArray[importedAccount.importedIndex] = importedAccount.address
-    }
-    return addressesArray
-  }, Array(Object.keys(pendingAccounts).length))
-  // if any of the spaces of the address array is null just default to the old addresses array based from keys
-  if (addresses.some((address) => !address)) {
-    addresses = Object.keys(pendingAccounts)
-  }
+  const addresses = Object.keys(pendingAccounts)
 
   const [selectedAddresses, setSelectedAddresses] = useReducer(
     (currentAddresses: string[], addressToProcess: string) =>
