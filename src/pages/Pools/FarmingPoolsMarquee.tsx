@@ -17,6 +17,7 @@ import { useProMMFarmsFetchOnlyOne } from 'state/farms/promm/hooks'
 import { useToken } from 'hooks/Tokens'
 import useMarquee from 'hooks/useMarquee'
 import { FadeInAnimation } from 'components/Animation'
+import { VERSION } from 'constants/v2'
 
 const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; token1: string }) => {
   const theme = useTheme()
@@ -38,7 +39,7 @@ const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; t
       ? WETH[chainId as ChainId].symbol?.slice(1)
       : token1.address
 
-  const tab = (qs.tab as string) || 'promm'
+  const tab = (qs.tab as string) || VERSION.ELASTIC
 
   return (
     <Link
@@ -88,8 +89,8 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
 
   const increaseRef = useMarquee(uniqueAndActiveFarms)
 
-  if (tab === 'dmm' && uniqueAndActiveFarms.length === 0) return null
-  if (tab === 'promm' && activePrommFarm.length === 0) return null
+  if (tab === VERSION.CLASSIC && uniqueAndActiveFarms.length === 0) return null
+  if (tab === VERSION.ELASTIC && activePrommFarm.length === 0) return null
 
   return (
     <FadeInAnimation>
@@ -105,7 +106,7 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
         <MarqueeSection>
           <MarqueeWrapper ref={increaseRef} id="mq">
             <Marquee>
-              {tab === 'dmm'
+              {tab === VERSION.CLASSIC
                 ? uniqueAndActiveFarms.map(farm => (
                     <MarqueeItem
                       key={`${farm.token0?.symbol}-${farm.token1?.symbol}`}

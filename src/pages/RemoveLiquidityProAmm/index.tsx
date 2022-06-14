@@ -31,7 +31,7 @@ import Divider from 'components/Divider'
 import { Container, FirstColumn, GridColumn, SecondColumn } from './styled'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { Field } from 'state/burn/proamm/actions'
-import { useTokensPrice } from 'state/application/hooks'
+import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
 import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
 import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
 import ProAmmFee from 'components/ProAmm/ProAmmFee'
@@ -42,6 +42,7 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import Copy from 'components/Copy'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { ZERO } from '@kyberswap/ks-sdk-classic'
+import { VERSION } from 'constants/v2'
 
 const MaxButton = styled(MaxBtn)`
   margin: 0;
@@ -106,6 +107,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const positionManager = useProAmmNFTPositionManagerContract()
   const theme = useTheme()
   const { account, chainId, library } = useActiveWeb3React()
+  const toggleWalletModal = useWalletModalToggle()
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId.toNumber()]).result?.[0]
   const ownsNFT = owner === account
@@ -171,7 +173,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     [Field.CURRENCY_B]:
       independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '',
   }
-  const usdPrices = useTokensPrice([liquidityValue0?.currency.wrapped, liquidityValue1?.currency.wrapped], 'promm')
+  const usdPrices = useTokensPrice(
+    [liquidityValue0?.currency.wrapped, liquidityValue1?.currency.wrapped],
+    VERSION.ELASTIC,
+  )
 
   const estimatedUsdCurrencyA =
     parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
@@ -325,7 +330,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     <Trans>
       Removing {liquidityValue0?.toSignificant(6)} {liquidityValue0?.currency?.symbol} and{' '}
       {liquidityValue1?.toSignificant(6)} {liquidityValue1?.currency?.symbol}
-      {(feeValue0?.greaterThan(ZERO) || feeValue1?.greaterThan(ZERO)) ? <br /> : ''}
+      {feeValue0?.greaterThan(ZERO) || feeValue1?.greaterThan(ZERO) ? <br /> : ''}
       {feeValue0?.greaterThan(ZERO) || feeValue1?.greaterThan(ZERO)
         ? `Collecting fee of ${feeValue0?.toSignificant(6)} ${
             feeValue0?.currency?.symbol
@@ -520,7 +525,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       !liquidityValue0 ||
                       (!!owner && !!account && !ownsNFT)
                     }
-                    onClick={() => setShowConfirm(true)}
+                    onClick={() => {
+                      if (!account) {
+                        toggleWalletModal()
+                      } else setShowConfirm(true)
+                    }}
                   >
                     {removed ? <Trans>Closed</Trans> : error ?? <Trans>Preview</Trans>}
                   </ButtonConfirmed>

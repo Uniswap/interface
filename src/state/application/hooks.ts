@@ -21,6 +21,7 @@ import { getPercentChange, getBlockFromTimestamp } from 'utils'
 import { useDeepCompareEffect } from 'react-use'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { defaultExchangeClient, prommClient } from 'apollo/client'
+import { VERSION } from 'constants/v2'
 
 export function useExchangeClient() {
   const { chainId } = useActiveWeb3React()
@@ -221,20 +222,20 @@ const getPrommEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<Nor
   return [ethPrice, ethPriceOneDay, priceChangeETH]
 }
 
-export function useETHPrice(version: string = 'dmm'): AppState['application']['ethPrice'] {
+export function useETHPrice(version: string = VERSION.CLASSIC): AppState['application']['ethPrice'] {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
   const apolloClient = useExchangeClient()
 
   const ethPrice = useSelector((state: AppState) =>
-    version === 'promm' ? state.application.prommEthPrice : state.application.ethPrice,
+    version === VERSION.ELASTIC ? state.application.prommEthPrice : state.application.ethPrice,
   )
 
   useEffect(() => {
     const apolloProMMClient = prommClient[chainId as ChainId]
 
     async function checkForEthPrice() {
-      let [newPrice, oneDayBackPrice, pricePercentChange] = await (version === 'promm' && apolloProMMClient
+      let [newPrice, oneDayBackPrice, pricePercentChange] = await (version === VERSION.ELASTIC && apolloProMMClient
         ? getPrommEthPrice(chainId as ChainId, apolloProMMClient)
         : getEthPrice(chainId as ChainId, apolloClient))
 
@@ -243,7 +244,7 @@ export function useETHPrice(version: string = 'dmm'): AppState['application']['e
       // }
 
       dispatch(
-        version === 'promm'
+        version === VERSION.ELASTIC
           ? updatePrommETHPrice({
               currentPrice: (newPrice ? newPrice : 0).toString(),
               oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
@@ -350,7 +351,7 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
   const [prices, setPrices] = useState<number[]>([])
   const apolloClient = useExchangeClient()
 
-  const client = version !== 'promm' ? apolloClient : prommClient[chainId as ChainId]
+  const client = version !== VERSION.ELASTIC ? apolloClient : prommClient[chainId as ChainId]
 
   useDeepCompareEffect(() => {
     async function checkForTokenPrice() {

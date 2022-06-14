@@ -536,7 +536,7 @@ export default function PositionPage({
                   {currency0 && currency1 && feeAmount && tokenId ? (
                     <ButtonGray
                       as={Link}
-                      to={`/proamm/increase/${currencyId(currency0, chainId)}/${currencyId(
+                      to={`/elastic/increase/${currencyId(currency0, chainId)}/${currencyId(
                         currency1,
                         chainId,
                       )}/${feeAmount}/${tokenId}`}
@@ -550,7 +550,7 @@ export default function PositionPage({
                   {tokenId && !removed ? (
                     <ResponsiveButtonPrimary
                       as={Link}
-                      to={`/proamm/remove/${tokenId}`}
+                      to={`/elastic/remove/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
                     >

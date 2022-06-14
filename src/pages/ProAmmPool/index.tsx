@@ -21,6 +21,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import FarmingPoolsToggle from 'components/Toggle/FarmingPoolsToggle'
 import { useProMMFarmsFetchOnlyOne, useProMMFarms } from 'state/farms/promm/hooks'
 import Card from 'components/Card'
+import { VERSION } from 'constants/v2'
 
 interface AddressSymbolMapInterface {
   [key: string]: string
@@ -57,7 +58,7 @@ export default function ProAmmPool() {
   const history = useHistory()
   const location = useLocation()
 
-  const tab = (qs.tab as string) || 'promm'
+  const tab = (qs.tab as string) || VERSION.ELASTIC
 
   const onSearch = (search: string) => {
     history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
@@ -122,7 +123,7 @@ export default function ProAmmPool() {
               </Flex>
             </Flex>
 
-            <ExternalLink href={`${PROMM_ANALYTICS}/${CHAIN_ROUTE[chainId as ChainId]}/accounts/${account}`}>
+            <ExternalLink href={`${PROMM_ANALYTICS}/${CHAIN_ROUTE[chainId as ChainId]}/account/${account}`}>
               <Flex alignItems="center">
                 <Wallet size={16} />
                 <Text fontSize="14px" marginLeft="4px">
@@ -185,7 +186,7 @@ export default function ProAmmPool() {
               <Text fontSize={16} lineHeight={1.5} color={theme.subText} textAlign="center" marginTop="1rem">
                 <Trans>
                   No liquidity found. Check out our{' '}
-                  <StyledInternalLink to="/pools?tab=promm">Pools.</StyledInternalLink>
+                  <StyledInternalLink to="/pools?tab=elastic">Pools.</StyledInternalLink>
                 </Trans>
               </Text>
             </Flex>

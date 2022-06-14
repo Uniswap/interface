@@ -37,7 +37,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import Wallet from 'components/Icons/Wallet'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { ELASTIC_NOT_SUPPORTED } from 'constants/v2'
+import { ELASTIC_NOT_SUPPORTED, VERSION } from 'constants/v2'
 
 export const Tab = styled.div<{ active: boolean }>`
   padding: 4px 0;
@@ -157,8 +157,8 @@ export default function PoolCombination() {
   const history = useHistory()
   const location = useLocation()
   const qs = useParsedQueryString()
-  const tab = (qs.tab as string) || 'dmm'
-  const setTab = (tab: 'promm' | 'dmm') => {
+  const tab = (qs.tab as string) || VERSION.CLASSIC
+  const setTab = (tab: VERSION) => {
     history.replace(location.pathname + '?tab=' + tab)
   }
 
@@ -175,7 +175,7 @@ export default function PoolCombination() {
               <Flex
                 onClick={() => {
                   if (!!notSupportedMsg) return
-                  if (tab === 'dmm') setTab('promm')
+                  if (tab === VERSION.CLASSIC) setTab(VERSION.ELASTIC)
                 }}
                 alignItems="center"
                 role="button"
@@ -183,14 +183,14 @@ export default function PoolCombination() {
                 <Text
                   fontWeight={500}
                   fontSize={20}
-                  color={tab === 'promm' ? theme.primary : theme.subText}
+                  color={tab === VERSION.ELASTIC ? theme.primary : theme.subText}
                   width={auto}
                   marginRight={'5px'}
                   style={{ cursor: 'pointer' }}
                 >
                   <Trans>Elastic Pools</Trans>
                 </Text>
-                <PoolElasticIcon size={16} color={tab === 'promm' ? theme.primary : theme.subText} />
+                <PoolElasticIcon size={16} color={tab === VERSION.ELASTIC ? theme.primary : theme.subText} />
               </Flex>
             </MouseoverTooltip>
             <Text
@@ -208,24 +208,24 @@ export default function PoolCombination() {
               role="button"
               alignItems={'center'}
               onClick={() => {
-                if (tab === 'promm') setTab('dmm')
+                if (tab === VERSION.ELASTIC) setTab(VERSION.CLASSIC)
               }}
             >
               <Text
                 fontWeight={500}
                 fontSize={20}
-                color={tab === 'dmm' ? theme.primary : theme.subText}
+                color={tab === VERSION.CLASSIC ? theme.primary : theme.subText}
                 width={auto}
                 marginRight={'5px'}
                 style={{ cursor: 'pointer' }}
               >
                 <Trans>Classic Pools</Trans>
               </Text>
-              <PoolClassicIcon size={16} color={tab === 'promm' ? theme.subText : theme.primary} />
+              <PoolClassicIcon size={16} color={tab === VERSION.ELASTIC ? theme.subText : theme.primary} />
             </Flex>
           </Flex>
         </AutoColumn>
-        {tab === 'promm' ? <ProAmmPool /> : <Pool />}
+        {tab === VERSION.ELASTIC ? <ProAmmPool /> : <Pool />}
       </PageWrapper>
       <SwitchLocaleLink />
     </>
@@ -457,7 +457,7 @@ function Pool() {
                   <Text fontSize={16} lineHeight={1.5} color={theme.subText} textAlign="center" marginTop="1rem">
                     <Trans>
                       No liquidity found. Check out our{' '}
-                      <StyledInternalLink to="/pools?tab=dmm">Pools.</StyledInternalLink>
+                      <StyledInternalLink to="/pools?tab=classic">Pools.</StyledInternalLink>
                     </Trans>
                     <br />
                     {t`Don't see a pool you joined?`}{' '}

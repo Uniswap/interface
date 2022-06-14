@@ -3,7 +3,7 @@ import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { useCallback, useMemo, useState, useRef, useEffect } from 'react'
 import { useActiveWeb3React, providers } from 'hooks'
-import { FARM_CONTRACTS, PRO_AMM_CORE_FACTORY_ADDRESSES, PRO_AMM_INIT_CODE_HASH } from 'constants/v2'
+import { FARM_CONTRACTS, PRO_AMM_CORE_FACTORY_ADDRESSES, PRO_AMM_INIT_CODE_HASH, VERSION } from 'constants/v2'
 import { ChainId, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { updatePrommFarms, setLoading } from './actions'
 import { useProMMFarmContracts, useProMMFarmContract, useProAmmNFTPositionManagerContract } from 'hooks/useContract'
@@ -449,7 +449,7 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
   const rwTokenMap = useTokens(rewardAddress)
 
   const rwTokens = useMemo(() => Object.values(rwTokenMap), [rwTokenMap])
-  const prices = useTokensPrice(rwTokens, 'promm')
+  const prices = useTokensPrice(rwTokens, VERSION.ELASTIC)
   const priceMap: { [key: string]: number } = useMemo(
     () =>
       prices?.reduce(
@@ -462,7 +462,7 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
     [prices, rwTokens],
   )
 
-  const ethPriceUSD = useETHPrice('promm')
+  const ethPriceUSD = useETHPrice(VERSION.ELASTIC)
 
   return useMemo(() => {
     let tvl = 0

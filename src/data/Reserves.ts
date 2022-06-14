@@ -29,6 +29,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   )
   const result: any[] = []
   let start = 0
+
   tokens.forEach(([tokenA, tokenB]) => {
     if (!!(tokenA && tokenB && !tokenA.equals(tokenB)) && !!ress[start]) {
       result.push(ress[start])
@@ -48,7 +49,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   const results = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'getTradeInfo')
   const ampResults = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'ampBps')
   return useMemo(() => {
-    start = 0
+    let start = 0
     const vv: any[] = []
     lens.forEach((len, index) => {
       vv.push([])
@@ -86,7 +87,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       }
     })
     return vv
-  }, [results, tokens, lens])
+  }, [results, tokens, lens, ampResults, pairAddresses])
 }
 
 export function usePairsByAddress(
@@ -129,7 +130,7 @@ export function usePairsByAddress(
         ),
       ]
     })
-  }, [results])
+  }, [results, ampResults, pairInfo])
 }
 
 export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null][] {

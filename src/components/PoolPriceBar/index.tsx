@@ -229,7 +229,7 @@ export function PoolPriceRangeBar({
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
 
-  const wrappedA = currencies[Field.CURRENCY_A]?.wrapped
+  const wrappedA = nativeA?.wrapped
 
   const existedPriceRange = () => {
     const amp = amplification?.divide(JSBI.BigInt(10000))

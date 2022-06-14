@@ -6,7 +6,7 @@ import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
-import { PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, FARM_CONTRACTS } from 'constants/v2'
+import { PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, FARM_CONTRACTS, VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -122,7 +122,7 @@ export default function AddLiquidity({
   const quoteCurrencyIsETHER = !!(chainId && quoteCurrency && quoteCurrency.isNative)
   const quoteCurrencyIsWETH = !!(chainId && quoteCurrency && quoteCurrency.equals(WETH[chainId]))
 
-  const usdPrices = useTokensPrice([baseCurrency?.wrapped, quoteCurrency?.wrapped], 'promm')
+  const usdPrices = useTokensPrice([baseCurrency?.wrapped, quoteCurrency?.wrapped], VERSION.ELASTIC)
 
   const estimatedUsdCurrencyA =
     parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
@@ -478,7 +478,7 @@ export default function AddLiquidity({
                     <div style={!depositADisabled ? { visibility: 'visible' } : { visibility: 'hidden' }}>
                       <StyledInternalLink
                         replace
-                        to={`/proamm/increase/${
+                        to={`/elastic/increase/${
                           baseCurrencyIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
                         }/${currencyIdB}/${feeAmount}/${tokenId}`}
                         style={{ fontSize: '14px', float: 'right' }}
@@ -506,7 +506,7 @@ export default function AddLiquidity({
                     <div style={!depositBDisabled ? { visibility: 'visible' } : { visibility: 'hidden' }}>
                       <StyledInternalLink
                         replace
-                        to={`/proamm/increase/${currencyIdA}/${
+                        to={`/elastic/increase/${currencyIdA}/${
                           quoteCurrencyIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
                         }/${feeAmount}/${tokenId}`}
                         style={{ fontSize: '14px', float: 'right' }}

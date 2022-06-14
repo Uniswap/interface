@@ -31,6 +31,7 @@ import { CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import HoverDropdown from 'components/HoverDropdown'
 import { ExternalLink, StyledInternalLink } from 'theme'
 import { ProMMFarm } from 'state/farms/promm/types'
+import { VERSION } from 'constants/v2'
 
 type ModalType = 'deposit' | 'withdraw' | 'stake' | 'unstake' | 'harvest'
 
@@ -161,7 +162,7 @@ function ProMMFarms({
         </HeadingRight>
       </HeadingContainer>
 
-      {qs.tab === 'ended' && qs.farmType !== 'dmm' && (
+      {qs.tab === 'ended' && qs.farmType !== VERSION.CLASSIC && (
         <Text fontStyle="italic" fontSize={12} textAlign="right" marginBottom="1rem" color={theme.subText}>
           <Trans>
             Your rewards may be automatically harvested a few days after the farm ends. Please check the{' '}

@@ -238,7 +238,6 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
   [ChainId.OASIS]: oasisBlockClient,
 }
 
-//https://router.firebird.finance/bsc/route
 export const routerUri: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route/encode`,
   [ChainId.BSCMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/bsc/route/encode`,
@@ -252,14 +251,6 @@ export const routerUri: { [chainId in ChainId]?: string } = {
   [ChainId.VELAS]: `${process.env.REACT_APP_AGGREGATOR_API}/velas/route/encode`,
   [ChainId.OASIS]: `${process.env.REACT_APP_AGGREGATOR_API}/oasis/route/encode`,
   [ChainId.RINKEBY]: `https://aggregator-api.dev.kyberengineering.io/rinkeby/route/encode`,
-}
-
-// TODO-swapv2: change price uri
-export const priceUri: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '',
-  [ChainId.BSCMAINNET]: 'https://price-api.firebird.finance',
-  [ChainId.MATIC]: 'https://price-api-polygon.firebird.finance',
-  [ChainId.AVAXMAINNET]: '',
 }
 
 const dummy = new ApolloClient({

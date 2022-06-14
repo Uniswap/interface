@@ -1735,7 +1735,6 @@ msgid "My Deposit"
 msgstr "My Deposit"
 
 #: src/components/Header/index.tsx
-#: src/components/Menu/index.tsx
 msgid "My Pools"
 msgstr "My Pools"
 
