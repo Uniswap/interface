@@ -85,7 +85,7 @@ export function DevScreen({ navigation }: any) {
 
   return (
     <SheetScreen>
-      <Box flexDirection="row" justifyContent="flex-end" px="md" py="sm">
+      <Box flexDirection="row" justifyContent="flex-end" pb="sm" pt="xl" px="md">
         <BackX />
       </Box>
       <ScrollView>

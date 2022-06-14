@@ -13,12 +13,12 @@ import LockIcon from 'src/assets/icons/lock.svg'
 import TestnetsIcon from 'src/assets/icons/testnets.svg'
 import TwitterIcon from 'src/assets/logos/twitter.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import {
   SettingsRow,
   SettingsSection,
@@ -216,11 +216,7 @@ export function SettingsScreen() {
   }
 
   return (
-    <Screen px="lg" py="sm">
-      <Flex alignItems="center" flexDirection="row" mb="xl">
-        <BackButton color="neutralTextSecondary" />
-        <Text variant="largeLabel">{t('Settings')}</Text>
-      </Flex>
+    <Screen px="lg" py="lg">
       <SectionList
         ListHeaderComponent={<WalletSettings />}
         keyExtractor={(_item, index) => 'settings' + index}
@@ -291,6 +287,10 @@ function WalletSettings() {
 
   return (
     <Box flexDirection="column" mb="md">
+      <SettingsBackButtonRow>
+        <Text variant="largeLabel">{t('Settings')}</Text>
+      </SettingsBackButtonRow>
+
       <Flex row justifyContent="space-between">
         <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
           {t('Wallet settings')}

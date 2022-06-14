@@ -4,10 +4,10 @@ import { SettingsStackNavigationProp, SettingsStackParamList } from 'src/app/nav
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { PopoutArrow } from 'src/components/icons/PopoutArrow'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
-import { Flex } from 'src/components/layout'
 
 export interface SettingsSection {
   subTitle: string
@@ -48,7 +48,12 @@ export function SettingsRow({
     }
   }
   return (
-    <Button mb="md" name="DEBUG_Settings_Navigate" px="sm" onPress={handleRow}>
+    <Button
+      disabled={Boolean(action)}
+      mb="md"
+      name="DEBUG_Settings_Navigate"
+      px="sm"
+      onPress={handleRow}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Flex row>
           {icon}

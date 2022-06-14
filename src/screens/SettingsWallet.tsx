@@ -2,33 +2,33 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SectionList, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo, SectionList } from 'react-native'
+import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
-import { BackButton } from 'src/components/buttons/BackButton'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
+import NotificationIcon from 'src/assets/icons/bell.svg'
+import EditIcon from 'src/assets/icons/edit.svg'
+import GlobalIcon from 'src/assets/icons/global.svg'
+import { AddressDisplay } from 'src/components/AddressDisplay'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Switch } from 'src/components/buttons/Switch'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import {
-  SettingsSection,
   SettingsRow,
+  SettingsSection,
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
-import { Screens } from './Screens'
-import EditIcon from 'src/assets/icons/edit.svg'
-import NotificationIcon from 'src/assets/icons/bell.svg'
-import GlobalIcon from 'src/assets/icons/global.svg'
-import { Switch } from 'src/components/buttons/Switch'
-import { AddressDisplay } from 'src/components/AddressDisplay'
-import { useAppDispatch } from 'src/app/hooks'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { opacify } from 'src/utils/colors'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex } from 'src/components/layout'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
+import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
+import { opacify } from 'src/utils/colors'
+import { Screens } from './Screens'
 
 const ALERT_ICON_SIZE = 32
 
@@ -105,12 +105,11 @@ export function SettingsWallet({
   }
 
   return (
-    <Screen px="lg" py="sm">
+    <Screen px="lg" py="lg">
       <Box flex={1}>
-        <Flex row alignItems="center" mb="lg">
-          <BackButton />
+        <SettingsBackButtonRow>
           <AddressDisplay address={address} variant="body1" verticalGap="none" />
-        </Flex>
+        </SettingsBackButtonRow>
         <SectionList
           keyExtractor={(_item, index) => 'wallet_settings' + index}
           renderItem={renderItem}

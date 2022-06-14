@@ -1,24 +1,25 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
+import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { isEnabled, useTestConfigManager } from 'src/features/remoteConfig'
 import { flex } from 'src/styles/flex'
+import { theme } from 'src/styles/theme'
 
 export function SettingsTestConfigs() {
   const [testConfigs, toggleLocalConfig] = useTestConfigManager()
 
   return (
     <SheetScreen px="lg">
-      <ScrollView contentContainerStyle={flex.fill}>
+      <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
         <Flex>
-          <Flex row alignItems="center">
-            <BackButton />
-            <Text variant="subHead1">Test Configs</Text>
-          </Flex>
+          <SettingsBackButtonRow>
+            <Text variant="largeLabel">Test Configs</Text>
+          </SettingsBackButtonRow>
+
           <Text variant="body1">List of all test configs available to the app</Text>
           <Text variant="caption">
             Remote-only test configs cannot be toggled locally. Use the Firebase console instead.

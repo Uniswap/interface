@@ -1,11 +1,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
-import { BackButton } from 'src/components/buttons/BackButton'
-import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
+import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { flex } from 'src/styles/flex'
+import { theme } from 'src/styles/theme'
 import { getLogBuffer } from 'src/utils/logger'
 
 export function SettingsSupportScreen() {
@@ -15,11 +15,10 @@ export function SettingsSupportScreen() {
 
   return (
     <SheetScreen px="lg">
-      <ScrollView contentContainerStyle={flex.fill}>
-        <Box alignItems="center" flexDirection="row" mb="lg">
-          <BackButton mr="md" />
-          <Text variant="subHead1">{t('Wallet Support')}</Text>
-        </Box>
+      <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
+        <SettingsBackButtonRow>
+          <Text variant="largeLabel">{t('Wallet Support')}</Text>
+        </SettingsBackButtonRow>
         <Text mb="sm" variant="subHead1">
           {t('Recent logs')}
         </Text>
