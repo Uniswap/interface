@@ -1,11 +1,6 @@
 {
   "npm.packageManager": "yarn",
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "files.exclude": {
-    "**/.git": true,
-    "**/.next": true,
-    "**/.DS_Store": true
-  },
   "javascript.updateImportsOnFileMove.enabled": "always",
   "editor.formatOnSaveMode": "file",
   "editor.tabCompletion": "on",
