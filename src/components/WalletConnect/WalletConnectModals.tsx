@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
 import {
@@ -13,7 +13,7 @@ import {
   setWalletConnectModalState,
 } from 'src/features/walletConnect/walletConnectSlice'
 
-export function WalletConnectWrapper({ children }: PropsWithChildren<any>) {
+export function WalletConnectModals() {
   const activeAccount = useActiveAccount()
   const dispatch = useAppDispatch()
 
@@ -43,7 +43,6 @@ export function WalletConnectWrapper({ children }: PropsWithChildren<any>) {
       {currRequest && (
         <WalletConnectRequestModal isVisible request={currRequest} onClose={onCloseRequest} />
       )}
-      {children}
     </>
   )
 }

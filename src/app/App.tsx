@@ -11,7 +11,7 @@ import { DrawerNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
-import { WalletConnectWrapper } from 'src/components/WalletConnect/WalletConnectWrapper'
+import { AppModals } from 'src/components/modals/AppModals'
 import { config } from 'src/config'
 import { TransactionHistoryUpdater } from 'src/features/dataApi/zerion/updater'
 import { MulticallUpdaters } from 'src/features/multicall'
@@ -47,9 +47,8 @@ export function App() {
                 <WalletContextProvider>
                   <DataUpdaters />
                   <BottomSheetModalProvider>
-                    <WalletConnectWrapper>
-                      <NavStack isDarkMode={isDarkMode} />
-                    </WalletConnectWrapper>
+                    <AppModals />
+                    <NavStack isDarkMode={isDarkMode} />
                   </BottomSheetModalProvider>
                 </WalletContextProvider>
               </ErrorBoundary>
