@@ -27,7 +27,8 @@ const connect = async (connector: Connector) => {
   }
 }
 
-// This component handles state changes in web3-react. It eagerly connects to all wallets.
+// This component handles state changes in web3-react.
+// It eagerly connects to gnosis safe, network, and the selectedWallet.
 // It also checks for Coinbase Wallet, Wallet Connect Fortmatic or Injected wallets to become active.
 function Web3Updater() {
   const dispatch = useAppDispatch()
