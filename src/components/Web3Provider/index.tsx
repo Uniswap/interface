@@ -13,7 +13,7 @@ import {
   walletConnectHooks,
 } from 'connectors'
 import usePrevious from 'hooks/usePrevious'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/walletOverride/reducer'
 
@@ -29,11 +29,6 @@ const connect = async (connector: Connector) => {
   }
 }
 
-interface ConnectorState {
-  isActive: boolean
-  previousIsActive: boolean | undefined
-}
-
 // This component handles state changes in web3-react. It eagerly connects to all wallets.
 // It also checks for Coinbase Wallet, Wallet Connect Fortmatic or Injected wallets to become active.
 function Web3Updater() {
@@ -42,19 +37,43 @@ function Web3Updater() {
   const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
   const walletOverrideBackfilled = useAppSelector((state) => state.walletOverride.walletOverrideBackfilled)
 
-  const injectedIsActive = injectedHooks.useIsActive()
-  const previousInjectedIsActive = usePrevious(injectedIsActive)
-
-  const coinbaseWalletIsActive = coinbaseWalletHooks.useIsActive()
-  const previousCoinbaseWalletIsActive = usePrevious(coinbaseWalletIsActive)
-
-  const walletConnectIsActive = walletConnectHooks.useIsActive()
-  const previousWalletConnectIsActive = usePrevious(walletConnectIsActive)
-
-  const fortmaticIsActive = fortmaticHooks.useIsActive()
-  const previousFortmaticIsActive = usePrevious(fortmaticIsActive)
-
   const [isEagerlyConnecting, setIsEagerlyConnecting] = useState(false)
+
+  const injectedIsActive = injectedHooks.useIsActive()
+  const coinbaseWalletIsActive = coinbaseWalletHooks.useIsActive()
+  const walletConnectIsActive = walletConnectHooks.useIsActive()
+  const fortmaticIsActive = fortmaticHooks.useIsActive()
+  const isActiveMap: Map<Wallet, boolean> = useMemo(() => {
+    return new Map([
+      [Wallet.INJECTED, injectedIsActive],
+      [Wallet.COINBASE_WALLET, coinbaseWalletIsActive],
+      [Wallet.WALLET_CONNECT, walletConnectIsActive],
+      [Wallet.FORTMATIC, fortmaticIsActive],
+    ])
+  }, [injectedIsActive, coinbaseWalletIsActive, walletConnectIsActive, fortmaticIsActive])
+  const previousIsActiveMap = usePrevious(isActiveMap)
+
+  useEffect(() => {
+    isActiveMap.forEach((isActive: boolean, wallet: Wallet) => {
+      if (isActive && !previousIsActiveMap?.get(wallet)) {
+        if (isEagerlyConnecting) {
+          setIsEagerlyConnecting(false)
+        } else if (!walletOverrideBackfilled) {
+          // When a user manually sets their new connection, set a wallet override.
+          // Also set an override when they were a user prior to this state being introduced.
+          dispatch(updateWalletOverride({ wallet }))
+        }
+      }
+    })
+  }, [
+    dispatch,
+    isActiveMap,
+    previousIsActiveMap,
+    isEagerlyConnecting,
+    setIsEagerlyConnecting,
+    walletOverride,
+    walletOverrideBackfilled,
+  ])
 
   // The dependency list is empty so this is only run once on mount
   useEffect(() => {
@@ -73,31 +92,8 @@ function Web3Updater() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    const injectedState: ConnectorState = {
-      isActive: injectedIsActive,
-      previousIsActive: previousInjectedIsActive,
-    }
-    const coinbaseWalletState: ConnectorState = {
-      isActive: coinbaseWalletIsActive,
-      previousIsActive: previousCoinbaseWalletIsActive,
-    }
-    const walletConnectState: ConnectorState = {
-      isActive: walletConnectIsActive,
-      previousIsActive: previousWalletConnectIsActive,
-    }
-    const fortmaticState: ConnectorState = {
-      isActive: fortmaticIsActive,
-      previousIsActive: previousFortmaticIsActive,
-    }
-    const isActiveMap = new Map<Wallet, ConnectorState>([
-      [Wallet.INJECTED, injectedState],
-      [Wallet.COINBASE_WALLET, coinbaseWalletState],
-      [Wallet.WALLET_CONNECT, walletConnectState],
-      [Wallet.FORTMATIC, fortmaticState],
-    ])
-
-    isActiveMap.forEach((state: ConnectorState, wallet: Wallet) => {
-      const { isActive, previousIsActive } = state
+    isActiveMap.forEach((isActive: boolean, wallet: Wallet) => {
+      const previousIsActive = previousIsActiveMap?.get(wallet)
       if (isActive && !previousIsActive) {
         // When a user manually sets their new connection, set a wallet override.
         // Also set an override when they were a user prior to this state being introduced.
@@ -115,14 +111,8 @@ function Web3Updater() {
     dispatch,
     walletOverride,
     walletOverrideBackfilled,
-    injectedIsActive,
-    coinbaseWalletIsActive,
-    walletConnectIsActive,
-    previousInjectedIsActive,
-    previousCoinbaseWalletIsActive,
-    previousWalletConnectIsActive,
-    fortmaticIsActive,
-    previousFortmaticIsActive,
+    isActiveMap,
+    previousIsActiveMap,
     isEagerlyConnecting,
     setIsEagerlyConnecting,
   ])
