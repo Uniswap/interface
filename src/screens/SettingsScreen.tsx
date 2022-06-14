@@ -76,11 +76,7 @@ export function SettingsScreen() {
         subTitle: t('Support and feedback'),
         data: [
           {
-            screen: Screens.WebView,
-            screenProps: {
-              uriLink: 'https://help.uniswap.org',
-              headerTitle: t('Help Center'),
-            },
+            externalLink: 'https://help.uniswap.org',
             text: t('Help Center'),
             icon: (
               <ChatBubbleIcon
