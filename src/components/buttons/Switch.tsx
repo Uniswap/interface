@@ -27,11 +27,11 @@ export function Switch({
   return (
     <Box {...rest}>
       <BaseSwitch
-        ios_backgroundColor={theme.colors.deprecated_gray100}
-        thumbColor={value ? theme.colors.accentBackgroundActive : theme.colors.deprecated_gray400}
+        ios_backgroundColor={theme.colors.neutralAction}
+        thumbColor={value ? theme.colors.accentBackgroundActive : theme.colors.neutralTextTertiary}
         trackColor={{
-          false: theme.colors.deprecated_gray100,
-          true: theme.colors.deprecated_gray100,
+          false: theme.colors.neutralAction,
+          true: theme.colors.neutralAction,
         }}
         value={value}
         onValueChange={disabled ? undefined : onValueChange}
