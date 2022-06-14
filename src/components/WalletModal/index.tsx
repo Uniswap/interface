@@ -322,11 +322,19 @@ export default function WalletModal({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        <HeaderRow color="blue">
-          <HoverText onClick={() => setWalletView(WALLET_VIEWS.OPTIONS)}>
-            <ArrowLeft />
-          </HoverText>
-        </HeaderRow>
+        {connector === network ? (
+          <HeaderRow color="blue">
+            <HoverText onClick={() => setWalletView(WALLET_VIEWS.OPTIONS)}>
+              <ArrowLeft />
+            </HoverText>
+          </HeaderRow>
+        ) : (
+          <HeaderRow>
+            <HoverText onClick={() => setWalletView(WALLET_VIEWS.ACCOUNT)}>
+              <Trans>Connect a wallet</Trans>
+            </HoverText>
+          </HeaderRow>
+        )}
         <ContentWrapper>
           <AutoColumn gap="16px">
             {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
