@@ -16,17 +16,7 @@ import styled from 'styled-components/macro'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import {
-  coinbaseWalletHooks,
-  fortmatic,
-  fortmaticHooks,
-  getWalletForConnector,
-  injected,
-  injectedHooks,
-  network,
-  Wallet,
-  walletConnectHooks,
-} from '../../connectors'
+import { fortmatic, getWalletForConnector, injected, network } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
