@@ -10,28 +10,26 @@ import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { ChainId } from 'src/constants/chains'
-import { Asset } from 'src/features/dataApi/zerion/types'
+import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 
 interface TokenItemProps {
+  currencyId: string
   gesturesEnabled?: boolean
   index?: number
-  isSearchResult?: boolean
   metadataDisplayType?: string
   onCycleMetadata?: () => void
   onPress: () => void
-  token: Asset
+  token: CoingeckoMarketCoin
 }
 
 const tokenLogoStyle: ImageStyle = { width: 35, height: 35, borderRadius: 35 / 2 }
 const boxTokenLogoStyle: ImageStyle = { width: 18, height: 18, borderRadius: 18 / 2 }
 
 interface FavoriteButtonProps {
-  asset: Asset
+  token: CoingeckoMarketCoin
   onPress: () => void
   active: boolean
 }
@@ -49,9 +47,9 @@ function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
 }
 
 export function TokenItem({
+  currencyId,
   gesturesEnabled,
   index,
-  isSearchResult = false,
   metadataDisplayType,
   onCycleMetadata,
   onPress,
@@ -59,14 +57,13 @@ export function TokenItem({
 }: TokenItemProps) {
   const { t } = useTranslation()
 
-  const assetId = buildCurrencyId(ChainId.Mainnet, token.asset.asset_code)
-  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(assetId)
-  const toggleFavoriteCallback = useToggleFavoriteCallback(assetId)
+  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(currencyId)
+  const toggleFavoriteCallback = useToggleFavoriteCallback(currencyId)
 
   const renderRightActions = () => {
     // TODO: fade in on drag
-    return isSearchResult ? null : (
-      <FavoriteButton active={isFavoriteToken} asset={token} onPress={toggleFavoriteCallback} />
+    return (
+      <FavoriteButton active={isFavoriteToken} token={token} onPress={toggleFavoriteCallback} />
     )
   }
 
@@ -75,44 +72,42 @@ export function TokenItem({
       enabled={gesturesEnabled}
       overshootRight={false}
       renderRightActions={renderRightActions}>
-      <Button testID={`token-item-${token.asset.symbol}`} onPress={onPress}>
+      <Button testID={`token-item-${token.symbol}`} onPress={onPress}>
         <AnimatedFlex
           row
           alignItems="center"
-          bg={isSearchResult ? 'none' : 'neutralBackground'}
+          bg="neutralBackground"
           justifyContent="space-between"
-          px={isSearchResult ? 'xs' : 'md'}
+          px="md"
           py="sm">
           <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
             {index !== undefined && (
               <Box minWidth={18}>
                 <Text color="neutralTextSecondary" variant="badge">
-                  {index + 1}
+                  {token.market_cap_rank}
                 </Text>
               </Box>
             )}
 
-            <Image source={{ uri: token.asset.icon_url }} style={tokenLogoStyle} />
+            <Image source={{ uri: token.image }} style={tokenLogoStyle} />
             <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
-              <Flex row>
-                <Text variant="mediumLabel">{token.asset.name ?? ''}</Text>
-              </Flex>
-              <Flex row>
-                <Text variant="caption">{token.asset.symbol ?? ''}</Text>
-              </Flex>
+              <Text variant="mediumLabel">{token.name ?? ''}</Text>
+              <Text color="neutralTextSecondary" variant="caption">
+                {token.symbol.toUpperCase() ?? ''}
+              </Text>
             </Flex>
           </Flex>
           <Flex row justifyContent="flex-end">
             <Button onPress={onCycleMetadata}>
               <TokenMetadata
-                main={formatUSDPrice(token.asset.price?.value)}
+                main={formatUSDPrice(token.current_price)}
                 sub={
                   metadataDisplayType === 'market_cap' ? (
                     <Text variant="caption">
                       {t('MCap {{marketCap}}', { marketCap: formatNumber(token?.market_cap) })}
                     </Text>
                   ) : (
-                    <RelativeChange change={token?.asset.price?.relative_change_24h} />
+                    <RelativeChange change={token.price_change_percentage_24h ?? undefined} />
                   )
                 }
               />
@@ -126,18 +121,18 @@ export function TokenItem({
 
 export function TokenItemBox({ token, onPress }: TokenItemProps) {
   return (
-    <Pressable testID={`token-box-${token.asset.symbol}`} onPress={onPress}>
+    <Pressable testID={`token-box-${token.symbol}`} onPress={onPress}>
       <Box bg="neutralContainer" borderRadius="lg" justifyContent="space-between">
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="body1">{token.asset.symbol ?? ''}</Text>
-            <Image source={{ uri: token.asset.icon_url }} style={boxTokenLogoStyle} />
+            <Text variant="body1">{token.symbol ?? ''}</Text>
+            <Image source={{ uri: token.image }} style={boxTokenLogoStyle} />
           </Flex>
           <Flex row>
             <TokenMetadata
               align="flex-start"
-              main={<Text variant="body2">{formatUSDPrice(token.asset.price?.value)}</Text>}
-              sub={<RelativeChange change={token?.asset.price?.relative_change_24h} />}
+              main={<Text variant="body2">{formatUSDPrice(token.current_price)}</Text>}
+              sub={<RelativeChange change={token.price_change_percentage_24h ?? undefined} />}
             />
           </Flex>
         </Flex>

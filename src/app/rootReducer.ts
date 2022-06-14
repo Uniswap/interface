@@ -2,6 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
+import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { dataApi } from 'src/features/dataApi/slice'
 import { zerionApi } from 'src/features/dataApi/zerion/api'
 import { favoritesReducer } from 'src/features/favorites/slice'
@@ -16,6 +17,7 @@ import { transactionReducer } from 'src/features/transactions/slice'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 export const rootReducer = combineReducers({
+  [coingeckoApi.reducerPath]: coingeckoApi.reducer,
   [dataApi.reducerPath]: dataApi.reducer,
   [multicall.reducerPath]: multicall.reducer,
   [nftApi.reducerPath]: nftApi.reducer,

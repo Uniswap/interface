@@ -5,3 +5,5 @@ jest-setup.js
 # Generated contract types
 src/abis/types
 src/abis/uniswapV3
+
+generated*.ts

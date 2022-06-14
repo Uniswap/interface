@@ -1,6 +1,6 @@
 import { default as React, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ImageStyle, ListRenderItemInfo } from 'react-native'
+import { Image, ImageStyle, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
@@ -15,14 +15,33 @@ import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { Asset } from 'src/features/dataApi/zerion/types'
+import { useGetCoinsListQuery } from 'src/features/dataApi/coingecko/enhancedApi'
+import { CoingeckoSearchCoin, GetCoinsListResponse } from 'src/features/dataApi/coingecko/types'
 import { useENS } from 'src/features/ens/useENS'
 import { useTokenSearchResults } from 'src/features/explore/hooks'
-import { TokenItem } from 'src/features/explore/TokenItem'
 import { Screens } from 'src/screens/Screens'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
+
+type TokenResultRowProps = CoingeckoSearchCoin & {
+  onPress: () => void
+}
+function TokenResultRow({ name, symbol, large: uri }: TokenResultRowProps) {
+  return (
+    <Flex row alignItems="center" px="md" py="sm">
+      <Image source={{ uri }} style={logoStyle} />
+      <Flex gap="none">
+        <Text color="neutralTextPrimary" variant="subHead1">
+          {name}
+        </Text>
+        <Text color="neutralTextSecondary" variant="caption">
+          {symbol}
+        </Text>
+      </Flex>
+    </Flex>
+  )
+}
 
 export interface SearchResultsSectionProps {
   searchQuery: string
@@ -33,7 +52,8 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   const theme = useAppTheme()
   const navigation = useExploreStackNavigation()
 
-  const { tokens, isLoading: tokensLoading } = useTokenSearchResults(searchQuery, 5)
+  const { tokens, isLoading: tokensLoading } = useTokenSearchResults(searchQuery)
+  const { currentData: coinsList } = useGetCoinsListQuery({ includePlatform: true })
 
   const {
     address: ensAddress,
@@ -46,21 +66,24 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     : ensAddress || null
 
   const renderTokenItem = useCallback(
-    ({ item: token }: ListRenderItemInfo<Asset>) => {
+    ({ item: token }: ListRenderItemInfo<CoingeckoSearchCoin>) => {
+      // TODO: support non mainnet
+      const currencyId = buildCurrencyId(
+        ChainId.Mainnet,
+        (coinsList as GetCoinsListResponse)?.[token.id]?.platforms.ethereum ?? ''
+      )
       return (
-        <TokenItem
-          gesturesEnabled={false}
-          isSearchResult={true}
-          token={token}
+        <TokenResultRow
+          {...token}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
-              currencyId: buildCurrencyId(ChainId.Mainnet, token.asset.asset_code),
+              currencyId,
             })
           }}
         />
       )
     },
-    [navigation]
+    [coinsList, navigation]
   )
 
   const onPressViewEtherscan = (address: string) => {
@@ -71,7 +94,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     })
   }
 
-  const noTokenResults = !tokensLoading && tokens?.info?.length === 0
+  const noTokenResults = !tokensLoading && tokens?.length === 0
   const noENSResults = !ensLoading && !ensName && !ensAddress
   const noResults = noTokenResults && noENSResults && !etherscanAddress
 
@@ -104,7 +127,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
           <Loading repeat={4} type="token" />
         </AnimatedFlex>
       ) : (
-        tokens?.info?.length && (
+        tokens?.length && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
             <Section.List
               ItemSeparatorComponent={() => <Separator mx="xs" />}
@@ -113,7 +136,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
                   {t('Tokens')}
                 </Text>
               }
-              data={tokens?.info}
+              data={tokens}
               keyExtractor={key}
               renderItem={renderTokenItem}
             />
@@ -171,11 +194,11 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   )
 }
 
-function key(asset: Asset) {
-  return asset.asset.asset_code
+function key(coin: CoingeckoSearchCoin) {
+  return coin.id
 }
 
-export const etherscanLogoStyle: ImageStyle = {
+export const logoStyle: ImageStyle = {
   height: 35,
   resizeMode: 'cover',
   width: 35,

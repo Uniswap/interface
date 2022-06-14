@@ -1,52 +1,82 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useMemo, useReducer } from 'react'
-import { useAssetInfoQuery } from 'src/features/dataApi/zerion/api'
-import { Namespace, OrderBy } from 'src/features/dataApi/zerion/types'
-import { requests } from 'src/features/dataApi/zerion/utils'
-import { useFavoriteCurrencies } from 'src/features/favorites/hooks'
-import { useAllCurrencies } from 'src/features/tokens/useTokens'
+import { useAppSelector } from 'src/app/hooks'
+import { useGetSearchQuery } from 'src/features/dataApi/coingecko/enhancedApi'
+import { useGetCoinsMarketsQuery } from 'src/features/dataApi/coingecko/generatedApi'
+import {
+  ClientSideOrderBy,
+  CoingeckoMarketCoin,
+  CoingeckoOrderBy,
+  GetCoinsSearchResponse,
+} from 'src/features/dataApi/coingecko/types'
+import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { next } from 'src/utils/array'
-import { flattenObjectOfObjects } from 'src/utils/objects'
+import { getCompareFn } from './utils'
 
-export function useFavoriteTokenInfo(orderBy?: OrderBy) {
-  const currencies = useAllCurrencies()
-  const currenciesFlat = useMemo(() => flattenObjectOfObjects(currencies), [currencies])
-  const favorites = useFavoriteCurrencies(currenciesFlat ?? []).map((c) =>
-    c.isToken ? c.address.toLowerCase() : 'eth'
-  )
+export function useFavoriteTokenInfo() {
+  const favoritesList = Array.from(useAppSelector(selectFavoriteTokensSet)).join(',')
 
-  return useAssetInfoQuery(
-    favorites.length > 0
-      ? requests[Namespace.Assets].info({ asset_codes: favorites, order_by: orderBy })
-      : skipToken
-  )
+  return useMarketTokens({ ids: favoritesList })
 }
 
-export function useMarketTokens(orderBy?: OrderBy) {
-  // TODO: filter out tokens not in token list
-  const { currentData: topTokens, isLoading } = useAssetInfoQuery(
-    requests[Namespace.Assets].market({
-      order_by: orderBy,
-    })
+// TODO: consider casting coins to `Currency` by merging market data
+//       with Coingecko list data
+export function useMarketTokens({
+  remoteOrderBy = CoingeckoOrderBy.MarketCapDesc,
+  localOrderBy,
+  ids,
+}: {
+  remoteOrderBy?: CoingeckoOrderBy
+  localOrderBy?: ClientSideOrderBy
+  ids?: string
+}): {
+  tokens: CoingeckoMarketCoin[]
+  isLoading: boolean
+} {
+  const { currentData, isLoading } = useGetCoinsMarketsQuery(
+    {
+      category: 'ethereum-ecosystem',
+      ids,
+      order: remoteOrderBy,
+      page: 1,
+      perPage: 100,
+      vsCurrency: 'usd',
+    },
+    {
+      pollingInterval: 60 * 1000, // 1 min
+    }
   )
-  return { topTokens, isLoading }
+
+  const tokens = useMemo(() => {
+    const typedCurrentData = currentData as Nullable<CoingeckoMarketCoin[]>
+    if (!localOrderBy) return typedCurrentData
+
+    const compareFn = getCompareFn(localOrderBy)
+    return typedCurrentData?.slice().sort(compareFn)
+  }, [currentData, localOrderBy])
+
+  return useMemo(() => {
+    return {
+      tokens: tokens ?? [],
+      isLoading,
+    }
+  }, [isLoading, tokens])
 }
 
-export function useTokenSearchResults(searchQuery: string, limit?: number) {
-  const { currentData: tokens, isLoading } = useAssetInfoQuery(
-    requests[Namespace.Assets].search({ search_query: searchQuery, limit })
-  )
+export function useTokenSearchResults(query: string) {
+  const { currentData: results, isLoading } = useGetSearchQuery({ query })
 
-  return { tokens, isLoading }
+  return { tokens: (results as Nullable<GetCoinsSearchResponse>)?.coins, isLoading }
 }
 
-const tokenMetadataCategories = [OrderBy.RelativeChange1D, OrderBy.MarketCap]
+// TODO: fix in follow-up PR
+const tokenMetadataCategories = [CoingeckoOrderBy.MarketCapDesc, CoingeckoOrderBy.VolumeDesc]
 
 // TODO(judo): consider persisting latest category
 export function useTokenMetadataDisplayType() {
   // simple reducer to cycle through categories
   return useReducer(
-    (current: OrderBy) => next(tokenMetadataCategories, current) ?? tokenMetadataCategories[0],
+    (current: CoingeckoOrderBy) =>
+      next(tokenMetadataCategories, current) ?? tokenMetadataCategories[0],
     tokenMetadataCategories[0]
   )
 }

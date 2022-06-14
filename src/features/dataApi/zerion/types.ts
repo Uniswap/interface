@@ -49,11 +49,11 @@ export type AssetData = {
   name: string
   symbol: string
   decimals: number
-  type: AssetType
+  type?: AssetType
   icon_url?: string
   price?: Price
-  is_displayable: boolean
-  is_verified: boolean
+  is_displayable?: boolean
+  is_verified?: boolean
 }
 
 export type Asset = {

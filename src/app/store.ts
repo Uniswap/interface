@@ -17,6 +17,7 @@ import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { dataApi } from 'src/features/dataApi/slice'
 import { zerionApi } from 'src/features/dataApi/zerion/api'
 import { nftApi } from 'src/features/nfts/api'
@@ -77,6 +78,7 @@ export const store = configureStore({
       },
     }).concat(
       sagaMiddleware,
+      coingeckoApi.middleware,
       dataApi.middleware,
       nftApi.middleware,
       routingApi.middleware,

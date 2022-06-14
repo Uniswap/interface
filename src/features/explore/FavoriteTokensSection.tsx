@@ -6,7 +6,8 @@ import { Heart } from 'src/components/icons/Heart'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { Asset } from 'src/features/dataApi/zerion/types'
+import { useGetCoinsListQuery } from 'src/features/dataApi/coingecko/enhancedApi'
+import { CoingeckoMarketCoin, GetCoinsListResponse } from 'src/features/dataApi/coingecko/types'
 import {
   BaseTokenSectionProps,
   GenericTokenSection,
@@ -24,12 +25,20 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
 
-  const { currentData: favorites, isLoading, isFetching } = useFavoriteTokenInfo()
+  const { tokens: favorites, isLoading } = useFavoriteTokenInfo()
+  const { currentData: coinsList } = useGetCoinsListQuery({ includePlatform: true })
 
   const renderItem = useCallback(
-    ({ item: token, index }: ListRenderItemInfo<Asset>) => {
+    ({ item: token, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => {
+      // TODO: support non mainnet
+      const currencyId = buildCurrencyId(
+        ChainId.Mainnet,
+        (coinsList as GetCoinsListResponse)?.[token.id]?.platforms.ethereum ?? ''
+      )
+
       return (
         <TokenItemBox
+          currencyId={currencyId}
           gesturesEnabled={props.expanded}
           index={index}
           metadataDisplayType={props.metadataDisplayType}
@@ -37,16 +46,16 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
           onCycleMetadata={props.onCycleMetadata}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
-              currencyId: buildCurrencyId(ChainId.Mainnet, token.asset.asset_code),
+              currencyId,
             })
           }}
         />
       )
     },
-    [props.expanded, props.metadataDisplayType, props.onCycleMetadata, navigation]
+    [coinsList, navigation, props.expanded, props.metadataDisplayType, props.onCycleMetadata]
   )
 
-  if (!favorites?.info?.length) return null
+  if (!favorites?.length) return null
 
   return (
     <Box mb="sm">
@@ -54,9 +63,9 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
         {...props}
         displayFavorites
         horizontal
-        assets={favorites?.info}
+        assets={favorites}
         id="explore-favorites-header"
-        loading={isLoading || isFetching}
+        loading={isLoading}
         renderItem={renderItem}
         title={
           <Flex row alignItems="center" gap="xs">

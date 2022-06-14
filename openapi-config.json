@@ -1,0 +1,8 @@
+{
+  "apiFile": "./src/features/dataApi/coingecko/emptyApi.ts",
+  "apiImport": "emptyApi",
+  "exportName": "generatedApi",
+  "hooks": true,
+  "outputFile": "./src/features/dataApi/coingecko/generatedApi.ts",
+  "schemaFile": "./src/features/dataApi/coingecko/swagger.json"
+}

@@ -6,7 +6,7 @@ import { Box } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
-import { Asset, OrderBy } from 'src/features/dataApi/zerion/types'
+import { CoingeckoMarketCoin, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { Screens } from 'src/screens/Screens'
 
 export interface BaseTokenSectionProps {
@@ -14,22 +14,22 @@ export interface BaseTokenSectionProps {
   expanded?: boolean
   fixedCount?: number
   metadataDisplayType: string
+  orderBy?: CoingeckoOrderBy
   onCycleMetadata: () => void
-  orderBy?: OrderBy
 }
 
-type GenericTokenSectionProps = BaseTokenSectionProps & {
-  assets?: Nullable<Asset[]>
+type GenericTokenSectionProps<T> = BaseTokenSectionProps & {
+  assets?: T[]
   horizontal?: boolean
   id: string
   loading?: boolean
   title: string | ReactNode
   subtitle?: string | ReactNode
-  renderItem: FlatListProps<Asset>['renderItem']
+  renderItem: FlatListProps<CoingeckoMarketCoin>['renderItem']
 }
 
 /** Renders a token section inside a Flatlist with expand behavior */
-export function GenericTokenSection({
+export function GenericTokenSection<T>({
   assets,
   displayFavorites,
   expanded,
@@ -40,7 +40,7 @@ export function GenericTokenSection({
   title,
   renderItem,
   subtitle,
-}: GenericTokenSectionProps) {
+}: GenericTokenSectionProps<T>) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
 
@@ -83,6 +83,6 @@ export function GenericTokenSection({
   )
 }
 
-function key(asset: Asset) {
-  return asset.asset.asset_code
+function key({ id }: { id: string }) {
+  return id
 }
