@@ -28,18 +28,16 @@ Cypress.Commands.overwrite(
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     assert(typeof url === 'string')
 
-    return original({
-      ...options,
-      url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
-      onBeforeLoad(win) {
-        options?.onBeforeLoad?.(win)
-        win.localStorage.clear()
-        if (!options?.serviceWorker) {
-          cy.stub(win.navigator.serviceWorker, 'register').throws()
-        }
-        win.ethereum = injected
-      },
-    })
+    return cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() =>
+      original({
+        ...options,
+        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
+        onBeforeLoad(win) {
+          options?.onBeforeLoad?.(win)
+          win.localStorage.clear()
+          win.ethereum = injected
+        },
+      }))
   }
 )
 
