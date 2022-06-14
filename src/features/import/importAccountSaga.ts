@@ -16,7 +16,7 @@ export function* importAccount(params: ImportAccountParams) {
   if (type === ImportAccountType.Address) {
     yield* call(importAddressAccount, params.address, name)
   } else if (type === ImportAccountType.Mnemonic) {
-    yield* call(importMnemonicAccounts, params.mnemonic, name, params.indexes)
+    yield* call(importMnemonicAccounts, params.mnemonic, name, params.indexes, params.markAsActive)
   } else if (type === ImportAccountType.PrivateKey) {
     yield* call(importPrivateKeyAccount, params.privateKey, name)
   } else {
@@ -35,7 +35,12 @@ function* importAddressAccount(address: string, name?: string) {
   yield* call(onAccountImport, account)
 }
 
-function* importMnemonicAccounts(mnemonic: string, name?: string, indexes = [0]) {
+function* importMnemonicAccounts(
+  mnemonic: string,
+  name?: string,
+  indexes = [0],
+  markAsActive?: boolean
+) {
   const formattedMnemonic = normalizeMnemonic(mnemonic)
   const mnemonicId = yield* call(importMnemonic, formattedMnemonic)
   // generate private keys and return addresses for all derivation indexes
@@ -55,7 +60,7 @@ function* importMnemonicAccounts(mnemonic: string, name?: string, indexes = [0])
     type: AccountType.Native,
     address: addresses[0],
     name,
-    pending: true,
+    pending: !markAsActive,
   }
   yield* call(onAccountImport, activeAccount)
 }

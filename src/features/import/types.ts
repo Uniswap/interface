@@ -26,6 +26,7 @@ export interface ImportMnemonicAccountParams extends BaseImportAccountParams {
   type: ImportAccountType.Mnemonic
   mnemonic: string
   indexes?: number[]
+  markAsActive?: boolean // used for automatically activating test account
 }
 
 export interface ImportPrivateKeyAccountParams extends BaseImportAccountParams {
