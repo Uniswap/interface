@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { fortmatic, getWalletForConnector } from 'connectors'
+import { getWalletForConnector } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -17,7 +17,7 @@ import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-import { switchChain } from 'utils/switchChain'
+import { isChainAllowed, switchChain } from 'utils/switchChain'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -344,14 +344,17 @@ export default function NetworkSelector() {
             <FlyoutHeader>
               <Trans>Select a network</Trans>
             </FlyoutHeader>
-            <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.MAINNET} />
-            {/* Formatic is only supported on mainnet, so we hide the other chains */}
-            {connector !== fortmatic && (
-              <>
-                <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.POLYGON} />
-                <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.OPTIMISM} />
-                <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.ARBITRUM_ONE} />
-              </>
+            {isChainAllowed(connector, SupportedChainId.MAINNET) && (
+              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.MAINNET} />
+            )}
+            {isChainAllowed(connector, SupportedChainId.POLYGON) && (
+              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.POLYGON} />
+            )}
+            {isChainAllowed(connector, SupportedChainId.OPTIMISM) && (
+              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.OPTIMISM} />
+            )}
+            {isChainAllowed(connector, SupportedChainId.ARBITRUM_ONE) && (
+              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.ARBITRUM_ONE} />
             )}
           </FlyoutMenuContents>
         </FlyoutMenu>

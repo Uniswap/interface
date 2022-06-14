@@ -6,7 +6,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import Fortmatic from 'fortmatic'
 import { useMemo } from 'react'
@@ -26,21 +26,6 @@ export const MODAL_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wal
 
 export function reportError(error: Error) {
   console.debug(`web3-react error: ${error}`)
-}
-
-export const isChainAllowed = (connector: Connector, chainId: number) => {
-  switch (connector) {
-    case fortmatic:
-      return chainId === SupportedChainId.MAINNET
-    case injected:
-    case coinbaseWallet:
-    case walletConnect:
-    case network:
-    case gnosisSafe:
-      return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
-    default:
-      return false
-  }
 }
 
 export const getWalletForConnector = (connector: Connector) => {

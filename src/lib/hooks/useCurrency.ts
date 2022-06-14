@@ -1,12 +1,12 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { isChainAllowed } from 'connectors'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
+import { isChainAllowed } from 'utils/switchChain'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
