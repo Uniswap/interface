@@ -3,8 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
-import { PrivacyPolicy } from 'components/PrivacyPolicy'
-import Row, { AutoRow } from 'components/Row'
+import { AutoRow } from 'components/Row'
 import useIsActiveMap from 'hooks/useIsActiveMap'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -18,7 +17,6 @@ import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { fortmatic, getWalletForConnector, injected, network } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -109,10 +107,8 @@ const HoverText = styled.div`
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
-  OPTIONS_SECONDARY: 'options_secondary',
   ACCOUNT: 'account',
   PENDING: 'pending',
-  LEGAL: 'legal',
 }
 
 export default function WalletModal({
@@ -130,7 +126,6 @@ export default function WalletModal({
   const isActiveMap = useIsActiveMap()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
-  const previousWalletView = usePrevious(walletView)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -311,30 +306,6 @@ export default function WalletModal({
   }
 
   function getModalContent() {
-    if (walletView === WALLET_VIEWS.LEGAL) {
-      return (
-        <UpperSection>
-          <HeaderRow>
-            <HoverText
-              onClick={() => {
-                setWalletView(
-                  (previousWalletView === WALLET_VIEWS.LEGAL ? WALLET_VIEWS.ACCOUNT : previousWalletView) ??
-                    WALLET_VIEWS.ACCOUNT
-                )
-              }}
-            >
-              <ArrowLeft />
-            </HoverText>
-            <Row justify="center">
-              <ThemedText.MediumHeader>
-                <Trans>Legal & Privacy</Trans>
-              </ThemedText.MediumHeader>
-            </Row>
-          </HeaderRow>
-          <PrivacyPolicy />
-        </UpperSection>
-      )
-    }
     if (walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <AccountDetails
