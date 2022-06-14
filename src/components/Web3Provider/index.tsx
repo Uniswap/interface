@@ -65,7 +65,7 @@ function Web3Updater() {
       connect(getConnectorForWallet(walletOverride))
       setIsEagerlyConnecting(true)
     } else if (!walletOverrideBackfilled) {
-      MODAL_WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC)
+      MODAL_WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC) // Don't try to connect to Fortmatic because it opens up a modal
         .map(getConnectorForWallet)
         .forEach(connect)
       setIsEagerlyConnecting(true)
