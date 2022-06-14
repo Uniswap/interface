@@ -13,7 +13,7 @@ import useIsActiveMap from 'hooks/useIsActiveMap'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { updateWalletOverride } from 'state/walletOverride/reducer'
+import { updateSelectedWallet } from 'state/user/reducer'
 
 const connect = async (connector: Connector) => {
   try {
@@ -32,8 +32,8 @@ const connect = async (connector: Connector) => {
 function Web3Updater() {
   const dispatch = useAppDispatch()
 
-  const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
-  const walletOverrideBackfilled = useAppSelector((state) => state.walletOverride.walletOverrideBackfilled)
+  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+  const selectedWalletBackfilled = useAppSelector((state) => state.user.selectedWalletBackfilled)
 
   const [isEagerlyConnecting, setIsEagerlyConnecting] = useState(false)
   const isActiveMap = useIsActiveMap()
@@ -44,10 +44,10 @@ function Web3Updater() {
       if (isActive && !previousIsActiveMap?.get(wallet)) {
         if (isEagerlyConnecting) {
           setIsEagerlyConnecting(false)
-        } else if (!walletOverrideBackfilled) {
-          // When a user manually sets their new connection, set a wallet override.
+        } else if (!selectedWalletBackfilled) {
+          // When a user manually sets their new connection, set a selectedWallet.
           // Also set an override when they were a user prior to this state being introduced.
-          dispatch(updateWalletOverride({ wallet }))
+          dispatch(updateSelectedWallet({ wallet }))
         }
       }
     })
@@ -57,18 +57,18 @@ function Web3Updater() {
     previousIsActiveMap,
     isEagerlyConnecting,
     setIsEagerlyConnecting,
-    walletOverride,
-    walletOverrideBackfilled,
+    selectedWallet,
+    selectedWalletBackfilled,
   ])
 
   useEffect(() => {
     connect(gnosisSafe)
     connect(network)
 
-    if (walletOverride) {
-      connect(getConnectorForWallet(walletOverride))
+    if (selectedWallet) {
+      connect(getConnectorForWallet(selectedWallet))
       setIsEagerlyConnecting(true)
-    } else if (!walletOverrideBackfilled) {
+    } else if (!selectedWalletBackfilled) {
       MODAL_WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC) // Don't try to connect to Fortmatic because it opens up a modal
         .map(getConnectorForWallet)
         .forEach(connect)
@@ -77,38 +77,12 @@ function Web3Updater() {
     // The dependency list is empty so this is only run once on mount
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    isActiveMap.forEach((isActive: boolean, wallet: Wallet) => {
-      const previousIsActive = previousIsActiveMap?.get(wallet)
-      if (isActive && !previousIsActive) {
-        // When a user manually sets their new connection, set a wallet override.
-        // Also set an override when they were a user prior to this state being introduced.
-        if (!isEagerlyConnecting || !walletOverrideBackfilled) {
-          dispatch(updateWalletOverride({ wallet }))
-        }
-
-        // Reset the eagerly connecting state.
-        if (isEagerlyConnecting) {
-          setIsEagerlyConnecting(false)
-        }
-      }
-    })
-  }, [
-    dispatch,
-    walletOverride,
-    walletOverrideBackfilled,
-    isActiveMap,
-    previousIsActiveMap,
-    isEagerlyConnecting,
-    setIsEagerlyConnecting,
-  ])
-
   return null
 }
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
-  const connectors = useConnectors(walletOverride)
+  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+  const connectors = useConnectors(selectedWallet)
   return (
     <Web3ReactProvider connectors={connectors}>
       <Web3Updater />

@@ -5,7 +5,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
-import { updateWalletOverride } from 'state/walletOverride/reducer'
+import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -265,13 +265,13 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {/* Coinbase Wallet reloads the page right now, which breaks the walletOverride from being set properly on localStorage */}
+                  {/* Coinbase Wallet reloads the page right now, which breaks the selectedWallet from being set properly on localStorage */}
                   {connector !== coinbaseWallet && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
                         connector.deactivate ? connector.deactivate() : connector.resetState()
-                        dispatch(updateWalletOverride({ wallet: undefined }))
+                        dispatch(updateSelectedWallet({ wallet: undefined }))
                         openOptions()
                       }}
                       data-cy="wallet-disconnect"

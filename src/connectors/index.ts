@@ -132,13 +132,13 @@ interface ConnectorListItem {
   hooks: Web3ReactHooks
 }
 
-export function useConnectors(walletOverride: Wallet | undefined) {
+export function useConnectors(selectedWallet: Wallet | undefined) {
   return useMemo(() => {
     const connectors: ConnectorListItem[] = [{ connector: gnosisSafe, hooks: gnosisSafeHooks }]
-    if (walletOverride) {
-      connectors.push(getConnectorListItemForWallet(walletOverride))
+    if (selectedWallet) {
+      connectors.push(getConnectorListItemForWallet(selectedWallet))
     }
-    MODAL_WALLETS.filter((wallet) => wallet !== walletOverride).forEach((wallet) => {
+    MODAL_WALLETS.filter((wallet) => wallet !== selectedWallet).forEach((wallet) => {
       connectors.push(getConnectorListItemForWallet(wallet))
     })
     connectors.push({ connector: network, hooks: networkHooks })
@@ -147,5 +147,5 @@ export function useConnectors(walletOverride: Wallet | undefined) {
       hooks,
     ])
     return web3ReactConnectors
-  }, [walletOverride])
+  }, [selectedWallet])
 }

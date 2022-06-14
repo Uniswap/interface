@@ -8,8 +8,8 @@ import useIsActiveMap from 'hooks/useIsActiveMap'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { updateSelectedWallet } from 'state/user/reducer'
 import { updateWalletError } from 'state/wallet/reducer'
-import { updateWalletOverride } from 'state/walletOverride/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -181,8 +181,8 @@ export default function WalletModal({
           await connector.activate()
           setWalletView(WALLET_VIEWS.ACCOUNT)
 
-          // If the wallet is already active in web3-react, we need to update the wallet override.
-          dispatch(updateWalletOverride({ wallet }))
+          // If the wallet is already active in web3-react, we need to update the selected wallet.
+          dispatch(updateSelectedWallet({ wallet }))
         } else {
           // The wallet override will be set in Web3Provider when the isActive becomes true.
           await connector.activate()
