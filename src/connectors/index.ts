@@ -22,8 +22,6 @@ export enum Wallet {
   GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
 
-export type ModalWallet = Exclude<Wallet, Wallet.NETWORK | Wallet.GNOSIS_SAFE>
-
 export const MODAL_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED, Wallet.FORTMATIC]
 
 export const isChainAllowed = (connector: Connector, chainId: number) => {
