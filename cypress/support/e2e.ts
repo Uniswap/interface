@@ -15,6 +15,9 @@ declare global {
     interface ApplicationWindow {
       ethereum: typeof injected
     }
+    interface VisitOptions {
+      serviceWorker?: true
+    }
   }
 }
 
@@ -24,16 +27,25 @@ Cypress.Commands.overwrite(
   'visit',
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     assert(typeof url === 'string')
-    return original({
-      ...options,
-      url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
-      async onBeforeLoad(win) {
-        options?.onBeforeLoad?.(win)
-        win.localStorage.clear()
-        win.navigator.serviceWorker.getRegistration().then((sw) => sw?.unregister())
-        win.ethereum = injected
-      },
-    })
+
+    cy.intercept({ url: '/service-worker.js', headers: { 'Service-Worker': 'script' } }, (req) => {
+      if (options?.serviceWorker) {
+        req.continue()
+      } else {
+        // Avoid installing a service worker unless it is explicitly under test.
+        req.destroy()
+      }
+    }).then(() =>
+      original({
+        ...options,
+        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
+        onBeforeLoad(win) {
+          options?.onBeforeLoad?.(win)
+          win.localStorage.clear()
+          win.ethereum = injected
+        },
+      })
+    )
   }
 )
 
