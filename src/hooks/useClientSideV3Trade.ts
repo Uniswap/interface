@@ -43,6 +43,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         : [],
     [amountSpecified, routes, tradeType]
   )
+  // TODO investigate; doesn't return quotes for celo assets. Multicall / quoter issue?
   const quotesResults = useSingleContractWithCallData(quoter, callData, {
     gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })

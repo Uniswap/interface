@@ -7,7 +7,7 @@ import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 
-import { TOKEN_SHORTHANDS } from '../../constants/tokens'
+import { NATIVE_CURRENCY_IS_TOKEN, TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
 
@@ -108,5 +108,8 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   const wrappedNative = nativeCurrency?.wrapped
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
 
-  return isNative ? nativeCurrency : token
+  // Use Celo ERC20 representation instead of native asset
+  const nativeCurrencyIsToken = chainId && !NATIVE_CURRENCY_IS_TOKEN[chainId]
+
+  return isNative && !nativeCurrencyIsToken ? nativeCurrency : token
 }

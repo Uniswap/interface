@@ -18,6 +18,7 @@ import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
+import { SupportedChainId } from '../../constants/chains'
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
@@ -116,7 +117,8 @@ export function CurrencySearch({
   const native = useNativeCurrency()
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
-    if (!native) return filteredSortedTokens
+    if (!native || (chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)))
+      return filteredSortedTokens
 
     const s = debouncedQuery.toLowerCase().trim()
     if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
