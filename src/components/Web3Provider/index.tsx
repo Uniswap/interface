@@ -53,7 +53,6 @@ function Web3Updater() {
     walletOverrideBackfilled,
   ])
 
-  // The dependency list is empty so this is only run once on mount
   useEffect(() => {
     connect(gnosisSafe)
     connect(network)
@@ -67,6 +66,7 @@ function Web3Updater() {
         .forEach(connect)
       setIsEagerlyConnecting(true)
     }
+    // The dependency list is empty so this is only run once on mount
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
