@@ -55,7 +55,7 @@ describe('Service Worker', () => {
   it('installs a ServiceWorker', () => {
     cy.visit('/', { serviceWorker: true })
       .get('#swap-page')
-      .wait('@NotInstalled', { timeout: 10000 })
+      .wait('@NotInstalled', { timeout: 20000 })
       .window({ timeout: 60000 })
       .and(() => {
         expect(window.navigator.serviceWorker.controller?.state).to.equal('activating')
@@ -63,7 +63,7 @@ describe('Service Worker', () => {
   })
 
   it('records a cache hit', () => {
-    cy.visit('/', { serviceWorker: true }).get('#swap-page').wait('@CacheHit', { timeout: 10000 })
+    cy.visit('/', { serviceWorker: true }).get('#swap-page').wait('@CacheHit', { timeout: 20000 })
   })
 
   it('records a cache miss', () => {
@@ -82,6 +82,6 @@ describe('Service Worker', () => {
       })
       .visit('/', { serviceWorker: true })
       .get('#swap-page')
-      .wait('@CacheMiss', { timeout: 10000 })
+      .wait('@CacheMiss', { timeout: 20000 })
   })
 })
