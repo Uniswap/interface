@@ -28,7 +28,7 @@ Cypress.Commands.overwrite(
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     assert(typeof url === 'string')
 
-    return cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() =>
+    cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() => {
       original({
         ...options,
         url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
@@ -37,7 +37,8 @@ Cypress.Commands.overwrite(
           win.localStorage.clear()
           win.ethereum = injected
         },
-      }))
+      })
+    })
   }
 )
 
