@@ -176,14 +176,13 @@ export default function Updater(): null {
                     break
                   }
                   case 'Collect fee': {
-                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_COLLECT_FEES_COMPLETED, {
-                      ...transaction.arbitrary,
-                    })
+                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_COLLECT_FEES_COMPLETED, transaction.arbitrary)
                     break
                   }
                   case 'Increase liquidity': {
                     mixpanelHandler(MIXPANEL_TYPE.ELASTIC_INCREASE_LIQUIDITY_COMPLETED, {
                       ...transaction.arbitrary,
+                      tx_hash: transaction.hash,
                     })
                     break
                   }
