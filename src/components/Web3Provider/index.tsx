@@ -1,19 +1,9 @@
 import { Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import {
-  coinbaseWalletHooks,
-  fortmaticHooks,
-  getConnectorForWallet,
-  gnosisSafe,
-  injectedHooks,
-  MODAL_WALLETS,
-  network,
-  useConnectors,
-  Wallet,
-  walletConnectHooks,
-} from 'connectors'
+import { getConnectorForWallet, gnosisSafe, MODAL_WALLETS, network, useConnectors, Wallet } from 'connectors'
+import useIsActiveMap from 'hooks/useIsActiveMap'
 import usePrevious from 'hooks/usePrevious'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/walletOverride/reducer'
 
@@ -38,19 +28,7 @@ function Web3Updater() {
   const walletOverrideBackfilled = useAppSelector((state) => state.walletOverride.walletOverrideBackfilled)
 
   const [isEagerlyConnecting, setIsEagerlyConnecting] = useState(false)
-
-  const injectedIsActive = injectedHooks.useIsActive()
-  const coinbaseWalletIsActive = coinbaseWalletHooks.useIsActive()
-  const walletConnectIsActive = walletConnectHooks.useIsActive()
-  const fortmaticIsActive = fortmaticHooks.useIsActive()
-  const isActiveMap: Map<Wallet, boolean> = useMemo(() => {
-    return new Map([
-      [Wallet.INJECTED, injectedIsActive],
-      [Wallet.COINBASE_WALLET, coinbaseWalletIsActive],
-      [Wallet.WALLET_CONNECT, walletConnectIsActive],
-      [Wallet.FORTMATIC, fortmaticIsActive],
-    ])
-  }, [injectedIsActive, coinbaseWalletIsActive, walletConnectIsActive, fortmaticIsActive])
+  const isActiveMap = useIsActiveMap()
   const previousIsActiveMap = usePrevious(isActiveMap)
 
   useEffect(() => {

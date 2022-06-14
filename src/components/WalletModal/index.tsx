@@ -5,6 +5,7 @@ import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow } from 'components/Row'
+import useIsActiveMap from 'hooks/useIsActiveMap'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -135,12 +136,8 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
-  const isActiveMap: Partial<Record<Wallet, boolean>> = {
-    [Wallet.INJECTED]: injectedHooks.useIsActive(),
-    [Wallet.COINBASE_WALLET]: coinbaseWalletHooks.useIsActive(),
-    [Wallet.WALLET_CONNECT]: walletConnectHooks.useIsActive(),
-    [Wallet.FORTMATIC]: fortmaticHooks.useIsActive(),
-  }
+
+  const isActiveMap = useIsActiveMap()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const previousWalletView = usePrevious(walletView)
@@ -194,11 +191,14 @@ export default function WalletModal({
       setPendingConnector(connector)
       setWalletView(WALLET_VIEWS.PENDING)
 
-      if (isActiveMap[wallet]) {
+      if (isActiveMap.get(wallet)) {
         await connector.activate()
         setWalletView(WALLET_VIEWS.ACCOUNT)
+
+        // If the wallet is already active in web3-react, we need to update the wallet override.
         dispatch(updateWalletOverride({ wallet }))
       } else {
+        // The wallet override will be set in Web3Provider when the isActive becomes true.
         await connector.activate()
       }
 
