@@ -50,8 +50,14 @@ function* importMnemonicAccounts(
     })
   )
   yield* all(
-    addresses.slice(1, addresses.length).map((address) => {
-      const account: Account = { type: AccountType.Native, address, name, pending: true }
+    addresses.slice(1, addresses.length).map((address, index) => {
+      const account: Account = {
+        type: AccountType.Native,
+        address,
+        name,
+        pending: true,
+        importedIndex: index + 1,
+      }
       return put(addAccount(account))
     })
   )
@@ -61,6 +67,7 @@ function* importMnemonicAccounts(
     address: addresses[0],
     name,
     pending: !markAsActive,
+    importedIndex: 0,
   }
   yield* call(onAccountImport, activeAccount)
 }
