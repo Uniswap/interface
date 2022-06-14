@@ -19,20 +19,22 @@ interface SerializableTransactionReceipt {
  */
 export enum TransactionType {
   APPROVAL = 0,
-  SWAP = 1,
-  DEPOSIT_LIQUIDITY_STAKING = 2,
-  WITHDRAW_LIQUIDITY_STAKING = 3,
-  CLAIM = 4,
-  VOTE = 5,
-  DELEGATE = 6,
-  WRAP = 7,
-  CREATE_V3_POOL = 8,
-  ADD_LIQUIDITY_V3_POOL = 9,
-  ADD_LIQUIDITY_V2_POOL = 10,
-  MIGRATE_LIQUIDITY_V3 = 11,
-  COLLECT_FEES = 12,
-  REMOVE_LIQUIDITY_V3 = 13,
-  SUBMIT_PROPOSAL = 14,
+  SWAP,
+  DEPOSIT_LIQUIDITY_STAKING,
+  WITHDRAW_LIQUIDITY_STAKING,
+  CLAIM,
+  VOTE,
+  DELEGATE,
+  WRAP,
+  CREATE_V3_POOL,
+  ADD_LIQUIDITY_V3_POOL,
+  ADD_LIQUIDITY_V2_POOL,
+  MIGRATE_LIQUIDITY_V3,
+  COLLECT_FEES,
+  REMOVE_LIQUIDITY_V3,
+  SUBMIT_PROPOSAL,
+  QUEUE,
+  EXECUTE,
 }
 
 export interface BaseTransactionInfo {
@@ -45,6 +47,18 @@ export interface VoteTransactionInfo extends BaseTransactionInfo {
   proposalId: number
   decision: VoteOption
   reason: string
+}
+
+export interface QueueTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.QUEUE
+  governorAddress: string
+  proposalId: number
+}
+
+export interface ExecuteTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.EXECUTE
+  governorAddress: string
+  proposalId: number
 }
 
 export interface DelegateTransactionInfo extends BaseTransactionInfo {
@@ -158,6 +172,8 @@ export type TransactionInfo =
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
   | VoteTransactionInfo
+  | QueueTransactionInfo
+  | ExecuteTransactionInfo
   | DelegateTransactionInfo
   | DepositLiquidityStakingTransactionInfo
   | WithdrawLiquidityStakingTransactionInfo

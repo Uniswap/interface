@@ -66,7 +66,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   const [attempting, setAttempting] = useState(false)
 
   // wrapper to reset state on modal close
-  function wrappedOndismiss() {
+  function wrappedOnDismiss() {
     setHash(undefined)
     setAttempting(false)
     onDismiss()
@@ -90,13 +90,13 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOndismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.MediumHeader fontWeight={500}>{title}</ThemedText.MediumHeader>
-              <StyledClosed stroke="black" onClick={wrappedOndismiss} />
+              <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.Body>
               <Trans>Earned UNI tokens represent voting shares in Uniswap governance.</Trans>
@@ -119,7 +119,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         </ContentWrapper>
       )}
       {attempting && !hash && (
-        <LoadingView onDismiss={wrappedOndismiss}>
+        <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <ThemedText.LargeHeader>
               {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
@@ -129,7 +129,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         </LoadingView>
       )}
       {hash && (
-        <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <ThemedText.LargeHeader>
               <Trans>Transaction Submitted</Trans>

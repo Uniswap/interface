@@ -26,6 +26,8 @@ export enum ApplicationModal {
   SETTINGS,
   VOTE,
   WALLET,
+  QUEUE,
+  EXECUTE,
 }
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
