@@ -3,7 +3,7 @@ import { Connector } from '@web3-react/types'
 import { getConnectorForWallet, gnosisSafe, MODAL_WALLETS, network, useConnectors, Wallet } from 'connectors'
 import useIsActiveMap from 'hooks/useIsActiveMap'
 import usePrevious from 'hooks/usePrevious'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateWalletOverride } from 'state/walletOverride/reducer'
 
@@ -98,11 +98,7 @@ function Web3Updater() {
   return null
 }
 
-interface Props {
-  children: JSX.Element
-}
-
-export default function Web3Provider({ children }: Props) {
+export default function Web3Provider({ children }: { children: ReactNode }) {
   const walletOverride = useAppSelector((state) => state.walletOverride.walletOverride)
   const connectors = useConnectors(walletOverride)
   return (
