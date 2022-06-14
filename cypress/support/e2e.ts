@@ -28,24 +28,18 @@ Cypress.Commands.overwrite(
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     assert(typeof url === 'string')
 
-    cy.intercept({ url: '/service-worker.js', headers: { 'Service-Worker': 'script' } }, (req) => {
-      if (options?.serviceWorker) {
-        req.continue()
-      } else {
-        // Avoid installing a service worker unless it is explicitly under test.
-        req.destroy()
-      }
-    }).then(() =>
-      original({
-        ...options,
-        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
-        onBeforeLoad(win) {
-          options?.onBeforeLoad?.(win)
-          win.localStorage.clear()
-          win.ethereum = injected
-        },
-      })
-    )
+    return original({
+      ...options,
+      url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
+      onBeforeLoad(win) {
+        options?.onBeforeLoad?.(win)
+        win.localStorage.clear()
+        if (!options?.serviceWorker) {
+          cy.stub(win.navigator.serviceWorker, 'register').throws()
+        }
+        win.ethereum = injected
+      },
+    })
   }
 )
 

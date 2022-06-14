@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "serve": "serve build -l 3000",
     "test": "react-scripts test --coverage",
-    "cypress": "cypress"
+    "cypress:open": "cypress open --browser chrome --e2e",
+    "cypress:run": "cypress run --browser chrome --e2e"
   },
   "jest": {
     "collectCoverageFrom": [
