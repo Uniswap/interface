@@ -157,53 +157,56 @@ export default function WalletModal({
     }
   }, [pendingConnector, walletView])
 
-  const tryActivation = async (connector: Connector) => {
-    const name = Object.values(SUPPORTED_WALLETS).find(
-      (supportedWallet) => connector === supportedWallet.connector
-    )?.name
+  const tryActivation = useCallback(
+    async (connector: Connector) => {
+      const name = Object.values(SUPPORTED_WALLETS).find(
+        (supportedWallet) => connector === supportedWallet.connector
+      )?.name
 
-    // log selected wallet
-    sendEvent({
-      category: 'Wallet',
-      action: 'Change Wallet',
-      label: name,
-    })
+      // log selected wallet
+      sendEvent({
+        category: 'Wallet',
+        action: 'Change Wallet',
+        label: name,
+      })
 
-    const wallet = getWalletForConnector(connector)
+      const wallet = getWalletForConnector(connector)
 
-    try {
-      // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
-      // collision into the WalletModal, so we special case by closing the modal.
-      if (connector === fortmatic) {
-        toggleWalletModal()
+      try {
+        // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
+        // collision into the WalletModal, so we special case by closing the modal.
+        if (connector === fortmatic) {
+          toggleWalletModal()
+        }
+
+        setPendingConnector(connector)
+        setWalletView(WALLET_VIEWS.PENDING)
+
+        if (isActiveMap.get(wallet)) {
+          await connector.activate()
+          setWalletView(WALLET_VIEWS.ACCOUNT)
+
+          // If the wallet is already active in web3-react, we need to update the wallet override.
+          dispatch(updateWalletOverride({ wallet }))
+        } else {
+          // The wallet override will be set in Web3Provider when the isActive becomes true.
+          await connector.activate()
+        }
+
+        dispatch(updateWalletError({ wallet, error: undefined }))
+      } catch (error) {
+        if (
+          connector === fortmatic &&
+          error.message === 'Fortmatic RPC Error: [-32603] Fortmatic: User denied account access.'
+        ) {
+          return
+        }
+
+        dispatch(updateWalletError({ wallet, error: error.message }))
       }
-
-      setPendingConnector(connector)
-      setWalletView(WALLET_VIEWS.PENDING)
-
-      if (isActiveMap.get(wallet)) {
-        await connector.activate()
-        setWalletView(WALLET_VIEWS.ACCOUNT)
-
-        // If the wallet is already active in web3-react, we need to update the wallet override.
-        dispatch(updateWalletOverride({ wallet }))
-      } else {
-        // The wallet override will be set in Web3Provider when the isActive becomes true.
-        await connector.activate()
-      }
-
-      dispatch(updateWalletError({ wallet, error: undefined }))
-    } catch (error) {
-      if (
-        connector === fortmatic &&
-        error.message === 'Fortmatic RPC Error: [-32603] Fortmatic: User denied account access.'
-      ) {
-        return
-      }
-
-      dispatch(updateWalletError({ wallet, error: error.message }))
-    }
-  }
+    },
+    [dispatch, isActiveMap, toggleWalletModal]
+  )
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
