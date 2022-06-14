@@ -249,7 +249,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 export default function Header() {
   const { account, chainId, connector } = useActiveWeb3React()
 
-  const chainNotAllowed = chainId && !isChainAllowed(connector, chainId)
+  const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
@@ -268,7 +268,7 @@ export default function Header() {
   const {
     infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = CHAIN_INFO[!chainId || chainNotAllowed ? SupportedChainId.MAINNET : chainId]
+  } = CHAIN_INFO[!chainId || !chainAllowed ? SupportedChainId.MAINNET : chainId]
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
