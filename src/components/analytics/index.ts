@@ -53,19 +53,18 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
   googleAnalytics.initialize('test', { gtagOptions: { debug_mode: true } })
 }
 
+const installed = Boolean(window.navigator.serviceWorker.controller)
+const hit = Boolean((window as any).__isDocumentCached)
+console.log('zzmp:sw', hit, (window as any).__isDocumentCached)
+const action = installed ? (hit ? 'Cache hit' : 'Cache miss') : 'Not installed'
+sendEvent({ category: 'Service Worker', action, nonInteraction: true })
+
 function reportWebVitals({ name, delta, id }: Metric) {
   sendTiming('Web Vitals', name, Math.round(name === 'CLS' ? delta * 1000 : delta), id)
 }
 
 // tracks web vitals and pageviews
 export function useAnalyticsReporter({ pathname, search }: RouteComponentProps['location']) {
-  useEffect(() => {
-    const installed = Boolean(window.navigator.serviceWorker.controller)
-    const hit = Boolean((window as any).__isDocumentCached)
-    const action = installed ? (hit ? 'Cache hit' : 'Cache miss') : 'Not installed'
-    sendEvent({ category: 'Service Worker', action, nonInteraction: true })
-  }, [])
-
   useEffect(() => {
     getFCP(reportWebVitals)
     getFID(reportWebVitals)

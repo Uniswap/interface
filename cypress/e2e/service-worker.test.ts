@@ -38,16 +38,13 @@ describe('Service Worker', () => {
   beforeEach(() => {
     cy.intercept({ hostname: 'www.google-analytics.com' }, (req) => {
       const body = req.body.toString()
-      if (body.includes('Service%20Worker')) {
-        if (body.includes('Not%20Installed')) {
+      if (req.query['ep.event_category'] === 'Service Worker' || body.includes('Service%20Worker')) {
+        if (req.query['en'] === 'Not Installed' || body.includes('Not%20Installed')) {
           req.alias = 'NotInstalled'
-          console.log('Cache not installed')
-        } else if (body.includes('Cache%20Hit')) {
+        } else if (req.query['en'] === 'Cache Hit' || body.includes('Cache%20Hit')) {
           req.alias = 'CacheHit'
-          console.log('Cache hit')
-        } else if (body.includes('Cache%20Miss')) {
+        } else if (req.query['en'] === 'Cache Miss' || body.includes('Cache%20Miss')) {
           req.alias = 'CacheMiss'
-          console.log('Cache miss')
         }
       }
     })
@@ -57,9 +54,9 @@ describe('Service Worker', () => {
     cy.visit('/', { serviceWorker: true })
       .get('#swap-page')
       .wait('@NotInstalled', { timeout: 20000 })
-      .window({ timeout: 90000 })
-      .and(() => {
-        expect(window.navigator.serviceWorker.controller?.state).to.equal('activated')
+      .window({ timeout: 20000 })
+      .and((win) => {
+        expect(win.navigator.serviceWorker.controller?.state).to.equal('activated')
       })
   })
 

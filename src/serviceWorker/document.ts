@@ -102,6 +102,10 @@ export class CachedDocument extends Response {
     const reader = response.body?.getReader()
     const stream = new ReadableStream({
       async start(controller) {
+        // Injects a marker into the document so that client code knows it was served from cache.
+        // This is non-standard HTML (the <script> will be injected before the <html> tag), but is still recognized by browsers.
+        controller.enqueue(new TextEncoder().encode('<script>window.__isDocumentCached = true</script>\n'))
+
         let done = false
         while (!done) {
           const result = await reader?.read()
@@ -110,7 +114,6 @@ export class CachedDocument extends Response {
             controller.enqueue(result.value)
           }
         }
-        controller.enqueue(new TextEncoder().encode('\n<script>window.__isDocumentCached = true</script>\n'))
         controller.close()
       },
     })
