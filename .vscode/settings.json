@@ -1,0 +1,28 @@
+{
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 2500,
+  "npm.packageManager": "yarn",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.next": true,
+    "**/.DS_Store": true
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "vetur.experimental.templateInterpolationService": true,
+  "workbench.sideBar.location": "right",
+  "editor.formatOnSaveMode": "file",
+  "editor.tabCompletion": "on",
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "files.eol": "\n",
+  "eslint.enable": true,
+  "eslint.debug": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
