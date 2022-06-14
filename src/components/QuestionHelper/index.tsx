@@ -14,7 +14,7 @@ const QuestionWrapper = styled.div<{ useCurrentColor?: boolean }>`
   outline: none;
   cursor: default;
   border-radius: 36px;
-  color: ${({ theme, useCurrentColor }) => (useCurrentColor ? 'inherit' : theme.text2)};
+  color: ${({ theme, useCurrentColor, color }) => (useCurrentColor ? 'inherit' : theme.text2)};
 
   :hover,
   :focus {
@@ -68,7 +68,7 @@ export default function QuestionHelper({
     <Flex as="span" marginLeft="0.25rem" alignItems="center">
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} useCurrentColor={useCurrentColor}>
-          <Info size={size} color={color || theme.subText} />
+          <Info size={size} color={useCurrentColor ? undefined : color || theme.subText} />
         </QuestionWrapper>
       </Tooltip>
     </Flex>
