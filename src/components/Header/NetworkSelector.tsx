@@ -258,6 +258,13 @@ const getChainNameFromId = (id: string | number) => {
   return CHAIN_IDS_TO_NAMES[id as SupportedChainId] || ''
 }
 
+const NETWORK_SELECTOR_CHAINS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+]
+
 export default function NetworkSelector() {
   const dispatch = useAppDispatch()
   const { chainId, provider, connector } = useActiveWeb3React()
@@ -344,17 +351,10 @@ export default function NetworkSelector() {
             <FlyoutHeader>
               <Trans>Select a network</Trans>
             </FlyoutHeader>
-            {isChainAllowed(connector, SupportedChainId.MAINNET) && (
-              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.MAINNET} />
-            )}
-            {isChainAllowed(connector, SupportedChainId.POLYGON) && (
-              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.POLYGON} />
-            )}
-            {isChainAllowed(connector, SupportedChainId.OPTIMISM) && (
-              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.OPTIMISM} />
-            )}
-            {isChainAllowed(connector, SupportedChainId.ARBITRUM_ONE) && (
-              <Row onSelectChain={onSelectChain} targetChain={SupportedChainId.ARBITRUM_ONE} />
+            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
+              isChainAllowed(connector, chainId) ? (
+                <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} />
+              ) : null
             )}
           </FlyoutMenuContents>
         </FlyoutMenu>
