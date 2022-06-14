@@ -68,7 +68,7 @@ export async function handleDocument(this: HandlerContext, { event, request }: R
     }
   } catch (e) {
     if (!cachedResponse) throw e
-    return new CachedDocument(cachedResponse)
+    return CachedDocument.from(cachedResponse)
   }
 
   // The etag header can be queried before the entire response body has streamed, so it is still a
@@ -80,7 +80,7 @@ export async function handleDocument(this: HandlerContext, { event, request }: R
     // automatically by returning before it is settled; cancelling the preloadResponse will log
     // an error to the console, but it can be ignored - it *should* be cancelled.
     controller.abort()
-    return new CachedDocument(cachedResponse)
+    return CachedDocument.from(cachedResponse)
   }
 
   return response
@@ -98,29 +98,11 @@ export class DocumentRoute extends Route {
  * This document sets the local `__isDocumentCached` variable to true.
  */
 export class CachedDocument extends Response {
-  private static toCachedReadableStream(response: Response) {
-    const reader = response.body?.getReader()
-    const stream = new ReadableStream({
-      async start(controller) {
-        // Injects a marker into the document so that client code knows it was served from cache.
-        // This is non-standard HTML (the <script> will be injected before the <html> tag), but is still recognized by browsers.
-        controller.enqueue(new TextEncoder().encode('<script>window.__isDocumentCached = true</script>\n'))
+  static async from(response: Response) {
+    const text = await response.text()
 
-        let done = false
-        while (!done) {
-          const result = await reader?.read()
-          done = !result || result.done
-          if (result?.value) {
-            controller.enqueue(result.value)
-          }
-        }
-        controller.close()
-      },
-    })
-    return stream
-  }
-
-  constructor(public response: Response) {
-    super(CachedDocument.toCachedReadableStream(response), response)
+    // Injects a marker into the document so that client code knows it was served from cache.
+    // The marker should be injected immediately in the <head> so it is available to client code.
+    return new CachedDocument(text.replace('<head>', '<head><script>window.__isDocumentCached=true</script>'), response)
   }
 }

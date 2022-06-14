@@ -55,7 +55,6 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 
 const installed = Boolean(window.navigator.serviceWorker.controller)
 const hit = Boolean((window as any).__isDocumentCached)
-console.log('zzmp:sw', hit, (window as any).__isDocumentCached)
 const action = installed ? (hit ? 'Cache hit' : 'Cache miss') : 'Not installed'
 sendEvent({ category: 'Service Worker', action, nonInteraction: true })
 
