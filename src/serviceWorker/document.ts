@@ -105,4 +105,8 @@ export class CachedDocument extends Response {
     // The marker should be injected immediately in the <head> so it is available to client code.
     return new CachedDocument(text.replace('<head>', '<head><script>window.__isDocumentCached=true</script>'), response)
   }
+
+  private constructor(text: string, public response: Response) {
+    super(text, response)
+  }
 }
