@@ -24,6 +24,10 @@ export enum Wallet {
 
 export const MODAL_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED, Wallet.FORTMATIC]
 
+export function reportError(error: Error) {
+  console.debug(`web3-react error: ${error}`)
+}
+
 export const isChainAllowed = (connector: Connector, chainId: number) => {
   switch (connector) {
     case fortmatic:
@@ -103,7 +107,9 @@ export const [network, networkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, defaultChainId: 1 })
 )
 
-export const [injected, injectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))
+export const [injected, injectedHooks] = initializeConnector<MetaMask>(
+  (actions) => new MetaMask({ actions, onError: reportError })
+)
 
 export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
 
@@ -115,6 +121,7 @@ export const [walletConnect, walletConnectHooks] = initializeConnector<WalletCon
         rpc: INFURA_NETWORK_URLS,
         qrcode: true,
       },
+      onError: reportError,
     })
 )
 
@@ -131,6 +138,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO_URL,
       },
+      onError: reportError,
     })
 )
 
