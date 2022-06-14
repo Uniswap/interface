@@ -86,6 +86,25 @@ class RNWalletConnect: RCTEventEmitter {
   }
   
   @objc
+  func disconnectAllForAccount(_ account: String) {
+    if let sessionObjects = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data] {
+      
+      var updatedSessions = sessionObjects
+      
+      for (_, sessionObject) in sessionObjects {
+        if let session = try? JSONDecoder().decode(Session.self, from: sessionObject) {
+          if (session.getAccount() == account) {
+            self.serverWrapper.disconnect(session.url.topic)
+            updatedSessions.removeValue(forKey: session.url.topic)
+          }
+        }
+      }
+      
+      UserDefaults.standard.set(updatedSessions, forKey: WALLET_CONNECT_SESSION_STORAGE_KEY)
+    }
+  }
+  
+  @objc
   func connect(_ url: String) {
     guard let wcUrl = WCURL(url) else {
       return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.wcInvalidUrl ])

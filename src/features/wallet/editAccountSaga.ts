@@ -5,6 +5,7 @@ import {
   editAccount as editInStore,
   removeAccount as removeInStore,
 } from 'src/features/wallet/walletSlice'
+import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
 import { unique } from 'src/utils/array'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
@@ -90,8 +91,7 @@ function* removeAccount(params: RemoveParams) {
   logger.info('editAccountSaga', 'removeAccount', 'Removing account', address)
   // TODO cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
-
-  // TODO: remove walletconnect client and sessions in native
+  yield* call(disconnectWCForAccount, address)
 }
 
 // TODO: should be per seed phrase

@@ -38,3 +38,7 @@ export const sendSignature = (requestInternalId: string, signature: string) => {
 export const isValidWCUrl = (uri: string) => {
   return RNWalletConnect.isValidWCUrl(uri)
 }
+
+export const disconnectWCForAccount = (account: string) => {
+  return RNWalletConnect.disconnectAllForAccount(account)
+}
