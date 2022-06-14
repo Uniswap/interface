@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "serve": "serve build -l 3000",
     "test": "react-scripts test --coverage",
-    "cypress": "cypress"
+    "cypress:open": "cypress open --browser chrome --e2e",
+    "cypress:run": "cypress run --browser chrome --e2e"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -196,6 +197,7 @@
     "web3-react-walletlink-connector": "npm:@web3-react/walletlink-connector@^6.2.13",
     "wicg-inert": "^3.1.1",
     "workbox-core": "^6.1.0",
+    "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"
   },
