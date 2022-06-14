@@ -53,7 +53,7 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
   googleAnalytics.initialize('test', { gtagOptions: { debug_mode: true } })
 }
 
-const installed = Boolean(window.navigator.serviceWorker.controller)
+const installed = Boolean(window.navigator.serviceWorker?.controller)
 const hit = Boolean((window as any).__isDocumentCached)
 const action = installed ? (hit ? 'Cache hit' : 'Cache miss') : 'Not installed'
 sendEvent({ category: 'Service Worker', action, nonInteraction: true })
