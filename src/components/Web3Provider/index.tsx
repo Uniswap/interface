@@ -1,14 +1,6 @@
 import { Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import {
-  getConnectorForWallet,
-  gnosisSafe,
-  MODAL_WALLETS,
-  network,
-  reportError,
-  useConnectors,
-  Wallet,
-} from 'connectors'
+import { getConnectorForWallet, gnosisSafe, MODAL_WALLETS, network, useConnectors, Wallet } from 'connectors'
 import useIsActiveMap from 'hooks/useIsActiveMap'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect, useState } from 'react'
@@ -23,7 +15,7 @@ const connect = async (connector: Connector) => {
       await connector.activate()
     }
   } catch (error) {
-    reportError(error)
+    console.debug(`web3-react error: ${error}`)
   }
 }
 
