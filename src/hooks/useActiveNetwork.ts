@@ -237,21 +237,22 @@ export function useActiveNetwork() {
         dispatch(updateChainIdWhenNotConnected(chainId))
       }
 
-      if (library && library.provider && library.provider.request) {
+      const activeProvider = library?.provider ?? window.ethereum
+      if (activeProvider && activeProvider.request) {
         history.push(filteredQueryStringLocation)
 
         try {
-          await library.provider.request({
+          await activeProvider.request({
             method: 'wallet_switchEthereumChain',
             params: [switchNetworkParams],
           })
         } catch (switchError) {
           // This is a workaround solution for Coin98
-          const isSwitcherror = typeof switchError === 'object' && switchError && Object.keys(switchError)?.length === 0
+          const isSwitchError = typeof switchError === 'object' && switchError && Object.keys(switchError)?.length === 0
           // This error code indicates that the chain has not been added to MetaMask.
-          if (switchError?.code === 4902 || switchError?.code === -32603 || isSwitcherror) {
+          if (switchError?.code === 4902 || switchError?.code === -32603 || isSwitchError) {
             try {
-              await library.provider.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
+              await activeProvider.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
             } catch (addError) {
               console.error(addError)
             }
