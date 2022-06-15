@@ -32,6 +32,24 @@ function Web3Updater() {
   const isActiveMap = useIsActiveMap()
   const previousIsActiveMap = usePrevious(isActiveMap)
 
+  // Connects eagerly to connectors.
+  useEffect(() => {
+    connect(gnosisSafe)
+    connect(network)
+
+    if (selectedWallet) {
+      connect(getConnectorForWallet(selectedWallet))
+      setIsEagerlyConnecting(true)
+    } else if (!selectedWalletBackfilled) {
+      MODAL_WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC) // Don't try to connect to Fortmatic because it opens up a modal
+        .map(getConnectorForWallet)
+        .forEach(connect)
+      setIsEagerlyConnecting(true)
+    }
+    // The dependency list is empty so this is only run once on mount
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Checks for connection changes within wallet connectors.
   useEffect(() => {
     isActiveMap.forEach((isActive: boolean, wallet: Wallet) => {
       if (isActive && !previousIsActiveMap?.get(wallet)) {
@@ -53,22 +71,6 @@ function Web3Updater() {
     selectedWallet,
     selectedWalletBackfilled,
   ])
-
-  useEffect(() => {
-    connect(gnosisSafe)
-    connect(network)
-
-    if (selectedWallet) {
-      connect(getConnectorForWallet(selectedWallet))
-      setIsEagerlyConnecting(true)
-    } else if (!selectedWalletBackfilled) {
-      MODAL_WALLETS.filter((wallet) => wallet !== Wallet.FORTMATIC) // Don't try to connect to Fortmatic because it opens up a modal
-        .map(getConnectorForWallet)
-        .forEach(connect)
-      setIsEagerlyConnecting(true)
-    }
-    // The dependency list is empty so this is only run once on mount
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null
 }
