@@ -6,8 +6,7 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
-import AddressEnsDisplay from 'src/components/accounts/AddressEnsDisplay'
-import { Identicon } from 'src/components/accounts/Identicon'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -94,8 +93,15 @@ export function UserScreen({
           <Flex row alignItems="center" justifyContent="space-between" mb="md">
             {/* address group */}
             <Flex centered row gap="sm">
-              <Identicon address={address} size={50} />
-              <AddressEnsDisplay address={address} mainSize={20} secondarySize={14} />
+              <AddressDisplay
+                address={address}
+                captionVariant="mediumLabel"
+                direction="column"
+                showAddressAsSubtitle={true}
+                showCopy={true}
+                size={48}
+                variant="h2"
+              />
             </Flex>
             {/* follow button */}
             <Button
