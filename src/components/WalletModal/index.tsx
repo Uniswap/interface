@@ -4,7 +4,6 @@ import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import useIsActiveMap from 'hooks/useIsActiveMap'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -123,8 +122,6 @@ export default function WalletModal({
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
 
-  const isActiveMap = useIsActiveMap()
-
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
@@ -177,12 +174,7 @@ export default function WalletModal({
         setPendingConnector(connector)
         setWalletView(WALLET_VIEWS.PENDING)
 
-        if (isActiveMap.get(wallet)) {
-          await connector.activate()
-          setWalletView(WALLET_VIEWS.ACCOUNT)
-        } else {
-          await connector.activate()
-        }
+        await connector.activate()
 
         dispatch(updateSelectedWallet({ wallet }))
         dispatch(updateWalletError({ wallet, error: undefined }))
@@ -197,7 +189,7 @@ export default function WalletModal({
         dispatch(updateWalletError({ wallet, error: error.message }))
       }
     },
-    [dispatch, isActiveMap, toggleWalletModal]
+    [dispatch, toggleWalletModal]
   )
 
   // get wallets user can switch too, depending on device/browser
