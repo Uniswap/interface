@@ -238,6 +238,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
           )}
         </AnimatedFlex>
       )}
+
       {etherscanAddress && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
           <Text color="neutralTextSecondary" mx="xs" variant="subHead2">
