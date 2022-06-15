@@ -1,17 +1,12 @@
 import React from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
-import {
-  WalletConnectModal,
-  WalletConnectModalState,
-} from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
+import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
+import { closeModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import {
-  removePendingSession,
-  removeRequest,
-  setWalletConnectModalState,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { removePendingSession, removeRequest } from 'src/features/walletConnect/walletConnectSlice'
 
 export function WalletConnectModals() {
   const activeAccount = useActiveAccount()
@@ -28,16 +23,18 @@ export function WalletConnectModals() {
     )
   }
 
+  const onClose = () => {
+    dispatch(removePendingSession())
+    dispatch(closeModal({ name: ModalName.WalletConnectScan }))
+  }
+
   return (
     <>
-      {modalState !== WalletConnectModalState.Hidden && (
+      {modalState.isOpen && (
         <WalletConnectModal
-          initialScreenState={modalState}
+          initialScreenState={modalState.initialState}
           isVisible={true}
-          onClose={() => {
-            dispatch(removePendingSession())
-            dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.Hidden }))
-          }}
+          onClose={onClose}
         />
       )}
       {currRequest && (

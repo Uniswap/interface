@@ -25,7 +25,6 @@ import { opacify } from 'src/utils/colors'
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
 export enum WalletConnectModalState {
-  Hidden,
   ScanQr,
   ConnectedDapps,
   WalletQr,

@@ -17,6 +17,7 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { openModal } from 'src/features/modals/modalSlice'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
@@ -25,13 +26,10 @@ import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { NotificationCenterLogo } from 'src/features/notifications/NotificationCenterLogo'
 import { selectHasUnreadNotifications } from 'src/features/notifications/selectors'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import {
-  removePendingSession,
-  setWalletConnectModalState,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { NFTMasonry } from 'src/screens/PortfolioNFTs'
 import { PortfolioTokens } from 'src/screens/PortfolioTokens'
 import { Screens } from 'src/screens/Screens'
@@ -60,7 +58,9 @@ export function HomeScreen({ navigation }: Props) {
     selectionAsync()
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
-    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ScanQr }))
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
+    )
   }
 
   const onPressAccountHeader = () => {

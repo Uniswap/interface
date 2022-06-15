@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
+import { modalsReducer } from 'src/features/modals/modalSlice'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
@@ -26,6 +27,7 @@ export const rootReducer = combineReducers({
   blocks: blocksReducer,
   chains: chainsReducer,
   favorites: favoritesReducer,
+  modals: modalsReducer,
   notifications: notificationReducer,
   providers: providersReducer,
   saga: monitoredSagaReducers,

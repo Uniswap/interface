@@ -16,6 +16,7 @@ import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { openModal } from 'src/features/modals/modalSlice'
 import { Text } from 'src/components/Text'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
@@ -24,9 +25,8 @@ import { useFavoriteCurrencyBalances } from 'src/features/balances/hooks'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useENS } from 'src/features/ens/useENS'
 import { selectFollowedAddressSet } from 'src/features/favorites/selectors'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { setWalletConnectModalState } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 import { opacify } from 'src/utils/colors'
@@ -48,12 +48,19 @@ export function ProfileScreen({ navigation }: Props) {
 
   const onPressScan = () => {
     selectionAsync()
-    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ScanQr }))
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
+    )
   }
 
   const onPressWalletQr = () => {
     selectionAsync()
-    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.WalletQr }))
+    dispatch(
+      openModal({
+        name: ModalName.WalletConnectScan,
+        initialState: WalletConnectModalState.WalletQr,
+      })
+    )
   }
 
   const onPressFriend = (friendAddres: string) => {

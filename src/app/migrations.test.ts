@@ -3,6 +3,7 @@ import { createMigrate } from 'redux-persist'
 import { migrations } from 'src/app/migrations'
 import { initialSchema } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
+import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import {
@@ -107,5 +108,19 @@ describe('Redux state migrations', () => {
     expect(
       newSchema.notifications.lastTxNotificationUpdate['0xShadowySuperCoder'][ChainId.Mainnet]
     ).toEqual(12345678912345)
+  })
+
+  it('migrates from v0 to v1', () => {
+    const initialSchemaStub = {
+      ...initialSchema,
+      walletConnect: {
+        ...initialSchema.wallet,
+        modalState: WalletConnectModalState.ScanQr,
+      },
+    }
+
+    const v0 = migrations[0](initialSchemaStub)
+    const v1 = migrations[1](v0)
+    expect(v1.walletConnect.modalState).toEqual(undefined)
   })
 })

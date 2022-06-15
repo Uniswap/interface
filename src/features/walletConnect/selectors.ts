@@ -1,5 +1,7 @@
 import { RootState } from 'src/app/rootReducer'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
+import { AppModalState } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import {
   WalletConnectRequest,
   WalletConnectSession,
@@ -17,8 +19,8 @@ export const selectPendingRequests = (state: RootState): WalletConnectRequest[] 
   return state.walletConnect.pendingRequests
 }
 
-export const selectModalState = (state: RootState): WalletConnectModalState => {
-  return state.walletConnect.modalState
+export const selectModalState = (state: RootState): AppModalState<WalletConnectModalState> => {
+  return state.modals[ModalName.WalletConnectScan]
 }
 
 export const selectPendingSession = (state: RootState): WalletConnectSession | null => {

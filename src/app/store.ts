@@ -45,7 +45,7 @@ export const persistConfig = {
     'tokens',
     'notifications',
   ],
-  version: 0,
+  version: 1,
   migrate: createMigrate(migrations),
 }
 

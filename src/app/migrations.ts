@@ -29,4 +29,10 @@ export const migrations = {
 
     return { ...state, transactions: newTransactionState, notifications: newNotificationState }
   },
+
+  1: (state: any) => {
+    const newState = { ...state }
+    delete newState.walletConnect.modalState
+    return newState
+  },
 }

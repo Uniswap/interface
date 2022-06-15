@@ -8,6 +8,7 @@ import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
+import { openModal } from 'src/features/modals/modalSlice'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
@@ -37,11 +38,11 @@ import {
   formUnknownTxTitle,
   formWCNotificationTitle,
 } from 'src/features/notifications/utils'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { setWalletConnectModalState } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
@@ -68,7 +69,12 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
   )
 
   const onPressNotification = () => {
-    dispatch(setWalletConnectModalState({ modalState: WalletConnectModalState.ConnectedDapps }))
+    dispatch(
+      openModal({
+        name: ModalName.WalletConnectScan,
+        initialState: WalletConnectModalState.ConnectedDapps,
+      })
+    )
   }
 
   return (

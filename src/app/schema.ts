@@ -3,6 +3,7 @@ import {
   DEFAULT_LIST_OF_LISTS,
 } from 'src/constants/tokenLists/tokenLists'
 import { DEFAULT_WATCHED_TOKENS } from 'src/constants/watchedTokens'
+import { ModalName } from 'src/features/telemetry/constants'
 import { BY_URL_DEFAULT_LISTS } from 'src/features/tokenLists/reducer'
 
 export const initialSchema = {
@@ -66,6 +67,20 @@ export const v0Schema = {
   },
 }
 
+export const v1Schema = {
+  ...v0Schema,
+  walletConnect: {
+    byAccount: {},
+    pendingRequests: [],
+  },
+  modals: {
+    [ModalName.WalletConnectScan]: {
+      isOpen: false,
+      initialState: undefined,
+    },
+  },
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v0Schema
+export const getSchema = () => v1Schema
