@@ -180,14 +180,11 @@ export default function WalletModal({
         if (isActiveMap.get(wallet)) {
           await connector.activate()
           setWalletView(WALLET_VIEWS.ACCOUNT)
-
-          // If the wallet is already active in web3-react, we need to update the selected wallet.
-          dispatch(updateSelectedWallet({ wallet }))
         } else {
-          // The wallet override will be set in Web3Provider when the isActive becomes true.
           await connector.activate()
         }
 
+        dispatch(updateSelectedWallet({ wallet }))
         dispatch(updateWalletError({ wallet, error: undefined }))
       } catch (error) {
         if (

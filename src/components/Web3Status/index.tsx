@@ -141,6 +141,7 @@ function WrappedStatusIcon({ connector }: { connector: Connector }) {
 
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
+
   const error = useAppSelector((state) => state.wallet.errorByWallet[getWalletForConnector(connector)])
 
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
@@ -158,7 +159,9 @@ function Web3StatusInner() {
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
 
-  if (!chainAllowed) {
+  if (!chainId) {
+    return null
+  } else if (!chainAllowed) {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
         <NetworkIcon />
