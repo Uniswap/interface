@@ -38,6 +38,7 @@ export const enum ModalName {
   TermsModal = 'terms-modal',
   RecoveryWarning = 'recovery-warning',
   ScreenshotWarning = 'screenshot-warning',
+  Swap = 'swap',
   TokenWarningModal = 'token-warning-modal',
   WalletConnectScan = 'wallet-connect-scan-modal',
   WCSignRequest = 'wc-sign-request-modal',

@@ -1,12 +1,9 @@
-import { StackActions } from '@react-navigation/native'
 import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
-import React, { useCallback, useState } from 'react'
+import React, { useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { SlideInDown, SlideOutDown } from 'react-native-reanimated'
-import { AnyAction } from 'redux'
-import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { LongPressButton } from 'src/components/buttons/LongPressButton'
 import { SwapArrow } from 'src/components/icons/SwapArrow'
@@ -30,30 +27,28 @@ import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
   CurrencyField,
+  initialState as emptyState,
   TransactionState,
+  transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
-  state: TransactionState
-  dispatch: React.Dispatch<AnyAction>
+  prefilledState?: TransactionState
+  onClose: () => void
 }
 
 // TODO:
 // -check erc20 permits
 // -handle price impact too high
 // TODO: token warnings
-export function SwapForm({ state, dispatch }: SwapFormProps) {
+export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
+  const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
+
   const [showDetails, setShowDetails] = useState(false)
 
   const activeAccount = useActiveAccount()
-  const navigation = useAppStackNavigation()
   const { t } = useTranslation()
-
-  const onSubmit = useCallback(() => {
-    navigation.dispatch(StackActions.popToTop())
-  }, [navigation])
-
   const derivedSwapInfo = useDerivedSwapInfo(state)
 
   const {
@@ -69,8 +64,8 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
   const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
     useSwapActionHandlers(dispatch)
 
-  const { swapCallback } = useSwapCallback(trade, onSubmit)
-  const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onSubmit)
+  const { swapCallback } = useSwapCallback(trade, onClose)
+  const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onClose)
 
   const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
   const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
@@ -78,7 +73,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
   const quoteSuccess = !loading && !error
 
   return (
-    <Box flex={1} justifyContent="space-between" px="md">
+    <Box flex={1} justifyContent="space-between" mt="lg" px="md">
       <Box>
         <Trace section={SectionName.CurrencyInputPanel}>
           <CurrencyInput
@@ -143,7 +138,7 @@ export function SwapForm({ state, dispatch }: SwapFormProps) {
           />
         </Trace>
       </Box>
-      <Flex flexGrow={1} gap="md" justifyContent="flex-end" my="xs">
+      <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs">
         {showDetails && !isWrapAction(wrapType) && trade && quoteSuccess && (
           <SwapDetails
             currencyIn={currencyAmounts[CurrencyField.INPUT]}

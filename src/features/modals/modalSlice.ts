@@ -1,21 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from 'src/app/rootReducer'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { ModalName } from 'src/features/telemetry/constants'
-import { TransactionState } from 'src/features/transactions/slice'
+import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 
 export interface AppModalState<T> {
   isOpen: boolean
   initialState?: T
 }
 
-type OpenModalParams = {
+type WalletConnectModalParams = {
   name: ModalName.WalletConnectScan
   initialState: WalletConnectModalState
-} // TODO: union with other param types here
+}
+type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
+
+type OpenModalParams = WalletConnectModalParams | SwapModalParams
 
 export interface ModalsState {
   [ModalName.WalletConnectScan]: AppModalState<WalletConnectModalState>
-  [ModalName.Account]: AppModalState<TransactionState>
+  [ModalName.Swap]: AppModalState<TransactionState>
 }
 
 export const initialModalState: ModalsState = {
@@ -23,7 +27,7 @@ export const initialModalState: ModalsState = {
     isOpen: false,
     initialState: WalletConnectModalState.ScanQr,
   },
-  [ModalName.Account]: {
+  [ModalName.Swap]: {
     isOpen: false,
     initialState: undefined,
   },
@@ -46,6 +50,14 @@ const slice = createSlice({
     },
   },
 })
+
+// TODO: combine both of these using a selector factory while preserving return types
+export const selectSwapModalState = (state: RootState): AppModalState<TransactionState> => {
+  return state.modals[ModalName.Swap]
+}
+export const selectWCModalState = (state: RootState): AppModalState<WalletConnectModalState> => {
+  return state.modals[ModalName.WalletConnectScan]
+}
 
 export const { openModal, closeModal } = slice.actions
 export const { reducer: modalsReducer, actions: modalsActions } = slice

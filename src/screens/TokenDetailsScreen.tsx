@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -24,6 +24,7 @@ import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
+import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { TokenWarningLevel, useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
@@ -80,6 +81,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
   const balance = useSingleBalance(currency)
 
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
   const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
@@ -103,8 +105,8 @@ function TokenDetails({ currency }: { currency: Currency }) {
         type: AssetType.Currency,
       },
     }
-    navigation.push(Screens.Swap, { swapFormState })
-  }, [currency, navigation])
+    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+  }, [currency, dispatch])
 
   const navigateToSwapSell = useCallback(() => {
     setActiveSwapAttemptType(undefined)
@@ -118,8 +120,8 @@ function TokenDetails({ currency }: { currency: Currency }) {
       },
       [CurrencyField.OUTPUT]: null,
     }
-    navigation.push(Screens.Swap, { swapFormState })
-  }, [currency, navigation])
+    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+  }, [currency, dispatch])
 
   const onPressSwap = useCallback(
     (swapType: SwapType) => {

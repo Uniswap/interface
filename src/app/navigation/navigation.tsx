@@ -62,7 +62,6 @@ import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
-import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
 import { UserScreen } from 'src/screens/UserScreen'
@@ -347,7 +346,6 @@ export function AppStackNavigator() {
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
-        <AppStack.Screen component={SwapScreen} name={Screens.Swap} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
         <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
         <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />

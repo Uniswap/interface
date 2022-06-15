@@ -1,32 +1,38 @@
 import { useHeaderHeight } from '@react-navigation/elements'
-import React, { PropsWithChildren, useReducer } from 'react'
-import { useTranslation } from 'react-i18next'
+import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
-import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { closeModal, selectSwapModalState } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { SheetScreenHeader } from 'src/features/transactions/swap/SheetScreenHeader'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
-import {
-  initialState,
-  TransactionState,
-  transactionStateReducer,
-} from 'src/features/transactions/transactionState/transactionState'
-import { Screens } from 'src/screens/Screens'
+import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import { flex } from 'src/styles/flex'
 
-export function SwapScreen({ route }: AppStackScreenProp<Screens.Swap>) {
-  const [state, dispatch] = useReducer(
-    transactionStateReducer,
-    route.params?.swapFormState || initialState
-  )
+export function SwapModal() {
+  const theme = useAppTheme()
+  const appDispatch = useAppDispatch()
+  const modalState = useAppSelector(selectSwapModalState)
 
-  const { t } = useTranslation()
+  const onClose = () => {
+    appDispatch(closeModal({ name: ModalName.Swap }))
+  }
+
+  if (!modalState.isOpen) return null
 
   return (
-    <SheetScreenWithHeader label={t('Swap')} state={state}>
-      <SwapForm dispatch={dispatch} state={state} />
-    </SheetScreenWithHeader>
+    <BottomSheetModal
+      fullScreen
+      backgroundColor={theme.colors.mainBackground}
+      isVisible={modalState.isOpen}
+      name={ModalName.Swap}
+      onClose={onClose}>
+      <SwapForm prefilledState={modalState.initialState} onClose={onClose} />
+    </BottomSheetModal>
   )
 }
 

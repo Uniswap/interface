@@ -17,13 +17,13 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { openModal } from 'src/features/modals/modalSlice'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { BiometricCheck } from 'src/features/biometrics'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import { openModal } from 'src/features/modals/modalSlice'
 import { NotificationCenterLogo } from 'src/features/notifications/NotificationCenterLogo'
 import { selectHasUnreadNotifications } from 'src/features/notifications/selectors'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -131,11 +131,12 @@ function NotificationIndicator() {
 
 function QuickActions() {
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const navigation = useHomeStackNavigation()
 
   const onPressSwap = () => {
-    navigation.navigate(Screens.Swap)
+    dispatch(openModal({ name: ModalName.Swap }))
   }
   const onPressSend = () => {
     navigation.navigate(Screens.Transfer, {})

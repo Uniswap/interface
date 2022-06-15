@@ -8,7 +8,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
 import { Screens } from 'src/screens/Screens'
-import { SheetScreenWithHeader } from 'src/screens/SwapScreen'
+import { SheetScreenWithHeader } from 'src/app/modals/SwapModal'
 
 export function TransferTokenScreen({ route }: AppStackScreenProp<Screens.Transfer>) {
   const [state, dispatch] = useReducer(

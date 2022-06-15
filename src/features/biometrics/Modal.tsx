@@ -2,7 +2,7 @@ import { AuthenticationType, supportedAuthenticationTypesAsync } from 'expo-loca
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { useAppStackNavigation } from 'src/app/navigation/types'
+import { goBack } from 'src/app/navigation/rootNavigation'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
@@ -25,7 +25,6 @@ export function BiometricModal({
   tryAuthenticate,
 }: BiometricModalProps) {
   const { t } = useTranslation()
-  const navigation = useAppStackNavigation()
   const theme = useAppTheme()
 
   const supportedBiometricTypes = useSupportedBiometricTypes()
@@ -74,7 +73,7 @@ export function BiometricModal({
               width="100%"
               onPress={tryAuthenticate}
             />
-            <TextButton name={ElementName.Back} onPress={() => navigation.popToTop()}>
+            <TextButton name={ElementName.Back} onPress={() => goBack()}>
               <Text variant="caption">{t('Cancel')}</Text>
             </TextButton>
           </Flex>

@@ -3,7 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { selectionAsync } from 'expo-haptics'
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppStackNavigation } from 'src/app/navigation/types'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { CurrencySelect } from 'src/components/CurrencySelector/CurrencySelect'
 import { Toggle } from 'src/components/CurrencySelector/Toggle'
@@ -29,14 +29,12 @@ export function CurrencySelector({
   otherSelectedCurrency,
   selectedCurrency,
 }: CurrencySelectorProps) {
-  const navigation = useAppStackNavigation()
-
   const { t } = useTranslation()
   const theme = useTheme<Theme>()
 
   const selectCurrency = () => {
     selectionAsync()
-    navigation.navigate(Screens.CurrencySelector, {
+    navigate(Screens.CurrencySelector, {
       onSelectCurrency,
       otherCurrencyAddress: otherSelectedCurrency ? currencyId(otherSelectedCurrency) : undefined,
       otherCurrencyChainId: otherSelectedCurrency?.chainId,

@@ -17,3 +17,12 @@ export async function navigate<RouteName extends keyof RootParamList>(
   // type `createNavigationContainerRef` in a way that's compatible
   navigationRef.navigate(routeName as never, params as never)
 }
+
+export async function goBack() {
+  if (!navigationRef.isReady()) {
+    logger.info('rootNavigation', 'navigate', 'Navigator was called before it was initialized')
+    return
+  }
+
+  navigationRef.goBack()
+}

@@ -31,13 +31,7 @@ interface DecimalPadProps {
 
 export function DecimalPad({ setValue, value = '' }: DecimalPadProps) {
   return (
-    <AnimatedBox
-      // entering={SlideInDown}
-      // exiting={SlideOutDown}
-      flex={1}
-      flexDirection="row"
-      flexGrow={1}
-      flexWrap="wrap">
+    <AnimatedBox flex={1} flexDirection="row" flexGrow={1} flexWrap="wrap">
       {keys.map((key, i) => (
         <KeyButton {...key} key={i} setValue={setValue} value={value} />
       ))}
