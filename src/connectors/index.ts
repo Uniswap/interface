@@ -138,9 +138,7 @@ export function useConnectors(selectedWallet: Wallet | undefined) {
     if (selectedWallet) {
       connectors.push(getConnectorListItemForWallet(selectedWallet))
     }
-    MODAL_WALLETS.filter((wallet) => wallet !== selectedWallet).forEach((wallet) => {
-      connectors.push(getConnectorListItemForWallet(wallet))
-    })
+    connectors.push(...MODAL_WALLETS.filter((wallet) => wallet !== selectedWallet).map(getConnectorListItemForWallet))
     connectors.push({ connector: network, hooks: networkHooks })
     const web3ReactConnectors: [Connector, Web3ReactHooks][] = connectors.map(({ connector, hooks }) => [
       connector,
