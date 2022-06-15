@@ -25,6 +25,7 @@ describe('Wallet', () => {
 
   it('shows connect buttons after disconnect', () => {
     cy.get('[data-cy=wallet-disconnect]').click()
+    cy.get('[data-cy=option-grid]').should('exist')
     cy.reload()
     cy.get('#connect-wallet').should('exist')
   })
