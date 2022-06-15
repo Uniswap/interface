@@ -5,41 +5,59 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import ArrowDown from 'src/assets/icons/arrow-down.svg'
-import ProfileIcon from 'src/assets/icons/profile.svg'
 import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
-import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useGetCoinsListQuery } from 'src/features/dataApi/coingecko/enhancedApi'
-import { CoingeckoSearchCoin, GetCoinsListResponse } from 'src/features/dataApi/coingecko/types'
+import {
+  CoingeckoMarketCoin,
+  CoingeckoOrderBy,
+  CoingeckoSearchCoin,
+  GetCoinsListResponse,
+} from 'src/features/dataApi/coingecko/types'
 import { useENS } from 'src/features/ens/useENS'
-import { useTokenSearchResults } from 'src/features/explore/hooks'
+import { useMarketTokens, useTokenSearchResults } from 'src/features/explore/hooks'
+import { WalletItem, WalletItemProps } from 'src/features/explore/WalletItem'
 import { Screens } from 'src/screens/Screens'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 
-type TokenResultRowProps = CoingeckoSearchCoin & {
+// TODO: Update fixed trending wallets
+const TRENDING_WALLETS: WalletItemProps[] = [
+  { address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', ensName: 'vitalik.eth' },
+  { address: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa', ensName: 'hayden.eth' },
+  { address: '0xD387A6E4e84a6C86bd90C158C6028A58CC8Ac459', ensName: 'pranksy.eth' },
+]
+
+type TokenResultRowProps = {
+  coin: CoingeckoSearchCoin | CoingeckoMarketCoin
   onPress: () => void
 }
-function TokenResultRow({ name, symbol, large: uri }: TokenResultRowProps) {
+
+function TokenResultRow({ coin, onPress }: TokenResultRowProps) {
+  const { name, symbol } = coin
+  const uri = (coin as CoingeckoSearchCoin).large || (coin as CoingeckoMarketCoin).image
+
   return (
-    <Flex row alignItems="center" px="md" py="sm">
-      <Image source={{ uri }} style={logoStyle} />
-      <Flex gap="none">
-        <Text color="neutralTextPrimary" variant="subHead1">
-          {name}
-        </Text>
-        <Text color="neutralTextSecondary" variant="caption">
-          {symbol}
-        </Text>
+    <Button onPress={onPress}>
+      <Flex row alignItems="center" px="xs" py="sm">
+        <Image source={{ uri }} style={logoStyle} />
+        <Flex gap="none">
+          <Text color="neutralTextPrimary" variant="subHead1">
+            {name}
+          </Text>
+          <Text color="neutralTextSecondary" variant="caption">
+            {symbol.toUpperCase() ?? ''}
+          </Text>
+        </Flex>
       </Flex>
-    </Flex>
+    </Button>
   )
 }
 
@@ -52,8 +70,11 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   const theme = useAppTheme()
   const navigation = useExploreStackNavigation()
 
-  const { tokens, isLoading: tokensLoading } = useTokenSearchResults(searchQuery)
+  const { tokens: searchTokens, isLoading: searchIsLoading } = useTokenSearchResults(searchQuery)
   const { currentData: coinsList } = useGetCoinsListQuery({ includePlatform: true })
+  const { tokens: trendingTokens, isLoading: trendingIsLoading } = useMarketTokens({
+    remoteOrderBy: CoingeckoOrderBy.VolumeDesc,
+  })
 
   const {
     address: ensAddress,
@@ -74,7 +95,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
       )
       return (
         <TokenResultRow
-          {...token}
+          coin={token}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
               currencyId,
@@ -86,6 +107,19 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     [coinsList, navigation]
   )
 
+  const renderWalletItem = useCallback(
+    ({ item: wallet }: ListRenderItemInfo<WalletItemProps>) => {
+      return (
+        <WalletItem
+          address={wallet.address}
+          ensName={wallet.ensName}
+          onPress={() => navigation.navigate(Screens.User, { address: wallet.address })}
+        />
+      )
+    },
+    [navigation]
+  )
+
   const onPressViewEtherscan = (address: string) => {
     const explorerLink = getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS)
     navigation.navigate(Screens.WebView, {
@@ -94,12 +128,54 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     })
   }
 
-  const noTokenResults = !tokensLoading && tokens?.length === 0
+  const noTokenResults = !searchIsLoading && searchTokens?.length === 0
   const noENSResults = !ensLoading && !ensName && !ensAddress
   const noResults = noTokenResults && noENSResults && !etherscanAddress
 
+  // Show trending tokens and wallets
   if (searchQuery.length === 0) {
-    return null
+    // TODO: Add search history
+    return (
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
+        {trendingIsLoading ? (
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
+            <Text color="neutralTextSecondary" variant="subHead2">
+              {t('Popular Tokens')}
+            </Text>
+            <Loading repeat={4} type="token" />
+          </AnimatedFlex>
+        ) : (
+          trendingTokens?.length && (
+            <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+              <Section.List
+                ItemSeparatorComponent={() => <Separator mx="xs" />}
+                ListHeaderComponent={
+                  <Text color="neutralTextSecondary" mb="xxs" mx="xs" variant="subHead2">
+                    {t('Popular Tokens')}
+                  </Text>
+                }
+                data={trendingTokens?.slice(0, 5)}
+                keyExtractor={coinKey}
+                listKey="tokens"
+                renderItem={renderTokenItem}
+              />
+            </AnimatedFlex>
+          )
+        )}
+        <Section.List
+          ItemSeparatorComponent={() => <Separator mx="xs" />}
+          ListHeaderComponent={
+            <Text color="neutralTextSecondary" mb="xxs" mx="xs" variant="subHead2">
+              {t('Wallets')}
+            </Text>
+          }
+          data={TRENDING_WALLETS}
+          keyExtractor={walletKey}
+          listKey="wallets"
+          renderItem={renderWalletItem}
+        />
+      </AnimatedFlex>
+    )
   }
 
   if (noResults) {
@@ -118,63 +194,57 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   }
 
   return (
-    <Flex grow borderRadius="md" gap="md">
-      {tokensLoading ? (
+    <Flex grow borderRadius="md" gap="xs">
+      {searchIsLoading ? (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
-          <Text color="neutralTextSecondary" variant="body2">
+          <Text color="neutralTextSecondary" variant="subHead2">
             {t('Tokens')}
           </Text>
           <Loading repeat={4} type="token" />
         </AnimatedFlex>
       ) : (
-        tokens?.length && (
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
+        searchTokens?.length && (
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
             <Section.List
               ItemSeparatorComponent={() => <Separator mx="xs" />}
               ListHeaderComponent={
-                <Text color="neutralTextSecondary" mb="xxs" mx="xs" variant="body2">
+                <Text color="neutralTextSecondary" mb="xxs" mx="xs" variant="subHead2">
                   {t('Tokens')}
                 </Text>
               }
-              data={tokens}
-              keyExtractor={key}
+              data={searchTokens.slice(0, 5)}
+              keyExtractor={coinKey}
+              listKey="tokens"
               renderItem={renderTokenItem}
             />
           </AnimatedFlex>
         )
       )}
       {(ensLoading || (ensName && ensAddress)) && (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
-          <Text color="neutralTextSecondary" variant="body2">
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
+          <Text color="neutralTextSecondary" mx="xs" variant="subHead2">
             {t('Wallets')}
           </Text>
           {ensName && ensAddress ? (
-            <Button onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}>
-              <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
-                <Flex centered row gap="sm">
-                  <Identicon address={ensAddress} size={35} />
-                  <Flex gap="xxs">
-                    <Text variant="mediumLabel">{ensName}</Text>
-                    <Text color="neutralTextSecondary" variant="caption">
-                      {shortenAddress(ensAddress)}
-                    </Text>
-                  </Flex>
-                </Flex>
-                <ProfileIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
-              </Flex>
-            </Button>
+            <WalletItem
+              address={ensAddress}
+              ensName={ensName}
+              onPress={() => navigation.navigate(Screens.User, { address: ensAddress })}
+            />
           ) : (
-            <Loading repeat={1} type="token" />
+            <Box mx="xs" my="sm">
+              <Loading repeat={1} type="token" />
+            </Box>
           )}
         </AnimatedFlex>
       )}
       {etherscanAddress && (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
-          <Text color="neutralTextSecondary" variant="body2">
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
+          <Text color="neutralTextSecondary" mx="xs" variant="subHead2">
             {t('View on Etherscan')}
           </Text>
           <Button onPress={() => onPressViewEtherscan(etherscanAddress)}>
-            <Flex row alignItems="center" gap="sm" justifyContent="space-between" my="xs">
+            <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
               <Flex centered row gap="sm">
                 <EtherscanLogo height={35} width={35} />
                 <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
@@ -194,8 +264,12 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   )
 }
 
-function key(coin: CoingeckoSearchCoin) {
+function coinKey(coin: CoingeckoSearchCoin) {
   return coin.id
+}
+
+function walletKey(wallet: WalletItemProps) {
+  return wallet.address
 }
 
 export const logoStyle: ImageStyle = {
