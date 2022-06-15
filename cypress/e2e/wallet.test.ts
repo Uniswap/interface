@@ -22,11 +22,4 @@ describe('Wallet', () => {
     cy.contains('Injected').click()
     cy.get('#web3-account-identifier-row').contains(TEST_ADDRESS_NEVER_USE_SHORTENED)
   })
-
-  it('shows connect buttons after disconnect', () => {
-    cy.get('[data-cy=wallet-disconnect]').click()
-    cy.get('[data-cy=option-grid]').should('exist')
-    cy.reload()
-    cy.get('#connect-wallet').should('exist')
-  })
 })
