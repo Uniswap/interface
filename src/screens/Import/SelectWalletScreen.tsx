@@ -56,7 +56,7 @@ export function SelectWalletScreen({ navigation }: Props) {
     <OnboardingScreen
       stepCount={4}
       stepNumber={1}
-      subtitle={t('We found several wallets associated with your seed phrase.')}
+      subtitle={t('We found several wallets associated with your recovery phrase.')}
       title={t('Select wallets to import')}>
       {loadingAccounts ? (
         <ActivityIndicator />

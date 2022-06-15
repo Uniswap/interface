@@ -136,7 +136,7 @@ function EducationSection() {
         icon={<EyeIcon color={theme.colors.neutralTextPrimary} height={16} width={16} />}
         label={t('Write it down in private')}
         sublabel={t(
-          "Ensure that you're in a private location and write down your seed phrase's words in order."
+          "Ensure that you're in a private location and write down your recovery phrase's words in order."
         )}
       />
       {spacer}

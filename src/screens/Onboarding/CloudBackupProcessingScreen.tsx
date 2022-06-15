@@ -18,7 +18,7 @@ type Props = NativeStackScreenProps<
   OnboardingScreens.BackupCloudProcessing
 >
 
-/** Screen to perform secure seed phrase backup/restore to Cloud  */
+/** Screen to perform secure recovery phrase backup/restore to Cloud  */
 export function CloudBackupProcessingScreen({
   navigation,
   route: {

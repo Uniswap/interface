@@ -20,13 +20,13 @@ export function isValidMnemonic(
   if (split.length < MNEMONIC_LENGTH_MIN)
     return {
       valid: false,
-      errorText: t('Seed phrases must be at least 12 words'),
+      errorText: t('Recovery phrases must be at least 12 words'),
     }
 
   if (split.length > MNEMONIC_LENGTH_MAX)
     return {
       valid: false,
-      errorText: t('Seed phrases must be less than 24 words'),
+      errorText: t('Recovery phrases must be less than 24 words'),
     }
 
   if (!utils.isValidMnemonic(formatted)) {

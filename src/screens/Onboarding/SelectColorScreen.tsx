@@ -50,7 +50,7 @@ export function SelectColorScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
 
-  // only show backup flow if importing accounts from seed phrase, assume new accounts activated.
+  // only show backup flow if importing accounts from recovery phrase, assume new accounts activated.
   const nextScreen = useNextOnboardingScreen(OnboardingScreens.SelectColor)
 
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined)

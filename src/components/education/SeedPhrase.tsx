@@ -54,7 +54,7 @@ export const SeedPhraseEducationContent = () => [
     text={
       <Text fontSize={28} lineHeight={34} variant="h2">
         <Trans>
-          A seed phrase is a set of 12 unique words that you can use to access to your wallet—
+          A recovery phrase is a set of 12 unique words that you can use to access to your wallet—
           <Text color="deprecated_pink">it's like your wallet's secret password.</Text>
         </Trans>
       </Text>
@@ -66,7 +66,7 @@ export const SeedPhraseEducationContent = () => [
         <Trans>
           You can{' '}
           <Text color="deprecated_pink">
-            enter your seed phrase on a new device to recover your wallet
+            enter your recovery phrase on a new device to recover your wallet
           </Text>{' '}
           and access your funds.
         </Trans>
@@ -77,7 +77,7 @@ export const SeedPhraseEducationContent = () => [
     text={
       <Text fontSize={28} lineHeight={34} variant="h2">
         <Trans>
-          Instead of memorizing your seed phrase,{' '}
+          Instead of memorizing your recovery phrase,{' '}
           <Text color="deprecated_pink">you can back it up to iCloud</Text> and protect it by
           setting a PIN.
         </Trans>
@@ -89,7 +89,9 @@ export const SeedPhraseEducationContent = () => [
       <Text fontSize={28} lineHeight={34} variant="h2">
         <Trans>
           You can also{' '}
-          <Text color="deprecated_pink">manually back up your seed phrase by writing it down</Text>{' '}
+          <Text color="deprecated_pink">
+            manually back up your recovery phrase by writing it down
+          </Text>{' '}
           and storing it in a safe place.
         </Trans>
       </Text>

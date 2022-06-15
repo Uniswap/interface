@@ -35,19 +35,19 @@ const options: {
   nav: any
 }[] = [
   {
-    title: (t: TFunction) => t('Import a seed phrase'),
-    blurb: (t: TFunction) => t('Enter or scan words'),
+    title: (t: TFunction) => t('Import a recovery phrase'),
+    blurb: (t: TFunction) => t('Enter or paste words'),
     icon: <SeedPhraseIcon />,
     nav: OnboardingScreens.SeedPhraseInput,
   },
   {
     title: (t: TFunction) => t('Import a private key'),
-    blurb: (t: TFunction) => t('Enter, paste, or scan your key'),
+    blurb: (t: TFunction) => t('Enter or paste your key'),
     icon: <KeyIcon />,
     nav: OnboardingScreens.PrivateKeyInput,
   },
   {
-    title: (t: TFunction) => t('Watch a wallet address'),
+    title: (t: TFunction) => t('View only'),
     blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
     icon: <EyeIcon />,
     nav: OnboardingScreens.WatchWallet,

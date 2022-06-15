@@ -43,12 +43,12 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
     <OnboardingScreen
       stepCount={4}
       stepNumber={0}
-      subtitle={t('Your seed phrase will only be stored locally on your device.')}
-      title={t('Enter your seed phrase')}>
+      subtitle={t('Your recovery phrase will only be stored locally on your device.')}
+      title={t('Enter your recovery phrase')}>
       <Flex pt="lg">
         <GenericImportForm
           error={errorText}
-          placeholderLabel={t('seed phrase')}
+          placeholderLabel={t('recovery phrase')}
           showSuccess={valid}
           value={value}
           onChange={(text: string | undefined) => setValue(text)}

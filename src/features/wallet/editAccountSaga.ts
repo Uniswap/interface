@@ -94,7 +94,7 @@ function* removeAccount(params: RemoveParams) {
   yield* call(disconnectWCForAccount, address)
 }
 
-// TODO: should be per seed phrase
+// TODO: should be per recovery phrase
 function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
   const { address, backupMethod } = params
   logger.info('editAccountSaga', 'addBackupMethod', 'Adding backup method', address)
