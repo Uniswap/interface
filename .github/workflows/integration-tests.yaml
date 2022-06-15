@@ -42,10 +42,8 @@ jobs:
           CI: false # disables lint checks when building
 
       - run: yarn serve &
-        env:
-          CI: false # disables lint checks when building
       
-      - run: yarn cypress run --record
+      - run: yarn cypress:run --record
         env:
           CYPRESS_INTEGRATION_TEST_PRIVATE_KEY: ${{ secrets.CYPRESS_INTEGRATION_TEST_PRIVATE_KEY }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

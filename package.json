@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "serve": "serve build -l 3000",
     "test": "react-scripts test --coverage",
-    "cypress": "cypress"
+    "cypress:open": "cypress open --browser chrome --e2e",
+    "cypress:run": "cypress run --browser chrome --e2e"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -194,6 +195,7 @@
     "wcag-contrast": "^3.0.0",
     "web-vitals": "^2.1.0",
     "workbox-core": "^6.1.0",
+    "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"
   },

@@ -44,7 +44,7 @@ By default, this runs only unit tests that have been affected since the last com
 yarn test --watchAll
 ```
 
-## Running cypress integration tests
+## Running integration tests (cypress)
 
 Integration tests require a server to be running. In order to see your changes quickly, run `start` in its own tab/window:
 
@@ -52,10 +52,16 @@ Integration tests require a server to be running. In order to see your changes q
 yarn start
 ```
 
-Integration tests are run using `cypress`. When developing locally, use `cypress open` for an interactive UI, and to inspect the rendered page:
+Integration tests are run using `cypress`. When developing locally, use `cypress:open` for an interactive UI, and to inspect the rendered page:
 
 ```
-yarn cypress open
+yarn cypress:open
+```
+
+To run _all_ cypress integration tests _from the command line_:
+
+```
+yarn cypress:run
 ```
 
 ## Engineering standards
