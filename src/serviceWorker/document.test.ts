@@ -1,10 +1,13 @@
 import { RouteHandlerCallbackOptions, RouteMatchCallbackOptions } from 'workbox-core'
-import { matchPrecache as matchPrecacheMock } from 'workbox-precaching'
+import { getCacheKeyForURL as getCacheKeyForURLMock, matchPrecache as matchPrecacheMock } from 'workbox-precaching'
 
-import { CachedDocument, DOCUMENT, handleDocument, matchDocument } from './document'
+import { CachedDocument, handleDocument, matchDocument } from './document'
 
 jest.mock('workbox-navigation-preload', () => ({ enable: jest.fn() }))
-jest.mock('workbox-precaching', () => ({ matchPrecache: jest.fn() }))
+jest.mock('workbox-precaching', () => ({
+  getCacheKeyForURL: jest.fn(),
+  matchPrecache: jest.fn(),
+}))
 jest.mock('workbox-routing', () => ({ Route: class {} }))
 
 describe('document', () => {
@@ -29,17 +32,22 @@ describe('document', () => {
   })
 
   describe('handleDocument', () => {
+    const requestUrl = 'request_url'
+
     let fetch: jest.SpyInstance
+    let getCacheKeyForURL: jest.SpyInstance
     let matchPrecache: jest.SpyInstance
     let options: RouteHandlerCallbackOptions
 
     beforeAll(() => {
       fetch = jest.spyOn(window, 'fetch')
+      getCacheKeyForURL = getCacheKeyForURLMock as unknown as jest.SpyInstance
       matchPrecache = matchPrecacheMock as unknown as jest.SpyInstance
     })
 
     beforeEach(() => {
       fetch.mockReset()
+      getCacheKeyForURL.mockReturnValueOnce(requestUrl)
       options = {
         event: new Event('fetch') as ExtendableEvent,
         request: new Request('http://example.com'),
@@ -90,28 +98,17 @@ describe('document', () => {
       })
     })
 
-    describe.each([
-      ['preloadResponse', true],
-      ['fetched document', false],
-    ])('with a %s', (responseType, withPreloadResponse) => {
+    describe('with a fetched response', () => {
       let fetched: Response
       const FETCHED_ETAGS = 'fetched'
 
       beforeEach(() => {
         fetched = new Response(null, { headers: { etag: FETCHED_ETAGS } })
-        if (withPreloadResponse) {
-          ;(options.event as { preloadResponse?: Promise<Response> }).preloadResponse = Promise.resolve(fetched)
-        } else {
-          fetch.mockReturnValueOnce(fetched)
-        }
+        fetch.mockReturnValueOnce(fetched)
       })
 
       afterEach(() => {
-        if (withPreloadResponse) {
-          expect(fetch).not.toHaveBeenCalled()
-        } else {
-          expect(fetch).toHaveBeenCalledWith(DOCUMENT, expect.anything())
-        }
+        expect(fetch).toHaveBeenCalledWith(requestUrl, expect.anything())
       })
 
       describe('with a cached response', () => {
@@ -127,13 +124,11 @@ describe('document', () => {
             cached.headers.set('etag', FETCHED_ETAGS)
           })
 
-          if (!withPreloadResponse) {
-            it('aborts the fetched response', async () => {
-              await handleDocument(options)
-              const abortSignal = fetch.mock.calls[0][1].signal
-              expect(abortSignal.aborted).toBeTruthy()
-            })
-          }
+          it('aborts the fetched response', async () => {
+            await handleDocument(options)
+            const abortSignal = fetch.mock.calls[0][1].signal
+            expect(abortSignal.aborted).toBeTruthy()
+          })
 
           it('returns the cached response', async () => {
             const { response } = (await handleDocument(options)) as CachedDocument
@@ -141,13 +136,13 @@ describe('document', () => {
           })
         })
 
-        it(`returns the ${responseType} with mismatched etags`, async () => {
+        it(`returns the fetched response with mismatched etags`, async () => {
           const response = await handleDocument(options)
           expect(response).toBe(fetched)
         })
       })
 
-      it(`returns the ${responseType} with no cached response`, async () => {
+      it(`returns the fetched response with no cached response`, async () => {
         const response = await handleDocument(options)
         expect(response).toBe(fetched)
       })
