@@ -50,9 +50,7 @@ describe('Swap', () => {
 
   it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('.token-item-0xc778417E063141139Fce010982780140Aa0cD5Ab').should('be.visible')
     cy.get('.token-item-0xc778417E063141139Fce010982780140Aa0cD5Ab').click({ force: true })
-    cy.get('#swap-currency-input .token-amount-input').should('be.visible')
     cy.get('#swap-currency-input .token-amount-input').type('0.01', { force: true, delay: 100 })
     cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
   })
