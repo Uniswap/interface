@@ -65,11 +65,11 @@ describe('document', () => {
       afterAll(() => onLine.mockRestore())
 
       it('returns a fetched document', async () => {
-        const fetched = new Response()
+        const fetched = new Response('test_body')
         fetch.mockResolvedValueOnce(fetched)
         const response = await handleDocument(options)
         expect(fetch).toHaveBeenCalledWith(options.request)
-        expect(response).toBe(fetched)
+        expect(response.body).toBe(fetched.body)
       })
 
       it('returns a clone of offlineDocument with an offlineDocument', async () => {
@@ -84,11 +84,12 @@ describe('document', () => {
 
     describe('with a thrown fetch', () => {
       it('returns a cached response', async () => {
-        const cached = new Response()
+        const cached = new Response('<html><head></head></html>')
         matchPrecache.mockResolvedValueOnce(cached)
         fetch.mockRejectedValueOnce(new Error())
-        const { response } = (await handleDocument(options)) as CachedDocument
-        expect(response).toBe(cached)
+        const response = await handleDocument(options)
+        expect(response).toBeInstanceOf(CachedDocument)
+        expect((response as CachedDocument).response).toBe(cached)
       })
 
       it('rethrows with no cached response', async () => {
@@ -103,7 +104,7 @@ describe('document', () => {
       const FETCHED_ETAGS = 'fetched'
 
       beforeEach(() => {
-        fetched = new Response(null, { headers: { etag: FETCHED_ETAGS } })
+        fetched = new Response('test_body', { headers: { etag: FETCHED_ETAGS } })
         fetch.mockReturnValueOnce(fetched)
       })
 
@@ -115,7 +116,7 @@ describe('document', () => {
         let cached: Response
 
         beforeEach(() => {
-          cached = new Response('<html>cached</html>', { headers: { etag: 'cached' } })
+          cached = new Response('<html><head></head></html>', { headers: { etag: 'cached' } })
           matchPrecache.mockResolvedValueOnce(cached)
         })
 
@@ -131,20 +132,24 @@ describe('document', () => {
           })
 
           it('returns the cached response', async () => {
-            const { response } = (await handleDocument(options)) as CachedDocument
-            expect(response).toBe(cached)
+            const response = await handleDocument(options)
+            expect(response).toBeInstanceOf(CachedDocument)
+            expect((response as CachedDocument).response).toBe(cached)
+            expect(await response.text()).toBe(
+              '<html><head><script>window.__isDocumentCached=true</script></head></html>'
+            )
           })
         })
 
         it(`returns the fetched response with mismatched etags`, async () => {
           const response = await handleDocument(options)
-          expect(response).toBe(fetched)
+          expect(response.body).toBe(fetched.body)
         })
       })
 
       it(`returns the fetched response with no cached response`, async () => {
         const response = await handleDocument(options)
-        expect(response).toBe(fetched)
+        expect(response.body).toBe(fetched.body)
       })
     })
   })

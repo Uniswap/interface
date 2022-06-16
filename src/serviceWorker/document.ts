@@ -56,15 +56,15 @@ export async function handleDocument(this: HandlerContext, { event, request }: R
   // The exact cache key should be used for requests, as etags will be different for different paths.
   // This also prevents usage of preloadResponse.
   const requestUrl = getCacheKeyForURL(DOCUMENT)
-  const cachedResponse = requestUrl && (await matchPrecache(requestUrl))
+  const cachedResponse = await matchPrecache(DOCUMENT)
 
   // Responses will throw if offline, but if cached the cached response should still be returned.
   const controller = new AbortController()
   let response
   try {
-    response = await fetch(requestUrl || DOCUMENT, { signal: controller.signal })
+    response = await fetch(requestUrl || DOCUMENT, { cache: 'reload', signal: controller.signal })
     if (!cachedResponse) {
-      return response
+      return new Response(response.body, response)
     }
   } catch (e) {
     if (!cachedResponse) throw e
@@ -81,7 +81,7 @@ export async function handleDocument(this: HandlerContext, { event, request }: R
     return CachedDocument.from(cachedResponse)
   }
 
-  return response
+  return new Response(response.body, response)
 }
 
 export class DocumentRoute extends Route {
