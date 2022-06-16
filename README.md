@@ -88,3 +88,9 @@ If Typescript in VSCode is slow to see the change, you can restart the typescrip
 ### E2E Tests
 
 See [e2e/README.md](e2e/README.md)
+
+## Deployment
+
+A [Github workflow runs a Fastlane build and deploy](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml) at 2AM UTC everyday from M-F. 
+
+Deploys can also be triggered by running the `Fastlane deploy iOS` workflow manually  
