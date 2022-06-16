@@ -173,11 +173,11 @@ export default function WalletModal({
 
         setPendingConnector(connector)
         setWalletView(WALLET_VIEWS.PENDING)
+        dispatch(updateWalletError({ wallet, error: undefined }))
 
         await connector.activate()
 
         dispatch(updateSelectedWallet({ wallet }))
-        dispatch(updateWalletError({ wallet, error: undefined }))
       } catch (error) {
         console.debug(`web3-react connection error: ${error}`)
 
