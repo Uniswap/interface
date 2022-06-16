@@ -111,7 +111,6 @@ export type AppStackParamList = {
   [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
 
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
-  [Screens.Swap]: { swapFormState?: TransactionState } | undefined
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.Transfer]: { transferFormState?: TransactionState } | undefined

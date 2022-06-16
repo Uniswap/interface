@@ -1,12 +1,13 @@
 import { BigNumber } from 'ethers'
-import { navigate } from 'src/app/navigation/rootNavigation'
+import { put } from 'redux-saga/effects'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import { selectActiveChainIds } from 'src/features/chains/utils'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { Screens } from 'src/screens/Screens'
 import { isValidAddress } from 'src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
@@ -42,10 +43,10 @@ export function* handleSwapLink(url: URL) {
       exactAmount,
     }
 
-    yield* call(navigate, Screens.Swap, { swapFormState })
+    yield put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
   } catch (error: any) {
     logger.info('handleSwapLink', 'handleSwapLink', error?.message)
-    yield* call(navigate, Screens.Swap)
+    yield put(openModal({ name: ModalName.Swap }))
   }
 }
 
@@ -85,7 +86,7 @@ export function* parseAndValidateSwapParams(url: URL) {
     throw new Error('Invalid tokenAddress provided within outputCurrencyId')
   }
 
-  const activeChainIds = yield* selectActiveChainIds()
+  const activeChainIds = yield* call(selectActiveChainIds)
 
   if (!activeChainIds.includes(inputChain)) {
     throw new Error('Invalid inputCurrencyId. Chain ID is not currently active')

@@ -24,19 +24,19 @@ When routing to the swap screen, including the various swap data as query parame
 
 Parameters:
 
-- `inputCurrency`: the currency the user wishes to swap. Must be of format </chain id/>-</token address/>
-- `ouputCurrency`: the currency the user wishes to receive. Must be of format </chain id/>-</token address/>
+- `inputCurrencyId`: the currency the user wishes to swap. Must be of format </chain id/>-</token address/>
+- `ouputCurrencyId`: the currency the user wishes to receive. Must be of format </chain id/>-</token address/>
 - `currencyField`: used to specify whether `amount` refers to how much the user wishes to expend or receive. Value can either be `input` or `output`
 - `amount`: the currency amount the user either wishes to expend or receive
 
 Example (swap 100 Ethereum mainnet DAI for Ethereum mainnet UNI):
 
 ```
-uniswap://?screen=swap&userAddress=0x123...789&inputCurrency=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrency=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100
+uniswap://?screen=swap&userAddress=0x123...789&inputCurrencyId=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100
 ```
 
 Example (swap Polygon DAI for 100 Polygon UNI):
 
 ```
-uniswap://?screen=swap&userAddress=0x123...789&inputCurrency=137-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrency=137-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=output&amount=100
+uniswap://?screen=swap&userAddress=0x123...789&inputCurrencyId=137-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=137-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=output&amount=100
 ```

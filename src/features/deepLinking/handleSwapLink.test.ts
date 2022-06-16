@@ -1,16 +1,17 @@
-import { call } from '@redux-saga/core/effects'
 import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
-import { navigate } from 'src/app/navigation/rootNavigation'
+import { call } from 'redux-saga/effects'
 import { ChainId } from 'src/constants/chains'
 import { DAI, UNI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
+import { selectActiveChainIds } from 'src/features/chains/utils'
 import { handleSwapLink, parseAndValidateSwapParams } from 'src/features/deepLinking/handleSwapLink'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { Screens } from 'src/screens/Screens'
 import { account } from 'src/test/fixtures'
 
 const formSwapUrl = (
@@ -24,8 +25,8 @@ const formSwapUrl = (
   new URL(
     `uniswap://?screen=swap
 &userAddress=${userAddress}
-&inputCurrency=${chain}-${inputAddress}
-&outputCurrency=${chain}-${outputAddress}
+&inputCurrencyId=${chain}-${inputAddress}
+&outputCurrencyId=${chain}-${outputAddress}
 &currencyField=${currencyField}
 &amount=${amount}`.trim()
   )
@@ -120,43 +121,48 @@ const swapFormState = formTransactionState(
 describe(handleSwapLink, () => {
   it('Navigates to the swap screen with all params if all inputs are valid', () => {
     return expectSaga(handleSwapLink, swapUrl)
-      .provide([[call(navigate, Screens.Swap, { swapFormState }), undefined]])
+      .provide([[call(selectActiveChainIds), [1]]])
       .call(parseAndValidateSwapParams, swapUrl)
+      .put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
       .silentRun()
   })
 
   it('Navigates to an empty swap screen if outputCurrency is invalid', () => {
     return expectSaga(handleSwapLink, invalidOutputCurrencySwapUrl)
-      .provide([[call(navigate, Screens.Swap), undefined]])
+      .provide([[call(selectActiveChainIds), [1]]])
       .call(parseAndValidateSwapParams, invalidOutputCurrencySwapUrl)
+      .put(openModal({ name: ModalName.Swap }))
       .silentRun()
   })
 
   it('Navigates to an empty swap screen if inputToken is invalid', () => {
     return expectSaga(handleSwapLink, invalidInputTokenSwapURl)
-      .provide([[call(navigate, Screens.Swap), undefined]])
+      .provide([[call(selectActiveChainIds), [1]]])
       .call(parseAndValidateSwapParams, invalidInputTokenSwapURl)
+      .put(openModal({ name: ModalName.Swap }))
       .silentRun()
   })
 
   it('Navigates to an empty swap screen if the chain is not supported', () => {
     return expectSaga(handleSwapLink, invalidChainSwapUrl)
-      .provide([[call(navigate, Screens.Swap), undefined]])
       .call(parseAndValidateSwapParams, invalidChainSwapUrl)
+      .put(openModal({ name: ModalName.Swap }))
       .silentRun()
   })
 
   it('Navigates to an empty swap screen if the swap amount is invalid', () => {
     return expectSaga(handleSwapLink, invalidAmountSwapUrl)
-      .provide([[call(navigate, Screens.Swap), undefined]])
+      .provide([[call(selectActiveChainIds), [1]]])
       .call(parseAndValidateSwapParams, invalidAmountSwapUrl)
+      .put(openModal({ name: ModalName.Swap }))
       .silentRun()
   })
 
   it('Navigates to an empty swap screen if currency field is invalid', () => {
     return expectSaga(handleSwapLink, invalidCurrencyFieldSwapUrl)
-      .provide([[call(navigate, Screens.Swap), undefined]])
+      .provide([[call(selectActiveChainIds), [1]]])
       .call(parseAndValidateSwapParams, invalidCurrencyFieldSwapUrl)
+      .put(openModal({ name: ModalName.Swap }))
       .silentRun()
   })
 })

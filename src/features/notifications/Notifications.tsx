@@ -2,17 +2,16 @@ import { utils } from 'ethers'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
-import { openModal } from 'src/features/modals/modalSlice'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useENS } from 'src/features/ens/useENS'
+import { openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
 import {
   NotificationToast,
@@ -43,7 +42,6 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
@@ -132,13 +130,14 @@ export function SwapNotification({
   )
 
   const swapFormState = useCreateSwapFormState(address, chainId, txHash)
-
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const retryButton =
     txStatus === TransactionStatus.Failed
       ? {
           title: t('Retry'),
-          onPress: () => navigate(Screens.Swap, swapFormState ? { swapFormState } : undefined),
+          onPress: () =>
+            dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState ?? undefined })),
         }
       : undefined
 
