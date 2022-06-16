@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import React, { PropsWithChildren, useRef } from 'react'
+import React, { ComponentProps, PropsWithChildren, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -15,7 +15,7 @@ import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/Spend
 import { ChainId } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccount, useSignerAccounts } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import { EthMethod, isPrimaryTypePermit, PermitMessage } from 'src/features/walletConnect/types'
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
@@ -38,7 +38,7 @@ interface Props {
 }
 
 const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
-  (request.type === EthMethod.EthSign && !request.message) || isTransactionRequest(request)
+  request.type !== EthMethod.PersonalSign
 
 const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction
@@ -81,24 +81,25 @@ const VALID_REQUEST_TYPES = [
 ]
 
 function SectionContainer({
-  hasBottomBorder = true,
   children,
   style,
-}: PropsWithChildren<{ hasBottomBorder?: boolean; style?: StyleProp<ViewStyle> }>) {
+}: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>) {
   return children ? (
-    <Box
-      borderBottomColor={hasBottomBorder ? 'neutralOutline' : 'none'}
-      borderBottomWidth={1}
-      paddingHorizontal="md"
-      paddingVertical="md"
-      style={style}>
+    <Box p="md" style={style}>
       {children}
     </Box>
   ) : null
 }
 
+const spacerProps: ComponentProps<typeof Box> = {
+  borderBottomColor: 'neutralOutline',
+  borderBottomWidth: 1,
+}
+
 export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
   const activeAccount = useActiveAccount()
+  const hasMultipleAccounts = useSignerAccounts().length > 1
+
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -181,7 +182,11 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails permitInfo={permitInfo} request={request} />
 
-        <Box backgroundColor="neutralContainer" borderRadius="lg">
+        <Flex
+          backgroundColor="neutralContainer"
+          borderRadius="lg"
+          gap="none"
+          spacerProps={spacerProps}>
           {hasCurrencyAmount && (
             <SectionContainer>
               <SpendingDetails currencyAmount={currencyAmount} />
@@ -215,10 +220,12 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             </SectionContainer>
           )}
 
-          <SectionContainer hasBottomBorder={false}>
-            <AccountDetails address={request.account} />
-          </SectionContainer>
-        </Box>
+          {hasMultipleAccounts && (
+            <SectionContainer>
+              <AccountDetails address={request.account} />
+            </SectionContainer>
+          )}
+        </Flex>
 
         <Flex row gap="sm">
           <PrimaryButton

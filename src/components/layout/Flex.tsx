@@ -35,6 +35,7 @@ export type FlexProps = ComponentProps<typeof Box> &
   DirectionProps & {
     /** spacing _between_ elements */
     gap?: keyof Theme['spacing']
+    spacerProps?: ComponentProps<typeof Box>
   } & LayoutShorthandProps
 
 /**
@@ -55,15 +56,17 @@ export function Flex({
   justifyContent = 'flex-start',
   row,
   shrink,
+  spacerProps,
   ...boxProps
 }: FlexProps) {
   const childrenArr = useMemo(() => React.Children.toArray(children).filter((c) => !!c), [children])
-  const spacerProps = useMemo(
+  const mergedSpacerProps = useMemo(
     () => ({
       x: row || flexDirection === 'row' || flexDirection === 'row-reverse' ? gap : undefined,
       y: flexDirection === 'column' || flexDirection === 'column-reverse' ? gap : undefined,
+      ...spacerProps,
     }),
-    [flexDirection, gap, row]
+    [flexDirection, gap, row, spacerProps]
   )
   return (
     <Box
@@ -79,7 +82,7 @@ export function Flex({
       {childrenArr.map((child, index, array) => (
         <React.Fragment key={index}>
           {child}
-          {gap && index < array.length - 1 && <Spacer {...spacerProps} />}
+          {gap && index < array.length - 1 && <Spacer {...mergedSpacerProps} />}
         </React.Fragment>
       ))}
     </Box>
