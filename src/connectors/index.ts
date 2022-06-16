@@ -28,7 +28,7 @@ function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
 }
 
-export const getWalletForConnector = (connector: Connector) => {
+export function getWalletForConnector(connector: Connector) {
   switch (connector) {
     case injected:
       return Wallet.INJECTED
@@ -47,7 +47,7 @@ export const getWalletForConnector = (connector: Connector) => {
   }
 }
 
-export const getConnectorForWallet = (wallet: Wallet) => {
+export function getConnectorForWallet(wallet: Wallet) {
   switch (wallet) {
     case Wallet.INJECTED:
       return injected
@@ -64,14 +64,14 @@ export const getConnectorForWallet = (wallet: Wallet) => {
   }
 }
 
-const getConnectorListItemForWallet = (wallet: Wallet) => {
+function getConnectorListItemForWallet(wallet: Wallet) {
   return {
     connector: getConnectorForWallet(wallet),
     hooks: getHooksForWallet(wallet),
   }
 }
 
-const getHooksForWallet = (wallet: Wallet) => {
+function getHooksForWallet(wallet: Wallet) {
   switch (wallet) {
     case Wallet.INJECTED:
       return injectedHooks
