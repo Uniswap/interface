@@ -148,11 +148,8 @@ export default function Swap({ history }: RouteComponentProps) {
     [trade, tradeState]
   )
   // show price estimates based on wrap trade
-  let inputValue = trade?.inputAmount
-  let outputValue = trade?.outputAmount
-  if (showWrap) {
-    inputValue = outputValue = parsedAmount
-  }
+  const inputValue = showWrap ? parsedAmount : trade?.inputAmount
+  const outputValue = showWrap ? parsedAmount : trade?.outputAmount
   const fiatValueInput = useUSDCValue(inputValue)
   const fiatValueOutput = useUSDCValue(outputValue)
   const priceImpact = useMemo(
