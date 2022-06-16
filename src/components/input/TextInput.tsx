@@ -53,7 +53,9 @@ export function TextInput({ onChangeText, onBlur, inputRef, ...rest }: TextInput
   rest.py ??= 'sm'
   rest.color ??= 'mainForeground'
   rest.borderRadius ??= 'md'
-  rest.placeholderTextColor ??= theme.colors.deprecated_gray600
+
+  // restyle doesn't parse placeholderTextColorCorrectly
+  rest.placeholderTextColor ??= theme.colors.accentText3
   const transformedProps = useRestyle(restyleFunctions, rest)
 
   return (

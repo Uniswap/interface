@@ -85,6 +85,7 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
           </Flex>
         ) : (
           <CurrencyInputPanel
+            autoFocus
             currency={currencyIn}
             currencyAmount={currencyAmounts[CurrencyField.INPUT]}
             currencyBalance={currencyBalances[CurrencyField.INPUT]}

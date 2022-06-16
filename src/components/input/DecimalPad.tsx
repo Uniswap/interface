@@ -1,5 +1,4 @@
 import React from 'react'
-import { withAnimated } from 'src/components/animated'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { AnimatedBox } from 'src/components/layout'
 
@@ -70,5 +69,3 @@ function KeyButton({ action, disabled, label, setValue, value }: KeyButtonProps)
     </TextButton>
   )
 }
-
-export const AnimatedDecimalPad = withAnimated(DecimalPad)

@@ -6,6 +6,8 @@ import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { Theme } from 'src/styles/theme'
 
+const ICON_SIZE = 20
+
 const ArrowDown = createRestyleComponent<ColorProps<Theme> & Omit<SvgProps, 'color'>, Theme>(
   [restyleColor],
   ArrowDownSVG
@@ -13,14 +15,17 @@ const ArrowDown = createRestyleComponent<ColorProps<Theme> & Omit<SvgProps, 'col
 
 type ArrowDownButtonProps = Pick<ComponentProps<typeof Button>, 'disabled' | 'name' | 'onPress'>
 
-export function TransferArrowButton({ name, onPress }: ArrowDownButtonProps) {
+export function TransferArrowButton({ name, onPress, disabled }: ArrowDownButtonProps) {
   return (
     <IconButton
       alignItems="center"
       alignSelf="center"
       bg="neutralSurface"
+      borderColor="neutralBackground"
       borderRadius="md"
-      icon={<ArrowDown color="deprecated_textColor" height={30} width={30} />}
+      borderWidth={4}
+      disabled={disabled}
+      icon={<ArrowDown color="neutralTextSecondary" height={ICON_SIZE} width={ICON_SIZE} />}
       justifyContent="center"
       name={name}
       onPress={onPress}

@@ -47,6 +47,7 @@ export function CurrencySelector({
   return (
     <Box>
       <Toggle
+        backgroundColor={!selectedCurrency ? 'accentBackgroundActive' : undefined}
         filled={!selectedCurrency}
         testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
         onToggle={() => {
@@ -69,7 +70,7 @@ export function CurrencySelector({
           ) : (
             <Flex centered row gap="xs" px="md" py="xs">
               <Text color="white" lineHeight={20} variant="mediumLabel">
-                {t('Select a token')}
+                {t('Choose token')}
               </Text>
               <Chevron color="white" direction="e" height={12} width={12} />
             </Flex>

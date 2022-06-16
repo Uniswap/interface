@@ -1,16 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
-import React, { useReducer, useState } from 'react'
+import React, { useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { SlideInDown, SlideOutDown } from 'react-native-reanimated'
-import { Button } from 'src/components/buttons/Button'
 import { LongPressButton } from 'src/components/buttons/LongPressButton'
-import { SwapArrow } from 'src/components/icons/SwapArrow'
-import { CurrencyInput } from 'src/components/input/CurrencyInput'
-import { AnimatedDecimalPad } from 'src/components/input/DecimalPad'
+import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
+import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
+import { DecimalPad } from 'src/components/input/DecimalPad'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
+import { Text } from 'src/components/Text'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -20,8 +19,6 @@ import {
   useSwapCallback,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
-import { QuickDetails } from 'src/features/transactions/swap/QuickDetails'
-import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/validate'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
@@ -44,9 +41,6 @@ interface SwapFormProps {
 // TODO: token warnings
 export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
-
-  const [showDetails, setShowDetails] = useState(false)
-
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const derivedSwapInfo = useDerivedSwapInfo(state)
@@ -57,7 +51,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
     currencyBalances,
     exactCurrencyField,
     formattedAmounts,
-    trade: { trade: trade, loading, error },
+    trade: { trade: trade, loading },
     wrapType,
   } = derivedSwapInfo
 
@@ -70,19 +64,19 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
   const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
   const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
 
-  const quoteSuccess = !loading && !error
-
   return (
-    <Box flex={1} justifyContent="space-between" mt="lg" px="md">
-      <Box>
+    <Flex fill gap="xs" justifyContent="space-between" py="md">
+      <Text textAlign="center" variant="subHead1">
+        {t('Swap')}
+      </Text>
+      <Flex gap="sm" justifyContent="center">
         <Trace section={SectionName.CurrencyInputPanel}>
-          <CurrencyInput
-            autofocus
+          <CurrencyInputPanel
+            autoFocus
             currency={currencies[CurrencyField.INPUT]}
             currencyAmount={currencyAmounts[CurrencyField.INPUT]}
             currencyBalance={currencyBalances[CurrencyField.INPUT]}
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
-            showNonZeroBalancesOnly={true}
             value={formattedAmounts[CurrencyField.INPUT]}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
@@ -90,80 +84,48 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
             onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
           />
         </Trace>
-        <Box zIndex="popover">
-          <Box alignItems="center" height={40} style={StyleSheet.absoluteFill}>
-            <Box
-              alignItems="center"
-              bg="neutralSurface"
-              borderColor="mainBackground"
-              borderRadius="md"
-              borderWidth={4}
-              bottom={18}
-              justifyContent="center"
-              p="xs"
-              position="relative">
-              <Button
-                alignItems="center"
-                borderRadius="md"
-                justifyContent="center"
-                name={ElementName.SwapArrow}
-                px="xxs"
-                py="xs"
-                onPress={onSwitchCurrencies}>
-                <SwapArrow
-                  color="deprecated_textColor"
-                  height={18}
-                  strokeLinecap="round"
-                  strokeWidth="1.5"
-                  width={18}
-                />
-              </Button>
-            </Box>
-          </Box>
-        </Box>
+
         <Trace section={SectionName.CurrencyOutputPanel}>
-          <CurrencyInput
-            backgroundColor="neutralSurface"
-            currency={currencies[CurrencyField.OUTPUT]}
-            currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
-            currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-            otherSelectedCurrency={currencies[CurrencyField.INPUT]}
-            showNonZeroBalancesOnly={false}
-            title={t("You'll receive")}
-            value={formattedAmounts[CurrencyField.OUTPUT]}
-            onSelectCurrency={(newCurrency: Currency) =>
-              onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
-            }
-            onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
-          />
+          <Flex
+            backgroundColor={currencies[CurrencyField.OUTPUT] ? 'neutralSurface' : 'none'}
+            borderRadius="lg"
+            mb="sm"
+            mt="xl"
+            mx="md"
+            position="relative">
+            <Box zIndex="popover">
+              <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
+                <Box alignItems="center" position="absolute" top={-24}>
+                  <TransferArrowButton
+                    disabled={!currencies[CurrencyField.OUTPUT]}
+                    onPress={onSwitchCurrencies}
+                  />
+                </Box>
+              </Box>
+            </Box>
+            <Flex pb="md" pt="md" px="md">
+              <CurrencyInputPanel
+                isOutput
+                currency={currencies[CurrencyField.OUTPUT]}
+                currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+                currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+                otherSelectedCurrency={currencies[CurrencyField.INPUT]}
+                showNonZeroBalancesOnly={false}
+                value={formattedAmounts[CurrencyField.OUTPUT]}
+                onSelectCurrency={(newCurrency: Currency) =>
+                  onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
+                }
+                onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
+              />
+            </Flex>
+          </Flex>
         </Trace>
-      </Box>
-      <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs">
-        {showDetails && !isWrapAction(wrapType) && trade && quoteSuccess && (
-          <SwapDetails
-            currencyIn={currencyAmounts[CurrencyField.INPUT]}
-            currencyOut={currencyAmounts[CurrencyField.OUTPUT]}
-            trade={trade}
-          />
-        )}
-        {!isWrapAction(wrapType) && (
-          <Button
-            disabled={!!swapInputStatusMessage}
-            name={ElementName.SwapQuickDetails}
-            onPress={() => {
-              setShowDetails(!showDetails)
-            }}>
-            <QuickDetails label={swapInputStatusMessage} trade={trade} />
-          </Button>
-        )}
-        {showDetails ? null : (
-          <AnimatedDecimalPad
-            entering={SlideInDown}
-            exiting={SlideOutDown}
-            setValue={(value: string) => onEnterExactAmount(exactCurrencyField, value)}
-            value={formattedAmounts[exactCurrencyField]}
-          />
-        )}
+      </Flex>
+      <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
+        <DecimalPad
+          setValue={(value: string) => onEnterExactAmount(exactCurrencyField, value)}
+          value={formattedAmounts[exactCurrencyField]}
+        />
         <ActionButton
           callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
           disabled={actionButtonDisabled}
@@ -184,7 +146,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
           }
         />
       </Flex>
-    </Box>
+    </Flex>
   )
 }
 

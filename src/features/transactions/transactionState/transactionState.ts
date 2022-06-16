@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { shallowEqual } from 'react-redux'
-import { TradeableAsset } from 'src/entities/assets'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
+import { ChainId } from 'src/constants/chains'
+import { AssetType, TradeableAsset } from 'src/entities/assets'
 
 export enum CurrencyField {
   INPUT,
@@ -15,8 +17,16 @@ export interface TransactionState {
   recipient?: string
 }
 
+const ETH_TRADEABLE_ASSET: TradeableAsset = {
+  address: NATIVE_ADDRESS,
+  chainId: ChainId.Mainnet,
+  type: AssetType.Currency,
+}
+
+// TODO: use native token for chain with highest total USD balance
+// instead of defaulting to mainnet eth
 export const initialState: Readonly<TransactionState> = {
-  [CurrencyField.INPUT]: null,
+  [CurrencyField.INPUT]: ETH_TRADEABLE_ASSET,
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
   exactAmount: '',
@@ -37,7 +47,6 @@ const slice = createSlice({
       action: PayloadAction<{ field: CurrencyField; tradeableAsset: TradeableAsset }>
     ) => {
       const { field, tradeableAsset } = action.payload
-
       const nonExactField =
         field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
