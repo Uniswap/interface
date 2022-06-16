@@ -34,11 +34,15 @@ jobs:
 
       - run: yarn build
 
+      - run: yarn cypress install
+
       - uses: actions/upload-artifact@v2
         with:
-          name: build
+          name: cypress
           if-no-files-found: error
-          path: build
+          path: |
+            build
+            /home/runner/.cache/Cypress
 
   cypress-tests:
     name: Run tests
@@ -68,8 +72,10 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          name: build
-          path: build
+          name: cypress
+          path: |
+            build
+            /home/runner/.cache/Cypress
 
       - uses: cypress-io/github-action@v4
         with:
