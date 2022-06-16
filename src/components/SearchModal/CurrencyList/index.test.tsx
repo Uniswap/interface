@@ -22,7 +22,7 @@ jest.mock(
       `CurrencyLogo currency=${currency.symbol}`
 )
 
-jest.mock('hooks/useActiveWeb3React', () => {
+jest.mock('@web3-react/core', () => {
   return {
     __esModule: true,
     default: () => ({
