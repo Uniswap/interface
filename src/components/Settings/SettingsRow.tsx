@@ -27,6 +27,7 @@ export interface SettingsSectionItem {
   text: string
   subText?: string
   icon: ReactElement
+  isHidden?: boolean
 }
 
 interface SettingsRowProps {

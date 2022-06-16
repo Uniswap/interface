@@ -31,7 +31,8 @@ import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
-import { useSignerAccounts } from 'src/features/wallet/hooks'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useAccounts } from 'src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 
@@ -274,14 +275,16 @@ function WalletSettings() {
   const { t } = useTranslation()
   const theme = useTheme()
   const navigation = useSettingsStackNavigation()
-  const signerAccounts = useSignerAccounts()
+  const addressToAccount = useAccounts()
   const [showAll, setShowAll] = useState(false)
+
+  const allAccounts = useMemo(() => Object.values(addressToAccount), [addressToAccount])
 
   const toggleViewAll = () => {
     setShowAll(!showAll)
   }
 
-  const handleNavigation = (address: Address) => {
+  const handleNavigation = (address: string) => {
     navigation.navigate(Screens.SettingsWallet, { address })
   }
 
@@ -295,7 +298,7 @@ function WalletSettings() {
         <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
           {t('Wallet settings')}
         </Text>
-        {signerAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
+        {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <Button onPress={toggleViewAll}>
             <Text color="neutralTextTertiary" mb="sm" variant="subHead2">
               {showAll ? t('Hide') : t('View all')}
@@ -303,8 +306,8 @@ function WalletSettings() {
           </Button>
         )}
       </Flex>
-      {signerAccounts
-        .slice(0, showAll ? signerAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
+      {allAccounts
+        .slice(0, showAll ? allAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
         .map((account) => (
           <Button
             key={account.address}
@@ -315,6 +318,7 @@ function WalletSettings() {
               <AddressDisplay
                 showAddressAsSubtitle
                 address={account.address}
+                showViewOnly={account.type === AccountType.Readonly}
                 size={36}
                 variant="body1"
                 verticalGap="none"

@@ -1,16 +1,18 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { IdenticonWithNotificationBadge } from 'src/components/accounts/IdenticonWithNotificationBadge'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 import { setClipboard } from 'src/utils/clipboard'
+import { opacify } from 'src/utils/colors'
 
 type AddressDisplayProps = {
   address: string
@@ -23,6 +25,7 @@ type AddressDisplayProps = {
   showNotificationBadge?: boolean
   direction?: 'row' | 'column'
   showCopy?: boolean
+  showViewOnly?: boolean
 }
 
 /** Helper component to display identicon and formatted address */
@@ -37,7 +40,9 @@ export function AddressDisplay({
   showNotificationBadge,
   direction = 'row',
   showCopy = false,
+  showViewOnly,
 }: AddressDisplayProps) {
+  const { t } = useTranslation()
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
   const nameTypeIsAddress = displayName?.type === 'address'
@@ -76,6 +81,17 @@ export function AddressDisplay({
                 width={mainSize}
               />
             </Button>
+          )}
+          {showViewOnly && (
+            <Box
+              borderRadius="md"
+              px="xs"
+              py="xxs"
+              style={{ backgroundColor: opacify(8, theme.colors.neutralTextSecondary) }}>
+              <Text color="neutralTextPrimary" variant="caption">
+                {t('View only')}
+              </Text>
+            </Box>
           )}
         </Flex>
         {showCaption && (

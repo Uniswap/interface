@@ -26,9 +26,10 @@ import {
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { opacify } from 'src/utils/colors'
 import { Screens } from './Screens'
+import { useAccounts } from 'src/features/wallet/hooks'
+import { AccountType } from 'src/features/wallet/accounts/types'
 
 const ALERT_ICON_SIZE = 32
 
@@ -42,7 +43,10 @@ export function SettingsWallet({
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const theme = useTheme()
-  const signerAccounts = useSignerAccounts()
+  const addressToAccount = useAccounts()
+  const currentAccount = addressToAccount[address]
+  const readonly = currentAccount.type === AccountType.Readonly
+  const hasOnlyOneAccount = Object.values(addressToAccount).length === 1
   const navigation = useSettingsStackNavigation()
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
@@ -90,6 +94,7 @@ export function SettingsWallet({
           text: t('Manage connections'),
           icon: <GlobalIcon color={theme.colors.neutralTextSecondary} strokeWidth="1.5" />,
           screenProps: { address },
+          isHidden: readonly,
         },
       ],
     },
@@ -101,6 +106,7 @@ export function SettingsWallet({
     if ('component' in item) {
       return item.component
     }
+    if (item.isHidden) return null
     return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
   }
 
@@ -108,7 +114,12 @@ export function SettingsWallet({
     <Screen px="lg" py="lg">
       <Box flex={1}>
         <SettingsBackButtonRow>
-          <AddressDisplay address={address} variant="body1" verticalGap="none" />
+          <AddressDisplay
+            address={address}
+            showViewOnly={readonly}
+            variant="body1"
+            verticalGap="none"
+          />
         </SettingsBackButtonRow>
         <SectionList
           keyExtractor={(_item, index) => 'wallet_settings' + index}
@@ -124,7 +135,7 @@ export function SettingsWallet({
           showsVerticalScrollIndicator={false}
         />
       </Box>
-      {signerAccounts.length > 1 && (
+      {!hasOnlyOneAccount && (
         <PrimaryButton
           label={t('Remove wallet')}
           style={{ backgroundColor: opacify(15, theme.colors.accentBackgroundFailure) }}
