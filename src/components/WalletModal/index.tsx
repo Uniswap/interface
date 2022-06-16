@@ -313,7 +313,7 @@ export default function WalletModal({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        {connector === network ? (
+        {walletView !== WALLET_VIEWS.ACCOUNT ? (
           <HeaderRow color="blue">
             <HoverText onClick={() => setWalletView(WALLET_VIEWS.OPTIONS)}>
               <ArrowLeft />
@@ -321,7 +321,7 @@ export default function WalletModal({
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText onClick={() => setWalletView(WALLET_VIEWS.ACCOUNT)}>
+            <HoverText>
               <Trans>Connect a wallet</Trans>
             </HoverText>
           </HeaderRow>
