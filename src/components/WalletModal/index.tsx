@@ -120,7 +120,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector } = useWeb3React()
+  const { connector, account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -138,9 +138,9 @@ export default function WalletModal({
 
   useEffect(() => {
     if (walletModalOpen) {
-      setWalletView(connector === network ? WALLET_VIEWS.OPTIONS : WALLET_VIEWS.ACCOUNT)
+      setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)
     }
-  }, [walletModalOpen, setWalletView, connector])
+  }, [walletModalOpen, setWalletView, connector, account])
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
