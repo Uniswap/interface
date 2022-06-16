@@ -11,6 +11,7 @@ import { Masonry } from 'src/components/layout/Masonry'
 import { Screen } from 'src/components/layout/Screen'
 import { Section } from 'src/components/layout/Section'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
+import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
@@ -49,7 +50,8 @@ export function NFTMasonry({
   const { t } = useTranslation()
 
   const { currentData: nftsByCollection, isLoading: loading } = useNftBalancesQuery(
-    activeAddress ? { owner: activeAddress } : skipToken
+    activeAddress ? { owner: activeAddress } : skipToken,
+    { pollingInterval: PollingInterval.Normal }
   )
   const nftItems = useMemo(
     () =>

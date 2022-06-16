@@ -1,5 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { PollingInterval } from 'src/constants/misc'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyAddress } from 'src/utils/currencyId'
@@ -43,7 +44,7 @@ export function useRouterQuote(params: UseQuoteProps) {
           recipient: recipient?.address,
         },
     {
-      pollingInterval: 60 * 1000, // 1 minute
+      pollingInterval: PollingInterval.Fast,
     }
   )
 

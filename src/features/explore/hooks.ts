@@ -1,5 +1,6 @@
 import { useMemo, useReducer } from 'react'
 import { useAppSelector } from 'src/app/hooks'
+import { PollingInterval } from 'src/constants/misc'
 import { useGetSearchQuery } from 'src/features/dataApi/coingecko/enhancedApi'
 import { useGetCoinsMarketsQuery } from 'src/features/dataApi/coingecko/generatedApi'
 import {
@@ -42,7 +43,7 @@ export function useMarketTokens({
       vsCurrency: 'usd',
     },
     {
-      pollingInterval: 60 * 1000, // 1 min
+      pollingInterval: PollingInterval.Normal,
     }
   )
 

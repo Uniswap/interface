@@ -2,6 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
+import { PollingInterval } from 'src/constants/misc'
 import {
   TESTNET_BALANCE_AMOUNT,
   TESTNET_BALANCE_USD,
@@ -33,7 +34,8 @@ function useChainBalances(
   loading: boolean
 } {
   const { currentData: data, isLoading: loading } = useBalancesQuery(
-    address ? { chainId, address } : skipToken
+    address ? { chainId, address } : skipToken,
+    { pollingInterval: PollingInterval.Normal }
   )
 
   return useMemo(

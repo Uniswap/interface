@@ -10,6 +10,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { NFTCollectionItem } from 'src/components/NFT/NFTCollectionItem'
 import { Text } from 'src/components/Text'
+import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -24,7 +25,8 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.Profile>) {
   const activeAccount = useActiveAccount()
 
   const { currentData: nftsByCollection, isLoading } = useNftBalancesQuery(
-    activeAccount ? { owner: activeAccount?.address } : skipToken
+    activeAccount ? { owner: activeAccount?.address } : skipToken,
+    { pollingInterval: PollingInterval.Normal }
   )
 
   const onPressNFT = (nftAsset: NFTAsset.Asset) => {

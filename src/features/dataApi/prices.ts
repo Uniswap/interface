@@ -2,6 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'src/constants/chains'
+import { PollingInterval } from 'src/constants/misc'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useSpotPricesQuery } from 'src/features/dataApi/slice'
 import { SpotPrices } from 'src/features/dataApi/types'
@@ -37,7 +38,9 @@ export function useSpotPrices(currencies: Array<Nullable<Currency>>): {
     const { currentData, isLoading } = useSpotPricesQuery(
       addressesToFetch && addressesToFetch.length > 0
         ? { chainId, addresses: addressesToFetch }
-        : skipToken
+        : skipToken,
+      // Covalent pricing endpoint only refreshes every 30 minutes
+      { pollingInterval: PollingInterval.Slow }
     )
     spotPrices = { ...spotPrices, ...currentData }
     loading = loading || isLoading

@@ -16,6 +16,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { Text } from 'src/components/Text'
+import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery, useNftCollectionQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
@@ -184,13 +185,19 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   const appTheme = useAppTheme()
 
   const { currentData: nftsByCollection } = useNftBalancesQuery(
-    activeAddress ? { owner: activeAddress } : skipToken
+    activeAddress ? { owner: activeAddress } : skipToken,
+    { pollingInterval: PollingInterval.Normal }
   )
   const nftAssets = nftsByCollection?.[address]
 
-  const { currentData: collection } = useNftCollectionQuery({
-    openseaSlug: slug,
-  })
+  const { currentData: collection } = useNftCollectionQuery(
+    {
+      openseaSlug: slug,
+    },
+    {
+      pollingInterval: PollingInterval.Normal,
+    }
+  )
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
