@@ -22,13 +22,15 @@ jobs:
           cache: 'yarn'
 
       - uses: actions/cache@v3
-        id: node_modules-cache
+        id: install-cache
         with:
           path: node_modules/
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
 
-      - if: steps.node_modules-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+      - if: steps.install-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - run: yarn prepare
 
       - run: yarn build
 
@@ -57,12 +59,12 @@ jobs:
           cache: 'yarn'
 
       - uses: actions/cache@v3
-        id: node_modules-cache
+        id: install-cache
         with:
           path: node_modules/ # this should always be a cache hit, from install
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
 
-      - if: steps.node_modules-cache.outputs.cache-hit != 'true'
+      - if: steps.install-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --ignore-scripts
 
       - uses: actions/download-artifact@v2

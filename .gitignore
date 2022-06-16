@@ -3,9 +3,6 @@
 # generated contract types
 /src/types/v3
 /src/abis/types
-/src/lib/locales/**/*.js
-/src/lib/locales/**/en-US.po
-/src/lib/locales/**/pseudo.po
 /src/locales/**/*.js
 /src/locales/**/en-US.po
 /src/locales/**/pseudo.po
