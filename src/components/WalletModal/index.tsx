@@ -301,9 +301,9 @@ export default function WalletModal({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        {walletView !== WALLET_VIEWS.ACCOUNT ? (
+        {walletView === WALLET_VIEWS.ACCOUNT || !!account ? (
           <HeaderRow color="blue">
-            <HoverText onClick={() => setWalletView(WALLET_VIEWS.OPTIONS)}>
+            <HoverText onClick={() => setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)}>
               <ArrowLeft />
             </HoverText>
           </HeaderRow>
