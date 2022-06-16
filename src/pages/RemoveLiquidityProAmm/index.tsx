@@ -210,6 +210,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !liquidityPercentage ||
       !library
     ) {
+      setAttemptingTxn(false)
       return
     }
     // const partialPosition = new Position({
