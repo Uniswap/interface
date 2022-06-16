@@ -27,7 +27,6 @@ jobs:
         with:
           path: node_modules/
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
-          cache: 'yarn'
 
       - if: steps.node_modules-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile

@@ -54,13 +54,13 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org
+          cache: 'yarn'
 
       - uses: actions/cache@v3
         id: node_modules-cache
         with:
           path: node_modules/ # this should always be a cache hit, from install
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
-          cache: 'yarn'
 
       - if: steps.node_modules-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --ignore-scripts
