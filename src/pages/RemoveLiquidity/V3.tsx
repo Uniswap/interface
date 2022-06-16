@@ -66,7 +66,7 @@ export default function RemoveLiquidityV3({
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
   const theme = useTheme()
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, provider } = useActiveWeb3React()
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
@@ -111,7 +111,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !chainId ||
       !positionSDK ||
       !liquidityPercentage ||
-      !library
+      !provider
     ) {
       return
     }
@@ -136,7 +136,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       value,
     }
 
-    library
+    provider
       .getSigner()
       .estimateGas(txn)
       .then((estimate) => {
@@ -145,7 +145,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           gasLimit: calculateGasMargin(estimate),
         }
 
-        return library
+        return provider
           .getSigner()
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
@@ -180,7 +180,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     feeValue1,
     positionSDK,
     liquidityPercentage,
-    library,
+    provider,
     tokenId,
     allowedSlippage,
     addTransaction,

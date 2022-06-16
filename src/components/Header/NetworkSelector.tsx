@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { getWalletForConnector } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -11,12 +12,12 @@ import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
+import { useAppDispatch } from 'state/hooks'
+import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-
-import { useAppDispatch } from '../../state/hooks'
-import { switchToNetwork } from '../../utils/switchToNetwork'
+import { isChainAllowed, switchChain } from 'utils/switchChain'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -184,8 +185,8 @@ function Row({
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
 }) {
-  const { library, chainId } = useActiveWeb3React()
-  if (!library || !chainId) {
+  const { provider, chainId } = useActiveWeb3React()
+  if (!provider || !chainId) {
     return null
   }
   const active = chainId === targetChain
@@ -257,8 +258,16 @@ const getChainNameFromId = (id: string | number) => {
   return CHAIN_IDS_TO_NAMES[id as SupportedChainId] || ''
 }
 
+const NETWORK_SELECTOR_CHAINS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+]
+
 export default function NetworkSelector() {
-  const { chainId, library } = useActiveWeb3React()
+  const dispatch = useAppDispatch()
+  const { chainId, provider, connector } = useActiveWeb3React()
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
   const prevChainId = usePrevious(chainId)
@@ -271,37 +280,39 @@ export default function NetworkSelector() {
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
-  const dispatch = useAppDispatch()
+  const onSelectChain = useCallback(
+    async (targetChain: number, skipToggle?: boolean) => {
+      if (!connector) return
 
-  const handleChainSwitch = useCallback(
-    (targetChain: number, skipToggle?: boolean) => {
-      if (!library?.provider) return
-      switchToNetwork({ provider: library.provider, chainId: targetChain })
-        .then(() => {
-          if (!skipToggle) {
-            toggle()
-          }
-          history.replace({
-            search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
-          })
+      const wallet = getWalletForConnector(connector)
+
+      try {
+        dispatch(updateWalletError({ wallet, error: undefined }))
+        await switchChain(connector, targetChain)
+        if (!skipToggle) {
+          toggle()
+        }
+        history.replace({
+          search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
         })
-        .catch((error) => {
-          console.error('Failed to switch networks', error)
+      } catch (error) {
+        console.error('Failed to switch networks', error)
 
-          // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
-          // but the request fails, revert the URL back to current chainId
-          if (chainId) {
-            history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-          }
+        // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
+        // but the request fails, revert the URL back to current chainId
+        if (chainId) {
+          history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+        }
 
-          if (!skipToggle) {
-            toggle()
-          }
+        if (!skipToggle) {
+          toggle()
+        }
 
-          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
-        })
+        dispatch(updateWalletError({ wallet, error: error.message }))
+        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
+      }
     },
-    [dispatch, library, toggle, history, chainId]
+    [connector, toggle, dispatch, history, chainId]
   )
 
   useEffect(() => {
@@ -312,9 +323,9 @@ export default function NetworkSelector() {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
     } else if (urlChainId && urlChainId !== chainId) {
-      handleChainSwitch(urlChainId, true)
+      onSelectChain(urlChainId, true)
     }
-  }, [chainId, urlChainId, prevChainId, handleChainSwitch, history])
+  }, [chainId, urlChainId, prevChainId, onSelectChain, history])
 
   // set chain parameter on initial load if not there
   useEffect(() => {
@@ -323,7 +334,7 @@ export default function NetworkSelector() {
     }
   }, [chainId, history, urlChainId, urlChain])
 
-  if (!chainId || !info || !library) {
+  if (!chainId || !info || !provider) {
     return null
   }
 
@@ -340,10 +351,11 @@ export default function NetworkSelector() {
             <FlyoutHeader>
               <Trans>Select a network</Trans>
             </FlyoutHeader>
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MAINNET} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.POLYGON} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.OPTIMISM} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.ARBITRUM_ONE} />
+            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
+              isChainAllowed(connector, chainId) ? (
+                <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} />
+              ) : null
+            )}
           </FlyoutMenuContents>
         </FlyoutMenu>
       )}

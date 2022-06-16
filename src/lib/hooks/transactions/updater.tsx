@@ -45,18 +45,18 @@ interface UpdaterProps {
 }
 
 export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, provider } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
   const fastForwardBlockNumber = useFastForwardBlockNumber()
 
   const getReceipt = useCallback(
     (hash: string) => {
-      if (!library || !chainId) throw new Error('No library or chainId')
+      if (!provider || !chainId) throw new Error('No provider or chainId')
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
-          library.getTransactionReceipt(hash).then((receipt) => {
+          provider.getTransactionReceipt(hash).then((receipt) => {
             if (receipt === null) {
               console.debug(`Retrying tranasaction receipt for ${hash}`)
               throw new RetryableError()
@@ -66,11 +66,11 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         retryOptions
       )
     },
-    [chainId, library]
+    [chainId, provider]
   )
 
   useEffect(() => {
-    if (!chainId || !library || !lastBlockNumber) return
+    if (!chainId || !provider || !lastBlockNumber) return
 
     const cancels = Object.keys(pendingTransactions)
       .filter((hash) => shouldCheck(lastBlockNumber, pendingTransactions[hash]))
@@ -95,7 +95,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, library, lastBlockNumber, getReceipt, fastForwardBlockNumber, onReceipt, onCheck, pendingTransactions])
+  }, [chainId, provider, lastBlockNumber, getReceipt, fastForwardBlockNumber, onReceipt, onCheck, pendingTransactions])
 
   return null
 }

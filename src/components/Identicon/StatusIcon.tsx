@@ -1,22 +1,21 @@
 import { Connector } from '@web3-react/types'
-import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, walletconnect, walletlink } from '../../connectors'
+import { coinbaseWallet, fortmatic, injected, walletConnect } from '../../connectors'
 import Identicon from '../Identicon'
 
-export default function StatusIcon({ connector }: { connector: AbstractConnector | Connector }) {
+export default function StatusIcon({ connector }: { connector: Connector }) {
   switch (connector) {
     case injected:
       return <Identicon />
-    case walletconnect:
-      return <img src={WalletConnectIcon} alt={'WalletConnect'} />
-    case walletlink:
-      return <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet'} />
+    case walletConnect:
+      return <img src={WalletConnectIcon} alt="WalletConnect" />
+    case coinbaseWallet:
+      return <img src={CoinbaseWalletIcon} alt="Coinbase Wallet" />
     case fortmatic:
-      return <img src={FortmaticIcon} alt={'Fortmatic'} />
+      return <img src={FortmaticIcon} alt="Fortmatic" />
     default:
       return null
   }

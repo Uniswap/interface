@@ -4,15 +4,14 @@ import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
-import { ReactNode, useContext } from 'react'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
+import { ReactNode, useCallback, useContext, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import MetaMaskLogo from '../../assets/images/metamask.png'
 import { ExternalLink } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -97,9 +96,25 @@ function TransactionSubmittedContent({
 }) {
   const theme = useContext(ThemeContext)
 
-  const { library } = useActiveWeb3React()
+  const { connector } = useActiveWeb3React()
 
-  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
+  const token = currencyToAdd?.wrapped
+  const logoURL = useCurrencyLogoURIs(token)[0]
+
+  const [success, setSuccess] = useState<boolean | undefined>()
+
+  const addToken = useCallback(() => {
+    if (!token?.symbol || !connector.watchAsset) return
+    connector
+      .watchAsset({
+        address: token.address,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        image: logoURL,
+      })
+      .then(() => setSuccess(true))
+      .catch(() => setSuccess(false))
+  }, [connector, logoURL, token])
 
   return (
     <Wrapper>
@@ -124,13 +139,11 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {currencyToAdd && library?.provider?.isMetaMask && (
+          {currencyToAdd && connector.watchAsset && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  <Trans>
-                    Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
-                  </Trans>
+                  <Trans>Add {currencyToAdd.symbol}</Trans>
                 </RowFixed>
               ) : (
                 <RowFixed>
