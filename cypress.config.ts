@@ -1,7 +1,7 @@
 import { defineConfig } from 'cypress'
 
 export default defineConfig({
-  projectId: '5nvkck',
+  projectId: 'yp82ef',
   videoUploadOnPasses: false,
   defaultCommandTimeout: 10000,
   chromeWebSecurity: false,
