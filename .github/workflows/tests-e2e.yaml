@@ -1,0 +1,30 @@
+name: End-to-End Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cypress-tests:
+    name: Run Cypress tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v4
+        with:
+          build: yarn build
+          start: yarn serve
+          wait-on: 'http://localhost:3000'
+          browser: chrome
+          record: true
+        env:
+          CI: false # disables lint checks when building
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
