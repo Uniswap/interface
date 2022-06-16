@@ -93,4 +93,4 @@ See [e2e/README.md](e2e/README.md)
 
 A [Github workflow runs a Fastlane build and deploy](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml) at 2AM UTC everyday from M-F. 
 
-Deploys can also be triggered by running the `Fastlane deploy iOS` workflow manually  
+Deploys can also be triggered by running the [`Fastlane deploy iOS` workflow manually](https://github.com/Uniswap/mobile/actions/workflows/fastlane.yml)  
