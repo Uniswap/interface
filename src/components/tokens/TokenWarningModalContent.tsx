@@ -9,6 +9,7 @@ import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { getTokenWarningHeaderText } from 'src/components/tokens/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   TokenWarningLevel,
@@ -27,13 +28,8 @@ interface Props {
 function getWarningText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
   switch (tokenWarningLevel) {
     case TokenWarningLevel.LOW:
-      return t(
-        'This token is not on any partner list and has >$Y volume in the last 7 days. Trading it may result in tktk. Please check the Etherscan link below to verify this is the right token.'
-      )
     case TokenWarningLevel.MEDIUM:
-      return t(
-        'This token does not appear on any partner token lists or has very low trade volume.  Please check the Etherscan link below to verify this is the right token.'
-      )
+      return t('Please do your own research before trading.')
     default:
       return ''
   }
@@ -57,21 +53,25 @@ export default function TokenWarningModalContent({ currency, onClose, onAccept }
   )
 
   return (
-    <Flex centered gap="lg" mb="xxl" p="lg">
+    <Flex centered gap="xs" mb="xxl" p="lg">
       <Flex
         centered
-        borderRadius="md"
-        borderWidth={1}
-        p="sm"
+        row
+        borderRadius="xs"
+        gap="xxs"
+        p="xxs"
         style={{
           backgroundColor: opacify(10, theme.colors[warningColor]),
           borderColor: opacify(60, theme.colors[warningColor]),
         }}>
-        <AlertTriangle color={theme.colors[warningColor]} />
+        <Text color={warningColor} fontWeight="700" variant="caption">
+          {getTokenWarningHeaderText(tokenWarningLevel, t)}
+        </Text>
+        <AlertTriangle color={theme.colors[warningColor]} height={14} />
       </Flex>
-      <Text variant="mediumLabel">{t('Are you sure?')}</Text>
-      <Text color="deprecated_gray400" lineHeight={20} textAlign="center" variant="mediumLabel">
-        {getWarningText(tokenWarningLevel, t)}
+      <Text variant="largeLabel">{t('This token isn’t verified')}</Text>
+      <Text color="neutralTextPrimary" fontWeight="400" textAlign="center" variant="smallLabel">
+        {getWarningText(tokenWarningLevel, t)} <Text fontWeight="700">{t('Learn more')}</Text>
       </Text>
       <Button onPress={() => openUri(explorerLink)}>
         <Flex
@@ -92,7 +92,7 @@ export default function TokenWarningModalContent({ currency, onClose, onAccept }
           </Text>
         </Flex>
       </Button>
-      <Flex centered row>
+      <Flex centered row mt="md">
         <PrimaryButton flex={1} label={t('Cancel')} variant="gray" onPress={onClose} />
         <Button
           alignItems="center"

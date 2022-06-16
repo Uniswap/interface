@@ -111,9 +111,9 @@ export function useTokenWarningLevelColors(tokenWarningLevel: TokenWarningLevel 
     case TokenWarningLevel.MEDIUM:
       return 'accentBackgroundFailure'
     case TokenWarningLevel.BLOCKED:
-      return 'neutralTextTertiary'
+      return 'neutralTextSecondary'
     default:
-      return 'neutralTextTertiary'
+      return 'neutralTextSecondary'
   }
 }
 

@@ -6,6 +6,7 @@ import { IconButton } from 'src/components/buttons/IconButton'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { getTokenWarningHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import {
   TokenWarningLevel,
@@ -13,29 +14,15 @@ import {
 } from 'src/features/tokens/useTokenWarningLevel'
 import { opacify } from 'src/utils/colors'
 
-function getHeaderText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
-  switch (tokenWarningLevel) {
-    case TokenWarningLevel.LOW:
-      return t('Be careful')
-    case TokenWarningLevel.MEDIUM:
-      return t('Warning')
-    case TokenWarningLevel.BLOCKED:
-      return t('Not available for trading')
-  }
-}
-
 function getBodyText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
   switch (tokenWarningLevel) {
     case TokenWarningLevel.LOW:
-      return t(
-        'This token only appears on one partner token list or has low trade volume. Please research this token using the information and links below.'
-      )
     case TokenWarningLevel.MEDIUM:
-      return t(
-        'This token does not appear on any partner token lists or has very low trade volume. Please research this token using the information and links below.'
-      )
+      return `${t('This token isn’t verified')}. ${t(
+        'Please do your own research before trading.'
+      )}`
     case TokenWarningLevel.BLOCKED:
-      return t('This token cannot be traded through the Uniswap mobile app.')
+      return t('You can’t trade this token using Uniswap Wallet.')
   }
 }
 
@@ -57,30 +44,30 @@ export default function TokenWarningCard({
       borderWidth={1}
       gap="sm"
       padding="md"
-      style={{ backgroundColor: opacify(16, theme.colors[warningColor]) }}>
+      style={{ backgroundColor: opacify(10, theme.colors[warningColor]) }}>
       <Flex row justifyContent="space-between">
         <Flex alignItems="center" flexDirection="row" gap="xs">
-          <WarningIcon tokenWarningLevel={tokenWarningLevel} />
-          <Text color={warningColor} variant="body1">
-            {getHeaderText(tokenWarningLevel, t)}
+          <WarningIcon height={18} tokenWarningLevel={tokenWarningLevel} width={18} />
+          <Text color={warningColor} fontWeight="700" variant="smallLabel">
+            {getTokenWarningHeaderText(tokenWarningLevel, t)}
           </Text>
         </Flex>
         {tokenWarningLevel !== TokenWarningLevel.BLOCKED && (
           <IconButton
             alignItems="center"
             borderRadius="full"
-            height={20}
+            height={18}
             icon={<CloseIcon size={8} />}
             justifyContent="center"
-            style={{ backgroundColor: opacify(40, theme.colors[warningColor]) }}
-            width={20}
+            style={{ backgroundColor: opacify(5, theme.colors.white) }}
+            width={18}
             onPress={onDismiss}
           />
         )}
       </Flex>
       <Flex>
-        <Text color="deprecated_gray600" fontSize={16}>
-          {getBodyText(tokenWarningLevel, t)}
+        <Text color="neutralTextSecondary" fontSize={16}>
+          {getBodyText(tokenWarningLevel, t)} <Text fontWeight="700">{t('Learn more')}</Text>
         </Text>
       </Flex>
     </Flex>
