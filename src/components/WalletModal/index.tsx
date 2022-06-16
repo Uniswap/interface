@@ -151,18 +151,14 @@ export default function WalletModal({
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
-      const name = Object.values(SUPPORTED_WALLETS).find(
-        (supportedWallet) => connector === supportedWallet.connector
-      )?.name
+      const wallet = getWalletForConnector(connector)
 
       // log selected wallet
       sendEvent({
         category: 'Wallet',
         action: 'Change Wallet',
-        label: name,
+        label: wallet,
       })
-
-      const wallet = getWalletForConnector(connector)
 
       try {
         // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
