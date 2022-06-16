@@ -22,7 +22,15 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: 'yarn'
 
-      - run: yarn install --frozen-lockfile
+      - uses: actions/cache@v3
+        id: node_modules-cache
+        with:
+          path: node_modules/
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+          cache: 'yarn'
+
+      - if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - name: Run eslint w/ autofix
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.repository_owner }}

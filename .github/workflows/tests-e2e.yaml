@@ -25,7 +25,7 @@ jobs:
         id: node_modules-cache
         with:
           path: node_modules/
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
 
       - if: steps.node_modules-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
@@ -59,7 +59,11 @@ jobs:
         id: node_modules-cache
         with:
           path: node_modules/ # this should always be a cache hit, from install
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+          cache: 'yarn'
+
+      - if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --ignore-scripts
 
       - uses: actions/download-artifact@v2
         with:
