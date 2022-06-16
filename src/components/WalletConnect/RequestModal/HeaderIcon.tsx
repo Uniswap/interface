@@ -12,9 +12,11 @@ const DAPP_IMAGE_SIZE = 48
 export function HeaderIcon({
   dapp,
   permitCurrency,
+  showChain = true,
 }: {
   dapp: DappInfo
   permitCurrency?: Currency | null
+  showChain?: boolean
 }) {
   if (permitCurrency) {
     return <CurrencyLogoOrPlaceholder currency={permitCurrency} size={DAPP_IMAGE_SIZE} />
@@ -25,9 +27,11 @@ export function HeaderIcon({
   return (
     <>
       <Image source={{ uri: dapp.icon, height: DAPP_IMAGE_SIZE, width: DAPP_IMAGE_SIZE }} />
-      <Box bottom={-4} position="absolute" right={-4}>
-        <NetworkLogo chainId={chainId} size={20} />
-      </Box>
+      {showChain && (
+        <Box bottom={-4} position="absolute" right={-4}>
+          <NetworkLogo chainId={chainId} size={20} />
+        </Box>
+      )}
     </>
   )
 }

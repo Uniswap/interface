@@ -12,10 +12,10 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { AppBackground } from 'src/components/gradients'
 import { Chevron } from 'src/components/icons/Chevron'
-import { RemoteImage } from 'src/components/images/RemoteImage'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
+import { HeaderIcon } from 'src/components/WalletConnect/RequestModal/HeaderIcon'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { PendingConnectionSwitchNetworkModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchNetworkModal'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
@@ -126,7 +126,6 @@ const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
 }
 
 export const PendingConnection = ({ pendingSession, onClose }: Props) => {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
@@ -170,12 +169,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
         <AppBackground />
         <Flex alignItems="center" flex={1} gap="md" justifyContent="flex-end">
           <Box>
-            <RemoteImage
-              borderRadius={theme.borderRadii.full}
-              height={48}
-              imageUrl={pendingSession.dapp.icon}
-              width={48}
-            />
+            <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
           </Box>
           <Text textAlign="center" variant="h3">
             <Trans t={t}>
