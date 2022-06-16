@@ -117,7 +117,7 @@ export function SettingsWallet({
           <AddressDisplay
             address={address}
             showViewOnly={readonly}
-            variant="body1"
+            variant="largeLabel"
             verticalGap="none"
           />
         </SettingsBackButtonRow>

@@ -54,7 +54,7 @@ export function SettingsWalletEdit({
   }
 
   return (
-    <Screen px="lg" py="sm">
+    <Screen px="lg" py="lg">
       <Flex alignItems="center" flexDirection="row" mb="xl">
         <BackButton color="neutralTextSecondary" />
         <Text variant="largeLabel">{t('Edit nickname or theme')}</Text>
