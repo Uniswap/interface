@@ -288,7 +288,7 @@ export default function Market({ history }: RouteComponentProps) {
     setTimeout(() => setCopied(false), 15000)
   }
 
-  if (obj && obj != '' && referer == '' && account && obj != account) setReferer(obj)
+  if (obj && obj != '' && referer == null && account && obj != account) setReferer(obj)
 
   const toggledVersion = Version.v2
   if (window.location.hash.includes('/r/0x')) {

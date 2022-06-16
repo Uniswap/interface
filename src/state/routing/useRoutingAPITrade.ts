@@ -110,7 +110,7 @@ function useSwapAPIArguments({
       destReceiver: recipient ? recipient.toString() : account.toString(),
       referrerAddress: affiliate?.toString() ?? null,
       fee: affiliate ? '0.01' : null,
-      disableEstimate: true,
+      disableEstimate: false,
     },
   }
 }
@@ -163,6 +163,8 @@ export function useInchQuoteAPITrade(
   )
 
   const gasAmount = useNetworkGasPrice()
+  console.log('gas amount')
+  console.log(gasAmount?.toSignificant(15))
   const priceGwei =
     gasAmount && data?.estimatedGas
       ? gasAmount
