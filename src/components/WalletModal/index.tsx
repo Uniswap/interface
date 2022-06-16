@@ -296,24 +296,34 @@ export default function WalletModal({
         />
       )
     }
+
+    let headerRow
+    if (walletView === WALLET_VIEWS.PENDING) {
+      headerRow = null
+    } else if (walletView === WALLET_VIEWS.ACCOUNT || !!account) {
+      headerRow = (
+        <HeaderRow color="blue">
+          <HoverText onClick={() => setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)}>
+            <ArrowLeft />
+          </HoverText>
+        </HeaderRow>
+      )
+    } else {
+      headerRow = (
+        <HeaderRow>
+          <HoverText>
+            <Trans>Connect a wallet</Trans>
+          </HoverText>
+        </HeaderRow>
+      )
+    }
+
     return (
       <UpperSection>
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        {walletView === WALLET_VIEWS.ACCOUNT || !!account ? (
-          <HeaderRow color="blue">
-            <HoverText onClick={() => setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)}>
-              <ArrowLeft />
-            </HoverText>
-          </HeaderRow>
-        ) : (
-          <HeaderRow>
-            <HoverText>
-              <Trans>Connect a wallet</Trans>
-            </HoverText>
-          </HeaderRow>
-        )}
+        {headerRow}
         <ContentWrapper>
           <AutoColumn gap="16px">
             {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
