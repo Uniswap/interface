@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import styled from 'styled-components/macro'
 
@@ -40,7 +40,7 @@ flex-direction: column;
 `
 
 export default function Earn() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   // staking info for connected account
   const stakingInfos = useStakingInfo()

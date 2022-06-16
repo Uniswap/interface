@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
+import { useWeb3React } from '@web3-react/core'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import ListLogo from 'components/ListLogo'
 import { RowFixed } from 'components/Row'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { transparentize } from 'polished'
 import { AlertCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
@@ -33,7 +33,7 @@ interface TokenImportCardProps {
 }
 const TokenImportCard = ({ list, token }: TokenImportCardProps) => {
   const theme = useTheme()
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   return (
     <Card backgroundColor={theme.bg2} padding="2rem">
       <AutoColumn gap="10px" justify="center">
