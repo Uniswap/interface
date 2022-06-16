@@ -21,7 +21,14 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: 'yarn'
 
-      - run: yarn install --frozen-lockfile
+      - uses: actions/cache@v3
+        id: node_modules-cache
+        with:
+          path: node_modules/
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - run: yarn build
 
@@ -47,9 +54,12 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org
-          cache: 'yarn'
 
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - uses: actions/cache@v3
+        id: node_modules-cache
+        with:
+          path: node_modules/ # this should always be a cache hit, from install
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - uses: actions/download-artifact@v2
         with:
