@@ -11,23 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up node
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org
           cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - uses: actions/cache@v3
+        id: install-cache
+        with:
+          path: node_modules/
+          key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Extract translations
-        run: "yarn i18n:extract"
+      - if: steps.install-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --ignore-scripts
 
-      - name: Synchronize
+      - run: yarn i18n:extract
+
+      - name: Upload Crowdin sources
         uses: crowdin/github-action@1.1.0
         with:
           upload_sources: true
