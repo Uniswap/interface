@@ -1,6 +1,5 @@
 import { RouteHandlerCallbackOptions, RouteMatchCallbackOptions } from 'workbox-core'
-import * as navigationPreload from 'workbox-navigation-preload'
-import { matchPrecache } from 'workbox-precaching'
+import { getCacheKeyForURL, matchPrecache } from 'workbox-precaching'
 import { Route } from 'workbox-routing'
 
 import { isLocalhost } from './utils'
@@ -39,7 +38,7 @@ type HandlerContext = {
 /**
  * The returned document should always be fresh, so this handler uses a custom strategy:
  *
- * - Always fetches the document (using navigationPreload, if supported).
+ * - Always fetches the document.
  * - When available, compares the etag headers of the fetched and cached documents:
  *   - If matching (fresh) or missing (offline), returns the cached document.
  *   - If not matching (stale), returns the fetched document.
@@ -54,17 +53,18 @@ export async function handleDocument(this: HandlerContext, { event, request }: R
   // If we are offline, serve the offline document.
   if ('onLine' in navigator && !navigator.onLine) return this?.offlineDocument?.clone() || fetch(request)
 
-  // Always use index.html, as its already been matched for App Shell-style routing (@see {@link matchDocument}).
+  // The exact cache key should be used for requests, as etags will be different for different paths.
+  // This also prevents usage of preloadResponse.
+  const requestUrl = getCacheKeyForURL(DOCUMENT)
   const cachedResponse = await matchPrecache(DOCUMENT)
-  const { preloadResponse } = event as unknown as { preloadResponse: Promise<Response | undefined> }
 
   // Responses will throw if offline, but if cached the cached response should still be returned.
   const controller = new AbortController()
   let response
   try {
-    response = (await preloadResponse) || (await fetch(DOCUMENT, { signal: controller.signal }))
+    response = await fetch(requestUrl || DOCUMENT, { cache: 'reload', signal: controller.signal })
     if (!cachedResponse) {
-      return response
+      return new Response(response.body, response)
     }
   } catch (e) {
     if (!cachedResponse) throw e
@@ -76,19 +76,16 @@ export async function handleDocument(this: HandlerContext, { event, request }: R
   const etag = response?.headers.get('etag')
   const cachedEtag = cachedResponse?.headers.get('etag')
   if (etag && etag === cachedEtag) {
-    // If the cache is still fresh, cancel the pending response. The preloadResponse is cancelled
-    // automatically by returning before it is settled; cancelling the preloadResponse will log
-    // an error to the console, but it can be ignored - it *should* be cancelled.
+    // If the cache is still fresh, cancel the pending response.
     controller.abort()
     return CachedDocument.from(cachedResponse)
   }
 
-  return response
+  return new Response(response.body, response)
 }
 
 export class DocumentRoute extends Route {
   constructor(offlineDocument?: Response) {
-    navigationPreload.enable()
     super(matchDocument, handleDocument.bind({ offlineDocument }), 'GET')
   }
 }

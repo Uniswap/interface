@@ -1,10 +1,13 @@
 import { RouteHandlerCallbackOptions, RouteMatchCallbackOptions } from 'workbox-core'
-import { matchPrecache as matchPrecacheMock } from 'workbox-precaching'
+import { getCacheKeyForURL as getCacheKeyForURLMock, matchPrecache as matchPrecacheMock } from 'workbox-precaching'
 
-import { CachedDocument, DOCUMENT, handleDocument, matchDocument } from './document'
+import { CachedDocument, handleDocument, matchDocument } from './document'
 
 jest.mock('workbox-navigation-preload', () => ({ enable: jest.fn() }))
-jest.mock('workbox-precaching', () => ({ matchPrecache: jest.fn() }))
+jest.mock('workbox-precaching', () => ({
+  getCacheKeyForURL: jest.fn(),
+  matchPrecache: jest.fn(),
+}))
 jest.mock('workbox-routing', () => ({ Route: class {} }))
 
 describe('document', () => {
@@ -29,17 +32,22 @@ describe('document', () => {
   })
 
   describe('handleDocument', () => {
+    const requestUrl = 'request_url'
+
     let fetch: jest.SpyInstance
+    let getCacheKeyForURL: jest.SpyInstance
     let matchPrecache: jest.SpyInstance
     let options: RouteHandlerCallbackOptions
 
     beforeAll(() => {
       fetch = jest.spyOn(window, 'fetch')
+      getCacheKeyForURL = getCacheKeyForURLMock as unknown as jest.SpyInstance
       matchPrecache = matchPrecacheMock as unknown as jest.SpyInstance
     })
 
     beforeEach(() => {
       fetch.mockReset()
+      getCacheKeyForURL.mockReturnValueOnce(requestUrl)
       options = {
         event: new Event('fetch') as ExtendableEvent,
         request: new Request('http://example.com'),
@@ -57,11 +65,11 @@ describe('document', () => {
       afterAll(() => onLine.mockRestore())
 
       it('returns a fetched document', async () => {
-        const fetched = new Response()
+        const fetched = new Response('test_body')
         fetch.mockResolvedValueOnce(fetched)
         const response = await handleDocument(options)
         expect(fetch).toHaveBeenCalledWith(options.request)
-        expect(response).toBe(fetched)
+        expect(response.body).toBe(fetched.body)
       })
 
       it('returns a clone of offlineDocument with an offlineDocument', async () => {
@@ -76,11 +84,12 @@ describe('document', () => {
 
     describe('with a thrown fetch', () => {
       it('returns a cached response', async () => {
-        const cached = new Response()
+        const cached = new Response('<html><head></head></html>')
         matchPrecache.mockResolvedValueOnce(cached)
         fetch.mockRejectedValueOnce(new Error())
-        const { response } = (await handleDocument(options)) as CachedDocument
-        expect(response).toBe(cached)
+        const response = await handleDocument(options)
+        expect(response).toBeInstanceOf(CachedDocument)
+        expect((response as CachedDocument).response).toBe(cached)
       })
 
       it('rethrows with no cached response', async () => {
@@ -90,35 +99,24 @@ describe('document', () => {
       })
     })
 
-    describe.each([
-      ['preloadResponse', true],
-      ['fetched document', false],
-    ])('with a %s', (responseType, withPreloadResponse) => {
+    describe('with a fetched response', () => {
       let fetched: Response
       const FETCHED_ETAGS = 'fetched'
 
       beforeEach(() => {
-        fetched = new Response(null, { headers: { etag: FETCHED_ETAGS } })
-        if (withPreloadResponse) {
-          ;(options.event as { preloadResponse?: Promise<Response> }).preloadResponse = Promise.resolve(fetched)
-        } else {
-          fetch.mockReturnValueOnce(fetched)
-        }
+        fetched = new Response('test_body', { headers: { etag: FETCHED_ETAGS } })
+        fetch.mockReturnValueOnce(fetched)
       })
 
       afterEach(() => {
-        if (withPreloadResponse) {
-          expect(fetch).not.toHaveBeenCalled()
-        } else {
-          expect(fetch).toHaveBeenCalledWith(DOCUMENT, expect.anything())
-        }
+        expect(fetch).toHaveBeenCalledWith(requestUrl, expect.anything())
       })
 
       describe('with a cached response', () => {
         let cached: Response
 
         beforeEach(() => {
-          cached = new Response('<html>cached</html>', { headers: { etag: 'cached' } })
+          cached = new Response('<html><head></head></html>', { headers: { etag: 'cached' } })
           matchPrecache.mockResolvedValueOnce(cached)
         })
 
@@ -127,29 +125,31 @@ describe('document', () => {
             cached.headers.set('etag', FETCHED_ETAGS)
           })
 
-          if (!withPreloadResponse) {
-            it('aborts the fetched response', async () => {
-              await handleDocument(options)
-              const abortSignal = fetch.mock.calls[0][1].signal
-              expect(abortSignal.aborted).toBeTruthy()
-            })
-          }
+          it('aborts the fetched response', async () => {
+            await handleDocument(options)
+            const abortSignal = fetch.mock.calls[0][1].signal
+            expect(abortSignal.aborted).toBeTruthy()
+          })
 
           it('returns the cached response', async () => {
-            const { response } = (await handleDocument(options)) as CachedDocument
-            expect(response).toBe(cached)
+            const response = await handleDocument(options)
+            expect(response).toBeInstanceOf(CachedDocument)
+            expect((response as CachedDocument).response).toBe(cached)
+            expect(await response.text()).toBe(
+              '<html><head><script>window.__isDocumentCached=true</script></head></html>'
+            )
           })
         })
 
-        it(`returns the ${responseType} with mismatched etags`, async () => {
+        it(`returns the fetched response with mismatched etags`, async () => {
           const response = await handleDocument(options)
-          expect(response).toBe(fetched)
+          expect(response.body).toBe(fetched.body)
         })
       })
 
-      it(`returns the ${responseType} with no cached response`, async () => {
+      it(`returns the fetched response with no cached response`, async () => {
         const response = await handleDocument(options)
-        expect(response).toBe(fetched)
+        expect(response.body).toBe(fetched.body)
       })
     })
   })
