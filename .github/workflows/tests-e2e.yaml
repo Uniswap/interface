@@ -35,7 +35,7 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     container: cypress/included:10.1.0
-    need: build
+    needs: build
     strategy:
       fail-fast: false
       matrix:
@@ -51,8 +51,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile --ignore-scripts
 
-      - name: Download the build folders
-        uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v2
         with:
           name: build
           path: build
