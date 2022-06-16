@@ -9,29 +9,22 @@ on:
       - main
 
 jobs:
-  e2e-tests:
-    name: Cypress
+  cypress-tests:
+    name: Run Cypress tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up node
-        uses: actions/setup-node@v3
+      - name: Cypress install
+        uses: cypress-io/github-action@v4
         with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - run: yarn build
+          build: yarn build
+          start: yarn serve
+          wait-on: 'http://localhost:3000'
+          browser: chrome
+          record: true
         env:
           CI: false # disables lint checks when building
-
-      - run: yarn serve &
-      
-      - run: yarn cypress:run --record
-        env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
