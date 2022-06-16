@@ -9,21 +9,62 @@ on:
       - main
 
 jobs:
-  cypress-tests:
-    name: Run Cypress tests
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Cypress install
-        uses: cypress-io/github-action@v4
+      - uses: actions/setup-node@v3
         with:
-          build: yarn build
+          node-version: 14
+          registry-url: https://registry.npmjs.org
+          cache: 'yarn'
+
+      - run: yarn install --frozen-lockfile
+
+      - run: yarn build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          if-no-files-found: error
+          path: build
+
+  cypress-tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    container: cypress/included:10.1.0
+    need: build
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org
+          cache: 'yarn'
+
+      - run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Download the build folders
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+
+      - uses: cypress-io/github-action@v4
+        with:
+          install: false
           start: yarn serve
           wait-on: 'http://localhost:3000'
           browser: chrome
           record: true
+          parallel: true
         env:
           CI: false # disables lint checks when building
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
