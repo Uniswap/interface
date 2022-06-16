@@ -64,13 +64,6 @@ export function getConnectorForWallet(wallet: Wallet) {
   }
 }
 
-function getConnectorListItemForWallet(wallet: Wallet) {
-  return {
-    connector: getConnectorForWallet(wallet),
-    hooks: getHooksForWallet(wallet),
-  }
-}
-
 function getHooksForWallet(wallet: Wallet) {
   switch (wallet) {
     case Wallet.INJECTED:
@@ -128,6 +121,13 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
 interface ConnectorListItem {
   connector: Connector
   hooks: Web3ReactHooks
+}
+
+function getConnectorListItemForWallet(wallet: Wallet) {
+  return {
+    connector: getConnectorForWallet(wallet),
+    hooks: getHooksForWallet(wallet),
+  }
 }
 
 export function useConnectors(selectedWallet: Wallet | undefined) {
