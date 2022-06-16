@@ -20,11 +20,11 @@ export function SpendingDetails({
 
   return (
     <Flex gap="xs">
-      <Text color="neutralTextSecondary" fontSize={12}>
-        {t('Spending')}
+      <Text color="neutralTextSecondary" variant="body2">
+        {t('Send')}
       </Text>
       <Flex row>
-        <Flex grow row alignItems="center">
+        <Flex grow row alignItems="center" gap="xs">
           <CurrencyLogoOnly currency={currencyAmount.currency} size={32} />
           <Box>
             <Text variant="subHead1">{name}</Text>

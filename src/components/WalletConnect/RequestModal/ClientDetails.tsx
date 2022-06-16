@@ -27,7 +27,7 @@ export function ClientDetails({
       <Flex row alignItems="center" gap="md">
         <HeaderIcon dapp={dapp} permitCurrency={permitCurrency} />
       </Flex>
-      <Flex centered gap="none">
+      <Flex centered gap="sm">
         <HeaderText
           permitAmount={permitInfo?.amount}
           permitCurrency={permitCurrency}

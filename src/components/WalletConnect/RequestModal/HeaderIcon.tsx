@@ -17,14 +17,7 @@ export function HeaderIcon({
   permitCurrency?: Currency | null
 }) {
   if (permitCurrency) {
-    return (
-      <>
-        <CurrencyLogoOrPlaceholder currency={permitCurrency} size={DAPP_IMAGE_SIZE} />
-        <Box bottom={-4} position="absolute" right={-4}>
-          <Image source={{ uri: dapp.icon, height: 24, width: 24 }} />
-        </Box>
-      </>
-    )
+    return <CurrencyLogoOrPlaceholder currency={permitCurrency} size={DAPP_IMAGE_SIZE} />
   }
 
   const chainId = toSupportedChainId(dapp.chain_id) ?? ChainId.Mainnet

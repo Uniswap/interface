@@ -38,7 +38,7 @@ interface Props {
 }
 
 const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
-  request.type === EthMethod.EthSign && !request.message
+  (request.type === EthMethod.EthSign && !request.message) || isTransactionRequest(request)
 
 const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction
@@ -81,15 +81,15 @@ const VALID_REQUEST_TYPES = [
 ]
 
 function SectionContainer({
-  hasTopBorder = true,
+  hasBottomBorder = true,
   children,
   style,
-}: PropsWithChildren<{ hasTopBorder?: boolean; style?: StyleProp<ViewStyle> }>) {
+}: PropsWithChildren<{ hasBottomBorder?: boolean; style?: StyleProp<ViewStyle> }>) {
   return children ? (
     <Box
-      borderTopColor={hasTopBorder ? 'neutralOutline' : 'none'}
-      borderTopWidth={1}
-      paddingHorizontal="lg"
+      borderBottomColor={hasBottomBorder ? 'neutralOutline' : 'none'}
+      borderBottomWidth={1}
+      paddingHorizontal="md"
       paddingVertical="md"
       style={style}>
       {children}
@@ -172,6 +172,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   const currencyAmount =
     isTransactionRequest(request) &&
     getTransactionCurrencyAmount(chainId, request.transaction.value)
+  const hasCurrencyAmount = currencyAmount && !currencyAmount.equalTo(0)
 
   let permitInfo = getPermitInfo(request)
 
@@ -181,8 +182,14 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
         <ClientDetails permitInfo={permitInfo} request={request} />
 
         <Box backgroundColor="neutralContainer" borderRadius="lg">
+          {hasCurrencyAmount && (
+            <SectionContainer>
+              <SpendingDetails currencyAmount={currencyAmount} />
+            </SectionContainer>
+          )}
+
           {!permitInfo && (
-            <SectionContainer hasTopBorder={false} style={requestMessageStyle}>
+            <SectionContainer style={requestMessageStyle}>
               <RequestMessage request={request} />
             </SectionContainer>
           )}
@@ -191,16 +198,14 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             <SectionContainer>
               <Text color="accentBackgroundWarning" variant="body2">
                 <Trans t={t}>
-                  <Text fontWeight="bold">Be careful:</Text> Signing this message could allow the
-                  requesting app to perform any action with your wallet and its contents.
+                  <Text fontWeight="bold">Be careful:</Text>{' '}
+                  {isTransactionRequest(request)
+                    ? 'Accepting this request'
+                    : 'Signing this message'}{' '}
+                  could allow the requesting app to perform any action with your wallet and its
+                  contents.
                 </Trans>
               </Text>
-            </SectionContainer>
-          )}
-
-          {currencyAmount && !currencyAmount.equalTo(0) && (
-            <SectionContainer>
-              <SpendingDetails currencyAmount={currencyAmount} />
             </SectionContainer>
           )}
 
@@ -210,7 +215,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             </SectionContainer>
           )}
 
-          <SectionContainer>
+          <SectionContainer hasBottomBorder={false}>
             <AccountDetails address={request.account} />
           </SectionContainer>
         </Box>
@@ -229,7 +234,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             borderRadius="md"
             disabled={!activeAccount}
             flex={1}
-            label={t('Confirm')}
+            label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
             name={ElementName.Confirm}
             variant="blue"
             onPress={onConfirm}
