@@ -12,7 +12,7 @@ const connect = async (connector: Connector) => {
       await connector.activate()
     }
   } catch (error) {
-    console.debug(`web3-react error: ${error}`)
+    console.debug(`web3-react eager connection error: ${error}`)
   }
 }
 

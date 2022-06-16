@@ -179,6 +179,8 @@ export default function WalletModal({
         dispatch(updateSelectedWallet({ wallet }))
         dispatch(updateWalletError({ wallet, error: undefined }))
       } catch (error) {
+        console.debug(`web3-react connection error: ${error}`)
+
         if (
           connector === fortmatic &&
           error.message === 'Fortmatic RPC Error: [-32603] Fortmatic: User denied account access.'
