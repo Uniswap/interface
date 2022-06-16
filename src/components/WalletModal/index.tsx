@@ -14,7 +14,7 @@ import styled from 'styled-components/macro'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, getWalletForConnector, injected, network } from '../../connectors'
+import { fortmatic, getWalletForConnector, injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -140,7 +140,7 @@ export default function WalletModal({
     if (walletModalOpen) {
       setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)
     }
-  }, [walletModalOpen, setWalletView, connector, account])
+  }, [walletModalOpen, setWalletView, account])
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
