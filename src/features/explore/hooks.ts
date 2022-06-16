@@ -1,8 +1,10 @@
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useMemo, useReducer } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { PollingInterval } from 'src/constants/misc'
 import { useGetSearchQuery } from 'src/features/dataApi/coingecko/enhancedApi'
 import { useGetCoinsMarketsQuery } from 'src/features/dataApi/coingecko/generatedApi'
+import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
 import {
   ClientSideOrderBy,
   CoingeckoMarketCoin,
@@ -13,35 +15,54 @@ import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { next } from 'src/utils/array'
 import { getCompareFn } from './utils'
 
-export function useFavoriteTokenInfo() {
-  const favoritesList = Array.from(useAppSelector(selectFavoriteTokensSet)).join(',')
+const COINS_PER_PAGE = 100
 
-  return useMarketTokens({ ids: favoritesList })
+export function useFavoriteTokenInfo() {
+  const { currencyIdToCoinId, isLoading } = useCoinIdAndCurrencyIdMappings()
+  const favoriteTokenSet = useAppSelector(selectFavoriteTokensSet)
+
+  const favorites = useMemo(
+    () =>
+      (isLoading
+        ? []
+        : Array.from(favoriteTokenSet)
+            .map((currencyId) => currencyIdToCoinId[currencyId.toLocaleLowerCase()])
+            // TODO(MOB-798): better handle case where token does not have a corresponding coin id
+            .filter((f) => f)
+      ).join(','),
+    [currencyIdToCoinId, favoriteTokenSet, isLoading]
+  )
+
+  return useMarketTokens({ ids: favorites })
 }
 
 // TODO: consider casting coins to `Currency` by merging market data
 //       with Coingecko list data
 export function useMarketTokens({
-  remoteOrderBy = CoingeckoOrderBy.MarketCapDesc,
-  localOrderBy,
+  category,
   ids,
+  localOrderBy,
+  remoteOrderBy = CoingeckoOrderBy.MarketCapDesc,
 }: {
-  remoteOrderBy?: CoingeckoOrderBy
-  localOrderBy?: ClientSideOrderBy
+  category?: 'ethereum-ecosystem'
   ids?: string
+  localOrderBy?: ClientSideOrderBy
+  remoteOrderBy?: CoingeckoOrderBy
 }): {
   tokens: CoingeckoMarketCoin[]
   isLoading: boolean
 } {
   const { currentData, isLoading } = useGetCoinsMarketsQuery(
-    {
-      category: 'ethereum-ecosystem',
-      ids,
-      order: remoteOrderBy,
-      page: 1,
-      perPage: 100,
-      vsCurrency: 'usd',
-    },
+    ids !== undefined && ids.length === 0
+      ? skipToken
+      : {
+          category,
+          ids,
+          order: remoteOrderBy,
+          page: 1,
+          perPage: COINS_PER_PAGE,
+          vsCurrency: 'usd',
+        },
     {
       pollingInterval: PollingInterval.Normal,
     }

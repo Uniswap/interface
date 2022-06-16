@@ -125,7 +125,7 @@ export function TokenItemBox({ token, onPress }: TokenItemProps) {
       <Box bg="neutralContainer" borderRadius="lg" justifyContent="space-between">
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="body1">{token.symbol ?? ''}</Text>
+            <Text variant="body1">{token.symbol.toUpperCase() ?? ''}</Text>
             <Image source={{ uri: token.image }} style={boxTokenLogoStyle} />
           </Flex>
           <Flex row>

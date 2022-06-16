@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ChainId } from 'src/constants/chains'
-import { useGetCoinsListQuery } from 'src/features/dataApi/coingecko/enhancedApi'
-import { CoingeckoMarketCoin, GetCoinsListResponse } from 'src/features/dataApi/coingecko/types'
+import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
+import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
 import { SortingGroup } from 'src/features/explore/FilterGroup'
 import {
   BaseTokenSectionProps,
@@ -15,7 +15,6 @@ import { useOrderByModal } from 'src/features/explore/Modals'
 import { TokenItem } from 'src/features/explore/TokenItem'
 import { getOrderByValues } from 'src/features/explore/utils'
 import { Screens } from 'src/screens/Screens'
-import { buildCurrencyId } from 'src/utils/currencyId'
 
 /** Renders the top X tokens section on the Explore page */
 export function TopTokensSection(props: BaseTokenSectionProps) {
@@ -24,20 +23,18 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
 
   const { orderBy, toggleModalVisible, orderByModal } = useOrderByModal()
   const { tokens: topTokens, isLoading } = useMarketTokens(
-    useMemo(() => getOrderByValues(orderBy), [orderBy])
+    useMemo(() => ({ ...getOrderByValues(orderBy), category: 'ethereum-ecosystem' }), [orderBy])
   )
 
-  const { currentData: coinsList } = useGetCoinsListQuery({ includePlatform: true })
+  const { coinIdToCurrencyIds } = useCoinIdAndCurrencyIdMappings()
 
   const { onCycleMetadata, metadataDisplayType, expanded } = props
 
   const renderItem = useCallback(
     ({ item: token, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => {
       // TODO: support non mainnet
-      const currencyId = buildCurrencyId(
-        ChainId.Mainnet,
-        (coinsList as GetCoinsListResponse)?.[token.id]?.platforms.ethereum ?? ''
-      )
+      const currencyId = coinIdToCurrencyIds[token.id][ChainId.Mainnet]
+      if (!currencyId) return null
 
       return (
         <TokenItem
@@ -55,7 +52,7 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
         />
       )
     },
-    [coinsList, expanded, metadataDisplayType, navigation, onCycleMetadata]
+    [coinIdToCurrencyIds, expanded, metadataDisplayType, navigation, onCycleMetadata]
   )
 
   return (

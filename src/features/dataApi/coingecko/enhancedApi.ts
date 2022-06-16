@@ -1,18 +1,26 @@
+import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { generatedApi } from 'src/features/dataApi/coingecko/generatedApi'
 import {
   CoingeckoListCoin,
-  GetCoinsListResponse,
+  CoinIdAndCurrencyIdMappings,
   GetCoinsMarketsResponse,
   GetCoinsSearchResponse,
 } from 'src/features/dataApi/coingecko/types'
+import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
+import { getKeys } from 'src/utils/objects'
 
+// Close to "infinite" to avoid redownloading the large list and keep in cache while app is running
+// https://github.com/reduxjs/redux-toolkit/discussions/2347#discussioncomment-2805964
+const KEEP_COINGECKO_LIST_DATA_FOR = 100000000 // about 3 years
+
+// Coingecko platforms are similar to our oconcept of chains but have their own unique ids
 // NOTE: Alternative to hardcoding: query `asset_platforms` endpoint and filter by chain_identifier
-const supportedCoingeckoPlatforms = [
-  'ethereum',
-  'polygon-pos',
-  'optimistic-ethereum',
-  'arbitrum-one',
-]
+const supportedCoingeckoPlatforms: { [coingeckoPlatform: string]: ChainId } = {
+  ethereum: ChainId.Mainnet,
+  'polygon-pos': ChainId.Polygon,
+  'optimistic-ethereum': ChainId.Optimism,
+  'arbitrum-one': ChainId.ArbitrumOne,
+}
 
 const enhancedApi = generatedApi.enhanceEndpoints({
   endpoints: {
@@ -22,20 +30,41 @@ const enhancedApi = generatedApi.enhanceEndpoints({
         data?.filter((coin) => Boolean(coin.market_cap)),
     },
     getCoinsList: {
-      transformResponse: (data: Nullable<CoingeckoListCoin[]>) =>
-        data?.reduce<GetCoinsListResponse>((acc, coin) => {
-          const isSupported = Object.keys(coin.platforms).some(
-            (platform) =>
-              // removes any non-ethereum coins
-              Boolean(coin.platforms[platform]) && supportedCoingeckoPlatforms.includes(platform)
-          )
+      transformResponse: (data: Nullable<CoingeckoListCoin[]>) => {
+        return data?.reduce<CoinIdAndCurrencyIdMappings>(
+          (acc, coin) => {
+            // Coingecko lists platforms/chains on which the coin is deployed
+            // For each of those platforms, we extract the token address of the coin
+            //  and build a map of token_address<->coin id
 
-          if (isSupported) {
-            acc[coin.id] = coin
-          }
+            // build coin id -> currency id[]
+            const chainIdToCurrencyId = getKeys(coin.platforms).reduce<ChainIdTo<CurrencyId>>(
+              (coinAcc, platform) => {
+                // Coingecko platforms map to token contract addresses on that platform/chain
+                const tokenAddress = coin.platforms[platform]
+                const chainId = supportedCoingeckoPlatforms[platform]
 
-          return acc
-        }, {}),
+                // ignores any chains we do not support
+                if (!tokenAddress || !chainId) return coinAcc
+
+                coinAcc[chainId] = buildCurrencyId(chainId, tokenAddress)
+                return coinAcc
+              },
+              {}
+            )
+            acc.coinIdToCurrencyIds[coin.id] = chainIdToCurrencyId
+
+            // build currency ids -> coin id
+            for (const _currencyId of Object.values(chainIdToCurrencyId)) {
+              acc.currencyIdToCoinId[_currencyId] = coin.id
+            }
+
+            return acc
+          },
+          { coinIdToCurrencyIds: {}, currencyIdToCoinId: {} }
+        )
+      },
+      keepUnusedDataFor: KEEP_COINGECKO_LIST_DATA_FOR,
     },
     getSearch: {
       // @ts-expect-error: cannot override generated types

@@ -6,8 +6,8 @@ import { Heart } from 'src/components/icons/Heart'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { useGetCoinsListQuery } from 'src/features/dataApi/coingecko/enhancedApi'
-import { CoingeckoMarketCoin, GetCoinsListResponse } from 'src/features/dataApi/coingecko/types'
+import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
+import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
 import {
   BaseTokenSectionProps,
   GenericTokenSection,
@@ -15,7 +15,6 @@ import {
 import { useFavoriteTokenInfo } from 'src/features/explore/hooks'
 import { TokenItemBox } from 'src/features/explore/TokenItem'
 import { Screens } from 'src/screens/Screens'
-import { buildCurrencyId } from 'src/utils/currencyId'
 
 const HEART_SIZE_EXPANDED = 20
 const HEART_SIZE_MINIMIZED = 16
@@ -26,15 +25,13 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
   const navigation = useExploreStackNavigation()
 
   const { tokens: favorites, isLoading } = useFavoriteTokenInfo()
-  const { currentData: coinsList } = useGetCoinsListQuery({ includePlatform: true })
+  const { coinIdToCurrencyIds } = useCoinIdAndCurrencyIdMappings()
 
   const renderItem = useCallback(
     ({ item: token, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => {
       // TODO: support non mainnet
-      const currencyId = buildCurrencyId(
-        ChainId.Mainnet,
-        (coinsList as GetCoinsListResponse)?.[token.id]?.platforms.ethereum ?? ''
-      )
+      const currencyId = coinIdToCurrencyIds[token.id][ChainId.Mainnet]
+      if (!currencyId) return null
 
       return (
         <TokenItemBox
@@ -52,7 +49,13 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
         />
       )
     },
-    [coinsList, navigation, props.expanded, props.metadataDisplayType, props.onCycleMetadata]
+    [
+      coinIdToCurrencyIds,
+      navigation,
+      props.expanded,
+      props.metadataDisplayType,
+      props.onCycleMetadata,
+    ]
   )
 
   if (!favorites?.length) return null

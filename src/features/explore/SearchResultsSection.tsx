@@ -13,19 +13,17 @@ import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { useGetCoinsListQuery } from 'src/features/dataApi/coingecko/enhancedApi'
+import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
 import {
   CoingeckoMarketCoin,
   CoingeckoOrderBy,
   CoingeckoSearchCoin,
-  GetCoinsListResponse,
 } from 'src/features/dataApi/coingecko/types'
 import { useENS } from 'src/features/ens/useENS'
 import { useMarketTokens, useTokenSearchResults } from 'src/features/explore/hooks'
 import { WalletItem, WalletItemProps } from 'src/features/explore/WalletItem'
 import { Screens } from 'src/screens/Screens'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
-import { buildCurrencyId } from 'src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 
 // TODO: Update fixed trending wallets
@@ -71,7 +69,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   const navigation = useExploreStackNavigation()
 
   const { tokens: searchTokens, isLoading: searchIsLoading } = useTokenSearchResults(searchQuery)
-  const { currentData: coinsList } = useGetCoinsListQuery({ includePlatform: true })
+  const { coinIdToCurrencyIds } = useCoinIdAndCurrencyIdMappings()
   const { tokens: trendingTokens, isLoading: trendingIsLoading } = useMarketTokens({
     remoteOrderBy: CoingeckoOrderBy.VolumeDesc,
   })
@@ -89,10 +87,8 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   const renderTokenItem = useCallback(
     ({ item: token }: ListRenderItemInfo<CoingeckoSearchCoin>) => {
       // TODO: support non mainnet
-      const currencyId = buildCurrencyId(
-        ChainId.Mainnet,
-        (coinsList as GetCoinsListResponse)?.[token.id]?.platforms.ethereum ?? ''
-      )
+      const currencyId = coinIdToCurrencyIds[token.id][ChainId.Mainnet]
+      if (!currencyId) return null
       return (
         <TokenResultRow
           coin={token}
@@ -104,7 +100,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
         />
       )
     },
-    [coinsList, navigation]
+    [coinIdToCurrencyIds, navigation]
   )
 
   const renderWalletItem = useCallback(

@@ -1,4 +1,8 @@
 // Order by keys supported by Coingecko
+
+import { ChainIdTo } from 'src/constants/chains'
+import { CurrencyId } from 'src/utils/currencyId'
+
 // Other keys (e.g. % change) must be sorted locally
 export enum CoingeckoOrderBy {
   GeckoAsc = 'gecko_asc',
@@ -17,8 +21,8 @@ export enum ClientSideOrderBy {
 }
 
 export type GetCoinsMarketsResponse = Nullable<CoingeckoMarketCoin[]>
-export type GetCoinsListResponse = { [coinId: string]: CoingeckoListCoin }
 export type GetCoinsSearchResponse = Nullable<{ coins: CoingeckoSearchCoin[] }>
+export type GetCoinsListResponse = Nullable<CoingeckoListCoin[]>
 
 /** Coin info representation in Coingecko market lists  */
 export interface CoingeckoMarketCoin {
@@ -54,7 +58,11 @@ export interface CoingeckoListCoin {
   id: string
   symbol: string
   name: string
-  platforms: { [name: string]: Nullable<string> }
+  platforms: { [name: string]: Nullable<Address> }
+}
+export type CoinIdAndCurrencyIdMappings = {
+  coinIdToCurrencyIds: { [coinId: string]: ChainIdTo<CurrencyId> }
+  currencyIdToCoinId: { [currencyId: CurrencyId]: string }
 }
 
 /**  Coin info representation in Coingecko Search lists */
