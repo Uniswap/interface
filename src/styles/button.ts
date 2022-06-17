@@ -24,9 +24,11 @@ export const primaryButtonVariants = {
     backgroundColor: 'deprecated_paleOrange',
     color: 'deprecated_orange',
   },
-  paleBlue: {
-    backgroundColor: 'deprecated_paleBlue',
-    color: 'deprecated_blue',
+  transparent: {
+    backgroundColor: 'none',
+    borderColor: 'neutralOutline',
+    borderWidth: 1,
+    color: 'neutralTextPrimary',
   },
   blue: {
     backgroundColor: 'deprecated_blue',

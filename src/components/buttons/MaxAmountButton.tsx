@@ -34,11 +34,11 @@ export function MaxAmountButton({
     // TODO: use `soft` button variant when available
     <PrimaryButton
       borderRadius="md"
-      label={t('MAX')}
-      px="xs"
-      py="xs"
-      textVariant="body1"
-      variant="paleBlue"
+      label={t('Max')}
+      px="sm"
+      py="sm"
+      textVariant="smallLabel"
+      variant="transparent"
       onPress={() => onSetAmount(maxInputAmount.toSignificant())}
     />
   )
