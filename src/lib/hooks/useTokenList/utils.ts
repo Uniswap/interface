@@ -16,16 +16,20 @@ export function tokensToChainTokenMap(tokens: TokenList | TokenInfo[]): ChainTok
 
   const [list, infos] = Array.isArray(tokens) ? [undefined, tokens] : [tokens, tokens.tokens]
   const map = infos.reduce<Mutable<ChainTokenMap>>((map, info) => {
-    const token = new WrappedTokenInfo(info, list)
-    if (map[token.chainId]?.[token.address] !== undefined) {
-      console.warn(`Duplicate token skipped: ${token.address}`)
+    try {
+      const token = new WrappedTokenInfo(info, list)
+      if (map[token.chainId]?.[token.address] !== undefined) {
+        console.warn(`Duplicate token skipped: ${token.address}`)
+        return map
+      }
+      if (!map[token.chainId]) {
+        map[token.chainId] = {}
+      }
+      map[token.chainId][token.address] = { token, list }
+      return map
+    } catch {
       return map
     }
-    if (!map[token.chainId]) {
-      map[token.chainId] = {}
-    }
-    map[token.chainId][token.address] = { token, list }
-    return map
   }, {}) as ChainTokenMap
   mapCache?.set(tokens, map)
   return map
