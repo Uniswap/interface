@@ -1,22 +1,20 @@
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { FlatList, FlatListProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
+import ArrowDown from 'src/assets/icons/arrow-down.svg'
+import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TextButton } from 'src/components/buttons/TextButton'
-import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Trace } from 'src/features/telemetry/Trace'
-
-const TOGGLE_ICON_SIZE = 12
 
 // Container
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
   return (
     <Trace {...trace}>
-      <Flex bg="neutralBackground" borderRadius="md" gap="xs" py="md">
+      <Box bg="neutralBackground" borderRadius="md" pb="md">
         {children}
-      </Flex>
+      </Box>
     </Trace>
   )
 }
@@ -25,62 +23,45 @@ export function Container({ children, ...trace }: PropsWithChildren<ComponentPro
 interface HeaderProps {
   title: string | ReactNode
   subtitle?: string | ReactNode
-  buttonLabel: string
-  expanded: boolean
-  // TODO: replace with `expandedScreen`
-  onMinimize?: () => void
-  onMaximize?: () => void
+  onPress?: () => void
 }
 
-function Header({ buttonLabel, expanded, onMaximize, onMinimize, subtitle, title }: HeaderProps) {
+function Header({ title, subtitle, onPress }: HeaderProps) {
   const theme = useAppTheme()
 
-  const onPress = () => (expanded ? onMinimize?.() : onMaximize?.())
-
   return (
-    <TextButton mx="md" onPress={onPress}>
-      <Flex gap="xxs" width="100%">
-        <Flex row alignItems="center" justifyContent="space-between" width="100%">
+    <Button
+      borderBottomColor="neutralOutline"
+      borderBottomWidth={0.5}
+      px="md"
+      py="sm"
+      onPress={onPress}>
+      <Flex row alignItems="center" justifyContent="space-between">
+        <Flex gap="xxs">
           {typeof title === 'string' ? (
-            <Text
-              color={expanded ? 'neutralTextPrimary' : 'neutralTextSecondary'}
-              variant={expanded ? 'h3' : 'body2'}>
+            <Text color="neutralTextSecondary" variant="body1">
               {title}
             </Text>
           ) : (
             title
           )}
-
-          {expanded ? (
-            <Chevron
-              color={theme.colors.neutralAction}
-              direction="s"
-              height={TOGGLE_ICON_SIZE}
-              width={TOGGLE_ICON_SIZE}
-            />
-          ) : (
-            <Flex row gap="xs">
-              <Text color="neutralTextSecondary" variant="body2">
-                {buttonLabel}
-              </Text>
-              <Chevron
-                color={theme.colors.neutralTextSecondary}
-                direction="e"
-                height={TOGGLE_ICON_SIZE}
-                width={TOGGLE_ICON_SIZE}
-              />
-            </Flex>
-          )}
+          {subtitle ? (
+            typeof subtitle === 'string' ? (
+              <Text variant="subHead1">{subtitle}</Text>
+            ) : (
+              subtitle
+            )
+          ) : null}
         </Flex>
-        {subtitle ? (
-          typeof subtitle === 'string' ? (
-            <Text variant="subHead1">{subtitle}</Text>
-          ) : (
-            subtitle
-          )
-        ) : null}
+        <ArrowDown
+          color={theme.colors.neutralTextSecondary}
+          height={24}
+          strokeWidth={2}
+          style={{ transform: [{ rotate: '270deg' }] }}
+          width={24}
+        />
       </Flex>
-    </TextButton>
+    </Button>
   )
 }
 

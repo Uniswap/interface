@@ -3,12 +3,10 @@ import { utils } from 'ethers'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SharedElement } from 'react-navigation-shared-element'
-import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
+import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { AppBackground } from 'src/components/gradients'
 import { Flex } from 'src/components/layout'
 import { Masonry } from 'src/components/layout/Masonry'
-import { Screen } from 'src/components/layout/Screen'
 import { Section } from 'src/components/layout/Section'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { PollingInterval } from 'src/constants/misc'
@@ -21,29 +19,7 @@ import { dimensions } from 'src/styles/sizing'
 
 const IMAGE_SIZE_RATIO = 2.4
 
-export function PortfolioNFTsScreen({
-  route: {
-    params: { owner },
-  },
-}: HomeStackScreenProp<Screens.PortfolioNFTs>) {
-  return (
-    <Screen withSharedElementTransition>
-      <AppBackground />
-      <Flex grow m="sm">
-        <NFTMasonry expanded count={50} owner={owner} />
-      </Flex>
-    </Screen>
-  )
-}
-export function NFTMasonry({
-  expanded,
-  count,
-  owner,
-}: {
-  count?: number
-  expanded?: boolean
-  owner?: string
-}) {
+export function PortfolioNFTSection({ count, owner }: { count?: number; owner?: string }) {
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
@@ -101,11 +77,8 @@ export function NFTMasonry({
         <Flex gap="xs">
           <SharedElement id="portfolio-nfts-header">
             <Section.Header
-              buttonLabel={t('View all')}
-              expanded={Boolean(expanded)}
               title={t('NFTs')}
-              onMaximize={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
-              onMinimize={() => navigation.canGoBack() && navigation.goBack()}
+              onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
             />
           </SharedElement>
           <SharedElement id="portfolio-nfts-content">

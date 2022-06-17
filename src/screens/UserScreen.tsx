@@ -11,14 +11,14 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { AppBackground } from 'src/components/gradients'
+import { PortfolioNFTSection } from 'src/components/home/PortfolioNFTSection'
+import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
 import { selectFollowedAddressSet } from 'src/features/favorites/selectors'
 import { addFollow, removeFollow } from 'src/features/favorites/slice'
-import { NFTMasonry } from 'src/screens/PortfolioNFTs'
-import { PortfolioTokens } from 'src/screens/PortfolioTokens'
 import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 
@@ -118,8 +118,8 @@ export function UserScreen({
               </Text>
             </Button>
           </Flex>
-          <PortfolioTokens count={4} owner={address} />
-          <NFTMasonry count={16} owner={address} />
+          <PortfolioTokensSection count={4} owner={address} />
+          <PortfolioNFTSection count={16} owner={address} />
         </Flex>
       </VirtualizedList>
     </Screen>

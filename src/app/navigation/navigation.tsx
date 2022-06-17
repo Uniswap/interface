@@ -1,10 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { StackCardStyleInterpolator } from '@react-navigation/stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import {
@@ -20,12 +18,11 @@ import {
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
-import { AppBackground } from 'src/components/gradients'
-import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
+import { ExploreFavoritesScreen } from 'src/screens/ExploreFavoritesScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExploreTokensScreen } from 'src/screens/ExploreTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
@@ -50,8 +47,8 @@ import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSe
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { SelectColorScreen } from 'src/screens/Onboarding/SelectColorScreen'
-import { PortfolioNFTsScreen } from 'src/screens/PortfolioNFTs'
-import { PortfolioTokensScreen } from 'src/screens/PortfolioTokens'
+import { PortfolioNFTsScreen } from 'src/screens/PortfolioNFTsScreen'
+import { PortfolioTokensScreen } from 'src/screens/PortfolioTokensScreen'
 import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
@@ -71,12 +68,11 @@ import { dimensions } from 'src/styles/sizing'
 const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
-const HomeStack = createSharedElementStackNavigator<HomeStackParamList>()
-const ExploreStack = createSharedElementStackNavigator<ExploreStackParamList>()
+const HomeStack = createNativeStackNavigator<HomeStackParamList>()
+const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
-
-const ProfileStack = createSharedElementStackNavigator<ProfileStackParamList>()
+const ProfileStack = createNativeStackNavigator<ProfileStackParamList>()
 
 const Drawer = createDrawerNavigator()
 
@@ -148,26 +144,10 @@ function ProfileStackGroup() {
   return (
     <ProfileStack.Navigator
       screenOptions={{
-        cardStyleInterpolator: forFade,
         gestureEnabled: false,
       }}>
-      <ProfileStack.Screen
-        component={PortfolioTokensScreen}
-        name={Screens.PortfolioTokens}
-        sharedElements={() => {
-          return [
-            { id: 'portfolio-tokens-header', animation: 'move' },
-            { id: 'portfolio-tokens-content', animation: 'move' },
-          ]
-        }}
-      />
-      <ProfileStack.Screen
-        component={PortfolioNFTsScreen}
-        name={Screens.PortfolioNFTs}
-        sharedElements={() => {
-          return ['portfolio-nfts-header']
-        }}
-      />
+      <ProfileStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
+      <ProfileStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
     </ProfileStack.Navigator>
   )
 }
@@ -193,57 +173,23 @@ export function DrawerNavigator() {
   )
 }
 
-const forFade: StackCardStyleInterpolator = ({ current }) => ({
-  cardStyle: {
-    opacity: current.progress,
-  },
-})
-
 export function HomeStackNavigator() {
   return (
     <HomeStack.Navigator
       initialRouteName={Screens.Home}
       screenOptions={{
         ...navOptions.noHeader,
-        cardStyleInterpolator: forFade,
-        gestureEnabled: false,
       }}>
-      <AppBackground />
+      {/* <AppBackground /> */}
       <HomeStack.Screen component={HomeScreen} name={Screens.Home} />
 
       {/* Tokens */}
-      <HomeStack.Screen
-        component={PortfolioTokensScreen}
-        name={Screens.PortfolioTokens}
-        // TODO: re-enable
-        // sharedElements={() => {
-        //   return [
-        //     { id: 'portfolio-tokens-header', animation: 'fade' },
-        //     { id: 'portfolio-tokens-content', animation: 'fade' },
-        //   ]
-        // }}
-      />
+      <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
       <HomeStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
 
       {/* NFTS */}
-      <HomeStack.Screen
-        component={PortfolioNFTsScreen}
-        name={Screens.PortfolioNFTs}
-        // TODO: re-enable
-        // sharedElements={() => {
-        //   return [
-        //     { id: 'portfolio-nfts-header', animation: 'fade' },
-        //     { id: 'portfolio-nfts-content', animation: 'fade' },
-        //   ]
-        // }}
-      />
-      <HomeStack.Screen
-        component={NFTItemScreen}
-        name={Screens.NFTItem}
-        sharedElements={({ params: { address, token_id } }) => {
-          return [{ id: getNFTAssetKey(address, token_id), animation: 'fade' }]
-        }}
-      />
+      <HomeStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
+      <HomeStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
     </HomeStack.Navigator>
   )
 }
@@ -254,17 +200,10 @@ export function ExploreStackNavigator() {
       initialRouteName={Screens.Explore}
       screenOptions={{
         ...navOptions.noHeader,
-        cardStyleInterpolator: forFade,
-        gestureEnabled: false,
       }}>
       <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
-      <ExploreStack.Screen
-        component={ExploreTokensScreen}
-        name={Screens.ExploreTokens}
-        sharedElements={() => {
-          return [{ id: 'explore-tokens-header', animation: 'fade' }]
-        }}
-      />
+      <ExploreStack.Screen component={ExploreTokensScreen} name={Screens.ExploreTokens} />
+      <ExploreStack.Screen component={ExploreFavoritesScreen} name={Screens.ExploreFavorites} />
       <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
     </ExploreStack.Navigator>
   )

@@ -17,8 +17,8 @@ export function SortingGroup({ onPressOrderBy, orderBy }: FilterGroupProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   return (
-    <TextButton mt="md" onPress={onPressOrderBy}>
-      <Flex row alignItems="center" gap="xs">
+    <TextButton onPress={onPressOrderBy}>
+      <Flex centered row gap="xs">
         <ArrowUpDown color={theme.colors.neutralTextTertiary} height={20} width={20} />
         <Text color="neutralTextSecondary" variant="subHead1">
           {getOrderByLabel(orderBy, t)}

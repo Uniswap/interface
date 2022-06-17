@@ -7,6 +7,7 @@ export enum Screens {
   Education = 'Education',
   Explore = 'Explore',
   ExploreTokens = 'ExploreTokens',
+  ExploreFavorites = 'ExploreFavorites',
   Home = 'Home',
   ImportAccount = 'ImportAccount',
   Ledger = 'Ledger',

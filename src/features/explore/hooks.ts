@@ -57,7 +57,7 @@ export function useMarketTokens({
     ids !== undefined && ids.length === 0
       ? skipToken
       : {
-          category,
+          category: ids ? undefined : category ?? 'ethereum-ecosystem',
           ids,
           order: remoteOrderBy,
           page: 1,

@@ -26,14 +26,7 @@ Primary.args = {
   ...Primary.args,
   children: (
     <Flex>
-      <Section.Header
-        buttonLabel="View all"
-        expanded={false}
-        subtitle="$124.34"
-        title="Tokens"
-        onMaximize={() => {}}
-        onMinimize={() => {}}
-      />
+      <Section.Header subtitle="$124.34" title="Tokens" onPress={() => {}} />
       <Text variant="body1">My Content</Text>
     </Flex>
   ),

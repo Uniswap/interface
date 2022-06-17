@@ -74,13 +74,7 @@ export function NFTItemScreen({
       )}
 
       <Box mt="md" mx="md">
-        <Section.Header
-          buttonLabel={''}
-          expanded={true}
-          title="Back"
-          onMaximize={() => {}}
-          onMinimize={onPressToggle}
-        />
+        <Section.Header title="Back" onPress={onPressToggle} />
       </Box>
 
       <ScrollView showsVerticalScrollIndicator={false}>

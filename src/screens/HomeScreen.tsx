@@ -13,6 +13,8 @@ import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AppBackground } from 'src/components/gradients'
+import { PortfolioNFTSection } from 'src/components/home/PortfolioNFTSection'
+import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -30,8 +32,6 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { NFTMasonry } from 'src/screens/PortfolioNFTs'
-import { PortfolioTokens } from 'src/screens/PortfolioTokens'
 import { Screens } from 'src/screens/Screens'
 import { spacing } from 'src/styles/sizing'
 import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
@@ -103,8 +103,8 @@ export function HomeScreen({ navigation }: Props) {
             <QuickActions />
           </Flex>
           <Flex gap="md">
-            <PortfolioTokens count={4} />
-            <NFTMasonry count={16} />
+            <PortfolioTokensSection count={4} />
+            <PortfolioNFTSection count={16} />
           </Flex>
         </VirtualizedList>
       </Box>

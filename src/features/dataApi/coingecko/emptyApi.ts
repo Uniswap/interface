@@ -11,7 +11,7 @@ export const emptyApi = createApi({
   endpoints: () => ({}),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
-      return action.payload[reducerPath]
+      return action.payload?.[reducerPath]
     }
   },
 })

@@ -7,6 +7,7 @@ import { useExploreStackNavigation } from 'src/app/navigation/types'
 import ArrowDown from 'src/assets/icons/arrow-down.svg'
 import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
 import { Button } from 'src/components/buttons/Button'
+import { WalletItem, WalletItemProps } from 'src/components/explore/WalletItem'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
@@ -20,7 +21,6 @@ import {
 } from 'src/features/dataApi/coingecko/types'
 import { useENS } from 'src/features/ens/useENS'
 import { useMarketTokens, useTokenSearchResults } from 'src/features/explore/hooks'
-import { WalletItem, WalletItemProps } from 'src/features/explore/WalletItem'
 import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
 import { Screens } from 'src/screens/Screens'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
@@ -35,24 +35,6 @@ const TRENDING_WALLETS: WalletItemProps[] = [
 
 export interface SearchResultsSectionProps {
   searchQuery: string
-}
-
-function SearchResult({ coin }: { coin: CoingeckoSearchCoin }) {
-  const { navigate } = useExploreStackNavigation()
-  const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
-
-  if (!_currencyId) return null
-
-  return (
-    <TokenResultRow
-      coin={coin}
-      onPress={() => {
-        navigate(Screens.TokenDetails, {
-          currencyId: _currencyId,
-        })
-      }}
-    />
-  )
 }
 
 export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps) {
@@ -76,7 +58,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     : ensAddress || null
 
   const renderTokenItem = useCallback(
-    ({ item: coin }: ListRenderItemInfo<CoingeckoSearchCoin>) => <SearchResult coin={coin} />,
+    ({ item: coin }: ListRenderItemInfo<CoingeckoSearchCoin>) => <TokenResultRow coin={coin} />,
     []
   )
 
@@ -240,15 +222,24 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
 
 type TokenResultRowProps = {
   coin: CoingeckoSearchCoin | CoingeckoMarketCoin
-  onPress: () => void
 }
 
-function TokenResultRow({ coin, onPress }: TokenResultRowProps) {
+function TokenResultRow({ coin }: TokenResultRowProps) {
+  const { navigate } = useExploreStackNavigation()
+  const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
+
+  if (!_currencyId) return null
+
   const { name, symbol } = coin
   const uri = (coin as CoingeckoSearchCoin).large || (coin as CoingeckoMarketCoin).image
 
   return (
-    <Button onPress={onPress}>
+    <Button
+      onPress={() => {
+        navigate(Screens.TokenDetails, {
+          currencyId: _currencyId,
+        })
+      }}>
       <Flex row alignItems="center" px="xs" py="sm">
         <Image source={{ uri }} style={logoStyle} />
         <Flex gap="none">

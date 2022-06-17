@@ -1,5 +1,4 @@
 import { default as React, ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 import { FlatListProps } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
@@ -11,7 +10,6 @@ import { Screens } from 'src/screens/Screens'
 
 export interface BaseTokenSectionProps {
   displayFavorites?: boolean
-  expanded?: boolean
   fixedCount?: number
   metadataDisplayType: string
   orderBy?: CoingeckoOrderBy
@@ -32,7 +30,6 @@ type GenericTokenSectionProps<T> = BaseTokenSectionProps & {
 export function GenericTokenSection<T>({
   assets,
   displayFavorites,
-  expanded,
   fixedCount,
   horizontal,
   id,
@@ -41,36 +38,27 @@ export function GenericTokenSection<T>({
   renderItem,
   subtitle,
 }: GenericTokenSectionProps<T>) {
-  const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
 
-  // TODO: refactor
-  const onToggle = () => {
-    if (expanded) {
-      navigation.navigate(Screens.Explore)
+  const onPress = () => {
+    if (displayFavorites) {
+      navigation.navigate(Screens.ExploreFavorites)
     } else {
-      navigation.navigate(Screens.ExploreTokens, { displayFavorites })
+      navigation.navigate(Screens.ExploreTokens)
     }
   }
 
   return (
     <Section.Container>
-      <Section.Header
-        buttonLabel={t('View all')}
-        expanded={!!expanded}
-        subtitle={subtitle}
-        title={title}
-        onMaximize={onToggle}
-        onMinimize={onToggle}
-      />
+      <Section.Header subtitle={subtitle} title={title} onPress={onPress} />
       {loading ? (
         <Box padding="sm">
           <Loading repeat={4} type="box" />
         </Box>
       ) : (
-        <Box ml={horizontal ? 'sm' : 'none'}>
+        <Box ml={horizontal ? 'sm' : 'none'} mt={horizontal ? 'sm' : 'none'}>
           <Section.List
-            ItemSeparatorComponent={() => <Separator ml="md" />}
+            ItemSeparatorComponent={() => <Separator ml={horizontal ? 'sm' : 'none'} />}
             data={fixedCount ? assets?.slice(0, fixedCount) : assets}
             horizontal={horizontal}
             keyExtractor={key}

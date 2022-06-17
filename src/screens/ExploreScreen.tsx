@@ -14,16 +14,16 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { FavoriteTokensSection } from 'src/components/explore/FavoriteTokensSection'
+import { SearchResultsSection } from 'src/components/explore/SearchResultsSection'
+import { TopTokensSection } from 'src/components/explore/TopTokensSection'
 import { AppBackground } from 'src/components/gradients'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { AnimatedText } from 'src/components/Text'
-import { FavoriteTokensSection } from 'src/features/explore/FavoriteTokensSection'
 import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
-import { SearchResultsSection } from 'src/features/explore/SearchResultsSection'
-import { TopTokensSection } from 'src/features/explore/TopTokensSection'
 import { theme } from 'src/styles/theme'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)

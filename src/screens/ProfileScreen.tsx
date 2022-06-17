@@ -119,7 +119,7 @@ export function ProfileScreen({ navigation }: Props) {
             balances={favoriteBalances as PortfolioBalance[]}
             header={
               <Text color="neutralTextSecondary" variant="subHead1">
-                {t('Favorite Tokens')}
+                {t('Favorite tokens')}
               </Text>
             }
             loading={loading}

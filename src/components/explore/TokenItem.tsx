@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
 import { useAppSelector } from 'src/app/hooks'
+import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { IconButton } from 'src/components/buttons/IconButton'
-import { Heart } from 'src/components/icons/Heart'
+import { FavoriteButton } from 'src/components/explore/FavoriteButton'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -13,64 +13,55 @@ import { RelativeChange } from 'src/components/text/RelativeChange'
 import { CoingeckoMarketCoin, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
+import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
+import { Screens } from 'src/screens/Screens'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
-
-interface TokenItemProps {
-  coin: CoingeckoMarketCoin
-  currencyId: string
-  gesturesEnabled?: boolean
-  index?: number
-  metadataDisplayType?: string
-  onCycleMetadata?: () => void
-  onPress: () => void
-}
 
 const boxTokenLogoStyle: ImageStyle = { width: 18, height: 18, borderRadius: 18 / 2 }
 const tokenLogoStyle: ImageStyle = { width: 35, height: 35, borderRadius: 35 / 2 }
 
-interface FavoriteButtonProps {
-  active: boolean
+interface TokenItemProps {
   coin: CoingeckoMarketCoin
-  onPress: () => void
-}
-
-function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
-  return (
-    <Flex centered bg="neutralAction" width={80}>
-      <IconButton
-        icon={<Heart active={active} size={24} />}
-        variant="transparent"
-        onPress={onPress}
-      />
-    </Flex>
-  )
+  gesturesEnabled?: boolean
+  index?: number
+  metadataDisplayType?: string
+  onCycleMetadata?: () => void
 }
 
 export function TokenItem({
   coin,
-  currencyId,
   gesturesEnabled,
   index,
   metadataDisplayType,
   onCycleMetadata,
-  onPress,
 }: TokenItemProps) {
   const { t } = useTranslation()
+  const { navigate } = useExploreStackNavigation()
 
-  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(currencyId)
-  const toggleFavoriteCallback = useToggleFavoriteCallback(currencyId)
+  const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
 
-  const renderRightActions = () => {
+  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(_currencyId ?? '')
+  const toggleFavoriteCallback = useToggleFavoriteCallback(_currencyId ?? '')
+
+  const renderRightActions = useCallback(() => {
     // TODO: fade in on drag
     return <FavoriteButton active={isFavoriteToken} coin={coin} onPress={toggleFavoriteCallback} />
-  }
+  }, [coin, isFavoriteToken, toggleFavoriteCallback])
 
+  if (!_currencyId) return null
+
+  // hitSlop prevents TokenItem from interfering with the swipe back navigation gesture
   return (
     <Swipeable
       enabled={gesturesEnabled}
+      hitSlop={{ left: -60 }}
       overshootRight={false}
       renderRightActions={renderRightActions}>
-      <Button testID={`token-item-${coin.symbol}`} onPress={onPress}>
+      <Button
+        testID={`token-item-${coin.symbol}`}
+        onPress={() => {
+          navigate(Screens.TokenDetails, { currencyId: _currencyId })
+        }}>
         <AnimatedFlex
           row
           alignItems="center"
@@ -117,9 +108,16 @@ export function TokenItem({
   )
 }
 
-export function TokenItemBox({ coin, onPress }: TokenItemProps) {
+export function TokenItemBox({ coin }: TokenItemProps) {
+  const { navigate } = useExploreStackNavigation()
+  const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
+  if (!_currencyId) return null
   return (
-    <Pressable testID={`token-box-${coin.symbol}`} onPress={onPress}>
+    <Pressable
+      testID={`token-box-${coin.symbol}`}
+      onPress={() => {
+        navigate(Screens.TokenDetails, { currencyId: _currencyId })
+      }}>
       <Box bg="neutralContainer" borderRadius="lg" justifyContent="space-between">
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">

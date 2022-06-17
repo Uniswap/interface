@@ -30,7 +30,8 @@ export type HomeStackParamList = {
 
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined
-  [Screens.ExploreTokens]: { displayFavorites?: boolean }
+  [Screens.ExploreTokens]: undefined
+  [Screens.ExploreFavorites]: undefined
   [Screens.TokenDetails]: { currencyId: string }
 }
 
