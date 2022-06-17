@@ -1,7 +1,8 @@
 import { utils } from 'ethers'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import Approve from 'src/assets/icons/approve.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
@@ -42,11 +43,13 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
-  const { imageUrl, chainId, address } = notification
+  const theme = useAppTheme()
+  const { imageUrl, chainId, address, event } = notification
   const dispatch = useAppDispatch()
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
@@ -58,9 +61,18 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
         imageUrl={imageUrl}
         width={NOTIFICATION_SIZING.primaryImage}
       />
-      {validChainId && (
+      {(validChainId || event === WalletConnectEvent.Confirmed) && (
         <Box bottom={0} position="absolute" right={0}>
-          <NetworkLogo chainId={validChainId} size={NOTIFICATION_SIZING.secondaryImage} />
+          {event === WalletConnectEvent.Confirmed ? (
+            <Approve
+              color={theme.colors.accentBackgroundSuccess}
+              fill={theme.colors.mainBackground}
+              height={NOTIFICATION_SIZING.secondaryImage}
+              width={NOTIFICATION_SIZING.secondaryImage}
+            />
+          ) : (
+            <NetworkLogo chainId={validChainId!} size={NOTIFICATION_SIZING.secondaryImage} />
+          )}
         </Box>
       )}
     </>

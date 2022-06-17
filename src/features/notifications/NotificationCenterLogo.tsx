@@ -46,27 +46,23 @@ export function NotificationCenterLogo({ size = 24 }: { size?: number }) {
 
   // If a transaction has been pending for longer than 5 mins, don't show the spinner anymore
   if (pendingTransactionCount >= 1 && pendingTransactionCount <= 99 && !txPendingLongerThanLimit) {
-    const spinnerSize = size + 4
     const countToDisplay = pendingTransactionCount === 1 ? undefined : pendingTransactionCount
     return (
       <Box position="relative">
         <Box
           alignItems="center"
-          height={spinnerSize}
+          height={size}
           justifyContent="center"
           position="absolute"
-          width={spinnerSize}
+          width={size}
           zIndex="modal">
           <Text textAlign="center" variant="badge">
             {countToDisplay}
           </Text>
         </Box>
-        <Progress.CircleSnail
-          direction={'clockwise'}
-          indeterminate={true}
-          size={spinnerSize}
-          thickness={2.5}
-        />
+        <Box alignItems="center" flexDirection="row">
+          <Progress.CircleSnail direction={'clockwise'} size={size} thickness={2.5} />
+        </Box>
       </Box>
     )
   }

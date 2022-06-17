@@ -21,6 +21,8 @@ export const formWCNotificationTitle = (appNotification: WalletConnectNotificati
     case WalletConnectEvent.NetworkChanged:
       const networkName = CHAIN_INFO[chainId]?.label
       return i18n.t('{{dappName}} switched to {{networkName}}', { dappName, networkName })
+    case WalletConnectEvent.Confirmed:
+      return i18n.t('Transaction confirmed with {{dappName}}', { dappName })
   }
 }
 

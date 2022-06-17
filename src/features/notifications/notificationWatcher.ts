@@ -4,6 +4,7 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { logger } from 'src/utils/logger'
 import { put, takeLatest } from 'typed-redux-saga'
 
@@ -129,6 +130,17 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           })
         )
       }
+      break
+    case TransactionType.WCConfirm:
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.WalletConnect,
+          event: WalletConnectEvent.Confirmed,
+          dappName: typeInfo.dapp.name,
+          imageUrl: typeInfo.dapp.icon,
+          chainId: typeInfo.dapp.chain_id,
+        })
+      )
       break
     case TransactionType.Unknown:
       yield* put(

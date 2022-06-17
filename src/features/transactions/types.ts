@@ -2,6 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
+import { DappInfo } from 'src/features/walletConnect/types'
 
 export type ChainIdToTxIdToDetails = ChainIdTo<{ [txId: string]: TransactionDetails }>
 
@@ -61,7 +62,7 @@ export interface TransactionReceipt {
 
 /**
  * Be careful adding to this enum, always assign a unique value (typescript will not prevent duplicate values).
- * These values is persisted in state and if you change the value it will cause errors
+ * These values are persisted in state and if you change the value it will cause errors
  */
 export enum TransactionType {
   Approve = 'approve',
@@ -69,6 +70,7 @@ export enum TransactionType {
   Wrap = 'wrap',
   Send = 'send',
   Receive = 'receive',
+  WCConfirm = 'wc-confirm',
   Unknown = 'unknown',
 }
 
@@ -127,6 +129,11 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   tokenId?: string // optional. NFT token id
 }
 
+export interface WCConfirmInfo extends BaseTransactionInfo {
+  type: TransactionType.WCConfirm
+  dapp: DappInfo
+}
+
 export interface UnknownTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Unknown
   tokenAddress?: string
@@ -139,4 +146,5 @@ export type TransactionTypeInfo =
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
+  | WCConfirmInfo
   | UnknownTransactionInfo

@@ -51,6 +51,7 @@ export enum WalletConnectEvent {
   Connected,
   Disconnected,
   NetworkChanged,
+  Confirmed,
 }
 
 function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
@@ -254,7 +255,10 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
         options: {
           request: params.transaction,
         },
-        typeInfo: { type: TransactionType.Unknown },
+        typeInfo: {
+          type: TransactionType.WCConfirm,
+          dapp: params.dapp,
+        },
       }
       const { transactionResponse } = yield* call(sendTransaction, txParams)
       signature = transactionResponse.hash
