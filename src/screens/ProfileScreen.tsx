@@ -2,9 +2,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
-import Scan from 'src/assets/icons/scan.svg'
+import Scan from 'src/assets/icons/qr-simple.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -31,6 +31,7 @@ import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
 export function ProfileScreen({ navigation }: Props) {
+  const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -44,7 +45,10 @@ export function ProfileScreen({ navigation }: Props) {
   const onPressScan = () => {
     selectionAsync()
     dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
+      openModal({
+        name: ModalName.WalletConnectScan,
+        initialState: WalletConnectModalState.WalletQr,
+      })
     )
   }
 
@@ -74,15 +78,15 @@ export function ProfileScreen({ navigation }: Props) {
       </GradientBackground>
       {/* nav header */}
       <Flex row justifyContent="space-between" mt="lg" mx="lg">
-        <Text variant={'h3'}>Profile</Text>
+        <Text variant="h3">{t('Activity')}</Text>
         <Flex centered row gap="md">
           {isWalletConnectSupportedAccount(activeAccount) && (
             <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-              <Scan color="gray100" height={20} width={20} />
+              <Scan color={theme.colors.neutralTextSecondary} height={24} width={24} />
             </Button>
           )}
           <Button name={ElementName.Settings} onPress={onPressSettings}>
-            <Settings color="gray100" height={24} width={24} />
+            <Settings color={theme.colors.neutralTextSecondary} height={24} width={24} />
           </Button>
         </Flex>
       </Flex>
