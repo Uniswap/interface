@@ -24,10 +24,12 @@ jest.mock(
 
 jest.mock('@web3-react/core', () => {
   return {
-    __esModule: true,
-    default: () => ({
-      account: '123',
-      active: true,
+    useWeb3React: () => ({
+      __esModule: true,
+      default: () => ({
+        account: '123',
+        active: true,
+      }),
     }),
   }
 })
