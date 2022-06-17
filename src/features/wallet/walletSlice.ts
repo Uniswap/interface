@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
+import { next } from 'src/utils/array'
+
+const tokensMetadataDisplayTypes = [
+  CoingeckoOrderBy.MarketCapDesc,
+  ClientSideOrderBy.PriceChangePercentage24hDesc,
+]
 
 export enum HardwareDeviceType {
   LEDGER = 'LEDGER',
@@ -19,6 +26,11 @@ interface Wallet {
   flashbotsEnabled: boolean
   hardwareDevices: HardwareDevice[]
   isUnlocked: boolean
+  settings: {
+    // Settings used in the top tokens list
+    tokensOrderBy?: CoingeckoOrderBy | ClientSideOrderBy
+    tokensMetadataDisplayType?: CoingeckoOrderBy | ClientSideOrderBy
+  }
 }
 
 const initialState: Wallet = {
@@ -28,6 +40,7 @@ const initialState: Wallet = {
   flashbotsEnabled: false,
   hardwareDevices: [],
   isUnlocked: false,
+  settings: {},
 }
 
 const slice = createSlice({
@@ -87,6 +100,22 @@ const slice = createSlice({
     ) => {
       state.finishedOnboarding = finishedOnboarding
     },
+    setTokensOrderBy: (
+      state,
+      {
+        payload: { newTokensOrderBy },
+      }: PayloadAction<{ newTokensOrderBy: CoingeckoOrderBy | ClientSideOrderBy }>
+    ) => {
+      state.settings.tokensOrderBy = newTokensOrderBy
+
+      // Unset metadata display type to fallback to order by value
+      state.settings.tokensMetadataDisplayType = undefined
+    },
+    cycleTokensMetadataDisplayType: (state) => {
+      state.settings.tokensMetadataDisplayType =
+        next(tokensMetadataDisplayTypes, state.settings.tokensMetadataDisplayType) ??
+        tokensMetadataDisplayTypes[0]
+    },
     resetWallet: () => initialState,
   },
 })
@@ -103,6 +132,8 @@ export const {
   toggleBluetooth,
   setFinishedOnboarding,
   toggleFlashbots,
+  setTokensOrderBy,
+  cycleTokensMetadataDisplayType,
 } = slice.actions
 
 export const walletReducer = slice.reducer

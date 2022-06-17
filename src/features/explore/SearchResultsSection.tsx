@@ -13,7 +13,6 @@ import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
 import {
   CoingeckoMarketCoin,
   CoingeckoOrderBy,
@@ -22,6 +21,7 @@ import {
 import { useENS } from 'src/features/ens/useENS'
 import { useMarketTokens, useTokenSearchResults } from 'src/features/explore/hooks'
 import { WalletItem, WalletItemProps } from 'src/features/explore/WalletItem'
+import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
 import { Screens } from 'src/screens/Screens'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
@@ -33,34 +33,26 @@ const TRENDING_WALLETS: WalletItemProps[] = [
   { address: '0xD387A6E4e84a6C86bd90C158C6028A58CC8Ac459', ensName: 'pranksy.eth' },
 ]
 
-type TokenResultRowProps = {
-  coin: CoingeckoSearchCoin | CoingeckoMarketCoin
-  onPress: () => void
-}
-
-function TokenResultRow({ coin, onPress }: TokenResultRowProps) {
-  const { name, symbol } = coin
-  const uri = (coin as CoingeckoSearchCoin).large || (coin as CoingeckoMarketCoin).image
-
-  return (
-    <Button onPress={onPress}>
-      <Flex row alignItems="center" px="xs" py="sm">
-        <Image source={{ uri }} style={logoStyle} />
-        <Flex gap="none">
-          <Text color="neutralTextPrimary" variant="subHead1">
-            {name}
-          </Text>
-          <Text color="neutralTextSecondary" variant="caption">
-            {symbol.toUpperCase() ?? ''}
-          </Text>
-        </Flex>
-      </Flex>
-    </Button>
-  )
-}
-
 export interface SearchResultsSectionProps {
   searchQuery: string
+}
+
+function SearchResult({ coin }: { coin: CoingeckoSearchCoin }) {
+  const { navigate } = useExploreStackNavigation()
+  const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
+
+  if (!_currencyId) return null
+
+  return (
+    <TokenResultRow
+      coin={coin}
+      onPress={() => {
+        navigate(Screens.TokenDetails, {
+          currencyId: _currencyId,
+        })
+      }}
+    />
+  )
 }
 
 export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps) {
@@ -69,7 +61,6 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   const navigation = useExploreStackNavigation()
 
   const { tokens: searchTokens, isLoading: searchIsLoading } = useTokenSearchResults(searchQuery)
-  const { coinIdToCurrencyIds } = useCoinIdAndCurrencyIdMappings()
   const { tokens: trendingTokens, isLoading: trendingIsLoading } = useMarketTokens({
     remoteOrderBy: CoingeckoOrderBy.VolumeDesc,
   })
@@ -85,22 +76,8 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     : ensAddress || null
 
   const renderTokenItem = useCallback(
-    ({ item: token }: ListRenderItemInfo<CoingeckoSearchCoin>) => {
-      // TODO: support non mainnet
-      const currencyId = coinIdToCurrencyIds[token.id][ChainId.Mainnet]
-      if (!currencyId) return null
-      return (
-        <TokenResultRow
-          coin={token}
-          onPress={() => {
-            navigation.navigate(Screens.TokenDetails, {
-              currencyId,
-            })
-          }}
-        />
-      )
-    },
-    [coinIdToCurrencyIds, navigation]
+    ({ item: coin }: ListRenderItemInfo<CoingeckoSearchCoin>) => <SearchResult coin={coin} />,
+    []
   )
 
   const renderWalletItem = useCallback(
@@ -258,6 +235,32 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
         </AnimatedFlex>
       )}
     </Flex>
+  )
+}
+
+type TokenResultRowProps = {
+  coin: CoingeckoSearchCoin | CoingeckoMarketCoin
+  onPress: () => void
+}
+
+function TokenResultRow({ coin, onPress }: TokenResultRowProps) {
+  const { name, symbol } = coin
+  const uri = (coin as CoingeckoSearchCoin).large || (coin as CoingeckoMarketCoin).image
+
+  return (
+    <Button onPress={onPress}>
+      <Flex row alignItems="center" px="xs" py="sm">
+        <Image source={{ uri }} style={logoStyle} />
+        <Flex gap="none">
+          <Text color="neutralTextPrimary" variant="subHead1">
+            {name}
+          </Text>
+          <Text color="neutralTextSecondary" variant="caption">
+            {symbol.toUpperCase() ?? ''}
+          </Text>
+        </Flex>
+      </Flex>
+    </Button>
   )
 }
 

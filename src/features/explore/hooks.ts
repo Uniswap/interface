@@ -1,9 +1,11 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { useMemo, useReducer } from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { useCallback, useMemo } from 'react'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { PollingInterval } from 'src/constants/misc'
-import { useGetSearchQuery } from 'src/features/dataApi/coingecko/enhancedApi'
-import { useGetCoinsMarketsQuery } from 'src/features/dataApi/coingecko/generatedApi'
+import {
+  useGetCoinsMarketsQuery,
+  useGetSearchQuery,
+} from 'src/features/dataApi/coingecko/enhancedApi'
 import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
 import {
   ClientSideOrderBy,
@@ -12,7 +14,8 @@ import {
   GetCoinsSearchResponse,
 } from 'src/features/dataApi/coingecko/types'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { next } from 'src/utils/array'
+import { selectTokensMetadataDisplayType } from 'src/features/wallet/selectors'
+import { cycleTokensMetadataDisplayType } from 'src/features/wallet/walletSlice'
 import { getCompareFn } from './utils'
 
 const COINS_PER_PAGE = 100
@@ -36,8 +39,6 @@ export function useFavoriteTokenInfo() {
   return useMarketTokens({ ids: favorites })
 }
 
-// TODO: consider casting coins to `Currency` by merging market data
-//       with Coingecko list data
 export function useMarketTokens({
   category,
   ids,
@@ -64,7 +65,7 @@ export function useMarketTokens({
           vsCurrency: 'usd',
         },
     {
-      pollingInterval: PollingInterval.Normal,
+      pollingInterval: PollingInterval.Fast,
     }
   )
 
@@ -90,15 +91,11 @@ export function useTokenSearchResults(query: string) {
   return { tokens: (results as Nullable<GetCoinsSearchResponse>)?.coins, isLoading }
 }
 
-// TODO: fix in follow-up PR
-const tokenMetadataCategories = [CoingeckoOrderBy.MarketCapDesc, CoingeckoOrderBy.VolumeDesc]
+export function useTokenMetadataDisplayType(): [CoingeckoOrderBy | ClientSideOrderBy, () => void] {
+  const dispatch = useAppDispatch()
 
-// TODO(judo): consider persisting latest category
-export function useTokenMetadataDisplayType() {
-  // simple reducer to cycle through categories
-  return useReducer(
-    (current: CoingeckoOrderBy) =>
-      next(tokenMetadataCategories, current) ?? tokenMetadataCategories[0],
-    tokenMetadataCategories[0]
-  )
+  const metadataDisplayType = useAppSelector(selectTokensMetadataDisplayType)
+  const cycleMetadata = useCallback(() => dispatch(cycleTokensMetadataDisplayType()), [dispatch])
+
+  return [metadataDisplayType, cycleMetadata]
 }

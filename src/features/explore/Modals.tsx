@@ -1,35 +1,38 @@
 import { TFunction } from 'i18next'
-import React, { useMemo, useReducer, useState } from 'react'
+import React, { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
 import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { ModalName } from 'src/features/telemetry/constants'
+import { selectTokensOrderBy } from 'src/features/wallet/selectors'
+import { setTokensOrderBy } from 'src/features/wallet/walletSlice'
 import { flex } from 'src/styles/flex'
 
 const CheckmarkSize = 18
 
 export function useOrderByModal() {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+
   const [isVisible, toggleModalVisible] = useReducer((visible) => !visible, false)
-  const [orderBy, setOrderBy] = useState<CoingeckoOrderBy | ClientSideOrderBy>(
-    CoingeckoOrderBy.MarketCapDesc
-  )
+
+  const orderBy = useAppSelector(selectTokensOrderBy)
 
   const options = useMemo(
     () =>
       getOrderByModalOptions(
         orderBy,
-        (newOrderBy: CoingeckoOrderBy | ClientSideOrderBy) => {
-          setOrderBy(newOrderBy)
+        (newTokensOrderBy: CoingeckoOrderBy | ClientSideOrderBy) => {
+          dispatch(setTokensOrderBy({ newTokensOrderBy }))
           toggleModalVisible()
         },
         t
       ),
-    [orderBy, t]
+    [orderBy, t, dispatch]
   )
 
   return {

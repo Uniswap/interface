@@ -78,6 +78,10 @@ export const v1Schema = {
       isOpen: false,
       initialState: undefined,
     },
+    wallet: {
+      ...v0Schema.wallet,
+      settings: {},
+    },
   },
 }
 

@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
 import { currencyIdToChain } from 'src/utils/currencyId'
@@ -10,7 +11,7 @@ import { currencyIdToChain } from 'src/utils/currencyId'
 /**
  * @param currencyId currency address or identifier (ETH for native Ether)
  */
-export function useCurrency(currencyId?: string): Currency | null | undefined {
+export function useCurrency(currencyId?: string): Nullable<Currency> {
   const chainId = currencyIdToChain(currencyId)
   const isNative = currencyId?.endsWith(NATIVE_ADDRESS) || currencyId?.endsWith(NATIVE_ADDRESS_ALT)
   const token = useTokenInfoFromAddress(
@@ -31,4 +32,14 @@ export function useCurrency(currencyId?: string): Currency | null | undefined {
   if (currencyId === null || currencyId === undefined) return currencyId
   if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
   return isNative ? extendedEther : token
+}
+
+export function useCurrencyIdFromCoingeckoId(coingeckoId?: string): Nullable<string> {
+  const { coinIdToCurrencyIds, isLoading } = useCoinIdAndCurrencyIdMappings()
+
+  // TODO: iterate over available platforms starting from Mainnet
+  const currencyId =
+    isLoading || !coingeckoId ? undefined : coinIdToCurrencyIds[coingeckoId][ChainId.Mainnet]
+
+  return currencyId
 }

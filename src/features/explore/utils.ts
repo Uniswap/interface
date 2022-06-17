@@ -1,3 +1,4 @@
+import { TFunction } from 'i18next'
 import {
   ClientSideOrderBy,
   CoingeckoMarketCoin,
@@ -34,5 +35,20 @@ export function getOrderByValues(orderBy: CoingeckoOrderBy | ClientSideOrderBy) 
   return {
     localOrderBy: !requiresRemoteOrderBy ? (orderBy as ClientSideOrderBy) : undefined,
     remoteOrderBy: requiresRemoteOrderBy ? (orderBy as CoingeckoOrderBy) : undefined,
+  }
+}
+
+export function getOrderByLabel(orderBy: CoingeckoOrderBy | ClientSideOrderBy, t: TFunction) {
+  if (!orderBy) return null
+
+  switch (orderBy) {
+    case CoingeckoOrderBy.MarketCapDesc:
+      return t('Market cap')
+    case CoingeckoOrderBy.VolumeDesc:
+      return t('Volume')
+    case ClientSideOrderBy.PriceChangePercentage24hDesc:
+      return t('Percent change')
+    default:
+      throw new Error('Unexpected order by value ' + orderBy)
   }
 }

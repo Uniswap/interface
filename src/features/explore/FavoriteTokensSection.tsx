@@ -1,9 +1,10 @@
 import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
+import { FadeInUp } from 'react-native-reanimated'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Heart } from 'src/components/icons/Heart'
-import { Box, Flex } from 'src/components/layout'
+import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
@@ -35,11 +36,11 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
 
       return (
         <TokenItemBox
+          coin={token}
           currencyId={currencyId}
           gesturesEnabled={props.expanded}
           index={index}
           metadataDisplayType={props.metadataDisplayType}
-          token={token}
           onCycleMetadata={props.onCycleMetadata}
           onPress={() => {
             navigation.navigate(Screens.TokenDetails, {
@@ -61,7 +62,7 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
   if (!favorites?.length) return null
 
   return (
-    <Box mb="sm">
+    <AnimatedBox entering={FadeInUp} mb="sm">
       <GenericTokenSection
         {...props}
         displayFavorites
@@ -84,6 +85,6 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
           </Flex>
         }
       />
-    </Box>
+    </AnimatedBox>
   )
 }
