@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import dayjs from 'dayjs'
 import { utils } from 'ethers/lib/ethers'
+import { REHYDRATE } from 'redux-persist'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { START_OF_TIME } from 'src/features/dataApi/constants'
@@ -130,6 +131,11 @@ export const dataApi = createApi({
         ) ?? [],
     }),
   }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === REHYDRATE) {
+      return action.payload[reducerPath]
+    }
+  },
 })
 
 export const { useBalancesQuery, useDailyTokenPricesQuery, useSpotPricesQuery } = dataApi

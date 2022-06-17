@@ -1,6 +1,7 @@
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { utils } from 'ethers'
+import { REHYDRATE } from 'redux-persist'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import {
@@ -81,6 +82,11 @@ export const nftApi = createApi({
       transformResponse: (response: OpenseaNFTCollectionResponse) => response.collection,
     }),
   }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === REHYDRATE) {
+      return action.payload[reducerPath]
+    }
+  },
 })
 
 export const { useNftBalancesQuery, useNftCollectionQuery } = nftApi
