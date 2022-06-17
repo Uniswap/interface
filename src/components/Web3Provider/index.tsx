@@ -1,6 +1,6 @@
 import { Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { BACKFILLABLE_WALLETS, getConnectorForWallet, gnosisSafe, network, useConnectors } from 'connectors'
+import { BACKFILLABLE_WALLETS, getConnectorForWallet, gnosisSafe, injected, network, useConnectors } from 'connectors'
 import { ReactNode, useEffect } from 'react'
 import { useAppSelector } from 'state/hooks'
 
@@ -24,6 +24,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     connect(gnosisSafe)
+    connect(injected)
     connect(network)
 
     if (selectedWallet) {
