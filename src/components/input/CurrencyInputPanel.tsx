@@ -1,13 +1,16 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { InlineMaxAmountButton } from 'src/components/buttons/MaxAmountButton'
 import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
+import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
+import { formatCurrencyAmount } from 'src/utils/format'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
@@ -42,6 +45,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   } = props
 
   const theme = useAppTheme()
+  const { t } = useTranslation()
 
   const transformedProps = useRestyle(restyleFunctions, rest)
   const isBlankOutputState = isOutput && !currency
@@ -50,7 +54,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     <Flex
       centered
       borderRadius="lg"
-      gap="lg"
+      gap="xs"
       pt={isBlankOutputState ? 'lg' : 'md'}
       {...transformedProps}>
       {!isBlankOutputState && (
@@ -61,6 +65,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           fontFamily={theme.textVariants.h1.fontFamily}
           fontSize={36}
           height={36}
+          mb="xs"
           placeholder="0"
           px="none"
           py="none"
@@ -70,6 +75,12 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           onPressIn={() => onSetAmount('')}
         />
+      )}
+
+      {!isOutput && currency && (
+        <Text color="accentText2" variant="body2">
+          {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
+        </Text>
       )}
 
       <Flex row alignItems="center" gap="xs" justifyContent="center">
