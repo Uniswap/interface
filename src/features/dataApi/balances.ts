@@ -19,7 +19,6 @@ import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { isTestnet } from 'src/utils/chainId'
 import { buildCurrencyId, currencyId, CurrencyId } from 'src/utils/currencyId'
-import { logger } from 'src/utils/logger'
 import { percentDifference } from 'src/utils/statistics'
 
 function useChainBalances(
@@ -145,21 +144,15 @@ function formatSerializedBalanceItems(
     (portfolioBalances: PortfolioBalances, item: SerializablePortfolioBalance) => {
       const id = buildCurrencyId(chainId, item.contract_address)
       const currency = knownCurrencies[id]
-      if (!currency) {
-        logger.debug(
-          'balances',
-          'useChainBalances',
-          'Ignoring item with balance: ',
-          id,
-          item.contract_ticker_symbol
-        )
-      } else {
+
+      if (currency) {
         portfolioBalances[id] = {
           amount: CurrencyAmount.fromRawAmount(currency, item.balance),
           balanceUSD: item.balanceUSD,
           relativeChange24: percentDifference(item.quote_rate, item.quote_rate_24h),
         }
       }
+
       return portfolioBalances
     },
     {}
