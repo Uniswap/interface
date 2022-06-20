@@ -11,27 +11,26 @@ import { mixPath, useVector } from 'react-native-redash'
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
-import { Header } from 'src/components/PriceChart/Header'
 import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/Model'
+import { PriceHeader } from 'src/components/PriceChart/PriceHeader'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { Theme } from 'src/styles/theme'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
-const SELECTION_WIDTH = WIDTH - 50
+const SELECTION_WIDTH = WIDTH
 const BUTTON_WIDTH = SELECTION_WIDTH / NUM_GRAPHS
 
 interface GraphProps {
   graphs: GraphMetadatas
-  title: string
 }
 
 /**
  * Displays a set of graphs with header, scrubbable chart and navigation row.
  * Inspired by https://github.com/wcandillon/can-it-be-done-in-react-native/tree/master/season4/src/Rainbow
  */
-export const PriceExplorer = ({ graphs, title }: GraphProps) => {
+export const PriceExplorer = ({ graphs }: GraphProps) => {
   const theme = useTheme<Theme>()
 
   // whether the graph pan gesture is active
@@ -72,27 +71,26 @@ export const PriceExplorer = ({ graphs, title }: GraphProps) => {
   }))
 
   return (
-    <Box flex={1}>
-      <Header
+    <Box>
+      <PriceHeader
         graphs={graphs}
         index={currentGraphIndex}
         isPanning={isPanning}
-        title={title}
         translation={translation}
       />
-      <Box mb="sm">
+      <Box my="sm">
         <Svg height={HEIGHT} width={WIDTH}>
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
-            stroke={theme.colors.deprecated_primary1}
+            stroke={theme.colors.accentBackgroundAction}
             strokeWidth={2}
           />
 
           <Defs>
             <LinearGradient id="gradient" x1="50%" x2="50%" y1="0%" y2="100%">
-              <Stop offset="0%" stopColor={theme.colors.deprecated_primary1} stopOpacity="0.2" />
-              <Stop offset="100%" stopColor={theme.colors.deprecated_primary1} stopOpacity="0" />
+              <Stop offset="0%" stopColor={theme.colors.accentBackgroundAction} stopOpacity="0.2" />
+              <Stop offset="100%" stopColor={theme.colors.accentBackgroundAction} stopOpacity="0" />
             </LinearGradient>
           </Defs>
 
@@ -113,7 +111,7 @@ export const PriceExplorer = ({ graphs, title }: GraphProps) => {
       <Box alignSelf="center" flexDirection="row" width={SELECTION_WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="deprecated_primary1"
+            bg="neutralSurface"
             borderRadius="lg"
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
             width={BUTTON_WIDTH}

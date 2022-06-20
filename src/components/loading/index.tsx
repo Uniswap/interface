@@ -29,7 +29,7 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
       )
     case 'graph':
       return (
-        <Box borderRadius="lg" overflow="hidden">
+        <Box overflow="hidden">
           <GraphCurve color={theme.colors.deprecated_gray100} />
           <GraphCurveArea fill={theme.colors.deprecated_gray50} style={StyleSheet.absoluteFill} />
         </Box>

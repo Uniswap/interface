@@ -1,23 +1,19 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { CenterBox } from 'src/components/layout/CenterBox'
-import { Screen } from 'src/components/layout/Screen'
+import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
-import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import { AssetType } from 'src/entities/assets'
@@ -34,6 +30,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 import { currencyAddress, currencyId } from 'src/utils/currencyId'
+import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -46,19 +43,35 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const onFavoritePress = useToggleFavoriteCallback(currencyId(currency))
 
   return (
-    <CenterBox flexDirection="row" justifyContent="space-between" my="md">
-      <BackButton ml="lg" />
-      <Flex centered row gap="sm">
-        <CurrencyLogo currency={currency} size={30} />
-        <Text variant="h2">{currency.symbol ?? t('Unknown token')}</Text>
+    <Flex row justifyContent="space-between" mx="md">
+      <Flex centered row gap="xs">
+        <CurrencyLogo currency={currency} size={35} />
+        <Box>
+          <Text variant="h3">{currency.name ?? t('Unknown token')}</Text>
+          <Text variant="caption">{currency.symbol ?? t('Unknown token')}</Text>
+        </Box>
       </Flex>
       <IconButton
         icon={<Heart active={isFavoriteToken} size={24} />}
-        mr="sm"
+        px="none"
         variant="transparent"
         onPress={onFavoritePress}
       />
-    </CenterBox>
+    </Flex>
+  )
+}
+
+function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
+  const { t } = useTranslation()
+
+  return (
+    <Flex centered gap="none">
+      <Flex centered row gap="xxs">
+        <CurrencyLogo currency={currency} size={20} />
+        <Text variant="subHead1">{currency.name ?? t('Unknown token')}</Text>
+      </Flex>
+      <Text variant="caption">{currency.symbol ?? t('Unknown token')}</Text>
+    </Flex>
   )
 }
 
@@ -156,66 +169,74 @@ function TokenDetails({ currency }: { currency: Currency }) {
   }
 
   return (
-    <Screen>
-      <TokenDetailsHeader currency={currency} />
-      <ScrollView>
-        <Flex gap="lg">
+    <>
+      <ScrollDetailScreen titleElement={<HeaderTitleElement currency={currency} />}>
+        <Flex gap="md" my="md">
+          <TokenDetailsHeader currency={currency} />
           <PriceChart currency={currency} />
-          <Box>
-            {balance && (
-              <Box mx="lg">
-                <Text color="deprecated_gray600" variant="body2">
-                  {t('Your balance')}
+          {balance && (
+            <Flex bg="neutralContainer" borderRadius="sm" gap="md" mx="md" p="md">
+              <Text color="neutralTextSecondary" variant="subHead2">
+                {t('Your balance')}
+              </Text>
+              <Flex row alignItems="center" justifyContent="space-between">
+                <Text variant="h3">
+                  {`${formatCurrencyAmount(balance.amount)}`} {currency.symbol}
                 </Text>
-                <TokenBalanceItem balance={balance} />
-              </Box>
-            )}
-            <Flex flexDirection="row" gap="sm" mx="lg" my="md">
-              <PrimaryButton
-                disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
-                flex={1}
-                label={t('Buy')}
-                name={ElementName.BuyToken}
-                textVariant="mediumLabel"
-                onPress={() => onPressSwap(SwapType.BUY)}
-              />
-              <PrimaryButton
-                disabled={!balance || tokenWarningLevel === TokenWarningLevel.BLOCKED}
-                flex={1}
-                label={t('Sell')}
-                name={ElementName.SellToken}
-                textVariant="mediumLabel"
-                variant="gray"
-                onPress={() => onPressSwap(SwapType.SELL)}
-              />
-              <IconButton
-                bg="deprecated_gray100"
-                borderRadius="md"
-                disabled={!balance}
-                icon={
-                  <SendIcon
-                    color={theme.colors.deprecated_textColor}
-                    height={20}
-                    strokeWidth={1.5}
-                    width={20}
-                  />
-                }
-                justifyContent="center"
-                px="md"
-                onPress={onPressSend}
-              />
+                <Text variant="body1">{formatUSDPrice(balance.balanceUSD)}</Text>
+              </Flex>
             </Flex>
-            {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
-              <Box mx="lg">
-                <TokenWarningCard
-                  tokenWarningLevel={tokenWarningLevel}
-                  onDismiss={warningDismissCallback}
-                />
-              </Box>
-            )}
-          </Box>
+          )}
+
+          {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
+            <Box mx="md">
+              <TokenWarningCard
+                tokenWarningLevel={tokenWarningLevel}
+                onDismiss={warningDismissCallback}
+              />
+            </Box>
+          )}
         </Flex>
-      </ScrollView>
+      </ScrollDetailScreen>
+      <Flex row bg="neutralBackground" gap="sm" px="sm" py="xs">
+        <PrimaryButton
+          disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
+          flex={1}
+          label={t('Buy')}
+          name={ElementName.BuyToken}
+          textVariant="mediumLabel"
+          onPress={() => onPressSwap(SwapType.BUY)}
+        />
+        {balance && (
+          <PrimaryButton
+            disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
+            flex={1}
+            label={t('Sell')}
+            name={ElementName.SellToken}
+            textVariant="mediumLabel"
+            variant="gray"
+            onPress={() => onPressSwap(SwapType.SELL)}
+          />
+        )}
+        {balance && (
+          <IconButton
+            bg="deprecated_gray100"
+            borderRadius="md"
+            disabled={!balance}
+            icon={
+              <SendIcon
+                color={theme.colors.neutralTextSecondary}
+                height={20}
+                strokeWidth={1.5}
+                width={20}
+              />
+            }
+            justifyContent="center"
+            px="md"
+            onPress={onPressSend}
+          />
+        )}
+      </Flex>
       <BottomSheetModal
         isVisible={
           activeSwapAttemptType === SwapType.BUY || activeSwapAttemptType === SwapType.SELL
@@ -228,6 +249,6 @@ function TokenDetails({ currency }: { currency: Currency }) {
           onClose={() => setActiveSwapAttemptType(undefined)}
         />
       </BottomSheetModal>
-    </Screen>
+    </>
   )
 }

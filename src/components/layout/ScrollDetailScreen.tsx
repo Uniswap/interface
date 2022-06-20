@@ -1,7 +1,8 @@
+import { useNavigation } from '@react-navigation/native'
 import { BlurView } from 'expo-blur'
-import React, { ReactElement } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatListProps, useColorScheme, ViewStyle } from 'react-native'
+import { useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolate,
   interpolate,
@@ -12,7 +13,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -28,13 +28,19 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 // Types for React Native View prop pointerEvents, necessary typing for AnimatedBlurView's animatedProps
 type PointerEvent = 'auto' | 'none'
 
-type ListDetailScreenProps = {
+type ScrollDetailScreenProps = {
   title?: string
+  titleElement?: ReactElement
   contentHeader?: ReactElement
-} & FlatListProps<any>
+}
 
-export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDetailScreenProps) {
-  const navigation = useExploreStackNavigation()
+export function ScrollDetailScreen({
+  title,
+  titleElement,
+  contentHeader,
+  children,
+}: PropsWithChildren<ScrollDetailScreenProps>) {
+  const navigation = useNavigation()
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
   const insets = useSafeAreaInsets()
@@ -66,11 +72,11 @@ export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDet
 
   const contentHeaderStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y / 2], [1, 0], Extrapolate.CLAMP),
+      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [1, 0], Extrapolate.CLAMP),
     }
   })
 
-  const ListContentHeader = (
+  const ContentHeader = (
     <AnimatedFlex mt="sm" mx="md" style={contentHeaderStyle}>
       <Button
         onPress={() => {
@@ -101,9 +107,13 @@ export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDet
       tint={isDarkMode ? 'dark' : 'default'}>
       <Flex row alignItems="center" justifyContent="space-between" px="md" py="sm">
         <BackButton color="neutralTextPrimary" size={18} />
-        <Text mx="xs" variant="subHead1">
-          {title}
-        </Text>
+        {titleElement ? (
+          titleElement
+        ) : title ? (
+          <Text mx="xs" variant="subHead1">
+            {title}
+          </Text>
+        ) : null}
         <Box width={18} />
       </Flex>
     </AnimatedBlurView>
@@ -112,13 +122,14 @@ export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDet
   return (
     <Screen edges={['top', 'left', 'right']}>
       {FixedHeaderBar}
-      <Animated.FlatList
-        {...listProps}
-        ListHeaderComponent={ListContentHeader}
+      <Animated.ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        onScroll={scrollHandler}
-      />
+        onScroll={scrollHandler}>
+        {ContentHeader}
+        {children}
+      </Animated.ScrollView>
     </Screen>
   )
 }

@@ -36,14 +36,12 @@ const graphs = [
 ] as const
 
 it('renders correctly', () => {
-  const tree = renderWithTheme(<PriceExplorer graphs={graphs} title="My Token" />)
+  const tree = renderWithTheme(<PriceExplorer graphs={graphs} />)
   expect(tree).toMatchSnapshot()
 })
 
 it('navigates between ranges', () => {
-  const { getByText } = render(
-    <WithTheme component={<PriceExplorer graphs={graphs} title="My token" />} />
-  )
+  const { getByText } = render(<WithTheme component={<PriceExplorer graphs={graphs} />} />)
 
   fireEvent.press(getByText(graphs[1].label))
 })

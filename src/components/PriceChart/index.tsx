@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Loading } from 'src/components/loading'
@@ -18,18 +17,18 @@ export const PriceChart = ({ currency }: PriceChartProps) => {
   // TODO(judo): improve loading state
   const loading = useMemo(() => graphs?.some((g) => g.data === null), [graphs])
 
-  const { t } = useTranslation()
-
   const showLoading = loading || !graphs
   return (
-    <Box m="lg" mt="none" overflow="hidden">
+    <Box overflow="hidden">
       {showLoading ? (
-        <Flex gap="lg" mb="lg" mt="xl">
-          <Loading type="header" />
+        <Flex gap="lg" my="md">
+          <Box mx="md">
+            <Loading type="header" />
+          </Box>
           <Loading type="graph" />
         </Flex>
       ) : (
-        <PriceExplorer graphs={graphs} title={currency.name ?? t('Unknown token')} />
+        <PriceExplorer graphs={graphs} />
       )}
     </Box>
   )

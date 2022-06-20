@@ -6,7 +6,6 @@ exports[`renders correctly 1`] = `
     Array [
       Object {
         "display": "flex",
-        "flex": 1,
       },
     ]
   }
@@ -15,11 +14,9 @@ exports[`renders correctly 1`] = `
     style={
       Array [
         Object {
-          "alignItems": "center",
           "display": "flex",
-          "flex": 1,
-          "flexDirection": "column",
-          "justifyContent": "center",
+          "marginBottom": 24,
+          "marginHorizontal": 16,
         },
       ]
     }
@@ -34,40 +31,11 @@ exports[`renders correctly 1`] = `
       editable={false}
       style={
         Object {
-          "color": "#C0C7DE",
-          "fontFamily": "Inter-SemiBold",
-          "fontSize": 16,
-          "lineHeight": 20,
-        }
-      }
-      text="My Token"
-      underlineColorAndroid="transparent"
-      value="My Token"
-    />
-    <View
-      style={
-        Array [
-          Object {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-          },
-        ]
-      }
-    />
-    <TextInput
-      animatedStyle={
-        Object {
-          "value": Object {},
-        }
-      }
-      collapsable={false}
-      editable={false}
-      style={
-        Object {
           "color": "#000000",
-          "fontSize": 45,
+          "fontFamily": "Inter-Medium",
+          "fontSize": 36,
+          "fontWeight": "300",
+          "lineHeight": 40,
         }
       }
       text="$100"
@@ -78,43 +46,123 @@ exports[`renders correctly 1`] = `
       style={
         Array [
           Object {
+            "alignItems": "stretch",
             "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
           },
         ]
       }
-    />
-    <TextInput
-      animatedStyle={
-        Object {
-          "value": Object {
-            "color": "#FD4040",
-          },
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "stretch",
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+            },
+          ]
         }
-      }
-      collapsable={false}
-      editable={false}
-      style={
-        Object {
-          "color": "#FD4040",
-          "fontFamily": "Inter-Medium",
-          "fontSize": 20,
-          "lineHeight": 24,
+      >
+        <TextInput
+          animatedStyle={
+            Object {
+              "value": Object {},
+            }
+          }
+          collapsable={false}
+          editable={false}
+          style={
+            Object {
+              "color": "#5F667D",
+              "fontFamily": "Inter-Regular",
+              "fontSize": 12,
+              "lineHeight": 16,
+            }
+          }
+          text="-50%"
+          underlineColorAndroid="transparent"
+          value="-50%"
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 0,
+                "width": 0,
+              },
+            ]
+          }
+        />
+        <TextInput
+          animatedStyle={
+            Object {
+              "value": Object {
+                "color": "#FD4040",
+              },
+            }
+          }
+          collapsable={false}
+          editable={false}
+          style={
+            Object {
+              "color": "#FD4040",
+              "fontFamily": "Inter-Regular",
+              "fontSize": 12,
+              "lineHeight": 16,
+            }
+          }
+          text="↘"
+          underlineColorAndroid="transparent"
+          value="↘"
+        />
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 4,
+              "width": 4,
+            },
+          ]
         }
-      }
-      text="-50%"
-      underlineColorAndroid="transparent"
-      value="-50%"
-    />
+      />
+      <TextInput
+        animatedStyle={
+          Object {
+            "value": Object {},
+          }
+        }
+        collapsable={false}
+        editable={false}
+        style={
+          Object {
+            "color": "#5F667D",
+            "fontFamily": "Inter-Regular",
+            "fontSize": 12,
+            "lineHeight": 16,
+          }
+        }
+        text=""
+        underlineColorAndroid="transparent"
+        value=""
+      />
+    </View>
   </View>
   <View
     style={
       Array [
         Object {
           "display": "flex",
-          "marginBottom": 12,
+          "marginVertical": 12,
         },
       ]
     }
@@ -305,7 +353,7 @@ exports[`renders correctly 1`] = `
           "alignSelf": "center",
           "display": "flex",
           "flexDirection": "row",
-          "width": 700,
+          "width": 750,
         },
       ]
     }
@@ -327,7 +375,7 @@ exports[`renders correctly 1`] = `
             "value": Object {
               "transform": Array [
                 Object {
-                  "translateX": 140,
+                  "translateX": 150,
                 },
               ],
             },
@@ -337,10 +385,10 @@ exports[`renders correctly 1`] = `
         style={
           Array [
             Object {
-              "backgroundColor": "#EF368E",
+              "backgroundColor": "#F4F6FE",
               "borderRadius": 16,
               "display": "flex",
-              "width": 140,
+              "width": 150,
             },
             Object {
               "bottom": 0,
@@ -350,7 +398,7 @@ exports[`renders correctly 1`] = `
               "top": 0,
               "transform": Array [
                 Object {
-                  "translateX": 140,
+                  "translateX": 150,
                 },
               ],
             },
@@ -373,7 +421,7 @@ exports[`renders correctly 1`] = `
           Object {
             "display": "flex",
             "padding": 8,
-            "width": 140,
+            "width": 150,
           },
         ]
       }
@@ -382,14 +430,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#EF368E",
+              "color": "#5F667D",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#EF368E",
+            "color": "#5F667D",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -416,7 +464,7 @@ exports[`renders correctly 1`] = `
           Object {
             "display": "flex",
             "padding": 8,
-            "width": 140,
+            "width": 150,
           },
         ]
       }
@@ -425,14 +473,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "rgba(255, 255, 255, 1)",
+              "color": "rgba(7, 10, 21, 1)",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "rgba(255, 255, 255, 1)",
+            "color": "rgba(7, 10, 21, 1)",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -459,7 +507,7 @@ exports[`renders correctly 1`] = `
           Object {
             "display": "flex",
             "padding": 8,
-            "width": 140,
+            "width": 150,
           },
         ]
       }
@@ -468,14 +516,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#EF368E",
+              "color": "#5F667D",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#EF368E",
+            "color": "#5F667D",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -502,7 +550,7 @@ exports[`renders correctly 1`] = `
           Object {
             "display": "flex",
             "padding": 8,
-            "width": 140,
+            "width": 150,
           },
         ]
       }
@@ -511,14 +559,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#EF368E",
+              "color": "#5F667D",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#EF368E",
+            "color": "#5F667D",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -545,7 +593,7 @@ exports[`renders correctly 1`] = `
           Object {
             "display": "flex",
             "padding": 8,
-            "width": 140,
+            "width": 150,
           },
         ]
       }
@@ -554,14 +602,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#EF368E",
+              "color": "#5F667D",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#EF368E",
+            "color": "#5F667D",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,

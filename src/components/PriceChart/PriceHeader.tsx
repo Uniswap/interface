@@ -16,6 +16,7 @@ import {
 } from 'react-native-reanimated'
 import { ReText, round } from 'react-native-redash'
 import { useAppTheme } from 'src/app/hooks'
+import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { HEIGHT, WIDTH } from 'src/components/PriceChart/Model'
 import {
@@ -29,7 +30,6 @@ interface HeaderProps {
   graphs: GraphMetadatas
   index: AnimatedNumber
   isPanning: SharedValue<boolean>
-  title: string
   translation: AnimatedTranslation
 }
 
@@ -41,7 +41,7 @@ const StyledReText = createRestyleComponent<
   Theme
 >([createVariant({ themeKey: 'textVariants' }), typography, color], ReText)
 
-export const Header = ({ graphs, index, isPanning, title, translation }: HeaderProps) => {
+export const PriceHeader = ({ graphs, index, isPanning, translation }: HeaderProps) => {
   const theme = useAppTheme()
 
   const data = useDerivedValue(() => graphs[index.value].data)
@@ -61,16 +61,20 @@ export const Header = ({ graphs, index, isPanning, title, translation }: HeaderP
   const percentChange = useDerivedValue(
     () => ((price.value - data.value.openPrice) / data.value.openPrice) * 100
   )
+
   const percentChangeFormatted = useDerivedValue(() =>
     isNaN(percentChange.value) ? '-' : `${round(percentChange.value, 2)}%`
   )
-  const percentChangeLabelStyle = useAnimatedStyle(() => ({
+
+  const percentChangeIconStyle = useAnimatedStyle(() => ({
     color: percentChange.value > 0 ? theme.colors.deprecated_green : theme.colors.deprecated_red,
   }))
 
+  const percentChangeIcon = useDerivedValue(() => (percentChange.value > 0 ? '↗' : '↘'))
+
   // retrieves date and formats it
-  const header = useDerivedValue(() => {
-    if (!isPanning.value) return title
+  const priceDate = useDerivedValue(() => {
+    if (!isPanning.value) return ''
 
     const unix = interpolate(
       translation.x.value,
@@ -88,10 +92,19 @@ export const Header = ({ graphs, index, isPanning, title, translation }: HeaderP
   })
 
   return (
-    <Flex centered flex={1} flexDirection="column" gap="xs">
-      <StyledReText color="deprecated_gray200" text={header} variant="mediumLabel" />
-      <StyledReText color="mainForeground" fontSize={45} text={priceFormatted} />
-      <StyledReText style={percentChangeLabelStyle} text={percentChangeFormatted} variant="h3" />
-    </Flex>
+    <Box mb="lg" mx="md">
+      <StyledReText color="mainForeground" fontWeight="300" text={priceFormatted} variant="h1" />
+      <Flex row gap="xxs">
+        <Flex row gap="none">
+          <StyledReText
+            color="neutralTextSecondary"
+            text={percentChangeFormatted}
+            variant="caption"
+          />
+          <StyledReText style={percentChangeIconStyle} text={percentChangeIcon} variant="caption" />
+        </Flex>
+        <StyledReText color="neutralTextSecondary" text={priceDate} variant="caption" />
+      </Flex>
+    </Box>
   )
 }
