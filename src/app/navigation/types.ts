@@ -99,6 +99,7 @@ export type AppStackParamList = {
   [Screens.Education]: {
     type: EducationContentType
   }
+  [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.Notifications]: undefined | { txHash: string }
   [Screens.NFTCollection]: {
     address: Address

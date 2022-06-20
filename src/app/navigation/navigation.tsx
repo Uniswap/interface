@@ -283,6 +283,10 @@ export function AppStackNavigator() {
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={UserScreen} name={Screens.User} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
+      <AppStack.Screen
+        component={SettingsWalletManageConnection}
+        name={Screens.SettingsWalletManageConnection}
+      />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />

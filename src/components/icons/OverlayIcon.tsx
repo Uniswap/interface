@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Box } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 
 // For overlaying icons in JSX
 export default function OverlayIcon({
@@ -18,5 +18,21 @@ export default function OverlayIcon({
         {overlay}
       </Box>
     </>
+  )
+}
+
+// For multiple SVGs overlayed in a row
+export function OverlayGroup({ icons, iconSize = 24 }: { icons: ReactNode[]; iconSize?: number }) {
+  return (
+    <Flex row alignItems="center">
+      {icons.map((icon, i) => {
+        return (
+          // eslint-disable-next-line react-native/no-inline-styles
+          <Box key={i} style={{ marginLeft: i === 0 ? 0 : -(iconSize / 1.25) }}>
+            {icon}
+          </Box>
+        )
+      })}
+    </Flex>
   )
 }
