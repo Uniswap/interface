@@ -89,7 +89,6 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
   const blockNumber = useBlockNumber()
-  // Todo
   const apolloClient = useExchangeClient()
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)
@@ -322,7 +321,6 @@ export const useYieldHistories = (isModalOpen: boolean) => {
   const { chainId, account } = useActiveWeb3React()
   const [histories, setHistories] = useState<FarmHistory[]>([])
   const [loading, setLoading] = useState(false)
-  // Todo
   const apolloClient = useExchangeClient()
 
   useEffect(() => {

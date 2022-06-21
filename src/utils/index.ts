@@ -307,10 +307,6 @@ export function getMigratorContract(_: number, library: Web3Provider, account?: 
   return getContract(MIGRATE_ADDRESS, MIGRATOR_ABI, library, account)
 }
 
-// export function getFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-//   return getContract(FACTORY_ADDRESSES[chainId], FACTORY_ABI, library, account)
-// }
-
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }

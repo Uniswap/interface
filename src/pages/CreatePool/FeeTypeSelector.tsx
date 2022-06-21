@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import { t } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import QuestionHelper from 'components/QuestionHelper'
 const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
   position: absolute;
@@ -59,7 +59,7 @@ export default function FeeTypeSelector({ active = 'static', onChange, bgColor =
       name: 'static',
       content: (
         <>
-          Static Fees{' '}
+          <Trans>Static Fees</Trans>{' '}
           <QuestionHelper
             text={t`You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee.`}
             useCurrentColor
@@ -71,7 +71,7 @@ export default function FeeTypeSelector({ active = 'static', onChange, bgColor =
       name: 'dynamic',
       content: (
         <>
-          Dynamic Fees{' '}
+          <Trans>Dynamic Fees</Trans>{' '}
           <QuestionHelper
             text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
             useCurrentColor

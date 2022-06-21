@@ -65,14 +65,9 @@ export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
 }
 
 export const GLOBAL_DATA = (chainId: ChainId, block?: number) => {
-  const factoryIdsString = [STATIC_FEE_FACTORY_ADDRESSES[chainId], DYNAMIC_FEE_FACTORY_ADDRESSES[chainId]]
-    .map(address => `"${address ? address.toLowerCase() : ''}"`)
-    .join(',')
-
   const queryString = `query dmmFactories {
     dmmFactories(
-       ${block ? `block: { number: ${block}}` : ``}
-       where: { id_in: [${factoryIdsString}] }) {
+       ${block ? `block: { number: ${block}}` : ``}) {
         id
         totalVolumeUSD
         totalFeeUSD

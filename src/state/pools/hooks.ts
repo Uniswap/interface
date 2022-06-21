@@ -332,7 +332,6 @@ export function useResetPools(chainId: ChainId | undefined) {
 
 export function usePoolCountInSubgraph(): number {
   const [poolCount, setPoolCount] = useState(0)
-  // Todo
   const apolloClient = useExchangeClient()
 
   useEffect(() => {
@@ -357,7 +356,6 @@ export function useAllPoolsData(): {
 } {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
-  // Todo
   const apolloClient = useExchangeClient()
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
@@ -412,7 +410,6 @@ export function useSinglePoolData(
   data?: SubgraphPoolData
 } {
   const { chainId } = useActiveWeb3React()
-  // Todo
   const apolloClient = useExchangeClient()
 
   const [loading, setLoading] = useState<boolean>(false)
