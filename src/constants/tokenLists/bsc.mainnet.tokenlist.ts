@@ -172,6 +172,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png',
     },
+    {
+      chainId: 56,
+      address: '0x393C44A497706DDE15996BB0C7Bdf691A79De38a',
+      symbol: 'FBL',
+      name: 'FootballBattle',
+      decimals: 18,
+      logoURI: 'https://raw.githubusercontent.com/KyberNetwork/ks-assets/main/img/token/fbl.png',
+    },
   ],
   version: {
     major: 0,
