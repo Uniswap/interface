@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { getWalletForConnector } from 'connectors'
+import useENSName from 'hooks/useENSName'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
@@ -140,9 +141,10 @@ function WrappedStatusIcon({ connector }: { connector: Connector }) {
 }
 
 function Web3StatusInner() {
-  const { account, connector, chainId, ENSName } = useWeb3React()
+  const { account, connector, chainId } = useWeb3React()
 
   const error = useAppSelector((state) => state.wallet.errorByWallet[getWalletForConnector(connector)])
+  const { ENSName } = useENSName(account ?? undefined)
 
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
