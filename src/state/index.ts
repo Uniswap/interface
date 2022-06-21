@@ -17,6 +17,7 @@ import pools from './pools/reducer'
 import farms from './farms/reducer'
 import prommFarms from './farms/promm/reducer'
 import vesting from './vesting/reducer'
+import campaigns from './campaigns/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -39,6 +40,7 @@ const store = configureStore({
     prommFarms,
     vesting,
     // [dataApi.reducerPath]: dataApi.reducer
+    campaigns,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ thunk: false, immutableCheck: false, serializableCheck: false })

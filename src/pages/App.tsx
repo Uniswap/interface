@@ -63,6 +63,8 @@ const CreateReferral = lazy(() => import(/* webpackChunkName: 'create-referral-p
 
 const TrueSight = lazy(() => import(/* webpackChunkName: 'true-sight-page' */ './TrueSight'))
 
+const Campaign = lazy(() => import(/* webpackChunkName: 'campaigns-page' */ './Campaign'))
+
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -244,6 +246,8 @@ export default function App() {
                     <Route exact path="/about/knc" component={AboutKNC} />
                     <Route exact path="/referral" component={CreateReferral} />
                     <Route exact path="/discover" component={TrueSight} />
+                    <Route exact path="/campaigns" component={Campaign} />
+
                     <Route component={RedirectPathToSwapOnly} />
                   </Switch>
                 </Web3ReactManager>

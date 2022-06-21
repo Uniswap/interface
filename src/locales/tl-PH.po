@@ -58,6 +58,10 @@ msgstr ""
 msgid "24H Trading Volume"
 msgstr ""
 
+#: src/components/swapv2/SingleTokenInfo.tsx
+msgid "24H Volume"
+msgstr ""
+
 #: src/pages/RemoveLiquidityProAmm/index.tsx
 msgid "25%"
 msgstr ""
@@ -238,14 +242,6 @@ msgstr ""
 
 #: src/state/farms/promm/hooks.ts
 msgid "All positions"
-msgstr ""
-
-#: src/components/swapv2/TokenInfo.tsx
-msgid "All-Time High"
-msgstr ""
-
-#: src/components/swapv2/TokenInfo.tsx
-msgid "All-Time Low"
 msgstr ""
 
 #: src/components/Header/URLWarning.tsx
@@ -456,6 +452,13 @@ msgstr ""
 msgid "Calculating best route"
 msgstr ""
 
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+#: src/pages/Campaign/CampaignListAndSearch.tsx
+#: src/pages/Campaign/index.tsx
+msgid "Campaigns"
+msgstr ""
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Cancel"
 msgstr ""
@@ -475,10 +478,6 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
-msgstr ""
-
-#: src/components/swapv2/TokenInfo.tsx
-msgid "Circulating Supply"
 msgstr ""
 
 #: src/components/Menu/ClaimRewardModal.tsx
@@ -633,6 +632,7 @@ msgstr ""
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Campaign/index.tsx
 #: src/pages/CreatePool/index.tsx
 #: src/pages/IncreaseLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
@@ -764,6 +764,10 @@ msgstr ""
 #: src/components/YieldPools/ProMMFarms.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Currently there are no Farms."
+msgstr ""
+
+#: src/pages/Campaign/index.tsx
+msgid "Currently, there is no campaign."
 msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
@@ -991,6 +995,10 @@ msgstr ""
 #: src/state/swap/proamm/hooks.tsx
 #: src/state/swap/useAggregator.ts
 msgid "Enter an amount"
+msgstr ""
+
+#: src/pages/Campaign/EnterNowButton.tsx
+msgid "Enter now"
 msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
@@ -1242,6 +1250,10 @@ msgstr ""
 msgid "Holders"
 msgstr ""
 
+#: src/pages/Campaign/index.tsx
+msgid "How to win"
+msgstr ""
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "I understand"
@@ -1335,7 +1347,8 @@ msgid "Increase Liquidity"
 msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTokenInfo.tsx
+#: src/components/swapv2/TokenInfo.tsx
 msgid "Info"
 msgstr ""
 
@@ -1530,6 +1543,14 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+#: src/pages/Campaign/index.tsx
+msgid "Leaderboard"
+msgstr ""
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Leaderboard refresh in"
+msgstr ""
+
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/pages/About/AboutKyberSwap.tsx
 #: src/pages/About/AboutKyberSwap.tsx
@@ -1634,7 +1655,6 @@ msgstr ""
 msgid "Manage your pools."
 msgstr ""
 
-#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
@@ -1642,7 +1662,7 @@ msgstr ""
 msgid "Market Cap"
 msgstr ""
 
-#: src/components/swapv2/TokenInfo.tsx
+#: src/components/swapv2/SingleTokenInfo.tsx
 msgid "Market Cap Rank"
 msgstr ""
 
@@ -1772,6 +1792,7 @@ msgstr ""
 
 #: src/components/Menu/index.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Menu/index.tsx
 #: src/pages/Yield/index.tsx
 msgid "New"
 msgstr ""
@@ -1870,6 +1891,10 @@ msgstr ""
 msgid "Open C98 Browser Extension"
 msgstr ""
 
+#: src/pages/Campaign/index.tsx
+msgid "Other Details"
+msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
 msgstr ""
@@ -1908,6 +1933,10 @@ msgstr ""
 msgid "PREVENT SNIPING ATTACKS"
 msgstr ""
 
+#: src/pages/Campaign/index.tsx
+msgid "Participants"
+msgstr ""
+
 #: src/pages/About/AboutKNC.tsx
 msgid "Participation Rewards"
 msgstr ""
@@ -1938,6 +1967,10 @@ msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Please type the word 'confirm' below to enable Advanced Mode"
+msgstr ""
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Points"
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
@@ -2017,7 +2050,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: src/components/swapv2/TokenInfo.tsx
+#: src/components/swapv2/SingleTokenInfo.tsx
 #: src/pages/TrueSight/components/Chart.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
@@ -2091,6 +2124,10 @@ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Rainmaker Yield Farming"
+msgstr ""
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Rank"
 msgstr ""
 
 #: src/pages/TrueSight/components/FilterBar/ModalSorting.tsx
@@ -2193,6 +2230,9 @@ msgstr ""
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 #: src/components/YieldPools/HarvestAll.tsx
+#: src/pages/Campaign/LeaderboardLayout.tsx
+#: src/pages/Campaign/index.tsx
+#: src/pages/Campaign/index.tsx
 msgid "Rewards"
 msgstr ""
 
@@ -2208,6 +2248,10 @@ msgstr ""
 msgid "Routing through these tokens resulted in the best price for your trade"
 msgstr ""
 
+#: src/pages/Campaign/index.tsx
+msgid "Rules"
+msgstr ""
+
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "STAKED BALANCE:"
@@ -2219,6 +2263,10 @@ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Seamless liquidity."
+msgstr ""
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Search by address"
 msgstr ""
 
 #: src/components/Search/index.tsx
@@ -2239,6 +2287,10 @@ msgstr ""
 
 #: src/pages/ProAmmPool/index.tsx
 msgid "Search by token or pool address"
+msgstr ""
+
+#: src/pages/Campaign/CampaignListAndSearch.tsx
+msgid "Search for campaign"
 msgstr ""
 
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -2291,6 +2343,10 @@ msgstr ""
 
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
+msgstr ""
+
+#: src/components/ShareModal/index.tsx
+msgid "Share this campaign with your friends!"
 msgstr ""
 
 #: src/pages/ProAmmPools/ListItem.tsx
@@ -2549,6 +2605,10 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
+#: src/pages/Campaign/index.tsx
+msgid "Terms and Conditions"
+msgstr ""
+
 #: src/components/WalletModal/index.tsx
 msgid "Terms of Use"
 msgstr ""
@@ -2611,6 +2671,10 @@ msgstr ""
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens"
+msgstr ""
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "This campaign does not have a leaderboard yet."
 msgstr ""
 
 #: src/components/YieldPools/FairLaunchPools.tsx
@@ -2714,10 +2778,6 @@ msgstr ""
 msgid "Total LP Tokens"
 msgstr ""
 
-#: src/components/swapv2/TokenInfo.tsx
-msgid "Total Supply"
-msgstr ""
-
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Trading Volume"
 msgstr ""
@@ -2757,7 +2817,6 @@ msgstr ""
 msgid "Trading Volume"
 msgstr ""
 
-#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
@@ -3014,6 +3073,10 @@ msgstr ""
 msgid "Waiting For Confirmation"
 msgstr ""
 
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Wallet"
+msgstr ""
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
 msgstr ""
@@ -3212,6 +3275,10 @@ msgstr ""
 msgid "Your Pooled {0}"
 msgstr ""
 
+#: src/pages/Campaign/index.tsx
+msgid "Your Rank"
+msgstr ""
+
 #: src/components/PoolList/ItemCard/TabYourLiquidityItems.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -3379,6 +3446,9 @@ msgstr ""
 #: src/components/ProAmm/ProAmmPriceRange.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/swapv2/TokenInfo.tsx
+#: src/pages/Campaign/EnterNowButton.tsx
+#: src/pages/Campaign/index.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx

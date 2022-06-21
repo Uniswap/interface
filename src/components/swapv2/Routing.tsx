@@ -181,7 +181,7 @@ const StyledHops = styled.div<{ length: string | number }>`
 const StyledHop = styled.div`
   padding: 8px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg6};
+  background-color: ${({ theme }) => theme.background};
   border: 1px solid ${({ theme }) => theme.border};
   height: fit-content;
   position: relative;

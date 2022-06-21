@@ -35,7 +35,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, width, mob
 
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background-color: ${({ theme }) => theme.bg6};
+    background-color: ${({ theme }) => theme.background};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
     padding: 0px;
     width: ${({ width }) => width || '50vw'};

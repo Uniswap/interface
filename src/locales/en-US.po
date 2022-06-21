@@ -58,6 +58,10 @@ msgstr "1D"
 msgid "24H Trading Volume"
 msgstr "24H Trading Volume"
 
+#: src/components/swapv2/SingleTokenInfo.tsx
+msgid "24H Volume"
+msgstr "24H Volume"
+
 #: src/pages/RemoveLiquidityProAmm/index.tsx
 msgid "25%"
 msgstr "25%"
@@ -239,14 +243,6 @@ msgstr "All Tokens"
 #: src/state/farms/promm/hooks.ts
 msgid "All positions"
 msgstr "All positions"
-
-#: src/components/swapv2/TokenInfo.tsx
-msgid "All-Time High"
-msgstr "All-Time High"
-
-#: src/components/swapv2/TokenInfo.tsx
-msgid "All-Time Low"
-msgstr "All-Time Low"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
@@ -456,6 +452,13 @@ msgstr "CLAIMED"
 msgid "Calculating best route"
 msgstr "Calculating best route"
 
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+#: src/pages/Campaign/CampaignListAndSearch.tsx
+#: src/pages/Campaign/index.tsx
+msgid "Campaigns"
+msgstr "Campaigns"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Cancel"
 msgstr "Cancel"
@@ -476,10 +479,6 @@ msgstr "Chart is unavailable"
 #: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
 msgstr "Checking allowance..."
-
-#: src/components/swapv2/TokenInfo.tsx
-msgid "Circulating Supply"
-msgstr "Circulating Supply"
 
 #: src/components/Menu/ClaimRewardModal.tsx
 #: src/components/Vesting/Schedule.tsx
@@ -633,6 +632,7 @@ msgstr "Confirm this transaction in your wallet"
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Campaign/index.tsx
 #: src/pages/CreatePool/index.tsx
 #: src/pages/IncreaseLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
@@ -765,6 +765,10 @@ msgstr "Current {0} Price"
 #: src/components/YieldPools/index.tsx
 msgid "Currently there are no Farms."
 msgstr "Currently there are no Farms."
+
+#: src/pages/Campaign/index.tsx
+msgid "Currently, there is no campaign."
+msgstr "Currently, there is no campaign."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Custom"
@@ -992,6 +996,10 @@ msgstr "Enter amp (>=1)"
 #: src/state/swap/useAggregator.ts
 msgid "Enter an amount"
 msgstr "Enter an amount"
+
+#: src/pages/Campaign/EnterNowButton.tsx
+msgid "Enter now"
+msgstr "Enter now"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -1242,6 +1250,10 @@ msgstr "History"
 msgid "Holders"
 msgstr "Holders"
 
+#: src/pages/Campaign/index.tsx
+msgid "How to win"
+msgstr "How to win"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "I understand"
@@ -1335,7 +1347,8 @@ msgid "Increase Liquidity"
 msgstr "Increase Liquidity"
 
 #: src/components/PoolList/ItemCard/index.tsx
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTokenInfo.tsx
+#: src/components/swapv2/TokenInfo.tsx
 msgid "Info"
 msgstr "Info"
 
@@ -1530,6 +1543,14 @@ msgstr "LP Tokens Removed"
 msgid "Language"
 msgstr "Language"
 
+#: src/pages/Campaign/index.tsx
+msgid "Leaderboard"
+msgstr "Leaderboard"
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Leaderboard refresh in"
+msgstr "Leaderboard refresh in"
+
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/pages/About/AboutKyberSwap.tsx
 #: src/pages/About/AboutKyberSwap.tsx
@@ -1634,7 +1655,6 @@ msgstr "Manage Token Lists"
 msgid "Manage your pools."
 msgstr "Manage your pools."
 
-#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
@@ -1642,7 +1662,7 @@ msgstr "Manage your pools."
 msgid "Market Cap"
 msgstr "Market Cap"
 
-#: src/components/swapv2/TokenInfo.tsx
+#: src/components/swapv2/SingleTokenInfo.tsx
 msgid "Market Cap Rank"
 msgstr "Market Cap Rank"
 
@@ -1772,6 +1792,7 @@ msgstr "Network"
 
 #: src/components/Menu/index.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Menu/index.tsx
 #: src/pages/Yield/index.tsx
 msgid "New"
 msgstr "New"
@@ -1870,6 +1891,10 @@ msgstr "Oops! An unknown error occurred. Please refresh the page, or visit from 
 msgid "Open C98 Browser Extension"
 msgstr "Open C98 Browser Extension"
 
+#: src/pages/Campaign/index.tsx
+msgid "Other Details"
+msgstr "Other Details"
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
 msgid "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
 msgstr "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
@@ -1908,6 +1933,10 @@ msgstr "Owner"
 msgid "PREVENT SNIPING ATTACKS"
 msgstr "PREVENT SNIPING ATTACKS"
 
+#: src/pages/Campaign/index.tsx
+msgid "Participants"
+msgstr "Participants"
+
 #: src/pages/About/AboutKNC.tsx
 msgid "Participation Rewards"
 msgstr "Participation Rewards"
@@ -1939,6 +1968,10 @@ msgstr "Please select fee"
 #: src/components/TransactionSettings/index.tsx
 msgid "Please type the word 'confirm' below to enable Advanced Mode"
 msgstr "Please type the word 'confirm' below to enable Advanced Mode"
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Points"
+msgstr "Points"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/YieldPools/ProMMFarms.tsx
@@ -2017,7 +2050,7 @@ msgstr "Preferences"
 msgid "Preview"
 msgstr "Preview"
 
-#: src/components/swapv2/TokenInfo.tsx
+#: src/components/swapv2/SingleTokenInfo.tsx
 #: src/pages/TrueSight/components/Chart.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
@@ -2092,6 +2125,10 @@ msgstr "REWARD:"
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Rainmaker Yield Farming"
 msgstr "Rainmaker Yield Farming"
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Rank"
+msgstr "Rank"
 
 #: src/pages/TrueSight/components/FilterBar/ModalSorting.tsx
 msgid "Ranking"
@@ -2193,6 +2230,9 @@ msgstr "Request to Faucet - Submitted"
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 #: src/components/YieldPools/HarvestAll.tsx
+#: src/pages/Campaign/LeaderboardLayout.tsx
+#: src/pages/Campaign/index.tsx
+#: src/pages/Campaign/index.tsx
 msgid "Rewards"
 msgstr "Rewards"
 
@@ -2208,6 +2248,10 @@ msgstr "Route"
 msgid "Routing through these tokens resulted in the best price for your trade"
 msgstr "Routing through these tokens resulted in the best price for your trade"
 
+#: src/pages/Campaign/index.tsx
+msgid "Rules"
+msgstr "Rules"
+
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "STAKED BALANCE:"
@@ -2220,6 +2264,10 @@ msgstr "Save time & effort"
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Seamless liquidity."
 msgstr "Seamless liquidity."
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Search by address"
+msgstr "Search by address"
 
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
@@ -2240,6 +2288,10 @@ msgstr "Search by token name or tag"
 #: src/pages/ProAmmPool/index.tsx
 msgid "Search by token or pool address"
 msgstr "Search by token or pool address"
+
+#: src/pages/Campaign/CampaignListAndSearch.tsx
+msgid "Search for campaign"
+msgstr "Search for campaign"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -2292,6 +2344,10 @@ msgstr "Share"
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr "Share of Pool"
+
+#: src/components/ShareModal/index.tsx
+msgid "Share this campaign with your friends!"
+msgstr "Share this campaign with your friends!"
 
 #: src/pages/ProAmmPools/ListItem.tsx
 msgid "Share this pool"
@@ -2549,6 +2605,10 @@ msgstr "Target volume"
 msgid "Terms"
 msgstr "Terms"
 
+#: src/pages/Campaign/index.tsx
+msgid "Terms and Conditions"
+msgstr "Terms and Conditions"
+
 #: src/components/WalletModal/index.tsx
 msgid "Terms of Use"
 msgstr "Terms of Use"
@@ -2612,6 +2672,10 @@ msgstr "There is no liquidity data."
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens"
 msgstr "These tokens are commonly paired with other tokens"
+
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "This campaign does not have a leaderboard yet."
+msgstr "This campaign does not have a leaderboard yet."
 
 #: src/components/YieldPools/FairLaunchPools.tsx
 msgid "This pool require {0} LP Tokens. Get the LP Tokens <0>here ↗</0>"
@@ -2714,10 +2778,6 @@ msgstr "Total Harvested Rewards"
 msgid "Total LP Tokens"
 msgstr "Total LP Tokens"
 
-#: src/components/swapv2/TokenInfo.tsx
-msgid "Total Supply"
-msgstr "Total Supply"
-
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Total Trading Volume"
 msgstr "Total Trading Volume"
@@ -2757,7 +2817,6 @@ msgstr "Trade Route"
 msgid "Trading Volume"
 msgstr "Trading Volume"
 
-#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail.tsx
@@ -3014,6 +3073,10 @@ msgstr "WITHDRAW"
 msgid "Waiting For Confirmation"
 msgstr "Waiting For Confirmation"
 
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Wallet"
+msgstr "Wallet"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
 msgstr "Wallet Address or ENS name"
@@ -3212,6 +3275,10 @@ msgstr "Your Pool Allocation"
 msgid "Your Pooled {0}"
 msgstr "Your Pooled {0}"
 
+#: src/pages/Campaign/index.tsx
+msgid "Your Rank"
+msgstr "Your Rank"
+
 #: src/components/PoolList/ItemCard/TabYourLiquidityItems.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -3379,6 +3446,9 @@ msgstr "via {0} token list"
 #: src/components/ProAmm/ProAmmPriceRange.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/swapv2/TokenInfo.tsx
+#: src/pages/Campaign/EnterNowButton.tsx
+#: src/pages/Campaign/index.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
