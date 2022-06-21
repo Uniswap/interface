@@ -118,8 +118,9 @@ jobs:
         env:
           CI: false
           REACT_APP_VERSION: ${{ github.sha }}
+          CURRENT_BRANCH: ${{ needs.prepare.outputs.current_branch }}
         run: |
-          if [[ needs.prepare.outputs.current_branch = "main" ]]; then
+          if [[ $CURRENT_BRANCH = "main" ]]; then
             yarn build-dev
           else
             yarn build-stg
