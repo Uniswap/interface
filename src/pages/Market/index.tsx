@@ -153,6 +153,10 @@ const MarketContainer = styled.div`
   margin-top: 100px;
   width: 100%;
   height: 100vh;
+
+  @media screen and (max-width: 600px) {
+    margin-top: 0px;
+  }
 `
 
 const ClassicModeContainer = styled.div`
@@ -218,6 +222,7 @@ export const FlexItemRight = styled.div`
     flex-direction: row-reverse;
     gap: 0.5rem;
     width: 100%;
+    justify-content: start;
   }
 
   @media screen and (max-width: 900px) {
@@ -245,6 +250,7 @@ export default function Market({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const refEnabled = false
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -918,82 +924,84 @@ export default function Market({ history }: RouteComponentProps) {
                   currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
                 />
               )}
-              <RefferalStylePro>
-                <AppBody>
-                  {' '}
-                  {account ? (
-                    <Trans>
-                      <ReferralContainer>
-                        <ReferralElement1>
-                          <svg
-                            width="40px"
-                            height="40px"
-                            viewBox="0 0 23 23"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            style={{ marginRight: '30px' }}
-                          >
-                            <rect
-                              x="2"
-                              y="21"
-                              width="7"
-                              height="5"
-                              rx="0.6"
-                              transform="rotate(-90 2 21)"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                            />
-                            <rect
-                              x="17"
-                              y="15.5"
-                              width="7"
-                              height="5"
-                              rx="0.6"
-                              transform="rotate(-90 17 15.5)"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                            />
-                            <rect
-                              x="2"
-                              y="10"
-                              width="7"
-                              height="5"
-                              rx="0.6"
-                              transform="rotate(-90 2 10)"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                            />
-                            <path
-                              d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                            />
-                            <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
-                          </svg>
-                        </ReferralElement1>
-                        <ReferralElement2>
-                          Earn crypto by sharing the following referral link{' '}
-                          <div>
-                            <StyledCopyButton onClick={handleCopy} id="walletAddress">
-                              {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
-                            </StyledCopyButton>
-                          </div>
-                        </ReferralElement2>
-                      </ReferralContainer>
-                    </Trans>
-                  ) : (
-                    <Trans>
-                      <NoWalletStyle>
-                        {' '}
-                        Connect wallet to generate referral link. How it works ?{' '}
-                        <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
-                          Read More
-                        </a>
-                      </NoWalletStyle>
-                    </Trans>
-                  )}
-                </AppBody>
-              </RefferalStylePro>
+              {refEnabled && (
+                <RefferalStylePro>
+                  <AppBody>
+                    {' '}
+                    {account ? (
+                      <Trans>
+                        <ReferralContainer>
+                          <ReferralElement1>
+                            <svg
+                              width="40px"
+                              height="40px"
+                              viewBox="0 0 23 23"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              style={{ marginRight: '30px' }}
+                            >
+                              <rect
+                                x="2"
+                                y="21"
+                                width="7"
+                                height="5"
+                                rx="0.6"
+                                transform="rotate(-90 2 21)"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                              />
+                              <rect
+                                x="17"
+                                y="15.5"
+                                width="7"
+                                height="5"
+                                rx="0.6"
+                                transform="rotate(-90 17 15.5)"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                              />
+                              <rect
+                                x="2"
+                                y="10"
+                                width="7"
+                                height="5"
+                                rx="0.6"
+                                transform="rotate(-90 2 10)"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                              />
+                              <path
+                                d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                              />
+                              <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
+                            </svg>
+                          </ReferralElement1>
+                          <ReferralElement2>
+                            Earn crypto by sharing the following referral link{' '}
+                            <div>
+                              <StyledCopyButton onClick={handleCopy} id="walletAddress">
+                                {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
+                              </StyledCopyButton>
+                            </div>
+                          </ReferralElement2>
+                        </ReferralContainer>
+                      </Trans>
+                    ) : (
+                      <Trans>
+                        <NoWalletStyle>
+                          {' '}
+                          Connect wallet to generate referral link. How it works ?{' '}
+                          <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
+                            Read More
+                          </a>
+                        </NoWalletStyle>
+                      </Trans>
+                    )}
+                  </AppBody>
+                </RefferalStylePro>
+              )}
             </StyledSwap>
           </FlexItemRight>
         </FlexContainer>
@@ -1346,82 +1354,84 @@ export default function Market({ history }: RouteComponentProps) {
             currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
           />
         )}
-        <RefferalStyle>
-          <AppBody>
-            {' '}
-            {account ? (
-              <Trans>
-                <ReferralContainer>
-                  <ReferralElement1>
-                    <svg
-                      width="40px"
-                      height="40px"
-                      viewBox="0 0 23 23"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      style={{ marginRight: '30px' }}
-                    >
-                      <rect
-                        x="2"
-                        y="21"
-                        width="7"
-                        height="5"
-                        rx="0.6"
-                        transform="rotate(-90 2 21)"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                      <rect
-                        x="17"
-                        y="15.5"
-                        width="7"
-                        height="5"
-                        rx="0.6"
-                        transform="rotate(-90 17 15.5)"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                      <rect
-                        x="2"
-                        y="10"
-                        width="7"
-                        height="5"
-                        rx="0.6"
-                        transform="rotate(-90 2 10)"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                      <path
-                        d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                      <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
-                    </svg>
-                  </ReferralElement1>
-                  <ReferralElement2>
-                    Earn crypto by sharing the following referral link{' '}
-                    <div>
-                      <StyledCopyButton onClick={handleCopy} id="walletAddress">
-                        {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
-                      </StyledCopyButton>
-                    </div>
-                  </ReferralElement2>
-                </ReferralContainer>
-              </Trans>
-            ) : (
-              <Trans>
-                <NoWalletStyle>
-                  {' '}
-                  Connect wallet to generate referral link. How it works ?{' '}
-                  <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
-                    Read More
-                  </a>
-                </NoWalletStyle>
-              </Trans>
-            )}
-          </AppBody>
-        </RefferalStyle>
+        {refEnabled && (
+          <RefferalStyle>
+            <AppBody>
+              {' '}
+              {account ? (
+                <Trans>
+                  <ReferralContainer>
+                    <ReferralElement1>
+                      <svg
+                        width="40px"
+                        height="40px"
+                        viewBox="0 0 23 23"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style={{ marginRight: '30px' }}
+                      >
+                        <rect
+                          x="2"
+                          y="21"
+                          width="7"
+                          height="5"
+                          rx="0.6"
+                          transform="rotate(-90 2 21)"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                        <rect
+                          x="17"
+                          y="15.5"
+                          width="7"
+                          height="5"
+                          rx="0.6"
+                          transform="rotate(-90 17 15.5)"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                        <rect
+                          x="2"
+                          y="10"
+                          width="7"
+                          height="5"
+                          rx="0.6"
+                          transform="rotate(-90 2 10)"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                        <path
+                          d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                        <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </ReferralElement1>
+                    <ReferralElement2>
+                      Earn crypto by sharing the following referral link{' '}
+                      <div>
+                        <StyledCopyButton onClick={handleCopy} id="walletAddress">
+                          {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
+                        </StyledCopyButton>
+                      </div>
+                    </ReferralElement2>
+                  </ReferralContainer>
+                </Trans>
+              ) : (
+                <Trans>
+                  <NoWalletStyle>
+                    {' '}
+                    Connect wallet to generate referral link. How it works ?{' '}
+                    <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
+                      Read More
+                    </a>
+                  </NoWalletStyle>
+                </Trans>
+              )}
+            </AppBody>
+          </RefferalStyle>
+        )}
       </ClassicModeContainer>
     </MarketContainer>
   )
