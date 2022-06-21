@@ -7,7 +7,7 @@ const { fullWidth } = dimensions
 
 export function Indicator({ stepCount, currentStep }: { stepCount: number; currentStep: number }) {
   return (
-    <Flex row gap="sm">
+    <Flex centered row gap="xs">
       {[...Array(stepCount)].map((_, i) => (
         <Box
           key={`indicator-${i}`}
@@ -15,7 +15,7 @@ export function Indicator({ stepCount, currentStep }: { stepCount: number; curre
           borderRadius="lg"
           height={4}
           opacity={i === currentStep ? 1 : 0.2}
-          width={40}
+          width={36}
         />
       ))}
     </Flex>
