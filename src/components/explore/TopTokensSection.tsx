@@ -28,7 +28,7 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
     ({ item: coin, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => (
       <TokenItem
         coin={coin}
-        gesturesEnabled={true}
+        gesturesEnabled={false}
         index={index}
         metadataDisplayType={props.metadataDisplayType}
         onCycleMetadata={props.onCycleMetadata}

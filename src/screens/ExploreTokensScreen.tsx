@@ -1,6 +1,8 @@
-import React, { useCallback, useMemo } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
+import { Swipeable } from 'react-native-gesture-handler'
 import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { TokenItem } from 'src/components/explore/TokenItem'
@@ -21,9 +23,24 @@ export function ExploreTokensScreen() {
 
   const { tokens } = useMarketTokens(useMemo(() => getOrderByValues(orderBy), [orderBy]))
 
+  // holds a reference to the currently open Swipeable to easily close
+  const currentOpenRowRef = useRef<Swipeable | null>(null)
+
+  useFocusEffect(
+    useCallback(() => {
+      // on screen blur
+      return () => {
+        if (!currentOpenRowRef) return
+        currentOpenRowRef.current?.close()
+        currentOpenRowRef.current = null
+      }
+    }, [])
+  )
+
   const renderItem = useCallback(
     ({ item: coin, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => (
       <TokenItem
+        ref={currentOpenRowRef}
         coin={coin}
         gesturesEnabled={true}
         index={index}
