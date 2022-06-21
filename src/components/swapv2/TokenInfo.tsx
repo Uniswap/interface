@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { Currency } from '@kyberswap/ks-sdk-core'
-
+import { ArrowLeft } from 'react-feather'
 import Coingecko from 'assets/svg/coingecko.svg'
 import CoingeckoLight from 'assets/svg/coingecko-light.svg'
 import { ButtonEmpty } from 'components/Button'
@@ -18,22 +18,24 @@ import { useIsDarkMode } from 'state/user/hooks'
 import { formattedNum, shortenAddress } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { formatLongNumber } from 'utils/formatBalance'
-
+import { Flex } from 'rebass'
 const NOT_AVAIALBLE = '--'
 
-const Wrapper = styled.div`
-  border: 1px solid ${({ theme }) => theme.border};
+const Wrapper = styled.div<{ border?: boolean }>`
+  border: ${({ theme, border }) => (border ? `1px solid ${theme.border}` : 'none')};
   border-radius: 4px;
-  padding: 16px 20px 20px;
+  padding: ${({ border }) => (border ? '16px 20px 20px' : '16px 0px')};
+  width: 100%;
 `
 
 const TabContainer = styled.div`
   display: flex;
+  flex: 1;
   border-radius: 20px;
   background-color: ${({ theme }) => theme.buttonBlack};
 `
 
-const Tab = styled(ButtonEmpty) <{ isActive?: boolean; isLeft?: boolean }>`
+const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,22 +66,22 @@ const InfoRow = styled(RowBetween)`
 
 const InfoRowLabel = styled.div`
   color: ${({ theme }) => theme.subText};
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
 
-  @media only screen and (min-width: 768px) {
-    font-size: 14px;
-  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 12px;
+  `}
 `
 
 const InfoRowValue = styled.div`
   color: ${({ theme }) => theme.text};
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
 
-  @media only screen and (min-width: 768px) {
-    font-size: 14px;
-  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 12px;
+  `}
 `
 
 const PoweredByWrapper = styled.div`
@@ -96,7 +98,31 @@ const PoweredByText = styled.span`
   color: ${({ theme }) => theme.subText};
 `
 
-const TokenInfo = ({ currencies }: { currencies: { [field in Field]?: Currency } }) => {
+const BackText = styled.span`
+  font-size: 18px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text};
+`
+
+const BackIconWrapper = styled(ArrowLeft)`
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  path {
+    stroke: ${({ theme }) => theme.text} !important;
+  }
+`
+const TokenInfo = ({
+  currencies,
+  border = true,
+  onBack,
+}: {
+  currencies: { [field in Field]?: Currency }
+  border?: boolean
+  onBack?: () => void
+}) => {
+  // 2 style: border and no border
   const { chainId } = useActiveWeb3React()
   const inputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT])
   const outputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT])
@@ -113,149 +139,76 @@ const TokenInfo = ({ currencies }: { currencies: { [field in Field]?: Currency }
     //eslint-disable-next-line
   }, [chainId, JSON.stringify(inputNativeCurrency), inputNativeCurrency?.symbol])
 
+  const listData = [
+    { label: 'Price', value: tokenInfo.price ? formattedNum(tokenInfo.price.toString(), true) : NOT_AVAIALBLE },
+    {
+      label: 'Trading Volume (24H)',
+      value: tokenInfo.tradingVolume ? formatLongNumber(tokenInfo.tradingVolume.toString(), true) : NOT_AVAIALBLE,
+    },
+    {
+      label: 'Market Cap Rank',
+      value: tokenInfo.marketCapRank ? `#${formattedNum(tokenInfo.marketCapRank.toString())}` : NOT_AVAIALBLE,
+    },
+    {
+      label: 'Market Cap',
+      value: tokenInfo.marketCap ? formatLongNumber(tokenInfo.marketCap.toString(), true) : NOT_AVAIALBLE,
+    },
+    {
+      label: 'All-Time High',
+      value: tokenInfo.allTimeHigh ? formattedNum(tokenInfo.allTimeHigh.toString(), true) : NOT_AVAIALBLE,
+    },
+    {
+      label: 'All-Time Low',
+      value: tokenInfo.allTimeLow ? formattedNum(tokenInfo.allTimeLow.toString(), true) : NOT_AVAIALBLE,
+    },
+    {
+      label: 'Circulating Supply',
+      value: tokenInfo.circulatingSupply ? formatLongNumber(tokenInfo.circulatingSupply.toString()) : NOT_AVAIALBLE,
+    },
+    {
+      label: 'Total Supply',
+      value: tokenInfo.totalSupply ? formatLongNumber(tokenInfo.totalSupply.toString()) : NOT_AVAIALBLE,
+    },
+  ]
+
   return (
     <>
-      <Wrapper>
-        <TabContainer>
-          <Tab
-            isActive={activeTab === inputNativeCurrency?.symbol}
-            padding="0"
-            onClick={() => setActiveTab(inputNativeCurrency?.symbol || '')}
-          >
-            <CurrencyLogo currency={inputNativeCurrency} size="16px" />
-            <TabText isActive={activeTab === inputNativeCurrency?.symbol}>{inputNativeCurrency?.symbol}</TabText>
-          </Tab>
-          <Tab
-            isActive={activeTab === outputNativeCurrency?.symbol}
-            padding="0"
-            onClick={() => setActiveTab(outputNativeCurrency?.symbol || '')}
-          >
-            <CurrencyLogo currency={outputNativeCurrency} size="16px" />
-            <TabText isActive={activeTab === outputNativeCurrency?.symbol}>{outputNativeCurrency?.symbol}</TabText>
-          </Tab>
-        </TabContainer>
+      <Wrapper border={border}>
+        <Flex justifyContent="space-between">
+          {onBack && (
+            <Flex alignItems="center" marginRight={20}>
+              <BackIconWrapper onClick={onBack}></BackIconWrapper>
+              <BackText>{t`Info`}</BackText>
+            </Flex>
+          )}
+          <TabContainer>
+            <Tab
+              isActive={activeTab === inputNativeCurrency?.symbol}
+              padding="0"
+              onClick={() => setActiveTab(inputNativeCurrency?.symbol || '')}
+            >
+              <CurrencyLogo currency={inputNativeCurrency} size="16px" />
+              <TabText isActive={activeTab === inputNativeCurrency?.symbol}>{inputNativeCurrency?.symbol}</TabText>
+            </Tab>
+            <Tab
+              isActive={activeTab === outputNativeCurrency?.symbol}
+              padding="0"
+              onClick={() => setActiveTab(outputNativeCurrency?.symbol || '')}
+            >
+              <CurrencyLogo currency={outputNativeCurrency} size="16px" />
+              <TabText isActive={activeTab === outputNativeCurrency?.symbol}>{outputNativeCurrency?.symbol}</TabText>
+            </Tab>
+          </TabContainer>
+        </Flex>
 
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>Price</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? <Loader /> : tokenInfo.price ? formattedNum(tokenInfo.price.toString(), true) : NOT_AVAIALBLE}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>Trading Volume (24H)</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.tradingVolume ? (
-              formatLongNumber(tokenInfo.tradingVolume.toString(), true)
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>Market Cap Rank</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.marketCapRank ? (
-              `#${formattedNum(tokenInfo.marketCapRank.toString())}`
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>Market Cap</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.marketCap ? (
-              formatLongNumber(tokenInfo.marketCap.toString(), true)
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>All-Time High</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.allTimeHigh ? (
-              formattedNum(tokenInfo.allTimeHigh.toString(), true)
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>All-Time Low</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.allTimeLow ? (
-              formattedNum(tokenInfo.allTimeLow.toString(), true)
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>Circulating Supply</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.circulatingSupply ? (
-              formatLongNumber(tokenInfo.circulatingSupply.toString())
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>Total Supply</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.totalSupply ? (
-              formatLongNumber(tokenInfo.totalSupply.toString())
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
+        {listData.map(item => (
+          <InfoRow key={item.label}>
+            <InfoRowLabel>
+              <Trans>{item.label}</Trans>
+            </InfoRowLabel>
+            <InfoRowValue>{loading ? <Loader /> : item.value}</InfoRowValue>
+          </InfoRow>
+        ))}
 
         <InfoRow style={{ borderBottom: 'none', paddingBottom: 0 }}>
           <InfoRowLabel>

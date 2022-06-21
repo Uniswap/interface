@@ -21,7 +21,7 @@ const StyledPositionCard = styled.div`
   flex-direction: column;
 `
 
-const Loading = styled.div`
+export const Loading = styled.div`
   background: linear-gradient(
     90deg,
     ${({ theme }) => theme.skeleton} 8%,

@@ -108,6 +108,10 @@ export function useTrendingSoonSortingModalToggle(): () => void {
   return useToggleModal(ApplicationModal.TRENDING_SOON_SORTING)
 }
 
+export function useSelectCampaignModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.SELECT_CAMPAIGN)
+}
+
 export function useTrueSightNetworkModalToggle(): () => void {
   return useToggleModal(ApplicationModal.TRUESIGHT_NETWORK)
 }

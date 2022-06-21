@@ -55,7 +55,7 @@ const HeaderRow = styled.div<{ padding?: string }>`
 `
 
 const ContentWrapper = styled.div<{ padding?: string }>`
-  background-color: ${({ theme }) => theme.bg6};
+  background-color: ${({ theme }) => theme.background};
   padding: ${({ padding }) => padding ?? '2rem 2rem 8px 2rem'};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;

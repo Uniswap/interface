@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const VestingHeader = styled.div`
   border-radius: 10px;
-  background-color: ${({ theme }) => theme.bg6};
+  background-color: ${({ theme }) => theme.background};
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   font-size: 14px;
   font-weight: 500;
@@ -15,7 +15,7 @@ export const VestingHeader = styled.div`
 
 export const VestPeriods = styled.div`
   margin-top: 1.5rem;
-  background: ${({ theme }) => theme.bg6};
+  background: ${({ theme }) => theme.background};
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   padding: 1.5rem;
   border-top-left-radius: 0.5rem;

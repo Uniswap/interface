@@ -7,32 +7,26 @@ import { ButtonEmpty } from 'components/Button'
 import { AutoColumn } from '../Column'
 import { errorFriendly } from 'utils/dmm'
 import { ReactComponent as Alert } from '../../assets/images/alert.svg'
-import Modal from 'components/Modal'
+import Modal, { ModalProps } from 'components/Modal'
+import { Z_INDEXS } from 'styles'
 
 export const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
-  gap: 24px;
+  padding: 24px 0px 0px 0px;
+  gap: 16px;
   width: 100%;
-
-  @media only screen and (min-width: 768px) {
-    flex-direction: column;
+  height: calc(100vh - 84px); // 100% - header (trigger sticky form)
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    padding: 24px 0px 24px 0px;
+    min-height: calc(100vh - 215px); // 100% - header - footer
+    height: unset;
+`}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 24px;
+    min-height: calc(100vh - 250px); // 100% - header - footer
     padding: 24px 16px;
-    gap: 16px;
-  }
-
-  // @media only screen and (min-width: 1000px) {
-  //   padding: 24px 32px 100px;
-  // }
-
-  // @media only screen and (min-width: 1366px) {
-  //   padding: 24px 155px 50px;
-  // }
-
-  // @media only screen and (min-width: 1500px) {
-  //   padding: 24px 202px 50px;
-  // }
+`}
 `
 
 export const TabContainer = styled.div`
@@ -92,7 +86,7 @@ export const Container = styled.div`
   flex-wrap: wrap;
   width: 100%;
   gap: 28px;
-
+  flex: 1;
   @media only screen and (min-width: 1000px) {
     flex-direction: row;
     align-items: flex-start;
@@ -350,10 +344,12 @@ export const PriceImpactHigh = styled.div<{ veryHigh?: boolean }>`
   font-size: 12px;
 `
 
-export const LiveChartWrapper = styled.div`
+export const LiveChartWrapper = styled.div<{ borderBottom?: boolean }>`
   width: 600px;
   height: 510px;
   display: none;
+  margin-bottom: 30px;
+  border-bottom: ${({ theme, borderBottom }) => (borderBottom ? `1px solid ${theme.border}` : 'none')};
   @media screen and (min-width: 1100px) {
     display: block;
   }
@@ -368,13 +364,25 @@ export const LiveChartWrapper = styled.div`
   }
 `
 
-export const RoutesWrapper = styled(LiveChartWrapper)<{ isOpenChart: boolean }>`
-  margin-bottom: 30px;
+export const RoutesWrapper = styled(LiveChartWrapper)<{ isOpenChart: boolean; borderBottom?: boolean }>`
+  height: auto;
   margin-top: 4px;
-  max-height: ${({ isOpenChart }) => (isOpenChart ? '354px' : '700px')};
+  padding-bottom: 25px;
+  border-bottom: ${({ theme, borderBottom }) => (borderBottom ? `1px solid ${theme.border}` : 'none')};
 `
 
-export const MobileModalWrapper = styled(Modal)<{ height?: string }>`
+export const TokenInfoWrapper = styled(LiveChartWrapper)`
+  display: block;
+  height: auto;
+  border-bottom: none;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%; 
+  `}
+`
+
+export const MobileModalWrapper = styled((props: ModalProps) => <Modal {...props} zIndex={Z_INDEXS.MOBILE_MODAL} />)<{
+  height?: string
+}>`
   &[data-reach-dialog-content] {
     width: 100vw;
     max-width: 100vw;
@@ -420,7 +428,11 @@ export const ShareButton = styled(IconButton)`
 `
 
 export const StyledFlex = styled(Flex)`
-  @media only screen and (min-width: 900px) {
-    gap: 48px;
-  }
+  gap: 48px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    gap: 25px;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 15px;
+`}
 `

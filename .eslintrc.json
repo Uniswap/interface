@@ -28,6 +28,7 @@
     "prettier/prettier": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/camelcase": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "@typescript-eslint/interface-name-prefix": "off"
   }
 }

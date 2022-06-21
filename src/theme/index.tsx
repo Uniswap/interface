@@ -8,6 +8,7 @@ import styled, {
 import { useIsDarkMode } from 'state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
+import { Z_INDEXS } from 'styles'
 
 export * from './components'
 
@@ -72,7 +73,6 @@ export function colors(darkMode: boolean): Colors {
     bg3Opacity4: darkMode ? '#40444F69' : '#69dcdbdc69',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
-    bg6: darkMode ? '#243036' : '#FFFFFF',
     bg7: darkMode ? '#31CB9E' : '#98e5ce',
     bg8: darkMode ? '#1d7a5f' : '#31CB9E',
     bg9: darkMode ? '#1d2a32' : '#ecebeb',
@@ -390,7 +390,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   .tf-v1-popover{
-    z-index: 999999 !important;
+    z-index: ${Z_INDEXS.ICON_SUPPORT} !important;
   }
 
   .tf-v1-popover-button {

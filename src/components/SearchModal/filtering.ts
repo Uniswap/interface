@@ -40,6 +40,13 @@ export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: s
   return tokens.filter(createTokenFilterFunction(search))
 }
 
+export function filterTokensWithExactKeyword<T extends Token | TokenInfo>(tokens: T[], search: string): T[] {
+  const result = filterTokens(tokens, search)
+  if (isAddress(search)) return result
+  const filterExact = result.filter(e => (e.symbol ? e.symbol.toLowerCase() === search.toLowerCase() : true)) // Exact Keyword
+  return filterExact.length ? filterExact : result
+}
+
 export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string): Token[] {
   return useMemo(() => {
     if (!tokens) {

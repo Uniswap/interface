@@ -1,6 +1,6 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import useTheme from 'hooks/useTheme'
-import React, { useMemo, useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useMedia } from 'react-use'
 import { Field } from 'state/mint/proamm/actions'
 import styled from 'styled-components'
@@ -9,12 +9,12 @@ import { t, Trans } from '@lingui/macro'
 import InfoHelper from 'components/InfoHelper'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import ProAmmPoolListItem from './ListItem'
-import { usePoolDatas, useTopPoolAddresses, ProMMPoolData, useUserProMMPositions } from 'state/prommPools/hooks'
+import { ProMMPoolData, usePoolDatas, useTopPoolAddresses, useUserProMMPositions } from 'state/prommPools/hooks'
 import LocalLoader from 'components/LocalLoader'
 import Pagination from 'components/Pagination'
 import ShareModal from 'components/ShareModal'
 import { useActiveWeb3React } from 'hooks'
-import { useOpenModal, useModalOpen } from 'state/application/hooks'
+import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import ProAmmPoolCardItem from './CardItem'
 import { useProMMFarms } from 'state/farms/promm/hooks'
@@ -260,18 +260,6 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
     setPage(1)
   }, [currencies, searchValue])
 
-  const maxPage =
-    pairDatas.length % ITEM_PER_PAGE === 0
-      ? pairDatas.length / ITEM_PER_PAGE
-      : Math.floor(pairDatas.length / ITEM_PER_PAGE) + 1
-
-  const onPrev = () => {
-    setPage(prev => (prev - 1 >= 1 ? prev - 1 : 1))
-  }
-  const onNext = () => {
-    setPage(prev => (prev + 1 <= maxPage ? prev + 1 : maxPage))
-  }
-
   const [sharedPoolId, setSharedPoolId] = useState('')
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
@@ -326,7 +314,9 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
         ),
       )}
 
-      {!!pairDatas.length && <Pagination onPrev={onPrev} onNext={onNext} currentPage={page} maxPage={maxPage} />}
+      {!!pairDatas.length && (
+        <Pagination onPageChange={setPage} totalCount={pairDatas.length} currentPage={page} pageSize={ITEM_PER_PAGE} />
+      )}
       <ShareModal url={shareUrl} onShared={() => {}} />
     </div>
   )

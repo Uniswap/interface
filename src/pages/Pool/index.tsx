@@ -130,9 +130,9 @@ const shimmer = keyframes`
     }
 `
 
-const PreloadCard = styled.div`
-  width: 100%;
-  height: 436px;
+export const PreloadCard = styled.div<{ width?: string; height?: string }>`
+  width: ${({ width }) => width ?? '100%'};
+  height: ${({ height }) => height ?? '436px'};
   background: ${({ theme }) => theme.background};
   border-radius: 8px;
   position: relative;

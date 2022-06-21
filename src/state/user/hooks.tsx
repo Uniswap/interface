@@ -27,6 +27,7 @@ import {
   toggleTradeRoutes,
   toggleProLiveChart,
   toggleTopTrendingTokens,
+  toggleTokenInfo,
 } from './actions'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
@@ -450,6 +451,10 @@ export function useShowTradeRoutes(): boolean {
   return showTradeRoutes
 }
 
+export function useShowTokenInfo(): boolean {
+  return useSelector((state: AppState) => state.user.showTokenInfo)
+}
+
 export function useShowTopTrendingSoonTokens(): boolean {
   const showTrendingSoon = useSelector((state: AppState) => state.user.showTopTrendingSoonTokens)
   return showTrendingSoon ?? true
@@ -467,6 +472,11 @@ export function useToggleProLiveChart(): () => void {
 export function useToggleTradeRoutes(): () => void {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(() => dispatch(toggleTradeRoutes()), [dispatch])
+}
+
+export function useToggleTokenInfo(): () => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(() => dispatch(toggleTokenInfo()), [dispatch])
 }
 
 export function useToggleTopTrendingTokens(): () => void {

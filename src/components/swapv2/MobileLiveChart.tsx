@@ -31,7 +31,7 @@ function MobileLiveChart({
         maxHeight={100}
         height={isHorizontal ? `${window.innerHeight}px` : '60vh'}
       >
-        <Flex flexDirection="column" padding="20px" alignItems={'center'} width="100%">
+        <Flex flexDirection="column" padding="20px" alignItems="center" width="100%">
           <LiveChart
             currencies={currencies}
             onRotateClick={handleRotateClick}

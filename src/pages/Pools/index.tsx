@@ -75,6 +75,7 @@ const Pools = ({
     },
     [currencyIdB, history, currencyIdA, chainId, tab],
   )
+
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
       const newCurrencyIdB = currencyId(currencyB, chainId)
@@ -96,6 +97,7 @@ const Pools = ({
   const { mixpanelHandler } = useMixpanel()
 
   const notSupportedMsg = ELASTIC_NOT_SUPPORTED[chainId as ChainId]
+
   return (
     <>
       <PoolsPageWrapper>
