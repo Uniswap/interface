@@ -27,7 +27,6 @@ import {
   STATIC_FEE_ROUTER_ADDRESSES,
 } from 'constants/index'
 import ROUTER_DYNAMIC_FEE_ABI from '../constants/abis/dmm-router-dynamic-fee.json'
-import ROUTER_STATIC_FEE_ABI from '../constants/abis/dmm-router-static-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
 import { abi as ROUTER_PRO_AMM } from '../constants/abis/v2/ProAmmRouter.json'
@@ -256,11 +255,7 @@ export function getContractForReading(address: string, ABI: any, library: ethers
 
 // account is optional
 export function getStaticFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  if (ONLY_STATIC_FEE_CHAINS.includes(chainId)) {
-    return getContract(STATIC_FEE_ROUTER_ADDRESSES[chainId], ROUTER_STATIC_FEE_ABI, library, account)
-  } else {
-    return getContract(STATIC_FEE_ROUTER_ADDRESSES[chainId], KS_ROUTER_STATIC_FEE_ABI, library, account)
-  }
+  return getContract(STATIC_FEE_ROUTER_ADDRESSES[chainId], KS_ROUTER_STATIC_FEE_ABI, library, account)
 }
 // account is optional
 export function getDynamicFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
