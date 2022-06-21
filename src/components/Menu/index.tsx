@@ -153,7 +153,7 @@ export default function Menu() {
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
 
-  const above1440 = useMedia('(min-width: 1440px)')
+  const under1440 = useMedia('(max-width: 1440px)')
   const above1321 = useMedia('(min-width: 1321px)')
   const above1100 = useMedia('(min-width: 1100px)')
   const above768 = useMedia('(min-width: 768px)')
@@ -262,14 +262,11 @@ export default function Menu() {
           </NavMenuItem>
         )}
 
-        {!above1440 && <AboutPageDropwdown />}
+        {under1440 && <AboutPageDropwdown />}
 
         <NavMenuItem to="/referral" onClick={toggle}>
           <UserPlus size={14} />
           <Trans>Referral</Trans>
-          <NewLabel>
-            <Trans>New</Trans>
-          </NewLabel>
         </NavMenuItem>
         {!above1100 && (
           <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
