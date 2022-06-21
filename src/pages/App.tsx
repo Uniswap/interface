@@ -215,20 +215,20 @@ export default function App() {
                       component={RemoveLiquidity}
                     />
 
-                    <Route exact strict path="/proamm/swap" component={ProAmmSwap} />
-                    <Route exact strict path="/proamm/pool/:tokenId" component={ProAmmPositionPage} />
-                    <Route exact strict path="/proamm/remove/:tokenId" component={ProAmmRemoveLiquidity} />
+                    <Route exact strict path="/elasic/swap" component={ProAmmSwap} />
+                    <Route exact strict path="/elasic/pool/:tokenId" component={ProAmmPositionPage} />
+                    <Route exact strict path="/elastic/remove/:tokenId" component={ProAmmRemoveLiquidity} />
                     <Route
                       exact
                       strict
-                      path="/proamm/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                      path="/elastic/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
                       component={RedirectDuplicateTokenIds}
                     />
 
                     <Route
                       exact
                       strict
-                      path="/proamm/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
+                      path="/elastic/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
                       component={IncreaseLiquidity}
                     />
 

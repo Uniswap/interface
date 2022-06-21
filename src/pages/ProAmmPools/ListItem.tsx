@@ -33,7 +33,7 @@ interface ListItemProps {
 
 const getPrommAnalyticLink = (chainId: ChainId | undefined, poolAddress: string) => {
   if (!chainId) return ''
-  return `${PROMM_ANALYTICS_URL[chainId]}/pools/${poolAddress}`
+  return `${PROMM_ANALYTICS_URL[chainId]}/pool/${poolAddress}`
 }
 
 export const TableRow = styled.div<{ isOpen?: boolean; isShowBorderBottom: boolean; hoverable: boolean }>`
@@ -185,14 +185,16 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions 
               {pool.apr.toFixed(2)}%
             </DataText>
             <DataText alignItems="flex-end">{formatDollarAmount(pool.volumeUSD)}</DataText>
-            <DataText alignItems="flex-end">{formatDollarAmount(pool.volumeUSD * (pool.feeTier / 10000))}</DataText>
+            <DataText alignItems="flex-end">
+              {formatDollarAmount(pool.volumeUSD * (pool.feeTier / ELASTIC_BASE_FEE_UNIT))}
+            </DataText>
             <DataText alignItems="flex-end">{myLiquidity ? formatDollarAmount(Number(myLiquidity)) : '-'}</DataText>
             <ButtonWrapper style={{ marginRight: '-3px' }}>
               <MouseoverTooltip text={<Trans> Add liquidity </Trans>} placement={'top'} width={'fit-content'}>
                 <ButtonEmpty
                   padding="0"
                   as={Link}
-                  to={`/proamm/add/${token0Address}/${token1Address}/${pool.feeTier}`}
+                  to={`/elastic/add/${token0Address}/${token1Address}/${pool.feeTier}`}
                   style={{
                     background: rgba(theme.primary, 0.2),
                     minWidth: '28px',

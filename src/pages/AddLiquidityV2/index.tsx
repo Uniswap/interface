@@ -6,7 +6,7 @@ import { ButtonError, ButtonLight, ButtonPrimary, ButtonWarning } from 'componen
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swapv2/styleds'
-import { PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v2'
+import { PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -107,7 +107,7 @@ export default function AddLiquidity({
   const feeAmount: FeeAmount | undefined =
     feeAmountFromUrl && Object.values(FeeAmount).includes(parseFloat(feeAmountFromUrl))
       ? parseFloat(feeAmountFromUrl)
-      : undefined
+      : FeeAmount.MEDIUM
   const baseCurrency = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
   // prevent an error if they input ETH/WETH
@@ -247,7 +247,7 @@ export default function AddLiquidity({
     () => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => currency?.wrapped),
     [currencies],
   )
-  const usdPrices = useTokensPrice(tokens, 'promm')
+  const usdPrices = useTokensPrice(tokens, VERSION.ELASTIC)
   const estimatedUsdCurrencyA =
     parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
       ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount<Currency>).toExact()) * usdPrices[0]
@@ -374,9 +374,9 @@ export default function AddLiquidity({
     (currencyANew: Currency) => {
       const [idA, idB] = handleCurrencySelect(currencyANew, currencyIdB)
       if (idB === undefined) {
-        history.push(`/proamm/add/${idA}`)
+        history.push(`/elastic/add/${idA}`)
       } else {
-        history.push(`/proamm/add/${idA}/${idB}`)
+        history.push(`/elastic/add/${idA}/${idB}`)
       }
     },
     [handleCurrencySelect, currencyIdB, history],
@@ -386,9 +386,9 @@ export default function AddLiquidity({
     (currencyBNew: Currency) => {
       const [idB, idA] = handleCurrencySelect(currencyBNew, currencyIdA)
       if (idA === undefined) {
-        history.push(`/proamm/add/${idB}`)
+        history.push(`/elastic/add/${idB}`)
       } else {
-        history.push(`/proamm/add/${idA}/${idB}`)
+        history.push(`/elastic/add/${idA}/${idB}`)
       }
     },
     [handleCurrencySelect, currencyIdA, history],
@@ -398,7 +398,7 @@ export default function AddLiquidity({
     (newFeeAmount: FeeAmount) => {
       onLeftRangeInput('')
       onRightRangeInput('')
-      history.push(`/proamm/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
+      history.push(`/elastic/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
     [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput],
   )
@@ -409,7 +409,7 @@ export default function AddLiquidity({
     if (txHash) {
       onFieldAInput('')
       // dont jump to pool page if creating
-      history.push('/myPools?tab=promm')
+      history.push('/myPools?tab=elastic')
     }
     setTxHash('')
   }, [history, onFieldAInput, txHash])
@@ -783,10 +783,10 @@ export default function AddLiquidity({
             onCleared={() => {
               onFieldAInput('0')
               onFieldBInput('0')
-              history.push('/proamm/add')
+              history.push('/elastic/add')
             }}
             onBack={() => {
-              history.replace('/pools')
+              history.replace('/pools?tab=elastic')
             }}
           />
           <ResponsiveTwoColumns>
@@ -827,7 +827,7 @@ export default function AddLiquidity({
                   ) : (
                     <StyledInternalLink
                       replace
-                      to={`/proamm/add/${currencyIdB}/${currencyIdA}/${feeAmount}`}
+                      to={`/elastic/add/${currencyIdB}/${currencyIdA}/${feeAmount}`}
                       style={{ color: 'inherit' }}
                     >
                       <SwapIcon size={22} />
@@ -891,7 +891,7 @@ export default function AddLiquidity({
                       <div style={!depositADisabled ? { visibility: 'visible' } : { visibility: 'hidden' }}>
                         <StyledInternalLink
                           replace
-                          to={`/proamm/add/${
+                          to={`/elastic/add/${
                             baseCurrencyIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
                           }/${currencyIdB}/${feeAmount}`}
                           style={{ fontSize: '14px', float: 'right' }}
@@ -926,7 +926,7 @@ export default function AddLiquidity({
                       <div style={!depositBDisabled ? { visibility: 'visible' } : { visibility: 'hidden' }}>
                         <StyledInternalLink
                           replace
-                          to={`/proamm/add/${currencyIdA}/${
+                          to={`/elastic/add/${currencyIdA}/${
                             quoteCurrencyIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
                           }/${feeAmount}`}
                           style={{ fontSize: '14px', float: 'right' }}

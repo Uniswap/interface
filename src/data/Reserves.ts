@@ -42,6 +42,7 @@ export function usePairs(
   )
   const result: any[] = []
   let start = 0
+
   tokens.forEach(([tokenA, tokenB]) => {
     if (!!(tokenA && tokenB && !tokenA.equals(tokenB)) && (!!staticRess[start] || !!dynamicRess[start])) {
       result.push(staticRess[start])

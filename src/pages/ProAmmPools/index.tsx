@@ -277,7 +277,7 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
 
   const shareUrl = sharedPoolId
-    ? window.location.origin + '/pools?search=' + sharedPoolId + '&tab=promm&networkId=' + chainId
+    ? window.location.origin + '/pools?search=' + sharedPoolId + '&tab=elastic&networkId=' + chainId
     : undefined
 
   useEffect(() => {

@@ -29,7 +29,7 @@ import useDebounce from 'hooks/useDebounce'
 import FarmingPoolsToggle from 'components/Toggle/FarmingPoolsToggle'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { stringify } from 'qs'
-import { ELASTIC_NOT_SUPPORTED } from 'constants/v2'
+import { ELASTIC_NOT_SUPPORTED, VERSION } from 'constants/v2'
 import { MouseoverTooltip } from 'components/Tooltip'
 
 const Pools = ({
@@ -49,7 +49,7 @@ const Pools = ({
   const searchValueInQs: string = (qs.search as string) ?? ''
   const debouncedSearchValue = useDebounce(searchValueInQs.trim().toLowerCase(), 200)
 
-  const tab = (qs.tab as string) || 'dmm'
+  const tab = (qs.tab as string) || VERSION.CLASSIC
   const onSearch = (search: string) => {
     history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
   }
@@ -108,14 +108,14 @@ const Pools = ({
                 alignItems={'center'}
                 onClick={() => {
                   if (!!notSupportedMsg) return
-                  const newQs = { ...qs, tab: 'promm' }
+                  const newQs = { ...qs, tab: VERSION.ELASTIC }
                   history.replace({ search: stringify(newQs) })
                 }}
               >
                 <Text
                   fontWeight={500}
                   fontSize={20}
-                  color={tab === 'promm' ? (!!notSupportedMsg ? theme.disableText : theme.primary) : theme.subText}
+                  color={tab === VERSION.ELASTIC ? (!!notSupportedMsg ? theme.disableText : theme.primary) : theme.subText}
                   width={'auto'}
                   marginRight={'5px'}
                   role="button"
@@ -125,7 +125,7 @@ const Pools = ({
                 >
                   <Trans>Elastic Pools</Trans>
                 </Text>
-                <PoolElasticIcon size={16} color={tab === 'promm' ? theme.primary : theme.subText} />
+                <PoolElasticIcon size={16} color={tab === VERSION.ELASTIC ? theme.primary : theme.subText} />
               </Flex>
             </MouseoverTooltip>
             <Text
@@ -142,14 +142,14 @@ const Pools = ({
             <Flex
               alignItems={'center'}
               onClick={() => {
-                const newQs = { ...qs, tab: 'dmm' }
+                const newQs = { ...qs, tab: VERSION.CLASSIC }
                 history.replace({ search: stringify(newQs) })
               }}
             >
               <Text
                 fontWeight={500}
                 fontSize={20}
-                color={tab === 'dmm' ? theme.primary : theme.subText}
+                color={tab === VERSION.CLASSIC ? theme.primary : theme.subText}
                 width={'auto'}
                 marginRight={'5px'}
                 style={{ cursor: 'pointer' }}
@@ -157,7 +157,7 @@ const Pools = ({
               >
                 <Trans>Classic Pools</Trans>
               </Text>
-              <PoolClassicIcon size={16} color={tab === 'promm' ? theme.subText : theme.primary} />
+              <PoolClassicIcon size={16} color={tab === VERSION.ELASTIC ? theme.subText : theme.primary} />
             </Flex>
           </Flex>
         </AutoColumn>
@@ -166,7 +166,7 @@ const Pools = ({
 
         <FarmingPoolsMarquee tab={tab} />
 
-        {(tab === 'promm' ? (
+        {(tab === VERSION.ELASTIC ? (
           above1260
         ) : (
           above1000
@@ -230,7 +230,7 @@ const Pools = ({
                 placeholder={t`Search by token name or pool address`}
                 minWidth={below1124 ? '260px' : '360px'}
               />
-              {tab === 'promm' && (
+              {tab === VERSION.ELASTIC && (
                 <ToolbarWrapper style={{ marginBottom: '0px' }}>
                   <Text fontSize="20px" fontWeight={500}></Text>
                   <SearchWrapper>
@@ -240,7 +240,7 @@ const Pools = ({
                       onClick={() => {
                         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_INITIATED)
                       }}
-                      to={`/proamm/add${
+                      to={`/elastic/add${
                         currencyIdA && currencyIdB
                           ? `/${currencyIdA}/${currencyIdB}`
                           : currencyIdA || currencyIdB
@@ -261,18 +261,18 @@ const Pools = ({
                     padding="10px 12px"
                     as={Link}
                     onClick={() => {
-                      if (tab === 'dmm') {
+                      if (tab === VERSION.CLASSIC) {
                         mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_INITITATED)
                       } else {
                         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_INITIATED)
                       }
                     }}
                     to={
-                      tab === 'dmm'
+                      tab === VERSION.CLASSIC
                         ? `/create/${currencyIdA === '' ? undefined : currencyIdA}/${
                             currencyIdB === '' ? undefined : currencyIdB
                           }`
-                        : `/proamm/add${
+                        : `/elastic/add${
                             currencyIdA && currencyIdB
                               ? `/${currencyIdA}/${currencyIdB}`
                               : currencyIdA || currencyIdB
@@ -297,7 +297,7 @@ const Pools = ({
                 onSearch={onSearch}
                 placeholder={t`Search by token name or pool address`}
               />
-              {tab === 'dmm' && (
+              {tab === VERSION.CLASSIC && (
                 <ButtonPrimary
                   padding="10px 12px"
                   width="106px"
@@ -357,7 +357,7 @@ const Pools = ({
                 <Trans>Swap</Trans>
               </ButtonPrimary>
             </Flex>
-            {tab === 'promm' && (
+            {tab === VERSION.ELASTIC && (
               <Flex justifyContent={'center'} style={{ gap: '23px' }}>
                 <ToolbarWrapper style={{ marginBottom: '0px', width: '100%' }}>
                   <Text fontSize="20px" fontWeight={500}></Text>
@@ -369,7 +369,7 @@ const Pools = ({
                       onClick={() => {
                         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_INITIATED)
                       }}
-                      to={`/proamm/add${
+                      to={`/elastic/add${
                         currencyIdA && currencyIdB
                           ? `/${currencyIdA}/${currencyIdB}`
                           : currencyIdA || currencyIdB
@@ -392,7 +392,7 @@ const Pools = ({
                       onClick={() => {
                         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_INITIATED)
                       }}
-                      to={`/proamm/add${
+                      to={`/elastic/add${
                         currencyIdA && currencyIdB
                           ? `/${currencyIdA}/${currencyIdB}`
                           : currencyIdA || currencyIdB
@@ -426,7 +426,7 @@ const Pools = ({
         )}
 
         <Panel>
-          {tab === 'dmm' ? (
+          {tab === VERSION.CLASSIC ? (
             <PoolList
               currencies={currencies}
               searchValue={debouncedSearchValue}

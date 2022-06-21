@@ -214,13 +214,14 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
               marginTop: '15px',
               padding: '6px 12px',
               borderRadius: '8px',
+              overflow: 'hidden',
               background: rgba(theme.background, 0.5),
             }}
           >
             <Flex
               ref={marqueeContainerRef}
               alignItems="center"
-              style={{ overflow: 'hidden', background: theme.buttonBlack, borderRadius: '40px' }}
+              style={{ overflow: 'auto', background: theme.buttonBlack, borderRadius: '40px' }}
             >
               {topTrendingSoonTokens.map((tokenData, index) => (
                 <React.Fragment key={tokenData.token_id}>

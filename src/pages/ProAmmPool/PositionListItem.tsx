@@ -31,6 +31,7 @@ import useTheme from 'hooks/useTheme'
 import { RowBetween } from 'components/Row'
 import { formatDollarAmount } from 'utils/numbers'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { VERSION } from 'constants/v2'
 
 const StyledPositionCard = styled(LightCard)`
   border: none;
@@ -141,7 +142,7 @@ export default function PositionListItem({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
-  const prices = useTokensPrice([token0, token1], 'promm')
+  const prices = useTokensPrice([token0, token1], VERSION.ELASTIC)
 
   // construct Position from details returned
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
@@ -301,7 +302,7 @@ export default function PositionListItem({
                     flex: 1,
                   }}
                   as={Link}
-                  to={`/proamm/increase/${currencyId(currency0, chainId)}/${currencyId(
+                  to={`/elastic/increase/${currencyId(currency0, chainId)}/${currencyId(
                     currency1,
                     chainId,
                   )}/${feeAmount}/${positionDetails.tokenId}`}
@@ -344,7 +345,7 @@ export default function PositionListItem({
                 <ButtonOutlined
                   padding="8px"
                   as={Link}
-                  to={`/proamm/remove/${positionDetails.tokenId}`}
+                  to={`/elastic/remove/${positionDetails.tokenId}`}
                   style={{ flex: 1 }}
                   onClick={() => {
                     mixpanelHandler(MIXPANEL_TYPE.ELASTIC_REMOVE_LIQUIDITY_INITIATED, {
@@ -366,7 +367,7 @@ export default function PositionListItem({
             <ButtonEmpty width="max-content" style={{ fontSize: '14px' }} padding="0">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`${PROMM_ANALYTICS_URL[chainId as ChainId]}/pools/${positionDetails.poolId}`}
+                href={`${PROMM_ANALYTICS_URL[chainId as ChainId]}/pool/${positionDetails.poolId}`}
               >
                 <Trans>Pool Analytics ↗</Trans>
               </ExternalLink>

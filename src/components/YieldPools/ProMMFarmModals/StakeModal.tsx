@@ -23,6 +23,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useMedia } from 'react-use'
 import { StyledInternalLink } from 'theme'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { VERSION } from 'constants/v2'
 const StakeTableHeader = styled(TableHeader)<{ isUnstake: boolean }>`
   grid-template-columns: 18px 90px repeat(${({ isUnstake }) => (isUnstake ? 2 : 3)}, 1fr);
 `
@@ -58,7 +59,7 @@ const PositionRow = ({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
-  const usdPrices = useTokensPrice([token0, token1], 'promm')
+  const usdPrices = useTokensPrice([token0, token1], VERSION.ELASTIC)
 
   // construct Position from details returned
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)

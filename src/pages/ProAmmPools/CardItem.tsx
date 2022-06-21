@@ -31,7 +31,7 @@ interface ListItemProps {
 
 const getPrommAnalyticLink = (chainId: ChainId | undefined, poolAddress: string) => {
   if (!chainId) return ''
-  return `${PROMM_ANALYTICS_URL[chainId]}/pools/${poolAddress}`
+  return `${PROMM_ANALYTICS_URL[chainId]}/pool/${poolAddress}`
 }
 
 export const Wrapper = styled.div`
@@ -204,7 +204,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions }: Li
                 to={
                   myLiquidity
                     ? `/myPools?search=${pool.address}`
-                    : `/proamm/add/${token0Address}/${token1Address}/${pool.feeTier}`
+                    : `/elastic/add/${token0Address}/${token1Address}/${pool.feeTier}`
                 }
               >
                 <Trans>Add Liquidity</Trans>

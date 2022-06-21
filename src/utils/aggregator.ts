@@ -437,13 +437,8 @@ export class Aggregator {
     const tokenInAddress = currencyAmountIn.currency.isNative ? ETHER_ADDRESS : amountIn.currency.wrapped.address
     const tokenOutAddress = currencyOut.isNative ? ETHER_ADDRESS : tokenOut.address
     const comparedDex = DEX_TO_COMPARE[chainId]
-    // const basePriceURL = priceUri[chainId]
-    if (
-      tokenInAddress &&
-      tokenOutAddress &&
-      comparedDex?.value
-      //  && basePriceURL
-    ) {
+
+    if (tokenInAddress && tokenOutAddress && comparedDex?.value) {
       const search = new URLSearchParams({
         // Trade config
         tokenIn: tokenInAddress.toLowerCase(),

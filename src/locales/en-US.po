@@ -945,10 +945,6 @@ msgstr "Elastic Pools"
 msgid "Elastic is not supported on Aurora. Please switch to other chains"
 msgstr "Elastic is not supported on Aurora. Please switch to other chains"
 
-#: src/constants/v2.ts
-msgid "Elastic will be available soon"
-msgstr "Elastic will be available soon"
-
 #: src/components/WalletModal/WarningBox.tsx
 msgid "Enable Metamask in C98"
 msgstr "Enable Metamask in C98"

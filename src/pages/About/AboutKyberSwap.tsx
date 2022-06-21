@@ -83,6 +83,7 @@ import Banner from 'components/Banner'
 // import { Pagination, FreeMode } from 'swiper'
 import { nativeOnChain } from 'constants/tokens'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
+import { VERSION } from 'constants/v2'
 
 const KNC_NOT_AVAILABLE_IN = [
   ChainId.CRONOS,
@@ -127,7 +128,7 @@ function AboutKyberSwap() {
     maxAPRAvailable: aggregatorData?.maxApr,
   }
 
-  const [activeTab, setActiveTab] = useState('promm')
+  const [activeTab, setActiveTab] = useState(VERSION.ELASTIC)
 
   const Compounding = ({ width }: { width?: string }) => (
     <ForLiquidityProviderItem
@@ -721,16 +722,16 @@ function AboutKyberSwap() {
           </Text>
 
           <Tabs>
-            <TabItem active={activeTab === 'promm'} role="button" onClick={() => setActiveTab('promm')}>
+            <TabItem active={activeTab === VERSION.ELASTIC} role="button" onClick={() => setActiveTab(VERSION.ELASTIC)}>
               KyberSwap Elastic
             </TabItem>
             <Text color={theme.subText}>|</Text>
-            <TabItem role="button" active={activeTab === 'dmm'} onClick={() => setActiveTab('dmm')}>
+            <TabItem role="button" active={activeTab === VERSION.CLASSIC} onClick={() => setActiveTab(VERSION.CLASSIC)}>
               KyberSwap Classic
             </TabItem>
           </Tabs>
 
-          {activeTab === 'dmm' &&
+          {activeTab === VERSION.CLASSIC &&
             (above500 ? (
               <Flex marginTop={['40px', '48px']} flexDirection="column">
                 <ForLPLowerSlippage />
@@ -747,7 +748,7 @@ function AboutKyberSwap() {
               </GridWrapper>
             ))}
 
-          {activeTab === 'promm' &&
+          {activeTab === VERSION.ELASTIC &&
             (above500 ? (
               <Flex marginTop={['40px', '48px']} sx={{ gap: '24px' }}>
                 <ConcentratedLiquidity />
