@@ -421,17 +421,17 @@ export default function Header() {
             </StyledNavLink>
           </DiscoverWrapper>
 
-          <AnalyticsWrapper>
-            <StyledNavExternalLink href={PROMM_ANALYTICS_URL[chainId as ChainId] + '/home'}>
-              <Trans>Analytics</Trans>
-            </StyledNavExternalLink>
-          </AnalyticsWrapper>
-
           <CampaignWrapper>
             <StyledNavLink id={`campaigns`} to={'/campaigns'} isActive={match => Boolean(match)}>
               <Trans>Campaigns</Trans>
             </StyledNavLink>
           </CampaignWrapper>
+
+          <AnalyticsWrapper>
+            <StyledNavExternalLink href={PROMM_ANALYTICS_URL[chainId as ChainId] + '/home'}>
+              <Trans>Analytics</Trans>
+            </StyledNavExternalLink>
+          </AnalyticsWrapper>
 
           <AboutWrapper>
             <AboutPageDropDown />
