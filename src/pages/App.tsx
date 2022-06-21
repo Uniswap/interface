@@ -87,10 +87,10 @@ const BodyWrapper = styled.div<{ isAboutPage?: boolean }>`
   overflow-y: auto;
   overflow-x: hidden;
 `
-
+const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap' }
 export default function App() {
   const { account, chainId, library } = useActiveWeb3React()
-  const aboutPage = useRouteMatch('/about')
+  const aboutPage = useRouteMatch(AppPaths.ABOUT)
   const apolloClient = useExchangeClient()
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -154,6 +154,9 @@ export default function App() {
 
   const { width } = useWindowSize()
   useGlobalMixpanelEvents()
+  const { pathname } = window.location
+  const showFooter =
+    pathname === AppPaths.SWAP_LEGACY ? true : !pathname.includes(AppPaths.ABOUT) && !pathname.includes(AppPaths.SWAP)
 
   return (
     <>
@@ -186,9 +189,14 @@ export default function App() {
                 <Popups />
                 <Web3ReactManager>
                   <Switch>
-                    <Route exact strict path="/swap-legacy" component={Swap} />
+                    <Route exact strict path={AppPaths.SWAP_LEGACY} component={Swap} />
+
+                    <Route exact strict path="/swap/:network/:fromCurrency-to-:toCurrency" component={SwapV2} />
+                    <Route exact strict path="/swap/:network/:fromCurrency" component={SwapV2} />
+
                     <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                     <Route exact strict path="/swap" component={SwapV2} />
+
                     <Route exact strict path="/find" component={PoolFinder} />
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
@@ -240,7 +248,7 @@ export default function App() {
                   </Switch>
                 </Web3ReactManager>
               </BodyWrapper>
-              {!window.location.href.includes('about') && <Footer />}
+              {showFooter && <Footer />}
             </Suspense>
           </AppWrapper>
         </ApolloProvider>

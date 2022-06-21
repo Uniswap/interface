@@ -18,6 +18,8 @@ import {
   useToggleTradeRoutes,
   useToggleTopTrendingTokens,
   useShowTopTrendingSoonTokens,
+  useShowTokenInfo,
+  useToggleTokenInfo,
 } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useModalOpen, useToggleTransactionSettingsMenu, useToggleModal } from 'state/application/hooks'
@@ -400,12 +402,18 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
 
   const isShowLiveChart = useShowLiveChart()
   const isShowMobileLiveChart = useModalOpen(ApplicationModal.MOBILE_LIVE_CHART)
+
   const isShowTradeRoutes = useShowTradeRoutes()
+  const isShowTokenInfo = useShowTokenInfo()
+
   const isShowMobileTradeRoutes = useModalOpen(ApplicationModal.MOBILE_TRADE_ROUTES)
   const toggleLiveChart = useToggleLiveChart()
   const toggleMobileLiveChart = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
+
   const toggleTradeRoutes = useToggleTradeRoutes()
+  const toggleTokenInfo = useToggleTokenInfo()
   const toggleMobileTradeRoutes = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
+
   const isShowTrendingSoonTokens = useShowTopTrendingSoonTokens()
   const toggleTopTrendingTokens = useToggleTopTrendingTokens()
   const { mixpanelHandler } = useMixpanel()
@@ -605,6 +613,16 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
                       size={isMobile ? 'md' : 'sm'}
                     />
                   </RowBetween>
+
+                  {/* <RowBetween>
+                    <RowFixed>
+                      <StyledLabel>
+                        <Trans>Token Info</Trans>
+                      </StyledLabel>
+                      <QuestionHelper text={t`Turn on to display token info`} />
+                    </RowFixed>
+                    <Toggle isActive={isShowTokenInfo} toggle={toggleTokenInfo} size={isMobile ? 'md' : 'sm'} />
+                  </RowBetween> */}
                 </AutoColumn>
               </>
             )}

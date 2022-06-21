@@ -379,7 +379,7 @@ const RouteRow = ({ route, chainId, backgroundColor }: RouteRowProps) => {
                     href={getEtherscanLink(chainId, token?.address, 'token')}
                     target="_blank"
                   >
-                    <CurrencyLogo currency={token} size={'16px'} />
+                    <CurrencyLogo currency={token} size="16px" />
                     <span>{token?.symbol}</span>
                   </StyledToken>
                   {Array.isArray(subRoute)
@@ -455,8 +455,8 @@ const Routing = ({ trade, currencies, formattedAmounts, maxHeight, backgroundCol
 
     if (chainId && currency) {
       return (
-        <StyledToken as={'div'} reverse={isOutput} style={{ border: 'none' }}>
-          <CurrencyLogo currency={currency} size={'20px'} />
+        <StyledToken as="div" reverse={isOutput} style={{ border: 'none' }}>
+          <CurrencyLogo currency={currency} size="20px" />
           <span>{`${currency && formattedAmounts[field] ? formattedAmounts[field] : '0.0'} ${currency.symbol}`}</span>
         </StyledToken>
       )

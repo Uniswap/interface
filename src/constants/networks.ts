@@ -10,6 +10,7 @@ import ARBITRUM from '../assets/networks/arbitrum-network.svg'
 import VELAS from '../assets/networks/velas-network.png'
 import OASIS from '../assets/networks/oasis-network.svg'
 import BTT from '../assets/networks/bttc.png'
+import { convertToSlug } from 'utils/string'
 
 export const SUPPORTED_NETWORKS: ChainId[] = [
   ChainId.MAINNET,
@@ -77,7 +78,23 @@ export const NETWORK_LABEL: { [chainId in ChainId]?: string } = {
   [ChainId.OASIS]: 'Oasis',
 }
 
-export const TRUESIGHT_NETWORK_TO_CHAINID: { [p: string]: ChainId } = {
+type NetToChain = { [p: string]: ChainId }
+
+// map network to chainId, key is slug of NETWORK_LABEL
+export const NETWORK_TO_CHAINID: NetToChain = Object.keys(NETWORK_LABEL).reduce((rs: NetToChain, key: string) => {
+  const key2 = (key as unknown) as ChainId
+  const value: string = NETWORK_LABEL[key2] || ''
+  rs[convertToSlug(value)] = key2
+  return rs
+}, {} as NetToChain)
+
+export const MAP_TOKEN_HAS_MULTI_BY_NETWORK = {
+  // these network have many type of usdt, .... =>  hardcode 1 type
+  avalanche: { usdt: 'usdt.e' },
+  bittorrent: { usdt: 'usdt_e' },
+}
+
+export const TRUESIGHT_NETWORK_TO_CHAINID: NetToChain = {
   eth: ChainId.MAINNET,
   bsc: ChainId.BSCMAINNET,
   avax: ChainId.AVAXMAINNET,
