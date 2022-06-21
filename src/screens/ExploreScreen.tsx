@@ -23,7 +23,7 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { AnimatedText } from 'src/components/Text'
-import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
+import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
 import { theme } from 'src/styles/theme'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
@@ -58,8 +58,6 @@ export function ExploreScreen() {
     scrollY.value = withTiming(0, { duration: 100 })
     setIsSearchMode(false)
   }
-
-  const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y
@@ -134,15 +132,13 @@ export function ExploreScreen() {
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
             <FavoriteTokensSection
               fixedCount={5}
-              metadataDisplayType={tokenMetadataDisplayType}
-              onCycleMetadata={cycleTokenMetadataDisplayType}
+              metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
             />
           </AnimatedFlex>
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
             <TopTokensSection
               fixedCount={15}
-              metadataDisplayType={tokenMetadataDisplayType}
-              onCycleMetadata={cycleTokenMetadataDisplayType}
+              metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
             />
           </AnimatedFlex>
         </VirtualizedList>

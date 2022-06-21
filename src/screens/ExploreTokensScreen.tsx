@@ -17,7 +17,7 @@ export function ExploreTokensScreen() {
   const { t } = useTranslation()
 
   const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
-  const { orderBy, toggleModalVisible, orderByModal } = useOrderByModal()
+  const { orderBy, setOrderByModalIsVisible, orderByModal } = useOrderByModal()
 
   const { tokens } = useMarketTokens(useMemo(() => getOrderByValues(orderBy), [orderBy]))
 
@@ -37,7 +37,7 @@ export function ExploreTokensScreen() {
   const ContentHeader = (
     <Flex row alignItems="center" justifyContent="space-between" my="xs">
       <Text variant="h3">{t('Tokens')}</Text>
-      <SortingGroup orderBy={orderBy} onPressOrderBy={toggleModalVisible} />
+      <SortingGroup orderBy={orderBy} onPressOrderBy={() => setOrderByModalIsVisible(true)} />
     </Flex>
   )
 

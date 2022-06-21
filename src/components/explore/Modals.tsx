@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import React, { useMemo, useReducer } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
@@ -7,6 +7,7 @@ import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
+import { getOrderByLabel } from 'src/features/explore/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 import { setTokensOrderBy } from 'src/features/wallet/walletSlice'
@@ -18,7 +19,7 @@ export function useOrderByModal() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  const [isVisible, toggleModalVisible] = useReducer((visible) => !visible, false)
+  const [isVisible, setIsVisible] = useState(false)
 
   const orderBy = useAppSelector(selectTokensOrderBy)
 
@@ -28,7 +29,7 @@ export function useOrderByModal() {
         orderBy,
         (newTokensOrderBy: CoingeckoOrderBy | ClientSideOrderBy) => {
           dispatch(setTokensOrderBy({ newTokensOrderBy }))
-          toggleModalVisible()
+          setIsVisible(false)
         },
         t
       ),
@@ -37,15 +38,17 @@ export function useOrderByModal() {
 
   return {
     orderBy,
-    toggleModalVisible,
+    setOrderByModalIsVisible: setIsVisible,
     orderByModal: useMemo(
       () => (
         <ActionSheetModal
-          header={t('Sort tokens by')}
+          header={t('Sort by')}
           isVisible={isVisible}
           name={ModalName.Account}
           options={options}
-          onClose={() => toggleModalVisible()}
+          onClose={() => {
+            setIsVisible(false)
+          }}
         />
       ),
       [isVisible, options, t]
@@ -89,7 +92,7 @@ const getOrderByModalOptions = (
       render: () => (
         <ModalOption
           isSelected={selected === CoingeckoOrderBy.MarketCapDesc}
-          label={t('Market Cap')}
+          label={getOrderByLabel(CoingeckoOrderBy.MarketCapDesc, t)}
         />
       ),
     },
@@ -99,7 +102,22 @@ const getOrderByModalOptions = (
         setOrderBy(CoingeckoOrderBy.VolumeDesc)
       },
       render: () => (
-        <ModalOption isSelected={selected === CoingeckoOrderBy.VolumeDesc} label={t('Volume')} />
+        <ModalOption
+          isSelected={selected === CoingeckoOrderBy.VolumeDesc}
+          label={getOrderByLabel(CoingeckoOrderBy.VolumeDesc, t)}
+        />
+      ),
+    },
+    {
+      key: ClientSideOrderBy.PriceChangePercentage24hAsc,
+      onPress: () => {
+        setOrderBy(ClientSideOrderBy.PriceChangePercentage24hAsc)
+      },
+      render: () => (
+        <ModalOption
+          isSelected={selected === ClientSideOrderBy.PriceChangePercentage24hAsc}
+          label={getOrderByLabel(ClientSideOrderBy.PriceChangePercentage24hAsc, t)}
+        />
       ),
     },
     {
@@ -110,7 +128,7 @@ const getOrderByModalOptions = (
       render: () => (
         <ModalOption
           isSelected={selected === ClientSideOrderBy.PriceChangePercentage24hDesc}
-          label={t('Percent change')}
+          label={getOrderByLabel(ClientSideOrderBy.PriceChangePercentage24hDesc, t)}
         />
       ),
     },

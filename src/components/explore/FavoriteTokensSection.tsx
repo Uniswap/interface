@@ -30,11 +30,10 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
           gesturesEnabled={false}
           index={index}
           metadataDisplayType={props.metadataDisplayType}
-          onCycleMetadata={props.onCycleMetadata}
         />
       )
     },
-    [props.metadataDisplayType, props.onCycleMetadata]
+    [props.metadataDisplayType]
   )
 
   if (!favorites?.length) return null

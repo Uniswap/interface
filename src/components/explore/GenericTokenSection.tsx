@@ -13,7 +13,7 @@ export interface BaseTokenSectionProps {
   fixedCount?: number
   metadataDisplayType: string
   orderBy?: CoingeckoOrderBy
-  onCycleMetadata: () => void
+  onCycleMetadata?: () => void
 }
 
 type GenericTokenSectionProps<T> = BaseTokenSectionProps & {

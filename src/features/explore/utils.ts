@@ -39,15 +39,17 @@ export function getOrderByValues(orderBy: CoingeckoOrderBy | ClientSideOrderBy) 
 }
 
 export function getOrderByLabel(orderBy: CoingeckoOrderBy | ClientSideOrderBy, t: TFunction) {
-  if (!orderBy) return null
+  if (!orderBy) return ''
 
   switch (orderBy) {
     case CoingeckoOrderBy.MarketCapDesc:
       return t('Market cap')
     case CoingeckoOrderBy.VolumeDesc:
-      return t('Volume')
+      return t('Volume (24h)')
+    case ClientSideOrderBy.PriceChangePercentage24hAsc:
+      return t('Percent change (24h) ↑')
     case ClientSideOrderBy.PriceChangePercentage24hDesc:
-      return t('Percent change')
+      return t('Percent change (24h) ↓')
     default:
       throw new Error('Unexpected order by value ' + orderBy)
   }

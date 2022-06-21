@@ -73,7 +73,7 @@ export function TokenItem({
             {index !== undefined && (
               <Box minWidth={18}>
                 <Text color="neutralTextSecondary" variant="badge">
-                  {index}
+                  {index + 1}
                 </Text>
               </Box>
             )}
@@ -87,7 +87,7 @@ export function TokenItem({
             </Flex>
           </Flex>
           <Flex row justifyContent="flex-end">
-            <Button onPress={onCycleMetadata}>
+            <Button disabled={!onCycleMetadata} onPress={onCycleMetadata}>
               <TokenMetadata
                 main={formatUSDPrice(coin.current_price)}
                 sub={

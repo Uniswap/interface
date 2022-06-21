@@ -91,9 +91,9 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   if (searchQuery.length === 0) {
     // TODO: Add search history
     return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm">
         {trendingIsLoading ? (
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="md" mx="xs">
             <Text color="neutralTextSecondary" variant="subHead2">
               {t('Popular Tokens')}
             </Text>

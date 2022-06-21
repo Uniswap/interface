@@ -61,7 +61,10 @@ const enhancedApi = generatedApi.enhanceEndpoints({
 
             return acc
           },
-          { coinIdToCurrencyIds: {}, currencyIdToCoinId: {} }
+          {
+            coinIdToCurrencyIds: {},
+            currencyIdToCoinId: {},
+          }
         )
       },
       keepUnusedDataFor: KEEP_COINGECKO_LIST_DATA_FOR,
