@@ -337,5 +337,6 @@
   "Enter value": "Enter value",
   "Recovery phrases must be at least 12 words": "Recovery phrases must be at least 12 words",
   "Recovery phrases must be less than 24 words": "Recovery phrases must be less than 24 words",
+  "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
   "Invalid phrase": "Invalid phrase"
 }

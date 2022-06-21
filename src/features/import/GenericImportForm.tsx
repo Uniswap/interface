@@ -18,6 +18,7 @@ interface Props {
   onSubmit?: () => void
   showSuccess?: boolean // show succes indicator
   endAdornment?: string //text to auto to end of input string
+  liveCheck?: boolean
 }
 
 export function GenericImportForm({
@@ -28,6 +29,7 @@ export function GenericImportForm({
   onSubmit,
   showSuccess,
   endAdornment,
+  liveCheck,
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -47,7 +49,7 @@ export function GenericImportForm({
           borderColor={
             showSuccess
               ? 'accentBackgroundSuccess'
-              : error && !focused && value
+              : error && (liveCheck || !focused) && value
               ? 'accentBackgroundFailure'
               : 'neutralContainer'
           }
@@ -61,7 +63,6 @@ export function GenericImportForm({
             <TextInput
               autoFocus
               autoCapitalize="none"
-              autoCorrect={false}
               backgroundColor="neutralSurface"
               blurOnSubmit={true}
               caretHidden={!value}
@@ -102,7 +103,7 @@ export function GenericImportForm({
           )}
         </Flex>
         <Flex>
-          {error && value && !focused && (
+          {error && value && (liveCheck || !focused) && (
             <Flex centered row gap="sm">
               <AlertTriangle color={theme.colors.accentBackgroundFailure} />
               <Text color="accentBackgroundFailure" fontWeight="600" variant="body1">

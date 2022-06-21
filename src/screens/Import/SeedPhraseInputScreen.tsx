@@ -47,6 +47,7 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
       title={t('Enter your recovery phrase')}>
       <Flex pt="lg">
         <GenericImportForm
+          liveCheck
           error={errorText}
           placeholderLabel={t('recovery phrase')}
           showSuccess={valid}
@@ -55,7 +56,7 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
           onSubmit={() => Keyboard.dismiss()}
         />
       </Flex>
-      <PrimaryButton disabled={!valid} label={t('Next')} variant="onboard" onPress={onSubmit} />
+      <PrimaryButton disabled={!valid} label={t('Continue')} variant="onboard" onPress={onSubmit} />
     </OnboardingScreen>
   )
 }

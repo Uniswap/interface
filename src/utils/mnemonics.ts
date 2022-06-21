@@ -17,16 +17,10 @@ export function isValidMnemonic(
   const formatted = normalizeMnemonic(mnemonic)
   const split = formatted.split(' ')
 
-  if (split.length < MNEMONIC_LENGTH_MIN)
+  if (split.length < MNEMONIC_LENGTH_MIN || split.length > MNEMONIC_LENGTH_MAX)
     return {
       valid: false,
-      errorText: t('Recovery phrases must be at least 12 words'),
-    }
-
-  if (split.length > MNEMONIC_LENGTH_MAX)
-    return {
-      valid: false,
-      errorText: t('Recovery phrases must be less than 24 words'),
+      errorText: t('Recovery phrases must be 12-24 words'),
     }
 
   if (!utils.isValidMnemonic(formatted)) {
