@@ -6,13 +6,22 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components/macro'
 
-const TIME_OPTIONS: { [key: string]: string } = {
+const TIME_DISPLAYS: { [key: string]: string } = {
   hour: '1H',
   day: '1D',
   week: '1W',
   month: '1M',
   year: '1Y',
 }
+
+const enum TimeOption {
+  Hour = 'hour',
+  Day = 'day',
+  Week = 'week',
+  Month = 'month',
+  Year = 'year',
+}
+const TIMES = [TimeOption.Hour, TimeOption.Day, TimeOption.Week, TimeOption.Month, TimeOption.Year]
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -37,7 +46,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem;
   justify-content: space-between;
   text-decoration: none;
   :hover {
@@ -143,10 +152,9 @@ export default function TimeSelector() {
   const toggle = useToggleModal(ApplicationModal.TIME_SELECTOR)
   const toggleMenu = useToggleModal(ApplicationModal.TIME_SELECTOR)
   useOnClickOutside(node, open ? toggle : undefined)
-  const times = ['hour', 'day', 'week', 'month', 'year']
-  const [activeTime, setTime] = useState('day')
+  const [activeTime, setTime] = useState(TimeOption.Day)
 
-  function handleTimeChange(time: string) {
+  function handleTimeChange(time: TimeOption) {
     setTime(time)
     toggleMenu()
   }
@@ -155,7 +163,7 @@ export default function TimeSelector() {
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`}>
         <StyledMenuContent>
-          {TIME_OPTIONS[activeTime]}
+          {TIME_DISPLAYS[activeTime]}
           <Chevron>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
@@ -164,9 +172,9 @@ export default function TimeSelector() {
       {/* handles the actual flyout of the menu*/}
       {open && (
         <MenuTimeFlyout>
-          {times.map((time) => (
+          {TIMES.map((time) => (
             <InternalLinkMenuItem key={time} onClick={() => handleTimeChange(time)}>
-              <div>{TIME_OPTIONS[time]}</div>
+              <div>{TIME_DISPLAYS[time]}</div>
               {time === activeTime && <Check opacity={0.6} size={16} />}
             </InternalLinkMenuItem>
           ))}
