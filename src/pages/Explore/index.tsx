@@ -1,9 +1,13 @@
+// import TimeSelector from 'components/Explore/TimeSelector'
+import TimeSelector from 'components/Explore/TimeSelector'
 import AppBody from 'pages/AppBody'
 
 const Explore = () => {
   return (
-    <AppBody>
-      <div>asdf</div>
+    <AppBody background-color="gray">
+      <div>
+        <TimeSelector />
+      </div>
     </AppBody>
   )
 }
