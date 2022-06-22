@@ -386,6 +386,10 @@ export default function Swap({ history }: RouteComponentProps) {
     return filterTokensWithExactKeyword(Object.values(defaultTokens), keyword)[0]
   }
 
+  const navigate = (url: string) => {
+    history.push(`${url}${window.location.search}`)
+  }
+
   function findTokenPairFromUrl() {
     if (!refIsCheckNetwork.current || !Object.keys(defaultTokens).length) return
     let { fromCurrency, toCurrency } = getUrlMatchParams()
@@ -397,8 +401,8 @@ export default function Swap({ history }: RouteComponentProps) {
       const fromToken = findToken(fromCurrency)
       if (fromToken) {
         onCurrencySelection(Field.INPUT, fromToken)
-        if (isSame) history.push(`/swap/${network}/${fromCurrency}`)
-      } else history.push('/swap')
+        if (isSame) navigate(`/swap/${network}/${fromCurrency}`)
+      } else navigate('/swap')
       return
     }
 
@@ -410,8 +414,8 @@ export default function Swap({ history }: RouteComponentProps) {
       const fromToken = findToken(fromCurrency)
       const toToken = findToken(toCurrency)
       if (fromToken && toToken) {
-        history.push(`/swap/${network}/${getSymbolSlug(fromToken)}-to-${getSymbolSlug(toToken)}`)
-      } else history.push('/swap')
+        navigate(`/swap/${network}/${getSymbolSlug(fromToken)}-to-${getSymbolSlug(toToken)}`)
+      } else navigate('/swap')
       return
     }
 
@@ -429,7 +433,7 @@ export default function Swap({ history }: RouteComponentProps) {
     const toToken = findToken(toCurrency)
 
     if (!toToken || !fromToken) {
-      history.push('/swap')
+      navigate('/swap')
       return
     }
     onCurrencySelection(Field.INPUT, fromToken)
@@ -448,7 +452,7 @@ export default function Swap({ history }: RouteComponentProps) {
           refIsCheckNetwork.current = true
         })
         .catch(() => {
-          history.push('/swap')
+          navigate('/swap')
         })
     } else {
       refIsCheckNetwork.current = true
@@ -459,7 +463,7 @@ export default function Swap({ history }: RouteComponentProps) {
     const symbolIn = getSymbolSlug(currencyIn)
     const symbolOut = getSymbolSlug(currencyOut)
     if (symbolIn && symbolOut && chainId) {
-      history.push(`/swap/${convertToSlug(NETWORK_LABEL[chainId] || '')}/${symbolIn}-to-${symbolOut}`)
+      navigate(`/swap/${convertToSlug(NETWORK_LABEL[chainId] || '')}/${symbolIn}-to-${symbolOut}`)
     }
   }
 
