@@ -15102,9 +15102,10 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-"no-yolo-signatures@https://github.com/uniswap/no-yolo-signatures.git":
-  version "0.0.1-alpha5"
-  resolved "https://github.com/uniswap/no-yolo-signatures.git#60cebb206a0faec845fb329345c434478269a69c"
+no-yolo-signatures@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/no-yolo-signatures/-/no-yolo-signatures-0.0.2.tgz#c2f4f176710ab80e165471ad69f1b466256dafa5"
+  integrity sha512-x5h6TxE1L+2UKLQASogWITbm77uJeObMkRdTBlZ5nUbglJhGYaXbf4cBXkZoLM0WceSOJmM3P/AUFpURDAS71w==
   dependencies:
     "@celo/base" "1.3.3"
     "@ethersproject/abi" "5.4.1"
