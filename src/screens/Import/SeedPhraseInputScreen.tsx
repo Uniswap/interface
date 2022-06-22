@@ -18,7 +18,7 @@ const IMPORT_WALLET_AMOUNT = 3
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
-export function SeedPhraseInputScreen({ navigation }: Props) {
+export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -35,14 +35,12 @@ export function SeedPhraseInputScreen({ navigation }: Props) {
           indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
         })
       )
-      navigation.navigate(OnboardingScreens.SelectWallet)
+      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     }
-  }, [dispatch, navigation, valid, value])
+  }, [dispatch, navigation, params, valid, value])
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={0}
       subtitle={t('Your recovery phrase will only be stored locally on your device.')}
       title={t('Enter your recovery phrase')}>
       <Flex pt="lg">

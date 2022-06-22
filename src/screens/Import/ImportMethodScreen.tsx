@@ -14,6 +14,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ImportType } from 'src/features/onboarding/utils'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -26,6 +27,7 @@ const backupOption = {
   blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
   icon: <CloudIcon />,
   nav: OnboardingScreens.RestoreWallet,
+  importType: ImportType.Restore,
 }
 
 const options: {
@@ -33,24 +35,28 @@ const options: {
   blurb: (t: TFunction) => string
   icon: React.ReactNode
   nav: any
+  importType: ImportType
 }[] = [
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
     blurb: (t: TFunction) => t('Enter or paste words'),
     icon: <SeedPhraseIcon />,
     nav: OnboardingScreens.SeedPhraseInput,
+    importType: ImportType.SeedPhrase,
   },
   {
     title: (t: TFunction) => t('Import a private key'),
     blurb: (t: TFunction) => t('Enter or paste your key'),
     icon: <KeyIcon />,
     nav: OnboardingScreens.PrivateKeyInput,
+    importType: ImportType.PrivateKey,
   },
   {
     title: (t: TFunction) => t('View only'),
     blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
     icon: <EyeIcon />,
     nav: OnboardingScreens.WatchWallet,
+    importType: ImportType.Watch,
   },
 ]
 
@@ -65,24 +71,30 @@ export function ImportMethodScreen({ navigation }: Props) {
    */
   const backupFound = true
 
-  const handleOnPress = (nav: OnboardingScreens) => {
+  const handleOnPress = (nav: OnboardingScreens, importType: ImportType) => {
     // Delete any pending accounts before entering flow.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
-    navigation.navigate(nav)
+    navigation.navigate({
+      name: nav,
+      params: { importType },
+      merge: true,
+    })
   }
 
   return (
     <OnboardingScreen title={t('Choose how to connect your wallet')}>
       <Flex grow gap="md">
-        {[...(backupFound ? [backupOption] : []), ...options].map(({ title, blurb, icon, nav }) => (
-          <OptionCard
-            key={'connection-option-' + title}
-            blurb={blurb(t)}
-            icon={icon}
-            title={title(t)}
-            onPress={() => handleOnPress(nav)}
-          />
-        ))}
+        {[...(backupFound ? [backupOption] : []), ...options].map(
+          ({ title, blurb, icon, nav, importType }) => (
+            <OptionCard
+              key={'connection-option-' + title}
+              blurb={blurb(t)}
+              icon={icon}
+              title={title(t)}
+              onPress={() => handleOnPress(nav, importType)}
+            />
+          )
+        )}
         <Flex grow justifyContent="flex-end">
           <Disclaimer />
         </Flex>

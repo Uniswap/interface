@@ -44,7 +44,7 @@ function useNextOnboardingScreen(currentScreen: OnboardingScreens) {
   }
 }
 
-export function SelectColorScreen({ navigation }: Props) {
+export function SelectColorScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -76,9 +76,13 @@ export function SelectColorScreen({ navigation }: Props) {
           },
         })
       )
-      navigation.navigate(nextScreen)
+      navigation.navigate({
+        name: nextScreen,
+        merge: true,
+        params,
+      })
     }
-  }, [activeAccount, dispatch, navigation, nextScreen, selectedColor])
+  }, [activeAccount, dispatch, navigation, nextScreen, params, selectedColor])
 
   const renderItem = useCallback(
     ({ item: color }: ListRenderItemInfo<string>) => (
@@ -108,8 +112,6 @@ export function SelectColorScreen({ navigation }: Props) {
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={1}
       subtitle={t(
         'Make your wallet feel like you by selecting a color. We’ll generate a special gradient based on your address'
       )}

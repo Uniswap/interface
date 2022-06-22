@@ -23,21 +23,21 @@ import { OnboardingScreens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
-export function NotificationsSetupScreen({ navigation }: Props) {
+export function NotificationsSetupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
 
   const onPressNext = () => {
-    navigation.navigate(OnboardingScreens.Security)
+    navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
   }
 
   const onPressEnableNotifications = () => {
-    promptPushPermission(() => navigation.navigate(OnboardingScreens.Security))
+    promptPushPermission(() =>
+      navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
+    )
   }
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={2}
       subtitle={t('Receive transaction status updates when you:')}
       title={t('Turn on push notifications')}>
       <Flex grow justifyContent="space-between">

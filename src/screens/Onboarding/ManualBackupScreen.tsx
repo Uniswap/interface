@@ -28,7 +28,7 @@ enum View {
   View,
 }
 
-export function ManualBackupScreen({ navigation }: Props) {
+export function ManualBackupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -52,9 +52,9 @@ export function ManualBackupScreen({ navigation }: Props) {
 
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Manual)) {
-      navigation.navigate(OnboardingScreens.Backup)
+      navigation.navigate({ name: OnboardingScreens.Backup, params, merge: true })
     }
-  }, [activeAccount?.backups, navigation])
+  }, [activeAccount?.backups, navigation, params])
 
   switch (view) {
     case View.Education:

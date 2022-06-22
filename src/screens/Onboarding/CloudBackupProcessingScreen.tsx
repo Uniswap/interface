@@ -22,7 +22,7 @@ type Props = NativeStackScreenProps<
 export function CloudBackupProcessingScreen({
   navigation,
   route: {
-    params: { type },
+    params: { type, importType },
   },
 }: Props) {
   const { t } = useTranslation()
@@ -35,9 +35,13 @@ export function CloudBackupProcessingScreen({
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Cloud)) {
       doneProcessing()
-      navigation.navigate(OnboardingScreens.Backup)
+      navigation.navigate({
+        name: OnboardingScreens.Backup,
+        params: { importType },
+        merge: true,
+      })
     }
-  }, [activeAccount?.backups, navigation])
+  }, [activeAccount?.backups, importType, navigation])
 
   useEffect(() => {
     if (!activeAccount?.address) return

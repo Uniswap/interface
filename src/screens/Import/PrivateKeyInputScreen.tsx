@@ -15,7 +15,7 @@ import { isValidPrivateKey } from 'src/utils/privateKeys'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.PrivateKeyInput>
 
-export function PrivateKeyInputScreen({ navigation }: Props) {
+export function PrivateKeyInputScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -31,9 +31,9 @@ export function PrivateKeyInputScreen({ navigation }: Props) {
           privateKey: value,
         })
       )
-      navigation.navigate(OnboardingScreens.EditName)
+      navigation.navigate({ name: OnboardingScreens.EditName, params, merge: true })
     }
-  }, [dispatch, navigation, valid, value])
+  }, [dispatch, navigation, params, valid, value])
 
   const onChange = (text: string | undefined) => {
     setValue(text ? text.trim() : undefined)
@@ -41,8 +41,6 @@ export function PrivateKeyInputScreen({ navigation }: Props) {
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={0}
       subtitle={t('Your private key will only be stored locally on your device.')}
       title={t('Enter your private key')}>
       <Flex pt="lg">

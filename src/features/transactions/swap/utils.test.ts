@@ -1,8 +1,10 @@
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { getStepCount, getStepNumber, ImportType } from 'src/features/onboarding/utils'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { getWrapType, serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
+import { OnboardingScreens } from 'src/screens/Screens'
 
 describe(serializeQueryParams, () => {
   it('handles the correct types', () => {
@@ -43,5 +45,19 @@ describe(getWrapType, () => {
     // different chains
     expect(getWrapType(weth, rinkEth)).toEqual(WrapType.NotApplicable)
     expect(getWrapType(rinkWeth, eth)).toEqual(WrapType.NotApplicable)
+  })
+})
+
+describe(getStepCount, () => {
+  it('correctly returns length of create flow', () => {
+    expect(getStepCount(ImportType.Create)).toBe(5)
+  })
+
+  it('identifies correct step number', () => {
+    expect(getStepNumber(ImportType.Watch, OnboardingScreens.Notifications)).toEqual(1)
+  })
+
+  it('returns undefined for incorrect screen', () => {
+    expect(getStepNumber(ImportType.Watch, OnboardingScreens.Backup)).toEqual(undefined)
   })
 })

@@ -10,6 +10,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { EducationContentType } from 'src/components/education'
 import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
+import { ImportType } from 'src/features/onboarding/utils'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
@@ -60,30 +61,36 @@ export type ProfileStackParamList = {
   [Screens.PortfolioNFTs]: { Address: string | undefined }
 }
 
+export type OnboardingStackBaseParams =
+  | {
+      importType?: ImportType | undefined
+    }
+  | undefined
+
 export type OnboardingStackParamList = {
   [OnboardingScreens.BackupCloud]: {
     pin?: string
-  }
+  } & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudProcessing]: {
     pin: string
     type: 'restore' | 'backup'
-  }
-  [OnboardingScreens.BackupManual]: undefined
-  [OnboardingScreens.Backup]: undefined
-  [OnboardingScreens.Landing]: undefined
-  [OnboardingScreens.EditName]: undefined
-  [OnboardingScreens.SelectColor]: undefined
-  [OnboardingScreens.Notifications]: undefined
-  [OnboardingScreens.Outro]: undefined
-  [OnboardingScreens.Security]: undefined
+  } & OnboardingStackBaseParams
+  [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
+  [OnboardingScreens.Backup]: OnboardingStackBaseParams
+  [OnboardingScreens.Landing]: OnboardingStackBaseParams
+  [OnboardingScreens.EditName]: OnboardingStackBaseParams
+  [OnboardingScreens.SelectColor]: OnboardingStackBaseParams
+  [OnboardingScreens.Notifications]: OnboardingStackBaseParams
+  [OnboardingScreens.Outro]: OnboardingStackBaseParams
+  [OnboardingScreens.Security]: OnboardingStackBaseParams
 
   // import
-  [OnboardingScreens.ImportMethod]: undefined
-  [OnboardingScreens.RestoreWallet]: undefined
-  [OnboardingScreens.SeedPhraseInput]: undefined
-  [OnboardingScreens.PrivateKeyInput]: undefined
-  [OnboardingScreens.SelectWallet]: undefined
-  [OnboardingScreens.WatchWallet]: undefined
+  [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
+  [OnboardingScreens.RestoreWallet]: OnboardingStackBaseParams
+  [OnboardingScreens.SeedPhraseInput]: OnboardingStackBaseParams
+  [OnboardingScreens.PrivateKeyInput]: OnboardingStackBaseParams
+  [OnboardingScreens.SelectWallet]: OnboardingStackBaseParams
+  [OnboardingScreens.WatchWallet]: OnboardingStackBaseParams
 }
 
 export type AppStackParamList = {

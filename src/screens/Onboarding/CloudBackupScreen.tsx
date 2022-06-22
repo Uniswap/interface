@@ -18,7 +18,7 @@ function isPinConfirmationValid(expected: string, actual: string) {
 export function CloudBackupScreen({
   navigation,
   route: {
-    params: { pin },
+    params: { pin, importType },
   },
 }: Props) {
   const { t } = useTranslation()
@@ -32,15 +32,20 @@ export function CloudBackupScreen({
     if (enteredPin.length !== PIN_LENGTH) return
 
     if (isPinConfirmationValid(pin, enteredPin)) {
-      navigation.navigate(OnboardingScreens.BackupCloudProcessing, {
-        pin,
-        type: 'backup',
+      navigation.navigate({
+        name: OnboardingScreens.BackupCloudProcessing,
+        params: {
+          pin,
+          type: 'backup',
+          importType,
+        },
+        merge: true,
       })
     } else {
       setEnteredPin('')
       setError(true)
     }
-  }, [enteredPin, navigation, pin])
+  }, [enteredPin, importType, navigation, pin])
 
   // detects user pin form complete
   useEffect(() => {
@@ -48,15 +53,14 @@ export function CloudBackupScreen({
     if (enteredPin.length !== PIN_LENGTH) return
 
     // push same screen with pin filled
-    navigation.push(OnboardingScreens.BackupCloud, { pin: enteredPin })
-  }, [enteredPin, navigation, pin])
+    navigation.push(OnboardingScreens.BackupCloud, { pin: enteredPin, importType })
+  }, [enteredPin, importType, navigation, pin])
 
   if (!pin) {
     return (
       <OnboardingScreen
         subtitle={t('You’ll use this PIN to restore your wallet from iCloud.')}
-        title={t('Set your iCloud backup PIN')}
-        onSkip={() => navigation.navigate(OnboardingScreens.Backup)}>
+        title={t('Set your iCloud backup PIN')}>
         <PinInput length={PIN_LENGTH} setValue={setEnteredPin} value={enteredPin} />
       </OnboardingScreen>
     )

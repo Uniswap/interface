@@ -18,7 +18,7 @@ import { normalizeTextInput } from 'src/utils/string'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 
-export function WatchWalletScreen({ navigation }: Props) {
+export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -51,9 +51,9 @@ export function WatchWalletScreen({ navigation }: Props) {
           })
         )
       }
-      navigation.navigate(OnboardingScreens.Notifications)
+      navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
     }
-  }, [dispatch, isValid, navigation, normalizedValue, resolvedAddress, value])
+  }, [dispatch, isValid, navigation, normalizedValue, params, resolvedAddress, value])
 
   const onChange = (text: string | undefined) => {
     setValue(text?.trim())
@@ -61,8 +61,6 @@ export function WatchWalletScreen({ navigation }: Props) {
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={0}
       subtitle={t('Enter an Ethereum wallet address or ENS name.')}
       title={t('Enter a wallet address')}>
       <Flex pt="lg">

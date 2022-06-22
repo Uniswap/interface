@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -18,6 +19,7 @@ import {
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
+import OnboardingHeader from 'src/features/onboarding/OnboardingHeader'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -66,7 +68,7 @@ import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { dimensions } from 'src/styles/sizing'
 
 const Tab = createBottomTabNavigator<TabParamList>()
-const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
+const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
@@ -209,6 +211,79 @@ export function ExploreStackNavigator() {
   )
 }
 
+export function OnboardingStackNavigator() {
+  const theme = useAppTheme()
+  return (
+    <OnboardingStack.Navigator>
+      <OnboardingStack.Group
+        screenOptions={{
+          headerMode: 'float',
+          headerTitle: (props) => <OnboardingHeader {...props} />,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: theme.colors.mainBackground,
+            shadowColor: theme.colors.none,
+          },
+          headerTintColor: theme.colors.neutralTextSecondary,
+        }}>
+        <OnboardingStack.Screen
+          component={LandingScreen}
+          name={OnboardingScreens.Landing}
+          options={{ headerShown: false }}
+        />
+        <OnboardingStack.Screen component={EditNameScreen} name={OnboardingScreens.EditName} />
+        <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
+        <OnboardingStack.Screen
+          component={NotificationsSetupScreen}
+          name={OnboardingScreens.Notifications}
+        />
+        <OnboardingStack.Screen component={SecuritySetupScreen} name={OnboardingScreens.Security} />
+        <OnboardingStack.Screen
+          component={ManualBackupScreen}
+          name={OnboardingScreens.BackupManual}
+        />
+        <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} />
+        <OnboardingStack.Screen
+          component={CloudBackupScreen}
+          name={OnboardingScreens.BackupCloud}
+        />
+        <OnboardingStack.Screen
+          component={CloudBackupProcessingScreen}
+          name={OnboardingScreens.BackupCloudProcessing}
+        />
+        <OnboardingStack.Screen
+          component={ImportMethodScreen}
+          name={OnboardingScreens.ImportMethod}
+        />
+        <OnboardingStack.Screen
+          component={PrivateKeyInputScreen}
+          name={OnboardingScreens.PrivateKeyInput}
+        />
+        <OnboardingStack.Screen
+          component={RestoreWalletScreen}
+          name={OnboardingScreens.RestoreWallet}
+        />
+        <OnboardingStack.Screen
+          component={SeedPhraseInputScreen}
+          name={OnboardingScreens.SeedPhraseInput}
+        />
+        <OnboardingStack.Screen
+          component={SelectWalletScreen}
+          name={OnboardingScreens.SelectWallet}
+        />
+        <OnboardingStack.Screen
+          component={SelectColorScreen}
+          name={OnboardingScreens.SelectColor}
+        />
+        <OnboardingStack.Screen
+          component={WatchWalletScreen}
+          name={OnboardingScreens.WatchWallet}
+        />
+      </OnboardingStack.Group>
+    </OnboardingStack.Navigator>
+  )
+}
+
 export function AppStackNavigator() {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
 
@@ -217,62 +292,8 @@ export function AppStackNavigator() {
       {finishedOnboarding ? (
         <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       ) : (
-        <AppStack.Group>
-          <OnboardingStack.Screen component={LandingScreen} name={OnboardingScreens.Landing} />
-          <OnboardingStack.Screen component={EditNameScreen} name={OnboardingScreens.EditName} />
-          <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
-          <OnboardingStack.Screen
-            component={NotificationsSetupScreen}
-            name={OnboardingScreens.Notifications}
-          />
-          <OnboardingStack.Screen
-            component={SecuritySetupScreen}
-            name={OnboardingScreens.Security}
-          />
-          <OnboardingStack.Screen
-            component={ManualBackupScreen}
-            name={OnboardingScreens.BackupManual}
-          />
-          <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} />
-          <OnboardingStack.Screen
-            component={CloudBackupScreen}
-            name={OnboardingScreens.BackupCloud}
-          />
-          <OnboardingStack.Screen
-            component={CloudBackupProcessingScreen}
-            name={OnboardingScreens.BackupCloudProcessing}
-          />
-          <OnboardingStack.Screen
-            component={ImportMethodScreen}
-            name={OnboardingScreens.ImportMethod}
-          />
-          <OnboardingStack.Screen
-            component={PrivateKeyInputScreen}
-            name={OnboardingScreens.PrivateKeyInput}
-          />
-          <OnboardingStack.Screen
-            component={RestoreWalletScreen}
-            name={OnboardingScreens.RestoreWallet}
-          />
-          <OnboardingStack.Screen
-            component={SeedPhraseInputScreen}
-            name={OnboardingScreens.SeedPhraseInput}
-          />
-          <OnboardingStack.Screen
-            component={SelectWalletScreen}
-            name={OnboardingScreens.SelectWallet}
-          />
-          <OnboardingStack.Screen
-            component={SelectColorScreen}
-            name={OnboardingScreens.SelectColor}
-          />
-          <OnboardingStack.Screen
-            component={WatchWalletScreen}
-            name={OnboardingScreens.WatchWallet}
-          />
-        </AppStack.Group>
+        <AppStack.Screen component={OnboardingStackNavigator} name={Screens.OnboardingStack} />
       )}
-
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
         <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />

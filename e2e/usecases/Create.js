@@ -1,4 +1,5 @@
 import { by, device, element, expect } from 'detox'
+import { sleep } from '../../src/utils/timing'
 import { ElementName } from '../../src/features/telemetry/constants'
 import { Accounts } from '../utils/fixtures'
 
@@ -27,6 +28,8 @@ export function Create() {
     await element(by.id(ElementName.Next)).tap()
     // finish viewing native mnemonic
     await element(by.id(ElementName.Confirm)).tap()
+
+    await sleep(1000)
 
     // iCloud Backup
     await element(by.id(ElementName.AddiCloudBackup)).tap()

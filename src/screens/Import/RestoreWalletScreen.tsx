@@ -12,7 +12,7 @@ const PIN_LENGTH = 6
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreWallet>
 
-export function RestoreWalletScreen({ navigation }: Props) {
+export function RestoreWalletScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
 
   const [enteredPin, setEnteredPin] = useState('')
@@ -29,17 +29,15 @@ export function RestoreWalletScreen({ navigation }: Props) {
   useEffect(() => {
     if (enteredPin.length !== PIN_LENGTH) return
     if (enteredPin === expectedPin) {
-      navigation.navigate(OnboardingScreens.SelectWallet)
+      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     } else {
       setEnteredPin('')
       setError(true)
     }
-  }, [enteredPin, navigation])
+  }, [enteredPin, navigation, params])
 
   return (
     <OnboardingScreen
-      stepCount={2}
-      stepNumber={0}
       subtitle={t('This PIN is required to recover your backed up recovery phrase from iCloud.')}
       title={t('Enter your iCloud backup PIN')}>
       <Box minHeight={30}>

@@ -18,7 +18,7 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectWallet>
 
-export function SelectWalletScreen({ navigation }: Props) {
+export function SelectWalletScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -49,13 +49,11 @@ export function SelectWalletScreen({ navigation }: Props) {
         )
       }
     })
-    navigation.navigate(OnboardingScreens.Notifications)
-  }, [dispatch, addresses, navigation, selectedAddresses])
+    navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
+  }, [addresses, navigation, params, selectedAddresses, dispatch])
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={1}
       subtitle={t('We found several wallets associated with your recovery phrase.')}
       title={t('Select wallets to import')}>
       {loadingAccounts ? (

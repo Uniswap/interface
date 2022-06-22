@@ -1,10 +1,12 @@
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { StackScreenProps } from '@react-navigation/stack'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
+  OnboardingStackBaseParams,
   OnboardingStackParamList,
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
@@ -25,17 +27,17 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type Props = CompositeScreenProps<
-  NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
+  StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
   NativeStackScreenProps<AppStackParamList, Screens.Education>
 >
 
-export function BackupScreen({ navigation }: Props) {
+export function BackupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
 
   const activeAccountBackups = useActiveAccount()?.backups
 
   const onPressNext = () => {
-    navigation.navigate(OnboardingScreens.Notifications)
+    navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
   }
 
   const onPressEducationButton = () => {
@@ -46,14 +48,12 @@ export function BackupScreen({ navigation }: Props) {
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={1}
       subtitle={t(
         'Backups let you restore your wallet if you lose your device––we recommend adding both types.'
       )}
       title={t('Back up your recovery phrase')}>
       <Flex grow>
-        <BackupOptions backupMethods={activeAccountBackups} />
+        <BackupOptions backupMethods={activeAccountBackups} params={params} />
         <Button alignSelf="center" py="sm" onPress={onPressEducationButton}>
           <Flex centered row gap="xs">
             <StarGroup height={16} width={16} />
@@ -75,7 +75,13 @@ export function BackupScreen({ navigation }: Props) {
   )
 }
 
-function BackupOptions({ backupMethods }: { backupMethods?: BackupType[] }) {
+function BackupOptions({
+  backupMethods,
+  params,
+}: {
+  backupMethods?: BackupType[]
+  params: Readonly<OnboardingStackBaseParams>
+}) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -90,7 +96,11 @@ function BackupOptions({ backupMethods }: { backupMethods?: BackupType[] }) {
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
         onPress={() => {
-          navigate(OnboardingScreens.BackupCloud, {})
+          navigate({
+            name: OnboardingScreens.BackupCloud,
+            params: { importType: params?.importType },
+            merge: true,
+          })
         }}
       />
       <BackupOptionButton
@@ -100,7 +110,7 @@ function BackupOptions({ backupMethods }: { backupMethods?: BackupType[] }) {
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
         onPress={() => {
-          navigate(OnboardingScreens.BackupManual)
+          navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
         }}
       />
     </Flex>

@@ -13,6 +13,7 @@ import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import {
@@ -33,7 +34,11 @@ export function LandingScreen({ navigation }: Props) {
     // Clear any existing pending accounts first.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     dispatch(createAccountActions.trigger(0))
-    navigation.navigate(OnboardingScreens.EditName)
+    navigation.navigate({
+      name: OnboardingScreens.EditName,
+      params: { importType: ImportType.Create },
+      merge: true,
+    })
   }
   const onPressImportWallet = () => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))

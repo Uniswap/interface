@@ -22,7 +22,7 @@ import { shortenAddress } from 'src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
-export function EditNameScreen({ navigation }: Props) {
+export function EditNameScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -33,7 +33,11 @@ export function EditNameScreen({ navigation }: Props) {
   const [newAccountName, setNewAccountName] = useState<string>(pendingAccountName ?? '')
 
   const onPressNext = () => {
-    navigation.navigate(OnboardingScreens.SelectColor)
+    navigation.navigate({
+      name: OnboardingScreens.SelectColor,
+      merge: true,
+      params,
+    })
 
     if (activeAccount) {
       dispatch(
@@ -48,8 +52,6 @@ export function EditNameScreen({ navigation }: Props) {
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={0}
       subtitle={t('Easily identify your wallet in the app by giving it a nickname and color.')}
       title={t('Give your wallet a nickname')}>
       <Box>

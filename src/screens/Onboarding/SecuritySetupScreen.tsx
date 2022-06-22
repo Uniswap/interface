@@ -32,8 +32,6 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
 
   return (
     <OnboardingScreen
-      stepCount={4}
-      stepNumber={3}
       subtitle={t(
         'Make sure that you’re the only person who can access your app and make transactions.'
       )}

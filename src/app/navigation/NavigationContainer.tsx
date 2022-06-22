@@ -1,11 +1,12 @@
 import {
   createNavigationContainerRef,
+  DefaultTheme,
   NavigationContainer as NativeNavigationContainer,
 } from '@react-navigation/native'
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, FC, useEffect, useState } from 'react'
 import { Linking } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLink'
 import { logScreenView } from 'src/features/telemetry'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -16,12 +17,18 @@ export const navigationRef = createNavigationContainerRef()
 export const NavigationContainer: FC = ({ children }) => {
   const [routeName, setRouteName] = useState<string | undefined>()
   const dispatch = useAppDispatch()
+  const theme = useAppTheme()
 
   useManageDeepLinks(dispatch)
 
   return (
     <NativeNavigationContainer
       ref={navigationRef}
+      // avoid white flickering background on screen navigation
+      theme={{
+        ...DefaultTheme,
+        colors: { ...DefaultTheme.colors, background: theme.colors.mainBackground },
+      }}
       onReady={() => {
         setRouteName(navigationRef.getCurrentRoute()?.name)
       }}
