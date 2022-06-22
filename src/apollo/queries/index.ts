@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { BUNDLE_ID, STATIC_FEE_FACTORY_ADDRESSES, DYNAMIC_FEE_FACTORY_ADDRESSES } from '../../constants'
+import { BUNDLE_ID } from '../../constants'
 
 export const SUBGRAPH_BLOCK_NUMBER = () => gql`
   query block_number {
@@ -66,8 +66,7 @@ export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
 
 export const GLOBAL_DATA = (chainId: ChainId, block?: number) => {
   const queryString = `query dmmFactories {
-    dmmFactories(
-       ${block ? `block: { number: ${block}}` : ``}) {
+    dmmFactories${block ? `(block: { number: ${block}})` : ``} {
         id
         totalVolumeUSD
         totalFeeUSD
@@ -112,7 +111,7 @@ export const GET_BLOCKS = (timestamps: number[]) => {
   return gql(queryString)
 }
 
-const PoolFields = `
+const PoolFields = (withFee?: boolean) => `
   fragment PoolFields on Pool {
     id
     txCount
@@ -142,7 +141,7 @@ const PoolFields = `
     trackedReserveETH
     reserveETH
     volumeUSD
-    fee
+    ${withFee ? 'fee' : ''}
     feeUSD
     untrackedVolumeUSD
     untrackedFeeUSD
@@ -212,14 +211,14 @@ export const USER_LIQUIDITY_POSITION_SNAPSHOTS = gql`
   }
 `
 
-export const POOL_DATA = (poolAddress: string, block: number) => {
+export const POOL_DATA = (poolAddress: string, block: number, withFee?: boolean) => {
   const queryString = `
     query pools {
       pools(${block ? `block: {number: ${block}}` : ``} where: { id: "${poolAddress}"} ) {
         ...PoolFields
       }
     }
-    ${PoolFields}
+    ${PoolFields(withFee)}
     `
 
   return gql(queryString)
@@ -227,13 +226,13 @@ export const POOL_DATA = (poolAddress: string, block: number) => {
 
 export const POOL_COUNT = gql`
   {
-    dmmFactories(first: 1) {
+    dmmFactories {
       poolCount
     }
   }
 `
 
-export const POOLS_BULK_FROM_LIST = (pools: string[]) => {
+export const POOLS_BULK_FROM_LIST = (pools: string[], withFee?: boolean) => {
   let poolsString = `[`
   pools.map((pool: string) => {
     return (poolsString += `"${pool}"`)
@@ -249,12 +248,12 @@ export const POOLS_BULK_FROM_LIST = (pools: string[]) => {
   `
 
   return gql`
-    ${PoolFields}
+    ${PoolFields(withFee)}
     ${queryString}
   `
 }
 
-export const POOLS_BULK_WITH_PAGINATION = (first: number, skip: number) => {
+export const POOLS_BULK_WITH_PAGINATION = (first: number, skip: number, withFee?: boolean) => {
   const queryString = `
   query pools {
     pools(first: ${first}, skip: ${skip}) {
@@ -264,12 +263,12 @@ export const POOLS_BULK_WITH_PAGINATION = (first: number, skip: number) => {
   `
 
   return gql`
-    ${PoolFields}
+    ${PoolFields(withFee)}
     ${queryString}
   `
 }
 
-export const POOLS_HISTORICAL_BULK_FROM_LIST = (block: number, pools: string[]) => {
+export const POOLS_HISTORICAL_BULK_FROM_LIST = (block: number, pools: string[], withFee?: boolean) => {
   let poolsString = `[`
   pools.map((pool: string) => {
     return (poolsString += `"${pool}"`)
@@ -278,11 +277,14 @@ export const POOLS_HISTORICAL_BULK_FROM_LIST = (block: number, pools: string[]) 
 
   const queryString = `
   query pools {
-    pools(first: ${pools.length}, where: {id_in: ${poolsString}}, block: {number: ${block}}, orderBy: reserveUSD, orderDirection: desc) {
+    pools(first: ${
+      pools.length
+    }, where: {id_in: ${poolsString}}, block: {number: ${block}}, orderBy: reserveUSD, orderDirection: desc) {
       id
       reserveUSD
       trackedReserveETH
       volumeUSD
+      ${withFee ? 'fee' : ''}
       feeUSD
       untrackedVolumeUSD
       untrackedFeeUSD
@@ -293,7 +295,12 @@ export const POOLS_HISTORICAL_BULK_FROM_LIST = (block: number, pools: string[]) 
   return gql(queryString)
 }
 
-export const POOLS_HISTORICAL_BULK_WITH_PAGINATION = (first: number, skip: number, block: number) => {
+export const POOLS_HISTORICAL_BULK_WITH_PAGINATION = (
+  first: number,
+  skip: number,
+  block: number,
+  withFee?: boolean,
+) => {
   const queryString = `
   query pools {
     pools(first: ${first}, skip: ${skip}, block: {number: ${block}}) {
@@ -301,7 +308,7 @@ export const POOLS_HISTORICAL_BULK_WITH_PAGINATION = (first: number, skip: numbe
       reserveUSD
       trackedReserveETH
       volumeUSD
-      fee
+      ${withFee ? 'fee' : ''}
       feeUSD
       untrackedVolumeUSD
       untrackedFeeUSD
