@@ -203,7 +203,16 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
             <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
               <Flex centered row gap="sm">
                 <EtherscanLogo height={35} width={35} />
-                <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
+                {ensName ? (
+                  <Flex gap="xxs">
+                    <Text variant="mediumLabel">{ensName}</Text>
+                    <Text color="neutralTextSecondary" variant="caption">
+                      {shortenAddress(etherscanAddress)}
+                    </Text>
+                  </Flex>
+                ) : (
+                  <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
+                )}
               </Flex>
               <ArrowDown
                 color={theme.colors.neutralTextSecondary}
