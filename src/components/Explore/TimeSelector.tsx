@@ -97,7 +97,6 @@ const StyledMenuButton = styled.button`
   height: 44px;
   background-color: ${({ theme }) => theme.bg0};
   border: 1px solid ${({ theme }) => theme.bg0};
-  padding: 0.15rem 0.5rem;
   padding: 6px 12px 6px 12px;
   border-radius: 12px;
   font-size: 16px;
@@ -134,11 +133,6 @@ const StyledMenuContent = styled.div`
   width: 100%;
   vertical-align: middle;
   color: ${({ theme }) => theme.text1};
-
-  .chevron {
-    size: 15px;
-    color: ${({ theme }) => theme.text2};
-  }
 `
 
 const Chevron = styled.span`
@@ -149,15 +143,9 @@ const Chevron = styled.span`
 export default function TimeSelector() {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.TIME_SELECTOR)
-  const toggle = useToggleModal(ApplicationModal.TIME_SELECTOR)
   const toggleMenu = useToggleModal(ApplicationModal.TIME_SELECTOR)
-  useOnClickOutside(node, open ? toggle : undefined)
+  useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeTime, setTime] = useState(TimeOption.Day)
-
-  function handleTimeChange(time: TimeOption) {
-    setTime(time)
-    toggleMenu()
-  }
 
   return (
     <StyledMenu ref={node as any}>
@@ -173,7 +161,13 @@ export default function TimeSelector() {
       {open && (
         <MenuTimeFlyout>
           {TIMES.map((time) => (
-            <InternalLinkMenuItem key={time} onClick={() => handleTimeChange(time)}>
+            <InternalLinkMenuItem
+              key={time}
+              onClick={() => {
+                setTime(time)
+                toggleMenu()
+              }}
+            >
               <div>{TIME_DISPLAYS[time]}</div>
               {time === activeTime && <Check opacity={0.6} size={16} />}
             </InternalLinkMenuItem>
