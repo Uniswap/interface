@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { GAS_FEE_REFRESH_INTERVAL } from 'src/constants/gas'
@@ -11,15 +11,20 @@ import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { logger } from 'src/utils/logger'
 import { useInterval } from 'src/utils/timing'
 
-export function useGasFeeInfo(chainId: ChainId, tx: providers.TransactionRequest) {
+export function useGasFeeInfo(
+  chainId: ChainId | undefined,
+  tx: providers.TransactionRequest | null
+) {
   const [gasFeeInfo, setGasFeeInfo] = useState<FeeInfo | undefined>(undefined)
-  const provider = useProvider(chainId)
+  const provider = useProvider(chainId || ChainId.Mainnet)
 
-  useInterval(async () => {
+  const computeGas = useCallback(async () => {
     try {
-      if (!provider) {
+      if (!provider || !chainId) {
         throw new Error('Missing params. Query should not be enabled.')
       }
+
+      if (!tx) return
 
       computeGasFee(chainId, tx, provider)
         .then((feeInfo) => {
@@ -31,7 +36,9 @@ export function useGasFeeInfo(chainId: ChainId, tx: providers.TransactionRequest
     } catch (error) {
       logger.error('useGasFee', '', 'Error computing gas fee', error)
     }
-  }, GAS_FEE_REFRESH_INTERVAL)
+  }, [chainId, provider, tx])
+
+  useInterval(computeGas, GAS_FEE_REFRESH_INTERVAL)
 
   return gasFeeInfo
 }

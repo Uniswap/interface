@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import React, { ComponentProps, PropsWithChildren, useRef } from 'react'
+import React, { ComponentProps, PropsWithChildren, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -9,10 +9,12 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
+import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
 import { NetworkFee } from 'src/components/WalletConnect/RequestModal/NetworkFee'
 import { RequestMessage } from 'src/components/WalletConnect/RequestModal/RequestMessage'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { ChainId } from 'src/constants/chains'
+import { useGasFeeInfo } from 'src/features/gas/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccount, useSignerAccounts } from 'src/features/wallet/hooks'
@@ -97,8 +99,35 @@ const spacerProps: ComponentProps<typeof Box> = {
 }
 
 export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
+  const chainId = toSupportedChainId(request?.dapp.chain_id) ?? undefined
+
+  const tx: providers.TransactionRequest | null = useMemo(() => {
+    if (!chainId || !request || !isTransactionRequest(request)) {
+      return null
+    }
+
+    const { to, from, value, data, gasPrice, nonce } = request.transaction
+
+    return {
+      to,
+      from,
+      value,
+      data,
+      gasPrice,
+      nonce,
+      chainId,
+    }
+  }, [chainId, request])
+
   const activeAccount = useActiveAccount()
   const hasMultipleAccounts = useSignerAccounts().length > 1
+  const gasFeeInfo = useGasFeeInfo(chainId, tx)
+  const hasSufficientFunds = useHasSufficientFunds({
+    account: request?.account,
+    chainId,
+    gasFeeInfo,
+    value: request && isTransactionRequest(request) ? request.transaction.value : undefined,
+  })
 
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -112,8 +141,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   if (!request?.type || !VALID_REQUEST_TYPES.includes(request?.type)) {
     return null
   }
-
-  const chainId = toSupportedChainId(request?.dapp.chain_id) ?? undefined
 
   const onReject = () => {
     rejectRequest(request.internalId)
@@ -174,6 +201,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     isTransactionRequest(request) &&
     getTransactionCurrencyAmount(chainId, request.transaction.value)
   const hasCurrencyAmount = currencyAmount && !currencyAmount.equalTo(0)
+  const nativeCurrency = chainId && NativeCurrency.onChain(chainId)
 
   let permitInfo = getPermitInfo(request)
 
@@ -216,13 +244,24 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
           {methodCostsGas(request) && chainId && (
             <SectionContainer>
-              <NetworkFee chainId={chainId} transaction={request.transaction} />
+              <NetworkFee
+                chainId={chainId}
+                gasFeeInfo={gasFeeInfo}
+                transaction={request.transaction}
+              />
             </SectionContainer>
           )}
 
           {hasMultipleAccounts && (
             <SectionContainer>
               <AccountDetails address={request.account} />
+              {!hasSufficientFunds && (
+                <Text color="accentBackgroundWarning" paddingTop="xs" variant="caption">
+                  {t("You don't have enough {{symbol}} to complete this transaction.", {
+                    symbol: nativeCurrency?.symbol,
+                  })}
+                </Text>
+              )}
             </SectionContainer>
           )}
         </Flex>
@@ -239,7 +278,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
           />
           <PrimaryButton
             borderRadius="md"
-            disabled={!activeAccount}
+            disabled={!activeAccount || !hasSufficientFunds}
             flex={1}
             label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
             name={ElementName.Confirm}
