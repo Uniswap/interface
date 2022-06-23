@@ -8,7 +8,7 @@ export enum TimePeriod {
   year = 'year',
 }
 
-type TokenData = {
+export type TokenData = {
   [address: string]: {
     sparkline: string // svg string
     price: number // usdc price
