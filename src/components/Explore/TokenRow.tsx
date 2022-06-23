@@ -1,7 +1,8 @@
-import { useToken } from 'hooks/Tokens'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import React from 'react'
-import { ArrowDownRight, ArrowUpRight, Circle, Heart } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
 import styled from 'styled-components/macro'
 
 const TokenRowWrapper = styled.div`
@@ -139,10 +140,10 @@ const SwapButton = styled.button`
   width: 54px;
   height: 32px;
 
-  background: #4c82fb;
+  background: ${({ theme }) => theme.primary2};
   border-radius: 12px;
   border: none;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.white};
 `
 
 const TokenSymbol = styled.span`
@@ -189,7 +190,7 @@ export default function TokenRow({
       <FavoriteContainer>{favorited ? <Heart size={15} /> : <Heart size={15} />}</FavoriteContainer>
       <ListNumberContainer>{listNumber}</ListNumberContainer>
       <NameContainer>
-        <Circle opacity={0.6} />
+        <CurrencyLogo currency={useCurrency(tokenAddress)} />
         {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
       </NameContainer>
       <PriceContainer>${tokenData.price}</PriceContainer>
