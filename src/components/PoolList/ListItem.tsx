@@ -148,9 +148,9 @@ const ListItem = ({
   const isWarning = realPercentToken0.lessThan('10') || realPercentToken1.lessThan('10')
   const volume = poolData.oneDayVolumeUSD ? poolData.oneDayVolumeUSD : poolData.oneDayVolumeUntracked
 
-  const fee = poolData.oneDayFeeUSD ? poolData.oneDayFeeUSD : poolData.oneDayFeeUntracked
+  const fee24H = poolData.oneDayFeeUSD ? poolData.oneDayFeeUSD : poolData.oneDayFeeUntracked
 
-  const oneYearFL = getTradingFeeAPR(poolData.reserveUSD, fee).toFixed(2)
+  const oneYearFL = getTradingFeeAPR(poolData.reserveUSD, fee24H).toFixed(2)
 
   const ampLiquidity = formattedNum(`${parseFloat(amp.toSignificant(5)) * parseFloat(poolData.reserveUSD)}`, true)
   const totalValueLocked = formattedNum(`${parseFloat(poolData.reserveUSD)}`, true)
@@ -235,7 +235,7 @@ const ListItem = ({
           {!poolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}
         </APR>
         <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(volume, true)}</DataText>
-        <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(fee, true)}</DataText>
+        <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(fee24H, true)}</DataText>
         <DataText alignItems="flex-end">{getMyLiquidity(myLiquidity)}</DataText>
         <ButtonWrapper style={{ marginRight: '-3px' }}>
           <ButtonEmpty

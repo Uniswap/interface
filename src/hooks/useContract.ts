@@ -15,9 +15,17 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract, getContractForReading } from '../utils'
 import { providers, useActiveWeb3React } from './index'
-import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, FAIRLAUNCH_V2_ADDRESSES, ZAP_ADDRESSES } from '../constants'
+import {
+  STATIC_FEE_FACTORY_ADDRESSES,
+  DYNAMIC_FEE_FACTORY_ADDRESSES,
+  FAIRLAUNCH_ADDRESSES,
+  FAIRLAUNCH_V2_ADDRESSES,
+  ZAP_ADDRESSES,
+  STATIC_FEE_ZAP_ADDRESSES,
+} from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import ZAP_ABI from 'constants/abis/zap.json'
+import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
 import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
 import PROMM_FARM_ABI from '../constants/abis/v2/farm.json'
 import FAIRLAUNCH_V2_ABI from '../constants/abis/fairlaunch-v2.json'
@@ -169,16 +177,24 @@ export function useSocksController(): Contract | null {
   )
 }
 
-export function useFactoryContract(): Contract | null {
+export function useStaticFeeFactoryContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
 
-  return useContract(chainId && FACTORY_ADDRESSES[chainId], FACTORY_ABI)
+  return useContract(chainId && STATIC_FEE_FACTORY_ADDRESSES[chainId], FACTORY_ABI)
+}
+export function useDynamicFeeFactoryContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+
+  return useContract(chainId && DYNAMIC_FEE_FACTORY_ADDRESSES[chainId], FACTORY_ABI)
 }
 
-export function useZapContract(): Contract | null {
+export function useZapContract(isStaticFeeContract: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
 
-  return useContract(chainId && ZAP_ADDRESSES[chainId], ZAP_ABI)
+  return useContract(
+    chainId && (isStaticFeeContract ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId]),
+    isStaticFeeContract ? ZAP_STATIC_FEE_ABI : ZAP_ABI,
+  )
 }
 
 export function useProMMFarmContracts(): { [key: string]: Contract } | null {

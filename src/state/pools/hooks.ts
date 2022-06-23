@@ -1,3 +1,4 @@
+import { ONLY_DYNAMIC_FEE_CHAINS } from './../../constants/index'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ApolloClient, NormalizedCacheObject, useQuery } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +18,6 @@ import { setError, setLoading, setSharedPoolId, updatePools } from './actions'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { useETHPrice, useExchangeClient } from 'state/application/hooks'
-import { FEE_OPTIONS } from 'constants/index'
 
 export interface SubgraphPoolData {
   id: string
@@ -204,7 +204,7 @@ export async function getBulkPoolDataFromPoolList(
 ): Promise<any> {
   try {
     const current = await apolloClient.query({
-      query: POOLS_BULK_FROM_LIST(poolList),
+      query: POOLS_BULK_FROM_LIST(poolList, chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)),
       fetchPolicy: 'network-only',
     })
     let poolData
@@ -219,7 +219,11 @@ export async function getBulkPoolDataFromPoolList(
       const [oneDayResult] = await Promise.all(
         [b1].map(async block => {
           const result = apolloClient.query({
-            query: POOLS_HISTORICAL_BULK_FROM_LIST(block, poolList),
+            query: POOLS_HISTORICAL_BULK_FROM_LIST(
+              block,
+              poolList,
+              chainId && ONLY_DYNAMIC_FEE_CHAINS.includes(chainId),
+            ),
             fetchPolicy: 'network-only',
           })
           return result
@@ -237,7 +241,7 @@ export async function getBulkPoolDataFromPoolList(
             let oneDayHistory = oneDayData?.[pool.id]
             if (!oneDayHistory) {
               const newData = await apolloClient.query({
-                query: POOL_DATA(pool.id, b1),
+                query: POOL_DATA(pool.id, b1, chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)),
                 fetchPolicy: 'network-only',
               })
               oneDayHistory = newData.data.pools[0]
@@ -273,20 +277,23 @@ export async function getBulkPoolDataWithPagination(
     } else {
       const [{ number: b1 }] = blocks
 
-      const withoutDynamicFee = !!(chainId && FEE_OPTIONS[chainId])
-
       const [oneDayResult, current] = await Promise.all(
         [b1]
           .map(async block => {
             const result = apolloClient.query({
-              query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(first, skip, block, withoutDynamicFee),
+              query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(
+                first,
+                skip,
+                block,
+                chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId),
+              ),
               fetchPolicy: 'network-only',
             })
             return result
           })
           .concat(
             apolloClient.query({
-              query: POOLS_BULK_WITH_PAGINATION(first, skip, withoutDynamicFee),
+              query: POOLS_BULK_WITH_PAGINATION(first, skip, chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)),
               fetchPolicy: 'network-only',
             }),
           ),
@@ -343,7 +350,11 @@ export function usePoolCountInSubgraph(): number {
         query: POOL_COUNT,
         fetchPolicy: 'network-only',
       })
-      setPoolCount(result?.data.dmmFactories[0]?.poolCount || 0)
+      setPoolCount(
+        result?.data.dmmFactories.reduce((count: number, factory: { poolCount: number }) => {
+          return count + factory.poolCount
+        }, 0) || 0,
+      )
     }
 
     getPoolCount()
@@ -368,7 +379,6 @@ export function useAllPoolsData(): {
   const { currentPrice: ethPrice } = useETHPrice()
 
   const poolCountSubgraph = usePoolCountInSubgraph()
-
   useEffect(() => {
     let cancelled = false
 

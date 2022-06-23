@@ -24,15 +24,26 @@ export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
   [ChainId.CRONOSTESTNET]: '',
   [ChainId.CRONOS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.ARBITRUM_TESTNET]: '0xfa33723F6fA00a35F69F8aCd72A5BE9AF3c8Bd25',
-  [ChainId.ARBITRUM]: '0xf530a090EF6481cfB33F98c63532E7745abab58A',
   [ChainId.BTTC]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.AURORA]: '0xd1f345593cb69fa546852b2DEb90f373F8AdC903',
-  [ChainId.VELAS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.OASIS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
 }
 
-export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
+export const STATIC_FEE_ZAP_ADDRESSES: { [chainId: number]: string } = {
+  [ChainId.ROPSTEN]: '0x548E585B17908D0387d16F9BFf46c4EDe7ca7746',
+  [ChainId.ARBITRUM_TESTNET]: '0xfa33723F6fA00a35F69F8aCd72A5BE9AF3c8Bd25',
+  [ChainId.MAINNET]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.AVAXMAINNET]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.BSCMAINNET]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.FANTOM]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.MATIC]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.CRONOS]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.BTTC]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.ARBITRUM]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.AURORA]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.VELAS]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+  [ChainId.OASIS]: '0x2abE8750e4a65584d7452316356128C936273e0D',
+}
+
+export const DYNAMIC_FEE_ROUTER_ADDRESSES: { [chainId: number]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0xD8358861251E1af3081cD722Ae96c8753Ab7591D'
@@ -61,11 +72,71 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.CRONOSTESTNET]: '0x548E585B17908D0387d16F9BFf46c4EDe7ca7746',
   [ChainId.CRONOS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
   [ChainId.ARBITRUM_TESTNET]: '0x78Ad9A49327D73C6E3B9881eCD653232cF3E480C',
-  [ChainId.ARBITRUM]: '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD',
   [ChainId.BTTC]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
-  [ChainId.AURORA]: '0x0622973c3A8893838A3bc0c5309a8c6897148795',
-  [ChainId.VELAS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
-  [ChainId.OASIS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
+}
+
+export const STATIC_FEE_ROUTER_ADDRESSES: { [chainId: number]: string } = {
+  [ChainId.MAINNET]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.AVAXMAINNET]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.BSCMAINNET]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.FANTOM]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.MATIC]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.CRONOS]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.BTTC]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.RINKEBY]: '0x89F138263B698D0708689e0aD10dC0E65C2B02BB',
+  [ChainId.ROPSTEN]: '0x136ae5CC3150C4e53AF8b1DC886464CB9AF1AB61',
+  [ChainId.ARBITRUM_TESTNET]: '0x78Ad9A49327D73C6E3B9881eCD653232cF3E480C',
+  [ChainId.ARBITRUM]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.AURORA]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.VELAS]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+  [ChainId.OASIS]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
+}
+export const STATIC_FEE_FACTORY_ADDRESSES: { [chainId: number]: string } = {
+  [ChainId.MAINNET]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.AVAXMAINNET]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.BSCMAINNET]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.FANTOM]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.MATIC]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.CRONOS]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.BTTC]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.RINKEBY]: '0x1811E801C09CCDa73b50fB3493254d05e9aE641F',
+  [ChainId.ROPSTEN]: '0xB332f6145A5b064f58FF9793ba3523245F8fafaC',
+  [ChainId.ARBITRUM_TESTNET]: '0x9D4ffbf49cc21372c2115Ae4C155a1e5c0aACf36',
+  [ChainId.ARBITRUM]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.AURORA]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.VELAS]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+  [ChainId.OASIS]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
+}
+
+export const DYNAMIC_FEE_FACTORY_ADDRESSES: { [chainId in number]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x5C1cBdc3b8dD2a3456643A62547ef9AA5e1571f3'
+      : '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
+  [ChainId.ROPSTEN]: '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
+      : '0x5F1fe642060B5B9658C15721Ea22E982643c095c',
+  [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
+  [ChainId.BSCTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
+      : '0x878dFE971d44e9122048308301F540910Bbd934c',
+  [ChainId.AVAXTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
+  [ChainId.AVAXMAINNET]: '0x10908C875D865C66f271F5d3949848971c9595C9',
+  [ChainId.FANTOM]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
+      : '0x78df70615ffc8066cc0887917f2Cd72092C86409',
+  [ChainId.CRONOSTESTNET]: '0x9fE747AEA6173DD2c72e9D9BF4E2bCbbC0f8aD9e',
+  [ChainId.CRONOS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
+  [ChainId.ARBITRUM_TESTNET]: '0x9D4ffbf49cc21372c2115Ae4C155a1e5c0aACf36',
+  [ChainId.BTTC]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
 }
 
 // Aggregation Router
@@ -95,41 +166,6 @@ export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
   [ChainId.AURORA]: '0x41684b361557E9282E0373CA51260D9331e518C9',
   [ChainId.VELAS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
   [ChainId.OASIS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-}
-
-export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x5C1cBdc3b8dD2a3456643A62547ef9AA5e1571f3'
-      : '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
-  [ChainId.ROPSTEN]: '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
-      : '0x5F1fe642060B5B9658C15721Ea22E982643c095c',
-  [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
-  [ChainId.BSCTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
-      : '0x878dFE971d44e9122048308301F540910Bbd934c',
-  [ChainId.AVAXTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
-  [ChainId.AVAXMAINNET]: '0x10908C875D865C66f271F5d3949848971c9595C9',
-  [ChainId.FANTOM]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
-      : '0x78df70615ffc8066cc0887917f2Cd72092C86409',
-  [ChainId.CRONOSTESTNET]: '0x9fE747AEA6173DD2c72e9D9BF4E2bCbbC0f8aD9e',
-  [ChainId.CRONOS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
-  [ChainId.ARBITRUM_TESTNET]: '0x9D4ffbf49cc21372c2115Ae4C155a1e5c0aACf36',
-  [ChainId.ARBITRUM]: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
-  [ChainId.BTTC]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
-  [ChainId.AURORA]: '0x39a8809fbbf22ccaeac450eaf559c076843eb910',
-  [ChainId.VELAS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
-  [ChainId.OASIS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -165,7 +201,12 @@ export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const ROUTER_ABI = IUniswapV2Router02ABI
 // export const FACTORY_ABI = [{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token0","type":"address"},{"indexed":true,"internalType":"address","name":"token1","type":"address"},{"indexed":false,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"totalPair","type":"uint256"}],"name":"PairCreated","type":"event"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allPairs","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"allPairsLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"tokenA","type":"address"},{"internalType":"contract IERC20","name":"tokenB","type":"address"}],"name":"createPair","outputs":[{"internalType":"address","name":"pair","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"feeTo","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"feeToSetter","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"","type":"address"},{"internalType":"contract IERC20","name":"","type":"address"}],"name":"getPair","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_feeTo","type":"address"}],"name":"setFeeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"name":"setFeeToSetter","outputs":[],"stateMutability":"nonpayable","type":"function"}]
 export const INIT_CODE_HASH = '0xf6eae63ebbc500de6e7310fc6568df4e6a4514aac0d3d423da5e4e3f332d04f5'
-export const BAD_RECIPIENT_ADDRESSES: string[] = [FACTORY_ADDRESSES[ChainId.MAINNET], ROUTER_ADDRESSES[ChainId.MAINNET]]
+export const BAD_RECIPIENT_ADDRESSES: string[] = [
+  DYNAMIC_FEE_FACTORY_ADDRESSES[ChainId.MAINNET],
+  DYNAMIC_FEE_ROUTER_ADDRESSES[ChainId.MAINNET],
+  STATIC_FEE_FACTORY_ADDRESSES[ChainId.MAINNET],
+  STATIC_FEE_ROUTER_ADDRESSES[ChainId.MAINNET],
+]
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -1405,13 +1446,32 @@ export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
 export const sentryRequestId = uuid()
 
 // Fee options instead of dynamic fee
-export const FEE_OPTIONS: { [chainId: number]: number[] } = {
-  [ChainId.ARBITRUM]: [1, 5, 30, 50, 100],
-  [ChainId.ARBITRUM_TESTNET]: [1, 5, 30, 50, 100],
-  [ChainId.AURORA]: [1, 5, 30, 50, 100],
-  [ChainId.VELAS]: [1, 5, 30, 50, 100],
-  [ChainId.OASIS]: [1, 5, 30, 50, 100],
+export const STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
+  [ChainId.ARBITRUM]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.ARBITRUM_TESTNET]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.AURORA]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.VELAS]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.OASIS]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.MAINNET]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.ROPSTEN]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.RINKEBY]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.MATIC]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.AVAXMAINNET]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.FANTOM]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.BSCMAINNET]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.CRONOS]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.BTTC]: [8, 10, 50, 300, 500, 1000],
 }
+
+export const ONLY_STATIC_FEE_CHAINS = [
+  ChainId.ARBITRUM,
+  ChainId.ARBITRUM_TESTNET,
+  ChainId.AURORA,
+  ChainId.VELAS,
+  ChainId.OASIS,
+]
+
+export const ONLY_DYNAMIC_FEE_CHAINS = [ChainId.BSCMAINNET, ChainId.MATIC]
 
 export const TRENDING_SOON_ITEM_PER_PAGE = 10
 export const TRENDING_SOON_MAX_ITEMS = 50

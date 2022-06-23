@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { GLOBAL_DATA } from 'apollo/queries'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { useBlockNumber, useExchangeClient } from 'state/application/hooks'
+import { useBlockNumber } from 'state/application/hooks'
 import { getExchangeSubgraphUrls } from 'apollo/manager'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
@@ -39,7 +39,6 @@ interface GlobalData {
 export function useGlobalData() {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
-  const apolloClient = useExchangeClient()
   const [globalData, setGlobalData] = useState<GlobalData>()
   const aggregatorData = useAggregatorVolume()
   const aggregatorAPR = useAggregatorAPR()
@@ -48,11 +47,12 @@ export function useGlobalData() {
     const getSumValues = (results: { data: GlobalData }[], field: string) => {
       return results
         .reduce((total, item) => {
-          return total + parseFloat(item?.data?.dmmFactories?.[0]?.[field] || '0')
+          if (!item?.data?.dmmFactories?.length) return 0
+          const sum = item.data.dmmFactories.reduce((sum, factory) => sum + parseFloat(factory[field] || '0'), 0)
+          return total + sum
         }, 0)
         .toString()
     }
-
     const getResultByChainIds = async (chainIds: readonly ChainId[]) => {
       const allChainPromises = chainIds.map(chain => {
         const subgraphPromises = getExchangeSubgraphUrls(chain)
@@ -69,7 +69,6 @@ export function useGlobalData() {
       const queryResult = (
         await Promise.all(allChainPromises.map(promises => Promise.any(promises.map(p => p.catch(e => e)))))
       ).filter(res => !(res instanceof Error))
-
       return {
         data: {
           dmmFactories: [
@@ -104,7 +103,7 @@ export function useGlobalData() {
     }
 
     getGlobalData()
-  }, [chainId, blockNumber, apolloClient, aggregatorData, aggregatorAPR])
+  }, [chainId, blockNumber, aggregatorData, aggregatorAPR])
 
   return globalData
 }

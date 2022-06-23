@@ -5,7 +5,7 @@ import Tooltip from '../Tooltip'
 import { Flex } from 'rebass'
 import useTheme from 'hooks/useTheme'
 
-const QuestionWrapper = styled.div`
+const QuestionWrapper = styled.div<{ useCurrentColor?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@ const QuestionWrapper = styled.div`
   outline: none;
   cursor: default;
   border-radius: 36px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme, useCurrentColor, color }) => (useCurrentColor ? 'inherit' : theme.text2)};
 
   :hover,
   :focus {
@@ -47,7 +47,17 @@ const QuestionMark = styled.span`
   font-size: 1rem;
 `
 
-export default function QuestionHelper({ text, color, size = 12 }: { text: string; color?: string; size?: number }) {
+export default function QuestionHelper({
+  text,
+  color,
+  size = 12,
+  useCurrentColor,
+}: {
+  text: string
+  color?: string
+  size?: number
+  useCurrentColor?: boolean
+}) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
@@ -57,8 +67,8 @@ export default function QuestionHelper({ text, color, size = 12 }: { text: strin
   return (
     <Flex as="span" marginLeft="0.25rem" alignItems="center">
       <Tooltip text={text} show={show}>
-        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Info size={size} color={color || theme.subText} />
+        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} useCurrentColor={useCurrentColor}>
+          <Info size={size} color={useCurrentColor ? undefined : color || theme.subText} />
         </QuestionWrapper>
       </Tooltip>
     </Flex>

@@ -87,19 +87,7 @@ const HoverDropdown = styled.div<{ active: boolean }>`
   }
 `
 
-export const LinkCointainer = styled(Flex)`
-  position: absolute;
-  bottom: -100px;
-  left: 0;
-  border-radius: 8px;
-  flex-direction: column;
-  background: ${({ theme }) => theme.tableHeader};
-  z-index: 9999;
-  padding: 16px;
-  gap: 16px;
-`
-
-export default function AboutPageDropwdown() {
+export default function AboutPageDropdown() {
   const { pathname } = useLocation()
 
   return (

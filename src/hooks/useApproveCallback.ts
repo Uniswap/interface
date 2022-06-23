@@ -1,11 +1,11 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import {  CurrencyAmount, Currency, ChainId, TradeType, Percent } from '@kyberswap/ks-sdk-core'
+import { CurrencyAmount, Currency, ChainId, TradeType, Percent } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 import { Trade } from '@kyberswap/ks-sdk-classic'
 import { Trade as ProAmmTrade } from '@kyberswap/ks-sdk-elastic'
 import { useCallback, useMemo } from 'react'
-import { ROUTER_ADDRESSES } from 'constants/index'
+import { DYNAMIC_FEE_ROUTER_ADDRESSES } from 'constants/index'
 import { useTokenAllowance } from 'data/Allowances'
 import { Field } from 'state/swap/actions'
 import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
@@ -142,7 +142,7 @@ export function useApproveCallbackFromTrade(trade?: Trade<Currency, Currency, Tr
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage],
   )
-  return useApproveCallback(amountToApprove, !!chainId ? ROUTER_ADDRESSES[chainId] : undefined)
+  return useApproveCallback(amountToApprove, !!chainId ? DYNAMIC_FEE_ROUTER_ADDRESSES[chainId] : undefined)
 }
 
 // wraps useApproveCallback in the context of a swap
