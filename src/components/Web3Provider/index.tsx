@@ -35,7 +35,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
     } else if (selectedWallet) {
       connect(getConnectorForWallet(selectedWallet))
     } else if (!selectedWalletBackfilled) {
-      BACKFILLABLE_WALLETS.map(getConnectorForWallet).forEach((connector) => connect(connector))
+      BACKFILLABLE_WALLETS.map(getConnectorForWallet).forEach(connect)
     }
     // The dependency list is empty so this is only run once on mount
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
