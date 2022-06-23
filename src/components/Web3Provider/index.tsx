@@ -6,9 +6,9 @@ import { useAppSelector } from 'state/hooks'
 
 import { isMobile } from '../../utils/userAgent'
 
-const connect = async (connector: Connector, forceActivate?: boolean) => {
+const connect = async (connector: Connector) => {
   try {
-    if (!forceActivate && connector.connectEagerly) {
+    if (connector.connectEagerly) {
       await connector.connectEagerly()
     } else {
       await connector.activate()
@@ -31,7 +31,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
     connect(network)
 
     if (isMobile && isMetaMask) {
-      connect(injected, true)
+      injected.activate()
     } else if (selectedWallet) {
       connect(getConnectorForWallet(selectedWallet))
     } else if (!selectedWalletBackfilled) {
