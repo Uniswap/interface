@@ -4,9 +4,14 @@ import { BACKFILLABLE_WALLETS, getConnectorForWallet, gnosisSafe, network, useCo
 import { ReactNode, useEffect } from 'react'
 import { useAppSelector } from 'state/hooks'
 
+import { isMobile } from '../../utils/userAgent'
+
 const connect = async (connector: Connector) => {
+  const isMetaMask = !!window.ethereum?.isMetaMask
   try {
-    if (connector.connectEagerly) {
+    if (isMobile && isMetaMask) {
+      await connector.activate()
+    } else if (connector.connectEagerly) {
       await connector.connectEagerly()
     } else {
       await connector.activate()
