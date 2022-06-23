@@ -34,7 +34,13 @@ Storybook supports various `stories` formats.
 - `.mdx`: Markdown with support for `jsx`. **No Typescript support**
 - `.tsx`: Draw on canvas with Typescript
 
-We're currently leaning on `.mdx` for the ability to write documentation around the Storybook canvas. The lack of Typescript has been annoying but not back-breaking.
+We're currently leaning on writing stories `.tsx` because of Typescript support.
+
+### Run Storybook locally
+To run Storybook locally and view stories:
+```
+yarn storybook
+```
 
 ## Chromatic
 

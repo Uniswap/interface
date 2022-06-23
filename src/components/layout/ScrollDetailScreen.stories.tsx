@@ -1,8 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import { ListRenderItemInfo } from 'react-native'
 import { ListDetailScreen } from 'src/components/layout/ListDetailScreen'
-import { Separator } from 'src/components/layout/Separator'
+import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
 import { Text } from 'src/components/Text'
 import { Box, Flex } from '../layout'
 
@@ -10,21 +9,13 @@ const data = Array.from(Array(10).keys())
 
 const ContentHeader = (
   <Flex row alignItems="center" gap="xs" my="xs">
-    <Text fontWeight={'600'} variant="h1">
-      Screen Title
-    </Text>
+    <Text variant="h1">Screen Title</Text>
   </Flex>
 )
-const renderItem = ({ item }: ListRenderItemInfo<number>) => {
-  return (
-    <Flex row gap="sm" p="md">
-      <Text variant="body1">Row {item}</Text>
-    </Flex>
-  )
-}
+
 export default {
-  title: 'Layout/ListDetailScreen',
-  component: ListDetailScreen,
+  title: 'Layout/ScrollDetailScreen',
+  component: ScrollDetailScreen,
   decorators: [
     (Story) => (
       <Box borderColor="backgroundContainer" borderWidth={1} height={812} width={375}>
@@ -34,14 +25,19 @@ export default {
   ],
 } as ComponentMeta<typeof ListDetailScreen>
 
-const Template: ComponentStory<typeof ListDetailScreen> = (args) => <ListDetailScreen {...args} />
+const Template: ComponentStory<typeof ListDetailScreen> = (args) => {
+  return (
+    <ScrollDetailScreen {...args}>
+      <Flex row bg="backgroundContainer" m="md" p="md">
+        <Text variant="body1">Body content</Text>
+      </Flex>
+    </ScrollDetailScreen>
+  )
+}
 
 export const Primary = Template.bind({})
 Primary.args = {
-  ItemSeparatorComponent: () => <Separator />,
   contentHeader: ContentHeader,
   data: data,
-  keyExtractor: (item) => item,
-  renderItem: renderItem,
   title: 'Screen Title',
 }
