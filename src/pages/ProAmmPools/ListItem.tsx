@@ -33,7 +33,7 @@ interface ListItemProps {
 
 const getPrommAnalyticLink = (chainId: ChainId | undefined, poolAddress: string) => {
   if (!chainId) return ''
-  return `${PROMM_ANALYTICS_URL[chainId]}/pool/${poolAddress}`
+  return `${PROMM_ANALYTICS_URL[chainId]}/pool/${poolAddress.toLowerCase()}`
 }
 
 export const TableRow = styled.div<{ isOpen?: boolean; isShowBorderBottom: boolean; hoverable: boolean }>`

@@ -391,42 +391,6 @@ export const MobileModalWrapper = styled((props: ModalProps) => <Modal {...props
   }
 `
 
-export const IconButton = styled.button<{ enableClickToRefresh: boolean }>`
-  height: 36px;
-  width: 36px;
-  border-radius: 4px;
-  transition: background 0.2s;
-  outline: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  ${({ enableClickToRefresh }) =>
-    enableClickToRefresh &&
-    css`
-      cursor: pointer;
-
-      :hover,
-      :focus {
-        cursor: pointer;
-        outline: none;
-        background-color: ${({ theme }) => theme.buttonBlack};
-      }
-    `}
-`
-
-export const ShareButton = styled(IconButton)`
-  svg {
-    circle {
-      fill: ${({ theme }) => theme.text};
-    }
-  }
-`
-
 export const StyledFlex = styled(Flex)`
   gap: 48px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -435,4 +399,48 @@ export const StyledFlex = styled(Flex)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     gap: 15px;
 `}
+`
+
+export const StyledActionButtonSwapForm = styled.button<{ active?: boolean }>`
+  position: relative;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  height: 35px;
+  width: 35px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  :hover {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
+
+  ${({ active }) =>
+    active
+      ? css`
+          cursor: pointer;
+          outline: none;
+          background-color: ${({ theme }) => theme.buttonBlack};
+        `
+      : ''}
+
+  svg {
+    margin-top: 2px;
+  }
+`
+
+export const IconButton = styled(StyledActionButtonSwapForm)<{ enableClickToRefresh: boolean }>`
+  transition: background 0.2s;
+
+  // off click
+  &:hover {
+    cursor: default;
+    background-color: transparent;
+  }
 `

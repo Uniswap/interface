@@ -135,7 +135,8 @@ export default function Swap({ history }: RouteComponentProps) {
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfoSetting = useShowTokenInfo()
 
-  const [isSelectCurencyMannual, setIsSelectCurencyMannual] = useState(false) // true when select input/output mannual else select via url
+  const [isSelectCurencyMannual, setIsSelectCurencyMannual] = useState(false) // true when: select token input, output mannualy or click rotate token.
+  // else select via url
 
   const [activeTab, setActiveTab] = useState<ACTIVE_TAB>(ACTIVE_TAB.SWAP)
 
@@ -269,6 +270,7 @@ export default function Swap({ history }: RouteComponentProps) {
     setApprovalSubmitted(false) // reset 2 step UI for approvals
     setRotate(prev => !prev)
     onSwitchTokensV2()
+    setIsSelectCurencyMannual(true)
   }, [onSwitchTokensV2])
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
@@ -597,15 +599,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       />
                       <AutoColumn justify="space-between">
                         <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                          <ArrowWrapper
-                            clickable
-                            rotated={rotate}
-                            onClick={() => {
-                              setApprovalSubmitted(false) // reset 2 step UI for approvals
-                              setRotate(prev => !prev)
-                              onSwitchTokensV2()
-                            }}
-                          >
+                          <ArrowWrapper clickable rotated={rotate} onClick={handleRotateClick}>
                             <SwapIcon size={22} />
                           </ArrowWrapper>
                           {recipient === null && !showWrap && isExpertMode ? (
@@ -744,7 +738,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           <Trans>Connect Wallet</Trans>
                         </ButtonLight>
                       ) : isLoading ? (
-                        <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px', padding: '18px' }}>
+                        <GreyCard style={{ textAlign: 'center', borderRadius: '999px', padding: '18px' }}>
                           <TYPE.main>
                             <Dots>
                               <Trans>Calculating best route</Trans>

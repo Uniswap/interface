@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { MobileModalWrapper } from 'components/swapv2/styleds'
+import { MobileModalWrapper, StyledActionButtonSwapForm } from 'components/swapv2/styleds'
 import { Flex, Text } from 'rebass'
 import { ButtonText } from 'theme/components'
 import { X } from 'react-feather'
@@ -27,14 +27,6 @@ function MobileTradeRoutes({
 
   return (
     <>
-      <Info
-        size={20}
-        onClick={isMobile ? toggle : onClick}
-        style={{
-          display: 'flex',
-          width: 36,
-        }}
-      />
       <MobileView>
         <MobileModalWrapper isOpen={isOpen} onDismiss={toggle} maxHeight={80}>
           <Flex flexDirection="column" alignItems="center" width="100%">
@@ -54,6 +46,9 @@ function MobileTradeRoutes({
           </Flex>
         </MobileModalWrapper>
       </MobileView>
+      <StyledActionButtonSwapForm onClick={isMobile ? toggle : onClick}>
+        <Info color={theme.text} />
+      </StyledActionButtonSwapForm>
     </>
   )
 }
