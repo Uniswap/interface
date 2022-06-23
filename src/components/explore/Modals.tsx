@@ -67,11 +67,7 @@ function ModalOption({ isSelected, label }: { isSelected: boolean; label: string
       </Text>
       <Box height={CheckmarkSize} width={CheckmarkSize}>
         {isSelected && (
-          <Check
-            color={theme.colors.neutralTextSecondary}
-            height={CheckmarkSize}
-            width={CheckmarkSize}
-          />
+          <Check color={theme.colors.textSecondary} height={CheckmarkSize} width={CheckmarkSize} />
         )}
       </Box>
     </Flex>

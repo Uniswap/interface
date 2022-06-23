@@ -50,23 +50,23 @@ const SitePermissions = () => {
 
   return (
     <Flex gap="sm" p="md">
-      <Text color="neutralTextSecondary">{t('Site permissions')}</Text>
+      <Text color="textSecondary">{t('Site permissions')}</Text>
       <Flex row alignItems="center" gap="xs">
-        <Checkmark color={theme.colors.accentBackgroundSuccess} height={11} width={11} />
+        <Checkmark color={theme.colors.accentSuccess} height={11} width={11} />
         <Box>
-          <Text color="neutralTextPrimary">{t('View your wallet address and ENS name')}</Text>
+          <Text color="textPrimary">{t('View your wallet address and ENS name')}</Text>
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="xs">
-        <Checkmark color={theme.colors.accentBackgroundSuccess} height={11} width={11} />
+        <Checkmark color={theme.colors.accentSuccess} height={11} width={11} />
         <Box>
-          <Text color="neutralTextPrimary">{t('View your token balances')}</Text>
+          <Text color="textPrimary">{t('View your token balances')}</Text>
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="xs">
-        <X color={theme.colors.accentBackgroundFailure} height={11} width={11} />
+        <X color={theme.colors.accentFailure} height={11} width={11} />
         <Box>
-          <Text color="neutralTextPrimary">{t('Transfer your assets without your consent')}</Text>
+          <Text color="textPrimary">{t('Transfer your assets without your consent')}</Text>
         </Box>
       </Flex>
     </Flex>
@@ -86,11 +86,11 @@ const SwitchNetworkRow = ({ onPress, selectedChainId }: SwitchNetworkProps) => {
       <Flex row shrink alignItems="center" gap="sm" justifyContent="space-between" p="sm">
         <Flex row shrink gap="sm">
           <NetworkLogo chainId={selectedChainId} size={20} />
-          <Text color="neutralTextPrimary" variant="body2">
+          <Text color="textPrimary" variant="body2">
             {CHAIN_INFO[selectedChainId].label}
           </Text>
         </Flex>
-        <Chevron color={theme.colors.neutralTextTertiary} direction="e" height="10" width="13" />
+        <Chevron color={theme.colors.textTertiary} direction="e" height="10" width="13" />
       </Flex>
     </Button>
   )
@@ -115,10 +115,10 @@ const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
           verticalGap="none"
         />
         <Flex centered row shrink gap="xs">
-          <Text color="neutralTextSecondary" variant="body2">
+          <Text color="textSecondary" variant="body2">
             {shortenAddress(activeAddress)}
           </Text>
-          <Chevron color={theme.colors.neutralTextTertiary} direction="e" height="10" width="13" />
+          <Chevron color={theme.colors.textTertiary} direction="e" height="10" width="13" />
         </Flex>
       </Flex>
     </Button>

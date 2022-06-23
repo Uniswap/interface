@@ -83,8 +83,8 @@ export function ScrollDetailScreen({
           navigation.goBack()
         }}>
         <Flex row alignItems="center" gap="xs">
-          <Chevron color={theme.colors.neutralTextSecondary} direction="w" height={18} width={18} />
-          <Text color="neutralTextSecondary" variant={'subHead1'}>
+          <Chevron color={theme.colors.textSecondary} direction="w" height={18} width={18} />
+          <Text color="textSecondary" variant={'subHead1'}>
             {t('Back')}
           </Text>
         </Flex>
@@ -106,7 +106,7 @@ export function ScrollDetailScreen({
       ]}
       tint={isDarkMode ? 'dark' : 'default'}>
       <Flex row alignItems="center" justifyContent="space-between" px="md" py="sm">
-        <BackButton color="neutralTextPrimary" size={18} />
+        <BackButton color="textPrimary" size={18} />
         {titleElement ? (
           titleElement
         ) : title ? (

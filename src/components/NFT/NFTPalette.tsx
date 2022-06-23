@@ -43,9 +43,9 @@ export function ApplyNFTPaletteButton({ asset }: { asset: NFTAsset.Asset }) {
 
   return colors?.platform === 'ios' ? (
     <IconButton
-      bg="neutralOutline"
+      bg="backgroundOutline"
       borderRadius="md"
-      icon={<MagicWand color={theme.colors.neutralTextPrimary} height={24} width={24} />}
+      icon={<MagicWand color={theme.colors.textPrimary} height={24} width={24} />}
       name={ElementName.ApplyThemeFromNFT}
       onPress={() => {
         if (!activeAccount) return
@@ -79,7 +79,7 @@ export function NFTPalette({ asset }: { asset: NFTAsset.Asset }) {
 
   return colors?.platform === 'ios' ? (
     <Flex row alignItems="flex-end" gap="sm" justifyContent="flex-end">
-      <Flex borderRadius="lg" p="xs" style={{ backgroundColor: theme.colors.neutralOutline }}>
+      <Flex borderRadius="lg" p="xs" style={{ backgroundColor: theme.colors.backgroundOutline }}>
         <Flex centered gap="sm">
           <Box borderRadius="lg" style={{ backgroundColor: colors.primary }}>
             <Inset all="xs" />

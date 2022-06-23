@@ -18,8 +18,8 @@ export default function WalletPreviewCard({ address, selected, onSelect }: Props
 
   return (
     <Button
-      backgroundColor={selected ? 'neutralContainer' : 'neutralSurface'}
-      borderColor={selected ? 'neutralAction' : 'none'}
+      backgroundColor={selected ? 'backgroundContainer' : 'backgroundSurface'}
+      borderColor={selected ? 'backgroundAction' : 'none'}
       borderRadius="lg"
       borderWidth={1}
       p="md"

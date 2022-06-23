@@ -25,7 +25,7 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: 
     () =>
       (rest.textColor && theme.colors[rest.textColor]) ||
       flattenStyleProp(style)?.color ||
-      theme.colors.neutralTextPrimary,
+      theme.colors.textPrimary,
     [theme.colors, rest.textColor, style]
   )
 

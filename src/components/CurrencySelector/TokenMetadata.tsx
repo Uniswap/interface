@@ -80,7 +80,7 @@ function DataFormatter({ pre, main, sub }: DataFormatterProps) {
       <Box alignItems="flex-end" minWidth={70}>
         <Text variant="body1">{main}</Text>
         {sub && (
-          <Text color="neutralTextSecondary" variant="body2">
+          <Text color="textSecondary" variant="body2">
             {sub}
           </Text>
         )}

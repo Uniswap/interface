@@ -29,15 +29,15 @@ export function NotificationCenterLogo({ size = 24 }: { size?: number }) {
     if (txStatus === TransactionStatus.Success) {
       return (
         <CheckmarkCircle
-          borderColor="accentBackgroundSuccess"
+          borderColor="accentSuccess"
           borderWidth={2}
-          color={theme.colors.accentBackgroundSuccess}
+          color={theme.colors.accentSuccess}
           size={size}
         />
       )
     }
 
-    return <AlertCircle color={theme.colors.accentBackgroundWarning} height={size} width={size} />
+    return <AlertCircle color={theme.colors.accentWarning} height={size} width={size} />
   }
 
   const pendingTransactionCount = pendingTransactions.length

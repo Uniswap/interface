@@ -17,12 +17,12 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
   const style = useAnimatedStyle(() => {
     const selected = index === selectedIndex.value
 
-    if (!selected) return { color: theme.colors.neutralTextSecondary }
+    if (!selected) return { color: theme.colors.textSecondary }
 
     const color = interpolateColor(
       transition.value,
       [0, 1],
-      [theme.colors.neutralTextSecondary, theme.colors.neutralTextPrimary]
+      [theme.colors.textSecondary, theme.colors.textPrimary]
     )
 
     return { color }

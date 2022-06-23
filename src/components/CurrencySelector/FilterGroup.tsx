@@ -43,8 +43,8 @@ export function FilterGroup({
         <Flex row gap="none">
           <Button mr="sm" name={ElementName.FavoritesFilter} onPress={onPressFavorites}>
             <Pill
-              backgroundColor="neutralSurface"
-              borderColor={selected === 'favorites' ? 'neutralOutline' : 'neutralSurface'}
+              backgroundColor="backgroundSurface"
+              borderColor={selected === 'favorites' ? 'backgroundOutline' : 'backgroundSurface'}
               foregroundColor={theme.colors.deprecated_textColor}
               height={36}
               icon={<Heart active size={20} />}
@@ -53,8 +53,8 @@ export function FilterGroup({
           </Button>
           <Button mr="sm" name={ElementName.Reset} onPress={onReset}>
             <Pill
-              backgroundColor="neutralSurface"
-              borderColor={selected === 'reset' ? 'neutralOutline' : 'neutralSurface'}
+              backgroundColor="backgroundSurface"
+              borderColor={selected === 'reset' ? 'backgroundOutline' : 'backgroundSurface'}
               foregroundColor={theme.colors.deprecated_textColor}
               height={36}
               label={resetButtonLabel}

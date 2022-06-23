@@ -44,6 +44,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
       label={name || shortenAddress(address)}
       px="xs"
       py="xxs"
+      // TODO: sync this to design theme, use color name instead of hardcoded value
       style={{ backgroundColor: opacify(20, theme.colors.black) }}
       textVariant="body2"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
@@ -68,7 +69,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
         if (typeof childValue === 'object') {
           return (
             <Flex gap="xxs">
-              <Text color="accentText2" style={{ marginLeft: depth * 10 }} variant="code">
+              <Text color="textTertiary" style={{ marginLeft: depth * 10 }} variant="code">
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
@@ -79,7 +80,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
         if (typeof childValue === 'string') {
           return (
             <Flex row alignItems="flex-start" gap="xs" style={{ marginLeft: depth * 10 }}>
-              <Text color="accentText2" py="xxs" variant="code">
+              <Text color="textTertiary" py="xxs" variant="code">
                 {objKey}
               </Text>
               <Flex flexShrink={1}>
@@ -143,18 +144,18 @@ function TransactionMessage({
   return (
     <Flex gap="xs">
       <Flex row alignItems="center" gap="xs">
-        <Text color="neutralTextSecondary" variant="body2">
+        <Text color="textSecondary" variant="body2">
           To:
         </Text>
         <AddressButton address={transaction.to} chainId={chainId} />
       </Flex>
       {isLoading || !parsedData ? (
-        <Text color="neutralTextTertiary" py="xxs" variant="body2">
+        <Text color="textTertiary" py="xxs" variant="body2">
           {isLoading ? ' ' : t('Unable to decode this transaction request')}
         </Text>
       ) : (
         <Flex row alignItems="center" gap="xs">
-          <Text color="neutralTextSecondary" py="xxs" variant="body2">
+          <Text color="textSecondary" py="xxs" variant="body2">
             Function:{' '}
           </Text>
           <Box
@@ -162,7 +163,7 @@ function TransactionMessage({
             px="xs"
             py="xxs"
             style={{ backgroundColor: opacify(20, theme.colors.black) }}>
-            <Text color="neutralTextPrimary" variant="code">
+            <Text color="textPrimary" variant="code">
               {parsedData.name}
             </Text>
           </Box>
@@ -197,7 +198,7 @@ function RequestMessageContent({ request }: Props) {
   return message ? (
     <Text variant="body2">{message}</Text>
   ) : (
-    <Text color="neutralTextSecondary" variant="body2">
+    <Text color="textSecondary" variant="body2">
       {t('No message found.')}
     </Text>
   )

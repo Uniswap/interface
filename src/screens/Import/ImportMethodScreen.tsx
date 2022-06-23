@@ -20,7 +20,6 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { opacify } from 'src/utils/colors'
 
 const backupOption = {
   title: (t: TFunction) => t('Restore from iCloud'),
@@ -121,7 +120,7 @@ function OptionCard({
       borderRadius="lg"
       borderWidth={1}
       p="md"
-      style={{ borderColor: opacify(40, theme.colors.neutralOutline) }}
+      style={{ borderColor: theme.colors.backgroundOutline }}
       onPress={onPress}>
       <Flex row alignItems="center" gap="md" justifyContent="space-between">
         <Flex gap="xs">
@@ -129,11 +128,11 @@ function OptionCard({
             {icon}
             <Text variant="mediumLabel">{title}</Text>
           </Flex>
-          <Text color="accentText2" variant="caption">
+          <Text color="textSecondary" variant="caption">
             {blurb}
           </Text>
         </Flex>
-        <Chevron color={theme.colors.neutralOutline} direction="e" height={12} width={12} />
+        <Chevron color={theme.colors.backgroundOutline} direction="e" height={12} width={12} />
       </Flex>
     </Button>
   )

@@ -16,9 +16,7 @@ export function IdenticonWithNotificationBadge({ address, size }: Props) {
   }
 
   return (
-    <NotificationBadge
-      backgroundColor="accentBackgroundAction"
-      notificationCount={notificationCount}>
+    <NotificationBadge backgroundColor="accentAction" notificationCount={notificationCount}>
       <Identicon address={address} size={size} />
     </NotificationBadge>
   )

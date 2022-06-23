@@ -34,7 +34,7 @@ export function ClientDetails({
           request={request}
         />
         <LinkButton
-          backgroundColor="neutralContainer"
+          backgroundColor="backgroundContainer"
           borderRadius="xs"
           label={dapp.url}
           mt="xs"

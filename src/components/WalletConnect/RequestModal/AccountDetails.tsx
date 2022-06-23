@@ -17,7 +17,7 @@ export function AccountDetails({ address }: { address: string }) {
         </Text>
       </Flex>
       {displayName?.type !== 'address' && (
-        <Text color="neutralTextSecondary" variant="body2">
+        <Text color="textSecondary" variant="body2">
           {shortenAddress(address)}
         </Text>
       )}

@@ -50,13 +50,13 @@ export function TextWithFuseMatches({
       {pieces.map((p, i) => {
         if (p[1])
           return (
-            <Text key={`${i}${p[0]}`} color="neutralTextPrimary" variant={variant}>
+            <Text key={`${i}${p[0]}`} color="textPrimary" variant={variant}>
               {p[0]}
             </Text>
           )
         else
           return (
-            <Text key={`${i}${p[0]}`} color="neutralTextTertiary" variant={variant}>
+            <Text key={`${i}${p[0]}`} color="textTertiary" variant={variant}>
               {p[0]}
             </Text>
           )

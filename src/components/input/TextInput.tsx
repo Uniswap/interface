@@ -55,7 +55,7 @@ export function TextInput({ onChangeText, onBlur, inputRef, ...rest }: TextInput
   rest.borderRadius ??= 'md'
 
   // restyle doesn't parse placeholderTextColorCorrectly
-  rest.placeholderTextColor ??= theme.colors.accentText3
+  rest.placeholderTextColor ??= theme.colors.textTertiary
   const transformedProps = useRestyle(restyleFunctions, rest)
 
   return (

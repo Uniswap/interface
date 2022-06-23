@@ -38,11 +38,11 @@ export function SearchTextInput(props: SearchTextInputProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const {
-    backgroundColor = 'neutralSurface',
+    backgroundColor = 'backgroundSurface',
     clearIcon,
     disableClearable,
     endAdornment = (
-      <SearchIcon color={theme.colors.neutralTextTertiary} height={20} strokeWidth={2} width={20} />
+      <SearchIcon color={theme.colors.textTertiary} height={20} strokeWidth={2} width={20} />
     ),
     onCancel,
     onChangeText,
@@ -150,7 +150,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
           fontSize={16}
           fontWeight="500"
           placeholder={placeholder}
-          placeholderTextColor={theme.colors.neutralTextTertiary}
+          placeholderTextColor={theme.colors.textTertiary}
           returnKeyType="search"
           value={value ?? undefined}
           onChangeText={onChangeTextInput}
@@ -192,12 +192,16 @@ function ClearButton(props: ClearButtonProps) {
 
   const {
     onPress,
-    clearIcon = (
-      <X color={theme.colors.neutralTextSecondary} height={10} strokeWidth={4} width={10} />
-    ),
+    clearIcon = <X color={theme.colors.textSecondary} height={10} strokeWidth={4} width={10} />,
   } = props
 
   return (
-    <IconButton bg="neutralSurface" borderRadius="full" icon={clearIcon} p="xs" onPress={onPress} />
+    <IconButton
+      bg="backgroundSurface"
+      borderRadius="full"
+      icon={clearIcon}
+      p="xs"
+      onPress={onPress}
+    />
   )
 }

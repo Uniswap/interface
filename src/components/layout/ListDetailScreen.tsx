@@ -77,8 +77,8 @@ export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDet
           navigation.goBack()
         }}>
         <Flex row alignItems="center" gap="xs">
-          <Chevron color={theme.colors.neutralTextSecondary} direction="w" height={18} width={18} />
-          <Text color="neutralTextSecondary" variant={'subHead1'}>
+          <Chevron color={theme.colors.textSecondary} direction="w" height={18} width={18} />
+          <Text color="textSecondary" variant={'subHead1'}>
             {t('Back')}
           </Text>
         </Flex>
@@ -100,7 +100,7 @@ export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDet
       ]}
       tint={isDarkMode ? 'dark' : 'default'}>
       <Flex row alignItems="center" justifyContent="space-between" px="md" py="sm">
-        <BackButton color="neutralTextPrimary" size={18} />
+        <BackButton color="textPrimary" size={18} />
         <Text mx="xs" variant="subHead1">
           {title}
         </Text>

@@ -95,14 +95,14 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
           <AnimatedFlex
             row
             alignItems="center"
-            bg="neutralBackground"
+            bg="backgroundBackdrop"
             justifyContent="space-between"
             px="md"
             py="sm">
             <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
               {index !== undefined && (
                 <Box minWidth={18}>
-                  <Text color="neutralTextSecondary" variant="badge">
+                  <Text color="textSecondary" variant="badge">
                     {index + 1}
                   </Text>
                 </Box>
@@ -111,7 +111,7 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
               <Image source={{ uri: coin.image }} style={tokenLogoStyle} />
               <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
                 <Text variant="mediumLabel">{coin.name ?? ''}</Text>
-                <Text color="neutralTextSecondary" variant="caption">
+                <Text color="textSecondary" variant="caption">
                   {coin.symbol.toUpperCase() ?? ''}
                 </Text>
               </Flex>
@@ -149,7 +149,7 @@ export function TokenItemBox({ coin }: TokenItemProps) {
       onPress={() => {
         navigate(Screens.TokenDetails, { currencyId: _currencyId })
       }}>
-      <Box bg="neutralContainer" borderRadius="lg" justifyContent="space-between">
+      <Box bg="backgroundContainer" borderRadius="lg" justifyContent="space-between">
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
             <Text variant="body1">{coin.symbol.toUpperCase() ?? ''}</Text>

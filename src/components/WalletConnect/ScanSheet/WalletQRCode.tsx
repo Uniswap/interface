@@ -43,10 +43,10 @@ export function WalletQRCode({ address }: Props) {
   return (
     <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut} gap="xl" p="lg">
       <Flex centered gap="xs">
-        <Text color="neutralTextPrimary" variant="largeLabel">
+        <Text color="textPrimary" variant="largeLabel">
           {ens.name ?? shortenAddress(address)}
         </Text>
-        <Text color="neutralTextSecondary" variant="subHead1">
+        <Text color="textSecondary" variant="subHead1">
           {ens.name ? shortenAddress(address) : ''}
         </Text>
       </Flex>
@@ -66,18 +66,18 @@ export function WalletQRCode({ address }: Props) {
         <PrimaryCopyTextButton
           copyText={address}
           flex={1}
-          icon={<CopySheets color={theme.colors.neutralTextPrimary} height={18} width={18} />}
+          icon={<CopySheets color={theme.colors.textPrimary} height={18} width={18} />}
           label={t`Copy`}
           style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray100) }}
-          textColor="neutralTextPrimary"
+          textColor="textPrimary"
         />
         <PrimaryButton
           flex={1}
-          icon={<ShareIcon color={theme.colors.neutralTextPrimary} height={18} width={18} />}
+          icon={<ShareIcon color={theme.colors.textPrimary} height={18} width={18} />}
           label={t`Share`}
           marginLeft="sm"
           style={{ backgroundColor: opacify(30, theme.colors.deprecated_gray100) }}
-          textColor="neutralTextPrimary"
+          textColor="textPrimary"
           onPress={onShare}
         />
       </Box>

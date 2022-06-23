@@ -20,12 +20,12 @@ export function TransferArrowButton({ name, onPress, disabled }: ArrowDownButton
     <IconButton
       alignItems="center"
       alignSelf="center"
-      bg="neutralSurface"
-      borderColor="neutralBackground"
+      bg="backgroundSurface"
+      borderColor="backgroundBackdrop"
       borderRadius="md"
       borderWidth={4}
       disabled={disabled}
-      icon={<ArrowDown color="neutralTextSecondary" height={ICON_SIZE} width={ICON_SIZE} />}
+      icon={<ArrowDown color="textSecondary" height={ICON_SIZE} width={ICON_SIZE} />}
       justifyContent="center"
       name={name}
       onPress={onPress}

@@ -84,13 +84,13 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.neutralTextPrimary,
-        tabBarInactiveTintColor: theme.colors.neutralTextTertiary,
+        tabBarActiveTintColor: theme.colors.textPrimary,
+        tabBarInactiveTintColor: theme.colors.textTertiary,
         tabBarShowLabel: false,
         headerShown: false,
         tabBarStyle: {
           backgroundColor: theme.colors.mainBackground,
-          borderTopColor: theme.colors.neutralOutline,
+          borderTopColor: theme.colors.backgroundOutline,
           paddingBottom: 16,
         },
       }}>
@@ -224,7 +224,7 @@ export function OnboardingStackNavigator() {
             backgroundColor: theme.colors.mainBackground,
             shadowColor: theme.colors.none,
           },
-          headerTintColor: theme.colors.neutralTextSecondary,
+          headerTintColor: theme.colors.textSecondary,
         }}>
         <OnboardingStack.Screen
           component={LandingScreen}

@@ -26,15 +26,10 @@ function Page({ text }: { text: ReactNode }) {
           }>
           <Flex centered>
             <Flex row alignItems="center" justifyContent="space-between" px="lg" width={fullWidth}>
-              <Text color="neutralTextSecondary" variant="mediumLabel">
+              <Text color="textSecondary" variant="mediumLabel">
                 <Trans>What’s a recovery phrase?</Trans>
               </Text>
-              <CloseButton
-                color="neutralTextSecondary"
-                size={12}
-                strokeWidth={3}
-                onPress={onDismiss}
-              />
+              <CloseButton color="textSecondary" size={12} strokeWidth={3} onPress={onDismiss} />
             </Flex>
             <Flex flex={0.2} />
             <Flex flex={0.8} px="lg">

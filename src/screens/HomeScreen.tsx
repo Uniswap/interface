@@ -88,7 +88,7 @@ export function HomeScreen({ navigation }: Props) {
               <Flex centered row>
                 {isWalletConnectSupportedAccount(activeAccount) && (
                   <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                    <Scan color={theme.colors.neutralTextTertiary} height={20} width={20} />
+                    <Scan color={theme.colors.textTertiary} height={20} width={20} />
                   </Button>
                 )}
                 <Button name={ElementName.Notifications} width={28} onPress={onPressNotifications}>
@@ -118,7 +118,7 @@ function NotificationIndicator() {
   const hasUnreadNotifications = useAppSelector(selectHasUnreadNotifications)
   return (
     <Box
-      backgroundColor={hasUnreadNotifications ? 'accentBackgroundAction' : 'neutralTextTertiary'}
+      backgroundColor={hasUnreadNotifications ? 'accentAction' : 'textTertiary'}
       borderRadius="full"
       height={NOTIFICATION_INDICATOR_SIZE}
       left={-(NOTIFICATION_INDICATOR_SIZE / 2) + -spacing.md} // half of inicator width + `mx` of Home Screen

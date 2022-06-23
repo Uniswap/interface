@@ -133,7 +133,7 @@ function EducationSection() {
   return (
     <Flex gap="lg" py="xl">
       <EducationRow
-        icon={<EyeIcon color={theme.colors.neutralTextPrimary} height={16} width={16} />}
+        icon={<EyeIcon color={theme.colors.textPrimary} height={16} width={16} />}
         label={t('Write it down in private')}
         sublabel={t(
           "Ensure that you're in a private location and write down your recovery phrase's words in order."
@@ -141,13 +141,13 @@ function EducationSection() {
       />
       {spacer}
       <EducationRow
-        icon={<BriefcaseIcon color={theme.colors.neutralTextPrimary} height={16} width={16} />}
+        icon={<BriefcaseIcon color={theme.colors.textPrimary} height={16} width={16} />}
         label={t('Keep it somewhere safe')}
         sublabel={t('Remember that anyone who has your recovery phrase can access your wallet.')}
       />
       {spacer}
       <EducationRow
-        icon={<LockIcon color={theme.colors.neutralTextPrimary} height={16} width={16} />}
+        icon={<LockIcon color={theme.colors.textPrimary} height={16} width={16} />}
         label={t("Don't lose it")}
         sublabel={t(
           'If you lose your recovery phrase, you’ll lose access to your wallet and its contents.'
@@ -172,7 +172,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
             <LinearGradientBox radius="md" stops={RainbowLinearGradientStops}>
               {/* TODO: simplify Rainbow border */}
               <Box alignItems="center" justifyContent="center" style={styles.padded}>
-                <Flex centered bg="neutralBackground" borderRadius="md" height={38} width={38}>
+                <Flex centered bg="backgroundBackdrop" borderRadius="md" height={38} width={38}>
                   {icon}
                 </Flex>
               </Box>
@@ -180,7 +180,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
           </Box>
           <Flex flex={1} gap="none">
             <Text variant="subHead1">{label}</Text>
-            <Text color="neutralTextSecondary" variant="caption">
+            <Text color="textSecondary" variant="caption">
               {sublabel}
             </Text>
           </Flex>

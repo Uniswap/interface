@@ -19,8 +19,8 @@ export function SortingGroup({ onPressOrderBy, orderBy }: FilterGroupProps) {
   return (
     <TextButton onPress={onPressOrderBy}>
       <Flex centered row gap="xs">
-        <ArrowUpDown color={theme.colors.neutralTextTertiary} height={20} width={20} />
-        <Text color="neutralTextSecondary" variant="subHead1">
+        <ArrowUpDown color={theme.colors.textTertiary} height={20} width={20} />
+        <Text color="textSecondary" variant="subHead1">
           {getOrderByLabel(orderBy, t)}
         </Text>
       </Flex>

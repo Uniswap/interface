@@ -111,12 +111,12 @@ export function QRCodeScanner({
       {layout && (
         <Flex centered gap="xxl" style={StyleSheet.absoluteFill}>
           <Flex centered gap="xs">
-            <Text color="neutralTextPrimary" variant="largeLabel">
+            <Text color="textPrimary" variant="largeLabel">
               {t('Scan a QR code')}
             </Text>
             <Flex centered row gap="sm">
               {<WalletConnectLogo height={16} width={16} />}
-              <Text color="neutralTextPrimary" variant="body2">
+              <Text color="textPrimary" variant="body2">
                 {t('Connect to an app with WalletConnect')}
               </Text>
             </Flex>

@@ -66,7 +66,7 @@ export default function TokenWarningCard({
         )}
       </Flex>
       <Flex>
-        <Text color="neutralTextSecondary" fontSize={16}>
+        <Text color="textSecondary" fontSize={16}>
           {getBodyText(tokenWarningLevel, t)} <Text fontWeight="700">{t('Learn more')}</Text>
         </Text>
       </Flex>

@@ -63,7 +63,7 @@ export function SettingsScreen() {
             subText: t('Allow connections to test networks'),
             icon: (
               <TestnetsIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -81,7 +81,7 @@ export function SettingsScreen() {
             text: t('Help Center'),
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -94,7 +94,7 @@ export function SettingsScreen() {
             text: t('Uniswap Labs Twitter'),
             icon: (
               <TwitterIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -116,7 +116,7 @@ export function SettingsScreen() {
             text: t('Uniswap Labs Privacy Policy'),
             icon: (
               <LockIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -133,7 +133,7 @@ export function SettingsScreen() {
             text: t('Uniswap Labs Terms of Service'),
             icon: (
               <BookOpenIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -153,7 +153,7 @@ export function SettingsScreen() {
             // TODO use chains icon when available
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -166,7 +166,7 @@ export function SettingsScreen() {
             text: t('Support'),
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -179,7 +179,7 @@ export function SettingsScreen() {
             text: 'Test Configs',
             icon: (
               <ChatBubbleIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -192,7 +192,7 @@ export function SettingsScreen() {
             text: t('Dev Options'),
             icon: (
               <CoffeeIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
                 strokeWidth="1.5"
@@ -224,7 +224,7 @@ export function SettingsScreen() {
         renderItem={renderItem}
         renderSectionHeader={({ section: { subTitle } }) => (
           <Box bg="mainBackground" pb="md">
-            <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+            <Text color="textSecondary" fontWeight="500" variant="body1">
               {subTitle}
             </Text>
           </Box>
@@ -253,7 +253,7 @@ function OnboardingRow() {
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
           <HeartIcon
-            color={theme.colors.neutralTextSecondary}
+            color={theme.colors.textSecondary}
             height={20}
             strokeLinecap="round"
             strokeWidth="1.5"
@@ -263,7 +263,7 @@ function OnboardingRow() {
             {t('Onboarding')}
           </Text>
         </Box>
-        <Chevron color={theme.colors.neutralTextTertiary} direction="e" height={16} width={16} />
+        <Chevron color={theme.colors.textTertiary} direction="e" height={16} width={16} />
       </Box>
     </Button>
   )
@@ -295,12 +295,12 @@ function WalletSettings() {
       </SettingsBackButtonRow>
 
       <Flex row justifyContent="space-between">
-        <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+        <Text color="textSecondary" fontWeight="500" variant="body1">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <Button onPress={toggleViewAll}>
-            <Text color="neutralTextTertiary" mb="sm" variant="subHead2">
+            <Text color="textTertiary" mb="sm" variant="subHead2">
               {showAll ? t('Hide') : t('View all')}
             </Text>
           </Button>
@@ -323,12 +323,7 @@ function WalletSettings() {
                 variant="body1"
                 verticalGap="none"
               />
-              <Chevron
-                color={theme.colors.neutralTextTertiary}
-                direction="e"
-                height={16}
-                width={16}
-              />
+              <Chevron color={theme.colors.textTertiary} direction="e" height={16} width={16} />
             </Box>
           </Button>
         ))}

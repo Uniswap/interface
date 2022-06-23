@@ -43,9 +43,7 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
           <Text ellipsizeMode="tail" numberOfLines={1} variant="subHead1">
             {currency.symbol}
           </Text>
-          <Text color="neutralTextSecondary" variant="caption">{`${formatCurrencyAmount(
-            amount
-          )} `}</Text>
+          <Text color="textSecondary" variant="caption">{`${formatCurrencyAmount(amount)} `}</Text>
         </Flex>
       </AnimatedFlex>
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">

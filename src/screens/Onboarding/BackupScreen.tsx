@@ -154,17 +154,13 @@ function BackupOptionButton({
             </Box>
             <Text variant="mediumLabel">{label}</Text>
           </Flex>
-          <Text color="neutralTextSecondary" variant="caption">
+          <Text color="textSecondary" variant="caption">
             {caption}
           </Text>
         </Flex>
         <Flex grow alignItems="flex-end">
           {completed ? (
-            <CheckmarkCircle
-              backgroundColor="none"
-              color={theme.colors.accentBackgroundSuccess}
-              size={40}
-            />
+            <CheckmarkCircle backgroundColor="none" color={theme.colors.accentSuccess} size={40} />
           ) : (
             <Chevron color={theme.colors.lightBorder} direction="e" height="20" width="15" />
           )}

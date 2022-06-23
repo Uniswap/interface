@@ -175,8 +175,8 @@ function TokenDetails({ currency }: { currency: Currency }) {
           <TokenDetailsHeader currency={currency} />
           <PriceChart currency={currency} />
           {balance && (
-            <Flex bg="neutralContainer" borderRadius="sm" gap="md" mx="md" p="md">
-              <Text color="neutralTextSecondary" variant="subHead2">
+            <Flex bg="backgroundContainer" borderRadius="sm" gap="md" mx="md" p="md">
+              <Text color="textSecondary" variant="subHead2">
                 {t('Your balance')}
               </Text>
               <Flex row alignItems="center" justifyContent="space-between">
@@ -198,7 +198,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
           )}
         </Flex>
       </ScrollDetailScreen>
-      <Flex row bg="neutralBackground" gap="sm" px="sm" py="xs">
+      <Flex row bg="backgroundBackdrop" gap="sm" px="sm" py="xs">
         <PrimaryButton
           disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
           flex={1}
@@ -225,7 +225,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
             disabled={!balance}
             icon={
               <SendIcon
-                color={theme.colors.neutralTextSecondary}
+                color={theme.colors.textSecondary}
                 height={20}
                 strokeWidth={1.5}
                 width={20}

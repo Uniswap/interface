@@ -45,7 +45,7 @@ export function LongPressButton({
       onPressOut={onPressOut}>
       <Box
         alignItems="center"
-        backgroundColor="accentBackgroundActive"
+        backgroundColor="accentActive"
         borderRadius="lg"
         opacity={disabled ? 0.2 : 1}
         overflow="hidden"

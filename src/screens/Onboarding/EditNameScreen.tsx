@@ -112,7 +112,7 @@ function CustomizationSection({
             fontSize={28}
             inputRef={textInputRef}
             placeholder="Nickname"
-            placeholderTextColor={theme.colors.neutralAction}
+            placeholderTextColor={theme.colors.accentAction}
             testID="customize/name"
             textAlign="center"
             value={accountName}
@@ -132,7 +132,7 @@ function CustomizationSection({
             </AnimatedButton>
           )}
         </Flex>
-        <Text color="neutralTextSecondary" opacity={0.7} variant="body1">
+        <Text color="textSecondary" opacity={0.7} variant="body1">
           {shortenAddress(address)}
         </Text>
       </Flex>

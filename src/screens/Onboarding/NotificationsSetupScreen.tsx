@@ -88,7 +88,7 @@ function SampleNotifications() {
   return (
     <Flex gap="md">
       {sampleNotifications.map((value, i) => (
-        <Box key={i} backgroundColor="neutralSurface" borderRadius="lg" padding="sm">
+        <Box key={i} backgroundColor="backgroundSurface" borderRadius="lg" padding="sm">
           <NotificationContent key={i} icon={value.icon} title={value.title} />
         </Box>
       ))}

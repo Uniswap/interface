@@ -20,7 +20,7 @@ export const theme = createTheme({
   colors: {
     mainBackground: colorsLight.white,
     mainForeground: colorsLight.black,
-    translucentBackground: opacify(50, colorsLight.neutralBackground),
+    translucentBackground: opacify(50, colorsLight.backgroundBackdrop),
     imageTintBackground: opacify(80, colorsLight.deprecated_background1),
     tokenSelector: colorsLight.deprecated_gray50,
     shimmer: colorsLight.white,

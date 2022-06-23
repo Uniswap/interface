@@ -237,7 +237,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
             {collection?.name}
           </Text>
           <Button onPress={onPressShare}>
-            <ShareIcon color={appTheme.colors.neutralTextTertiary} height={24} width={24} />
+            <ShareIcon color={appTheme.colors.textTertiary} height={24} width={24} />
           </Button>
         </Flex>
         <FlatList

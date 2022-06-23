@@ -30,7 +30,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
 
   return (
     <Flex justifyContent="flex-end">
-      <Flex centered bg="neutralSurface" borderRadius="lg" gap="none" overflow="hidden">
+      <Flex centered bg="backgroundSurface" borderRadius="lg" gap="none" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="xxs" py="md">
             <Text variant="mediumLabel">{header}</Text>
@@ -62,8 +62,8 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
           selectionAsync()
           onClose()
         }}>
-        <Flex centered bg="neutralSurface" borderRadius="lg" py="md">
-          <Text color="neutralTextPrimary" variant="subHead1">
+        <Flex centered bg="backgroundSurface" borderRadius="lg" py="md">
+          <Text color="textPrimary" variant="subHead1">
             {closeButtonLabel}
           </Text>
         </Flex>

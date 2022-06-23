@@ -12,8 +12,8 @@ function _Heart({ active, size }: Props) {
 
   return (
     <HeartIcon
-      color={active ? theme.colors.accentBackgroundAction : theme.colors.neutralTextTertiary}
-      fill={active ? theme.colors.accentBackgroundAction : theme.colors.neutralSurface}
+      color={active ? theme.colors.accentAction : theme.colors.textTertiary}
+      fill={active ? theme.colors.accentAction : theme.colors.backgroundSurface}
       height={size}
       width={size}
     />

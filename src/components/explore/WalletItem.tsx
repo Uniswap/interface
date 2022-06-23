@@ -22,12 +22,12 @@ export function WalletItem({ address, ensName, onPress }: WalletItemProps) {
           <Identicon address={address} size={35} />
           <Flex gap="xxs">
             <Text variant="mediumLabel">{ensName}</Text>
-            <Text color="neutralTextSecondary" variant="caption">
+            <Text color="textSecondary" variant="caption">
               {shortenAddress(address)}
             </Text>
           </Flex>
         </Flex>
-        <ProfileIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
+        <ProfileIcon color={theme.colors.textSecondary} height={24} width={24} />
       </Flex>
     </Button>
   )

@@ -107,7 +107,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           </Text>
           <Flex>
             <Button onPress={onPressShare}>
-              <ShareIcon color={theme.colors.neutralTextTertiary} height={24} width={24} />
+              <ShareIcon color={theme.colors.textTertiary} height={24} width={24} />
             </Button>
           </Flex>
         </Flex>

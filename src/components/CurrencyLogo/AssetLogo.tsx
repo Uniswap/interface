@@ -17,11 +17,11 @@ export function AssetLogoWithFallback({ name, url }: AssetLogoProps) {
   ) : (
     <Flex
       centered
-      backgroundColor="neutralContainer"
+      backgroundColor="backgroundContainer"
       borderRadius="full"
       height={tokenLogoStyle.height}
       width={tokenLogoStyle.width}>
-      <Text color="neutralTextTertiary" variant="subHead2">
+      <Text color="textTertiary" variant="subHead2">
         {name[0]}
       </Text>
     </Flex>

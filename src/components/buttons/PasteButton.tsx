@@ -22,11 +22,11 @@ export default function PasteButton({ onPress }: { onPress: (text: string) => vo
       borderRadius="md"
       px="sm"
       py="xs"
-      style={{ backgroundColor: opacify(10, theme.colors.accentBackgroundActive) }}
+      style={{ backgroundColor: opacify(10, theme.colors.accentActive) }}
       onPress={onPressButton}>
       <Flex centered row gap="xs">
         <PasteIcon />
-        <Text color="accentBackgroundActive" variant="mediumLabel">
+        <Text color="accentActive" variant="mediumLabel">
           {t('paste')}
         </Text>
       </Flex>

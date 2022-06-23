@@ -25,11 +25,11 @@ import {
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
+import { useAccounts } from 'src/features/wallet/hooks'
 import { opacify } from 'src/utils/colors'
 import { Screens } from './Screens'
-import { useAccounts } from 'src/features/wallet/hooks'
-import { AccountType } from 'src/features/wallet/accounts/types'
 
 const ALERT_ICON_SIZE = 32
 
@@ -79,7 +79,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsWalletEdit,
           text: t('Edit nickname or theme'),
-          icon: <EditIcon color={theme.colors.neutralTextSecondary} strokeWidth="1.5" />,
+          icon: <EditIcon color={theme.colors.textSecondary} strokeWidth="1.5" />,
           screenProps: { address },
         },
         {
@@ -87,12 +87,12 @@ export function SettingsWallet({
             <Switch value={notificationsEnabled} onValueChange={onChangeNotificationSettings} />
           ),
           text: t('Notifications'),
-          icon: <NotificationIcon color={theme.colors.neutralTextSecondary} strokeWidth="1.5" />,
+          icon: <NotificationIcon color={theme.colors.textSecondary} strokeWidth="1.5" />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,
           text: t('Manage connections'),
-          icon: <GlobalIcon color={theme.colors.neutralTextSecondary} strokeWidth="1.5" />,
+          icon: <GlobalIcon color={theme.colors.textSecondary} strokeWidth="1.5" />,
           screenProps: { address },
           isHidden: readonly,
         },
@@ -126,7 +126,7 @@ export function SettingsWallet({
           renderItem={renderItem}
           renderSectionHeader={({ section: { subTitle } }) => (
             <Box bg="mainBackground" pb="md">
-              <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+              <Text color="textSecondary" fontWeight="500" variant="body1">
                 {subTitle}
               </Text>
             </Box>
@@ -138,28 +138,28 @@ export function SettingsWallet({
       {!hasOnlyOneAccount && (
         <PrimaryButton
           label={t('Remove wallet')}
-          style={{ backgroundColor: opacify(15, theme.colors.accentBackgroundFailure) }}
-          textColor="accentBackgroundFailure"
+          style={{ backgroundColor: opacify(15, theme.colors.accentFailure) }}
+          textColor="accentFailure"
           width="100%"
           onPress={() => setShowRemoveWalletModal(true)}
         />
       )}
       <BottomSheetModal
-        backgroundColor={theme.colors.neutralSurface}
+        backgroundColor={theme.colors.backgroundSurface}
         isVisible={showRemoveWalletModal}
         name={ModalName.RemoveWallet}
         onClose={() => setShowRemoveWalletModal(false)}>
         <Flex centered gap="xl" px="md" py="lg">
           <Flex centered gap="xs">
             <AlertTriangle
-              color={theme.colors.accentBackgroundWarning}
+              color={theme.colors.accentWarning}
               height={ALERT_ICON_SIZE}
               width={ALERT_ICON_SIZE}
             />
             <Text mt="xs" variant="mediumLabel">
               {t('Are you sure?')}
             </Text>
-            <Text color="neutralTextSecondary" textAlign="center" variant="body2">
+            <Text color="textSecondary" textAlign="center" variant="body2">
               {t(
                 'You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.'
               )}
@@ -169,15 +169,15 @@ export function SettingsWallet({
             <PrimaryButton
               flex={1}
               label={t('Cancel')}
-              style={{ backgroundColor: theme.colors.neutralContainer }}
-              textColor="neutralTextPrimary"
+              style={{ backgroundColor: theme.colors.backgroundContainer }}
+              textColor="textPrimary"
               onPress={() => setShowRemoveWalletModal(false)}
             />
             <PrimaryButton
               flex={1}
               label={t('Remove')}
-              style={{ backgroundColor: opacify(10, theme.colors.accentBackgroundFailure) }}
-              textColor="accentBackgroundFailure"
+              style={{ backgroundColor: opacify(10, theme.colors.accentFailure) }}
+              textColor="accentFailure"
               onPress={removeWallet}
             />
           </Flex>

@@ -65,7 +65,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
         <Box bottom={0} position="absolute" right={0}>
           {event === WalletConnectEvent.Confirmed ? (
             <Approve
-              color={theme.colors.accentBackgroundSuccess}
+              color={theme.colors.accentSuccess}
               fill={theme.colors.mainBackground}
               height={NOTIFICATION_SIZING.secondaryImage}
               width={NOTIFICATION_SIZING.secondaryImage}

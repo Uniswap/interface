@@ -78,7 +78,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       )}
 
       {!isOutput && currency && (
-        <Text color="accentText2" variant="body2">
+        <Text color="textSecondary" variant="body2">
           {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
         </Text>
       )}

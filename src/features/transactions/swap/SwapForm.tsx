@@ -87,7 +87,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
 
         <Trace section={SectionName.CurrencyOutputPanel}>
           <Flex
-            backgroundColor={currencies[CurrencyField.OUTPUT] ? 'neutralSurface' : 'none'}
+            backgroundColor={currencies[CurrencyField.OUTPUT] ? 'backgroundSurface' : 'none'}
             borderRadius="lg"
             mb="sm"
             mt="xl"

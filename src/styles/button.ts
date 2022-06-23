@@ -26,9 +26,9 @@ export const primaryButtonVariants = {
   },
   transparent: {
     backgroundColor: 'none',
-    borderColor: 'neutralOutline',
+    borderColor: 'backgroundOutline',
     borderWidth: 1,
-    color: 'neutralTextPrimary',
+    color: 'textPrimary',
   },
   blue: {
     backgroundColor: 'deprecated_blue',
@@ -41,7 +41,7 @@ export const primaryButtonVariants = {
   // used in full screen onboarding views
   onboard: {
     py: 'md',
-    backgroundColor: 'accentBackgroundActive',
+    backgroundColor: 'accentActive',
   },
 }
 

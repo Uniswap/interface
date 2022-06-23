@@ -70,7 +70,7 @@ export default function TokenWarningModalContent({ currency, onClose, onAccept }
         <AlertTriangle color={theme.colors[warningColor]} height={14} />
       </Flex>
       <Text variant="largeLabel">{t('This token isn’t verified')}</Text>
-      <Text color="neutralTextPrimary" fontWeight="400" textAlign="center" variant="smallLabel">
+      <Text color="textPrimary" fontWeight="400" textAlign="center" variant="smallLabel">
         {getWarningText(tokenWarningLevel, t)} <Text fontWeight="700">{t('Learn more')}</Text>
       </Text>
       <Button onPress={() => openUri(explorerLink)}>

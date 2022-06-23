@@ -78,11 +78,11 @@ export function ProfileScreen({ navigation }: Props) {
           <Flex centered row gap="md">
             {isWalletConnectSupportedAccount(activeAccount) && (
               <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                <Scan color={theme.colors.neutralTextSecondary} height={24} width={24} />
+                <Scan color={theme.colors.textSecondary} height={24} width={24} />
               </Button>
             )}
             <Button name={ElementName.Settings} onPress={onPressSettings}>
-              <Settings color={theme.colors.neutralTextSecondary} height={24} width={24} />
+              <Settings color={theme.colors.textSecondary} height={24} width={24} />
             </Button>
           </Flex>
         </Flex>

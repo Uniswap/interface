@@ -109,7 +109,7 @@ export function NotificationToast({
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedBox
-        borderColor="neutralContainer"
+        borderColor="backgroundContainer"
         borderRadius="lg"
         borderWidth={1}
         left={0}
@@ -120,7 +120,7 @@ export function NotificationToast({
         zIndex="modal">
         <Button
           alignItems="center"
-          bg="neutralBackground"
+          bg="backgroundBackdrop"
           borderRadius="lg"
           flex={1}
           flexDirection="row"
@@ -175,7 +175,7 @@ export function NotificationContent({
             <>
               <Text
                 adjustsFontSizeToFit
-                color="accentBackgroundSuccess"
+                color="accentSuccess"
                 fontWeight="600"
                 numberOfLines={1}
                 variant="smallLabel">
@@ -183,7 +183,7 @@ export function NotificationContent({
               </Text>
               <Text
                 adjustsFontSizeToFit
-                color="neutralTextSecondary"
+                color="textSecondary"
                 fontWeight="500"
                 numberOfLines={1}
                 variant="code">
@@ -191,11 +191,7 @@ export function NotificationContent({
               </Text>
             </>
           ) : actionButton ? (
-            <TextButton
-              px="xs"
-              py="xs"
-              textColor="accentBackgroundActive"
-              onPress={actionButton.onPress}>
+            <TextButton px="xs" py="xs" textColor="accentActive" onPress={actionButton.onPress}>
               {actionButton.title}
             </TextButton>
           ) : null}

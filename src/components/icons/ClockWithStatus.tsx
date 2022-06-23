@@ -15,15 +15,13 @@ type Props = {
 
 function _ClockWithStatus({
   size = 24,
-  color = theme.colors.neutralTextTertiary,
+  color = theme.colors.textTertiary,
   pendingTxCount,
   unreadNotifications,
 }: Props) {
   if (pendingTxCount) {
     return (
-      <NotificationBadge
-        backgroundColor="accentBackgroundActive"
-        notificationCount={pendingTxCount}>
+      <NotificationBadge backgroundColor="accentActive" notificationCount={pendingTxCount}>
         <Clock color={color} height={size} width={size} />
       </NotificationBadge>
     )
@@ -34,7 +32,7 @@ function _ClockWithStatus({
       <Box position="relative">
         <Clock color={color} height={size} width={size} />
         <Box
-          backgroundColor="accentBackgroundAction"
+          backgroundColor="accentAction"
           borderRadius="full"
           borderWidth={2}
           height={NOTIFICATION_DOT_SIZE}

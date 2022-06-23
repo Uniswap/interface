@@ -46,9 +46,9 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
     )
 
   const fill = theme.colors.mainBackground
-  const gray = theme.colors.neutralAction
-  const green = theme.colors.accentBackgroundSuccess
-  const yellow = theme.colors.accentBackgroundWarning
+  const gray = theme.colors.backgroundAction
+  const green = theme.colors.accentSuccess
+  const yellow = theme.colors.accentWarning
   const statusSize = size.secondaryImage
 
   const getTxStatusIcon = () => {
@@ -89,7 +89,7 @@ function NFTLogoOrPlaceholder(props: { nft?: NFTAsset.Asset; size: number }) {
   return (
     <Box
       alignItems="center"
-      backgroundColor="neutralContainer"
+      backgroundColor="backgroundContainer"
       borderRadius="xs"
       height={size}
       justifyContent="center"

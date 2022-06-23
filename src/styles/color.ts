@@ -25,6 +25,7 @@ export interface GlobalPalette {
   pink700: string
   pink800: string
   pink900: string
+  pinkVibrant: string
   red50: string
   red100: string
   red200: string
@@ -35,6 +36,7 @@ export interface GlobalPalette {
   red700: string
   red800: string
   red900: string
+  redVibrant: string
   yellow50: string
   yellow100: string
   yellow200: string
@@ -45,6 +47,9 @@ export interface GlobalPalette {
   yellow700: string
   yellow800: string
   yellow900: string
+  yellowVibrant: string
+  gold200: string
+  goldVibrant: string
   green50: string
   green100: string
   green200: string
@@ -55,6 +60,7 @@ export interface GlobalPalette {
   green700: string
   green800: string
   green900: string
+  greenVibrant: string
   blue50: string
   blue100: string
   blue200: string
@@ -65,6 +71,7 @@ export interface GlobalPalette {
   blue700: string
   blue800: string
   blue900: string
+  blueVibrant: string
   networkEthereum: string
   networkOptimism: string
   networkOptimismSoft: string
@@ -97,6 +104,7 @@ export const colors: GlobalPalette = {
   pink700: '#55072A',
   pink800: '#350318',
   pink900: '#2B000B',
+  pinkVibrant: '#F51A70',
   red50: '#FFF4EE',
   red100: '#FFD9CE',
   red200: '#FDA799',
@@ -107,6 +115,7 @@ export const colors: GlobalPalette = {
   red700: '#530F10',
   red800: '#350700',
   red900: '#2C0000',
+  redVibrant: '#F14544',
   yellow50: '#FFF5E8',
   yellow100: '#F8DEB6',
   yellow200: '#F3B71E',
@@ -117,6 +126,10 @@ export const colors: GlobalPalette = {
   yellow700: '#3F2208',
   yellow800: '#26130A',
   yellow900: '#110A00',
+  yellowVibrant: '#FAF40A',
+  // TODO: add gold 50-900
+  gold200: '#EEB317',
+  goldVibrant: '#FEB239',
   green50: '#EAFAED',
   green100: '#BDECC8',
   green200: '#75D090',
@@ -127,6 +140,7 @@ export const colors: GlobalPalette = {
   green700: '#053117',
   green800: '#031C0A',
   green900: '#020E04',
+  greenVibrant: '#5CFE9D',
   blue50: '#F4F6FF',
   blue100: '#DBDFFF',
   blue200: '#AABAFF',
@@ -137,6 +151,7 @@ export const colors: GlobalPalette = {
   blue700: '#09265E',
   blue800: '#06163B',
   blue900: '#00072F',
+  blueVibrant: '#587BFF',
   networkEthereum: '#627EEA',
   networkOptimism: '#FF0420',
   networkOptimismSoft: 'rgba(255, 4, 32, 0.16)',
@@ -173,23 +188,35 @@ export interface Palette {
   deprecated_warning: string
   deprecated_error: string
 
-  neutralBackground: string
-  neutralSurface: string
-  neutralContainer: string
-  neutralAction: string
-  neutralOutline: string
-  neutralTextPrimary: string
-  neutralTextSecondary: string
-  neutralTextTertiary: string
-  accentBackgroundAction: string
-  accentBackgroundActionSoft: string
-  accentBackgroundActive: string
-  accentBackgroundSuccess: string
-  accentBackgroundWarning: string
-  accentBackgroundFailure: string
-  accentText1: string
-  accentText2: string
-  accentText3: string
+  backgroundBackdrop: string
+  backgroundSurface: string
+  backgroundContainer: string
+  backgroundAction: string
+  backgroundOutline: string
+
+  textPrimary: string
+  textSecondary: string
+  textTertiary: string
+
+  accentAction: string
+  accentActive: string
+  accentSuccess: string
+  accentWarning: string
+  accentFailure: string
+
+  accentActionSoft: string
+  accentActiveSoft: string
+  accentSuccessSoft: string
+  accentWarningSoft: string
+  accentFailureSoft: string
+
+  accentTextDarkPrimary: string
+  accentTextDarkSecondary: string
+  accentTextDarkTertiary: string
+
+  accentTextLightPrimary: string
+  accentTextLightSecondary: string
+  accentTextLightTertiary: string
 
   white: string
   black: string
@@ -236,23 +263,35 @@ export const colorsLight: Palette = {
   deprecated_error: colors.red400,
   none: 'transparent',
 
-  neutralBackground: colors.white,
-  neutralSurface: colors.gray50,
-  neutralContainer: colors.gray100,
-  neutralAction: colors.gray200,
-  neutralOutline: colors.gray100,
-  neutralTextPrimary: colors.gray900,
-  neutralTextSecondary: colors.gray500,
-  neutralTextTertiary: colors.gray400,
-  accentBackgroundAction: colors.pink400,
-  accentBackgroundActionSoft: colors.pink100,
-  accentBackgroundActive: colors.blue400,
-  accentBackgroundSuccess: colors.green400,
-  accentBackgroundWarning: colors.yellow200,
-  accentBackgroundFailure: colors.red400,
-  accentText1: opacify(80, colors.black),
-  accentText2: opacify(60, colors.black),
-  accentText3: opacify(24, colors.black),
+  backgroundBackdrop: colors.white,
+  backgroundSurface: colors.gray50,
+  backgroundContainer: opacify(8, colors.gray500),
+  backgroundAction: colors.gray100,
+  backgroundOutline: opacify(24, colors.gray500),
+
+  textPrimary: colors.gray900,
+  textSecondary: colors.gray500,
+  textTertiary: colors.gray400,
+
+  accentAction: colors.pink400,
+  accentActive: colors.blue400,
+  accentSuccess: colors.green400,
+  accentWarning: colors.gold200,
+  accentFailure: colors.red400,
+
+  accentActionSoft: opacify(12, colors.pink400),
+  accentActiveSoft: opacify(12, colors.blue400),
+  accentSuccessSoft: opacify(12, colors.green400),
+  accentWarningSoft: opacify(12, colors.gold200),
+  accentFailureSoft: opacify(12, colors.red400),
+
+  accentTextDarkPrimary: opacify(80, colors.black),
+  accentTextDarkSecondary: opacify(60, colors.black),
+  accentTextDarkTertiary: opacify(24, colors.black),
+
+  accentTextLightPrimary: colors.white,
+  accentTextLightSecondary: opacify(60, colors.white),
+  accentTextLightTertiary: opacify(12, colors.white),
 
   white: colors.white,
   black: colors.black,
@@ -297,24 +336,37 @@ export const colorsDark: Palette = {
   deprecated_warning: colors.yellow200,
   deprecated_error: colors.red400,
 
-  neutralBackground: colors.gray900,
-  neutralSurface: colors.gray800,
-  neutralContainer: colors.gray700,
-  neutralAction: colors.gray600,
-  neutralOutline: colors.gray600,
-  neutralTextPrimary: colors.white,
-  neutralTextSecondary: colors.gray300,
-  neutralTextTertiary: colors.gray400,
-  accentBackgroundAction: colors.pink400,
-  accentBackgroundActionSoft: colors.pink100,
-  accentBackgroundActive: colors.blue400,
-  accentBackgroundSuccess: colors.green400,
-  accentBackgroundWarning: colors.yellow200,
-  accentBackgroundFailure: colors.red400,
+  backgroundBackdrop: colors.black,
+  backgroundSurface: colors.gray900,
+  backgroundContainer: opacify(8, colors.gray300),
+  backgroundAction: colors.gray700,
+  backgroundOutline: opacify(24, colors.gray300),
+
+  textPrimary: colors.white,
+  textSecondary: colors.gray300,
+  textTertiary: colors.gray400,
+
+  accentAction: colors.blue400,
+  accentActive: colors.blue400,
+  accentSuccess: colors.greenVibrant,
+  accentWarning: colors.gold200,
+  accentFailure: colors.red400,
+
+  accentActionSoft: opacify(12, colors.blue400),
+  accentActiveSoft: opacify(12, colors.blue400),
+  accentSuccessSoft: opacify(12, colors.green400),
+  accentWarningSoft: opacify(12, colors.gold200),
+  accentFailureSoft: opacify(12, colors.red400),
+
   // TODO: rgba(white) or rgba(black)
-  accentText1: colors.white,
-  accentText2: 'rgba(255, 255, 255, 0.72)',
-  accentText3: 'rgba(255, 255, 255, 0.12)',
+
+  accentTextDarkPrimary: opacify(80, colors.black),
+  accentTextDarkSecondary: opacify(60, colors.black),
+  accentTextDarkTertiary: opacify(24, colors.black),
+
+  accentTextLightPrimary: colors.white,
+  accentTextLightSecondary: opacify(72, colors.white),
+  accentTextLightTertiary: opacify(12, colors.white),
 
   white: colors.white,
   black: colors.black,

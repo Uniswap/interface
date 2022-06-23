@@ -63,16 +63,16 @@ export function SettingsRow({
               {text}
             </Text>
             {subText && (
-              <Text color="neutralTextSecondary" variant="caption">
+              <Text color="textSecondary" variant="caption">
                 {subText}
               </Text>
             )}
           </Flex>
         </Flex>
         {screen ? (
-          <Chevron color={theme.colors.neutralTextTertiary} direction="e" height={16} width={16} />
+          <Chevron color={theme.colors.textTertiary} direction="e" height={16} width={16} />
         ) : externalLink ? (
-          <PopoutArrow color={theme.colors.neutralTextTertiary} size={24} />
+          <PopoutArrow color={theme.colors.textTertiary} size={24} />
         ) : (
           action
         )}

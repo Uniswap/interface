@@ -20,7 +20,6 @@ import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
-import { opacify } from 'src/utils/colors'
 
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
@@ -128,7 +127,7 @@ export function WalletConnectModal({
               borderRadius="lg"
               name={ElementName.QRCodeModalToggle}
               p="md"
-              style={{ backgroundColor: opacify(30, theme.colors.neutralContainer) }}
+              style={{ backgroundColor: theme.colors.backgroundContainer }}
               onPress={onPressBottomToggle}>
               <Flex row gap="sm">
                 {currentScreenState === WalletConnectModalState.ScanQr ? (
@@ -137,18 +136,18 @@ export function WalletConnectModal({
                   </Flex>
                 ) : (
                   <Flex centered>
-                    <ScanQRIcon color={theme.colors.neutralTextTertiary} height={35} width={35} />
+                    <ScanQRIcon color={theme.colors.textTertiary} height={35} width={35} />
                   </Flex>
                 )}
                 <Flex shrink flexGrow={1} gap="xxs">
-                  <Text color="neutralTextPrimary" variant="subHead1">
+                  <Text color="textPrimary" variant="subHead1">
                     {currentScreenState === WalletConnectModalState.ScanQr
                       ? t('Show my QR code')
                       : t('Scan a QR code')}
                   </Text>
                   <Text
                     adjustsFontSizeToFit
-                    color="neutralTextSecondary"
+                    color="textSecondary"
                     numberOfLines={1}
                     variant="body2">
                     {currentScreenState === WalletConnectModalState.ScanQr
@@ -156,19 +155,14 @@ export function WalletConnectModal({
                       : t('Connect to an app with WalletConnect')}
                   </Text>
                 </Flex>
-                <Chevron
-                  color={theme.colors.neutralTextTertiary}
-                  direction="e"
-                  height="20"
-                  width="15"
-                />
+                <Chevron color={theme.colors.textTertiary} direction="e" height="20" width="15" />
               </Flex>
             </Button>
           </Flex>
         </>
       )}
       <Flex centered mt="md" position="absolute" width="100%">
-        <Box bg="neutralOutline" borderRadius="sm" height={4} width={40} />
+        <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />
       </Flex>
     </BottomSheetModal>
   )

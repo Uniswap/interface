@@ -63,7 +63,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
             padding="sm"
             width={20}
             onPress={() => onPressQRCode(address)}>
-            <QrCode color={theme.colors.accentText2} height={20} strokeWidth={1} width={20} />
+            <QrCode color={theme.colors.textSecondary} height={20} strokeWidth={1} width={20} />
           </Button>
         </Flex>
         <Flex row alignItems="center" justifyContent="space-between">
@@ -71,7 +71,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots
-                color={theme.colors.accentText3}
+                color={theme.colors.textTertiary}
                 height={12}
                 strokeLinecap="round"
                 strokeWidth="1"

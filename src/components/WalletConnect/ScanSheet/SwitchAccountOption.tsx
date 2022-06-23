@@ -33,20 +33,20 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
         <Identicon address={account.address} size={ICON_SIZE} />
         <Box p="none">
           <Text
-            color="neutralTextPrimary"
+            color="textPrimary"
             testID={`address-display/name/${displayName?.name}`}
             variant="subHead1">
             {displayName?.name}
           </Text>
           {!nameTypeIsAddress && (
-            <Text color="neutralTextSecondary" variant="caption">
+            <Text color="textSecondary" variant="caption">
               {shortenAddress(account.address)}
             </Text>
           )}
         </Box>
         <Box height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
-            <Check color={theme.colors.neutralTextSecondary} height={ICON_SIZE} width={ICON_SIZE} />
+            <Check color={theme.colors.textSecondary} height={ICON_SIZE} width={ICON_SIZE} />
           )}
         </Box>
       </Flex>

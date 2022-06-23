@@ -60,7 +60,7 @@ export function LandingScreen({ navigation }: Props) {
           <Box>
             <LinearGradientBox radius="xl" stops={RainbowLinearGradientStops}>
               <View style={styles.padded}>
-                <Box bg="neutralBackground" borderRadius="xl">
+                <Box bg="backgroundBackdrop" borderRadius="xl">
                   <Image source={UNISWAP_SPLASH_LOGO} />
                 </Box>
               </View>

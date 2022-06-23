@@ -39,7 +39,7 @@ export function RecipientInputPanel({
         </Text>
       )}
       <Button
-        bg={recipientAddress ? 'tokenSelector' : 'accentBackgroundActive'}
+        bg={recipientAddress ? 'tokenSelector' : 'accentActive'}
         borderRadius="lg"
         name={ElementName.SelectRecipient}
         p="xs"

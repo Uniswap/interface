@@ -110,7 +110,7 @@ export function NFTItemScreen({
                   width={16}
                 />
               ) : null}
-              <Text color="neutralTextSecondary" ml="xs" variant="subHead2">
+              <Text color="textSecondary" ml="xs" variant="subHead2">
                 {asset.collection.name}
               </Text>
               {asset.collection.safelist_request_status === 'verified' && (
@@ -144,8 +144,8 @@ export function NFTItemScreen({
           {/* Metadata */}
           <Flex gap="sm">
             <Flex gap="md">
-              <Text color="neutralTextSecondary" variant="subHead1">{t`About this NFT`}</Text>
-              <Text color="neutralTextSecondary" variant="caption">
+              <Text color="textSecondary" variant="subHead1">{t`About this NFT`}</Text>
+              <Text color="textSecondary" variant="caption">
                 {asset.collection.description}
               </Text>
             </Flex>

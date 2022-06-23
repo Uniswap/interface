@@ -109,7 +109,7 @@ export function ExploreScreen() {
             {t('Explore')}
           </AnimatedText>
           <SearchTextInput
-            backgroundColor="neutralBackground"
+            backgroundColor="backgroundBackdrop"
             placeholder={t('Search tokens, ENS, or addresses')}
             value={searchQuery}
             onCancel={onSearchCancel}

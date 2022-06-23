@@ -107,13 +107,13 @@ export function useTokenWarningLevel(currency: Currency): {
 export function useTokenWarningLevelColors(tokenWarningLevel: TokenWarningLevel | undefined) {
   switch (tokenWarningLevel) {
     case TokenWarningLevel.LOW:
-      return 'accentBackgroundWarning'
+      return 'accentWarning'
     case TokenWarningLevel.MEDIUM:
-      return 'accentBackgroundFailure'
+      return 'accentFailure'
     case TokenWarningLevel.BLOCKED:
-      return 'neutralTextSecondary'
+      return 'textSecondary'
     default:
-      return 'neutralTextSecondary'
+      return 'textSecondary'
   }
 }
 

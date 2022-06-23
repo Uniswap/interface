@@ -45,13 +45,13 @@ export function GenericImportForm({
       <Flex gap="md">
         <Flex
           centered
-          backgroundColor="neutralSurface"
+          backgroundColor="backgroundSurface"
           borderColor={
             showSuccess
-              ? 'accentBackgroundSuccess'
+              ? 'accentSuccess'
               : error && (liveCheck || !focused) && value
-              ? 'accentBackgroundFailure'
-              : 'neutralContainer'
+              ? 'accentFailure'
+              : 'backgroundContainer'
           }
           borderRadius="lg"
           borderWidth={1}
@@ -63,7 +63,8 @@ export function GenericImportForm({
             <TextInput
               autoFocus
               autoCapitalize="none"
-              backgroundColor="neutralSurface"
+              autoCorrect={false}
+              backgroundColor="backgroundSurface"
               blurOnSubmit={true}
               caretHidden={!value}
               fontSize={18}
@@ -83,19 +84,19 @@ export function GenericImportForm({
               onSubmitEditing={handleSubmit}
             />
             {endAdornment && value && !value.includes(endAdornment) && (
-              <Text color="neutralTextSecondary" fontSize={18} lineHeight={18} variant="body1">
+              <Text color="textSecondary" fontSize={18} lineHeight={18} variant="body1">
                 {endAdornment}
               </Text>
             )}
           </Flex>
           {!value && (
             <Flex centered row gap="xs" position="absolute" top={52}>
-              <Text color="accentText2" variant="body1">
+              <Text color="textSecondary" variant="body1">
                 {t('Type or')}
               </Text>
               <PasteButton onPress={onChange} />
               {placeholderLabel && (
-                <Text color="accentText2" variant="body1">
+                <Text color="textSecondary" variant="body1">
                   {placeholderLabel}
                 </Text>
               )}
@@ -105,8 +106,8 @@ export function GenericImportForm({
         <Flex>
           {error && value && (liveCheck || !focused) && (
             <Flex centered row gap="sm">
-              <AlertTriangle color={theme.colors.accentBackgroundFailure} />
-              <Text color="accentBackgroundFailure" fontWeight="600" variant="body1">
+              <AlertTriangle color={theme.colors.accentFailure} />
+              <Text color="accentFailure" fontWeight="600" variant="body1">
                 {error}
               </Text>
             </Flex>

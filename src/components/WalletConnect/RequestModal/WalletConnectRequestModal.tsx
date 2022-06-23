@@ -94,7 +94,7 @@ function SectionContainer({
 }
 
 const spacerProps: ComponentProps<typeof Box> = {
-  borderBottomColor: 'neutralOutline',
+  borderBottomColor: 'backgroundOutline',
   borderBottomWidth: 1,
 }
 
@@ -211,7 +211,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
         <ClientDetails permitInfo={permitInfo} request={request} />
 
         <Flex
-          backgroundColor="neutralContainer"
+          backgroundColor="backgroundContainer"
           borderRadius="lg"
           gap="none"
           spacerProps={spacerProps}>
@@ -229,7 +229,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
           {isPotentiallyUnsafe(request) && (
             <SectionContainer>
-              <Text color="accentBackgroundWarning" variant="body2">
+              <Text color="accentWarning" variant="body2">
                 <Trans t={t}>
                   <Text fontWeight="bold">Be careful:</Text>{' '}
                   {isTransactionRequest(request)
@@ -256,7 +256,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             <SectionContainer>
               <AccountDetails address={request.account} />
               {!hasSufficientFunds && (
-                <Text color="accentBackgroundWarning" paddingTop="xs" variant="caption">
+                <Text color="accentWarning" paddingTop="xs" variant="caption">
                   {t("You don't have enough {{symbol}} to complete this transaction.", {
                     symbol: nativeCurrency?.symbol,
                   })}
@@ -268,7 +268,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
         <Flex row gap="sm">
           <PrimaryButton
-            borderColor="neutralOutline"
+            borderColor="backgroundOutline"
             borderWidth={1}
             flex={1}
             label={t('Cancel')}

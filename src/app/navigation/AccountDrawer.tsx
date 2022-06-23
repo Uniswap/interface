@@ -167,7 +167,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           renderItem={renderItem}
           renderSectionHeader={({ section: { title } }) => (
             <Box bg="mainBackground" py="md">
-              <Text color="neutralTextPrimary" variant="subHead1">
+              <Text color="textPrimary" variant="subHead1">
                 {title}
               </Text>
             </Box>
@@ -176,15 +176,15 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           showsVerticalScrollIndicator={false}
         />
         <Flex mb="sm">
-          <Box bg="neutralOutline" height={1} mb="md" />
+          <Box bg="backgroundOutline" height={1} mb="md" />
           <Flex gap="xl">
             <Button
               name={ElementName.ImportAccount}
               testID={ElementName.ImportAccount}
               onPress={onPressNewAccount}>
               <Flex row alignItems="center" gap="sm">
-                <PlusSquareIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
-                <Text color="neutralTextSecondary" variant="subHead1">
+                <PlusSquareIcon color={theme.colors.textSecondary} height={24} width={24} />
+                <Text color="textSecondary" variant="subHead1">
                   {t('New account')}
                 </Text>
               </Flex>
@@ -194,8 +194,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               testID={ElementName.Settings}
               onPress={onPressSettings}>
               <Flex row alignItems="center" gap="sm">
-                <SettingsIcon color={theme.colors.neutralTextSecondary} height={24} width={24} />
-                <Text color="neutralTextSecondary" variant="subHead1">
+                <SettingsIcon color={theme.colors.textSecondary} height={24} width={24} />
+                <Text color="textSecondary" variant="subHead1">
                   {t('Settings')}
                 </Text>
               </Flex>

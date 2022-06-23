@@ -29,16 +29,16 @@ export default function WarningModal({
   const theme = useAppTheme()
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.neutralSurface}
+      backgroundColor={theme.colors.backgroundSurface}
       isVisible={isVisible}
       name={modalName}
       onClose={onClose}>
       <Flex centered gap="md" mb="lg" padding="xl">
-        <AlertTriangleIcon color={theme.colors.accentBackgroundWarning} height={24} width={24} />
+        <AlertTriangleIcon color={theme.colors.accentWarning} height={24} width={24} />
         <Text textAlign="center" variant="mediumLabel">
           {title}
         </Text>
-        <Text color="neutralTextSecondary" textAlign="center" variant="smallLabel">
+        <Text color="textSecondary" textAlign="center" variant="smallLabel">
           {caption}
         </Text>
         <Flex centered row gap="sm" paddingTop="lg">

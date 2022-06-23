@@ -34,7 +34,7 @@ export function AddressDisplay({
   size = 24,
   variant = 'body1',
   captionVariant = 'caption',
-  captionColor = 'neutralTextSecondary',
+  captionColor = 'textSecondary',
   verticalGap = 'xxs',
   showAddressAsSubtitle,
   showNotificationBadge,
@@ -68,18 +68,14 @@ export function AddressDisplay({
       <Flex alignItems={direction === 'column' ? 'center' : 'flex-start'} gap={verticalGap}>
         <Flex centered row gap="sm">
           <Text
-            color="neutralTextPrimary"
+            color="textPrimary"
             testID={`address-display/name/${displayName?.name}`}
             variant={variant}>
             {displayName?.name}
           </Text>
           {showCopy && !showCaption && (
             <Button name={ElementName.Copy} onPress={onPressCopyAddress}>
-              <CopyIcon
-                color={theme.colors.neutralTextPrimary}
-                height={mainSize}
-                width={mainSize}
-              />
+              <CopyIcon color={theme.colors.textPrimary} height={mainSize} width={mainSize} />
             </Button>
           )}
           {showViewOnly && (
@@ -87,8 +83,8 @@ export function AddressDisplay({
               borderRadius="md"
               px="xs"
               py="xxs"
-              style={{ backgroundColor: opacify(8, theme.colors.neutralTextSecondary) }}>
-              <Text color="neutralTextPrimary" variant="caption">
+              style={{ backgroundColor: opacify(8, theme.colors.textSecondary) }}>
+              <Text color="textPrimary" variant="caption">
                 {t('View only')}
               </Text>
             </Box>

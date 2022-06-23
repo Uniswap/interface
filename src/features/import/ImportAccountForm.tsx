@@ -83,7 +83,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
               {t('Warning: this wallet is still experimental. Use with caution.')}
             </Text>
             <CenterBox
-              backgroundColor="neutralSurface"
+              backgroundColor="backgroundSurface"
               borderRadius="lg"
               mt="lg"
               pt="lg"
@@ -91,7 +91,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
               width="100%">
               <TextInput
                 autoCapitalize="none"
-                backgroundColor="neutralSurface"
+                backgroundColor="backgroundSurface"
                 fontSize={18}
                 height={100}
                 multiline={true}

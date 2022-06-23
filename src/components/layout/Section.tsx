@@ -12,7 +12,7 @@ import { Trace } from 'src/features/telemetry/Trace'
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
   return (
     <Trace {...trace}>
-      <Box bg="neutralBackground" borderRadius="md" pb="md">
+      <Box bg="backgroundBackdrop" borderRadius="md" pb="md">
         {children}
       </Box>
     </Trace>
@@ -31,7 +31,7 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
 
   return (
     <Button
-      borderBottomColor="neutralOutline"
+      borderBottomColor="backgroundOutline"
       borderBottomWidth={0.5}
       px="md"
       py="sm"
@@ -39,7 +39,7 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex gap="xxs">
           {typeof title === 'string' ? (
-            <Text color="neutralTextSecondary" variant="body1">
+            <Text color="textSecondary" variant="body1">
               {title}
             </Text>
           ) : (
@@ -54,7 +54,7 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
           ) : null}
         </Flex>
         <ArrowDown
-          color={theme.colors.neutralTextSecondary}
+          color={theme.colors.textSecondary}
           height={24}
           strokeWidth={2}
           style={{ transform: [{ rotate: '270deg' }] }}
@@ -79,7 +79,7 @@ function EmptyState({ buttonLabel, description, onPress, title }: EmptyStateProp
       <Text fontWeight="600" textAlign="center" variant="subHead1">
         {title}
       </Text>
-      <Text color="neutralTextSecondary" textAlign="center" variant="caption">
+      <Text color="textSecondary" textAlign="center" variant="caption">
         {description}
       </Text>
       <PrimaryButton label={buttonLabel} textVariant="body1" variant="blue" onPress={onPress} />

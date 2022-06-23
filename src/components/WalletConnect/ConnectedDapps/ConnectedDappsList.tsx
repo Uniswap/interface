@@ -28,9 +28,9 @@ export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} px="lg" py="lg">
         <Flex row alignItems="center" mb="lg">
           <Button onPress={goBack}>
-            <Chevron color={theme.colors.neutralTextPrimary} direction="w" height={18} width={18} />
+            <Chevron color={theme.colors.textPrimary} direction="w" height={18} width={18} />
           </Button>
-          <Text color="neutralTextPrimary" variant="largeLabel">
+          <Text color="textPrimary" variant="largeLabel">
             {t('Manage connections')}
           </Text>
         </Flex>
@@ -51,10 +51,10 @@ export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
           />
         ) : (
           <Flex centered fill gap="xs" mx="xl">
-            <Text color="neutralTextPrimary" variant="body1">
+            <Text color="textPrimary" variant="body1">
               {t('No sites connected')}
             </Text>
-            <Text color="neutralTextSecondary" textAlign="center" variant="body2">
+            <Text color="textSecondary" textAlign="center" variant="body2">
               {t('Connect to a site by scanning a code via WalletConnect')}
             </Text>
           </Flex>

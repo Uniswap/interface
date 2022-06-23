@@ -20,7 +20,7 @@ export function SpendingDetails({
 
   return (
     <Flex gap="xs">
-      <Text color="neutralTextSecondary" variant="body2">
+      <Text color="textSecondary" variant="body2">
         {t('Send')}
       </Text>
       <Flex row>
@@ -28,14 +28,14 @@ export function SpendingDetails({
           <CurrencyLogoOnly currency={currencyAmount.currency} size={32} />
           <Box>
             <Text variant="subHead1">{name}</Text>
-            <Text color="neutralTextSecondary" fontSize={12}>
+            <Text color="textSecondary" fontSize={12}>
               {symbol}
             </Text>
           </Box>
         </Flex>
         <Box alignItems="flex-end">
           <Text variant="body1">{currencyAmount?.toExact()}</Text>
-          <Text color="neutralTextSecondary" fontSize={12}>
+          <Text color="textSecondary" fontSize={12}>
             {formatUSDPrice(usdValue?.toExact())}
           </Text>
         </Box>

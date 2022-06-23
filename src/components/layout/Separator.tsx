@@ -4,5 +4,5 @@ import { Box } from 'src/components/layout'
 import { Theme } from 'src/styles/theme'
 
 export function Separator(props: SpacingShorthandProps<Theme>) {
-  return <Box bg="neutralOutline" height={0.5} {...props} />
+  return <Box bg="backgroundOutline" height={0.5} {...props} />
 }

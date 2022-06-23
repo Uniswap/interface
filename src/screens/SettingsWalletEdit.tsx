@@ -1,24 +1,24 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useTheme } from '@shopify/restyle'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard } from 'react-native'
+import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
+import PencilIcon from 'src/assets/icons/pencil.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
+import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { ChainId } from 'src/constants/chains'
+import { useENS } from 'src/features/ens/useENS'
+import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 import { Screens } from './Screens'
-import PencilIcon from 'src/assets/icons/pencil.svg'
-import { useTheme } from '@shopify/restyle'
-import { TextInput } from 'src/components/input/TextInput'
-import { Keyboard } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useENS } from 'src/features/ens/useENS'
-import { ChainId } from 'src/constants/chains'
 const EDIT_BUTTON_SIZE = 30
 const EDIT_BUTTON_ICON_SIZE = 10
 
@@ -56,13 +56,13 @@ export function SettingsWalletEdit({
   return (
     <Screen px="lg" py="lg">
       <Flex alignItems="center" flexDirection="row" mb="xl">
-        <BackButton color="neutralTextSecondary" />
+        <BackButton color="textSecondary" />
         <Text variant="largeLabel">{t('Edit nickname or theme')}</Text>
       </Flex>
       <Flex gap="xl">
         <Flex gap="none">
           <Box bg="mainBackground" pb="md">
-            <Text color="neutralTextSecondary" fontWeight="500" variant="body1">
+            <Text color="textSecondary" fontWeight="500" variant="body1">
               {t('Nickname')}
             </Text>
           </Box>
@@ -76,7 +76,7 @@ export function SettingsWalletEdit({
                 margin="none"
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
-                placeholderTextColor={theme.colors.neutralTextTertiary}
+                placeholderTextColor={theme.colors.textTertiary}
                 px="none"
                 py="none"
                 returnKeyType="done"
@@ -87,9 +87,7 @@ export function SettingsWalletEdit({
               />
             ) : (
               <>
-                <Text
-                  color={nickname ? 'mainForeground' : 'neutralTextTertiary'}
-                  variant="largeLabel">
+                <Text color={nickname ? 'mainForeground' : 'textTertiary'} variant="largeLabel">
                   {nickname || shortenAddress(address)}
                 </Text>
                 {!ensName && (
@@ -103,7 +101,7 @@ export function SettingsWalletEdit({
                     width={EDIT_BUTTON_SIZE}
                     onPress={onPressShowEditInput}>
                     <PencilIcon
-                      color={theme.colors.neutralTextPrimary}
+                      color={theme.colors.textPrimary}
                       height={EDIT_BUTTON_ICON_SIZE}
                       strokeWidth="1.5"
                       width={EDIT_BUTTON_ICON_SIZE}
