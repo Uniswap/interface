@@ -32,6 +32,7 @@ import { abi as ROUTER_PRO_AMM } from '../constants/abis/v2/ProAmmRouter.json'
 import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import ZAP_ABI from '../constants/abis/zap.json'
+import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
 import JSBI from 'jsbi'
 import { Percent, Token, CurrencyAmount, Currency, WETH } from '@kyberswap/ks-sdk-core'
 import { ChainId } from '@kyberswap/ks-sdk-core'
@@ -279,7 +280,7 @@ export function getZapContract(
 ): Contract {
   return getContract(
     isStaticFeeContract ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId] || '',
-    ZAP_ABI,
+    isStaticFeeContract ? ZAP_STATIC_FEE_ABI : ZAP_ABI,
     library,
     account,
   )

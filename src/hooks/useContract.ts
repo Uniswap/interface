@@ -25,6 +25,7 @@ import {
 } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import ZAP_ABI from 'constants/abis/zap.json'
+import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
 import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
 import PROMM_FARM_ABI from '../constants/abis/v2/farm.json'
 import FAIRLAUNCH_V2_ABI from '../constants/abis/fairlaunch-v2.json'
@@ -192,7 +193,7 @@ export function useZapContract(isStaticFeeContract: boolean): Contract | null {
 
   return useContract(
     chainId && (isStaticFeeContract ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId]),
-    ZAP_ABI,
+    isStaticFeeContract ? ZAP_STATIC_FEE_ABI : ZAP_ABI,
   )
 }
 

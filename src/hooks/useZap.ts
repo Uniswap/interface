@@ -1,14 +1,24 @@
 import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useZapContract } from 'hooks/useContract'
+import { useActiveWeb3React } from 'hooks'
+import { STATIC_FEE_FACTORY_ADDRESSES } from 'constants/index'
 
 const useZap = (isStaticFeeContract: boolean) => {
   const zapContract = useZapContract(isStaticFeeContract)
-
+  const { chainId } = useActiveWeb3React()
   const calculateZapInAmounts = useCallback(
     async (tokenIn: string, tokenOut: string, pool: string, userIn: BigNumber) => {
       try {
-        const result = await zapContract?.calculateZapInAmounts(tokenIn, tokenOut, pool, userIn)
+        const result = isStaticFeeContract
+          ? await zapContract?.calculateZapInAmounts(
+              chainId && STATIC_FEE_FACTORY_ADDRESSES[chainId],
+              tokenIn,
+              tokenOut,
+              pool,
+              userIn,
+            )
+          : await zapContract?.calculateZapInAmounts(tokenIn, tokenOut, pool, userIn)
 
         return result
       } catch (err) {
@@ -22,7 +32,15 @@ const useZap = (isStaticFeeContract: boolean) => {
   const calculateZapOutAmount = useCallback(
     async (tokenIn: string, tokenOut: string, pool: string, lpQty: BigNumber) => {
       try {
-        const result = await zapContract?.calculateZapOutAmount(tokenIn, tokenOut, pool, lpQty)
+        const result = isStaticFeeContract
+          ? await zapContract?.calculateZapOutAmount(
+              chainId && STATIC_FEE_FACTORY_ADDRESSES[chainId],
+              tokenIn,
+              tokenOut,
+              pool,
+              lpQty,
+            )
+          : await zapContract?.calculateZapOutAmount(tokenIn, tokenOut, pool, lpQty)
 
         return result
       } catch (err) {

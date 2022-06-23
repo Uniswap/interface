@@ -18,7 +18,7 @@ import {
   WETH,
 } from '@kyberswap/ks-sdk-core'
 
-import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES } from 'constants/index'
+import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, STATIC_FEE_FACTORY_ADDRESSES } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -346,6 +346,10 @@ export default function ZapOut({
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
 
+    // All methods of new zap static fee contract include factory address as first arg
+    if (isStaticFeePair) {
+      args.unshift(STATIC_FEE_FACTORY_ADDRESSES[chainId])
+    }
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
         routerContract.estimateGas[methodName](...args)

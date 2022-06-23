@@ -8,7 +8,7 @@ import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { computePriceImpact, Currency, CurrencyAmount, Fraction, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
-import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, AMP_HINT } from 'constants/index'
+import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, AMP_HINT, STATIC_FEE_FACTORY_ADDRESSES } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
@@ -220,7 +220,10 @@ const ZapIn = ({
       ]
       value = null
     }
-
+    // All methods of new zap static fee contract include factory address as first arg
+    if (isStaticFeePair) {
+      args.unshift(STATIC_FEE_FACTORY_ADDRESSES[chainId])
+    }
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
