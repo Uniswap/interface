@@ -1,7 +1,8 @@
+import { useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import useTopTokens from 'hooks/useTopTokens'
 import React from 'react'
-import { Circle, Heart } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Circle, Heart } from 'react-feather'
 import styled from 'styled-components/macro'
 
 const GridContainer = styled.div`
@@ -13,6 +14,7 @@ const GridContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   border-radius: 8px;
+  justify-content: center;
 `
 
 const TokenRow = styled.div`
@@ -38,6 +40,7 @@ const FavoriteContainer = styled.div`
   align-items: center;
   padding: 14px 0px;
   gap: 10px;
+  color: ${({ theme }) => theme.text2};
 
   width: 40px;
   height: 60px;
@@ -49,6 +52,7 @@ const ListNumberContainer = styled.div`
   align-items: center;
   padding: 14px 0px;
   gap: 10px;
+  color: ${({ theme }) => theme.text2};
 
   width: 32px;
   height: 60px;
@@ -85,6 +89,14 @@ const PercentChangeContainer = styled.div`
   width: 107.5px;
   height: 60px;
 `
+
+const PercentChangeContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`
+
 const MarketCapContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -116,8 +128,13 @@ const SparkLineContainer = styled.div`
   width: 172px;
 `
 const SparkLineImg = styled.div`
-  width: 124px;
-  height: 28px;
+  max-width: 124px;
+  max-height: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: scale(1.2);
 `
 
 const SwapContainer = styled.div`
@@ -148,10 +165,36 @@ const SwapButton = styled.button`
   color: ${({ theme }) => theme.text1};
 `
 
+const TokenSymbol = styled.span`
+  font-weight: 400;
+  font-size: 16px;
+  color: ${({ theme }) => theme.text3};
+`
+const ArrowContainer = styled.div`
+  padding: 0px 0px 0px 4px;
+`
+
+/* formats price with appropriate string */
+function priceFormatter(num: number): string {
+  if (num >= 1000000000) {
+    return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G'
+  }
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K'
+  }
+  return num.toString()
+}
+
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const timePeriod = TimePeriod.day
-  if (error || data === null) {
+  const GetToken = (tokenAddress: string) => {
+    return useToken(tokenAddress)
+  }
+  if (error) {
     return <GridContainer>Error Loading Top Token Data</GridContainer>
   }
   if (loading) {
@@ -161,33 +204,42 @@ export default function TokenTable() {
     return <GridContainer>No Top Token Data Available</GridContainer>
   }
   const topTokenAddresses = Object.keys(data)
+  let listNumber = 0
 
   const tokenRows = topTokenAddresses.map((tokenAddress) => {
     const tokenData = data[tokenAddress]
-
-    // TODO: retrieve actual token name: useToken(tokenAddress)
+    /*
+    TODO: retrieve actual token name: useToken(tokenAddress)
+    const token = GetToken(tokenAddress)
+    */
     const tokenName = 'Bitcoin'
-    const tokenSymbol = 'XXX'
-    const favorited = false
-    const listNumber = 1
-
+    const tokenSymbol = 'BTC'
+    const favorited = false // TODO: write favorites hook
+    listNumber += 1
+    // TODO: remove magic number colors
     return (
       <TokenRow key={tokenAddress}>
         <FavoriteContainer>{favorited ? <Heart size={15} /> : <Heart size={15} />}</FavoriteContainer>
         <ListNumberContainer>{listNumber}</ListNumberContainer>
         <NameContainer>
           <Circle opacity={0.6} />
-          {tokenName}|{tokenSymbol}
+          {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
         </NameContainer>
         <PriceContainer>${tokenData.price}</PriceContainer>
         <PercentChangeContainer>
-          <>
+          <PercentChangeContent>
             {tokenData.delta}%
-            {/*Math.sign(tokenData.price) > 0 ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />*/}
-          </>
+            <ArrowContainer>
+              {Math.sign(tokenData.price) > 0 ? (
+                <ArrowUpRight size={14} color={'#57bd0f'} />
+              ) : (
+                <ArrowDownRight size={14} color={'red'} />
+              )}
+            </ArrowContainer>
+          </PercentChangeContent>
         </PercentChangeContainer>
-        <MarketCapContainer>{tokenData.marketCap}</MarketCapContainer>
-        <VolumeContainer>{tokenData.volume[timePeriod]}</VolumeContainer>
+        <MarketCapContainer>{priceFormatter(tokenData.marketCap)}</MarketCapContainer>
+        <VolumeContainer>{priceFormatter(tokenData.volume[timePeriod])}</VolumeContainer>
         <SparkLineContainer>
           <SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />
         </SparkLineContainer>
