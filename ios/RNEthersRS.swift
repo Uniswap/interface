@@ -178,13 +178,13 @@ class RNEthersRS: NSObject {
     resolve(result)
   }
   
-  @objc(signHashForAddress:hash:chainId:eip155:resolve:reject:)
+  @objc(signHashForAddress:hash:chainId:resolve:reject:)
   func signHashForAddress(
-    address: String, hash: String, chainId: NSNumber, eip155: Bool, resolve: RCTPromiseResolveBlock,
+    address: String, hash: String, chainId: NSNumber, resolve: RCTPromiseResolveBlock,
     reject: RCTPromiseRejectBlock
   ) {
     let wallet = retrieveOrCreateWalletForAddress(address: address)
-    let signedHash = sign_hash_with_wallet(wallet, hash, UInt64(chainId), eip155)
+    let signedHash = sign_hash_with_wallet(wallet, hash, UInt64(chainId))
     let result = String(cString: signedHash!)
     string_free(signedHash)
     resolve(result)

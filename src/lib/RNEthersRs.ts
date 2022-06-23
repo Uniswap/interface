@@ -45,5 +45,5 @@ export function signHashForAddress(
   hash: string,
   chainId: number
 ): Promise<string> {
-  return RNEthersRS.signHashForAddress(address, hash, chainId, true)
+  return RNEthersRS.signHashForAddress(address, hash, chainId)
 }

@@ -1300,11 +1300,6 @@
   resolved "https://registry.yarnpkg.com/@celo/base/-/base-1.3.3.tgz#a74ef1b9a63afd831d5f3ec6399bb98cc2fc733a"
   integrity sha512-FA7C212AMCRVbWCBFNmmh0AKEStztwxkmMNYGLOSpBNu6QIMvTw/ZZKMqJeXJ0KcZvH0/xK9K3vjVEq2J9Z1HQ==
 
-"@cmcewen/ethers-rs-mobile@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@cmcewen/ethers-rs-mobile/-/ethers-rs-mobile-0.0.7.tgz#93f38a688e2193a2273682c7df1ef0ed539e4473"
-  integrity sha512-1HjtMhBLu3tlr7VYUYWUQNZdYlwaCeXn1bdoGGppLde9GPnIHFk/OKSk7gPh84hlkVp5b8Ou0SLMcMDn2sLAmA==
-
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -5298,6 +5293,11 @@
   dependencies:
     "@typescript-eslint/types" "4.31.2"
     eslint-visitor-keys "^2.0.0"
+
+"@uniswap/ethers-rs-mobile@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/ethers-rs-mobile/-/ethers-rs-mobile-0.0.1.tgz#ed5c3d03286c3e60b04d8b9f7c36d89c76d73b5e"
+  integrity sha512-SYHijj43RDqxPORbb0DwxRmTrFj0VFjlR91pMM+h9IIQ6BvSmjgRshe4T9ginI5+zPFeQZvD1DgjLKP2JdInUw==
 
 "@uniswap/lib@^4.0.1-alpha":
   version "4.0.1-alpha"
