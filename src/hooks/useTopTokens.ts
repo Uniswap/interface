@@ -1,7 +1,7 @@
 import { SupportedChainId } from 'constants/chains'
 import { useEffect, useState } from 'react'
 
-enum TimePeriod {
+export enum TimePeriod {
   hour = 'hour',
   day = 'day',
   week = 'week',

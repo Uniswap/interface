@@ -1,4 +1,5 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { TimePeriod } from 'hooks/useTopTokens'
 import { useRef } from 'react'
 import React, { useState } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
@@ -14,23 +15,16 @@ const TIME_DISPLAYS: { [key: string]: string } = {
   year: '1Y',
 }
 
-const enum TimeOption {
-  Hour = 'hour',
-  Day = 'day',
-  Week = 'week',
-  Month = 'month',
-  Year = 'year',
-}
-const TIMES = [TimeOption.Hour, TimeOption.Day, TimeOption.Week, TimeOption.Month, TimeOption.Year]
+const TIMES = Object.values(TimePeriod)
 
-export enum FlyoutAlignment {
+enum FlyoutAlignment {
   LEFT = 'LEFT',
   RIGHT = 'RIGHT',
 }
 
 const InternalMenuItem = styled.div`
   flex: 1;
-  padding: 0.5rem 0.5rem;
+  padding: 8px;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -46,7 +40,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0.5rem;
+  padding: 8px;
   justify-content: space-between;
   text-decoration: none;
   :hover {
@@ -64,21 +58,21 @@ const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border: 1px solid ${({ theme }) => theme.bg0};
   border-radius: 12px;
-  padding: 0.5rem;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
   position: absolute;
-  top: 3rem;
+  top: 48px;
   z-index: 100;
 
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
     flyoutAlignment === FlyoutAlignment.RIGHT
       ? css`
-          right: 0rem;
+          right: 0px;
         `
       : css`
-          left: 0rem;
+          left: 0px;
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     bottom: unset;
@@ -141,14 +135,14 @@ const Chevron = styled.span`
 
 // TODO: change this to reflect data pipeline
 export default function TimeSelector() {
-  const node = useRef<HTMLDivElement>()
+  const node = useRef<HTMLDivElement | null>(null)
   const open = useModalOpen(ApplicationModal.TIME_SELECTOR)
   const toggleMenu = useToggleModal(ApplicationModal.TIME_SELECTOR)
   useOnClickOutside(node, open ? toggleMenu : undefined)
-  const [activeTime, setTime] = useState(TimeOption.Day)
+  const [activeTime, setTime] = useState(TimePeriod.day)
 
   return (
-    <StyledMenu ref={node as any}>
+    <StyledMenu ref={node}>
       <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`}>
         <StyledMenuContent>
           {TIME_DISPLAYS[activeTime]}

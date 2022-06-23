@@ -4,10 +4,8 @@ import AppBody from 'pages/AppBody'
 
 const Explore = () => {
   return (
-    <AppBody background-color="gray">
-      <div>
-        <TimeSelector />
-      </div>
+    <AppBody>
+      <TimeSelector />
     </AppBody>
   )
 }
