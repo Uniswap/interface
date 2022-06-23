@@ -62,8 +62,8 @@ export const dexListConfig: DexList = {
       ChainId.OASIS,
     ],
   },
-  kyberswapStatic: {
-    name: 'KyberSwap Static',
+  'kyberswap-static': {
+    name: 'KyberSwap',
     icon: 'https://kyberswap.com/favicon.ico',
     chainIds: [
       ChainId.MAINNET,
