@@ -1,3 +1,5 @@
+import { TimePeriod } from 'hooks/useTopTokens'
+import useTopTokens from 'hooks/useTopTokens'
 import React from 'react'
 import { Circle, Heart } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -113,6 +115,11 @@ const SparkLineContainer = styled.div`
 
   width: 172px;
 `
+const SparkLineImg = styled.div`
+  width: 124px;
+  height: 28px;
+`
+
 const SwapContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -141,82 +148,57 @@ const SwapButton = styled.button`
   color: ${({ theme }) => theme.text1};
 `
 
-function loadTokenData({
-  favorited,
-  listNumber,
-  name,
-  price,
-  percentChange,
-  marketCap,
-  volume,
-  sparkLine,
-}: {
-  favorited: boolean
-  listNumber: number
-  name: string
-  price: number
-  percentChange: number // percentage
-  marketCap: number
-  volume: number
-  sparkLine: string // svg string
-}) {
-  return (
-    <TokenRow key={name}>
-      <FavoriteContainer>{favorited ? <Heart size={15} /> : <Heart size={15} />}</FavoriteContainer>
-      <ListNumberContainer>{listNumber}</ListNumberContainer>
-      <NameContainer>
-        <Circle opacity={0.6} />
-        {name}
-      </NameContainer>
-      <PriceContainer>${price}</PriceContainer>
-      <PercentChangeContainer>
-        <>
-          {percentChange}%{/*Math.sign(percentChange) > 0 ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />*/}
-        </>
-      </PercentChangeContainer>
-      <MarketCapContainer>{marketCap}</MarketCapContainer>
-      <VolumeContainer>{volume}</VolumeContainer>
-      <SparkLineContainer>{sparkLine}</SparkLineContainer>
-      <SwapContainer>
-        <SwapButton>Swap</SwapButton>
-      </SwapContainer>
-    </TokenRow>
-  )
-}
 export default function TokenTable() {
-  const dummyData = [
-    {
-      favorited: false,
-      listNumber: 1,
-      name: 'Bitcoin BIT',
-      price: 130,
-      percentChange: 1.5,
-      marketCap: 10,
-      volume: 10,
-      sparkLine: 'sparkyGraph',
-    },
-    {
-      favorited: false,
-      listNumber: 2,
-      name: 'ethereum ETH',
-      price: 120,
-      percentChange: 1.5,
-      marketCap: 10,
-      volume: 14,
-      sparkLine: 'sparkyGraph',
-    },
-    {
-      favorited: false,
-      listNumber: 3,
-      name: 'Tether USDT',
-      price: 130,
-      percentChange: 1.5,
-      marketCap: 19,
-      volume: 10,
-      sparkLine: 'sparkyGraph',
-    },
-  ]
+  const { data, error, loading } = useTopTokens()
+  const timePeriod = TimePeriod.day
+  if (error || data === null) {
+    return <GridContainer>Error Loading Top Token Data</GridContainer>
+  }
+  if (loading) {
+    return <GridContainer>Top Token Data Loading</GridContainer>
+  }
+  if (data === null) {
+    return <GridContainer>No Top Token Data Available</GridContainer>
+  }
+  const topTokenAddresses = Object.keys(data)
 
+  const tokenRows = topTokenAddresses.map((tokenAddress) => {
+    const tokenData = data[tokenAddress]
+
+    // TODO: retrieve actual token name: useToken(tokenAddress)
+    const tokenName = 'Bitcoin'
+    const tokenSymbol = 'XXX'
+    const favorited = false
+    const listNumber = 1
+
+    return (
+      <TokenRow key={tokenAddress}>
+        <FavoriteContainer>{favorited ? <Heart size={15} /> : <Heart size={15} />}</FavoriteContainer>
+        <ListNumberContainer>{listNumber}</ListNumberContainer>
+        <NameContainer>
+          <Circle opacity={0.6} />
+          {tokenName}|{tokenSymbol}
+        </NameContainer>
+        <PriceContainer>${tokenData.price}</PriceContainer>
+        <PercentChangeContainer>
+          <>
+            {tokenData.delta}%
+            {/*Math.sign(tokenData.price) > 0 ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />*/}
+          </>
+        </PercentChangeContainer>
+        <MarketCapContainer>{tokenData.marketCap}</MarketCapContainer>
+        <VolumeContainer>{tokenData.volume[timePeriod]}</VolumeContainer>
+        <SparkLineContainer>
+          <SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />
+        </SparkLineContainer>
+        <SwapContainer>
+          <SwapButton>Swap</SwapButton>
+        </SwapContainer>
+      </TokenRow>
+    )
+  })
+
+  // handles header
   const header = (
     <HeaderRow>
       <div></div>
@@ -232,9 +214,7 @@ export default function TokenTable() {
   return (
     <GridContainer>
       {header}
-      {loadTokenData(dummyData[0])}
-      {loadTokenData(dummyData[1])}
-      {loadTokenData(dummyData[2])}
+      {tokenRows}
     </GridContainer>
   )
 }
