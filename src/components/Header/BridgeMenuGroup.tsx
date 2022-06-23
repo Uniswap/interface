@@ -69,6 +69,9 @@ export default function BridgeMenuGroup() {
           <MenuItem id="link" href="https://bridge.orbitchain.io/">
             Orbit
           </MenuItem>
+          <MenuItem id="link" href="https://transferto.xyz/">
+            LI.FI
+          </MenuItem>
         </MenuFlyout>
       )}
     </StyledMenu>

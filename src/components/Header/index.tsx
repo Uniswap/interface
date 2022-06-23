@@ -465,6 +465,11 @@ export default function Header() {
                   Orbit
                 </StyledDrawerExternalLink>
               </StyledSubMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://transferto.xyz/'}>
+                  LI.FI
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
               <StyledMenuItem>
                 <StyledNavLink id={'charts-drawer-nav-link'} to={'#'}>
                   Charts
