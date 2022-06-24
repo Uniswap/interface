@@ -166,6 +166,7 @@ function priceFormatter(num: number): string {
   }
   return num.toString()
 }
+
 export default function TokenRow({
   key,
   tokenAddress,
@@ -184,6 +185,7 @@ export default function TokenRow({
   const tokenSymbol = token?.symbol
   const tokenData = data[tokenAddress]
   // TODO: write favorited hook
+  // TODO: remove magic number colors
   const favorited = false
   return (
     <TokenRowWrapper key={key}>
@@ -198,7 +200,7 @@ export default function TokenRow({
         <PercentChangeContent>
           {tokenData.delta}%
           <ArrowContainer>
-            {Math.sign(tokenData.price) > 0 ? (
+            {Math.sign(tokenData.delta) > 0 ? (
               <ArrowUpRight size={14} color={'#57bd0f'} />
             ) : (
               <ArrowDownRight size={14} color={'red'} />
