@@ -16,6 +16,10 @@ import Pagination from 'components/Pagination'
 import { CAMPAIGN_ITEM_PER_PAGE } from 'constants/index'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
+import {
+  useSelectedCampaignLeaderboardLookupAddressManager,
+  useSelectedCampaignLeaderboardPageNumberManager,
+} from 'state/campaigns/hooks'
 
 /*
 const LEADERBOARD_SAMPLE: LeaderboardItem[] = [
@@ -99,11 +103,15 @@ const LEADERBOARD_SAMPLE: LeaderboardItem[] = [
 ]
 */
 
+const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
+  1: `linear-gradient(90deg, rgba(255, 204, 102, 0.25) 0%, rgba(255, 204, 102, 0) 54.69%, rgba(255, 204, 102, 0) 100%)`,
+  2: `linear-gradient(90deg, rgba(224, 224, 224, 0.25) 0%, rgba(224, 224, 224, 0) 54.69%, rgba(224, 224, 224, 0) 100%)`,
+  3: `linear-gradient(90deg, rgba(255, 152, 56, 0.25) 0%, rgba(255, 152, 56, 0) 54.69%, rgba(255, 152, 56, 0) 100%)`,
+}
+
 export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) {
   const above1200 = useMedia('(min-width: 1200px)')
   const theme = useTheme()
-  const [searchValue, setSearchValue] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
   const [rank, { width: rankWidth }] = useSize(() => (
     <span>
       <Trans>Rank</Trans>
@@ -111,11 +119,9 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
   ))
 
   const selectedCampaignLeaderboard = useSelector((state: AppState) => state.campaigns.selectedCampaignLeaderboard)
-  const searchedLeaderboard = selectedCampaignLeaderboard
-    ? selectedCampaignLeaderboard.ranking.filter(item =>
-        item.address.toLowerCase().includes(searchValue.toLowerCase().trim()),
-      )
-    : []
+
+  const [currentPage, setCurrentPage] = useSelectedCampaignLeaderboardPageNumberManager()
+  const [searchValue, setSearchValue] = useSelectedCampaignLeaderboardLookupAddressManager()
 
   const refreshInMinute = Math.floor(refreshIn / 60)
   const refreshInSecond = refreshIn - refreshInMinute * 60
@@ -167,54 +173,47 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
             </LeaderboardTableHeaderItem>
           )}
         </LeaderboardTableHeader>
-        {searchedLeaderboard
-          .slice((currentPage - 1) * CAMPAIGN_ITEM_PER_PAGE, currentPage * CAMPAIGN_ITEM_PER_PAGE)
-          .map((data, index) => (
-            <LeaderboardTableBody
-              key={index}
-              showRewards={showRewards}
-              style={{
-                background:
-                  data.rank === 1
-                    ? 'linear-gradient(90deg, rgba(255, 204, 102, 0.25) 0%, rgba(255, 204, 102, 0) 54.69%, rgba(255, 204, 102, 0) 100%)'
-                    : data.rank === 2
-                    ? 'linear-gradient(90deg, rgba(224, 224, 224, 0.25) 0%, rgba(224, 224, 224, 0) 54.69%, rgba(224, 224, 224, 0) 100%)'
-                    : data.rank === 3
-                    ? 'linear-gradient(90deg, rgba(255, 152, 56, 0.25) 0%, rgba(255, 152, 56, 0) 54.69%, rgba(255, 152, 56, 0) 100%)'
-                    : 'transparent',
-                padding: data.rank <= 3 ? '16px 20px' : '20px',
-              }}
+        {(selectedCampaignLeaderboard?.ranking ?? []).map((data, index) => (
+          <LeaderboardTableBody
+            key={index}
+            showRewards={showRewards}
+            style={{
+              background: leaderboardTableBodyBackgroundColorsByRank[data.rank.toString()] ?? 'transparent',
+              padding: data.rank <= 3 ? '16px 20px' : '20px',
+            }}
+          >
+            <LeaderboardTableBodyItem
+              align="center"
+              style={{ width: (rankWidth === Infinity ? 33 : rankWidth) + 'px', maxHeight: '24px' }}
             >
-              <LeaderboardTableBodyItem
-                align="center"
-                style={{ width: (rankWidth === Infinity ? 33 : rankWidth) + 'px', maxHeight: '24px' }}
-              >
-                {data.rank === 1 ? (
-                  <img src={Gold} style={{ minWidth: '18px' }} alt="" />
-                ) : data.rank === 2 ? (
-                  <img src={Silver} style={{ minWidth: '18px' }} alt="" />
-                ) : data.rank === 3 ? (
-                  <img src={Bronze} style={{ minWidth: '18px' }} alt="" />
-                ) : data.rank !== undefined ? (
-                  data.rank
-                ) : null}
-              </LeaderboardTableBodyItem>
-              <LeaderboardTableBodyItem>{getShortenAddress(data.address, above1200)}</LeaderboardTableBodyItem>
+              {data.rank === 1 ? (
+                <img src={Gold} style={{ minWidth: '18px' }} alt="" />
+              ) : data.rank === 2 ? (
+                <img src={Silver} style={{ minWidth: '18px' }} alt="" />
+              ) : data.rank === 3 ? (
+                <img src={Bronze} style={{ minWidth: '18px' }} alt="" />
+              ) : data.rank !== undefined ? (
+                data.rank
+              ) : null}
+            </LeaderboardTableBodyItem>
+            <LeaderboardTableBodyItem>{getShortenAddress(data.address, above1200)}</LeaderboardTableBodyItem>
+            <LeaderboardTableBodyItem align="right">
+              {formatNumberWithPrecisionRange(data.point, 0, 2)}
+            </LeaderboardTableBodyItem>
+            {showRewards && (
               <LeaderboardTableBodyItem align="right">
-                {formatNumberWithPrecisionRange(data.point, 0, 2)}
+                {data.rewardAmount} {data.token}
               </LeaderboardTableBodyItem>
-              {showRewards && (
-                <LeaderboardTableBodyItem align="right">
-                  {data.rewardAmount} {data.token}
-                </LeaderboardTableBodyItem>
-              )}
-            </LeaderboardTableBody>
-          ))}
+            )}
+          </LeaderboardTableBody>
+        ))}
       </LeaderboardTable>
       <Pagination
-        onPageChange={setCurrentPage}
-        totalCount={searchedLeaderboard.length}
-        currentPage={currentPage}
+        onPageChange={pageNumber => setCurrentPage(pageNumber - 1)}
+        totalCount={
+          selectedCampaignLeaderboard ? (searchValue ? 1 : selectedCampaignLeaderboard.numberOfParticipants) : 0
+        }
+        currentPage={currentPage + 1}
         pageSize={CAMPAIGN_ITEM_PER_PAGE}
         style={{ padding: '0' }}
       />

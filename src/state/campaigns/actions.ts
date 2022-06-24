@@ -76,3 +76,9 @@ export const setSelectedCampaignLeaderboard = createAction<{ leaderboard: Campai
 export const setLoadingSelectedCampaignLeaderboard = createAction<boolean>(
   'campaigns/setLoadingSelectedCampaignLeaderboard',
 )
+export const setSelectedCampaignLeaderboardPageNumber = createAction<number>(
+  'campaigns/setSelectedCampaignLeaderboardPageNumber',
+)
+export const setSelectedCampaignLeaderboardLookupAddress = createAction<string>(
+  'campaigns/setSelectedCampaignLeaderboardLookupAddress',
+)

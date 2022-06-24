@@ -14,7 +14,7 @@ import {
 } from 'state/campaigns/actions'
 import { AppState } from 'state/index'
 import { useActiveWeb3React } from 'hooks'
-import { SWR_KEYS } from 'constants/index'
+import { CAMPAIGN_ITEM_PER_PAGE, SWR_KEYS } from 'constants/index'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useHistory } from 'react-router-dom'
 import { stringify } from 'qs'
@@ -158,8 +158,16 @@ export default function CampaignsUpdater(): null {
   }, [dispatch, isLoadingData])
 
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
+  const selectedCampaignLeaderboardPageNumber = useSelector(
+    (state: AppState) => state.campaigns.selectedCampaignLeaderboardPageNumber,
+  )
+  const selectedCampaignLeaderboardLookupAddress = useSelector(
+    (state: AppState) => state.campaigns.selectedCampaignLeaderboardLookupAddress,
+  )
   const { data: leaderboard, isValidating: isLoadingLeaderboard } = useSWR(
-    selectedCampaign ? SWR_KEYS.getLeaderboard(selectedCampaign.id) : null,
+    selectedCampaign
+      ? [selectedCampaign.id, selectedCampaignLeaderboardPageNumber, selectedCampaignLeaderboardLookupAddress, account]
+      : null,
     async () => {
       if (selectedCampaign === undefined || selectedCampaign.status === 'Upcoming') return
 
@@ -168,9 +176,10 @@ export default function CampaignsUpdater(): null {
           method: 'GET',
           url: SWR_KEYS.getLeaderboard(selectedCampaign.id),
           params: {
-            pageSize: MAXIMUM_ITEMS_PER_REQUEST,
-            pageNumber: 0,
+            pageSize: CAMPAIGN_ITEM_PER_PAGE,
+            pageNumber: selectedCampaignLeaderboardPageNumber,
             userAddress: account?.toLowerCase() ?? '',
+            lookupAddress: selectedCampaignLeaderboardLookupAddress,
           },
         })
         const data = response.data.data

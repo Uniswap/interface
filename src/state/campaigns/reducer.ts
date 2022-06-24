@@ -8,20 +8,30 @@ import {
   setLoadingSelectedCampaignLeaderboard,
   setSelectedCampaign,
   setSelectedCampaignLeaderboard,
+  setSelectedCampaignLeaderboardLookupAddress,
+  setSelectedCampaignLeaderboardPageNumber,
 } from './actions'
 
 export interface CampaignsState {
   readonly data: CampaignData[]
-  readonly selectedCampaign: CampaignData | undefined
-  readonly selectedCampaignLeaderboard: CampaignLeaderboard | undefined
   readonly loadingCampaignData: boolean
+
+  readonly selectedCampaign: CampaignData | undefined
+
+  readonly selectedCampaignLeaderboard: CampaignLeaderboard | undefined
+  readonly selectedCampaignLeaderboardPageNumber: number
+  readonly selectedCampaignLeaderboardLookupAddress: string
 }
 
 const initialState: CampaignsState = {
   data: [],
-  selectedCampaign: undefined,
-  selectedCampaignLeaderboard: undefined,
   loadingCampaignData: false,
+
+  selectedCampaign: undefined,
+
+  selectedCampaignLeaderboard: undefined,
+  selectedCampaignLeaderboardPageNumber: 0,
+  selectedCampaignLeaderboardLookupAddress: '',
 }
 
 export default createReducer<CampaignsState>(initialState, builder =>
@@ -51,6 +61,18 @@ export default createReducer<CampaignsState>(initialState, builder =>
       return {
         ...state,
         setLoadingSelectedCampaignLeaderboard: loading,
+      }
+    })
+    .addCase(setSelectedCampaignLeaderboardPageNumber, (state, { payload: pageNumber }) => {
+      return {
+        ...state,
+        selectedCampaignLeaderboardPageNumber: pageNumber,
+      }
+    })
+    .addCase(setSelectedCampaignLeaderboardLookupAddress, (state, { payload: lookupAddress }) => {
+      return {
+        ...state,
+        selectedCampaignLeaderboardLookupAddress: lookupAddress,
       }
     }),
 )
