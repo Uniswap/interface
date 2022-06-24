@@ -1,9 +1,9 @@
 import React from 'react'
-import { Identicon } from 'src/components/accounts/Identicon'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { Unicon } from 'src/components/unicons/Unicon'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 
 export function ProfileIcon({ size }: { size: number }) {
-  const activeAddress = useActiveAccount()?.address
+  const activeAddress = useActiveAccountAddressWithThrow()
 
-  return <Identicon address={activeAddress ?? ''} size={size} />
+  return <Unicon address={activeAddress} size={size} />
 }

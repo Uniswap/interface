@@ -1,10 +1,10 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
-import { Identicon } from 'src/components/accounts/Identicon'
 import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
+import { Unicon } from 'src/components/unicons/Unicon'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
@@ -30,7 +30,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
         justifyContent="space-between"
         px="lg"
         py={!nameTypeIsAddress ? 'xs' : 'md'}>
-        <Identicon address={account.address} size={ICON_SIZE} />
+        <Unicon address={account.address} size={ICON_SIZE} />
         <Box p="none">
           <Text
             color="textPrimary"

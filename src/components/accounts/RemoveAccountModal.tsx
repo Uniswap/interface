@@ -1,11 +1,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Identicon } from 'src/components/accounts/Identicon'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Modal } from 'src/components/modals/Modal'
 import { Text } from 'src/components/Text'
+import { Unicon } from 'src/components/unicons/Unicon'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { dimensions } from 'src/styles/sizing'
 
@@ -23,7 +23,7 @@ export function RemoveAccountModal({ address, onCancel, onConfirm }: RemoveAccou
       hide={onCancel}
       visible={!!address}
       width={dimensions.fullWidth * 0.85}>
-      <Identicon address={address || NATIVE_ADDRESS} size={50} />
+      <Unicon address={address || NATIVE_ADDRESS} size={50} />
       <Text mt="md" textAlign="center" variant="subHead1">
         {t('Remove this account?')}
       </Text>

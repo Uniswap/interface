@@ -2,11 +2,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
-import { Identicon } from 'src/components/accounts/Identicon'
-import { IdenticonWithNotificationBadge } from 'src/components/accounts/IdenticonWithNotificationBadge'
 import { Button } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { Unicon } from 'src/components/unicons/Unicon'
+import { UniconWithNotificationBadge } from 'src/components/unicons/UniconWithNotificationBadge'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
@@ -61,9 +61,9 @@ export function AddressDisplay({
   return (
     <Flex alignItems="center" flexDirection={direction} gap="sm">
       {showNotificationBadge ? (
-        <IdenticonWithNotificationBadge address={address} size={size} />
+        <UniconWithNotificationBadge address={address} size={size} />
       ) : (
-        <Identicon address={address} size={size} />
+        <Unicon address={address} size={size} />
       )}
       <Flex alignItems={direction === 'column' ? 'center' : 'flex-start'} gap={verticalGap}>
         <Flex centered row gap="sm">

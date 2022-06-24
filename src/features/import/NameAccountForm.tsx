@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { Identicon } from 'src/components/accounts/Identicon'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { CenterBox } from 'src/components/layout/CenterBox'
+import { Unicon } from 'src/components/unicons/Unicon'
 import {
   EditAccountAction,
   editAccountActions,
@@ -46,7 +46,7 @@ export function NameAccountForm({ address, onSuccess }: Props) {
   return (
     <Trace section={SectionName.NameAccountForm}>
       <CenterBox mt="md">
-        <Identicon address={address} size={50} />
+        <Unicon address={address} size={50} />
         <TextInput
           fontSize={20}
           mt="lg"

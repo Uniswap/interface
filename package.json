@@ -24,7 +24,8 @@
     "test:e2e:build": "RN_SRC_EXT=e2e.js detox build -c ios.sim.debug",
     "test:e2e:packager": "RN_SRC_EXT=e2e.js,e2e.ts yarn start:production --no-interactive",
     "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",
-    "tsc:compile": "tsc --project ."
+    "tsc:compile": "tsc --project .",
+    "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix"
   },
   "dependencies": {
     "@ethersproject/shims": "^5.5.0",
@@ -51,6 +52,7 @@
     "@react-navigation/stack": "^6.2.1",
     "@reduxjs/toolkit": "^1.6.1",
     "@sentry/react-native": "^3.1.1",
+    "@shopify/react-native-skia": "^0.1.132",
     "@shopify/restyle": "^1.6.1",
     "@uniswap/ethers-rs-mobile": "0.0.1",
     "@uniswap/redux-multicall": "^1.1.0",
