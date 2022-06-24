@@ -14,17 +14,24 @@ export function* importAccount(params: ImportAccountParams) {
   logger.debug('importAccountSaga', 'importAccount', 'Importing type:', type)
 
   if (type === ImportAccountType.Address) {
-    yield* call(importAddressAccount, params.address, name)
+    yield* call(importAddressAccount, params.address, name, params.ignoreActivate)
   } else if (type === ImportAccountType.Mnemonic) {
-    yield* call(importMnemonicAccounts, params.mnemonic, name, params.indexes, params.markAsActive)
+    yield* call(
+      importMnemonicAccounts,
+      params.mnemonic,
+      name,
+      params.indexes,
+      params.markAsActive,
+      params.ignoreActivate
+    )
   } else if (type === ImportAccountType.PrivateKey) {
-    yield* call(importPrivateKeyAccount, params.privateKey, name)
+    yield* call(importPrivateKeyAccount, params.privateKey, name, params.ignoreActivate)
   } else {
     throw new Error('Unsupported import account type')
   }
 }
 
-function* importAddressAccount(address: string, name?: string) {
+function* importAddressAccount(address: string, name?: string, ignoreActivate?: boolean) {
   const formattedAddress = normalizeAddress(address)
   const account: Account = {
     type: AccountType.Readonly,
@@ -32,14 +39,15 @@ function* importAddressAccount(address: string, name?: string) {
     name,
     pending: true,
   }
-  yield* call(onAccountImport, account)
+  yield* call(onAccountImport, account, ignoreActivate)
 }
 
 function* importMnemonicAccounts(
   mnemonic: string,
   name?: string,
   indexes = [0],
-  markAsActive?: boolean
+  markAsActive?: boolean,
+  ignoreActivate?: boolean
 ) {
   const formattedMnemonic = normalizeMnemonic(mnemonic)
   const mnemonicId = yield* call(importMnemonic, formattedMnemonic)
@@ -62,20 +70,22 @@ function* importMnemonicAccounts(
     name,
     pending: !markAsActive,
   }
-  yield* call(onAccountImport, activeAccount)
+  yield* call(onAccountImport, activeAccount, ignoreActivate)
 }
 
-function* importPrivateKeyAccount(privateKey: string, name?: string) {
+function* importPrivateKeyAccount(privateKey: string, name?: string, ignoreActivate?: boolean) {
   const wallet = new Wallet(ensureLeading0x(privateKey))
   const address = wallet.address
   const account: Account = { type: AccountType.Local, privateKey, name, address, pending: true }
   // TODO save key to keychain: https://github.com/Uniswap/mobile/issues/131
-  yield* call(onAccountImport, account)
+  yield* call(onAccountImport, account, ignoreActivate)
 }
 
-function* onAccountImport(account: Account) {
+function* onAccountImport(account: Account, ignoreActivate?: boolean) {
   yield* put(addAccount(account))
-  yield* put(activateAccount(account.address))
+  if (!ignoreActivate) {
+    yield* put(activateAccount(account.address))
+  }
   yield* put(unlockWallet())
   logger.info('importAccount', '', `New ${account.type} account imported: ${account.address}`)
 }

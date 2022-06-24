@@ -15,6 +15,7 @@ interface BaseImportAccountParams {
   type: ImportAccountType
   name?: string
   locale?: string
+  ignoreActivate?: boolean
 }
 
 export interface ImportAddressAccountParams extends BaseImportAccountParams {

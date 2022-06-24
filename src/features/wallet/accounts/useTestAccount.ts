@@ -16,6 +16,7 @@ export function useTestAccount() {
         name: 'Demo Account',
         mnemonic: MNEMONIC_TEST_ONLY,
         markAsActive: true,
+        ignoreActivate: true,
       })
     )
   }, [dispatch])

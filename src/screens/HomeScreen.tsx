@@ -44,11 +44,11 @@ export function HomeScreen({ navigation }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
 
-  const dispatch = useAppDispatch()
-  const theme = useAppTheme()
-
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
+
+  const dispatch = useAppDispatch()
+  const theme = useAppTheme()
 
   const { balances } = useAllBalancesByChainId(activeAccount?.address, currentChains)
 

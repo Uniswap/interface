@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useReducer } from 'react'
+import React, { useCallback, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -12,6 +12,7 @@ import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { usePendingAccounts } from 'src/features/wallet/hooks'
+import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { SagaStatus } from 'src/utils/saga'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
@@ -37,6 +38,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
   )
   const onPress = (address: string) => setSelectedAddresses(address)
 
+  const isFirstAccountActive = useRef(false) // to keep track of first account activated from the selected accounts
   const onSubmit = useCallback(() => {
     addresses.map((address) => {
       // Remove unselected accounst from store.
@@ -47,10 +49,15 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
             address,
           })
         )
+      } else {
+        if (!isFirstAccountActive.current) {
+          dispatch(activateAccount(address))
+          isFirstAccountActive.current = true
+        }
       }
     })
     navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
-  }, [addresses, navigation, params, selectedAddresses, dispatch])
+  }, [dispatch, addresses, navigation, selectedAddresses, isFirstAccountActive, params])
 
   return (
     <OnboardingScreen

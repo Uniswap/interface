@@ -33,7 +33,7 @@ import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
-import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
+import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 
 export function SettingsScreen() {
@@ -52,6 +52,7 @@ export function SettingsScreen() {
   }, [dispatch, isRinkebyActive])
 
   // Defining them inline instead of outside component b.c. they need t()
+  const showDevSettings = isEnabled(TestConfig.ShowDevSettings)
   const sections: SettingsSection[] = useMemo(
     () => [
       {
@@ -145,7 +146,7 @@ export function SettingsScreen() {
       },
       {
         subTitle: t('Developer settings'),
-        isHidden: !isEnabled(TestConfig.ShowDevSettings),
+        isHidden: !showDevSettings,
         data: [
           {
             screen: Screens.SettingsChains,
@@ -204,7 +205,7 @@ export function SettingsScreen() {
         ],
       },
     ],
-    [isRinkebyActive, onToggleTestnets, t, theme]
+    [isRinkebyActive, onToggleTestnets, t, theme, showDevSettings]
   )
 
   const renderItem = ({
@@ -248,6 +249,7 @@ function OnboardingRow() {
       px="sm"
       onPress={() => {
         navigation.goBack()
+        dispatch(resetWallet())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       }}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
