@@ -36,8 +36,6 @@ export default function TokenTable() {
 
   const tokenRows = topTokenAddresses.map((tokenAddress) => {
     listNumber += 1
-    // TODO: remove magic number colors
-    // make token row a component, pass in props, call useToken() in the component
     return (
       <TokenRow
         key={tokenAddress}
