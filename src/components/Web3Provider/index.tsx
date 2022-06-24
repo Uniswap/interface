@@ -1,8 +1,10 @@
 import { Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { BACKFILLABLE_WALLETS, getConnectorForWallet, gnosisSafe, network, useConnectors } from 'connectors'
+import { BACKFILLABLE_WALLETS, getConnectorForWallet, gnosisSafe, injected, network, useConnectors } from 'connectors'
 import { ReactNode, useEffect } from 'react'
 import { useAppSelector } from 'state/hooks'
+
+import { isMobile } from '../../utils/userAgent'
 
 const connect = async (connector: Connector) => {
   try {
@@ -22,11 +24,15 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 
   const connectors = useConnectors(selectedWallet)
 
+  const isMetaMask = !!window.ethereum?.isMetaMask
+
   useEffect(() => {
     connect(gnosisSafe)
     connect(network)
 
-    if (selectedWallet) {
+    if (isMobile && isMetaMask) {
+      injected.activate()
+    } else if (selectedWallet) {
       connect(getConnectorForWallet(selectedWallet))
     } else if (!selectedWalletBackfilled) {
       BACKFILLABLE_WALLETS.map(getConnectorForWallet).forEach(connect)
