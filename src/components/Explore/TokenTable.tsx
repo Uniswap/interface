@@ -16,7 +16,6 @@ const GridContainer = styled.div`
   margin-right: auto;
   border-radius: 8px;
   justify-content: center;
-  border: 1px solid ${({ theme }) => theme.bg3};
 `
 
 export default function TokenTable() {
