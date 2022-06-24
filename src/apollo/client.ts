@@ -95,7 +95,7 @@ const velasExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClien
 })
 
 const auroraExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-aurora',
+  uri: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-aurora',
   cache: new InMemoryCache(),
 })
 

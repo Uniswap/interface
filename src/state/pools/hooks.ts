@@ -95,17 +95,10 @@ export function useUserLiquidityPositions(user: string | null | undefined): User
 
 function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, chainId?: ChainId): SubgraphPoolData {
   // get volume changes
-  const oneDayVolumeUSD = get24hValue(data?.volumeUSD, oneDayData?.volumeUSD ? oneDayData.volumeUSD : 0)
-
-  const oneDayFeeUSD = get24hValue(data?.feeUSD, oneDayData?.feeUSD ? oneDayData.feeUSD : 0)
-  const oneDayVolumeUntracked = get24hValue(
-    data?.untrackedVolumeUSD,
-    oneDayData?.untrackedVolumeUSD ? parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
-  )
-  const oneDayFeeUntracked = get24hValue(
-    data?.untrackedFeeUSD,
-    oneDayData?.untrackedFeeUSD ? parseFloat(oneDayData?.untrackedFeeUSD) : 0,
-  )
+  const oneDayVolumeUSD = get24hValue(data?.volumeUSD, oneDayData?.volumeUSD)
+  const oneDayFeeUSD = get24hValue(data?.feeUSD, oneDayData?.feeUSD)
+  const oneDayVolumeUntracked = get24hValue(data?.untrackedVolumeUSD, oneDayData?.untrackedVolumeUSD)
+  const oneDayFeeUntracked = get24hValue(data?.untrackedFeeUSD, oneDayData?.untrackedFeeUSD)
 
   // set volume properties
   data.oneDayVolumeUSD = oneDayVolumeUSD
@@ -118,11 +111,9 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
   data.liquidityChangeUSD = getPercentChange(data.reserveUSD, oneDayData?.reserveUSD)
 
   // format if pool hasnt existed for a day or a week
-  if (!oneDayData && data && data.createdAtBlockNumber > oneDayBlock) {
-    data.oneDayVolumeUSD = parseFloat(data.volumeUSD)
-  }
   if (!oneDayData && data) {
-    data.oneDayVolumeUSD = parseFloat(data.volumeUSD)
+    if (data.createdAtBlockNumber > oneDayBlock) data.oneDayVolumeUSD = parseFloat(data.volumeUSD)
+    else data.oneDayVolumeUSD = 0
   }
 
   if (chainId === ChainId.MAINNET) {
@@ -210,7 +201,6 @@ export async function getBulkPoolDataFromPoolList(
     let poolData
     const [t1] = getTimestampsForChanges()
     const blocks = await getBlocksFromTimestamps([t1], chainId)
-
     if (!blocks.length) {
       return current.data.pools
     } else {
@@ -269,18 +259,17 @@ export async function getBulkPoolDataWithPagination(
   chainId?: ChainId,
 ): Promise<any> {
   try {
-    let poolData
     const [t1] = getTimestampsForChanges()
     const blocks = await getBlocksFromTimestamps([t1], chainId)
-    if (!blocks.length) {
-      return []
-    } else {
-      const [{ number: b1 }] = blocks
 
-      const [oneDayResult, current] = await Promise.all(
-        [b1]
-          .map(async block => {
-            const result = apolloClient.query({
+    // In case we can't get the block one day ago then we set it to 0 which is fine
+    // because our subgraph never syncs from block 0 => response is empty
+    const [{ number: b1 }] = blocks.length ? blocks : [{ number: 0 }]
+    const [oneDayResult, current] = await Promise.all(
+      [b1]
+        .map(async block => {
+          const result = apolloClient
+            .query({
               query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(
                 first,
                 skip,
@@ -289,40 +278,42 @@ export async function getBulkPoolDataWithPagination(
               ),
               fetchPolicy: 'network-only',
             })
-            return result
-          })
-          .concat(
-            apolloClient.query({
-              query: POOLS_BULK_WITH_PAGINATION(first, skip, chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)),
-              fetchPolicy: 'network-only',
-            }),
-          ),
-      )
-
-      const oneDayData = oneDayResult?.data?.pools.reduce((obj: any, cur: any) => {
-        return { ...obj, [cur.id]: cur }
-      }, {})
-
-      poolData = await Promise.all(
-        current &&
-          current.data.pools.map(async (pool: any) => {
-            let data = { ...pool }
-            const oneDayHistory = oneDayData?.[pool.id]
-            // TODO: If number of pools > 1000 then uncomment this.
-            // if (!oneDayHistory) {
-            //   const newData = await apolloClient.query({
-            //     query: POOL_DATA(pool.id, b1),
-            //     fetchPolicy: 'network-only'
-            //   })
-            //   oneDayHistory = newData.data.pools[0]
-            // }
-
-            data = parseData(data, oneDayHistory, ethPrice, b1, chainId)
-
-            return data
+            .catch(err => {
+              return err
+            })
+          return result
+        })
+        .concat(
+          apolloClient.query({
+            query: POOLS_BULK_WITH_PAGINATION(first, skip, chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)),
+            fetchPolicy: 'network-only',
           }),
-      )
-    }
+        ),
+    )
+
+    const oneDayData = oneDayResult?.data?.pools.reduce((obj: any, cur: any) => {
+      return { ...obj, [cur.id]: cur }
+    }, {})
+
+    const poolData = await Promise.all(
+      current &&
+        current.data.pools.map(async (pool: any) => {
+          let data = { ...pool }
+          const oneDayHistory = oneDayData?.[pool.id]
+          // TODO: If number of pools > 1000 then uncomment this.
+          // if (!oneDayHistory) {
+          //   const newData = await apolloClient.query({
+          //     query: POOL_DATA(pool.id, b1),
+          //     fetchPolicy: 'network-only'
+          //   })
+          //   oneDayHistory = newData.data.pools[0]
+          // }
+
+          data = parseData(data, oneDayHistory, ethPrice, b1, chainId)
+
+          return data
+        }),
+    )
 
     return poolData
   } catch (e) {

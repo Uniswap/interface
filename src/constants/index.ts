@@ -1471,7 +1471,7 @@ export const ONLY_STATIC_FEE_CHAINS = [
   ChainId.OASIS,
 ]
 
-export const ONLY_DYNAMIC_FEE_CHAINS = [ChainId.BSCMAINNET, ChainId.MATIC]
+export const ONLY_DYNAMIC_FEE_CHAINS = [ChainId.BSCMAINNET, ChainId.MATIC, ChainId.BTTC]
 
 export const TRENDING_SOON_ITEM_PER_PAGE = 10
 export const TRENDING_SOON_MAX_ITEMS = 50
