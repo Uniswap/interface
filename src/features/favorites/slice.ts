@@ -4,13 +4,13 @@ import { logger } from 'src/utils/logger'
 
 export interface FavoritesState {
   tokens: CurrencyId[]
-  followedAddresses: Address[]
+  watchedAddresses: Address[]
   // add other types of assets here, e.g. nfts
 }
 
 const initialState: FavoritesState = {
   tokens: [],
-  followedAddresses: [],
+  watchedAddresses: [],
 }
 
 export const slice = createSlice({
@@ -45,24 +45,32 @@ export const slice = createSlice({
 
       state.tokens = newTokens
     },
-    addFollow: (state, { payload: { address } }: PayloadAction<{ address: Address }>) => {
-      !state.followedAddresses.includes(address)
-        ? state.followedAddresses.push(address)
-        : logger.warn('slice', 'addFollow', `Attempting to follow an address twice (${address})`)
+    addWatchedAddress: (state, { payload: { address } }: PayloadAction<{ address: Address }>) => {
+      !state.watchedAddresses.includes(address)
+        ? state.watchedAddresses.push(address)
+        : logger.warn(
+            'slice',
+            'addWatchedAddress',
+            `Attempting to watch an address twice (${address})`
+          )
     },
-    removeFollow: (state, { payload: { address } }: PayloadAction<{ address: Address }>) => {
-      const newFollowing = state.followedAddresses.filter((a) => a !== address)
-      if (newFollowing.length === state.followedAddresses.length) {
+    removeWatchedAddress: (
+      state,
+      { payload: { address } }: PayloadAction<{ address: Address }>
+    ) => {
+      const newWatched = state.watchedAddresses.filter((a) => a !== address)
+      if (newWatched.length === state.watchedAddresses.length) {
         logger.warn(
           'slice',
-          'removeFollow',
-          `Attempting to un-follow an address not found in following (${address})`
+          'removeWatchedAddress',
+          `Attempting to remove an address not found in watched list (${address})`
         )
       }
-      state.followedAddresses = newFollowing
+      state.watchedAddresses = newWatched
     },
   },
 })
 
-export const { addFavoriteToken, removeFavoriteToken, addFollow, removeFollow } = slice.actions
+export const { addFavoriteToken, removeFavoriteToken, addWatchedAddress, removeWatchedAddress } =
+  slice.actions
 export const { reducer: favoritesReducer, actions: favoritesActions } = slice

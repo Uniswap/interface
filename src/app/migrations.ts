@@ -35,4 +35,12 @@ export const migrations = {
     delete newState.walletConnect.modalState
     return newState
   },
+
+  2: (state: any) => {
+    const newState = { ...state }
+    const oldFollowingAddresses = state.favorites.followedAddresses
+    newState.favorites.watchedAddresses = oldFollowingAddresses
+    delete newState.favorites.followedAddresses
+    return newState
+  },
 }

@@ -85,6 +85,15 @@ export const v1Schema = {
   },
 }
 
+export const v2Schema = {
+  ...v1Schema,
+  favorites: {
+    ...v1Schema.favorites,
+    followedAddresses: undefined,
+    watchedAddresses: [],
+  },
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v1Schema
+export const getSchema = () => v2Schema

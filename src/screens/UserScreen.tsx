@@ -1,26 +1,26 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Share } from 'react-native'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { AppStackParamList } from 'src/app/navigation/types'
+import { AppStackParamList, useAppStackNavigation } from 'src/app/navigation/types'
+import EyeIcon from 'src/assets/icons/eye.svg'
 import SendIcon from 'src/assets/icons/send.svg'
-import ShareIcon from 'src/assets/icons/share.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { IconButton } from 'src/components/buttons/IconButton'
-import { AppBackground } from 'src/components/gradients'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
+import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PortfolioNFTSection } from 'src/components/home/PortfolioNFTSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
-import { selectFollowedAddressSet } from 'src/features/favorites/selectors'
-import { addFollow, removeFollow } from 'src/features/favorites/slice'
+import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
+import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.User>
 
@@ -32,25 +32,27 @@ export function UserScreen({
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const navigation = useAppStackNavigation()
 
-  const isFollowing = useAppSelector(selectFollowedAddressSet).has(address)
+  const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
 
-  const onShare = async () => {
-    if (!address) return
-    try {
-      await Share.share({
-        message: address,
-      })
-    } catch (e) {
-      logger.error('UserShare', 'onShare', 'Error sharing account address', e)
-    }
+  const onSendPress = async () => {
+    navigation.navigate(Screens.Transfer, {
+      transferFormState: {
+        recipient: address,
+        exactAmount: '',
+        exactCurrencyField: CurrencyField.INPUT,
+        [CurrencyField.INPUT]: null,
+        [CurrencyField.OUTPUT]: null,
+      },
+    })
   }
 
-  const onFollowPress = () => {
-    if (isFollowing) {
-      dispatch(removeFollow({ address }))
+  const onWatchPress = () => {
+    if (isWatching) {
+      dispatch(removeWatchedAddress({ address }))
     } else {
-      dispatch(addFollow({ address }))
+      dispatch(addWatchedAddress({ address }))
     }
   }
 
@@ -64,59 +66,65 @@ export function UserScreen({
     )
 
   return (
-    <Screen edges={['top', 'left', 'right']}>
-      <AppBackground />
+    <Screen>
+      <GradientBackground opacity={1}>
+        <BlueToDarkRadial />
+      </GradientBackground>
       <VirtualizedList>
-        <Flex gap="md" mx="md">
+        <Flex gap="lg" mt="sm" px="md">
           {/* header */}
-          <Flex row alignItems="center" justifyContent="space-between">
-            <BackButton color="deprecated_gray600" />
-            <Flex row gap="xs">
-              <IconButton
-                icon={
-                  <SendIcon
-                    height={24}
-                    stroke={theme.colors.deprecated_gray600}
-                    strokeWidth={2.5}
-                    width={24}
-                  />
-                }
-              />
-              <IconButton
-                icon={<ShareIcon height={24} stroke={theme.colors.deprecated_gray600} width={24} />}
-                onPress={onShare}
-              />
+          <Button onPress={() => navigation.goBack()}>
+            <Flex row alignItems="center" gap="xs">
+              <BackButton color="textSecondary" size={14} />
+              <Text color="textSecondary" variant="smallLabel">
+                Back
+              </Text>
             </Flex>
-          </Flex>
+          </Button>
 
           {/* profile info */}
-          <Flex row alignItems="center" justifyContent="space-between" mb="md">
-            {/* address group */}
-            <Flex centered row gap="sm">
-              <AddressDisplay
-                address={address}
-                captionVariant="mediumLabel"
-                direction="column"
-                showAddressAsSubtitle={true}
-                showCopy={true}
-                size={48}
-                variant="h2"
+          <Flex centered gap="md" my="md">
+            <AddressDisplay
+              address={address}
+              captionVariant="mediumLabel"
+              direction="column"
+              showAddressAsSubtitle={true}
+              showCopy={true}
+              size={48}
+              variant="h2"
+            />
+            <Flex centered row gap="xs">
+              <PrimaryButton
+                borderRadius="lg"
+                icon={
+                  <SendIcon
+                    height={20}
+                    stroke={theme.colors.mainForeground}
+                    strokeWidth={3}
+                    width={20}
+                  />
+                }
+                label={t('Send')}
+                px="lg"
+                variant="transparent"
+                onPress={onSendPress}
+              />
+              <PrimaryButton
+                borderRadius="lg"
+                icon={
+                  <EyeIcon
+                    height={20}
+                    stroke={theme.colors.mainForeground}
+                    strokeWidth={2}
+                    width={20}
+                  />
+                }
+                label={isWatching ? t('Remove') : t('Watch')}
+                px="lg"
+                variant="transparent"
+                onPress={onWatchPress}
               />
             </Flex>
-            {/* follow button */}
-            <Button
-              alignItems="center"
-              backgroundColor={isFollowing ? 'deprecated_gray50' : 'deprecated_blue'}
-              borderColor={isFollowing ? 'deprecated_gray100' : 'deprecated_blue'}
-              borderRadius="lg"
-              borderWidth={1}
-              px="md"
-              py="xxs"
-              onPress={onFollowPress}>
-              <Text fontWeight={'500'} variant="body2">
-                {isFollowing ? t('Following') : t('Follow')}
-              </Text>
-            </Button>
           </Flex>
           <PortfolioTokensSection count={4} owner={address} />
           <PortfolioNFTSection count={16} owner={address} />
