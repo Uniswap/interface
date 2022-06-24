@@ -106,7 +106,7 @@ export function usePairs(
       }
     })
     return vv
-  }, [results, tokens, lens, results, ampResults, factories, pairAddresses])
+  }, [results, tokens, lens, ampResults, factories, pairAddresses, chainId])
 }
 
 export function usePairsByAddress(

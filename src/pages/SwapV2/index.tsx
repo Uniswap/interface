@@ -51,7 +51,7 @@ import {
   useExpertModeManager,
   useShowLiveChart,
   useShowProLiveChart,
-  useShowTokenInfo,
+  // useShowTokenInfo,
   useShowTradeRoutes,
   useUserSlippageTolerance,
 } from 'state/user/hooks'
@@ -133,7 +133,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const isShowLiveChart = useShowLiveChart()
   const isShowTradeRoutes = useShowTradeRoutes()
-  const isShowTokenInfoSetting = useShowTokenInfo()
+  // const isShowTokenInfoSetting = useShowTokenInfo()
 
   const [isSelectCurencyMannual, setIsSelectCurencyMannual] = useState(false) // true when: select token input, output mannualy or click rotate token.
   // else select via url

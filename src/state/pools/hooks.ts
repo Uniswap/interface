@@ -222,7 +222,7 @@ export async function getBulkPoolDataFromPoolList(
             query: POOLS_HISTORICAL_BULK_FROM_LIST(
               block,
               poolList,
-              chainId && ONLY_DYNAMIC_FEE_CHAINS.includes(chainId),
+              chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId),
             ),
             fetchPolicy: 'network-only',
           })
