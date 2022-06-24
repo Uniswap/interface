@@ -58,7 +58,7 @@ export interface ListItemProps {
   isDisableShowTwoPools: boolean
 }
 
-const ListItemGroup = ({
+const ListItem = ({
   sortedFilteredSubgraphPoolsObject,
   poolData,
   userLiquidityPositions,
@@ -96,7 +96,7 @@ const ListItemGroup = ({
       isShowExpandedPools={isShowTwoPools}
     >
       {renderPools.map((poolData, index) => (
-        <ListItem
+        <ListItemGroup
           key={poolData.id}
           poolData={poolData}
           myLiquidity={userLiquidityPositions[poolData.id]}
@@ -116,7 +116,7 @@ const ListItemGroup = ({
   )
 }
 
-const ListItem = ({
+const ListItemGroup = ({
   poolData,
   myLiquidity,
   isShowExpandedPools,
@@ -316,4 +316,4 @@ const ListItem = ({
   )
 }
 
-export default ListItemGroup
+export default ListItem

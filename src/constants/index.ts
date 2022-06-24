@@ -4,7 +4,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
 import { t } from '@lingui/macro'
-import { uuid } from 'uuidv4'
+import { v4 as uuid } from 'uuid'
 
 export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]:

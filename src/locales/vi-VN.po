@@ -364,7 +364,6 @@ msgstr ""
 msgid "Available LP Tokens"
 msgstr ""
 
-#: src/components/PoolList/ListItem.tsx
 #: src/pages/ProAmmPool/PositionListItem.tsx
 #: src/pages/ProAmmPools/CardItem.tsx
 #: src/pages/ProAmmPools/ListItem.tsx
@@ -2379,16 +2378,8 @@ msgstr ""
 msgid "Show closed positions"
 msgstr ""
 
-#: src/components/PoolList/ListItem.tsx
-msgid "Show less pools"
-msgstr ""
-
 #: src/components/PoolList/ItemCard/ItemCardGroup.tsx
 msgid "Show less {0} - {1} pools"
-msgstr ""
-
-#: src/components/PoolList/ListItem.tsx
-msgid "Show more pools"
 msgstr ""
 
 #: src/components/LiquidityProviderMode/index.tsx

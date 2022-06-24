@@ -14,7 +14,6 @@ import {
   useSharedPoolIdManager,
   useUserLiquidityPositions,
 } from 'state/pools/hooks'
-import ListItemGroup from './ListItem'
 import ItemCardGroup from 'components/PoolList/ItemCard/ItemCardGroup'
 import PoolDetailModal from './PoolDetailModal'
 import { AMP_HINT, AMP_LIQUIDITY_HINT, MAX_ALLOW_APY } from 'constants/index'
@@ -29,6 +28,7 @@ import { ClickableText } from 'components/YieldPools/styleds'
 import ShareModal from 'components/ShareModal'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
+import ListItem from 'components/PoolList/ListItem'
 
 const TableHeader = styled.div`
   display: grid;
@@ -356,7 +356,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
       {sortedFilteredPaginatedSubgraphPoolsList.map(poolData => {
         if (poolData) {
           return above1000 ? (
-            <ListItemGroup
+            <ListItem
               key={poolData.id}
               sortedFilteredSubgraphPoolsObject={sortedFilteredSubgraphPoolsObject}
               poolData={poolData}

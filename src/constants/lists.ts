@@ -8,7 +8,6 @@ const AAVE_LIST = 'tokenlist.aave.eth'
 const SYNTHETIX_LIST = 'synths.snx.eth'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
-const OPYN_LIST = 'https://raw.githubusercontent.com/opynfinance/opyn-tokenlist/master/opyn-v1.tokenlist.json'
 const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const CMC_ALL_LIST = 'defi.cmc.eth'
 const CMC_STABLECOIN = 'stablecoin.cmc.eth'
@@ -18,14 +17,13 @@ const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/se
 const QUICK_SWAP = 'https://unpkg.com/quickswap-default-token-list@1.0.67/build/quickswap-default.tokenlist.json'
 const PANCAKE_EXTENDED = 'https://tokens.pancakeswap.finance/pancakeswap-extended.json'
 const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json'
-const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
 const SPOOKY = 'https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json'
 const COINGECKO = 'https://tokens.coingecko.com/uniswap/all.json'
 const AURORA = 'https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/assets/aurora.tokenlist.json'
 const ARBITRUM = 'https://bridge.arbitrum.io/token-list-42161.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
-export const BYPASS_LIST = [PANGOLIN, SPOOKY, ARBITRUM]
+export const BYPASS_LIST = [SPOOKY, ARBITRUM]
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   COINGECKO,
@@ -35,7 +33,6 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   UMA_LIST,
   WRAPPED_LIST,
   SET_LIST,
-  OPYN_LIST,
   ROLL_LIST,
   CMC_ALL_LIST,
   CMC_STABLECOIN,
@@ -44,7 +41,6 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   QUICK_SWAP,
   PANCAKE_TOP100,
   PANCAKE_EXTENDED,
-  PANGOLIN,
   SPOOKY,
   AURORA,
   ARBITRUM,
@@ -69,7 +65,6 @@ export const LIST_OF_LISTS: Map<ChainId, string[]> = new Map([
       UMA_LIST,
       WRAPPED_LIST,
       SET_LIST,
-      OPYN_LIST,
       ROLL_LIST,
       CMC_ALL_LIST,
       CMC_STABLECOIN,
@@ -87,7 +82,6 @@ export const LIST_OF_LISTS: Map<ChainId, string[]> = new Map([
       UMA_LIST,
       WRAPPED_LIST,
       SET_LIST,
-      OPYN_LIST,
       ROLL_LIST,
       CMC_ALL_LIST,
       CMC_STABLECOIN,
