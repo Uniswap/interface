@@ -176,8 +176,8 @@ const Farms = () => {
           <FarmTypeWrapper>
             <MouseoverTooltip text={notSupportedMsg || ''}>
               <FarmType
-                isDisable={!!notSupportedMsg}
-                active={farmType === VERSION.ELASTIC}
+                disabled={!!notSupportedMsg}
+                active={farmType === VERSION.ELASTIC ? 1 : 0}
                 to={{
                   search: stringify({ ...qs, farmType: !!notSupportedMsg ? '' : VERSION.ELASTIC }),
                 }}
@@ -192,7 +192,7 @@ const Farms = () => {
             <Text color={theme.subText}>|</Text>
 
             <FarmType
-              active={farmType === VERSION.CLASSIC}
+              active={farmType === VERSION.CLASSIC ? 1 : 0}
               to={{
                 search: stringify({ ...qs, farmType: VERSION.CLASSIC }),
               }}

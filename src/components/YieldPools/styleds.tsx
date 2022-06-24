@@ -43,21 +43,21 @@ export const ProMMTotalRewards = styled(ProMMFarmGuide)`
   flex: 1;
 `
 
-export const FarmType = styled(StyledInternalLink)<{ active: boolean; isDisable?: boolean }>`
+export const FarmType = styled(StyledInternalLink)<{ active: 0 | 1; disabled?: boolean }>`
   display: flex;
   cursor: pointer;
   align-items: center;
   gap: 6px;
   font-size: 20px;
   font-weight: 500;
-  color: ${({ theme, active, isDisable }) => (isDisable ? theme.subText : active ? theme.primary : theme.subText)};
+  color: ${({ theme, active, disabled }) => (disabled ? theme.subText : active ? theme.primary : theme.subText)};
 
   :focus {
     text-decoration: none;
   }
 
   :hover {
-    color: ${({ theme, isDisable }) => (isDisable ? theme.subText : theme.primary)};
+    color: ${({ theme, disabled }) => (disabled ? theme.subText : theme.primary)};
     text-decoration: none;
   }
 
