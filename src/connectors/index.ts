@@ -82,13 +82,13 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {
-  [ChainId.MAINNET]: `https://ethereum.kyber.network/v1/mainnet/geth?appId=prod-dmm-interface`,
+  [ChainId.MAINNET]: `https://cloudflare-eth.com/v1/mainnet/geth?appId=prod-dmm-interface`,
   [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.GÖRLI]: `https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.MUMBAI]: `https://rpc-mumbai.maticvigil.com`,
-  [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
+  [ChainId.MATIC]: `https://polygon-rpc.com/v1/mainnet/geth?appId=prod-dmm`,
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
   // [ChainId.BSCMAINNET]: `https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface`,
   [ChainId.BSCMAINNET]: `https://bscrpc.com`,
