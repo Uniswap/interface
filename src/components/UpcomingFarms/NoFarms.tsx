@@ -5,11 +5,12 @@ import { Trans } from '@lingui/macro'
 import { NoFarmsWrapper, NoFarmsMessage } from './styled'
 import { useHistory } from 'react-router-dom'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { VERSION } from 'constants/v2'
 
 const NoFarms = () => {
   const history = useHistory()
   const qs = useParsedQueryString()
-  const farmType = qs.farmType || 'promm'
+  const farmType = qs.farmType || VERSION.CLASSIC
   return (
     <NoFarmsWrapper>
       <NoFarmsMessage>Currently there are no Upcoming Farms.</NoFarmsMessage>

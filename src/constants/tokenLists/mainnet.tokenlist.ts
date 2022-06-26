@@ -243,6 +243,22 @@ export const MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://i.imgur.com/OH663J3.jpg',
     },
+    {
+      chainId: 1,
+      address: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
+      symbol: 'wstETH',
+      name: 'Wrapped stETH (Lido)',
+      decimals: 18,
+      logoURI: 'https://assets.coingecko.com/coins/images/18834/large/wstETH.png',
+    },
+    {
+      chainId: 1,
+      address: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
+      symbol: 'stETH',
+      name: 'stETH (Lido)',
+      decimals: 18,
+      logoURI: 'https://assets.coingecko.com/coins/images/13442/large/steth_logo.png',
+    },
   ],
   version: {
     major: 0,

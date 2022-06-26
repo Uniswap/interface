@@ -62,6 +62,23 @@ export const dexListConfig: DexList = {
       ChainId.OASIS,
     ],
   },
+  'kyberswap-static': {
+    name: 'KyberSwap',
+    icon: 'https://kyberswap.com/favicon.ico',
+    chainIds: [
+      ChainId.MAINNET,
+      ChainId.MATIC,
+      ChainId.BSCMAINNET,
+      ChainId.AVAXMAINNET,
+      ChainId.FANTOM,
+      ChainId.CRONOS,
+      ChainId.ARBITRUM,
+      ChainId.BTTC,
+      ChainId.AURORA,
+      ChainId.VELAS,
+      ChainId.OASIS,
+    ],
+  },
   uniswap: {
     name: 'UniSwap_V2',
     icon: 'https://www.logowik.com/content/uploads/images/uniswap-uni7403.jpg',
@@ -76,7 +93,14 @@ export const dexListConfig: DexList = {
     name: 'SushiSwap',
     icon:
       'https://res.cloudinary.com/sushi-cdn/image/fetch/f_auto,c_limit,w_32,q_auto/https://app.sushi.com/images/logo.svg',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM, ChainId.ARBITRUM, ChainId.BSCMAINNET],
+    chainIds: [
+      ChainId.MAINNET,
+      ChainId.MATIC,
+      ChainId.FANTOM,
+      ChainId.ARBITRUM,
+      ChainId.BSCMAINNET,
+      ChainId.AVAXMAINNET,
+    ],
   },
   shibaswap: {
     name: 'ShibaSwap',
@@ -450,6 +474,7 @@ export const dexTypes: DexTypes = {
     beethovenx: 6,
     uniswapv3: 5,
     kyberswapv2: 5,
+    kyberswapStatic: 3,
   },
   [ChainId.MAINNET]: {},
   [ChainId.BSCMAINNET]: {},

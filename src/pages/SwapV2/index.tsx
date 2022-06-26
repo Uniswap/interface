@@ -1,12 +1,12 @@
-import { CurrencyAmount, Token, Currency } from '@kyberswap/ks-sdk-core'
+import { CurrencyAmount, Token, Currency, ChainId } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Box, Flex, Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, useParams } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
-import { BrowserView } from 'react-device-detect'
+import { BrowserView, MobileView } from 'react-device-detect'
 
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -16,6 +16,7 @@ import ConfirmSwapModal from 'components/swapv2/ConfirmSwapModal'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { AutoRow, RowBetween } from 'components/Row'
 import AdvancedSwapDetailsDropdown from 'components/swapv2/AdvancedSwapDetailsDropdown'
+import { ReactComponent as RoutingIcon } from 'assets/svg/routing-icon.svg'
 import {
   ArrowWrapper,
   BottomGrouping,
@@ -46,7 +47,14 @@ import { useToggleTransactionSettingsMenu, useWalletModalToggle } from 'state/ap
 import { Field } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 import { useDerivedSwapInfoV2 } from 'state/swap/useAggregator'
-import { useExpertModeManager, useShowLiveChart, useShowTradeRoutes, useUserSlippageTolerance } from 'state/user/hooks'
+import {
+  useExpertModeManager,
+  useShowLiveChart,
+  useShowProLiveChart,
+  // useShowTokenInfo,
+  useShowTradeRoutes,
+  useUserSlippageTolerance,
+} from 'state/user/hooks'
 import { LinkStyledButton, TYPE } from 'theme'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import AppBody from 'pages/AppBody'
@@ -57,7 +65,7 @@ import { useSwapV2Callback } from 'hooks/useSwapV2Callback'
 import Routing from 'components/swapv2/Routing'
 import RefreshButton from 'components/swapv2/RefreshButton'
 import TradeTypeSelection from 'components/swapv2/TradeTypeSelection'
-import { formattedNum } from 'utils'
+import { formattedNum, isAddressString } from 'utils'
 import TransactionSettings from 'components/TransactionSettings'
 import { Swap as SwapIcon } from 'components/Icons'
 import TradePrice from 'components/swapv2/TradePrice'
@@ -65,19 +73,30 @@ import InfoHelper from 'components/InfoHelper'
 import LiveChart from 'components/LiveChart'
 import { ShareButtonWithModal } from 'components/ShareModal'
 import TokenInfo from 'components/swapv2/TokenInfo'
+import TokenInfoV2 from 'components/swapv2/TokenInfoV2'
 import MobileLiveChart from 'components/swapv2/MobileLiveChart'
 import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
+import MobileTokenInfo from 'components/swapv2/MobileTokenInfo'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { currencyId } from 'utils/currencyId'
 import Banner from 'components/Banner'
 import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
 import TopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork'
 import { clientData } from 'constants/clientData'
+import { MAP_TOKEN_HAS_MULTI_BY_NETWORK, NETWORK_LABEL, NETWORK_TO_CHAINID } from 'constants/networks'
+import { useActiveNetwork } from 'hooks/useActiveNetwork'
+import { convertToSlug } from 'utils/string'
+import { filterTokensWithExactKeyword } from 'components/SearchModal/filtering'
+import { useRef } from 'react'
+import { nativeOnChain } from 'constants/tokens'
 
+import Footer from 'components/Footer/Footer'
 enum ACTIVE_TAB {
   SWAP,
   INFO,
 }
+const getSymbolSlug = (token: Currency | Token | undefined) =>
+  token ? convertToSlug(token?.symbol || token?.wrapped?.symbol || '') : ''
 
 export const AppBodyWrapped = styled(AppBody)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
@@ -87,6 +106,26 @@ export const AppBodyWrapped = styled(AppBody)`
   @media only screen and (min-width: 768px) {
     width: 404px;
   }
+  @media only screen and (min-width: 1100px) {
+    position: sticky;
+    top: 10px;
+  }
+`
+
+const SwitchLocaleLinkWrapper = styled.div`
+  margin-bottom: 30px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  margin-bottom: 0px;
+`}
+`
+
+const RoutingIconWrapper = styled(RoutingIcon)`
+  height: 27px;
+  width: 27px;
+  margin-right: 10px;
+  path {
+    fill: ${({ theme }) => theme.subText} !important;
+  }
 `
 
 export default function Swap({ history }: RouteComponentProps) {
@@ -94,6 +133,11 @@ export default function Swap({ history }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const isShowLiveChart = useShowLiveChart()
   const isShowTradeRoutes = useShowTradeRoutes()
+  // const isShowTokenInfoSetting = useShowTokenInfo()
+
+  const [isSelectCurencyMannual, setIsSelectCurencyMannual] = useState(false) // true when: select token input, output mannualy or click rotate token.
+  // else select via url
+
   const [activeTab, setActiveTab] = useState<ACTIVE_TAB>(ACTIVE_TAB.SWAP)
 
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -103,6 +147,7 @@ export default function Swap({ history }: RouteComponentProps) {
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId),
   ]
+
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
@@ -147,6 +192,9 @@ export default function Swap({ history }: RouteComponentProps) {
     loading: loadingAPI,
   } = useDerivedSwapInfoV2()
 
+  const currencyIn = currencies[Field.INPUT]
+  const currencyOut = currencies[Field.OUTPUT]
+
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -157,13 +205,13 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const parsedAmounts = showWrap
     ? {
-      [Field.INPUT]: parsedAmount,
-      [Field.OUTPUT]: parsedAmount,
-    }
+        [Field.INPUT]: parsedAmount,
+        [Field.OUTPUT]: parsedAmount,
+      }
     : {
-      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
-    }
+        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+      }
 
   const { onSwitchTokensV2, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
@@ -208,7 +256,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }
 
   const userHasSpecifiedInputOutput = Boolean(
-    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0)),
+    currencyIn && currencyOut && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0)),
   )
   const noRoute = !trade?.swaps?.length
 
@@ -222,6 +270,7 @@ export default function Swap({ history }: RouteComponentProps) {
     setApprovalSubmitted(false) // reset 2 step UI for approvals
     setRotate(prev => !prev)
     onSwitchTokensV2()
+    setIsSelectCurencyMannual(true)
   }, [onSwitchTokensV2])
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
@@ -286,6 +335,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const handleInputSelect = useCallback(
     inputCurrency => {
+      setIsSelectCurencyMannual(true)
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -298,6 +348,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const handleOutputSelect = useCallback(
     outputCurrency => {
+      setIsSelectCurencyMannual(true)
       onCurrencySelection(Field.OUTPUT, outputCurrency)
     },
     [onCurrencySelection],
@@ -311,6 +362,127 @@ export default function Swap({ history }: RouteComponentProps) {
   const mixpanelSwapInit = () => {
     mixpanelHandler(MIXPANEL_TYPE.SWAP_INITIATED)
   }
+
+  const params = useParams<{
+    fromCurrency: string
+    toCurrency: string
+    network: string
+  }>()
+  const getUrlMatchParams = () => {
+    const fromCurrency = (params.fromCurrency || '').toLowerCase()
+    const toCurrency = (params.toCurrency || '').toLowerCase()
+    const network: string = convertToSlug(params.network || '')
+    return { fromCurrency, toCurrency, network }
+  }
+
+  const showProChartStore = useShowProLiveChart()
+
+  const { changeNetwork } = useActiveNetwork()
+  const refIsCheckNetwork = useRef<boolean>() // to prevent call function many time
+
+  const findToken = (keyword: string) => {
+    const nativeToken = nativeOnChain(chainId as ChainId)
+    if (keyword === getSymbolSlug(nativeToken)) {
+      return nativeToken
+    }
+    return filterTokensWithExactKeyword(Object.values(defaultTokens), keyword)[0]
+  }
+
+  const navigate = (url: string) => {
+    history.push(`${url}${window.location.search}`)
+  }
+
+  function findTokenPairFromUrl() {
+    if (!refIsCheckNetwork.current || !Object.keys(defaultTokens).length) return
+    let { fromCurrency, toCurrency } = getUrlMatchParams()
+    const { network } = getUrlMatchParams()
+
+    const isSame = fromCurrency && fromCurrency === toCurrency
+    if (!toCurrency || isSame) {
+      // net/xxx
+      const fromToken = findToken(fromCurrency)
+      if (fromToken) {
+        onCurrencySelection(Field.INPUT, fromToken)
+        if (isSame) navigate(`/swap/${network}/${fromCurrency}`)
+      } else navigate('/swap')
+      return
+    }
+
+    const isAddress1 = isAddressString(fromCurrency)
+    const isAddress2 = isAddressString(toCurrency)
+
+    // net/add-to-add
+    if (isAddress1 && isAddress2) {
+      const fromToken = findToken(fromCurrency)
+      const toToken = findToken(toCurrency)
+      if (fromToken && toToken) {
+        navigate(`/swap/${network}/${getSymbolSlug(fromToken)}-to-${getSymbolSlug(toToken)}`)
+      } else navigate('/swap')
+      return
+    }
+
+    // sym-to-sym
+    // hard code: ex: usdt => usdt_e, ...
+    const mapData = MAP_TOKEN_HAS_MULTI_BY_NETWORK[network as keyof typeof MAP_TOKEN_HAS_MULTI_BY_NETWORK]
+    if (mapData) {
+      type KeyType = keyof typeof mapData
+      const newValue1 = mapData[fromCurrency as KeyType]
+      const newValue2 = mapData[toCurrency as KeyType]
+      if (newValue1) fromCurrency = newValue1
+      if (newValue2) toCurrency = newValue2
+    }
+    const fromToken = findToken(fromCurrency)
+    const toToken = findToken(toCurrency)
+
+    if (!toToken || !fromToken) {
+      navigate('/swap')
+      return
+    }
+    onCurrencySelection(Field.INPUT, fromToken)
+    onCurrencySelection(Field.OUTPUT, toToken)
+  }
+
+  const checkAutoSelectTokenFromUrl = () => {
+    // check case:  `/swap/net/x-to-y` or `/swap/net/x` is valid
+    const { fromCurrency, network } = getUrlMatchParams()
+    if (!fromCurrency || !network) return
+
+    const findChainId = +NETWORK_TO_CHAINID[network] // check network first and then find token pair at findTokenPairFromUrl()
+    if (findChainId !== chainId) {
+      changeNetwork(findChainId)
+        .then(() => {
+          refIsCheckNetwork.current = true
+        })
+        .catch(() => {
+          navigate('/swap')
+        })
+    } else {
+      refIsCheckNetwork.current = true
+    }
+  }
+
+  const syncUrl = () => {
+    const symbolIn = getSymbolSlug(currencyIn)
+    const symbolOut = getSymbolSlug(currencyOut)
+    if (symbolIn && symbolOut && chainId) {
+      navigate(`/swap/${convertToSlug(NETWORK_LABEL[chainId] || '')}/${symbolIn}-to-${symbolOut}`)
+    }
+  }
+
+  useEffect(() => {
+    findTokenPairFromUrl()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultTokens])
+
+  useEffect(() => {
+    checkAutoSelectTokenFromUrl()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (isSelectCurencyMannual) syncUrl() // run only when we select mannual
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currencyIn, currencyOut])
 
   useEffect(() => {
     if (isExpertMode) {
@@ -327,13 +499,17 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [allowedSlippage])
 
   const shareUrl =
-    currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]
+    currencies && currencyIn && currencyOut
       ? window.location.origin +
-        `/swap?inputCurrency=${currencyId(currencies[Field.INPUT] as Currency, chainId)}&outputCurrency=${currencyId(
-          currencies[Field.OUTPUT] as Currency,
+        `/swap?inputCurrency=${currencyId(currencyIn as Currency, chainId)}&outputCurrency=${currencyId(
+          currencyOut as Currency,
           chainId,
         )}&networkId=${chainId}`
       : undefined
+
+  const renderTokenInfo = false // Boolean(isShowTokenInfoSetting && (currencyIn || currencyOut))
+
+  const [actualShowTokenInfo, setActualShowTokenInfo] = useState(true)
 
   return (
     <>
@@ -347,27 +523,34 @@ export default function Swap({ history }: RouteComponentProps) {
         <Banner />
         <TopTrendingSoonTokensInCurrentNetwork />
         <Container>
-          <StyledFlex justifyContent={'center'} alignItems={'flex-start'}>
+          <StyledFlex justifyContent={'center'} alignItems="flex-start" flexWrap={'wrap'}>
             <AppBodyWrapped>
               <RowBetween mb={'16px'}>
                 <TabContainer>
                   <TabWrapper>
-                    <Tab onClick={() => setActiveTab(ACTIVE_TAB.SWAP)} isActive={activeTab === ACTIVE_TAB.SWAP}>
+                    <Tab
+                      onClick={() => setActiveTab(ACTIVE_TAB.SWAP)}
+                      // isActive={isMobile ? false : activeTab === ACTIVE_TAB.SWAP}
+                      isActive={false}
+                    >
                       <TYPE.black fontSize={18} fontWeight={500}>{t`Swap`}</TYPE.black>
                     </Tab>
-                    <Tab
-                      onClick={() => {
-                        mixpanelHandler(MIXPANEL_TYPE.TOKEN_INFO_CHECKED)
-                        setActiveTab(ACTIVE_TAB.INFO)
-                      }}
-                      isActive={activeTab === ACTIVE_TAB.INFO}
-                    >
-                      <TYPE.black fontSize={18} fontWeight={500}>{t`Info`}</TYPE.black>
-                    </Tab>
+                    {/* <BrowserView>
+                      <Tab
+                        onClick={() => {
+                          mixpanelHandler(MIXPANEL_TYPE.TOKEN_INFO_CHECKED)
+                          setActiveTab(ACTIVE_TAB.INFO)
+                        }}
+                        isActive={activeTab === ACTIVE_TAB.INFO}
+                      >
+                        <TYPE.black fontSize={18} fontWeight={500}>{t`Info`}</TYPE.black>
+                      </Tab>
+                    </BrowserView> */}
                   </TabWrapper>
                 </TabContainer>
 
                 <SwapFormActions>
+                  <MobileTokenInfo currencies={currencies} onClick={() => setActiveTab(ACTIVE_TAB.INFO)} />
                   <RefreshButton isConfirming={showConfirm} trade={trade} onRefresh={onRefresh} />
                   <TransactionSettings isShowDisplaySettings />
                   <ShareButtonWithModal
@@ -394,7 +577,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       onConfirm={handleSwap}
                       swapErrorMessage={swapErrorMessage}
                       onDismiss={handleConfirmDismiss}
-                      tokenAddToMetaMask={currencies[Field.OUTPUT]}
+                      tokenAddToMetaMask={currencyOut}
                     />
 
                     <Flex flexDirection="column" sx={{ gap: '0.675rem' }}>
@@ -403,11 +586,11 @@ export default function Swap({ history }: RouteComponentProps) {
                         value={formattedAmounts[Field.INPUT]}
                         positionMax="top"
                         showMaxButton
-                        currency={currencies[Field.INPUT]}
+                        currency={currencyIn}
                         onUserInput={handleTypeInput}
                         onMax={handleMaxInput}
                         onCurrencySelect={handleInputSelect}
-                        otherCurrency={currencies[Field.OUTPUT]}
+                        otherCurrency={currencyOut}
                         id="swap-currency-input"
                         showCommonBases={true}
                         estimatedUsd={
@@ -416,15 +599,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       />
                       <AutoColumn justify="space-between">
                         <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                          <ArrowWrapper
-                            clickable
-                            rotated={rotate}
-                            onClick={() => {
-                              setApprovalSubmitted(false) // reset 2 step UI for approvals
-                              setRotate(prev => !prev)
-                              onSwitchTokensV2()
-                            }}
-                          >
+                          <ArrowWrapper clickable rotated={rotate} onClick={handleRotateClick}>
                             <SwapIcon size={22} />
                           </ArrowWrapper>
                           {recipient === null && !showWrap && isExpertMode ? (
@@ -440,9 +615,9 @@ export default function Swap({ history }: RouteComponentProps) {
                             <Trans>You save</Trans>{' '}
                             {formattedNum(tradeComparer.tradeSaved.usd, true) +
                               ` (${tradeComparer?.tradeSaved?.percent &&
-                              (tradeComparer.tradeSaved.percent < 0.01
-                                ? '<0.01'
-                                : tradeComparer.tradeSaved.percent.toFixed(2))}%)`}
+                                (tradeComparer.tradeSaved.percent < 0.01
+                                  ? '<0.01'
+                                  : tradeComparer.tradeSaved.percent.toFixed(2))}%)`}
                             <InfoHelper
                               text={
                                 <Text>
@@ -473,9 +648,9 @@ export default function Swap({ history }: RouteComponentProps) {
                           onUserInput={handleTypeOutput}
                           label={independentField === Field.INPUT && !showWrap && trade ? t`To (estimated)` : t`To`}
                           showMaxButton={false}
-                          currency={currencies[Field.OUTPUT]}
+                          currency={currencyOut}
                           onCurrencySelect={handleOutputSelect}
-                          otherCurrency={currencies[Field.INPUT]}
+                          otherCurrency={currencyIn}
                           id="swap-currency-output"
                           showCommonBases={true}
                           estimatedUsd={
@@ -563,7 +738,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           <Trans>Connect Wallet</Trans>
                         </ButtonLight>
                       ) : isLoading ? (
-                        <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px', padding: '18px' }}>
+                        <GreyCard style={{ textAlign: 'center', borderRadius: '999px', padding: '18px' }}>
                           <TYPE.main>
                             <Dots>
                               <Trans>Calculating best route</Trans>
@@ -597,7 +772,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                               t`Approved`
                             ) : (
-                              t`Approve ${currencies[Field.INPUT]?.symbol}`
+                              t`Approve ${currencyIn?.symbol}`
                             )}
                           </ButtonConfirmed>
                           <ButtonError
@@ -655,8 +830,8 @@ export default function Swap({ history }: RouteComponentProps) {
                               approval !== ApprovalState.APPROVED ||
                               (!isExpertMode && trade && (trade.priceImpact > 15 || trade.priceImpact === -1))
                             ) &&
-                              trade &&
-                              (trade.priceImpact > 5 || trade.priceImpact === -1)
+                            trade &&
+                            (trade.priceImpact > 5 || trade.priceImpact === -1)
                               ? { background: theme.red, color: theme.white }
                               : {}),
                           }}
@@ -665,10 +840,10 @@ export default function Swap({ history }: RouteComponentProps) {
                             {swapInputError
                               ? swapInputError
                               : approval !== ApprovalState.APPROVED
-                                ? t`Checking allowance...`
-                                : trade && (trade.priceImpact > 5 || trade.priceImpact === -1)
-                                  ? t`Swap Anyway`
-                                  : t`Swap`}
+                              ? t`Checking allowance...`
+                              : trade && (trade.priceImpact > 5 || trade.priceImpact === -1)
+                              ? t`Swap Anyway`
+                              : t`Swap`}
                           </Text>
                         </ButtonError>
                       )}
@@ -683,24 +858,32 @@ export default function Swap({ history }: RouteComponentProps) {
                   <AdvancedSwapDetailsDropdown trade={trade} feeConfig={feeConfig} />
                 </>
               ) : (
-                <TokenInfo currencies={currencies} />
+                <TokenInfo currencies={currencies} onBack={() => setActiveTab(ACTIVE_TAB.SWAP)} />
               )}
             </AppBodyWrapped>
-            {(isShowLiveChart || isShowTradeRoutes) && (
-              <BrowserView style={{ paddingTop: '30px' }}>
+            <Flex flexDirection="column">
+              <BrowserView>
                 {isShowLiveChart && (
-                  <LiveChartWrapper>
+                  <LiveChartWrapper
+                    borderBottom={
+                      showProChartStore ? false : isShowTradeRoutes || (renderTokenInfo ? actualShowTokenInfo : false)
+                    }
+                  >
                     <LiveChart onRotateClick={handleRotateClick} currencies={currencies} />
                   </LiveChartWrapper>
                 )}
                 {isShowTradeRoutes && (
-                  <RoutesWrapper isOpenChart={isShowLiveChart}>
+                  <RoutesWrapper
+                    isOpenChart={isShowLiveChart}
+                    borderBottom={renderTokenInfo ? actualShowTokenInfo : false}
+                  >
                     <Flex flexDirection="column" width="100%">
-                      <RowBetween>
-                        <Text fontSize={18} fontWeight={500} color={theme.subText}>
+                      <Flex alignItems={'center'}>
+                        <RoutingIconWrapper />
+                        <Text fontSize={20} fontWeight={500} color={theme.subText}>
                           <Trans>Your trade route</Trans>
                         </Text>
-                      </RowBetween>
+                      </Flex>
                       <Routing
                         trade={trade}
                         currencies={currencies}
@@ -712,11 +895,22 @@ export default function Swap({ history }: RouteComponentProps) {
                   </RoutesWrapper>
                 )}
               </BrowserView>
-            )}
+              {renderTokenInfo ? (
+                <TokenInfoV2 currencyIn={currencyIn} currencyOut={currencyOut} callback={setActualShowTokenInfo} />
+              ) : null}
+              <SwitchLocaleLinkWrapper>
+                <SwitchLocaleLink />
+              </SwitchLocaleLinkWrapper>
+            </Flex>
           </StyledFlex>
-          <SwitchLocaleLink />
         </Container>
+        <BrowserView>
+          <Footer />
+        </BrowserView>
       </PageWrapper>
+      <MobileView style={{ width: '100vw' }}>
+        <Footer />
+      </MobileView>
       <MobileLiveChart handleRotateClick={handleRotateClick} currencies={currencies} />
       <MobileTradeRoutes trade={trade} formattedAmounts={formattedAmounts} currencies={currencies} />
     </>

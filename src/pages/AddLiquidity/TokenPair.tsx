@@ -17,7 +17,7 @@ import TransactionConfirmationModal, {
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, AMP_HINT, FEE_OPTIONS } from '../../constants'
+import { AMP_HINT, STATIC_FEE_ROUTER_ADDRESSES, DYNAMIC_FEE_ROUTER_ADDRESSES } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -30,7 +30,13 @@ import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, usePairAdderByTokens, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from '../../utils'
+import {
+  calculateGasMargin,
+  calculateSlippageAmount,
+  formattedNum,
+  getDynamicFeeRouterContract,
+  getStaticFeeRouterContract,
+} from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
@@ -93,6 +99,7 @@ const TokenPair = ({
     poolTokenPercentage,
     error,
     unAmplifiedPairAddress,
+    isStaticFeePair,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
 
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
@@ -139,15 +146,15 @@ const TokenPair = ({
     {},
   )
 
+  const routerAddress = chainId
+    ? isStaticFeePair
+      ? STATIC_FEE_ROUTER_ADDRESSES[chainId]
+      : DYNAMIC_FEE_ROUTER_ADDRESSES[chainId]
+    : undefined
+
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_A],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
-  )
-  const [approvalB, approveBCallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_B],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
-  )
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], routerAddress)
 
   const addTransactionWithType = useTransactionAdder()
   const addPair = usePairAdderByTokens()
@@ -155,7 +162,9 @@ const TokenPair = ({
   async function onAdd() {
     // if (!pair) return
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    const router = isStaticFeePair
+      ? getStaticFeeRouterContract(chainId, library, account)
+      : getDynamicFeeRouterContract(chainId, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -570,31 +579,31 @@ const TokenPair = ({
                         <AutoRow>
                           <Text fontWeight={500} fontSize={12} color={theme.subText}>
                             <UppercaseText>
-                              {chainId && FEE_OPTIONS[chainId] ? <Trans>Fee</Trans> : <Trans>Dynamic Fee Range</Trans>}
+                              {isStaticFeePair || !pair ? <Trans>Fee</Trans> : <Trans>Dynamic Fee Range</Trans>}
                             </UppercaseText>
                           </Text>
                           <QuestionHelper
                             text={
-                              chainId && FEE_OPTIONS[chainId]
+                              isStaticFeePair || !pair
                                 ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
                                 : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers`
                             }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
-                          {chainId && FEE_OPTIONS[chainId]
-                            ? pair?.fee
+                          {!!pair
+                            ? isStaticFeePair && pair?.fee
                               ? +new Fraction(JSBI.BigInt(pair.fee))
                                   .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
                                   .toSignificant(6) *
                                   100 +
                                 '%'
-                              : ''
-                            : feeRangeCalc(
-                                !!pair?.amp
-                                  ? +new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
-                                  : +amp,
-                              )}
+                              : feeRangeCalc(
+                                  !!pair?.amp
+                                    ? +new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                    : +amp,
+                                )
+                            : ''}
                         </Text>
                       </DynamicFeeRangeWrapper>
                     )}

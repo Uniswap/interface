@@ -39,7 +39,8 @@ export default function PoolFinder() {
   const [currency0, setCurrency0] = useState<Currency | null>(nativeOnChain(chainId as ChainId))
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
-  const pairs: [PairState, Pair | null][] = usePair(currency0 ?? undefined, currency1 ?? undefined)
+  // pairs: {PairState, Pair, isStaticFeePair}[]
+  const pairs: [PairState, Pair | null, boolean?][] = usePair(currency0 ?? undefined, currency1 ?? undefined)
   const addPair = usePairAdderByTokens()
   useEffect(() => {
     if (pairs.length > 0) {
@@ -81,7 +82,7 @@ export default function PoolFinder() {
       if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
         hasPosition = Boolean(
           positions[pair.liquidityToken.address] &&
-            JSBI.greaterThanOrEqual((positions[pair.liquidityToken.address] as TokenAmount).quotient, JSBI.BigInt(0)),
+            JSBI.greaterThan((positions[pair.liquidityToken.address] as TokenAmount).quotient, JSBI.BigInt(0)),
         )
       }
       return pairState === PairState.EXISTS && hasPosition && pair

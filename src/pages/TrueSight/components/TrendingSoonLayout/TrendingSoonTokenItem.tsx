@@ -104,7 +104,7 @@ const TrendingSoonTokenItem = ({
   const theme = useTheme()
   // const date = dayjs(tokenData.discovered_on * 1000).format('YYYY/MM/DD, HH:mm')
   const date = dayjs(tokenData.discovered_on * 1000).format('YYYY/MM/DD')
-  const above1200 = useMedia('(min-width: 1200px)')
+  const above1201 = useMedia('(min-width: 1201px)')
 
   const toggleTrendingSoonTokenDetailModal = useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
 
@@ -121,7 +121,7 @@ const TrendingSoonTokenItem = ({
       </Text>
     ) : null
 
-  if (above1200) {
+  if (above1201) {
     return (
       <StyledTrendingSoonTokenItem
         justifyContent="space-between"

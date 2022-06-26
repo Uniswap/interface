@@ -34,15 +34,17 @@ async function fetchChunk(
   let resultsBlockNumber, returnData
 
   try {
-    const res = await multicallContract.callStatic.aggregate(
+    const res = await multicallContract.callStatic.tryBlockAndAggregate(
+      false, // requireSuccess
       chunk.map(obj => ({
         target: obj.address,
         callData: obj.callData,
         gasLimit: obj.gasRequired ?? 1_000_000,
       })),
     )
+
     resultsBlockNumber = res.blockNumber
-    returnData = res.returnData
+    returnData = res.returnData.map((item: any) => item[1])
     // ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(chunk.map(obj => [obj.address, obj.callData]))
   } catch (e) {
     let error: any = e

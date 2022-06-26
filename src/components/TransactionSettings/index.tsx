@@ -18,6 +18,8 @@ import {
   useToggleTradeRoutes,
   useToggleTopTrendingTokens,
   useShowTopTrendingSoonTokens,
+  // useShowTokenInfo,
+  // useToggleTokenInfo,
 } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useModalOpen, useToggleTransactionSettingsMenu, useToggleModal } from 'state/application/hooks'
@@ -31,6 +33,7 @@ import MenuFlyout from 'components/MenuFlyout'
 import { isMobile } from 'react-device-detect'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
+import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
 enum SlippageError {
   InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',
@@ -127,39 +130,6 @@ const ModalContentWrapper = styled.div`
   width: 100%;
   padding: 24px 24px 28px;
   background-color: ${({ theme }) => theme.background};
-`
-
-const StyledMenuButton = styled.button<{ active?: boolean }>`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  height: 35px;
-
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-
-  :hover {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.buttonBlack};
-  }
-
-  ${({ active }) =>
-    active
-      ? css`
-          cursor: pointer;
-          outline: none;
-          background-color: ${({ theme }) => theme.buttonBlack};
-        `
-      : ''}
-
-  svg {
-    margin-top: 2px;
-  }
 `
 
 const StyledMenu = styled.div`
@@ -400,12 +370,18 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
 
   const isShowLiveChart = useShowLiveChart()
   const isShowMobileLiveChart = useModalOpen(ApplicationModal.MOBILE_LIVE_CHART)
+
   const isShowTradeRoutes = useShowTradeRoutes()
+  // const isShowTokenInfo = useShowTokenInfo()
+
   const isShowMobileTradeRoutes = useModalOpen(ApplicationModal.MOBILE_TRADE_ROUTES)
   const toggleLiveChart = useToggleLiveChart()
   const toggleMobileLiveChart = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
+
   const toggleTradeRoutes = useToggleTradeRoutes()
+  // const toggleTokenInfo = useToggleTokenInfo()
   const toggleMobileTradeRoutes = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
+
   const isShowTrendingSoonTokens = useShowTopTrendingSoonTokens()
   const toggleTopTrendingTokens = useToggleTopTrendingTokens()
   const { mixpanelHandler } = useMixpanel()
@@ -486,14 +462,14 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
       <StyledMenu ref={node as any}>
         <Tooltip text={t`Advanced mode is on!`} show={expertMode && isShowTooltip}>
           <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip}>
-            <StyledMenuButton
+            <StyledActionButtonSwapForm
               active={open}
               onClick={toggle}
               id="open-settings-dialog-button"
               aria-label="Transaction Settings"
             >
               <TransactionSettingsIcon fill={expertMode ? theme.warning : theme.text} />
-            </StyledMenuButton>
+            </StyledActionButtonSwapForm>
           </div>
         </Tooltip>
 
@@ -605,6 +581,16 @@ export default function TransactionSettings({ isShowDisplaySettings = false }: {
                       size={isMobile ? 'md' : 'sm'}
                     />
                   </RowBetween>
+
+                  {/* <RowBetween>
+                    <RowFixed>
+                      <StyledLabel>
+                        <Trans>Token Info</Trans>
+                      </StyledLabel>
+                      <QuestionHelper text={t`Turn on to display token info`} />
+                    </RowFixed>
+                    <Toggle isActive={isShowTokenInfo} toggle={toggleTokenInfo} size={isMobile ? 'md' : 'sm'} />
+                  </RowBetween> */}
                 </AutoColumn>
               </>
             )}

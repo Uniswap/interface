@@ -1,6 +1,6 @@
 import React, { HTMLProps, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { ArrowLeft, X, ExternalLink as LinkIconFeather, Trash } from 'react-feather'
 
@@ -257,6 +257,23 @@ export function BackArrow({ to }: { to: string }) {
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
+`
+
+export const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    ${css`
+      display: none;
+    `}
+  `};
+`
+
+export const MediumOnly = styled.span`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    ${css`
+      display: block;
+    `}
+  `};
 `
 
 export const HideSmall = styled.span`

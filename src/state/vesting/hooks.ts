@@ -20,6 +20,7 @@ import { useTokens } from 'hooks/Tokens'
 import { useTokensPrice } from 'state/application/hooks'
 import REWARD_LOCKER_V2_ABI from 'constants/abis/reward-locker-v2.json'
 import { Contract } from 'ethers'
+import { VERSION } from 'constants/v2'
 
 export const useRewardLockerAddressesWithVersion = (): { [rewardLockerAddress: string]: RewardLockerVersion } => {
   const { chainId } = useActiveWeb3React()
@@ -226,7 +227,7 @@ export const usePrommSchedules = () => {
     return Object.values(rwTokenMap)
   }, [rwTokenMap])
 
-  const prices = useTokensPrice(tokens, 'promm')
+  const prices = useTokensPrice(tokens, VERSION.ELASTIC)
 
   const tokenPriceMap = useMemo(() => {
     return prices.reduce((priceMap, price, index) => {

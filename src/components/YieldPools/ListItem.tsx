@@ -339,7 +339,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         >
           {farmRewards.map(reward => {
             return (
-              <div key={reward.token.address} style={{ marginTop: '2px' }}>
+              <div key={reward.token.wrapped.address} style={{ marginTop: '2px' }}>
                 <Flex alignItems="center">
                   {getFullDisplayBalance(reward.amount, reward.token.decimals)}
                   {chainId && reward.token.wrapped.address && (
@@ -492,10 +492,10 @@ const ListItem = ({ farm }: ListItemProps) => {
                       <RewardBalanceWrapper>
                         {farmRewards.map(reward => {
                           return (
-                            <div key={reward.token.address}>
+                            <div key={reward.token.wrapped.address}>
                               <Flex alignItems="center">
                                 {getFullDisplayBalance(reward.amount, reward.token.decimals)}
-                                {chainId && reward.token.address && (
+                                {chainId && reward.token.wrapped.address && (
                                   <CurrencyLogo currency={reward.token} size="16px" style={{ marginLeft: '3px' }} />
                                 )}
                               </Flex>
@@ -634,10 +634,10 @@ const ListItem = ({ farm }: ListItemProps) => {
           <DataText style={{ display: 'flex', flexDirection: 'column' }}>
             {farmRewards.map(reward => {
               return (
-                <div key={reward.token.address} style={{ marginTop: '2px' }}>
+                <div key={reward.token.wrapped.address} style={{ marginTop: '2px' }}>
                   <Flex style={{ alignItems: 'center' }}>
                     {getFullDisplayBalance(reward?.amount)}
-                    {chainId && reward.token.address && (
+                    {chainId && reward.token.wrapped.address && (
                       <CurrencyLogo currency={reward.token} size="20px" style={{ marginLeft: '3px' }} />
                     )}
                   </Flex>
@@ -827,10 +827,10 @@ const ListItem = ({ farm }: ListItemProps) => {
                   <RewardBalanceWrapper>
                     {farmRewards?.map(reward => {
                       return (
-                        <div key={reward.token.address} style={{ marginTop: '2px' }}>
+                        <div key={reward.token.wrapped.address} style={{ marginTop: '2px' }}>
                           <Flex style={{ alignItems: 'center' }}>
                             {getFullDisplayBalance(reward?.amount)}
-                            {chainId && reward.token.address && (
+                            {chainId && reward.token.wrapped.address && (
                               <CurrencyLogo currency={reward.token} size="16px" style={{ marginLeft: '3px' }} />
                             )}
                           </Flex>

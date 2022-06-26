@@ -37,6 +37,7 @@ import HoverDropdown from 'components/HoverDropdown'
 import { StyledInternalLink } from 'theme'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { VERSION } from 'constants/v2'
 
 const PositionRow = ({
   position,
@@ -54,7 +55,7 @@ const PositionRow = ({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
-  const usdPrices = useTokensPrice([token0, token1], 'promm')
+  const usdPrices = useTokensPrice([token0, token1], VERSION.ELASTIC)
 
   // construct Position from details returned
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)

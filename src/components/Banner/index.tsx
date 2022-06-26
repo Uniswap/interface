@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { useWindowSize } from 'hooks/useWindowSize'
 import styled from 'styled-components'
 import { X } from 'react-feather'
@@ -173,12 +173,12 @@ function Banner({
     },
   ]
 
-  const [showBanner, setShowBanner] = useLocalStorage('show-banner-' + ALL_BANNERS[0].id, true)
-
+  const [_showBanner, setShowBanner] = useLocalStorage('show-banner-' + ALL_BANNERS[0].id, true)
   const banners = ALL_BANNERS.filter(b => {
     const date = new Date()
     return date >= b.start && date <= b.end
   })
+  const showBanner = useMemo(() => _showBanner && banners.length, [_showBanner, banners.length])
 
   if (!showBanner) return null
 

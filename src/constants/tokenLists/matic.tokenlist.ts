@@ -225,6 +225,14 @@ export const MATIC_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://app.forlootandglory.io/token_logo.png',
     },
+    {
+      chainId: 137,
+      address: '0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4',
+      symbol: 'stMATIC',
+      name: 'Staked MATIC (PoS)',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/128x128/18688.png',
+    },
   ],
   version: {
     major: 0,

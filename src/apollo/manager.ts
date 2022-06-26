@@ -3,13 +3,10 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { SUBGRAPH_BLOCK_NUMBER } from './queries'
 
 const EXCHANGE_SUBGRAPH_URLS = {
-  mainnet: ['https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm'],
+  mainnet: ['https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-ethereum'],
   mainnetStaging: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'],
-  ropsten: ['https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-ropsten'],
-  polygon: [
-    'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
-    'https://polygon-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-matic',
-  ],
+  ropsten: ['https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-classic-ropsten'],
+  polygon: ['https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-polygon'],
   polygonStaging: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic-staging'],
   mumbai: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai'],
   bsc: [
@@ -24,7 +21,7 @@ const EXCHANGE_SUBGRAPH_URLS = {
   ],
   avalancheTestnet: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij'],
   fantom: [
-    'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-ftm',
+    'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-fantom',
     // 'https://fantom-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-ftm'
   ],
   cronosTestnet: ['https://testnet-cronos-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-cronos-testnet'],
@@ -32,7 +29,7 @@ const EXCHANGE_SUBGRAPH_URLS = {
   arbitrumTestnet: ['https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-arbitrum-rinkeby'],
   arbitrum: ['https://arbitrum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-arbitrum'],
   bttc: ['https://bttc-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-bttc'],
-  aurora: ['https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-aurora'],
+  aurora: ['https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-aurora'],
   velas: ['https://velas-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-velas'],
   oasis: ['https://oasis-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-oasis'],
 }

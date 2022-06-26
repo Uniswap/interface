@@ -1,4 +1,3 @@
-import { useFactoryContract } from 'hooks/useContract'
 import { Pair } from '@kyberswap/ks-sdk-classic'
 import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import flatMap from 'lodash.flatmap'
@@ -28,6 +27,7 @@ import {
   toggleTradeRoutes,
   toggleProLiveChart,
   toggleTopTrendingTokens,
+  toggleTokenInfo,
 } from './actions'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
@@ -35,6 +35,7 @@ import { isAddress } from 'utils'
 import { useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { defaultShowLiveCharts } from './reducer'
+import { useStaticFeeFactoryContract, useDynamicFeeFactoryContract } from 'hooks/useContract'
 
 function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
   return {
@@ -51,23 +52,23 @@ function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
 function deserializeToken(serializedToken: SerializedToken): Token {
   return serializedToken?.logoURI && serializedToken?.list
     ? new WrappedTokenInfo(
-      {
-        chainId: serializedToken.chainId,
-        address: serializedToken.address,
-        name: serializedToken.name ?? '',
-        symbol: serializedToken.symbol ?? '',
-        decimals: serializedToken.decimals,
-        logoURI: serializedToken.logoURI,
-      },
-      serializedToken.list,
-    )
+        {
+          chainId: serializedToken.chainId,
+          address: serializedToken.address,
+          name: serializedToken.name ?? '',
+          symbol: serializedToken.symbol ?? '',
+          decimals: serializedToken.decimals,
+          logoURI: serializedToken.logoURI,
+        },
+        serializedToken.list,
+      )
     : new Token(
-      serializedToken.chainId,
-      serializedToken.address,
-      serializedToken.decimals,
-      serializedToken.symbol,
-      serializedToken.name,
-    )
+        serializedToken.chainId,
+        serializedToken.address,
+        serializedToken.decimals,
+        serializedToken.symbol,
+        serializedToken.name,
+      )
 }
 // function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
 //   return new TokenUNI(
@@ -261,19 +262,42 @@ export function useURLWarningToggle(): () => void {
 export function useToV2LiquidityTokens(
   tokenCouples: [Token, Token][],
 ): { liquidityTokens: []; tokens: [Token, Token] }[] {
-  const contract = useFactoryContract()
-  const result = useSingleContractMultipleData(
-    contract,
+  const staticContract = useStaticFeeFactoryContract()
+  const dynamicContract = useDynamicFeeFactoryContract()
+  const result1 = useSingleContractMultipleData(
+    staticContract,
     'getPools',
     tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
   )
-  return result.map((result, index) => ({
-    tokens: tokenCouples[index],
-    liquidityTokens:
-      result.result?.[0].map(
-        (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP'),
-      ) || [],
-  }))
+  const result2 = useSingleContractMultipleData(
+    dynamicContract,
+    'getPools',
+    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
+  )
+  const result = useMemo(
+    () =>
+      result1?.map((call, index) => {
+        return {
+          ...call,
+          result: [call.result?.[0].concat(result2?.[index]?.result?.[0] || [])],
+        }
+      }),
+    [result1, result2],
+  )
+  return useMemo(
+    () =>
+      result.map((result, index) => {
+        return {
+          tokens: tokenCouples[index],
+          liquidityTokens: result?.result?.[0]
+            ? result.result[0].map(
+                (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP'),
+              )
+            : [],
+        }
+      }),
+    [tokenCouples, result],
+  )
 }
 
 /**
@@ -427,6 +451,10 @@ export function useShowTradeRoutes(): boolean {
   return showTradeRoutes
 }
 
+export function useShowTokenInfo(): boolean {
+  return useSelector((state: AppState) => state.user.showTokenInfo)
+}
+
 export function useShowTopTrendingSoonTokens(): boolean {
   const showTrendingSoon = useSelector((state: AppState) => state.user.showTopTrendingSoonTokens)
   return showTrendingSoon ?? true
@@ -444,6 +472,11 @@ export function useToggleProLiveChart(): () => void {
 export function useToggleTradeRoutes(): () => void {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(() => dispatch(toggleTradeRoutes()), [dispatch])
+}
+
+export function useToggleTokenInfo(): () => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(() => dispatch(toggleTokenInfo()), [dispatch])
 }
 
 export function useToggleTopTrendingTokens(): () => void {

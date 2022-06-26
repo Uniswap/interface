@@ -28,7 +28,7 @@ export const Container = styled.div`
   max-width: 936px;
   margin: 0 auto;
   padding: 24px 20px;
-  background: ${({ theme }) => theme.bg6};
+  background: ${({ theme }) => theme.background};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
@@ -146,8 +146,8 @@ export const PoolRatioWrapper = styled.div`
 `
 
 export const DynamicFeeRangeWrapper = styled(AutoColumn)`
-  flex: 2;
-  justify-content: flex-end;
+  flex: 1;
+  justify-content: flex-start;
 `
 
 export const USDPrice = styled.div`

@@ -166,7 +166,7 @@ export default function CreateReferral() {
       return (
         window.location.origin +
         '/swap?' +
-        `referral=${address}&fee_percent=${commission}${
+        `referral=${address}&fee_bip=${commission}${
           isShowTokens
             ? `&inputCurrency=${currencyId(currencyA as Currency, chainId)}&outputCurrency=${currencyId(
                 currencyB as Currency,
@@ -313,7 +313,7 @@ export default function CreateReferral() {
                 <Text fontSize={36} lineHeight="42px" fontWeight={500} color={theme.text}>
                   {new Fraction(JSBI.BigInt(commission), JSBI.BigInt(PERCENT_TO_BIP_DENOMINATOR)).toSignificant(5)}%
                 </Text>
-                <MaxButton onClick={() => setCommission(100)}>
+                <MaxButton onClick={() => setCommission(10)}>
                   <Text fontSize={12} color={theme.green}>
                     <Trans>Max</Trans>: 0.1%
                   </Text>

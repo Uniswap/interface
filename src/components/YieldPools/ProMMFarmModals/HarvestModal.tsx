@@ -19,6 +19,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useTokensPrice } from 'state/application/hooks'
 import { formatDollarAmount } from 'utils/numbers'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { VERSION } from 'constants/v2'
 const HarvestInfo = styled.div`
   padding: 16px;
   border-radius: 4px;
@@ -163,7 +164,7 @@ function HarvestModal({
             <br />
             <br />
             To claim your rewards, go to the{' '}
-            <StyledInternalLink to="/farms?tab=vesting&farmType=promm"> Vesting</StyledInternalLink> tab and click
+            <StyledInternalLink to="/farms?tab=vesting&farmType=elastic"> Vesting</StyledInternalLink> tab and click
             'Claim'.
           </Trans>
         </HarvestInfo>
@@ -203,7 +204,7 @@ const Reward = ({
 }) => {
   const token = useToken(address)
 
-  const price = useTokensPrice([token], 'promm')
+  const price = useTokensPrice([token], VERSION.ELASTIC)
 
   const amountString = amount?.toString()
 

@@ -10,6 +10,7 @@ import * as ReactDOMServer from 'react-dom/server'
 import { isMobile } from 'react-device-detect'
 import { useDatafeed } from './datafeed'
 import { Currency } from '@kyberswap/ks-sdk-core'
+import { Z_INDEXS } from 'styles'
 
 const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
   margin-top: 10px;
@@ -27,7 +28,7 @@ const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
     position: fixed;
     top: -15px;
     left: 0;
-    z-index: 99999;
+    z-index: ${Z_INDEXS.LIVE_CHART};
     padding-top: 82px;
     height: 100%!important;
     width: 100%!important;

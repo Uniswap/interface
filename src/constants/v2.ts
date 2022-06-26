@@ -52,12 +52,12 @@ export const PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: ChainStringList = {
   [ChainId.OASIS]: NONFUNGIBLE_POSITION_MANAGER_ADDRESS,
 }
 // const TICK_READER = '0xb4748ce3ca04BE8f7E266dC9E38343A286eB5Ec6' //-- old
-const TICK_READER = '0xD7ab1699280980E756C446769B4c0F04550f88c9'
+const TICK_READER = '0xe3AC3fd66EB31cAf4EE0831b262D837c479FFCe5'
 
 export const PRO_AMM_TICK_READER: ChainStringList = {
   [ChainId.MAINNET]: TICK_READER,
   [ChainId.ROPSTEN]: '0x9A32cd0d2Fc6C60bFE51B0f0Ab27bAd82ca8F3FD',
-  [ChainId.RINKEBY]: TICK_READER,
+  [ChainId.RINKEBY]: '0xF08651170A4593898B5506BAbaf3A7fc85C0958E',
   [ChainId.GÖRLI]: TICK_READER,
   [ChainId.KOVAN]: TICK_READER,
   [ChainId.MATIC]: TICK_READER,
@@ -183,5 +183,10 @@ export const FARM_CONTRACTS: { readonly [chainId in ChainId]?: Array<string> } =
 
 export const ELASTIC_NOT_SUPPORTED: { [key: string]: string } = {
   [ChainId.AURORA]: t`Elastic is not supported on Aurora. Please switch to other chains`,
-  [ChainId.VELAS]: t`Elastic will be available soon`,
+  // [ChainId.VELAS]: t`Elastic will be available soon`,
+}
+
+export enum VERSION {
+  ELASTIC = 'elastic',
+  CLASSIC = 'classic',
 }

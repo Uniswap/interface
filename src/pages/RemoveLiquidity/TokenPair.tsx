@@ -8,7 +8,7 @@ import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
 import { Currency, CurrencyAmount, Fraction, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { ROUTER_ADDRESSES, FEE_OPTIONS } from 'constants/index'
+import { STATIC_FEE_ROUTER_ADDRESSES, DYNAMIC_FEE_ROUTER_ADDRESSES } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -38,7 +38,13 @@ import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { Wrapper } from '../Pool/styleds'
-import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from 'utils'
+import {
+  calculateGasMargin,
+  calculateSlippageAmount,
+  formattedNum,
+  getStaticFeeRouterContract,
+  getDynamicFeeRouterContract,
+} from 'utils'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 import { currencyId } from 'utils/currencyId'
 import { formatJSBIValue } from 'utils/formatBalance'
@@ -85,11 +91,16 @@ export default function TokenPair({
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const { pair, userLiquidity, parsedAmounts, amountsMin, price, error } = useDerivedBurnInfo(
+  const { pair, userLiquidity, parsedAmounts, amountsMin, price, error, isStaticFeePair } = useDerivedBurnInfo(
     currencyA ?? undefined,
     currencyB ?? undefined,
     pairAddress,
   )
+  const contractAddress = chainId
+    ? isStaticFeePair
+      ? STATIC_FEE_ROUTER_ADDRESSES[chainId]
+      : DYNAMIC_FEE_ROUTER_ADDRESSES[chainId]
+    : undefined
   const amp = pair?.amp || JSBI.BigInt(0)
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
@@ -123,10 +134,7 @@ export default function TokenPair({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(
-    parsedAmounts[Field.LIQUIDITY],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
-  )
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], contractAddress)
 
   // if user liquidity change => remove signature
   useEffect(() => {
@@ -146,8 +154,6 @@ export default function TokenPair({
       return approveCallback()
     }
 
-    const isWithoutDynamicFee = !!(chainId && FEE_OPTIONS[chainId])
-
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)
 
@@ -158,7 +164,7 @@ export default function TokenPair({
       { name: 'verifyingContract', type: 'address' },
     ]
     const domain = {
-      name: !isWithoutDynamicFee ? 'KyberDMM LP' : 'KyberSwap LP',
+      name: isStaticFeePair ? 'KyberSwap LP' : 'KyberDMM LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address,
@@ -172,7 +178,8 @@ export default function TokenPair({
     ]
     const message = {
       owner: account,
-      spender: ROUTER_ADDRESSES[chainId],
+      TransactionErrorContent,
+      spender: contractAddress,
       value: liquidityAmount.quotient.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber(),
@@ -233,7 +240,9 @@ export default function TokenPair({
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
     }
-    const router = getRouterContract(chainId, library, account)
+    const routerContract = isStaticFeePair
+      ? getStaticFeeRouterContract(chainId, library, account)
+      : getDynamicFeeRouterContract(chainId, library, account)
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
@@ -323,7 +332,7 @@ export default function TokenPair({
 
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
-        router.estimateGas[methodName](...args)
+        routerContract.estimateGas[methodName](...args)
           .then(calculateGasMargin)
           .catch(error => {
             console.error(`estimateGas failed`, methodName, args, error)
@@ -344,7 +353,7 @@ export default function TokenPair({
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
       setAttemptingTxn(true)
-      await router[methodName](...args, {
+      await routerContract[methodName](...args, {
         gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {

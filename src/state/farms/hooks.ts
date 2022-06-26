@@ -89,7 +89,6 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
   const blockNumber = useBlockNumber()
-
   const apolloClient = useExchangeClient()
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)

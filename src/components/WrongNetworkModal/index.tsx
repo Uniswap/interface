@@ -41,7 +41,7 @@ const ListItem = styled.div<{ selected?: boolean }>`
       ? `
         background-color: ${theme.primary};
         & ${NetworkLabel} {
-          color: ${theme.bg6};
+          color: ${theme.background};
         }
       `
       : `

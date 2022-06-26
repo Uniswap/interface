@@ -11,7 +11,7 @@ import {
   basisPointsToPercent,
   calculateGasMargin,
   getProAmmRouterContract,
-  getRouterContract,
+  getDynamicFeeRouterContract,
   isAddress,
   shortenAddress,
 } from '../utils'
@@ -73,8 +73,10 @@ function useSwapCallArguments(
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
     if (trade instanceof Trade) {
-      const routerContract: Contract | null = getRouterContract(chainId, library, account)
-      if (!routerContract) return []
+      const routerContract: Contract | null = getDynamicFeeRouterContract(chainId, library, account)
+      if (!routerContract) {
+        return []
+      }
       const swapMethods = [
         Router.swapCallParameters(trade, {
           feeOnTransfer: false,

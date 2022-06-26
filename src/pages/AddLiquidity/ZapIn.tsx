@@ -6,10 +6,9 @@ import { AlertTriangle } from 'react-feather'
 import { Text, Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
-
 import { computePriceImpact, Currency, CurrencyAmount, Fraction, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
-import { ZAP_ADDRESSES, AMP_HINT, FEE_OPTIONS } from 'constants/index'
+import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, AMP_HINT, STATIC_FEE_FACTORY_ADDRESSES } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
@@ -97,6 +96,7 @@ const ZapIn = ({
     insufficientLiquidity,
     error,
     unAmplifiedPairAddress,
+    isStaticFeePair,
   } = useDerivedZapInInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
 
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
@@ -158,7 +158,7 @@ const ZapIn = ({
 
   const [approval, approveCallback] = useApproveCallback(
     amountToApprove,
-    !!chainId ? ZAP_ADDRESSES[chainId] : undefined,
+    !!chainId ? (isStaticFeePair ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId]) : undefined,
   )
 
   const userInCurrencyAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
@@ -176,7 +176,7 @@ const ZapIn = ({
   const addTransactionWithType = useTransactionAdder()
   async function onZapIn() {
     if (!chainId || !library || !account) return
-    const zapContract = getZapContract(chainId, library, account)
+    const zapContract = getZapContract(chainId, library, account, isStaticFeePair)
 
     if (!chainId || !account) {
       return
@@ -220,7 +220,10 @@ const ZapIn = ({
       ]
       value = null
     }
-
+    // All methods of new zap static fee contract include factory address as first arg
+    if (isStaticFeePair) {
+      args.unshift(STATIC_FEE_FACTORY_ADDRESSES[chainId])
+    }
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -611,31 +614,31 @@ const ZapIn = ({
                         <AutoRow>
                           <Text fontWeight={500} fontSize={12} color={theme.subText}>
                             <UppercaseText>
-                              {chainId && FEE_OPTIONS[chainId] ? <Trans>Fee</Trans> : <Trans>Dynamic Fee Range</Trans>}
+                              {isStaticFeePair || !pair ? <Trans>Fee</Trans> : <Trans>Dynamic Fee Range</Trans>}
                             </UppercaseText>
                           </Text>
                           <QuestionHelper
                             text={
-                              chainId && FEE_OPTIONS[chainId]
+                              isStaticFeePair || !pair
                                 ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
                                 : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers`
                             }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
-                          {chainId && FEE_OPTIONS[chainId]
-                            ? pair?.fee
+                          {!!pair
+                            ? isStaticFeePair && pair?.fee
                               ? +new Fraction(JSBI.BigInt(pair.fee))
                                   .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
                                   .toSignificant(6) *
                                   100 +
                                 '%'
-                              : ''
-                            : feeRangeCalc(
-                                !!pair?.amp
-                                  ? +new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
-                                  : +amp,
-                              )}
+                              : feeRangeCalc(
+                                  !!pair?.amp
+                                    ? +new Fraction(JSBI.BigInt(pair.amp)).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                    : +amp,
+                                )
+                            : ''}
                         </Text>
                       </DynamicFeeRangeWrapper>
                     )}

@@ -40,6 +40,7 @@ import { ModalContentWrapper } from './ProMMFarmModals/styled'
 import { ExternalLink } from 'theme'
 import Loader from 'components/Loader'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { VERSION } from 'constants/v2'
 
 const BtnPrimary = styled(ButtonPrimary)`
   height: 36px;
@@ -167,7 +168,7 @@ const Row = ({
 
   const { tvl, farmAPR, poolAPY } = useProMMFarmTVL(fairlaunchAddress, farm.pid)
 
-  const prices = useTokensPrice([token0, token1], 'promm')
+  const prices = useTokensPrice([token0, token1], VERSION.ELASTIC)
 
   const pool = useMemo(() => {
     if (token0 && token1)
@@ -544,7 +545,7 @@ function ProMMFarmGroup({
   const rwTokenMap = useTokens(rewardAddresses)
 
   const rwTokens = useMemo(() => Object.values(rwTokenMap), [rwTokenMap])
-  const prices = useTokensPrice(rwTokens, 'promm')
+  const prices = useTokensPrice(rwTokens, VERSION.ELASTIC)
   const priceMap: { [key: string]: number } = useMemo(
     () =>
       prices?.reduce(

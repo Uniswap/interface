@@ -133,7 +133,7 @@ export default function SwapProAmm({ history }: RouteComponentProps) {
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/proamm/swap/')
+    history.push('/elastic/swap/')
   }, [history])
 
   // modal and loading
