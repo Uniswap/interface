@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import CeloLogo from '../../assets/svg/celo_logo.svg'
+import CeloLogo from '../../assets/svg/celo/celo_standard.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
 import { NATIVE_CURRENCY_IS_TOKEN } from '../../constants/tokens'
 

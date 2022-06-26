@@ -7,7 +7,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
 
-import celoAlternativeLogo from '../../assets/svg/celo.svg'
+import celoAlternativeLogo from '../../assets/svg/celo/celo_green.svg'
 import { AutoRow } from '../Row'
 
 const L2Icon = styled.img`
