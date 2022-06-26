@@ -14,7 +14,7 @@ import styled from 'styled-components/macro'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, getWalletForConnector, injected } from '../../connectors'
+import { fortmatic, getWalletForConnector } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -184,8 +184,8 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetamask = !!window.ethereum?.isMetaMask
-    const isTally = !!window.ethereum?.isTally
+    // const isMetamask = !!window.ethereum?.isMetaMask
+    // const isTally = !!window.ethereum?.isTally
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
       const isActive = option.connector === connector
@@ -218,48 +218,41 @@ export default function WalletModal({
         return null
       }
 
-      // overwrite injected when needed
-      if (option.connector === injected) {
+      // FIXME(maybe): We publish the captured injected providers in window.ethereum.providers array and other wallets also do the same
+      // web3-onboard has a method, do parse that array if exist and add all the providers to the user selection
+      // this behavior might be a good idea here as well, but probably require some changes when activating the provider
+      // so it's up to you if you want to implement that here
+
+      // overwrite injected like providers when needed
+      if (option.name === SUPPORTED_WALLETS['INJECTED'].name) {
         // don't show injected if there's no injected provider
-        if (!(window.web3 || window.ethereum)) {
-          if (option.name === 'MetaMask') {
-            return (
-              <Option
-                id={`connect-${key}`}
-                key={key}
-                color={'#E8831D'}
-                header={<Trans>Install Metamask</Trans>}
-                subheader={null}
-                link={'https://metamask.io/'}
-                icon={MetamaskIcon}
-              />
-            )
-          } else {
-            return null //dont want to return install twice
-          }
-        }
-        // don't return metamask if injected provider isn't metamask
-        else if (option.name === 'MetaMask' && !isMetamask) {
+        if (!(window.web3 || window.ethereum) || window.ethereum?.isMetaMask || window.ethereum?.isTally) {
           return null
         }
-        // likewise for generic
-        else if (option.name === 'Injected' && isMetamask) {
-          return null
-        } else if (option.name === 'Injected' && isTally) {
+      } else if (option.name === SUPPORTED_WALLETS['METAMASK'].name) {
+        if (!(window.web3 || window.ethereum) || window.ethereum?.isTally) {
           return (
             <Option
               id={`connect-${key}`}
               key={key}
-              onClick={() => {
-                option.connector === connector
-                  ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                  : !option.href && option.connector && tryActivation(option.connector)
-              }}
               color={'#E8831D'}
-              header={<Trans>Tally</Trans>}
-              active={option.connector === connector}
+              header={<Trans>Install Metamask</Trans>}
               subheader={null}
-              link={null}
+              link={'https://metamask.io/'}
+              icon={MetamaskIcon}
+            />
+          )
+        }
+      } else if (option.name === SUPPORTED_WALLETS['TALLY'].name) {
+        if (!window.tally) {
+          return (
+            <Option
+              id={`connect-${key}`}
+              key={key}
+              color={'#E8831D'}
+              header={<Trans>Install Tally Ho!</Trans>}
+              subheader={null}
+              link={'https://tally.cash/'}
               icon={TallyIcon}
             />
           )

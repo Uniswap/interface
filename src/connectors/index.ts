@@ -4,7 +4,7 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
-import { Connector } from '@web3-react/types'
+import { Connector, Provider } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
@@ -12,9 +12,12 @@ import Fortmatic from 'fortmatic'
 import { useMemo } from 'react'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
+import { TallyHo } from './tally-ho'
 
 export enum Wallet {
   INJECTED = 'INJECTED',
+  METAMASK = 'METAMASK',
+  TALLY = 'TALLY',
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',
   FORTMATIC = 'FORTMATIC',
@@ -22,7 +25,7 @@ export enum Wallet {
   GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
 
-export const BACKFILLABLE_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED]
+export const BACKFILLABLE_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED, Wallet.TALLY]
 export const SELECTABLE_WALLETS = [...BACKFILLABLE_WALLETS, Wallet.FORTMATIC]
 
 function onError(error: Error) {
@@ -33,6 +36,10 @@ export function getWalletForConnector(connector: Connector) {
   switch (connector) {
     case injected:
       return Wallet.INJECTED
+    case metaMask:
+      return Wallet.METAMASK
+    case tally:
+      return Wallet.TALLY
     case coinbaseWallet:
       return Wallet.COINBASE_WALLET
     case walletConnect:
@@ -52,6 +59,10 @@ export function getConnectorForWallet(wallet: Wallet) {
   switch (wallet) {
     case Wallet.INJECTED:
       return injected
+    case Wallet.METAMASK:
+      return metaMask
+    case Wallet.TALLY:
+      return tally
     case Wallet.COINBASE_WALLET:
       return coinbaseWallet
     case Wallet.WALLET_CONNECT:
@@ -69,6 +80,10 @@ function getHooksForWallet(wallet: Wallet) {
   switch (wallet) {
     case Wallet.INJECTED:
       return injectedHooks
+    case Wallet.METAMASK:
+      return metaMaskHooks
+    case Wallet.TALLY:
+      return tallyHooks
     case Wallet.COINBASE_WALLET:
       return coinbaseWalletHooks
     case Wallet.WALLET_CONNECT:
@@ -86,7 +101,13 @@ export const [network, networkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, defaultChainId: 1 })
 )
 
-export const [injected, injectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
+export const [injected, injectedHooks] = initializeConnector<EIP1193>(
+  (actions) => new EIP1193({ actions, provider: (window.ethereum as Provider) ?? { on: () => null }, onError })
+)
+
+export const [metaMask, metaMaskHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
+
+export const [tally, tallyHooks] = initializeConnector<TallyHo>((actions) => new TallyHo({ actions, onError }))
 
 export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
 

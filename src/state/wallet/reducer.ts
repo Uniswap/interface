@@ -8,6 +8,8 @@ export interface WalletState {
 export const initialState: WalletState = {
   errorByWallet: {
     [Wallet.INJECTED]: undefined,
+    [Wallet.METAMASK]: undefined,
+    [Wallet.TALLY]: undefined,
     [Wallet.FORTMATIC]: undefined,
     [Wallet.WALLET_CONNECT]: undefined,
     [Wallet.COINBASE_WALLET]: undefined,

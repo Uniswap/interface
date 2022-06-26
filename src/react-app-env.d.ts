@@ -6,16 +6,19 @@ declare module '@metamask/jazzicon' {
 
 declare module 'fortmatic'
 
+interface InjectedProvider {
+  // value that is populated and returns true by the Coinbase Wallet mobile dapp browser
+  isCoinbaseWallet?: true
+  isMetaMask?: true
+  isTally?: false
+  autoRefreshOnNetworkChange?: boolean
+}
+
 interface Window {
   // walletLinkExtension is injected by the Coinbase Wallet extension
   walletLinkExtension?: any
-  ethereum?: {
-    // value that is populated and returns true by the Coinbase Wallet mobile dapp browser
-    isCoinbaseWallet?: true
-    isMetaMask?: true
-    isTally?: false
-    autoRefreshOnNetworkChange?: boolean
-  }
+  ethereum?: InjectedProvider
+  tally?: InjectedProvider
   web3?: Record<string, unknown>
 }
 
