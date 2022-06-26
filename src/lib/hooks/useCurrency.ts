@@ -109,7 +109,7 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
 
   // Use Celo ERC20 representation instead of native asset
-  const nativeCurrencyIsToken = chainId && NATIVE_CURRENCY_IS_TOKEN[chainId]
+  if (isNative && chainId && NATIVE_CURRENCY_IS_TOKEN[chainId]) return wrappedNative
 
-  return isNative && !nativeCurrencyIsToken ? nativeCurrency : token
+  return isNative ? nativeCurrency : token
 }
