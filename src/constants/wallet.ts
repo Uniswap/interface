@@ -1,4 +1,4 @@
-// import { AbstractConnector } from 'web3-react-abstract-connector'
+import { Connector } from '@web3-react/types'
 
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
@@ -9,10 +9,7 @@ import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
 import { coinbaseWallet, fortmatic, injected, metaMask, tally, walletConnect } from '../connectors'
 
 interface WalletInfo {
-  // FIXME: include web3-react v6 web3-react-abstract-connector in the codebase.
-  // Either as devDependency or copy the code (won't change anymore).
-  // connector?: AbstractConnector
-  connector?: any
+  connector?: Connector
   name: string
   iconURL: string
   description: string
@@ -84,13 +81,4 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#6748FF',
     mobile: true,
   },
-  // Portis: {
-  //   connector: portis,
-  //   name: 'Portis',
-  //   iconURL: PORTIS_ICON_URL,
-  //   description: 'Login using Portis hosted wallet',
-  //   href: null,
-  //   color: '#4A6C9B',
-  //   mobile: true,
-  // },
 }

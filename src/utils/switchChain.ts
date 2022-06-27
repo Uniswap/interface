@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import { coinbaseWallet, fortmatic, gnosisSafe, injected, network, walletConnect } from 'connectors'
+import { coinbaseWallet, fortmatic, gnosisSafe, injected, metaMask, network, tally, walletConnect } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
@@ -39,6 +39,8 @@ export function isChainAllowed(connector: Connector, chainId: number) {
     case walletConnect:
     case network:
     case gnosisSafe:
+    case tally:
+    case metaMask:
       return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
     default:
       return false

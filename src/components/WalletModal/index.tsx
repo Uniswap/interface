@@ -184,8 +184,6 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    // const isMetamask = !!window.ethereum?.isMetaMask
-    // const isTally = !!window.ethereum?.isTally
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
       const isActive = option.connector === connector

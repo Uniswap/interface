@@ -3,6 +3,7 @@ import { Connector } from '@web3-react/types'
 
 export interface TallyHoProvider extends Provider {
   isTally: boolean
+  on: (eventName: string, listener: (...args: any[]) => void) => unknown
 }
 
 function isTally(provider: unknown): provider is TallyHoProvider {
@@ -25,7 +26,7 @@ export interface TallyHoConstructorArgs {
 }
 
 export class TallyHo extends Connector {
-  provider: Provider | undefined
+  provider: TallyHoProvider | undefined
 
   constructor({ actions, onError }: TallyHoConstructorArgs) {
     super(actions, onError)
@@ -68,27 +69,19 @@ export class TallyHo extends Connector {
     if (isTally(window.tally)) {
       this.provider = window.tally
 
-      // FIXME on is not recognized on Provider, but EventEmitter is extended in the type
-      // @ts-ignore
       this.provider.on('connect', ({ chainId }: ProviderConnectInfo): void => {
         this.actions.update({ chainId: parseChainId(chainId) })
       })
 
-      // FIXME on is not recognized on Provider, but EventEmitter is extended in the type
-      // @ts-ignore
       this.provider.on('disconnect', (error: ProviderRpcError): void => {
         this.actions.resetState()
         this.onError?.(error)
       })
 
-      // FIXME on is not recognized on Provider, but EventEmitter is extended in the type
-      // @ts-ignore
       this.provider.on('chainChanged', (chainId: string): void => {
         this.actions.update({ chainId: parseChainId(chainId) })
       })
 
-      // FIXME on is not recognized on Provider, but EventEmitter is extended in the type
-      // @ts-ignore
       this.provider.on('accountsChanged', (accounts: string[]): void => {
         this.actions.update({ accounts })
       })
