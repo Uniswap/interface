@@ -1,30 +1,98 @@
+import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
+import { darken } from 'polished'
 import React from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
+import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
+import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
+//   @media screen and (max-width: 1225px) and (min-width: 1045px) {}
 const TokenRowWrapper = styled.div`
   width: 100%;
   height: 60px;
   display: grid;
   padding: 0px 12px;
-  grid-template-columns: 40px 32px 200px 107.5px 107.5px 107.5px 107.5px 172px 62px;
+  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 4fr 5fr 2fr;
   font-size: 15px;
   line-height: 24px;
+  margin: 4px 0px;
+  max-width: 960px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+  grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
+  gap: 10px;
+  .col-hide-1 {
+    display: none;
+  }
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
+  width: fit-content;
+  .col-hide-1 {
+    display: none;
+  }
+  .col-hide-2 {
+    display: none;
+  }
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2fr;
+  width: fit-content;
+  .col-hide-1 {
+    display: none;
+  }
+  .col-hide-2 {
+    display: none;
+  }
+  .col-hide-3 {
+    display: none;
+  }
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  grid-template-columns: 1fr 7fr 4fr 4fr;
+  width: fit-content;
+  .col-hide-1 {
+    display: none;
+  }
+  .col-hide-2 {
+    display: none;
+  }
+  .col-hide-3 {
+    display: none;
+  }
+  .col-hide-4 {
+    display: none;
+  }
+  `};
+`
+const HeaderRow = styled(TokenRowWrapper)`
+  width: 100%;
+  height: 48px;
+  color: ${({ theme }) => theme.text2};
+  font-size: 12px;
+  line-height: 16px;
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.bg3};
+  border-radius: 8px 8px 0px 0px;
 `
 const FavoriteContainer = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 14px 0px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
 
-  width: 40px;
-  height: 60px;
+  .fav {
+    fill: ${({ theme }) => theme.primary1};
+    color: ${({ theme }) => theme.primary1};
+  }
 `
 const ListNumberContainer = styled.div`
   display: flex;
@@ -34,30 +102,20 @@ const ListNumberContainer = styled.div`
   padding: 14px 0px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
-
-  width: 32px;
-  height: 60px;
 `
 const NameContainer = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
   padding: 14px 8px;
   gap: 8px;
-
-  width: 200px;
-  height: 60px;
+  min-width: 200px;
 `
 const PriceContainer = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   padding: 12px 8px;
   gap: 10px;
-
-  width: 107.5px;
-  height: 60px;
 `
 const PercentChangeContainer = styled.div`
   display: flex;
@@ -66,37 +124,29 @@ const PercentChangeContainer = styled.div`
   align-items: flex-end;
   padding: 14px 8px;
   gap: 10px;
-
-  width: 107.5px;
-  height: 60px;
+  min-width: max-content;
 `
 
 const PercentChangeContent = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
 `
 
 const MarketCapContainer = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   padding: 12px 8px;
   gap: 10px;
-
-  width: 107.5px;
+  min-width: max-content;
 `
 const VolumeContainer = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   padding: 12px 8px;
   gap: 10px;
-
-  width: 107.5px;
 `
 const SparkLineContainer = styled.div`
   display: flex;
@@ -105,8 +155,7 @@ const SparkLineContainer = styled.div`
   align-items: center;
   padding: 16px 24px;
   gap: 10px;
-
-  width: 172px;
+  min-width: 120px;
 `
 const SparkLineImg = styled.div`
   max-width: 124px;
@@ -125,8 +174,6 @@ const SwapContainer = styled.div`
   align-items: center;
   padding: 16px 4px;
   gap: 10px;
-
-  width: 62px;
 `
 
 const SwapButton = styled.button`
@@ -136,6 +183,7 @@ const SwapButton = styled.button`
   align-items: center;
   padding: 8px;
   gap: 6px;
+  font-weight: 600;
 
   width: 54px;
   height: 32px;
@@ -144,6 +192,9 @@ const SwapButton = styled.button`
   border-radius: 12px;
   border: none;
   color: ${({ theme }) => theme.white};
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.primary2)};
+  }
 `
 
 const TokenSymbol = styled.span`
@@ -151,20 +202,56 @@ const TokenSymbol = styled.span`
 `
 const ArrowContainer = styled.div`
   padding: 0px 0px 0px 4px;
+  display: flex;
+  flex-direction: column;
 `
 
-/* formats price with appropriate string */
-function priceFormatter(num: number): string {
-  if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G'
+const SortingCategory = styled.span`
+  color: ${({ theme }) => theme.primary1};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const SortArrowContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 2px 0px 0px;
+`
+
+function getHeaderCategory(category: string, sortCategory: string, sortDecreasing: boolean) {
+  if (sortCategory === category) {
+    return (
+      <SortingCategory>
+        <SortArrowContainer>{sortDecreasing ? <ArrowDown size={14} /> : <ArrowUp size={14} />}</SortArrowContainer>
+        {category}
+      </SortingCategory>
+    )
   }
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K'
-  }
-  return num.toString()
+  return category
+}
+
+export function headerRow() {
+  const possibleSortCategories = ['Market Cap', 'Price', '% Change']
+  const sortCategory = possibleSortCategories[0]
+  const sortDecreasing = true
+  return (
+    <HeaderRow>
+      <div className="col-hide-4"></div>
+      <div></div>
+      <Trans>
+        <NameContainer>Name</NameContainer>
+        <PriceContainer>{getHeaderCategory('Price', sortCategory, sortDecreasing)}</PriceContainer>
+        <PercentChangeContainer>{getHeaderCategory('% Change', sortCategory, sortDecreasing)}</PercentChangeContainer>
+        <MarketCapContainer className="col-hide-3">
+          {getHeaderCategory('Market Cap', sortCategory, sortDecreasing)}
+        </MarketCapContainer>
+        <VolumeContainer className="col-hide-2">1D Volume</VolumeContainer>
+      </Trans>
+    </HeaderRow>
+  )
 }
 
 export default function TokenRow({
@@ -184,18 +271,20 @@ export default function TokenRow({
   const tokenName = token?.name
   const tokenSymbol = token?.symbol
   const tokenData = data[tokenAddress]
-  // TODO: write favorited hook
   // TODO: remove magic number colors
-  const favorited = false
+  // TODO: write favorited hook
+  const favorited = true
   return (
     <TokenRowWrapper key={key}>
-      <FavoriteContainer>{favorited ? <Heart size={15} /> : <Heart size={15} />}</FavoriteContainer>
+      <FavoriteContainer className="col-hide-4">
+        {favorited ? <Heart size={15} className="fav" /> : <Heart size={15} />}
+      </FavoriteContainer>
       <ListNumberContainer>{listNumber}</ListNumberContainer>
       <NameContainer>
         <CurrencyLogo currency={useCurrency(tokenAddress)} />
         {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
       </NameContainer>
-      <PriceContainer>${tokenData.price}</PriceContainer>
+      <PriceContainer>{formatDollarAmount(tokenData.price)}</PriceContainer>
       <PercentChangeContainer>
         <PercentChangeContent>
           {tokenData.delta}%
@@ -208,13 +297,17 @@ export default function TokenRow({
           </ArrowContainer>
         </PercentChangeContent>
       </PercentChangeContainer>
-      <MarketCapContainer>{priceFormatter(tokenData.marketCap)}</MarketCapContainer>
-      <VolumeContainer>{priceFormatter(tokenData.volume[timePeriod])}</VolumeContainer>
-      <SparkLineContainer>
+      <MarketCapContainer className="col-hide-3">{formatAmount(tokenData.marketCap).toUpperCase()}</MarketCapContainer>
+      <VolumeContainer className="col-hide-2">
+        {formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+      </VolumeContainer>
+      <SparkLineContainer className="col-hide-1">
         <SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />
       </SparkLineContainer>
-      <SwapContainer>
-        <SwapButton>Swap</SwapButton>
+      <SwapContainer className="col-hide-4">
+        <SwapButton>
+          <Trans>Swap</Trans>
+        </SwapButton>
       </SwapContainer>
     </TokenRowWrapper>
   )

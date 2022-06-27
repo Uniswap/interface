@@ -158,6 +158,7 @@
     "multicodec": "^3.0.1",
     "multihashes": "^4.0.2",
     "node-vibrant": "^3.2.1-alpha.1",
+    "numbro": "^2.3.6",
     "polished": "^3.3.2",
     "polyfill-object.fromentries": "^1.0.1",
     "popper-max-size-modifier": "^0.2.0",
