@@ -27,6 +27,7 @@ import {
   RedirectToSwap,
   RedirectToVote,
 } from './Swap/redirects'
+import XTTPresale from './XTTPresale'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -95,6 +96,7 @@ export default function App() {
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/swap" component={Swap} />
+                <Route exact strict path="/xtt-presale" component={XTTPresale} />
 
                 <Route exact strict path="/pool/find" component={PoolFinder} />
                 <Route exact strict path="/pool" component={PoolV2} />

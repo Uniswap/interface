@@ -8,7 +8,7 @@ import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/ho
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import Logo from '../../assets/images/logo.png'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -216,6 +216,7 @@ const StyledNavLink = styled(NavLink).attrs({
 
 export default function Header() {
   const { account } = useActiveWeb3React()
+  const theme = useTheme()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
@@ -244,6 +245,7 @@ export default function Header() {
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Trans>Swap</Trans>
         </StyledNavLink>
+
         <StyledNavLink
           id={`pool-nav-link`}
           to={'/pool'}
@@ -257,20 +259,25 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
+        <StyledNavLink id={`xtt-presale-nav-link`} to={'/xtt-presale'}>
+          <ThemedText.Main color={theme.primaryText1}>
+            <Trans>XTT Presale</Trans>
+          </ThemedText.Main>
+        </StyledNavLink>
         <ExternalLink
           style={{ padding: '8px 8px' }}
           href="https://gov.xspswap.finance"
           id={`vote-nav-link`}
           target="_blank"
         >
-          <ThemedText.White>
+          <ThemedText.Main>
             <Trans>Vote</Trans>
-          </ThemedText.White>
+          </ThemedText.Main>
         </ExternalLink>
         <ExternalLink style={{ padding: '8px 8px' }} href="https://analytics.xspswap.finance/" id={`charts-nav-link`}>
-          <ThemedText.White>
+          <ThemedText.Main>
             <Trans>Charts</Trans>
-          </ThemedText.White>
+          </ThemedText.Main>
         </ExternalLink>
       </HeaderLinks>
 
