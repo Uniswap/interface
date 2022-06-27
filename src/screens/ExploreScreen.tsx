@@ -135,7 +135,7 @@ export function ExploreScreen() {
               metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
             />
           </AnimatedFlex>
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="lg" mx="md">
             <TopTokensSection
               fixedCount={15}
               metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}

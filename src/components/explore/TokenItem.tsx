@@ -72,7 +72,14 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
     const renderRightActions: ComponentProps<typeof Swipeable>['renderRightActions'] =
       useCallback(() => {
         return (
-          <FavoriteButton active={isFavoriteToken} coin={coin} onPress={toggleFavoriteCallback} />
+          <FavoriteButton
+            active={isFavoriteToken}
+            coin={coin}
+            onPress={() => {
+              toggleFavoriteCallback()
+              currentRowRef.current?.close()
+            }}
+          />
         )
       }, [coin, isFavoriteToken, toggleFavoriteCallback])
 

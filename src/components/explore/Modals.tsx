@@ -105,18 +105,6 @@ const getOrderByModalOptions = (
       ),
     },
     {
-      key: ClientSideOrderBy.PriceChangePercentage24hAsc,
-      onPress: () => {
-        setOrderBy(ClientSideOrderBy.PriceChangePercentage24hAsc)
-      },
-      render: () => (
-        <ModalOption
-          isSelected={selected === ClientSideOrderBy.PriceChangePercentage24hAsc}
-          label={getOrderByLabel(ClientSideOrderBy.PriceChangePercentage24hAsc, t)}
-        />
-      ),
-    },
-    {
       key: ClientSideOrderBy.PriceChangePercentage24hDesc,
       onPress: () => {
         setOrderBy(ClientSideOrderBy.PriceChangePercentage24hDesc)
@@ -125,6 +113,18 @@ const getOrderByModalOptions = (
         <ModalOption
           isSelected={selected === ClientSideOrderBy.PriceChangePercentage24hDesc}
           label={getOrderByLabel(ClientSideOrderBy.PriceChangePercentage24hDesc, t)}
+        />
+      ),
+    },
+    {
+      key: ClientSideOrderBy.PriceChangePercentage24hAsc,
+      onPress: () => {
+        setOrderBy(ClientSideOrderBy.PriceChangePercentage24hAsc)
+      },
+      render: () => (
+        <ModalOption
+          isSelected={selected === ClientSideOrderBy.PriceChangePercentage24hAsc}
+          label={getOrderByLabel(ClientSideOrderBy.PriceChangePercentage24hAsc, t)}
         />
       ),
     },

@@ -46,9 +46,9 @@ export function getOrderByLabel(orderBy: CoingeckoOrderBy | ClientSideOrderBy, t
       return t('Market cap')
     case CoingeckoOrderBy.VolumeDesc:
       return t('Volume (24h)')
-    case ClientSideOrderBy.PriceChangePercentage24hAsc:
-      return t('Percent change (24h) ↑')
     case ClientSideOrderBy.PriceChangePercentage24hDesc:
+      return t('Percent change (24h) ↑')
+    case ClientSideOrderBy.PriceChangePercentage24hAsc:
       return t('Percent change (24h) ↓')
     default:
       throw new Error('Unexpected order by value ' + orderBy)
