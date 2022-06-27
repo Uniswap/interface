@@ -45,6 +45,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
+import XttPresaleUpdater from '../../state/xtt-presale/updater'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -354,6 +355,7 @@ export default function XTTPresale({ history }: RouteComponentProps) {
 
   return (
     <>
+      <XttPresaleUpdater />
       <TokenWarningModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokens={importTokensNotInDefault}

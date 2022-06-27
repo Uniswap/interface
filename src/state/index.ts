@@ -13,7 +13,7 @@ import { routingApi } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
-
+import xttPresale from './xtt-presale/reducer'
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 const store = configureStore({
@@ -28,6 +28,7 @@ const store = configureStore({
     lists,
     logs,
     [routingApi.reducerPath]: routingApi.reducer,
+    xttPresale,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
