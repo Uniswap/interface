@@ -3,12 +3,13 @@ import useTopTokens from 'hooks/useTopTokens'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import TokenRow from './TokenRow'
-import TokenTableHeader from './TokenTableHeader'
+import TokenRow, { headerRow } from './TokenRow'
 
 const GridContainer = styled.div`
-  display: grid;
-  width: 960px;
+  display: flex;
+  flex-direction: column;
+  min-width: 360px;
+  max-width: 960px;
   background: ${({ theme }) => theme.bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -22,25 +23,23 @@ export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const timePeriod = TimePeriod.day
   if (error) {
-    return <GridContainer>Error Loading Top Token Data</GridContainer>
+    return <GridContainer style={{ padding: '4px 0px' }}>Error Loading Top Token Data</GridContainer>
   }
   if (loading) {
-    return <GridContainer>Top Token Data Loading</GridContainer>
+    return <GridContainer style={{ padding: '4px 0px' }}>Top Token Data Loading</GridContainer>
   }
   if (data === null) {
-    return <GridContainer>No Top Token Data Available</GridContainer>
+    return <GridContainer style={{ padding: '4px 0px' }}>No Top Token Data Available</GridContainer>
   }
   const topTokenAddresses = Object.keys(data)
-  let listNumber = 0
 
-  const tokenRows = topTokenAddresses.map((tokenAddress) => {
-    listNumber += 1
+  const tokenRows = topTokenAddresses.map((tokenAddress, index) => {
     return (
       <TokenRow
         key={tokenAddress}
         tokenAddress={tokenAddress}
         data={data}
-        listNumber={listNumber}
+        listNumber={index + 1}
         timePeriod={timePeriod}
       />
     )
@@ -48,8 +47,8 @@ export default function TokenTable() {
 
   return (
     <GridContainer>
-      <TokenTableHeader />
-      {tokenRows}
+      {headerRow()}
+      <div style={{ padding: '4px 0px' }}>{tokenRows}</div>
     </GridContainer>
   )
 }
