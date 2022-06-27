@@ -54,6 +54,7 @@
     ]
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^0.5.1",
     "@coinbase/wallet-sdk": "^3.2.0",
     "@ethersproject/experimental": "^5.4.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
@@ -128,6 +129,7 @@
     "@web3-react/url": "^8.0.24-beta.0",
     "@web3-react/walletconnect": "^8.0.34-beta.0",
     "ajv": "^6.12.3",
+    "amplitude-js": "^8.18.4",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
