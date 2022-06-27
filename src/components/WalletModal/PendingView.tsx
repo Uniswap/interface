@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { Connector } from '@web3-react/types'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import Loader from '../Loader'
 
@@ -49,15 +49,13 @@ const LoadingWrapper = styled.div`
 export default function PendingView({
   connector,
   error = false,
-  setPendingError,
   tryActivation,
-  resetAccountView,
+  openOptions,
 }: {
-  connector?: AbstractConnector
+  connector: Connector
   error?: boolean
-  setPendingError: (error: boolean) => void
-  tryActivation: (connector: AbstractConnector) => void
-  resetAccountView: () => void
+  tryActivation: (connector: Connector) => void
+  openOptions: () => void
 }) {
   return (
     <PendingSection>
@@ -77,14 +75,13 @@ export default function PendingView({
                 $borderRadius="12px"
                 padding="12px"
                 onClick={() => {
-                  setPendingError(false)
-                  connector && tryActivation(connector)
+                  tryActivation(connector)
                 }}
               >
                 <Trans>Try Again</Trans>
               </ButtonPrimary>
               <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-                <ThemedText.Link fontSize={12} onClick={resetAccountView}>
+                <ThemedText.Link fontSize={12} onClick={openOptions}>
                   <Trans>Back to wallet selection</Trans>
                 </ThemedText.Link>
               </ButtonEmpty>

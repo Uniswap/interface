@@ -1,15 +1,17 @@
-name: Crowdin Upload
+name: Unit Tests
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  synchronize-with-crowdin:
-    name: Upload sources to Crowdin
+  unit-tests:
+    name: Run tests
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
@@ -28,16 +30,6 @@ jobs:
       - if: steps.install-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --ignore-scripts
 
-      - run: yarn i18n:extract
+      - run: yarn prepare
 
-      - name: Upload Crowdin sources
-        uses: crowdin/github-action@1.1.0
-        with:
-          upload_sources: true
-          download_translations: false
-          project_id: 458284
-          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
-          source: 'src/locales/en-US.po'
-          translation: 'src/locales/%locale%.po'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: yarn test

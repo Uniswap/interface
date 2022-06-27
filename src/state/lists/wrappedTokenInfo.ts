@@ -14,21 +14,22 @@ export class WrappedTokenInfo implements Token {
   public readonly isNative: false = false
   public readonly isToken: true = true
   public readonly list?: TokenList
-
   public readonly tokenInfo: TokenInfo
+
+  private _checksummedAddress: string
 
   constructor(tokenInfo: TokenInfo, list?: TokenList) {
     this.tokenInfo = tokenInfo
     this.list = list
+    const checksummedAddress = isAddress(this.tokenInfo.address)
+    if (!checksummedAddress) {
+      throw new Error(`Invalid token address: ${this.tokenInfo.address}`)
+    }
+    this._checksummedAddress = checksummedAddress
   }
 
-  private _checksummedAddress: string | null = null
-
   public get address(): string {
-    if (this._checksummedAddress) return this._checksummedAddress
-    const checksummedAddress = isAddress(this.tokenInfo.address)
-    if (!checksummedAddress) throw new Error(`Invalid token address: ${this.tokenInfo.address}`)
-    return (this._checksummedAddress = checksummedAddress)
+    return this._checksummedAddress
   }
 
   public get chainId(): number {

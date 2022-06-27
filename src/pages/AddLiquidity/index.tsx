@@ -81,7 +81,7 @@ export default function AddLiquidity({
   },
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, provider } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
@@ -225,7 +225,7 @@ export default function AddLiquidity({
   )
 
   async function onAdd() {
-    if (!chainId || !library || !account) return
+    if (!chainId || !provider || !account) return
 
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
@@ -281,7 +281,7 @@ export default function AddLiquidity({
 
       setAttemptingTxn(true)
 
-      library
+      provider
         .getSigner()
         .estimateGas(txn)
         .then((estimate) => {
@@ -290,7 +290,7 @@ export default function AddLiquidity({
             gasLimit: calculateGasMargin(estimate),
           }
 
-          return library
+          return provider
             .getSigner()
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
