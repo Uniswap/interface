@@ -324,6 +324,7 @@
   "Are you sure?": "Are you sure?",
   "You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.": "You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.",
   "Nickname": "Nickname",
+  "Theme": "Theme",
   "Transaction Settings": "Transaction Settings",
   "Gas price determines the priority with which your transaction is handled by the network.": "Gas price determines the priority with which your transaction is handled by the network.",
   "Higher fees will result in faster transaction processing.": "Higher fees will result in faster transaction processing.",

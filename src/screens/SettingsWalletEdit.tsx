@@ -19,6 +19,8 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 import { Screens } from './Screens'
+import { ColorSelector } from 'src/components/ColorSelector/ColorSelector'
+import { useUpdateColorCallback } from 'src/components/ColorSelector/hooks'
 const EDIT_BUTTON_SIZE = 30
 const EDIT_BUTTON_ICON_SIZE = 10
 
@@ -36,6 +38,15 @@ export function SettingsWalletEdit({
   const ensName = useENS(ChainId.Mainnet, address)?.name
   const [nickname, setNickname] = useState(ensName || activeAccount?.name)
   const [showEditInput, setShowEditInput] = useState(false)
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    activeAccount?.customizations?.palette?.deprecated_primary1
+  )
+  const updateThemeColor = useUpdateColorCallback()
+
+  const updateColor = (color: string) => {
+    setSelectedColor(color)
+    updateThemeColor(activeAccount, color)
+  }
 
   const handleNicknameUpdate = () => {
     Keyboard.dismiss()
@@ -93,8 +104,8 @@ export function SettingsWalletEdit({
                 {!ensName && (
                   <Button
                     alignItems="center"
-                    bg="translucentBackground"
-                    borderRadius="full"
+                    bg="backgroundAction"
+                    borderRadius="md"
                     height={EDIT_BUTTON_SIZE}
                     justifyContent="center"
                     marginLeft="sm"
@@ -112,7 +123,16 @@ export function SettingsWalletEdit({
             )}
           </Flex>
         </Flex>
-        {/* TODO: Theme edit */}
+        <Flex gap="none">
+          <Box bg="mainBackground" pb="md">
+            <Text color="textSecondary" fontWeight="500" variant="body1">
+              {t('Theme')}
+            </Text>
+          </Box>
+          <Flex alignItems="center" flexDirection="row">
+            <ColorSelector selectedColor={selectedColor} updateColor={updateColor} />
+          </Flex>
+        </Flex>
       </Flex>
     </Screen>
   )
