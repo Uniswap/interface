@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "clean": "react-native-clean-project",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/uniswapV3/types './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
@@ -148,6 +149,7 @@
     "postinstall-postinstall": "^2.1.0",
     "react-devtools": "^4.18.0",
     "react-dom": "^17.0.2",
+    "react-native-clean-project": "^4.0.1",
     "react-native-dotenv": "^3.2.0",
     "react-native-flipper": "^0.127.0",
     "react-native-svg-transformer": "^0.14.3",
