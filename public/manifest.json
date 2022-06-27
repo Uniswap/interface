@@ -56,9 +56,9 @@
       "density": "4.0"
     },
     {
-      "src":"/images/meta/android-chrome-512x512.png",
-      "sizes":"512x512",
-      "type":"image/png"
+      "src": "/images/meta/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }

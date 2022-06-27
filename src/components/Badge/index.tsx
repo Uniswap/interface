@@ -9,7 +9,6 @@ export enum BadgeVariant {
   POSITIVE = 'POSITIVE',
   PRIMARY = 'PRIMARY',
   WARNING = 'WARNING',
-
   WARNING_OUTLINE = 'WARNING_OUTLINE',
 }
 

@@ -5,8 +5,5 @@
     "baseUrl": "src"
   },
   "exclude": ["node_modules", "cypress"],
-  "include": [
-    "src/**/*",
-    "node_modules/eslint-plugin-react/lib/types.d.ts"
-  ]
+  "include": ["src/**/*", "node_modules/eslint-plugin-react/lib/types.d.ts"]
 }
