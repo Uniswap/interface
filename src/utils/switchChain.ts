@@ -2,7 +2,7 @@ import { Connector } from '@web3-react/types'
 import { coinbaseWallet, fortmatic, gnosisSafe, injected, network, walletConnect } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-import { INFURA_NETWORK_URLS } from 'constants/infura'
+import { NETWORK_URLS } from 'constants/networks'
 
 function getRpcUrls(chainId: SupportedChainId): [string] {
   switch (chainId) {
@@ -11,7 +11,7 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
     case SupportedChainId.ROPSTEN:
     case SupportedChainId.KOVAN:
     case SupportedChainId.GOERLI:
-      return [INFURA_NETWORK_URLS[chainId]]
+      return [NETWORK_URLS[chainId]]
     case SupportedChainId.OPTIMISM:
       return ['https://mainnet.optimism.io']
     case SupportedChainId.OPTIMISTIC_KOVAN:
@@ -24,6 +24,10 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
       return ['https://polygon-rpc.com/']
     case SupportedChainId.POLYGON_MUMBAI:
       return ['https://rpc-endpoints.superfluid.dev/mumbai']
+    case SupportedChainId.CELO:
+      return ['https://forno.celo.org']
+    case SupportedChainId.CELO_ALFAJORES:
+      return ['https://alfajores-forno.celo-testnet.org']
     default:
   }
   // Our API-keyed URLs will fail security checks when used with external wallets.

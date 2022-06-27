@@ -7,7 +7,7 @@ import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
-import { NETWORK_URLS } from 'constants/infura'
+import { NETWORK_URLS } from 'constants/networks'
 import Fortmatic from 'fortmatic'
 import { useMemo } from 'react'
 
