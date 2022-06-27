@@ -1,3 +1,4 @@
+/* Copied from Uniswap/v-3: https://github.com/Uniswap/v3-info/blob/master/src/utils/numbers.ts */
 import numbro from 'numbro'
 
 // using a currency library here in case we want to add more in future

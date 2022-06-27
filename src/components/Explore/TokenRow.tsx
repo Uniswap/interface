@@ -10,7 +10,14 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
-//   @media screen and (max-width: 1225px) and (min-width: 1045px) {}
+enum Category {
+  percent_change = '% Change',
+  market_cap = 'Market Cap',
+  price = 'Price',
+}
+
+const SORT_CATEGORIES = Object.values(Category)
+
 const TokenRowWrapper = styled.div`
   width: 100%;
   height: 60px;
@@ -24,7 +31,6 @@ const TokenRowWrapper = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
   grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
-  gap: 10px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -42,7 +48,7 @@ const TokenRowWrapper = styled.div`
   width: fit-content;
   `};
 `
-const HeaderRow = styled(TokenRowWrapper)`
+const HeaderRowWrapper = styled(TokenRowWrapper)`
   width: 100%;
   height: 48px;
   color: ${({ theme }) => theme.text2};
@@ -57,7 +63,7 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const FavoriteContainer = styled(Cell)`
+const FavoriteCell = styled(Cell)`
   padding: 14px 0px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
@@ -65,25 +71,24 @@ const FavoriteContainer = styled(Cell)`
     display:none
   `};
 `
-const ListNumberContainer = styled(Cell)`
-  flex-direction: column;
+const ListNumberCell = styled(Cell)`
   padding: 14px 0px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
 `
-const NameContainer = styled(Cell)`
+const NameCell = styled(Cell)`
   justify-content: flex-start;
-  padding: 14px 0px;
+  padding: 14px 8px;
   gap: 8px;
   min-width: 200px;
 `
-const PriceContainer = styled(Cell)`
+const PriceCell = styled(Cell)`
   justify-content: flex-end;
   align-items: center;
   padding: 12px 0px;
   gap: 10px;
 `
-const PercentChangeContainer = styled(Cell)`
+const PercentChangeCell = styled(Cell)`
   flex-direction: column;
   align-items: flex-end;
   padding: 14px 0px;
@@ -91,7 +96,7 @@ const PercentChangeContainer = styled(Cell)`
   min-width: max-content;
 `
 
-const MarketCapContainer = styled(Cell)`
+const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
   padding: 12px 0px;
   gap: 10px;
@@ -100,7 +105,7 @@ const MarketCapContainer = styled(Cell)`
   display: none;
 `};
 `
-const VolumeContainer = styled(Cell)`
+const VolumeCell = styled(Cell)`
   justify-content: flex-end;
   padding: 12px 0px;
   gap: 10px;
@@ -108,7 +113,7 @@ const VolumeContainer = styled(Cell)`
     display: none;
   `};
 `
-const SparkLineContainer = styled(Cell)`
+const SparkLineCell = styled(Cell)`
   flex-direction: column;
   padding: 16px 24px;
   gap: 10px;
@@ -124,7 +129,7 @@ const SparkLineImg = styled(Cell)`
   transform: scale(1.2);
 `
 
-const SwapContainer = styled(Cell)`
+const SwapCell = styled(Cell)`
   flex-direction: column;
   padding: 16px 0px;
   gap: 10px;
@@ -157,7 +162,7 @@ const SwapButton = styled.button`
 const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.text3};
 `
-const ArrowContainer = styled.div`
+const ArrowCell = styled.div`
   padding-left: 4px;
   display: flex;
   flex-direction: column;
@@ -170,7 +175,7 @@ const SortingCategory = styled.span`
   justify-content: center;
 `
 
-const SortArrowContainer = styled(Cell)`
+const SortArrowCell = styled(Cell)`
   flex-direction: column;
   padding-right: 2px;
 `
@@ -179,7 +184,7 @@ function getHeaderCategory(category: string, sortCategory: string, sortDecreasin
   if (sortCategory === category) {
     return (
       <SortingCategory>
-        <SortArrowContainer>{sortDecreasing ? <ArrowDown size={14} /> : <ArrowUp size={14} />}</SortArrowContainer>
+        <SortArrowCell>{sortDecreasing ? <ArrowDown size={14} /> : <ArrowUp size={14} />}</SortArrowCell>
         {category}
       </SortingCategory>
     )
@@ -187,32 +192,31 @@ function getHeaderCategory(category: string, sortCategory: string, sortDecreasin
   return category
 }
 
-export function headerRow() {
-  /* TODO: access which sort category used and timeframe used */
-  const possibleSortCategories = ['Market Cap', 'Price', '% Change']
-  const sortCategory = possibleSortCategories[0]
+export function HeaderRow() {
+  /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
+  const sortCategory = SORT_CATEGORIES[0]
   const sortDecreasing = true
   return (
-    <HeaderRow>
+    <HeaderRowWrapper>
       {/* Empty contents for no header for favorite and rank columns */}
-      <FavoriteContainer></FavoriteContainer>
-      <div></div>
-      <NameContainer>
+      <FavoriteCell></FavoriteCell>
+      <ListNumberCell></ListNumberCell>
+      <NameCell>
         <Trans>Name</Trans>
-      </NameContainer>
-      <PriceContainer>
+      </NameCell>
+      <PriceCell>
         <Trans>{getHeaderCategory('Price', sortCategory, sortDecreasing)}</Trans>
-      </PriceContainer>
-      <PercentChangeContainer>
+      </PriceCell>
+      <PercentChangeCell>
         <Trans>{getHeaderCategory('% Change', sortCategory, sortDecreasing)}</Trans>
-      </PercentChangeContainer>
-      <MarketCapContainer className="col-hide-3">
+      </PercentChangeCell>
+      <MarketCapCell className="col-hide-3">
         <Trans>{getHeaderCategory('Market Cap', sortCategory, sortDecreasing)}</Trans>
-      </MarketCapContainer>
-      <VolumeContainer className="col-hide-2">
+      </MarketCapCell>
+      <VolumeCell className="col-hide-2">
         <Trans>1D Volume</Trans>
-      </VolumeContainer>
-    </HeaderRow>
+      </VolumeCell>
+    </HeaderRowWrapper>
   )
 }
 
@@ -239,37 +243,37 @@ export default function TokenRow({
   const favorited = true
   return (
     <TokenRowWrapper key={key}>
-      <FavoriteContainer>
-        {favorited ? <Heart size={15} color={theme.primary1} fill={theme.primary1} /> : <Heart size={15} />}
-      </FavoriteContainer>
-      <ListNumberContainer>{listNumber}</ListNumberContainer>
-      <NameContainer>
+      <FavoriteCell>
+        <Heart size={15} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
+      </FavoriteCell>
+      <ListNumberCell>{listNumber}</ListNumberCell>
+      <NameCell>
         <CurrencyLogo currency={useCurrency(tokenAddress)} />
         {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-      </NameContainer>
-      <PriceContainer>{formatDollarAmount(tokenData.price)}</PriceContainer>
-      <PercentChangeContainer>
+      </NameCell>
+      <PriceCell>{formatDollarAmount(tokenData.price)}</PriceCell>
+      <PercentChangeCell>
         <Cell>
           {tokenData.delta}%
-          <ArrowContainer>
+          <ArrowCell>
             {Math.sign(tokenData.delta) > 0 ? (
               <ArrowUpRight size={14} color={'#57bd0f'} />
             ) : (
               <ArrowDownRight size={14} color={'red'} />
             )}
-          </ArrowContainer>
+          </ArrowCell>
         </Cell>
-      </PercentChangeContainer>
-      <MarketCapContainer>{formatAmount(tokenData.marketCap).toUpperCase()}</MarketCapContainer>
-      <VolumeContainer>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</VolumeContainer>
-      <SparkLineContainer>
+      </PercentChangeCell>
+      <MarketCapCell>{formatAmount(tokenData.marketCap).toUpperCase()}</MarketCapCell>
+      <VolumeCell>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</VolumeCell>
+      <SparkLineCell>
         <SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />
-      </SparkLineContainer>
-      <SwapContainer>
+      </SparkLineCell>
+      <SwapCell>
         <SwapButton>
           <Trans>Swap</Trans>
         </SwapButton>
-      </SwapContainer>
+      </SwapCell>
     </TokenRowWrapper>
   )
 }

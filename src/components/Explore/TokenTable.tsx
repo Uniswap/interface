@@ -3,7 +3,7 @@ import useTopTokens from 'hooks/useTopTokens'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import TokenRow, { headerRow } from './TokenRow'
+import TokenRow, { HeaderRow } from './TokenRow'
 
 const GridContainer = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ const GridContainer = styled.div`
   border-radius: 8px;
   justify-content: center;
   align-items: center;
-  padding: '4px 0px';
+  padding: '4px 0px 8px 0px';
 `
 
 export default function TokenTable() {
@@ -49,8 +49,8 @@ export default function TokenTable() {
 
   return (
     <GridContainer>
-      {headerRow()}
-      <div style={{ paddingBottom: '4px' }}>{tokenRows}</div>
+      <HeaderRow />
+      {tokenRows}
     </GridContainer>
   )
 }
