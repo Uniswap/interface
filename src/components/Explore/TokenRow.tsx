@@ -15,8 +15,10 @@ enum Category {
   market_cap = 'Market Cap',
   price = 'Price',
 }
-
-const SORT_CATEGORIES = Object.values(Category)
+enum SortDirection {
+  inc = 'increasing',
+  dec = 'decreasing',
+}
 
 const TokenRowWrapper = styled.div`
   width: 100%;
@@ -180,22 +182,31 @@ const SortArrowCell = styled(Cell)`
   padding-right: 2px;
 `
 
-function getHeaderCategory(category: string, sortCategory: string, sortDecreasing: boolean) {
-  if (sortCategory === category) {
+function HeaderCell({
+  category,
+  sortDirection,
+  isSortedBy,
+}: {
+  category: string
+  sortDirection: SortDirection
+  isSortedBy: string
+}) {
+  if (category === isSortedBy) {
     return (
       <SortingCategory>
-        <SortArrowCell>{sortDecreasing ? <ArrowDown size={14} /> : <ArrowUp size={14} />}</SortArrowCell>
+        <SortArrowCell>
+          {sortDirection === SortDirection.dec ? <ArrowDown size={14} /> : <ArrowUp size={14} />}
+        </SortArrowCell>
         {category}
       </SortingCategory>
     )
   }
-  return category
+  return <>{category}</>
 }
 
 export function HeaderRow() {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  const sortCategory = SORT_CATEGORIES[1]
-  const sortDecreasing = true
+  const sortedBy = Category.market_cap
   return (
     <HeaderRowWrapper>
       {/* Empty contents for no header for favorite and rank columns */}
@@ -205,13 +216,19 @@ export function HeaderRow() {
         <Trans>Name</Trans>
       </NameCell>
       <PriceCell>
-        <Trans>{getHeaderCategory('Price', sortCategory, sortDecreasing)}</Trans>
+        <Trans>
+          <HeaderCell category={Category.price} sortDirection={SortDirection.dec} isSortedBy={sortedBy} />
+        </Trans>
       </PriceCell>
       <PercentChangeCell>
-        <Trans>{getHeaderCategory('% Change', sortCategory, sortDecreasing)}</Trans>
+        <Trans>
+          <HeaderCell category={Category.percent_change} sortDirection={SortDirection.dec} isSortedBy={sortedBy} />
+        </Trans>
       </PercentChangeCell>
       <MarketCapCell className="col-hide-3">
-        <Trans>{getHeaderCategory('Market Cap', sortCategory, sortDecreasing)}</Trans>
+        <Trans>
+          <HeaderCell category={Category.market_cap} sortDirection={SortDirection.dec} isSortedBy={sortedBy} />
+        </Trans>
       </MarketCapCell>
       <VolumeCell className="col-hide-2">
         <Trans>1D Volume</Trans>

@@ -24,17 +24,15 @@ const GridContainer = styled.div`
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const timePeriod = TimePeriod.day
+  // do we need a case for data === null
   if (error) {
     return <GridContainer>Error Loading Top Token Data</GridContainer>
-  }
-  if (loading) {
+  } else if (loading) {
     return <GridContainer>Top Token Data Loading</GridContainer>
-  }
-  if (data === null) {
+  } else if (data === null) {
     return <GridContainer>No Top Token Data Available</GridContainer>
   }
   const topTokenAddresses = Object.keys(data)
-
   const tokenRows = topTokenAddresses.map((tokenAddress, index) => {
     return (
       <TokenRow
