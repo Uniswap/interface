@@ -64,7 +64,7 @@ const Cell = styled.div`
   justify-content: center;
 `
 const FavoriteCell = styled(Cell)`
-  padding: 14px 0px;
+  padding: 14px 8px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -72,7 +72,7 @@ const FavoriteCell = styled(Cell)`
   `};
 `
 const ListNumberCell = styled(Cell)`
-  padding: 14px 0px;
+  padding: 14px 8px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
 `
@@ -85,20 +85,20 @@ const NameCell = styled(Cell)`
 const PriceCell = styled(Cell)`
   justify-content: flex-end;
   align-items: center;
-  padding: 12px 0px;
+  padding: 12px 8px;
   gap: 10px;
 `
 const PercentChangeCell = styled(Cell)`
   flex-direction: column;
   align-items: flex-end;
-  padding: 14px 0px;
+  padding: 14px 8px;
   gap: 10px;
   min-width: max-content;
 `
 
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
-  padding: 12px 0px;
+  padding: 12px 8px;
   gap: 10px;
   min-width: max-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -107,7 +107,7 @@ const MarketCapCell = styled(Cell)`
 `
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
-  padding: 12px 0px;
+  padding: 12px 8px;
   gap: 10px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
@@ -131,7 +131,7 @@ const SparkLineImg = styled(Cell)`
 
 const SwapCell = styled(Cell)`
   flex-direction: column;
-  padding: 16px 0px;
+  padding: 16px 8px;
   gap: 10px;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   display:none
@@ -194,7 +194,7 @@ function getHeaderCategory(category: string, sortCategory: string, sortDecreasin
 
 export function HeaderRow() {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  const sortCategory = SORT_CATEGORIES[0]
+  const sortCategory = SORT_CATEGORIES[1]
   const sortDecreasing = true
   return (
     <HeaderRowWrapper>
