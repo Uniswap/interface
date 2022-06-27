@@ -18,6 +18,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
 import { theme } from 'src/styles/theme'
 
@@ -32,12 +33,14 @@ type ScrollDetailScreenProps = {
   title?: string
   titleElement?: ReactElement
   contentHeader?: ReactElement
+  background?: ReactElement
 }
 
 export function ScrollDetailScreen({
   title,
   titleElement,
   contentHeader,
+  background,
   children,
 }: PropsWithChildren<ScrollDetailScreenProps>) {
   const navigation = useNavigation()
@@ -121,15 +124,16 @@ export function ScrollDetailScreen({
 
   return (
     <Screen edges={['top', 'left', 'right']}>
+      {background}
       {FixedHeaderBar}
-      <Animated.ScrollView
+      <VirtualizedList
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}>
         {ContentHeader}
         {children}
-      </Animated.ScrollView>
+      </VirtualizedList>
     </Screen>
   )
 }

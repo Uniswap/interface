@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Section } from 'src/components/layout/Section'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
-import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
@@ -24,15 +23,18 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
 
   // TODO: make state
   const viewType: ViewType = ViewType.Flat
-  const balances = useMemo(
-    () =>
-      // TODO: add support for network view
-      // viewType === ViewType.Network
-      //   ? balanceData
-      //   :
-      flattenObjectOfObjects(balanceData ?? {}).slice(0, count),
-    [balanceData, count]
-  )
+  const { balances, totalCount } = useMemo(() => {
+    // TODO: add support for network view
+    // viewType === ViewType.Network
+    //   ? balanceData
+    //   :
+
+    const allBalances = flattenObjectOfObjects(balanceData ?? {})
+    return {
+      balances: allBalances.slice(0, count),
+      totalCount: allBalances.length,
+    }
+  }, [balanceData, count])
 
   const onPressToken = (currency: Currency) =>
     navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
@@ -55,8 +57,7 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
         }
         header={
           <Section.Header
-            subtitle={<TotalBalance balances={balanceData} variant="h3" />}
-            title={t('Tokens')}
+            title={t('Tokens ({{totalCount}})', { totalCount })}
             onPress={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
           />
         }

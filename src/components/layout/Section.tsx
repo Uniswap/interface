@@ -1,9 +1,9 @@
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { FlatList, FlatListProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import ArrowDown from 'src/assets/icons/arrow-down.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -53,13 +53,7 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
             )
           ) : null}
         </Flex>
-        <ArrowDown
-          color={theme.colors.textSecondary}
-          height={24}
-          strokeWidth={2}
-          style={{ transform: [{ rotate: '270deg' }] }}
-          width={24}
-        />
+        <Chevron color={theme.colors.textSecondary} direction="e" height={16} width={16} />
       </Flex>
     </Button>
   )

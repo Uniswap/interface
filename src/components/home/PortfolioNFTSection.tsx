@@ -28,13 +28,13 @@ export function PortfolioNFTSection({ count, owner }: { count?: number; owner?: 
     activeAddress ? { owner: activeAddress } : skipToken,
     { pollingInterval: PollingInterval.Normal }
   )
-  const nftItems = useMemo(
-    () =>
-      Object.values(nftsByCollection ?? {})
-        .slice(0, count)
-        .flat(),
-    [count, nftsByCollection]
-  )
+  const { nftItems, totalCount } = useMemo(() => {
+    const allItems = Object.values(nftsByCollection ?? {}).flat()
+    return {
+      nftItems: allItems.slice(0, count),
+      totalCount: allItems.length,
+    }
+  }, [count, nftsByCollection])
 
   const onPressItem = useCallback(
     (asset: NFTAsset.Asset) => {
@@ -75,7 +75,7 @@ export function PortfolioNFTSection({ count, owner }: { count?: number; owner?: 
       ) : (
         <Flex gap="xs">
           <Section.Header
-            title={t('NFTs')}
+            title={t('NFTs ({{totalCount}})', { totalCount })}
             onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
           />
           <Masonry
