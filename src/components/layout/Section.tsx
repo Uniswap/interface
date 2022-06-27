@@ -70,19 +70,27 @@ interface EmptyStateProps {
   buttonLabel: string
   description: string
   onPress: () => void
-  title: string
+  title?: string
 }
 
 function EmptyState({ buttonLabel, description, onPress, title }: EmptyStateProps) {
   return (
-    <Flex centered gap="sm" p="sm">
-      <Text fontWeight="600" textAlign="center" variant="subHead1">
-        {title}
-      </Text>
+    <Flex centered gap="sm" p="sm" width="100%">
+      {title && (
+        <Text fontWeight="600" textAlign="center" variant="subHead1">
+          {title}
+        </Text>
+      )}
       <Text color="textSecondary" textAlign="center" variant="caption">
         {description}
       </Text>
-      <PrimaryButton label={buttonLabel} textVariant="body1" variant="blue" onPress={onPress} />
+      <PrimaryButton
+        borderColor="backgroundOutline"
+        label={buttonLabel}
+        textVariant="smallLabel"
+        variant="transparent"
+        onPress={onPress}
+      />
     </Flex>
   )
 }

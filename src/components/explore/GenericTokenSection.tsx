@@ -1,4 +1,4 @@
-import { default as React, ReactNode } from 'react'
+import { default as React, ReactElement, ReactNode } from 'react'
 import { FlatListProps } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
@@ -7,6 +7,7 @@ import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { CoingeckoMarketCoin, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { Screens } from 'src/screens/Screens'
+import { flex } from 'src/styles/flex'
 
 export interface BaseTokenSectionProps {
   displayFavorites?: boolean
@@ -18,6 +19,7 @@ export interface BaseTokenSectionProps {
 
 type GenericTokenSectionProps<T> = BaseTokenSectionProps & {
   assets?: T[]
+  ListEmptyComponent?: ReactElement
   horizontal?: boolean
   id: string
   loading?: boolean
@@ -28,15 +30,16 @@ type GenericTokenSectionProps<T> = BaseTokenSectionProps & {
 
 /** Renders a token section inside a Flatlist with expand behavior */
 export function GenericTokenSection<T>({
+  ListEmptyComponent,
   assets,
   displayFavorites,
   fixedCount,
   horizontal,
   id,
   loading,
-  title,
   renderItem,
   subtitle,
+  title,
 }: GenericTokenSectionProps<T>) {
   const navigation = useExploreStackNavigation()
 
@@ -59,6 +62,8 @@ export function GenericTokenSection<T>({
         <Box ml={horizontal ? 'sm' : 'none'} mt={horizontal ? 'sm' : 'none'}>
           <Section.List
             ItemSeparatorComponent={() => <Separator ml={horizontal ? 'sm' : 'none'} />}
+            ListEmptyComponent={ListEmptyComponent}
+            contentContainerStyle={flex.fill}
             data={fixedCount ? assets?.slice(0, fixedCount) : assets}
             horizontal={horizontal}
             keyExtractor={key}

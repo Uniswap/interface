@@ -776,6 +776,35 @@ PODS:
     - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (3.3.2):
     - React-Core
+  - react-native-skia (0.1.132):
+    - React
+    - React-callinvoker
+    - React-Core
+    - react-native-skia/Api (= 0.1.132)
+    - react-native-skia/Jsi (= 0.1.132)
+    - react-native-skia/RNSkia (= 0.1.132)
+    - react-native-skia/SkiaHeaders (= 0.1.132)
+    - react-native-skia/Utils (= 0.1.132)
+  - react-native-skia/Api (0.1.132):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/Jsi (0.1.132):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/RNSkia (0.1.132):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/SkiaHeaders (0.1.132):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/Utils (0.1.132):
+    - React
+    - React-callinvoker
+    - React-Core
   - react-native-webview (11.14.3):
     - React-Core
   - React-perflogger (0.66.0)
@@ -967,6 +996,7 @@ DEPENDENCIES:
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -1107,6 +1137,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-onesignal"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-skia:
+    :path: "../node_modules/@shopify/react-native-skia"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-perflogger:
@@ -1240,6 +1272,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: 237bffb1c7e05fb142092681531810a29ba53015
   react-native-onesignal: 7643517fe655b94cfda8e697ec16f9b9135648b8
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-skia: 10ff062404f9b65e96f4fd934f4d3a33e6c31193
   react-native-webview: b83cf1aa6b4453fe53ffcc5896c36cdf37f0383f
   React-perflogger: 1f554c2b684e2f484f9edcdfdaeedab039fbaca8
   React-RCTActionSheet: 610d5a5d71ab4808734782c8bca6a12ec3563672

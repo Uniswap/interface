@@ -18,7 +18,7 @@ import { Screens } from 'src/screens/Screens'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
-const boxTokenLogoStyle: ImageStyle = { width: 18, height: 18, borderRadius: 18 / 2 }
+const boxTokenLogoStyle: ImageStyle = { width: 32, height: 32, borderRadius: 32 / 2 }
 const tokenLogoStyle: ImageStyle = { width: 35, height: 35, borderRadius: 35 / 2 }
 
 interface TokenItemProps {
@@ -40,6 +40,7 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
 
     const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
 
+    // TODO(judo): better handle when token is last favorite
     const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(_currencyId ?? '')
     const toggleFavoriteCallback = useToggleFavoriteCallback(_currencyId ?? '')
 
@@ -156,16 +157,16 @@ export function TokenItemBox({ coin }: TokenItemProps) {
       onPress={() => {
         navigate(Screens.TokenDetails, { currencyId: _currencyId })
       }}>
-      <Box bg="backgroundContainer" borderRadius="lg" justifyContent="space-between">
+      <Box bg="backgroundContainer" borderRadius="lg" justifyContent="space-between" minWidth={135}>
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="body1">{coin.symbol.toUpperCase() ?? ''}</Text>
+            <Text variant="subHead1">{coin.symbol.toUpperCase() ?? ''}</Text>
             <Image source={{ uri: coin.image }} style={boxTokenLogoStyle} />
           </Flex>
           <Flex row>
             <TokenMetadata
               align="flex-start"
-              main={<Text variant="body2">{formatUSDPrice(coin.current_price)}</Text>}
+              main={<Text variant="body1">{formatUSDPrice(coin.current_price)}</Text>}
               sub={<RelativeChange change={coin.price_change_percentage_24h ?? undefined} />}
             />
           </Flex>
