@@ -3,6 +3,7 @@ import { shallowEqual } from 'react-redux'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, TradeableAsset } from 'src/entities/assets'
+import { TransactionType } from 'src/features/transactions/types'
 
 export enum CurrencyField {
   INPUT,
@@ -15,6 +16,8 @@ export interface TransactionState {
   exactCurrencyField: CurrencyField
   exactAmount: string
   recipient?: string
+  gasSpendEstimate?: Partial<Record<TransactionType, string>>
+  gasPrice?: string // gas price in native currency
 }
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
@@ -89,9 +92,34 @@ const slice = createSlice({
       const { recipient } = action.payload
       state.recipient = recipient
     },
+    updateGasEstimates: (
+      state,
+      action: PayloadAction<{
+        gasEstimates: Partial<Record<TransactionType, string>>
+        gasPrice?: string
+      }>
+    ) => {
+      const { gasEstimates, gasPrice } = action.payload
+      if (gasPrice) state.gasPrice = gasPrice
+
+      state.gasSpendEstimate = {
+        ...state.gasSpendEstimate,
+        ...gasEstimates,
+      }
+    },
+    clearGasEstimates: (state) => {
+      state.gasPrice = undefined
+      state.gasSpendEstimate = undefined
+    },
   },
 })
 
-export const { selectCurrency, switchCurrencySides, enterExactAmount, selectRecipient } =
-  slice.actions
+export const {
+  selectCurrency,
+  switchCurrencySides,
+  enterExactAmount,
+  selectRecipient,
+  updateGasEstimates,
+  clearGasEstimates,
+} = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice

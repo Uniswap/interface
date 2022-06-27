@@ -1,13 +1,15 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
-import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
+import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
+import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { swapActions, swapSagaName } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
@@ -18,6 +20,7 @@ import {
   WrapType,
 } from 'src/features/transactions/swap/wrapSaga'
 import {
+  clearGasEstimates,
   CurrencyField,
   TransactionState,
   transactionStateActions,
@@ -29,7 +32,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { buildCurrencyId, currencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, currencyAddress, currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
@@ -157,13 +160,16 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
       transactionStateActions.selectCurrency({
         field,
         tradeableAsset: {
-          address: currency.isToken ? currency.wrapped.address : NATIVE_ADDRESS,
+          address: currencyAddress(currency),
           chainId: currency.chainId,
           type: AssetType.Currency,
         },
       })
     )
-  const onSwitchCurrencies = () => dispatch(transactionStateActions.switchCurrencySides())
+  const onSwitchCurrencies = () => {
+    dispatch(transactionStateActions.switchCurrencySides())
+    dispatch(clearGasEstimates)
+  }
   const onEnterExactAmount = (field: CurrencyField, exactAmount: string) =>
     dispatch(transactionStateActions.enterExactAmount({ field, exactAmount }))
   const onSelectRecipient = (recipient: Address) =>
@@ -312,4 +318,68 @@ function tradeToTransactionInfo(
           .maximumAmountIn(DEFAULT_SLIPPAGE_TOLERANCE_PERCENT)
           .quotient.toString(),
       }
+}
+
+export function useUpdateSwapGasEstimate(
+  transactionStateDispatch: React.Dispatch<AnyAction>,
+  trade: Trade | null
+) {
+  const dispatch = useAppDispatch()
+
+  const chainId = trade?.inputAmount.currency.chainId
+  const tokenAddress = trade ? currencyAddress(trade?.inputAmount.currency) : undefined
+  const txAmount = trade?.quote?.amount
+  const gasUseEstimate = trade?.quote?.gasUseEstimate
+  const callData = trade?.quote?.methodParameters?.calldata
+  const value = trade?.quote?.methodParameters?.value
+
+  useEffect(() => {
+    if (!chainId || !tokenAddress) return
+
+    if (txAmount) {
+      dispatch(
+        estimateGasAction({
+          txType: TransactionType.Approve,
+          chainId,
+          transactionStateDispatch,
+          tokenAddress,
+          txAmount,
+        })
+      )
+    }
+
+    if (callData && gasUseEstimate) {
+      dispatch(
+        estimateGasAction({
+          txType: TransactionType.Swap,
+          chainId,
+          transactionStateDispatch,
+          callData,
+          gasUseEstimate,
+          value,
+        })
+      )
+    }
+  }, [
+    chainId,
+    dispatch,
+    txAmount,
+    tokenAddress,
+    transactionStateDispatch,
+    callData,
+    value,
+    gasUseEstimate,
+  ])
+}
+
+export function useSwapGasFee(state: TransactionState) {
+  const approveGasEstimate = state.gasSpendEstimate?.[TransactionType.Approve]
+  const swapGasEstimate = state.gasSpendEstimate?.[TransactionType.Swap]
+  const gasPrice = state.gasPrice
+  return useMemo(() => {
+    if (!approveGasEstimate || !swapGasEstimate || !gasPrice) return undefined
+    const gasLimitEstimate = BigNumber.from(approveGasEstimate).add(swapGasEstimate)
+    const gasFee = BigNumber.from(gasPrice).mul(gasLimitEstimate)
+    return gasFee.toString()
+  }, [approveGasEstimate, swapGasEstimate, gasPrice])
 }

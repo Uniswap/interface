@@ -19,15 +19,11 @@ const EIP_1559_CHAINS = [
 export async function computeGasFee(
   chainId: ChainId,
   tx: providers.TransactionRequest,
-  provider: providers.JsonRpcProvider
+  provider: providers.JsonRpcProvider,
+  fallbackGasEstimate?: string
 ): Promise<FeeInfo> {
-  let gasLimit: BigNumber
-  try {
-    gasLimit = (await provider.estimateGas(tx)).mul(GAS_INFLATION_FACTOR)
-  } catch (error) {
-    logger.error('useGasFee', 'computeGasFee', 'Cannot estimate gas, likely invalid tx', error)
-    throw new Error('Cannot estimate gas')
-  }
+  const gasLimit = await estimateGasOrUseFallback(tx, provider, fallbackGasEstimate)
+
   try {
     if (EIP_1559_CHAINS.includes(chainId)) {
       const feeInfo = await computeGasFee1559(provider, gasLimit)
@@ -37,8 +33,35 @@ export async function computeGasFee(
       return feeInfo
     }
   } catch (error) {
-    logger.error('useGasFee', 'computeGasFee', 'Cannot compute fee', error)
+    logger.error('computeGasFee', '', 'Cannot compute fee', error)
     throw new Error('Cannot compute fee')
+  }
+}
+
+async function estimateGasOrUseFallback(
+  tx: providers.TransactionRequest,
+  provider: providers.JsonRpcProvider,
+  fallbackGasEstimate?: string
+) {
+  try {
+    return (await provider.estimateGas(tx)).mul(GAS_INFLATION_FACTOR)
+  } catch (error) {
+    if (fallbackGasEstimate) {
+      logger.info(
+        'computeGasFee',
+        '',
+        `Cannot estimate gas, using estimate from router as fallback: ${fallbackGasEstimate}`
+      )
+      return BigNumber.from(fallbackGasEstimate)
+    }
+
+    logger.error(
+      'computeGasFee',
+      '',
+      'Cannot estimate gas and no fallback provided, likely invalid tx',
+      error
+    )
+    throw new Error('Cannot estimate gas')
   }
 }
 

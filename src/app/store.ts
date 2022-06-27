@@ -20,6 +20,7 @@ import { config } from 'src/config'
 import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { dataApi } from 'src/features/dataApi/slice'
 import { zerionApi } from 'src/features/dataApi/zerion/api'
+import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
 import { nftApi } from 'src/features/nfts/api'
 import { routingApi } from 'src/features/routing/routingApi'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
@@ -70,6 +71,7 @@ export const store = configureStore({
           // contains non-serializable objects that do not hit the store
           swapActions.trigger.type,
           tokenWrapActions.trigger.type,
+          estimateGasAction.type,
         ],
         warnAfter: 128,
       },

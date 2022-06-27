@@ -22,6 +22,9 @@ export function currencyAddress(currency: Currency): string {
   throw new Error('invalid currency')
 }
 
+export const isNativeCurrencyAddress = (address: Address) =>
+  address === NATIVE_ADDRESS || address === NATIVE_ADDRESS_ALT
+
 // Currency ids are formatted as `chainId-tokenddress`
 export function currencyIdToAddress(_currencyId: string): Address {
   return _currencyId.split('-')[1]

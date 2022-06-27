@@ -13,7 +13,8 @@ import { useInterval } from 'src/utils/timing'
 
 export function useGasFeeInfo(
   chainId: ChainId | undefined,
-  tx: providers.TransactionRequest | null
+  tx: providers.TransactionRequest | null,
+  fallbackGasEstimate?: string
 ) {
   const [gasFeeInfo, setGasFeeInfo] = useState<FeeInfo | undefined>(undefined)
   const provider = useProvider(chainId || ChainId.Mainnet)
@@ -26,7 +27,7 @@ export function useGasFeeInfo(
 
       if (!tx) return
 
-      computeGasFee(chainId, tx, provider)
+      computeGasFee(chainId, tx, provider, fallbackGasEstimate)
         .then((feeInfo) => {
           setGasFeeInfo(feeInfo)
         })
@@ -36,18 +37,18 @@ export function useGasFeeInfo(
     } catch (error) {
       logger.error('useGasFee', '', 'Error computing gas fee', error)
     }
-  }, [chainId, provider, tx])
+  }, [chainId, provider, tx, fallbackGasEstimate])
 
   useInterval(computeGas, GAS_FEE_REFRESH_INTERVAL)
 
   return gasFeeInfo
 }
 
-export function useGasPrice(chainId: ChainId, gasFeeInfo?: FeeInfo) {
-  const currency = NativeCurrency.onChain(chainId)
-  const currencyAmount = gasFeeInfo
-    ? CurrencyAmount.fromRawAmount(currency, gasFeeInfo.fee.normal)
-    : undefined
+export function useUSDGasPrice(chainId: ChainId | undefined, gasFee?: string) {
+  const currencyAmount =
+    gasFee && chainId
+      ? CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), gasFee)
+      : undefined
 
   return useUSDCValue(currencyAmount)?.toExact()
 }

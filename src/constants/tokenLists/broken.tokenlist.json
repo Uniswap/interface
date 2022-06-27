@@ -17,6 +17,14 @@
       "decimals": 18,
       "chainId": 1,
       "logoURI": ""
+    },
+    {
+      "name": "Lido Staked Ether",
+      "address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+      "symbol": "stETH",
+      "decimals": 18,
+      "chainId": 1,
+      "logoURI": ""
     }
   ]
 }
