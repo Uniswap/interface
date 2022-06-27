@@ -111,13 +111,16 @@ const Pools = ({
                 onClick={() => {
                   if (!!notSupportedMsg) return
                   const newQs = { ...qs, tab: VERSION.ELASTIC }
+                  mixpanelHandler(MIXPANEL_TYPE.ELASTIC_POOLS_ELASTIC_POOLS_CLICKED)
                   history.replace({ search: stringify(newQs) })
                 }}
               >
                 <Text
                   fontWeight={500}
                   fontSize={20}
-                  color={tab === VERSION.ELASTIC ? (!!notSupportedMsg ? theme.disableText : theme.primary) : theme.subText}
+                  color={
+                    tab === VERSION.ELASTIC ? (!!notSupportedMsg ? theme.disableText : theme.primary) : theme.subText
+                  }
                   width={'auto'}
                   marginRight={'5px'}
                   role="button"

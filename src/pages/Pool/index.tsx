@@ -163,7 +163,7 @@ export default function PoolCombination() {
   }
 
   const { chainId } = useActiveWeb3React()
-
+  const { mixpanelHandler } = useMixpanel()
   const notSupportedMsg = ELASTIC_NOT_SUPPORTED[chainId as ChainId]
 
   return (
@@ -175,7 +175,10 @@ export default function PoolCombination() {
               <Flex
                 onClick={() => {
                   if (!!notSupportedMsg) return
-                  if (tab === VERSION.CLASSIC) setTab(VERSION.ELASTIC)
+                  if (tab === VERSION.CLASSIC) {
+                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_MYPOOLS_ELASTIC_POOLS_CLICKED)
+                    setTab(VERSION.ELASTIC)
+                  }
                 }}
                 alignItems="center"
                 role="button"

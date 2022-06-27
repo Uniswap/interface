@@ -65,6 +65,8 @@ export enum MIXPANEL_TYPE {
   DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED,
   ELASTIC_CREATE_POOL_INITIATED,
   ELASTIC_CREATE_POOL_COMPLETED,
+  ELASTIC_MYPOOLS_ELASTIC_POOLS_CLICKED,
+  ELASTIC_POOLS_ELASTIC_POOLS_CLICKED,
   ELASTIC_ADD_LIQUIDITY_INITIATED,
   ELASTIC_ADD_LIQUIDITY_IN_LIST_INITIATED,
   ELASTIC_ADD_LIQUIDITY_COMPLETED,
@@ -115,7 +117,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.WALLET_CONNECTED:
-          mixpanel.register_once({ wallet_address: account, platform: isMobile ? 'Mobile' : 'Web', network })
+          mixpanel.register({ wallet_address: account, platform: isMobile ? 'Mobile' : 'Web', network })
           mixpanel.track('Wallet Connected')
           break
         case MIXPANEL_TYPE.SWAP_INITIATED: {
@@ -130,7 +132,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.SWAP_COMPLETED: {
-          const { arbitrary, actual_gas, amountUSD, txHash } = payload
+          const { arbitrary, actual_gas, amountUSD, tx_hash } = payload
           mixpanel.track('Swap Completed', {
             input_token: arbitrary.inputSymbol,
             output_token: arbitrary.outputSymbol,
@@ -143,7 +145,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
                 parseFloat(formatUnits(gasPrice?.standard, 18)) *
                 parseFloat(ethPrice.currentPrice)
               ).toFixed(4),
-            tx_hash: txHash,
+            tx_hash: tx_hash,
             max_return_or_low_gas: arbitrary.saveGas ? 'Lowest Gas' : 'Maximum Return',
             trade_qty: arbitrary.inputAmount,
             trade_amount_usd: amountUSD,
@@ -423,15 +425,23 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.ELASTIC_CREATE_POOL_INITIATED: {
-          mixpanel.track('Elastic Pools - Create New Pool Initiated', {})
+          mixpanel.track('Elastic Pools - Create New Pool Initiated')
           break
         }
         case MIXPANEL_TYPE.ELASTIC_CREATE_POOL_COMPLETED: {
           mixpanel.track('Elastic Pools - Create New Pool Completed', payload)
           break
         }
+        case MIXPANEL_TYPE.ELASTIC_MYPOOLS_ELASTIC_POOLS_CLICKED: {
+          mixpanel.track('Elastic Pools - My pools - Click on Elastic Pool')
+          break
+        }
+        case MIXPANEL_TYPE.ELASTIC_POOLS_ELASTIC_POOLS_CLICKED: {
+          mixpanel.track('Elastic Pools - Click on Elastic Pool')
+          break
+        }
         case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_INITIATED: {
-          mixpanel.track('Elastic Pools - Add Liquidity Initiated', {})
+          mixpanel.track('Elastic Pools - Add Liquidity Initiated')
           break
         }
         case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_IN_LIST_INITIATED: {
@@ -483,7 +493,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.ELASTIC_INDIVIDUAL_REWARD_HARVESTED: {
-          mixpanel.track('Elastics Farms - Individual Reward Harvested', payload)
+          mixpanel.track('Elastic Farms - Individual Reward Harvested', payload)
           break
         }
         case MIXPANEL_TYPE.ELASTIC_ALLS_REWARD_HARVESTED: {
@@ -592,6 +602,7 @@ export const useGlobalMixpanelEvents = () => {
         new_network: chainId && NETWORK_LABEL[chainId as ChainId],
         old_network: oldNetwork && NETWORK_LABEL[oldNetwork as ChainId],
       })
+      mixpanel.register({ network: chainId && NETWORK_LABEL[chainId as ChainId] })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])
@@ -639,20 +650,17 @@ export const useGlobalMixpanelEvents = () => {
         case 'campaign':
           pageName = 'Campaign'
           break
-        case 'proamm/swap':
-          pageName = 'Promm Swap'
-          break
         case 'proamm/pool':
-          pageName = 'Promm Pool'
+          pageName = 'Elastic - Pool'
           break
         case 'proamm/remove':
-          pageName = 'Promm Remove Liquidity'
+          pageName = 'Elastic - Remove Liquidity'
           break
         case 'proamm/add':
-          pageName = 'Promm Add Liquidity'
+          pageName = 'Elastic - Add Liquidity'
           break
         case 'proamm/increase':
-          pageName = 'Promm Increase Liquidity'
+          pageName = 'Elastic - Increase Liquidity'
           break
         default:
           break

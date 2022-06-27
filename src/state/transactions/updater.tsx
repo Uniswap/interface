@@ -113,8 +113,9 @@ export default function Updater(): null {
 
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
+    const uniqueTransactions = [...new Set(Object.keys(transactions))]
 
-    Object.keys(transactions)
+    uniqueTransactions
       .filter(hash => shouldCheck(lastBlockNumber, transactions[hash]))
       .forEach(hash => {
         library
@@ -143,6 +144,7 @@ export default function Updater(): null {
                     'Elastic Add liquidity',
                     'Remove liquidity',
                     'Elastic Remove liquidity',
+                    'Elastic Create pool',
                   ].includes(transaction.type || ''),
                 }),
               )
@@ -165,13 +167,7 @@ export default function Updater(): null {
                       token_1: transaction.arbitrary.token_1,
                       token_2: transaction.arbitrary.token_2,
                       amp: transaction.arbitrary.amp,
-                    })
-                    break
-                  }
-                  case 'Elastic Create pool': {
-                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_COMPLETED, {
-                      token_1: transaction.arbitrary.token_1,
-                      token_2: transaction.arbitrary.token_2,
+                      tx_hash: transaction.hash,
                     })
                     break
                   }
@@ -198,7 +194,7 @@ export default function Updater(): null {
             console.error(`failed to check transaction hash: ${hash}`, error)
           })
       })
-    Object.keys(transactions)
+    uniqueTransactions
       .filter(hash => transactions[hash]?.needCheckSubgraph)
       .forEach(async (hash: string) => {
         const transaction = transactions[hash]
@@ -225,7 +221,7 @@ export default function Updater(): null {
                 amountUSD: !!res.data?.transaction?.swaps
                   ? Math.max(res.data.transaction.swaps.map((s: any) => parseFloat(s.amountUSD).toPrecision(3)))
                   : '',
-                tx_hash: transaction.hash,
+                tx_hash: hash,
               })
               dispatch(checkedSubgraph({ chainId, hash }))
               break
@@ -253,7 +249,7 @@ export default function Updater(): null {
                 token_2: transaction.arbitrary.token_2,
                 add_liquidity_method: transaction.arbitrary.add_liquidity_method,
                 amp: transaction.arbitrary.amp,
-                tx_hash: transaction.hash,
+                tx_hash: hash,
               })
               dispatch(checkedSubgraph({ chainId, hash }))
               break
@@ -281,7 +277,7 @@ export default function Updater(): null {
                 token_1: transaction.arbitrary.token_1,
                 token_2: transaction.arbitrary.token_2,
                 fee_tier: feeTier / ELASTIC_BASE_FEE_UNIT,
-                tx_hash: transaction.hash,
+                tx_hash: hash,
               })
               dispatch(checkedSubgraph({ chainId, hash }))
               break
@@ -311,7 +307,7 @@ export default function Updater(): null {
                 token_2: transaction.arbitrary.token_2,
                 remove_liquidity_method: transaction.arbitrary.remove_liquidity_method,
                 amp: transaction.arbitrary.amp,
-                tx_hash: transaction.hash,
+                tx_hash: hash,
               })
               dispatch(checkedSubgraph({ chainId, hash }))
               break
@@ -339,9 +335,32 @@ export default function Updater(): null {
                 token_1: transaction.arbitrary.token_1,
                 token_2: transaction.arbitrary.token_2,
                 fee_tier: feeTier / ELASTIC_BASE_FEE_UNIT,
-                tx_hash: transaction.hash,
+                tx_hash: hash,
               })
               dispatch(checkedSubgraph({ chainId, hash }))
+              break
+            }
+            case 'Elastic Create pool': {
+              // const res = await apolloProMMClient.query({
+              //   query: PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
+              //   variables: {
+              //     poolAddress: transaction.arbitrary.poolAddress.toLowerCase(),
+              //   },
+              //   fetchPolicy: 'network-only',
+              // })
+              // if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+              //   if (
+              //     !res.data?.pool?.burns ||
+              //     res.data.pool.burns.every((burn: { id: string }) => !burn.id.startsWith(transaction.hash))
+              //   )
+              //     break
+              // }
+              // const { totalValueLockedToken0, totalValueLockedToken1, totalValueLockedUSD, feeTier } = res.data.pool
+              mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_COMPLETED, {
+                token_1: transaction.arbitrary.token_1,
+                token_2: transaction.arbitrary.token_2,
+                tx_hash: hash,
+              })
               break
             }
             default:
