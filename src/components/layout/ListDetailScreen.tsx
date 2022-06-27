@@ -30,10 +30,16 @@ type PointerEvent = 'auto' | 'none'
 
 type ListDetailScreenProps = {
   title?: string
+  titleElement?: ReactElement
   contentHeader?: ReactElement
 } & FlatListProps<any>
 
-export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDetailScreenProps) {
+export function ListDetailScreen({
+  title,
+  titleElement,
+  contentHeader,
+  ...listProps
+}: ListDetailScreenProps) {
   const navigation = useExploreStackNavigation()
   const { t } = useTranslation()
   const isDarkMode = useColorScheme() === 'dark'
@@ -101,9 +107,13 @@ export function ListDetailScreen({ title, contentHeader, ...listProps }: ListDet
       tint={isDarkMode ? 'dark' : 'default'}>
       <Flex row alignItems="center" justifyContent="space-between" px="md" py="sm">
         <BackButton color="textPrimary" size={18} />
-        <Text mx="xs" variant="subHead1">
-          {title}
-        </Text>
+        {titleElement ? (
+          titleElement
+        ) : title ? (
+          <Text mx="xs" variant="subHead1">
+            {title}
+          </Text>
+        ) : null}
         <Box width={18} />
       </Flex>
     </AnimatedBlurView>

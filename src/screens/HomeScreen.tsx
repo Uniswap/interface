@@ -77,9 +77,9 @@ export function HomeScreen({ navigation }: Props) {
     )
 
   return (
-    <Screen edges={['left', 'right']}>
+    <Screen edges={['top', 'left', 'right']}>
       <AppBackground />
-      <Box mt="xl" mx="md">
+      <Box mx="md">
         <NotificationIndicator />
         <VirtualizedList>
           <Flex gap="lg" my="lg">

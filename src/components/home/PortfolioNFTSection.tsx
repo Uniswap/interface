@@ -2,7 +2,6 @@ import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { utils } from 'ethers'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SharedElement } from 'react-navigation-shared-element'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
@@ -75,22 +74,18 @@ export function PortfolioNFTSection({ count, owner }: { count?: number; owner?: 
         />
       ) : (
         <Flex gap="xs">
-          <SharedElement id="portfolio-nfts-header">
-            <Section.Header
-              title={t('NFTs')}
-              onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
-            />
-          </SharedElement>
-          <SharedElement id="portfolio-nfts-content">
-            <Masonry
-              data={nftItems}
-              getKey={({ asset_contract, token_id }) =>
-                getNFTAssetKey(asset_contract.address, token_id)
-              }
-              loading={loading}
-              renderItem={renderItem}
-            />
-          </SharedElement>
+          <Section.Header
+            title={t('NFTs')}
+            onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
+          />
+          <Masonry
+            data={nftItems}
+            getKey={({ asset_contract, token_id }) =>
+              getNFTAssetKey(asset_contract.address, token_id)
+            }
+            loading={loading}
+            renderItem={renderItem}
+          />
         </Flex>
       )}
     </Section.Container>
