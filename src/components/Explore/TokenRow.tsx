@@ -36,23 +36,23 @@ const TokenRowWrapper = styled.div`
   max-width: 960px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-  grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
-  width: fit-content;
+    grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
+    width: fit-content;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
-  width: fit-content;
+    grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
+    width: fit-content;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2fr;
-  width: fit-content;
+      grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2fr;
+      width: fit-content;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  grid-template-columns: 1fr 7fr 4fr 4fr;
-  width: fit-content;
+    grid-template-columns: 1fr 7fr 4fr 4fr;
+    width: fit-content;
   `};
 `
 const HeaderRowWrapper = styled(TokenRowWrapper)`
@@ -71,7 +71,6 @@ const Cell = styled.div`
   justify-content: center;
 `
 const FavoriteCell = styled(Cell)`
-  padding: 0px 8px;
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -79,33 +78,25 @@ const FavoriteCell = styled(Cell)`
   `};
 `
 const ListNumberCell = styled(Cell)`
-  padding: 0px 8px;
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
-  padding: 0px 8px;
   gap: 8px;
   min-width: 200px;
 `
 const PriceCell = styled(Cell)`
   justify-content: flex-end;
   align-items: center;
-  padding: 0px 8px;
 `
 const PercentChangeCell = styled(Cell)`
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 0px 8px;
-
+  justify-content: flex-end;
   min-width: max-content;
 `
 
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
-  padding: 0px 8px;
-
   min-width: max-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
@@ -113,7 +104,6 @@ const MarketCapCell = styled(Cell)`
 `
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
-  padding: 0px 8px;
   min-width: max-content;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
@@ -137,7 +127,6 @@ const SparkLineImg = styled(Cell)`
 
 const SwapCell = styled(Cell)`
   flex-direction: column;
-  padding: 0px 8px;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display:none
@@ -149,7 +138,6 @@ const SwapButton = styled.button`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 8px;
   gap: 6px;
   font-weight: 600;
 
@@ -315,16 +303,14 @@ export default function TokenRow({
       </NameCell>
       <PriceCell>{formatDollarAmount(tokenData.price)}</PriceCell>
       <PercentChangeCell>
-        <Cell>
-          {tokenData.delta}%
-          <ArrowCell>
-            {Math.sign(tokenData.delta) > 0 ? (
-              <ArrowUpRight size={14} color={'#57bd0f'} />
-            ) : (
-              <ArrowDownRight size={14} color={'red'} />
-            )}
-          </ArrowCell>
-        </Cell>
+        {tokenData.delta}%
+        <ArrowCell>
+          {Math.sign(tokenData.delta) > 0 ? (
+            <ArrowUpRight size={14} color={'#57bd0f'} />
+          ) : (
+            <ArrowDownRight size={14} color={'red'} />
+          )}
+        </ArrowCell>
       </PercentChangeCell>
       <MarketCapCell>{formatAmount(tokenData.marketCap).toUpperCase()}</MarketCapCell>
       <VolumeCell>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</VolumeCell>
