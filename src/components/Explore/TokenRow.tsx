@@ -10,15 +10,19 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
+import { TIME_DISPLAYS } from './TimeSelector'
+
 enum Category {
   percent_change = '% Change',
   market_cap = 'Market Cap',
   price = 'Price',
+  volume = 'Volume',
 }
 enum SortDirection {
   inc = 'increasing',
   dec = 'decreasing',
 }
+const SORT_CATEGORIES = Object.values(Category)
 
 const TokenRowWrapper = styled.div`
   width: 100%;
@@ -33,6 +37,7 @@ const TokenRowWrapper = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
   grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
+  width: fit-content;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -66,59 +71,58 @@ const Cell = styled.div`
   justify-content: center;
 `
 const FavoriteCell = styled(Cell)`
-  padding: 14px 8px;
-  gap: 10px;
+  padding: 0px 8px;
+  min-width: 40px;
   color: ${({ theme }) => theme.text2};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display:none
   `};
 `
 const ListNumberCell = styled(Cell)`
-  padding: 14px 8px;
-  gap: 10px;
+  padding: 0px 8px;
   color: ${({ theme }) => theme.text2};
+  min-width: 32px;
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
-  padding: 14px 8px;
+  padding: 0px 8px;
   gap: 8px;
   min-width: 200px;
 `
 const PriceCell = styled(Cell)`
   justify-content: flex-end;
   align-items: center;
-  padding: 12px 8px;
-  gap: 10px;
+  padding: 0px 8px;
 `
 const PercentChangeCell = styled(Cell)`
   flex-direction: column;
   align-items: flex-end;
-  padding: 14px 8px;
-  gap: 10px;
+  padding: 0px 8px;
+
   min-width: max-content;
 `
 
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
-  padding: 12px 8px;
-  gap: 10px;
+  padding: 0px 8px;
+
   min-width: max-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  display: none;
+    display: none;
 `};
 `
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
-  padding: 12px 8px;
-  gap: 10px;
+  padding: 0px 8px;
+  min-width: max-content;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `};
 `
 const SparkLineCell = styled(Cell)`
   flex-direction: column;
-  padding: 16px 24px;
-  gap: 10px;
+  padding: 0px 24px;
+
   min-width: 120px;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     display: none;
@@ -133,10 +137,10 @@ const SparkLineImg = styled(Cell)`
 
 const SwapCell = styled(Cell)`
   flex-direction: column;
-  padding: 16px 8px;
-  gap: 10px;
+  padding: 0px 8px;
+
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  display:none
+    display:none
 `};
 `
 
@@ -175,6 +179,15 @@ const SortingCategory = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+  &:hover {
+    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+  }
+`
+const SortOption = styled.span`
+  &:hover {
+    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+  }
 `
 
 const SortArrowCell = styled(Cell)`
@@ -182,31 +195,43 @@ const SortArrowCell = styled(Cell)`
   padding-right: 2px;
 `
 
+/* formatting for volume with timeframe header display */
+function getHeaderDisplay(category: string, timeframe: string): string {
+  if (category === Category.volume) return TIME_DISPLAYS[timeframe] + ' ' + category
+  return category
+}
+
 function HeaderCell({
   category,
   sortDirection,
-  isSortedBy,
+  isSorted,
+  sortable,
+  timeframe,
 }: {
-  category: string
+  category: string // TODO: change this to make it work for trans
   sortDirection: SortDirection
-  isSortedBy: string
+  isSorted: boolean
+  sortable: boolean
+  timeframe: string
 }) {
-  if (category === isSortedBy) {
+  if (isSorted) {
     return (
       <SortingCategory>
         <SortArrowCell>
           {sortDirection === SortDirection.dec ? <ArrowDown size={14} /> : <ArrowUp size={14} />}
         </SortArrowCell>
-        {category}
+        <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
       </SortingCategory>
     )
   }
-  return <>{category}</>
+  if (sortable) return <SortOption>{getHeaderDisplay(category, timeframe)}</SortOption>
+  return <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
 }
 
-export function HeaderRow() {
+export function HeaderRow({ timeframe }: { timeframe: string }) {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  const sortedBy = Category.market_cap
+  /* TODO: make column aligned */
+  const sortedBy = SORT_CATEGORIES[1]
   return (
     <HeaderRowWrapper>
       {/* Empty contents for no header for favorite and rank columns */}
@@ -216,23 +241,43 @@ export function HeaderRow() {
         <Trans>Name</Trans>
       </NameCell>
       <PriceCell>
-        <Trans>
-          <HeaderCell category={Category.price} sortDirection={SortDirection.dec} isSortedBy={sortedBy} />
-        </Trans>
+        <HeaderCell
+          category={Category.price}
+          sortDirection={SortDirection.dec}
+          isSorted={sortedBy === Category.price}
+          sortable={false}
+          timeframe={timeframe}
+        />
       </PriceCell>
       <PercentChangeCell>
-        <Trans>
-          <HeaderCell category={Category.percent_change} sortDirection={SortDirection.dec} isSortedBy={sortedBy} />
-        </Trans>
+        <HeaderCell
+          category={Category.percent_change}
+          sortDirection={SortDirection.dec}
+          isSorted={sortedBy === Category.percent_change}
+          sortable={false}
+          timeframe={timeframe}
+        />
       </PercentChangeCell>
-      <MarketCapCell className="col-hide-3">
-        <Trans>
-          <HeaderCell category={Category.market_cap} sortDirection={SortDirection.dec} isSortedBy={sortedBy} />
-        </Trans>
+      <MarketCapCell>
+        <HeaderCell
+          category={Category.market_cap}
+          sortDirection={SortDirection.dec}
+          isSorted={sortedBy === Category.market_cap}
+          sortable={true}
+          timeframe={timeframe}
+        />
       </MarketCapCell>
-      <VolumeCell className="col-hide-2">
-        <Trans>1D Volume</Trans>
+      <VolumeCell>
+        <HeaderCell
+          category={Category.volume}
+          sortDirection={SortDirection.dec}
+          isSorted={sortedBy === Category.volume}
+          sortable={true}
+          timeframe={timeframe}
+        />
       </VolumeCell>
+      <SparkLineCell></SparkLineCell>
+      <SwapCell></SwapCell>
     </HeaderRowWrapper>
   )
 }

@@ -7,7 +7,7 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components/macro'
 
-const TIME_DISPLAYS: { [key: string]: string } = {
+export const TIME_DISPLAYS: { [key: string]: string } = {
   hour: '1H',
   day: '1D',
   week: '1W',

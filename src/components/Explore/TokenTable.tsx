@@ -24,7 +24,6 @@ const GridContainer = styled.div`
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const timePeriod = TimePeriod.day
-  // do we need a case for data === null
   if (error) {
     return <GridContainer>Error Loading Top Token Data</GridContainer>
   } else if (loading) {
@@ -47,7 +46,7 @@ export default function TokenTable() {
 
   return (
     <GridContainer>
-      <HeaderRow />
+      <HeaderRow timeframe={timePeriod} />
       {tokenRows}
     </GridContainer>
   )
