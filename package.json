@@ -76,7 +76,6 @@
     "expo-haptics": "~11.0.3",
     "expo-linear-gradient": "~10.0.3",
     "expo-local-authentication": "^12.0.1",
-    "expo-secure-store": "^11.0.3",
     "expo-splash-screen": "^0.13.5",
     "formik": "^2.2.9",
     "fuse.js": "^6.5.3",
