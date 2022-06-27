@@ -17,19 +17,21 @@ const GridContainer = styled.div`
   margin-right: auto;
   border-radius: 8px;
   justify-content: center;
+  align-items: center;
+  padding: '4px 0px';
 `
 
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const timePeriod = TimePeriod.day
   if (error) {
-    return <GridContainer style={{ padding: '4px 0px' }}>Error Loading Top Token Data</GridContainer>
+    return <GridContainer>Error Loading Top Token Data</GridContainer>
   }
   if (loading) {
-    return <GridContainer style={{ padding: '4px 0px' }}>Top Token Data Loading</GridContainer>
+    return <GridContainer>Top Token Data Loading</GridContainer>
   }
   if (data === null) {
-    return <GridContainer style={{ padding: '4px 0px' }}>No Top Token Data Available</GridContainer>
+    return <GridContainer>No Top Token Data Available</GridContainer>
   }
   const topTokenAddresses = Object.keys(data)
 
@@ -48,7 +50,7 @@ export default function TokenTable() {
   return (
     <GridContainer>
       {headerRow()}
-      <div style={{ padding: '4px 0px' }}>{tokenRows}</div>
+      <div style={{ paddingBottom: '4px' }}>{tokenRows}</div>
     </GridContainer>
   )
 }

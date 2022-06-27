@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
+import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { darken } from 'polished'
 import React from 'react'
@@ -24,51 +25,21 @@ const TokenRowWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToLarge`
   grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
   gap: 10px;
-  .col-hide-1 {
-    display: none;
-  }
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
   grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
   width: fit-content;
-  .col-hide-1 {
-    display: none;
-  }
-  .col-hide-2 {
-    display: none;
-  }
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
   grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2fr;
   width: fit-content;
-  .col-hide-1 {
-    display: none;
-  }
-  .col-hide-2 {
-    display: none;
-  }
-  .col-hide-3 {
-    display: none;
-  }
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   grid-template-columns: 1fr 7fr 4fr 4fr;
   width: fit-content;
-  .col-hide-1 {
-    display: none;
-  }
-  .col-hide-2 {
-    display: none;
-  }
-  .col-hide-3 {
-    display: none;
-  }
-  .col-hide-4 {
-    display: none;
-  }
   `};
 `
 const HeaderRow = styled(TokenRowWrapper)`
@@ -81,99 +52,85 @@ const HeaderRow = styled(TokenRowWrapper)`
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
 `
-const FavoriteContainer = styled.div`
+const Cell = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+`
+const FavoriteContainer = styled(Cell)`
   padding: 14px 0px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
-
-  .fav {
-    fill: ${({ theme }) => theme.primary1};
-    color: ${({ theme }) => theme.primary1};
-  }
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display:none
+  `};
 `
-const ListNumberContainer = styled.div`
-  display: flex;
+const ListNumberContainer = styled(Cell)`
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 14px 0px;
   gap: 10px;
   color: ${({ theme }) => theme.text2};
 `
-const NameContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 14px 8px;
+const NameContainer = styled(Cell)`
+  justify-content: flex-start;
+  padding: 14px 0px;
   gap: 8px;
   min-width: 200px;
 `
-const PriceContainer = styled.div`
-  display: flex;
+const PriceContainer = styled(Cell)`
   justify-content: flex-end;
   align-items: center;
-  padding: 12px 8px;
+  padding: 12px 0px;
   gap: 10px;
 `
-const PercentChangeContainer = styled.div`
-  display: flex;
+const PercentChangeContainer = styled(Cell)`
   flex-direction: column;
-  justify-content: center;
   align-items: flex-end;
-  padding: 14px 8px;
+  padding: 14px 0px;
   gap: 10px;
   min-width: max-content;
 `
 
-const PercentChangeContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const MarketCapContainer = styled.div`
-  display: flex;
+const MarketCapContainer = styled(Cell)`
   justify-content: flex-end;
-  align-items: center;
-  padding: 12px 8px;
+  padding: 12px 0px;
   gap: 10px;
   min-width: max-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  display: none;
+`};
 `
-const VolumeContainer = styled.div`
-  display: flex;
+const VolumeContainer = styled(Cell)`
   justify-content: flex-end;
-  align-items: center;
-  padding: 12px 8px;
+  padding: 12px 0px;
   gap: 10px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
 `
-const SparkLineContainer = styled.div`
-  display: flex;
+const SparkLineContainer = styled(Cell)`
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 16px 24px;
   gap: 10px;
   min-width: 120px;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    display: none;
+  `};
 `
-const SparkLineImg = styled.div`
+const SparkLineImg = styled(Cell)`
   max-width: 124px;
   max-height: 28px;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   transform: scale(1.2);
 `
 
-const SwapContainer = styled.div`
-  display: flex;
+const SwapContainer = styled(Cell)`
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 4px;
+  padding: 16px 0px;
   gap: 10px;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  display:none
+`};
 `
 
 const SwapButton = styled.button`
@@ -201,7 +158,7 @@ const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.text3};
 `
 const ArrowContainer = styled.div`
-  padding: 0px 0px 0px 4px;
+  padding-left: 4px;
   display: flex;
   flex-direction: column;
 `
@@ -213,12 +170,9 @@ const SortingCategory = styled.span`
   justify-content: center;
 `
 
-const SortArrowContainer = styled.div`
-  display: flex;
+const SortArrowContainer = styled(Cell)`
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0px 2px 0px 0px;
+  padding-right: 2px;
 `
 
 function getHeaderCategory(category: string, sortCategory: string, sortDecreasing: boolean) {
@@ -234,22 +188,30 @@ function getHeaderCategory(category: string, sortCategory: string, sortDecreasin
 }
 
 export function headerRow() {
+  /* TODO: access which sort category used and timeframe used */
   const possibleSortCategories = ['Market Cap', 'Price', '% Change']
   const sortCategory = possibleSortCategories[0]
   const sortDecreasing = true
   return (
     <HeaderRow>
-      <div className="col-hide-4"></div>
+      {/* Empty contents for no header for favorite and rank columns */}
+      <FavoriteContainer></FavoriteContainer>
       <div></div>
-      <Trans>
-        <NameContainer>Name</NameContainer>
-        <PriceContainer>{getHeaderCategory('Price', sortCategory, sortDecreasing)}</PriceContainer>
-        <PercentChangeContainer>{getHeaderCategory('% Change', sortCategory, sortDecreasing)}</PercentChangeContainer>
-        <MarketCapContainer className="col-hide-3">
-          {getHeaderCategory('Market Cap', sortCategory, sortDecreasing)}
-        </MarketCapContainer>
-        <VolumeContainer className="col-hide-2">1D Volume</VolumeContainer>
-      </Trans>
+      <NameContainer>
+        <Trans>Name</Trans>
+      </NameContainer>
+      <PriceContainer>
+        <Trans>{getHeaderCategory('Price', sortCategory, sortDecreasing)}</Trans>
+      </PriceContainer>
+      <PercentChangeContainer>
+        <Trans>{getHeaderCategory('% Change', sortCategory, sortDecreasing)}</Trans>
+      </PercentChangeContainer>
+      <MarketCapContainer className="col-hide-3">
+        <Trans>{getHeaderCategory('Market Cap', sortCategory, sortDecreasing)}</Trans>
+      </MarketCapContainer>
+      <VolumeContainer className="col-hide-2">
+        <Trans>1D Volume</Trans>
+      </VolumeContainer>
     </HeaderRow>
   )
 }
@@ -271,13 +233,14 @@ export default function TokenRow({
   const tokenName = token?.name
   const tokenSymbol = token?.symbol
   const tokenData = data[tokenAddress]
+  const theme = useTheme()
   // TODO: remove magic number colors
   // TODO: write favorited hook
   const favorited = true
   return (
     <TokenRowWrapper key={key}>
-      <FavoriteContainer className="col-hide-4">
-        {favorited ? <Heart size={15} className="fav" /> : <Heart size={15} />}
+      <FavoriteContainer>
+        {favorited ? <Heart size={15} color={theme.primary1} fill={theme.primary1} /> : <Heart size={15} />}
       </FavoriteContainer>
       <ListNumberContainer>{listNumber}</ListNumberContainer>
       <NameContainer>
@@ -286,7 +249,7 @@ export default function TokenRow({
       </NameContainer>
       <PriceContainer>{formatDollarAmount(tokenData.price)}</PriceContainer>
       <PercentChangeContainer>
-        <PercentChangeContent>
+        <Cell>
           {tokenData.delta}%
           <ArrowContainer>
             {Math.sign(tokenData.delta) > 0 ? (
@@ -295,16 +258,14 @@ export default function TokenRow({
               <ArrowDownRight size={14} color={'red'} />
             )}
           </ArrowContainer>
-        </PercentChangeContent>
+        </Cell>
       </PercentChangeContainer>
-      <MarketCapContainer className="col-hide-3">{formatAmount(tokenData.marketCap).toUpperCase()}</MarketCapContainer>
-      <VolumeContainer className="col-hide-2">
-        {formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
-      </VolumeContainer>
-      <SparkLineContainer className="col-hide-1">
+      <MarketCapContainer>{formatAmount(tokenData.marketCap).toUpperCase()}</MarketCapContainer>
+      <VolumeContainer>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</VolumeContainer>
+      <SparkLineContainer>
         <SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />
       </SparkLineContainer>
-      <SwapContainer className="col-hide-4">
+      <SwapContainer>
         <SwapButton>
           <Trans>Swap</Trans>
         </SwapButton>
