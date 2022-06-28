@@ -26,6 +26,7 @@ import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import XttPresaleHeader from '../../components/xttpresale/XttPresaleHeader'
+import { ExtendedXDC } from '../../constants/extended-xdc'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -45,6 +46,8 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
+import { useXttPresaleState } from '../../state/xtt-presale/hooks'
+import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import XttPresaleUpdater from '../../state/xtt-presale/updater'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
@@ -53,8 +56,27 @@ import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
 export default function XTTPresale({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const xttPresaleState: IXttPresaleState = useXttPresaleState()
+
+  const xttToken = useMemo(() => {
+    console.log(xttPresaleState)
+    if (xttPresaleState.status !== Status.SUCCESS || !chainId) {
+      return null
+    }
+    return new Token(chainId, xttPresaleState.token, 18, 'XTT', 'X Treasury Token')
+  }, [xttPresaleState, chainId])
+
+  useEffect(() => {
+    console.log(xttToken)
+  }, [xttToken])
+  const ether = useMemo(() => {
+    if (chainId) {
+      return ExtendedXDC.onChain(chainId)
+    }
+    return null
+  }, [chainId])
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -363,7 +385,7 @@ export default function XTTPresale({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
       <AppBody>
-        <XttPresaleHeader hardCap={9000} sold={90} progress={68} startTime={new Date()} endTime={new Date()}/>
+        <XttPresaleHeader state={xttPresaleState} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -387,7 +409,7 @@ export default function XTTPresale({ history }: RouteComponentProps) {
                 }
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={showMaxButton}
-                currency={currencies[Field.INPUT]}
+                currency={ether}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
                 fiatValue={fiatValueInput ?? undefined}
@@ -403,7 +425,7 @@ export default function XTTPresale({ history }: RouteComponentProps) {
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
                 priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
+                currency={xttToken}
                 showCommonBases={true}
                 id="swap-currency-output"
                 // loading={independentField === Field.INPUT && routeIsSyncing}

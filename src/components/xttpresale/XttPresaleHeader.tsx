@@ -1,6 +1,9 @@
+import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
+import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
+import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import { Separator, ThemedText } from '../../theme'
 import ProgressBar from '../PorgressBar'
 import { RowBetween, RowFixed } from '../Row'
@@ -14,19 +17,23 @@ const StyledXttPresaleHeader = styled.div`
   flex-direction: column;
 `
 
-export default function XttPresaleHeader({
-  progress = 0,
-  startTime,
-  endTime,
-  sold,
-  hardCap,
-}: {
-  progress: number
-  startTime: Date
-  endTime: Date
-  sold: number
-  hardCap: number
-}) {
+interface Props {
+  state: IXttPresaleState
+}
+
+export default function XttPresaleHeader({ state }: Props) {
+  const formattedState = useMemo(() => {
+    if (state.status !== Status.SUCCESS) {
+      return null
+    }
+    console.log(formatEther(state.hardCapEthAmount))
+    return {}
+  }, [state])
+
+  if (state.status !== Status.SUCCESS) {
+    return null
+  }
+
   return (
     <StyledXttPresaleHeader>
       <RowBetween>
@@ -43,7 +50,7 @@ export default function XttPresaleHeader({
             Start time:
           </ThemedText.Black>
           <ThemedText.Black fontSize={14} style={{ marginLeft: '8px' }}>
-            {startTime}
+            {0}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
@@ -53,7 +60,7 @@ export default function XttPresaleHeader({
             End time:
           </ThemedText.Black>
           <ThemedText.Black fontSize={14} style={{ marginLeft: '8px' }}>
-            {endTime}
+            {0}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
@@ -61,17 +68,17 @@ export default function XttPresaleHeader({
       <RowBetween>
         <RowFixed>
           <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Sold: {sold}
+            Sold: {0}
           </ThemedText.Black>
         </RowFixed>
         <RowFixed>
           <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Hard Cap: {hardCap}
+            Hard Cap: {0}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <ProgressBar progress={progress} height="100%" />
+        <ProgressBar progress={0} height="100%" />
       </RowBetween>
     </StyledXttPresaleHeader>
   )

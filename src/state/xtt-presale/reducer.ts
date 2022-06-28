@@ -9,7 +9,7 @@ export enum Status {
   PENDING = 'PENDING',
 }
 
-export interface XttPresaleState {
+export interface IXttPresaleState {
   token: string
   privateSaleStartTimestamp: number
   privateSaleEndTimestamp: number
@@ -28,7 +28,7 @@ export interface XttPresaleState {
 }
 export type DataWithSigner = 'balanceOf' | 'deposits' | 'statusWithSigner'
 
-export const initialState: XttPresaleState = {
+export const initialState: IXttPresaleState = {
   balanceOf: '',
   claimEnabledStart: 0,
   deposits: '',
@@ -46,7 +46,7 @@ export const initialState: XttPresaleState = {
   statusWithSigner: Status.INITIAL,
 }
 
-export default createReducer<XttPresaleState>(initialState, (builder) =>
+export default createReducer<IXttPresaleState>(initialState, (builder) =>
   builder
     .addCase(fetchData, (state) => ({
       ...state,
