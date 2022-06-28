@@ -22,7 +22,6 @@ const HEART_SIZE_MINIMIZED = 16
 /** Renders the favorite tokens section on the Explore page */
 export function FavoriteTokensSection(props: BaseTokenSectionProps) {
   const { t } = useTranslation()
-  const navigation = useExploreStackNavigation()
 
   const { tokens: favorites, isLoading } = useFavoriteTokenInfo()
 
@@ -46,15 +45,7 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
         {...props}
         displayFavorites
         horizontal
-        ListEmptyComponent={
-          <Section.EmptyState
-            buttonLabel={t('Explore tokens')}
-            description={t("When you favorite tokens, they'll appear here.")}
-            onPress={() => {
-              navigation.navigate(Screens.ExploreTokens)
-            }}
-          />
-        }
+        ListEmptyComponent={<FavoritesEmptyState />}
         assets={favorites}
         id="explore-favorites-header"
         loading={isLoading}
@@ -69,5 +60,20 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
         }
       />
     </AnimatedBox>
+  )
+}
+
+export function FavoritesEmptyState() {
+  const { t } = useTranslation()
+  const navigation = useExploreStackNavigation()
+
+  return (
+    <Section.EmptyState
+      buttonLabel={t('Explore tokens')}
+      description={t("When you favorite tokens, they'll appear here.")}
+      onPress={() => {
+        navigation.navigate(Screens.ExploreTokens)
+      }}
+    />
   )
 }

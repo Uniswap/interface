@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
+import { FavoritesEmptyState } from 'src/components/explore/FavoriteTokensSection'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { Heart } from 'src/components/icons/Heart'
 import { Box, Flex } from 'src/components/layout'
@@ -18,7 +19,7 @@ export function ExploreFavoritesScreen() {
 
   const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
 
-  const { tokens } = useFavoriteTokenInfo()
+  const { tokens, isLoading } = useFavoriteTokenInfo()
 
   const renderItem = useCallback(
     ({ item: coin, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => (
@@ -44,9 +45,13 @@ export function ExploreFavoritesScreen() {
     <ListDetailScreen
       ItemSeparatorComponent={() => <Separator ml="md" />}
       ListEmptyComponent={
-        <Box mx="md" my="sm">
-          <Loading repeat={8} type="token" />
-        </Box>
+        isLoading ? (
+          <Box mx="md" my="sm">
+            <Loading repeat={8} type="token" />
+          </Box>
+        ) : (
+          <FavoritesEmptyState />
+        )
       }
       contentHeader={ContentHeader}
       data={tokens}
