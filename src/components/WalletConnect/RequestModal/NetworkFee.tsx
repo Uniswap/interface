@@ -17,7 +17,7 @@ export function NetworkFee({
   gasFeeInfo: FeeInfo | undefined
 }) {
   const { t } = useTranslation()
-  const price = useUSDGasPrice(chainId, gasFeeInfo?.fee.normal)
+  const price = useUSDGasPrice(chainId, gasFeeInfo?.fee.urgent)
 
   return (
     <Flex row>

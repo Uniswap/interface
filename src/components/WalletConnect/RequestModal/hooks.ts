@@ -22,8 +22,8 @@ export function useHasSufficientFunds({
   const hasSufficientFunds = useMemo(() => {
     if (!gasFeeInfo || !chainId) return true
 
-    const gasFeeAmount = gasFeeInfo.fee.normal
-      ? CurrencyAmount.fromRawAmount(nativeCurrency, gasFeeInfo.fee.normal)
+    const gasFeeAmount = gasFeeInfo
+      ? CurrencyAmount.fromRawAmount(nativeCurrency, gasFeeInfo.fee.urgent)
       : undefined
     const transactionAmount = value
       ? CurrencyAmount.fromRawAmount(nativeCurrency, value)

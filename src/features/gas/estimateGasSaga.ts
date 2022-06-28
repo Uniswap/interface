@@ -179,7 +179,7 @@ function* estimateSwapGasInfo(
   const gasPrice =
     swapGasInfo.type === FeeType.Eip1559
       ? BigNumber.from(swapGasInfo.feeDetails.currentBaseFeePerGas)
-          .add(swapGasInfo.feeDetails.maxPriorityFeePerGas.normal)
+          .add(swapGasInfo.feeDetails.maxPriorityFeePerGas.urgent)
           .toString()
       : swapGasInfo.gasPrice
 
