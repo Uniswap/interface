@@ -9,13 +9,13 @@ import { maxAmountSpend } from 'src/utils/balance'
 interface MaxAmountButtonProps {
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency> | null | undefined
-  onSetAmount: (amount: string) => void
+  onSetMax: (amount: string) => void
 }
 
 export function MaxAmountButton({
   currencyAmount,
   currencyBalance,
-  onSetAmount,
+  onSetMax,
 }: MaxAmountButtonProps) {
   const { t } = useTranslation()
 
@@ -39,7 +39,7 @@ export function MaxAmountButton({
       py="sm"
       textVariant="smallLabel"
       variant="transparent"
-      onPress={() => onSetAmount(maxInputAmount.toSignificant())}
+      onPress={() => onSetMax(maxInputAmount.toSignificant())}
     />
   )
 }

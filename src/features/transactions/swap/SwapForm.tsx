@@ -60,7 +60,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
     isUSDInput = false,
   } = derivedSwapInfo
 
-  const { onSelectCurrency, onSwitchCurrencies, onSetAmount, onToggleUSDInput } =
+  const { onSelectCurrency, onSwitchCurrencies, onSetAmount, onSetMax, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
 
   const exactCurrency = currencies[exactCurrencyField]
@@ -107,6 +107,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
             onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+            onSetMax={onSetMax}
             onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
           />
         </Trace>

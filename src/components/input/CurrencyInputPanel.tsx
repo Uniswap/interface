@@ -28,6 +28,7 @@ type CurrentInputPanelProps = {
   autoFocus?: boolean
   isOutput?: boolean
   isUSDInput?: boolean
+  onSetMax?: (amount: string) => void
   onToggleUSDInput?: () => void
 } & RestyleProps
 
@@ -38,6 +39,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     currencyAmount,
     currencyBalance,
     onSetAmount,
+    onSetMax,
     onSelectCurrency,
     value,
     otherSelectedCurrency,
@@ -88,16 +90,15 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       )}
 
       <Flex row alignItems="center" gap="xs" justifyContent="center">
-        {isOutput ? (
-          <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
-        ) : (
+        {onSetMax ? (
           <InlineMaxAmountButton
             currencyAmount={currencyAmount}
             currencyBalance={currencyBalance}
-            onSetAmount={onSetAmount}
+            onSetMax={onSetMax}
           />
+        ) : (
+          <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
         )}
-
         <Box alignItems="center">
           <CurrencySelector
             otherSelectedCurrency={otherSelectedCurrency}

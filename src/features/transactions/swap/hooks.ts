@@ -246,6 +246,12 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
     updater(field, value)
   }
+  const onSetMax = (amount: string) => {
+    // when setting max amount, always switch to token mode because
+    // our token/usd updater doesnt handle this case yet
+    dispatch(transactionStateActions.toggleUSDInput(false))
+    dispatch(transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount }))
+  }
 
   const onSwitchCurrencies = () => {
     dispatch(transactionStateActions.switchCurrencySides())
@@ -257,13 +263,12 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(transactionStateActions.toggleUSDInput(isUSDInput))
 
   return {
-    onUpdateExactTokenAmount,
-    onUpdateExactUSDAmount,
     onSelectCurrency,
     onSelectRecipient,
     onSwitchCurrencies,
     onToggleUSDInput,
     onSetAmount,
+    onSetMax,
   }
 }
 
