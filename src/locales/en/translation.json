@@ -342,5 +342,7 @@
   "Create New Account": "Create New Account",
   "Enter value": "Enter value",
   "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
+  "Invalid word": "Invalid word",
+  "Invalid words": "Invalid words",
   "Invalid phrase": "Invalid phrase"
 }

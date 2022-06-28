@@ -11,7 +11,7 @@ import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { isValidMnemonic } from 'src/utils/mnemonics'
+import { isValidMnemonic, isValidWord } from 'src/utils/mnemonics'
 import { normalizeTextInput } from 'src/utils/string'
 
 const IMPORT_WALLET_AMOUNT = 3
@@ -23,11 +23,25 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
   const { t } = useTranslation()
 
   const [value, setValue] = useState<string | undefined>(undefined)
-  const { valid, errorText } = isValidMnemonic(value ? normalizeTextInput(value) : null, t)
+  const { valid: validWord, errorText: errorTextWord } = isValidWord(
+    value ? normalizeTextInput(value) : null,
+    t
+  )
+  const [errorTextPhrase, setErrorPhrase] = useState<string | undefined>()
+
+  const isValid = validWord && !errorTextPhrase
+  const error = errorTextWord || errorTextPhrase
 
   // Add all accounts from mnemonic.
   const onSubmit = useCallback(() => {
-    if (valid && value) {
+    if (validWord && value) {
+      // Check phrase validation
+      const { valid: validPhrase, errorText } = isValidMnemonic(normalizeTextInput(value), t)
+      if (!validPhrase) {
+        setErrorPhrase(errorText)
+        return
+      }
+
       dispatch(
         importAccountActions.trigger({
           type: ImportAccountType.Mnemonic,
@@ -37,7 +51,14 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
       )
       navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     }
-  }, [dispatch, navigation, params, valid, value])
+  }, [dispatch, navigation, params, t, validWord, value])
+
+  const onChange = (text: string | undefined) => {
+    if (errorTextPhrase) {
+      setErrorPhrase('')
+    }
+    setValue(text)
+  }
 
   return (
     <OnboardingScreen
@@ -46,15 +67,20 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
       <Flex pt="lg">
         <GenericImportForm
           liveCheck
-          error={errorText}
+          error={error}
           placeholderLabel={t('recovery phrase')}
-          showSuccess={valid}
+          showSuccess={isValid}
           value={value}
-          onChange={(text: string | undefined) => setValue(text)}
+          onChange={onChange}
           onSubmit={() => Keyboard.dismiss()}
         />
       </Flex>
-      <PrimaryButton disabled={!valid} label={t('Continue')} variant="onboard" onPress={onSubmit} />
+      <PrimaryButton
+        disabled={!validWord}
+        label={t('Continue')}
+        variant="onboard"
+        onPress={onSubmit}
+      />
     </OnboardingScreen>
   )
 }
