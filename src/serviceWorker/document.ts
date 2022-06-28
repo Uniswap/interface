@@ -102,8 +102,8 @@ export class CachedDocument extends Response {
     response.headers.set('Content-Type', 'text/html; charset=utf-8')
 
     // Injects a marker into the document so that client code knows it was served from cache.
-    // The marker should be injected immediately in the <head> so it is available to client code.
-    return new CachedDocument(text.replace('<head>', '<head><script>window.__isDocumentCached=true</script>'), response)
+    // The marker should be injected immediately in the <body> so it is available to client code.
+    return new CachedDocument(text.replace('<body>', '<body><script>window.__isDocumentCached=true</script>'), response)
   }
 
   private constructor(text: string, response: Response) {

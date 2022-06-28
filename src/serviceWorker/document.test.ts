@@ -91,7 +91,7 @@ describe('document', () => {
         expect(response).toBeInstanceOf(CachedDocument)
         expect(response.headers.get('Content-Type')).toBe('text/html; charset=utf-8')
         expect(await response.text()).toBe(
-          '<html><head><script>window.__isDocumentCached=true</script></head><body>mock</body></html>'
+          '<html><head></head><body><script>window.__isDocumentCached=true</script>mock</body></html>'
         )
       })
 
@@ -139,7 +139,7 @@ describe('document', () => {
             expect(response).toBeInstanceOf(CachedDocument)
             expect(response.headers.get('Content-Type')).toBe('text/html; charset=utf-8')
             expect(await response.text()).toBe(
-              '<html><head><script>window.__isDocumentCached=true</script></head><body>mock</body></html>'
+              '<html><head></head><body><script>window.__isDocumentCached=true</script>mock</body></html>'
             )
           })
         })
