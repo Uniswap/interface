@@ -17,6 +17,7 @@ import {
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapCallback,
+  useUSDTokenUpdater,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
@@ -50,14 +51,25 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,
+    exactAmountToken,
+    exactAmountUSD = '',
     formattedAmounts,
     trade: { trade: trade, loading },
     wrapType,
+    isUSDInput = false,
   } = derivedSwapInfo
 
-  const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
+  const { onSelectCurrency, onSwitchCurrencies, onSetAmount, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
+  const exactCurrency = currencies[exactCurrencyField]
 
+  useUSDTokenUpdater(
+    dispatch,
+    isUSDInput,
+    exactAmountToken,
+    exactAmountUSD,
+    exactCurrency ?? undefined
+  )
   const { swapCallback } = useSwapCallback(trade, onClose)
   const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onClose)
 
@@ -76,12 +88,14 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
             currency={currencies[CurrencyField.INPUT]}
             currencyAmount={currencyAmounts[CurrencyField.INPUT]}
             currencyBalance={currencyBalances[CurrencyField.INPUT]}
+            isUSDInput={isUSDInput}
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
             value={formattedAmounts[CurrencyField.INPUT]}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
-            onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
+            onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+            onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
           />
         </Trace>
 
@@ -109,13 +123,14 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
                 currency={currencies[CurrencyField.OUTPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                 currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+                isUSDInput={isUSDInput}
                 otherSelectedCurrency={currencies[CurrencyField.INPUT]}
                 showNonZeroBalancesOnly={false}
                 value={formattedAmounts[CurrencyField.OUTPUT]}
                 onSelectCurrency={(newCurrency: Currency) =>
                   onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
                 }
-                onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
+                onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
               />
             </Flex>
           </Flex>
@@ -123,7 +138,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
       </Flex>
       <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
         <DecimalPad
-          setValue={(value: string) => onEnterExactAmount(exactCurrencyField, value)}
+          setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
           value={formattedAmounts[exactCurrencyField]}
         />
         <ActionButton

@@ -14,6 +14,7 @@ export type BaseDerivedInfo<TInput = Currency> = {
   formattedAmounts: {
     [CurrencyField.INPUT]: string
   }
-  exactAmount: string
+  exactAmountUSD?: string
+  exactAmountToken: string
   exactCurrencyField: CurrencyField
 }

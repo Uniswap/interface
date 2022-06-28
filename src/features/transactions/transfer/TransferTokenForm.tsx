@@ -50,7 +50,7 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
     recipient,
   } = derivedTransferInfo
 
-  const { onSelectCurrency, onEnterExactAmount, onSelectRecipient } =
+  const { onSelectCurrency, onUpdateExactTokenAmount, onSelectRecipient } =
     useSwapActionHandlers(dispatch)
 
   // TODO: consider simplifying this logic
@@ -93,7 +93,8 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
-            onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
+            // TODO: enable USD inputs in transfer token form
+            onSetAmount={(value) => onUpdateExactTokenAmount(CurrencyField.INPUT, value)}
           />
         )}
 
@@ -104,7 +105,7 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
 
       {isNFT ? null : (
         <DecimalPad
-          setValue={(newValue) => onEnterExactAmount(CurrencyField.INPUT, newValue)}
+          setValue={(newValue) => onUpdateExactTokenAmount(CurrencyField.INPUT, newValue)}
           value={formattedAmounts[CurrencyField.INPUT]}
         />
       )}

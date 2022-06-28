@@ -31,7 +31,12 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
 }
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
-  const { [CurrencyField.INPUT]: tradeableAsset, exactAmount, recipient } = state
+  const {
+    [CurrencyField.INPUT]: tradeableAsset,
+    exactAmountToken,
+    exactAmountUSD,
+    recipient,
+  } = state
 
   const activeAccount = useActiveAccount()
   const chainId = tradeableAsset?.chainId ?? ChainId.Mainnet
@@ -61,8 +66,8 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const { balance: nativeInBalance } = useNativeCurrencyBalance(chainId, activeAccount?.address)
 
   const amountSpecified = useMemo(
-    () => tryParseExactAmount(exactAmount, currencyIn),
-    [currencyIn, exactAmount]
+    () => tryParseExactAmount(exactAmountToken, currencyIn),
+    [currencyIn, exactAmountToken]
   )
   const currencyAmounts = {
     [CurrencyField.INPUT]: amountSpecified,
@@ -77,10 +82,11 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     currencyTypes: {
       [CurrencyField.INPUT]: tradeableAsset?.type,
     },
-    exactAmount,
+    exactAmountUSD,
+    exactAmountToken,
     exactCurrencyField: CurrencyField.INPUT,
     formattedAmounts: {
-      [CurrencyField.INPUT]: exactAmount,
+      [CurrencyField.INPUT]: exactAmountToken,
     },
     recipient,
   }

@@ -4,6 +4,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { InlineMaxAmountButton } from 'src/components/buttons/MaxAmountButton'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout'
@@ -26,6 +27,8 @@ type CurrentInputPanelProps = {
   showNonZeroBalancesOnly?: boolean
   autoFocus?: boolean
   isOutput?: boolean
+  isUSDInput?: boolean
+  onToggleUSDInput?: () => void
 } & RestyleProps
 
 /** Input panel for a single side of a transfer action. */
@@ -41,12 +44,13 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     showNonZeroBalancesOnly = true,
     autoFocus,
     isOutput = false,
+    isUSDInput = false,
+    onToggleUSDInput,
     ...rest
   } = props
 
   const theme = useAppTheme()
   const { t } = useTranslation()
-
   const transformedProps = useRestyle(restyleFunctions, rest)
   const isBlankOutputState = isOutput && !currency
 
@@ -103,7 +107,20 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           />
         </Box>
 
-        <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
+        <Box alignItems="flex-start" flexBasis={0} flexGrow={1}>
+          {onToggleUSDInput ? (
+            <PrimaryButton
+              borderRadius="md"
+              label={t('USD')}
+              px="sm"
+              py="sm"
+              testID="toggle-usd"
+              textVariant="smallLabel"
+              variant={isUSDInput ? 'transparentBlue' : 'transparent'}
+              onPress={onToggleUSDInput}
+            />
+          ) : null}
+        </Box>
       </Flex>
     </Flex>
   )

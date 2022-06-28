@@ -14,8 +14,10 @@ export interface TransactionState {
   [CurrencyField.INPUT]: TradeableAsset | null
   [CurrencyField.OUTPUT]: TradeableAsset | null
   exactCurrencyField: CurrencyField
-  exactAmount: string
+  exactAmountToken: string
+  exactAmountUSD?: string
   recipient?: string
+  isUSDInput?: boolean
   gasSpendEstimate?: Partial<Record<TransactionType, string>>
   gasPrice?: string // gas price in native currency
 }
@@ -32,7 +34,9 @@ export const initialState: Readonly<TransactionState> = {
   [CurrencyField.INPUT]: ETH_TRADEABLE_ASSET,
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
-  exactAmount: '',
+  exactAmountToken: '',
+  exactAmountUSD: '',
+  isUSDInput: false,
 }
 
 // using `createSlice` for convenience -- slice is not added to root reducer
@@ -66,6 +70,12 @@ const slice = createSlice({
       }
 
       state[field] = tradeableAsset
+
+      // on selecting a new input currency, reset input amounts
+      if (field === state.exactCurrencyField) {
+        state.exactAmountToken = ''
+        state.exactAmountUSD = ''
+      }
     },
     /** Switches input and output currencies */
     switchCurrencySides: (state) => {
@@ -77,20 +87,46 @@ const slice = createSlice({
         state[CurrencyField.OUTPUT],
         state[CurrencyField.INPUT],
       ]
+
+      state.exactAmountToken = ''
+      state.exactAmountUSD = ''
     },
     /** Processes a new typed value for the given `field` */
-    enterExactAmount: (
+    updateExactAmountToken: (
       state,
-      action: PayloadAction<{ field: CurrencyField; exactAmount: string }>
+      action: PayloadAction<{
+        field?: CurrencyField
+        amount: string
+      }>
     ) => {
-      const { field, exactAmount } = action.payload
-      state.exactCurrencyField = field
-      state.exactAmount = exactAmount
+      const { field, amount } = action.payload
+      if (field) {
+        state.exactCurrencyField = field
+      }
+      state.exactAmountToken = amount
+    },
+    /** Processes a new typed value for the given `field` */
+    updateExactAmountUSD: (
+      state,
+      action: PayloadAction<{
+        field?: CurrencyField
+        amount: string
+      }>
+    ) => {
+      const { field, amount } = action.payload
+      if (field) {
+        state.exactCurrencyField = field
+      }
+      state.exactAmountUSD = amount
     },
     /** Changes the recipient */
     selectRecipient: (state, action: PayloadAction<{ recipient: Address }>) => {
       const { recipient } = action.payload
       state.recipient = recipient
+    },
+
+    toggleUSDInput: (state, action: PayloadAction<boolean>) => {
+      state.isUSDInput = action.payload
     },
     updateGasEstimates: (
       state,
@@ -117,8 +153,10 @@ const slice = createSlice({
 export const {
   selectCurrency,
   switchCurrencySides,
-  enterExactAmount,
+  updateExactAmountToken,
+  updateExactAmountUSD,
   selectRecipient,
+  toggleUSDInput,
   updateGasEstimates,
   clearGasEstimates,
 } = slice.actions

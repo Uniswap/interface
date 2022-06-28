@@ -21,7 +21,7 @@ export function* handleSwapLink(url: URL) {
       outputChain,
       outputAddress,
       exactCurrencyField,
-      exactAmount,
+      exactAmountToken,
     } = yield* call(parseAndValidateSwapParams, url)
 
     const inputAsset: CurrencyAsset = {
@@ -40,7 +40,7 @@ export function* handleSwapLink(url: URL) {
       [CurrencyField.INPUT]: inputAsset,
       [CurrencyField.OUTPUT]: outputAsset,
       exactCurrencyField,
-      exactAmount,
+      exactAmountToken,
     }
 
     yield put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
@@ -54,7 +54,7 @@ export function* parseAndValidateSwapParams(url: URL) {
   const inputCurrencyId = url.searchParams.get('inputCurrencyId')
   const outputCurrencyId = url.searchParams.get('outputCurrencyId')
   const currencyField = url.searchParams.get('currencyField')
-  const exactAmount = url.searchParams.get('amount') ?? '0'
+  const exactAmountToken = url.searchParams.get('amount') ?? '0'
 
   if (!inputCurrencyId) {
     throw new Error('No inputCurrencyId')
@@ -97,7 +97,7 @@ export function* parseAndValidateSwapParams(url: URL) {
   }
 
   try {
-    BigNumber.from(exactAmount).toNumber() // throws if exactAmount string is not a valid number
+    BigNumber.from(exactAmountToken).toNumber() // throws if exactAmount string is not a valid number
   } catch (error) {
     throw new Error('Invalid swap amount')
   }
@@ -118,6 +118,6 @@ export function* parseAndValidateSwapParams(url: URL) {
     outputChain,
     outputAddress,
     exactCurrencyField,
-    exactAmount,
+    exactAmountToken,
   }
 }

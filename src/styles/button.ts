@@ -30,6 +30,12 @@ export const primaryButtonVariants = {
     borderWidth: 1,
     color: 'textPrimary',
   },
+  transparentBlue: {
+    backgroundColor: 'none',
+    borderColor: 'accentActive',
+    borderWidth: 1,
+    color: 'accentActive',
+  },
   blue: {
     backgroundColor: 'deprecated_blue',
     color: 'white',

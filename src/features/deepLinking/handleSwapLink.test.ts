@@ -53,7 +53,7 @@ const formTransactionState = (
     : currencyField.toLowerCase() === 'output'
     ? CurrencyField.OUTPUT
     : CurrencyField.INPUT,
-  exactAmount: amount,
+  exactAmountToken: amount,
 })
 
 const swapUrl = formSwapUrl(

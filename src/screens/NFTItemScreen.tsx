@@ -45,7 +45,7 @@ export function NFTItemScreen({
   const onPressSend = () => {
     const transferFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmount: '',
+      exactAmountToken: '',
       [CurrencyField.INPUT]: {
         chainId: ChainId.Mainnet,
         address: asset.asset_contract.address,

@@ -136,7 +136,7 @@ export function useCreateSwapFormState(
       [CurrencyField.INPUT]: inputAsset,
       [CurrencyField.OUTPUT]: outputAsset,
       exactCurrencyField,
-      exactAmount: exactAmount?.toExact() ?? '',
+      exactAmountToken: exactAmount?.toExact() ?? '',
     }
 
     return swapFormState

@@ -9,6 +9,7 @@ export interface UseQuoteProps {
   amountSpecified: CurrencyAmount<Currency> | null | undefined
   otherCurrency: Currency | null | undefined
   tradeType: TradeType
+  pollingInterval?: PollingInterval
 }
 
 /**
@@ -17,7 +18,12 @@ export interface UseQuoteProps {
 export function useRouterQuote(params: UseQuoteProps) {
   const recipient = useActiveAccount()
 
-  const { amountSpecified, tradeType, otherCurrency } = params
+  const {
+    amountSpecified,
+    tradeType,
+    otherCurrency,
+    pollingInterval = PollingInterval.Fast,
+  } = params
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
   const currencyOut =
@@ -44,7 +50,7 @@ export function useRouterQuote(params: UseQuoteProps) {
           recipient: recipient?.address,
         },
     {
-      pollingInterval: PollingInterval.Fast,
+      pollingInterval,
     }
   )
 

@@ -110,7 +110,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
     setActiveSwapAttemptType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.OUTPUT,
-      exactAmount: '0',
+      exactAmountToken: '0',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
         address: currencyAddress(currency),
@@ -125,7 +125,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
     setActiveSwapAttemptType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmount: '0',
+      exactAmountToken: '0',
       [CurrencyField.INPUT]: {
         address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,
@@ -157,7 +157,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
   const onPressSend = () => {
     const transferFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmount: '1',
+      exactAmountToken: '1',
       [CurrencyField.INPUT]: {
         address: currencyAddress(currency),
         chainId: currency.wrapped.chainId,

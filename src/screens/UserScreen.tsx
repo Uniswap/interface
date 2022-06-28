@@ -41,7 +41,8 @@ export function UserScreen({
     navigation.navigate(Screens.Transfer, {
       transferFormState: {
         recipient: address,
-        exactAmount: '',
+        exactAmountToken: '',
+        exactAmountUSD: '',
         exactCurrencyField: CurrencyField.INPUT,
         [CurrencyField.INPUT]: null,
         [CurrencyField.OUTPUT]: null,

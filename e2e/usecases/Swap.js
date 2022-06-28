@@ -1,5 +1,5 @@
 import { ElementName } from '../../src/features/telemetry/constants'
-import { by, element, device } from 'detox'
+import { by, element, device, expect } from 'detox'
 import { sleep } from '../../src/utils/timing'
 import { maybeDismissTokenWarning } from '../utils/utils'
 
@@ -31,14 +31,17 @@ export function Swap() {
     await sleep(5000)
   })
 
+  it('saves the original amount on usd toggle', async () => {
+    await element(by.id('toggle-usd')).tap()
+    await expect(element(by.id('amount-input-in'))).toHaveText()
+
+    await element(by.id('toggle-usd')).tap()
+    await expect(element(by.id('amount-input-in'))).toHaveValue('1.23')
+  })
+
   it('submit a swap tx', async () => {
     await element(by.id(ElementName.Swap)).longPress(2000)
 
     await device.matchFace()
   })
-
-  // Commenting out for now because can't run locally
-  // it('validates swap response', async () => {
-  //   await expect(element(by.id('swap-success-toast'))).toBeVisible()
-  // })
 }

@@ -3,12 +3,13 @@ import { ChainId } from 'src/constants/chains'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import {
   CurrencyField,
-  enterExactAmount,
   initialState,
   selectCurrency,
   switchCurrencySides,
   TransactionState,
   transactionStateReducer,
+  updateExactAmountToken,
+  updateExactAmountUSD,
 } from './transactionState'
 
 const chainId = ChainId.Rinkeby
@@ -24,7 +25,8 @@ const testInitialState: Readonly<TransactionState> = {
   },
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
-  exactAmount: '',
+  exactAmountToken: '',
+  exactAmountUSD: '',
 }
 
 test('should return the initial state', () => {
@@ -153,23 +155,40 @@ describe(switchCurrencySides, () => {
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: ethTradeableAsset,
       [CurrencyField.OUTPUT]: daiTradeableAsset,
+      exactAmountUSD: '',
+      exactAmountToken: '',
     })
   })
 })
 
-describe(enterExactAmount, () => {
-  it('should set typed value', () => {
+describe(updateExactAmountToken, () => {
+  it('should set typed value on token amount updates', () => {
     const previousState = { ...testInitialState }
 
     expect(
       transactionStateReducer(
         previousState,
-        enterExactAmount({ field: CurrencyField.INPUT, exactAmount: '1' })
+        updateExactAmountToken({ field: CurrencyField.INPUT, amount: '1' })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmount: '1',
+      exactAmountToken: '1',
+    })
+  })
+
+  it('should set typed value on usd amount updates', () => {
+    const previousState = { ...testInitialState }
+
+    expect(
+      transactionStateReducer(
+        previousState,
+        updateExactAmountUSD({ field: CurrencyField.INPUT, amount: '1' })
+      )
+    ).toEqual({
+      ...previousState,
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmountUSD: '1',
     })
   })
 
@@ -179,12 +198,12 @@ describe(enterExactAmount, () => {
     expect(
       transactionStateReducer(
         previousState,
-        enterExactAmount({ field: CurrencyField.OUTPUT, exactAmount: '5' })
+        updateExactAmountToken({ field: CurrencyField.OUTPUT, amount: '5' })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
-      exactAmount: '5',
+      exactAmountToken: '5',
     })
   })
 })

@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
@@ -10,6 +10,11 @@ import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
+import {
+  STABLECOIN_AMOUNT_OUT,
+  useUSDCPrice,
+  useUSDCValue,
+} from 'src/features/routing/useUSDCPrice'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { swapActions, swapSagaName } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
@@ -24,6 +29,8 @@ import {
   CurrencyField,
   TransactionState,
   transactionStateActions,
+  updateExactAmountToken,
+  updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import {
@@ -39,6 +46,8 @@ import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
+const NUM_CURRENCY_DECIMALS_DISPLAY = 8
+const NUM_USD_DECIMALS_DISPLAY = 2
 
 export type DerivedSwapInfo<
   TInput = Currency,
@@ -58,6 +67,7 @@ export type DerivedSwapInfo<
   }
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
+  isUSDInput?: boolean
 }
 
 /** Returns information derived from the current swap state */
@@ -65,8 +75,10 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const {
     [CurrencyField.INPUT]: currencyAssetIn,
     [CurrencyField.OUTPUT]: currencyAssetOut,
-    exactAmount,
+    exactAmountUSD,
+    exactAmountToken,
     exactCurrencyField,
+    isUSDInput,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -105,12 +117,13 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const isExactIn = exactCurrencyField === CurrencyField.INPUT
   const wrapType = getWrapType(currencyIn, currencyOut)
 
-  // amountSpecified, otherCurrency, tradeType fully defines a trade
-  const amountSpecified = useMemo(
-    () => tryParseExactAmount(exactAmount, isExactIn ? currencyIn : currencyOut),
-    [currencyIn, currencyOut, exactAmount, isExactIn]
-  )
   const otherCurrency = isExactIn ? currencyOut : currencyIn
+  const exactCurrency = isExactIn ? currencyIn : currencyOut
+
+  // amountSpecified, otherCurrency, tradeType fully defines a trade
+  const amountSpecified = useMemo(() => {
+    return tryParseExactAmount(exactAmountToken, exactCurrency)
+  }, [exactAmountToken, exactCurrency])
 
   const shouldGetQuote = !isWrapAction(wrapType)
   const trade = useTrade(
@@ -118,6 +131,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     otherCurrency,
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
   )
+
+  const tradeUSDValue = useUSDCValue(isUSDInput ? trade.trade?.outputAmount : undefined)
 
   const currencyAmounts = shouldGetQuote
     ? {
@@ -131,6 +146,24 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
         [CurrencyField.OUTPUT]: amountSpecified,
       }
 
+  const getFormattedInput = () => {
+    if (isExactIn) {
+      return isUSDInput ? exactAmountUSD : exactAmountToken
+    }
+
+    return isUSDInput
+      ? tradeUSDValue?.toFixed(2)
+      : (currencyAmounts[CurrencyField.INPUT]?.toExact() ?? '').toString()
+  }
+
+  const getFormattedOutput = () => {
+    if (!isExactIn) {
+      return isUSDInput ? exactAmountUSD : exactAmountToken
+    }
+
+    return isUSDInput ? tradeUSDValue?.toFixed(2) : currencyAmounts[CurrencyField.OUTPUT]?.toExact()
+  }
+
   return {
     currencies,
     currencyAmounts,
@@ -138,19 +171,56 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
       [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
     },
-    exactAmount,
+    exactAmountToken,
+    exactAmountUSD,
     exactCurrencyField,
     formattedAmounts: {
-      [CurrencyField.INPUT]: isExactIn
-        ? exactAmount
-        : (currencyAmounts[CurrencyField.INPUT]?.toExact() ?? '').toString(),
-      [CurrencyField.OUTPUT]: isExactIn
-        ? (currencyAmounts[CurrencyField.OUTPUT]?.toExact() ?? '').toString()
-        : exactAmount,
+      [CurrencyField.INPUT]: getFormattedInput() || '',
+      [CurrencyField.OUTPUT]: getFormattedOutput() || '',
     },
     trade,
     wrapType,
+    isUSDInput,
   }
+}
+
+export function useUSDTokenUpdater(
+  dispatch: React.Dispatch<AnyAction>,
+  isUSDInput: boolean,
+  exactAmountToken: string,
+  exactAmountUSD: string,
+  exactCurrency?: Currency
+) {
+  const price = useUSDCPrice(exactCurrency ?? undefined)
+  const shouldUseUSDRef = useRef(isUSDInput)
+
+  useEffect(() => {
+    shouldUseUSDRef.current = isUSDInput
+  }, [isUSDInput])
+
+  useEffect(() => {
+    if (!exactCurrency || !price) return
+
+    if (shouldUseUSDRef.current) {
+      const stablecoinAmount = tryParseExactAmount(
+        exactAmountUSD,
+        STABLECOIN_AMOUNT_OUT[exactCurrency.chainId].currency
+      )
+      const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
+
+      return dispatch(
+        updateExactAmountToken({
+          amount: currencyAmount?.toFixed(NUM_CURRENCY_DECIMALS_DISPLAY) || '',
+        })
+      )
+    }
+
+    const exactCurrencyAmount = tryParseExactAmount(exactAmountToken, exactCurrency)
+    const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
+    return dispatch(
+      updateExactAmountUSD({ amount: usdPrice?.toFixed(NUM_USD_DECIMALS_DISPLAY) || '' })
+    )
+  }, [dispatch, shouldUseUSDRef, exactAmountUSD, exactAmountToken, exactCurrency, price])
 }
 
 /** Set of handlers wrapping actions involving user input */
@@ -166,20 +236,33 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
         },
       })
     )
+
+  const onUpdateExactTokenAmount = (field: CurrencyField, amount: string) =>
+    dispatch(transactionStateActions.updateExactAmountToken({ field, amount }))
+  const onUpdateExactUSDAmount = (field: CurrencyField, amount: string) =>
+    dispatch(transactionStateActions.updateExactAmountUSD({ field, amount }))
+  const onSetAmount = (field: CurrencyField, value: string, isUSDInput: boolean) => {
+    const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
+    updater(field, value)
+  }
+
   const onSwitchCurrencies = () => {
     dispatch(transactionStateActions.switchCurrencySides())
     dispatch(clearGasEstimates)
   }
-  const onEnterExactAmount = (field: CurrencyField, exactAmount: string) =>
-    dispatch(transactionStateActions.enterExactAmount({ field, exactAmount }))
   const onSelectRecipient = (recipient: Address) =>
     dispatch(transactionStateActions.selectRecipient({ recipient }))
+  const onToggleUSDInput = (isUSDInput: boolean) =>
+    dispatch(transactionStateActions.toggleUSDInput(isUSDInput))
 
   return {
-    onEnterExactAmount,
+    onUpdateExactTokenAmount,
+    onUpdateExactUSDAmount,
     onSelectCurrency,
     onSelectRecipient,
     onSwitchCurrencies,
+    onToggleUSDInput,
+    onSetAmount,
   }
 }
 

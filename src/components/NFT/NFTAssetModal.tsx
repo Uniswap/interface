@@ -58,7 +58,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
   const onPressSend = () => {
     const transferFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmount: '',
+      exactAmountToken: '',
       [CurrencyField.INPUT]: {
         chainId: ChainId.Mainnet,
         address: nftAsset.asset_contract.address,
