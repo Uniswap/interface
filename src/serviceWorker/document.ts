@@ -107,7 +107,7 @@ export class CachedDocument extends Response {
     return new CachedDocument(text.replace('<head>', '<head><script>window.__isDocumentCached=true</script>'), init)
   }
 
-  private constructor(text: string, public response: Response) {
+  private constructor(text: string, response: Response) {
     super(text, response)
   }
 }
