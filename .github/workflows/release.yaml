@@ -73,6 +73,8 @@ jobs:
         uses: uniswap/convert-cidv0-cidv1@v1.0.0
         with:
           cidv0: ${{ steps.upload.outputs.hash }}
+      
+      - run: sleep 600
 
       - name: Update DNS with new IPFS hash
         env:
