@@ -66,18 +66,19 @@ export function GenericImportForm({
               autoCorrect={false}
               backgroundColor="backgroundSurface"
               blurOnSubmit={true}
-              caretHidden={!value}
               fontSize={18}
               justifyContent="center"
               multiline={true}
               numberOfLines={5}
-              px={'none'}
+              px={value ? 'none' : 'md'}
               py={'none'}
               returnKeyType="done"
+              selectionColor="white"
               spellCheck={false}
               testID="import_account_form/input"
-              textAlign="center"
+              textAlign={value ? 'center' : 'left'}
               value={value}
+              width={value ? 'auto' : '100%'}
               onBlur={() => setFocused(false)}
               onChangeText={onChange}
               onFocus={() => setFocused(true)}
@@ -90,7 +91,7 @@ export function GenericImportForm({
             )}
           </Flex>
           {!value && (
-            <Flex centered row gap="xs" position="absolute" top={52}>
+            <Flex centered row gap="xs" position="absolute" top={54}>
               <Text color="textSecondary" variant="body">
                 {t('Type or')}
               </Text>
