@@ -1,4 +1,4 @@
-import { max, scaleLinear, ZoomTransform } from 'd3'
+import { max, scaleLinear, scaleLog, ZoomTransform } from 'd3'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 
@@ -36,9 +36,9 @@ export function Chart({
 
   const { xScale, yScale } = useMemo(() => {
     const scales = {
-      xScale: scaleLinear()
+      xScale: scaleLog()
         .domain([current * zoomLevels.initialMin, current * zoomLevels.initialMax] as number[])
-        .range([0, innerWidth]),
+        .range([1, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
         .range([innerHeight, 0]),

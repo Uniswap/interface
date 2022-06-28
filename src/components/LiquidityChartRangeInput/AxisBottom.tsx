@@ -36,7 +36,7 @@ export const AxisBottom = ({
   useMemo(
     () => (
       <StyledGroup transform={`translate(0, ${innerHeight + offset})`}>
-        <Axis axisGenerator={axisBottom(xScale).ticks(6)} />
+        <Axis axisGenerator={axisBottom(xScale).ticks(8)} />
       </StyledGroup>
     ),
     [innerHeight, offset, xScale]
