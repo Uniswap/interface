@@ -21,7 +21,6 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { setGasPrice } from 'state/application/actions'
 import Footer from 'components/Footer/Footer'
-import GoogleAnalyticsReporter from 'components/GoogleAnalyticsReporter'
 import { RedirectDuplicateTokenIds } from './AddLiquidityV2/redirects'
 import { useIsDarkMode } from 'state/user/hooks'
 import { Sidetab, Popover } from '@typeform/embed-react'
@@ -181,7 +180,6 @@ export default function App() {
 
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
         <ApolloProvider client={apolloClient || defaultExchangeClient}>
-          <Route component={GoogleAnalyticsReporter} />
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
             <TopBanner />
