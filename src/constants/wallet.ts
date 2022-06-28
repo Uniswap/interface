@@ -55,7 +55,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#4196FC',
     mobile: true,
   },
-  WALLET_LINK: {
+  COINBASE_WALLET: {
     connector: coinbaseWallet,
     name: 'Coinbase Wallet',
     iconURL: COINBASE_ICON_URL,

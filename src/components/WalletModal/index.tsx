@@ -216,11 +216,6 @@ export default function WalletModal({
         return null
       }
 
-      // FIXME(maybe): We publish the captured injected providers in window.ethereum.providers array and other wallets also do the same
-      // web3-onboard has a method, do parse that array if exist and add all the providers to the user selection
-      // this behavior might be a good idea here as well, but probably require some changes when activating the provider
-      // so it's up to you if you want to implement that here
-
       // overwrite injected like providers when needed
       if (option.name === SUPPORTED_WALLETS['INJECTED'].name) {
         // don't show injected if there's no injected provider
