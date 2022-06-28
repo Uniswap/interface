@@ -12,6 +12,8 @@ import { useAppTheme } from 'src/app/hooks'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button } from 'src/components/buttons/Button'
+import PasteButton from 'src/components/buttons/PasteButton'
+import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { opacify } from 'src/utils/colors'
@@ -120,6 +122,9 @@ export function QRCodeScanner({
                 {t('Connect to an app with WalletConnect')}
               </Text>
             </Flex>
+            <DevelopmentOnly>
+              <PasteButton onPress={onScanCode} />
+            </DevelopmentOnly>
           </Flex>
           <CameraScan
             color={theme.colors.white}
