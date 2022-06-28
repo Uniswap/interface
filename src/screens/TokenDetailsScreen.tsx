@@ -47,7 +47,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
       <Flex centered row gap="xs">
         <CurrencyLogo currency={currency} size={35} />
         <Box>
-          <Text variant="h3">{currency.name ?? t('Unknown token')}</Text>
+          <Text variant="headlineSmall">{currency.name ?? t('Unknown token')}</Text>
           <Text variant="caption">{currency.symbol ?? t('Unknown token')}</Text>
         </Box>
       </Flex>
@@ -68,7 +68,7 @@ function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
     <Flex centered gap="none">
       <Flex centered row gap="xxs">
         <CurrencyLogo currency={currency} size={20} />
-        <Text variant="subHead1">{currency.name ?? t('Unknown token')}</Text>
+        <Text variant="subhead">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
       <Text variant="caption">{currency.symbol ?? t('Unknown token')}</Text>
     </Flex>
@@ -176,14 +176,14 @@ function TokenDetails({ currency }: { currency: Currency }) {
           <PriceChart currency={currency} />
           {balance && (
             <Flex bg="backgroundContainer" borderRadius="sm" gap="md" mx="md" p="md">
-              <Text color="textSecondary" variant="subHead2">
+              <Text color="textSecondary" variant="subheadSmall">
                 {t('Your balance')}
               </Text>
               <Flex row alignItems="center" justifyContent="space-between">
-                <Text variant="h3">
+                <Text variant="headlineSmall">
                   {`${formatCurrencyAmount(balance.amount)}`} {currency.symbol}
                 </Text>
-                <Text variant="body1">{formatUSDPrice(balance.balanceUSD)}</Text>
+                <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
               </Flex>
             </Flex>
           )}

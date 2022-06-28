@@ -8,6 +8,6 @@ type FormattedAddressProps = {
   address: string
 } & { variant?: keyof Theme['textVariants'] }
 
-export function FormattedAddress({ name, address, variant = 'body1' }: FormattedAddressProps) {
+export function FormattedAddress({ name, address, variant = 'body' }: FormattedAddressProps) {
   return <Text variant={variant}>{name ?? shortenAddress(address)}</Text>
 }

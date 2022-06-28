@@ -35,7 +35,7 @@ exports[`renders correctly 1`] = `
           "fontFamily": "Inter-Medium",
           "fontSize": 36,
           "fontWeight": "300",
-          "lineHeight": 40,
+          "lineHeight": 44,
         }
       }
       text="$100"

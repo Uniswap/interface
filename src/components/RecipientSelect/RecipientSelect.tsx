@@ -29,7 +29,7 @@ export function RecipientSelect({ setRecipientAddress }: RecipientSelectProps) {
           <Flex centered gap="sm" mt="lg" px="lg">
             <Text variant="mediumLabel">😔</Text>
             <Text variant="mediumLabel">{t('No results found')}</Text>
-            <Text color="deprecated_gray200" textAlign="center" variant="body1">
+            <Text color="deprecated_gray200" textAlign="center" variant="body">
               {t('The address you typed either does not exist or is spelled incorrectly.')}
             </Text>
           </Flex>

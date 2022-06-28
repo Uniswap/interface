@@ -59,7 +59,7 @@ export function SettingsRow({
         <Flex row>
           {icon}
           <Flex gap="none">
-            <Text fontWeight="500" variant="subHead1">
+            <Text fontWeight="500" variant="subhead">
               {text}
             </Text>
             {subText && (

@@ -36,7 +36,7 @@ export function AccountItem({ account, isActive, onPress, onEdit }: Props) {
           padding="sm"
           testID={`account_item/${address.toLowerCase()}`}
           width="100%">
-          <AddressDisplay showAddressAsSubtitle address={address} size={50} variant="body2" />
+          <AddressDisplay showAddressAsSubtitle address={address} size={50} variant="bodySmall" />
           {onEdit && (
             <Button mx="sm" my="md" name={ElementName.Edit} onPress={() => onEdit(address)}>
               <TripleDots

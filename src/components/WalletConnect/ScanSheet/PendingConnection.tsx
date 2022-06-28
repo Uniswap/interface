@@ -86,7 +86,7 @@ const SwitchNetworkRow = ({ onPress, selectedChainId }: SwitchNetworkProps) => {
       <Flex row shrink alignItems="center" gap="sm" justifyContent="space-between" p="sm">
         <Flex row shrink gap="sm">
           <NetworkLogo chainId={selectedChainId} size={20} />
-          <Text color="textPrimary" variant="body2">
+          <Text color="textPrimary" variant="bodySmall">
             {CHAIN_INFO[selectedChainId].label}
           </Text>
         </Flex>
@@ -111,11 +111,11 @@ const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
           address={activeAddress}
           showNotificationBadge={false}
           size={20}
-          variant="body2"
+          variant="bodySmall"
           verticalGap="none"
         />
         <Flex centered row shrink gap="xs">
-          <Text color="textSecondary" variant="body2">
+          <Text color="textSecondary" variant="bodySmall">
             {shortenAddress(activeAddress)}
           </Text>
           <Chevron color={theme.colors.textTertiary} direction="e" height="10" width="13" />
@@ -171,7 +171,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
           <Box>
             <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
           </Box>
-          <Text textAlign="center" variant="h3">
+          <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
               <Text fontWeight="bold">{{ dapp: pendingSession.dapp.name }}</Text> wants to connect
               to your wallet

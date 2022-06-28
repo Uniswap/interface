@@ -46,7 +46,7 @@ export function TransactionSummaryCard({ tx }: { tx: TransactionDetails }) {
       justifyContent="space-between"
       p="md">
       <Flex gap="sm">
-        <Text variant="body1">{getNotificationName(tx, t)}</Text>
+        <Text variant="body">{getNotificationName(tx, t)}</Text>
         <Text variant="caption">
           {t('From {{addr}} on {{chain}}', { addr: fromAddress, chain: chainName })}
         </Text>
@@ -96,7 +96,7 @@ export function HistoricalTransactionSummaryCard({ tx }: { tx: Transaction }) {
       justifyContent="space-between"
       p="md">
       <Flex gap="sm">
-        <Text variant="body1">{tx.type}</Text>
+        <Text variant="body">{tx.type}</Text>
         {fromAddress ? (
           <Text variant="caption">
             {t('From {{addr}} on {{chain}}', { addr: fromAddress, chain: chainName })}

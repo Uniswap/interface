@@ -66,7 +66,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
 
   return (
     <Flex fill gap="xs" justifyContent="space-between" py="md">
-      <Text textAlign="center" variant="subHead1">
+      <Text textAlign="center" variant="subhead">
         {t('Swap')}
       </Text>
       <Flex gap="sm" justifyContent="center">

@@ -39,7 +39,7 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex gap="xxs">
           {typeof title === 'string' ? (
-            <Text color="textSecondary" variant="body1">
+            <Text color="textSecondary" variant="body">
               {title}
             </Text>
           ) : (
@@ -47,7 +47,7 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
           )}
           {subtitle ? (
             typeof subtitle === 'string' ? (
-              <Text variant="subHead1">{subtitle}</Text>
+              <Text variant="subhead">{subtitle}</Text>
             ) : (
               subtitle
             )
@@ -71,7 +71,7 @@ function EmptyState({ buttonLabel, description, onPress, title }: EmptyStateProp
   return (
     <Flex centered gap="sm" p="sm" width="100%">
       {title && (
-        <Text fontWeight="600" textAlign="center" variant="subHead1">
+        <Text fontWeight="600" textAlign="center" variant="subhead">
           {title}
         </Text>
       )}

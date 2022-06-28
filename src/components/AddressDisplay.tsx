@@ -32,7 +32,7 @@ type AddressDisplayProps = {
 export function AddressDisplay({
   address,
   size = 24,
-  variant = 'body1',
+  variant = 'body',
   captionVariant = 'caption',
   captionColor = 'textSecondary',
   verticalGap = 'xxs',

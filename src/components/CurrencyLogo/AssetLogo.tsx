@@ -21,7 +21,7 @@ export function AssetLogoWithFallback({ name, url }: AssetLogoProps) {
       borderRadius="full"
       height={tokenLogoStyle.height}
       width={tokenLogoStyle.width}>
-      <Text color="textTertiary" variant="subHead2">
+      <Text color="textTertiary" variant="subheadSmall">
         {name[0]}
       </Text>
     </Flex>

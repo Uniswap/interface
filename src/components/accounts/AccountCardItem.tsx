@@ -53,7 +53,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
             address={address}
             showNotificationBadge={true}
             size={36}
-            variant="body1"
+            variant="body"
             verticalGap="none"
           />
           <Button
@@ -67,7 +67,7 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
           </Button>
         </Flex>
         <Flex row alignItems="center" justifyContent="space-between">
-          <TotalBalance balances={balances} variant="h3" />
+          <TotalBalance balances={balances} variant="headlineSmall" />
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots

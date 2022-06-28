@@ -56,7 +56,7 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.Profile>) {
   return (
     <Screen edges={['top', 'left', 'right']}>
       <Box mb="sm" mt="lg" mx="lg">
-        <Text variant="h3">{t('Collectibles')}</Text>
+        <Text variant="headlineSmall">{t('Collectibles')}</Text>
       </Box>
       {isLoading ? (
         <ActivityIndicator color={theme.colors.deprecated_gray100} size={25} />
@@ -64,7 +64,7 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.Profile>) {
         <FlatList
           ListEmptyComponent={
             <CenterBox m="md">
-              <Text color="deprecated_gray200" variant={'body1'}>
+              <Text color="deprecated_gray200" variant={'body'}>
                 {t('No NFTs found')}
               </Text>
             </CenterBox>

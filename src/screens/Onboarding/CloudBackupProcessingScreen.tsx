@@ -63,7 +63,7 @@ export function CloudBackupProcessingScreen({
       {processing ? (
         <Flex centered grow gap="xl">
           <ActivityIndicator size="large" />
-          <Text variant="h2">{t('Backing up to iCloud...')}</Text>
+          <Text variant="headlineMedium">{t('Backing up to iCloud...')}</Text>
         </Flex>
       ) : (
         <Flex centered grow gap="none" mb="lg">
@@ -71,7 +71,7 @@ export function CloudBackupProcessingScreen({
             color={theme.colors.deprecated_primary1}
             size={dimensions.fullWidth / 4}
           />
-          <Text variant="h2">{t('iCloud backup successful')}</Text>
+          <Text variant="headlineMedium">{t('iCloud backup successful')}</Text>
         </Flex>
       )}
     </Screen>

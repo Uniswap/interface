@@ -42,7 +42,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
                 <Separator />
                 <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                   <NetworkLogo chainId={chainId} size={24} />
-                  <Text color="textPrimary" variant="subHead1">
+                  <Text color="textPrimary" variant="subhead">
                     {info.label}
                   </Text>
                   <Box height={24} width={24}>
@@ -67,7 +67,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
               <>
                 <Separator />
                 <Flex centered row px="lg" py="md">
-                  <Text color="accentFailure" variant="subHead1">
+                  <Text color="accentFailure" variant="subhead">
                     {t('Disconnect')}
                   </Text>
                 </Flex>

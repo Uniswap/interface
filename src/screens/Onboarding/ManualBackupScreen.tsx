@@ -179,7 +179,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
             </LinearGradientBox>
           </Box>
           <Flex flex={1} gap="none">
-            <Text variant="subHead1">{label}</Text>
+            <Text variant="subhead">{label}</Text>
             <Text color="textSecondary" variant="caption">
               {sublabel}
             </Text>

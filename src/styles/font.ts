@@ -21,43 +21,43 @@ export const fontFamily = {
 }
 
 export const textVariants = {
-  h1: {
+  headlineLarge: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 36,
-    lineHeight: 40,
+    lineHeight: 44,
     color: 'textPrimary',
   },
-  h2: {
+  headlineMedium: {
     fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 24,
-    lineHeight: 32,
+    fontSize: 28,
+    lineHeight: 36,
     color: 'textPrimary',
   },
-  h3: {
+  headlineSmall: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 20,
-    lineHeight: 24,
+    lineHeight: 28,
     color: 'textPrimary',
   },
-  subHead1: {
+  subhead: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 16,
     lineHeight: 24,
     color: 'textPrimary',
   },
-  subHead2: {
+  subheadSmall: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 14,
     lineHeight: 20,
     color: 'textPrimary',
   },
-  body1: {
+  body: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 16,
     lineHeight: 24,
     color: 'textPrimary',
   },
-  body2: {
+  bodySmall: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 14,
     lineHeight: 20,

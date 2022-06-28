@@ -9,7 +9,7 @@ const data = Array.from(Array(10).keys())
 
 const ContentHeader = (
   <Flex row alignItems="center" gap="xs" my="xs">
-    <Text variant="h1">Screen Title</Text>
+    <Text variant="headlineLarge">Screen Title</Text>
   </Flex>
 )
 
@@ -29,7 +29,7 @@ const Template: ComponentStory<typeof ListDetailScreen> = (args) => {
   return (
     <ScrollDetailScreen {...args}>
       <Flex row bg="backgroundContainer" m="md" p="md">
-        <Text variant="body1">Body content</Text>
+        <Text variant="body">Body content</Text>
       </Flex>
     </ScrollDetailScreen>
   )

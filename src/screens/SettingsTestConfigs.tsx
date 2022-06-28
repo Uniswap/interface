@@ -20,7 +20,7 @@ export function SettingsTestConfigs() {
             <Text variant="largeLabel">Test Configs</Text>
           </SettingsBackButtonRow>
 
-          <Text variant="body1">List of all test configs available to the app</Text>
+          <Text variant="body">List of all test configs available to the app</Text>
           <Text variant="caption">
             Remote-only test configs cannot be toggled locally. Use the Firebase console instead.
           </Text>
@@ -30,7 +30,7 @@ export function SettingsTestConfigs() {
 
               return (
                 <Flex key={name} row alignItems="center" justifyContent="space-between">
-                  <Text variant="body1">{name}</Text>
+                  <Text variant="body">{name}</Text>
                   {configValue.getSource() === 'default' ? (
                     <Switch
                       value={enabled}

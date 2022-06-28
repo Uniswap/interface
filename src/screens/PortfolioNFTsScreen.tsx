@@ -60,7 +60,7 @@ export function PortfolioNFTsScreen({
   return (
     <ScrollDetailScreen
       contentHeader={
-        <Text mb="md" mx="xs" variant="h3">
+        <Text mb="md" mx="xs" variant="headlineSmall">
           {t('Your NFTs')}
         </Text>
       }

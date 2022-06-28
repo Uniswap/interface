@@ -225,7 +225,7 @@ export function SettingsScreen() {
         renderItem={renderItem}
         renderSectionHeader={({ section: { subTitle } }) => (
           <Box bg="mainBackground" pb="md">
-            <Text color="textSecondary" fontWeight="500" variant="body1">
+            <Text color="textSecondary" fontWeight="500" variant="body">
               {subTitle}
             </Text>
           </Box>
@@ -261,7 +261,7 @@ function OnboardingRow() {
             strokeWidth="1.5"
             width={20}
           />
-          <Text fontWeight="500" ml="md" variant="subHead1">
+          <Text fontWeight="500" ml="md" variant="subhead">
             {t('Onboarding')}
           </Text>
         </Box>
@@ -297,12 +297,12 @@ function WalletSettings() {
       </SettingsBackButtonRow>
 
       <Flex row justifyContent="space-between">
-        <Text color="textSecondary" fontWeight="500" variant="body1">
+        <Text color="textSecondary" fontWeight="500" variant="body">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <Button onPress={toggleViewAll}>
-            <Text color="textTertiary" mb="sm" variant="subHead2">
+            <Text color="textTertiary" mb="sm" variant="subheadSmall">
               {showAll ? t('Hide') : t('View all')}
             </Text>
           </Button>
@@ -322,7 +322,7 @@ function WalletSettings() {
                 address={account.address}
                 showViewOnly={account.type === AccountType.Readonly}
                 size={36}
-                variant="body1"
+                variant="body"
                 verticalGap="none"
               />
               <Chevron color={theme.colors.textTertiary} direction="e" height={16} width={16} />

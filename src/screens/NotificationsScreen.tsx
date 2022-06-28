@@ -47,7 +47,7 @@ export function NotificationsScreen() {
   return (
     <SheetScreen flex={1} px="lg">
       <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
-        <Text variant="body1">{t('Transaction History')}</Text>
+        <Text variant="body">{t('Transaction History')}</Text>
         <BackX size={16} />
       </Box>
       {activeAccountAddress && (
@@ -55,7 +55,7 @@ export function NotificationsScreen() {
           mt="md"
           px="xs"
           textColor="deprecated_gray600"
-          textVariant="body1"
+          textVariant="body"
           onPress={onPressEtherscan}>
           {t('View details on Etherscan')}
         </TextButton>
@@ -65,7 +65,7 @@ export function NotificationsScreen() {
       {localTransactions.length || allTransactionsFromApi.length ? (
         <Flex mt="sm">
           <FlatList data={localTransactions} keyExtractor={getTxKey} renderItem={ListItem} />
-          <Text variant="body1">{t('All transactions')}</Text>
+          <Text variant="body">{t('All transactions')}</Text>
           <FlatList
             ItemSeparatorComponent={() => <Spacer y="sm" />}
             data={allTransactionsFromApi}
@@ -92,7 +92,7 @@ function EmptyList() {
   const { t } = useTranslation()
   return (
     <CenterBox flex={1}>
-      <Text color="deprecated_gray600" p="lg" textAlign="center" variant="body1">
+      <Text color="deprecated_gray600" p="lg" textAlign="center" variant="body">
         {t('No transactions yet, try making a swap from this wallet!')}
       </Text>
     </CenterBox>

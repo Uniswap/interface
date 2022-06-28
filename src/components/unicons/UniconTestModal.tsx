@@ -58,7 +58,7 @@ export function UniconTestModal() {
         {toggleCombos &&
           Array.from(Array(UniconNumOptions[UniconAttributes.Shape]).keys()).map((i) => (
             <Flex key={'Flex' + i}>
-              <Text variant="body1">Shape {i + 1}</Text>
+              <Text variant="body">Shape {i + 1}</Text>
               <UniconShapeBlock shapeIndex={i} />
             </Flex>
           ))}

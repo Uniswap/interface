@@ -74,7 +74,7 @@ export function ProfileScreen({ navigation }: Props) {
       <Flex gap="lg" mt="sm" px="md">
         {/* nav header */}
         <Flex row justifyContent="space-between">
-          <Text variant="h3">{t('Activity')}</Text>
+          <Text variant="headlineSmall">{t('Activity')}</Text>
           <Flex centered row gap="md">
             {isWalletConnectSupportedAccount(activeAccount) && (
               <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
@@ -95,7 +95,7 @@ export function ProfileScreen({ navigation }: Props) {
             showAddressAsSubtitle={true}
             showCopy={true}
             size={48}
-            variant="h2"
+            variant="headlineMedium"
           />
         </Flex>
         {sessions.length > 0 && <SessionsButton sessions={sessions} onPress={onPressSessions} />}

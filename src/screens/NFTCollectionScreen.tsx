@@ -126,7 +126,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   {t('Items')}
                 </Text>
                 {collection?.stats.total_supply && (
-                  <Text fontWeight="600" variant="h3">
+                  <Text fontWeight="600" variant="headlineSmall">
                     {formatNumber(collection?.stats.total_supply)}
                   </Text>
                 )}
@@ -136,7 +136,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   {t('Owners')}
                 </Text>
                 {collection?.stats.num_owners && (
-                  <Text fontWeight="600" variant="h3">
+                  <Text fontWeight="600" variant="headlineSmall">
                     {formatNumber(collection?.stats.num_owners)}
                   </Text>
                 )}
@@ -146,7 +146,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   <Text color="deprecated_gray400" variant="caption">
                     {t('Floor')}
                   </Text>
-                  <Text fontWeight="600" variant="h3">
+                  <Text fontWeight="600" variant="headlineSmall">
                     {t('{{price}} ETH', { price: collection?.stats.floor_price })}
                   </Text>
                 </Flex>
@@ -165,7 +165,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           onPress={() => openUri(`https://opensea.io/collection/${collection?.slug}`)}>
           <Flex alignItems="center" flexDirection="row" gap="xs" justifyContent="center">
             <OpenSeaIcon color={appTheme.colors.deprecated_textColor} height={16} width={16} />
-            <Text variant="body1">{t('View Collection')}</Text>
+            <Text variant="body">{t('View Collection')}</Text>
           </Flex>
         </Button>
         <Text mt="md" variant="mediumLabel">

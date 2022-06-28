@@ -81,7 +81,7 @@ export function NFTItemScreen({
 
         {/* Collection info */}
         <Flex gap="xs">
-          <Text variant="h2">{asset?.name}</Text>
+          <Text variant="headlineMedium">{asset?.name}</Text>
           <Flex row alignItems="center" gap="xxs">
             {asset.collection.image_url ? (
               <RemoteImage
@@ -91,7 +91,7 @@ export function NFTItemScreen({
                 width={16}
               />
             ) : null}
-            <Text color="textSecondary" ml="xs" variant="subHead2">
+            <Text color="textSecondary" ml="xs" variant="subheadSmall">
               {asset.collection.name}
             </Text>
             {asset.collection.safelist_request_status === 'verified' && (
@@ -125,7 +125,7 @@ export function NFTItemScreen({
         {/* Metadata */}
         <Flex gap="sm">
           <Flex gap="md">
-            <Text color="textSecondary" variant="subHead1">{t`About this NFT`}</Text>
+            <Text color="textSecondary" variant="subhead">{t`About this NFT`}</Text>
             <Text color="textSecondary" variant="caption">
               {asset.collection.description}
             </Text>

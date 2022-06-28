@@ -29,7 +29,7 @@ export function SuggestedRecipientList({ onPress, sections }: SuggestedRecipient
 
 function SectionHeader(info: { section: SectionListData<string> }) {
   return (
-    <Text color="deprecated_gray400" variant="body2">
+    <Text color="deprecated_gray400" variant="bodySmall">
       {info.section.title}
     </Text>
   )

@@ -29,9 +29,9 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
     if (error !== null) {
       return (
         <Box alignItems="center" flex={1} justifyContent="center">
-          <Text variant="h1">An Error Occurred</Text>
+          <Text variant="headlineLarge">An Error Occurred</Text>
           {error.message && (
-            <Text mt="xl" variant="h3">
+            <Text mt="xl" variant="headlineSmall">
               {error.message}
             </Text>
           )}

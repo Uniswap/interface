@@ -62,7 +62,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           autoFocus={autoFocus}
           backgroundColor="none"
           borderWidth={0}
-          fontFamily={theme.textVariants.h1.fontFamily}
+          fontFamily={theme.textVariants.headlineLarge.fontFamily}
           fontSize={36}
           height={36}
           mb="xs"
@@ -78,7 +78,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       )}
 
       {!isOutput && currency && (
-        <Text color="textSecondary" variant="body2">
+        <Text color="textSecondary" variant="bodySmall">
           {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
         </Text>
       )}

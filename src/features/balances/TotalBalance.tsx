@@ -10,7 +10,7 @@ interface TotalBalanceViewProps {
   variant?: keyof Theme['textVariants']
 }
 
-export function TotalBalance({ balances, variant = 'h1' }: TotalBalanceViewProps) {
+export function TotalBalance({ balances, variant = 'headlineLarge' }: TotalBalanceViewProps) {
   const totalBalance = getKeys(balances).reduce((sum, chainId) => {
     return (
       sum +

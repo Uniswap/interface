@@ -54,7 +54,7 @@ function KeyButton({ action, disabled, label, setValue, value }: KeyButtonProps)
       testID={'decimal-pad-' + label}
       textAlign="center"
       textColor={isDisabled ? 'deprecated_gray400' : 'deprecated_textColor'}
-      textVariant="h1"
+      textVariant="headlineLarge"
       width="33%"
       onPress={() => {
         switch (action) {

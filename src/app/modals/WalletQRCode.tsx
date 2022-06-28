@@ -42,10 +42,10 @@ export function WalletQRCode({ address, isVisible, onClose }: Props) {
     <BottomSheetModal isVisible={isVisible} name={ModalName.WalletQRCode} onClose={onClose}>
       <Box alignItems="center" marginBottom="lg" p="lg">
         <Flex alignItems="center" gap="sm">
-          <Text color="deprecated_gray400" variant="body1">
+          <Text color="deprecated_gray400" variant="body">
             {t`Receive funds`}
           </Text>
-          <AddressDisplay address={address} variant="body2" />
+          <AddressDisplay address={address} variant="bodySmall" />
         </Flex>
 
         <Box

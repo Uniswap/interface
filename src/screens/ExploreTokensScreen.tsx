@@ -53,7 +53,7 @@ export function ExploreTokensScreen() {
 
   const ContentHeader = (
     <Flex row alignItems="center" justifyContent="space-between" my="xs">
-      <Text variant="h3">{t('Tokens')}</Text>
+      <Text variant="headlineSmall">{t('Tokens')}</Text>
       <SortingGroup orderBy={orderBy} onPressOrderBy={() => setOrderByModalIsVisible(true)} />
     </Flex>
   )

@@ -22,9 +22,9 @@ export function NetworkFee({
   return (
     <Flex row>
       <Flex grow>
-        <Text variant="body2">{t('Network Fee')}</Text>
+        <Text variant="bodySmall">{t('Network Fee')}</Text>
       </Flex>
-      <Text variant="body2">{!gasFeeInfo ? 'Loading...' : formatPrice(price)}</Text>
+      <Text variant="bodySmall">{!gasFeeInfo ? 'Loading...' : formatPrice(price)}</Text>
     </Flex>
   )
 }

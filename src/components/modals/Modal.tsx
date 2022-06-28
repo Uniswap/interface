@@ -54,7 +54,7 @@ React.PropsWithChildren<Props>) {
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
           width={width}>
           {title && (
-            <Text mb="sm" px="md" variant="h3">
+            <Text mb="sm" px="md" variant="headlineSmall">
               {title}
             </Text>
           )}

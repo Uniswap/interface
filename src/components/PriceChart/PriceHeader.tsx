@@ -93,7 +93,12 @@ export const PriceHeader = ({ graphs, index, isPanning, translation }: HeaderPro
 
   return (
     <Box mb="lg" mx="md">
-      <StyledReText color="mainForeground" fontWeight="300" text={priceFormatted} variant="h1" />
+      <StyledReText
+        color="mainForeground"
+        fontWeight="300"
+        text={priceFormatted}
+        variant="headlineLarge"
+      />
       <Flex row gap="xxs">
         <Flex row gap="none">
           <StyledReText color="textSecondary" text={percentChangeFormatted} variant="caption" />

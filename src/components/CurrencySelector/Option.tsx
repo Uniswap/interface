@@ -32,7 +32,7 @@ export function Option({ currency, onPress, matches, metadataType, icon }: Optio
               <TextWithFuseMatches
                 matches={nameMatches}
                 text={currency.name ?? ''}
-                variant="subHead1"
+                variant="subhead"
               />
               {icon}
             </Flex>

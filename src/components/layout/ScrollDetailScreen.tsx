@@ -87,7 +87,7 @@ export function ScrollDetailScreen({
         }}>
         <Flex row alignItems="center" gap="xs">
           <Chevron color={theme.colors.textSecondary} direction="w" height={18} width={18} />
-          <Text color="textSecondary" variant={'subHead1'}>
+          <Text color="textSecondary" variant={'subhead'}>
             {t('Back')}
           </Text>
         </Flex>
@@ -113,7 +113,7 @@ export function ScrollDetailScreen({
         {titleElement ? (
           titleElement
         ) : title ? (
-          <Text mx="xs" variant="subHead1">
+          <Text mx="xs" variant="subhead">
             {title}
           </Text>
         ) : null}

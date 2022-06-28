@@ -28,7 +28,7 @@ export function WelcomeScreen() {
   return (
     <Screen>
       <Box alignItems="center">
-        <Text textAlign="center" variant="h1">
+        <Text textAlign="center" variant="headlineLarge">
           {t('Uniswap Wallet')}
         </Text>
         <PrimaryButton

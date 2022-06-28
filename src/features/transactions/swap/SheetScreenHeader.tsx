@@ -14,7 +14,7 @@ interface SheetScreenHeaderProps {
 export function SheetScreenHeader({ label, onPressBack }: SheetScreenHeaderProps) {
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="lg">
-      <Text color="deprecated_textColor" variant="body1">
+      <Text color="deprecated_textColor" variant="body">
         {label}
       </Text>
       <Flex alignContent="center" alignItems="center" flexDirection="row" justifyContent="flex-end">

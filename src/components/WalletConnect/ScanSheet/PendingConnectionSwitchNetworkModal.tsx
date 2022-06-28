@@ -38,7 +38,7 @@ export const PendingConnectionSwitchNetworkModal = ({
               <Separator />
               <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                 <NetworkLogo chainId={chainId} size={24} />
-                <Text color="textPrimary" variant="subHead1">
+                <Text color="textPrimary" variant="subhead">
                   {info.label}
                 </Text>
                 <Box height={24} width={24}>

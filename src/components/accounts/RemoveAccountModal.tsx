@@ -24,7 +24,7 @@ export function RemoveAccountModal({ address, onCancel, onConfirm }: RemoveAccou
       visible={!!address}
       width={dimensions.fullWidth * 0.85}>
       <Unicon address={address || NATIVE_ADDRESS} size={50} />
-      <Text mt="md" textAlign="center" variant="subHead1">
+      <Text mt="md" textAlign="center" variant="subhead">
         {t('Remove this account?')}
       </Text>
       <Text mt="md" textAlign="center" variant="badge">
@@ -32,7 +32,7 @@ export function RemoveAccountModal({ address, onCancel, onConfirm }: RemoveAccou
       </Text>
       <CenterBox mt="md">
         <PrimaryButton label={t('Remove')} variant="paleOrange" width={150} onPress={onConfirm} />
-        <TextButton mt="md" textVariant="body1" onPress={onCancel}>
+        <TextButton mt="md" textVariant="body" onPress={onCancel}>
           {t('Cancel')}
         </TextButton>
       </CenterBox>

@@ -60,7 +60,7 @@ export function QuickDetails(props: QuickDetailsProps) {
           <Text
             color={label ? 'deprecated_gray400' : 'mainForeground'}
             fontWeight="500"
-            variant="body2">
+            variant="bodySmall">
             {label || formatExecutionPrice(trade?.executionPrice)}
           </Text>
         </Flex>
@@ -74,7 +74,7 @@ export function QuickDetails(props: QuickDetailsProps) {
             }}>
             <Flex centered flexDirection="row" gap="xs" m="sm">
               <NetworkLogo chainId={trade.inputAmount.wrapped.currency.chainId} size={15} />
-              <Text style={{ color: networkColors.foreground }} variant="body2">
+              <Text style={{ color: networkColors.foreground }} variant="bodySmall">
                 {formatPrice(trade.quote?.gasUseEstimateUSD?.toString())}
               </Text>
             </Flex>

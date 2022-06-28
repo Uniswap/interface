@@ -26,7 +26,7 @@ export function HeaderText({
 
     return readablePermitAmount ? (
       <Trans t={t}>
-        <Text textAlign="center" variant="h3">
+        <Text textAlign="center" variant="headlineSmall">
           Allow {dapp.name} to use up to
           <Text fontWeight="bold"> {readablePermitAmount} </Text>
           {permitCurrency?.name}?
@@ -34,7 +34,7 @@ export function HeaderText({
       </Trans>
     ) : (
       <Trans t={t}>
-        <Text textAlign="center" variant="h3">
+        <Text textAlign="center" variant="headlineSmall">
           Allow <Text fontWeight="bold">{dapp.name}</Text> to use your {permitCurrency?.symbol}?
         </Text>
       </Trans>
@@ -57,8 +57,8 @@ export function HeaderText({
 
   return (
     <>
-      <Text variant="h3">{getReadableMethodName(method)}</Text>
-      <Text fontWeight="bold" textAlign="center" variant="h3">
+      <Text variant="headlineSmall">{getReadableMethodName(method)}</Text>
+      <Text fontWeight="bold" textAlign="center" variant="headlineSmall">
         {dapp.name}
       </Text>
     </>

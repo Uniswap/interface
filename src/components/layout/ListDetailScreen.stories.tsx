@@ -10,7 +10,7 @@ const data = Array.from(Array(10).keys())
 
 const ContentHeader = (
   <Flex row alignItems="center" gap="xs" my="xs">
-    <Text fontWeight={'600'} variant="h1">
+    <Text fontWeight={'600'} variant="headlineLarge">
       Screen Title
     </Text>
   </Flex>
@@ -18,7 +18,7 @@ const ContentHeader = (
 const renderItem = ({ item }: ListRenderItemInfo<number>) => {
   return (
     <Flex row gap="sm" p="md">
-      <Text variant="body1">Row {item}</Text>
+      <Text variant="body">Row {item}</Text>
     </Flex>
   )
 }

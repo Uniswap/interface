@@ -90,10 +90,10 @@ export function DevScreen({ navigation }: any) {
       </Box>
       <ScrollView>
         <Box alignItems="center">
-          <Text color="deprecated_textColor" textAlign="center" variant="h3">
+          <Text color="deprecated_textColor" textAlign="center" variant="headlineSmall">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
-          <Text mt="md" textAlign="center" variant="h3">
+          <Text mt="md" textAlign="center" variant="headlineSmall">
             🌀🌀Screen Stargate🌀🌀
           </Text>
           <Box alignItems="center" flexDirection="row" flexWrap="wrap" justifyContent="center">
@@ -109,11 +109,11 @@ export function DevScreen({ navigation }: any) {
               </TextButton>
             ))}
           </Box>
-          <Text mt="sm" textAlign="center" variant="body1">
+          <Text mt="sm" textAlign="center" variant="body">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="body1">Use flashbots for transactions</Text>
+            <Text variant="body">Use flashbots for transactions</Text>
             <Switch
               value={flashbotsEnabled}
               onValueChange={() => onToggleFlashbots(!flashbotsEnabled)}

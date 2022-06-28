@@ -12,12 +12,12 @@ export function AccountDetails({ address }: { address: string }) {
     <Flex row>
       <Flex grow row alignItems="center" gap="xs">
         <Unicon address={address} size={20} />
-        <Text fontWeight="500" variant="subHead2">
+        <Text fontWeight="500" variant="subheadSmall">
           {displayName?.name}
         </Text>
       </Flex>
       {displayName?.type !== 'address' && (
-        <Text color="textSecondary" variant="body2">
+        <Text color="textSecondary" variant="bodySmall">
           {shortenAddress(address)}
         </Text>
       )}

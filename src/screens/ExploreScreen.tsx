@@ -31,7 +31,10 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 // For content Y offset since Header has abolute position
 const SEARCH_BAR_HEIGHT = 48
 const HEADER_HEIGHT =
-  theme.textVariants.h3.lineHeight + theme.spacing.lg + SEARCH_BAR_HEIGHT + theme.spacing.sm * 2
+  theme.textVariants.headlineSmall.lineHeight +
+  theme.spacing.lg +
+  SEARCH_BAR_HEIGHT +
+  theme.spacing.sm * 2
 const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.sm // Scroll distance for pinned search bar state
 
 export function ExploreScreen() {
@@ -105,7 +108,7 @@ export function ExploreScreen() {
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
         <Flex gap="lg" mb="sm" mt="lg" mx="md">
-          <AnimatedText mx="xs" style={titleStyle} variant="h3">
+          <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
             {t('Explore')}
           </AnimatedText>
           <SearchTextInput

@@ -40,7 +40,7 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
         overflow="hidden">
         <CurrencyLogo currency={currency} size={36} />
         <Flex alignItems="flex-start" flexShrink={1} gap="none">
-          <Text ellipsizeMode="tail" numberOfLines={1} variant="subHead1">
+          <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
             {currency.symbol}
           </Text>
           <Text color="textSecondary" variant="caption">{`${formatCurrencyAmount(amount)} `}</Text>
@@ -48,7 +48,7 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
       </AnimatedFlex>
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
         <Box alignItems="flex-end" flexBasis="auto" flexShrink={1}>
-          <Text variant="subHead1">{formatUSDPrice(balance.balanceUSD)}</Text>
+          <Text variant="subhead">{formatUSDPrice(balance.balanceUSD)}</Text>
           <RelativeChange change={relativeChange24} />
         </Box>
       </AnimatedFlex>

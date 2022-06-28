@@ -229,7 +229,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
           {isPotentiallyUnsafe(request) && (
             <SectionContainer>
-              <Text color="accentWarning" variant="body2">
+              <Text color="accentWarning" variant="bodySmall">
                 <Trans t={t}>
                   <Text fontWeight="bold">Be careful:</Text>{' '}
                   {isTransactionRequest(request)

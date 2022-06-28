@@ -15,7 +15,7 @@ interface TextWithFuseMatchesProps {
 export function TextWithFuseMatches({
   matches,
   text,
-  variant = 'body1',
+  variant = 'body',
   numberOfLines = 1,
 }: TextWithFuseMatchesProps & TextProps) {
   if (!matches || matches.length === 0) {

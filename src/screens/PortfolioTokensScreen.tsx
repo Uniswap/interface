@@ -65,8 +65,8 @@ export function PortfolioTokensScreen({
       renderItem={renderItem}
       titleElement={
         <Flex centered gap="none">
-          <TotalBalance balances={balancesData} variant="subHead2" />
-          <Text color="textSecondary" variant="subHead2">
+          <TotalBalance balances={balancesData} variant="subheadSmall" />
+          <Text color="textSecondary" variant="subheadSmall">
             {t('Your tokens')}
           </Text>
         </Flex>

@@ -34,7 +34,7 @@ export function RecipientInputPanel({
   return (
     <Flex centered gap="sm">
       {recipientAddress && (
-        <Text color="deprecated_gray400" variant="body2">
+        <Text color="deprecated_gray400" variant="bodySmall">
           {t('To')}
         </Text>
       )}
@@ -83,7 +83,7 @@ function RecipientMetadata({ recipient }: { recipient: string }) {
   return (
     <Flex centered row gap="sm">
       <Unicon address={address} size={24} />
-      <FormattedAddress address={address} name={name} variant="h3" />
+      <FormattedAddress address={address} name={name} variant="headlineSmall" />
     </Flex>
   )
 }

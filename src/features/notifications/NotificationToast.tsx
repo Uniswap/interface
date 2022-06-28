@@ -164,7 +164,7 @@ export function NotificationContent({
           </Flex>
         )}
         <Flex row shrink alignItems="center">
-          <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="body2">
+          <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="bodySmall">
             {title}
           </Text>
         </Flex>

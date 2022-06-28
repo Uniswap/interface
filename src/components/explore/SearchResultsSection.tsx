@@ -94,7 +94,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm">
         {trendingIsLoading ? (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="md" mx="xs">
-            <Text color="textSecondary" variant="subHead2">
+            <Text color="textSecondary" variant="subheadSmall">
               {t('Popular Tokens')}
             </Text>
             <Loading repeat={4} type="token" />
@@ -105,7 +105,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
               <Section.List
                 ItemSeparatorComponent={() => <Separator mx="xs" />}
                 ListHeaderComponent={
-                  <Text color="textSecondary" mb="xxs" mx="xs" variant="subHead2">
+                  <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
                     {t('Popular Tokens')}
                   </Text>
                 }
@@ -120,7 +120,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
         <Section.List
           ItemSeparatorComponent={() => <Separator mx="xs" />}
           ListHeaderComponent={
-            <Text color="textSecondary" mb="xxs" mx="xs" variant="subHead2">
+            <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
               {t('Wallets')}
             </Text>
           }
@@ -137,9 +137,9 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     return (
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
         <Trans t={t}>
-          <Text color="textSecondary" variant="subHead1">
+          <Text color="textSecondary" variant="subhead">
             No results found for
-            <Text color="textPrimary" variant="subHead1">
+            <Text color="textPrimary" variant="subhead">
               {` ”${searchQuery}”`}
             </Text>
           </Text>
@@ -152,7 +152,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     <Flex grow borderRadius="md" gap="xs">
       {searchIsLoading ? (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
-          <Text color="textSecondary" variant="subHead2">
+          <Text color="textSecondary" variant="subheadSmall">
             {t('Tokens')}
           </Text>
           <Loading repeat={4} type="token" />
@@ -163,7 +163,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
             <Section.List
               ItemSeparatorComponent={() => <Separator mx="xs" />}
               ListHeaderComponent={
-                <Text color="textSecondary" mb="xxs" mx="xs" variant="subHead2">
+                <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
                   {t('Tokens')}
                 </Text>
               }
@@ -177,7 +177,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
       )}
       {(ensLoading || (ensName && ensAddress)) && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
-          <Text color="textSecondary" mx="xs" variant="subHead2">
+          <Text color="textSecondary" mx="xs" variant="subheadSmall">
             {t('Wallets')}
           </Text>
           {ensName && ensAddress ? (
@@ -196,7 +196,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
 
       {etherscanAddress && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
-          <Text color="textSecondary" mx="xs" variant="subHead2">
+          <Text color="textSecondary" mx="xs" variant="subheadSmall">
             {t('View on Etherscan')}
           </Text>
           <Button onPress={() => onPressViewEtherscan(etherscanAddress)}>
@@ -252,7 +252,7 @@ function TokenResultRow({ coin }: TokenResultRowProps) {
       <Flex row alignItems="center" px="xs" py="sm">
         <Image source={{ uri }} style={logoStyle} />
         <Flex gap="none">
-          <Text color="textPrimary" variant="subHead1">
+          <Text color="textPrimary" variant="subhead">
             {name}
           </Text>
           <Text color="textSecondary" variant="caption">

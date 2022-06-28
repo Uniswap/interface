@@ -20,7 +20,7 @@ export function SortingGroup({ onPressOrderBy, orderBy }: FilterGroupProps) {
     <TextButton onPress={onPressOrderBy}>
       <Flex row alignItems="center" gap="xs" justifyContent="flex-end">
         <ArrowUpDown color={theme.colors.textTertiary} height={20} width={20} />
-        <Text color="textSecondary" textAlign="right" variant="subHead1">
+        <Text color="textSecondary" textAlign="right" variant="subhead">
           {getOrderByLabel(orderBy, t)}
         </Text>
       </Flex>

@@ -27,7 +27,7 @@ Primary.args = {
   children: (
     <Flex>
       <Section.Header subtitle="$124.34" title="Tokens" onPress={() => {}} />
-      <Text variant="body1">My Content</Text>
+      <Text variant="body">My Content</Text>
     </Flex>
   ),
 }

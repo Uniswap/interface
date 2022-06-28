@@ -98,7 +98,7 @@ export function HomeScreen({ navigation }: Props) {
             </Box>
             <Flex centered gap="xxs">
               <TotalBalance balances={balances} />
-              <RelativeChange change={4.2} variant="body1" />
+              <RelativeChange change={4.2} variant="body" />
             </Flex>
             <QuickActions />
           </Flex>

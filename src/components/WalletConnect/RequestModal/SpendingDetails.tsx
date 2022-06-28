@@ -20,21 +20,21 @@ export function SpendingDetails({
 
   return (
     <Flex gap="xs">
-      <Text color="textSecondary" variant="body2">
+      <Text color="textSecondary" variant="bodySmall">
         {t('Send')}
       </Text>
       <Flex row>
         <Flex grow row alignItems="center" gap="xs">
           <CurrencyLogoOnly currency={currencyAmount.currency} size={32} />
           <Box>
-            <Text variant="subHead1">{name}</Text>
+            <Text variant="subhead">{name}</Text>
             <Text color="textSecondary" fontSize={12}>
               {symbol}
             </Text>
           </Box>
         </Flex>
         <Box alignItems="flex-end">
-          <Text variant="body1">{currencyAmount?.toExact()}</Text>
+          <Text variant="body">{currencyAmount?.toExact()}</Text>
           <Text color="textSecondary" fontSize={12}>
             {formatUSDPrice(usdValue?.toExact())}
           </Text>

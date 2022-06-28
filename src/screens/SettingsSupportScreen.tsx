@@ -19,7 +19,7 @@ export function SettingsSupportScreen() {
         <SettingsBackButtonRow>
           <Text variant="largeLabel">{t('Wallet Support')}</Text>
         </SettingsBackButtonRow>
-        <Text mb="sm" variant="subHead1">
+        <Text mb="sm" variant="subhead">
           {t('Recent logs')}
         </Text>
         <ScrollView>

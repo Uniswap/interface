@@ -33,7 +33,7 @@ function Page({ text }: { text: ReactNode }) {
             </Flex>
             <Flex flex={0.2} />
             <Flex flex={0.8} px="lg">
-              <Text fontSize={28} lineHeight={34} variant="h2">
+              <Text fontSize={28} lineHeight={34} variant="headlineMedium">
                 {text}
               </Text>
             </Flex>
@@ -47,7 +47,7 @@ function Page({ text }: { text: ReactNode }) {
 export const SeedPhraseEducationContent = () => [
   <Page
     text={
-      <Text fontSize={28} lineHeight={34} variant="h2">
+      <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           A recovery phrase is a set of 12 unique words that you can use to access to your wallet—
           <Text color="deprecated_pink">it's like your wallet's secret password.</Text>
@@ -57,7 +57,7 @@ export const SeedPhraseEducationContent = () => [
   />,
   <Page
     text={
-      <Text fontSize={28} lineHeight={34} variant="h2">
+      <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           You can{' '}
           <Text color="deprecated_pink">
@@ -70,7 +70,7 @@ export const SeedPhraseEducationContent = () => [
   />,
   <Page
     text={
-      <Text fontSize={28} lineHeight={34} variant="h2">
+      <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           Instead of memorizing your recovery phrase,{' '}
           <Text color="deprecated_pink">you can back it up to iCloud</Text> and protect it by
@@ -81,7 +81,7 @@ export const SeedPhraseEducationContent = () => [
   />,
   <Page
     text={
-      <Text fontSize={28} lineHeight={34} variant="h2">
+      <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           You can also{' '}
           <Text color="deprecated_pink">
@@ -94,7 +94,7 @@ export const SeedPhraseEducationContent = () => [
   />,
   <Page
     text={
-      <Text fontSize={28} lineHeight={34} variant="h2">
+      <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           We recommend using both types of backups, because{' '}
           <Text color="deprecated_pink">

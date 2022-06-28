@@ -63,7 +63,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
           onClose()
         }}>
         <Flex centered bg="backgroundSurface" borderRadius="lg" py="md">
-          <Text color="textPrimary" variant="subHead1">
+          <Text color="textPrimary" variant="subhead">
             {closeButtonLabel}
           </Text>
         </Flex>

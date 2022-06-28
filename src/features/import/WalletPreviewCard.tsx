@@ -25,8 +25,8 @@ export default function WalletPreviewCard({ address, selected, onSelect }: Props
       p="md"
       onPress={() => onSelect(address)}>
       <Flex row alignItems="center" justifyContent="space-between">
-        <AddressDisplay address={address} variant="body2" />
-        <TotalBalance balances={balances} variant="body2" />
+        <AddressDisplay address={address} variant="bodySmall" />
+        <TotalBalance balances={balances} variant="bodySmall" />
       </Flex>
     </Button>
   )

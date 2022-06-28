@@ -48,13 +48,13 @@ export function TokenItemBox({ token, onPress }: TokenItemProps) {
       <Box bg="translucentBackground" borderRadius="lg" justifyContent="space-between">
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="body1">{token.asset.symbol ?? ''}</Text>
+            <Text variant="body">{token.asset.symbol ?? ''}</Text>
             <Image source={{ uri: token.asset.icon_url }} style={boxTokenLogoStyle} />
           </Flex>
           <Flex row>
             <TokenMetadata
               align="flex-start"
-              main={<Text variant="body2">{formatUSDPrice(token.asset.price?.value)}</Text>}
+              main={<Text variant="bodySmall">{formatUSDPrice(token.asset.price?.value)}</Text>}
               sub={<RelativeChange change={token?.asset.price?.relative_change_24h} />}
             />
           </Flex>
@@ -77,7 +77,7 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
     <Flex row>
       {pre}
       <Box alignItems={align} minWidth={70}>
-        <Text variant="body1">{main}</Text>
+        <Text variant="body">{main}</Text>
         {sub && (
           <Text color="deprecated_gray400" variant="caption">
             {sub}

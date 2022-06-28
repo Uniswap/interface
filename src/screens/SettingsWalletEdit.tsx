@@ -8,6 +8,8 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
+import { ColorSelector } from 'src/components/ColorSelector/ColorSelector'
+import { useUpdateColorCallback } from 'src/components/ColorSelector/hooks'
 import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
@@ -19,8 +21,6 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 import { Screens } from './Screens'
-import { ColorSelector } from 'src/components/ColorSelector/ColorSelector'
-import { useUpdateColorCallback } from 'src/components/ColorSelector/hooks'
 const EDIT_BUTTON_SIZE = 30
 const EDIT_BUTTON_ICON_SIZE = 10
 
@@ -73,7 +73,7 @@ export function SettingsWalletEdit({
       <Flex gap="xl">
         <Flex gap="none">
           <Box bg="mainBackground" pb="md">
-            <Text color="textSecondary" fontWeight="500" variant="body1">
+            <Text color="textSecondary" fontWeight="500" variant="body">
               {t('Nickname')}
             </Text>
           </Box>
@@ -125,7 +125,7 @@ export function SettingsWalletEdit({
         </Flex>
         <Flex gap="none">
           <Box bg="mainBackground" pb="md">
-            <Text color="textSecondary" fontWeight="500" variant="body1">
+            <Text color="textSecondary" fontWeight="500" variant="body">
               {t('Theme')}
             </Text>
           </Box>

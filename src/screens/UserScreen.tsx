@@ -81,7 +81,7 @@ export function UserScreen({
           showAddressAsSubtitle={true}
           showCopy={true}
           size={48}
-          variant="h2"
+          variant="headlineMedium"
         />
       }
       title={displayName?.name}>

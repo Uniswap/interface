@@ -46,7 +46,7 @@ export function WalletQRCode({ address }: Props) {
         <Text color="textPrimary" variant="largeLabel">
           {ens.name ?? shortenAddress(address)}
         </Text>
-        <Text color="textSecondary" variant="subHead1">
+        <Text color="textSecondary" variant="subhead">
           {ens.name ? shortenAddress(address) : ''}
         </Text>
       </Flex>

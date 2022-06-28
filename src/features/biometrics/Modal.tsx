@@ -51,7 +51,7 @@ export function BiometricModal({
         <Flex centered gap="lg">
           <Flex centered bg="deprecated_paleBlue" borderRadius="md" px="xxl" py="lg">
             <FaceIdIcon color={theme.colors.deprecated_blue} height={64} width={64} />
-            <Text color="deprecated_blue" variant="body1">
+            <Text color="deprecated_blue" variant="body">
               {t('Face ID')}
             </Text>
           </Flex>

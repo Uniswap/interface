@@ -35,7 +35,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
           <Text
             color="textPrimary"
             testID={`address-display/name/${displayName?.name}`}
-            variant="subHead1">
+            variant="subhead">
             {displayName?.name}
           </Text>
           {!nameTypeIsAddress && (

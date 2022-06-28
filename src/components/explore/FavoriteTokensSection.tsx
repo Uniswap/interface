@@ -62,7 +62,7 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
         title={
           <Flex row alignItems="center" gap="xs">
             <Heart active={true} size={HEART_SIZE_MINIMIZED} />
-            <Text color="textSecondary" variant="body1">
+            <Text color="textSecondary" variant="body">
               {t('Favorite tokens')}
             </Text>
           </Flex>

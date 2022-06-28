@@ -21,7 +21,7 @@ export default function EnsNameResults({ names }: { names: { name: string; addre
           borderRadius="lg"
           padding="md"
           onPress={() => onPress(item)}>
-          <Text variant="body1">{item.name}</Text>
+          <Text variant="body">{item.name}</Text>
         </Button>
       ))}
     </Flex>

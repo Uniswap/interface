@@ -140,7 +140,7 @@ export function WalletConnectModal({
                   </Flex>
                 )}
                 <Flex shrink flexGrow={1} gap="xxs">
-                  <Text color="textPrimary" variant="subHead1">
+                  <Text color="textPrimary" variant="subhead">
                     {currentScreenState === WalletConnectModalState.ScanQr
                       ? t('Show my QR code')
                       : t('Scan a QR code')}
@@ -149,7 +149,7 @@ export function WalletConnectModal({
                     adjustsFontSizeToFit
                     color="textSecondary"
                     numberOfLines={1}
-                    variant="body2">
+                    variant="bodySmall">
                     {currentScreenState === WalletConnectModalState.ScanQr
                       ? displayName?.name
                       : t('Connect to an app with WalletConnect')}

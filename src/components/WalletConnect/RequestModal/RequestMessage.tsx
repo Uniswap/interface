@@ -46,7 +46,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
       py="xxs"
       // TODO: sync this to design theme, use color name instead of hardcoded value
       style={{ backgroundColor: opacify(20, theme.colors.black) }}
-      textVariant="body2"
+      textVariant="bodySmall"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
     />
@@ -144,18 +144,18 @@ function TransactionMessage({
   return (
     <Flex gap="xs">
       <Flex row alignItems="center" gap="xs">
-        <Text color="textSecondary" variant="body2">
+        <Text color="textSecondary" variant="bodySmall">
           To:
         </Text>
         <AddressButton address={transaction.to} chainId={chainId} />
       </Flex>
       {isLoading || !parsedData ? (
-        <Text color="textTertiary" py="xxs" variant="body2">
+        <Text color="textTertiary" py="xxs" variant="bodySmall">
           {isLoading ? ' ' : t('Unable to decode this transaction request')}
         </Text>
       ) : (
         <Flex row alignItems="center" gap="xs">
-          <Text color="textSecondary" py="xxs" variant="body2">
+          <Text color="textSecondary" py="xxs" variant="bodySmall">
             Function:{' '}
           </Text>
           <Box
@@ -196,9 +196,9 @@ function RequestMessageContent({ request }: Props) {
 
   const message = getStrMessage(request)
   return message ? (
-    <Text variant="body2">{message}</Text>
+    <Text variant="bodySmall">{message}</Text>
   ) : (
-    <Text color="textSecondary" variant="body2">
+    <Text color="textSecondary" variant="bodySmall">
       {t('No message found.')}
     </Text>
   )

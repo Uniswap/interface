@@ -20,12 +20,12 @@ export function SwapConfigScreen() {
       <Box>
         <Box alignItems="center" flexDirection="row" justifyContent="flex-start" my="md">
           <BackButton ml="sm" />
-          <Text ml="md" variant="h3">
+          <Text ml="md" variant="headlineSmall">
             {t('Transaction Settings')}
           </Text>
         </Box>
         <Box alignItems="center" flexDirection="row">
-          <Text variant="body1">Gas Price</Text>
+          <Text variant="body">Gas Price</Text>
           <TooltipButton
             lines={[
               t(
@@ -45,7 +45,7 @@ export function SwapConfigScreen() {
           justifyContent="space-between"
           px="md"
           width="100%">
-          <Text variant="body1">Expert Mode</Text>
+          <Text variant="body">Expert Mode</Text>
           <Switch value={expertMode} onValueChange={setExpertMode} />
         </Box>
       </Box>

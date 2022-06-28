@@ -160,13 +160,13 @@ export function TokenItemBox({ coin }: TokenItemProps) {
       <Box bg="backgroundContainer" borderRadius="lg" justifyContent="space-between" minWidth={135}>
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="subHead1">{coin.symbol.toUpperCase() ?? ''}</Text>
+            <Text variant="subhead">{coin.symbol.toUpperCase() ?? ''}</Text>
             <Image source={{ uri: coin.image }} style={boxTokenLogoStyle} />
           </Flex>
           <Flex row>
             <TokenMetadata
               align="flex-start"
-              main={<Text variant="body1">{formatUSDPrice(coin.current_price)}</Text>}
+              main={<Text variant="body">{formatUSDPrice(coin.current_price)}</Text>}
               sub={<RelativeChange change={coin.price_change_percentage_24h ?? undefined} />}
             />
           </Flex>
@@ -189,7 +189,7 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
     <Flex row>
       {pre}
       <Box alignItems={align} minWidth={70}>
-        <Text variant="body1">{main}</Text>
+        <Text variant="body">{main}</Text>
         {sub && (
           <Text color="deprecated_gray400" variant="caption">
             {sub}

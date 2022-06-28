@@ -78,12 +78,12 @@ export function DappConnectionItem({
           {chainId ? (
             <Flex row shrink gap="xs">
               <NetworkLogo chainId={chainId} size={20} />
-              <Text color="deprecated_gray600" variant="body2">
+              <Text color="deprecated_gray600" variant="bodySmall">
                 {CHAIN_INFO[chainId].label}
               </Text>
             </Flex>
           ) : (
-            <Text color="deprecated_gray600" style={flex.shrink} variant="body2">
+            <Text color="deprecated_gray600" style={flex.shrink} variant="bodySmall">
               {t('Unsupported chain')}
             </Text>
           )}

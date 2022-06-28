@@ -79,7 +79,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
       {({ handleChange, handleBlur, values, touched, errors }) => (
         <Trace section={SectionName.ImportAccountForm}>
           <CenterBox>
-            <Text color="deprecated_warning" px="md" textAlign="center" variant="body1">
+            <Text color="deprecated_warning" px="md" textAlign="center" variant="body">
               {t('Warning: this wallet is still experimental. Use with caution.')}
             </Text>
             <CenterBox
@@ -110,7 +110,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
             </CenterBox>
 
             {touched.input && errors.input && (
-              <Text color="deprecated_error" mt="md" variant="body1">
+              <Text color="deprecated_error" mt="md" variant="body">
                 {errors.input}
               </Text>
             )}

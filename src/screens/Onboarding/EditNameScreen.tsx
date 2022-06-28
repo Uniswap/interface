@@ -132,7 +132,7 @@ function CustomizationSection({
             </AnimatedButton>
           )}
         </Flex>
-        <Text color="textSecondary" opacity={0.7} variant="body1">
+        <Text color="textSecondary" opacity={0.7} variant="body">
           {shortenAddress(address)}
         </Text>
       </Flex>

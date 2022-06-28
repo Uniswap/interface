@@ -30,7 +30,7 @@ export function SettingsChainsScreen() {
           <Text variant="largeLabel">{t('Chain Settings')}</Text>
         </SettingsBackButtonRow>
         <Box px="sm">
-          <Text variant="subHead1">{t('Configure active chains (networks)')}</Text>
+          <Text variant="subhead">{t('Configure active chains (networks)')}</Text>
           {ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {
             const isActive = activeChains.includes(chainId)
             return (
@@ -40,7 +40,7 @@ export function SettingsChainsScreen() {
                 flexDirection="row"
                 justifyContent="space-between"
                 mt="lg">
-                <Text variant="body1">{CHAIN_INFO[chainId].label}</Text>
+                <Text variant="body">{CHAIN_INFO[chainId].label}</Text>
                 <Switch value={isActive} onValueChange={() => onToggleChain(chainId)} />
               </Box>
             )

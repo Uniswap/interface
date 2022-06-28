@@ -171,7 +171,7 @@ export function SearchTextInput(props: SearchTextInputProps) {
         style={[cancelButtonStyle, CancelButtonDefaultStyle]}
         onLayout={onCancelLayout}
         onPress={onPressCancel}>
-        <Text variant={'subHead1'}>{t('Cancel')}</Text>
+        <Text variant={'subhead'}>{t('Cancel')}</Text>
       </AnimatedButton>
     </Flex>
   )

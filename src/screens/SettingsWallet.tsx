@@ -126,7 +126,7 @@ export function SettingsWallet({
           renderItem={renderItem}
           renderSectionHeader={({ section: { subTitle } }) => (
             <Box bg="mainBackground" pb="md">
-              <Text color="textSecondary" fontWeight="500" variant="body1">
+              <Text color="textSecondary" fontWeight="500" variant="body">
                 {subTitle}
               </Text>
             </Box>
@@ -159,7 +159,7 @@ export function SettingsWallet({
             <Text mt="xs" variant="mediumLabel">
               {t('Are you sure?')}
             </Text>
-            <Text color="textSecondary" textAlign="center" variant="body2">
+            <Text color="textSecondary" textAlign="center" variant="bodySmall">
               {t(
                 'You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.'
               )}

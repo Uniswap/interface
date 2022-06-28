@@ -35,7 +35,7 @@ export function ExploreFavoritesScreen() {
 
   const ContentHeader = (
     <Flex row alignItems="center" gap="xs" my="xs">
-      <Text variant="h3">{t('Favorite tokens')}</Text>
+      <Text variant="headlineSmall">{t('Favorite tokens')}</Text>
       <Heart active={true} size={HEART_SIZE} />
     </Flex>
   )

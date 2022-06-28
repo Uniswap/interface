@@ -45,8 +45,8 @@ export function OutroScreen({}: Props) {
             />
           </Box>
           <Flex centered gap="sm">
-            <Text variant="h3">{t("You're ready to go!")}</Text>
-            <Text color="textSecondary" textAlign="center" variant="body1">
+            <Text variant="headlineSmall">{t("You're ready to go!")}</Text>
+            <Text color="textSecondary" textAlign="center" variant="body">
               {t(
                 'Transfer tokens to your wallet to make a swap or add assets to your watchlist to save them for later.'
               )}
