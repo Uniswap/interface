@@ -131,6 +131,7 @@
     "@types/jest": "^27.0.1",
     "@types/react-native": "^0.65.0",
     "@types/react-test-renderer": "^17.0.1",
+    "@welldone-software/why-did-you-render": "^7.0.1",
     "babel-jest": "^27.2.1",
     "babel-loader": "^8.2.3",
     "babel-plugin-react-native-web": "^0.17.5",
