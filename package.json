@@ -54,7 +54,7 @@
     ]
   },
   "dependencies": {
-    "@coinbase/wallet-sdk": "^3.2.0",
+    "@coinbase/wallet-sdk": "^3.3.0",
     "@ethersproject/experimental": "^5.4.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
