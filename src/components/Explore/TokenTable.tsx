@@ -3,7 +3,7 @@ import useTopTokens from 'hooks/useTopTokens'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import TokenRow, { HeaderRow } from './TokenRow'
+import TokenRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
   display: flex;
@@ -25,7 +25,17 @@ export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const timePeriod = TimePeriod.day
   if (loading) {
-    return <GridContainer>Top Token Data Loading</GridContainer>
+    const loadingRows = Array(10)
+      .fill(0)
+      .map((item, index) => {
+        return <LoadingRow key={`${index}`} />
+      })
+    return (
+      <GridContainer>
+        <HeaderRow timeframe={timePeriod} />
+        {loadingRows}
+      </GridContainer>
+    )
   } else if (error || data === null) {
     return <GridContainer>Error Loading Top Token Data</GridContainer>
   }

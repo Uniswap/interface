@@ -174,6 +174,35 @@ const VolumeCell = styled(Cell)`
   `};
 `
 
+const LoadingBubble = styled.div`
+  background-color: ${({ theme }) => darken(0.1, theme.bg3)};
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+`
+const SmallLoadingBubble = styled(LoadingBubble)`
+  width: 25%;
+`
+const MediumLoadingBubble = styled(LoadingBubble)`
+  width: 65%;
+`
+const LongLoadingBubble = styled(LoadingBubble)`
+  width: 90%;
+`
+const IconLoadingBubble = styled(LoadingBubble)`
+  border-radius: 50%;
+  width: 24px;
+`
+
+const SparkLineLoadingBubble = styled(LongLoadingBubble)`
+  height: 4px;
+`
+/*
+function LoadingBubble({ width, height }: { width: number; height: number }) {
+  return <LoadingBubbleCell width={width} height={height}></LoadingBubbleCell>
+}
+*/
+
 /* formatting for volume with timeframe header display */
 function getHeaderDisplay(category: string, timeframe: string): string {
   if (category === Category.volume) return `${TIME_DISPLAYS[timeframe]} ${category}`
@@ -205,6 +234,39 @@ function HeaderCell({
   }
   if (sortable) return <SortOption>{getHeaderDisplay(category, timeframe)}</SortOption>
   return <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
+}
+
+export function LoadingRow({ key }: { key: string }) {
+  return (
+    <TokenRowWrapper key={key}>
+      <FavoriteCell></FavoriteCell>
+      <ListNumberCell>
+        <SmallLoadingBubble />
+      </ListNumberCell>
+      <NameCell>
+        <IconLoadingBubble />
+        <MediumLoadingBubble />
+      </NameCell>
+      <PriceCell>
+        <MediumLoadingBubble />
+      </PriceCell>
+      <PercentChangeCell>
+        <LoadingBubble />
+      </PercentChangeCell>
+      <MarketCapCell>
+        <LoadingBubble />
+      </MarketCapCell>
+      <VolumeCell>
+        <LoadingBubble />
+      </VolumeCell>
+      <SparkLineCell>
+        <SparkLineLoadingBubble />
+      </SparkLineCell>
+      <SwapCell>
+        <LongLoadingBubble />
+      </SwapCell>
+    </TokenRowWrapper>
+  )
 }
 
 export function HeaderRow({ timeframe }: { timeframe: string }) {
