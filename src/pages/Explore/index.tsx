@@ -1,12 +1,18 @@
-// import TimeSelector from 'components/Explore/TimeSelector'
 import TimeSelector from 'components/Explore/TimeSelector'
-import AppBody from 'pages/AppBody'
+import TokenTable from 'components/Explore/TokenTable'
+import styled from 'styled-components/macro'
+const GridContainer = styled.div`
+  padding: 12px;
+`
 
 const Explore = () => {
   return (
-    <AppBody>
+    <>
       <TimeSelector />
-    </AppBody>
+      <GridContainer>
+        <TokenTable />
+      </GridContainer>
+    </>
   )
 }
 

@@ -7,7 +7,7 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components/macro'
 
-const TIME_DISPLAYS: { [key: string]: string } = {
+export const TIME_DISPLAYS: { [key: string]: string } = {
   hour: '1H',
   day: '1D',
   week: '1W',
@@ -87,7 +87,6 @@ const StyledMenuButton = styled.button`
   border: none;
   background-color: transparent;
   margin: 0;
-  padding: 0;
   height: 44px;
   background-color: ${({ theme }) => theme.bg0};
   border: 1px solid ${({ theme }) => theme.bg0};
