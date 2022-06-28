@@ -64,12 +64,6 @@ export async function signAndSendTransaction(
   signerManager: SignerManager
 ) {
   const signer = await signerManager.getSignerForAccount(account)
-
-  // recalculate gasPrice that dapp sends because it may not be accurate
-  if (request.gasPrice) {
-    request.gasPrice = await provider.getGasPrice()
-  }
-
   const connectedSigner = signer.connect(provider)
   const populatedRequest = await connectedSigner.populateTransaction(request)
   const signedTx = await connectedSigner.signTransaction(populatedRequest)

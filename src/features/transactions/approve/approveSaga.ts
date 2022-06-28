@@ -1,8 +1,8 @@
-import { MaxUint256 } from '@ethersproject/constants'
 import { BigNumber } from 'ethers'
+import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
+import { getContractManager, getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
-import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
   TransactionOptions,
@@ -16,50 +16,34 @@ import { call } from 'typed-redux-saga'
 export interface ApproveParams {
   account: Account
   chainId: ChainId
-  txAmount: string
-  contract: Erc20
+  approveAmount: BigNumber
+  inputTokenAddress: string
   spender: Address
+  gasLimit: string
+  gasPrice: string
 }
 
 export function* maybeApprove(params: ApproveParams) {
-  const { account, txAmount, chainId, contract, spender } = params
+  const { account, approveAmount, chainId, inputTokenAddress, spender, gasLimit, gasPrice } = params
 
-  try {
-    const allowance = yield* call(contract.allowance, account.address, spender)
-
-    if (allowance.gt(txAmount)) {
-      logger.debug('approveSaga', 'approve', 'Token allowance sufficient. Skipping approval')
-      return true
-    }
-  } catch (e) {
-    logger.error('approveSaga', 'approve', 'Allowance check fail. Continuing with approval')
+  if (gasLimit === '0') {
+    return false
   }
 
-  let amountToApprove = MaxUint256
-  let estimatedGas: BigNumber
-  try {
-    estimatedGas = yield* call(contract.estimateGas.approve, spender, amountToApprove)
-  } catch (e) {
-    logger.debug(
-      'approveSaga',
-      'approve',
-      'Gas estimation for approve max amount failed (token may restrict approval amounts). Attempting to approve exact'
-    )
-    amountToApprove = BigNumber.from(txAmount)
-    estimatedGas = yield* call(contract.estimateGas.approve, spender, amountToApprove)
-  }
+  const contractManager = yield* call(getContractManager)
+  const provider = yield* call(getProvider, chainId)
+  const contract = contractManager.getOrCreateContract<Erc20>(
+    chainId,
+    inputTokenAddress,
+    provider,
+    ERC20_ABI
+  )
 
-  // TODO move gas estimation out of this saga
-  // Tricky in this case as it's being used to determine approval amount
   try {
-    const populatedTx = yield* call(
-      contract.populateTransaction.approve,
-      spender,
-      amountToApprove,
-      {
-        gasLimit: estimatedGas.mul(GAS_INFLATION_FACTOR),
-      }
-    )
+    const populatedTx = yield* call(contract.populateTransaction.approve, spender, approveAmount, {
+      gasLimit,
+      gasPrice,
+    })
 
     const typeInfo: TransactionTypeInfo = {
       type: TransactionType.Approve,
@@ -81,6 +65,6 @@ export function* maybeApprove(params: ApproveParams) {
     return true
   } catch (e) {
     logger.error('approveSaga', 'approve', 'Failed to approve:' + e)
-    return false
+    throw new Error('Provided SwapRouter contract is not approved to spend tokens')
   }
 }

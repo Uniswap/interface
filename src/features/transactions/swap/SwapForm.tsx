@@ -17,6 +17,7 @@ import {
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapCallback,
+  useUpdateSwapGasEstimate,
   useUSDTokenUpdater,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
@@ -61,8 +62,8 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
 
   const { onSelectCurrency, onSwitchCurrencies, onSetAmount, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
-  const exactCurrency = currencies[exactCurrencyField]
 
+  const exactCurrency = currencies[exactCurrencyField]
   useUSDTokenUpdater(
     dispatch,
     isUSDInput,
@@ -70,7 +71,18 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
     exactAmountUSD,
     exactCurrency ?? undefined
   )
-  const { swapCallback } = useSwapCallback(trade, onClose)
+
+  useUpdateSwapGasEstimate(dispatch, trade)
+  const { gasSpendEstimate, gasPrice, exactApproveRequired } = state
+
+  const { swapCallback } = useSwapCallback(
+    trade,
+    gasSpendEstimate,
+    gasPrice,
+    exactApproveRequired,
+    onClose
+  )
+
   const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onClose)
 
   const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)

@@ -1,14 +1,17 @@
+import { MaxUint256 } from '@ethersproject/constants'
+import { call } from '@redux-saga/core/effects'
 import { TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
-import { testSaga } from 'redux-saga-test-plan'
-import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
+import { expectSaga } from 'redux-saga-test-plan'
+import { getProvider } from 'src/app/walletContext'
+import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { maybeApprove } from 'src/features/transactions/approve/approveSaga'
+import { ApproveParams, maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
-import { account, tokenContract } from 'src/test/fixtures'
+import { account, mockProvider } from 'src/test/fixtures'
 import { currencyId } from 'src/utils/currencyId'
 
 const methodParameters: MethodParameters = {
@@ -31,89 +34,73 @@ const transactionTypeInfo: ExactInputSwapTransactionInfo = {
 const swapParams: SwapParams = {
   account,
   chainId: ChainId.Rinkeby,
-  contract: tokenContract,
   methodParameters,
   swapRouterAddress: SWAP_ROUTER_ADDRESSES[CHAIN_ID],
   typeInfo: transactionTypeInfo,
-  txAmount: '1',
+  inputTokenAddress: NATIVE_ADDRESS,
+  approveAmount: MaxUint256,
+  gasSpendEstimate: {
+    [TransactionType.Approve]: '0',
+    [TransactionType.Swap]: '115000',
+  },
+  gasPrice: '71',
 }
 
-const approveParams = (({
-  account: swapAccount,
-  chainId,
-  contract,
-  swapRouterAddress,
-  txAmount,
-}: SwapParams) => ({
-  account: swapAccount,
-  chainId,
-  contract,
-  spender: swapRouterAddress,
-  txAmount,
-}))(swapParams)
-
-const transaction = {
-  from: account.address,
-  to: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
-  data: '0x01',
+const approveParams: ApproveParams = {
+  account: swapParams.account,
+  chainId: swapParams.chainId,
+  approveAmount: MaxUint256,
+  inputTokenAddress: swapParams.inputTokenAddress,
+  spender: swapParams.swapRouterAddress,
+  gasLimit: swapParams.gasSpendEstimate[TransactionType.Approve] as string,
+  gasPrice: swapParams.gasPrice,
 }
-const transactionWithValue = {
-  ...transaction,
-  value: '0x02',
+
+const nonce = 1
+
+const tx = {
+  from: swapParams.account.address,
+  to: swapParams.swapRouterAddress,
+  data: swapParams.methodParameters.calldata,
+  gasLimit: swapParams.gasSpendEstimate.swap,
+  gasPrice: swapParams.gasPrice,
+  nonce,
 }
 
 describe(approveAndSwap, () => {
-  it('errors out when approval fails', () => {
-    testSaga(approveAndSwap, swapParams)
-      .next()
-      .call(maybeApprove, approveParams)
-      .next(/*approved=*/ false)
-      .isDone()
+  it('sends a swap tx', async () => {
+    await expectSaga(approveAndSwap, swapParams)
+      .provide([
+        [call(getProvider, approveParams.chainId), mockProvider],
+        [call(maybeApprove, approveParams), true],
+        [
+          call(sendTransaction, {
+            chainId: swapParams.chainId,
+            account: swapParams.account,
+            options: { request: tx },
+            typeInfo: transactionTypeInfo,
+          }),
+          undefined,
+        ],
+      ])
+      .silentRun()
   })
 
-  it('sends a transaction and waits on receipt', () => {
-    testSaga(approveAndSwap, swapParams)
-      .next()
-      .call(maybeApprove, approveParams)
-      .next(/*approved=*/ true)
-      .call(sendTransaction, {
-        chainId: approveParams.chainId,
-        account: approveParams.account,
-        typeInfo: transactionTypeInfo,
-        options: { request: transaction },
-      })
-      .next()
-      .isDone()
-  })
-
-  it('sends a transaction with value and waits on receipt', () => {
-    const params = { ...swapParams, methodParameters: { value: '0x02', calldata: '0x01' } }
-    testSaga(approveAndSwap, params)
-      .next()
-      .call(maybeApprove, approveParams)
-      .next(/*approved=*/ true)
-      .call(sendTransaction, {
-        chainId: approveParams.chainId,
-        account: approveParams.account,
-        typeInfo: transactionTypeInfo,
-        options: { request: transactionWithValue },
-      })
-      .next()
-      .isDone()
-  })
-
-  it('skips approval for native currencies', () => {
-    const nativeSwapParams: SwapParams = { ...swapParams, contract: null }
-
-    testSaga(approveAndSwap, nativeSwapParams)
-      .next()
-      .call(sendTransaction, {
-        chainId: approveParams.chainId,
-        account: approveParams.account,
-        typeInfo: transactionTypeInfo,
-        options: { request: transaction },
-      })
-      .next()
-      .isDone()
+  it('sends a swap tx with incremented nonce if an approve tx is sent first', async () => {
+    await expectSaga(approveAndSwap, swapParams)
+      .provide([
+        [call(getProvider, approveParams.chainId), mockProvider],
+        [call(maybeApprove, approveParams), true],
+        [
+          call(sendTransaction, {
+            chainId: swapParams.chainId,
+            account: swapParams.account,
+            options: { request: { ...tx, nonce: nonce + 1 } },
+            typeInfo: transactionTypeInfo,
+          }),
+          undefined,
+        ],
+      ])
+      .silentRun()
   })
 })

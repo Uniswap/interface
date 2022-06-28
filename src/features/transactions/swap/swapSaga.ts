@@ -1,9 +1,10 @@
 import { MethodParameters } from '@uniswap/v3-sdk'
-import { providers } from 'ethers'
-import { Erc20 } from 'src/abis/types'
+import { BigNumber, providers } from 'ethers'
+import { getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { GasSpendEstimate } from 'src/features/transactions/transactionState/transactionState'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -21,42 +22,52 @@ export type SwapParams = {
   methodParameters: MethodParameters
   swapRouterAddress: Address
   typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-  txAmount: string
-
-  // Optional. provide if input currency requires approval
-  contract: Erc20 | null
+  approveAmount: BigNumber
+  inputTokenAddress: string
+  gasSpendEstimate: GasSpendEstimate
+  gasPrice: string
 }
 
 export function* approveAndSwap(params: SwapParams) {
   const {
     account,
     chainId,
-    contract,
+    inputTokenAddress,
     methodParameters: { calldata, value },
     swapRouterAddress,
-    txAmount,
+    approveAmount,
     typeInfo,
+    gasSpendEstimate,
+    gasPrice,
   } = params
 
+  if (!gasSpendEstimate.approve || !gasSpendEstimate.swap) {
+    logger.info('swapSaga', 'approveAndSwap', 'Gas estimates were not provided')
+    return
+  }
+
   try {
-    if (contract) {
-      const approved = yield* call(maybeApprove, {
-        account,
-        chainId,
-        contract,
-        spender: swapRouterAddress,
-        txAmount,
-      })
-      if (!approved) {
-        throw new Error('Provided SwapRouter contract is not approved to spend tokens')
-      }
-    }
+    const provider = yield* call(getProvider, chainId)
+    const nonce = yield* call([provider, provider.getTransactionCount], account.address)
+
+    const approveSubmitted = yield* call(maybeApprove, {
+      account,
+      chainId,
+      inputTokenAddress,
+      spender: swapRouterAddress,
+      approveAmount,
+      gasLimit: gasSpendEstimate.approve,
+      gasPrice,
+    })
 
     const request: providers.TransactionRequest = {
       from: account.address,
       to: swapRouterAddress,
       data: calldata,
       ...(!value || isZero(value) ? {} : { value }),
+      gasLimit: gasSpendEstimate.swap,
+      gasPrice,
+      nonce: approveSubmitted ? nonce + 1 : nonce,
     }
 
     const options: TransactionOptions = {

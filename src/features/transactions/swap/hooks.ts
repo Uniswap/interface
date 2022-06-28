@@ -1,3 +1,4 @@
+import { MaxUint256 } from '@ethersproject/constants'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import React, { useEffect, useMemo, useRef } from 'react'
@@ -8,7 +9,6 @@ import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
-import { useTokenContract } from 'src/features/contracts/useContract'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
 import {
   STABLECOIN_AMOUNT_OUT,
@@ -27,6 +27,7 @@ import {
 import {
   clearGasEstimates,
   CurrencyField,
+  GasSpendEstimate,
   TransactionState,
   transactionStateActions,
   updateExactAmountToken,
@@ -269,6 +270,9 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 /** Callback to submit trades and track progress */
 export function useSwapCallback(
   trade: Trade | undefined | null,
+  gasSpendEstimate: GasSpendEstimate | undefined,
+  gasPrice: string | undefined,
+  exactApproveRequired: boolean | undefined,
   onSubmit: () => void
 ): {
   swapState: SagaState | null
@@ -276,15 +280,6 @@ export function useSwapCallback(
 } {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-
-  const { amount, methodParameters } = trade?.quote || {}
-  const chainId = trade?.inputAmount.currency.chainId
-
-  // TODO: fallback to mainnet required?
-  const tokenContract = useTokenContract(
-    chainId ?? ChainId.Mainnet,
-    trade?.inputAmount.currency.isToken ? trade?.inputAmount.currency.wrapped.address : undefined
-  )
 
   const swapState = useSagaStatus(swapSagaName, onSubmit, true)
 
@@ -295,7 +290,13 @@ export function useSwapCallback(
   }, [onSubmit, swapState])
 
   return useMemo(() => {
-    if (!account || !amount || !chainId || !methodParameters) {
+    if (
+      !account ||
+      !trade?.quote ||
+      !gasSpendEstimate?.approve ||
+      !gasSpendEstimate?.swap ||
+      !gasPrice
+    ) {
       return {
         swapCallback: () => {
           logger.error(
@@ -308,23 +309,41 @@ export function useSwapCallback(
       }
     }
 
+    const { amount, methodParameters } = trade.quote
+    const chainId = trade.inputAmount.currency.chainId
+
+    if (!methodParameters) {
+      return {
+        swapCallback: () => {
+          logger.error(
+            'hooks',
+            'useSwapCallback',
+            'Missing swapCallback parameter `methodParameters`, which should always be supplied by the swap router endpoint'
+          )
+        },
+        swapState: null,
+      }
+    }
+
     return {
       swapCallback: async () => {
         appDispatch(
           swapActions.trigger({
             account,
             chainId,
-            contract: tokenContract,
+            inputTokenAddress: currencyAddress(trade.inputAmount.currency),
             methodParameters,
             swapRouterAddress: SWAP_ROUTER_ADDRESSES[chainId],
             typeInfo: tradeToTransactionInfo(trade),
-            txAmount: amount,
+            approveAmount: exactApproveRequired ? BigNumber.from(amount) : MaxUint256,
+            gasSpendEstimate,
+            gasPrice,
           })
         )
       },
       swapState,
     }
-  }, [account, amount, chainId, methodParameters, tokenContract, swapState, appDispatch, trade])
+  }, [account, swapState, appDispatch, trade, gasSpendEstimate, gasPrice, exactApproveRequired])
 }
 
 export function useWrapCallback(

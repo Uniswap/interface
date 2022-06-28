@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { AnyAction, createAction } from '@reduxjs/toolkit'
-import { BigNumber, providers } from 'ethers'
+import { BigNumber, FixedNumber, providers } from 'ethers'
 import { Dispatch } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
@@ -11,12 +11,15 @@ import { ChainId } from 'src/constants/chains'
 import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
 import { FeeType } from 'src/features/gas/types'
-import { updateGasEstimates } from 'src/features/transactions/transactionState/transactionState'
+import {
+  setExactApproveRequired,
+  updateGasEstimates,
+} from 'src/features/transactions/transactionState/transactionState'
 import { TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
-import { isZero } from 'src/utils/number'
+import { fixedNumberToInt, isZero } from 'src/utils/number'
 import { call, takeEvery } from 'typed-redux-saga'
 
 export type GasEstimateParams = ApproveGasEstimateParmams | SwapGasEstimateParams
@@ -137,12 +140,18 @@ function* estimateApproveGasLimit(
         from: address,
       }
     )
+
+    transactionStateDispatch(setExactApproveRequired(true))
   }
 
   transactionStateDispatch(
     updateGasEstimates({
       gasEstimates: {
-        [TransactionType.Approve]: approveGasEstimate.mul(GAS_INFLATION_FACTOR).toString(),
+        [TransactionType.Approve]: fixedNumberToInt(
+          FixedNumber.from(approveGasEstimate).mulUnsafe(
+            FixedNumber.from(GAS_INFLATION_FACTOR.toString())
+          )
+        ),
       },
     })
   )
@@ -177,7 +186,11 @@ function* estimateSwapGasInfo(
   transactionStateDispatch(
     updateGasEstimates({
       gasEstimates: {
-        [TransactionType.Swap]: swapGasInfo.gasLimit,
+        [TransactionType.Swap]: fixedNumberToInt(
+          FixedNumber.from(swapGasInfo.gasLimit).mulUnsafe(
+            FixedNumber.from(GAS_INFLATION_FACTOR.toString())
+          )
+        ),
       },
       gasPrice,
     })

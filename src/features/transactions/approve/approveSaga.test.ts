@@ -1,108 +1,150 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
-import { testSaga } from 'redux-saga-test-plan'
+import { call } from '@redux-saga/core/effects'
+import { expectSaga } from 'redux-saga-test-plan'
+import { getContractManager, getProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
+import { DAI } from 'src/constants/tokens'
 import { ApproveParams, maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { TransactionType } from 'src/features/transactions/types'
-import { account, tokenContract } from 'src/test/fixtures'
-
-const approveParams: ApproveParams = {
-  account,
-  chainId: ChainId.Rinkeby,
-  txAmount: '1',
-  contract: tokenContract,
-  spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
-}
-
-const approveTxTypeInfo = {
-  type: TransactionType.Approve,
-  tokenAddress: tokenContract.address,
-  spender: approveParams.spender,
-}
-
-const populatedTx = { from: '0x123', to: '0x456', value: '0x0', data: '0x789' }
+import { account, mockProvider } from 'src/test/fixtures'
 
 describe(maybeApprove, () => {
-  it('skips approval when allowance is sufficient', () => {
-    testSaga(maybeApprove, approveParams)
-      .next()
-      .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
-      .next(BigNumber.from(approveParams.txAmount).add('1000'))
-      .isDone()
+  it('skips approval when gasLimit is 0', async () => {
+    const approveParams: ApproveParams = {
+      account,
+      chainId: ChainId.Rinkeby,
+      approveAmount: BigNumber.from(1),
+      inputTokenAddress: DAI.address,
+      spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
+      gasLimit: '0',
+      gasPrice: '45',
+    }
+
+    await expectSaga(maybeApprove, approveParams).silentRun()
   })
 
-  it('ignores failed allowance check', () => {
-    testSaga(maybeApprove, approveParams)
-      .next()
-      .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
-      .throw(new Error('Failed to get allowance'))
-  })
+  it('submits an approve tx with inifine approval', async () => {
+    const approveParams: ApproveParams = {
+      account,
+      chainId: ChainId.Rinkeby,
+      approveAmount: MaxUint256,
+      inputTokenAddress: DAI.address,
+      spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
+      gasLimit: '45000',
+      gasPrice: '45',
+    }
 
-  it('approves maximum amount', () => {
-    testSaga(maybeApprove, approveParams)
-      .next()
-      .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
-      .next(BigNumber.from('0'))
-      .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)
-      .next(BigNumber.from(100_000))
-      .call(approveParams.contract.populateTransaction.approve, approveParams.spender, MaxUint256, {
-        gasLimit: BigNumber.from(100_000).mul(GAS_INFLATION_FACTOR),
-      })
-      .next(populatedTx)
-      .call(sendTransaction, {
-        chainId: approveParams.chainId,
-        account: approveParams.account,
-        options: { request: populatedTx },
-        typeInfo: approveTxTypeInfo,
-      })
-      .next()
-      .isDone()
-  })
+    const mockContractManager = {
+      getOrCreateContract: jest.fn(() => mockTokenContract),
+    }
 
-  it('approves exact amount', () => {
-    const approvedAmount = BigNumber.from(approveParams.txAmount)
-    testSaga(maybeApprove, approveParams)
-      .next()
-      .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
-      .next(BigNumber.from('0'))
-      .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)
-      .throw(new Error('Failed to estimate gas'))
-      .call(approveParams.contract.estimateGas.approve, approveParams.spender, approvedAmount)
-      .next(BigNumber.from(120_000))
+    const tx = {
+      to: approveParams.inputTokenAddress,
+      from: approveParams.spender,
+      nonce: 1,
+      gasLimit: BigNumber.from(approveParams.gasLimit),
+      gasPrice: BigNumber.from(approveParams.gasPrice),
+      data: '0x1230101013',
+      chainId: approveParams.chainId,
+      maxFeePerGas: BigNumber.from(approveParams.gasPrice),
+      maxPriorityFeePerGas: BigNumber.from(0),
+    }
+
+    const mockTokenContract = {
+      address: DAI.address,
+      populateTransaction: {
+        approve: jest.fn(() => tx),
+      },
+    }
+
+    await expectSaga(maybeApprove, approveParams)
+      .provide([
+        [call(getContractManager), mockContractManager],
+        [call(getProvider, approveParams.chainId), mockProvider],
+        [
+          call(sendTransaction, {
+            chainId: approveParams.chainId,
+            account: approveParams.account,
+            options: { request: tx },
+            typeInfo: {
+              type: TransactionType.Approve,
+              tokenAddress: approveParams.inputTokenAddress,
+              spender: approveParams.spender,
+            },
+          }),
+          undefined,
+        ],
+      ])
       .call(
-        approveParams.contract.populateTransaction.approve,
-        approveParams.spender,
-        approvedAmount,
-        {
-          gasLimit: BigNumber.from(120_000).mul(GAS_INFLATION_FACTOR),
-        }
+        mockTokenContract.populateTransaction.approve,
+        SWAP_ROUTER_ADDRESSES[approveParams.chainId],
+        MaxUint256,
+        { gasLimit: approveParams.gasLimit, gasPrice: approveParams.gasPrice }
       )
-      .next(populatedTx)
-      .call(sendTransaction, {
-        chainId: approveParams.chainId,
-        account: approveParams.account,
-        options: { request: populatedTx },
-        typeInfo: approveTxTypeInfo,
-      })
-      .next()
-      .isDone()
+      .silentRun()
   })
 
-  // TODO: switch to integration testing with redux-saga-test-plan
-  // The sample `expectSaga` test redux-saga-test-plan does not pass for me.. figure out why
-  // xit('skips approval when allowance is sufficient', () => {
-  //   return expectSaga(approveSaga)
-  //     .provide([
-  //       [call(getSignerManager), SignerManager],
-  //       [
-  //         call(tokenContract.allowance, account.address, approveParams.spender),
-  //         approveParams.txAmount.add(10),
-  //       ],
-  //     ])
-  //     .dispatch(approveActions.trigger(approveParams))
-  //     .silentRun(50)
-  // })
+  it('submits an approve tx with a specific approve amount', async () => {
+    const approveParams: ApproveParams = {
+      account,
+      chainId: ChainId.Rinkeby,
+      approveAmount: BigNumber.from(1),
+      inputTokenAddress: DAI.address,
+      spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
+      gasLimit: '45000',
+      gasPrice: '45',
+    }
+
+    const mockContractManager = {
+      getOrCreateContract: jest.fn(() => mockTokenContract),
+    }
+
+    const tx = {
+      to: approveParams.inputTokenAddress,
+      from: approveParams.spender,
+      nonce: 1,
+      gasLimit: BigNumber.from(approveParams.gasLimit),
+      gasPrice: BigNumber.from(approveParams.gasPrice),
+      data: '0x1230101013',
+      chainId: approveParams.chainId,
+      maxFeePerGas: BigNumber.from(approveParams.gasPrice),
+      maxPriorityFeePerGas: BigNumber.from(0),
+    }
+
+    const mockTokenContract = {
+      address: DAI.address,
+      populateTransaction: {
+        approve: jest.fn(() => tx),
+      },
+    }
+
+    await expectSaga(maybeApprove, approveParams)
+      .provide([
+        [call(getContractManager), mockContractManager],
+        [call(getProvider, approveParams.chainId), mockProvider],
+        [
+          call(sendTransaction, {
+            chainId: approveParams.chainId,
+            account: approveParams.account,
+            options: { request: tx },
+            typeInfo: {
+              type: TransactionType.Approve,
+              tokenAddress: approveParams.inputTokenAddress,
+              spender: approveParams.spender,
+            },
+          }),
+          undefined,
+        ],
+      ])
+      .call(
+        mockTokenContract.populateTransaction.approve,
+        SWAP_ROUTER_ADDRESSES[approveParams.chainId],
+        BigNumber.from(approveParams.approveAmount),
+        { gasLimit: approveParams.gasLimit, gasPrice: approveParams.gasPrice }
+      )
+      .silentRun()
+  })
 })

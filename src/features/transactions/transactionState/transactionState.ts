@@ -10,6 +10,8 @@ export enum CurrencyField {
   OUTPUT,
 }
 
+export type GasSpendEstimate = Partial<Record<TransactionType, string>>
+
 export interface TransactionState {
   [CurrencyField.INPUT]: TradeableAsset | null
   [CurrencyField.OUTPUT]: TradeableAsset | null
@@ -18,8 +20,9 @@ export interface TransactionState {
   exactAmountUSD?: string
   recipient?: string
   isUSDInput?: boolean
-  gasSpendEstimate?: Partial<Record<TransactionType, string>>
+  gasSpendEstimate?: GasSpendEstimate
   gasPrice?: string // gas price in native currency
+  exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
 }
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
@@ -131,7 +134,7 @@ const slice = createSlice({
     updateGasEstimates: (
       state,
       action: PayloadAction<{
-        gasEstimates: Partial<Record<TransactionType, string>>
+        gasEstimates?: GasSpendEstimate
         gasPrice?: string
       }>
     ) => {
@@ -140,8 +143,11 @@ const slice = createSlice({
 
       state.gasSpendEstimate = {
         ...state.gasSpendEstimate,
-        ...gasEstimates,
+        ...(gasEstimates ?? {}),
       }
+    },
+    setExactApproveRequired: (state, action: PayloadAction<boolean>) => {
+      state.exactApproveRequired = action.payload
     },
     clearGasEstimates: (state) => {
       state.gasPrice = undefined
@@ -159,5 +165,6 @@ export const {
   toggleUSDInput,
   updateGasEstimates,
   clearGasEstimates,
+  setExactApproveRequired,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice
