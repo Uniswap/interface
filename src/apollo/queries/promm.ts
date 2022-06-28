@@ -172,6 +172,9 @@ export const PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS = gql`
       feeTier
       mints(orderBy: timestamp, orderDirection: desc, first: 20) {
         id
+        amount0
+        amount1
+        amountUSD
       }
     }
   }
@@ -187,6 +190,9 @@ export const PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS = gql`
       feeTier
       burns(orderBy: timestamp, orderDirection: desc, first: 20) {
         id
+        amount0
+        amount1
+        amountUSD
       }
     }
   }

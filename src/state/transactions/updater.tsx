@@ -241,12 +241,16 @@ export default function Updater(): null {
                   break
               }
               const { reserve0, reserve1, reserveUSD } = res.data.pool
+              const mint = res.data.pool.mints.find((mint: { id: string }) => mint.id.startsWith(transaction.hash))
               mixpanelHandler(MIXPANEL_TYPE.ADD_LIQUIDITY_COMPLETED, {
                 token_1_pool_qty: reserve0,
                 token_2_pool_qty: reserve1,
                 liquidity_USD: reserveUSD,
                 token_1: transaction.arbitrary.token_1,
                 token_2: transaction.arbitrary.token_2,
+                token_1_qty: mint?.amount0,
+                token_2_qty: mint?.amount1,
+                add_liquidity_USD: mint?.amountUSD,
                 add_liquidity_method: transaction.arbitrary.add_liquidity_method,
                 amp: transaction.arbitrary.amp,
                 tx_hash: hash,
@@ -269,6 +273,7 @@ export default function Updater(): null {
                 )
                   break
               }
+              const mint = res.data.pool.mints.find((mint: { id: string }) => mint.id.startsWith(transaction.hash))
               const { totalValueLockedToken0, totalValueLockedToken1, totalValueLockedUSD, feeTier } = res.data.pool
               mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_COMPLETED, {
                 token_1_pool_qty: totalValueLockedToken0,
@@ -276,6 +281,9 @@ export default function Updater(): null {
                 liquidity_USD: totalValueLockedUSD,
                 token_1: transaction.arbitrary.token_1,
                 token_2: transaction.arbitrary.token_2,
+                token_1_qty: mint?.amount0,
+                token_2_qty: mint?.amount1,
+                add_liquidity_USD: mint?.amountUSD,
                 fee_tier: feeTier / ELASTIC_BASE_FEE_UNIT,
                 tx_hash: hash,
               })
