@@ -145,7 +145,8 @@ export const ForTraderInfoShadow = styled.div`
 export const ForTraderDivider = styled.div<{ horizontal?: boolean }>`
   background-color: ${({ theme }) => theme.border};
   width: ${({ horizontal }) => (horizontal ? '100%' : '1px')};
-  height: ${({ horizontal }) => (horizontal ? '1px' : '100%')};
+  height: ${({ horizontal }) => (horizontal ? '1px' : '50px')};
+
   ${({ theme, horizontal }) => theme.mediaWidth.upToMedium`
     ${!horizontal && 'height: auto;'}
   `}

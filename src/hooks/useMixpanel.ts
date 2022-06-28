@@ -30,6 +30,7 @@ import {
   PROMM_GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS,
 } from 'apollo/queries/promm'
 import { checkedSubgraph } from 'state/transactions/actions'
+
 export enum MIXPANEL_TYPE {
   PAGE_VIEWED,
   WALLET_CONNECTED,
@@ -109,6 +110,8 @@ export enum MIXPANEL_TYPE {
   CAMPAIGN_ENTER_NOW_CLICKED,
   CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED,
   CAMPAIGN_CLAIM_REWARDS_CLICKED,
+  TRANSAK_BUY_CRYPTO_CLICKED,
+  TRANSAK_DOWNLOAD_WALLET_CLICKED,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
@@ -556,6 +559,14 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Campaign - Claim Rewards Trading Contest "Claim Rewards"')
           break
         }
+        case MIXPANEL_TYPE.TRANSAK_DOWNLOAD_WALLET_CLICKED: {
+          mixpanel.track('Buy Crypto - Download a wallet "Download Wallet”')
+          break
+        }
+        case MIXPANEL_TYPE.TRANSAK_BUY_CRYPTO_CLICKED: {
+          mixpanel.track('Buy Crypto - To purchase crypto on Transak "Buy Now”')
+          break
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -891,17 +902,20 @@ export const useGlobalMixpanelEvents = () => {
         case 'campaign':
           pageName = 'Campaign'
           break
-        case 'proamm/pool':
+        case 'elastic/pool':
           pageName = 'Elastic - Pool'
           break
-        case 'proamm/remove':
+        case 'elastic/remove':
           pageName = 'Elastic - Remove Liquidity'
           break
-        case 'proamm/add':
+        case 'elastic/add':
           pageName = 'Elastic - Add Liquidity'
           break
-        case 'proamm/increase':
+        case 'elastic/increase':
           pageName = 'Elastic - Increase Liquidity'
+          break
+        case 'buy-crypto':
+          pageName = 'Buy Crypto'
           break
         default:
           break

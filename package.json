@@ -13,6 +13,7 @@
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
     "@reduxjs/toolkit": "^1.7.1",
+    "@types/aos": "^3.0.4",
     "@types/jest": "^25.2.1",
     "@types/lingui__core": "^3.0.0",
     "@types/lingui__macro": "^3.0.0",
@@ -93,10 +94,10 @@
     "trezor-connect": "8.1.15"
   },
   "scripts": {
-    "i18n:extract": "lingui extract --clean",
+    "i18n:extract": "lingui extract",
     "i18n:compile": "lingui compile",
     "i18n": "yarn i18n:extract && yarn i18n:compile",
-    "start": "yarn i18n && env-cmd -f .env.production react-app-rewired start",
+    "start": "yarn i18n && react-app-rewired start",
     "start-dev": "yarn i18n && env-cmd -f .env.dev react-app-rewired start",
     "start-stg": "yarn i18n && env-cmd -f .env.stg react-app-rewired start",
     "start-production": "yarn i18n && env-cmd -f .env.production react-app-rewired start",
@@ -144,6 +145,7 @@
     "@types/react-gtm-module": "^2.0.1",
     "@types/recharts": "^1.8.23",
     "@uniswap/default-token-list": "^2.0.0",
+    "aos": "^2.3.4",
     "d3": "^7.3.0",
     "dayjs": "^1.10.7",
     "env-cmd": "^10.1.0",
