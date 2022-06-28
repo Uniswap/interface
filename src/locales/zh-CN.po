@@ -13,13 +13,13 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "$- (todo)"
-msgstr ""
+#: 
+#~ msgid "$- (todo)"
+#~ msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "$-(todo)"
-msgstr ""
+#: 
+#~ msgid "$-(todo)"
+#~ msgstr ""
 
 #: src/pages/CreateReferral/index.tsx
 msgid "*Required"
@@ -88,6 +88,10 @@ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
+msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "A cryptocurrency wallet gives you access to your digital tokens and acts as a gateway to many blockchain applications like KyberSwap. You can buy, store, send and swap tokens using this wallet.<0/><1/>On KyberSwap we support a list of wallets including: MetaMask, Coin98, Wallet Connect, Coinbase Wallet, Ledger and others"
 msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -431,6 +435,20 @@ msgstr ""
 msgid "Bug Bounty"
 msgstr ""
 
+#: src/components/Header/index.tsx
+#: src/pages/BuyCrypto/index.tsx
+#: src/pages/BuyCrypto/index.tsx
+msgid "Buy Crypto"
+msgstr ""
+
+#: 
+#~ msgid "Buy Now"
+#~ msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "Buy crypto easily with over 50+ currencies"
+msgstr ""
+
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
 msgstr ""
@@ -494,9 +512,9 @@ msgstr ""
 msgid "Claim Rewards"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Claim fees"
-msgstr ""
+#: 
+#~ msgid "Claim fees"
+#~ msgstr ""
 
 #: src/components/Menu/ClaimRewardModal.tsx
 msgid "Claim your rewards"
@@ -546,39 +564,39 @@ msgstr ""
 msgid "Code Audited"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Collect"
-msgstr ""
+#: 
+#~ msgid "Collect"
+#~ msgstr ""
 
 #: src/components/ProAmm/ProAmmFee.tsx
 #: src/components/ProAmm/ProAmmFee.tsx
 msgid "Collect Fees"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Collect as WETH"
-msgstr ""
+#: 
+#~ msgid "Collect as WETH"
+#~ msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Collect fees"
-msgstr ""
+#: 
+#: 
+#~ msgid "Collect fees"
+#~ msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Collected"
-msgstr ""
+#: 
+#~ msgid "Collected"
+#~ msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Collecting"
-msgstr ""
+#: 
+#~ msgid "Collecting"
+#~ msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Collecting fees"
-msgstr ""
+#: 
+#~ msgid "Collecting fees"
+#~ msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Collecting fees will withdraw currently available fees for you."
-msgstr ""
+#: 
+#~ msgid "Collecting fees will withdraw currently available fees for you."
+#~ msgstr ""
 
 #: src/components/UpcomingFarms/StartingIn.tsx
 msgid "Coming soon"
@@ -749,7 +767,6 @@ msgstr ""
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -878,6 +895,18 @@ msgstr ""
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Don't see a pool you joined?"
+msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "Download Wallet"
+msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "Download a Wallet"
+msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "Download a wallet"
 msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
@@ -1167,6 +1196,10 @@ msgstr ""
 msgid "Gas Fee"
 msgstr ""
 
+#: src/pages/BuyCrypto/index.tsx
+msgid "Get Started"
+msgstr ""
+
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Get pool {0} info"
@@ -1349,7 +1382,6 @@ msgstr ""
 #: src/pages/IncreaseLiquidity/index.tsx
 #: src/pages/ProAmmPool/PositionListItem.tsx
 #: src/pages/ProAmmPool/PositionListItem.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 msgid "Increase Liquidity"
 msgstr ""
 
@@ -1580,7 +1612,6 @@ msgid "Learn more"
 msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 msgid "Liquidity"
 msgstr ""
 
@@ -1633,12 +1664,10 @@ msgid "MAX"
 msgstr ""
 
 #: src/components/ProAmm/ProAmmPriceRange.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 msgid "MAX PRICE"
 msgstr ""
 
 #: src/components/ProAmm/ProAmmPriceRange.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 msgid "MIN PRICE"
 msgstr ""
 
@@ -1859,6 +1888,10 @@ msgstr ""
 msgid "Note: {warningToken} is now <10% of the pool. Pool might become inactive if {warningToken} reaches 0%"
 msgstr ""
 
+#: src/pages/BuyCrypto/index.tsx
+msgid "Now that you have purchased your crypto, you can trade from over 20,000+ tokens on KyberSwap! We give you the best trading rates in the market!"
+msgstr ""
+
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr ""
@@ -1931,9 +1964,9 @@ msgstr ""
 msgid "Output is estimated. You will receive at least"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Owner"
-msgstr ""
+#: 
+#~ msgid "Owner"
+#~ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "PREVENT SNIPING ATTACKS"
@@ -2107,9 +2140,9 @@ msgstr ""
 msgid "Price impact is too high"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Price range"
-msgstr ""
+#: 
+#~ msgid "Price range"
+#~ msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "Price:"
@@ -2202,7 +2235,6 @@ msgstr ""
 #: src/pages/ProAmmPool/PositionListItem.tsx
 #: src/pages/ProAmmPool/PositionListItem.tsx
 #: src/pages/ProAmmPool/PositionListItem.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 #: src/pages/RemoveLiquidityProAmm/index.tsx
 msgid "Remove Liquidity"
 msgstr ""
@@ -2395,6 +2427,10 @@ msgstr ""
 msgid "Single Token"
 msgstr ""
 
+#: 
+#~ msgid "Skip"
+#~ msgstr ""
+
 #: src/components/swapv2/SwapModalFooter.tsx
 msgid "Slippage"
 msgstr ""
@@ -2507,6 +2543,18 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
+#: src/pages/BuyCrypto/index.tsx
+msgid "Step 1"
+msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "Step 2"
+msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "Step 3"
+msgstr ""
+
 #: src/pages/TrueSight/index.tsx
 msgid "Subscribe"
 msgstr ""
@@ -2535,6 +2583,7 @@ msgstr ""
 msgid "Supply Anyway"
 msgstr ""
 
+#: src/components/Header/index.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ItemCard/index.tsx
@@ -2570,7 +2619,12 @@ msgstr ""
 #: src/pages/About/AboutKyberSwap.tsx
 #: src/pages/About/AboutKyberSwap.tsx
 #: src/pages/About/AboutKyberSwap.tsx
+#: src/pages/BuyCrypto/index.tsx
 msgid "Swap Now"
+msgstr ""
+
+#: src/pages/BuyCrypto/index.tsx
+msgid "Swap on KyberSwap"
 msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
@@ -2903,9 +2957,9 @@ msgstr ""
 msgid "Unamplified Pool existed"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Unclaimed fees"
-msgstr ""
+#: 
+#~ msgid "Unclaimed fees"
+#~ msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "Unknown"
@@ -3355,10 +3409,10 @@ msgstr ""
 msgid "Your position will be 100% composed of {0} at this price"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "Your position will be 100% {0} at this price."
-msgstr ""
+#: 
+#: 
+#~ msgid "Your position will be 100% {0} at this price."
+#~ msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Your position will not earn fees until the market price of the pool moves into your price range."
@@ -3489,9 +3543,6 @@ msgstr ""
 #: src/components/PositionPreview/index.tsx
 #: src/components/ProAmm/ProAmmPriceRange.tsx
 #: src/components/ProAmm/ProAmmPriceRange.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 msgid "{0} per {1}"
 msgstr ""
 
@@ -3509,9 +3560,6 @@ msgid "{0} ↗"
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
-#: src/pages/ProAmmPool/PositionPage.tsx
 msgid "{0}%"
 msgstr ""
 
@@ -3533,6 +3581,10 @@ msgstr ""
 msgid "{0}% Unlocked"
 msgstr ""
 
+#: src/pages/BuyCrypto/index.tsx
+msgid "{0}Skip"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"
 msgstr ""
@@ -3545,6 +3597,6 @@ msgstr ""
 msgid "• Added by user"
 msgstr ""
 
-#: src/pages/ProAmmPool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr ""
+#: 
+#~ msgid "← Back to Pools Overview"
+#~ msgstr ""

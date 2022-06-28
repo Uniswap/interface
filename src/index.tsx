@@ -23,6 +23,10 @@ import TagManager from 'react-gtm-module'
 import * as Sentry from '@sentry/react'
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
+import AOS from 'aos'
+import 'aos/dist/aos.css' // You can also use <link> for styles
+
+AOS.init()
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 

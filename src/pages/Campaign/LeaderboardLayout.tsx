@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Text } from 'rebass'
 import { Clock } from 'react-feather'
 import Search from 'components/Search'

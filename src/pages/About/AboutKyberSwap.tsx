@@ -102,6 +102,64 @@ const getPoolsMenuLink = (chainId?: ChainId, path?: string) => {
   return `/${pathname}/${nativeOnChain(chainId as ChainId).symbol || 'ETH'}/${KNC[chainId as ChainId].address}`
 }
 
+export const KSStatistic = () => {
+  const theme = useTheme()
+  const above992 = useMedia('(min-width: 992px)')
+
+  return (
+    <>
+      <div style={{ position: 'relative', marginTop: '20px' }}>
+        <ForTraderInfoShadow />
+        <ForTraderInfo>
+          <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
+            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
+              <Text fontWeight="600" fontSize="24px">
+                $24B
+              </Text>
+              <Text color={theme.subText} marginTop="4px" fontSize="14px">
+                <Trans>TVL From DEXs</Trans>
+              </Text>
+            </Flex>
+
+            <ForTraderDivider />
+
+            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
+              <Text fontWeight="600" fontSize="24px">
+                {Object.keys(dexListConfig).length - 1}+{/* DMM and KyberSwap are one */}
+              </Text>
+              <Text color={theme.subText} marginTop="4px" fontSize="14px">
+                <Trans>DEXs</Trans>
+              </Text>
+            </Flex>
+          </Flex>
+
+          <ForTraderDivider horizontal={!above992} />
+
+          <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
+            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
+              <Text fontWeight="600" fontSize="24px">
+                {SUPPORTED_NETWORKS.length}
+              </Text>
+              <Text color={theme.subText} marginTop="4px" fontSize="14px">
+                <Trans>Chains</Trans>
+              </Text>
+            </Flex>
+            <ForTraderDivider />
+            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
+              <Text fontWeight="600" fontSize="24px">
+                20,000+
+              </Text>
+              <Text color={theme.subText} marginTop="4px" fontSize="14px">
+                <Trans>Tokens</Trans>
+              </Text>
+            </Flex>
+          </Flex>
+        </ForTraderInfo>
+      </div>
+    </>
+  )
+}
+
 function AboutKyberSwap() {
   const theme = useTheme()
   const [isDarkMode] = useDarkModeManager()
@@ -630,54 +688,7 @@ function AboutKyberSwap() {
                 alt="ForTrader"
                 style={{ marginTop: above992 ? '0.25rem' : '40px' }}
               />
-              <div style={{ position: 'relative', marginTop: '20px' }}>
-                <ForTraderInfoShadow />
-                <ForTraderInfo>
-                  <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
-                    <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-                      <Text fontWeight="600" fontSize="24px">
-                        $24B
-                      </Text>
-                      <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                        <Trans>TVL From DEXs</Trans>
-                      </Text>
-                    </Flex>
-
-                    <ForTraderDivider />
-
-                    <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-                      <Text fontWeight="600" fontSize="24px">
-                        {Object.keys(dexListConfig).length - 1}+{/* DMM and KyberSwap are one */}
-                      </Text>
-                      <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                        <Trans>DEXs</Trans>
-                      </Text>
-                    </Flex>
-                  </Flex>
-
-                  <ForTraderDivider horizontal={!above992} />
-
-                  <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
-                    <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-                      <Text fontWeight="600" fontSize="24px">
-                        {SUPPORTED_NETWORKS.length}
-                      </Text>
-                      <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                        <Trans>Chains</Trans>
-                      </Text>
-                    </Flex>
-                    <ForTraderDivider />
-                    <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-                      <Text fontWeight="600" fontSize="24px">
-                        20,000+
-                      </Text>
-                      <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                        <Trans>Tokens</Trans>
-                      </Text>
-                    </Flex>
-                  </Flex>
-                </ForTraderInfo>
-              </div>
+              <KSStatistic />
             </Flex>
             {!above500 && (
               <BtnPrimary

@@ -18,8 +18,18 @@ import Web3Network from 'components/Web3Network'
 import { useIsDarkMode } from 'state/user/hooks'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import { useWindowSize } from 'hooks/useWindowSize'
+// import { Repeat } from 'react-feather'
+// import { ReactComponent as Dollar } from 'assets/svg/dollar.svg'
+// import { ReactComponent as Visa } from 'assets/buy-crypto/visa.svg'
+// import { ReactComponent as MasterCard } from 'assets/buy-crypto/master-card.svg'
 // import { MouseoverTooltip } from 'components/Tooltip'
 import AboutPageDropdown from 'components/AboutPageDropDown'
+
+// const VisaSVG = styled(Visa)`
+//   path {
+//     fill: ${({ theme }) => theme.text};
+//   }
+// `
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -356,14 +366,44 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink
-            id={`swapv2-nav-link`}
-            to={'/swap'}
-            isActive={match => Boolean(match)}
-            style={{ flexDirection: 'column' }}
-          >
-            <Trans>Swap</Trans>
+          <StyledNavLink id={`swapv2-nav-link`} to={'/swap'} isActive={match => Boolean(match)}>
+            <Flex alignItems="center" sx={{ gap: '10px' }}>
+              <Trans>Swap</Trans>
+            </Flex>
           </StyledNavLink>
+
+          {/* temporary hide Dropdown while waiting for legal confirm
+          <HoverDropdown active={pathname.includes('/swap') || pathname === '/buy-crypto'}>
+            <Flex alignItems="center">
+              <Trans>Swap</Trans>
+              <DropdownIcon />
+            </Flex>
+
+            <Dropdown>
+              <StyledNavLink
+                id={`swapv2-nav-link`}
+                to={'/swap'}
+                isActive={match => Boolean(match)}
+                style={{ flexDirection: 'column' }}
+              >
+                <Flex alignItems="center" sx={{ gap: '10px' }}>
+                  <Repeat size={16} />
+                  <Trans>Swap</Trans>
+                </Flex>
+              </StyledNavLink>{' '}
+              <StyledNavLink id={`buy-crypto-nav-link`} to={'/buy-crypto'} isActive={match => Boolean(match)}>
+                <Flex alignItems="center" sx={{ gap: '8px' }}>
+                  <Dollar />
+                  <Trans>Buy Crypto</Trans>
+                  <Flex sx={{ gap: '8px' }}>
+                    <VisaSVG width="20" height="20" />
+                    <MasterCard width="20" height="20" />
+                  </Flex>
+                </Flex>
+              </StyledNavLink>
+            </Dropdown>
+          </HoverDropdown>
+          */}
 
           <HoverDropdown active={pathname.toLowerCase().includes('pools')}>
             <Flex alignItems="center">
