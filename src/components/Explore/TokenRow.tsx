@@ -47,23 +47,25 @@ const TokenRowWrapper = styled.div`
   @media only screen and (max-width: 960px) {
     grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
     width: fit-content;
-    gap: 16px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media only screen and (max-width: 880px) {
     grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
     width: fit-content;
-    gap: 16px;
-  `};
+  }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2.5fr;
+  @media only screen and (max-width: 776px) {
+    grid-template-columns: 1.2fr 1fr 8fr 5fr 5fr 3.5fr;
     width: fit-content;
-    gap: 16px;
-  `};
+  }
 
   @media only screen and (max-width: 640px) {
-    grid-template-columns: 1fr 7fr 4fr 4fr;
+    grid-template-columns: 1fr 7fr 4fr 4fr 0.5px;
+    width: fit-content;
+  }
+
+  @media only screen and (max-width: 390px) {
+    grid-template-columns: 1fr 12fr 6fr;
     width: fit-content;
   }
 `
@@ -91,19 +93,22 @@ const ListNumberCell = styled(Cell)`
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  @media only screen and (max-width: 776px) {
     display: none;
-`};
+  }
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
   padding-left: 8px;
   gap: 8px;
   min-width: 200px;
+  @media only screen and (max-width: 390px) {
+    min-width: fit-content;
+  }
 `
 const PriceCell = styled(Cell)`
   justify-content: flex-end;
-  min-width: fit-content(max-content, 80px);
+  min-width: max-content;
 `
 const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
@@ -142,6 +147,7 @@ const SparkLineImg = styled(Cell)`
   transform: scale(1.2);
 `
 const SwapCell = styled(Cell)`
+  justify-content: flex-end;
   @media only screen and (max-width: 640px) {
     display: none;
   }
@@ -169,9 +175,9 @@ const TokenSymbol = styled.span`
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media only screen and (max-width: 880px) {
     display: none;
-  `};
+  }
 `
 
 /* formatting for volume with timeframe header display */
@@ -282,14 +288,16 @@ export default function TokenRow({
   // TODO: remove magic number colors
   // TODO: write favorited hook
   const favorited = true
+  const currency = useCurrency(tokenAddress)
+
   return (
     <TokenRowWrapper key={key}>
       <FavoriteCell>
-        <Heart size={15} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
+        <Heart size={18} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
       </FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>
-        <CurrencyLogo currency={useCurrency(tokenAddress)} />
+        <CurrencyLogo currency={currency} />
         {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
       </NameCell>
       <PriceCell>{formatDollarAmount(tokenData.price)}</PriceCell>

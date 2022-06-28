@@ -5,10 +5,10 @@ import styled from 'styled-components/macro'
 
 import TokenRow, { HeaderRow } from './TokenRow'
 
+//   min-width: 360px;
 const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 360px;
   max-width: 960px;
   background: ${({ theme }) => theme.bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -18,7 +18,11 @@ const GridContainer = styled.div`
   border-radius: 8px;
   justify-content: center;
   align-items: center;
-  padding: '4px 0px 8px 0px';
+  padding: 4px 0px 8px 0px;
+
+  @media only screen and (max-width: 390px) {
+    padding: 20px 16px;
+  }
 `
 
 export default function TokenTable() {
