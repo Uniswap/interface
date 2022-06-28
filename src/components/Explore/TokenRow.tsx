@@ -24,6 +24,15 @@ enum SortDirection {
 }
 const SORT_CATEGORIES = Object.values(Category)
 
+const ArrowCell = styled.div`
+  padding-left: 4px;
+  display: flex;
+`
+const Cell = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 const TokenRowWrapper = styled.div`
   width: 100%;
   height: 60px;
@@ -58,6 +67,13 @@ const TokenRowWrapper = styled.div`
     width: fit-content;
   }
 `
+const FavoriteCell = styled(Cell)`
+  min-width: 40px;
+  color: ${({ theme }) => theme.text2};
+  @media only screen and (max-width: 640px) {
+    display: none;
+  }
+`
 const HeaderRowWrapper = styled(TokenRowWrapper)`
   width: 100%;
   height: 48px;
@@ -68,21 +84,16 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
 `
-const Cell = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-const FavoriteCell = styled(Cell)`
-  min-width: 40px;
-  color: ${({ theme }) => theme.text2};
-  @media only screen and (max-width: 640px) {
-    display: none;
-  }
-`
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
+`
+const MarketCapCell = styled(Cell)`
+  justify-content: flex-end;
+  min-width: max-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+`};
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
@@ -98,20 +109,23 @@ const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
 `
-
-const MarketCapCell = styled(Cell)`
-  justify-content: flex-end;
-  min-width: max-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-`};
+const SortArrowCell = styled(Cell)`
+  padding-right: 2px;
 `
-const VolumeCell = styled(Cell)`
-  justify-content: flex-end;
-  min-width: max-content;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
-  `};
+const SortingCategory = styled.span`
+  color: ${({ theme }) => theme.primary1};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+  }
+`
+const SortOption = styled.span`
+  &:hover {
+    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -127,13 +141,11 @@ const SparkLineImg = styled(Cell)`
   flex-direction: column;
   transform: scale(1.2);
 `
-
 const SwapCell = styled(Cell)`
   @media only screen and (max-width: 640px) {
     display: none;
   }
 `
-
 const SwapButton = styled.button`
   display: flex;
   justify-content: center;
@@ -151,33 +163,15 @@ const SwapButton = styled.button`
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
   }
 `
-
 const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.text3};
 `
-const ArrowCell = styled.div`
-  padding-left: 4px;
-  display: flex;
-`
-
-const SortingCategory = styled.span`
-  color: ${({ theme }) => theme.primary1};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
-  }
-`
-const SortOption = styled.span`
-  &:hover {
-    color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
-  }
-`
-
-const SortArrowCell = styled(Cell)`
-  padding-right: 2px;
+const VolumeCell = styled(Cell)`
+  justify-content: flex-end;
+  min-width: max-content;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
 `
 
 /* formatting for volume with timeframe header display */
