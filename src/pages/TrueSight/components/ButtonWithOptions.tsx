@@ -85,7 +85,7 @@ const ButtonWithOptions = ({
                       history.push(
                         `/swap?inputCurrency=ETH&outputCurrency=${getAddress(
                           platforms.get(platform) ?? '',
-                        )}&networkId=${mappedChainId}&keepCurrencyIds=1`,
+                        )}&networkId=${mappedChainId}`,
                       )
                       mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_POPUP_CLICKED, {
                         trending_token: tokenData.symbol,
