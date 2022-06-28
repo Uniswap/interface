@@ -17,6 +17,7 @@ interface Window {
   web3?: {}
   version?: string
   coin98?: any
+  dataLayer?: any[]
 }
 
 declare module 'content-hash' {

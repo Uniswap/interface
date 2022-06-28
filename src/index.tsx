@@ -18,7 +18,6 @@ import CampaignsUpdater from 'state/campaigns/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 import SEO from './components/SEO'
-import ReactGA from 'react-ga'
 import TagManager from 'react-gtm-module'
 import * as Sentry from '@sentry/react'
 import 'swiper/swiper-bundle.min.css'
@@ -49,39 +48,12 @@ function Updaters() {
   )
 }
 
-const initGoogleAnalytics = () => {
-  /*
-  const gaLinkScript = document.createElement('script')
-  gaLinkScript.async = true
-  gaLinkScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-69MK4SBS26'
-
-  const gaScript = document.createElement('script')
-  gaScript.innerHTML = `
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag('js', new Date());
-  gtag('config', 'G-69MK4SBS26');
-`
-
-  document.head.insertBefore(gaScript, document.head.childNodes[0])
-  document.head.insertBefore(gaLinkScript, document.head.childNodes[0])
-  */
-  ReactGA.initialize('UA-207888714-1')
-}
-
-const initGoogleTagManager = () => {
+if (process.env.REACT_APP_GTM_ID) {
   const tagManagerArgs = {
-    gtmId: 'GTM-TRQCJ8F',
+    gtmId: process.env.REACT_APP_GTM_ID,
   }
 
   TagManager.initialize(tagManagerArgs)
-}
-
-if (process.env.REACT_APP_MAINNET_ENV === 'production') {
-  initGoogleAnalytics()
-  initGoogleTagManager()
 }
 
 if (window.location.href.includes('kyberswap')) {
