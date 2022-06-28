@@ -19,8 +19,8 @@ enum Category {
   volume = 'Volume',
 }
 enum SortDirection {
-  inc = 'increasing',
-  dec = 'decreasing',
+  Increasing = 'Increasing',
+  Decreasing = 'Decreasing',
 }
 const SORT_CATEGORIES = Object.values(Category)
 
@@ -35,25 +35,28 @@ const TokenRowWrapper = styled.div`
   margin: 4px 0px;
   max-width: 960px;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  @media only screen and (max-width: 960px) {
     grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
     width: fit-content;
-  `};
+    gap: 16px;
+  }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
     width: fit-content;
+    gap: 16px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-      grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2fr;
-      width: fit-content;
+    grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2.5fr;
+    width: fit-content;
+    gap: 16px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  @media only screen and (max-width: 640px) {
     grid-template-columns: 1fr 7fr 4fr 4fr;
     width: fit-content;
-  `};
+  }
 `
 const HeaderRowWrapper = styled(TokenRowWrapper)`
   width: 100%;
@@ -73,9 +76,9 @@ const Cell = styled.div`
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display:none
-  `};
+  @media only screen and (max-width: 640px) {
+    display: none;
+  }
 `
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
@@ -83,12 +86,13 @@ const ListNumberCell = styled(Cell)`
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
+  padding-left: 8px;
   gap: 8px;
   min-width: 200px;
 `
 const PriceCell = styled(Cell)`
   justify-content: flex-end;
-  align-items: center;
+  min-width: fit-content(max-content, 80px);
 `
 const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
@@ -110,13 +114,12 @@ const VolumeCell = styled(Cell)`
   `};
 `
 const SparkLineCell = styled(Cell)`
-  flex-direction: column;
   padding: 0px 24px;
 
   min-width: 120px;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  @media only screen and (max-width: 960px) {
     display: none;
-  `};
+  }
 `
 const SparkLineImg = styled(Cell)`
   max-width: 124px;
@@ -126,19 +129,15 @@ const SparkLineImg = styled(Cell)`
 `
 
 const SwapCell = styled(Cell)`
-  flex-direction: column;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display:none
-`};
+  @media only screen and (max-width: 640px) {
+    display: none;
+  }
 `
 
 const SwapButton = styled.button`
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 6px;
   font-weight: 600;
 
   width: 54px;
@@ -159,7 +158,6 @@ const TokenSymbol = styled.span`
 const ArrowCell = styled.div`
   padding-left: 4px;
   display: flex;
-  flex-direction: column;
 `
 
 const SortingCategory = styled.span`
@@ -179,13 +177,12 @@ const SortOption = styled.span`
 `
 
 const SortArrowCell = styled(Cell)`
-  flex-direction: column;
   padding-right: 2px;
 `
 
 /* formatting for volume with timeframe header display */
 function getHeaderDisplay(category: string, timeframe: string): string {
-  if (category === Category.volume) return TIME_DISPLAYS[timeframe] + ' ' + category
+  if (category === Category.volume) return `${TIME_DISPLAYS[timeframe]} ${category}`
   return category
 }
 
@@ -206,7 +203,7 @@ function HeaderCell({
     return (
       <SortingCategory>
         <SortArrowCell>
-          {sortDirection === SortDirection.dec ? <ArrowDown size={14} /> : <ArrowUp size={14} />}
+          {sortDirection === SortDirection.Decreasing ? <ArrowDown size={14} /> : <ArrowUp size={14} />}
         </SortArrowCell>
         <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
       </SortingCategory>
@@ -218,7 +215,7 @@ function HeaderCell({
 
 export function HeaderRow({ timeframe }: { timeframe: string }) {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  /* TODO: make column aligned */
+  /* TODO: implement mobile layout */
   const sortedBy = SORT_CATEGORIES[1]
   return (
     <HeaderRowWrapper>
@@ -231,7 +228,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       <PriceCell>
         <HeaderCell
           category={Category.price}
-          sortDirection={SortDirection.dec}
+          sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.price}
           sortable={false}
           timeframe={timeframe}
@@ -240,7 +237,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       <PercentChangeCell>
         <HeaderCell
           category={Category.percent_change}
-          sortDirection={SortDirection.dec}
+          sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.percent_change}
           sortable={false}
           timeframe={timeframe}
@@ -249,7 +246,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       <MarketCapCell>
         <HeaderCell
           category={Category.market_cap}
-          sortDirection={SortDirection.dec}
+          sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.market_cap}
           sortable={true}
           timeframe={timeframe}
@@ -258,7 +255,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       <VolumeCell>
         <HeaderCell
           category={Category.volume}
-          sortDirection={SortDirection.dec}
+          sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.volume}
           sortable={true}
           timeframe={timeframe}
