@@ -2,7 +2,7 @@ import { Connector } from '@web3-react/types'
 import { coinbaseWallet, fortmatic, gnosisSafe, injected, network, walletConnect } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-import { NETWORK_URLS } from 'constants/networks'
+import { RPC_URLS } from 'constants/networks'
 
 function getRpcUrls(chainId: SupportedChainId): [string] {
   switch (chainId) {
@@ -11,7 +11,7 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
     case SupportedChainId.ROPSTEN:
     case SupportedChainId.KOVAN:
     case SupportedChainId.GOERLI:
-      return [NETWORK_URLS[chainId]]
+      return [RPC_URLS[chainId]]
     case SupportedChainId.OPTIMISM:
       return ['https://mainnet.optimism.io']
     case SupportedChainId.OPTIMISTIC_KOVAN:

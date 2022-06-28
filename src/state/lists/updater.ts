@@ -36,7 +36,6 @@ export default function Updater(): null {
     if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
       dispatch(enableList(ARBITRUM_LIST))
     }
-    // TODO Combine once lists are merged
     if (chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)) {
       dispatch(enableList(CELO_LIST))
     }

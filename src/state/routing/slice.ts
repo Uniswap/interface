@@ -2,7 +2,7 @@ import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
-import { NETWORK_URLS } from 'constants/networks'
+import { RPC_URLS } from 'constants/networks'
 import { AUTO_ROUTER_SUPPORTED_CHAINS, getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
@@ -15,7 +15,7 @@ function getRouterProvider(chainId: ChainId): BaseProvider {
   if (provider) return provider
 
   if (AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
-    const provider = new JsonRpcProvider(NETWORK_URLS[chainId])
+    const provider = new JsonRpcProvider(RPC_URLS[chainId])
     routerProviders.set(chainId, provider)
     return provider
   }

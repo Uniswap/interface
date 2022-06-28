@@ -7,7 +7,7 @@ import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
-import { NETWORK_URLS } from 'constants/networks'
+import { RPC_URLS } from 'constants/networks'
 import Fortmatic from 'fortmatic'
 import { useMemo } from 'react'
 
@@ -83,7 +83,7 @@ function getHooksForWallet(wallet: Wallet) {
 }
 
 export const [network, networkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: NETWORK_URLS, defaultChainId: 1 })
+  (actions) => new Network({ actions, urlMap: RPC_URLS, defaultChainId: 1 })
 )
 
 export const [injected, injectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
@@ -95,7 +95,7 @@ export const [walletConnect, walletConnectHooks] = initializeConnector<WalletCon
     new WalletConnect({
       actions,
       options: {
-        rpc: NETWORK_URLS,
+        rpc: RPC_URLS,
         qrcode: true,
       },
       onError,
@@ -111,7 +111,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
     new CoinbaseWallet({
       actions,
       options: {
-        url: NETWORK_URLS[SupportedChainId.MAINNET],
+        url: RPC_URLS[SupportedChainId.MAINNET],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO_URL,
       },

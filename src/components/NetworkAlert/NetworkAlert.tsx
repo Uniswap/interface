@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useMemo } from 'react'
 import { ArrowUpRight } from 'react-feather'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -152,25 +153,26 @@ export function NetworkAlert() {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
 
+  const logoUrl = useMemo(() => {
+    if (!chainId) return ''
+    if ([SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)) {
+      return celoAlternativeLogo
+    } else {
+      const { logoUrl } = CHAIN_INFO[chainId]
+      return logoUrl
+    }
+  }, [chainId])
+
   if (!shouldShowAlert(chainId)) {
     return null
   }
 
-  const { label, logoUrl, bridge } = CHAIN_INFO[chainId]
+  const { label, bridge } = CHAIN_INFO[chainId]
   const textColor = TEXT_COLORS[chainId]
-
-  const ALTERNATIVE_LOGO: { [ChainId: number]: string } = {
-    [SupportedChainId.CELO]: celoAlternativeLogo,
-    [SupportedChainId.CELO_ALFAJORES]: celoAlternativeLogo,
-  }
 
   return bridge ? (
     <RootWrapper>
-      <ContentWrapper
-        chainId={chainId}
-        darkMode={darkMode}
-        logoUrl={ALTERNATIVE_LOGO[chainId] ? ALTERNATIVE_LOGO[chainId] : logoUrl}
-      >
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
         <LinkOutToBridge href={bridge}>
           <BodyText color={textColor}>
             <L2Icon src={logoUrl} />

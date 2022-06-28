@@ -299,17 +299,18 @@ export const DAI_CELO = new Token(
 export const CUSD_CELO = new Token(
   SupportedChainId.CELO,
   '0x765DE816845861e75A25fCA122bb6898B8B1282a',
-  6,
+  18,
   'CUSD',
   'Celo Dollar'
 )
 export const CEUR_CELO = new Token(
   SupportedChainId.CELO,
   '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73',
-  6,
+  18,
   'CEUR',
   'Celo Euro Stablecoin'
 )
+
 export const WBTC_CELO = new Token(
   SupportedChainId.CELO,
   '0xBAAB46E28388d2779e6E31Fd00cF0e5Ad95E327B',

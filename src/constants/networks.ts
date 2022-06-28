@@ -12,7 +12,7 @@ export const MAINNET_PROVIDER = new JsonRpcProvider(`https://mainnet.infura.io/v
 /**
  * These are the network URLs used by the interface when there is not another available source of chain data
  */
-export const NETWORK_URLS: { [key in SupportedChainId]: string } = {
+export const RPC_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
