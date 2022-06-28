@@ -100,7 +100,15 @@ export class CachedDocument extends Response {
 
     // Injects a marker into the document so that client code knows it was served from cache.
     // The marker should be injected immediately in the <head> so it is available to client code.
-    return new CachedDocument(text.replace('<head>', '<head><script>window.__isDocumentCached=true</script>'), response)
+    const document = new CachedDocument(
+      text.replace('<head>', '<head><script>window.__isDocumentCached=true</script>'),
+      response
+    )
+
+    // Some browsers (Android 12; Chrome 91) duplicate the content-type header, invalidating it.
+    document.headers.set('Content-Type', 'text/html')
+
+    return document
   }
 
   private constructor(text: string, public response: Response) {
