@@ -106,7 +106,10 @@ export class CachedDocument extends Response {
     )
 
     // Some browsers (Android 12; Chrome 91) duplicate the content-type header, invalidating it.
-    document.headers.set('Content-Type', 'text/html')
+    document.headers.delete('content-type')
+    document.headers.delete('Content-type')
+    document.headers.delete('Content-Type')
+    document.headers.set('Content-Type', 'text/html; charset=utf-8')
 
     return document
   }
