@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { AppStackParamList, useAppStackNavigation } from 'src/app/navigation/types'
+import { ExploreStackParamList, useAppStackNavigation } from 'src/app/navigation/types'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -19,10 +19,9 @@ import { Text } from 'src/components/Text'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<AppStackParamList, Screens.User>
+type Props = NativeStackScreenProps<ExploreStackParamList, Screens.User>
 
 export function UserScreen({
   route: {
@@ -33,7 +32,6 @@ export function UserScreen({
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const navigation = useAppStackNavigation()
-  const displayName = useDisplayName(address)
 
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
 
@@ -85,7 +83,7 @@ export function UserScreen({
           variant="headlineMedium"
         />
       }
-      title={displayName?.name}>
+      titleElement={<AddressDisplay address={address} captionVariant="subhead" size={16} />}>
       <VirtualizedList>
         <Flex gap="lg" px="md">
           {/* profile info */}

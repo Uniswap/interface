@@ -3,6 +3,7 @@ import { utils } from 'ethers'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Masonry } from 'src/components/layout/Masonry'
 import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
@@ -12,7 +13,7 @@ import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 
@@ -26,6 +27,8 @@ export function PortfolioNFTsScreen({
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
+  const displayName = useDisplayName(owner)
+
   const { t } = useTranslation()
 
   const { currentData: nftsByCollection, isLoading: loading } = useNftBalancesQuery(
@@ -57,14 +60,24 @@ export function PortfolioNFTsScreen({
     [onPressItem]
   )
 
+  const isOtherOwner = owner && owner !== accountAddress
+
   return (
     <ScrollDetailScreen
       contentHeader={
         <Text mb="md" mx="xs" variant="headlineSmall">
-          {t('Your NFTs')}
+          {isOtherOwner
+            ? t("{{displayName}}'s NFTs", { displayName: displayName?.name || owner })
+            : t('Your NFTs')}
         </Text>
       }
-      title={t('Your NFTs')}>
+      titleElement={
+        isOtherOwner ? (
+          <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+        ) : (
+          <Text variant="subhead">{t('Your NFTs')}</Text>
+        )
+      }>
       <Masonry
         data={nftItems}
         getKey={({ asset_contract, token_id }) => getNFTAssetKey(asset_contract.address, token_id)}

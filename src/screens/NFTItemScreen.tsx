@@ -24,6 +24,7 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
+import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { openUri } from 'src/utils/linking'
@@ -38,6 +39,7 @@ export function NFTItemScreen({
   const { t } = useTranslation()
 
   const { asset } = useNFT(owner, address, token_id)
+  const accountAddress = useActiveAccountAddress()
 
   // TODO: better handle error / loading states
   if (!asset) return null
@@ -56,6 +58,8 @@ export function NFTItemScreen({
     }
     navigation.push(Screens.Transfer, { transferFormState })
   }
+
+  const isMyNFT = owner && owner === accountAddress
 
   return (
     <ScrollDetailScreen>
@@ -103,30 +107,38 @@ export function NFTItemScreen({
         {/* Action buttons */}
         <Flex centered row>
           <PrimaryButton
+            borderColor="backgroundOutline"
+            borderWidth={1}
             flex={1}
             icon={<OpenSeaIcon color={theme.colors.white} height={20} width={20} />}
-            label={t('View')}
+            label="OpenSea"
             name={ElementName.NFTAssetViewOnOpensea}
             testID={ElementName.NFTAssetViewOnOpensea}
             variant="black"
             onPress={() => openUri(asset.permalink)}
           />
-          <PrimaryButton
-            flex={1}
-            icon={<SendIcon height={20} stroke={theme.colors.white} strokeWidth={2} width={20} />}
-            label={t('Send')}
-            name={ElementName.Send}
-            testID={ElementName.Send}
-            variant="black"
-            onPress={onPressSend}
-          />
+          {isMyNFT && (
+            <PrimaryButton
+              borderColor="backgroundOutline"
+              borderWidth={1}
+              flex={1}
+              icon={<SendIcon height={20} stroke={theme.colors.white} strokeWidth={2} width={20} />}
+              label={t('Send')}
+              name={ElementName.Send}
+              testID={ElementName.Send}
+              variant="black"
+              onPress={onPressSend}
+            />
+          )}
         </Flex>
 
         {/* Metadata */}
         <Flex gap="sm">
-          <Flex gap="md">
-            <Text color="textSecondary" variant="subhead">{t`About this NFT`}</Text>
-            <Text color="textSecondary" variant="caption">
+          <Flex gap="sm">
+            <Text color="textSecondary" variant="headlineSmall">
+              {t('Description')}
+            </Text>
+            <Text color="textPrimary" variant="bodySmall">
               {asset.collection.description}
             </Text>
           </Flex>

@@ -14,6 +14,9 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
+type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
+  Pick<NFTAsset.Asset, 'token_id'>
+
 export type TabParamList = {
   [Tabs.Home]: undefined
   [Tabs.Explore]: undefined
@@ -25,8 +28,7 @@ export type HomeStackParamList = {
   [Screens.PortfolioTokens]: { owner: Address | undefined }
   [Screens.TokenDetails]: { currencyId: string }
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
-  [Screens.NFTItem]: { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
-    Pick<NFTAsset.Asset, 'token_id'>
+  [Screens.NFTItem]: NFTItem
 }
 
 export type ExploreStackParamList = {
@@ -34,6 +36,9 @@ export type ExploreStackParamList = {
   [Screens.ExploreTokens]: undefined
   [Screens.ExploreFavorites]: undefined
   [Screens.TokenDetails]: { currencyId: string }
+  [Screens.PortfolioNFTs]: { owner: Address | undefined }
+  [Screens.User]: { address: string }
+  [Screens.NFTItem]: NFTItem
 }
 
 export type AccountStackParamList = {
@@ -124,7 +129,6 @@ export type AppStackParamList = {
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.Transfer]: { transferFormState?: TransactionState } | undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
-  [Screens.User]: { address: string }
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

@@ -54,7 +54,8 @@ export function UniconTestModal() {
       <ScrollView>
         <PrimaryButton
           label="Show / hide all possible Unicons"
-          onPress={() => setToggleCombos(!toggleCombos)}></PrimaryButton>
+          onPress={() => setToggleCombos(!toggleCombos)}
+        />
         {toggleCombos &&
           Array.from(Array(UniconNumOptions[UniconAttributes.Shape]).keys()).map((i) => (
             <Flex key={'Flex' + i}>

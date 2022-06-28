@@ -207,6 +207,9 @@ export function ExploreStackNavigator() {
       <ExploreStack.Screen component={ExploreTokensScreen} name={Screens.ExploreTokens} />
       <ExploreStack.Screen component={ExploreFavoritesScreen} name={Screens.ExploreFavorites} />
       <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+      <ExploreStack.Screen component={UserScreen} name={Screens.User} />
+      <ExploreStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
+      <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
     </ExploreStack.Navigator>
   )
 }
@@ -302,7 +305,6 @@ export function AppStackNavigator() {
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
-      <AppStack.Screen component={UserScreen} name={Screens.User} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Screen
         component={SettingsWalletManageConnection}

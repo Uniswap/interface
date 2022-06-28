@@ -1,12 +1,12 @@
 import React from 'react'
-import { useHomeStackNavigation } from 'src/app/navigation/types'
+import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Screens } from 'src/screens/Screens'
 
 export default function EnsNameResults({ names }: { names: { name: string; address: Address }[] }) {
-  const navigation = useHomeStackNavigation()
+  const navigation = useExploreStackNavigation()
 
   const onPress = (item: { name: string; address: Address }) => {
     navigation.navigate(Screens.User, { address: item.address })
