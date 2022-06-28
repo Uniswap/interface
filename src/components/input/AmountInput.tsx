@@ -4,12 +4,28 @@ import { escapeRegExp } from 'src/utils/string'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
 
-export function AmountInput({ onChangeText, ...rest }: TextInputProps) {
+type Props = {
+  showCurrencySign: boolean
+} & TextInputProps
+
+export function AmountInput({ onChangeText, value, showCurrencySign, ...rest }: Props) {
   const handleChange = (text: string) => {
-    if (text === '' || inputRegex.test(escapeRegExp(text))) {
-      onChangeText(text)
+    const parsedText = showCurrencySign ? text.substring(1) : text
+
+    if (parsedText === '' || inputRegex.test(escapeRegExp(parsedText))) {
+      onChangeText(parsedText)
     }
   }
 
-  return <TextInput keyboardType="numeric" onChangeText={handleChange} {...rest} />
+  // TODO: handle non-dollar currencies in the future
+  const formattedValue = showCurrencySign ? `$${value}` : value
+
+  return (
+    <TextInput
+      keyboardType="numeric"
+      value={formattedValue}
+      onChangeText={handleChange}
+      {...rest}
+    />
+  )
 }

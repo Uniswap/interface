@@ -75,6 +75,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           placeholder="0"
           px="none"
           py="none"
+          showCurrencySign={isUSDInput}
           showSoftInputOnFocus={false}
           testID={'amount-input-in'}
           value={value}
