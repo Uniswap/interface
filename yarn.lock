@@ -4613,10 +4613,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz#dc3d911f65a860fc3f0cae074bdcd08ed6a27a4d"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/redux-multicall@^1.1.1":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.3.tgz#63c0a6bde8315b9e701d051f0f87c7e7bb4b056b"
-  integrity sha512-bqie7gbG39wofbWRCbK7iBoNy+LtS4JxIUFviK+iM5cJa0s5og6flZFd6z9DMvNFK+20YjotLelzA3kxXMwNtw==
+"@uniswap/redux-multicall@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.4.tgz#f24252464d38b7c64b902b23045d4159844cbffd"
+  integrity sha512-bl+Zhiayq/he/fS/DvDjytziV1IforNoADDp0zRBOwhV6mCR2VAmiEiTD9xaUGWHl1UFpJ9P1IoDK5W+JnvP9Q==
 
 "@uniswap/router-sdk@^1.0.3", "@uniswap/router-sdk@^1.0.5":
   version "1.0.6"
