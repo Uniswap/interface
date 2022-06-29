@@ -117,7 +117,7 @@ export default function Option({
       onClick={onClick}
       clickable={clickable && !active}
       active={active}
-      data-test="wallet-modal-option"
+      data-testid="wallet-modal-option"
     >
       <OptionCardLeft>
         <HeaderText color={color}>

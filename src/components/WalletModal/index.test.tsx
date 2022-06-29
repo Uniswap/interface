@@ -35,6 +35,7 @@ test('Loads Wallet Modal on desktop', async () => {
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
   expect(screen.getByText('Fortmatic')).toBeInTheDocument()
+  expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
 })
 
 test('Loads Wallet Modal on desktop with MetaMask installed', async () => {
@@ -45,6 +46,7 @@ test('Loads Wallet Modal on desktop with MetaMask installed', async () => {
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
   expect(screen.getByText('Fortmatic')).toBeInTheDocument()
+  expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
 })
 
 test('Loads Wallet Modal on mobile', async () => {
@@ -56,6 +58,7 @@ test('Loads Wallet Modal on mobile', async () => {
   expect(screen.getByText('Open in Coinbase Wallet')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
   expect(screen.getByText('Fortmatic')).toBeInTheDocument()
+  expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(3)
 })
 
 test('Loads Wallet Modal on MetaMask browser', async () => {
@@ -64,6 +67,7 @@ test('Loads Wallet Modal on MetaMask browser', async () => {
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('MetaMask')).toBeInTheDocument()
+  expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(1)
 })
 
 test('Loads Wallet Modal on Coinbase Wallet browser', async () => {
@@ -72,4 +76,5 @@ test('Loads Wallet Modal on Coinbase Wallet browser', async () => {
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
+  expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(1)
 })
