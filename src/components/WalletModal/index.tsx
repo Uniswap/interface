@@ -120,7 +120,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, account } = useWeb3React()
+  const { connector, account, isActive } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -188,10 +188,10 @@ export default function WalletModal({
     const isTally = !!window.ethereum?.isTally
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
-      const isActive = option.connector === connector
+      const optionIsActive = option.connector === connector && isActive
 
       const optionProps = {
-        active: isActive,
+        isActive: optionIsActive,
         id: `connect-${key}`,
         link: option.href,
         header: option.name,
@@ -257,7 +257,7 @@ export default function WalletModal({
               }}
               color={'#E8831D'}
               header={<Trans>Tally</Trans>}
-              active={option.connector === connector}
+              isActive={option.connector === connector}
               subheader={null}
               link={null}
               icon={TallyIcon}
