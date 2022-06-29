@@ -8,6 +8,7 @@ import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { Box, Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -75,11 +76,9 @@ export function ExploreTokensScreen() {
         }
         data={tokens}
         fixedHeader={
-          <Flex row alignItems="center" justifyContent="space-between">
-            <BackButton />
+          <BackHeader>
             <Text variant="subhead">{t('Tokens')}</Text>
-            <Box width={18} />
-          </Flex>
+          </BackHeader>
         }
         keyExtractor={key}
         renderItem={renderItem}

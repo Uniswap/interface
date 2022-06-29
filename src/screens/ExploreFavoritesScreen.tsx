@@ -6,6 +6,7 @@ import { FavoritesEmptyState } from 'src/components/explore/FavoriteTokensSectio
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { Heart } from 'src/components/icons/Heart'
 import { Box, Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -58,11 +59,9 @@ export function ExploreFavoritesScreen() {
       }
       data={tokens}
       fixedHeader={
-        <Flex row alignItems="center" justifyContent="space-between">
-          <BackButton />
+        <BackHeader>
           <Text variant="subhead">{t('Favorite tokens')}</Text>
-          <Box width={18} />
-        </Flex>
+        </BackHeader>
       }
       keyExtractor={key}
       renderItem={renderItem}

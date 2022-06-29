@@ -6,7 +6,8 @@ import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Masonry } from 'src/components/layout/Masonry'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
@@ -76,8 +77,7 @@ export function PortfolioNFTsScreen({
         </Flex>
       }
       fixedHeader={
-        <Flex row alignItems="center" justifyContent="space-between">
-          <BackButton />
+        <BackHeader>
           {isOtherOwner ? (
             <Flex centered gap="none">
               <AddressDisplay address={owner} captionVariant="subhead" size={16} />
@@ -88,8 +88,7 @@ export function PortfolioNFTsScreen({
           ) : (
             <Text variant="subhead">{t('Your NFTs')}</Text>
           )}
-          <Box width={18} />
-        </Flex>
+        </BackHeader>
       }>
       <Masonry
         data={nftItems}

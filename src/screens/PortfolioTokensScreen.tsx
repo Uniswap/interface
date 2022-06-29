@@ -6,6 +6,7 @@ import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Box, Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -67,8 +68,7 @@ export function PortfolioTokensScreen({
       }
       data={balances}
       fixedHeader={
-        <Flex row alignItems="center" justifyContent="space-between">
-          <BackButton size={18} />
+        <BackHeader>
           <Flex centered gap="none">
             {isOtherOwner ? (
               <AddressDisplay address={owner} captionVariant="subhead" size={16} />
@@ -79,8 +79,7 @@ export function PortfolioTokensScreen({
               {isOtherOwner ? t('Tokens') : t('Your tokens')}
             </Text>
           </Flex>
-          <Box width={18} />
-        </Flex>
+        </BackHeader>
       }
       keyExtractor={(item: PortfolioBalance) => currencyId(item.amount.currency)}
       renderItem={renderItem}

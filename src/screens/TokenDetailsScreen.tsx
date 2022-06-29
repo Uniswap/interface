@@ -10,6 +10,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -174,11 +175,9 @@ function TokenDetails({ currency }: { currency: Currency }) {
       <HeaderScrollScreen
         contentHeader={<BackButton showButtonLabel />}
         fixedHeader={
-          <Flex row alignItems="center" justifyContent="space-between">
-            <BackButton color="textPrimary" size={18} />
+          <BackHeader>
             <HeaderTitleElement currency={currency} />
-            <Box width={18} />
-          </Flex>
+          </BackHeader>
         }>
         <Flex gap="md" my="md">
           <TokenDetailsHeader currency={currency} />

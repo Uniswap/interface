@@ -13,6 +13,7 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
@@ -88,11 +89,9 @@ export function UserScreen({
         </Flex>
       }
       fixedHeader={
-        <Flex row alignItems="center" justifyContent="space-between">
-          <BackButton size={18} />
+        <BackHeader>
           <AddressDisplay address={address} captionVariant="subhead" size={16} />
-          <Box width={18} />
-        </Flex>
+        </BackHeader>
       }>
       <VirtualizedList>
         <Flex gap="lg" px="md">
