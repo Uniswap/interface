@@ -85,6 +85,10 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
+
+  @media only screen and (max-width: 390px) {
+    display: none;
+  }
 `
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};

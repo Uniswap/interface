@@ -5,7 +5,6 @@ import styled from 'styled-components/macro'
 
 import TokenRow, { HeaderRow } from './TokenRow'
 
-//   min-width: 360px;
 const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
