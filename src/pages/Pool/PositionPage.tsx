@@ -26,7 +26,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
@@ -313,7 +313,23 @@ const useInverter = ({
   }
 }
 
-export function PositionPage({
+export function PositionPage(props: RouteComponentProps<{ tokenId?: string }>) {
+  const {
+    match: {
+      params: { tokenId: tokenIdFromUrl },
+    },
+  } = props
+
+  //tokenId cannot not be a exponential or floating value
+  const tokenId = Number(tokenIdFromUrl?.toLowerCase().includes('e') ? '0' : tokenIdFromUrl)
+
+  if (Number.isSafeInteger(tokenId) && tokenId > 0) {
+    return <PositionPageBody {...props} />
+  }
+  return <Redirect to={`/pool`} />
+}
+
+export function PositionPageBody({
   match: {
     params: { tokenId: tokenIdFromUrl },
   },
