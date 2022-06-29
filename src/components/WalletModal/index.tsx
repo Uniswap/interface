@@ -202,7 +202,6 @@ export default function WalletModal({
       }
 
       // check for mobile options
-      console.log(isMetaMask, isCoinbaseWallet)
       if (isMobile) {
         if (
           (!window.web3 && !window.ethereum && option.mobile) ||
