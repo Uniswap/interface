@@ -178,7 +178,7 @@
     "react-router-dom": "^6.3.0",
     "react-spring": "^8.0.27",
     "react-use-gesture": "^6.0.14",
-    "react-virtualized-auto-sizer": "^1.0.2",
+    "react-virtualized-auto-sizer": "^1.0.1",
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
     "redux": "^4.1.2",
