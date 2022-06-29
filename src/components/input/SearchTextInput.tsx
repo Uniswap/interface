@@ -151,7 +151,8 @@ export function SearchTextInput(props: SearchTextInputProps) {
           fontWeight="500"
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textTertiary}
-          returnKeyType="search"
+          returnKeyType="done"
+          textContentType="none"
           value={value ?? undefined}
           onChangeText={onChangeTextInput}
           onFocus={onTextInputFocus}
