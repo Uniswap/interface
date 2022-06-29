@@ -82,7 +82,7 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {
-  [ChainId.MAINNET]: `https://cloudflare-eth.com/v1/mainnet/geth?appId=prod-dmm-interface`,
+  [ChainId.MAINNET]: `https://proxy.kyberengineering.io/ethereum`,
   [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.GÖRLI]: `https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,

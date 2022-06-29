@@ -902,9 +902,6 @@ export const useGlobalMixpanelEvents = () => {
         case 'campaign':
           pageName = 'Campaign'
           break
-        case 'elastic/pool':
-          pageName = 'Elastic - Pool'
-          break
         case 'elastic/remove':
           pageName = 'Elastic - Remove Liquidity'
           break
