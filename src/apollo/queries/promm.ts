@@ -197,3 +197,17 @@ export const PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS = gql`
     }
   }
 `
+
+export const PROMM_GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS = gql`
+  query getPoolValuesAfterBurnsSuccess($transactionHash: String!) {
+    transaction(id: $transactionHash) {
+      id
+      mints {
+        id
+        amount0
+        amount1
+        amountUSD
+      }
+    }
+  }
+`

@@ -1,6 +1,8 @@
+import { useActiveWeb3React } from 'hooks/index'
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NETWORK_LABEL } from 'constants/networks'
+import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import mixpanel from 'mixpanel-browser'
 import { isMobile } from 'react-device-detect'
 import { Field } from 'state/swap/actions'
@@ -8,12 +10,26 @@ import { useSwapState } from 'state/swap/hooks'
 import { Aggregator } from 'utils/aggregator'
 import { useCallback, useEffect, useMemo } from 'react'
 import { usePrevious } from 'react-use'
-import { useSelector } from 'react-redux'
-import { useETHPrice } from 'state/application/hooks'
-import { AppState } from 'state'
+import { useDispatch, useSelector } from 'react-redux'
+import { useETHPrice, useExchangeClient } from 'state/application/hooks'
+import { AppDispatch, AppState } from 'state'
 import { formatUnits, isAddress } from 'ethers/lib/utils'
 import { useLocation } from 'react-router-dom'
 import { nativeNameFromETH } from 'utils'
+import { TransactionDetails } from 'state/transactions/reducer'
+import { prommClient } from 'apollo/client'
+import {
+  TRANSACTION_SWAP_AMOUNT_USD,
+  GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
+  GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
+  GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS,
+} from 'apollo/queries'
+import {
+  PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
+  PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
+  PROMM_GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS,
+} from 'apollo/queries/promm'
+import { checkedSubgraph } from 'state/transactions/actions'
 export enum MIXPANEL_TYPE {
   PAGE_VIEWED,
   WALLET_CONNECTED,
@@ -95,6 +111,16 @@ export enum MIXPANEL_TYPE {
   CAMPAIGN_CLAIM_REWARDS_CLICKED,
 }
 
+export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
+  'Swap',
+  'Add liquidity',
+  'Elastic Add liquidity',
+  'Remove liquidity',
+  'Elastic Remove liquidity',
+  'Create pool',
+  'Elastic Create pool',
+]
+
 export default function useMixpanel(trade?: Aggregator | undefined, currencies?: { [field in Field]?: Currency }) {
   const { chainId, account } = useWeb3React()
   const { saveGas } = useSwapState()
@@ -105,6 +131,8 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
   const outputSymbol = outputCurrency && outputCurrency.isNative ? nativeNameFromETH(chainId) : outputCurrency?.symbol
   const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
   const ethPrice = useETHPrice()
+  const dispatch = useDispatch<AppDispatch>()
+  const apolloClient = useExchangeClient()
   const mixpanelHandler = useCallback(
     (type: MIXPANEL_TYPE, payload?: any) => {
       if (!account) {
@@ -533,7 +561,220 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currencies, network, saveGas, account, trade, mixpanel.hasOwnProperty('get_distinct_id')],
   )
-  return { mixpanelHandler }
+  const subgraphMixpanelHandler = useCallback(
+    async (transaction: TransactionDetails) => {
+      const apolloProMMClient = prommClient[chainId as ChainId]
+
+      const hash = transaction.hash
+      if (!chainId) return
+      switch (transaction.type) {
+        case 'Swap':
+          const res = await apolloClient.query({
+            query: TRANSACTION_SWAP_AMOUNT_USD,
+            variables: {
+              transactionHash: hash,
+            },
+            fetchPolicy: 'network-only',
+          })
+          if (
+            !res.data?.transaction?.swaps &&
+            transaction.confirmedTime &&
+            new Date().getTime() - transaction.confirmedTime < 3600000
+          )
+            break
+          mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
+            arbitrary: transaction.arbitrary,
+            actual_gas: transaction.receipt?.gasUsed || '',
+            amountUSD: !!res.data?.transaction?.swaps
+              ? Math.max(res.data.transaction.swaps.map((s: any) => parseFloat(s.amountUSD).toPrecision(3)))
+              : '',
+            tx_hash: hash,
+          })
+          dispatch(checkedSubgraph({ chainId, hash }))
+          break
+        case 'Add liquidity': {
+          const res = await apolloClient.query({
+            query: GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
+            variables: {
+              poolAddress: transaction.arbitrary.poolAddress.toLowerCase(),
+            },
+            fetchPolicy: 'network-only',
+          })
+          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+            if (
+              !res.data?.pool?.mints ||
+              res.data.pool.mints.every((mint: { id: string }) => !mint.id.startsWith(transaction.hash))
+            )
+              break
+          }
+          const { reserve0, reserve1, reserveUSD } = res.data.pool
+          const mint = res.data.pool.mints.find((mint: { id: string }) => mint.id.startsWith(transaction.hash))
+          mixpanelHandler(MIXPANEL_TYPE.ADD_LIQUIDITY_COMPLETED, {
+            token_1_pool_qty: reserve0,
+            token_2_pool_qty: reserve1,
+            liquidity_USD: reserveUSD,
+            token_1: transaction.arbitrary.token_1,
+            token_2: transaction.arbitrary.token_2,
+            token_1_qty: mint?.amount0,
+            token_2_qty: mint?.amount1,
+            tx_liquidity_USD: mint?.amountUSD,
+            add_liquidity_method: transaction.arbitrary.add_liquidity_method,
+            amp: transaction.arbitrary.amp,
+            tx_hash: hash,
+          })
+          dispatch(checkedSubgraph({ chainId, hash }))
+          break
+        }
+        case 'Elastic Add liquidity': {
+          const res = await apolloProMMClient.query({
+            query: PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
+            variables: {
+              poolAddress: transaction.arbitrary.poolAddress.toLowerCase(),
+            },
+            fetchPolicy: 'network-only',
+          })
+          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+            if (
+              !res.data?.pool?.mints ||
+              res.data.pool.mints.every((mint: { id: string }) => !mint.id.startsWith(transaction.hash))
+            )
+              break
+          }
+          const { totalValueLockedToken0, totalValueLockedToken1, totalValueLockedUSD, feeTier } = res.data.pool
+          const mint = res.data.pool.mints.find((mint: { id: string }) => mint.id.startsWith(transaction.hash))
+          mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_COMPLETED, {
+            token_1_pool_qty: totalValueLockedToken0,
+            token_2_pool_qty: totalValueLockedToken1,
+            liquidity_USD: totalValueLockedUSD,
+            token_1: transaction.arbitrary.token_1,
+            token_2: transaction.arbitrary.token_2,
+            token_1_qty: mint?.amount0,
+            token_2_qty: mint?.amount1,
+            tx_liquidity_USD: mint?.amountUSD,
+            fee_tier: feeTier / ELASTIC_BASE_FEE_UNIT,
+            tx_hash: hash,
+          })
+          dispatch(checkedSubgraph({ chainId, hash }))
+          break
+        }
+        case 'Remove liquidity': {
+          const res = await apolloClient.query({
+            query: GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
+            variables: {
+              poolAddress: transaction.arbitrary.poolAddress.toLowerCase(),
+            },
+            fetchPolicy: 'network-only',
+          })
+
+          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+            if (
+              !res.data?.pool?.burns ||
+              res.data.pool.burns.every((burn: { id: string }) => !burn.id.startsWith(transaction.hash))
+            )
+              break
+          }
+          const { reserve0, reserve1, reserveUSD } = res.data.pool
+          const burn = res.data.pool.burns.find((burn: { id: string }) => burn.id.startsWith(transaction.hash))
+          mixpanelHandler(MIXPANEL_TYPE.REMOVE_LIQUIDITY_COMPLETED, {
+            token_1_pool_qty: reserve0,
+            token_2_pool_qty: reserve1,
+            liquidity_USD: reserveUSD,
+            token_1: transaction.arbitrary.token_1,
+            token_2: transaction.arbitrary.token_2,
+            token_1_qty: burn?.amount0,
+            token_2_qty: burn?.amount1,
+            tx_liquidity_USD: burn?.amountUSD,
+            remove_liquidity_method: transaction.arbitrary.remove_liquidity_method,
+            amp: transaction.arbitrary.amp,
+            tx_hash: hash,
+          })
+          dispatch(checkedSubgraph({ chainId, hash }))
+          break
+        }
+        case 'Elastic Remove liquidity': {
+          const res = await apolloProMMClient.query({
+            query: PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
+            variables: {
+              poolAddress: transaction.arbitrary.poolAddress.toLowerCase(),
+            },
+            fetchPolicy: 'network-only',
+          })
+          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+            if (
+              !res.data?.pool?.burns ||
+              res.data.pool.burns.every((burn: { id: string }) => !burn.id.startsWith(transaction.hash))
+            )
+              break
+          }
+          const { totalValueLockedToken0, totalValueLockedToken1, totalValueLockedUSD, feeTier } = res.data.pool
+          const burn = res.data.pool.burns.find((burn: { id: string }) => burn.id.startsWith(transaction.hash))
+          mixpanelHandler(MIXPANEL_TYPE.ELASTIC_REMOVE_LIQUIDITY_COMPLETED, {
+            token_1_pool_qty: totalValueLockedToken0,
+            token_2_pool_qty: totalValueLockedToken1,
+            liquidity_USD: totalValueLockedUSD,
+            token_1: transaction.arbitrary.token_1,
+            token_2: transaction.arbitrary.token_2,
+            token_1_qty: burn?.amount0,
+            token_2_qty: burn?.amount1,
+            tx_liquidity_USD: burn?.amountUSD,
+            fee_tier: feeTier / ELASTIC_BASE_FEE_UNIT,
+            tx_hash: hash,
+          })
+          dispatch(checkedSubgraph({ chainId, hash }))
+          break
+        }
+        case 'Create pool': {
+          const res = await apolloClient.query({
+            query: GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS,
+            variables: {
+              transactionHash: hash,
+            },
+            fetchPolicy: 'network-only',
+          })
+          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+            if (!res.data?.transaction?.mints || res.data.transaction.mints.length === 0) break
+          }
+          const { amount0, amount1, amountUSD } = res.data.transaction.mints[0]
+          mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_COMPLETED, {
+            token_1: transaction.arbitrary.token_1,
+            token_2: transaction.arbitrary.token_2,
+            amp: transaction.arbitrary.amp,
+            tx_hash: hash,
+            token_1_qty: amount0,
+            token_2_qty: amount1,
+            tx_liquidity_USD: amountUSD,
+          })
+          break
+        }
+        case 'Elastic Create pool': {
+          const res = await apolloProMMClient.query({
+            query: PROMM_GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS,
+            variables: {
+              transactionHash: hash,
+            },
+            fetchPolicy: 'network-only',
+          })
+          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+            if (!res.data?.transaction?.mints || res.data.transaction.mints.length === 0) break
+          }
+          const { amount0, amount1, amountUSD } = res.data.transaction.mints[0]
+          mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_COMPLETED, {
+            token_1: transaction.arbitrary.token_1,
+            token_2: transaction.arbitrary.token_2,
+            tx_hash: hash,
+            token_1_qty: amount0,
+            token_2_qty: amount1,
+            tx_liquidity_USD: amountUSD,
+          })
+          break
+        }
+        default:
+          break
+      }
+    },
+    [chainId, dispatch, apolloClient, mixpanelHandler],
+  )
+  return { mixpanelHandler, subgraphMixpanelHandler }
 }
 
 export const useGlobalMixpanelEvents = () => {
