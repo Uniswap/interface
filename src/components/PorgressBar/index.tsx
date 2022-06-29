@@ -11,6 +11,7 @@ const ProgressBarContainer = styled.div<{ height?: string }>`
 const ProgressBarFill = styled.div<{ progress: number }>`
   height: 100%;
   width: ${({ progress }) => `${progress}%` ?? '100%'};
+  color: ${({ theme, progress }) => (progress < 10 ? theme.black : theme.text1)};
   background-color: ${({ theme }) => theme.primary3};
   border-radius: 40px;
   text-align: right;
@@ -18,7 +19,6 @@ const ProgressBarFill = styled.div<{ progress: number }>`
 `
 
 const ProgressBarText = styled.span`
-  color: ${({ theme }) => theme.text1};
   padding: 10px;
   font-weight: 900;
 `

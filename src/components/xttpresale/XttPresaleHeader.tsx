@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 
 import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import { Separator, ThemedText } from '../../theme'
+import Loader from '../Loader'
 import ProgressBar from '../PorgressBar'
 import { RowBetween, RowFixed } from '../Row'
 
@@ -13,8 +14,9 @@ const StyledXttPresaleHeader = styled.div`
   width: 100%;
   color: ${({ theme }) => theme.text2};
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-direction: column;
+  align-items: center;
 `
 
 interface Props {
@@ -26,12 +28,38 @@ export default function XttPresaleHeader({ state }: Props) {
     if (state.status !== Status.SUCCESS) {
       return null
     }
-    console.log(formatEther(state.hardCapEthAmount))
-    return {}
+    return {
+      hardCap: formatEther(state.hardCapEthAmount),
+      totalBought: formatEther(state.totalBought),
+    }
   }, [state])
 
+  const progress = useMemo(() => {
+    if (!formattedState) {
+      return 0
+    }
+    const progressRaw = (+formattedState.totalBought * 100) / +formattedState.hardCap
+    console.log(progressRaw)
+    return Math.round(progressRaw * 100) / 100
+  }, [formattedState])
+
   if (state.status !== Status.SUCCESS) {
-    return null
+    return (
+      <StyledXttPresaleHeader>
+        <Loader size="48px" />
+      </StyledXttPresaleHeader>
+    )
+  }
+
+  const timeConverter = (timestamp: number) => {
+    const a = new Date(timestamp * 1000)
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const year = a.getFullYear()
+    const month = months[a.getMonth()]
+    const date = a.getDate()
+    const hour = a.getHours()
+    const min = a.getMinutes()
+    return `${date} ${month} ${year} 0${hour}:0${min} UTC 00:00`
   }
 
   return (
@@ -50,7 +78,7 @@ export default function XttPresaleHeader({ state }: Props) {
             Start time:
           </ThemedText.Black>
           <ThemedText.Black fontSize={14} style={{ marginLeft: '8px' }}>
-            {0}
+            {timeConverter(state.privateSaleStartTimestamp)}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
@@ -60,7 +88,7 @@ export default function XttPresaleHeader({ state }: Props) {
             End time:
           </ThemedText.Black>
           <ThemedText.Black fontSize={14} style={{ marginLeft: '8px' }}>
-            {0}
+            {timeConverter(state.privateSaleEndTimestamp)}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
@@ -68,17 +96,17 @@ export default function XttPresaleHeader({ state }: Props) {
       <RowBetween>
         <RowFixed>
           <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Sold: {0}
+            Sold: {formattedState?.totalBought}
           </ThemedText.Black>
         </RowFixed>
         <RowFixed>
           <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Hard Cap: {0}
+            Hard Cap: {formattedState?.hardCap}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <ProgressBar progress={0} height="100%" />
+        <ProgressBar progress={progress} height="100%" />
       </RowBetween>
     </StyledXttPresaleHeader>
   )
