@@ -33,7 +33,6 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-//    margin: 4px 0px;
 const TokenRowWrapper = styled.div`
   width: 100%;
   height: 60px;
@@ -71,10 +70,11 @@ const TokenRowWrapper = styled.div`
     width: fit-content;
     min-width: 0px;
     border-bottom: 0.5px solid ${({ theme }) => theme.bg3};
+    padding: 0px;
+
     :last-of-type {
       border-bottom: none;
     }
-    padding: 0px;
   }
 `
 const FavoriteCell = styled(Cell)`
