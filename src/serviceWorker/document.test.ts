@@ -84,15 +84,12 @@ describe('document', () => {
 
     describe('with a thrown fetch', () => {
       it('returns a cached response', async () => {
-        const cached = new Response('<html><head></head><body>mock</body></html>')
+        const cached = new Response('<html><head></head></html>')
         matchPrecache.mockResolvedValueOnce(cached)
         fetch.mockRejectedValueOnce(new Error())
         const response = await handleDocument(options)
         expect(response).toBeInstanceOf(CachedDocument)
-        expect(response.headers.get('Content-Type')).toBe('text/html; charset=utf-8')
-        expect(await response.text()).toBe(
-          '<html><head></head><body><script>window.__isDocumentCached=true</script>mock</body></html>'
-        )
+        expect((response as CachedDocument).response).toBe(cached)
       })
 
       it('rethrows with no cached response', async () => {
@@ -119,7 +116,7 @@ describe('document', () => {
         let cached: Response
 
         beforeEach(() => {
-          cached = new Response('<html><head></head><body>mock</body></html>', { headers: { etag: 'cached' } })
+          cached = new Response('<html><head></head></html>', { headers: { etag: 'cached' } })
           matchPrecache.mockResolvedValueOnce(cached)
         })
 
@@ -137,9 +134,9 @@ describe('document', () => {
           it('returns the cached response', async () => {
             const response = await handleDocument(options)
             expect(response).toBeInstanceOf(CachedDocument)
-            expect(response.headers.get('Content-Type')).toBe('text/html; charset=utf-8')
+            expect((response as CachedDocument).response).toBe(cached)
             expect(await response.text()).toBe(
-              '<html><head></head><body><script>window.__isDocumentCached=true</script>mock</body></html>'
+              '<html><head><script>window.__isDocumentCached=true</script></head></html>'
             )
           })
         })
