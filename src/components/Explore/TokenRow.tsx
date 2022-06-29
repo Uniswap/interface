@@ -4,7 +4,7 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { darken } from 'polished'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
 import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -88,6 +88,13 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
   border-radius: 8px 8px 0px 0px;
 
   @media only screen and (max-width: 390px) {
+    display: none;
+  }
+`
+const FavoriteCell = styled(Cell)`
+  min-width: 40px;
+  color: ${({ theme }) => theme.text2};
+  @media only screen and (max-width: 640px) {
     display: none;
   }
 `
@@ -175,10 +182,8 @@ const SwapButton = styled.button`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-
   width: 54px;
   height: 32px;
-
   background: ${({ theme }) => theme.primary2};
   border-radius: 12px;
   border: none;
@@ -225,6 +230,29 @@ const TokenInfoCell = styled(Cell)`
     gap: 0px;
   }
 `
+/* Loading state bubbles */
+const LoadingBubble = styled.div`
+  background-color: ${({ theme }) => darken(0.1, theme.bg3)};
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+`
+const SmallLoadingBubble = styled(LoadingBubble)`
+  width: 25%;
+`
+const MediumLoadingBubble = styled(LoadingBubble)`
+  width: 65%;
+`
+const LongLoadingBubble = styled(LoadingBubble)`
+  width: 90%;
+`
+const IconLoadingBubble = styled(LoadingBubble)`
+  border-radius: 50%;
+  width: 24px;
+`
+const SparkLineLoadingBubble = styled(LongLoadingBubble)`
+  height: 4px;
+`
 
 /* formatting for volume with timeframe header display */
 function getHeaderDisplay(category: string, timeframe: string): string {
@@ -232,6 +260,7 @@ function getHeaderDisplay(category: string, timeframe: string): string {
   return category
 }
 
+/* Get singular header cell for header row */
 function HeaderCell({
   category,
   sortDirection,
@@ -259,19 +288,59 @@ function HeaderCell({
   return <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
 }
 
+/* Token Row: skeleton row component */
+export function TokenRow({
+  header,
+  favorited,
+  listNumber,
+  tokenInfo,
+  price,
+  percentChange,
+  marketCap,
+  volume,
+  sparkLine,
+  swap,
+}: {
+  header: boolean
+  favorited: ReactNode
+  listNumber: ReactNode
+  tokenInfo: ReactNode
+  price: ReactNode
+  percentChange: ReactNode
+  marketCap: ReactNode
+  volume: ReactNode
+  sparkLine: ReactNode
+  swap: ReactNode
+}) {
+  const rowCells = (
+    <>
+      <FavoriteCell>{favorited}</FavoriteCell>
+      <ListNumberCell>{listNumber}</ListNumberCell>
+      <NameCell>{tokenInfo}</NameCell>
+      <PriceCell>{price}</PriceCell>
+      <PercentChangeCell>{percentChange}</PercentChangeCell>
+      <MarketCapCell>{marketCap}</MarketCapCell>
+      <VolumeCell>{volume}</VolumeCell>
+      <SparkLineCell>{sparkLine}</SparkLineCell>
+      <SwapCell>{swap}</SwapCell>
+    </>
+  )
+  if (header) return <HeaderRowWrapper>{rowCells}</HeaderRowWrapper>
+  return <TokenRowWrapper>{rowCells}</TokenRowWrapper>
+}
+
+/* Header Row: top header row component for table */
 export function HeaderRow({ timeframe }: { timeframe: string }) {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
   /* TODO: implement mobile layout */
   const sortedBy = SORT_CATEGORIES[1]
   return (
-    <HeaderRowWrapper>
-      {/* Empty contents for no header for favorite and rank columns */}
-      <FavoriteCell></FavoriteCell>
-      <ListNumberCell></ListNumberCell>
-      <NameCell>
-        <Trans>Name</Trans>
-      </NameCell>
-      <PriceCell>
+    <TokenRow
+      header={true}
+      favorited={null}
+      listNumber={null}
+      tokenInfo={<Trans>Name</Trans>}
+      price={
         <HeaderCell
           category={Category.price}
           sortDirection={SortDirection.Decreasing}
@@ -279,8 +348,8 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           sortable={false}
           timeframe={timeframe}
         />
-      </PriceCell>
-      <PercentChangeCell>
+      }
+      percentChange={
         <HeaderCell
           category={Category.percent_change}
           sortDirection={SortDirection.Decreasing}
@@ -288,8 +357,8 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           sortable={false}
           timeframe={timeframe}
         />
-      </PercentChangeCell>
-      <MarketCapCell>
+      }
+      marketCap={
         <HeaderCell
           category={Category.market_cap}
           sortDirection={SortDirection.Decreasing}
@@ -297,8 +366,8 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           sortable={true}
           timeframe={timeframe}
         />
-      </MarketCapCell>
-      <VolumeCell>
+      }
+      volume={
         <HeaderCell
           category={Category.volume}
           sortDirection={SortDirection.Decreasing}
@@ -306,21 +375,43 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           sortable={true}
           timeframe={timeframe}
         />
-      </VolumeCell>
-      <SparkLineCell></SparkLineCell>
-      <SwapCell></SwapCell>
-    </HeaderRowWrapper>
+      }
+      sparkLine={null}
+      swap={null}
+    />
   )
 }
 
-export default function TokenRow({
-  key,
+/* Loading State: row component with loading bubbles */
+export function LoadingRow() {
+  return (
+    <TokenRow
+      header={false}
+      favorited={null}
+      listNumber={<SmallLoadingBubble />}
+      tokenInfo={
+        <>
+          <IconLoadingBubble />
+          <MediumLoadingBubble />
+        </>
+      }
+      price={<MediumLoadingBubble />}
+      percentChange={<LoadingBubble />}
+      marketCap={<LoadingBubble />}
+      volume={<LoadingBubble />}
+      sparkLine={<SparkLineLoadingBubble />}
+      swap={<LongLoadingBubble />}
+    />
+  )
+}
+
+/* Loaded State: row component with token information */
+export default function LoadedRow({
   tokenAddress,
   data,
   listNumber,
   timePeriod,
 }: {
-  key: string
   tokenAddress: string
   data: TokenData
   listNumber: number
@@ -338,38 +429,39 @@ export default function TokenRow({
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <TokenRowWrapper key={key}>
-      <FavoriteCell>
-        <Heart size={18} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
-      </FavoriteCell>
-      <ListNumberCell>{listNumber}</ListNumberCell>
-      <NameCell>
-        <CurrencyLogo currency={currency} />
-        <TokenInfoCell>
-          <TokenName>{tokenName}</TokenName> <TokenSymbol>{tokenSymbol}</TokenSymbol>
-        </TokenInfoCell>
-      </NameCell>
-      <PriceCell>{formatDollarAmount(tokenData.price)}</PriceCell>
-      <PercentChangeCell>
-        {tokenData.delta}%
-        <ArrowCell>
-          {Math.sign(tokenData.delta) > 0 ? (
-            <ArrowUpRight size={14} color={'#57bd0f'} />
-          ) : (
-            <ArrowDownRight size={14} color={'red'} />
-          )}
-        </ArrowCell>
-      </PercentChangeCell>
-      <MarketCapCell>{formatAmount(tokenData.marketCap).toUpperCase()}</MarketCapCell>
-      <VolumeCell>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</VolumeCell>
-      <SparkLineCell>
-        <SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />
-      </SparkLineCell>
-      <SwapCell>
+    <TokenRow
+      header={false}
+      favorited={
+        <Heart size={15} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
+      }
+      listNumber={listNumber}
+      tokenInfo={
+        <>
+          <CurrencyLogo currency={useCurrency(tokenAddress)} />
+          {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+        </>
+      }
+      price={formatDollarAmount(tokenData.price)}
+      percentChange={
+        <>
+          {tokenData.delta} %
+          <ArrowCell>
+            {Math.sign(tokenData.delta) > 0 ? (
+              <ArrowUpRight size={14} color={'#57bd0f'} />
+            ) : (
+              <ArrowDownRight size={14} color={'red'} />
+            )}
+          </ArrowCell>
+        </>
+      }
+      marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
+      volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+      sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />}
+      swap={
         <SwapButton>
           <Trans>Swap</Trans>
         </SwapButton>
-      </SwapCell>
-    </TokenRowWrapper>
+      }
+    />
   )
 }
