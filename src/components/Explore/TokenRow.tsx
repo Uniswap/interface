@@ -232,7 +232,6 @@ function HeaderCell({
 /* Token Row: skeleton row component */
 export function TokenRow({
   header,
-  key,
   favorited,
   listNumber,
   tokenInfo,
@@ -244,7 +243,6 @@ export function TokenRow({
   swap,
 }: {
   header: boolean
-  key: string
   favorited: ReactNode
   listNumber: ReactNode
   tokenInfo: ReactNode
@@ -268,8 +266,8 @@ export function TokenRow({
       <SwapCell>{swap}</SwapCell>
     </>
   )
-  if (header) return <HeaderRowWrapper key={key}>{rowCells}</HeaderRowWrapper>
-  return <TokenRowWrapper key={key}>{rowCells}</TokenRowWrapper>
+  if (header) return <HeaderRowWrapper>{rowCells}</HeaderRowWrapper>
+  return <TokenRowWrapper>{rowCells}</TokenRowWrapper>
 }
 
 /* Header Row: top header row component for table */
@@ -280,7 +278,6 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
   return (
     <TokenRow
       header={true}
-      key={'header'}
       favorited={null}
       listNumber={null}
       tokenInfo={<Trans>Name</Trans>}
@@ -327,11 +324,10 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
 }
 
 /* Loading State: row component with loading bubbles */
-export function LoadingRow({ key }: { key: string }) {
+export function LoadingRow() {
   return (
     <TokenRow
       header={false}
-      key={key}
       favorited={null}
       listNumber={<SmallLoadingBubble />}
       tokenInfo={
@@ -352,13 +348,11 @@ export function LoadingRow({ key }: { key: string }) {
 
 /* Loaded State: row component with token information */
 export default function LoadedRow({
-  key,
   tokenAddress,
   data,
   listNumber,
   timePeriod,
 }: {
-  key: string
   tokenAddress: string
   data: TokenData
   listNumber: number
@@ -375,7 +369,6 @@ export default function LoadedRow({
   return (
     <TokenRow
       header={false}
-      key={key}
       favorited={
         <Heart size={15} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
       }
