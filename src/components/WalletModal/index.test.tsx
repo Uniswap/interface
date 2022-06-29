@@ -53,7 +53,7 @@ test('Loads Wallet Modal on mobile', async () => {
   global.window.web3 = undefined
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
-  // expect(screen.getByText('Open in Coinbase Wallet app.')).toBeInTheDocument()
+  expect(screen.getByText('Open in Coinbase Wallet app.')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
   expect(screen.getByText('Fortmatic')).toBeInTheDocument()
 })
