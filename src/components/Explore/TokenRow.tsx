@@ -47,24 +47,34 @@ const TokenRowWrapper = styled.div`
   @media only screen and (max-width: 960px) {
     grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
     width: fit-content;
-    gap: 16px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media only screen and (max-width: 880px) {
     grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
     width: fit-content;
-    gap: 16px;
-  `};
+  }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 2.5fr;
+  @media only screen and (max-width: 776px) {
+    grid-template-columns: 1.2fr 1fr 8fr 5fr 5fr 3.5fr;
     width: fit-content;
-    gap: 16px;
-  `};
+  }
 
   @media only screen and (max-width: 640px) {
-    grid-template-columns: 1fr 7fr 4fr 4fr;
+    grid-template-columns: 1fr 7fr 4fr 4fr 0.5px;
     width: fit-content;
+  }
+
+  @media only screen and (max-width: 390px) {
+    grid-template-columns: 1fr 12fr 6fr;
+    width: fit-content;
+  }
+`
+const FavoriteCell = styled(Cell)`
+  min-width: 40px;
+  color: ${({ theme }) => theme.text2};
+
+  @media only screen and (max-width: 640px) {
+    display: none;
   }
 `
 const HeaderRowWrapper = styled(TokenRowWrapper)`
@@ -76,6 +86,10 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
+
+  @media only screen and (max-width: 390px) {
+    display: none;
+  }
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -87,27 +101,42 @@ const FavoriteCell = styled(Cell)`
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
+
+  @media only screen and (max-width: 390px) {
+    font-size: 12px;
+    justify-content: flex-start;
+    min-width: 20px;
+  }
 `
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+
+  @media only screen and (max-width: 776px) {
     display: none;
-`};
+  }
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
   padding-left: 8px;
   gap: 8px;
   min-width: 200px;
+
+  @media only screen and (max-width: 390px) {
+    min-width: fit-content;
+  }
 `
 const PriceCell = styled(Cell)`
   justify-content: flex-end;
-  min-width: fit-content(max-content, 80px);
+  min-width: max-content;
 `
 const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+
+  @media only screen and (max-width: 960px) {
+    display: none;
+  }
 `
 const SortArrowCell = styled(Cell)`
   padding-right: 2px;
@@ -142,6 +171,8 @@ const SparkLineImg = styled(Cell)`
   transform: scale(1.2);
 `
 const SwapCell = styled(Cell)`
+  justify-content: flex-end;
+
   @media only screen and (max-width: 640px) {
     display: none;
   }
@@ -161,15 +192,43 @@ const SwapButton = styled.button`
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
   }
 `
-const TokenSymbol = styled.span`
+const TokenName = styled(Cell)`
+  @media only screen and (max-width: 390px) {
+    justify-content: flex-start;
+    height: 24px;
+    min-width: max-content;
+  }
+`
+const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.text3};
+
+  @media only screen and (max-width: 390px) {
+    font-size: 12px;
+    height: 16px;
+    justify-content: flex-start;
+    width: 100%;
+  }
 `
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+
+  @media only screen and (max-width: 880px) {
     display: none;
-  `};
+  }
+`
+
+/* Handling mobile-specific behavior */
+const TokenInfoCell = styled(Cell)`
+  gap: 8px;
+  line-height: 24px;
+  font-size: 16px;
+
+  @media only screen and (max-width: 390px) {
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 0px;
+  }
 `
 /* Loading state bubbles */
 const LoadingBubble = styled.div`
@@ -366,6 +425,9 @@ export default function LoadedRow({
   // TODO: remove magic number colors
   // TODO: write favorited hook
   const favorited = true
+  const currency = useCurrency(tokenAddress)
+
+  // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <TokenRow
       header={false}
