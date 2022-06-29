@@ -14,12 +14,13 @@
     "i18n:compile": "yarn i18n:extract && lingui compile",
     "i18n:pseudo": "lingui extract --locale pseudo && lingui compile",
     "prepare": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "yarn run relay && react-scripts start",
+    "build": "yarn run relay && react-scripts build",
     "serve": "serve build -l 3000",
     "test": "react-scripts test --coverage",
     "cypress:open": "cypress open --browser chrome --e2e",
-    "cypress:run": "cypress run --browser chrome --e2e"
+    "cypress:run": "cypress run --browser chrome --e2e",
+    "relay": "yarn run relay-compiler"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -59,10 +60,10 @@
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
-    "@graphql-codegen/cli": "1.21.5",
-    "@graphql-codegen/typescript": "1.22.3",
-    "@graphql-codegen/typescript-operations": "^1.18.2",
-    "@graphql-codegen/typescript-rtk-query": "^1.1.1",
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/typescript": "2.5.1",
+    "@graphql-codegen/typescript-operations": "^2.4.2",
+    "@graphql-codegen/typescript-rtk-query": "^2.2.14",
     "@lingui/cli": "^3.9.0",
     "@lingui/core": "^3.9.0",
     "@lingui/macro": "^3.9.0",
@@ -91,10 +92,12 @@
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/react-redux": "^7.1.16",
+    "@types/react-relay": "^13.0.2",
     "@types/react-router-dom": "^5.0.0",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.2",
     "@types/rebass": "^4.0.7",
+    "@types/relay-runtime": "^13.0.3",
     "@types/styled-components": "^5.1.0",
     "@types/testing-library__cypress": "^5.0.5",
     "@types/ua-parser-js": "^0.7.35",
@@ -130,6 +133,7 @@
     "ajv": "^6.12.3",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
+    "babel-plugin-relay": "^14.0.0",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
     "cypress": "^10.1.0",
@@ -172,6 +176,7 @@
     "react-markdown": "^4.3.1",
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.2",
+    "react-relay": "^14.0.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^4.0.3",
     "react-spring": "^8.0.27",
@@ -181,6 +186,8 @@
     "rebass": "^4.0.7",
     "redux": "^4.1.2",
     "redux-localstorage-simple": "^2.3.1",
+    "relay-compiler": "^14.0.0",
+    "relay-runtime": "^14.0.0",
     "sass": "^1.45.1",
     "serve": "^11.3.2",
     "setimmediate": "^1.0.5",
@@ -200,5 +207,10 @@
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "1.7.1"
+  },
+  "relay": {
+    "src": "src",
+    "schema": "schema.graphql",
+    "language": "typescript"
   }
 }

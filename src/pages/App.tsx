@@ -1,8 +1,7 @@
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { lazy, Suspense } from 'react'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -17,6 +16,7 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import GraphQL from './GraphQL'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -90,6 +90,7 @@ export default function App() {
           <TopLevelModals />
           <Suspense fallback={<Loader />}>
             <Switch>
+              <Route exact strict path="/graphql" component={GraphQL} />
               <Route strict path="/vote" component={Vote} />
               <Route exact strict path="/create-proposal">
                 <Redirect to="/vote/create-proposal" />
