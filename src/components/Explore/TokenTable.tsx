@@ -19,8 +19,8 @@ const GridContainer = styled.div`
   align-items: center;
   padding: 4px 0px 8px 0px;
 
-  @media only screen and (max-width: 390px) {
-    padding: 20px 16px;
+  @media only screen and (max-width: 410px) {
+    padding: 12px 16px;
   }
 `
 const LOADING_ROWS = Array(10)

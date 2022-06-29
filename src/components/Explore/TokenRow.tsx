@@ -33,6 +33,7 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
+//    margin: 4px 0px;
 const TokenRowWrapper = styled.div`
   width: 100%;
   height: 60px;
@@ -41,8 +42,9 @@ const TokenRowWrapper = styled.div`
   grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 4fr 5fr 2fr;
   font-size: 15px;
   line-height: 24px;
-  margin: 4px 0px;
+
   max-width: 960px;
+  min-width: 390px;
 
   @media only screen and (max-width: 960px) {
     grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
@@ -64,9 +66,15 @@ const TokenRowWrapper = styled.div`
     width: fit-content;
   }
 
-  @media only screen and (max-width: 390px) {
+  @media only screen and (max-width: 410px) {
     grid-template-columns: 1fr 12fr 6fr;
     width: fit-content;
+    min-width: 0px;
+    border-bottom: 0.5px solid ${({ theme }) => theme.bg3};
+    :last-of-type {
+      border-bottom: none;
+    }
+    padding: 0px;
   }
 `
 const FavoriteCell = styled(Cell)`
@@ -87,14 +95,7 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
 
-  @media only screen and (max-width: 390px) {
-    display: none;
-  }
-`
-const FavoriteCell = styled(Cell)`
-  min-width: 40px;
-  color: ${({ theme }) => theme.text2};
-  @media only screen and (max-width: 640px) {
+  @media only screen and (max-width: 410px) {
     display: none;
   }
 `
@@ -102,7 +103,7 @@ const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
 
-  @media only screen and (max-width: 390px) {
+  @media only screen and (max-width: 410px) {
     font-size: 12px;
     justify-content: flex-start;
     min-width: 20px;
@@ -122,20 +123,43 @@ const NameCell = styled(Cell)`
   gap: 8px;
   min-width: 200px;
 
-  @media only screen and (max-width: 390px) {
+  @media only screen and (max-width: 410px) {
     min-width: fit-content;
+  }
+`
+
+const PercentChangeCell = styled(Cell)`
+  justify-content: flex-end;
+  min-width: 80px;
+
+  @media only screen and (max-width: 410px) {
+    display: none;
+  }
+`
+const PercentChangeInfoCell = styled(Cell)`
+  display: none;
+
+  @media only screen and (max-width: 410px) {
+    display: flex;
+    color: ${({ theme }) => theme.text3};
+    font-size: 12px;
+    line-height: 16px;
   }
 `
 const PriceCell = styled(Cell)`
   justify-content: flex-end;
-  min-width: max-content;
+  min-width: 80px;
+
+  @media only screen and (max-width: 410px) {
+    min-width: max-content;
+  }
 `
-const PercentChangeCell = styled(Cell)`
+const PriceInfoCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
 
-  @media only screen and (max-width: 960px) {
-    display: none;
+  @media only screen and (max-width: 410px) {
+    flex-direction: column;
   }
 `
 const SortArrowCell = styled(Cell)`
@@ -192,17 +216,23 @@ const SwapButton = styled.button`
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
   }
 `
-const TokenName = styled(Cell)`
-  @media only screen and (max-width: 390px) {
+const TokenInfoCell = styled(Cell)`
+  gap: 8px;
+  line-height: 24px;
+  font-size: 16px;
+
+  @media only screen and (max-width: 410px) {
     justify-content: flex-start;
-    height: 24px;
-    min-width: max-content;
+    flex-direction: column;
+    gap: 0px;
+    width: max-content;
+    font-weight: 500;
   }
 `
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.text3};
 
-  @media only screen and (max-width: 390px) {
+  @media only screen and (max-width: 410px) {
     font-size: 12px;
     height: 16px;
     justify-content: flex-start;
@@ -215,19 +245,6 @@ const VolumeCell = styled(Cell)`
 
   @media only screen and (max-width: 880px) {
     display: none;
-  }
-`
-
-/* Handling mobile-specific behavior */
-const TokenInfoCell = styled(Cell)`
-  gap: 8px;
-  line-height: 24px;
-  font-size: 16px;
-
-  @media only screen and (max-width: 390px) {
-    justify-content: flex-start;
-    flex-direction: column;
-    gap: 0px;
   }
 `
 /* Loading state bubbles */
@@ -425,7 +442,18 @@ export default function LoadedRow({
   // TODO: remove magic number colors
   // TODO: write favorited hook
   const favorited = true
-  const currency = useCurrency(tokenAddress)
+  const percentChangeInfo = (
+    <>
+      {tokenData.delta}%
+      <ArrowCell>
+        {Math.sign(tokenData.delta) > 0 ? (
+          <ArrowUpRight size={14} color={'#57bd0f'} />
+        ) : (
+          <ArrowDownRight size={14} color={'red'} />
+        )}
+      </ArrowCell>
+    </>
+  )
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
@@ -438,22 +466,18 @@ export default function LoadedRow({
       tokenInfo={
         <>
           <CurrencyLogo currency={useCurrency(tokenAddress)} />
-          {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+          <TokenInfoCell>
+            {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+          </TokenInfoCell>
         </>
       }
-      price={formatDollarAmount(tokenData.price)}
-      percentChange={
-        <>
-          {tokenData.delta} %
-          <ArrowCell>
-            {Math.sign(tokenData.delta) > 0 ? (
-              <ArrowUpRight size={14} color={'#57bd0f'} />
-            ) : (
-              <ArrowDownRight size={14} color={'red'} />
-            )}
-          </ArrowCell>
-        </>
+      price={
+        <PriceInfoCell>
+          {formatDollarAmount(tokenData.price)}
+          <PercentChangeInfoCell>{percentChangeInfo}</PercentChangeInfoCell>
+        </PriceInfoCell>
       }
+      percentChange={percentChangeInfo}
       marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
       volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />}
