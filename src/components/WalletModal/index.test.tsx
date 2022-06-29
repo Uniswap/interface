@@ -3,12 +3,6 @@ import { ApplicationModal } from 'state/application/reducer'
 import { render, screen } from '../../test-utils'
 import WalletModal from './index'
 
-const { location } = window
-
-afterEach(() => {
-  window.location = location
-})
-
 const UserAgentMock = jest.requireMock('utils/userAgent')
 jest.mock('utils/userAgent', () => ({
   isMobile: false,
@@ -44,7 +38,7 @@ test('Loads Wallet Modal on desktop', async () => {
 })
 
 test('Loads Wallet Modal on desktop with MetaMask installed', async () => {
-  window.ethereum = { isMetaMask: true }
+  global.window.ethereum = { isMetaMask: true }
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('MetaMask')).toBeInTheDocument()
@@ -54,8 +48,9 @@ test('Loads Wallet Modal on desktop with MetaMask installed', async () => {
 })
 
 test('Loads Wallet Modal on mobile', async () => {
-  console.log(window.ethereum)
   UserAgentMock.isMobile = true
+  global.window.ethereum = undefined
+  global.window.web3 = undefined
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   // expect(screen.getByText('Open in Coinbase Wallet app.')).toBeInTheDocument()
@@ -65,7 +60,7 @@ test('Loads Wallet Modal on mobile', async () => {
 
 test('Loads Wallet Modal on MetaMask browser', async () => {
   UserAgentMock.isMobile = true
-  window.ethereum = { isMetaMask: true }
+  global.window.ethereum = { isMetaMask: true }
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('MetaMask')).toBeInTheDocument()
@@ -73,7 +68,7 @@ test('Loads Wallet Modal on MetaMask browser', async () => {
 
 test('Loads Wallet Modal on Coinbase Wallet browser', async () => {
   UserAgentMock.isMobile = true
-  window.ethereum = { isCoinbaseWallet: true }
+  global.window.ethereum = { isCoinbaseWallet: true }
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
