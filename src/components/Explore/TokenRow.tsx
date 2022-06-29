@@ -125,6 +125,7 @@ const NameCell = styled(Cell)`
 
   @media only screen and (max-width: 410px) {
     min-width: fit-content;
+    padding-right: 8px;
   }
 `
 
