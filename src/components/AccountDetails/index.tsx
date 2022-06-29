@@ -288,7 +288,7 @@ export default function AccountDetails({
                   </WalletAction>
                 </div>
               </AccountGroupingRow>
-              <AccountGroupingRow id="web3-account-identifier-row">
+              <AccountGroupingRow data-testid="web3-account-identifier-row">
                 <AccountControl>
                   {ENSName ? (
                     <>
