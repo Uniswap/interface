@@ -72,6 +72,7 @@ const TokenRowWrapper = styled.div`
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
+
   @media only screen and (max-width: 640px) {
     display: none;
   }
@@ -93,10 +94,17 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
+
+  @media only screen and (max-width: 390px) {
+    font-size: 12px;
+    justify-content: flex-start;
+    min-width: 20px;
+  }
 `
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+
   @media only screen and (max-width: 776px) {
     display: none;
   }
@@ -106,6 +114,7 @@ const NameCell = styled(Cell)`
   padding-left: 8px;
   gap: 8px;
   min-width: 200px;
+
   @media only screen and (max-width: 390px) {
     min-width: fit-content;
   }
@@ -117,6 +126,10 @@ const PriceCell = styled(Cell)`
 const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+
+  @media only screen and (max-width: 960px) {
+    display: none;
+  }
 `
 const SortArrowCell = styled(Cell)`
   padding-right: 2px;
@@ -138,8 +151,8 @@ const SortOption = styled.span`
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
-
   min-width: 120px;
+
   @media only screen and (max-width: 960px) {
     display: none;
   }
@@ -152,6 +165,7 @@ const SparkLineImg = styled(Cell)`
 `
 const SwapCell = styled(Cell)`
   justify-content: flex-end;
+
   @media only screen and (max-width: 640px) {
     display: none;
   }
@@ -173,14 +187,42 @@ const SwapButton = styled.button`
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
   }
 `
-const TokenSymbol = styled.span`
+const TokenName = styled(Cell)`
+  @media only screen and (max-width: 390px) {
+    justify-content: flex-start;
+    height: 24px;
+    min-width: max-content;
+  }
+`
+const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.text3};
+
+  @media only screen and (max-width: 390px) {
+    font-size: 12px;
+    height: 16px;
+    justify-content: flex-start;
+    width: 100%;
+  }
 `
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+
   @media only screen and (max-width: 880px) {
     display: none;
+  }
+`
+
+/* Handling mobile-specific behavior */
+const TokenInfoCell = styled(Cell)`
+  gap: 8px;
+  line-height: 24px;
+  font-size: 16px;
+
+  @media only screen and (max-width: 390px) {
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 0px;
   }
 `
 
@@ -294,6 +336,7 @@ export default function TokenRow({
   const favorited = true
   const currency = useCurrency(tokenAddress)
 
+  // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <TokenRowWrapper key={key}>
       <FavoriteCell>
@@ -302,7 +345,9 @@ export default function TokenRow({
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>
         <CurrencyLogo currency={currency} />
-        {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+        <TokenInfoCell>
+          <TokenName>{tokenName}</TokenName> <TokenSymbol>{tokenSymbol}</TokenSymbol>
+        </TokenInfoCell>
       </NameCell>
       <PriceCell>{formatDollarAmount(tokenData.price)}</PriceCell>
       <PercentChangeCell>
