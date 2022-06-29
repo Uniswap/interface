@@ -1,8 +1,7 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { render } from '@testing-library/react'
-import { Web3ReactProvider } from '@web3-react/core'
-import { injected, injectedHooks } from 'connectors'
+import Web3Provider from 'components/Web3Provider'
 import { DEFAULT_LOCALE } from 'constants/locales'
 import { en } from 'make-plural/plurals'
 import { ReactElement, ReactNode } from 'react'
@@ -26,9 +25,9 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
   return (
     <MockedI18nProvider>
       <Provider store={store}>
-        <Web3ReactProvider connectors={[[injected, injectedHooks]]}>
+        <Web3Provider>
           <ThemeProvider>{children}</ThemeProvider>
-        </Web3ReactProvider>
+        </Web3Provider>
       </Provider>
     </MockedI18nProvider>
   )
