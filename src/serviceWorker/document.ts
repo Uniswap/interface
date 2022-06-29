@@ -2,7 +2,7 @@ import { RouteHandlerCallbackOptions, RouteMatchCallbackOptions } from 'workbox-
 import { getCacheKeyForURL, matchPrecache } from 'workbox-precaching'
 import { Route } from 'workbox-routing'
 
-import { isDevelopment } from './utils'
+import { isLocalhost } from './utils'
 
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$')
 export const DOCUMENT = process.env.PUBLIC_URL + '/index.html'
@@ -24,7 +24,7 @@ export function matchDocument({ request, url }: RouteMatchCallbackOptions) {
 
   // If this isn't app.uniswap.org (or a local build), skip.
   // IPFS gateways may not have domain separation, so they cannot use document caching.
-  if (url.hostname !== 'app.uniswap.org' && !isDevelopment()) {
+  if (url.hostname !== 'app.uniswap.org' && !isLocalhost()) {
     return false
   }
 
@@ -98,15 +98,12 @@ export class CachedDocument extends Response {
   static async from(response: Response) {
     const text = await response.text()
 
-    // Some browsers (Android 12; Chrome 91) duplicate the content-type header, invalidating it.
-    response.headers.set('Content-Type', 'text/html; charset=utf-8')
-
     // Injects a marker into the document so that client code knows it was served from cache.
-    // The marker should be injected immediately in the <body> so it is available to client code.
-    return new CachedDocument(text.replace('<body>', '<body><script>window.__isDocumentCached=true</script>'), response)
+    // The marker should be injected immediately in the <head> so it is available to client code.
+    return new CachedDocument(text.replace('<head>', '<head><script>window.__isDocumentCached=true</script>'), response)
   }
 
-  private constructor(text: string, response: Response) {
+  private constructor(text: string, public response: Response) {
     super(text, response)
   }
 }
