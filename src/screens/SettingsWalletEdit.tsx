@@ -6,7 +6,6 @@ import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil.svg'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector'
 import { useUpdateColorCallback } from 'src/components/ColorSelector/hooks'
@@ -14,6 +13,7 @@ import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
+import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
@@ -66,10 +66,9 @@ export function SettingsWalletEdit({
 
   return (
     <Screen px="lg" py="lg">
-      <Flex alignItems="center" flexDirection="row" mb="xl">
-        <BackButton color="textSecondary" />
+      <SettingsBackButtonRow>
         <Text variant="largeLabel">{t('Edit nickname or theme')}</Text>
-      </Flex>
+      </SettingsBackButtonRow>
       <Flex gap="xl">
         <Flex gap="none">
           <Box bg="mainBackground" pb="md">

@@ -6,9 +6,9 @@ import { useDispatch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
-import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
 import HeartIcon from 'src/assets/icons/heart.svg'
+import HelpIcon from 'src/assets/icons/help.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
 import TestnetsIcon from 'src/assets/icons/testnets.svg'
 import TwitterIcon from 'src/assets/logos/twitter.svg'
@@ -62,15 +62,7 @@ export function SettingsScreen() {
             action: <Switch value={isRinkebyActive} onValueChange={onToggleTestnets} />,
             text: t('Testnets'),
             subText: t('Allow connections to test networks'),
-            icon: (
-              <TestnetsIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <TestnetsIcon color={theme.colors.textSecondary} />,
           },
         ],
       },
@@ -80,28 +72,12 @@ export function SettingsScreen() {
           {
             externalLink: 'https://help.uniswap.org',
             text: t('Help Center'),
-            icon: (
-              <ChatBubbleIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <HelpIcon color={theme.textSecondary} />,
           },
           {
             externalLink: 'https://twitter.com/Uniswap',
             text: t('Uniswap Labs Twitter'),
-            icon: (
-              <TwitterIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <TwitterIcon color={theme.colors.textSecondary} />,
           },
         ],
       },
@@ -115,15 +91,7 @@ export function SettingsScreen() {
               headerTitle: t('Uniswap Labs Privacy Policy'),
             },
             text: t('Uniswap Labs Privacy Policy'),
-            icon: (
-              <LockIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <LockIcon color={theme.colors.textSecondary} />,
           },
           {
             screen: Screens.WebView,
@@ -132,15 +100,7 @@ export function SettingsScreen() {
               headerTitle: t('Uniswap Labs Terms of Service'),
             },
             text: t('Uniswap Labs Terms of Service'),
-            icon: (
-              <BookOpenIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <BookOpenIcon color={theme.colors.textSecondary} />,
           },
         ],
       },
@@ -153,7 +113,7 @@ export function SettingsScreen() {
             text: t('Chains'),
             // TODO use chains icon when available
             icon: (
-              <ChatBubbleIcon
+              <CoffeeIcon
                 color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
@@ -166,7 +126,7 @@ export function SettingsScreen() {
             screen: Screens.SettingsSupport,
             text: t('Support'),
             icon: (
-              <ChatBubbleIcon
+              <CoffeeIcon
                 color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
@@ -179,7 +139,7 @@ export function SettingsScreen() {
             screen: Screens.SettingsTestConfigs,
             text: 'Test Configs',
             icon: (
-              <ChatBubbleIcon
+              <CoffeeIcon
                 color={theme.colors.textSecondary}
                 height={20}
                 strokeLinecap="round"
@@ -246,7 +206,7 @@ function OnboardingRow() {
   return (
     <Button
       name="DEBUG_Settings_Navigate"
-      px="sm"
+      pl="xxs"
       onPress={() => {
         navigation.goBack()
         dispatch(resetWallet())
@@ -265,7 +225,7 @@ function OnboardingRow() {
             {t('Onboarding')}
           </Text>
         </Box>
-        <Chevron color={theme.colors.textTertiary} direction="e" height={16} width={16} />
+        <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
       </Box>
     </Button>
   )
@@ -302,7 +262,7 @@ function WalletSettings() {
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <Button onPress={toggleViewAll}>
-            <Text color="textTertiary" mb="sm" variant="subheadSmall">
+            <Text color="textSecondary" mb="sm" variant="subheadSmall">
               {showAll ? t('Hide') : t('View all')}
             </Text>
           </Button>
@@ -313,7 +273,7 @@ function WalletSettings() {
         .map((account) => (
           <Button
             key={account.address}
-            px="sm"
+            pl="xxs"
             py="sm"
             onPress={() => handleNavigation(account.address)}>
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
@@ -325,7 +285,7 @@ function WalletSettings() {
                 variant="body"
                 verticalGap="none"
               />
-              <Chevron color={theme.colors.textTertiary} direction="e" height={16} width={16} />
+              <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
             </Box>
           </Button>
         ))}

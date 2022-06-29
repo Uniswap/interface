@@ -5,7 +5,6 @@ import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { PopoutArrow } from 'src/components/icons/PopoutArrow'
 import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
 
@@ -53,12 +52,12 @@ export function SettingsRow({
       disabled={Boolean(action)}
       mb="md"
       name="DEBUG_Settings_Navigate"
-      px="sm"
+      pl="xxs"
       onPress={handleRow}>
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
-        <Flex row>
+      <Flex row alignItems="center" gap="sm">
+        <Flex grow row alignItems={subText ? 'flex-start' : 'center'} gap="sm">
           {icon}
-          <Flex gap="none">
+          <Flex alignItems="stretch" gap="none">
             <Text fontWeight="500" variant="subhead">
               {text}
             </Text>
@@ -70,13 +69,13 @@ export function SettingsRow({
           </Flex>
         </Flex>
         {screen ? (
-          <Chevron color={theme.colors.textTertiary} direction="e" height={16} width={16} />
+          <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
         ) : externalLink ? (
-          <PopoutArrow color={theme.colors.textTertiary} size={24} />
+          <PopoutArrow color={theme.colors.textSecondary} size={24} />
         ) : (
           action
         )}
-      </Box>
+      </Flex>
     </Button>
   )
 }

@@ -79,7 +79,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsWalletEdit,
           text: t('Edit nickname or theme'),
-          icon: <EditIcon color={theme.colors.textSecondary} strokeWidth="1.5" />,
+          icon: <EditIcon color={theme.colors.textSecondary} />,
           screenProps: { address },
         },
         {
@@ -87,12 +87,12 @@ export function SettingsWallet({
             <Switch value={notificationsEnabled} onValueChange={onChangeNotificationSettings} />
           ),
           text: t('Notifications'),
-          icon: <NotificationIcon color={theme.colors.textSecondary} strokeWidth="1.5" />,
+          icon: <NotificationIcon color={theme.colors.textSecondary} />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,
           text: t('Manage connections'),
-          icon: <GlobalIcon color={theme.colors.textSecondary} strokeWidth="1.5" />,
+          icon: <GlobalIcon color={theme.colors.textSecondary} />,
           screenProps: { address },
           isHidden: readonly,
         },
