@@ -4,7 +4,7 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { darken } from 'polished'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
 import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -66,17 +66,16 @@ const TokenRowWrapper = styled.div`
     grid-template-columns: 1fr 7fr 4fr 4fr;
     width: fit-content;
   }
-
-  &.header {
-    width: 100%;
-    height: 48px;
-    color: ${({ theme }) => theme.text2};
-    font-size: 12px;
-    line-height: 16px;
-    border-bottom: 1px solid;
-    border-color: ${({ theme }) => theme.bg3};
-    border-radius: 8px 8px 0px 0px;
-  }
+`
+const HeaderRowWrapper = styled(TokenRowWrapper)`
+  width: 100%;
+  height: 48px;
+  color: ${({ theme }) => theme.text2};
+  font-size: 12px;
+  line-height: 16px;
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.bg3};
+  border-radius: 8px 8px 0px 0px;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -246,19 +245,18 @@ export function TokenRow({
 }: {
   header: boolean
   key: string
-  favorited: JSX.Element | null
-  listNumber: JSX.Element | number | null
-  tokenInfo: JSX.Element
-  price: JSX.Element | string
-  percentChange: JSX.Element
-  marketCap: JSX.Element | string
-  volume: JSX.Element | string
-  sparkLine: JSX.Element | null
-  swap: JSX.Element | null
+  favorited: ReactNode
+  listNumber: ReactNode
+  tokenInfo: ReactNode
+  price: ReactNode
+  percentChange: ReactNode
+  marketCap: ReactNode
+  volume: ReactNode
+  sparkLine: ReactNode
+  swap: ReactNode
 }) {
-  const headerRow = header ? 'header' : undefined
-  return (
-    <TokenRowWrapper key={key} className={headerRow}>
+  const rowCells = (
+    <>
       <FavoriteCell>{favorited}</FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
@@ -268,8 +266,10 @@ export function TokenRow({
       <VolumeCell>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
       <SwapCell>{swap}</SwapCell>
-    </TokenRowWrapper>
+    </>
   )
+  if (header) return <HeaderRowWrapper key={key}>{rowCells}</HeaderRowWrapper>
+  return <TokenRowWrapper key={key}>{rowCells}</TokenRowWrapper>
 }
 
 /* Header Row: top header row component for table */
