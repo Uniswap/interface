@@ -6,7 +6,7 @@ import { ChevronDown, X } from 'react-feather'
 import styled from 'styled-components'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { OptionsContainer } from 'pages/TrueSight/styled'
-import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import Kyber from 'components/Icons/Kyber'
 import { TRENDING_SOON_SUPPORTED_NETWORKS } from 'constants/index'
 import { TrueSightFilter } from 'pages/TrueSight/index'
@@ -60,12 +60,12 @@ const NetworkSelect = ({
     >
       <Flex alignItems="center" style={{ gap: '4px' }}>
         {selectedNetwork ? (
-          <Image minHeight={16} minWidth={16} height={16} width={16} src={NETWORK_ICON[selectedNetwork]} />
+          <Image minHeight={16} minWidth={16} height={16} width={16} src={NETWORKS_INFO[selectedNetwork].icon} />
         ) : (
           <Kyber size={16} style={{ filter: 'grayscale(1)' }} />
         )}
         <Text color={selectedNetwork ? theme.subText : theme.disableText} fontSize="12px">
-          {selectedNetwork ? NETWORK_LABEL[selectedNetwork] : <Trans>All Chains</Trans>}
+          {selectedNetwork ? NETWORKS_INFO[selectedNetwork].name : <Trans>All Chains</Trans>}
         </Text>
       </Flex>
       <Flex alignItems="center">
@@ -95,9 +95,9 @@ const NetworkSelect = ({
                 setFilter(prev => ({ ...prev, selectedNetwork: network }))
               }}
             >
-              <Image minHeight={16} minWidth={16} height={16} width={16} src={NETWORK_ICON[network]} />
+              <Image minHeight={16} minWidth={16} height={16} width={16} src={NETWORKS_INFO[network].icon} />
               <Text key={index} color={theme.subText} fontSize="12px">
-                <Trans>{NETWORK_LABEL[network]}</Trans>
+                <Trans>{NETWORKS_INFO[network].name}</Trans>
               </Text>
             </Flex>
           ))}

@@ -2,197 +2,9 @@ import JSBI from 'jsbi'
 import { ChainId, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
-import { PopularPair } from 'state/pair/types'
 import { t } from '@lingui/macro'
 import { v4 as uuid } from 'uuid'
-
-export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.ROPSTEN]: '0xc33D1124c43cE3d020d1153fa0593eB9Ebc75Fb0',
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0xF79B1ea5566Ab2120f58bA8174055e9Eb8526975'
-      : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.MUMBAI]: '',
-  [ChainId.BSCTESTNET]: '0x0ff512d940F390Cd76D95304fC4493170e0B42DE',
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.CRONOSTESTNET]: '',
-  [ChainId.CRONOS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.BTTC]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-}
-
-export const STATIC_FEE_ZAP_ADDRESSES: { [chainId: number]: string } = {
-  [ChainId.ROPSTEN]: '0x548E585B17908D0387d16F9BFf46c4EDe7ca7746',
-  [ChainId.ARBITRUM_TESTNET]: '0xfa33723F6fA00a35F69F8aCd72A5BE9AF3c8Bd25',
-  [ChainId.MAINNET]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.AVAXMAINNET]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.BSCMAINNET]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.FANTOM]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.MATIC]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.CRONOS]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.BTTC]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.ARBITRUM]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.AURORA]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.VELAS]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-  [ChainId.OASIS]: '0x2abE8750e4a65584d7452316356128C936273e0D',
-}
-
-export const DYNAMIC_FEE_ROUTER_ADDRESSES: { [chainId: number]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0xD8358861251E1af3081cD722Ae96c8753Ab7591D'
-      : '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
-  [ChainId.ROPSTEN]: '0x96E8B9E051c81661C36a18dF64ba45F86AC80Aae',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
-      : '0x546C79662E028B661dFB4767664d0273184E4dD1',
-  [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956',
-  [ChainId.BSCTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
-      : '0x78df70615ffc8066cc0887917f2Cd72092C86409',
-  [ChainId.AVAXTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
-  [ChainId.AVAXMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8',
-  [ChainId.FANTOM]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8efa5a9ad6d594cf76830267077b78ce0bc5a5f8'
-      : '0x5d5A5a0a465129848c2549669e12cDC2f8DE039A',
-  [ChainId.CRONOSTESTNET]: '0x548E585B17908D0387d16F9BFf46c4EDe7ca7746',
-  [ChainId.CRONOS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
-  [ChainId.ARBITRUM_TESTNET]: '0x78Ad9A49327D73C6E3B9881eCD653232cF3E480C',
-  [ChainId.BTTC]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
-}
-
-export const STATIC_FEE_ROUTER_ADDRESSES: { [chainId: number]: string } = {
-  [ChainId.MAINNET]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.AVAXMAINNET]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.BSCMAINNET]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.FANTOM]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.MATIC]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.CRONOS]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.BTTC]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.RINKEBY]: '0x89F138263B698D0708689e0aD10dC0E65C2B02BB',
-  [ChainId.ROPSTEN]: '0x136ae5CC3150C4e53AF8b1DC886464CB9AF1AB61',
-  [ChainId.ARBITRUM_TESTNET]: '0x78Ad9A49327D73C6E3B9881eCD653232cF3E480C',
-  [ChainId.ARBITRUM]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.AURORA]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.VELAS]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-  [ChainId.OASIS]: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
-}
-export const STATIC_FEE_FACTORY_ADDRESSES: { [chainId: number]: string } = {
-  [ChainId.MAINNET]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.AVAXMAINNET]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.BSCMAINNET]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.FANTOM]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.MATIC]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.CRONOS]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.BTTC]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.RINKEBY]: '0x1811E801C09CCDa73b50fB3493254d05e9aE641F',
-  [ChainId.ROPSTEN]: '0xB332f6145A5b064f58FF9793ba3523245F8fafaC',
-  [ChainId.ARBITRUM_TESTNET]: '0x9D4ffbf49cc21372c2115Ae4C155a1e5c0aACf36',
-  [ChainId.ARBITRUM]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.AURORA]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.VELAS]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-  [ChainId.OASIS]: '0x1c758aF0688502e49140230F6b0EBd376d429be5',
-}
-
-export const DYNAMIC_FEE_FACTORY_ADDRESSES: { [chainId in number]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x5C1cBdc3b8dD2a3456643A62547ef9AA5e1571f3'
-      : '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
-  [ChainId.ROPSTEN]: '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
-      : '0x5F1fe642060B5B9658C15721Ea22E982643c095c',
-  [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
-  [ChainId.BSCTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
-      : '0x878dFE971d44e9122048308301F540910Bbd934c',
-  [ChainId.AVAXTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
-  [ChainId.AVAXMAINNET]: '0x10908C875D865C66f271F5d3949848971c9595C9',
-  [ChainId.FANTOM]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
-      : '0x78df70615ffc8066cc0887917f2Cd72092C86409',
-  [ChainId.CRONOSTESTNET]: '0x9fE747AEA6173DD2c72e9D9BF4E2bCbbC0f8aD9e',
-  [ChainId.CRONOS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
-  [ChainId.ARBITRUM_TESTNET]: '0x9D4ffbf49cc21372c2115Ae4C155a1e5c0aACf36',
-  [ChainId.BTTC]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
-}
-
-// Aggregation Router
-export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.MATIC]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.AVAXMAINNET]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.MAINNET]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.FANTOM]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.CRONOS]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.ARBITRUM]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.BTTC]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.AURORA]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.VELAS]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-  [ChainId.OASIS]: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-}
-
-export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.MATIC]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.AVAXMAINNET]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.MAINNET]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.FANTOM]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.CRONOS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.BTTC]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.ARBITRUM]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.AURORA]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.VELAS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-  [ChainId.OASIS]: '0x41684b361557E9282E0373CA51260D9331e518C9',
-}
-
-export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x2f99E688cfe6FB7Add8F383779f259f370E16C25'
-      : '0x6A65e062cE8290007301296F3C6AE446Af7BDEeC',
-  [ChainId.ROPSTEN]: '0x247B641bB4eAff621987E2B5c3D0247489556E75',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '',
-  [ChainId.BSCTESTNET]: '',
-  [ChainId.BSCMAINNET]: '',
-  [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: '',
-  [ChainId.FANTOM]: '',
-  [ChainId.CRONOSTESTNET]: '',
-  [ChainId.CRONOS]: '',
-  [ChainId.ARBITRUM_TESTNET]: '',
-  [ChainId.ARBITRUM]: '',
-  [ChainId.BTTC]: '',
-  [ChainId.AURORA]: '',
-  [ChainId.VELAS]: '',
-  [ChainId.OASIS]: '',
-}
+import { SUPPORTED_NETWORKS, NETWORKS_INFO } from './networks'
 
 export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
 export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
@@ -200,83 +12,32 @@ export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const FACTORY_ADDRESS = '0x945c725e3eCC3dfdC350C0334f3fF42f08F719EA'
 // export const ROUTER_ABI = IUniswapV2Router02ABI
 // export const FACTORY_ABI = [{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token0","type":"address"},{"indexed":true,"internalType":"address","name":"token1","type":"address"},{"indexed":false,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"totalPair","type":"uint256"}],"name":"PairCreated","type":"event"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allPairs","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"allPairsLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"tokenA","type":"address"},{"internalType":"contract IERC20","name":"tokenB","type":"address"}],"name":"createPair","outputs":[{"internalType":"address","name":"pair","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"feeTo","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"feeToSetter","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"","type":"address"},{"internalType":"contract IERC20","name":"","type":"address"}],"name":"getPair","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_feeTo","type":"address"}],"name":"setFeeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"name":"setFeeToSetter","outputs":[],"stateMutability":"nonpayable","type":"function"}]
-export const INIT_CODE_HASH = '0xf6eae63ebbc500de6e7310fc6568df4e6a4514aac0d3d423da5e4e3f332d04f5'
 export const BAD_RECIPIENT_ADDRESSES: string[] = [
-  DYNAMIC_FEE_FACTORY_ADDRESSES[ChainId.MAINNET],
-  DYNAMIC_FEE_ROUTER_ADDRESSES[ChainId.MAINNET],
-  STATIC_FEE_FACTORY_ADDRESSES[ChainId.MAINNET],
-  STATIC_FEE_ROUTER_ADDRESSES[ChainId.MAINNET],
+  NETWORKS_INFO[ChainId.MAINNET].classic.static.factory,
+  NETWORKS_INFO[ChainId.MAINNET].classic.static.router,
+  NETWORKS_INFO[ChainId.MAINNET].classic.static.factory,
+  NETWORKS_INFO[ChainId.MAINNET].classic.static.router,
 ]
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0xB2eA6DaAD5334907311c63a27EdFb02535048f50',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
-  [ChainId.MUMBAI]: '',
-  [ChainId.BSCTESTNET]: '',
-  [ChainId.BSCMAINNET]: '',
-  [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: '0x610A05127d51dd42031A39c25aF951a8e77cDDf7',
-  [ChainId.FANTOM]: '',
-  [ChainId.CRONOSTESTNET]: '',
-  [ChainId.CRONOS]: '',
-  [ChainId.BTTC]: '0x1a91f5ADc7cB5763d35A26e98A18520CB9b67e70',
-  [ChainId.ARBITRUM]: '',
-  [ChainId.ARBITRUM_TESTNET]: '',
-  [ChainId.AURORA]: '',
-  [ChainId.VELAS]: '',
-  [ChainId.OASIS]: '',
-}
-
 export const DMM_ANALYTICS = 'https://analytics.kyberswap.com/classic'
 
-export const CHAIN_ROUTE: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: 'ethereum',
-  [ChainId.ROPSTEN]: 'ropsten',
-  [ChainId.RINKEBY]: 'rinkeby',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: 'polygon',
-  [ChainId.MUMBAI]: '',
-  [ChainId.BSCTESTNET]: 'bsc-test',
-  [ChainId.BSCMAINNET]: 'bnb',
-  [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: 'avalanche',
-  [ChainId.FANTOM]: 'fantom',
-  [ChainId.CRONOSTESTNET]: '',
-  [ChainId.CRONOS]: 'cronos',
-  [ChainId.BTTC]: 'bittorrent',
-  [ChainId.ARBITRUM]: 'arbitrum',
-  [ChainId.ARBITRUM_TESTNET]: '',
-  [ChainId.AURORA]: 'aurora',
-  [ChainId.VELAS]: 'velas',
-  [ChainId.OASIS]: 'oasis',
-}
-
-export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = Object.keys(CHAIN_ROUTE)
-  .map(i => Number(i))
-  .reduce((acc, cur) => {
-    return {
-      ...acc,
-      [cur]: `${DMM_ANALYTICS}/${CHAIN_ROUTE[cur as ChainId]}`,
-    }
-  }, {}) as { [chainId in ChainId]: string }
+export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = SUPPORTED_NETWORKS.reduce((acc, cur) => {
+  return {
+    ...acc,
+    [cur]: `${DMM_ANALYTICS}/${NETWORKS_INFO[cur].route}`,
+  }
+}, {}) as { [chainId in ChainId]: string }
 
 export const PROMM_ANALYTICS = 'https://analytics.kyberswap.com/elastic'
 
-export const PROMM_ANALYTICS_URL: { [chainId in ChainId]: string } = Object.keys(CHAIN_ROUTE)
-  .map(i => Number(i))
-  .reduce((acc, cur) => {
-    return {
-      ...acc,
-      [cur]: `${PROMM_ANALYTICS}/${CHAIN_ROUTE[cur as ChainId]}`,
-    }
-  }, {}) as { [chainId in ChainId]: string }
+export const PROMM_ANALYTICS_URL: { [chainId in ChainId]: string } = SUPPORTED_NETWORKS.reduce((acc, cur) => {
+  return {
+    ...acc,
+    [cur]: `${PROMM_ANALYTICS}/${NETWORKS_INFO[cur].route}`,
+  }
+}, {}) as { [chainId in ChainId]: string }
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -390,6 +151,13 @@ export const DAI: { [chainId in ChainId]: Token } = {
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100', 18, 'DAI', 'Dai Stablecoin'),
   //not existing on Oasis
   [ChainId.OASIS]: new Token(ChainId.OASIS, '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100', 18, 'DAI', 'Dai Stablecoin'),
+  [ChainId.OPTIMISM]: new Token(
+    ChainId.OPTIMISM,
+    '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+    18,
+    'DAI',
+    'Dai Stablecoin',
+  ),
 }
 
 export const USDC: { [chainId in ChainId]: Token } = {
@@ -456,6 +224,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
     'USDC',
     'USD Coin (Multichain)',
   ),
+  [ChainId.OPTIMISM]: new Token(ChainId.OPTIMISM, '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', 6, 'USDC', 'USD Coin'),
 }
 
 export const USDT: { [chainId in ChainId]: Token } = {
@@ -527,6 +296,13 @@ export const USDT: { [chainId in ChainId]: Token } = {
     'USDT',
     'Tether USD (Wormhole)',
   ),
+  [ChainId.OPTIMISM]: new Token(
+    ChainId.OPTIMISM,
+    '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+    6,
+    'USDT',
+    'Tether USD',
+  ),
 }
 
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
@@ -541,34 +317,8 @@ export const WBTC_ARBITRUM = new Token(
   'Wrapped BTC',
 )
 
-// Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
-export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId in ChainId]: number } = {
-  [ChainId.MAINNET]: 13.13,
-  [ChainId.RINKEBY]: 13.13,
-  [ChainId.ROPSTEN]: 13.13,
-  [ChainId.GÖRLI]: 13.13,
-  [ChainId.KOVAN]: 13.13,
-  [ChainId.MATIC]: 2.6,
-  [ChainId.MUMBAI]: 2.6,
-  [ChainId.BSCTESTNET]: 3,
-  [ChainId.BSCMAINNET]: 3,
-  [ChainId.AVAXTESTNET]: 1.85,
-  [ChainId.AVAXMAINNET]: 1.85,
-  [ChainId.FANTOM]: 1,
-  [ChainId.CRONOSTESTNET]: 6,
-  [ChainId.CRONOS]: 5.6,
-  [ChainId.AURORA]: 1,
-
-  // TODO: check these info
-  [ChainId.ARBITRUM]: 1,
-  [ChainId.ARBITRUM_TESTNET]: 1,
-  [ChainId.BTTC]: 2,
-  [ChainId.VELAS]: 1,
-  [ChainId.OASIS]: 10,
-}
-
 export const BLOCKS_PER_YEAR = (chainId: ChainId): number =>
-  Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[chainId]) * 60 * 24 * 365)
+  Math.floor((60 / NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds) * 60 * 24 * 365)
 
 export const SECONDS_PER_YEAR = 31556926
 
@@ -593,6 +343,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.ARBITRUM_TESTNET]: [WETH[ChainId.ARBITRUM_TESTNET]],
   [ChainId.VELAS]: [WETH[ChainId.VELAS]],
   [ChainId.OASIS]: [WETH[ChainId.OASIS]],
+  [ChainId.OPTIMISM]: [WETH[ChainId.OPTIMISM]],
 }
 
 export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
@@ -695,6 +446,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.OASIS]: new Token(ChainId.OASIS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
+  [ChainId.OPTIMISM]: new Token(ChainId.OPTIMISM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
 }
 
 export const KNCL_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
@@ -765,6 +517,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     new Token(ChainId.BTTC, '0xE887512ab8BC60BcC9224e1c3b5Be68E26048B8B', 6, 'USDT_e', 'USDT_e'),
     new Token(ChainId.BTTC, '0xedf53026aea60f8f75fca25f8830b7e2d6200662', 6, 'TRX', 'TRX'),
   ],
+  [ChainId.OPTIMISM]: [...WETH_ONLY[ChainId.OPTIMISM], USDC[ChainId.OPTIMISM], USDT[ChainId.OPTIMISM]],
 }
 
 /**
@@ -1113,313 +866,19 @@ export const OUTSITE_FARM_REWARDS_QUERY: {
   },
 }
 
-export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A']
-      : [
-          '0xc0601973451d9369252Aee01397c0270CD2Ecd60',
-          '0x0FEEa33C4dE6f37A0Fc550028FddA2401B2Ee5Ce',
-          '0xc93239B33239A901143e15473e4A852a0D92c53b',
-          '0x31De05f28568e3d3D612BFA6A78B356676367470',
-        ],
-  [ChainId.ROPSTEN]: ['0x0FEEa33C4dE6f37A0Fc550028FddA2401B2Ee5Ce', '0xfEf235b06AFe69589e6C7622F4C071BcCed5bb13'],
-
-  [ChainId.RINKEBY]: [''],
-  [ChainId.GÖRLI]: [''],
-  [ChainId.KOVAN]: [''],
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB']
-      : [
-          '0xc39bD0fAE646Cb026C73943C5B50E703de2a6532',
-          '0xc940acee228893c14274eF1bB64e631308E96e1A',
-          '0x7EB05d3115984547a50Ff0e2d247fB6948E1c252',
-          '0xc0601973451d9369252Aee01397c0270CD2Ecd60',
-          '0x829c27fd3013b944cbE76E92c3D6c45767c0C789',
-          '0x3aDd3034Fcf921F20c74c6149FB44921709595B1',
-        ],
-  [ChainId.MUMBAI]: ['0x882233B197F9e50b1d41F510fD803a510470d7a6'],
-  [ChainId.BSCTESTNET]: [
-    '0xf0fb5bD9EB287A902Bd45b57AE4CF5F9DcEBe550',
-    '0xC4ad1e43c755F3437b890eeCE2E55cA7b14D1F15',
-    '0x7B731e53B16694cF5dEb87d4C84bA2b4F4EcB4eB',
-    '0x35D1b10fA26cd0FbC52Fd22dd58E2d9d22FC631F',
-  ],
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD', '0xf530a090EF6481cfB33F98c63532E7745abab58A']
-      : [
-          '0x597e3FeDBC02579232799Ecd4B7edeC4827B0435',
-          '0x3D88bDa6ed7dA31E15E86A41CA015Ea50771448E',
-          '0x829c27fd3013b944cbE76E92c3D6c45767c0C789',
-          '0xc49b3b43565b76E5ba7A98613263E7bFdEf1140c',
-          '0xcCAc8DFb75120140A5469282a13E9A60B1751276',
-          '0x31De05f28568e3d3D612BFA6A78B356676367470',
-        ],
-  [ChainId.AVAXTESTNET]: ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'],
-  [ChainId.AVAXMAINNET]: [
-    '0xD169410524Ab1c3C51F56a856a2157B88d4D4FF5',
-    '0x3133C5C35947dBcA7A76Ee05f106a7c63BFD5C3F',
-    '0x98910F7f13496fcDE2ade93648F05b4854Fc99D9',
-    '0x854Cf246b09c7366AEe5abce92fA167bfE7f3E75',
-  ],
-  [ChainId.FANTOM]: [],
-  [ChainId.CRONOSTESTNET]: [],
-  [ChainId.CRONOS]: [],
-  [ChainId.AURORA]: [],
-  [ChainId.ARBITRUM]: [],
-  [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: [],
-  [ChainId.VELAS]: [],
-  [ChainId.OASIS]: [],
-}
-
-export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
-  [ChainId.MAINNET]: [],
-  [ChainId.ROPSTEN]: [
-    '0x26Eb52A419C5492134BB9007795CdACBa20143DE',
-    '0xbc191D7757Be78FbE0997Ba59304A35cdE844dD8',
-    '0xBDe20F598AEe01732Be0011E2D2210e10de4e49d',
-  ],
-  [ChainId.RINKEBY]: [],
-  [ChainId.GÖRLI]: [],
-  [ChainId.KOVAN]: [],
-  [ChainId.MATIC]: [],
-  [ChainId.MUMBAI]: [],
-  [ChainId.BSCTESTNET]: [],
-  [ChainId.BSCMAINNET]: ['0x3474b537da4358A08f916b1587dccdD9585376A4'],
-  [ChainId.AVAXTESTNET]: [],
-  [ChainId.AVAXMAINNET]: [
-    '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C',
-    '0x845d1d0d9b344fba8a205461b9e94aefe258b918',
-    '0xa107e6466Be74361840059a11e390200371a7538',
-    '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
-  ],
-  [ChainId.FANTOM]: [],
-  [ChainId.CRONOSTESTNET]: [],
-  [ChainId.CRONOS]: [],
-  [ChainId.ARBITRUM]: [],
-  [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: [
-    '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C',
-    '0xa107e6466Be74361840059a11e390200371a7538',
-    '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
-  ],
-  [ChainId.AURORA]: [],
-  [ChainId.VELAS]: [],
-  [ChainId.OASIS]: [],
-}
-
 export const FARMING_POOLS_CHAIN_STAKING_LINK: { [key: string]: string } = {
   '0x9a56f30ff04884cb06da80cb3aef09c6132f5e77':
     'https://sipher.xyz/stake/deposit/kyber-slp-sipher-eth?utm_source=kyberswap',
 }
 
-export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? [
-          '0xf5426127Fa776eDaFa6232d52F566bc3b32d15F9',
-          '0xDA2D12BcC6343f84B627D18Fb240bA73141b048A',
-          '0x9744bddE8dd5C6441f797Ec9e04fb337Ff41d8d9',
-          '0x23c0E614f660Aeef5Daf87dE483931d145B7F5B8',
-        ]
-      : [
-          '0x9A56f30fF04884cB06da80cB3aEf09c6132f5E77',
-          '0xf4c408835De8C68232f4746b5Ed598608B17e98D',
-          '0xdEb01e683FF0d2e3AdB852a03df28e1bA7c99774',
-          '0xE69Ba3f5FfE577BBA3A2bF8Ce949f7875D4C67DB',
-        ],
-  [ChainId.ROPSTEN]: [
-    '0x4F54C52D446605f324f30dDd79547D607255612E',
-    '0x26b8d1680b8450dda51FA7d4753cDcA9766717bD',
-    '0xb26A8395Ba1997A4C9a47D1589234BcD3fF468F3',
-    '0x03aBe515bcDDA4c01F1E98666E2406d837B1b597',
-  ],
-  [ChainId.RINKEBY]: [''],
-  [ChainId.GÖRLI]: [''],
-  [ChainId.KOVAN]: [''],
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? [
-          '0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525',
-          '0x706eF64b3842a8a6D31d7DC6669e521cCA9f5Ce1',
-          '0x0f0FC5a5029E3d155708356b422D22Cc29f8b3D4',
-        ]
-      : [
-          '0x3f1f398887525D2D9acd154eC5E4a3979ADFfaE6',
-          '0xa1219DBE76eEcBf7571Fed6b020Dd9154396B70e',
-          '0xbb2d00675B775E0F8acd590e08DA081B2a36D3a6',
-          '0x439E6A13a5ce7FdCA2CC03bF31Fb631b3f5EF157',
-          '0xa623aacf9eb4fc0a29515f08bdabb0d8ce385cf7',
-        ],
-  [ChainId.MUMBAI]: ['0x967a889dbF977DD9c7b79BF422f5Fa50294e56FD', '0x801Da4b550D1645F7aD3De8A5349a51B8dea48b8'],
-  [ChainId.BSCTESTNET]: [
-    '0xEA6A8B8ef82512e989FaAF7a7614fD89BbC3c8A5',
-    '0x7FC3B624dB42a90bE70dd8bCee5C1E0ea7ae01b1',
-    '0xb09a1EA652962197f54B580812D153b1Cfd3274e',
-    '0x30F2F907B014cB6520bfFe7FC715ad9c138dF7B0',
-  ],
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? [
-          '0x706eF64b3842a8a6D31d7DC6669e521cCA9f5Ce1',
-          '0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525',
-          '0x8BcBc65Ce330BC019D87409C2949A2471Bef1E5C',
-        ]
-      : [
-          '0xF8E61E301A44DF4e2dBAba570d2CB09039289B31',
-          '0x6170B6d96167346896169b35e1E9585feAB873bb',
-          '0xec303cE1eDbEbF7e71fc7B350341bB6A6A7a6381',
-          '0xc3daC2049616326E7D596cE52062789d96373b55',
-          '0xd26fa4D47Ab61C03259F0CBC9054890DF5C3B7aD',
-          '0x2D49F16C9ad4f1145bb27c9af71474F468a697c8',
-          '0xf81e106C5B44ba9A993Fc1f456A4c8e54C47CF34',
-          '0x97dBaf4aD688aEd04817121301a005B710E6067a',
-        ],
-  [ChainId.AVAXTESTNET]: ['0x2b4b833864f75fc23f96b5a0cbde8a4046c710b6', '0x0cfc06499dab780aab7775dc260117ec5ca106b4'],
-  [ChainId.AVAXMAINNET]: [
-    '0x44d1b2974b3b8CE93B261f6D15DcE5ad57f8933B',
-    '0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525',
-    '0x0f0FC5a5029E3d155708356b422D22Cc29f8b3D4',
-    '0x535a99a079d64b8c3f4cc264eba70d82992b224b',
-  ],
-  [ChainId.FANTOM]: [],
-  [ChainId.CRONOSTESTNET]: [],
-  [ChainId.CRONOS]: [],
-  [ChainId.AURORA]: [],
-  [ChainId.ARBITRUM]: [],
-  [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: [],
-  [ChainId.VELAS]: [],
-  [ChainId.OASIS]: [],
-}
-
 export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 export const KNC_COINGECKO_ID = 'kyber-network-crystal'
-
-//https://api.coingecko.com/api/v3/asset_platforms
-export const COINGECKO_NETWORK_ID: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: 'ethereum',
-  [ChainId.BSCMAINNET]: 'binance-smart-chain',
-  [ChainId.MATIC]: 'polygon-pos',
-  [ChainId.AVAXMAINNET]: 'avalanche',
-  [ChainId.FANTOM]: 'fantom',
-  [ChainId.CRONOS]: 'cronos',
-  [ChainId.AURORA]: 'aurora',
-  [ChainId.ARBITRUM]: 'arbitrum-one',
-  // TODO: check this
-  [ChainId.BTTC]: 'tron',
-  [ChainId.VELAS]: 'velas',
-  [ChainId.OASIS]: 'oasis',
-
-  [ChainId.ROPSTEN]: '',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MUMBAI]: '',
-  [ChainId.BSCTESTNET]: '',
-  [ChainId.AVAXTESTNET]: '',
-  [ChainId.CRONOSTESTNET]: '',
-  [ChainId.ARBITRUM_TESTNET]: '',
-}
-
-//https://api.coingecko.com/api/v3/coins/list
-export const COINGECKO_NATIVE_TOKEN_ID: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: 'ethereum',
-  [ChainId.BSCMAINNET]: 'binancecoin',
-  [ChainId.MATIC]: 'matic-network',
-  [ChainId.AVAXMAINNET]: 'avalanche-2',
-  [ChainId.FANTOM]: 'fantom',
-  [ChainId.CRONOS]: 'crypto-com-chain',
-  [ChainId.AURORA]: 'ethereum',
-  [ChainId.ARBITRUM]: 'ethereum',
-  [ChainId.ARBITRUM_TESTNET]: 'ethereum',
-  // TODO: check this
-  [ChainId.BTTC]: 'bittorrent',
-  [ChainId.VELAS]: 'velas',
-  [ChainId.OASIS]: 'oasis-network',
-
-  [ChainId.ROPSTEN]: '',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MUMBAI]: '',
-  [ChainId.BSCTESTNET]: '',
-  [ChainId.AVAXTESTNET]: '',
-  [ChainId.CRONOSTESTNET]: '',
-}
 
 export const ETHER_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 export const KYBER_NETWORK_DISCORD_URL = 'https://discord.com/invite/NB3vc8J9uv'
 export const KYBER_NETWORK_TWITTER_URL = 'https://twitter.com/KyberNetwork'
 
 export const DEFAULT_GAS_LIMIT_MARGIN = 20000
-
-export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
-  [ChainId.MAINNET]: [],
-  [ChainId.ROPSTEN]: [],
-  [ChainId.RINKEBY]: [],
-  [ChainId.GÖRLI]: [],
-  [ChainId.KOVAN]: [],
-  [ChainId.MATIC]: [],
-  [ChainId.MUMBAI]: [],
-  [ChainId.BSCTESTNET]: [],
-  [ChainId.BSCMAINNET]: [],
-  [ChainId.AVAXTESTNET]: [],
-  [ChainId.AVAXMAINNET]: [
-    {
-      token0: {
-        id: '0x39fC9e94Caeacb435842FADeDeCB783589F50f5f',
-        symbol: 'KNC',
-      },
-      token1: {
-        id: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
-        symbol: 'AVAX',
-      },
-    },
-    {
-      token0: {
-        id: '0x130966628846bfd36ff31a822705796e8cb8c18d',
-        symbol: 'MIM',
-      },
-      token1: {
-        id: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
-        symbol: 'USDT',
-      },
-    },
-    {
-      token0: {
-        id: '0xd1c3f94de7e5b45fa4edbba472491a9f4b166fc4',
-        symbol: 'XAVA',
-      },
-      token1: {
-        id: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
-        symbol: 'AVAX',
-      },
-    },
-    {
-      token0: {
-        id: '0x130966628846BFd36ff31a822705796e8cb8C18D',
-        symbol: 'MIM',
-      },
-      token1: {
-        id: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
-        symbol: 'USDC',
-      },
-    },
-  ],
-  [ChainId.FANTOM]: [],
-  [ChainId.CRONOSTESTNET]: [],
-  [ChainId.CRONOS]: [],
-  [ChainId.AURORA]: [],
-  [ChainId.ARBITRUM]: [],
-  [ChainId.ARBITRUM_TESTNET]: [],
-  [ChainId.BTTC]: [],
-  [ChainId.VELAS]: [],
-  [ChainId.OASIS]: [],
-}
 
 // This variable to handle crazy APR which it can be wrong calculations or a bug
 // But now, for FOMO of Pagxy, updated this to 10000 (before we set 2000 for it)
@@ -1446,7 +905,7 @@ export const CLAIM_REWARDS_DATA_URL: { [chainId: number]: string } = {
 export const sentryRequestId = uuid()
 
 // Fee options instead of dynamic fee
-export const STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
+export const STATIC_FEE_OPTIONS: { [chainId: number]: number[] | undefined } = {
   [ChainId.ARBITRUM]: [8, 10, 50, 300, 500, 1000],
   [ChainId.ARBITRUM_TESTNET]: [8, 10, 50, 300, 500, 1000],
   [ChainId.AURORA]: [8, 10, 50, 300, 500, 1000],
@@ -1461,6 +920,7 @@ export const STATIC_FEE_OPTIONS: { [chainId: number]: number[] } = {
   [ChainId.BSCMAINNET]: [8, 10, 50, 300, 500, 1000],
   [ChainId.CRONOS]: [8, 10, 50, 300, 500, 1000],
   [ChainId.BTTC]: [8, 10, 50, 300, 500, 1000],
+  [ChainId.OPTIMISM]: [8, 10, 50, 300, 500, 1000],
 }
 
 export const ONLY_STATIC_FEE_CHAINS = [
@@ -1469,8 +929,10 @@ export const ONLY_STATIC_FEE_CHAINS = [
   ChainId.AURORA,
   ChainId.VELAS,
   ChainId.OASIS,
-]
+  ChainId.OPTIMISM,
+] //todo namgold: generate this
 
+// hardcode for unavailable subgraph
 export const ONLY_DYNAMIC_FEE_CHAINS = [ChainId.BSCMAINNET, ChainId.BTTC]
 
 export const TRENDING_SOON_ITEM_PER_PAGE = 10

@@ -3,7 +3,6 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
-import { defaultExchangeClient } from 'apollo/client'
 import Loader from 'components/LocalLoader'
 import Header from '../components/Header'
 import Popups from '../components/Popups'
@@ -15,7 +14,6 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import SwapV2 from './SwapV2'
 import { BLACKLIST_WALLETS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
-import { useExchangeClient } from 'state/application/hooks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
@@ -29,6 +27,7 @@ import { useWindowSize } from 'hooks/useWindowSize'
 import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import { ethers } from 'ethers'
 import TopBanner from 'components/Header/TopBanner'
+import { NETWORKS_INFO } from 'constants/networks'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -95,7 +94,7 @@ const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap' }
 export default function App() {
   const { account, chainId, library } = useActiveWeb3React()
   const aboutPage = useRouteMatch(AppPaths.ABOUT)
-  const apolloClient = useExchangeClient()
+  const classicClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     const fallback = () => {
@@ -179,7 +178,7 @@ export default function App() {
       )}
 
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
-        <ApolloProvider client={apolloClient || defaultExchangeClient}>
+        <ApolloProvider client={classicClient}>
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
             <TopBanner />

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useActiveWeb3React } from 'hooks'
 import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
-import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
+import { NETWORKS_INFO } from '../../constants/networks'
 import NetworkModal from '../NetworkModal'
 import Card from 'components/Card'
 import Row from 'components/Row'
@@ -73,11 +73,11 @@ function Web3Network(): JSX.Element | null {
       <NetworkSwitchContainer>
         <Row>
           <img
-            src={NETWORK_ICON[chainId]}
+            src={NETWORKS_INFO[chainId].icon}
             alt="Switch Network"
             style={{ width: 24, height: 24, marginRight: '12px' }}
           />
-          <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>
+          <NetworkLabel>{NETWORKS_INFO[chainId].name}</NetworkLabel>
         </Row>
         <DropdownIcon open={networkModalOpen} />
       </NetworkSwitchContainer>

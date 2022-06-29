@@ -7,6 +7,7 @@ import Logo from '../Logo'
 const StyledListLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  object-fit: contain;
 `
 
 export default function ListLogo({

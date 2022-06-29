@@ -8,9 +8,9 @@ import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 import { PoolState, usePool } from './usePools'
 import useProAmmPoolInfo from './useProAmmPoolInfo'
 import { useActiveWeb3React } from 'hooks'
-import { prommClient } from 'apollo/client'
 import { useQuery } from '@apollo/client'
 import { ALL_TICKS, Tick } from 'apollo/queries/promm'
+import { NETWORKS_INFO } from 'constants/networks'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -27,7 +27,7 @@ const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | u
 
 const useAllTicks = (poolAddress: string) => {
   const { chainId } = useActiveWeb3React()
-  const client = prommClient[chainId as ChainId]
+  const client = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
 
   return useQuery(ALL_TICKS(poolAddress?.toLowerCase()), {
     client,

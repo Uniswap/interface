@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
+import { deleteUnique, pushUnique } from 'utils'
 import { DEFAULT_ACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, enableList, disableList } from './actions'
@@ -18,7 +19,7 @@ export interface ListsState {
   readonly lastInitializedDefaultListOfLists?: string[]
 
   // currently active lists
-  readonly activeListUrls: string[] | undefined
+  readonly activeListUrls: string[]
 }
 
 type ListState = ListsState['byUrl'][string]
@@ -74,7 +75,7 @@ export default createReducer(initialState, builder =>
       } else {
         // activate if on default active
         if (DEFAULT_ACTIVE_LIST_URLS.includes(url)) {
-          state.activeListUrls?.push(url)
+          state.activeListUrls = pushUnique(state.activeListUrls, url)
         }
 
         state.byUrl[url] = {
@@ -110,27 +111,16 @@ export default createReducer(initialState, builder =>
         delete state.byUrl[url]
       }
       // remove list from active urls if needed
-      if (state.activeListUrls && state.activeListUrls.includes(url)) {
-        state.activeListUrls = state.activeListUrls.filter(u => u !== url)
-      }
+      state.activeListUrls = deleteUnique(state.activeListUrls, url)
     })
     .addCase(enableList, (state, { payload: url }) => {
       if (!state.byUrl[url]) {
         state.byUrl[url] = NEW_LIST_STATE
       }
-
-      if (state.activeListUrls && !state.activeListUrls.includes(url)) {
-        state.activeListUrls.push(url)
-      }
-
-      if (!state.activeListUrls) {
-        state.activeListUrls = [url]
-      }
+      state.activeListUrls = pushUnique(state.activeListUrls, url)
     })
     .addCase(disableList, (state, { payload: url }) => {
-      if (state.activeListUrls && state.activeListUrls.includes(url)) {
-        state.activeListUrls = state.activeListUrls.filter(u => u !== url)
-      }
+      state.activeListUrls = deleteUnique(state.activeListUrls, url)
     })
     .addCase(acceptListUpdate, (state, { payload: url }) => {
       if (!state.byUrl[url]?.pendingUpdate) {

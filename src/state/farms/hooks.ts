@@ -12,14 +12,12 @@ import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { FairLaunchVersion, Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
 import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
-import { useBlockNumber, useETHPrice, useExchangeClient, useTokensPrice } from 'state/application/hooks'
+import { useBlockNumber, useETHPrice, useTokensPrice } from 'state/application/hooks'
 import { useActiveWeb3React } from 'hooks'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import {
   DEFAULT_REWARDS,
-  FAIRLAUNCH_ADDRESSES,
-  FAIRLAUNCH_V2_ADDRESSES,
   LP_TOKEN_DECIMALS,
   MAX_ALLOW_APY,
   OUTSIDE_FAIRLAUNCH_ADDRESSES,
@@ -37,17 +35,18 @@ import JSBI from 'jsbi'
 import { tryParseAmount } from 'state/swap/hooks'
 import { parseUnits } from 'ethers/lib/utils'
 import { nativeOnChain } from 'constants/tokens'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export const useRewardTokens = () => {
   const { chainId } = useActiveWeb3React()
   const rewardTokensMulticallResult = useMultipleContractSingleData(
-    FAIRLAUNCH_ADDRESSES[chainId as ChainId],
+    NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunch,
     new Interface(FAIRLAUNCH_ABI),
     'getRewardTokens',
   )
 
   const rewardTokensV2MulticallResult = useMultipleContractSingleData(
-    FAIRLAUNCH_V2_ADDRESSES[chainId as ChainId],
+    NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunchV2,
     new Interface(FAIRLAUNCH_V2_ABI),
     'getRewardTokens',
   )
@@ -89,7 +88,8 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
   const blockNumber = useBlockNumber()
-  const apolloClient = useExchangeClient()
+
+  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)
   const error = useSelector((state: AppState) => state.farms.error)
@@ -115,7 +115,7 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
 
       const pids = [...Array(BigNumber.from(poolLength).toNumber()).keys()]
 
-      const isV2 = FAIRLAUNCH_V2_ADDRESSES[chainId as ChainId].includes(contract.address)
+      const isV2 = NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunchV2.includes(contract.address)
       const poolInfos = await Promise.all(
         pids.map(async (pid: number) => {
           const poolInfo = await contract?.getPoolInfo(pid)
@@ -321,7 +321,7 @@ export const useYieldHistories = (isModalOpen: boolean) => {
   const { chainId, account } = useActiveWeb3React()
   const [histories, setHistories] = useState<FarmHistory[]>([])
   const [loading, setLoading] = useState(false)
-  const apolloClient = useExchangeClient()
+  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
 
   useEffect(() => {
     async function fetchFarmHistories() {

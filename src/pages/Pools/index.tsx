@@ -117,7 +117,9 @@ const Pools = ({
                 <Text
                   fontWeight={500}
                   fontSize={20}
-                  color={tab === VERSION.ELASTIC ? (!!notSupportedMsg ? theme.disableText : theme.primary) : theme.subText}
+                  color={
+                    tab === VERSION.ELASTIC ? (!!notSupportedMsg ? theme.disableText : theme.primary) : theme.subText
+                  }
                   width={'auto'}
                   marginRight={'5px'}
                   role="button"

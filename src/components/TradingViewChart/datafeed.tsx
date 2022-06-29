@@ -11,10 +11,10 @@ import {
 import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
-import { nativeNameFromETH } from 'utils'
 import { USDC, USDT, DAI } from 'constants/index'
 import { Field } from 'state/swap/actions'
 import { Bar } from './charting_library'
+import { NETWORKS_INFO } from 'constants/networks'
 const configurationData = {
   supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H', '1D', '1W', '1M'],
 }
@@ -41,6 +41,8 @@ const getNetworkString = (chainId: ChainId | undefined) => {
       return 'chain-aurora'
     case ChainId.OASIS:
       return 'chain-oasis'
+    case ChainId.OPTIMISM:
+      return 'chain-optimism'
     default:
       return ''
   }
@@ -97,9 +99,9 @@ export const getCandlesApi = (
   pairAddress: string,
   apiVersion: string,
   ts: number,
-  span: string = 'month',
-  res: string = '15m',
-  sym: string = 'eth',
+  span = 'month',
+  res = '15m',
+  sym = 'eth',
 ) => {
   return fetcherDextools(
     `${getNetworkString(
@@ -130,7 +132,7 @@ const checkIsUSDToken = (chainId: ChainId | undefined, currency: Currency | unde
 
 const updateLocalstorageCheckedPair = (key: string, res: { ver: number; pairAddress: string }) => {
   const cPstr = localStorage.getItem(LOCALSTORAGE_CHECKED_PAIRS)
-  let checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
+  const checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
     ? JSON.parse(cPstr)
     : {}
   checkedPairs[key] = { ...res, time: new Date().getTime() }
@@ -154,8 +156,8 @@ export const checkPairHasDextoolsData = async (
   const checkedPairs: { [key: string]: { ver: number; pairAddress: string; time: number } } = cPstr
     ? JSON.parse(cPstr)
     : {}
-  const symbolA = currencyA.isNative ? nativeNameFromETH(chainId) : currencyA.symbol
-  const symbolB = currencyB.isNative ? nativeNameFromETH(chainId) : currencyB.symbol
+  const symbolA = currencyA.isNative ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name : currencyA.symbol
+  const symbolB = currencyB.isNative ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name : currencyB.symbol
   const key: string = [symbolA, symbolB, chainId].sort().join('')
   const checkedPair = checkedPairs[key]
   if (
@@ -246,7 +248,7 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
     setData([])
   }, [currencies])
 
-  const getCandles = async (ts: number, span: string = 'month', res: string = '15m') => {
+  const getCandles = async (ts: number, span = 'month', res = '15m') => {
     const response = await getCandlesApi(chainId, pairAddress, apiVersion, ts, span, res, sym)
     return response?.data
   }
@@ -261,8 +263,12 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
       onResolveErrorCallback: ErrorCallback,
     ) => {
       try {
-        const label1 = currencies[0]?.isNative ? nativeNameFromETH(chainId) : currencies[0]?.symbol
-        const label2 = currencies[1]?.isNative ? nativeNameFromETH(chainId) : currencies[1]?.symbol
+        const label1 = currencies[0]?.isNative
+          ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name
+          : currencies[0]?.symbol
+        const label2 = currencies[1]?.isNative
+          ? NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name
+          : currencies[1]?.symbol
 
         const label = `${label1}/${label2}`
 
@@ -306,8 +312,8 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
     ) => {
       if (fetchingRef.current) return
       try {
-        let from = periodParams.from * 1000
-        let to = periodParams.to * 1000
+        const from = periodParams.from * 1000
+        const to = periodParams.to * 1000
         let candlesTemp = stateRef.current.data
         let noData = false
         const minTime = candlesTemp[0]?.time || new Date().getTime()
@@ -316,7 +322,7 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
           const fromTimePoint = Math.floor(from / monthTs)
 
           fetchingRef.current = true
-          let promisesArray = []
+          const promisesArray = []
           for (let i = lastTimePoint - 1; i >= fromTimePoint; i--) {
             const ts = i * monthTs
             promisesArray.push(getCandles(ts))
@@ -359,7 +365,7 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
           })
         }
         if (resolution === '1D' || resolution === '1W' || resolution === '1M') {
-          let dayCandles: { [key: number]: Bar } = {}
+          const dayCandles: { [key: number]: Bar } = {}
           let timeTs = 0
           switch (resolution) {
             case '1D':
@@ -375,7 +381,7 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
               timeTs = dayTs
           }
           formatedCandles.forEach((c: Bar) => {
-            let ts = Math.floor(c.time / timeTs)
+            const ts = Math.floor(c.time / timeTs)
             if (!dayCandles[ts]) {
               dayCandles[ts] = {
                 ...c,

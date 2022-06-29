@@ -8,7 +8,6 @@ import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
 import { Currency, CurrencyAmount, Fraction, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { STATIC_FEE_ROUTER_ADDRESSES, DYNAMIC_FEE_ROUTER_ADDRESSES } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -44,6 +43,7 @@ import {
   formattedNum,
   getStaticFeeRouterContract,
   getDynamicFeeRouterContract,
+  getOldStaticFeeRouterContract,
 } from 'utils'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 import { currencyId } from 'utils/currencyId'
@@ -61,6 +61,7 @@ import {
 } from './styled'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export default function TokenPair({
   currencyIdA,
@@ -91,15 +92,22 @@ export default function TokenPair({
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const { pair, userLiquidity, parsedAmounts, amountsMin, price, error, isStaticFeePair } = useDerivedBurnInfo(
-    currencyA ?? undefined,
-    currencyB ?? undefined,
-    pairAddress,
-  )
+  const {
+    pair,
+    userLiquidity,
+    parsedAmounts,
+    amountsMin,
+    price,
+    error,
+    isStaticFeePair,
+    isOldStaticFeeContract,
+  } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
   const contractAddress = chainId
     ? isStaticFeePair
-      ? STATIC_FEE_ROUTER_ADDRESSES[chainId]
-      : DYNAMIC_FEE_ROUTER_ADDRESSES[chainId]
+      ? isOldStaticFeeContract
+        ? NETWORKS_INFO[chainId].classic.oldStatic?.router
+        : NETWORKS_INFO[chainId].classic.static.router
+      : NETWORKS_INFO[chainId].classic.dynamic?.router
     : undefined
   const amp = pair?.amp || JSBI.BigInt(0)
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
@@ -241,7 +249,9 @@ export default function TokenPair({
       throw new Error('missing currency amounts')
     }
     const routerContract = isStaticFeePair
-      ? getStaticFeeRouterContract(chainId, library, account)
+      ? isOldStaticFeeContract
+        ? getOldStaticFeeRouterContract(chainId, library, account)
+        : getStaticFeeRouterContract(chainId, library, account)
       : getDynamicFeeRouterContract(chainId, library, account)
 
     const amountsMin = {

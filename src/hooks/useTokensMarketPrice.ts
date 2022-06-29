@@ -2,8 +2,9 @@ import { useMemo } from 'react'
 import useSWR from 'swr'
 
 import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { COINGECKO_API_URL, COINGECKO_NETWORK_ID, KNC, KNC_COINGECKO_ID } from 'constants/index'
+import { COINGECKO_API_URL, KNC, KNC_COINGECKO_ID } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
+import { NETWORKS_INFO } from 'constants/networks'
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
@@ -45,8 +46,9 @@ export default function useTokensMarketPrice(tokens: (Token | null | undefined)[
     .filter(Boolean)
     .map(token => (token?.isNative ? WETH[chainId || ChainId.MAINNET].address : token?.address))
 
-  const url = `${COINGECKO_API_URL}/simple/token_price/${COINGECKO_NETWORK_ID[chainId || ChainId.MAINNET]
-    }?contract_addresses=${tokenAddress.join()}&vs_currencies=usd`
+  const url = `${COINGECKO_API_URL}/simple/token_price/${
+    NETWORKS_INFO[chainId || ChainId.MAINNET].coingeckoNetworkId
+  }?contract_addresses=${tokenAddress.join()}&vs_currencies=usd`
 
   const { data, error } = useSWR(url, fetcher, {
     refreshInterval: 30000,

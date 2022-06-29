@@ -3,8 +3,7 @@ import { Trans } from '@lingui/macro'
 import { useMedia } from 'react-use'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ChainId, Token } from '@kyberswap/ks-sdk-core'
-import { AVERAGE_BLOCK_TIME_IN_SECS } from 'constants/index'
+import { Token } from '@kyberswap/ks-sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
@@ -23,6 +22,7 @@ import { ScheduleWrapper, Tag } from './styleds'
 import { Flex, Text } from 'rebass'
 import { RewardLockerVersion } from 'state/farms/types'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { NETWORKS_INFO } from 'constants/networks'
 
 const Schedule = ({
   rewardLockerAddress,
@@ -53,7 +53,7 @@ const Schedule = ({
       startTimestampFromBlock +
         schedule[1]
           .sub(schedule[0])
-          .mul(100 * AVERAGE_BLOCK_TIME_IN_SECS[chainId])
+          .mul(100 * NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds)
           .div(100)
           .toNumber())
   const startTimestamp =
@@ -68,7 +68,7 @@ const Schedule = ({
       chainId && currentBlockNumber && schedule[1].toNumber() > currentBlockNumber
         ? BigNumber.from(schedule[1])
             .sub(currentBlockNumber)
-            .mul(100 * AVERAGE_BLOCK_TIME_IN_SECS[chainId])
+            .mul(100 * NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds)
             .div(100)
             .toNumber()
         : undefined
@@ -191,7 +191,7 @@ const Schedule = ({
     chainId &&
     getFormattedTimeFromSecond(
       schedule[1].sub(schedule[0]).toNumber() *
-        (rewardLockerVersion === RewardLockerVersion.V1 ? AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId] : 1),
+        (rewardLockerVersion === RewardLockerVersion.V1 ? NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds : 1),
     )
 
   return (

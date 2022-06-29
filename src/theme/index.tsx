@@ -21,17 +21,16 @@ export const MEDIA_WIDTHS = {
   upToXXL: 1800,
 }
 
-const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
-  (accumulator, size) => {
-    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
-      @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
-        ${css(a, b, c)}
-      }
-    `
-    return accumulator
-  },
-  {},
-) as any
+const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = (Object.keys(
+  MEDIA_WIDTHS,
+) as (keyof typeof MEDIA_WIDTHS)[]).reduce((accumulator, size) => {
+  accumulator[size] = (a: any, b: any, c: any) => css`
+    @media (max-width: ${MEDIA_WIDTHS[size]}px) {
+      ${css(a, b, c)}
+    }
+  `
+  return accumulator
+}, {} as { [width in keyof typeof MEDIA_WIDTHS]: typeof css })
 
 const white = '#FFFFFF'
 const black = '#000000'

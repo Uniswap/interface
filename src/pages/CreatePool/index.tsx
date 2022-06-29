@@ -18,8 +18,6 @@ import { AddRemoveTabs, LiquidityAction } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
 import {
-  STATIC_FEE_ROUTER_ADDRESSES,
-  DYNAMIC_FEE_ROUTER_ADDRESSES,
   CREATE_POOL_AMP_HINT,
   STATIC_FEE_OPTIONS,
   ONLY_STATIC_FEE_CHAINS,
@@ -69,6 +67,7 @@ import {
 } from './styled'
 import { nativeOnChain } from 'constants/tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { NETWORKS_INFO } from 'constants/networks'
 import FeeTypeSelector from './FeeTypeSelector'
 import StaticFeeSelector from './StaticFeeSelector'
 
@@ -103,6 +102,9 @@ export default function CreatePool({
 
   const expertMode = useIsExpertMode()
 
+  // fee types
+  const [feeType, setFeeType] = useState<string>(FEE_TYPE.STATIC)
+
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
   const {
@@ -117,7 +119,12 @@ export default function CreatePool({
     poolTokenPercentage,
     error,
     unAmplifiedPairAddress,
-  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, undefined)
+  } = useDerivedMintInfo(
+    currencyA ?? undefined,
+    currencyB ?? undefined,
+    undefined,
+    !onlyDynamicFee && feeType === FEE_TYPE.STATIC,
+  )
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B])
 
@@ -150,8 +157,6 @@ export default function CreatePool({
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
   const [txHash, setTxHash] = useState<string>('')
 
-  // fee types
-  const [feeType, setFeeType] = useState<string>(FEE_TYPE.STATIC)
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -169,11 +174,17 @@ export default function CreatePool({
     {},
   )
 
-  const routerAddress = !!chainId
-    ? ONLY_STATIC_FEE_CHAINS.includes(chainId) || feeType === FEE_TYPE.STATIC
-      ? STATIC_FEE_ROUTER_ADDRESSES[chainId]
-      : DYNAMIC_FEE_ROUTER_ADDRESSES[chainId]
-    : undefined
+  const routerAddress = useMemo(() => {
+    if (!chainId) return
+    if (ONLY_STATIC_FEE_CHAINS.includes(chainId)) return NETWORKS_INFO[chainId].classic.static.router
+    if (ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)) return NETWORKS_INFO[chainId].classic.dynamic?.router
+    if (feeType === FEE_TYPE.STATIC) {
+      return NETWORKS_INFO[chainId].classic.static.router
+    } else {
+      return NETWORKS_INFO[chainId].classic.dynamic?.router
+    }
+  }, [chainId, feeType])
+
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress)
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], routerAddress)
@@ -211,8 +222,8 @@ export default function CreatePool({
       method = router.addLiquidityNewPoolETH
       args = [
         (tokenBIsETH ? currencyA?.wrapped : currencyB?.wrapped).address ?? '', // token
-        onlyStaticFee || (!onlyStaticFee && feeType === FEE_TYPE.STATIC && !onlyDynamicFee)
-          ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
+        feeType === FEE_TYPE.STATIC && !onlyDynamicFee
+          ? [ampConvertedInBps.toSignificant(5), selectedFee?.toString() ?? '']
           : ampConvertedInBps.toSignificant(5), //ampBps
         (tokenBIsETH ? parsedAmountA : parsedAmountB).quotient.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
@@ -227,9 +238,8 @@ export default function CreatePool({
       args = [
         currencyA?.wrapped.address ?? '',
         currencyB?.wrapped.address ?? '',
-        ampConvertedInBps.toSignificant(5), //ampBps
-        onlyStaticFee || (!onlyStaticFee && feeType === FEE_TYPE.STATIC && !onlyDynamicFee)
-          ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
+        feeType === FEE_TYPE.STATIC && !onlyDynamicFee
+          ? [ampConvertedInBps.toSignificant(5), selectedFee?.toString() ?? '']
           : ampConvertedInBps.toSignificant(5), //ampBps
         parsedAmountA.quotient.toString(),
         parsedAmountB.quotient.toString(),
@@ -240,46 +250,56 @@ export default function CreatePool({
       ]
       value = null
     }
-
+    console.log(args)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit => {
         method(...args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit),
-        }).then(response => {
-          const cA = currencies[Field.CURRENCY_A]
-          const cB = currencies[Field.CURRENCY_B]
-          if (!!cA && !!cB) {
-            setAttemptingTxn(false)
-            addTransactionWithType(response, {
-              type: 'Create pool',
-              summary:
-                parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
-                ' ' +
-                cA.symbol +
-                ' and ' +
-                parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
-                ' ' +
-                cB.symbol,
-              arbitrary: {
-                token_1: cA.symbol,
-                token_2: cB.symbol,
-                amp,
-              },
-            })
-            setTxHash(response.hash)
-            const tA = cA.wrapped
-            const tB = cB.wrapped
-            if (!!tA && !!tB) {
-              // In case subgraph sync is slow, doing this will show the pool in "My Pools" page.
-              addPair(tA, tB)
-            }
-          }
         })
+          .then(response => {
+            const cA = currencies[Field.CURRENCY_A]
+            const cB = currencies[Field.CURRENCY_B]
+            if (!!cA && !!cB) {
+              setAttemptingTxn(false)
+              addTransactionWithType(response, {
+                type: 'Create pool',
+                summary:
+                  parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
+                  ' ' +
+                  cA.symbol +
+                  ' and ' +
+                  parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
+                  ' ' +
+                  cB.symbol,
+                arbitrary: {
+                  token_1: cA.symbol,
+                  token_2: cB.symbol,
+                  amp,
+                },
+              })
+              setTxHash(response.hash)
+              const tA = cA.wrapped
+              const tB = cB.wrapped
+              if (!!tA && !!tB) {
+                // In case subgraph sync is slow, doing this will show the pool in "My Pools" page.
+                addPair(tA, tB)
+              }
+            }
+          })
+          .catch(error => {
+            setAttemptingTxn(false)
+            setShowConfirm(false)
+            // we only care if the error is something _other_ than the user rejected the tx
+            if (error?.code !== 4001) {
+              console.error(error)
+            }
+          })
       })
       .catch(error => {
         setAttemptingTxn(false)
+        setShowConfirm(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
           console.error(error)
@@ -630,9 +650,11 @@ export default function CreatePool({
                       <StaticFeeSelector
                         active={selectedFee}
                         onChange={(name: number) => setSelectedFee(name)}
-                        options={STATIC_FEE_OPTIONS[chainId].map((fee: number) => {
-                          return { name: fee, title: (fee / 1000).toString() + '%' }
-                        })}
+                        options={
+                          STATIC_FEE_OPTIONS[chainId]?.map((fee: number) => {
+                            return { name: fee, title: (fee / 1000).toString() + '%' }
+                          }) || []
+                        }
                       />
                     </>
                   ) : onlyDynamicFee ? (
@@ -663,9 +685,11 @@ export default function CreatePool({
                         <StaticFeeSelector
                           active={selectedFee}
                           onChange={(name: number) => setSelectedFee(name)}
-                          options={STATIC_FEE_OPTIONS[chainId].map((fee: number) => {
-                            return { name: fee, title: (fee / 1000).toString() + '%' }
-                          })}
+                          options={
+                            STATIC_FEE_OPTIONS[chainId]?.map((fee: number) => {
+                              return { name: fee, title: (fee / 1000).toString() + '%' }
+                            }) || []
+                          }
                         />
                       ) : (
                         <Section>

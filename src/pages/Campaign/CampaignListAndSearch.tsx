@@ -10,7 +10,7 @@ import useTheme from 'hooks/useTheme'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import { SelectedHighlight } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
-import { NETWORK_ICON } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export default function CampaignListAndSearch({
@@ -67,7 +67,7 @@ export default function CampaignListAndSearch({
                       .map(chainId => (
                         <img
                           key={chainId}
-                          src={NETWORK_ICON[(chainId as unknown) as ChainId]}
+                          src={NETWORKS_INFO[(chainId as any) as ChainId].icon}
                           alt="network_icon"
                           style={{ width: '16px', minWidth: '16px', height: '16px', minHeight: '16px' }}
                         />

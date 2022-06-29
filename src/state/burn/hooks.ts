@@ -44,6 +44,7 @@ export function useDerivedBurnInfo(
   price?: Price<Currency, Currency>
   error?: string
   isStaticFeePair?: boolean
+  isOldStaticFeeContract?: boolean
 } {
   const { account } = useActiveWeb3React()
 
@@ -64,7 +65,7 @@ export function useDerivedBurnInfo(
   let error: string | undefined
 
   // pair + totalsupply
-  const [, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const [, pair, isStaticFeePair, isOldStaticFeeContract] = usePairByAddress(tokenA, tokenB, pairAddress)
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -82,23 +83,23 @@ export function useDerivedBurnInfo(
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityValueA =
     pair &&
-      totalSupply &&
-      userLiquidity &&
-      tokenA &&
-      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-      JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
+    totalSupply &&
+    userLiquidity &&
+    tokenA &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
       ? TokenAmount.fromRawAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity).quotient)
       : undefined
   const liquidityValueB =
     pair &&
-      totalSupply &&
-      userLiquidity &&
-      tokenB &&
-      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-      JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
+    totalSupply &&
+    userLiquidity &&
+    tokenB &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
       ? TokenAmount.fromRawAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity).quotient)
       : undefined
-  const liquidityValues: { [Field.CURRENCY_A]?: TokenAmount;[Field.CURRENCY_B]?: TokenAmount } = {
+  const liquidityValues: { [Field.CURRENCY_A]?: TokenAmount; [Field.CURRENCY_B]?: TokenAmount } = {
     [Field.CURRENCY_A]: liquidityValueA,
     [Field.CURRENCY_B]: liquidityValueB,
   }
@@ -150,7 +151,7 @@ export function useDerivedBurnInfo(
     [Field.CURRENCY_B]:
       tokenB && percentToRemove && percentToRemove.greaterThan('0') && liquidityValueB
         ? TokenAmount.fromRawAmount(tokenB, percentToRemove.multiply(liquidityValueB.quotient).quotient)
-        : undefined
+        : undefined,
   }
 
   const amountsMin = {
@@ -161,7 +162,7 @@ export function useDerivedBurnInfo(
     [Field.CURRENCY_B]:
       parsedAmounts && parsedAmounts[Field.CURRENCY_B]
         ? calculateSlippageAmount(parsedAmounts[Field.CURRENCY_B] as CurrencyAmount<Currency>, allowedSlippage)[0]
-        : undefined
+        : undefined,
   }
 
   const price = useMemo(() => {
@@ -181,7 +182,18 @@ export function useDerivedBurnInfo(
     error = error ?? t`Insufficient balance`
   }
 
-  return { dependentField, currencies, pair, userLiquidity, parsedAmounts, amountsMin, price, error, isStaticFeePair }
+  return {
+    dependentField,
+    currencies,
+    pair,
+    userLiquidity,
+    parsedAmounts,
+    amountsMin,
+    price,
+    error,
+    isStaticFeePair,
+    isOldStaticFeeContract,
+  }
 }
 
 export function useBurnActionHandlers(): {
@@ -227,6 +239,7 @@ export function useDerivedZapOutInfo(
   price?: Price<Currency, Currency>
   error?: string
   isStaticFeePair?: boolean
+  isOldStaticFeeContract?: boolean
 } {
   const { account } = useActiveWeb3React()
 
@@ -251,7 +264,7 @@ export function useDerivedZapOutInfo(
   let error: string | undefined
 
   // pair + totalsupply
-  const [, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const [, pair, isStaticFeePair, isOldStaticFeeContract] = usePairByAddress(tokenA, tokenB, pairAddress)
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -269,20 +282,20 @@ export function useDerivedZapOutInfo(
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityValueA =
     pair &&
-      totalSupply &&
-      userLiquidity &&
-      tokenA &&
-      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-      JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
+    totalSupply &&
+    userLiquidity &&
+    tokenA &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
       ? TokenAmount.fromRawAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity).quotient)
       : undefined
   const liquidityValueB =
     pair &&
-      totalSupply &&
-      userLiquidity &&
-      tokenB &&
-      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-      JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
+    totalSupply &&
+    userLiquidity &&
+    tokenB &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
       ? TokenAmount.fromRawAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity).quotient)
       : undefined
   const liquidityValues: { [field in Field]?: TokenAmount } = {
@@ -327,14 +340,21 @@ export function useDerivedZapOutInfo(
 
     const liquidityToRemove = JSBI.divide(
       JSBI.multiply(userLiquidity.quotient, percentToRemove.numerator),
-      percentToRemove.denominator
+      percentToRemove.denominator,
     )
 
     return BigNumber.from(liquidityToRemove.toString())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLiquidity?.quotient.toString(), percentToRemove.numerator.toString(), percentToRemove.denominator.toString()])
 
-  const zapOutAmount = useZapOutAmount(!!isStaticFeePair, tokenIn?.address, tokenOut?.address, pair?.address, lpQty)
+  const zapOutAmount = useZapOutAmount(
+    !!isStaticFeePair,
+    !!isOldStaticFeeContract,
+    tokenIn?.address,
+    tokenOut?.address,
+    pair?.address,
+    lpQty,
+  )
 
   // amounts
   const independentTokenAmount: CurrencyAmount<Currency> | undefined = tryParseAmount(
@@ -375,7 +395,7 @@ export function useDerivedZapOutInfo(
     [Field.CURRENCY_B]:
       tokenB && liquidityValueB && percentToRemove && percentToRemove.greaterThan('0')
         ? TokenAmount.fromRawAmount(tokenB, percentToRemove.multiply(liquidityValueB.quotient).quotient)
-        : undefined
+        : undefined,
   }
 
   const parsedAmounts: {
@@ -394,7 +414,7 @@ export function useDerivedZapOutInfo(
         ? TokenAmount.fromRawAmount(tokenOut, independentTokenAmount.quotient)
         : undefined,
     [dependentTokenField]:
-      tokenIn && dependentTokenAmount ? TokenAmount.fromRawAmount(tokenIn, dependentTokenAmount.quotient) : undefined
+      tokenIn && dependentTokenAmount ? TokenAmount.fromRawAmount(tokenIn, dependentTokenAmount.quotient) : undefined,
   }
 
   const amountsMin = {
@@ -405,7 +425,7 @@ export function useDerivedZapOutInfo(
     [Field.CURRENCY_B]:
       parsedAmounts && parsedAmounts[Field.CURRENCY_B]
         ? calculateSlippageAmount(parsedAmounts[Field.CURRENCY_B] as CurrencyAmount<Currency>, allowedSlippage)[0]
-        : JSBI.BigInt(0)
+        : JSBI.BigInt(0),
   }
 
   const price = useMemo(() => {
@@ -453,6 +473,7 @@ export function useDerivedZapOutInfo(
     price,
     error,
     isStaticFeePair,
+    isOldStaticFeeContract,
   }
 }
 

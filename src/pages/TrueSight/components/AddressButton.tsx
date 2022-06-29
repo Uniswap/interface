@@ -7,7 +7,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box, Flex } from 'rebass'
 import useTheme from 'hooks/useTheme'
 import { isAddress } from 'utils'
-import { NETWORK_ICON, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import getShortenAddress from 'utils/getShortenAddress'
 
 function AddressButtonItself({
@@ -39,7 +39,7 @@ function AddressButtonItself({
     <StyledAddressButton isInOptionContainer={isInOptionContainer}>
       {address && mappedChainId && (
         <>
-          <img src={NETWORK_ICON[mappedChainId]} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
+          <img src={NETWORKS_INFO[mappedChainId].icon} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
           <AddressCopyContainer onClick={onCopy}>
             <div style={{ width: '90px' }}>{getShortenAddress(address)}</div>
             {isCopied ? <CheckCircle size={'14'} /> : <Copy size={'14'} />}

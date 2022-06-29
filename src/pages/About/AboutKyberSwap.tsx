@@ -27,6 +27,8 @@ import {
   VelasLogoFull,
   Oasis,
   OasisLogoFull,
+  OptimismLogo,
+  OptimismLogoFull,
   Drop,
   FarmIcon,
 } from 'components/Icons'
@@ -94,6 +96,7 @@ const KNC_NOT_AVAILABLE_IN = [
   ChainId.AURORA,
   ChainId.VELAS,
   ChainId.OASIS,
+  ChainId.OPTIMISM,
 ]
 
 const getPoolsMenuLink = (chainId?: ChainId, path?: string) => {
@@ -462,6 +465,7 @@ function AboutKyberSwap() {
             <Aurora />
             <Oasis />
             <Bttc />
+            <OptimismLogo />
           </SupportedChain>
 
           <Flex
@@ -607,7 +611,7 @@ function AboutKyberSwap() {
               >
                 <Trans>
                   KNC is a utility and governance token, and an integral part of Kyber Network and its flagship product
-                  KyberSwap. It is the glue that connects different stakeholders in Kyber's ecosystem
+                  KyberSwap. It is the glue that connects different stakeholders in Kyber&apos;s ecosystem
                 </Trans>
               </Text>
               <img
@@ -1042,12 +1046,14 @@ function AboutKyberSwap() {
               />
               <VelasLogoFull color={isDarkMode ? undefined : 'black'} />
               <AuroraFull />
+              <div />
               <OasisLogoFull />
               <img
                 src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`)}
                 alt="btt"
                 width="100%"
               />
+              <OptimismLogoFull />
             </Powered>
           </Text>
         </Wrapper>

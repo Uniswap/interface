@@ -57,7 +57,6 @@ export default createReducer<PoolsState>(initialState, builder =>
       }
     })
     .addCase(setSharedPoolId, (state, { payload: { poolId } }) => {
-      console.log(111, poolId)
       return {
         ...state,
         sharedPoolId: poolId,

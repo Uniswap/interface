@@ -1,5 +1,5 @@
 import { Pool, Position, TickMath } from '@kyberswap/ks-sdk-elastic'
-import { PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v2'
+import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
 import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
@@ -50,7 +50,7 @@ export function useProAmmTotalFeeOwedByPosition(
   const result = useSingleContractMultipleData(
     tickReader,
     'getTotalFeesOwedToPosition',
-    [[chainId && PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId], poolAddress, tokenID!!]].filter(
+    [[chainId && NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager, poolAddress, tokenID!!]].filter(
       item => !!item[0] && !!item[1] && !!item[2],
     ),
   )?.[0]?.result

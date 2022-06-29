@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import {
@@ -11,11 +10,9 @@ import {
   updateETHPrice,
   updateKNCPrice,
   updateChainIdWhenNotConnected,
-  setExchangeSubgraphClient,
   setGasPrice,
   updatePrommETHPrice,
 } from './actions'
-import { exchangeClients } from 'apollo/client'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
@@ -25,7 +22,13 @@ type ETHPrice = {
   pricePercentChange?: number
 }
 
-export type GasPrice = { fast: string; standard: string; low: string; default: string }
+export type GasPrice = {
+  fast?: string
+  standard: string
+  low?: string
+  default?: string
+}
+
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
@@ -34,7 +37,6 @@ export interface ApplicationState {
   readonly prommEthPrice: ETHPrice
   readonly kncPrice?: string
   readonly chainIdWhenNotConnected: ChainId
-  exchangeSubgraphClients: { [key: string]: ApolloClient<NormalizedCacheObject> }
   readonly gasPrice?: GasPrice
 }
 
@@ -46,7 +48,6 @@ const initialState: ApplicationState = {
   prommEthPrice: {},
   kncPrice: '',
   chainIdWhenNotConnected: ChainId.MAINNET,
-  exchangeSubgraphClients: exchangeClients,
 }
 
 export default createReducer(initialState, builder =>
@@ -96,10 +97,14 @@ export default createReducer(initialState, builder =>
     .addCase(updateChainIdWhenNotConnected, (state, { payload: chainId }) => {
       state.chainIdWhenNotConnected = chainId
     })
-    .addCase(setExchangeSubgraphClient, (state, { payload: exchangeSubgraphClients }) => {
-      state.exchangeSubgraphClients = exchangeSubgraphClients as any
-    })
     .addCase(setGasPrice, (state, { payload: gasPrice }) => {
-      state.gasPrice = gasPrice as GasPrice
+      if (
+        state.gasPrice?.default !== gasPrice?.default ||
+        state.gasPrice?.fast !== gasPrice?.fast ||
+        state.gasPrice?.low !== gasPrice?.low ||
+        state.gasPrice?.standard !== gasPrice?.standard
+      ) {
+        state.gasPrice = gasPrice as GasPrice
+      }
     }),
 )

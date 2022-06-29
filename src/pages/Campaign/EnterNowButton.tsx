@@ -9,7 +9,7 @@ import useTheme from 'hooks/useTheme'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { OptionsContainer } from 'pages/TrueSight/styled'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import { Flex, Text } from 'rebass'
 
 export default function EnterNowButton({ campaign }: { campaign: CampaignData | undefined }) {
@@ -54,9 +54,9 @@ export default function EnterNowButton({ campaign }: { campaign: CampaignData | 
                   window.open(campaign?.enterNowUrl + '?networkId=' + chainId)
                 }}
               >
-                <img src={NETWORK_ICON[chainId]} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
+                <img src={NETWORKS_INFO[chainId].icon} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
                 <Text marginLeft="4px" color={theme.subText} fontSize="12px" fontWeight={500} minWidth="fit-content">
-                  <Trans>{NETWORK_LABEL[chainId]}</Trans>
+                  <Trans>{NETWORKS_INFO[chainId].name}</Trans>
                 </Text>
               </Flex>
             )

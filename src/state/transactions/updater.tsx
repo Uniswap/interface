@@ -1,11 +1,11 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useAddPopup, useBlockNumber, useExchangeClient } from '../application/hooks'
+import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction, checkedSubgraph } from './actions'
 import { AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC, ELASTIC_BASE_FEE_UNIT } from 'constants/index'
@@ -20,8 +20,8 @@ import {
   PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
   PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
 } from 'apollo/queries/promm'
-import { prommClient } from 'apollo/client'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -48,11 +48,11 @@ export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
-  const apolloClient = useExchangeClient()
+  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
 
-  const transactions = chainId ? state[chainId] ?? {} : {}
+  const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
 
   // show popup on confirm
   const addPopup = useAddPopup()
@@ -203,7 +203,7 @@ export default function Updater(): null {
       .filter(hash => transactions[hash]?.needCheckSubgraph)
       .forEach(async (hash: string) => {
         const transaction = transactions[hash]
-        const apolloProMMClient = prommClient[chainId as ChainId]
+        const apolloProMMClient = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
         try {
           switch (transaction.type) {
             case 'Swap':

@@ -4,41 +4,12 @@ import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import {
-  FANTOM_TOKEN_LISTS,
-  AVAX_TOKEN_LISTS,
-  BSC_TOKEN_LISTS,
-  MATIC_TOKEN_LISTS,
-  CRONOS_TOKEN_LISTS,
-  UNSUPPORTED_LIST_URLS,
-  ARBITRUM_TOKEN_LISTS,
-  BTTC_TOKEN_LISTS,
-  AURORA_TOKEN_LISTS,
-  VELAS_TOKEN_LISTS,
-  OASIS_TOKEN_LISTS,
-} from '../../constants/lists'
-import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
-import { RINKEBY_TOKEN_LIST } from '../../constants/tokenLists/rinkeby.tokenlist'
-import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
-import { MATIC_TOKEN_LIST } from '../../constants/tokenLists/matic.tokenlist'
-import { MUMBAI_TOKEN_LIST } from '../../constants/tokenLists/mumbai.tokenlist'
-import { BSC_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.testnet.tokenlist'
-import { BSC_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.mainnet.tokenlist'
-import { AVAX_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/avax.testnet.tokenlist'
-import { AVAX_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/avax.mainnet.tokenlist'
-import { FANTOM_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/fantom.mainnet.tokenlist'
-import { CRONOS_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/cronos.testnet.tokenlist'
-import { CRONOS_TOKEN_LIST } from '../../constants/tokenLists/cronos.tokenlist'
-import { AURORA_TOKEN_LIST } from '../../constants/tokenLists/aurora.tokenlist'
-import { ARBITRUM_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/arbitrum.testnet.tokenlist'
-import { ARBITRUM_TOKEN_LIST } from '../../constants/tokenLists/arbitrum.tokenlist'
+import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { useActiveWeb3React } from 'hooks'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
 import { WrappedTokenInfo } from './wrappedTokenInfo'
-import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
-import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
-import { OASIS_TOKEN_LIST } from 'constants/tokenLists/oasis.tokenlist'
+import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -56,28 +27,10 @@ export type TokenAddressMap = Readonly<
 /**
  * An empty result, useful as a default.
  */
-const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.KOVAN]: {},
-  [ChainId.RINKEBY]: {},
-  [ChainId.ROPSTEN]: {},
-  [ChainId.GÖRLI]: {},
-  [ChainId.MAINNET]: {},
-  [ChainId.MATIC]: {},
-  [ChainId.MUMBAI]: {},
-  [ChainId.BSCTESTNET]: {},
-  [ChainId.BSCMAINNET]: {},
-  [ChainId.AVAXTESTNET]: {},
-  [ChainId.AVAXMAINNET]: {},
-  [ChainId.FANTOM]: {},
-  [ChainId.CRONOSTESTNET]: {},
-  [ChainId.CRONOS]: {},
-  [ChainId.AURORA]: {},
-  [ChainId.ARBITRUM_TESTNET]: {},
-  [ChainId.BTTC]: {},
-  [ChainId.ARBITRUM]: {},
-  [ChainId.VELAS]: {},
-  [ChainId.OASIS]: {},
-}
+export const EMPTY_LIST: TokenAddressMap = SUPPORTED_NETWORKS.reduce((acc, val) => {
+  acc[val] = {}
+  return acc
+}, {} as { [chainId in ChainId]: { [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } } })
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
   typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
@@ -111,58 +64,7 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export const getTokenAddressMap = (chainId?: ChainId) => {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return listToTokenMap(MAINNET_TOKEN_LIST)
-    case ChainId.ROPSTEN:
-      return listToTokenMap(ROPSTEN_TOKEN_LIST)
-    case ChainId.RINKEBY:
-      return listToTokenMap(RINKEBY_TOKEN_LIST)
-    case ChainId.MATIC:
-      return listToTokenMap(MATIC_TOKEN_LIST)
-    case ChainId.MUMBAI:
-      return listToTokenMap(MUMBAI_TOKEN_LIST)
-    case ChainId.BSCTESTNET:
-      return listToTokenMap(BSC_TESTNET_TOKEN_LIST)
-    case ChainId.BSCMAINNET:
-      return listToTokenMap(BSC_MAINNET_TOKEN_LIST)
-    case ChainId.AVAXTESTNET:
-      return listToTokenMap(AVAX_TESTNET_TOKEN_LIST)
-    case ChainId.AVAXMAINNET:
-      return listToTokenMap(AVAX_MAINNET_TOKEN_LIST)
-    case ChainId.FANTOM:
-      return listToTokenMap(FANTOM_MAINNET_TOKEN_LIST)
-    case ChainId.CRONOSTESTNET:
-      return listToTokenMap(CRONOS_TESTNET_TOKEN_LIST)
-    case ChainId.CRONOS:
-      return listToTokenMap(CRONOS_TOKEN_LIST)
-    case ChainId.AURORA:
-      return listToTokenMap(AURORA_TOKEN_LIST)
-    case ChainId.ARBITRUM_TESTNET:
-      return listToTokenMap(ARBITRUM_TESTNET_TOKEN_LIST)
-    case ChainId.ARBITRUM:
-      return listToTokenMap(ARBITRUM_TOKEN_LIST)
-    case ChainId.BTTC:
-      return listToTokenMap(BTTC_TOKEN_LIST)
-    case ChainId.VELAS:
-      return listToTokenMap(VELAS_TOKEN_LIST)
-    case ChainId.OASIS:
-      return listToTokenMap(OASIS_TOKEN_LIST)
-    default:
-      return listToTokenMap(MAINNET_TOKEN_LIST)
-  }
-}
-
 const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
-
-export function useDMMTokenList(): TokenAddressMap {
-  const { chainId } = useActiveWeb3React()
-
-  return useMemo(() => {
-    return getTokenAddressMap(chainId)
-  }, [chainId])
-}
 
 // returns all downloaded current lists
 export function useAllLists(): {
@@ -197,88 +99,12 @@ export function useAllListsByChainId(): {
     }
   } = {}
 
-  let lists
-
-  if (chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) {
-    lists = Object.keys(allLists)
-      .filter(key => MATIC_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && [ChainId.BSCTESTNET, ChainId.BSCMAINNET].includes(chainId)) {
-    lists = Object.keys(allLists)
-      .filter(key => BSC_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && [ChainId.AVAXTESTNET, ChainId.AVAXMAINNET].includes(chainId)) {
-    lists = Object.keys(allLists)
-      .filter(key => AVAX_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && [ChainId.FANTOM].includes(chainId)) {
-    lists = Object.keys(allLists)
-      .filter(key => FANTOM_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && [ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId)) {
-    lists = Object.keys(allLists)
-      .filter(key => CRONOS_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && [ChainId.ARBITRUM_TESTNET, ChainId.ARBITRUM].includes(chainId)) {
-    lists = Object.keys(allLists)
-      .filter(key => ARBITRUM_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && chainId === ChainId.BTTC) {
-    lists = Object.keys(allLists)
-      .filter(key => BTTC_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && chainId === ChainId.VELAS) {
-    lists = Object.keys(allLists)
-      .filter(key => VELAS_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && chainId === ChainId.AURORA) {
-    lists = Object.keys(allLists)
-      .filter(key => AURORA_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else if (chainId && chainId === ChainId.OASIS) {
-    lists = Object.keys(allLists)
-      .filter(key => OASIS_TOKEN_LISTS.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  } else {
-    lists = Object.keys(allLists)
-      .filter(
-        key => !MATIC_TOKEN_LISTS.includes(key) && !BSC_TOKEN_LISTS.includes(key) && !AVAX_TOKEN_LISTS.includes(key),
-      )
-      .reduce((obj, key) => {
-        obj[key] = allLists[key]
-        return obj
-      }, INITIAL_LISTS)
-  }
+  const lists = Object.keys(allLists)
+    .filter(list => allLists[list].current?.tokens.some?.(i => i.chainId === chainId))
+    .reduce((obj, key) => {
+      obj[key] = allLists[key]
+      return obj
+    }, INITIAL_LISTS)
 
   return lists
 }
@@ -347,7 +173,17 @@ export function useInactiveListUrls(): string[] {
   )
 }
 
-export function useDefaultTokenList(): TokenAddressMap {
+function useDMMTokenList(): TokenAddressMap {
+  const { chainId } = useActiveWeb3React()
+  const lists = useAllLists()
+
+  return useMemo(() => {
+    const list = lists[NETWORKS_INFO[chainId || ChainId.MAINNET].tokenListUrl].current
+    return list ? listToTokenMap(list) : {}
+  }, [chainId, lists])
+}
+
+function useDefaultTokenList(): TokenAddressMap {
   const dmmTokens = useDMMTokenList()
 
   return useMemo(() => {

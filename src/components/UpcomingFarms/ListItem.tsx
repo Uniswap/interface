@@ -3,7 +3,7 @@ import { useMedia } from 'react-use'
 import { Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 
-import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import { UpcomingPool } from 'constants/upcoming-pools'
 import { ExternalLink } from 'theme'
 import { DataText, DataTitle, GridItem } from 'components/YieldPools/styleds'
@@ -24,8 +24,12 @@ const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolea
           <StartingIn startingIn={pool.startingIn} />
         </Flex>
         <Flex grid-area="network" alignItems="center" justifyContent="flex-start">
-          <img src={NETWORK_ICON[pool.network]} alt="Network Logo" style={{ width: '16px', marginRight: '4px' }} />
-          <NetworkLabel>{NETWORK_LABEL[pool.network]}</NetworkLabel>
+          <img
+            src={NETWORKS_INFO[pool.network].icon}
+            alt="Network Logo"
+            style={{ width: '16px', marginRight: '4px' }}
+          />
+          <NetworkLabel>{NETWORKS_INFO[pool.network].name}</NetworkLabel>
         </Flex>
         <Flex grid-area="rewards" alignItems="right" justifyContent="flex-end">
           {pool.rewards.map((reward, index) => (
@@ -66,8 +70,12 @@ const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolea
         </DataTitle>
         <DataText>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={NETWORK_ICON[pool.network]} alt="Network Logo" style={{ width: '16px', marginRight: '4px' }} />
-            <NetworkLabel>{NETWORK_LABEL[pool.network]}</NetworkLabel>
+            <img
+              src={NETWORKS_INFO[pool.network].icon}
+              alt="Network Logo"
+              style={{ width: '16px', marginRight: '4px' }}
+            />
+            <NetworkLabel>{NETWORKS_INFO[pool.network].name}</NetworkLabel>
           </div>
         </DataText>
       </GridItem>

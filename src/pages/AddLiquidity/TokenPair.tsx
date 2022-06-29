@@ -16,8 +16,7 @@ import TransactionConfirmationModal, {
 } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
-
-import { AMP_HINT, STATIC_FEE_ROUTER_ADDRESSES, DYNAMIC_FEE_ROUTER_ADDRESSES } from '../../constants'
+import { AMP_HINT } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -36,6 +35,7 @@ import {
   formattedNum,
   getDynamicFeeRouterContract,
   getStaticFeeRouterContract,
+  getOldStaticFeeRouterContract,
 } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots, Wrapper } from '../Pool/styleds'
@@ -60,6 +60,7 @@ import {
   DynamicFeeRangeWrapper,
 } from './styled'
 import { nativeOnChain } from 'constants/tokens'
+import { NETWORKS_INFO } from 'constants/networks'
 
 const TokenPair = ({
   currencyIdA,
@@ -100,8 +101,8 @@ const TokenPair = ({
     error,
     unAmplifiedPairAddress,
     isStaticFeePair,
+    isOldStaticFeeContract,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
-
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B])
 
@@ -148,13 +149,15 @@ const TokenPair = ({
 
   const routerAddress = chainId
     ? isStaticFeePair
-      ? STATIC_FEE_ROUTER_ADDRESSES[chainId]
-      : DYNAMIC_FEE_ROUTER_ADDRESSES[chainId]
+      ? isOldStaticFeeContract
+        ? NETWORKS_INFO[chainId].classic.oldStatic?.router
+        : NETWORKS_INFO[chainId].classic.static.router
+      : NETWORKS_INFO[chainId].classic.dynamic?.router
     : undefined
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], routerAddress)
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress || undefined)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], routerAddress || undefined)
 
   const addTransactionWithType = useTransactionAdder()
   const addPair = usePairAdderByTokens()
@@ -163,7 +166,9 @@ const TokenPair = ({
     // if (!pair) return
     if (!chainId || !library || !account) return
     const router = isStaticFeePair
-      ? getStaticFeeRouterContract(chainId, library, account)
+      ? isOldStaticFeeContract
+        ? getOldStaticFeeRouterContract(chainId, library, account)
+        : getStaticFeeRouterContract(chainId, library, account)
       : getDynamicFeeRouterContract(chainId, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts

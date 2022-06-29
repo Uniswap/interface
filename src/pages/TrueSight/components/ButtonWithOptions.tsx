@@ -5,7 +5,7 @@ import { ButtonPrimary } from 'components/Button'
 import { Trans } from '@lingui/macro'
 import { ChevronDown } from 'react-feather'
 import { Flex, Text } from 'rebass'
-import { NETWORK_ICON, NETWORK_LABEL, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import { getAddress } from '@ethersproject/address'
 import { OptionsContainer } from 'pages/TrueSight/styled'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -92,7 +92,11 @@ const ButtonWithOptions = ({
                       })
                     }}
                   >
-                    <img src={NETWORK_ICON[mappedChainId]} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
+                    <img
+                      src={NETWORKS_INFO[mappedChainId].icon}
+                      alt="Network"
+                      style={{ minWidth: '16px', width: '16px' }}
+                    />
                     <Text
                       marginLeft="4px"
                       color={theme.subText}
@@ -100,7 +104,7 @@ const ButtonWithOptions = ({
                       fontWeight={500}
                       minWidth="fit-content"
                     >
-                      <Trans>{NETWORK_LABEL[mappedChainId]}</Trans>
+                      <Trans>{NETWORKS_INFO[mappedChainId].name}</Trans>
                     </Text>
                   </Flex>
                 )
@@ -116,9 +120,13 @@ const ButtonWithOptions = ({
                     triggerDiscoverSwapInitiated(platform)
                   }}
                 >
-                  <img src={NETWORK_ICON[mappedChainId]} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
+                  <img
+                    src={NETWORKS_INFO[mappedChainId].icon}
+                    alt="Network"
+                    style={{ minWidth: '16px', width: '16px' }}
+                  />
                   <Text marginLeft="4px" color={theme.subText} fontSize="12px" fontWeight={500} minWidth="fit-content">
-                    <Trans>{NETWORK_LABEL[mappedChainId]}</Trans>
+                    <Trans>{NETWORKS_INFO[mappedChainId].name}</Trans>
                   </Text>
                 </Flex>
               )

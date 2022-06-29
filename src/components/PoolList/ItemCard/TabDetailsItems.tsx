@@ -8,11 +8,18 @@ import { formattedNum } from 'utils'
 import { Fraction } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import JSBI from 'jsbi'
+import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { Interface } from 'ethers/lib/utils'
+import { DMMPool } from '@kyberswap/ks-sdk-classic'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolData }) {
   const { chainId } = useActiveWeb3React()
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
   const ampLiquidity = formattedNum(`${parseFloat(amp.toSignificant(5)) * parseFloat(poolData.reserveUSD)}`, true)
+  const factories = useMultipleContractSingleData([poolData.id], new Interface(DMMPool.abi), 'factory')
+  const isNewStaticFeePool = chainId && factories?.[0]?.result?.[0] === NETWORKS_INFO[chainId].classic.static.factory
+
   return (
     <>
       <ItemCardInfoRow name={t`AMP Liquidity`} value={ampLiquidity as string} infoHelperText={AMP_LIQUIDITY_HINT} />
@@ -24,7 +31,13 @@ export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolDa
             : undefined
         }
         name={poolData.fee ? t`Fee` : t`Fee Range`}
-        value={poolData.fee ? poolData.fee / 1000 + '%' : feeRangeCalc(+amp.toSignificant(5))}
+        value={
+          poolData.fee
+            ? factories?.[0]?.result !== undefined
+              ? poolData.fee / (isNewStaticFeePool ? 1000 : 100) + '%'
+              : ''
+            : feeRangeCalc(+amp.toSignificant(5))
+        }
       />
     </>
   )
