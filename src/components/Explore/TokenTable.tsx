@@ -3,7 +3,7 @@ import useTopTokens from 'hooks/useTopTokens'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import TokenRow, { HeaderRow, LoadingRow } from './TokenRow'
+import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
   display: flex;
@@ -20,20 +20,20 @@ const GridContainer = styled.div`
   align-items: center;
   padding: '4px 0px 8px 0px';
 `
+const LOADING_ROWS = Array(10)
+  .fill(0)
+  .map((item, index) => {
+    return <LoadingRow key={`${index}`} />
+  })
 
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const timePeriod = TimePeriod.day
   if (loading) {
-    const loadingRows = Array(10)
-      .fill(0)
-      .map((item, index) => {
-        return <LoadingRow key={`${index}`} />
-      })
     return (
       <GridContainer>
         <HeaderRow timeframe={timePeriod} />
-        {loadingRows}
+        {LOADING_ROWS}
       </GridContainer>
     )
   } else if (error || data === null) {
@@ -43,7 +43,7 @@ export default function TokenTable() {
   const topTokenAddresses = Object.keys(data)
   const tokenRows = topTokenAddresses.map((tokenAddress, index) => {
     return (
-      <TokenRow
+      <LoadedRow
         key={tokenAddress}
         tokenAddress={tokenAddress}
         data={data}
