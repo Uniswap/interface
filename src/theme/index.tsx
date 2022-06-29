@@ -113,7 +113,7 @@ function colors(darkMode: boolean): Colors {
   }
 }
 
-export function getTheme(darkMode: boolean): DefaultTheme {
+function getTheme(darkMode: boolean): DefaultTheme {
   return {
     ...colors(darkMode),
 

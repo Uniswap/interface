@@ -1,9 +1,7 @@
-import { render, screen } from '@testing-library/react'
 import { ReactChildren } from 'react'
 import { ApplicationModal } from 'state/application/reducer'
-import { ThemeProvider } from 'styled-components/macro'
-import { getTheme } from 'theme'
 
+import { render, screen } from '../../test-utils'
 import WalletModal from './index'
 
 jest.mock('@lingui/macro', () => ({ Trans: ({ children }: { children: ReactChildren }) => children }))
@@ -16,12 +14,6 @@ jest.mock('.../../state/application/hooks', () => {
     },
   }
 })
-
-const mockDispatch = jest.fn()
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-  useDispatch: () => mockDispatch,
-}))
 
 jest.mock('hooks/useActiveWeb3React', () => {
   return {
@@ -36,12 +28,8 @@ jest.mock('hooks/useActiveWeb3React', () => {
 })
 
 test('Loads Wallet Modal on desktop', async () => {
-  render(
-    <ThemeProvider theme={getTheme(false)}>
-      <WalletModal pendingTransactions={[]} confirmedTransactions={[]} />
-    </ThemeProvider>
-  )
-  // expect(screen.getByText('Install MetaMask')).toBeInTheDocument()
+  render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
+  expect(screen.getByText('Install MetaMask')).toBeInTheDocument()
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
   expect(screen.getByText('Fortmatic')).toBeInTheDocument()
