@@ -8,7 +8,6 @@ import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
@@ -20,18 +19,14 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
-import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import TokenWarningModal from '../../components/TokenWarningModal'
 import XttPresaleHeader from '../../components/xttpresale/XttPresaleHeader'
 import { ExtendedXDC } from '../../constants/extended-xdc'
-import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
-import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
@@ -39,69 +34,32 @@ import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import {
-  useDefaultsFromURLSearch,
-  useDerivedSwapInfo,
-  useSwapActionHandlers,
-  useSwapState,
-} from '../../state/swap/hooks'
+import { tryParseAmount, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
 import { useXttPresaleState } from '../../state/xtt-presale/hooks'
 import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import XttPresaleUpdater from '../../state/xtt-presale/updater'
 import { LinkStyledButton, ThemedText } from '../../theme'
-import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
-export default function XTTPresale({ history }: RouteComponentProps) {
+export default function XTTPresale() {
   const { account, chainId } = useActiveWeb3React()
-  const loadedUrlParams = useDefaultsFromURLSearch()
   const xttPresaleState: IXttPresaleState = useXttPresaleState()
 
   const xttToken = useMemo(() => {
-    console.log(xttPresaleState)
     if (xttPresaleState.status !== Status.SUCCESS || !chainId) {
       return null
     }
     return new Token(chainId, xttPresaleState.token, 18, 'XTT', 'X Treasury Token')
   }, [xttPresaleState, chainId])
 
-  useEffect(() => {
-    console.log(xttToken)
-  }, [xttToken])
   const ether = useMemo(() => {
     if (chainId) {
       return ExtendedXDC.onChain(chainId)
     }
     return null
   }, [chainId])
-
-  // token warning stuff
-  const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
-    useCurrency(loadedUrlParams?.outputCurrencyId),
-  ]
-  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
-  const urlLoadedTokens: Token[] = useMemo(
-    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
-  )
-  const handleConfirmTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-  }, [])
-
-  // dismiss warning if all imported tokens are in active lists
-  const defaultTokens = useAllTokens()
-  const importTokensNotInDefault = useMemo(
-    () =>
-      urlLoadedTokens &&
-      urlLoadedTokens.filter((token: Token) => {
-        return !Boolean(token.address in defaultTokens)
-      }),
-    [defaultTokens, urlLoadedTokens]
-  )
 
   const theme = useContext(ThemeContext)
 
@@ -148,30 +106,57 @@ export default function XTTPresale({ history }: RouteComponentProps) {
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
-  const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(
     (value: string) => {
-      onUserInput(Field.INPUT, value)
+      if (value === '') {
+        setV({ xtt: '', xdc: '' })
+      }
+      setV((v) => ({ ...v, xdc: value }))
+      if (ether && xttToken) {
+        const parsed = tryParseAmount(xttPresaleState.tokenPerETH, ether)
+        const parsedValue = tryParseAmount(value, xttToken)
+        console.log(parsed, parsedValue)
+        if (parsed !== undefined && parsedValue !== undefined) {
+          setV({
+            xdc: value,
+            xtt: parsed
+              .multiply(parsedValue)
+              .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
+              .toFixed(2),
+          })
+        }
+      }
     },
-    [onUserInput]
+    [xttPresaleState.tokenPerETH, xttToken, ether]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
-      onUserInput(Field.OUTPUT, value)
-    },
-    [onUserInput]
-  )
+      if (value === '') {
+        setV({ xtt: '', xdc: '' })
+      }
+      setV((v) => ({ ...v, xtt: value }))
+      if (ether && xttToken) {
+        const parsed = tryParseAmount(xttPresaleState.tokenPerETH, ether)
+        const parsedValue = tryParseAmount(value, ether)
 
-  // reset if they close warning without tokens in params
-  const handleDismissTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-    history.push('/swap/')
-  }, [history])
+        if (parsed !== undefined && parsedValue !== undefined) {
+          setV({
+            xtt: value,
+            xdc: parsedValue
+              .multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
+              .divide(parsed)
+              .toFixed(2),
+          })
+        }
+      }
+    },
+    [xttPresaleState.tokenPerETH, xttToken, ether]
+  )
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -188,15 +173,20 @@ export default function XTTPresale({ history }: RouteComponentProps) {
     txHash: undefined,
   })
 
-  const formattedAmounts = useMemo(
-    () => ({
+  const [v, setV] = useState({
+    xtt: '',
+    xdc: '',
+  })
+
+  const formattedAmounts = useMemo(() => {
+    console.log(independentField, dependentField, typedValue)
+    return {
       [independentField]: typedValue,
       [dependentField]: showWrap
         ? parsedAmounts[independentField]?.toExact() ?? ''
         : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
-    }),
-    [dependentField, independentField, parsedAmounts, showWrap, typedValue]
-  )
+    }
+  }, [dependentField, independentField, parsedAmounts, showWrap, typedValue])
 
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
@@ -266,9 +256,6 @@ export default function XTTPresale({ history }: RouteComponentProps) {
     if (!swapCallback) {
       return
     }
-    if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
-      return
-    }
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
       .then((hash) => {
@@ -300,7 +287,6 @@ export default function XTTPresale({ history }: RouteComponentProps) {
       })
   }, [
     swapCallback,
-    priceImpact,
     tradeToConfirm,
     showConfirm,
     recipient,
@@ -313,30 +299,6 @@ export default function XTTPresale({ history }: RouteComponentProps) {
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
-
-  // warnings on the greater of fiat value price impact and execution price impact
-  const priceImpactSeverity = useMemo(() => {
-    const executionPriceImpact = v2Trade?.priceImpact
-    return warningSeverity(
-      executionPriceImpact && priceImpact
-        ? executionPriceImpact.greaterThan(priceImpact)
-          ? executionPriceImpact
-          : priceImpact
-        : executionPriceImpact ?? priceImpact
-    )
-  }, [priceImpact, v2Trade])
-
-  const isArgentWallet = useIsArgentWallet()
-
-  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
-  // never show if price impact is above threshold in non expert mode
-  const showApproveFlow =
-    !isArgentWallet &&
-    !swapInputError &&
-    (approvalState === ApprovalState.NOT_APPROVED ||
-      approvalState === ApprovalState.PENDING ||
-      (approvalSubmitted && approvalState === ApprovalState.APPROVED)) &&
-    !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
@@ -373,17 +335,11 @@ export default function XTTPresale({ history }: RouteComponentProps) {
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
-  const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-
+  // todo
+  const showApproveFlow = false
   return (
     <>
       <XttPresaleUpdater />
-      <TokenWarningModal
-        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-        tokens={importTokensNotInDefault}
-        onConfirm={handleConfirmTokenWarning}
-        onDismiss={handleDismissTokenWarning}
-      />
       <AppBody>
         <XttPresaleHeader state={xttPresaleState} />
         <Wrapper id="swap-page">
@@ -407,26 +363,20 @@ export default function XTTPresale({ history }: RouteComponentProps) {
                 label={
                   independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                 }
-                value={formattedAmounts[Field.INPUT]}
+                value={v.xdc}
                 showMaxButton={showMaxButton}
                 currency={ether}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
-                fiatValue={fiatValueInput ?? undefined}
-                showCommonBases={true}
                 id="swap-currency-input"
                 // loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
               <CurrencyInputPanel
-                value={formattedAmounts[Field.OUTPUT]}
+                value={v.xtt}
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}
-                hideBalance={false}
-                fiatValue={fiatValueOutput ?? undefined}
-                priceImpact={priceImpact}
                 currency={xttToken}
-                showCommonBases={true}
                 id="swap-currency-output"
                 // loading={independentField === Field.INPUT && routeIsSyncing}
               />
@@ -550,19 +500,12 @@ export default function XTTPresale({ history }: RouteComponentProps) {
                         !isValid ||
                         routeIsSyncing ||
                         routeIsLoading ||
-                        (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
-                        priceImpactTooHigh
+                        (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                       }
-                      error={isValid && priceImpactSeverity > 2}
+                      error={isValid}
                     >
                       <Text fontSize={16} fontWeight={500}>
-                        {priceImpactTooHigh ? (
-                          <Trans>High Price Impact</Trans>
-                        ) : v2Trade && priceImpactSeverity > 2 ? (
-                          <Trans>Swap Anyway</Trans>
-                        ) : (
-                          <Trans>Swap</Trans>
-                        )}
+                        <Trans>Swap</Trans>
                       </Text>
                     </ButtonError>
                   </AutoColumn>
@@ -583,18 +526,14 @@ export default function XTTPresale({ history }: RouteComponentProps) {
                     }
                   }}
                   id="swap-button"
-                  disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
-                  error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                  disabled={!isValid || routeIsSyncing || routeIsLoading || !!swapCallbackError}
+                  error={isValid && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
                     {swapInputError ? (
                       swapInputError
                     ) : routeIsSyncing || routeIsLoading ? (
                       <Trans>Swap</Trans>
-                    ) : priceImpactSeverity > 2 ? (
-                      <Trans>Swap Anyway</Trans>
-                    ) : priceImpactTooHigh ? (
-                      <Trans>Price Impact Too High</Trans>
                     ) : (
                       <Trans>Swap</Trans>
                     )}
