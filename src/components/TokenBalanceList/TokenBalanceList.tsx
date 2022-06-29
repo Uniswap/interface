@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
-import { SharedElement } from 'react-navigation-shared-element'
 import { Inset } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Loading } from 'src/components/loading'
@@ -56,23 +55,19 @@ export function TokenBalanceList({
     )
   }
 
-  return (
-    <SharedElement id="portfolio-tokens-content">
-      {view === ViewType.Flat ? (
-        <FlatBalanceList
-          balances={balances as FlatViewProps['balances']}
-          empty={empty}
-          header={header}
-          onPressToken={onPressToken}
-        />
-      ) : (
-        <NetworkBalanceList
-          balances={balances as NetworkViewProps['balances']}
-          header={header}
-          onPressToken={onPressToken}
-        />
-      )}
-    </SharedElement>
+  return view === ViewType.Flat ? (
+    <FlatBalanceList
+      balances={balances as FlatViewProps['balances']}
+      empty={empty}
+      header={header}
+      onPressToken={onPressToken}
+    />
+  ) : (
+    <NetworkBalanceList
+      balances={balances as NetworkViewProps['balances']}
+      header={header}
+      onPressToken={onPressToken}
+    />
   )
 }
 

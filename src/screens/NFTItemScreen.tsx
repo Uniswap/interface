@@ -17,7 +17,6 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNFT } from 'src/features/nfts/hooks'
-import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -68,12 +67,7 @@ export function NFTItemScreen({
       fixedHeader={<BackButton showButtonLabel />}>
       <Flex borderRadius="md" p="md">
         <Flex centered>
-          <NFTAssetItem
-            id={getNFTAssetKey(address, token_id)}
-            mx="sm"
-            nft={asset}
-            size={dimensions.fullWidth}
-          />
+          <NFTAssetItem mx="sm" nft={asset} size={dimensions.fullWidth} />
 
           <Flex
             alignItems="flex-end"

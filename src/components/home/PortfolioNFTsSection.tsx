@@ -49,10 +49,9 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
 
   const renderItem = useCallback(
     (asset: NFTAsset.Asset) => {
-      const key = getNFTAssetKey(asset.asset_contract.address, asset.token_id)
       return (
         <Button onPress={() => onPressItem(asset)}>
-          <NFTAssetItem id={key} nft={asset} size={dimensions.fullWidth / IMAGE_SIZE_RATIO} />
+          <NFTAssetItem nft={asset} size={dimensions.fullWidth / IMAGE_SIZE_RATIO} />
         </Button>
       )
     },
