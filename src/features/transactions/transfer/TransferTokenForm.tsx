@@ -14,7 +14,7 @@ import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
+import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
   TransactionState,
@@ -47,10 +47,13 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
     currencyBalances,
     currencyTypes,
     formattedAmounts,
+    exactAmountToken,
+    exactAmountUSD = '',
     recipient,
+    isUSDInput = false,
   } = derivedTransferInfo
 
-  const { onSelectCurrency, onSetAmount, onSetMax, onSelectRecipient } =
+  const { onSelectCurrency, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
 
   // TODO: consider simplifying this logic
@@ -76,6 +79,14 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
     onSubmit
   )
 
+  useUSDTokenUpdater(
+    dispatch,
+    isUSDInput,
+    exactAmountToken,
+    exactAmountUSD,
+    currencyIn ?? undefined
+  )
+
   return (
     <Flex grow justifyContent="space-between" p="md">
       <Flex grow gap="md" justifyContent="center">
@@ -89,13 +100,15 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
             currency={currencyIn}
             currencyAmount={currencyAmounts[CurrencyField.INPUT]}
             currencyBalance={currencyBalances[CurrencyField.INPUT]}
+            isUSDInput={isUSDInput}
             value={formattedAmounts[CurrencyField.INPUT]}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
-            onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, false)}
+            onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
             // TODO: enable USD inputs in transfer token form
             onSetMax={onSetMax}
+            onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
           />
         )}
 

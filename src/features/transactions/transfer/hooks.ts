@@ -28,6 +28,7 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
   exactCurrencyField: CurrencyField.INPUT
   recipient?: string
+  isUSDInput?: boolean
 }
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
@@ -36,6 +37,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     exactAmountToken,
     exactAmountUSD,
     recipient,
+    isUSDInput,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -86,8 +88,9 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     exactAmountToken,
     exactCurrencyField: CurrencyField.INPUT,
     formattedAmounts: {
-      [CurrencyField.INPUT]: exactAmountToken,
+      [CurrencyField.INPUT]: isUSDInput ? exactAmountUSD || '' : exactAmountToken,
     },
+    isUSDInput,
     recipient,
   }
 }
