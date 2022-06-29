@@ -13,10 +13,10 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout'
+import { BackButtonRow } from 'src/components/layout/BackButtonRow'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import {
   SettingsRow,
   SettingsSection,
@@ -113,14 +113,14 @@ export function SettingsWallet({
   return (
     <Screen px="lg" py="lg">
       <Box flex={1}>
-        <SettingsBackButtonRow>
+        <BackButtonRow>
           <AddressDisplay
             address={address}
             showViewOnly={readonly}
-            variant="largeLabel"
+            variant="subhead"
             verticalGap="none"
           />
-        </SettingsBackButtonRow>
+        </BackButtonRow>
         <SectionList
           keyExtractor={(_item, index) => 'wallet_settings' + index}
           renderItem={renderItem}

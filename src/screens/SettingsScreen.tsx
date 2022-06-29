@@ -17,8 +17,8 @@ import { Button } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
+import { BackButtonRow } from 'src/components/layout/BackButtonRow'
 import { Screen } from 'src/components/layout/Screen'
-import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import {
   SettingsRow,
   SettingsSection,
@@ -292,9 +292,9 @@ function WalletSettings() {
 
   return (
     <Box flexDirection="column" mb="md">
-      <SettingsBackButtonRow>
-        <Text variant="largeLabel">{t('Settings')}</Text>
-      </SettingsBackButtonRow>
+      <BackButtonRow>
+        <Text variant="subhead">{t('Settings')}</Text>
+      </BackButtonRow>
 
       <Flex row justifyContent="space-between">
         <Text color="textSecondary" fontWeight="500" variant="body">

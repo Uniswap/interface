@@ -10,29 +10,29 @@ import { CenterBox } from 'src/components/layout/CenterBox'
 import { Theme } from 'src/styles/theme'
 
 type Props = {
-  width: string | number
-  height: string | number
-  direction: 'n' | 'e' | 's' | 'w'
+  width?: string | number
+  height?: string | number
+  direction?: 'n' | 'e' | 's' | 'w'
   color?: string
 } & BackgroundColorProps<Theme> &
   BackgroundColorShorthandProps<Theme> &
   SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-function _Chevron({ width, height, direction, color, ...rest }: Props) {
+function _Chevron({ width = 24, height = 24, direction = 'w', color, ...rest }: Props) {
   let degree: string
   switch (direction) {
     case 'n':
-      degree = '0deg'
-      break
-    case 'e':
       degree = '90deg'
       break
-    case 's':
+    case 'e':
       degree = '180deg'
       break
-    case 'w':
+    case 's':
       degree = '270deg'
+      break
+    case 'w':
+      degree = '0deg'
       break
     default:
       throw new Error(`Invalid chevron direction ${direction}`)
@@ -40,9 +40,9 @@ function _Chevron({ width, height, direction, color, ...rest }: Props) {
 
   return (
     <CenterBox borderRadius="full" style={{ transform: [{ rotate: degree }] }} {...rest}>
-      <Svg fill="none" height={height} viewBox="0 0 14 8" width={width}>
+      <Svg fill="none" height={height} viewBox={`0 0 ${width} ${height}`} width={width}>
         <Path
-          d="M13 7 7 1 1 7"
+          d="M15 6L9 12L15 18"
           stroke={color || '#000000'}
           strokeLinecap="round"
           strokeLinejoin="round"

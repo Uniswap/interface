@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { Switch } from 'src/components/buttons/Switch'
+import { BackButtonRow } from 'src/components/layout/BackButtonRow'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
-import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
@@ -26,9 +26,9 @@ export function SettingsChainsScreen() {
   return (
     <SheetScreen pt="lg" px="lg">
       <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
-        <SettingsBackButtonRow>
-          <Text variant="largeLabel">{t('Chain Settings')}</Text>
-        </SettingsBackButtonRow>
+        <BackButtonRow>
+          <Text variant="subhead">{t('Chain Settings')}</Text>
+        </BackButtonRow>
         <Box px="sm">
           <Text variant="subhead">{t('Configure active chains (networks)')}</Text>
           {ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {

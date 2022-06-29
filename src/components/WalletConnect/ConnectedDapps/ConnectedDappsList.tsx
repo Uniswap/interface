@@ -4,9 +4,8 @@ import { FlatList } from 'react-native'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
-import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Flex } from 'src/components/layout'
+import { BackButtonRow } from 'src/components/layout/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
@@ -14,7 +13,7 @@ import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSl
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
-  goBack: () => void
+  goBack?: () => void
 }
 
 export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
@@ -26,14 +25,12 @@ export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
   return (
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} px="lg" py="lg">
-        <Flex row alignItems="center" mb="lg">
-          <Button onPress={goBack}>
-            <Chevron color={theme.colors.textPrimary} direction="w" height={18} width={18} />
-          </Button>
-          <Text color="textPrimary" variant="largeLabel">
+        <BackButtonRow onPressBack={goBack}>
+          <Text color="textPrimary" variant="subhead">
             {t('Manage connections')}
           </Text>
-        </Flex>
+        </BackButtonRow>
+
         {sessions.length > 0 ? (
           <FlatList
             columnWrapperStyle={{ marginHorizontal: theme.spacing.sm }}

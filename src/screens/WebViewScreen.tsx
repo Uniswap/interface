@@ -1,9 +1,9 @@
 import React from 'react'
 import WebView from 'react-native-webview'
 import { AppStackScreenProp, SettingsStackScreenProp } from 'src/app/navigation/types'
+import { BackButtonRow } from 'src/components/layout/BackButtonRow'
 import { Screen } from 'src/components/layout/Screen'
 import { Separator } from 'src/components/layout/Separator'
-import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { Screens } from 'src/screens/Screens'
 
@@ -13,9 +13,9 @@ export function WebViewScreen({
   const { headerTitle, uriLink } = route.params
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <SettingsBackButtonRow mb="md" pt="lg" px="lg">
-        <Text variant="largeLabel">{headerTitle}</Text>
-      </SettingsBackButtonRow>
+      <BackButtonRow mb="md" pt="lg" px="lg">
+        <Text variant="subhead">{headerTitle}</Text>
+      </BackButtonRow>
       <Separator />
       <WebView
         source={{

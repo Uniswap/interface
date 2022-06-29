@@ -1,10 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
-import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
+import { SettingsStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import { Screens } from './Screens'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
+import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWalletManageConnection>
 
@@ -14,15 +14,10 @@ export function SettingsWalletManageConnection({
   },
 }: Props) {
   const { sessions } = useWalletConnect(address)
-  const navigation = useSettingsStackNavigation()
-
-  const goBack = () => {
-    navigation.goBack()
-  }
 
   return (
     <Screen>
-      <ConnectedDappsList goBack={goBack} sessions={sessions} />
+      <ConnectedDappsList sessions={sessions} />
     </Screen>
   )
 }

@@ -2,8 +2,8 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout'
+import { BackButtonRow } from 'src/components/layout/BackButtonRow'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
-import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { isEnabled, useTestConfigManager } from 'src/features/remoteConfig'
 import { flex } from 'src/styles/flex'
@@ -16,9 +16,9 @@ export function SettingsTestConfigs() {
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
         <Flex>
-          <SettingsBackButtonRow>
-            <Text variant="largeLabel">Test Configs</Text>
-          </SettingsBackButtonRow>
+          <BackButtonRow>
+            <Text variant="subhead">Test Configs</Text>
+          </BackButtonRow>
 
           <Text variant="body">List of all test configs available to the app</Text>
           <Text variant="caption">

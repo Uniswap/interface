@@ -28,9 +28,8 @@ export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest 
       <Flex row alignItems="center" gap="xs">
         <Chevron
           color={color ? theme.colors[color] : theme.colors.textSecondary}
-          direction="w"
-          height={size ?? 18}
-          width={size ?? 18}
+          height={size}
+          width={size}
         />
         {showButtonLabel && (
           <Text color="textSecondary" variant={'subhead'}>
