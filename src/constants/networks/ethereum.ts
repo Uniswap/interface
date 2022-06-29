@@ -28,7 +28,7 @@ const ethereumInfo: NetworkInfo = {
     logo: EthereumLogo,
     decimal: 18,
   },
-  rpcUrl: 'https://proxy.kyberengineering.io/ethereum',
+  rpcUrl: 'https://cloudflare-eth.com/v1/mainnet/geth?appId=prod-dmm-interface',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route/encode`,
   classic: {
     static: {
