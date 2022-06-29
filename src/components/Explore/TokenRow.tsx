@@ -72,6 +72,7 @@ const TokenRowWrapper = styled.div`
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
+
   @media only screen and (max-width: 640px) {
     display: none;
   }
@@ -89,6 +90,7 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
+
   @media only screen and (max-width: 390px) {
     font-size: 12px;
     justify-content: flex-start;
@@ -98,6 +100,7 @@ const ListNumberCell = styled(Cell)`
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+
   @media only screen and (max-width: 776px) {
     display: none;
   }
@@ -107,6 +110,7 @@ const NameCell = styled(Cell)`
   padding-left: 8px;
   gap: 8px;
   min-width: 200px;
+
   @media only screen and (max-width: 390px) {
     min-width: fit-content;
   }
@@ -118,6 +122,7 @@ const PriceCell = styled(Cell)`
 const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+
   @media only screen and (max-width: 960px) {
     display: none;
   }
@@ -143,6 +148,7 @@ const SortOption = styled.span`
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
   min-width: 120px;
+
   @media only screen and (max-width: 960px) {
     display: none;
   }
@@ -155,6 +161,7 @@ const SparkLineImg = styled(Cell)`
 `
 const SwapCell = styled(Cell)`
   justify-content: flex-end;
+
   @media only screen and (max-width: 640px) {
     display: none;
   }
@@ -185,6 +192,7 @@ const TokenName = styled(Cell)`
 `
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.text3};
+
   @media only screen and (max-width: 390px) {
     font-size: 12px;
     height: 16px;
@@ -195,13 +203,14 @@ const TokenSymbol = styled(Cell)`
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+
   @media only screen and (max-width: 880px) {
     display: none;
   }
 `
 
 /* Handling mobile-specific behavior */
-const MobileStackedNameCell = styled(Cell)`
+const TokenInfoCell = styled(Cell)`
   gap: 8px;
   line-height: 24px;
   font-size: 16px;
@@ -210,18 +219,6 @@ const MobileStackedNameCell = styled(Cell)`
     justify-content: flex-start;
     flex-direction: column;
     gap: 0px;
-  }
-`
-const MobileView = styled(Cell)`
-  display: none;
-  @media only screen and (max-width: 390px) {
-    display: flex;
-  }
-`
-const DesktopView = styled(Cell)`
-  align-items: center;
-  @media only screen and (max-width: 390px) {
-    display: none;
   }
 `
 
@@ -335,6 +332,7 @@ export default function TokenRow({
   const favorited = true
   const currency = useCurrency(tokenAddress)
 
+  // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <TokenRowWrapper key={key}>
       <FavoriteCell>
@@ -342,15 +340,10 @@ export default function TokenRow({
       </FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>
-        <DesktopView>
-          <CurrencyLogo currency={currency} size={'24px'} />
-        </DesktopView>
-        <MobileView>
-          <CurrencyLogo currency={currency} size={'32px'} />
-        </MobileView>
-        <MobileStackedNameCell>
+        <CurrencyLogo currency={currency} />
+        <TokenInfoCell>
           <TokenName>{tokenName}</TokenName> <TokenSymbol>{tokenSymbol}</TokenSymbol>
-        </MobileStackedNameCell>
+        </TokenInfoCell>
       </NameCell>
       <PriceCell>{formatDollarAmount(tokenData.price)}</PriceCell>
       <PercentChangeCell>
