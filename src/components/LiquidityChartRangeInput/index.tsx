@@ -103,7 +103,7 @@ export default function LiquidityChartRangeInput({
   })
 
   const onBrushDomainChangeEnded = useCallback(
-    (domain, mode) => {
+    (domain: [number, number], mode: string | undefined) => {
       let leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
 

@@ -47,6 +47,10 @@ type ErrorBoundaryState = {
   error: Error | null
 }
 
+interface ErrorBoundaryProps {
+  children?: React.ReactNode
+}
+
 const IS_UNISWAP = window.location.hostname === 'app.uniswap.org'
 
 async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
@@ -56,8 +60,8 @@ async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
   return ready.update() as unknown as Promise<ServiceWorkerRegistration>
 }
 
-export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
-  constructor(props: unknown) {
+export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = { error: null }
   }
