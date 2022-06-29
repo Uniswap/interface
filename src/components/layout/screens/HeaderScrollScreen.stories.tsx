@@ -1,11 +1,8 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import { ListDetailScreen } from 'src/components/layout/ListDetailScreen'
-import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
+import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
-import { Box, Flex } from '../layout'
-
-const data = Array.from(Array(10).keys())
+import { Box, Flex } from '../index'
 
 const ContentHeader = (
   <Flex row alignItems="center" gap="xs" my="xs">
@@ -13,9 +10,15 @@ const ContentHeader = (
   </Flex>
 )
 
+const FixedHeader = (
+  <Flex row alignItems="center" gap="xs" my="xs">
+    <Text variant="headlineLarge">Fixed Screen Title</Text>
+  </Flex>
+)
+
 export default {
-  title: 'Layout/ScrollDetailScreen',
-  component: ScrollDetailScreen,
+  title: 'Layout/HeaderScrollScreen',
+  component: HeaderScrollScreen,
   decorators: [
     (Story) => (
       <Box borderColor="backgroundContainer" borderWidth={1} height={812} width={375}>
@@ -23,21 +26,20 @@ export default {
       </Box>
     ),
   ],
-} as ComponentMeta<typeof ListDetailScreen>
+} as ComponentMeta<typeof HeaderScrollScreen>
 
-const Template: ComponentStory<typeof ListDetailScreen> = (args) => {
+const Template: ComponentStory<typeof HeaderScrollScreen> = (args) => {
   return (
-    <ScrollDetailScreen {...args}>
+    <HeaderScrollScreen {...args}>
       <Flex row bg="backgroundContainer" m="md" p="md">
         <Text variant="body">Body content</Text>
       </Flex>
-    </ScrollDetailScreen>
+    </HeaderScrollScreen>
   )
 }
 
 export const Primary = Template.bind({})
 Primary.args = {
   contentHeader: ContentHeader,
-  data: data,
-  title: 'Screen Title',
+  fixedHeader: FixedHeader,
 }

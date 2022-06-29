@@ -6,14 +6,15 @@ import { ExploreStackParamList, useAppStackNavigation } from 'src/app/navigation
 import EyeIcon from 'src/assets/icons/eye.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { PortfolioNFTSection } from 'src/components/home/PortfolioNFTSection'
+import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
+import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
@@ -66,24 +67,33 @@ export function UserScreen({
     )
 
   return (
-    <ScrollDetailScreen
+    <HeaderScrollScreen
       background={
         <GradientBackground opacity={1}>
           <BlueToDarkRadial />
         </GradientBackground>
       }
       contentHeader={
-        <AddressDisplay
-          address={address}
-          captionVariant="mediumLabel"
-          direction="column"
-          showAddressAsSubtitle={true}
-          showCopy={true}
-          size={48}
-          variant="headlineMedium"
-        />
+        <Flex gap="md">
+          <BackButton showButtonLabel />
+          <AddressDisplay
+            address={address}
+            captionVariant="mediumLabel"
+            direction="column"
+            showAddressAsSubtitle={true}
+            showCopy={true}
+            size={48}
+            variant="headlineMedium"
+          />
+        </Flex>
       }
-      titleElement={<AddressDisplay address={address} captionVariant="subhead" size={16} />}>
+      fixedHeader={
+        <Flex row alignItems="center" justifyContent="space-between">
+          <BackButton size={18} />
+          <AddressDisplay address={address} captionVariant="subhead" size={16} />
+          <Box width={18} />
+        </Flex>
+      }>
       <VirtualizedList>
         <Flex gap="lg" px="md">
           {/* profile info */}
@@ -114,10 +124,10 @@ export function UserScreen({
               onPress={onWatchPress}
             />
           </Flex>
-          <PortfolioNFTSection count={4} owner={address} />
+          <PortfolioNFTsSection count={4} owner={address} />
           <PortfolioTokensSection count={3} owner={address} />
         </Flex>
       </VirtualizedList>
-    </ScrollDetailScreen>
+    </HeaderScrollScreen>
   )
 }

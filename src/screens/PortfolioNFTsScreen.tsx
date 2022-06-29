@@ -4,10 +4,11 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Masonry } from 'src/components/layout/Masonry'
-import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
+import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
 import { PollingInterval } from 'src/constants/misc'
@@ -64,25 +65,32 @@ export function PortfolioNFTsScreen({
   const isOtherOwner = owner && owner !== accountAddress
 
   return (
-    <ScrollDetailScreen
+    <HeaderScrollScreen
       contentHeader={
-        <Text mb="md" mx="xs" variant="headlineSmall">
-          {isOtherOwner
-            ? t("{{displayName}}'s NFTs", { displayName: displayName?.name || owner })
-            : t('Your NFTs')}
-        </Text>
+        <Flex gap="md">
+          <BackButton showButtonLabel />
+          <Text mb="md" mx="xs" variant="headlineSmall">
+            {isOtherOwner
+              ? t("{{displayName}}'s NFTs", { displayName: displayName?.name || owner })
+              : t('Your NFTs')}
+          </Text>
+        </Flex>
       }
-      titleElement={
-        isOtherOwner ? (
-          <Flex centered gap="none">
-            <AddressDisplay address={owner} captionVariant="subhead" size={16} />
-            <Text color="accentTextLightSecondary" variant="subheadSmall">
-              {t('NFTs')}
-            </Text>
-          </Flex>
-        ) : (
-          <Text variant="subhead">{t('Your NFTs')}</Text>
-        )
+      fixedHeader={
+        <Flex row alignItems="center" justifyContent="space-between">
+          <BackButton />
+          {isOtherOwner ? (
+            <Flex centered gap="none">
+              <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+              <Text color="accentTextLightSecondary" variant="subheadSmall">
+                {t('NFTs')}
+              </Text>
+            </Flex>
+          ) : (
+            <Text variant="subhead">{t('Your NFTs')}</Text>
+          )}
+          <Box width={18} />
+        </Flex>
       }>
       <Masonry
         data={nftItems}
@@ -90,6 +98,6 @@ export function PortfolioNFTsScreen({
         loading={loading}
         renderItem={renderItem}
       />
-    </ScrollDetailScreen>
+    </HeaderScrollScreen>
   )
 }

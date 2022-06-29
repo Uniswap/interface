@@ -4,13 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
+import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
@@ -170,7 +171,15 @@ function TokenDetails({ currency }: { currency: Currency }) {
 
   return (
     <>
-      <ScrollDetailScreen titleElement={<HeaderTitleElement currency={currency} />}>
+      <HeaderScrollScreen
+        contentHeader={<BackButton showButtonLabel />}
+        fixedHeader={
+          <Flex row alignItems="center" justifyContent="space-between">
+            <BackButton color="textPrimary" size={18} />
+            <HeaderTitleElement currency={currency} />
+            <Box width={18} />
+          </Flex>
+        }>
         <Flex gap="md" my="md">
           <TokenDetailsHeader currency={currency} />
           <PriceChart currency={currency} />
@@ -197,7 +206,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
             </Box>
           )}
         </Flex>
-      </ScrollDetailScreen>
+      </HeaderScrollScreen>
       <Flex row bg="backgroundBackdrop" gap="sm" px="sm" py="xs">
         <PrimaryButton
           disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}

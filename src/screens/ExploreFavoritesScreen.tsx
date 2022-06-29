@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { FavoritesEmptyState } from 'src/components/explore/FavoriteTokensSection'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { Heart } from 'src/components/icons/Heart'
 import { Box, Flex } from 'src/components/layout'
-import { ListDetailScreen } from 'src/components/layout/ListDetailScreen'
+import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -34,15 +35,8 @@ export function ExploreFavoritesScreen() {
     [tokenMetadataDisplayType, cycleTokenMetadataDisplayType]
   )
 
-  const ContentHeader = (
-    <Flex row alignItems="center" gap="xs" my="xs">
-      <Text variant="headlineSmall">{t('Favorite tokens')}</Text>
-      <Heart active={true} size={HEART_SIZE} />
-    </Flex>
-  )
-
   return (
-    <ListDetailScreen
+    <HeaderListScreen
       ItemSeparatorComponent={() => <Separator ml="md" />}
       ListEmptyComponent={
         isLoading ? (
@@ -53,11 +47,25 @@ export function ExploreFavoritesScreen() {
           <FavoritesEmptyState />
         )
       }
-      contentHeader={ContentHeader}
+      contentHeader={
+        <Flex gap="md" mt="sm">
+          <BackButton showButtonLabel />
+          <Flex row alignItems="center" gap="xs" my="xs">
+            <Text variant="headlineSmall">{t('Favorite tokens')}</Text>
+            <Heart active={true} size={HEART_SIZE} />
+          </Flex>
+        </Flex>
+      }
       data={tokens}
+      fixedHeader={
+        <Flex row alignItems="center" justifyContent="space-between">
+          <BackButton />
+          <Text variant="subhead">{t('Favorite tokens')}</Text>
+          <Box width={18} />
+        </Flex>
+      }
       keyExtractor={key}
       renderItem={renderItem}
-      title={t('Favorite tokens')}
     />
   )
 }

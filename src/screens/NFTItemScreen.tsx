@@ -6,10 +6,11 @@ import { HomeStackScreenProp } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
-import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
+import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette'
 import { Text } from 'src/components/Text'
@@ -62,7 +63,9 @@ export function NFTItemScreen({
   const isMyNFT = owner && owner === accountAddress
 
   return (
-    <ScrollDetailScreen>
+    <HeaderScrollScreen
+      contentHeader={<BackButton showButtonLabel />}
+      fixedHeader={<BackButton showButtonLabel />}>
       <Flex borderRadius="md" p="md">
         <Flex centered>
           <NFTAssetItem
@@ -144,6 +147,6 @@ export function NFTItemScreen({
           </Flex>
         </Flex>
       </Flex>
-    </ScrollDetailScreen>
+    </HeaderScrollScreen>
   )
 }

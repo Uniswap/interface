@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Box, Flex } from 'src/components/layout'
-import { ListDetailScreen } from 'src/components/layout/ListDetailScreen'
+import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -51,7 +52,7 @@ export function PortfolioTokensScreen({
   const isOtherOwner = owner && owner !== accountAddress
 
   return (
-    <ListDetailScreen
+    <HeaderListScreen
       ItemSeparatorComponent={() => <Separator ml="md" />}
       ListEmptyComponent={
         <Box mx="md" my="sm">
@@ -59,25 +60,30 @@ export function PortfolioTokensScreen({
         </Box>
       }
       contentHeader={
-        <Flex my="sm">
+        <Flex gap="md" my="sm">
+          <BackButton showButtonLabel />
           <TotalBalance balances={balancesData} />
         </Flex>
       }
       data={balances}
-      keyExtractor={(item: PortfolioBalance) => currencyId(item.amount.currency)}
-      renderItem={renderItem}
-      titleElement={
-        <Flex centered gap="none">
-          {isOtherOwner ? (
-            <AddressDisplay address={owner} captionVariant="subhead" size={16} />
-          ) : (
-            <TotalBalance balances={balancesData} variant="subheadSmall" />
-          )}
-          <Text color="accentTextLightSecondary" variant="subheadSmall">
-            {isOtherOwner ? t('Tokens') : t('Your tokens')}
-          </Text>
+      fixedHeader={
+        <Flex row alignItems="center" justifyContent="space-between">
+          <BackButton size={18} />
+          <Flex centered gap="none">
+            {isOtherOwner ? (
+              <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+            ) : (
+              <TotalBalance balances={balancesData} variant="subheadSmall" />
+            )}
+            <Text color="textSecondary" variant="subheadSmall">
+              {isOtherOwner ? t('Tokens') : t('Your tokens')}
+            </Text>
+          </Flex>
+          <Box width={18} />
         </Flex>
       }
+      keyExtractor={(item: PortfolioBalance) => currencyId(item.amount.currency)}
+      renderItem={renderItem}
     />
   )
 }

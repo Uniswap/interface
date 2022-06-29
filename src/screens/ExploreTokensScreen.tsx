@@ -3,11 +3,12 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { Box, Flex } from 'src/components/layout'
-import { ListDetailScreen } from 'src/components/layout/ListDetailScreen'
+import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -51,27 +52,37 @@ export function ExploreTokensScreen() {
     [tokenMetadataDisplayType, cycleTokenMetadataDisplayType]
   )
 
-  const ContentHeader = (
-    <Flex row alignItems="center" justifyContent="space-between" my="xs">
-      <Text variant="headlineSmall">{t('Tokens')}</Text>
-      <SortingGroup orderBy={orderBy} onPressOrderBy={() => setOrderByModalIsVisible(true)} />
-    </Flex>
-  )
-
   return (
     <>
-      <ListDetailScreen
+      <HeaderListScreen
         ItemSeparatorComponent={() => <Separator ml="md" />}
         ListEmptyComponent={
           <Box mx="md" my="sm">
             <Loading repeat={8} type="token" />
           </Box>
         }
-        contentHeader={ContentHeader}
+        contentHeader={
+          <Flex gap="md" mt="sm">
+            <BackButton showButtonLabel />
+            <Flex row alignItems="center" justifyContent="space-between" my="xs">
+              <Text variant="headlineSmall">{t('Tokens')}</Text>
+              <SortingGroup
+                orderBy={orderBy}
+                onPressOrderBy={() => setOrderByModalIsVisible(true)}
+              />
+            </Flex>
+          </Flex>
+        }
         data={tokens}
+        fixedHeader={
+          <Flex row alignItems="center" justifyContent="space-between">
+            <BackButton />
+            <Text variant="subhead">{t('Tokens')}</Text>
+            <Box width={18} />
+          </Flex>
+        }
         keyExtractor={key}
         renderItem={renderItem}
-        title={t('Tokens')}
       />
       {orderByModal}
     </>

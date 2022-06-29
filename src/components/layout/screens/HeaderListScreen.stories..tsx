@@ -1,10 +1,10 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
 import { ListRenderItemInfo } from 'react-native'
-import { ListDetailScreen } from 'src/components/layout/ListDetailScreen'
+import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
-import { Box, Flex } from '../layout'
+import { Box, Flex } from '../index'
 
 const data = Array.from(Array(10).keys())
 
@@ -15,6 +15,15 @@ const ContentHeader = (
     </Text>
   </Flex>
 )
+
+const FixedHeader = (
+  <Flex row alignItems="center" gap="xs" my="xs">
+    <Text fontWeight={'600'} variant="headlineLarge">
+      Fixed Screen Title
+    </Text>
+  </Flex>
+)
+
 const renderItem = ({ item }: ListRenderItemInfo<number>) => {
   return (
     <Flex row gap="sm" p="md">
@@ -23,8 +32,8 @@ const renderItem = ({ item }: ListRenderItemInfo<number>) => {
   )
 }
 export default {
-  title: 'Layout/ListDetailScreen',
-  component: ListDetailScreen,
+  title: 'Layout/HeaderListScreen',
+  component: HeaderListScreen,
   decorators: [
     (Story) => (
       <Box borderColor="backgroundContainer" borderWidth={1} height={812} width={375}>
@@ -32,9 +41,9 @@ export default {
       </Box>
     ),
   ],
-} as ComponentMeta<typeof ListDetailScreen>
+} as ComponentMeta<typeof HeaderListScreen>
 
-const Template: ComponentStory<typeof ListDetailScreen> = (args) => <ListDetailScreen {...args} />
+const Template: ComponentStory<typeof HeaderListScreen> = (args) => <HeaderListScreen {...args} />
 
 export const Primary = Template.bind({})
 Primary.args = {
@@ -43,5 +52,5 @@ Primary.args = {
   data: data,
   keyExtractor: (item) => item,
   renderItem: renderItem,
-  title: 'Screen Title',
+  fixedHeader: FixedHeader,
 }

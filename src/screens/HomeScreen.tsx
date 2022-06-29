@@ -10,15 +10,16 @@ import SendIcon from 'src/assets/icons/send.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AppBackground } from 'src/components/gradients'
-import { PortfolioNFTSection } from 'src/components/home/PortfolioNFTSection'
+import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
@@ -77,40 +78,45 @@ export function HomeScreen({ navigation }: Props) {
     )
 
   return (
-    <Screen edges={['top', 'left', 'right']}>
-      <AppBackground />
-      <Box mx="md">
-        <NotificationIndicator />
-        <VirtualizedList>
-          <Flex gap="lg" my="lg">
-            <Box alignItems="center" flexDirection="row" justifyContent="space-between">
-              <AccountHeader onPress={onPressAccountHeader} />
-              <Flex centered row>
-                {isWalletConnectSupportedAccount(activeAccount) && (
-                  <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                    <Scan color={theme.colors.textTertiary} height={20} width={20} />
-                  </Button>
-                )}
-                <Button name={ElementName.Notifications} width={28} onPress={onPressNotifications}>
-                  <NotificationCenterLogo />
+    <>
+      <HeaderScrollScreen
+        background={<AppBackground />}
+        contentHeader={
+          <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+            <AccountHeader onPress={onPressAccountHeader} />
+            <Flex centered row>
+              {isWalletConnectSupportedAccount(activeAccount) && (
+                <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+                  <Scan color={theme.colors.textTertiary} height={20} width={20} />
                 </Button>
-              </Flex>
-            </Box>
-            <Flex centered gap="xxs">
-              <TotalBalance balances={balances} />
-              <RelativeChange change={4.2} variant="body" />
+              )}
+              <Button name={ElementName.Notifications} width={28} onPress={onPressNotifications}>
+                <NotificationCenterLogo />
+              </Button>
             </Flex>
-            <QuickActions />
+          </Box>
+        }
+        fixedHeader={
+          <Flex centered mb="xxs">
+            <AddressDisplay address={activeAccount.address} variant="mediumLabel" />
           </Flex>
-          <Flex gap="md">
-            <PortfolioTokensSection count={4} />
-            <PortfolioNFTSection count={16} />
+        }>
+        <NotificationIndicator />
+        <Flex gap="lg" mx="md" my="lg">
+          <Flex centered gap="xxs">
+            <TotalBalance balances={balances} />
+            <RelativeChange change={4.2} variant="body" />
           </Flex>
-        </VirtualizedList>
-      </Box>
+          <QuickActions />
+        </Flex>
+        <Flex gap="md" mx="md">
+          <PortfolioTokensSection count={4} />
+          <PortfolioNFTsSection count={16} />
+        </Flex>
+      </HeaderScrollScreen>
       {/* TODO: remove when app secures funds  */}
       <BiometricCheck />
-    </Screen>
+    </>
   )
 }
 

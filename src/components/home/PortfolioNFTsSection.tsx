@@ -18,7 +18,7 @@ import { dimensions } from 'src/styles/sizing'
 
 const IMAGE_SIZE_RATIO = 2.4
 
-export function PortfolioNFTSection({ count, owner }: { count?: number; owner?: string }) {
+export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?: string }) {
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
