@@ -202,6 +202,7 @@ export default function WalletModal({
       }
 
       // check for mobile options
+      console.log(isMobile)
       if (isMobile) {
         if (
           (!window.web3 && !window.ethereum && option.mobile) ||
