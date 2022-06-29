@@ -89,6 +89,11 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
+  @media only screen and (max-width: 390px) {
+    font-size: 12px;
+    justify-content: flex-start;
+    min-width: 20px;
+  }
 `
 const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
@@ -113,6 +118,9 @@ const PriceCell = styled(Cell)`
 const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
+  @media only screen and (max-width: 960px) {
+    display: none;
+  }
 `
 const SortArrowCell = styled(Cell)`
   padding-right: 2px;
@@ -134,7 +142,6 @@ const SortOption = styled.span`
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
-
   min-width: 120px;
   @media only screen and (max-width: 960px) {
     display: none;
@@ -169,13 +176,51 @@ const SwapButton = styled.button`
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
   }
 `
-const TokenSymbol = styled.span`
+const TokenName = styled(Cell)`
+  @media only screen and (max-width: 390px) {
+    justify-content: flex-start;
+    height: 24px;
+    min-width: max-content;
+  }
+`
+const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.text3};
+  @media only screen and (max-width: 390px) {
+    font-size: 12px;
+    height: 16px;
+    justify-content: flex-start;
+    width: 100%;
+  }
 `
 const VolumeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
   @media only screen and (max-width: 880px) {
+    display: none;
+  }
+`
+
+/* Handling mobile-specific behavior */
+const MobileStackedNameCell = styled(Cell)`
+  gap: 8px;
+  line-height: 24px;
+  font-size: 16px;
+
+  @media only screen and (max-width: 390px) {
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 0px;
+  }
+`
+const MobileView = styled(Cell)`
+  display: none;
+  @media only screen and (max-width: 390px) {
+    display: flex;
+  }
+`
+const DesktopView = styled(Cell)`
+  align-items: center;
+  @media only screen and (max-width: 390px) {
     display: none;
   }
 `
@@ -297,8 +342,15 @@ export default function TokenRow({
       </FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>
-        <CurrencyLogo currency={currency} />
-        {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+        <DesktopView>
+          <CurrencyLogo currency={currency} size={'24px'} />
+        </DesktopView>
+        <MobileView>
+          <CurrencyLogo currency={currency} size={'32px'} />
+        </MobileView>
+        <MobileStackedNameCell>
+          <TokenName>{tokenName}</TokenName> <TokenSymbol>{tokenSymbol}</TokenSymbol>
+        </MobileStackedNameCell>
       </NameCell>
       <PriceCell>{formatDollarAmount(tokenData.price)}</PriceCell>
       <PercentChangeCell>
