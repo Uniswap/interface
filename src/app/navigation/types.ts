@@ -39,6 +39,7 @@ export type ExploreStackParamList = {
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.User]: { address: string }
   [Screens.NFTItem]: NFTItem
+  [Screens.PortfolioTokens]: { owner: Address | undefined }
 }
 
 export type AccountStackParamList = {

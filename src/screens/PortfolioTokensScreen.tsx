@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Box, Flex } from 'src/components/layout'
 import { ListDetailScreen } from 'src/components/layout/ListDetailScreen'
 import { Separator } from 'src/components/layout/Separator'
@@ -47,6 +48,8 @@ export function PortfolioTokensScreen({
     [navigation]
   )
 
+  const isOtherOwner = owner && owner !== accountAddress
+
   return (
     <ListDetailScreen
       ItemSeparatorComponent={() => <Separator ml="md" />}
@@ -65,9 +68,13 @@ export function PortfolioTokensScreen({
       renderItem={renderItem}
       titleElement={
         <Flex centered gap="none">
-          <TotalBalance balances={balancesData} variant="subheadSmall" />
-          <Text color="textSecondary" variant="subheadSmall">
-            {t('Your tokens')}
+          {isOtherOwner ? (
+            <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+          ) : (
+            <TotalBalance balances={balancesData} variant="subheadSmall" />
+          )}
+          <Text color="accentTextLightSecondary" variant="subheadSmall">
+            {isOtherOwner ? t('Tokens') : t('Your tokens')}
           </Text>
         </Flex>
       }

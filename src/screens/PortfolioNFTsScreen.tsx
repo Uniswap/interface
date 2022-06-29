@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
+import { Flex } from 'src/components/layout'
 import { Masonry } from 'src/components/layout/Masonry'
 import { ScrollDetailScreen } from 'src/components/layout/ScrollDetailScreen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
@@ -73,7 +74,12 @@ export function PortfolioNFTsScreen({
       }
       titleElement={
         isOtherOwner ? (
-          <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+          <Flex centered gap="none">
+            <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+            <Text color="accentTextLightSecondary" variant="subheadSmall">
+              {t('NFTs')}
+            </Text>
+          </Flex>
         ) : (
           <Text variant="subhead">{t('Your NFTs')}</Text>
         )
