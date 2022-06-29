@@ -274,7 +274,6 @@ export default function AccountDetails({
                         dispatch(updateSelectedWallet({ wallet: undefined }))
                         openOptions()
                       }}
-                      data-testid="wallet-disconnect"
                     >
                       <Trans>Disconnect</Trans>
                     </WalletAction>
@@ -284,7 +283,6 @@ export default function AccountDetails({
                     onClick={() => {
                       openOptions()
                     }}
-                    data-testid="wallet-change"
                   >
                     <Trans>Change</Trans>
                   </WalletAction>

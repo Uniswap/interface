@@ -14,7 +14,7 @@ describe('Wallet', () => {
   })
 
   it('changes back to the options grid', () => {
-    cy.get('[data-testid=wallet-change]').click()
+    cy.contains('Change').click()
     cy.get('[data-testid=option-grid]').should('exist')
   })
 
@@ -24,7 +24,7 @@ describe('Wallet', () => {
   })
 
   it('shows connect buttons after disconnect', () => {
-    cy.get('[data-testid=wallet-disconnect]').click()
+    cy.contains('Disconnect').click()
     cy.get('[data-testid=option-grid]').should('exist')
   })
 })
