@@ -181,7 +181,11 @@ function Web3StatusInner() {
     )
   } else if (account) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+      <Web3StatusConnected
+        data-testid="web3-status-connected"
+        onClick={toggleWalletModal}
+        pending={hasPendingTransactions}
+      >
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -200,7 +204,7 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+      <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
         <Text>
           <Trans>Connect Wallet</Trans>
         </Text>
