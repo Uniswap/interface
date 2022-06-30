@@ -45,11 +45,11 @@ export function isChainAllowed(connector: Connector, chainId: number) {
   }
 }
 
-export const switchChain = async (connector: Connector, chainId: number) => {
+export const switchChain = (connector: Connector, chainId: number) => {
   if (!isChainAllowed(connector, chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
   } else if (connector === walletConnect || connector === network) {
-    await connector.activate(chainId)
+    return connector.activate(chainId)
   } else {
     const info = CHAIN_INFO[chainId]
     const addChainParameter = {
@@ -59,6 +59,6 @@ export const switchChain = async (connector: Connector, chainId: number) => {
       nativeCurrency: info.nativeCurrency,
       blockExplorerUrls: [info.explorer],
     }
-    await connector.activate(addChainParameter)
+    return connector.activate(addChainParameter)
   }
 }
