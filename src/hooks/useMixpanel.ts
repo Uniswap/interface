@@ -552,11 +552,11 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           break
         }
         case MIXPANEL_TYPE.CAMPAIGN_ENTER_NOW_CLICKED: {
-          mixpanel.track('Campaign - Enter Trading Contest "Enter Now"')
+          mixpanel.track('Campaign - Enter Trading Contest "Enter Now"', payload)
           break
         }
         case MIXPANEL_TYPE.CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED: {
-          mixpanel.track('Campaign - Share Trading Contest share button')
+          mixpanel.track('Campaign - Share Trading Contest share button', payload)
           break
         }
         case MIXPANEL_TYPE.CAMPAIGN_CLAIM_REWARDS_CLICKED: {
@@ -600,7 +600,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
             arbitrary: transaction.arbitrary,
             actual_gas: transaction.receipt?.gasUsed || '',
-            amountUSD: !!res.data?.transaction?.swaps
+            trade_amount_usd: !!res.data?.transaction?.swaps
               ? Math.max(res.data.transaction.swaps.map((s: any) => parseFloat(s.amountUSD).toPrecision(3)))
               : '',
             tx_hash: hash,

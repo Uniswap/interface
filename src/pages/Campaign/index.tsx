@@ -282,7 +282,11 @@ export default function Campaign() {
               </ButtonLight>
               <ShareModal
                 url={window.location.href}
-                onShared={() => mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED)}
+                onShared={() =>
+                  mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED, {
+                    campaign_name: selectedCampaign?.name,
+                  })
+                }
               />
             </EnterNowAndShareContainer>
           </CampaignDetailHeader>

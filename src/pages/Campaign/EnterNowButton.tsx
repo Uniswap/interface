@@ -50,7 +50,7 @@ export default function EnterNowButton({ campaign }: { campaign: CampaignData | 
                 key={chainId}
                 alignItems="center"
                 onClick={() => {
-                  mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_ENTER_NOW_CLICKED)
+                  mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_ENTER_NOW_CLICKED, { campaign_name: campaign?.name })
                   window.open(campaign?.enterNowUrl + '?networkId=' + chainId)
                 }}
               >

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
-
 import { useActiveWeb3React } from '../../hooks'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
