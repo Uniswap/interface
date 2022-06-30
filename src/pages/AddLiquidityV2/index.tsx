@@ -2,10 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
@@ -53,7 +53,7 @@ export default function AddLiquidity({
   },
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  const { account, chainId, provider } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
 
   const theme = useContext(ThemeContext)
 

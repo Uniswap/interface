@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { getWalletForConnector } from 'connectors'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
@@ -185,7 +185,7 @@ function Row({
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
 }) {
-  const { provider, chainId } = useActiveWeb3React()
+  const { provider, chainId } = useWeb3React()
   if (!provider || !chainId) {
     return null
   }
@@ -267,7 +267,7 @@ const NETWORK_SELECTOR_CHAINS = [
 
 export default function NetworkSelector() {
   const dispatch = useAppDispatch()
-  const { chainId, provider, connector } = useActiveWeb3React()
+  const { chainId, provider, connector } = useWeb3React()
   const previousChainId = usePrevious(chainId)
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)

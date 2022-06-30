@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { useCallback, useMemo } from 'react'
@@ -19,7 +19,7 @@ export function useApprovalStateForSpender(
   spender: string | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
 ): ApprovalState {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
@@ -48,7 +48,7 @@ export function useApproval(
   ApprovalState,
   () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
 ] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
   // check the current approval status

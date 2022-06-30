@@ -4,7 +4,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
 import { AnyTrade, useSwapCallArguments } from 'hooks/useSwapCallArguments'
@@ -42,7 +42,7 @@ export function useSwapCallback({
   deadline,
   feeOptions,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
-  const { account, chainId, provider } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
 
   const swapCalls = useSwapCallArguments(
     trade,

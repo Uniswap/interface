@@ -1,4 +1,4 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -29,7 +29,7 @@ export function useFastForwardBlockNumber(): (block: number) => void {
 }
 
 export function BlockNumberProvider({ children }: { children: ReactNode }) {
-  const { chainId: activeChainId, provider } = useActiveWeb3React()
+  const { chainId: activeChainId, provider } = useWeb3React()
   const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
 
   const onBlock = useCallback(
