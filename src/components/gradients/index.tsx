@@ -1,9 +1,7 @@
-import React, { ComponentProps, useMemo } from 'react'
-import { useColorScheme } from 'react-native'
+import { ComponentProps, useMemo } from 'react'
+import 'react-native-reanimated'
 import { Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { RadialGradientBox } from 'src/components/gradients/RadialGradient'
-import { dimensions } from 'src/styles/sizing'
 
 type Stops = Array<ComponentProps<typeof Stop>>
 
@@ -39,23 +37,5 @@ export function usePinkToBlueLinearGradient(): Stops {
   return useMemo(
     () => getStops(theme.colors.deprecated_pink, theme.colors.deprecated_background1),
     [theme.colors.deprecated_background1, theme.colors.deprecated_pink]
-  )
-}
-
-export function AppBackground() {
-  const theme = useAppTheme()
-  const darkMode = useColorScheme() === 'dark'
-
-  return (
-    <RadialGradientBox
-      height={dimensions.fullHeight}
-      opacity={darkMode ? 0.4 : 0.2}
-      stops={getStops(
-        theme.colors.deprecated_primary1,
-        theme.colors.mainBackground,
-        theme.colors.mainBackground
-      )}
-      width={dimensions.fullWidth}
-    />
   )
 }

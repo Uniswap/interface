@@ -13,11 +13,10 @@ import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { AppBackground } from 'src/components/gradients'
+import { AppBackground } from 'src/components/gradients/AppBackground'
 import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
+import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { RelativeChange } from 'src/components/text/RelativeChange'
@@ -80,7 +79,7 @@ export function HomeScreen({ navigation }: Props) {
   return (
     <>
       <HeaderScrollScreen
-        background={<AppBackground />}
+        background={<AppBackground isStrongAccent />}
         contentHeader={
           <Box alignItems="center" flexDirection="row" justifyContent="space-between">
             <AccountHeader onPress={onPressAccountHeader} />
