@@ -425,7 +425,7 @@ export default function Swap() {
                     hostAppName: 'Ubeswap',
                     hostLogoUrl: 'https://info.ubeswap.org/favicon.png',
                     userAddress: account,
-                    swapAsset: currencies.INPUT?.symbol,
+                    swapAsset: `CELO_${currencies.INPUT?.symbol}`,
                     hostApiKey: process.env.REACT_APP_RAMP_KEY,
                   }).show()
                 }}

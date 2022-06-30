@@ -403,7 +403,7 @@ export default function AddLiquidity({
                               hostAppName: 'Ubeswap',
                               hostLogoUrl: 'https://info.ubeswap.org/favicon.png',
                               userAddress: account,
-                              swapAsset: currencies.CURRENCY_A?.symbol,
+                              swapAsset: `CELO_${currencies.CURRENCY_A?.symbol}`,
                               hostApiKey: process.env.REACT_APP_RAMP_KEY,
                             }).show()
                           }}
@@ -433,7 +433,7 @@ export default function AddLiquidity({
                               hostAppName: 'Ubeswap',
                               hostLogoUrl: 'https://info.ubeswap.org/favicon.png',
                               userAddress: account,
-                              swapAsset: currencies.CURRENCY_B?.symbol,
+                              swapAsset: `CELO_${currencies.CURRENCY_B?.symbol}`,
                               hostApiKey: process.env.REACT_APP_RAMP_KEY,
                             }).show()
                           }}

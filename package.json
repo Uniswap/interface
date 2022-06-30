@@ -131,7 +131,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
-    "@ramp-network/ramp-instant-sdk": "^2.5.0",
+    "@ramp-network/ramp-instant-sdk": "^3.1.1",
     "@sentry/react": "^6.9.0",
     "@sentry/tracing": "^6.16.1",
     "@ubeswap/core": "^1.0.2",

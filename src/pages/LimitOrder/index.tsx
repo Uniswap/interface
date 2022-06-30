@@ -420,7 +420,7 @@ export default function LimitOrder() {
                     hostAppName: 'Ubeswap',
                     hostLogoUrl: 'https://info.ubeswap.org/favicon.png',
                     userAddress: account,
-                    swapAsset: parsedInputTotal?.currency.symbol,
+                    swapAsset: `CELO_${parsedInputTotal?.currency.symbol}`,
                     hostApiKey: process.env.REACT_APP_RAMP_KEY,
                   }).show()
                 }}
