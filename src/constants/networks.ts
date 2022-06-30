@@ -28,7 +28,7 @@ import {
 type NetToChain = { [p: string]: ChainId }
 
 //todo move this to NETWORKS_INFO
-export const MAP_TOKEN_HAS_MULTI_BY_NETWORK = {
+export const MAP_TOKEN_HAS_MULTI_BY_NETWORK: { [key: string]: { [key: string]: string } } = {
   // these network have many type of usdt, .... =>  hardcode 1 type
   avalanche: { usdt: 'usdt.e' },
   bittorrent: { usdt: 'usdt_e' },
@@ -77,7 +77,7 @@ export const NETWORKS_INFO = new Proxy(NETWORKS_INFO_CONFIG, {
   },
 })
 
-export const SUPPORTED_NETWORKS = (Object.keys(NETWORKS_INFO) as any[]) as ChainId[]
+export const SUPPORTED_NETWORKS = Object.keys(NETWORKS_INFO).map(Number) as ChainId[]
 
 export const MAINNET_NETWORKS = [
   ChainId.MAINNET,

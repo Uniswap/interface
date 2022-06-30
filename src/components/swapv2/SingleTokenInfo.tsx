@@ -9,7 +9,7 @@ import { useRef } from 'react'
 import { formatDollarAmount } from 'utils/numbers'
 import { isMobile } from 'react-device-detect'
 import { TokenInfo } from 'hooks/useTokenInfo'
-import { Currency } from '@kyberswap/ks-sdk-core'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
 
 const NOT_AVAIALBLE = '--'
 const NUM_LINE_DESC = 5
@@ -64,12 +64,11 @@ const InfoRowLabel = styled.div`
   padding-bottom: 8px;
 `
 
-const AboutText = styled.div`
+const AboutText = styled.h2`
   color: ${({ theme }) => theme.subText};
   font-size: 20px;
   font-weight: 500;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin: 0;
 `
 
 const LINE_HEIGHT = 24
@@ -80,7 +79,6 @@ const DescText = styled(InfoRowLabel)<{ showLimitLine: boolean }>`
   `}
   p {
     line-height: ${LINE_HEIGHT}px;
-    margin: 0;
     ${({ showLimitLine }) =>
       showLimitLine
         ? `
@@ -110,8 +108,9 @@ const SeeMore = styled.a`
 function replaceHtml(text: string) {
   if (!text) return ''
   return text
+    .replace(/\u200B/g, '') // remove zero width space
     .replace(/<a[^>]*>/g, '') // replace a tag
-    .replace(/<\/a>/g, '')
+    .replace(/<\/a>/g, '') // replace a close tag
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // replace script tag
 }
 
@@ -119,6 +118,36 @@ enum SeeStatus {
   NOT_SHOW,
   SEE_MORE,
   SEE_LESS,
+}
+
+export function HowToSwap({
+  fromCurrency,
+  toCurrency,
+}: {
+  fromCurrency: Token | undefined
+  toCurrency: Token | undefined
+}) {
+  if (!fromCurrency || !toCurrency) return null
+  const symbol1 = fromCurrency.symbol
+  const symbol2 = toCurrency.symbol
+  return (
+    <Wrapper borderBottom={false}>
+      <Flex>
+        <AboutText>
+          How to swap {symbol1} to {symbol2}?
+        </AboutText>
+      </Flex>
+
+      <DescText showLimitLine={false}>
+        <p>
+          {fromCurrency.name} ({symbol1}) can be exchanged to {toCurrency.name} ({symbol1} to {symbol2}) on KyberSwap, a
+          cryptocurrency decentralized exchange. By using KyberSwap, users can trade {symbol1} to {symbol2} on networks
+          at the best rates, and earn more with your {symbol1} token without needing to check rates across multiple
+          platforms.
+        </p>
+      </DescText>
+    </Wrapper>
+  )
 }
 
 const SingleTokenInfo = ({
@@ -150,18 +179,25 @@ const SingleTokenInfo = ({
 
   const toggleSeeMore = () => setShowMoreDesc(isSeeMore ? SeeStatus.SEE_LESS : SeeStatus.SEE_MORE)
 
+  const symbol = currency?.symbol
+  const currencyName = tokenInfo.name || currency?.name
+
   return (
     <Wrapper borderBottom={borderBottom}>
-      <Flex>
-        <CurrencyLogo currency={currency} size="24px" />
-        <AboutText>About {currency?.symbol}</AboutText>
+      <Flex alignItems="center">
+        <CurrencyLogo currency={currency} size="24px" style={{ marginRight: 10 }} />
+        <AboutText>
+          About {symbol} {currencyName !== symbol ? `(${currencyName})` : null}
+        </AboutText>
       </Flex>
 
       <DescText showLimitLine={isSeeMore}>
         <p
           ref={ref}
           dangerouslySetInnerHTML={{
-            __html: isSeeMore ? description : description.replaceAll('\r\n\r\n', '<br><br>'),
+            __html: isSeeMore
+              ? description.replace(/<[^>]+>/g, '') // plain text
+              : description.replaceAll('\r\n\r\n', '<br><br>'),
           }}
         ></p>
         {seeMoreStatus !== SeeStatus.NOT_SHOW && (

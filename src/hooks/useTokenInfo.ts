@@ -15,6 +15,7 @@ export interface TokenInfo {
   allTimeLow: number
   tradingVolume: number
   description: { en: string }
+  name: string
 }
 
 export default function useTokenInfo(token: Token | undefined): { data: TokenInfo; loading: boolean; error: any } {
@@ -71,6 +72,7 @@ export default function useTokenInfo(token: Token | undefined): { data: TokenInf
     allTimeLow: data?.market_data?.atl?.usd || 0,
     tradingVolume: data?.market_data?.total_volume?.usd || 0,
     description: data?.description || { en: '' },
+    name: data?.name || '',
   }
 
   return { data: result, loading, error }

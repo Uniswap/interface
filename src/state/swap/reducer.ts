@@ -5,6 +5,7 @@ import {
   Field,
   replaceSwapState,
   selectCurrency,
+  resetSelectCurrency,
   setRecipient,
   switchCurrencies,
   switchCurrenciesV2,
@@ -78,6 +79,12 @@ export default createReducer<SwapState>(initialState, builder =>
           ...state,
           [field]: { currencyId: currencyId },
         }
+      }
+    })
+    .addCase(resetSelectCurrency, (state, { payload: { field } }) => {
+      return {
+        ...state,
+        [field]: { currencyId: '' },
       }
     })
     .addCase(switchCurrencies, state => {
