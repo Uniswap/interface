@@ -4,7 +4,7 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { darken } from 'polished'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
 import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -82,9 +82,18 @@ const TokenRowWrapper = styled.div`
     }
   }
 `
+const ClickFavorited = styled.span`
+  display: flex;
+  align-content: center;
+  &:hover {
+    color: ${({ theme }) => theme.primary1};
+    cursor: pointer;
+  }
+`
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
+  fill: none;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
@@ -178,12 +187,14 @@ const SortingCategory = styled.span`
   justify-content: center;
   &:hover {
     background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+    cursor: pointer;
   }
 `
 const SortOption = styled.span`
   &:hover {
     color: ${({ theme }) => theme.text1};
     background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+    cursor: pointer;
   }
 `
 const SparkLineCell = styled(Cell)`
@@ -220,6 +231,7 @@ const SwapButton = styled.button`
   color: ${({ theme }) => theme.white};
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
+    cursor: pointer;
   }
 `
 const TokenInfoCell = styled(Cell)`
@@ -434,21 +446,22 @@ export default function LoadedRow({
   data,
   listNumber,
   timePeriod,
+  favoriteTokens,
+  updateFavoriteTokens,
 }: {
   tokenAddress: string
   data: TokenData
   listNumber: number
   timePeriod: TimePeriod
+  favoriteTokens: string[]
+  updateFavoriteTokens: any
 }) {
   const token = useToken(tokenAddress)
   const tokenName = token?.name
   const tokenSymbol = token?.symbol
   const tokenData = data[tokenAddress]
-  const theme = useTheme()
   // TODO: remove magic number colors
-  // TODO: write favorited hook
-  const favorited = true
-  const percentChangeInfo = (
+  const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
       <ArrowCell>
@@ -460,13 +473,35 @@ export default function LoadedRow({
       </ArrowCell>
     </>
   )
+  const theme = useTheme()
+
+  /* handle favorite token logic */
+  const isFavorited = favoriteTokens.includes(tokenAddress)
+  const [tokenFavorited, setTokenFavorite] = useState(isFavorited)
+  const toggleFavoriteToken = () => {
+    if (tokenFavorited) {
+      favoriteTokens = favoriteTokens.filter((address) => {
+        return address !== tokenAddress
+      })
+    } else {
+      favoriteTokens.push(tokenAddress)
+    }
+    updateFavoriteTokens(favoriteTokens)
+    setTokenFavorite(!tokenFavorited)
+  }
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <TokenRow
       header={false}
       favorited={
-        <Heart size={15} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
+        <ClickFavorited onClick={() => toggleFavoriteToken()}>
+          <Heart
+            size={15}
+            color={tokenFavorited ? theme.primary1 : undefined}
+            fill={tokenFavorited ? theme.primary1 : undefined}
+          />
+        </ClickFavorited>
       }
       listNumber={listNumber}
       tokenInfo={
@@ -480,10 +515,10 @@ export default function LoadedRow({
       price={
         <PriceInfoCell>
           {formatDollarAmount(tokenData.price)}
-          <PercentChangeInfoCell>{percentChangeInfo}</PercentChangeInfoCell>
+          <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
         </PriceInfoCell>
       }
-      percentChange={percentChangeInfo}
+      percentChange={tokenPercentChangeInfo}
       marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
       volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />}

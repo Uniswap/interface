@@ -16,18 +16,17 @@ const FavoriteButtonContainer = styled.button`
   color: ${({ theme }) => theme.text1};
   font-size: 16px;
 
-  :hover,
-  :focus {
+  :hover {
     cursor: pointer;
     outline: none;
     border: 1px solid ${({ theme }) => theme.bg3};
   }
 `
 
-export default function FavoriteButton() {
+export default function FavoriteButton({ onClick }: { onClick: () => any }) {
   const theme = useTheme()
   return (
-    <FavoriteButtonContainer>
+    <FavoriteButtonContainer onClick={onClick}>
       <FavoriteButtonContent>
         <Heart size={17} color={theme.text1} fill={theme.text1} /> Favorites
       </FavoriteButtonContent>
