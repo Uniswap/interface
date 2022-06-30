@@ -60,8 +60,6 @@ test('Loads Wallet Modal on desktop with MetaMask installed', async () => {
 
 test('Loads Wallet Modal on mobile', async () => {
   UserAgentMock.isMobile = true
-  global.window.ethereum = undefined
-  global.window.web3 = undefined
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Open in Coinbase Wallet')).toBeInTheDocument()
