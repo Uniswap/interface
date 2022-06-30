@@ -4,10 +4,8 @@ import { GLOBAL_DATA } from 'apollo/queries'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useBlockNumber } from 'state/application/hooks'
-import { getExchangeSubgraphUrls } from 'apollo/manager'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
-import { SUPPORTED_NETWORKS } from 'constants/networks'
+import { NETWORKS_INFO, MAINNET_NETWORKS } from 'constants/networks'
 import useAggregatorAPR from 'hooks/useAggregatorAPR'
 
 interface GlobalData {
@@ -54,21 +52,16 @@ export function useGlobalData() {
         .toString()
     }
     const getResultByChainIds = async (chainIds: readonly ChainId[]) => {
-      const allChainPromises = chainIds.map(chain => {
-        const subgraphPromises = getExchangeSubgraphUrls(chain)
-          .map(uri => new ApolloClient({ uri, cache: new InMemoryCache() }))
-          .map(client =>
-            client.query({
-              query: GLOBAL_DATA(chain),
-              fetchPolicy: 'no-cache',
-            }),
-          )
-        return subgraphPromises
-      })
+      const allChainPromises = chainIds.map(chain =>
+        NETWORKS_INFO[chain].classicClient.query({
+          query: GLOBAL_DATA(chain),
+          fetchPolicy: 'no-cache',
+        }),
+      )
+      const queryResult = (await Promise.all(allChainPromises.map(promises => promises.catch(e => e)))).filter(
+        res => !(res instanceof Error),
+      )
 
-      const queryResult = (
-        await Promise.all(allChainPromises.map(promises => Promise.any(promises.map(p => p.catch(e => e)))))
-      ).filter(res => !(res instanceof Error))
       return {
         data: {
           dmmFactories: [
@@ -89,7 +82,7 @@ export function useGlobalData() {
     }
 
     async function getGlobalData() {
-      const result = await getResultByChainIds(SUPPORTED_NETWORKS)
+      const result = await getResultByChainIds(MAINNET_NETWORKS)
 
       setGlobalData({
         ...result.data,

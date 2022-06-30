@@ -6,7 +6,7 @@ import { ButtonError, ButtonLight, ButtonPrimary, ButtonWarning } from 'componen
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swapv2/styleds'
-import { PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, VERSION } from 'constants/v2'
+import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -65,6 +65,7 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 import ProAmmPriceRange from 'components/ProAmm/ProAmmPriceRange'
 import { ONE } from '@kyberswap/ks-sdk-classic'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
+import { NETWORKS_INFO } from 'constants/networks'
 
 // const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -233,14 +234,14 @@ export default function AddLiquidity({
     !!currencies[Field.CURRENCY_A] && depositADisabled && noLiquidity
       ? CurrencyAmount.fromFractionalAmount(currencies[Field.CURRENCY_A] as Currency, ONE, ONE)
       : parsedAmounts[Field.CURRENCY_A],
-    chainId ? PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined,
+    chainId ? NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager : undefined,
   )
 
   const [approvalB, approveBCallback] = useApproveCallback(
     !!currencies[Field.CURRENCY_B] && depositBDisabled && noLiquidity
       ? CurrencyAmount.fromFractionalAmount(currencies[Field.CURRENCY_B] as Currency, ONE, ONE)
       : parsedAmounts[Field.CURRENCY_B],
-    chainId ? PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined,
+    chainId ? NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager : undefined,
   )
 
   const tokens = useMemo(
@@ -283,7 +284,7 @@ export default function AddLiquidity({
 
       //0.00283161
       const txn: { to: string; data: string; value: string } = {
-        to: PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
+        to: NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager,
         data: calldata,
         value,
       }
@@ -812,7 +813,6 @@ export default function AddLiquidity({
                   clickable
                   rotated={rotate}
                   onClick={() => {
-                    // console.log("====", currencyIdA, currencyIdB, !!currencyIdA, !!currencyIdB)
                     if (!!rightPrice) {
                       onLeftRangeInput(rightPrice?.invert().toString())
                     }

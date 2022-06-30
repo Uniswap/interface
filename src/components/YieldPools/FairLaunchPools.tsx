@@ -2,7 +2,7 @@ import React from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { AVERAGE_BLOCK_TIME_IN_SECS, OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
+import { OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useFairLaunch from 'hooks/useFairLaunch'
 import { useAppDispatch } from 'state/hooks'
@@ -22,6 +22,7 @@ import { Trans } from '@lingui/macro'
 import { ExternalLink } from 'theme'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+import { NETWORKS_INFO } from 'constants/networks'
 
 interface FarmsListProps {
   fairLaunchAddress: string
@@ -103,13 +104,13 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
           if (!isFarmStarted) {
             remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
             estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId]
+              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].avgrageBlockTimeInSeconds
             formattedEstimatedRemainingTime =
               estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           } else {
             remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
             estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId]
+              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].avgrageBlockTimeInSeconds
             formattedEstimatedRemainingTime =
               estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           }

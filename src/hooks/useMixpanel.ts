@@ -1,8 +1,8 @@
 import { useActiveWeb3React } from 'hooks/index'
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { NETWORK_LABEL } from 'constants/networks'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
 import mixpanel from 'mixpanel-browser'
 import { isMobile } from 'react-device-detect'
 import { Field } from 'state/swap/actions'
@@ -11,13 +11,11 @@ import { Aggregator } from 'utils/aggregator'
 import { useCallback, useEffect, useMemo } from 'react'
 import { usePrevious } from 'react-use'
 import { useDispatch, useSelector } from 'react-redux'
-import { useETHPrice, useExchangeClient } from 'state/application/hooks'
+import { useETHPrice } from 'state/application/hooks'
 import { AppDispatch, AppState } from 'state'
 import { formatUnits, isAddress } from 'ethers/lib/utils'
 import { useLocation } from 'react-router-dom'
-import { nativeNameFromETH } from 'utils'
 import { TransactionDetails } from 'state/transactions/reducer'
-import { prommClient } from 'apollo/client'
 import {
   TRANSACTION_SWAP_AMOUNT_USD,
   GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
@@ -127,15 +125,21 @@ export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
 export default function useMixpanel(trade?: Aggregator | undefined, currencies?: { [field in Field]?: Currency }) {
   const { chainId, account } = useWeb3React()
   const { saveGas } = useSwapState()
-  const network = chainId && NETWORK_LABEL[chainId as ChainId]
+  const network = chainId && NETWORKS_INFO[chainId as ChainId].name
   const inputCurrency = currencies && currencies[Field.INPUT]
   const outputCurrency = currencies && currencies[Field.OUTPUT]
-  const inputSymbol = inputCurrency && inputCurrency.isNative ? nativeNameFromETH(chainId) : inputCurrency?.symbol
-  const outputSymbol = outputCurrency && outputCurrency.isNative ? nativeNameFromETH(chainId) : outputCurrency?.symbol
+  const inputSymbol =
+    inputCurrency && inputCurrency.isNative
+      ? NETWORKS_INFO[(chainId as ChainId) || ChainId.MAINNET].nativeToken.name
+      : inputCurrency?.symbol
+  const outputSymbol =
+    outputCurrency && outputCurrency.isNative
+      ? NETWORKS_INFO[(chainId as ChainId) || ChainId.MAINNET].nativeToken.name
+      : outputCurrency?.symbol
   const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
   const ethPrice = useETHPrice()
   const dispatch = useDispatch<AppDispatch>()
-  const apolloClient = useExchangeClient()
+  const apolloClient = NETWORKS_INFO[(chainId as ChainId) || (ChainId.MAINNET as ChainId)].classicClient
   const mixpanelHandler = useCallback(
     (type: MIXPANEL_TYPE, payload?: any) => {
       if (!account) {
@@ -574,7 +578,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
   )
   const subgraphMixpanelHandler = useCallback(
     async (transaction: TransactionDetails) => {
-      const apolloProMMClient = prommClient[chainId as ChainId]
+      const apolloProMMClient = NETWORKS_INFO[(chainId as ChainId) || (ChainId.MAINNET as ChainId)].elasticClient
 
       const hash = transaction.hash
       if (!chainId) return
@@ -806,9 +810,9 @@ export const useGlobalMixpanelEvents = () => {
       mixpanel.identify(account)
 
       const getQueryParam = (url: string, param: string) => {
-        // eslint-disable-next-line no-empty-character-class
-        param = param.replace(/[[]/, '[').replace(/[]]/, ']')
-        var regexS = '[?&]' + param + '=([^&#]*)',
+        // eslint-disable-next-line
+        param = param.replace(/\[\[\]/, '[').replace(/[]]/, ']')
+        const regexS = '[?&]' + param + '=([^&#]*)',
           regex = new RegExp(regexS),
           results: any = regex.exec(url)
         if (results === null || (results && typeof results[1] !== 'string' && results[1].length)) {
@@ -817,11 +821,11 @@ export const useGlobalMixpanelEvents = () => {
           return decodeURIComponent(results[1]).replace(/\W/gi, ' ')
         }
       }
-      var campaign_keywords = 'utm_source utm_medium utm_campaign utm_content utm_term'.split(' '),
-        kw = '',
+      let kw = ''
+      const campaign_keywords = 'utm_source utm_medium utm_campaign utm_content utm_term'.split(' '),
         params: { [key: string]: any } = {},
         first_params: { [key: string]: any } = {}
-      var index
+      let index
       for (index = 0; index < campaign_keywords.length; ++index) {
         kw = getQueryParam(document.URL, campaign_keywords[index])
         if (kw.length) {
@@ -851,10 +855,10 @@ export const useGlobalMixpanelEvents = () => {
   useEffect(() => {
     if (oldNetwork) {
       mixpanelHandler(MIXPANEL_TYPE.CHAIN_SWITCHED, {
-        new_network: chainId && NETWORK_LABEL[chainId as ChainId],
-        old_network: oldNetwork && NETWORK_LABEL[oldNetwork as ChainId],
+        new_network: chainId && NETWORKS_INFO[chainId as ChainId].name,
+        old_network: oldNetwork && NETWORKS_INFO[oldNetwork as ChainId].name,
       })
-      mixpanel.register({ network: chainId && NETWORK_LABEL[chainId as ChainId] })
+      mixpanel.register({ network: chainId && NETWORKS_INFO[chainId as ChainId].name })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])

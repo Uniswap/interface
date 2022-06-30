@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
-import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import { useModalOpen, useTrueSightNetworkModalToggle } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { ChainId } from '@kyberswap/ks-sdk-core'
@@ -106,16 +106,16 @@ export default function TrueSightNetworkModal({
                 return (
                   <SelectNetworkButton key={i} padding="0">
                     <ListItem selected>
-                      {key && NETWORK_ICON[key] ? (
+                      {key && NETWORKS_INFO[key].icon ? (
                         <img
-                          src={NETWORK_ICON[key]}
+                          src={NETWORKS_INFO[key].icon}
                           alt="Switch Network"
                           style={{ width: '24px', marginRight: '8px' }}
                         />
                       ) : (
                         <Kyber size={24} style={{ marginRight: '8px' }} color={theme.background} />
                       )}
-                      <NetworkLabel>{key ? NETWORK_LABEL[key] : t`All Chains`}</NetworkLabel>
+                      <NetworkLabel>{key ? NETWORKS_INFO[key].name : t`All Chains`}</NetworkLabel>
                     </ListItem>
                   </SelectNetworkButton>
                 )
@@ -131,12 +131,16 @@ export default function TrueSightNetworkModal({
                   }}
                 >
                   <ListItem>
-                    {key && NETWORK_ICON[key] ? (
-                      <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
+                    {key && NETWORKS_INFO[key].icon ? (
+                      <img
+                        src={NETWORKS_INFO[key].icon}
+                        alt="Switch Network"
+                        style={{ width: '24px', marginRight: '8px' }}
+                      />
                     ) : (
                       <Kyber size={24} style={{ marginRight: '8px' }} />
                     )}
-                    <NetworkLabel>{key ? NETWORK_LABEL[key] : t`All Chains`}</NetworkLabel>
+                    <NetworkLabel>{key ? NETWORKS_INFO[key].name : t`All Chains`}</NetworkLabel>
                   </ListItem>
                 </SelectNetworkButton>
               )

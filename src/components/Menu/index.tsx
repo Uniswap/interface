@@ -8,7 +8,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ExternalLink } from 'theme'
-import { CLAIM_REWARD_SC_ADDRESS, DMM_ANALYTICS_URL } from 'constants/index'
+import { DMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useMedia } from 'react-use'
@@ -36,6 +36,7 @@ import {
   UserPlus,
 } from 'react-feather'
 import { MoneyBag } from 'components/Icons'
+import { NETWORKS_INFO } from 'constants/networks'
 
 const sharedStylesMenuItem = css`
   flex: 1;
@@ -161,19 +162,7 @@ export default function Menu() {
 
   const getBridgeLink = () => {
     if (!chainId) return ''
-    if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) return 'https://wallet.matic.network/bridge'
-    if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
-    if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
-    if ([ChainId.FANTOM].includes(chainId)) return 'https://multichain.xyz'
-    if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId))
-      return 'https://cronos.crypto.org/docs/bridge/cdcapp.html'
-    if ([ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId)) return 'https://bridge.arbitrum.io'
-    if ([ChainId.BTTC].includes(chainId)) return 'https://wallet.bt.io/bridge'
-    if ([ChainId.AURORA].includes(chainId)) return 'https://rainbowbridge.app'
-    if ([ChainId.VELAS].includes(chainId)) return 'https://bridge.velaspad.io'
-    if ([ChainId.OASIS].includes(chainId)) return 'https://oasisprotocol.org/b-ridges'
-
-    return ''
+    return NETWORKS_INFO[chainId].bridgeURL
   }
 
   const bridgeLink = getBridgeLink()
@@ -298,7 +287,7 @@ export default function Menu() {
           <Trans>Contact Us</Trans>
         </MenuItem>
         <ClaimRewardButton
-          disabled={!account || (!!chainId && CLAIM_REWARD_SC_ADDRESS[chainId] === '') || pendingTx}
+          disabled={!account || (!!chainId && NETWORKS_INFO[chainId].classic.claimReward === '') || pendingTx}
           onClick={() => {
             mixpanelHandler(MIXPANEL_TYPE.CLAIM_REWARDS_INITIATED)
             toggleClaimPopup()

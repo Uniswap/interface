@@ -18,6 +18,7 @@ import Web3Network from 'components/Web3Network'
 import { useIsDarkMode } from 'state/user/hooks'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import { useWindowSize } from 'hooks/useWindowSize'
+import { NETWORKS_INFO } from 'constants/networks'
 // import { Repeat } from 'react-feather'
 // import { ReactComponent as Dollar } from 'assets/svg/dollar.svg'
 // import { ReactComponent as Visa } from 'assets/buy-crypto/visa.svg'
@@ -496,26 +497,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)}{' '}
-                {chainId && [1, 3, 4, 5, 42].includes(chainId)
-                  ? `ETH`
-                  : chainId && [137, 80001].includes(chainId)
-                  ? `MATIC`
-                  : chainId && [56, 97].includes(chainId)
-                  ? `BNB`
-                  : chainId && [43113, 43114].includes(chainId)
-                  ? `AVAX`
-                  : chainId && [250].includes(chainId)
-                  ? `FTM`
-                  : chainId && [25, 338].includes(chainId)
-                  ? `CRO`
-                  : chainId && [199, 1028].includes(chainId)
-                  ? 'BTT'
-                  : chainId && [ChainId.VELAS, 111].includes(chainId)
-                  ? 'VLX'
-                  : chainId && [ChainId.OASIS].includes(chainId)
-                  ? 'ROSE'
-                  : `ETH`}
+                {userEthBalance?.toSignificant(4)} {NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.symbol}
               </BalanceText>
             ) : null}
             <Web3Status />

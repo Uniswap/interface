@@ -3227,7 +3227,6 @@
     "@ethersproject/networks" "^5.0.2"
     "@ethersproject/providers" "^5.0.5"
     "@ethersproject/solidity" "^5.0.2"
-    "@kyberswap/ks-sdk-core" "^0.0.12"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.4"
@@ -3235,10 +3234,11 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@kyberswap/ks-sdk-core@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-core/-/ks-sdk-core-0.0.12.tgz#e6b786e0e0885ab3fe7ee6ea5d99e941e50adb8f"
-  integrity sha512-AUkaEMWONj7gyJNa8s8pFiXLO7MOCf2fKNVvCmHSF8HPf/+h1biV4Kr7y/KkvTFzdsfbgfV1kR9fvW0Fm90MrA==
+
+"@kyberswap/ks-sdk-core@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-core/-/ks-sdk-core-0.0.13.tgz#5331007fdbbe22bec8c258ef4ad7d0fcdff33a9b"
+  integrity sha512-WcuSJzey7b2NXNVm4PEULqiqMoNmBE8uI1t8Vak2sSpsdy+p82sICCQqAn4oYimdW2U1JZG0svgaBGdKZsiapQ==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -3254,7 +3254,6 @@
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@kyberswap/ks-sdk-core" "^0.0.12"
     "@uniswap/v3-periphery" "^1.3.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"

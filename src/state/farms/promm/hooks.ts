@@ -3,7 +3,7 @@ import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { useCallback, useMemo, useState, useRef, useEffect } from 'react'
 import { useActiveWeb3React, providers } from 'hooks'
-import { FARM_CONTRACTS, PRO_AMM_CORE_FACTORY_ADDRESSES, PRO_AMM_INIT_CODE_HASH, VERSION } from 'constants/v2'
+import { FARM_CONTRACTS, VERSION } from 'constants/v2'
 import { ChainId, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { updatePrommFarms, setLoading } from './actions'
 import { useProMMFarmContracts, useProMMFarmContract, useProAmmNFTPositionManagerContract } from 'hooks/useContract'
@@ -24,10 +24,10 @@ import { PositionDetails } from 'types/position'
 import usePrevious from 'hooks/usePrevious'
 import { useQuery } from '@apollo/client'
 import { PROMM_JOINED_POSITION } from 'apollo/queries/promm'
-import { prommClient } from 'apollo/client'
 import { useETHPrice, useTokensPrice } from 'state/application/hooks'
 import { usePoolBlocks } from 'state/prommPools/hooks'
 import { ZERO_ADDRESS } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export const useProMMFarms = () => {
   return useSelector((state: AppState) => state.prommFarms)
@@ -87,7 +87,7 @@ export const useGetProMMFarms = () => {
       const nftInfos = nftInfosFromContract.map((result: any, index) => ({
         tokenId: userDepositedNFT[index],
         poolId: getCreate2Address(
-          PRO_AMM_CORE_FACTORY_ADDRESSES[chainId as ChainId],
+          NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.coreFactory,
           keccak256(
             ['bytes'],
             [
@@ -97,7 +97,7 @@ export const useGetProMMFarms = () => {
               ),
             ],
           ),
-          PRO_AMM_INIT_CODE_HASH[chainId],
+          NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.initCodeHash,
         ),
         feeGrowthInsideLast: result.pos.feeGrowthInsideLast,
         nonce: result.pos.nonce,
@@ -111,7 +111,7 @@ export const useGetProMMFarms = () => {
         token1: result.info.token1,
       }))
 
-      let pids = [...Array(BigNumber.from(poolLength).toNumber()).keys()]
+      const pids = [...Array(BigNumber.from(poolLength).toNumber()).keys()]
 
       const poolInfos: ProMMFarm[] = await Promise.all(
         pids.map(async pid => {
@@ -437,7 +437,7 @@ type Response = {
 
 export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
   const { chainId } = useActiveWeb3React()
-  const dataClient = prommClient[chainId as ChainId]
+  const dataClient = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
   const { block24 } = usePoolBlocks()
 
   const { data } = useQuery<Response>(PROMM_JOINED_POSITION(fairlaunchAddress.toLowerCase(), pid, block24), {

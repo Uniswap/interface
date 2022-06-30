@@ -160,6 +160,26 @@ class OasisNativeCurrency extends NativeCurrency {
   }
 }
 
+function isOptimism(chainId: number): chainId is ChainId.OPTIMISM {
+  return chainId === ChainId.OPTIMISM
+}
+
+class OptimismNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isOptimism(this.chainId)) throw new Error('Not OPTIMISM')
+    return WETH[this.chainId]
+  }
+
+  public constructor(chainId: number) {
+    if (!isOptimism(chainId)) throw new Error('Not OPTIMISM')
+    super(chainId, 18, 'ETH', 'ETH')
+  }
+}
+
 export class ExtendedEther extends Ether {
   public get wrapped(): Token {
     if (this.chainId in WETH) return WETH[this.chainId as ChainId]
@@ -193,6 +213,8 @@ export function nativeOnChain(chainId: number): NativeCurrency {
       ? new VelasNativeCurrency(chainId)
       : isOasis(chainId)
       ? new OasisNativeCurrency(chainId)
+      : isOptimism(chainId)
+      ? new OptimismNativeCurrency(chainId)
       : ExtendedEther.onChain(chainId))
   )
 }

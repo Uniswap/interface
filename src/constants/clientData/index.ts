@@ -1,1 +1,1 @@
-export const clientData = {source: "KyberSwap"}
+export const clientData = { source: 'KyberSwap' }

@@ -2,10 +2,10 @@ import { Interface } from '@ethersproject/abi'
 import { FeeAmount, Pool, computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Currency, Token, ChainId } from '@kyberswap/ks-sdk-core'
 import { abi as ProAmmPoolStateABI } from 'constants/abis/v2/ProAmmPoolState.json'
-import { PRO_AMM_INIT_CODE_HASH, PRO_AMM_CORE_FACTORY_ADDRESSES } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { NETWORKS_INFO } from 'constants/networks'
 export enum PoolState {
   LOADING,
   NOT_EXISTS,
@@ -32,7 +32,7 @@ export function usePools(
     })
   }, [chainId, poolKeys])
   const poolAddresses: (string | undefined)[] = useMemo(() => {
-    const proAmmCoreFactoryAddress = chainId && PRO_AMM_CORE_FACTORY_ADDRESSES[chainId]
+    const proAmmCoreFactoryAddress = chainId && NETWORKS_INFO[chainId].elastic.coreFactory
 
     return transformed.map(value => {
       if (!proAmmCoreFactoryAddress || !value) return undefined
@@ -41,7 +41,7 @@ export function usePools(
         tokenA: value[0],
         tokenB: value[1],
         fee: value[2],
-        initCodeHashManualOverride: PRO_AMM_INIT_CODE_HASH[chainId as ChainId],
+        initCodeHashManualOverride: NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.initCodeHash,
       })
     })
   }, [chainId, transformed])

@@ -17,7 +17,8 @@ import { AppState } from '../index'
 import { setError, setLoading, setSharedPoolId, updatePools } from './actions'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 import { useActiveWeb3React } from 'hooks'
-import { useETHPrice, useExchangeClient } from 'state/application/hooks'
+import { useETHPrice } from 'state/application/hooks'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export interface SubgraphPoolData {
   id: string
@@ -333,7 +334,8 @@ export function useResetPools(chainId: ChainId | undefined) {
 
 export function usePoolCountInSubgraph(): number {
   const [poolCount, setPoolCount] = useState(0)
-  const apolloClient = useExchangeClient()
+  const { chainId } = useActiveWeb3React()
+  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
 
   useEffect(() => {
     const getPoolCount = async () => {
@@ -361,7 +363,7 @@ export function useAllPoolsData(): {
 } {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
-  const apolloClient = useExchangeClient()
+  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
   const loading = useSelector((state: AppState) => state.pools.loading)
@@ -415,7 +417,7 @@ export function useSinglePoolData(
   data?: SubgraphPoolData
 } {
   const { chainId } = useActiveWeb3React()
-  const apolloClient = useExchangeClient()
+  const apolloClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<Error | undefined>(undefined)

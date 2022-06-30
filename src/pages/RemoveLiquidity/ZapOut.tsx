@@ -18,7 +18,6 @@ import {
   WETH,
 } from '@kyberswap/ks-sdk-core'
 
-import { ZAP_ADDRESSES, STATIC_FEE_ZAP_ADDRESSES, STATIC_FEE_FACTORY_ADDRESSES } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -69,6 +68,7 @@ import {
 } from './styled'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export default function ZapOut({
   currencyIdA,
@@ -107,6 +107,7 @@ export default function ZapOut({
     price,
     error,
     isStaticFeePair,
+    isOldStaticFeeContract,
   } = useDerivedZapOutInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
   const { onUserInput: _onUserInput, onSwitchField } = useZapOutActionHandlers()
 
@@ -160,7 +161,13 @@ export default function ZapOut({
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(
     parsedAmounts[Field.LIQUIDITY],
-    !!chainId ? (isStaticFeePair ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId]) : undefined,
+    !!chainId
+      ? isStaticFeePair
+        ? isOldStaticFeeContract
+          ? NETWORKS_INFO[chainId].classic.oldStatic?.zap
+          : NETWORKS_INFO[chainId].classic.static.zap
+        : NETWORKS_INFO[chainId].classic.dynamic?.zap
+      : undefined,
   )
 
   // if user liquidity change => remove signature
@@ -205,7 +212,11 @@ export default function ZapOut({
     ]
     const message = {
       owner: account,
-      spender: isStaticFeePair ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId],
+      spender: isStaticFeePair
+        ? isOldStaticFeeContract
+          ? NETWORKS_INFO[chainId].classic.oldStatic?.zap
+          : NETWORKS_INFO[chainId].classic.static.zap
+        : NETWORKS_INFO[chainId].classic.dynamic?.zap,
       value: liquidityAmount.quotient.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber(),
@@ -264,7 +275,7 @@ export default function ZapOut({
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
     }
-    const routerContract = getZapContract(chainId, library, account, isStaticFeePair)
+    const zapContract = getZapContract(chainId, library, account, isStaticFeePair, isOldStaticFeeContract)
 
     if (!currencyA || !currencyB) throw new Error('missing tokens')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
@@ -347,12 +358,12 @@ export default function ZapOut({
     }
 
     // All methods of new zap static fee contract include factory address as first arg
-    if (isStaticFeePair) {
-      args.unshift(STATIC_FEE_FACTORY_ADDRESSES[chainId])
+    if (isStaticFeePair && !isOldStaticFeeContract) {
+      args.unshift(NETWORKS_INFO[chainId].classic.static.factory)
     }
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
-        routerContract.estimateGas[methodName](...args)
+        zapContract.estimateGas[methodName](...args)
           .then(calculateGasMargin)
           .catch(err => {
             // we only care if the error is something other than the user rejected the tx
@@ -386,7 +397,7 @@ export default function ZapOut({
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
       setAttemptingTxn(true)
-      await routerContract[methodName](...args, {
+      await zapContract[methodName](...args, {
         gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {

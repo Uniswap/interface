@@ -91,7 +91,6 @@ const ScheduleCard = ({ schedules }: { schedules: Schedule[] }) => {
   const remainTime = endTime - currentTimestamp
   const { mixpanelHandler } = useMixpanel()
 
-  console.log(schedules)
   const info = schedules.reduce<{
     [tokenAddress: string]: {
       vestableIndexes: number[]

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 
-import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
+import { NETWORKS_INFO } from '../../constants/networks'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ApplicationModal } from '../../state/application/actions'
@@ -111,8 +111,12 @@ export default function SelectNetworkModal({
               return (
                 <SelectNetworkButton key={i} padding="0">
                   <ListItem selected>
-                    <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
-                    <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
+                    <img
+                      src={NETWORKS_INFO[key].icon}
+                      alt="Switch Network"
+                      style={{ width: '24px', marginRight: '8px' }}
+                    />
+                    <NetworkLabel>{NETWORKS_INFO[key].name}</NetworkLabel>
                   </ListItem>
                 </SelectNetworkButton>
               )
@@ -128,8 +132,12 @@ export default function SelectNetworkModal({
                 }}
               >
                 <ListItem>
-                  <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
-                  <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
+                  <img
+                    src={NETWORKS_INFO[key].icon}
+                    alt="Switch Network"
+                    style={{ width: '24px', marginRight: '8px' }}
+                  />
+                  <NetworkLabel>{NETWORKS_INFO[key].name}</NetworkLabel>
                 </ListItem>
               </SelectNetworkButton>
             )

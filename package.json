@@ -130,7 +130,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.11",
     "@kyberswap/ks-sdk-classic": "^0.0.13",
-    "@kyberswap/ks-sdk-core": "^0.0.12",
+    "@kyberswap/ks-sdk-core": "^0.0.13",
     "@kyberswap/ks-sdk-elastic": "^0.0.41",
     "@lingui/detect-locale": "^3.10.4",
     "@lingui/react": "^3.10.2",

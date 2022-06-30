@@ -16,7 +16,7 @@ import { StyledInternalLink, ExternalLink, TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
 import ContentLoader from './ContentLoader'
 import Wallet from 'components/Icons/Wallet'
-import { PROMM_ANALYTICS, CHAIN_ROUTE } from 'constants/index'
+import { PROMM_ANALYTICS_URL } from 'constants/index'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import FarmingPoolsToggle from 'components/Toggle/FarmingPoolsToggle'
 import { useProMMFarmsFetchOnlyOne, useProMMFarms } from 'state/farms/promm/hooks'
@@ -123,7 +123,7 @@ export default function ProAmmPool() {
               </Flex>
             </Flex>
 
-            <ExternalLink href={`${PROMM_ANALYTICS}/${CHAIN_ROUTE[chainId as ChainId]}/account/${account}`}>
+            <ExternalLink href={`${PROMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}>
               <Flex alignItems="center">
                 <Wallet size={16} />
                 <Text fontSize="14px" marginLeft="4px">

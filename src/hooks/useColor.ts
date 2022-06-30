@@ -4,6 +4,7 @@ import Vibrant from 'node-vibrant'
 import { hex } from 'wcag-contrast'
 import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import uriToHttp from 'utils/uriToHttp'
+import { useIsDarkMode } from 'state/user/hooks'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
@@ -29,12 +30,21 @@ async function getColorFromToken(token: Token): Promise<string | null> {
     .catch(() => null)
 }
 
-async function getColorFromUriPath(uri: string): Promise<string | null> {
+async function getColorFromUriPath(uri: string, isDark: boolean): Promise<string | null> {
   const formattedPath = uriToHttp(uri)[0]
 
   return Vibrant.from(formattedPath)
     .getPalette()
     .then(palette => {
+      if (isDark) {
+        if (palette?.DarkVibrant) {
+          return palette.DarkVibrant.hex
+        }
+      } else {
+        if (palette?.LightVibrant) {
+          return palette.LightVibrant.hex
+        }
+      }
       if (palette?.Vibrant) {
         return palette.Vibrant.hex
       }
@@ -68,12 +78,13 @@ export function useColor(token?: Token) {
 
 export function useListColor(listImageUri?: string) {
   const [color, setColor] = useState('#2172E5')
+  const isDark = useIsDarkMode()
 
   useLayoutEffect(() => {
     let stale = false
 
     if (listImageUri) {
-      getColorFromUriPath(listImageUri).then(color => {
+      getColorFromUriPath(listImageUri, isDark).then(color => {
         if (!stale && color !== null) {
           setColor(color)
         }
@@ -84,7 +95,7 @@ export function useListColor(listImageUri?: string) {
       stale = true
       setColor('#2172E5')
     }
-  }, [listImageUri])
+  }, [isDark, listImageUri])
 
   return color
 }

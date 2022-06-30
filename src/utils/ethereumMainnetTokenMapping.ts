@@ -1,6 +1,5 @@
 import { ZERO_ADDRESS } from 'constants/index'
 import { isAddress } from 'utils'
-import { MAINNET_TOKEN_LIST } from 'constants/tokenLists/mainnet.tokenlist'
 
 export const getEthereumMainnetTokenLogoURL = (address: string) => {
   let uri
@@ -25,10 +24,6 @@ export const getEthereumMainnetTokenLogoURL = (address: string) => {
   } else if (address.toLowerCase() === '0x9F52c8ecbEe10e00D9faaAc5Ee9Ba0fF6550F511'.toLowerCase()) {
     // SIPHER
     uri = 'https://i.imgur.com/zhZo9Bx.jpg'
-  }
-
-  if (!uri) {
-    uri = MAINNET_TOKEN_LIST.tokens.find(token => token.address.toLowerCase() === address.toLowerCase())?.logoURI
   }
 
   if (!uri) {

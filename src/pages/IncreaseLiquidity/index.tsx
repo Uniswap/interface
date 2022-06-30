@@ -6,7 +6,7 @@ import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
-import { PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, FARM_CONTRACTS, VERSION } from 'constants/v2'
+import { FARM_CONTRACTS, VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -45,6 +45,7 @@ import usePrevious from 'hooks/usePrevious'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import useTheme from 'hooks/useTheme'
 import Copy from 'components/Copy'
+import { NETWORKS_INFO } from 'constants/networks'
 export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl, tokenId },
@@ -167,11 +168,11 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId ? PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined,
+    chainId ? NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager : undefined,
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId ? PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined,
+    chainId ? NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager : undefined,
   )
 
   const allowedSlippage = useUserSlippageTolerance()
@@ -200,7 +201,7 @@ export default function AddLiquidity({
 
       //0.00283161
       const txn: { to: string; data: string; value: string } = {
-        to: PRO_AMM_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
+        to: NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager,
         data: calldata,
         value,
       }
@@ -219,7 +220,6 @@ export default function AddLiquidity({
             .getSigner()
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
-              console.log(response)
               setAttemptingTxn(false)
               addTransactionWithType(response, {
                 type: 'Increase liquidity',

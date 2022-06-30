@@ -1,21 +1,13 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import MaticLogo from '../../assets/networks/polygon-network.png'
-import BnbLogo from '../../assets/images/bnb-logo.png'
-import AvaxLogo from '../../assets/networks/avax-network.png'
-import FtmLogo from '../../assets/networks/fantom-network.png'
-import CronosLogo from '../../assets/svg/cronos-token-logo.svg'
-import bttLogo from 'assets/networks/bttc.png'
-import velasLogo from 'assets/networks/velas-network.png'
-import oasisLogo from 'assets/networks/oasis-network.svg'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { useActiveWeb3React } from 'hooks'
 import Logo from '../Logo'
 import { getTokenLogoURL } from 'utils'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { NETWORKS_INFO } from 'constants/networks'
 
 const StyledNativeCurrencyLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -31,29 +23,6 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   object-fit: contain;
 `
-
-export const logo: { readonly [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: EthereumLogo,
-  [ChainId.ROPSTEN]: EthereumLogo,
-  [ChainId.RINKEBY]: EthereumLogo,
-  [ChainId.GÖRLI]: EthereumLogo,
-  [ChainId.KOVAN]: EthereumLogo,
-  [ChainId.MATIC]: MaticLogo,
-  [ChainId.MUMBAI]: MaticLogo,
-  [ChainId.BSCTESTNET]: BnbLogo,
-  [ChainId.BSCMAINNET]: BnbLogo,
-  [ChainId.AVAXTESTNET]: AvaxLogo,
-  [ChainId.AVAXMAINNET]: AvaxLogo,
-  [ChainId.FANTOM]: FtmLogo,
-  [ChainId.CRONOSTESTNET]: CronosLogo,
-  [ChainId.CRONOS]: CronosLogo,
-  [ChainId.ARBITRUM]: EthereumLogo,
-  [ChainId.ARBITRUM_TESTNET]: EthereumLogo,
-  [ChainId.BTTC]: bttLogo,
-  [ChainId.AURORA]: EthereumLogo,
-  [ChainId.VELAS]: velasLogo,
-  [ChainId.OASIS]: oasisLogo,
-}
 
 export default function CurrencyLogo({
   currency,
@@ -81,7 +50,14 @@ export default function CurrencyLogo({
   }, [chainId, currency, uriLocations])
 
   if (currency?.isNative && chainId) {
-    return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} alt={`${currency.symbol}Logo`} />
+    return (
+      <StyledNativeCurrencyLogo
+        src={NETWORKS_INFO[chainId].nativeToken.logo}
+        size={size}
+        style={style}
+        alt={`${currency.symbol}Logo`}
+      />
+    )
   }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />

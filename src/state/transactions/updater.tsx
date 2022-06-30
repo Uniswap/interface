@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ethers } from 'ethers'
@@ -40,7 +40,7 @@ export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
 
-  const transactions = chainId ? state[chainId] ?? {} : {}
+  const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
 
   // show popup on confirm
   const addPopup = useAddPopup()

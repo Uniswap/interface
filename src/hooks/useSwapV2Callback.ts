@@ -4,7 +4,7 @@ import { CurrencyAmount, Percent, TradeType, ChainId, validateAndParseAddress, C
 import { SwapParameters, TradeOptions, TradeOptionsDeadline } from '@kyberswap/ks-sdk-classic'
 import JSBI from 'jsbi'
 import { useMemo, useCallback } from 'react'
-import { BIPS_BASE, ETHER_ADDRESS, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESSES_V2 } from 'constants/index'
+import { BIPS_BASE, ETHER_ADDRESS, INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
   calculateGasMargin,
@@ -34,6 +34,7 @@ import { AppState } from 'state'
 import { ethers } from 'ethers'
 import { useSwapState } from 'state/swap/hooks'
 import { getAmountPlusFeeInQuotient } from 'utils/fee'
+import { NETWORKS_INFO } from 'constants/networks'
 
 /**
  * The parameters to use in the call to the DmmExchange Router to execute a trade.
@@ -333,7 +334,15 @@ function useSwapV2CallArguments(
   // TODO: resolve this
   // @ts-ignore
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline || !(ROUTER_ADDRESSES_V2[chainId] || ''))
+    if (
+      !trade ||
+      !recipient ||
+      !library ||
+      !account ||
+      !chainId ||
+      !deadline ||
+      !(NETWORKS_INFO[chainId].classic.routerV2 || '')
+    )
       return []
 
     const contract: Contract | null = getRouterV2Contract(chainId, library, account)

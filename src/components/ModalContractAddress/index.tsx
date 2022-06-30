@@ -7,7 +7,7 @@ import { Flex, Text } from 'rebass'
 import { Trans } from '@lingui/macro'
 import { CheckCircle, Copy, X } from 'react-feather'
 import useTheme from 'hooks/useTheme'
-import { NETWORK_ICON, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import getShortenAddress from 'utils/getShortenAddress'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { isAddress } from 'utils'
@@ -25,7 +25,7 @@ function ContractAddressItem({ network, address, lastItem }: { network: string; 
       <StyledContractAddressItem>
         <Flex alignItems="center" style={{ gap: '4px' }}>
           <img
-            src={NETWORK_ICON[TRUESIGHT_NETWORK_TO_CHAINID[network]]}
+            src={NETWORKS_INFO[TRUESIGHT_NETWORK_TO_CHAINID[network]].icon}
             alt="Network"
             style={{ minWidth: '16px', width: '16px', marginRight: '6px' }}
           />

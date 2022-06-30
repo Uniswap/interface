@@ -10,7 +10,7 @@ export function currencyId(currency?: Currency, chainId?: ChainId): string {
 
 export function currencyIdFromAddress(address: string, chainId?: ChainId): string {
   if (
-    (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) &&
+    (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN || chainId === ChainId.OPTIMISM) &&
     WETH[chainId].address.toLowerCase() === address.toLowerCase()
   ) {
     return 'ETH'

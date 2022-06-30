@@ -6,7 +6,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import FAIRLAUNCH_V2_ABI from 'constants/abis/fairlaunch-v2.json'
-import { FAIRLAUNCH_ADDRESSES, FAIRLAUNCH_V2_ADDRESSES, ZERO_ADDRESS } from 'constants/index'
+import { ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useRewardLockerContracts, useMultipleContracts } from 'hooks/useContract'
 import { AppState } from 'state'
@@ -21,12 +21,13 @@ import { useTokensPrice } from 'state/application/hooks'
 import REWARD_LOCKER_V2_ABI from 'constants/abis/reward-locker-v2.json'
 import { Contract } from 'ethers'
 import { VERSION } from 'constants/v2'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export const useRewardLockerAddressesWithVersion = (): { [rewardLockerAddress: string]: RewardLockerVersion } => {
   const { chainId } = useActiveWeb3React()
 
-  const fairLaunchAddresses = useMemo(() => FAIRLAUNCH_ADDRESSES[chainId as ChainId], [chainId])
-  const fairLaunchV2Addresses = useMemo(() => FAIRLAUNCH_V2_ADDRESSES[chainId as ChainId], [chainId])
+  const fairLaunchAddresses = useMemo(() => NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunch, [chainId])
+  const fairLaunchV2Addresses = useMemo(() => NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunchV2, [chainId])
   const fairLaunchInterface = useMemo(() => new Interface(FAIRLAUNCH_ABI), [])
   const fairLaunchV2Interface = useMemo(() => new Interface(FAIRLAUNCH_V2_ABI), [])
 
@@ -69,7 +70,10 @@ export const useRewardTokensByRewardLocker = () => {
    * Both V1 and V2 contain `getRewardTokens` and `rewardLocker`
    */
   const fairLaunchAddresses = useMemo(
-    () => [...FAIRLAUNCH_ADDRESSES[chainId as ChainId], ...FAIRLAUNCH_V2_ADDRESSES[chainId as ChainId]],
+    () => [
+      ...NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunch,
+      ...NETWORKS_INFO[chainId || ChainId.MAINNET].classic.fairlaunchV2,
+    ],
     [chainId],
   )
   const fairLaunchInterface = useMemo(() => new Interface(FAIRLAUNCH_ABI), [])

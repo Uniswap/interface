@@ -8,24 +8,17 @@ import Numeral from 'numeral'
 import dayjs from 'dayjs'
 
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
-import { blockClient } from 'apollo/client'
 import {
-  DYNAMIC_FEE_ROUTER_ADDRESSES,
-  ROUTER_ADDRESSES_V2,
-  ZAP_ADDRESSES,
-  STATIC_FEE_ZAP_ADDRESSES,
   ROPSTEN_TOKEN_LOGOS_MAPPING,
   MIGRATE_ADDRESS,
   KNCL_ADDRESS,
   KNCL_ADDRESS_ROPSTEN,
   KNC,
-  AGGREGATION_EXECUTOR,
   DEFAULT_GAS_LIMIT_MARGIN,
-  CLAIM_REWARD_SC_ADDRESS,
   ZERO_ADDRESS,
-  STATIC_FEE_ROUTER_ADDRESSES,
 } from 'constants/index'
 import ROUTER_DYNAMIC_FEE_ABI from '../constants/abis/dmm-router-dynamic-fee.json'
+import ROUTER_STATIC_FEE_ABI from '../constants/abis/dmm-router-static-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
 import { abi as ROUTER_PRO_AMM } from '../constants/abis/v2/ProAmmRouter.json'
@@ -47,21 +40,9 @@ import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 import { getFantomTokenLogoURL } from './fantomTokenMapping'
 import { getCronosTokenLogoURL } from './cronosTokenMapping'
-import { PRO_AMM_ROUTERS } from 'constants/v2'
 import { getAuroraTokenLogoURL } from './auroraTokenMapping'
-import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
-import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
-import { OASIS_TOKEN_LIST } from 'constants/tokenLists/oasis.tokenlist'
-import { ARBITRUM_TOKEN_LIST } from 'constants/tokenLists/arbitrum.tokenlist'
-import { FANTOM_MAINNET_TOKEN_LIST } from 'constants/tokenLists/fantom.mainnet.tokenlist'
-import { MATIC_TOKEN_LIST } from 'constants/tokenLists/matic.tokenlist'
-import { MAINNET_TOKEN_LIST } from 'constants/tokenLists/mainnet.tokenlist'
-import { MUMBAI_TOKEN_LIST } from 'constants/tokenLists/mumbai.tokenlist'
-import { BSC_MAINNET_TOKEN_LIST } from 'constants/tokenLists/bsc.mainnet.tokenlist'
-import { AVAX_MAINNET_TOKEN_LIST } from 'constants/tokenLists/avax.mainnet.tokenlist'
-import { CRONOS_TOKEN_LIST } from 'constants/tokenLists/cronos.tokenlist'
-import { AURORA_TOKEN_LIST } from 'constants/tokenLists/aurora.tokenlist'
-import { RINKEBY_TOKEN_LIST } from 'constants/tokenLists/rinkeby.tokenlist'
+import { NETWORKS_INFO } from 'constants/networks'
+import store from 'state'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -80,59 +61,12 @@ export function isAddressString(value: any): string {
   }
 }
 
-export function getExplorerUrl(chainId: ChainId): string {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return 'https://etherscan.io'
-    case ChainId.ROPSTEN:
-      return 'https://ropsten.etherscan.io'
-    case ChainId.RINKEBY:
-      return 'https://rinkeby.etherscan.io'
-    case ChainId.GÖRLI:
-      return 'https://goerli.etherscan.io'
-    case ChainId.KOVAN:
-      return 'https://kovan.etherscan.io'
-    case ChainId.MATIC:
-      return 'https://polygonscan.com'
-    case ChainId.MUMBAI:
-      return 'https://mumbai.polygonscan.com'
-    case ChainId.BSCTESTNET:
-      return 'https://testnet.bscscan.com'
-    case ChainId.BSCMAINNET:
-      return 'https://bscscan.com'
-    case ChainId.AVAXTESTNET:
-      return 'https://testnet.snowtrace.io'
-    case ChainId.AVAXMAINNET:
-      return 'https://snowtrace.io'
-    case ChainId.FANTOM:
-      return 'https://ftmscan.com'
-    case ChainId.CRONOSTESTNET:
-      return 'https://cronos.crypto.org/explorer/testnet3'
-    case ChainId.CRONOS:
-      return 'https://cronoscan.com'
-    case ChainId.AURORA:
-      return 'https://aurorascan.dev'
-    case ChainId.ARBITRUM_TESTNET:
-      return 'https://testnet.arbiscan.io'
-    case ChainId.ARBITRUM:
-      return 'https://arbiscan.io'
-    case ChainId.BTTC:
-      return 'https://bttcscan.com'
-    case ChainId.VELAS:
-      return 'https://evmexplorer.velas.com'
-    case ChainId.OASIS:
-      return 'https://explorer.emerald.oasis.dev'
-    default:
-      return ''
-  }
-}
-
 export function getEtherscanLink(
   chainId: ChainId,
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block',
 ): string {
-  const prefix = getExplorerUrl(chainId)
+  const prefix = NETWORKS_INFO[chainId].etherscanUrl
 
   switch (type) {
     case 'transaction': {
@@ -152,40 +86,7 @@ export function getEtherscanLink(
 }
 
 export function getEtherscanLinkText(chainId: ChainId): string {
-  if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) {
-    return 'View on Explorer'
-  }
-  if ([ChainId.BSCTESTNET, ChainId.BSCMAINNET].includes(chainId)) {
-    return 'View on Bscscan'
-  }
-
-  if ([ChainId.AVAXTESTNET, ChainId.AVAXMAINNET].includes(chainId)) {
-    return 'View on Snowtrace Explorer'
-  }
-
-  if ([ChainId.FANTOM].includes(chainId)) {
-    return 'View on Ftmscan'
-  }
-
-  if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId)) {
-    return 'View on Explorer'
-  }
-
-  if ([ChainId.AURORA].includes(chainId)) {
-    return 'View on Aurorascan'
-  }
-
-  if ([ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId)) {
-    return 'View on Arbiscan'
-  }
-
-  if (ChainId.BTTC === chainId) return 'View on BTTCScan'
-
-  if (ChainId.VELAS === chainId) return 'View on Velas Evm Explorer'
-
-  if (ChainId.OASIS === chainId) return 'View on Oasis Emerald Explorer'
-
-  return 'View on Etherscan'
+  return NETWORKS_INFO[chainId].etherscanName
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -254,21 +155,25 @@ export function getContractForReading(address: string, ABI: any, library: ethers
 }
 
 // account is optional
+export function getOldStaticFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(NETWORKS_INFO[chainId].classic.oldStatic?.router ?? '', ROUTER_STATIC_FEE_ABI, library, account)
+}
+// account is optional
 export function getStaticFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(STATIC_FEE_ROUTER_ADDRESSES[chainId], KS_ROUTER_STATIC_FEE_ABI, library, account)
+  return getContract(NETWORKS_INFO[chainId].classic.static.router, KS_ROUTER_STATIC_FEE_ABI, library, account)
 }
 // account is optional
 export function getDynamicFeeRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(DYNAMIC_FEE_ROUTER_ADDRESSES[chainId], ROUTER_DYNAMIC_FEE_ABI, library, account)
+  return getContract(NETWORKS_INFO[chainId].classic.dynamic?.router ?? '', ROUTER_DYNAMIC_FEE_ABI, library, account)
 }
 
 // account is optional
 export function getProAmmRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(PRO_AMM_ROUTERS[chainId], ROUTER_PRO_AMM, library, account)
+  return getContract(NETWORKS_INFO[chainId].elastic.routers, ROUTER_PRO_AMM, library, account)
 }
 
 export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESSES_V2[chainId] || '', ROUTER_ABI_V2, library, account)
+  return getContract(NETWORKS_INFO[chainId].classic.routerV2 || '', ROUTER_ABI_V2, library, account)
 }
 
 // account is optional
@@ -277,10 +182,15 @@ export function getZapContract(
   library: Web3Provider,
   account?: string,
   isStaticFeeContract?: boolean,
+  isOldStaticFeeContract?: boolean,
 ): Contract {
   return getContract(
-    isStaticFeeContract ? STATIC_FEE_ZAP_ADDRESSES[chainId] : ZAP_ADDRESSES[chainId] || '',
-    isStaticFeeContract ? ZAP_STATIC_FEE_ABI : ZAP_ABI,
+    isStaticFeeContract
+      ? isOldStaticFeeContract
+        ? NETWORKS_INFO[chainId].classic.oldStatic?.zap || ''
+        : NETWORKS_INFO[chainId].classic.static.zap
+      : NETWORKS_INFO[chainId].classic.dynamic?.zap || '',
+    isStaticFeeContract && !isOldStaticFeeContract ? ZAP_STATIC_FEE_ABI : ZAP_ABI,
     library,
     account,
   )
@@ -291,12 +201,12 @@ export function getClaimRewardContract(
   library: Web3Provider,
   account?: string,
 ): Contract | undefined {
-  if (CLAIM_REWARD_SC_ADDRESS[chainId] === '') return
-  return getContract(CLAIM_REWARD_SC_ADDRESS[chainId], CLAIM_REWARD_ABI, library, account)
+  if (!NETWORKS_INFO[chainId].classic.claimReward) return
+  return getContract(NETWORKS_INFO[chainId].classic.claimReward, CLAIM_REWARD_ABI, library, account)
 }
 
 export function getAggregationExecutorAddress(chainId: ChainId): string {
-  return AGGREGATION_EXECUTOR[chainId] || ''
+  return NETWORKS_INFO[chainId].classic.aggregationExecutor || ''
 }
 
 export function getAggregationExecutorContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
@@ -477,7 +387,7 @@ export async function splitQuery(query: any, localClient: any, vars: any, list: 
  * @param {Int} timestamp in seconds
  */
 export async function getBlockFromTimestamp(timestamp: number, chainId?: ChainId) {
-  const result = await blockClient[chainId as ChainId].query({
+  const result = await NETWORKS_INFO[chainId || ChainId.MAINNET].blockClient.query({
     query: GET_BLOCK,
     variables: {
       timestampFrom: timestamp,
@@ -505,7 +415,13 @@ export async function getBlocksFromTimestamps(
     return []
   }
 
-  const fetchedData = await splitQuery(GET_BLOCKS, blockClient[chainId as ChainId], [], timestamps, skipCount)
+  const fetchedData = await splitQuery(
+    GET_BLOCKS,
+    NETWORKS_INFO[chainId || ChainId.MAINNET].blockClient,
+    [],
+    timestamps,
+    skipCount,
+  )
   const blocks: { timestamp: string; number: number }[] = []
   if (fetchedData) {
     for (const t in fetchedData) {
@@ -537,7 +453,7 @@ export const get24hValue = (valueNow: string, value24HoursAgo: string | undefine
 
 export const getRopstenTokenLogoURL = (address: string) => {
   if (address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
+    return 'https://raw.githubusercontent.com/KyberNetwork/dmm-interface/develop/src/assets/images/KNCL.png'
   }
 
   if (ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]) {
@@ -556,11 +472,11 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
   }
 
   if (address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNC.svg'
+    return 'https://raw.githubusercontent.com/KyberNetwork/dmm-interface/develop/src/assets/images/KNC.svg'
   }
 
   if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
+    return 'https://raw.githubusercontent.com/KyberNetwork/dmm-interface/develop/src/assets/images/KNCL.png'
   }
 
   // WBTC
@@ -570,76 +486,50 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
 
   let imageURL
 
+  imageURL = store
+    .getState()
+    .lists.byUrl[NETWORKS_INFO[chainId || ChainId.MAINNET].tokenListUrl].current?.tokens.find(
+      item => item.address.toLowerCase() === address.toLowerCase(),
+    )?.logoURI
+  if (imageURL) return imageURL
+
   switch (chainId) {
+    //todo namgold: merge these adhoc func to tokenllist
     case ChainId.MAINNET:
-      imageURL =
-        MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getEthereumMainnetTokenLogoURL(address)
+      imageURL = getEthereumMainnetTokenLogoURL(address)
       break
     case ChainId.ROPSTEN:
       imageURL = getRopstenTokenLogoURL(address)
       break
     case ChainId.MATIC:
-      imageURL =
-        MATIC_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getMaticTokenLogoURL(address)
+      imageURL = getMaticTokenLogoURL(address)
       break
     case ChainId.MUMBAI:
-      imageURL =
-        MUMBAI_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getMumbaiTokenLogoURL(address)
+      imageURL = getMumbaiTokenLogoURL(address)
       break
     case ChainId.BSCTESTNET:
       imageURL = getBscTestnetTokenLogoURL(address)
       break
     case ChainId.BSCMAINNET:
-      imageURL =
-        BSC_MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getBscMainnetTokenLogoURL(address)
+      imageURL = getBscMainnetTokenLogoURL(address)
       break
     case ChainId.AVAXTESTNET:
       imageURL = getAvaxTestnetTokenLogoURL(address)
       break
     case ChainId.AVAXMAINNET:
-      imageURL =
-        AVAX_MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getAvaxMainnetTokenLogoURL(address)
+      imageURL = getAvaxMainnetTokenLogoURL(address)
       break
     case ChainId.FANTOM:
-      imageURL =
-        FANTOM_MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getFantomTokenLogoURL(address)
+      imageURL = getFantomTokenLogoURL(address)
       break
     case ChainId.CRONOS:
-      imageURL =
-        CRONOS_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getCronosTokenLogoURL(address)
+      imageURL = getCronosTokenLogoURL(address)
       break
     case ChainId.AURORA:
-      imageURL =
-        AURORA_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        getAuroraTokenLogoURL(address)
+      imageURL = getAuroraTokenLogoURL(address)
       break
     case ChainId.ARBITRUM:
-      imageURL =
-        ARBITRUM_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
-        `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
-      break
-    case ChainId.BTTC:
-      imageURL =
-        BTTC_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
-      break
-    case ChainId.VELAS:
-      imageURL =
-        VELAS_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
-      break
-    case ChainId.OASIS:
-      imageURL =
-        OASIS_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
-      break
-
-    case ChainId.RINKEBY:
-      imageURL = RINKEBY_TOKEN_LIST.tokens.find(t => t.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
+      imageURL = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
       break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
@@ -652,57 +542,26 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
 }
 
 export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
-  if (token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()) {
-    switch (chainId) {
-      case ChainId.MATIC:
-        return 'MATIC'
-      case ChainId.MUMBAI:
-        return 'MATIC'
-      case ChainId.BSCTESTNET:
-        return 'BNB'
-      case ChainId.BSCMAINNET:
-        return 'BNB'
-      case ChainId.AVAXTESTNET:
-        return 'AVAX'
-      case ChainId.AVAXMAINNET:
-        return 'AVAX'
-      case ChainId.FANTOM:
-        return 'FTM'
-      case ChainId.CRONOSTESTNET:
-        return 'CRO'
-      case ChainId.CRONOS:
-        return 'CRO'
-      case ChainId.AURORA:
-        return 'ETH'
-      case ChainId.BTTC:
-        return 'BTT'
-      case ChainId.VELAS:
-        return 'VLX'
-      case ChainId.OASIS:
-        return 'ROSE'
-      default:
-        return 'ETH'
-    }
+  if (chainId && token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()) {
+    return NETWORKS_INFO[chainId].nativeToken.symbol
   }
 
   return token.symbol || 'ETH'
 }
 
-export const nativeNameFromETH = (chainId: any) => {
+export const nativeNameFromETH = (chainId: ChainId | undefined) => {
   if (!chainId) return 'ETH'
-  return [137, 80001].includes(chainId)
-    ? 'MATIC'
-    : [97, 56].includes(chainId)
-    ? 'BNB'
-    : [43113, 43114].includes(chainId)
-    ? 'AVAX'
-    : [250].includes(chainId)
-    ? 'FTM'
-    : [25, 338].includes(chainId)
-    ? 'CRO'
-    : chainId === ChainId.BTTC
-    ? 'BTT'
-    : chainId === ChainId.VELAS
-    ? 'VLX'
-    : 'ETH'
+  return NETWORKS_INFO[chainId].nativeToken.symbol
+}
+
+export const pushUnique = <T>(array: T[] | undefined, element: T): T[] => {
+  const set = new Set<T>(array)
+  set.add(element)
+  return Array.from(set)
+}
+
+export const deleteUnique = <T>(array: T[] | undefined, element: T): T[] => {
+  const set = new Set<T>(array)
+  set.delete(element)
+  return Array.from(set)
 }

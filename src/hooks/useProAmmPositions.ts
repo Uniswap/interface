@@ -8,8 +8,8 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { keccak256 } from '@ethersproject/solidity'
 
 import { useActiveWeb3React } from 'hooks'
-import { PRO_AMM_CORE_FACTORY_ADDRESSES, PRO_AMM_INIT_CODE_HASH } from 'constants/v2'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { NETWORKS_INFO } from 'constants/networks'
 //           { "internalType": "uint96", "name": "nonce", "type": "uint96" },
 //           { "internalType": "address", "name": "operator", "type": "address" },
 //           { "internalType": "uint80", "name": "poolId", "type": "uint80" },
@@ -42,7 +42,7 @@ export function useProAmmPositionsFromTokenIds(tokenIds: BigNumber[] | undefined
         return {
           tokenId: tokenId,
           poolId: getCreate2Address(
-            PRO_AMM_CORE_FACTORY_ADDRESSES[chainId as ChainId],
+            NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.coreFactory,
             keccak256(
               ['bytes'],
               [
@@ -52,7 +52,7 @@ export function useProAmmPositionsFromTokenIds(tokenIds: BigNumber[] | undefined
                 ),
               ],
             ),
-            PRO_AMM_INIT_CODE_HASH[chainId as ChainId],
+            NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.initCodeHash,
           ),
           feeGrowthInsideLast: result.pos.feeGrowthInsideLast,
           nonce: result.pos.nonce,

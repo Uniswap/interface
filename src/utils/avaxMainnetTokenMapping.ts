@@ -1,15 +1,14 @@
 import { ZERO_ADDRESS } from 'constants/index'
 import { isAddress } from 'utils'
-import { AVAX_MAINNET_TOKEN_LIST } from 'constants/tokenLists/avax.mainnet.tokenlist'
 
 export const getAvaxMainnetTokenLogoURL = (address: string) => {
-  let uri = AVAX_MAINNET_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI
+  let uri
 
   if (address?.toLowerCase() === ZERO_ADDRESS) {
     //native token
-    uri = `https://raw.githubusercontent.com/dynamic-amm/dmm-interface/main/src/assets/networks/avax-network.png`
+    uri = `https://raw.githubusercontent.com/KyberNetwork/dmm-interface/main/src/assets/networks/avax-network.png`
   } else if (address?.toLowerCase() === '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7') {
-    uri = `https://raw.githubusercontent.com/dynamic-amm/dmm-interface/main/src/assets/networks/avax-network.png`
+    uri = `https://raw.githubusercontent.com/KyberNetwork/dmm-interface/main/src/assets/networks/avax-network.png`
   } else if (address?.toLowerCase() === '0xc7198437980c041c805a1edcba50c1ce5db95118') {
     //usdt
     address = '0xde3A24028580884448a5397872046a019649b084'

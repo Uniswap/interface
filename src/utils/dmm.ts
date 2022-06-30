@@ -25,6 +25,7 @@ import { tryParseAmount } from 'state/swap/hooks'
 import { getAddress } from '@ethersproject/address'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import JSBI from 'jsbi'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export function priceRangeCalc(
   price?: Price<Currency, Currency> | Fraction,
@@ -502,24 +503,7 @@ export function useRewardTokensFullInfo(): Token[] {
   const rewardTokens = useRewardTokens()
 
   const allTokens = useAllTokens()
-  const nativeName =
-    chainId && [137, 80001].includes(chainId)
-      ? 'MATIC'
-      : chainId && [97, 56].includes(chainId)
-      ? 'BNB'
-      : chainId && [43113, 43114].includes(chainId)
-      ? 'AVAX'
-      : chainId && [250].includes(chainId)
-      ? 'FTM'
-      : chainId && [25, 338].includes(chainId)
-      ? 'CRO'
-      : chainId && chainId === ChainId.BTTC
-      ? 'BTT'
-      : chainId && chainId === ChainId.VELAS
-      ? 'VLX'
-      : chainId && chainId === ChainId.OASIS
-      ? 'ROSE'
-      : 'ETH'
+  const nativeName = NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.symbol
 
   return useMemo(
     () =>

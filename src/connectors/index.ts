@@ -10,17 +10,14 @@ import { NetworkConnector } from './NetworkConnector'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
+import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 
-const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
-const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
-const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
+const NETWORK_URL = NETWORKS_INFO[ChainId.MAINNET].rpcUrl
+const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY // todo: remove
+const PORTIS_ID = process.env.REACT_APP_PORTIS_ID // todo: remove
 
 // export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
 export const NETWORK_CHAIN_ID = 1
-
-if (typeof NETWORK_URL === 'undefined') {
-  throw new Error('REACT_APP_NETWORK_URL must be a defined environment variable')
-}
 
 export const network = new NetworkConnector({
   urls: { [NETWORK_CHAIN_ID]: NETWORK_URL },
@@ -33,33 +30,34 @@ export function getNetworkLibrary(): Web3Provider {
 
 const injectedConnectorParam = {
   supportedChainIds: [
-    1,
-    3,
-    4,
-    5,
-    42,
-    80001,
-    137,
-    56,
-    97,
-    43113,
-    43114,
-    250,
-    25,
-    338,
+    ChainId.MAINNET,
+    ChainId.ROPSTEN,
+    ChainId.RINKEBY,
+    ChainId.GÖRLI,
+    ChainId.KOVAN,
+    ChainId.MUMBAI,
+    ChainId.MATIC,
+    ChainId.BSCMAINNET,
+    ChainId.BSCTESTNET,
+    ChainId.AVAXMAINNET,
+    ChainId.AVAXTESTNET,
+    ChainId.FANTOM,
+    ChainId.CRONOS,
+    ChainId.CRONOSTESTNET,
     ChainId.BTTC,
     ChainId.ARBITRUM,
     ChainId.ARBITRUM_TESTNET,
     ChainId.AURORA,
     ChainId.VELAS,
     ChainId.OASIS,
+    ChainId.OPTIMISM,
   ],
 }
 export const injected = new InjectedConnector(injectedConnectorParam)
 
 export const coin98InjectedConnector = new InjectedConnector(injectedConnectorParam)
 
-const SUPPORTED_CHAIN_IDS: ChainId[] = [
+const WALLET_CONNECT_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,
   ChainId.ROPSTEN,
   ChainId.MUMBAI,
@@ -77,37 +75,23 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.AURORA,
   ChainId.VELAS,
   ChainId.OASIS,
+  ChainId.OPTIMISM,
 ]
 
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
-} = {
-  [ChainId.MAINNET]: `https://proxy.kyberengineering.io/ethereum`,
-  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
-  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
-  [ChainId.GÖRLI]: `https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
-  [ChainId.KOVAN]: `https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
-  [ChainId.MUMBAI]: `https://rpc-mumbai.maticvigil.com`,
-  [ChainId.MATIC]: `https://polygon-rpc.com/v1/mainnet/geth?appId=prod-dmm`,
-  [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
-  // [ChainId.BSCMAINNET]: `https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface`,
-  [ChainId.BSCMAINNET]: `https://bscrpc.com`,
-  [ChainId.AVAXTESTNET]: `https://api.avax-test.network/ext/bc/C/rpc`,
-  [ChainId.AVAXMAINNET]: `https://avalanche.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
-  [ChainId.FANTOM]: `https://rpc.ftm.tools`,
-  [ChainId.CRONOSTESTNET]: `https://cronos-testnet-3.crypto.org:8545`,
-  [ChainId.CRONOS]: `https://evm-cronos.crypto.org`,
-  [ChainId.BTTC]: `https://rpc.bt.io`,
-  // [ChainId.BTTC]: `https://bttc.dev.kyberengineering.io`,
-  [ChainId.ARBITRUM]: `https://arb-mainnet.g.alchemy.com/v2/PGAWvp9KLZbqjvap-iingGj-Id7HM_Yn`,
-  [ChainId.ARBITRUM_TESTNET]: `https://rinkeby.arbitrum.io/rpc`,
-  [ChainId.VELAS]: 'https://evmexplorer.velas.com/rpc',
-  [ChainId.AURORA]: `https://mainnet.aurora.dev/GvfzNcGULXzWqaVahC8WPTdqEuSmwNCu3Nu3rtcVv9MD`,
-  [ChainId.OASIS]: `https://emerald.oasis.dev`,
-}
+} = SUPPORTED_NETWORKS.reduce(
+  (acc, val) => {
+    acc[val] = NETWORKS_INFO[val].rpcUrl
+    return acc
+  },
+  {} as {
+    [chainId in ChainId]: string
+  },
+)
 
 export const walletconnect = new WalletConnectConnector({
-  supportedChainIds: SUPPORTED_CHAIN_IDS,
+  supportedChainIds: WALLET_CONNECT_SUPPORTED_CHAIN_IDS,
   rpc: NETWORK_URLS,
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,

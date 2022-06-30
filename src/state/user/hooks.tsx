@@ -35,7 +35,11 @@ import { isAddress } from 'utils'
 import { useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { defaultShowLiveCharts } from './reducer'
-import { useStaticFeeFactoryContract, useDynamicFeeFactoryContract } from 'hooks/useContract'
+import {
+  useStaticFeeFactoryContract,
+  useDynamicFeeFactoryContract,
+  useOldStaticFeeFactoryContract,
+} from 'hooks/useContract'
 
 function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
   return {
@@ -262,6 +266,7 @@ export function useURLWarningToggle(): () => void {
 export function useToV2LiquidityTokens(
   tokenCouples: [Token, Token][],
 ): { liquidityTokens: []; tokens: [Token, Token] }[] {
+  const oldStaticContract = useOldStaticFeeFactoryContract()
   const staticContract = useStaticFeeFactoryContract()
   const dynamicContract = useDynamicFeeFactoryContract()
   const result1 = useSingleContractMultipleData(
@@ -274,15 +279,22 @@ export function useToV2LiquidityTokens(
     'getPools',
     tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
   )
+  const result3 = useSingleContractMultipleData(
+    oldStaticContract,
+    'getPools',
+    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
+  )
   const result = useMemo(
     () =>
       result1?.map((call, index) => {
         return {
           ...call,
-          result: [call.result?.[0].concat(result2?.[index]?.result?.[0] || [])],
+          result: [
+            call.result?.[0].concat(result2?.[index]?.result?.[0] || []).concat(result3?.[index]?.result?.[0] || []),
+          ],
         }
       }),
-    [result1, result2],
+    [result1, result2, result3],
   )
   return useMemo(
     () =>

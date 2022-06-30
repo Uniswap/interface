@@ -12,7 +12,7 @@ import FilterBarToggle from 'components/Toggle/FilterBarToggle'
 import { ArrowRight, ChevronDown } from 'react-feather'
 import TokensSelect from './TokensSelect'
 import Slider from 'components/Slider'
-import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import { Currency, Fraction } from '@kyberswap/ks-sdk-core'
 import { useNetworkModalToggle } from 'state/application/hooks'
 import NetworkModal from 'components/NetworkModal'
@@ -349,10 +349,10 @@ export default function CreateReferral() {
                       <Flex alignItems="center">
                         <img
                           alt=""
-                          src={NETWORK_ICON[chainId]}
+                          src={NETWORKS_INFO[chainId].icon}
                           style={{ height: '20px', width: '20px', marginRight: '8px' }}
                         />
-                        {NETWORK_LABEL[chainId]}
+                        {NETWORKS_INFO[chainId].name}
                       </Flex>
                       <ChevronDown size={20} style={{ top: '10px', right: '10px', position: 'absolute' }} />
                     </>

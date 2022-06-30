@@ -27,6 +27,7 @@ export function useDerivedMintInfo(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   pairAddress: string | undefined,
+  isStaticFee?: boolean,
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
@@ -41,6 +42,7 @@ export function useDerivedMintInfo(
   error?: string
   unAmplifiedPairAddress?: string
   isStaticFeePair?: boolean
+  isOldStaticFeeContract?: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -59,8 +61,13 @@ export function useDerivedMintInfo(
   // pair
   const tokenA = currencies[Field.CURRENCY_A]?.wrapped
   const tokenB = currencies[Field.CURRENCY_B]?.wrapped
-  const [pairState, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
-  const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
+  const [pairState, pair, isStaticFeePair, isOldStaticFeeContract] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const unAmplifiedPairAddresses = useUnAmplifiedPair(tokenA, tokenB)
+  const unAmplifiedPairAddress = unAmplifiedPairAddresses
+    ? isStaticFee || isStaticFeePair
+      ? unAmplifiedPairAddresses[0]
+      : unAmplifiedPairAddresses[1]
+    : ''
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean =
@@ -159,7 +166,7 @@ export function useDerivedMintInfo(
     error = t`Connect wallet`
   }
 
-  if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol === 'WETH' && tokenB?.symbol === 'WETH')) {
+  if ((pairAddress && pairState === PairState.INVALID) || tokenA?.symbol === tokenB?.symbol) {
     error = error ?? 'Invalid pair'
   }
 
@@ -202,6 +209,7 @@ export function useDerivedMintInfo(
     error,
     unAmplifiedPairAddress,
     isStaticFeePair,
+    isOldStaticFeeContract,
   }
 }
 
@@ -251,6 +259,7 @@ export function useDerivedZapInInfo(
   error?: string
   unAmplifiedPairAddress?: string
   isStaticFeePair?: boolean
+  isOldStaticFeeContract?: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -269,8 +278,13 @@ export function useDerivedZapInInfo(
   // pair
   const tokenA = currencies[Field.CURRENCY_A]?.wrapped
   const tokenB = currencies[Field.CURRENCY_B]?.wrapped
-  const [pairState, pair, isStaticFeePair] = usePairByAddress(tokenA, tokenB, pairAddress)
-  const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
+  const [pairState, pair, isStaticFeePair, isOldStaticFeeContract] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const unAmplifiedPairAddresses = useUnAmplifiedPair(tokenA, tokenB)
+  const unAmplifiedPairAddress = unAmplifiedPairAddresses
+    ? isStaticFeePair
+      ? unAmplifiedPairAddresses[0]
+      : unAmplifiedPairAddresses[1]
+    : ''
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const noLiquidity: boolean =
     (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.quotient, ZERO))) &&
@@ -296,6 +310,7 @@ export function useDerivedZapInInfo(
 
   const zapInAmounts = useZapInAmounts(
     !!isStaticFeePair,
+    !!isOldStaticFeeContract,
     dependentField === Field.CURRENCY_B ? tokenA?.address : tokenB?.address,
     dependentField === Field.CURRENCY_B ? tokenB?.address : tokenA?.address,
     pair?.address,
@@ -424,6 +439,7 @@ export function useDerivedZapInInfo(
     error,
     unAmplifiedPairAddress,
     isStaticFeePair,
+    isOldStaticFeeContract,
   }
 }
 

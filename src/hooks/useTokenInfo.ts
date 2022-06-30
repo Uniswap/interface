@@ -1,8 +1,9 @@
 import useSWR from 'swr'
 
 import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { COINGECKO_API_URL, COINGECKO_NATIVE_TOKEN_ID, COINGECKO_NETWORK_ID } from 'constants/index'
+import { COINGECKO_API_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export interface TokenInfo {
   price: number
@@ -27,10 +28,10 @@ export default function useTokenInfo(token: Token | undefined): { data: TokenInf
 
   if (tokenAddress?.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()) {
     // If the token is native token, we have to use different endpoint
-    url = `${COINGECKO_API_URL}/coins/${COINGECKO_NATIVE_TOKEN_ID[chainId || ChainId.MAINNET]}`
+    url = `${COINGECKO_API_URL}/coins/${NETWORKS_INFO[chainId || ChainId.MAINNET].coingeckoNativeTokenId}`
   } else {
     url = `${COINGECKO_API_URL}/coins/${
-      COINGECKO_NETWORK_ID[chainId || ChainId.MAINNET]
+      NETWORKS_INFO[chainId || ChainId.MAINNET].coingeckoNetworkId
     }/contract/${tokenAddress?.toLowerCase()}`
   }
 

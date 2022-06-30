@@ -18,7 +18,7 @@ import { TrueSightFilter } from 'pages/TrueSight/index'
 import { CheckCircle, ChevronDown, Copy } from 'react-feather'
 import TwitterIcon from 'components/Icons/TwitterIcon'
 import useTheme from 'hooks/useTheme'
-import { NETWORK_ICON, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import getShortenAddress from 'utils/getShortenAddress'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import Facebook from 'components/Icons/Facebook'
@@ -154,7 +154,7 @@ const TrendingSoonTokenItemDetailsOnMobile = ({
               </FieldName>
               <FieldValue>
                 <img
-                  src={NETWORK_ICON[TRUESIGHT_NETWORK_TO_CHAINID[defaultNetwork]]}
+                  src={NETWORKS_INFO[TRUESIGHT_NETWORK_TO_CHAINID[defaultNetwork]].icon}
                   alt="Network"
                   style={{ minWidth: '16px', width: '16px', marginRight: '6px' }}
                 />

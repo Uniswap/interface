@@ -10,10 +10,10 @@ import { useActiveWeb3React } from 'hooks'
 import { ProMMPoolFields, PROMM_POOLS_BULK } from 'apollo/queries/promm'
 import dayjs from 'dayjs'
 import { get2DayChange } from 'utils/data'
-import { prommClient } from 'apollo/client'
 import { Pool, Position } from '@kyberswap/ks-sdk-elastic'
 import JSBI from 'jsbi'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
 
 export interface ProMMPoolData {
   // basic token info
@@ -160,7 +160,7 @@ export function useUserProMMPositions(): UserPositionResult {
   const { chainId, account } = useActiveWeb3React()
 
   const { loading, error, data } = useQuery(PROMM_USER_POSITIONS, {
-    client: prommClient[chainId as ChainId],
+    client: NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient,
     variables: {
       owner: account?.toLowerCase(),
     },
@@ -397,7 +397,7 @@ export function usePoolDatas(
     | undefined
 } {
   const { chainId } = useActiveWeb3React()
-  const dataClient = prommClient[chainId as ChainId]
+  const dataClient = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
 
   const { block24, block48 } = usePoolBlocks()
 
@@ -483,7 +483,7 @@ export function useTopPoolAddresses(): {
   addresses: string[] | undefined
 } {
   const { chainId } = useActiveWeb3React()
-  const dataClient = prommClient[chainId as ChainId]
+  const dataClient = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
 
   const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
     client: dataClient,

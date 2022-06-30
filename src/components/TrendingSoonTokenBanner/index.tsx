@@ -1,7 +1,6 @@
 import React, { CSSProperties, useMemo } from 'react'
-import { Currency, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
-import { nativeNameFromETH } from 'utils'
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { ExternalLink } from 'theme'
@@ -13,6 +12,7 @@ import { rgba } from 'polished'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { Flex } from 'rebass'
 import { Field } from '../../state/swap/actions'
+import { NETWORKS_INFO } from 'constants/networks'
 
 const TrendingSoonTokenBanner = ({
   currencies,
@@ -37,7 +37,9 @@ const TrendingSoonTokenBanner = ({
   if (trendingSoonCurrency === undefined) return null
 
   const currencySymbol =
-    trendingSoonCurrency instanceof Token ? trendingSoonCurrency.symbol : nativeNameFromETH(chainId)
+    trendingSoonCurrency instanceof Token
+      ? trendingSoonCurrency.symbol
+      : NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.name
 
   return (
     <Container style={style}>

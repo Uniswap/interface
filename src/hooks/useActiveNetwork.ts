@@ -2,207 +2,31 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory, useLocation } from 'react-router'
 import { stringify } from 'qs'
 
-import { SUPPORTED_NETWORKS, SupportedNetwork } from 'constants/networks'
+import { SUPPORTED_NETWORKS, NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useParsedQueryString from './useParsedQueryString'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useAppDispatch } from 'state/hooks'
 import { updateChainIdWhenNotConnected } from 'state/application/actions'
 import { UnsupportedChainIdError } from '@web3-react/core'
-import { NETWORK_URLS } from 'connectors'
-import { getExplorerUrl } from 'utils'
 
-export const SWITCH_NETWORK_PARAMS: {
-  [chainId in ChainId]?: {
-    chainId: string
-  }
-} = {
-  [ChainId.MAINNET]: {
-    chainId: '0x1',
+const getAddNetworkParams = (chainId: ChainId) => ({
+  chainId: '0x' + chainId.toString(16),
+  chainName: NETWORKS_INFO[chainId].name,
+  nativeCurrency: {
+    name: NETWORKS_INFO[chainId].nativeToken.symbol,
+    symbol: NETWORKS_INFO[chainId].nativeToken.symbol,
+    decimals: NETWORKS_INFO[chainId].nativeToken.decimal,
   },
-  [ChainId.MATIC]: {
-    chainId: '0x89',
-  },
-  [ChainId.BSCMAINNET]: {
-    chainId: '0x38',
-  },
-  [ChainId.AVAXMAINNET]: {
-    chainId: '0xA86A',
-  },
-  [ChainId.FANTOM]: {
-    chainId: '0xFA',
-  },
-  [ChainId.CRONOS]: {
-    chainId: '0x19',
-  },
-  [ChainId.AURORA]: {
-    chainId: '0x4e454152',
-  },
-  [ChainId.ARBITRUM]: {
-    chainId: '0xa4b1',
-  },
-  [ChainId.BTTC]: {
-    chainId: '0xc7',
-  },
-  [ChainId.VELAS]: {
-    chainId: '0x6a',
-  },
-  [ChainId.OASIS]: {
-    chainId: '0xa516',
-  },
-  [ChainId.BSCTESTNET]: {
-    chainId: '0x61',
-  },
-  [ChainId.RINKEBY]: {
-    chainId: '0x4',
-  },
-  [ChainId.ROPSTEN]: {
-    chainId: '0x3',
-  },
-}
-
-export const ADD_NETWORK_PARAMS: {
-  [chainId in ChainId]?: {
-    chainId: string
-    chainName: string
-    nativeCurrency: {
-      name: string
-      symbol: string
-      decimals: number
-    }
-    rpcUrls: string[]
-    blockExplorerUrls: string[]
-  }
-} = {
-  [ChainId.MAINNET]: {
-    chainId: '0x1',
-    chainName: 'Ethereum',
-    nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: [getExplorerUrl(ChainId.MAINNET)],
-  },
-  [ChainId.MATIC]: {
-    chainId: '0x89',
-    chainName: 'Polygon',
-    nativeCurrency: {
-      name: 'Matic',
-      symbol: 'MATIC',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.MATIC]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.MATIC)],
-  },
-  [ChainId.BSCMAINNET]: {
-    chainId: '0x38',
-    chainName: 'BNB Chain',
-    nativeCurrency: {
-      name: 'BNB',
-      symbol: 'BNB',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.BSCMAINNET]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.BSCMAINNET)],
-  },
-  [ChainId.AVAXMAINNET]: {
-    chainId: '0xA86A',
-    chainName: 'Avalanche',
-    nativeCurrency: {
-      name: 'AVAX',
-      symbol: 'AVAX',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.AVAXMAINNET]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.AVAXMAINNET)],
-  },
-  [ChainId.FANTOM]: {
-    chainId: '0xFA',
-    chainName: 'FANTOM',
-    nativeCurrency: {
-      name: 'FTM',
-      symbol: 'FTM',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.FANTOM]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.FANTOM)],
-  },
-  [ChainId.CRONOS]: {
-    chainId: '0x19',
-    chainName: 'Cronos',
-    nativeCurrency: {
-      name: 'CRO',
-      symbol: 'CRO',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.CRONOS]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.CRONOS)],
-  },
-  [ChainId.AURORA]: {
-    chainId: '0x4e454152',
-    chainName: 'Aurora',
-    nativeCurrency: {
-      name: 'Ether',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.AURORA]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.AURORA)],
-  },
-
-  [ChainId.ARBITRUM]: {
-    chainId: '0xa4b1',
-    chainName: 'Arbitrum',
-    nativeCurrency: {
-      name: 'ETH',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.ARBITRUM]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.ARBITRUM)],
-  },
-  [ChainId.BTTC]: {
-    chainId: '0xc7',
-    chainName: 'BitTorrent',
-    nativeCurrency: {
-      name: 'BTT',
-      symbol: 'BTT',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.BTTC]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.BTTC)],
-  },
-  [ChainId.VELAS]: {
-    chainId: '0x6a',
-    chainName: 'Velas',
-    nativeCurrency: {
-      name: 'VLX',
-      symbol: 'VLX',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.VELAS]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.VELAS)],
-  },
-  [ChainId.OASIS]: {
-    chainId: '0xa516',
-    chainName: 'Oasis',
-    nativeCurrency: {
-      name: 'ROSE',
-      symbol: 'ROSE',
-      decimals: 18,
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.OASIS]],
-    blockExplorerUrls: [getExplorerUrl(ChainId.OASIS)],
-  },
-}
+  rpcUrls: [NETWORKS_INFO[chainId].rpcUrl],
+  blockExplorerUrls: [NETWORKS_INFO[chainId].etherscanUrl],
+})
 
 /**
  * Given a network string (e.g. from user agent), return the best match for corresponding SupportedNetwork
  * @param maybeSupportedNetwork the fuzzy network identifier
  */
-function parseNetworkId(maybeSupportedNetwork: string): SupportedNetwork | undefined {
+function parseNetworkId(maybeSupportedNetwork: string): ChainId | undefined {
   return SUPPORTED_NETWORKS.find(network => network.toString() === maybeSupportedNetwork)
 }
 
@@ -222,8 +46,10 @@ export function useActiveNetwork() {
 
   const changeNetwork = useCallback(
     async (chainId: ChainId) => {
-      const switchNetworkParams = SWITCH_NETWORK_PARAMS[chainId]
-      const addNetworkParams = ADD_NETWORK_PARAMS[chainId]
+      const switchNetworkParams = {
+        chainId: '0x' + Number(chainId).toString(16),
+      }
+      const addNetworkParams = getAddNetworkParams(chainId)
 
       const isNotConnected = !(library && library.provider)
       const isWrongNetwork = error instanceof UnsupportedChainIdError
