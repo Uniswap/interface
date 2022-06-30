@@ -268,9 +268,10 @@ const NETWORK_SELECTOR_CHAINS = [
 export default function NetworkSelector() {
   const dispatch = useAppDispatch()
   const { chainId, provider, connector } = useActiveWeb3React()
+  const previousChainId = usePrevious(chainId)
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
-  const prevChainId = usePrevious(chainId)
+  const previousUrlChainId = usePrevious(urlChainId)
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -289,43 +290,35 @@ export default function NetworkSelector() {
       try {
         dispatch(updateWalletError({ wallet, error: undefined }))
         await switchChain(connector, targetChain)
-        if (!skipToggle) {
-          toggle()
-        }
-        history.replace({
-          search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
-        })
       } catch (error) {
         console.error('Failed to switch networks', error)
-
-        // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
-        // but the request fails, revert the URL back to current chainId
-        if (chainId) {
-          history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-        }
-
-        if (!skipToggle) {
-          toggle()
-        }
 
         dispatch(updateWalletError({ wallet, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }
+
+      if (!skipToggle) {
+        toggle()
+      }
     },
-    [connector, toggle, dispatch, history, chainId]
+    [connector, toggle, dispatch]
   )
 
   useEffect(() => {
-    if (!chainId || !prevChainId) return
+    if (!chainId || !previousChainId) return
 
     // when network change originates from wallet or dropdown selector, just update URL
-    if (chainId !== prevChainId) {
+    if (chainId !== previousChainId && chainId !== urlChainId) {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
-    } else if (urlChainId && urlChainId !== chainId) {
-      onSelectChain(urlChainId, true)
+    } else if (urlChainId && urlChainId !== previousUrlChainId && urlChainId !== chainId) {
+      onSelectChain(urlChainId, true).catch(() => {
+        // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
+        // but the request fails, revert the URL back to current chainId
+        history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+      })
     }
-  }, [chainId, urlChainId, prevChainId, onSelectChain, history])
+  }, [chainId, urlChainId, previousChainId, previousUrlChainId, onSelectChain, history])
 
   // set chain parameter on initial load if not there
   useEffect(() => {
