@@ -306,7 +306,8 @@ export default function NetworkSelector() {
     if (!chainId || !prevChainId) return
 
     // when network change originates from wallet or dropdown selector, just update URL
-    if (chainId !== prevChainId) {
+    if (chainId !== prevChainId && chainId !== urlChainId) {
+      console.log(chainId, prevChainId, urlChainId)
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
     } else if (urlChainId && urlChainId !== chainId) {
