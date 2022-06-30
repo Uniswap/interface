@@ -6,6 +6,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
+import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import {
   AccountStackParamList,
   AppStackParamList,
@@ -163,16 +164,28 @@ export function DrawerNavigator() {
         drawerStyle: {
           width: dimensions.fullWidth - theme.spacing.xxl,
         },
+        headerShown: false,
       }}>
       <Drawer.Screen
         component={AppStackNavigator}
         name="AppStack"
-        options={{
-          headerShown: false,
-        }}
+        options={() => ({
+          swipeEnabled: getDrawerEnabled(),
+        })}
       />
     </Drawer.Navigator>
   )
+}
+
+function getDrawerEnabled() {
+  if (!navigationRef.isReady()) {
+    // On cases like app cold start, navigation reference may not be ready,
+    // and we should allow drawer immediately for home screen
+    return true
+  }
+
+  const routeName = navigationRef.getCurrentRoute()?.name
+  return routeName ? DRAWER_ENABLED_SCREENS.includes(routeName) : false
 }
 
 export function HomeStackNavigator() {
@@ -327,3 +340,10 @@ const navOptions = {
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },
 } as const
+
+const DRAWER_ENABLED_SCREENS = [
+  Screens.Home.valueOf(),
+  Screens.Explore.valueOf(),
+  Tabs.Explore.valueOf(),
+  Tabs.Profile.valueOf(),
+]
