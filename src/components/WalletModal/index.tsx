@@ -184,8 +184,9 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetamask = !!window.ethereum?.isMetaMask
+    const isMetaMask = !!window.ethereum?.isMetaMask
     const isTally = !!window.ethereum?.isTally
+    const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
       const isActive = option.connector === connector
@@ -202,7 +203,11 @@ export default function WalletModal({
 
       // check for mobile options
       if (isMobile) {
-        if (!window.web3 && !window.ethereum && option.mobile) {
+        if (
+          (!window.web3 && !window.ethereum && option.mobile) ||
+          (isMetaMask && option.name === 'MetaMask') ||
+          (isCoinbaseWallet && option.name === 'Coinbase Wallet')
+        ) {
           return (
             <Option
               {...optionProps}
@@ -228,7 +233,7 @@ export default function WalletModal({
                 id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
-                header={<Trans>Install Metamask</Trans>}
+                header={<Trans>Install MetaMask</Trans>}
                 subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}
@@ -239,11 +244,11 @@ export default function WalletModal({
           }
         }
         // don't return metamask if injected provider isn't metamask
-        else if (option.name === 'MetaMask' && !isMetamask) {
+        else if (option.name === 'MetaMask' && !isMetaMask) {
           return null
         }
         // likewise for generic
-        else if (option.name === 'Injected' && isMetamask) {
+        else if (option.name === 'Injected' && isMetaMask) {
           return null
         } else if (option.name === 'Injected' && isTally) {
           return (

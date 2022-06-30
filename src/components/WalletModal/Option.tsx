@@ -112,7 +112,13 @@ export default function Option({
   id: string
 }) {
   const content = (
-    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
+    <OptionCardClickable
+      id={id}
+      onClick={onClick}
+      clickable={clickable && !active}
+      active={active}
+      data-testid="wallet-modal-option"
+    >
       <OptionCardLeft>
         <HeaderText color={color}>
           {active ? (
