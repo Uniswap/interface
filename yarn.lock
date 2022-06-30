@@ -2098,17 +2098,17 @@
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
 "@gnosis.pm/safe-apps-provider@^0.11.0":
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-provider/-/safe-apps-provider-0.11.1.tgz#febbaa8878f69bdc74ac33a21006eb70e036f7da"
-  integrity sha512-gVhNtiF09GIUjQgjKdtnSXc1hDFF3DPCiDN2+6u/wI/nnLg8+3tjQZWqOLnJ3qnee/GbIb3AV1fWVN7DDJH4QA==
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-provider/-/safe-apps-provider-0.11.2.tgz#4fb1716c1d6a3760a9ade4925a59fb4a099a006b"
+  integrity sha512-ddXgB6wEvVHY0Nb2PvCBtbM9DE+K81d+mX+tdP929Q4lCeccgtga7PtbUfY2i5LAqV7zEXiCMPXyKlnDjP9zFA==
   dependencies:
-    "@gnosis.pm/safe-apps-sdk" "7.4.0"
+    "@gnosis.pm/safe-apps-sdk" "7.4.1"
     events "^3.3.0"
 
-"@gnosis.pm/safe-apps-sdk@7.4.0", "@gnosis.pm/safe-apps-sdk@^7.3.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-7.4.0.tgz#05d9ba4fa21961161c2869e22e81534990294901"
-  integrity sha512-7YYtEnOioRWo7Lre2XBRxNlCFBseqizWBmkYcjPFBMP8K9blBrntyRo/jr+FdK+wss+85n80RatAP0v8KjmDSg==
+"@gnosis.pm/safe-apps-sdk@7.4.1", "@gnosis.pm/safe-apps-sdk@^7.3.0":
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-7.4.1.tgz#3e397b3f54e5d1be7977f1dcb4cd3785eff721b3"
+  integrity sha512-l00IIKnSxd6qfTGyrh9FgP1Bx0rKwwGym9WOVrTY6E8PMDjg8z0qxTFhN7Qoc7pnvVa0kmtbZFcuuxgiOHFUzQ==
   dependencies:
     "@gnosis.pm/safe-react-gateway-sdk" "^3.1.1"
     ethers "^5.6.8"
@@ -2507,9 +2507,9 @@
     ws "7.4.5"
 
 "@graphql-tools/url-loader@^7.0.0":
-  version "7.11.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.11.0.tgz#c04d4d9f18af58230b589bdd55e81a003e19e5d6"
-  integrity sha512-c3L/NW9MRkYct4FoQQubTf/VeBhPm0lry2EsgDdcdKmV+lOh3RQ4DAYMH61cTX++MPeQiECYEwCCm68J52xlMg==
+  version "7.12.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.12.0.tgz#a80da06c4ccfe12dc983e6638d366a13a9cbf0e3"
+  integrity sha512-V5F3KgU5cpTQ5eghvwUVw1ac784Lxf66WgnmUO1ksFzfwhcvz2RZLvgpFdZ9x6ECnh31VOtxBmIarODnalPzPA==
   dependencies:
     "@graphql-tools/delegate" "8.8.0"
     "@graphql-tools/utils" "8.8.0"
@@ -2520,7 +2520,7 @@
     dset "^3.1.2"
     extract-files "^11.0.0"
     graphql-ws "^5.4.1"
-    isomorphic-ws "^4.0.1"
+    isomorphic-ws "^5.0.0"
     meros "^1.1.4"
     sync-fetch "^0.4.0"
     tslib "^2.4.0"
@@ -3318,9 +3318,9 @@
     "@react-hook/throttle" "^2.2.0"
 
 "@reduxjs/toolkit@^1.6.1":
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.2.tgz#352fd17bc858af51d21ce8d28183a930cab9e638"
-  integrity sha512-CtPw5TkN1pHRigMFCOS/0qg3b/yfPV5qGCsltVnIz7bx4PKTJlGHYfIxm97qskLknMzuGfjExaYdXJ77QTL0vg==
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.3.tgz#9c6a9c497bde43a67618d37a4175a00ae12efeb2"
+  integrity sha512-lU/LDIfORmjBbyDLaqFN2JB9YmAT1BElET9y0ZszwhSBa5Ef3t6o5CrHupw5J1iOXwd+o92QfQZ8OJpwXvsssg==
   dependencies:
     immer "^9.0.7"
     redux "^4.1.2"
@@ -11695,10 +11695,15 @@ isomorphic-fetch@^3.0.0:
     node-fetch "^2.6.1"
     whatwg-fetch "^3.4.1"
 
-isomorphic-ws@4.0.1, isomorphic-ws@^4.0.1:
+isomorphic-ws@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
   integrity sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==
+
+isomorphic-ws@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-5.0.0.tgz#e5529148912ecb9b451b46ed44d53dae1ce04bbf"
+  integrity sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==
 
 isstream@~0.1.2:
   version "0.1.2"
