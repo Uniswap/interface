@@ -1,10 +1,9 @@
+// eslint-disable-next-line simple-import-sort/imports
 import { graphql } from 'babel-plugin-relay/macro'
-import RelayEnvironment from 'graphql/RelayEnvironment'
-import { GraphQLTokenQuery } from 'pages/GraphQL/__generated__/GraphQLTokenQuery.graphql'
-import React from 'react'
+import { Suspense } from 'react'
 import { RelayEnvironmentProvider, useLazyLoadQuery } from 'react-relay/hooks'
-
-const { Suspense } = React
+import RelayEnvironment from './RelayEnvironment'
+import { GraphQLTokenQuery } from './__generated__/GraphQLTokenQuery.graphql'
 
 // Define a query
 // Inner component that reads the preloaded query results via `usePreloadedQuery()`.

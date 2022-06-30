@@ -1,5 +1,5 @@
 async function fetchGraphQL(text: any, variables: any) {
-  const response = await fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3', {
+  const response = await fetch(process.env.REACT_APP_GRAPHQL_SERVER as string, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -8,19 +8,19 @@
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
-    "graphql:generate": "graphql-codegen --config codegen.yml",
     "prei18n:extract": "touch src/locales/en-US.po",
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "yarn i18n:extract && lingui compile",
     "i18n:pseudo": "lingui extract --locale pseudo && lingui compile",
-    "prepare": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
-    "start": "yarn run relay && react-scripts start",
+    "prepare": "yarn contracts:compile && yarn i18n:compile",
+    "start": "yarn run relay:schema && yarn run relay && react-scripts start",
     "build": "yarn run relay && react-scripts build",
     "serve": "serve build -l 3000",
     "test": "react-scripts test --coverage",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
-    "relay": "yarn run relay-compiler"
+    "relay": "yarn run relay-compiler",
+    "relay:schema": "get-graphql-schema $(grep REACT_APP_GRAPHQL_SERVER .env | cut -d '=' -f2) > schema.graphql"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -150,6 +150,7 @@
     "ethers": "^5.1.4",
     "firebase": "^9.1.3",
     "fortmatic": "^2.4.0",
+    "get-graphql-schema": "^2.1.2",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "immer": "^9.0.6",
