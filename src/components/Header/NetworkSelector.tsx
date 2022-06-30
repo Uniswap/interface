@@ -292,27 +292,14 @@ export default function NetworkSelector() {
         if (!skipToggle) {
           toggle()
         }
-        history.replace({
-          search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
-        })
       } catch (error) {
         console.error('Failed to switch networks', error)
-
-        // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
-        // but the request fails, revert the URL back to current chainId
-        if (chainId) {
-          history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-        }
-
-        if (!skipToggle) {
-          toggle()
-        }
 
         dispatch(updateWalletError({ wallet, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }
     },
-    [connector, toggle, dispatch, history, chainId]
+    [connector, toggle, dispatch]
   )
 
   useEffect(() => {
