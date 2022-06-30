@@ -3,6 +3,14 @@ import { ApplicationModal } from 'state/application/reducer'
 import { render, screen } from '../../test-utils'
 import WalletModal from './index'
 
+beforeEach(() => {
+  delete global.window.ethereum
+})
+
+afterAll(() => {
+  delete global.window.ethereum
+})
+
 const UserAgentMock = jest.requireMock('utils/userAgent')
 jest.mock('utils/userAgent', () => ({
   isMobile: false,
@@ -17,15 +25,16 @@ jest.mock('.../../state/application/hooks', () => {
   }
 })
 
-jest.mock('hooks/useActiveWeb3React', () => {
+jest.mock('@web3-react/core', () => {
+  const web3React = jest.requireActual('@web3-react/core')
   return {
-    __esModule: true,
-    default: () => ({
+    useWeb3React: () => ({
       account: undefined,
       isActive: false,
       isActivating: false,
       connector: undefined,
     }),
+    ...web3React,
   }
 })
 
