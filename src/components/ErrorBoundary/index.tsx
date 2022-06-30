@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendEvent } from 'components/analytics'
-import React, { ErrorInfo } from 'react'
+import React, { ErrorInfo, PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 
 import store, { AppState } from '../../state'
@@ -47,10 +47,6 @@ type ErrorBoundaryState = {
   error: Error | null
 }
 
-interface ErrorBoundaryProps {
-  children?: React.ReactNode
-}
-
 const IS_UNISWAP = window.location.hostname === 'app.uniswap.org'
 
 async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
@@ -60,8 +56,8 @@ async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
   return ready.update() as unknown as Promise<ServiceWorkerRegistration>
 }
 
-export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
+export default class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, ErrorBoundaryState> {
+  constructor(props: PropsWithChildren<unknown>) {
     super(props)
     this.state = { error: null }
   }
