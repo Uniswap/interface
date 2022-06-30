@@ -22,20 +22,21 @@ jest.mock(
       `CurrencyLogo currency=${currency.symbol}`
 )
 
-jest.mock('hooks/useActiveWeb3React', () => {
+jest.mock('@web3-react/core', () => {
+  const web3React = jest.requireActual('@web3-react/core')
   return {
-    __esModule: true,
-    default: () => ({
+    useWeb3React: () => ({
       account: '123',
-      active: true,
+      isActive: true,
     }),
+    ...web3React,
   }
 })
 
 jest.mock('../../../state/wallet/hooks', () => {
   return {
     useCurrencyBalance: (currency: Currency) => {
-      return mockCurrencyAmt[(currency as mockToken).address]
+      return mockCurrencyAmt[(currency as mockToken)?.address]
     },
   }
 })
