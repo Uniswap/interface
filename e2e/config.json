@@ -9,6 +9,6 @@
   "testEnvironment": "./environment",
   "testRegex": "\\.e2e\\.js$",
   "testRunner": "jest-circus/runner",
-  "testTimeout": 240000,
+  "testTimeout": 500000,
   "verbose": true
 }
