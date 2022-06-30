@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { FavoriteTokensSection } from 'src/components/explore/FavoriteTokensSection'
 import { SearchResultsSection } from 'src/components/explore/SearchResultsSection'
 import { TopTokensSection } from 'src/components/explore/TopTokensSection'
+import { WatchedWalletsSection } from 'src/components/explore/WatchedWalletsSection'
 import { AppBackground } from 'src/components/gradients'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
@@ -132,6 +133,9 @@ export function ExploreScreen() {
       ) : (
         <VirtualizedList onScroll={scrollHandler}>
           <Box height={HEADER_HEIGHT} mb="md" />
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="md">
+            <WatchedWalletsSection />
+          </AnimatedFlex>
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
             <FavoriteTokensSection
               fixedCount={5}

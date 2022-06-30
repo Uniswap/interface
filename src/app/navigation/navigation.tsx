@@ -65,6 +65,7 @@ import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManage
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
 import { UserScreen } from 'src/screens/UserScreen'
+import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { dimensions } from 'src/styles/sizing'
 
@@ -222,8 +223,9 @@ export function ExploreStackNavigator() {
       <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <ExploreStack.Screen component={UserScreen} name={Screens.User} />
       <ExploreStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
-      <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
       <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
+      <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+      <ExploreStack.Screen component={WatchedWalletsScreen} name={Screens.WatchedWallets} />
     </ExploreStack.Navigator>
   )
 }
