@@ -19,7 +19,7 @@ type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
 
 export type TabParamList = {
   [Tabs.Home]: undefined
-  [Tabs.Explore]: undefined
+  [Tabs.Explore]: undefined | { screen: Screens; params: { address: string } }
   [Tabs.Profile]: undefined
 }
 

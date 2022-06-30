@@ -5,6 +5,7 @@ import { Alert } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -20,6 +21,8 @@ import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
+import { Screens, Tabs } from 'src/screens/Screens'
+import { isValidAddress } from 'src/utils/addresses'
 
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
@@ -55,7 +58,10 @@ export function WalletConnectModal({
     if (!activeAddress || hasScanError || shouldFreezeCamera) return
     selectionAsync()
 
-    if (await isValidWCUrl(uri.toString())) {
+    if (isValidAddress(uri)) {
+      navigate(Tabs.Explore, { screen: Screens.User, params: { address: uri } })
+      onClose()
+    } else if (await isValidWCUrl(uri.toString())) {
       setShouldFreezeCamera(true)
       connectToApp(uri)
     } else {
