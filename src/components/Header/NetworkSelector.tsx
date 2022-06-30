@@ -268,9 +268,10 @@ const NETWORK_SELECTOR_CHAINS = [
 export default function NetworkSelector() {
   const dispatch = useAppDispatch()
   const { chainId, provider, connector } = useActiveWeb3React()
+  const previousChainId = usePrevious(chainId)
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
-  const prevChainId = usePrevious(chainId)
+  const previousUrlChainId = usePrevious(urlChainId)
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -303,17 +304,16 @@ export default function NetworkSelector() {
   )
 
   useEffect(() => {
-    if (!chainId || !prevChainId) return
+    if (!chainId || !previousChainId) return
 
     // when network change originates from wallet or dropdown selector, just update URL
-    if (chainId !== prevChainId && chainId !== urlChainId) {
-      console.log(chainId, prevChainId, urlChainId)
+    if (chainId !== previousChainId && chainId !== urlChainId) {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
-    } else if (urlChainId && urlChainId !== chainId) {
+    } else if (urlChainId && urlChainId !== previousUrlChainId && urlChainId !== chainId) {
       onSelectChain(urlChainId, true)
     }
-  }, [chainId, urlChainId, prevChainId, onSelectChain, history])
+  }, [chainId, urlChainId, previousChainId, previousUrlChainId, onSelectChain, history])
 
   // set chain parameter on initial load if not there
   useEffect(() => {
