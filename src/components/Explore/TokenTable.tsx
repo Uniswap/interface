@@ -2,6 +2,7 @@ import { TimePeriod } from 'hooks/useTopTokens'
 import useTopTokens from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { showFavoritesAtom } from 'pages/Explore/index'
 import React from 'react'
 import styled from 'styled-components/macro'
 
@@ -43,9 +44,10 @@ const LOADING_ROWS = Array(10)
 // TODO: add to shared location
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 
-export default function TokenTable({ showFavorites }: { showFavorites: boolean }) {
+export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const [favoriteTokens] = useAtom(favoritesAtom)
+  const [showFavorites] = useAtom(showFavoritesAtom)
   const timePeriod = TimePeriod.day
 
   /* loading and error state */

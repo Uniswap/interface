@@ -1,4 +1,6 @@
 import useTheme from 'hooks/useTheme'
+import { useAtom } from 'jotai'
+import { showFavoritesAtom } from 'pages/Explore/index'
 import { Heart } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -23,10 +25,11 @@ const FavoriteButtonContainer = styled.button`
   }
 `
 
-export default function FavoriteButton({ onClick }: { onClick: () => any }) {
+export default function FavoriteButton() {
   const theme = useTheme()
+  const [showFavorites, setShowFavorites] = useAtom(showFavoritesAtom)
   return (
-    <FavoriteButtonContainer onClick={onClick}>
+    <FavoriteButtonContainer onClick={() => setShowFavorites(!showFavorites)}>
       <FavoriteButtonContent>
         <Heart size={17} color={theme.text1} fill={theme.text1} /> Favorites
       </FavoriteButtonContent>

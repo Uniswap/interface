@@ -1,7 +1,7 @@
 import FavoriteButton from 'components/Explore/FavoriteButton'
 import TimeSelector from 'components/Explore/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable'
-import { useState } from 'react'
+import { atomWithStorage } from 'jotai/utils'
 import styled from 'styled-components/macro'
 
 const GridContainer = styled.div`
@@ -12,18 +12,17 @@ const FiltersContainer = styled.div`
   gap: 8px;
   height: 44px;
 `
-
+export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 const Explore = () => {
-  const [showFavorites, setFavorites] = useState(false)
   return (
     <>
       <FiltersContainer>
-        <FavoriteButton onClick={() => setFavorites(!showFavorites)} />
+        <FavoriteButton />
         <TimeSelector />
       </FiltersContainer>
 
       <GridContainer>
-        <TokenTable showFavorites={showFavorites} />
+        <TokenTable />
       </GridContainer>
     </>
   )
