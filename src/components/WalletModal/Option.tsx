@@ -115,8 +115,8 @@ export default function Option({
     <OptionCardClickable
       id={id}
       onClick={onClick}
-      clickable={clickable && !active}
-      active={active}
+      clickable={clickable && !isActive}
+      active={isActive}
       data-testid="wallet-modal-option"
     >
       <OptionCardLeft>
