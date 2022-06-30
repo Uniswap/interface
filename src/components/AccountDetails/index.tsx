@@ -284,7 +284,6 @@ export default function AccountDetails({
                       dispatch(updateSelectedWallet({ wallet: undefined }))
                       openOptions()
                     }}
-                    data-cy="wallet-disconnect"
                   >
                     <Trans>Disconnect</Trans>
                   </WalletAction>
