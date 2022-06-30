@@ -2,8 +2,8 @@ import { BaseTheme } from '@shopify/restyle'
 import React, { ReactElement } from 'react'
 import { SettingsStackNavigationProp, SettingsStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
+import { Arrow } from 'src/components/icons/Arrow'
 import { Chevron } from 'src/components/icons/Chevron'
-import { PopoutArrow } from 'src/components/icons/PopoutArrow'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
@@ -71,7 +71,7 @@ export function SettingsRow({
         {screen ? (
           <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
         ) : externalLink ? (
-          <PopoutArrow color={theme.colors.textSecondary} size={24} />
+          <Arrow color={theme.colors.textSecondary} direction="ne" size={24} />
         ) : (
           action
         )}

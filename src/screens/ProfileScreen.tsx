@@ -10,7 +10,7 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { ArrowIcon } from 'src/components/icons/ArrowIcon'
+import { Arrow } from 'src/components/icons/Arrow'
 import { OverlayGroup } from 'src/components/icons/OverlayIcon'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box, Flex } from 'src/components/layout'
@@ -98,7 +98,7 @@ export function ProfileScreen({ navigation }: Props) {
             variant="headlineMedium"
           />
         </Flex>
-        {sessions.length > 0 && <SessionsButton sessions={sessions} onPress={onPressSessions} />}
+        {<SessionsButton sessions={sessions} onPress={onPressSessions} />}
       </Flex>
     </Screen>
   )
@@ -137,7 +137,7 @@ function SessionsButton({
           <OverlayGroup iconSize={32} icons={sessionIcons} />
           <Text variant="mediumLabel">{sessions.length + ' ' + t('sites connected')}</Text>
         </Flex>
-        <ArrowIcon size={18} />
+        <Arrow color={theme.colors.textSecondary} />
       </Flex>
     </Button>
   )

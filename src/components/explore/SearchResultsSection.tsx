@@ -4,10 +4,10 @@ import { Image, ImageStyle, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
-import ArrowDown from 'src/assets/icons/arrow-down.svg'
 import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
 import { Button } from 'src/components/buttons/Button'
 import { WalletItem, WalletItemProps } from 'src/components/explore/WalletItem'
+import { Arrow } from 'src/components/icons/Arrow'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Section } from 'src/components/layout/Section'
 import { Separator } from 'src/components/layout/Separator'
@@ -214,13 +214,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
                   <Text variant="mediumLabel">{shortenAddress(etherscanAddress)}</Text>
                 )}
               </Flex>
-              <ArrowDown
-                color={theme.colors.textSecondary}
-                height={24}
-                strokeWidth={2}
-                style={{ transform: [{ rotate: '225deg' }] }}
-                width={24}
-              />
+              <Arrow color={theme.colors.textSecondary} direction="ne" size={24} />
             </Flex>
           </Button>
         </AnimatedFlex>

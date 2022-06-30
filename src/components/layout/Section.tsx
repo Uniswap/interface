@@ -53,7 +53,7 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
             )
           ) : null}
         </Flex>
-        <Chevron color={theme.colors.textSecondary} direction="e" height={16} width={16} />
+        <Chevron color={theme.colors.textSecondary} direction="e" />
       </Flex>
     </Button>
   )

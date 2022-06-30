@@ -1,21 +1,15 @@
-import { color as restyleColor, ColorProps, createRestyleComponent } from '@shopify/restyle'
 import React, { ComponentProps } from 'react'
-import { SvgProps } from 'react-native-svg'
-import ArrowDownSVG from 'src/assets/icons/arrow-down.svg'
+import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { Theme } from 'src/styles/theme'
+import { Arrow } from 'src/components/icons/Arrow'
 
 const ICON_SIZE = 20
-
-const ArrowDown = createRestyleComponent<ColorProps<Theme> & Omit<SvgProps, 'color'>, Theme>(
-  [restyleColor],
-  ArrowDownSVG
-)
 
 type ArrowDownButtonProps = Pick<ComponentProps<typeof Button>, 'disabled' | 'name' | 'onPress'>
 
 export function TransferArrowButton({ name, onPress, disabled }: ArrowDownButtonProps) {
+  const theme = useAppTheme()
   return (
     <IconButton
       alignItems="center"
@@ -25,7 +19,7 @@ export function TransferArrowButton({ name, onPress, disabled }: ArrowDownButton
       borderRadius="md"
       borderWidth={4}
       disabled={disabled}
-      icon={<ArrowDown color="textSecondary" height={ICON_SIZE} width={ICON_SIZE} />}
+      icon={<Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />}
       justifyContent="center"
       name={name}
       onPress={onPress}
