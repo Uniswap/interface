@@ -38,7 +38,7 @@ jest.mock('@web3-react/core', () => {
   }
 })
 
-test('Loads Wallet Modal on desktop', async () => {
+it('loads Wallet Modal on desktop', async () => {
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Install MetaMask')).toBeInTheDocument()
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
@@ -47,7 +47,7 @@ test('Loads Wallet Modal on desktop', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
 })
 
-test('Loads Wallet Modal on desktop with MetaMask installed', async () => {
+it('loads Wallet Modal on desktop with MetaMask installed', async () => {
   global.window.ethereum = { isMetaMask: true }
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
@@ -58,7 +58,7 @@ test('Loads Wallet Modal on desktop with MetaMask installed', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
 })
 
-test('Loads Wallet Modal on mobile', async () => {
+it('loads Wallet Modal on mobile', async () => {
   UserAgentMock.isMobile = true
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
@@ -68,7 +68,7 @@ test('Loads Wallet Modal on mobile', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(3)
 })
 
-test('Loads Wallet Modal on MetaMask browser', async () => {
+it('loads Wallet Modal on MetaMask browser', async () => {
   UserAgentMock.isMobile = true
   global.window.ethereum = { isMetaMask: true }
 
@@ -77,7 +77,7 @@ test('Loads Wallet Modal on MetaMask browser', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(1)
 })
 
-test('Loads Wallet Modal on Coinbase Wallet browser', async () => {
+it('loads Wallet Modal on Coinbase Wallet browser', async () => {
   UserAgentMock.isMobile = true
   global.window.ethereum = { isCoinbaseWallet: true }
 
