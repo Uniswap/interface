@@ -9,16 +9,12 @@ const FavoriteButtonContent = styled.div`
   gap: 8px;
 `
 const FavoriteButtonContainer = styled.button`
-  width: 130px;
-  height: 44px;
-  padding: 12px 16px;
+  padding: 0px 16px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg0};
   border: 1px solid ${({ theme }) => theme.bg0};
   color: ${({ theme }) => theme.text1};
   font-size: 16px;
-  font-height: 24px;
-  font-weight: 400;
 
   :hover,
   :focus {
@@ -26,8 +22,6 @@ const FavoriteButtonContainer = styled.button`
     outline: none;
     border: 1px solid ${({ theme }) => theme.bg3};
   }
-
-  background-color: ;
 `
 
 export default function FavoriteButton() {

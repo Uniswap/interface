@@ -8,6 +8,7 @@ const GridContainer = styled.div`
 const FiltersContainer = styled.div`
   display: flex;
   gap: 8px;
+  height: 44px;
 `
 
 const Explore = () => {
