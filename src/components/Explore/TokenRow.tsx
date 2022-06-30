@@ -3,6 +3,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
+import { useAtom } from 'jotai'
 import { darken } from 'polished'
 import React, { ReactNode, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
@@ -11,6 +12,7 @@ import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
 import { TIME_DISPLAYS } from './TimeSelector'
+import { favoritesAtom } from './TokenTable'
 
 enum Category {
   percent_change = '% Change',
@@ -85,9 +87,9 @@ const TokenRowWrapper = styled.div`
 const ClickFavorited = styled.span`
   display: flex;
   align-content: center;
+
   &:hover {
     color: ${({ theme }) => theme.primary1};
-    cursor: pointer;
   }
 `
 const FavoriteCell = styled(Cell)`
@@ -446,20 +448,17 @@ export default function LoadedRow({
   data,
   listNumber,
   timePeriod,
-  favoriteTokens,
-  updateFavoriteTokens,
 }: {
   tokenAddress: string
   data: TokenData
   listNumber: number
   timePeriod: TimePeriod
-  favoriteTokens: string[]
-  updateFavoriteTokens: any
 }) {
   const token = useToken(tokenAddress)
   const tokenName = token?.name
   const tokenSymbol = token?.symbol
   const tokenData = data[tokenAddress]
+  const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
   // TODO: remove magic number colors
   const tokenPercentChangeInfo = (
     <>
@@ -479,14 +478,15 @@ export default function LoadedRow({
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const [tokenFavorited, setTokenFavorite] = useState(isFavorited)
   const toggleFavoriteToken = () => {
+    let updatedFavoriteTokens = favoriteTokens
     if (tokenFavorited) {
-      favoriteTokens = favoriteTokens.filter((address) => {
+      updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
         return address !== tokenAddress
       })
     } else {
-      favoriteTokens.push(tokenAddress)
+      updatedFavoriteTokens.push(tokenAddress)
     }
-    updateFavoriteTokens(favoriteTokens)
+    updateFavoriteTokens(updatedFavoriteTokens)
     setTokenFavorite(!tokenFavorited)
   }
 

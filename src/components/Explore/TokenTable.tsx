@@ -40,11 +40,12 @@ const LOADING_ROWS = Array(10)
     return <LoadingRow key={`${index}`} />
   })
 
-const favoritesAtom = atomWithStorage('favorites', [])
+// TODO: add to shared location
+export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 
 export default function TokenTable({ showFavorites }: { showFavorites: boolean }) {
   const { data, error, loading } = useTopTokens()
-  const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
+  const [favoriteTokens] = useAtom(favoritesAtom)
   const timePeriod = TimePeriod.day
 
   /* loading and error state */
@@ -78,8 +79,6 @@ export default function TokenTable({ showFavorites }: { showFavorites: boolean }
         data={data}
         listNumber={index + 1}
         timePeriod={timePeriod}
-        favoriteTokens={favoriteTokens}
-        updateFavoriteTokens={updateFavoriteTokens}
       />
     )
   })
