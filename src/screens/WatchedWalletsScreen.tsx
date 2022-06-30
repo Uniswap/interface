@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, Pressable } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -12,12 +12,21 @@ import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
-import { removeWatchedAddress } from 'src/features/favorites/slice'
+import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
 import { Screens } from 'src/screens/Screens'
 
-function WatchedWalletsItem({ address }: { address: string }) {
+function WatchedWalletsItem({
+  address,
+  isWatched,
+  onWatch,
+  onRemove,
+}: {
+  address: string
+  isWatched: boolean
+  onWatch: () => void
+  onRemove: () => void
+}) {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const { navigate } = useExploreStackNavigation()
 
   return (
@@ -36,15 +45,14 @@ function WatchedWalletsItem({ address }: { address: string }) {
           />
         </Box>
         <TextButton
+          backgroundColor={isWatched ? 'none' : 'backgroundAction'}
           borderColor="backgroundOutline"
           borderRadius="md"
           borderWidth={1}
           p="xs"
           textVariant="smallLabel"
-          onPress={() => {
-            dispatch(removeWatchedAddress({ address }))
-          }}>
-          {t('Remove')}
+          onPress={isWatched ? onRemove : onWatch}>
+          {isWatched ? t('Remove') : t('Watch')}
         </TextButton>
       </Flex>
     </Pressable>
@@ -53,12 +61,36 @@ function WatchedWalletsItem({ address }: { address: string }) {
 
 export function WatchedWalletsScreen() {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
-  const watchedWallets = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
+  const originalWallets = useRef(Array.from(watchedWalletsSet))
+
+  const [removedWallets, setRemovedWallets] = useState<string[]>([])
+
+  useEffect(() => {
+    const updatedRemovedWallets = originalWallets.current.filter(
+      (wallet) => !watchedWalletsSet.has(wallet)
+    )
+    setRemovedWallets(updatedRemovedWallets)
+  }, [watchedWalletsSet, originalWallets])
 
   const renderItem = useCallback(
-    ({ item: address }: ListRenderItemInfo<string>) => <WatchedWalletsItem address={address} />,
-    []
+    ({ item: address }: ListRenderItemInfo<string>) => {
+      return (
+        <WatchedWalletsItem
+          address={address}
+          isWatched={!removedWallets.includes(address)}
+          onRemove={() => {
+            dispatch(removeWatchedAddress({ address }))
+          }}
+          onWatch={() => {
+            dispatch(addWatchedAddress({ address }))
+          }}
+        />
+      )
+    },
+    [removedWallets, dispatch]
   )
 
   const headerText = t("Wallets you're watching")
@@ -72,7 +104,7 @@ export function WatchedWalletsScreen() {
           <Text variant="headlineSmall">{headerText}</Text>
         </Flex>
       }
-      data={watchedWallets}
+      data={originalWallets.current}
       fixedHeader={
         <BackHeader>
           <Text variant="subhead">{headerText}</Text>
