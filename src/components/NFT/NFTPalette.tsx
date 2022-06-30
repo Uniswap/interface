@@ -21,12 +21,14 @@ function useNFTColors(asset: NFTAsset.Asset | undefined) {
     if (!asset?.image_url) return
 
     setLoading(true)
-    extractColors(asset.image_url, theme.colors.deprecated_primary1).then(
-      (result: ImageColorsResult) => {
-        setLoading(false)
+    extractColors(asset.image_url, theme.colors.deprecated_primary1)
+      .then((result: ImageColorsResult) => {
         setColors(result)
-      }
-    )
+      })
+      .catch(() => {
+        // no-op
+      })
+      .finally(() => setLoading(false))
   }, [asset?.image_url, theme.colors.deprecated_primary1])
 
   return { loading, colors }

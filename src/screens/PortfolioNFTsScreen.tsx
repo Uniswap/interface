@@ -18,9 +18,6 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { dimensions } from 'src/styles/sizing'
-
-const IMAGE_SIZE_RATIO = 2.4
 
 export function PortfolioNFTsScreen({
   route: {
@@ -55,7 +52,7 @@ export function PortfolioNFTsScreen({
     (asset: NFTAsset.Asset) => {
       return (
         <Button onPress={() => onPressItem(asset)}>
-          <NFTAssetItem nft={asset} size={dimensions.fullWidth / IMAGE_SIZE_RATIO} />
+          <NFTAssetItem nft={asset} />
         </Button>
       )
     },

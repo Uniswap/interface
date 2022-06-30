@@ -7,7 +7,7 @@ import IncomingArrow from 'src/assets/icons/arrow-down-in-circle.svg'
 import OutgoingArrow from 'src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
-import { RemoteImage } from 'src/components/images/RemoteImage'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box } from 'src/components/layout/Box'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
@@ -94,7 +94,7 @@ function NFTLogoOrPlaceholder(props: { nft?: NFTAsset.Asset; size: number }) {
       height={size}
       justifyContent="center"
       width={size}>
-      {nft && <RemoteImage borderRadius={0} height={size} imageUrl={nft.image_url} width={size} />}
+      {nft && <NFTViewer uri={nft.image_url} />}
     </Box>
   )
 }

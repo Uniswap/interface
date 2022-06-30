@@ -24,7 +24,6 @@ import {
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
-import { dimensions } from 'src/styles/sizing'
 import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferTokenProps {
@@ -89,10 +88,10 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
 
   return (
     <Flex grow justifyContent="space-between" p="md">
-      <Flex grow gap="md" justifyContent="center">
+      <Flex centered grow gap="md">
         {isNFT ? (
-          <Flex centered>
-            <NFTAssetItem nft={nftIn} size={dimensions.fullWidth / 1.5} />
+          <Flex centered mx="xl">
+            <NFTAssetItem nft={nftIn} />
           </Flex>
         ) : (
           <CurrencyInputPanel

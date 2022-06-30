@@ -9,7 +9,7 @@ import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { RemoteImage } from 'src/components/images/RemoteImage'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -25,7 +25,6 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
-import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 import { formatNumber } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
@@ -36,12 +35,7 @@ interface Props {
   collectionName: string
 }
 
-const HORIZONTAL_MARGIN = theme.spacing.md * 2
-const ITEM_HORIZONTAL_MARGIN = theme.spacing.sm * 2
 const NUM_COLUMNS = 2
-const ITEM_WIDTH =
-  (dimensions.fullWidth - HORIZONTAL_MARGIN - ITEM_HORIZONTAL_MARGIN * NUM_COLUMNS) / NUM_COLUMNS
-
 function NFTCollectionHeader({ collection, collectionName }: Props) {
   const { t } = useTranslation()
   const appTheme = useAppTheme()
@@ -66,12 +60,9 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             p="md">
             <Flex row alignItems="center" gap="sm">
               {collection?.image_url && (
-                <RemoteImage
-                  borderRadius={theme.borderRadii.md}
-                  height={24}
-                  imageUrl={collection?.image_url}
-                  width={24}
-                />
+                <Box height={24} width={24}>
+                  <NFTViewer borderRadius={theme.borderRadii.md} uri={collection?.image_url} />
+                </Box>
               )}
               <Text style={flex.shrink} variant="mediumLabel">
                 {collectionName}
@@ -201,13 +192,9 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
-      <NFTAssetItem
-        mx="sm"
-        my="sm"
-        nft={item}
-        size={ITEM_WIDTH}
-        onPress={(nftAsset) => onPressNFT(nftAsset)}
-      />
+      <Button mx="sm" my="sm" onPress={() => onPressNFT(item)}>
+        <NFTAssetItem nft={item} />
+      </Button>
     ),
     []
   )

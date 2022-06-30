@@ -52,7 +52,7 @@ export function DappConnectionItem({
               <RemoteImage
                 borderRadius={theme.borderRadii.none}
                 height={40}
-                imageUrl={dapp.icon}
+                uri={dapp.icon}
                 width={40}
               />
             </Flex>

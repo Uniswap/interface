@@ -58,7 +58,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
       <RemoteImage
         borderRadius={NOTIFICATION_SIZING.primaryImage / 2}
         height={NOTIFICATION_SIZING.primaryImage}
-        imageUrl={imageUrl}
+        uri={imageUrl}
         width={NOTIFICATION_SIZING.primaryImage}
       />
       {(validChainId || event === WalletConnectEvent.Confirmed) && (

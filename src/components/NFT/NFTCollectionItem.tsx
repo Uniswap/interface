@@ -4,7 +4,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
-import { RemoteImage } from 'src/components/images/RemoteImage'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
@@ -24,12 +24,10 @@ interface Props {
 
 export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: Props) {
   const renderItem = ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
-    <NFTAssetItem
-      mx="sm"
-      nft={item}
-      size={dimensions.fullWidth / 3}
-      onPress={(nftAsset) => onPressNFT(nftAsset)}
-    />
+    <Button mx="sm" onPress={() => onPressNFT(item)}>
+      width={dimensions.fullWidth / 3}
+      <NFTAssetItem nft={item} />
+    </Button>
   )
 
   const { image_url, safelist_request_status, name } = nftAssets[0].collection
@@ -59,11 +57,11 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
           <Flex row gap="sm" justifyContent="space-between" mx="md">
             <Flex row shrink alignItems="center" gap="xs">
               {image_url && (
-                <RemoteImage
+                <NFTViewer
                   borderRadius={theme.borderRadii.md}
-                  height={20}
-                  imageUrl={image_url}
-                  width={20}
+                  // height={20}
+                  uri={image_url}
+                  // width={20}
                 />
               )}
               <Text numberOfLines={1} style={flex.shrink} variant="body">

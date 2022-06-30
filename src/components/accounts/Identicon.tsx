@@ -32,7 +32,7 @@ export function Identicon({ address, size = 36, ...rest }: Props) {
         <RemoteImage
           borderRadius={theme.borderRadii.full}
           height={size}
-          imageUrl={userPfp}
+          uri={userPfp}
           width={size}
         />
       )}

@@ -26,7 +26,6 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { dimensions } from 'src/styles/sizing'
 import { openUri } from 'src/utils/linking'
 
 export function NFTItemScreen({
@@ -67,7 +66,7 @@ export function NFTItemScreen({
       fixedHeader={<BackButton showButtonLabel />}>
       <Flex borderRadius="md" p="md">
         <Flex centered>
-          <NFTAssetItem mx="sm" nft={asset} size={dimensions.fullWidth} />
+          <NFTAssetItem nft={asset} />
 
           <Flex
             alignItems="flex-end"
@@ -88,7 +87,7 @@ export function NFTItemScreen({
               <RemoteImage
                 borderRadius={theme.borderRadii.full}
                 height={16}
-                imageUrl={asset.collection.image_url}
+                uri={asset.collection.image_url}
                 width={16}
               />
             ) : null}

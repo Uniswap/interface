@@ -9,7 +9,7 @@ import { TokenLoader } from 'src/components/loading/TokenLoader'
 import GraphCurveArea from './graph-curve-area.svg'
 import GraphCurve from './graph-curve.svg'
 
-type SkeletonType = 'box' | 'graph' | 'header' | 'token'
+type SkeletonType = 'box' | 'graph' | 'header' | 'token' | 'image'
 
 interface LoadingProps {
   type?: SkeletonType
@@ -42,6 +42,9 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
           ))}
         </Box>
       )
+    case 'image':
+      if (repeat > 1) throw new Error('Loading placeholder for images does not support repeat')
+      return <BoxLoader height={150} />
     case 'box':
     default:
       return (

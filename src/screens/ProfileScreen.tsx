@@ -119,7 +119,7 @@ function SessionsButton({
       <RemoteImage
         borderRadius={theme.borderRadii.none}
         height={32}
-        imageUrl={session.dapp.icon}
+        uri={session.dapp.icon}
         width={32}
       />
     )

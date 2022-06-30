@@ -8,7 +8,7 @@ import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { RemoteImage } from 'src/components/images/RemoteImage'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { BottomSheetScrollModal } from 'src/components/modals/BottomSheetModal'
@@ -27,7 +27,6 @@ import {
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
-import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 import { openUri } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
@@ -38,7 +37,6 @@ interface Props {
   onClose: () => void
 }
 
-const ITEM_WIDTH = dimensions.fullWidth - theme.spacing.lg * 2
 const COLLECTION_IMAGE_WIDTH = 20
 
 export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
@@ -86,11 +84,12 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
     <BottomSheetScrollModal isVisible={isVisible} name={ModalName.NFTAsset} onClose={onClose}>
       <Flex gap="md" mx="lg" my="md">
         <Box>
-          <RemoteImage
+          <NFTViewer
             borderRadius={theme.borderRadii.lg}
-            height={ITEM_WIDTH}
-            imageUrl={imageUrl}
-            width={ITEM_WIDTH}
+            // TODO: fix dimensions when nft work kicks off
+            // height={ITEM_WIDTH}
+            uri={imageUrl}
+            // width={ITEM_WIDTH}
           />
           <Flex
             alignItems="flex-end"
@@ -156,12 +155,9 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
                 style={flex.fill}
                 variant="bodySmall">{t`From the Collection`}</Text>
               <Flex row alignItems="center" gap="xs">
-                <RemoteImage
-                  borderRadius={theme.borderRadii.full}
-                  height={COLLECTION_IMAGE_WIDTH}
-                  imageUrl={collectionImageUrl}
-                  width={COLLECTION_IMAGE_WIDTH}
-                />
+                <Box height={COLLECTION_IMAGE_WIDTH} width={COLLECTION_IMAGE_WIDTH}>
+                  <NFTViewer borderRadius={theme.borderRadii.full} uri={collectionImageUrl} />
+                </Box>
                 <Text ml="xs" variant="body">
                   {collectionName}
                 </Text>
