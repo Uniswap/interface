@@ -68,7 +68,13 @@ export function PortfolioNFTsScreen({
     <HeaderScrollScreen
       contentHeader={
         <Flex gap="md">
-          <BackButton showButtonLabel />
+          {isOtherOwner ? (
+            <BackHeader>
+              <AddressDisplay address={owner} color="textSecondary" size={16} variant="subhead" />
+            </BackHeader>
+          ) : (
+            <BackButton showButtonLabel />
+          )}
           <Text mb="md" mx="xs" variant="headlineSmall">
             {isOtherOwner
               ? t("{{displayName}}'s NFTs", { displayName: displayName?.name || owner })
@@ -80,7 +86,7 @@ export function PortfolioNFTsScreen({
         <BackHeader>
           {isOtherOwner ? (
             <Flex centered gap="none">
-              <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+              <AddressDisplay address={owner} size={16} variant="subhead" />
               <Text color="accentTextLightSecondary" variant="subheadSmall">
                 {t('NFTs')}
               </Text>

@@ -19,6 +19,7 @@ type AddressDisplayProps = {
   showAddressAsSubtitle?: boolean
   size?: number
   variant?: keyof Theme['textVariants']
+  color?: keyof Theme['colors']
   captionVariant?: keyof Theme['textVariants']
   captionColor?: keyof Theme['colors']
   verticalGap?: keyof Theme['spacing']
@@ -33,6 +34,7 @@ export function AddressDisplay({
   address,
   size = 24,
   variant = 'body',
+  color = 'textPrimary',
   captionVariant = 'caption',
   captionColor = 'textSecondary',
   verticalGap = 'xxs',
@@ -68,7 +70,7 @@ export function AddressDisplay({
       <Flex alignItems={direction === 'column' ? 'center' : 'flex-start'} gap={verticalGap}>
         <Flex centered row gap="sm">
           <Text
-            color="textPrimary"
+            color={color}
             testID={`address-display/name/${displayName?.name}`}
             variant={variant}>
             {displayName?.name}

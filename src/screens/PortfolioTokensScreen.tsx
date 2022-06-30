@@ -62,7 +62,13 @@ export function PortfolioTokensScreen({
       }
       contentHeader={
         <Flex gap="md" my="sm">
-          <BackButton showButtonLabel />
+          {isOtherOwner ? (
+            <BackHeader>
+              <AddressDisplay address={owner} color="textSecondary" size={16} variant="subhead" />
+            </BackHeader>
+          ) : (
+            <BackButton showButtonLabel />
+          )}
           <TotalBalance balances={balancesData} />
         </Flex>
       }
@@ -71,7 +77,7 @@ export function PortfolioTokensScreen({
         <BackHeader>
           <Flex centered gap="none">
             {isOtherOwner ? (
-              <AddressDisplay address={owner} captionVariant="subhead" size={16} />
+              <AddressDisplay address={owner} size={16} variant="subhead" />
             ) : (
               <TotalBalance balances={balancesData} variant="subheadSmall" />
             )}
