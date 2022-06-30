@@ -4346,7 +4346,7 @@
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.8.tgz#b94a4391c85666c7b73299fd3ad79d4faa435310"
   integrity sha512-ipixuVrh2OdNmauvtT51o3d8z12p6LtFW9in7U79der/kwejjdNchQC5UMn5u/KxNoM7VHHOs/l8KS8uHxhODQ==
 
-"@types/testing-library__cypress@^5.0.9":
+"@types/testing-library__cypress@^5.0.5":
   version "5.0.9"
   resolved "https://registry.yarnpkg.com/@types/testing-library__cypress/-/testing-library__cypress-5.0.9.tgz#c65f2be0cbb7f11556c1a35fd767d8dd6d1dff23"
   integrity sha512-WTiIZhZKWDnV+Tgo42pxff8YfHdmaNFQz/bFoTlmfw2vbXcstCcb39VRaRi5yFHj/lb7t3K47btKYEbR1fci+Q==
