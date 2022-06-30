@@ -1,6 +1,7 @@
 {
   "react-native": {
-    "analytics_auto_collection_enabled": false
+    "analytics_auto_collection_enabled": false,
+    "perf_auto_collection_enabled": false
   },
   "firestore": {
     "rules": "firestore.rules",

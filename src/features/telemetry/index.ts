@@ -1,4 +1,5 @@
 import { firebase } from '@react-native-firebase/analytics'
+import { firebase as firebasePerf } from '@react-native-firebase/perf'
 import { logger } from 'src/utils/logger'
 
 export async function enableAnalytics() {
@@ -10,6 +11,7 @@ export async function enableAnalytics() {
 
   try {
     await firebase.analytics().setAnalyticsCollectionEnabled(true)
+    await firebasePerf.perf().setPerformanceCollectionEnabled(true)
   } catch (err) {
     logger.error('telemetry', 'enableAnalytics', 'error from Firebase', err)
   }

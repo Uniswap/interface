@@ -80,7 +80,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           py="none"
           showCurrencySign={isUSDInput}
           showSoftInputOnFocus={false}
-          testID={'amount-input-in'}
+          testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
           value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           onPressIn={() => onSetAmount('')}

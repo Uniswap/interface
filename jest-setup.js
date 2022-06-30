@@ -39,6 +39,13 @@ jest.mock('@react-native-firebase/app', () => {})
 jest.mock('@react-native-firebase/auth', () => {})
 jest.mock('@react-native-firebase/firestore', () => {})
 
+const mockPerf = {
+  firebase: {
+    perf: () => ({ setPerformanceCollectionEnabled: () => jest.fn() })
+  }
+}
+jest.mock('@react-native-firebase/perf', () => mockPerf)
+
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
   return {

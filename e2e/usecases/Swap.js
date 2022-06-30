@@ -33,10 +33,8 @@ export function Swap() {
 
   it('saves the original amount on usd toggle', async () => {
     await element(by.id('toggle-usd')).tap()
-    await expect(element(by.id('amount-input-in'))).toHaveText()
-
     await element(by.id('toggle-usd')).tap()
-    await expect(element(by.id('amount-input-in'))).toHaveValue('1.23')
+    await expect(element(by.id('amount-input-in'))).toHaveText('1.23')
   })
 
   it('submit a swap tx', async () => {
