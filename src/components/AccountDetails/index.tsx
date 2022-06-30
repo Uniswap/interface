@@ -9,7 +9,7 @@ import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected } from '../../connectors'
+import { coinbaseWallet, injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
@@ -268,7 +268,19 @@ export default function AccountDetails({
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                     onClick={() => {
-                      connector.deactivate ? connector.deactivate() : connector.resetState()
+                      if (connector.deactivate) {
+                        connector.deactivate()
+
+                        // Coinbase Wallet SDK does not emit a disconnect event to the provider,
+                        // which is what web3-react uses to reset state. As a workaround we manually
+                        // reset state.
+                        if (connector === coinbaseWallet) {
+                          connector.resetState()
+                        }
+                      } else {
+                        connector.resetState()
+                      }
+
                       dispatch(updateSelectedWallet({ wallet: undefined }))
                       openOptions()
                     }}
