@@ -23,6 +23,11 @@ enum SortDirection {
   Decreasing = 'Decreasing',
 }
 const SORT_CATEGORIES = Object.values(Category)
+const MAX_WIDTH_MEDIA_BREAKPOINT = '960px'
+const LARGE_MEDIA_BREAKPOINT = '880px'
+const MEDIUM_MEDIA_BREAKPOINT = '776px'
+const SMALL_MEDIA_BREAKPOINT = '640px'
+const MOBILE_MEDIA_BREAKPOINT = '410px'
 
 const ArrowCell = styled.div`
   padding-left: 4px;
@@ -42,33 +47,33 @@ const TokenRowWrapper = styled.div`
   font-size: 15px;
   line-height: 24px;
 
-  max-width: 960px;
+  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
 
-  @media only screen and (max-width: 960px) {
+  @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
     width: fit-content;
   }
 
-  @media only screen and (max-width: 880px) {
+  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
     width: fit-content;
   }
 
-  @media only screen and (max-width: 776px) {
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1.2fr 1fr 8fr 5fr 5fr 3.5fr;
     width: fit-content;
   }
 
-  @media only screen and (max-width: 640px) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 7fr 4fr 4fr 0.5px;
     width: fit-content;
   }
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 12fr 6fr;
     width: fit-content;
-    min-width: 0px;
+    min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.bg3};
     padding: 0px;
 
@@ -81,7 +86,7 @@ const FavoriteCell = styled(Cell)`
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
 
-  @media only screen and (max-width: 640px) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
@@ -95,7 +100,7 @@ const HeaderRowWrapper = styled(TokenRowWrapper)`
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
@@ -103,7 +108,7 @@ const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.text2};
   min-width: 32px;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     font-size: 12px;
     justify-content: flex-start;
     min-width: 20px;
@@ -113,7 +118,7 @@ const MarketCapCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
 
-  @media only screen and (max-width: 776px) {
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
@@ -123,7 +128,7 @@ const NameCell = styled(Cell)`
   gap: 8px;
   min-width: 200px;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     min-width: fit-content;
     padding-right: 8px;
   }
@@ -133,14 +138,14 @@ const PercentChangeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: 80px;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
   display: none;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
     color: ${({ theme }) => theme.text3};
     font-size: 12px;
@@ -151,7 +156,7 @@ const PriceCell = styled(Cell)`
   justify-content: flex-end;
   min-width: 80px;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     min-width: max-content;
   }
 `
@@ -159,7 +164,7 @@ const PriceInfoCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     flex-direction: column;
   }
 `
@@ -185,7 +190,7 @@ const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
   min-width: 120px;
 
-  @media only screen and (max-width: 960px) {
+  @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
@@ -198,7 +203,7 @@ const SparkLineImg = styled(Cell)`
 const SwapCell = styled(Cell)`
   justify-content: flex-end;
 
-  @media only screen and (max-width: 640px) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
@@ -222,7 +227,7 @@ const TokenInfoCell = styled(Cell)`
   line-height: 24px;
   font-size: 16px;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     justify-content: flex-start;
     flex-direction: column;
     gap: 0px;
@@ -233,7 +238,7 @@ const TokenInfoCell = styled(Cell)`
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.text3};
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     font-size: 12px;
     height: 16px;
     justify-content: flex-start;
@@ -244,7 +249,7 @@ const VolumeCell = styled(Cell)`
   justify-content: flex-end;
   min-width: max-content;
 
-  @media only screen and (max-width: 880px) {
+  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
