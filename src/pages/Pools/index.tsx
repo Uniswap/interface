@@ -111,6 +111,7 @@ const Pools = ({
                 onClick={() => {
                   if (!!notSupportedMsg) return
                   const newQs = { ...qs, tab: VERSION.ELASTIC }
+                  mixpanelHandler(MIXPANEL_TYPE.ELASTIC_POOLS_ELASTIC_POOLS_CLICKED)
                   history.replace({ search: stringify(newQs) })
                 }}
               >

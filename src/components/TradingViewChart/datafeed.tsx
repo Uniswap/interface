@@ -74,6 +74,11 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
   '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab': '0x0f0fc5a5029e3d155708356b422d22cc29f8b3d4',
   '0xd501281565bf7789224523144fe5d98e8b28f267': '0x64ed9711667c9e8923bee32260a55a9b8dbc99d3',
   '0x63a72806098Bd3D9520cC43356dD78afe5D386D9': '0x5944f135e4f1e3fa2e5550d4b5170783868cc4fe',
+  '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d': '0xd99c7f6c65857ac913a8f880a4cb84032ab2fc5b',
+  '0xdac17f958d2ee523a2206206994597c13d831ec7': '0x4e68ccd3e89f51c3074ca5072bbac773960dfa36', // BNB_USD
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': '0xce1923d2242bba540f1d56c8e23b1fbeae2596dc', // ETH_USD on polygon
+  '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': '0x905dfcd5649217c42684f23958568e533c711aa3', // ETH_USD Arbitrum
+  '0x7f5c764cbc14f9669b88837ca1490cca17c31607': '0x1a981daa7967c66c3356ad044979bc82e4a478b9', // ETH_USD Optimism
 }
 const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs'
 
@@ -164,7 +169,7 @@ export const checkPairHasDextoolsData = async (
     checkedPair &&
     checkedPair.ver &&
     checkedPair.pairAddress &&
-    checkedPair.time > new Date().getTime() - dayTs * 3
+    checkedPair.time > new Date().getTime() - dayTs // Cache expire after 1 day
   ) {
     return Promise.resolve({ ver: checkedPair.ver, pairAddress: checkedPair.pairAddress })
   }

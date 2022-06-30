@@ -394,6 +394,9 @@ export const GET_POOL_VALUES_AFTER_MINTS_SUCCESS = gql`
       reserveUSD
       mints(orderBy: timestamp, orderDirection: desc, first: 20) {
         id
+        amount0
+        amount1
+        amountUSD
       }
     }
   }
@@ -408,6 +411,22 @@ export const GET_POOL_VALUES_AFTER_BURNS_SUCCESS = gql`
       reserveUSD
       burns(orderBy: timestamp, orderDirection: desc, first: 20) {
         id
+        amount0
+        amount1
+        amountUSD
+      }
+    }
+  }
+`
+export const GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS = gql`
+  query getPoolValuesAfterBurnsSuccess($transactionHash: String!) {
+    transaction(id: $transactionHash) {
+      id
+      mints {
+        id
+        amount0
+        amount1
+        amountUSD
       }
     }
   }
