@@ -1,7 +1,43 @@
 {
-  "search.exclude": {
-    "**/node_modules": false
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true,
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true,
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true,
+      "source.organizeImports": true
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true,
+      "source.organizeImports": true
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
   "files.exclude": {
     "**/*.js.map": true
   },
@@ -10,44 +46,12 @@
     "**/.git/subtree-cache/**": true,
     "**/node_modules/*/**": true
   },
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "[javascript]": {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": false
-    }
-  },
-  "[javascriptreact]": {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    }
-  },
-  "[typescript]": {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    },
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    },
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "javascript.format.enable": false,
-  "editor.tabSize": 2,
-  "editor.insertSpaces": true,
-  "editor.detectIndentation": false,
+  "jest.jestCommandLine": "yarn test",
+  "search.exclude": {
+    "**/node_modules": false
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "jest.jestCommandLine": "yarn test"
+  "typescript.updateImportsOnFileMove.enabled": "always"
 }
