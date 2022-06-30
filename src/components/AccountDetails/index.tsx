@@ -265,19 +265,28 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {/* Coinbase Wallet reloads the page right now, which breaks the selectedWallet from being set properly on localStorage */}
-                  {connector !== coinbaseWallet && (
-                    <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                      onClick={() => {
-                        connector.deactivate ? connector.deactivate() : connector.resetState()
-                        dispatch(updateSelectedWallet({ wallet: undefined }))
-                        openOptions()
-                      }}
-                    >
-                      <Trans>Disconnect</Trans>
-                    </WalletAction>
-                  )}
+                  <WalletAction
+                    style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                    onClick={() => {
+                      if (connector.deactivate) {
+                        connector.deactivate()
+
+                        // Coinbase Wallet SDK does not emit a disconnect event to the provider,
+                        // which is what web3-react uses to reset state. As a workaround we manually
+                        // reset state.
+                        if (connector === coinbaseWallet) {
+                          connector.resetState()
+                        }
+                      } else {
+                        connector.resetState()
+                      }
+
+                      dispatch(updateSelectedWallet({ wallet: undefined }))
+                      openOptions()
+                    }}
+                  >
+                    <Trans>Disconnect</Trans>
+                  </WalletAction>
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
