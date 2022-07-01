@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 import Loader from 'components/Loader'
@@ -14,29 +14,29 @@ import { MAP_TOKEN_NAME } from 'constants/tokenLists/token-info'
 import { getSymbolSlug } from 'utils/string'
 
 const NOT_AVAIALBLE = '--'
-const NUM_LINE_DESC = 5
 // 2 styles: border and no border
 const Wrapper = styled.div<{ borderBottom?: boolean }>`
   width: 100%;
-  padding: 0px
+  padding: 0px;
   margin-top: 0px;
   margin-bottom: 0px;
   border: none;
   ${({ borderBottom, theme }) =>
     borderBottom
-      ? `
-  border-bottom: 1px solid ${theme.border}; 
-  margin-bottom: 30px;
-  padding-bottom: 30px;`
+      ? css`
+          border-bottom: 1px solid ${theme.border};
+          margin-bottom: 30px;
+          padding-bottom: 30px;
+        `
       : ``}
   ${({ theme, borderBottom }) => theme.mediaWidth.upToSmall`
     margin-top: 24px;
     ${
       borderBottom
-        ? `
-    margin-bottom: 10px;
-    margin-padding: 10px;
-    `
+        ? css`
+            margin-bottom: 10px;
+            margin-padding: 10px;
+          `
         : ``
     }
 `}
@@ -74,32 +74,40 @@ const AboutText = styled.h2`
 `
 
 const LINE_HEIGHT = 24
+const HEIGHT = 280
 const DescText = styled(InfoRowLabel)<{ showLimitLine: boolean }>`
-  margin: 10px 0px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin: 10px 0px 0px 0px;
-  `}
-  .desc {
-    line-height: ${LINE_HEIGHT}px;
-    ${({ showLimitLine }) =>
-      showLimitLine
-        ? `
-    text-overflow:ellipsis;
-    overflow:hidden;
-    display: -webkit-box !important;
-    height: ${LINE_HEIGHT * NUM_LINE_DESC}px;
-    -webkit-line-clamp: ${NUM_LINE_DESC};
-    -webkit-box-orient: vertical;
-    white-space: normal;
-  `
-        : ''}
-  }
+  line-height: ${LINE_HEIGHT}px;
+  ${({ showLimitLine }) =>
+    showLimitLine
+      ? css`
+          margin: 10px 0px;
+          overflow: hidden;
+          height: ${HEIGHT}px;
+        `
+      : css`
+          margin: 10px 0px 0px 0px;
+          height: unset;
+        `}
 `
-const SeeMore = styled.a`
+const SeeMore = styled.a<{ isSeeMore: boolean }>`
   cursor: pointer;
-  margin-top: 5px;
+  margin: 20px 0px;
   display: block;
   text-align: right;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0px;
+    bottom: 20px;
+    width: 100%;
+    height: 8em;
+    background: ${({ theme, isSeeMore }) =>
+      isSeeMore ? `linear-gradient(180deg, rgba(255, 255, 255, 0), ${theme.bg12})` : 'transparent'};
+  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin: 10px 0px;
+  `}
 `
 
 /**
@@ -182,9 +190,8 @@ const SingleTokenInfo = ({
   useEffect(() => {
     const descTag = ref.current
     if (descTag && description) {
-      const lineHeight = +getComputedStyle(descTag).lineHeight.replace('px', '')
-      const lines = descTag.getBoundingClientRect().height / lineHeight
-      setShowMoreDesc(lines < NUM_LINE_DESC ? SeeStatus.NOT_SHOW : SeeStatus.SEE_MORE)
+      const contentHeight = descTag.getBoundingClientRect().height
+      setShowMoreDesc(contentHeight < HEIGHT ? SeeStatus.NOT_SHOW : SeeStatus.SEE_MORE)
     }
   }, [description])
 
@@ -225,15 +232,15 @@ const SingleTokenInfo = ({
           className="desc"
           ref={ref}
           dangerouslySetInnerHTML={{
-            __html: isSeeMore
-              ? description.replace(/<[^>]+>/g, '') // plain text
-              : description.replaceAll('\r\n\r\n', '<br><br>'),
+            __html: description.replaceAll('\r\n\r\n', '<br><br>'),
           }}
         ></div>
-        {seeMoreStatus !== SeeStatus.NOT_SHOW && (
-          <SeeMore onClick={toggleSeeMore}>See {isSeeMore ? 'more' : 'less'}</SeeMore>
-        )}
       </DescText>
+      {seeMoreStatus !== SeeStatus.NOT_SHOW && (
+        <SeeMore onClick={toggleSeeMore} isSeeMore={isSeeMore}>
+          {isSeeMore ? <Trans>See more</Trans> : <Trans>See less</Trans>}
+        </SeeMore>
+      )}
 
       <Flex flexWrap="wrap">
         {listField.map((item, i) => (
