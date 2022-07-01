@@ -277,13 +277,6 @@ export default function AccountDetails({
                         onClick={() => {
                           if (connector.deactivate) {
                             connector.deactivate()
-
-                            // Coinbase Wallet SDK does not emit a disconnect event to the provider,
-                            // which is what web3-react uses to reset state. As a workaround we manually
-                            // reset state.
-                            if (connector === coinbaseWallet) {
-                              connector.resetState()
-                            }
                           } else {
                             connector.resetState()
                           }
