@@ -325,10 +325,10 @@ export default function NetworkSelector() {
 
   useEffect(() => {
     const chainQueryUnpopulated = !urlChainId
-    if (chainQueryUnpopulated && chainId && !isActive) {
+    if (chainQueryUnpopulated && chainId) {
       replaceURLChainParam()
     }
-  }, [chainId, urlChainId, replaceURLChainParam, isActive])
+  }, [chainId, urlChainId, replaceURLChainParam])
 
   useEffect(() => {
     const chainChanged = chainId !== previousChainId
@@ -340,10 +340,10 @@ export default function NetworkSelector() {
 
   useEffect(() => {
     const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
-    if (chainQueryManuallyUpdated) {
+    if (chainQueryManuallyUpdated && isActive) {
       onSelectChain(urlChainId, true)
     }
-  }, [onSelectChain, urlChainId, previousUrlChainId])
+  }, [onSelectChain, urlChainId, previousUrlChainId, isActive])
 
   if (!chainId || !info || !provider) {
     return null
