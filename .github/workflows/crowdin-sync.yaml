@@ -2,8 +2,9 @@ name: Crowdin Download
 
 on:
   schedule:
-    - cron: '0 * * * *' # every hour we download translations and update the pr from crowdin
-
+    # Download translations every hour.
+    # This is not done as part of the build so that builds remain reproducible.
+    - cron: '0 * * * *'
   # manual trigger
   workflow_dispatch:
 
