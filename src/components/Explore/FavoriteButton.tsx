@@ -10,7 +10,7 @@ const FavoriteButtonContent = styled.div`
   align-items: center;
   gap: 8px;
 `
-const FavoritesButton = styled.button`
+const StyledFavoriteButton = styled.button`
   padding: 0px 16px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg0};
@@ -29,10 +29,10 @@ export default function FavoriteButton() {
   const theme = useTheme()
   const [showFavorites, setShowFavorites] = useAtom(showFavoritesAtom)
   return (
-    <FavoritesButton onClick={() => setShowFavorites(!showFavorites)}>
+    <StyledFavoriteButton onClick={() => setShowFavorites(!showFavorites)}>
       <FavoriteButtonContent>
         <Heart size={17} color={theme.text1} fill={theme.text1} /> Favorites
       </FavoriteButtonContent>
-    </FavoritesButton>
+    </StyledFavoriteButton>
   )
 }

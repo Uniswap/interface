@@ -40,7 +40,7 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const TokenRowWrapper = styled.div`
+const StyledTokenRow = styled.div`
   width: 100%;
   height: 60px;
   display: grid;
@@ -102,7 +102,7 @@ const FavoriteCell = styled(Cell)`
     display: none;
   }
 `
-const HeaderRowWrapper = styled(TokenRowWrapper)`
+const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
   height: 48px;
   color: ${({ theme }) => theme.text2};
@@ -366,8 +366,8 @@ export function TokenRow({
       <SwapCell>{swap}</SwapCell>
     </>
   )
-  if (header) return <HeaderRowWrapper>{rowCells}</HeaderRowWrapper>
-  return <TokenRowWrapper>{rowCells}</TokenRowWrapper>
+  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
+  return <StyledTokenRow>{rowCells}</StyledTokenRow>
 }
 
 /* Header Row: top header row component for table */
