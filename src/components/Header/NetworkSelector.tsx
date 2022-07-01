@@ -7,7 +7,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
@@ -269,7 +269,13 @@ export default function NetworkSelector() {
   const dispatch = useAppDispatch()
 
   const { chainId, provider, connector } = useWeb3React()
-  const previousChainId = usePrevious(chainId)
+  const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    if (chainId) {
+      setPreviousChainId(chainId)
+    }
+  }, [chainId])
 
   const parsedQs = useParsedQueryString()
   const { urlChainId } = getParsedChainId(parsedQs)
