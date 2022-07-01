@@ -25,6 +25,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { tryParseAmount, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useXttPresaleState } from '../../state/xtt-presale/hooks'
 import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import XttPresaleUpdater from '../../state/xtt-presale/updater'
@@ -88,6 +89,8 @@ export default function XTTPresale() {
     [independentField, parsedAmount, showWrap, v2Trade]
   )
 
+  const xdcBalance = useCurrencyBalance(account ?? undefined, ether ?? undefined)
+
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(() => [!v2Trade?.route.path, false, false], [v2Trade])
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
@@ -148,6 +151,14 @@ export default function XTTPresale() {
     [xttPresaleState.tokenPerETH, xttToken, ether]
   )
 
+  const handleCheckBalance: (parsedValue: CurrencyAmount<ExtendedXDC>) => void = (parsedValue) => {
+    if (!!xdcBalance) {
+      console.log('xdcBalance', 'parsedValue', xdcBalance.toFixed(2) < parsedValue.toFixed(2))
+      xdcBalance.toFixed(2) < parsedValue.toFixed(2)
+        ? setPresaleError({ error: true, errorText: 'Insufficient balance for this transaction.' })
+        : setPresaleError({ error: false, errorText: '' })
+    }
+  }
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
@@ -291,9 +302,6 @@ export default function XTTPresale() {
     v2Trade?.outputAmount?.currency?.symbol,
   ])
 
-  // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
-
   const handleConfirmDismiss = useCallback(() => {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
@@ -373,7 +381,6 @@ export default function XTTPresale() {
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
                 id="swap-currency-input"
-                // loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
               <CurrencyInputPanel
                 value={v.xtt}
