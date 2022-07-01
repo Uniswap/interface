@@ -11,7 +11,8 @@ jobs:
     steps:
       - uses: jitterbit/await-check-suites@v1
         with:
-          onlyFirstCheckSuite: true # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
+          # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
+          onlyFirstCheckSuite: true
 
   tag:
     needs: wait-on-test
