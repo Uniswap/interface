@@ -268,7 +268,7 @@ const NETWORK_SELECTOR_CHAINS = [
 export default function NetworkSelector() {
   const dispatch = useAppDispatch()
 
-  const { chainId, provider, connector } = useWeb3React()
+  const { chainId, provider, connector, isActive } = useWeb3React()
   const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
 
   // Can't use `usePrevious` because `chainId` can be undefined while activating.
@@ -325,10 +325,10 @@ export default function NetworkSelector() {
 
   useEffect(() => {
     const chainQueryUnpopulated = !urlChainId
-    if (chainQueryUnpopulated && chainId) {
+    if (chainQueryUnpopulated && chainId && !isActive) {
       replaceURLChainParam()
     }
-  }, [chainId, urlChainId, replaceURLChainParam])
+  }, [chainId, urlChainId, replaceURLChainParam, isActive])
 
   useEffect(() => {
     const chainChanged = chainId !== previousChainId
