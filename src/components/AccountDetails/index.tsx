@@ -233,6 +233,7 @@ export default function AccountDetails({
 
   const isMetaMask = !!window.ethereum?.isMetaMask
   const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
+  const isInjectedMobileBrowser = (isMetaMask || isCoinbaseWallet) && isMobile
 
   function formatConnectorName() {
     const { ethereum } = window
@@ -269,7 +270,7 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {!(isMobile && (isMetaMask || isCoinbaseWallet)) && (
+                  {!isInjectedMobileBrowser && (
                     <>
                       <WalletAction
                         style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
