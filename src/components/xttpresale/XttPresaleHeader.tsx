@@ -7,7 +7,7 @@ import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import { Separator, ThemedText } from '../../theme'
 import Loader from '../Loader'
 import ProgressBar from '../PorgressBar'
-import { RowBetween, RowFixed } from '../Row'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 
 const StyledXttPresaleHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;
@@ -54,12 +54,11 @@ export default function XttPresaleHeader({ state }: Props) {
   const timeConverter = (timestamp: number) => {
     const a = new Date(timestamp * 1000)
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    const year = a.getFullYear()
     const month = months[a.getMonth()]
     const date = a.getDate()
-    const hour = a.getHours()
-    const min = a.getMinutes()
-    return `${date} ${month} ${year} 0${hour}:0${min} UTC 00:00`
+    const hour = a.getHours() < 10 ? `0${a.getHours()}` : a.getHours()
+    const min = a.getMinutes() < 10 ? `0${a.getMinutes()}` : a.getMinutes()
+    return `${date} ${month} ${hour}:${min} UTC 00:00`
   }
 
   return (
@@ -93,18 +92,11 @@ export default function XttPresaleHeader({ state }: Props) {
         </RowFixed>
       </RowBetween>
       <Separator />
-      <RowBetween>
-        <RowFixed>
-          <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Sold: {formattedState?.totalBought}
-          </ThemedText.Black>
-        </RowFixed>
-        <RowFixed>
-          <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Hard Cap: {formattedState?.hardCap}
-          </ThemedText.Black>
-        </RowFixed>
-      </RowBetween>
+      <AutoRow justify="flex-end">
+        <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
+          Hard Cap: {formattedState?.hardCap}
+        </ThemedText.Black>
+      </AutoRow>
       <RowBetween>
         <ProgressBar progress={progress} height="100%" />
       </RowBetween>

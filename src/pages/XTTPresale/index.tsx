@@ -1,18 +1,16 @@
+import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
-import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
+import { CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
-import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -20,7 +18,7 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { Wrapper } from '../../components/swap/styleds'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import XttPresaleHeader from '../../components/xttpresale/XttPresaleHeader'
 import { ExtendedXDC } from '../../constants/extended-xdc'
@@ -39,7 +37,7 @@ import { useExpertModeManager } from '../../state/user/hooks'
 import { useXttPresaleState } from '../../state/xtt-presale/hooks'
 import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import XttPresaleUpdater from '../../state/xtt-presale/updater'
-import { LinkStyledButton, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 
@@ -177,6 +175,7 @@ export default function XTTPresale() {
     xtt: '',
     xdc: '',
   })
+  const [errorText, setErrorText] = useState('')
 
   const formattedAmounts = useMemo(() => {
     console.log(independentField, dependentField, typedValue)
@@ -320,20 +319,40 @@ export default function XTTPresale() {
     [onCurrencySelection]
   )
 
-  const handleMaxInput = useCallback(() => {
-    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    ReactGA.event({
-      category: 'Swap',
-      action: 'Max',
-    })
-  }, [maxInputAmount, onUserInput])
+  const maximumDepositEthAmount = useMemo(() => {
+    if (!xttPresaleState) {
+      return null
+    }
+    return formatEther(xttPresaleState.maximumDepositEthAmount)
+  }, [xttPresaleState])
 
-  const handleOutputSelect = useCallback(
-    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
-    [onCurrencySelection]
-  )
+  const minimumDepositEthAmount = useMemo(() => {
+    if (!xttPresaleState) {
+      return null
+    }
+    return formatEther(xttPresaleState.minimumDepositEthAmount)
+  }, [xttPresaleState])
+
+  const handleMaxInput = useCallback(() => {
+    maxInputAmount && handleTypeInput(maxInputAmount.toFixed(2))
+  }, [maxInputAmount, handleTypeInput])
+
+  const isInDepositRange = useMemo(() => {
+    if (maximumDepositEthAmount && +maximumDepositEthAmount < +v.xdc) {
+      setErrorText('You amount is greater than max deposit amount')
+      return true
+    }
+
+    if (minimumDepositEthAmount && +minimumDepositEthAmount > +v.xdc) {
+      setErrorText('You amount is less than min deposit amount')
+      return true
+    }
+    return false
+  }, [minimumDepositEthAmount, maximumDepositEthAmount, v.xdc])
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
+
+  console.log(isInDepositRange)
 
   // todo
   const showApproveFlow = false
@@ -381,50 +400,17 @@ export default function XTTPresale() {
                 // loading={independentField === Field.INPUT && routeIsSyncing}
               />
             </div>
-
-            {recipient !== null && !showWrap ? (
-              <>
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.text2} />
-                  </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    <Trans>- Remove recipient</Trans>
-                  </LinkStyledButton>
-                </AutoRow>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-              </>
-            ) : null}
-            {!showWrap && userHasSpecifiedInputOutput && v2Trade && (
-              <SwapDetailsDropdown
-                trade={v2Trade}
-                syncing={false}
-                loading={false}
-                showInverted={showInverted}
-                setShowInverted={setShowInverted}
-                allowedSlippage={allowedSlippage}
-              />
-            )}
             <div>
-              {swapIsUnsupported ? (
-                <ButtonPrimary disabled={true}>
-                  <ThemedText.Main mb="4px">
-                    <Trans>Unsupported Asset</Trans>
-                  </ThemedText.Main>
-                </ButtonPrimary>
-              ) : !account ? (
+              {!account ? (
                 <ButtonLight onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>
                 </ButtonLight>
-              ) : showWrap ? (
-                <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                  {wrapInputError ??
-                    (wrapType === WrapType.WRAP ? (
-                      <Trans>Wrap</Trans>
-                    ) : wrapType === WrapType.UNWRAP ? (
-                      <Trans>Unwrap</Trans>
-                    ) : null)}
-                </ButtonPrimary>
+              ) : isInDepositRange ? (
+                <GreyCard style={{ textAlign: 'center' }}>
+                  <ThemedText.Main mb="4px">
+                    <Trans>{errorText}</Trans>
+                  </ThemedText.Main>
+                </GreyCard>
               ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <ThemedText.Main mb="4px">
@@ -540,18 +526,11 @@ export default function XTTPresale() {
                   </Text>
                 </ButtonError>
               )}
-              {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
             </div>
           </AutoColumn>
         </Wrapper>
       </AppBody>
       <SwitchLocaleLink />
-      {!swapIsUnsupported ? null : (
-        <UnsupportedCurrencyFooter
-          show={swapIsUnsupported}
-          currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
-        />
-      )}
     </>
   )
 }
