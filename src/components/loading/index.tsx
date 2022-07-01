@@ -44,13 +44,13 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
       )
     case 'image':
       if (repeat > 1) throw new Error('Loading placeholder for images does not support repeat')
-      return <BoxLoader height={150} />
+      return <BoxLoader aspectRatio={1} borderRadius="none" />
     case 'box':
     default:
       return (
         <Box>
           {new Array(repeat).fill(null).map((_, i) => (
-            <BoxLoader key={i} />
+            <BoxLoader key={i} height={50} mb="sm" />
           ))}
         </Box>
       )

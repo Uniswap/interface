@@ -4,7 +4,6 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Masonry } from 'src/components/layout/Masonry'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
@@ -69,7 +68,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
           }}
         />
       ) : (
-        <Flex gap="xs">
+        <>
           <BaseCard.Header
             title={t('NFTs ({{totalCount}})', { totalCount })}
             onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
@@ -82,7 +81,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
             loading={loading}
             renderItem={renderItem}
           />
-        </Flex>
+        </>
       )}
     </BaseCard.Container>
   )

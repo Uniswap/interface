@@ -1,14 +1,9 @@
+import { BoxProps } from '@shopify/restyle'
 import React from 'react'
+import { ViewProps } from 'react-native'
 import { Box } from 'src/components/layout'
+import { Theme } from 'src/styles/theme'
 
-export function BoxLoader({ height = 50 }: { height?: number }) {
-  return (
-    <Box
-      backgroundColor="deprecated_gray50"
-      borderRadius="md"
-      height={height}
-      marginBottom="sm"
-      width="100%"
-    />
-  )
+export function BoxLoader({ ...props }: BoxProps<Theme, true> & ViewProps) {
+  return <Box backgroundColor="deprecated_gray50" borderRadius="md" width="100%" {...props} />
 }

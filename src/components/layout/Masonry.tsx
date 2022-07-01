@@ -15,15 +15,15 @@ export function Masonry<T>({ data, getKey, loading, renderItem }: MasonryProps<T
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <Flex row gap="xxs">
-        <Flex flex={1} gap="xxs">
+      <Flex row gap="xxxs">
+        <Flex flex={1} gap="xxxs">
           {data
             .filter((_, i) => i % 2 === 0)
             .map((d) => (
               <Box key={getKey(d)}>{renderItem(d)}</Box>
             ))}
         </Flex>
-        <Flex flex={1} gap="xxs">
+        <Flex flex={1} gap="xxxs">
           {data
             .filter((_, i) => i % 2 !== 0)
             .map((d) => (
