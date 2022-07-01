@@ -1,5 +1,5 @@
 import useTheme from 'hooks/useTheme'
-import { atom, useAtom } from 'jotai'
+import { useState } from 'react'
 import { Search } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -29,10 +29,10 @@ const SearchInput = styled.input`
     color: ${({ theme }) => theme.text3};
   }
 `
-const focused = atom<boolean>(false)
+
 export default function SearchBar() {
   const theme = useTheme()
-  const [isFocused, setFocused] = useAtom(focused)
+  const [isFocused, setFocused] = useState(false)
   return (
     <StyledSearchBar focused={isFocused}>
       <Search size={20} color={theme.text3} />
