@@ -9,6 +9,7 @@ jobs:
   upload-sources:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ../actions/setup
       - run: yarn i18n:extract
 
