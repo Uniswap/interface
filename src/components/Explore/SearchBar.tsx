@@ -20,6 +20,7 @@ const SearchInput = styled.input`
   border: none;
   font-size: 16px;
   color: ${({ theme }) => theme.text1};
+
   :focus {
     outline: none;
     background-color: ${({ theme }) => theme.bg2};
