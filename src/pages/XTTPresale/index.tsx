@@ -154,7 +154,7 @@ export default function XTTPresale() {
   const handleCheckBalance: (parsedValue: CurrencyAmount<ExtendedXDC>) => void = (parsedValue) => {
     if (!!xdcBalance) {
       console.log('xdcBalance', 'parsedValue', xdcBalance.toFixed(2) < parsedValue.toFixed(2))
-      xdcBalance.toFixed(2) < parsedValue.toFixed(2)
+      xdcBalance.lessThan(parsedValue)
         ? setPresaleError({ error: true, errorText: 'Insufficient balance for this transaction.' })
         : setPresaleError({ error: false, errorText: '' })
     }
