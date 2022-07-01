@@ -255,13 +255,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         </Box>
       )}
       {!!pendingRemoveAddress && (
-        <Box flexGrow={1}>
-          <RemoveAccountModal
-            address={pendingRemoveAddress}
-            onCancel={onPressRemoveCancel}
-            onConfirm={onPressRemoveConfirm}
-          />
-        </Box>
+        <RemoveAccountModal onCancel={onPressRemoveCancel} onConfirm={onPressRemoveConfirm} />
       )}
       <BottomSheetModal
         isVisible={showQRModal}

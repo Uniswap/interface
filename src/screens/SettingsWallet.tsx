@@ -5,18 +5,16 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import NotificationIcon from 'src/assets/icons/bell.svg'
 import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
+import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Switch } from 'src/components/buttons/Switch'
-import { Flex } from 'src/components/layout'
 import { BackButtonRow } from 'src/components/layout/BackButtonRow'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import {
   SettingsRow,
   SettingsSection,
@@ -24,14 +22,11 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
-import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { opacify } from 'src/utils/colors'
 import { Screens } from './Screens'
-
-const ALERT_ICON_SIZE = 32
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
 
@@ -70,6 +65,10 @@ export function SettingsWallet({
       })
     )
     navigation.goBack()
+  }
+
+  const cancelWalletRemove = () => {
+    setShowRemoveWalletModal(false)
   }
 
   const sections: SettingsSection[] = [
@@ -144,45 +143,10 @@ export function SettingsWallet({
           onPress={() => setShowRemoveWalletModal(true)}
         />
       )}
-      <BottomSheetModal
-        backgroundColor={theme.colors.backgroundSurface}
-        isVisible={showRemoveWalletModal}
-        name={ModalName.RemoveWallet}
-        onClose={() => setShowRemoveWalletModal(false)}>
-        <Flex centered gap="xl" px="md" py="lg">
-          <Flex centered gap="xs">
-            <AlertTriangle
-              color={theme.colors.accentWarning}
-              height={ALERT_ICON_SIZE}
-              width={ALERT_ICON_SIZE}
-            />
-            <Text mt="xs" variant="mediumLabel">
-              {t('Are you sure?')}
-            </Text>
-            <Text color="textSecondary" textAlign="center" variant="bodySmall">
-              {t(
-                'You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.'
-              )}
-            </Text>
-          </Flex>
-          <Flex row mb="md">
-            <PrimaryButton
-              flex={1}
-              label={t('Cancel')}
-              style={{ backgroundColor: theme.colors.backgroundContainer }}
-              textColor="textPrimary"
-              onPress={() => setShowRemoveWalletModal(false)}
-            />
-            <PrimaryButton
-              flex={1}
-              label={t('Remove')}
-              style={{ backgroundColor: opacify(10, theme.colors.accentFailure) }}
-              textColor="accentFailure"
-              onPress={removeWallet}
-            />
-          </Flex>
-        </Flex>
-      </BottomSheetModal>
+
+      {!!showRemoveWalletModal && (
+        <RemoveAccountModal onCancel={cancelWalletRemove} onConfirm={removeWallet} />
+      )}
     </Screen>
   )
 }
