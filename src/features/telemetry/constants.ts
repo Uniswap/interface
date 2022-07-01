@@ -49,6 +49,7 @@ export const enum ModalName {
  * Known element names for telemetry purposes.
  * Use to identify low-level components given a TraceContext
  */
+
 export const enum ElementName {
   AccountCard = 'account-card',
   AddManualBackup = 'add-manual-backup',
@@ -119,6 +120,7 @@ export const enum ElementName {
   WCViewDappConnections = 'wc-view-dapp-connections',
   WalletConnectScan = 'wallet-connect-scan',
   Wrap = 'wrap',
+  WalletSettings = 'WalletSettings',
 }
 
 /**

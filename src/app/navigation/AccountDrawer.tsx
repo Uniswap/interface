@@ -4,35 +4,25 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList, useColorScheme, ViewStyle } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
-import CopyIcon from 'src/assets/icons/copy-sheets.svg'
-import EditIcon from 'src/assets/icons/pencil-box.svg'
 import PlusSquareIcon from 'src/assets/icons/plus-square.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
-import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
 import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
+import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
-import {
-  EditAccountAction,
-  editAccountActions,
-  editAccountSagaName,
-} from 'src/features/wallet/editAccountSaga'
+import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { darkTheme, theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
-import { SagaStatus } from 'src/utils/saga'
-import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 const drawerContentStyle: ViewStyle = {
   justifyContent: 'space-between',
@@ -53,9 +43,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const [showQRModal, setShowQRModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
-
-  const { status } = useSagaStatus(editAccountSagaName)
-  const isLoading = status === SagaStatus.Started
 
   const [signerAccounts, readOnlyAccounts] = useMemo(() => {
     const accounts = Object.values(addressToAccount)
@@ -78,39 +65,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     setPendingEditAddress(null)
   }
 
-  const onPressCopyAddress = () => {
-    if (!pendingEditAddress) return
-    setClipboard(pendingEditAddress)
-  }
-
-  const [pendingRenameAddress, setPendingRenameAddress] = useState<Address | null>(null)
-  const onPressRename = () => {
-    if (!pendingEditAddress) return
-    setShowEditAccountModal(false)
-    setPendingRenameAddress(pendingEditAddress)
-  }
-  const onPressRenameCancel = () => {
-    setPendingRenameAddress(null)
-  }
-  const onPressRenameConfirm = (newAccountName: string) => {
-    if (!pendingRenameAddress || !newAccountName) return
-    dispatch(
-      editAccountActions.trigger({
-        type: EditAccountAction.Rename,
-        address: pendingRenameAddress,
-        newName: newAccountName,
-      })
-    )
-    setPendingRenameAddress(null)
-    onPressEditCancel() // Dismiss bottom sheet
-  }
-
   const [pendingRemoveAddress, setPendingRemoveAddress] = useState<Address | null>(null)
-  const onPressRemove = () => {
-    if (!pendingEditAddress) return
-    setShowEditAccountModal(false)
-    setPendingRemoveAddress(pendingEditAddress)
-  }
   const onPressRemoveCancel = () => {
     setPendingRemoveAddress(null)
   }
@@ -142,8 +97,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     navigation.navigate(Screens.ImportAccount)
   }
 
-  const onPressSettings = () =>
+  const onPressSettings = () => {
+    navigation.closeDrawer()
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
+  }
 
   const renderItem = ({ item }: ListRenderItemInfo<Account>) => (
     <AccountCardItem
@@ -154,6 +111,62 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       onPressQRCode={onPressQRCode}
     />
   )
+
+  const editAccountOptions = useMemo<MenuItemProp[]>(() => {
+    const onPressWalletSettings = () => {
+      setShowEditAccountModal(false)
+      navigation.closeDrawer()
+      if (!pendingEditAddress) return
+      navigation.navigate(Screens.SettingsStack, {
+        screen: Screens.SettingsWallet,
+        params: { address: pendingEditAddress },
+      })
+    }
+
+    const onPressCopyAddress = () => {
+      if (!pendingEditAddress) return
+      setClipboard(pendingEditAddress)
+      setShowEditAccountModal(false)
+    }
+
+    const onPressRemove = () => {
+      if (!pendingEditAddress) return
+      setShowEditAccountModal(false)
+      setPendingRemoveAddress(pendingEditAddress)
+    }
+
+    return [
+      {
+        key: ElementName.WalletSettings,
+        onPress: onPressWalletSettings,
+        render: () => (
+          <Box alignItems="center" p="md">
+            <Text variant="body">{t('Wallet settings')}</Text>
+          </Box>
+        ),
+      },
+      {
+        key: ElementName.Copy,
+        onPress: onPressCopyAddress,
+        render: () => (
+          <Box alignItems="center" p="md">
+            <Text variant="body">{t('Copy address')}</Text>
+          </Box>
+        ),
+      },
+      {
+        key: ElementName.Remove,
+        onPress: onPressRemove,
+        render: () => (
+          <Box alignItems="center" p="md">
+            <Text color="accentFailure" variant="body">
+              {t('Remove account')}
+            </Text>
+          </Box>
+        ),
+      },
+    ]
+  }, [navigation, pendingEditAddress, t])
 
   return (
     <SafeAreaView
@@ -203,57 +216,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           </Flex>
         </Flex>
       </Box>
-      <BottomSheetModal
+      <ActionSheetModal
         isVisible={showEditAccountModal}
         name={ModalName.Account}
-        onClose={() => setShowEditAccountModal(false)}>
-        <Flex centered gap="sm" p="md">
-          <PrimaryButton
-            disabled={isLoading}
-            icon={<EditIcon color={theme.colors.white} height={18} strokeWidth={2} width={18} />}
-            label={t('Rename Account')}
-            name={ElementName.Rename}
-            width="100%"
-            onPress={onPressRename}
-          />
-          <PrimaryButton
-            disabled={isLoading}
-            icon={<CopyIcon color={theme.colors.white} height={18} width={18} />}
-            label={t('Copy Address')}
-            name={ElementName.Copy}
-            width="100%"
-            onPress={onPressCopyAddress}
-          />
-          <PrimaryButton
-            disabled={isLoading}
-            label={t('Remove Account')}
-            name={ElementName.Remove}
-            width="100%"
-            onPress={onPressRemove}
-          />
-          <TextButton
-            disabled={isLoading}
-            name={ElementName.EditCancel}
-            pb="sm"
-            pt="xs"
-            textAlign="center"
-            textColor="deprecated_primary1"
-            textVariant="body"
-            width="100%"
-            onPress={onPressEditCancel}>
-            {t('Cancel')}
-          </TextButton>
-        </Flex>
-      </BottomSheetModal>
-      {!!pendingRenameAddress && (
-        <Box flexGrow={1}>
-          <RenameAccountModal
-            address={pendingRenameAddress}
-            onCancel={onPressRenameCancel}
-            onConfirm={onPressRenameConfirm}
-          />
-        </Box>
-      )}
+        options={editAccountOptions}
+        onClose={() => setShowEditAccountModal(false)}
+      />
       {!!pendingRemoveAddress && (
         <RemoveAccountModal onCancel={onPressRemoveCancel} onConfirm={onPressRemoveConfirm} />
       )}

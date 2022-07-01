@@ -10,7 +10,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
 
-interface MenuItemProp {
+export interface MenuItemProp {
   key: string
   onPress: () => void
   render: () => ReactNode
