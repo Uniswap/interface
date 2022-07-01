@@ -1,23 +1,16 @@
-import { formatEther } from '@ethersproject/units'
+import { formatEther, parseEther, parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { MouseoverTooltip } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga'
-import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
-import { ButtonConfirmed, ButtonError, ButtonLight } from '../../components/Button'
+import { ButtonError, ButtonLight } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import Loader from '../../components/Loader'
-import { AutoRow } from '../../components/Row'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { Wrapper } from '../../components/swap/styleds'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import XttPresaleHeader from '../../components/xttpresale/XttPresaleHeader'
@@ -25,7 +18,6 @@ import { ExtendedXDC } from '../../constants/extended-xdc'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
-import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -33,7 +25,6 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { tryParseAmount, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
 import { useXttPresaleState } from '../../state/xtt-presale/hooks'
 import { IXttPresaleState, Status } from '../../state/xtt-presale/reducer'
 import XttPresaleUpdater from '../../state/xtt-presale/updater'
@@ -63,9 +54,6 @@ export default function XTTPresale() {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
-
-  // for expert mode
-  const [isExpertMode] = useExpertModeManager()
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
@@ -121,9 +109,12 @@ export default function XTTPresale() {
         const parsedValue = tryParseAmount(value, xttToken)
         console.log(parsed, parsedValue)
         if (parsed !== undefined && parsedValue !== undefined) {
+          const xttAmount = parseUnits(xttPresaleState.maximumDepositEthAmount, 0).eq(parseEther(value))
+            ? parsed.multiply(100 + bonus).divide(100)
+            : parsed
           setV({
             xdc: value,
-            xtt: parsed
+            xtt: xttAmount
               .multiply(parsedValue)
               .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
               .toFixed(2),
@@ -176,7 +167,10 @@ export default function XTTPresale() {
     xtt: '',
     xdc: '',
   })
-  const [errorText, setErrorText] = useState('')
+  const [presaleError, setPresaleError] = useState({
+    error: false,
+    errorText: '',
+  })
 
   const formattedAmounts = useMemo(() => {
     console.log(independentField, dependentField, typedValue)
@@ -320,13 +314,6 @@ export default function XTTPresale() {
     [onCurrencySelection]
   )
 
-  const minimumDepositEthAmount = useMemo(() => {
-    if (!xttPresaleState || !xttPresaleState.minimumDepositEthAmount) {
-      return null
-    }
-    return formatEther(xttPresaleState.minimumDepositEthAmount)
-  }, [xttPresaleState])
-
   const handleMaxInput = useCallback(() => {
     maxInputAmount && handleTypeInput(maxInputAmount.toFixed(2))
   }, [maxInputAmount, handleTypeInput])
@@ -336,50 +323,44 @@ export default function XTTPresale() {
       return true
     }
 
-    // const maximum = parseEther(xttPresaleState.maximumDepositEthAmount)
-    // const minimum = parseEther(xttPresaleState.minimumDepositEthAmount)
-    // const parsedV = parseEther(v.xdc)
+    const maximum = parseUnits(xttPresaleState.maximumDepositEthAmount, 0)
+    const minimum = parseUnits(xttPresaleState.minimumDepositEthAmount, 0)
+    const parsedV = parseEther(v.xdc)
 
-    // if (!maximumDepositEthAmount || !minimumDepositEthAmount) {
-    //   return true
-    // }
+    if (!maximum || !minimum || !parsedV) {
+      setPresaleError({
+        error: false,
+        errorText: '',
+      })
+      return false
+    }
 
-    // if (maximumDepositEthAmount < +v.xdc) {
-    //   setErrorText('You amount is greater than max deposit amount')
-    //   return true
-    // }
-
-    if (minimumDepositEthAmount && +minimumDepositEthAmount > +v.xdc) {
-      setErrorText('You amount is less than min deposit amount')
+    if (maximum.lt(parsedV)) {
+      setPresaleError({ error: true, errorText: `Max amount: ${formatEther(xttPresaleState.maximumDepositEthAmount)}` })
       return true
     }
+
+    if (minimum.gt(parsedV)) {
+      setPresaleError({
+        error: true,
+        errorText: `Min amount: ${formatEther(xttPresaleState.minimumDepositEthAmount)}`,
+      })
+      return true
+    }
+
+    setPresaleError({
+      error: false,
+      errorText: '',
+    })
     return false
   }, [v.xdc])
 
-  const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
-
-  // todo
-  const showApproveFlow = false
   return (
     <>
       <XttPresaleUpdater />
       <AppBody>
         <XttPresaleHeader state={xttPresaleState} />
         <Wrapper id="swap-page">
-          <ConfirmSwapModal
-            isOpen={showConfirm}
-            trade={v2Trade}
-            originalTrade={tradeToConfirm}
-            onAcceptChanges={handleAcceptChanges}
-            attemptingTxn={attemptingTxn}
-            txHash={txHash}
-            recipient={recipient}
-            allowedSlippage={allowedSlippage}
-            onConfirm={handleSwap}
-            swapErrorMessage={swapErrorMessage}
-            onDismiss={handleConfirmDismiss}
-          />
-
           <AutoColumn gap={'sm'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
@@ -401,133 +382,22 @@ export default function XTTPresale() {
                 showMaxButton={false}
                 currency={xttToken}
                 id="swap-currency-output"
-                // loading={independentField === Field.INPUT && routeIsSyncing}
               />
             </div>
             <div>
               {!account ? (
                 <ButtonLight onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>
-                </ButtonLight> /*: isInDepositRange ? (
-                <GreyCard style={{ textAlign: 'center' }}>
-                  <ThemedText.Main mb="4px">
-                    <Trans>{errorText}</Trans>
-                  </ThemedText.Main>
-                </GreyCard>
-              )*/
+                </ButtonLight>
               ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <ThemedText.Main mb="4px">
                     <Trans>Insufficient liquidity for this trade.</Trans>
                   </ThemedText.Main>
                 </GreyCard>
-              ) : showApproveFlow ? (
-                <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                  <AutoColumn style={{ width: '100%' }} gap="12px">
-                    <ButtonConfirmed
-                      onClick={handleApprove}
-                      disabled={
-                        approvalState !== ApprovalState.NOT_APPROVED ||
-                        approvalSubmitted ||
-                        signatureState === UseERC20PermitState.SIGNED
-                      }
-                      width="100%"
-                      altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={
-                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                      }
-                    >
-                      <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <CurrencyLogo
-                            currency={currencies[Field.INPUT]}
-                            size={'20px'}
-                            style={{ marginRight: '8px', flexShrink: 0 }}
-                          />
-                          {/* we need to shorten this string on mobile */}
-                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
-                            <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                          ) : (
-                            <Trans>Allow the X-Swap-Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                          )}
-                        </span>
-                        {approvalState === ApprovalState.PENDING ? (
-                          <Loader stroke="white" />
-                        ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                          signatureState === UseERC20PermitState.SIGNED ? (
-                          <CheckCircle size="20" color={theme.green1} />
-                        ) : (
-                          <MouseoverTooltip
-                            text={
-                              <Trans>
-                                You must give the XSwapProtocol smart contracts permission to use your{' '}
-                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                              </Trans>
-                            }
-                          >
-                            <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                          </MouseoverTooltip>
-                        )}
-                      </AutoRow>
-                    </ButtonConfirmed>
-                    <ButtonError
-                      onClick={() => {
-                        if (isExpertMode) {
-                          handleSwap()
-                        } else {
-                          setSwapState({
-                            tradeToConfirm: v2Trade,
-                            attemptingTxn: false,
-                            swapErrorMessage: undefined,
-                            showConfirm: true,
-                            txHash: undefined,
-                          })
-                        }
-                      }}
-                      width="100%"
-                      id="swap-button"
-                      disabled={
-                        !isValid ||
-                        routeIsSyncing ||
-                        routeIsLoading ||
-                        (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
-                      }
-                      error={isValid}
-                    >
-                      <Text fontSize={16} fontWeight={500}>
-                        <Trans>Swap</Trans>
-                      </Text>
-                    </ButtonError>
-                  </AutoColumn>
-                </AutoRow>
               ) : (
-                <ButtonError
-                  onClick={() => {
-                    if (isExpertMode) {
-                      handleSwap()
-                    } else {
-                      setSwapState({
-                        tradeToConfirm: v2Trade,
-                        attemptingTxn: false,
-                        swapErrorMessage: undefined,
-                        showConfirm: true,
-                        txHash: undefined,
-                      })
-                    }
-                  }}
-                  id="swap-button"
-                  disabled={!isValid || routeIsSyncing || routeIsLoading || !!swapCallbackError}
-                  error={isValid && !swapCallbackError}
-                >
-                  <Text fontSize={20} fontWeight={500}>
-                    {swapInputError ? (
-                      swapInputError
-                    ) : routeIsSyncing || routeIsLoading ? (
-                      <Trans>Swap</Trans>
-                    ) : (
-                      <Trans>Swap</Trans>
-                    )}
-                  </Text>
+                <ButtonError width="100%" id="swap-button" disabled={presaleError.error} error={presaleError.error}>
+                  {presaleError.error ? <Trans>{presaleError.errorText}</Trans> : <Trans>Buy</Trans>}
                 </ButtonError>
               )}
             </div>
