@@ -103,7 +103,7 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
           <AnimatedFlex
             row
             alignItems="center"
-            bg="backgroundBackdrop"
+            bg={gesturesEnabled ? 'backgroundSurface' : 'none'}
             justifyContent="space-between"
             px="md"
             py="sm">

@@ -81,7 +81,7 @@ export function HomeScreen({ navigation }: Props) {
       <HeaderScrollScreen
         background={<AppBackground isStrongAccent />}
         contentHeader={
-          <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+          <Box alignItems="center" flexDirection="row" justifyContent="space-between" mx="xs">
             <AccountHeader onPress={onPressAccountHeader} />
             <Flex centered row>
               {isWalletConnectSupportedAccount(activeAccount) && (
@@ -101,8 +101,8 @@ export function HomeScreen({ navigation }: Props) {
           </Flex>
         }>
         <NotificationIndicator />
-        <Flex gap="lg" mx="md" my="lg">
-          <Flex centered gap="xxs">
+        <Flex gap="lg" mx="lg" my="lg">
+          <Flex alignItems="flex-start" gap="xxs">
             <TotalBalance balances={balances} />
             <RelativeChange change={4.2} variant="body" />
           </Flex>

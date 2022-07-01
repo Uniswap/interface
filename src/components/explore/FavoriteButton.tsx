@@ -12,7 +12,7 @@ interface FavoriteButtonProps {
 
 export function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
   return (
-    <Flex alignItems="flex-end" bg="backgroundAction">
+    <Flex alignItems="flex-end" bg="backgroundAction" justifyContent="center" px="lg">
       <IconButton
         icon={<Heart active={active} size={24} />}
         variant="transparent"
