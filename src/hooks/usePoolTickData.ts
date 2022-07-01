@@ -10,8 +10,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useAllV3TicksQuery } from 'state/data/enhanced'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
-// import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
-// import useActiveWeb3React from './useActiveWeb3React'
+import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
+import useActiveWeb3React from './useActiveWeb3React'
 import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
@@ -142,16 +142,15 @@ function useTicksFromSubgraph(
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined
 ) {
-  // const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const poolAddress =
     currencyA && currencyB && feeAmount
       ? Pool.getAddress(
           currencyA?.wrapped,
           currencyB?.wrapped,
           feeAmount,
-          undefined
-          //TODO uncomment when router-sdk & interface are using v3-sdk 3.8.3
-          // chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
+          undefined,
+          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
         )
       : undefined
 
