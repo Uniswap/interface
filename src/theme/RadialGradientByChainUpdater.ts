@@ -64,7 +64,8 @@ export default function RadialGradientByChainUpdater(): null {
       case SupportedChainId.CELO_ALFAJORES:
         setBackground(backgroundResetStyles)
         const celoLightGradient = 'radial-gradient(150% 100% at 50% 0%,#35D07F35 0, #FBCC5C35 100%)'
-        const celoDarkGradient = 'radial-gradient(150% 100% at 50% 0%, #02502F 2%, #2A5F00 60%, #243218 100%)'
+        const celoDarkGradient =
+          'radial-gradient(150% 100% at 50% 0%, rgb(2 80 47) 2%, rgb(12 41 28) 53%, rgb(31, 33, 40) 100%)'
         backgroundRadialGradientElement.style.background = darkMode ? celoDarkGradient : celoLightGradient
         backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay,normal' : 'multiply,normal'
         break

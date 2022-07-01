@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { Trans } from '@lingui/macro'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
