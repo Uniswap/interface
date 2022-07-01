@@ -267,17 +267,21 @@ const NETWORK_SELECTOR_CHAINS = [
 
 export default function NetworkSelector() {
   const dispatch = useAppDispatch()
+
   const { chainId, provider, connector } = useWeb3React()
   const previousChainId = usePrevious(chainId)
+
   const parsedQs = useParsedQueryString()
   const { urlChainId } = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
+
+  const history = useHistory()
+
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
-  useOnClickOutside(node, open ? toggle : undefined)
 
-  const history = useHistory()
+  useOnClickOutside(node, open ? toggle : undefined)
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
