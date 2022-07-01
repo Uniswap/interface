@@ -14,10 +14,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { FavoriteTokensSection } from 'src/components/explore/FavoriteTokensSection'
+import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
-import { TopTokensSection } from 'src/components/explore/TopTokensSection'
-import { WatchedWalletsSection } from 'src/components/explore/WatchedWalletsSection'
+import { TopTokensCard } from 'src/components/explore/TopTokensCard'
+import { WatchedWalletsCard } from 'src/components/explore/WatchedWalletsCard'
 import { AppBackground } from 'src/components/gradients/AppBackground'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
@@ -136,20 +136,20 @@ export function ExploreScreen() {
         <VirtualizedList onScroll={scrollHandler}>
           <Box height={HEADER_HEIGHT} mb="md" />
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="md">
-            <WatchedWalletsSection
+            <WatchedWalletsCard
               onSearchWallets={() => {
                 textInputRef.current?.focus()
               }}
             />
           </AnimatedFlex>
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
-            <FavoriteTokensSection
+            <FavoriteTokensCard
               fixedCount={5}
               metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
             />
           </AnimatedFlex>
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="lg" mx="md">
-            <TopTokensSection
+            <TopTokensCard
               fixedCount={15}
               metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
             />

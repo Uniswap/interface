@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
-import { Section } from 'src/components/layout/Section'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
@@ -40,11 +40,11 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
     navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
 
   return (
-    <Section.Container>
+    <BaseCard.Container>
       <TokenBalanceList
         balances={balances as PortfolioBalance[]}
         empty={
-          <Section.EmptyState
+          <BaseCard.EmptyState
             buttonLabel={t('Explore')}
             description={t(
               'Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet.'
@@ -56,7 +56,7 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
           />
         }
         header={
-          <Section.Header
+          <BaseCard.Header
             title={t('Tokens ({{totalCount}})', { totalCount })}
             onPress={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
           />
@@ -65,6 +65,6 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
         view={viewType}
         onPressToken={onPressToken}
       />
-    </Section.Container>
+    </BaseCard.Container>
   )
 }

@@ -2,14 +2,15 @@ import { default as React, ReactElement, ReactNode } from 'react'
 import { FlatListProps } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
-import { Section } from 'src/components/layout/Section'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { CoingeckoMarketCoin, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
+import { spacing } from 'src/styles/sizing'
 
-export interface BaseTokenSectionProps {
+export interface BaseTokensCardProps {
   displayFavorites?: boolean
   fixedCount?: number
   metadataDisplayType: string
@@ -17,7 +18,7 @@ export interface BaseTokenSectionProps {
   onCycleMetadata?: () => void
 }
 
-type GenericTokenSectionProps<T> = BaseTokenSectionProps & {
+type GenericTokensCardProps<T> = BaseTokensCardProps & {
   assets?: T[]
   ListEmptyComponent?: ReactElement
   horizontal?: boolean
@@ -25,11 +26,12 @@ type GenericTokenSectionProps<T> = BaseTokenSectionProps & {
   loading?: boolean
   title: string | ReactNode
   subtitle?: string | ReactNode
+  icon?: ReactElement
   renderItem: FlatListProps<CoingeckoMarketCoin>['renderItem']
 }
 
-/** Renders a token section inside a Flatlist with expand behavior */
-export function GenericTokenSection<T>({
+/** Renders a token list inside a Flatlist with expand behavior */
+export function GenericTokensCard<T>({
   ListEmptyComponent,
   assets,
   displayFavorites,
@@ -40,7 +42,8 @@ export function GenericTokenSection<T>({
   renderItem,
   subtitle,
   title,
-}: GenericTokenSectionProps<T>) {
+  icon,
+}: GenericTokensCardProps<T>) {
   const navigation = useExploreStackNavigation()
 
   const onPress = () => {
@@ -51,19 +54,23 @@ export function GenericTokenSection<T>({
     }
   }
 
+  const margin = horizontal ? 'sm' : 'none'
+
   return (
-    <Section.Container>
-      <Section.Header subtitle={subtitle} title={title} onPress={onPress} />
+    <BaseCard.Container>
+      <BaseCard.Header icon={icon} subtitle={subtitle} title={title} onPress={onPress} />
       {loading ? (
         <Box padding="sm">
           <Loading repeat={4} type="box" />
         </Box>
       ) : (
-        <Box ml={horizontal ? 'sm' : 'none'} mt={horizontal ? 'sm' : 'none'}>
-          <Section.List
-            ItemSeparatorComponent={() => <Separator ml={horizontal ? 'sm' : 'none'} />}
+        <Box>
+          <BaseCard.List
+            ItemSeparatorComponent={() => <Separator ml={margin} />}
             ListEmptyComponent={ListEmptyComponent}
-            contentContainerStyle={flex.fill}
+            contentContainerStyle={
+              horizontal ? { ...flex.grow, padding: spacing.sm } : { ...flex.fill }
+            }
             data={fixedCount ? assets?.slice(0, fixedCount) : assets}
             horizontal={horizontal}
             keyExtractor={key}
@@ -72,7 +79,7 @@ export function GenericTokenSection<T>({
           />
         </Box>
       )}
-    </Section.Container>
+    </BaseCard.Container>
   )
 }
 

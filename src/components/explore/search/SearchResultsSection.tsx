@@ -7,7 +7,7 @@ import { SearchEtherscanItem } from 'src/components/explore/search/SearchEthersc
 import { SearchTokenItem } from 'src/components/explore/search/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/SearchWalletItem'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
-import { Section } from 'src/components/layout/Section'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -76,7 +76,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm">
       {searchHistory.length > 0 && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-          <Section.List
+          <BaseCard.List
             ItemSeparatorComponent={() => <Separator mx="xs" />}
             ListHeaderComponent={
               <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
@@ -98,7 +98,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
       ) : (
         trendingTokens?.length && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-            <Section.List
+            <BaseCard.List
               ItemSeparatorComponent={() => <Separator mx="xs" />}
               ListHeaderComponent={
                 <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
@@ -113,7 +113,7 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
           </AnimatedFlex>
         )
       )}
-      <Section.List
+      <BaseCard.List
         ItemSeparatorComponent={() => <Separator mx="xs" />}
         ListHeaderComponent={
           <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
@@ -174,7 +174,7 @@ export function SearchQueryResultsSection({ searchQuery }: SearchResultsSectionP
       ) : (
         topTokenSearchResults?.length && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-            <Section.List
+            <BaseCard.List
               ItemSeparatorComponent={() => <Separator mx="xs" />}
               ListHeaderComponent={
                 <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">

@@ -5,7 +5,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Box } from 'src/components/layout'
-import { Section } from 'src/components/layout/Section'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { Screens } from 'src/screens/Screens'
 
@@ -17,8 +17,8 @@ function renderItem({ item: address }: ListRenderItemInfo<string>) {
   )
 }
 
-/** Renders the favorite tokens section on the Explore page */
-export function WatchedWalletsSection({ onSearchWallets }: { onSearchWallets: () => void }) {
+/** Renders the favorite tokens card on the Explore page */
+export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () => void }) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
@@ -27,8 +27,8 @@ export function WatchedWalletsSection({ onSearchWallets }: { onSearchWallets: ()
   const hasWatchedWallets = watchedWalletsList.length > 0
 
   return (
-    <Section.Container>
-      <Section.Header
+    <BaseCard.Container>
+      <BaseCard.Header
         title={t("Wallets you're watching ({{watchedWalletsCount}})", {
           watchedWalletsCount: watchedWalletsList.length,
         })}
@@ -50,12 +50,12 @@ export function WatchedWalletsSection({ onSearchWallets }: { onSearchWallets: ()
           />
         </Box>
       ) : (
-        <Section.EmptyState
+        <BaseCard.EmptyState
           buttonLabel={t('Search wallets')}
           description={t("When you watch wallets, they'll appear here.")}
           onPress={onSearchWallets}
         />
       )}
-    </Section.Container>
+    </BaseCard.Container>
   )
 }

@@ -1,4 +1,4 @@
-import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
+import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { FlatList, FlatListProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
@@ -24,9 +24,10 @@ interface HeaderProps {
   title: string | ReactNode
   subtitle?: string | ReactNode
   onPress?: () => void
+  icon?: ReactElement
 }
 
-function Header({ title, subtitle, onPress }: HeaderProps) {
+function Header({ title, subtitle, onPress, icon }: HeaderProps) {
   const theme = useAppTheme()
 
   return (
@@ -38,13 +39,16 @@ function Header({ title, subtitle, onPress }: HeaderProps) {
       onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex gap="xxs">
-          {typeof title === 'string' ? (
-            <Text color="textSecondary" variant="body">
-              {title}
-            </Text>
-          ) : (
-            title
-          )}
+          <Flex row alignItems="center" gap="xs">
+            {icon}
+            {typeof title === 'string' ? (
+              <Text color="textSecondary" variant="subheadSmall">
+                {title}
+              </Text>
+            ) : (
+              title
+            )}
+          </Flex>
           {subtitle ? (
             typeof subtitle === 'string' ? (
               <Text variant="subhead">{subtitle}</Text>
@@ -102,7 +106,7 @@ function List(props: ListProps) {
   )
 }
 
-export const Section = {
+export const BaseCard = {
   Container,
   EmptyState,
   Header,

@@ -3,15 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FadeInUp } from 'react-native-reanimated'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
-import {
-  BaseTokenSectionProps,
-  GenericTokenSection,
-} from 'src/components/explore/GenericTokenSection'
+import { BaseTokensCardProps, GenericTokensCard } from 'src/components/explore/GenericTokensCard'
 import { TokenItemBox } from 'src/components/explore/TokenItem'
 import { Heart } from 'src/components/icons/Heart'
-import { AnimatedBox, Flex } from 'src/components/layout'
-import { Section } from 'src/components/layout/Section'
-import { Text } from 'src/components/Text'
+import { AnimatedBox } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
 
 import { useFavoriteTokenInfo } from 'src/features/explore/hooks'
@@ -19,8 +15,8 @@ import { Screens } from 'src/screens/Screens'
 
 const HEART_SIZE_MINIMIZED = 16
 
-/** Renders the favorite tokens section on the Explore page */
-export function FavoriteTokensSection(props: BaseTokenSectionProps) {
+/** Renders the favorite tokens card on the Explore page */
+export function FavoriteTokensCard(props: BaseTokensCardProps) {
   const { t } = useTranslation()
 
   const { tokens: favorites, isLoading } = useFavoriteTokenInfo()
@@ -41,23 +37,17 @@ export function FavoriteTokensSection(props: BaseTokenSectionProps) {
 
   return (
     <AnimatedBox entering={FadeInUp} mb="sm">
-      <GenericTokenSection
+      <GenericTokensCard
         {...props}
         displayFavorites
         horizontal
         ListEmptyComponent={<FavoritesEmptyState />}
         assets={favorites}
+        icon={<Heart active={true} size={HEART_SIZE_MINIMIZED} />}
         id="explore-favorites-header"
         loading={isLoading}
         renderItem={renderItem}
-        title={
-          <Flex row alignItems="center" gap="xs">
-            <Heart active={true} size={HEART_SIZE_MINIMIZED} />
-            <Text color="textSecondary" variant="body">
-              {t('Favorite tokens')}
-            </Text>
-          </Flex>
-        }
+        title={t('Favorite tokens')}
       />
     </AnimatedBox>
   )
@@ -68,7 +58,7 @@ export function FavoritesEmptyState() {
   const navigation = useExploreStackNavigation()
 
   return (
-    <Section.EmptyState
+    <BaseCard.EmptyState
       buttonLabel={t('Explore tokens')}
       description={t("When you favorite tokens, they'll appear here.")}
       onPress={() => {

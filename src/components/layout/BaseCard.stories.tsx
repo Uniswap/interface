@@ -1,13 +1,13 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Flex } from 'src/components/layout/Flex'
-import { Section } from 'src/components/layout/Section'
 import { Text } from 'src/components/Text'
-import { Box } from '../layout'
+import { Box } from '.'
 
 export default {
-  title: 'Layout/Section',
-  component: Section.Container,
+  title: 'Layout/BaseCard',
+  component: BaseCard.Container,
   decorators: [
     (Story) => (
       <Box bg="deprecated_gray50" width={300}>
@@ -15,10 +15,10 @@ export default {
       </Box>
     ),
   ],
-} as ComponentMeta<typeof Section.Container>
+} as ComponentMeta<typeof BaseCard.Container>
 
-const Template: ComponentStory<typeof Section.Container> = ({ children }) => (
-  <Section.Container>{children}</Section.Container>
+const Template: ComponentStory<typeof BaseCard.Container> = ({ children }) => (
+  <BaseCard.Container>{children}</BaseCard.Container>
 )
 
 export const Primary = Template.bind({})
@@ -26,7 +26,7 @@ Primary.args = {
   ...Primary.args,
   children: (
     <Flex>
-      <Section.Header subtitle="$124.34" title="Tokens" onPress={() => {}} />
+      <BaseCard.Header subtitle="$124.34" title="Tokens" onPress={() => {}} />
       <Text variant="body">My Content</Text>
     </Flex>
   ),
@@ -36,7 +36,7 @@ export const EmptyState = Template.bind({})
 EmptyState.args = {
   ...EmptyState.args,
   children: (
-    <Section.EmptyState
+    <BaseCard.EmptyState
       buttonLabel="Explore"
       description="Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet."
       title="Explore NFTs"

@@ -3,10 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FadeInUp } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
-import {
-  BaseTokenSectionProps,
-  GenericTokenSection,
-} from 'src/components/explore/GenericTokenSection'
+import { BaseTokensCardProps, GenericTokensCard } from 'src/components/explore/GenericTokensCard'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { AnimatedBox } from 'src/components/layout'
 import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
@@ -14,8 +11,8 @@ import { useMarketTokens } from 'src/features/explore/hooks'
 import { getOrderByValues } from 'src/features/explore/utils'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 
-/** Renders the top X tokens section on the Explore page */
-export function TopTokensSection(props: BaseTokenSectionProps) {
+/** Renders the top X tokens in a card on the Explore page */
+export function TopTokensCard(props: BaseTokensCardProps) {
   const { t } = useTranslation()
 
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -39,7 +36,7 @@ export function TopTokensSection(props: BaseTokenSectionProps) {
 
   return (
     <AnimatedBox entering={FadeInUp}>
-      <GenericTokenSection
+      <GenericTokensCard
         {...props}
         assets={topTokens}
         id="explore-tokens-header"

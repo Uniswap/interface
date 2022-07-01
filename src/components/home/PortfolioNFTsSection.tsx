@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Masonry } from 'src/components/layout/Masonry'
-import { Section } from 'src/components/layout/Section'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
@@ -56,9 +56,9 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
   )
 
   return (
-    <Section.Container>
+    <BaseCard.Container>
       {nftItems.length === 0 ? (
-        <Section.EmptyState
+        <BaseCard.EmptyState
           buttonLabel={t('Explore')}
           description={t(
             'Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet.'
@@ -70,7 +70,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
         />
       ) : (
         <Flex gap="xs">
-          <Section.Header
+          <BaseCard.Header
             title={t('NFTs ({{totalCount}})', { totalCount })}
             onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
           />
@@ -84,6 +84,6 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
           />
         </Flex>
       )}
-    </Section.Container>
+    </BaseCard.Container>
   )
 }
