@@ -3,9 +3,9 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -81,7 +81,7 @@ export default function AddLiquidity({
   },
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
-  const { account, chainId, provider } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const theme = useContext(ThemeContext)
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()

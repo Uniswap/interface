@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -91,7 +91,7 @@ export default function Manage({
     params: { currencyIdA, currencyIdB },
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]

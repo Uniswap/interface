@@ -114,6 +114,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
         url: RPC_URLS[SupportedChainId.MAINNET],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO_URL,
+        reloadOnDisconnect: false,
       },
       onError,
     })

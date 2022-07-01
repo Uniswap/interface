@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { ReactNode, useMemo } from 'react'
 
 const BLOCKED_ADDRESSES: string[] = [
@@ -38,7 +38,7 @@ const BLOCKED_ADDRESSES: string[] = [
 ]
 
 export default function Blocklist({ children }: { children: ReactNode }) {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const blocked: boolean = useMemo(() => Boolean(account && BLOCKED_ADDRESSES.indexOf(account) !== -1), [account])
   if (blocked) {
     return (

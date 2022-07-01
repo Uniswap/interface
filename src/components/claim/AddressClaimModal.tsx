@@ -1,7 +1,7 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -46,7 +46,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 `
 
 export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   // state for smart contract input
   const [typed, setTyped] = useState('')

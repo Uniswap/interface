@@ -3,6 +3,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
@@ -17,7 +18,6 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTheme from 'hooks/useTheme'
@@ -66,7 +66,7 @@ export default function RemoveLiquidityV3({
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
   const theme = useTheme()
-  const { account, chainId, provider } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
