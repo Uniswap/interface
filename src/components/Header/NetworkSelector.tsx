@@ -271,6 +271,7 @@ export default function NetworkSelector() {
   const { chainId, provider, connector } = useWeb3React()
   const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
 
+  // Can't use `usePrevious` because `chainId` can be undefined while activating.
   useEffect(() => {
     if (chainId) {
       setPreviousChainId(chainId)
@@ -329,7 +330,6 @@ export default function NetworkSelector() {
     }
   }, [chainId, urlChainId, replaceURLChainParam])
 
-  // If chain query parameter is unpopulated, set it with the current chain.
   useEffect(() => {
     const chainChanged = chainId !== previousChainId
     const chainQueryUnsynced = urlChainId !== chainId
