@@ -103,6 +103,7 @@ const LabelRow = styled.div`
 
 const FiatRow = styled(LabelRow)`
   justify-content: flex-end;
+  height: 16px;
 `
 
 const Aligner = styled.span`
@@ -271,7 +272,7 @@ export default function CurrencyInputPanel({
           </CurrencySelect>
         </InputRow>
 
-        <FiatRow style={{ height: '17px' }}>
+        <FiatRow>
           {!hideInput && !hideBalance && currency && (
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
