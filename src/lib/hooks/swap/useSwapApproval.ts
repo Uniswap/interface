@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
+
 export { ApprovalState } from '../useApproval'
 
 /** Returns approval state for all known swap routers */
@@ -71,8 +72,7 @@ export default function useSwapApproval(
   )
   const spender = useSwapRouterAddress(trade)
 
-  const approval = useApproval(amountToApprove, spender, useIsPendingApproval)
-  return approval
+  return useApproval(amountToApprove, spender, useIsPendingApproval)
 }
 
 export function useSwapApprovalOptimizedTrade(
@@ -110,13 +110,6 @@ export function useSwapApprovalOptimizedTrade(
           return V3Trade.createUncheckedTradeWithMultipleRoutes({
             routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
               route: new V3Route(
-                /*
-                  TODO error here when force upgrading to v3-sdk 3.8.3:
-                  TS2352: Conversion of type '(Pair | Pool)[]' to type 'Pool[]' may be a mistake because neither type
-                  sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
-
-                  resolved; router-sdk should use same v3-sdk version as interface
-                  */
                 route.pools.filter((p) => p instanceof Pool) as Pool[],
                 inputAmount.currency,
                 outputAmount.currency

@@ -45,7 +45,6 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
   }
 
   // Use Celo ERC20 logo
-  // TODO download use local SVG
   const nativeCurrencyAsToken = NATIVE_CURRENCY_IS_TOKEN[chainId]
 
   if (

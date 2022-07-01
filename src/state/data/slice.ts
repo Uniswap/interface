@@ -16,9 +16,7 @@ const CHAIN_SUBGRAPH_URL: Record<number, string> = {
 
   [SupportedChainId.POLYGON]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
 
-  // TODO swap with subgraph that points to Celo Mainnet
-  [SupportedChainId.CELO_ALFAJORES]:
-    'https://api.thegraph.com/subgraphs/name/joaquin-hernandez/uniswapv3-celo-alfajores-v1',
+  [SupportedChainId.CELO]: 'https://api.thegraph.com/subgraphs/name/joaquin-hernandez/uniswapv3-subgraph-celo',
 }
 
 export const api = createApi({
