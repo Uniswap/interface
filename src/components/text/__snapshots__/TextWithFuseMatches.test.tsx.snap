@@ -47,7 +47,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -62,7 +62,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -152,7 +152,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -167,7 +167,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -182,7 +182,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -197,7 +197,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -212,7 +212,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -227,7 +227,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -242,7 +242,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -257,7 +257,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -272,7 +272,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -287,7 +287,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -302,7 +302,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -317,7 +317,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,
@@ -332,7 +332,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#747D9C",
+          "color": "#99A1BD",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 16,

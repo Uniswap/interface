@@ -18,7 +18,7 @@ export const theme = createTheme({
     largeTablet: 1024,
   },
   colors: {
-    mainBackground: colorsLight.white,
+    mainBackground: colorsLight.backgroundBackdrop,
     mainForeground: colorsLight.black,
     translucentBackground: opacify(50, colorsLight.backgroundBackdrop),
     imageTintBackground: opacify(80, colorsLight.deprecated_background1),
@@ -38,7 +38,7 @@ export const theme = createTheme({
 export const darkTheme: Theme = {
   ...theme,
   colors: {
-    mainBackground: colorsDark.deprecated_background1,
+    mainBackground: colorsDark.backgroundBackdrop,
     mainForeground: colorsDark.white,
     translucentBackground: opacify(5, colorsDark.white),
     imageTintBackground: opacify(80, colorsDark.deprecated_background1),

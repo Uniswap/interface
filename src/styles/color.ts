@@ -193,6 +193,7 @@ export interface Palette {
   backgroundContainer: string
   backgroundAction: string
   backgroundOutline: string
+  backgroundScrim: string
 
   textPrimary: string
   textSecondary: string
@@ -268,10 +269,11 @@ export const colorsLight: Palette = {
   backgroundContainer: opacify(8, colors.gray500),
   backgroundAction: colors.gray100,
   backgroundOutline: opacify(24, colors.gray500),
+  backgroundScrim: opacify(72, colors.white),
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray500,
-  textTertiary: colors.gray400,
+  textTertiary: colors.gray300,
 
   accentAction: colors.pink400,
   accentActive: colors.blue400,
@@ -341,6 +343,7 @@ export const colorsDark: Palette = {
   backgroundContainer: opacify(8, colors.gray300),
   backgroundAction: colors.gray700,
   backgroundOutline: opacify(24, colors.gray300),
+  backgroundScrim: opacify(60, colors.black),
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
