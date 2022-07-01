@@ -22,9 +22,11 @@ const StyledXttPresaleHeader = styled.div`
 
 interface Props {
   state: IXttPresaleState
+  bonus: boolean
+  tokenBalance: string
 }
 
-export default function XttPresaleHeader({ state }: Props) {
+export default function XttPresaleHeader({ state, bonus, tokenBalance }: Props) {
   const formattedState = useMemo(() => {
     if (state.status !== Status.SUCCESS) {
       return null
@@ -40,7 +42,6 @@ export default function XttPresaleHeader({ state }: Props) {
       return 0
     }
     const progressRaw = (+formattedState.totalBought * 100) / +formattedState.hardCap
-    console.log(progressRaw)
     return Math.round(progressRaw * 100) / 100
   }, [formattedState])
 
@@ -92,6 +93,54 @@ export default function XttPresaleHeader({ state }: Props) {
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
+
+      {Number(formatEther(state.balanceOf)) > 0 && (
+        <RowBetween>
+          <RowFixed>
+            <ThemedText.Black fontWeight={200} fontSize={16}>
+              Claimable XTT:
+            </ThemedText.Black>
+            <ThemedText.Black fontSize={16} fontWeight={800} style={{ marginLeft: '8px' }}>
+              {formatEther(state.balanceOf || '0')}
+            </ThemedText.Black>
+          </RowFixed>
+        </RowBetween>
+      )}
+      {Number(formatEther(tokenBalance)) > 0 && (
+        <RowBetween>
+          <RowFixed>
+            <ThemedText.Black fontWeight={200} fontSize={16}>
+              XTT Balance:
+            </ThemedText.Black>
+            <ThemedText.Black fontSize={16} fontWeight={800} style={{ marginLeft: '8px' }}>
+              {formatEther(tokenBalance || '0')}
+            </ThemedText.Black>
+          </RowFixed>
+        </RowBetween>
+      )}
+      {Number(formatEther(state.balanceOf)) === 0 && state.claimEnabledStart > Date.now() / 1000 && (
+        <RowBetween>
+          <RowFixed>
+            <ThemedText.Black fontWeight={200} fontSize={16}>
+              Bonus for max deposit:
+            </ThemedText.Black>
+            <ThemedText.Black
+              fontSize={16}
+              fontWeight={600}
+              style={{
+                marginLeft: '8px',
+                border: `1px solid ${bonus ? '#090' : ''}`,
+                borderRadius: '10px',
+                padding: '2px 5px',
+                background: bonus ? '#090' : '',
+              }}
+            >
+              + {state.bonus}%
+            </ThemedText.Black>
+          </RowFixed>
+        </RowBetween>
+      )}
+
       <Separator />
       <AutoRow justify="flex-end">
         <ThemedText.Black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
@@ -101,6 +150,7 @@ export default function XttPresaleHeader({ state }: Props) {
       <RowBetween>
         <ProgressBar progress={progress} height="100%" />
       </RowBetween>
+      <Separator />
     </StyledXttPresaleHeader>
   )
 }
