@@ -24,14 +24,14 @@ export const TOKEN_INFO_DESCRIPTION: { [key: string]: string } = {
     <h3>Who Are the Founders of TRON (TRX)?</h3>
     <p>As the founder and CEO of TRON, Justin Sun has been honored by Forbes Asia in its 30 Under 30 series for entrepreneurs.</p>`,
   gmt: `<h3>What is STEPN (GMT)?</h3>
-      <p>STEPN is a Solana blockchain-based ""Web3 lifestyle app"" with GameFi elements. It incorporates features of a Play-to-Earn game in a fitness app to develop a solid category, known as ""move-to-earn."" Users purchase NFT sneakers to earn in-game currency while walking, running, or jogging.</p>
+      <p>STEPN is a Solana blockchain-based "Web3 lifestyle app" with GameFi elements. It incorporates features of a Play-to-Earn game in a fitness app to develop a solid category, known as "move-to-earn." Users purchase NFT sneakers to earn in-game currency while walking, running, or jogging.</p>
       
-      <p>STEPN's main goal is to disrupt the industry of fitness app by motivating users to live a better lifestyle. The app overcomes numerous issues, including a working GPS system, and ""proof of movement"", showing that users actually exercised.</p>
+      <p>STEPN's main goal is to disrupt the industry of fitness app by motivating users to live a better lifestyle. The app overcomes numerous issues, including a working GPS system, and "proof of movement", showing that users actually exercised.</p>
       
       <p>The application is available on both Android and iOS and has progressed from the conceptual stage to the open beta version in just five months. Following the success of its IDO in March 2022, STEPN aims to refine its in-game features and debut on a number of other chains in the future.</p>
       
-      <p>Who Are the Founders of STEPN (GMT)?
-      Yawn Rong, an Australian blockchain entrepreneur, founded STEPN in August 2021. He founded STEPN with his neighbor and partner Jerry Huang, a game developer and former founder of Falafel Games.</p>
+      <h3>Who Are the Founders of STEPN (GMT)?</h3>
+      <p>Yawn Rong, an Australian blockchain entrepreneur, founded STEPN in August 2021. He founded STEPN with his neighbor and partner Jerry Huang, a game developer and former founder of Falafel Games.</p>
       
       <p>STEPN raised a $5 million seed round from the most prominent crypto venture capital firms, including Sequoia Capital, Folius Ventures, Solana Capital, Alameda Research, 6th Man Ventures, DeFi Alliance, and others. Particularly,  Santiago R Santos and Republic Asia Partner Zhen Cao are two noteworthy angel investors.</p>
       `,
@@ -54,10 +54,10 @@ export const TOKEN_INFO_DESCRIPTION: { [key: string]: string } = {
       
       <p>Because Polkadot supports and explains the structure of a network of layer 1 blockchains known as parachains (parallel chains), it is known as a layer-0 metaprotocol. As a metaprotocol, Polkadot has the ability to forklessly and autonomously update its own codebase, which is in line with the will of its token holder community.</p>
       
-      <p>Creating a ""Decentralized Web - Decentralized Network"" is Polkadot's vision. Specifically, Interoperability and Scalability are two primary issues concerning blockchain that Polkadot focuses on tackling.</p> 
+      <p>Creating a "Decentralized Web - Decentralized Network" is Polkadot's vision. Specifically, Interoperability and Scalability are two primary issues concerning blockchain that Polkadot focuses on tackling.</p> 
       
-      <h3>What is the Polkadot (DOT) token?
-      The DOT token, which can be purchased or sold on Coinbase and other exchanges, is used for governance and staking.</h3>
+      <h3>What is the Polkadot (DOT) token?</h3>
+      <p>The DOT token, which can be purchased or sold on Coinbase and other exchanges, is used for governance and staking.</p>
       
       <p>The native DOT token of Polkadot includes 3 separate purposes: bonding tokens to connect parachains; staking for operations and security, referring to the way that the Polkadot network verifies transactions and issues new DOT; as well as facilitating network governance, which allows holders to have a say in the future of the protocol.</p>`,
   tlm: `<h3>What is Alien Worlds (TLM)?</h3>
@@ -109,12 +109,12 @@ export const TOKEN_INFO_DESCRIPTION: { [key: string]: string } = {
   slp: `<h3>What is Smooth Love Potion (SLP)?</h3>
       <p>By taking part in the Axie Infinity game, players can earn Smooth Love Potion (SLP) tokens. Experience points are replaced by this digital asset.</p>
       
-      <p>SLP are ERC-20 tokens that may be used to breed new Axies, meaning digital pe  ts. Axies can be bred a maximum of seven times, and the seventh breed costs 2,100 SLP. This cap is in place to guard against market hyperinflation. </p>
+      <p>SLP are ERC-20 tokens that may be used to breed new Axies, meaning digital pets. Axies can be bred a maximum of seven times, and the seventh breed costs 2,100 SLP. This cap is in place to guard against market hyperinflation. </p>
       
       <p>It takes some time to earn SLP through the game; for example, it might take 15 wins before a player has enough tokens to execute their first breed. Gamers can get a headstart by acquiring SLP on the open market.</p>
       
-      <p>Who Are the Founders of Smooth Love Potion (SLP)?
-      Trung Nguyen is the CEO of the company, who left his role as a software developer in the U.S. in order to focus on the project. </p>
+      <h3>Who Are the Founders of Smooth Love Potion (SLP)?</h3>
+      <p>Trung Nguyen is the CEO of the company, who left his role as a software developer in the U.S. in order to focus on the project. </p>
       
       <p>Nguyen was inspired to investigate blockchain's potential in gaming because he was dissatisfied with a huge number of players does not genuinely own valuable assets in popular titles.</p>
       `,
@@ -129,6 +129,11 @@ export const TOKEN_INFO_DESCRIPTION: { [key: string]: string } = {
     <p>The native token of Avalanche is AVAX. It is a hard-capped, scarce asset that operates as a fundamental unit of account between various Avalanche subnets as well as a means of fee payment and platform security through staking.</p>
    `,
 }
+
+const USDT_SUPPORTS = ['usdt.e', 'usdt_e', 'usdt_b', 'usdt_t']
+USDT_SUPPORTS.forEach(key => {
+  TOKEN_INFO_DESCRIPTION[key] = TOKEN_INFO_DESCRIPTION.usdt
+})
 
 // pairs in white list desc will be hardcode for now, the other will get data from api
 export const WHITE_LIST_TOKEN_INFO_PAIR: { [chain in ChainId]?: { [key: string]: boolean } } = {
@@ -155,4 +160,9 @@ export const WHITE_LIST_TOKEN_INFO_PAIR: { [chain in ChainId]?: { [key: string]:
     'avax,usdt.e': true,
     'avax,usdt': true,
   },
+}
+
+export const MAP_TOKEN_NAME: { [key: string]: string } = {
+  // hardcode token name. in the future will have api
+  tlm: 'Alien Worlds',
 }

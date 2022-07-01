@@ -92,7 +92,7 @@ const TokenInfoV2 = ({
   }, [callback, showToken2, showToken1])
 
   if (!showToken2 && !showToken1) return null
-  const showHow2Swap = Boolean(showToken1 && showToken2 && inputToken && outputToken && isHardCode)
+  const showHow2Swap = Boolean(showToken1 && showToken2 && currencyIn && currencyOut && isHardCode)
   return (
     <TokenInfoWrapper>
       {showToken1 && (
@@ -111,7 +111,14 @@ const TokenInfoV2 = ({
           borderBottom={showHow2Swap}
         />
       )}
-      {showHow2Swap && <HowToSwap fromCurrency={inputToken} toCurrency={outputToken} />}
+      {showHow2Swap && (
+        <HowToSwap
+          fromCurrency={currencyIn}
+          toCurrency={currencyOut}
+          fromCurrencyInfo={tokenInfo1}
+          toCurrencyInfo={tokenInfo2}
+        />
+      )}
     </TokenInfoWrapper>
   )
 }

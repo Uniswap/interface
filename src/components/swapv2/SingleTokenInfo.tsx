@@ -9,7 +9,9 @@ import { useRef } from 'react'
 import { formatDollarAmount } from 'utils/numbers'
 import { isMobile } from 'react-device-detect'
 import { TokenInfo } from 'hooks/useTokenInfo'
-import { Currency, Token } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
+import { MAP_TOKEN_NAME } from 'constants/tokenLists/token-info'
+import { getSymbolSlug } from 'utils/string'
 
 const NOT_AVAIALBLE = '--'
 const NUM_LINE_DESC = 5
@@ -77,7 +79,7 @@ const DescText = styled(InfoRowLabel)<{ showLimitLine: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 10px 0px 0px 0px;
   `}
-  p {
+  .desc {
     line-height: ${LINE_HEIGHT}px;
     ${({ showLimitLine }) =>
       showLimitLine
@@ -123,13 +125,25 @@ enum SeeStatus {
 export function HowToSwap({
   fromCurrency,
   toCurrency,
+  fromCurrencyInfo,
+  toCurrencyInfo,
 }: {
-  fromCurrency: Token | undefined
-  toCurrency: Token | undefined
+  fromCurrency: Currency | undefined
+  toCurrency: Currency | undefined
+  fromCurrencyInfo: TokenInfo
+  toCurrencyInfo: TokenInfo
 }) {
-  if (!fromCurrency || !toCurrency) return null
+  if (!fromCurrency || !toCurrency || !fromCurrencyInfo || !toCurrencyInfo) return null
   const symbol1 = fromCurrency.symbol
   const symbol2 = toCurrency.symbol
+  const name1 = fromCurrency.name
+  const name2 = toCurrency.name
+
+  let fromName = name1 !== symbol1 ? name1 : fromCurrencyInfo.name || name1
+  let toName = name2 !== symbol2 ? name2 : toCurrencyInfo.name || name2
+
+  fromName = MAP_TOKEN_NAME[getSymbolSlug(fromCurrency)] || fromName
+  toName = MAP_TOKEN_NAME[getSymbolSlug(toCurrency)] || toName
   return (
     <Wrapper borderBottom={false}>
       <Flex>
@@ -139,11 +153,10 @@ export function HowToSwap({
       </Flex>
 
       <DescText showLimitLine={false}>
-        <p>
-          {fromCurrency.name} ({symbol1}) can be exchanged to {toCurrency.name} ({symbol1} to {symbol2}) on KyberSwap, a
-          cryptocurrency decentralized exchange. By using KyberSwap, users can trade {symbol1} to {symbol2} on networks
-          at the best rates, and earn more with your {symbol1} token without needing to check rates across multiple
-          platforms.
+        <p className="desc">
+          {fromName} ({symbol1}) can be exchanged to {toName} ({symbol1} to {symbol2}) on KyberSwap, a cryptocurrency
+          decentralized exchange. By using KyberSwap, users can trade {symbol1} to {symbol2} on networks at the best
+          rates, and earn more with your {symbol1} token without needing to check rates across multiple platforms.
         </p>
       </DescText>
     </Wrapper>
@@ -182,72 +195,55 @@ const SingleTokenInfo = ({
   const symbol = currency?.symbol
   const currencyName = tokenInfo.name || currency?.name
 
+  const listField = [
+    { label: 'Price', value: tokenInfo.price ? formattedNum(tokenInfo.price.toString(), true) : NOT_AVAIALBLE },
+    {
+      label: 'Market Cap Rank',
+      value: tokenInfo.marketCapRank ? `#${formattedNum(tokenInfo.marketCapRank.toString())}` : NOT_AVAIALBLE,
+    },
+    {
+      label: '24H Volume',
+      value: !tokenInfo.tradingVolume
+        ? NOT_AVAIALBLE
+        : isMobile
+        ? formatDollarAmount(tokenInfo.tradingVolume, 2).toUpperCase()
+        : formattedNum(tokenInfo.tradingVolume.toString(), true),
+    },
+  ]
   return (
     <Wrapper borderBottom={borderBottom}>
       <Flex alignItems="center">
         <CurrencyLogo currency={currency} size="24px" style={{ marginRight: 10 }} />
         <AboutText>
-          About {symbol} {currencyName !== symbol ? `(${currencyName})` : null}
+          {/* About Usdt (Tether(...)) => Usdt (Tether) */}
+          About {symbol} {currencyName !== symbol ? `(${currencyName?.replace(/\s\(.*\)/i, '')})` : null}
         </AboutText>
       </Flex>
 
       <DescText showLimitLine={isSeeMore}>
-        <p
+        <div
+          className="desc"
           ref={ref}
           dangerouslySetInnerHTML={{
             __html: isSeeMore
               ? description.replace(/<[^>]+>/g, '') // plain text
               : description.replaceAll('\r\n\r\n', '<br><br>'),
           }}
-        ></p>
+        ></div>
         {seeMoreStatus !== SeeStatus.NOT_SHOW && (
           <SeeMore onClick={toggleSeeMore}>See {isSeeMore ? 'more' : 'less'}</SeeMore>
         )}
       </DescText>
 
       <Flex flexWrap="wrap">
-        <InfoRow isFirst={true}>
-          <InfoRowLabel>
-            <Trans>Price</Trans>
-          </InfoRowLabel>
-          <InfoRowValue>
-            {loading ? <Loader /> : tokenInfo.price ? formattedNum(tokenInfo.price.toString(), true) : NOT_AVAIALBLE}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoRowLabel>
-            <Trans>Market Cap Rank</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : tokenInfo.marketCapRank ? (
-              `#${formattedNum(tokenInfo.marketCapRank.toString())}`
-            ) : (
-              NOT_AVAIALBLE
-            )}
-          </InfoRowValue>
-        </InfoRow>
-
-        <InfoRow isLast={true}>
-          <InfoRowLabel>
-            <Trans>24H Volume</Trans>
-          </InfoRowLabel>
-
-          <InfoRowValue>
-            {loading ? (
-              <Loader />
-            ) : !tokenInfo.tradingVolume ? (
-              NOT_AVAIALBLE
-            ) : isMobile ? (
-              formatDollarAmount(tokenInfo.tradingVolume, 2).toUpperCase()
-            ) : (
-              formattedNum(tokenInfo.tradingVolume.toString(), true)
-            )}
-          </InfoRowValue>
-        </InfoRow>
+        {listField.map((item, i) => (
+          <InfoRow key={item.label} isFirst={i === 0} isLast={i === listField.length - 1}>
+            <InfoRowLabel>
+              <Trans>{item.label}</Trans>
+            </InfoRowLabel>
+            <InfoRowValue>{loading ? <Loader /> : item.value}</InfoRowValue>
+          </InfoRow>
+        ))}
       </Flex>
     </Wrapper>
   )

@@ -21,19 +21,19 @@ export interface TokenInfo {
 export default function useTokenInfo(token: Token | undefined): { data: TokenInfo; loading: boolean; error: any } {
   const { chainId } = useActiveWeb3React()
 
-  const fetcher = (url: string) => fetch(url).then(r => r.json())
+  const fetcher = (url: string) => (url ? fetch(url).then(r => r.json()) : Promise.reject({ data: {}, error: '' }))
 
-  const tokenAddress = token?.address
+  const tokenAddress = (token?.address || '').toLowerCase()
 
-  let url
+  let url = ''
 
-  if (tokenAddress?.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()) {
+  if (tokenAddress === WETH[chainId as ChainId].address.toLowerCase()) {
     // If the token is native token, we have to use different endpoint
     url = `${COINGECKO_API_URL}/coins/${NETWORKS_INFO[chainId || ChainId.MAINNET].coingeckoNativeTokenId}`
-  } else {
+  } else if (tokenAddress) {
     url = `${COINGECKO_API_URL}/coins/${
       NETWORKS_INFO[chainId || ChainId.MAINNET].coingeckoNetworkId
-    }/contract/${tokenAddress?.toLowerCase()}`
+    }/contract/${tokenAddress}`
   }
 
   const { data, error } = useSWR(url, fetcher, {
