@@ -1,6 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
@@ -11,7 +12,6 @@ import { useAllV3TicksQuery } from 'state/data/enhanced'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
-import useActiveWeb3React from './useActiveWeb3React'
 import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
@@ -142,7 +142,7 @@ function useTicksFromSubgraph(
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined
 ) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const poolAddress =
     currencyA && currencyB && feeAmount
       ? Pool.getAddress(
