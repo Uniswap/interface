@@ -10,7 +10,7 @@ interface WordListProps {
   updateColor: (color: string) => void
 }
 
-const COLORS = ['#FC72FF', '#5065FD', '#FF6F1E', '#B1F13C', '#36DBFF', '#C0C0C0']
+const COLORS = ['#FC72FF', '#5065FD', '#FF6F1E', '#B1F13C', '#36DBFF', '#7E887D']
 
 /** Renders color selector for theme update */
 export function ColorSelector({ selectedColor, updateColor }: WordListProps) {

@@ -101,7 +101,9 @@ function TabNavigator() {
         name={Tabs.Home}
         options={{
           tabBarLabel: t('Home'),
-          tabBarIcon: ({ color }) => <WalletIcon color={color} height={24} />,
+          tabBarIcon: ({ focused, color }) => (
+            <WalletIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
+          ),
         }}
       />
       <Tab.Screen
@@ -110,7 +112,9 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => <DiscoverIcon color={color} height={24} />,
+          tabBarIcon: ({ focused, color }) => (
+            <DiscoverIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
+          ),
         }}
       />
       <Tab.Screen
@@ -118,7 +122,9 @@ function TabNavigator() {
         name={Tabs.Profile}
         options={{
           tabBarLabel: t('Me'),
-          tabBarIcon: ({ color }) => <ProfileIcon color={color} height={24} />,
+          tabBarIcon: ({ focused, color }) => (
+            <ProfileIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
+          ),
         }}
       />
     </Tab.Navigator>

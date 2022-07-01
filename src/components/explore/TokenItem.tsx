@@ -1,6 +1,6 @@
 import React, { ComponentProps, forwardRef, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
+import { FlexAlignType, Image, ImageStyle, Pressable, useColorScheme } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
 import { useAppSelector } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
@@ -37,6 +37,7 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
   ) => {
     const { t } = useTranslation()
     const { navigate } = useExploreStackNavigation()
+    const isDarkMode = useColorScheme() === 'dark'
 
     const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
 
@@ -103,7 +104,8 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
           <AnimatedFlex
             row
             alignItems="center"
-            bg={gesturesEnabled ? 'backgroundSurface' : 'none'}
+            // TODO: Fix light/dark mode bg inconsistency for ExploreTokensScreen
+            bg={!gesturesEnabled ? 'none' : isDarkMode ? 'backgroundSurface' : 'backgroundBackdrop'}
             justifyContent="space-between"
             px="md"
             py="sm">

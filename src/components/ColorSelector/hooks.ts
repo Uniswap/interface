@@ -4,6 +4,7 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { editAccount } from 'src/features/wallet/walletSlice'
 
 export function useUpdateColorCallback() {
+  // TODO: Rename deprecated_primary1 and update DynamicThemeProvider
   const dispatch = useAppDispatch()
   return useCallback(
     (activeAccount: Account, color?: string) => {
