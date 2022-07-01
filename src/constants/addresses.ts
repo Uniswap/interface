@@ -26,7 +26,7 @@ export const V2_ROUTER_ADDRESS: AddressMap = {
 }
 export const XTT_PRESALE_ADDRESS: AddressMap = {
   [MAINNET]: '',
-  [TESTNET]: '0x1D48B9D2943e67d5412DDBD88F912c657Ad52Bbf',
+  [TESTNET]: '0xa22B00DB4Efe538449eBE18C78Dc215893d914Cc',
 }
 
 /**

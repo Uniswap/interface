@@ -1,5 +1,6 @@
 import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
+import { intlFormat } from 'date-fns'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
@@ -51,16 +52,6 @@ export default function XttPresaleHeader({ state }: Props) {
     )
   }
 
-  const timeConverter = (timestamp: number) => {
-    const a = new Date(timestamp * 1000)
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    const month = months[a.getMonth()]
-    const date = a.getDate()
-    const hour = a.getHours() < 10 ? `0${a.getHours()}` : a.getHours()
-    const min = a.getMinutes() < 10 ? `0${a.getMinutes()}` : a.getMinutes()
-    return `${date} ${month} ${hour}:${min} UTC 00:00`
-  }
-
   return (
     <StyledXttPresaleHeader>
       <RowBetween>
@@ -73,21 +64,31 @@ export default function XttPresaleHeader({ state }: Props) {
       <Separator />
       <RowBetween>
         <RowFixed>
-          <ThemedText.Black fontWeight={400} fontSize={16}>
+          <ThemedText.Black fontWeight={200} fontSize={16}>
             Start time:
           </ThemedText.Black>
-          <ThemedText.Black fontSize={14} style={{ marginLeft: '8px' }}>
-            {timeConverter(state.privateSaleStartTimestamp)}
+          <ThemedText.Black fontSize={16} fontWeight={800} style={{ marginLeft: '8px' }}>
+            {intlFormat(new Date(state.privateSaleStartTimestamp * 1000), {
+              month: 'short',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+            })}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>
       <RowBetween>
         <RowFixed>
-          <ThemedText.Black fontWeight={400} fontSize={16}>
+          <ThemedText.Black fontWeight={200} fontSize={16}>
             End time:
           </ThemedText.Black>
-          <ThemedText.Black fontSize={14} style={{ marginLeft: '8px' }}>
-            {timeConverter(state.privateSaleEndTimestamp)}
+          <ThemedText.Black fontSize={16} fontWeight={800} style={{ marginLeft: '8px' }}>
+            {intlFormat(new Date(state.privateSaleEndTimestamp * 1000), {
+              month: 'short',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+            })}
           </ThemedText.Black>
         </RowFixed>
       </RowBetween>

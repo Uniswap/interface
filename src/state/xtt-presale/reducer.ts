@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { createReducer } from '@reduxjs/toolkit'
 
 import { fetchData, fetchDataSuccess, fetchDataWithSignerSuccess } from './actions'
@@ -21,11 +22,37 @@ export interface IXttPresaleState {
   claimEnabledStart: number // timestamp
   totalBought: string
   totalClaimed: string
+  bonus: number
   deposits: string
   balanceOf: string
   status: Status
   statusWithSigner: Status
 }
+
+export interface IXttPresaleFormattedState
+  extends Omit<
+    IXttPresaleState,
+    | 'hardCapEthAmount'
+    | 'totalDepositedEthBalance'
+    | 'minimumDepositEthAmount'
+    | 'maximumDepositEthAmount'
+    | 'tokenPerETH'
+    | 'totalBought'
+    | 'totalClaimed'
+    | 'deposits'
+    | 'balanceOf'
+  > {
+  hardCapEthAmount: BigNumber
+  totalDepositedEthBalance: BigNumber
+  minimumDepositEthAmount: BigNumber
+  maximumDepositEthAmount: BigNumber
+  tokenPerETH: BigNumber
+  totalBought: BigNumber
+  totalClaimed: BigNumber
+  deposits: BigNumber
+  balanceOf: BigNumber
+}
+
 export type DataWithSigner = 'balanceOf' | 'deposits' | 'statusWithSigner'
 
 export const initialState: IXttPresaleState = {
@@ -42,6 +69,7 @@ export const initialState: IXttPresaleState = {
   totalClaimed: '',
   totalDepositedEthBalance: '',
   token: '',
+  bonus: 0,
   status: Status.INITIAL,
   statusWithSigner: Status.INITIAL,
 }

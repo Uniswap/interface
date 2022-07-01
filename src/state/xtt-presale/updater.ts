@@ -35,6 +35,7 @@ export default function XttPresaleUpdater(): null {
     'claimEnabledStart',
     'totalBought',
     'totalClaimed',
+    'bonus',
   ]
   const callData = callDataMethods.map((name) => itf.encodeFunctionData(name))
 
@@ -54,6 +55,7 @@ export default function XttPresaleUpdater(): null {
         case 1:
         case 2:
         case 8:
+        case 11:
           typed = Number(cur.result[0].toString())
           break
       }
