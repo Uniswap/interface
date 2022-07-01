@@ -30,7 +30,7 @@ const SMALL_MEDIA_BREAKPOINT = '640px'
 const MOBILE_MEDIA_BREAKPOINT = '410px'
 
 const ArrowCell = styled.div`
-  padding-left: 4px;
+  padding-left: 2px;
   display: flex;
 `
 const Cell = styled.div`
@@ -453,9 +453,9 @@ export default function LoadedRow({
       {tokenData.delta}%
       <ArrowCell>
         {Math.sign(tokenData.delta) > 0 ? (
-          <ArrowUpRight size={14} color={'#57bd0f'} />
+          <ArrowUpRight size={16} color={'#57bd0f'} />
         ) : (
-          <ArrowDownRight size={14} color={'red'} />
+          <ArrowDownRight size={16} color={'red'} />
         )}
       </ArrowCell>
     </>
