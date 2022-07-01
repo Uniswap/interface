@@ -111,6 +111,7 @@ export default function XTTPresale() {
 
   const handleTypeInput = useCallback(
     (value: string) => {
+      const bonus = 10
       if (value === '') {
         setV({ xtt: '', xdc: '' })
       }
@@ -319,15 +320,8 @@ export default function XTTPresale() {
     [onCurrencySelection]
   )
 
-  const maximumDepositEthAmount = useMemo(() => {
-    if (!xttPresaleState) {
-      return null
-    }
-    return formatEther(xttPresaleState.maximumDepositEthAmount)
-  }, [xttPresaleState])
-
   const minimumDepositEthAmount = useMemo(() => {
-    if (!xttPresaleState) {
+    if (!xttPresaleState || !xttPresaleState.minimumDepositEthAmount) {
       return null
     }
     return formatEther(xttPresaleState.minimumDepositEthAmount)
@@ -338,21 +332,31 @@ export default function XTTPresale() {
   }, [maxInputAmount, handleTypeInput])
 
   const isInDepositRange = useMemo(() => {
-    if (maximumDepositEthAmount && +maximumDepositEthAmount < +v.xdc) {
-      setErrorText('You amount is greater than max deposit amount')
+    if (!xttPresaleState.maximumDepositEthAmount || !xttPresaleState.minimumDepositEthAmount || !v.xdc) {
       return true
     }
+
+    // const maximum = parseEther(xttPresaleState.maximumDepositEthAmount)
+    // const minimum = parseEther(xttPresaleState.minimumDepositEthAmount)
+    // const parsedV = parseEther(v.xdc)
+
+    // if (!maximumDepositEthAmount || !minimumDepositEthAmount) {
+    //   return true
+    // }
+
+    // if (maximumDepositEthAmount < +v.xdc) {
+    //   setErrorText('You amount is greater than max deposit amount')
+    //   return true
+    // }
 
     if (minimumDepositEthAmount && +minimumDepositEthAmount > +v.xdc) {
       setErrorText('You amount is less than min deposit amount')
       return true
     }
     return false
-  }, [minimumDepositEthAmount, maximumDepositEthAmount, v.xdc])
+  }, [v.xdc])
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
-
-  console.log(isInDepositRange)
 
   // todo
   const showApproveFlow = false
@@ -404,13 +408,13 @@ export default function XTTPresale() {
               {!account ? (
                 <ButtonLight onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>
-                </ButtonLight>
-              ) : isInDepositRange ? (
+                </ButtonLight> /*: isInDepositRange ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <ThemedText.Main mb="4px">
                     <Trans>{errorText}</Trans>
                   </ThemedText.Main>
                 </GreyCard>
+              )*/
               ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <ThemedText.Main mb="4px">
