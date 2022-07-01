@@ -1,7 +1,7 @@
 import { BlurView } from 'expo-blur'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorScheme, ViewStyle } from 'react-native'
+import { TextInput, useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolate,
   FadeIn,
@@ -46,6 +46,7 @@ export function ExploreScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const scrollY = useSharedValue(0)
+  const textInputRef = useRef<TextInput>(null)
 
   const onChangeSearchFilter = (newSearchFilter: string) => {
     setSearchQuery(newSearchFilter)
@@ -113,6 +114,7 @@ export function ExploreScreen() {
             {t('Explore')}
           </AnimatedText>
           <SearchTextInput
+            ref={textInputRef}
             backgroundColor="backgroundBackdrop"
             placeholder={t('Search tokens, ENS, or addresses')}
             value={searchQuery}
@@ -132,9 +134,13 @@ export function ExploreScreen() {
         </AnimatedFlex>
       ) : (
         <VirtualizedList onScroll={scrollHandler}>
-          <Box height={HEADER_HEIGHT} mb="sm" />
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="sm" mx="md">
-            <WatchedWalletsSection />
+          <Box height={HEADER_HEIGHT} mb="md" />
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="md">
+            <WatchedWalletsSection
+              onSearchWallets={() => {
+                textInputRef.current?.focus()
+              }}
+            />
           </AnimatedFlex>
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
             <FavoriteTokensSection

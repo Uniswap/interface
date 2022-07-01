@@ -18,11 +18,13 @@ function renderItem({ item: address }: ListRenderItemInfo<string>) {
 }
 
 /** Renders the favorite tokens section on the Explore page */
-export function WatchedWalletsSection() {
+export function WatchedWalletsSection({ onSearchWallets }: { onSearchWallets: () => void }) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
+
+  const hasWatchedWallets = watchedWalletsList.length > 0
 
   return (
     <Section.Container>
@@ -30,19 +32,15 @@ export function WatchedWalletsSection() {
         title={t("Wallets you're watching ({{watchedWalletsCount}})", {
           watchedWalletsCount: watchedWalletsList.length,
         })}
-        onPress={() => {
-          navigation.navigate(Screens.WatchedWallets)
-        }}
+        onPress={
+          hasWatchedWallets
+            ? () => {
+                navigation.navigate(Screens.WatchedWallets)
+              }
+            : undefined
+        }
       />
-      {watchedWalletsList.length === 0 ? (
-        <Section.EmptyState
-          buttonLabel={t('Search wallets')}
-          description={t("When you watch wallets, they'll appear here.")}
-          onPress={() => {
-            // TODO: implement navigating to popular wallets
-          }}
-        />
-      ) : (
+      {hasWatchedWallets ? (
         <Box mt="md" mx="xxs">
           <FlatList
             horizontal
@@ -51,6 +49,12 @@ export function WatchedWalletsSection() {
             renderItem={renderItem}
           />
         </Box>
+      ) : (
+        <Section.EmptyState
+          buttonLabel={t('Search wallets')}
+          description={t("When you watch wallets, they'll appear here.")}
+          onPress={onSearchWallets}
+        />
       )}
     </Section.Container>
   )
