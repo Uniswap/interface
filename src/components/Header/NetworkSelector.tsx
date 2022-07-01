@@ -242,9 +242,9 @@ function Row({
 
 const getParsedChainId = (parsedQs?: ParsedQs) => {
   const chain = parsedQs?.chain
-  if (!chain || typeof chain !== 'string') return { urlChainId: undefined }
+  if (!chain || typeof chain !== 'string') return
 
-  return { urlChainId: getChainIdFromName(chain) }
+  return getChainIdFromName(chain)
 }
 
 const getChainIdFromName = (name: string) => {
@@ -279,7 +279,7 @@ export default function NetworkSelector() {
   }, [chainId])
 
   const parsedQs = useParsedQueryString()
-  const { urlChainId } = getParsedChainId(parsedQs)
+  const urlChainId = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
 
   const history = useHistory()
