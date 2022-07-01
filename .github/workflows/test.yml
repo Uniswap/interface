@@ -13,20 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ../actions/setup
+      - uses: ./.github/actions/setup
       - run: yarn eslint .
 
   unit-tests:
     runs-on: ubuntu-latest
       - uses: actions/checkout@v3
-      - uses: ../actions/setup
+      - uses: ./.github/actions/setup
       - run: yarn prepare
       - run: yarn test
 
   cypress-build:
     runs-on: ubuntu-latest
       - uses: actions/checkout@v3
-      - uses: ../actions/setup
+      - uses: ./.github/actions/setup
       - run: yarn prepare
 
       - run: yarn build
