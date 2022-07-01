@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: jitterbit/await-check-suites@v1
-        onlyFirstCheckSuite: true # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
+        with:
+          # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
+          onlyFirstCheckSuite: true
 
   tag:
     needs: wait-on-test
