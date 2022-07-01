@@ -311,15 +311,15 @@ export default function NetworkSelector() {
 
         dispatch(updateWalletError({ wallet, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
-      }
 
-      replaceURLChainParam()
+        replaceURLChainParam()
+      }
 
       if (!skipToggle) {
         toggle()
       }
     },
-    [connector, toggle, replaceURLChainParam, dispatch]
+    [connector, toggle, dispatch, replaceURLChainParam]
   )
 
   useEffect(() => {
@@ -332,13 +332,13 @@ export default function NetworkSelector() {
     if (chainId !== previousChainId && urlChainId !== chainId) {
       replaceURLChainParam()
     }
-  }, [chainId, urlChainId, previousChainId, replaceURLChainParam])
+  }, [chainId, previousChainId, replaceURLChainParam, urlChainId])
 
   useEffect(() => {
     if (urlChainId && urlChainId !== previousUrlChainId) {
       onSelectChain(urlChainId, true)
     }
-  }, [urlChainId, previousUrlChainId, onSelectChain])
+  }, [onSelectChain, urlChainId, previousUrlChainId])
 
   if (!chainId || !info || !provider) {
     return null
