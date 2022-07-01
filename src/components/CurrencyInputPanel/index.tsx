@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -56,7 +57,7 @@ const Container = styled.div<{ hideInput: boolean }>`
   }
 `
 
-const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean; hideInput?: boolean }>`
+const CurrencySelect = styled(ButtonGray) <{ visible: boolean; selected: boolean; hideInput?: boolean }>`
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.bg2 : theme.primary1)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
@@ -112,7 +113,7 @@ const Aligner = styled.span`
   width: 100%;
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
 
@@ -150,7 +151,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   }
 `
 
-const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
+const StyledNumericalInput = styled(NumericalInput) <{ $loading: boolean }>`
   ${loadingOpacityMixin};
   text-align: left;
 `
@@ -260,8 +261,8 @@ export default function CurrencyInputPanel({
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                      '...' +
+                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
                       : currency?.symbol) || <Trans>Select a token</Trans>}
                   </StyledTokenName>
                 )}
@@ -270,14 +271,15 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {!hideInput && !hideBalance && currency && (
-          <FiatRow>
+
+        <FiatRow style={{ height: '17px' }}>
+          {!hideInput && !hideBalance && currency && (
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
               </LoadingOpacityContainer>
               {account ? (
-                <RowFixed style={{ height: '17px' }}>
+                <RowFixed>
                   <ThemedText.Body
                     onClick={onMax}
                     color={theme.text3}
@@ -303,8 +305,9 @@ export default function CurrencyInputPanel({
                 <span />
               )}
             </RowBetween>
-          </FiatRow>
-        )}
+          )}
+        </FiatRow>
+
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal
