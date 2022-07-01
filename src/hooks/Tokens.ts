@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
@@ -13,7 +13,7 @@ import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
@@ -63,7 +63,7 @@ type BridgeInfo = Record<
 >
 
 export function useUnsupportedTokens(): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const listsByUrl = useAllLists()
   const unsupportedTokensMap = useUnsupportedTokenList()
   const unsupportedTokens = useTokensFromMap(unsupportedTokensMap, false)
@@ -108,7 +108,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
 export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
   const lists = useAllLists()
   const inactiveUrls = useInactiveListUrls()
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const activeTokens = useAllTokens()
   return useMemo(() => {
     if (!search || search.trim().length === 0) return []

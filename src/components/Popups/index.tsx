@@ -1,5 +1,5 @@
+import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 
@@ -63,7 +63,7 @@ export default function Popups() {
   const urlWarningActive = useURLWarningVisible()
 
   // need extra padding if network is not L1 Ethereum
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const isNotOnMainnet = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
 
   return (

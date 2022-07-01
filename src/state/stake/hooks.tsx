@@ -3,8 +3,8 @@ import { Trans } from '@lingui/macro'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useMultipleContractSingleData } from 'lib/hooks/multicall'
@@ -75,7 +75,7 @@ export interface StakingInfo {
 
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account } = useWeb3React()
 
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp()
@@ -229,7 +229,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 }
 
 export function useTotalUniEarned(): CurrencyAmount<Token> | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const uni = chainId ? UNI[chainId] : undefined
   const stakingInfos = useStakingInfo()
 
@@ -253,7 +253,7 @@ export function useDerivedStakeInfo(
   parsedAmount?: CurrencyAmount<Token>
   error?: ReactNode
 } {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
 
   const parsedInput: CurrencyAmount<Token> | undefined = tryParseCurrencyAmount(typedValue, stakingToken)
 

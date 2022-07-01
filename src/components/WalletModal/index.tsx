@@ -189,10 +189,9 @@ export default function WalletModal({
     const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
-      const isActive = option.connector === connector
 
       const optionProps = {
-        active: isActive,
+        isActive: option.connector === connector,
         id: `connect-${key}`,
         link: option.href,
         header: option.name,
@@ -212,7 +211,7 @@ export default function WalletModal({
             <Option
               {...optionProps}
               onClick={() => {
-                if (!isActive && !option.href && !!option.connector) {
+                if (!option.href && !!option.connector) {
                   tryActivation(option.connector)
                 }
               }}
@@ -262,7 +261,7 @@ export default function WalletModal({
               }}
               color={'#E8831D'}
               header={<Trans>Tally</Trans>}
-              active={option.connector === connector}
+              isActive={option.connector === connector}
               subheader={null}
               link={null}
               icon={TallyIcon}

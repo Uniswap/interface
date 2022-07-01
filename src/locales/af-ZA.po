@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-06 00:14\n"
+"PO-Revision-Date: 2022-06-30 17:10\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Voeg meer likiditeit by"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "Voeg {0} by Metamask <0/>"
+msgid "Add {0}"
+msgstr "Voeg {0}by"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "Voeg {0}/{1} V3 likiditeit by"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "{0}bygevoeg"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Deur hierdie voorstel by die tou te voeg, sal dit na 'n vertraging uitgevoer kan word."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -481,6 +485,8 @@ msgstr "Bevestig die ruil"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Bevestig hierdie transaksie in u beursie"
@@ -735,13 +741,8 @@ msgid "Error"
 msgstr "Fout"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Kon nie koppel nie"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Kon nie koppel nie. Probeer om die bladsy te verfris."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +760,34 @@ msgstr "Geskatte netwerkfooi"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Voer uit"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "Voer voorstel {proposalId}uit"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Voer voorstel {proposalKey}uit."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Uitgevoer"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Uitvoer"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "Die uitvoering van hierdie voorstel sal die oproepdata in die ketting in werking stel."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Uitvoering ingedien"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -898,8 +924,8 @@ msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transacti
 msgstr "Inset word geskat. U sal hoogstens <0>{0} {1}</0> anders gaan die transaksie terug."
 
 #: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Installeer Metamask"
+msgid "Install MetaMask"
+msgstr "Installeer MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +987,6 @@ msgstr "Leer meer"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Reg en privaatheid"
 
@@ -1173,10 +1198,6 @@ msgstr "Sodra u tevrede is met die tarief, klik op die aanbod om dit te hersien.
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Slegs stemgeregtigdes van UNI wat self gedelegeer is of na 'n ander adres voor blok {0} gedelegeer is."
 
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Oeps! 'N Onbekende fout het voorgekom. Verfris die bladsy of besoek 'n ander blaaier of toestel."
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
 msgstr "Optimisme brug"
@@ -1225,10 +1246,6 @@ msgstr "Bevestig dat u hierdie lys wil verwyder deur REMOVE in te tik"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Maak asseblief verbinding met Layer 1 Ethereum"
-
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Koppel asseblief aan 'n ondersteunde netwerk in die aftreklys of in jou beursie."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1347,9 +1364,26 @@ msgstr "Voorsteller"
 msgid "Protocol Disclaimer"
 msgstr "Protokol vrywaring"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Tou"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Touvoorstel {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Touvoorstel {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "In die ry staan"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "Toustaan"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1702,6 +1736,10 @@ msgstr "Hierdie toepassing gebruik die volgende derdeparty-API's:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Hierdie poel moet geïnisialiseer word voordat u likiditeit kan byvoeg. Kies 'n aanvangsprys vir die swembad om te initialiseer. Voer dan u likiditeitspryse en depositobedrag in. Gasfooie sal hoër wees as gewoonlik as gevolg van die initialiseringstransaksie."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Hierdie voorstel kan na {0}uitgevoer word."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Hierdie roete optimaliseer jou totale uitset deur gesplete roetes, veelvuldige hops en die gaskoste van elke stap in ag te neem."
@@ -1779,6 +1817,7 @@ msgstr "Transaksie-instellings"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transaksie ingedien"
@@ -1933,8 +1972,8 @@ msgid "User"
 msgstr "Gebruiker"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 is nie beskikbaar op Laag 2. Skakel oor na Laag 1 Ethereum."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 Pool is nie beskikbaar op Laag 2 nie. Skakel oor na Laag 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1967,6 +2006,8 @@ msgstr "Bekyk op Explorer"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Bekyk transaksie op Explorer"
@@ -2091,7 +2132,6 @@ msgstr "Draai toe"
 msgid "Wrap <0/> to {0}"
 msgstr "Wikkel <0/> tot {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Verkeerde netwerk"

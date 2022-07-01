@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-06 00:14\n"
+"PO-Revision-Date: 2022-06-30 17:10\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Agrega más liquidez"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "Añadir {0} a Metamask <0/>"
+msgid "Add {0}"
+msgstr "Añadir {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "Sumar liquidez {0}/{1} V3"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Añadido {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Agregar esta propuesta a la cola permitirá que se ejecute después de un retraso."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -481,6 +485,8 @@ msgstr "Confirmar intercambio"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Confirmar esta transacción en su cartera"
@@ -735,13 +741,8 @@ msgid "Error"
 msgstr "Error"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Error al conectar"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Error de conexión. Intente actualizar la página."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +760,34 @@ msgstr "Tarifa de red estimada"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Ejecutar"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "Ejecutar propuesta {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Ejecutar propuesta {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Ejecutado"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "ejecutando"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "La ejecución de esta propuesta promulgará los datos de llamada en la cadena."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Ejecución enviada"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -898,8 +924,8 @@ msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transacti
 msgstr "La entrada es estimada. Venderá como máximo <0>{0} {1}</0> o la transacción se revertirá."
 
 #: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Instalar Metamask"
+msgid "Install MetaMask"
+msgstr "Instalar MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +987,6 @@ msgstr "Aprende más"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Legal y Privacidad"
 
@@ -1173,10 +1198,6 @@ msgstr "Una vez que esté satisfecho con la comisión, haga clic en el suministr
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Solo los votos de UNI que fueron autodelegados o delegados a otra dirección antes del bloque {0} son elegibles para votar."
 
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "¡Ups! Se ha producido un error desconocido. Actualice la página o acceda desde otro navegador o dispositivo."
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
 msgstr "Puente de optimismo"
@@ -1225,10 +1246,6 @@ msgstr "Confirme que desea eliminar esta lista escribiendo ELIMINAR"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Conéctese a la capa 1 Ethereum"
-
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Conéctese a una red compatible en el menú desplegable o en su billetera."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1347,9 +1364,26 @@ msgstr "Proponente"
 msgid "Protocol Disclaimer"
 msgstr "Descargo de responsabilidad del protocolo"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Cola"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Propuesta de cola {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Propuesta de cola {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Puesto en cola"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "haciendo cola"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1702,6 +1736,10 @@ msgstr "Esta aplicación utiliza las siguientes API de terceros:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Este grupo debe inicializarse antes de poder agregar liquidez. Para inicializar, seleccione un precio inicial para el grupo. Luego, ingrese su rango de precio de liquidez y el monto del depósito. Las tarifas del gas serán más altas de lo habitual debido a la transacción de inicialización."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Esta propuesta puede ejecutarse después de {0}."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Esta ruta optimiza su producción total al considerar rutas divididas, múltiples saltos y el costo de gasolina de cada paso."
@@ -1779,6 +1817,7 @@ msgstr "Ajustes de la transacción"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transacción enviada"
@@ -1933,8 +1972,8 @@ msgid "User"
 msgstr "Usuario"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 no está disponible en la capa 2. Cambie a la capa 1 Ethereum."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 Pool no está disponible en la Capa 2. Cambie a Ethereum de Capa 1."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1967,6 +2006,8 @@ msgstr "Ver en el explorador"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Mostrar la transacción en el explorador"
@@ -2091,7 +2132,6 @@ msgstr "Envoltura"
 msgid "Wrap <0/> to {0}"
 msgstr "Envuelva <0/> a {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Red incorrecta"
