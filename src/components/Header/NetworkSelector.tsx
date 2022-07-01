@@ -323,19 +323,24 @@ export default function NetworkSelector() {
   )
 
   useEffect(() => {
-    if (chainId && !urlChainId) {
+    const chainQueryUnpopulated = !urlChainId
+    if (chainQueryUnpopulated && chainId) {
       replaceURLChainParam()
     }
   }, [chainId, urlChainId, replaceURLChainParam])
 
+  // If chain query parameter is unpopulated, set it with the current chain.
   useEffect(() => {
-    if (chainId !== previousChainId && urlChainId !== chainId) {
+    const chainChanged = chainId !== previousChainId
+    const chainQueryUnsynced = urlChainId !== chainId
+    if (chainChanged && chainQueryUnsynced) {
       replaceURLChainParam()
     }
   }, [chainId, previousChainId, replaceURLChainParam, urlChainId])
 
   useEffect(() => {
-    if (urlChainId && urlChainId !== previousUrlChainId) {
+    const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
+    if (chainQueryManuallyUpdated) {
       onSelectChain(urlChainId, true)
     }
   }, [onSelectChain, urlChainId, previousUrlChainId])
