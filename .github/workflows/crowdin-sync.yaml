@@ -2,34 +2,18 @@ name: Crowdin Download
 
 on:
   schedule:
-    - cron: '0 * * * *' # every hour we download translations and update the pr from crowdin
-
+    # Download translations every hour.
+    # This is not done as part of the build so that builds remain reproducible.
+    - cron: '0 * * * *'
   # manual trigger
   workflow_dispatch:
 
 jobs:
   download-translations:
-    name: Download translations
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org
-          cache: 'yarn'
-
-      - uses: actions/cache@v3
-        id: install-cache
-        with:
-          path: node_modules/
-          key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
-
-      - if: steps.install-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile --ignore-scripts
-
+      - uses: ./.github/actions/setup
       - run: yarn i18n:extract
 
       - name: Download Crowdin translations
