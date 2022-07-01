@@ -41,6 +41,7 @@ export const persistConfig = {
     'wallet',
     'chains',
     'favorites',
+    'searchHistory',
     'transactions',
     'tokenLists',
     'tokens',
@@ -49,7 +50,7 @@ export const persistConfig = {
     dataApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 2,
+  version: 3,
   migrate: createMigrate(migrations),
 }
 

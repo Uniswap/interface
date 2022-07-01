@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { createMigrate } from 'redux-persist'
 import { migrations } from 'src/app/migrations'
-import { initialSchema, v1Schema } from 'src/app/schema'
+import { initialSchema, v1Schema, v2Schema } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
@@ -139,5 +139,10 @@ describe('Redux state migrations', () => {
 
     expect(v2.favorites.watchedAddresses).toEqual(TEST_ADDRESSES)
     expect(v2.favorites.followedAddresses).toBeUndefined()
+  })
+
+  it('migrates from v2 to v3', () => {
+    const v3 = migrations[3](v2Schema)
+    expect(v3.searchHistory.results).toEqual([])
   })
 })

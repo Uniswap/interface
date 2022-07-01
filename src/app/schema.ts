@@ -94,6 +94,13 @@ export const v2Schema = {
   },
 }
 
+export const v3Schema = {
+  ...v2Schema,
+  searchHistory: {
+    results: [],
+  },
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v2Schema
+export const getSchema = () => v3Schema

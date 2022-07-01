@@ -43,4 +43,10 @@ export const migrations = {
     delete newState.favorites.followedAddresses
     return newState
   },
+
+  3: (state: any) => {
+    const newState = { ...state }
+    newState.searchHistory = { results: [] }
+    return newState
+  },
 }

@@ -15,10 +15,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { FavoriteTokensSection } from 'src/components/explore/FavoriteTokensSection'
-import { SearchResultsSection } from 'src/components/explore/SearchResultsSection'
+import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { TopTokensSection } from 'src/components/explore/TopTokensSection'
-import { AppBackground } from 'src/components/gradients/AppBackground'
 import { WatchedWalletsSection } from 'src/components/explore/WatchedWalletsSection'
+import { AppBackground } from 'src/components/gradients/AppBackground'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -126,14 +126,14 @@ export function ExploreScreen() {
       {isSearchMode ? (
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="md">
           <VirtualizedList>
-            <Box height={SEARCH_BAR_HEIGHT + theme.spacing.sm * 2} mb="md" />
+            <Box height={CONTENT_MAX_SCROLL_Y} mb="md" />
             <SearchResultsSection searchQuery={searchQuery} />
           </VirtualizedList>
         </AnimatedFlex>
       ) : (
         <VirtualizedList onScroll={scrollHandler}>
-          <Box height={HEADER_HEIGHT} mb="md" />
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="md">
+          <Box height={HEADER_HEIGHT} mb="sm" />
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="sm" mx="md">
             <WatchedWalletsSection />
           </AnimatedFlex>
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
