@@ -108,9 +108,9 @@ function CustomizationSection({
       <Flex centered gap="none" width="100%">
         <Flex centered row gap="none">
           <TextInput
+            ref={textInputRef}
             autoFocus={true}
             fontSize={28}
-            inputRef={textInputRef}
             placeholder="Nickname"
             placeholderTextColor={theme.colors.accentAction}
             testID="customize/name"

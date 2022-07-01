@@ -17,7 +17,7 @@ import {
   useRestyle,
   useTheme,
 } from '@shopify/restyle'
-import React, { RefObject } from 'react'
+import React, { forwardRef } from 'react'
 import { TextInput as TextInputBase, TextInputProps as BaseTextInputProps } from 'react-native'
 import { Theme } from 'src/styles/theme'
 
@@ -40,30 +40,31 @@ type RestyleProps = TypographyProps<Theme> &
   BackgroundColorShorthandProps<Theme> &
   ColorProps<Theme>
 
-export type TextInputProps = RestyleProps &
-  BaseTextInputProps & { inputRef?: RefObject<TextInputBase> }
+export type TextInputProps = RestyleProps & BaseTextInputProps
 
-export function TextInput({ onChangeText, onBlur, inputRef, ...rest }: TextInputProps) {
-  const theme = useTheme<Theme>()
+export const TextInput = forwardRef<TextInputBase, TextInputProps>(
+  ({ onChangeText, onBlur, ...rest }, ref) => {
+    const theme = useTheme<Theme>()
 
-  // Set defaults for style values
-  rest.backgroundColor ??= 'mainBackground'
-  rest.px ??= 'md'
-  rest.py ??= 'sm'
-  rest.color ??= 'mainForeground'
-  rest.borderRadius ??= 'md'
+    // Set defaults for style values
+    rest.backgroundColor ??= 'mainBackground'
+    rest.px ??= 'md'
+    rest.py ??= 'sm'
+    rest.color ??= 'mainForeground'
+    rest.borderRadius ??= 'md'
 
-  // restyle doesn't parse placeholderTextColorCorrectly
-  rest.placeholderTextColor ??= theme.colors.textTertiary
-  const transformedProps = useRestyle(restyleFunctions, rest)
+    // restyle doesn't parse placeholderTextColorCorrectly
+    rest.placeholderTextColor ??= theme.colors.textTertiary
+    const transformedProps = useRestyle(restyleFunctions, rest)
 
-  return (
-    <TextInputBase
-      ref={inputRef}
-      autoCompleteType="off"
-      onBlur={onBlur}
-      onChangeText={onChangeText}
-      {...transformedProps}
-    />
-  )
-}
+    return (
+      <TextInputBase
+        ref={ref}
+        autoCompleteType="off"
+        onBlur={onBlur}
+        onChangeText={onChangeText}
+        {...transformedProps}
+      />
+    )
+  }
+)

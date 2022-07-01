@@ -1,11 +1,12 @@
 import React, { forwardRef, ReactElement, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutChangeEvent, StyleSheet, TextInput, ViewStyle } from 'react-native'
+import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
 import { AnimatedButton } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
+import { TextInput } from 'src/components/input/TextInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
@@ -33,7 +34,7 @@ export interface SearchTextInputProps {
   placeholder?: string
 }
 
-export const SearchTextInput = forwardRef<TextInput, SearchTextInputProps>((props, ref) => {
+export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>((props, ref) => {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const {
@@ -144,10 +145,14 @@ export const SearchTextInput = forwardRef<TextInput, SearchTextInputProps>((prop
           ref={ref}
           autoCapitalize="none"
           autoCorrect={false}
+          backgroundColor="none"
+          borderWidth={0}
+          flex={1}
+          fontSize={16}
+          fontWeight="500"
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textTertiary}
           returnKeyType="done"
-          style={styles.input}
           textContentType="none"
           value={value ?? undefined}
           onChangeText={onChangeTextInput}
@@ -172,17 +177,6 @@ export const SearchTextInput = forwardRef<TextInput, SearchTextInputProps>((prop
       </AnimatedButton>
     </Flex>
   )
-})
-
-const styles = StyleSheet.create({
-  input: {
-    backgroundColor: 'none',
-    borderWidth: 0,
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '500',
-    paddingLeft: 8,
-  },
 })
 
 const CancelButtonDefaultStyle: ViewStyle = {
