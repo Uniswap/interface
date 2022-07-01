@@ -1,48 +1,41 @@
+import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
-import { notificationAsync } from 'expo-haptics'
-import React, { useReducer } from 'react'
+import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { LongPressButton } from 'src/components/buttons/LongPressButton'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { Text } from 'src/components/Text'
-import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import {
   useDerivedSwapInfo,
   useSwapActionHandlers,
-  useSwapCallback,
   useUpdateSwapGasEstimate,
   useUSDTokenUpdater,
-  useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/validate'
-import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
   CurrencyField,
-  initialState as emptyState,
   TransactionState,
-  transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
-  prefilledState?: TransactionState
-  onClose: () => void
+  state: TransactionState
+  dispatch: Dispatch<AnyAction>
+  onNext: () => void
 }
 
 // TODO:
 // -check erc20 permits
 // -handle price impact too high
 // TODO: token warnings
-export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
-  const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
+export function SwapForm({ state, dispatch, onNext }: SwapFormProps) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const derivedSwapInfo = useDerivedSwapInfo(state)
@@ -55,7 +48,7 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
     exactAmountToken,
     exactAmountUSD = '',
     formattedAmounts,
-    trade: { trade: trade, loading },
+    trade: { trade: trade },
     wrapType,
     isUSDInput = false,
   } = derivedSwapInfo
@@ -73,26 +66,12 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
   )
 
   useUpdateSwapGasEstimate(dispatch, trade)
-  const { gasSpendEstimate, gasPrice, exactApproveRequired } = state
-
-  const { swapCallback } = useSwapCallback(
-    trade,
-    gasSpendEstimate,
-    gasPrice,
-    exactApproveRequired,
-    onClose
-  )
-
-  const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onClose)
 
   const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
   const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
 
   return (
-    <Flex fill gap="xs" justifyContent="space-between" py="md">
-      <Text textAlign="center" variant="subhead">
-        {t('Swap')}
-      </Text>
+    <>
       <Flex gap="sm" justifyContent="center">
         <Trace section={SectionName.CurrencyInputPanel}>
           <CurrencyInputPanel
@@ -154,54 +133,16 @@ export function SwapForm({ prefilledState, onClose }: SwapFormProps) {
           setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
           value={formattedAmounts[exactCurrencyField]}
         />
-        <ActionButton
-          callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
+        <PrimaryButton
           disabled={actionButtonDisabled}
-          label={
-            wrapType === WrapType.Wrap
-              ? t('Hold to wrap')
-              : wrapType === WrapType.Unwrap
-              ? t('Hold to unwrap')
-              : t('Hold to swap')
-          }
-          loading={loading}
-          name={
-            wrapType === WrapType.Wrap
-              ? ElementName.Wrap
-              : wrapType === WrapType.Unwrap
-              ? ElementName.Unwrap
-              : ElementName.Swap
-          }
+          label={t('Review swap')}
+          name={ElementName.ReviewSwap}
+          py="md"
+          textVariant="largeLabel"
+          variant="blue"
+          onPress={onNext}
         />
       </Flex>
-    </Flex>
-  )
-}
-
-type ActionButtonProps = {
-  disabled: boolean
-  name: ElementName
-  label: string
-  loading: boolean
-  callback: () => void
-}
-
-function ActionButton({ callback, disabled, label, name }: ActionButtonProps) {
-  const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(callback)
-
-  return (
-    <>
-      <LongPressButton
-        disabled={disabled}
-        label={label}
-        name={name}
-        onComplete={() => {
-          notificationAsync()
-          actionButtonTrigger()
-        }}
-      />
-
-      {BiometricModal}
     </>
   )
 }

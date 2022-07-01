@@ -60,19 +60,14 @@ export function CurrencySelector({
               <Text color="mainForeground" variant="headlineSmall">
                 {selectedCurrency.symbol}
               </Text>
-              <Chevron
-                color={theme.colors.deprecated_textColor}
-                direction="e"
-                height={8}
-                width={12}
-              />
+              <Chevron color={theme.colors.deprecated_textColor} direction="e" />
             </Flex>
           ) : (
             <Flex centered row gap="xs" px="md" py="xs">
               <Text color="white" lineHeight={20} variant="mediumLabel">
                 {t('Choose token')}
               </Text>
-              <Chevron color="white" direction="e" height={12} width={12} />
+              <Chevron color="white" direction="e" />
             </Flex>
           )}
         </CenterBox>

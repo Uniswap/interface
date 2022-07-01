@@ -9,7 +9,7 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal, selectSwapModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { SheetScreenHeader } from 'src/features/transactions/swap/SheetScreenHeader'
-import { SwapForm } from 'src/features/transactions/swap/SwapForm'
+import { SwapFlow } from 'src/features/transactions/swap/SwapFlow'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import { flex } from 'src/styles/flex'
 
@@ -31,7 +31,7 @@ export function SwapModal() {
       isVisible={modalState.isOpen}
       name={ModalName.Swap}
       onClose={onClose}>
-      <SwapForm prefilledState={modalState.initialState} onClose={onClose} />
+      <SwapFlow prefilledState={modalState.initialState} onClose={onClose} />
     </BottomSheetModal>
   )
 }

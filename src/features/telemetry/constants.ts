@@ -92,6 +92,7 @@ export const enum ElementName {
   Rename = 'rename',
   Reset = 'reset',
   Restart = 'restart',
+  ReviewSwap = 'review-swap',
   SearchEtherscanItem = 'search-etherscan-item',
   SearchTokenItem = 'search-token-item',
   SearchWalletItem = 'search-wallet-item',

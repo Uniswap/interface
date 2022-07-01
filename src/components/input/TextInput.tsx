@@ -41,8 +41,7 @@ type RestyleProps = TypographyProps<Theme> &
   ColorProps<Theme>
 
 export type TextInputProps = RestyleProps &
-  BaseTextInputProps &
-  Required<Pick<BaseTextInputProps, 'onChangeText'>> & { inputRef?: RefObject<TextInputBase> }
+  BaseTextInputProps & { inputRef?: RefObject<TextInputBase> }
 
 export function TextInput({ onChangeText, onBlur, inputRef, ...rest }: TextInputProps) {
   const theme = useTheme<Theme>()

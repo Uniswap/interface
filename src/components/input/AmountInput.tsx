@@ -13,7 +13,7 @@ export function AmountInput({ onChangeText, value, showCurrencySign, ...rest }: 
     const parsedText = showCurrencySign ? text.substring(1) : text
 
     if (parsedText === '' || inputRegex.test(escapeRegExp(parsedText))) {
-      onChangeText(parsedText)
+      onChangeText?.(parsedText)
     }
   }
 
