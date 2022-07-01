@@ -1,5 +1,8 @@
 import { TimePeriod } from 'hooks/useTopTokens'
 import useTopTokens from 'hooks/useTopTokens'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
+import { showFavoritesAtom } from 'pages/Explore/index'
 import React from 'react'
 import styled from 'styled-components/macro'
 
@@ -23,15 +26,31 @@ const GridContainer = styled.div`
     padding: 12px 16px;
   }
 `
+const NoTokenDisplay = styled.div`
+  display: flex;
+  width: 100%;
+  height: 60px;
+  color: ${({ theme }) => theme.text2};
+  font-size: 16px;
+  align-items: center;
+  padding: 0px 28px;
+`
 const LOADING_ROWS = Array(10)
   .fill(0)
   .map((item, index) => {
     return <LoadingRow key={`${index}`} />
   })
 
+// TODO: add to shared location and possibly make a set
+export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
+
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
+  const [favoriteTokens] = useAtom(favoritesAtom)
+  const [showFavorites] = useAtom(showFavoritesAtom)
   const timePeriod = TimePeriod.day
+
+  /* loading and error state */
   if (loading) {
     return (
       <GridContainer>
@@ -42,9 +61,19 @@ export default function TokenTable() {
   } else if (error || data === null) {
     return <GridContainer>Error Loading Top Token Data</GridContainer>
   }
+  /* if no favorites tokens */
+  if (showFavorites && favoriteTokens.length === 0) {
+    return (
+      <GridContainer>
+        <HeaderRow timeframe={timePeriod} />
+        <NoTokenDisplay>No Favorited Tokens</NoTokenDisplay>
+      </GridContainer>
+    )
+  }
 
   const topTokenAddresses = Object.keys(data)
-  const tokenRows = topTokenAddresses.map((tokenAddress, index) => {
+  const showTokens = showFavorites ? favoriteTokens : topTokenAddresses
+  const tokenRows = showTokens.map((tokenAddress, index) => {
     return (
       <LoadedRow
         key={tokenAddress}

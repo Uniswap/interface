@@ -3,6 +3,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
+import { atom, useAtom } from 'jotai'
 import { darken } from 'polished'
 import React, { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
@@ -11,6 +12,7 @@ import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
 import { TIME_DISPLAYS } from './TimeSelector'
+import { favoritesAtom } from './TokenTable'
 
 enum Category {
   percent_change = '% Change',
@@ -38,7 +40,7 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const TokenRowWrapper = styled.div`
+const StyledTokenRow = styled.div`
   width: 100%;
   height: 60px;
   display: grid;
@@ -82,15 +84,25 @@ const TokenRowWrapper = styled.div`
     }
   }
 `
+const ClickFavorited = styled.span`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.primary1};
+  }
+`
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
+  fill: none;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
-const HeaderRowWrapper = styled(TokenRowWrapper)`
+const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
   height: 48px;
   color: ${({ theme }) => theme.text2};
@@ -176,11 +188,15 @@ const SortingCategory = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+
   &:hover {
     background-color: ${({ theme }) => darken(0.08, theme.bg0)};
   }
 `
 const SortOption = styled.span`
+  cursor: pointer;
+
   &:hover {
     color: ${({ theme }) => theme.text1};
     background-color: ${({ theme }) => darken(0.08, theme.bg0)};
@@ -218,6 +234,8 @@ const SwapButton = styled.button`
   border-radius: 12px;
   border: none;
   color: ${({ theme }) => theme.white};
+  cursor: pointer;
+
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
   }
@@ -348,14 +366,13 @@ export function TokenRow({
       <SwapCell>{swap}</SwapCell>
     </>
   )
-  if (header) return <HeaderRowWrapper>{rowCells}</HeaderRowWrapper>
-  return <TokenRowWrapper>{rowCells}</TokenRowWrapper>
+  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
+  return <StyledTokenRow>{rowCells}</StyledTokenRow>
 }
 
 /* Header Row: top header row component for table */
 export function HeaderRow({ timeframe }: { timeframe: string }) {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  /* TODO: implement mobile layout */
   const sortedBy = SORT_CATEGORIES[1]
   return (
     <TokenRow
@@ -444,11 +461,9 @@ export default function LoadedRow({
   const tokenName = token?.name
   const tokenSymbol = token?.symbol
   const tokenData = data[tokenAddress]
-  const theme = useTheme()
+  const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
   // TODO: remove magic number colors
-  // TODO: write favorited hook
-  const favorited = true
-  const percentChangeInfo = (
+  const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
       <ArrowCell>
@@ -460,13 +475,37 @@ export default function LoadedRow({
       </ArrowCell>
     </>
   )
+  const theme = useTheme()
+
+  /* handle favorite token logic */
+  const isTokenFavorited = atom<boolean>(favoriteTokens.includes(tokenAddress))
+  const [tokenFavorited, setTokenFavorite] = useAtom(isTokenFavorited)
+  const toggleFavoriteToken = () => {
+    let updatedFavoriteTokens = favoriteTokens
+    if (tokenFavorited) {
+      updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
+        return address !== tokenAddress
+      })
+    } else {
+      updatedFavoriteTokens.push(tokenAddress)
+    }
+    updateFavoriteTokens(updatedFavoriteTokens)
+    setTokenFavorite(!tokenFavorited)
+  }
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
+  // TODO: fix listNumber as number on most popular (should be fixed)
   return (
     <TokenRow
       header={false}
       favorited={
-        <Heart size={15} color={favorited ? theme.primary1 : undefined} fill={favorited ? theme.primary1 : undefined} />
+        <ClickFavorited onClick={() => toggleFavoriteToken()}>
+          <Heart
+            size={15}
+            color={tokenFavorited ? theme.primary1 : undefined}
+            fill={tokenFavorited ? theme.primary1 : undefined}
+          />
+        </ClickFavorited>
       }
       listNumber={listNumber}
       tokenInfo={
@@ -480,10 +519,10 @@ export default function LoadedRow({
       price={
         <PriceInfoCell>
           {formatDollarAmount(tokenData.price)}
-          <PercentChangeInfoCell>{percentChangeInfo}</PercentChangeInfoCell>
+          <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
         </PriceInfoCell>
       }
-      percentChange={percentChangeInfo}
+      percentChange={tokenPercentChangeInfo}
       marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
       volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />}
