@@ -6,7 +6,7 @@ import 'components/analytics'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 
@@ -42,28 +42,30 @@ function Updaters() {
   )
 }
 
-ReactDOM.render(
-  <StrictMode>
-    <Provider store={store}>
-      <HashRouter>
-        <LanguageProvider>
-          <Web3Provider>
-            <Blocklist>
-              <BlockNumberProvider>
-                <Updaters />
-                <ThemeProvider>
-                  <ThemedGlobalStyle />
-                  <App />
-                </ThemeProvider>
-              </BlockNumberProvider>
-            </Blocklist>
-          </Web3Provider>
-        </LanguageProvider>
-      </HashRouter>
-    </Provider>
-  </StrictMode>,
-  document.getElementById('root')
-)
+const container = document.getElementById('root')
+
+if (container)
+  createRoot(container).render(
+    <StrictMode>
+      <Provider store={store}>
+        <HashRouter>
+          <LanguageProvider>
+            <Web3Provider>
+              <Blocklist>
+                <BlockNumberProvider>
+                  <Updaters />
+                  <ThemeProvider>
+                    <ThemedGlobalStyle />
+                    <App />
+                  </ThemeProvider>
+                </BlockNumberProvider>
+              </Blocklist>
+            </Web3Provider>
+          </LanguageProvider>
+        </HashRouter>
+      </Provider>
+    </StrictMode>
+  )
 
 if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   serviceWorkerRegistration.register()

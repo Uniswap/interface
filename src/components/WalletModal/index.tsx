@@ -184,14 +184,14 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetamask = !!window.ethereum?.isMetaMask
+    const isMetaMask = !!window.ethereum?.isMetaMask
     const isTally = !!window.ethereum?.isTally
+    const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
-      const isActive = option.connector === connector
 
       const optionProps = {
-        active: isActive,
+        isActive: option.connector === connector,
         id: `connect-${key}`,
         link: option.href,
         header: option.name,
@@ -202,12 +202,16 @@ export default function WalletModal({
 
       // check for mobile options
       if (isMobile) {
-        if (!window.web3 && !window.ethereum && option.mobile) {
+        if (
+          (!window.web3 && !window.ethereum && option.mobile) ||
+          (isMetaMask && option.name === 'MetaMask') ||
+          (isCoinbaseWallet && option.name === 'Coinbase Wallet')
+        ) {
           return (
             <Option
               {...optionProps}
               onClick={() => {
-                if (!isActive && !option.href && !!option.connector) {
+                if (!option.href && !!option.connector) {
                   tryActivation(option.connector)
                 }
               }}
@@ -228,7 +232,7 @@ export default function WalletModal({
                 id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
-                header={<Trans>Install Metamask</Trans>}
+                header={<Trans>Install MetaMask</Trans>}
                 subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}
@@ -239,11 +243,11 @@ export default function WalletModal({
           }
         }
         // don't return metamask if injected provider isn't metamask
-        else if (option.name === 'MetaMask' && !isMetamask) {
+        else if (option.name === 'MetaMask' && !isMetaMask) {
           return null
         }
         // likewise for generic
-        else if (option.name === 'Injected' && isMetamask) {
+        else if (option.name === 'Injected' && isMetaMask) {
           return null
         } else if (option.name === 'Injected' && isTally) {
           return (
@@ -257,7 +261,7 @@ export default function WalletModal({
               }}
               color={'#E8831D'}
               header={<Trans>Tally</Trans>}
-              active={option.connector === connector}
+              isActive={option.connector === connector}
               subheader={null}
               link={null}
               icon={TallyIcon}
@@ -334,7 +338,7 @@ export default function WalletModal({
                 tryActivation={tryActivation}
               />
             )}
-            {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-cy="option-grid">{getOptions()}</OptionGrid>}
+            {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
             {!pendingError && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>

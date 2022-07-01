@@ -1,5 +1,5 @@
+import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import LibUpdater from 'lib/hooks/transactions/updater'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -7,20 +7,22 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './reducer'
+import { SerializableTransactionReceipt } from './types'
 
 export default function Updater() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const addPopup = useAddPopup()
   // speed up popup dismisall time if on L2
   const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
 
   const dispatch = useAppDispatch()
   const onCheck = useCallback(
-    ({ chainId, hash, blockNumber }) => dispatch(checkedTransaction({ chainId, hash, blockNumber })),
+    ({ chainId, hash, blockNumber }: { chainId: number; hash: string; blockNumber: number }) =>
+      dispatch(checkedTransaction({ chainId, hash, blockNumber })),
     [dispatch]
   )
   const onReceipt = useCallback(
-    ({ chainId, hash, receipt }) => {
+    ({ chainId, hash, receipt }: { chainId: number; hash: string; receipt: SerializableTransactionReceipt }) => {
       dispatch(
         finalizeTransaction({
           chainId,

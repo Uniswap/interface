@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-06 00:15\n"
+"PO-Revision-Date: 2022-06-30 17:10\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Adjon hozzá több likviditást"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "{0} hozzáadása a Metamask <0/> elemhez"
+msgid "Add {0}"
+msgstr "Adjunk hozzá {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "Adjon hozzá {0}/{1} V3 likviditást"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Hozzáadva {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Ha felveszi ezt az ajánlatot a sorba, akkor késleltetés után végrehajtható."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -481,6 +485,8 @@ msgstr "Swap megerősítése"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Tranzakció megerősítése a pénztárcájában"
@@ -735,13 +741,8 @@ msgid "Error"
 msgstr "Hiba"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Hiba történt a csatlakozáskor"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Hiba történt a csatlakozáskor. Próbálja frissíteni az oldalt."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +760,34 @@ msgstr "Becsült hálózati díj"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Végrehajtás"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "A {proposalId}javaslat végrehajtása"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "A {proposalKey}javaslat végrehajtása."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Végrehajtott"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Végrehajtó"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "A javaslat végrehajtása a hívási adatokat a láncon keresztül érvényesíti."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Végrehajtás benyújtva"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -899,8 +925,8 @@ msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transacti
 msgstr "Az input becsült. Legfeljebb <0>{0} {1}</0> értékesíthet, különben a tranzakció visszafordul."
 
 #: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Metamask telepítése"
+msgid "Install MetaMask"
+msgstr "Telepítse a MetaMask programot"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -962,7 +988,6 @@ msgstr "Tudj meg többet"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Jogi és adatvédelem"
 
@@ -1174,10 +1199,6 @@ msgstr "Ha elégedett az árfolyammal, kattintson a kínálatra az áttekintésh
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Csak azok az UNI-szavazatok jogosultak szavazni, amelyeket a {0} blokk előtt saját maguk vagy más címre delegáltak."
 
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Hoppá! Ismeretlen hiba történt. Kérjük, frissítse az oldalt, vagy látogasson el egy másik böngészőből vagy eszközről."
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
 msgstr "Optimizmus híd"
@@ -1226,10 +1247,6 @@ msgstr "Kérjük, erősítse meg, hogy el szeretné távolítani ezt a listát, 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
-
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Kérjük, csatlakozzon egy támogatott hálózathoz a legördülő menüben vagy a pénztárcájában."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1348,9 +1365,26 @@ msgstr "Javaslattevő"
 msgid "Protocol Disclaimer"
 msgstr "Protokoll Jogi nyilatkozat"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Sor"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Sorozati javaslat {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Sorajánlat {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Sorban"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "Sorban állás"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1703,6 +1737,10 @@ msgstr "Ez az alkalmazás a következő harmadik féltől származó API-kat has
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ezt a készletet inicializálni kell a likviditás növelése előtt. Az inicializáláshoz válassza ki a készlet kikiáltási árát. Ezután adja meg likviditási ártartományát és betéti összegét. Az inicializálási tranzakció miatt a gázdíjak a szokásosnál magasabbak lesznek."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Ezt a javaslatot {0}után lehet végrehajtani."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Ez az útvonal optimalizálja a teljes teljesítményt az osztott útvonalak, a több ugrás és az egyes lépések gázköltségének figyelembevételével."
@@ -1780,6 +1818,7 @@ msgstr "Tranzakció beállítások"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Tranzakció benyújtva"
@@ -1934,8 +1973,8 @@ msgid "User"
 msgstr "Felhasználó"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "A V2 nem érhető el a 2. rétegben. Váltás az 1. réteg Ethereumra."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "A V2 Pool nem érhető el a 2. rétegen. Váltson az 1. rétegű Ethereumra."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1968,6 +2007,8 @@ msgstr "Megtekintés az Explorerben"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Tranzakció megtekintése az Explorerben"
@@ -2092,7 +2133,6 @@ msgstr "Becsomagolás"
 msgid "Wrap <0/> to {0}"
 msgstr "Tekerje <0/> tól {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Rossz hálózat"
