@@ -464,7 +464,7 @@ export function useShowTradeRoutes(): boolean {
 }
 
 export function useShowTokenInfo(): boolean {
-  return useSelector((state: AppState) => state.user.showTokenInfo)
+  return useSelector((state: AppState) => state.user.showTokenInfo) ?? true
 }
 
 export function useShowTopTrendingSoonTokens(): boolean {
