@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -307,7 +306,6 @@ export default function CurrencyInputPanel({
             </RowBetween>
           )}
         </FiatRow>
-
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal
