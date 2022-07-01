@@ -1,4 +1,4 @@
-name: End-to-End Tests
+name: Test
 
 on:
   push:
@@ -9,31 +9,24 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: ../actions/setup
+      - run: yarn eslint .
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org
-          cache: 'yarn'
+  unit-tests:
+    runs-on: ubuntu-latest
+      - uses: ../actions/setup
+      - run: yarn prepare
+      - run: yarn test
 
-      - uses: actions/cache@v3
-        id: install-cache
-        with:
-          path: node_modules/
-          key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
-
-      - if: steps.install-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile --ignore-scripts
-
+  cypress-build:
+    runs-on: ubuntu-latest
+      - uses: ../actions/setup
       - run: yarn prepare
 
       - run: yarn build
-
       - uses: actions/upload-artifact@v2
         with:
           name: build
@@ -45,12 +38,10 @@ jobs:
         with:
           path: /home/runner/.cache/Cypress
           key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
-
       - if: steps.cypress-cache.outputs.cache-hit != 'true'
         run: yarn cypress install
-
+  
   cypress-tests:
-    name: Run tests
     runs-on: ubuntu-latest
     needs: build
     strategy:
@@ -58,22 +49,7 @@ jobs:
       matrix:
         containers: [1, 2, 3, 4]
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org
-          cache: 'yarn'
-
-      - uses: actions/cache@v3
-        id: install-cache
-        with:
-          path: node_modules/ # this should always be a cache hit, from install
-          key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
-
-      - if: steps.install-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile --ignore-scripts
+      - uses: ../actions/setup
 
       - uses: actions/download-artifact@v2
         with:
@@ -85,7 +61,6 @@ jobs:
         with:
           path: /home/runner/.cache/Cypress
           key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
-
       - if: steps.cypress-cache.outputs.cache-hit != 'true'
         run: yarn cypress install
 
@@ -98,6 +73,5 @@ jobs:
           record: true
           parallel: true
         env:
-          CI: false # disables lint checks when building
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
