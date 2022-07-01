@@ -43,9 +43,10 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   padding: 8px;
   justify-content: space-between;
   text-decoration: none;
+  cursor: pointer;
+
   :hover {
     color: ${({ theme }) => theme.text1};
-    cursor: pointer;
     text-decoration: none;
   }
 `

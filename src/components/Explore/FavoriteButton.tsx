@@ -10,16 +10,16 @@ const FavoriteButtonContent = styled.div`
   align-items: center;
   gap: 8px;
 `
-const FavoriteButtonContainer = styled.button`
+const FavoritesButton = styled.button`
   padding: 0px 16px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg0};
   border: 1px solid ${({ theme }) => theme.bg0};
   color: ${({ theme }) => theme.text1};
   font-size: 16px;
+  cursor: pointer;
 
   :hover {
-    cursor: pointer;
     outline: none;
     border: 1px solid ${({ theme }) => theme.bg3};
   }
@@ -29,10 +29,10 @@ export default function FavoriteButton() {
   const theme = useTheme()
   const [showFavorites, setShowFavorites] = useAtom(showFavoritesAtom)
   return (
-    <FavoriteButtonContainer onClick={() => setShowFavorites(!showFavorites)}>
+    <FavoritesButton onClick={() => setShowFavorites(!showFavorites)}>
       <FavoriteButtonContent>
         <Heart size={17} color={theme.text1} fill={theme.text1} /> Favorites
       </FavoriteButtonContent>
-    </FavoriteButtonContainer>
+    </FavoritesButton>
   )
 }

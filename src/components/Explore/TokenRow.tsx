@@ -3,9 +3,9 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
-import { useAtom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { darken } from 'polished'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
 import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -86,7 +86,8 @@ const TokenRowWrapper = styled.div`
 `
 const ClickFavorited = styled.span`
   display: flex;
-  align-content: center;
+  align-items: center;
+  cursor: pointer;
 
   &:hover {
     color: ${({ theme }) => theme.primary1};
@@ -187,16 +188,18 @@ const SortingCategory = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+
   &:hover {
     background-color: ${({ theme }) => darken(0.08, theme.bg0)};
-    cursor: pointer;
   }
 `
 const SortOption = styled.span`
+  cursor: pointer;
+
   &:hover {
     color: ${({ theme }) => theme.text1};
     background-color: ${({ theme }) => darken(0.08, theme.bg0)};
-    cursor: pointer;
   }
 `
 const SparkLineCell = styled(Cell)`
@@ -231,9 +234,10 @@ const SwapButton = styled.button`
   border-radius: 12px;
   border: none;
   color: ${({ theme }) => theme.white};
+  cursor: pointer;
+
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary2)};
-    cursor: pointer;
   }
 `
 const TokenInfoCell = styled(Cell)`
@@ -369,7 +373,6 @@ export function TokenRow({
 /* Header Row: top header row component for table */
 export function HeaderRow({ timeframe }: { timeframe: string }) {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  /* TODO: implement mobile layout */
   const sortedBy = SORT_CATEGORIES[1]
   return (
     <TokenRow
@@ -475,8 +478,8 @@ export default function LoadedRow({
   const theme = useTheme()
 
   /* handle favorite token logic */
-  const isFavorited = favoriteTokens.includes(tokenAddress)
-  const [tokenFavorited, setTokenFavorite] = useState(isFavorited)
+  const isTokenFavorited = atom<boolean>(favoriteTokens.includes(tokenAddress))
+  const [tokenFavorited, setTokenFavorite] = useAtom(isTokenFavorited)
   const toggleFavoriteToken = () => {
     let updatedFavoriteTokens = favoriteTokens
     if (tokenFavorited) {
@@ -491,6 +494,7 @@ export default function LoadedRow({
   }
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
+  // TODO: fix listNumber as number on most popular (should be fixed)
   return (
     <TokenRow
       header={false}

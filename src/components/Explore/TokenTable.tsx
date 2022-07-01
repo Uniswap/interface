@@ -41,7 +41,7 @@ const LOADING_ROWS = Array(10)
     return <LoadingRow key={`${index}`} />
   })
 
-// TODO: add to shared location
+// TODO: add to shared location and possibly make a set
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 
 export default function TokenTable() {
@@ -72,7 +72,7 @@ export default function TokenTable() {
   }
 
   const topTokenAddresses = Object.keys(data)
-  const showTokens = showFavorites && favoriteTokens ? favoriteTokens : topTokenAddresses
+  const showTokens = showFavorites ? favoriteTokens : topTokenAddresses
   const tokenRows = showTokens.map((tokenAddress, index) => {
     return (
       <LoadedRow
