@@ -25,7 +25,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
+export default function useStablecoinPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const chainId = currency?.chainId
 
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
@@ -66,7 +66,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
-  const price = useUSDCPrice(currencyAmount?.currency)
+  const price = useStablecoinPrice(currencyAmount?.currency)
 
   return useMemo(() => {
     if (!price || !currencyAmount) return null

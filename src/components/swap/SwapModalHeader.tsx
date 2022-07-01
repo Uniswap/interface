@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { useUSDCValue } from '../../hooks/useUSDCPrice'
+import { useUSDCValue } from '../../hooks/useStablecoinPrice'
 import { ThemedText } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'

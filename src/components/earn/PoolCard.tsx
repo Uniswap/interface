@@ -5,8 +5,8 @@ import styled from 'styled-components/macro'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
 import { useColor } from '../../hooks/useColor'
+import useStablecoinPrice from '../../hooks/useStablecoinPrice'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
-import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import { StakingInfo } from '../../state/stake/hooks'
 import { StyledInternalLink, ThemedText } from '../../theme'
@@ -104,7 +104,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   }
 
   // get the USD value of staked WETH
-  const USDPrice = useUSDCPrice(WETH)
+  const USDPrice = useStablecoinPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 

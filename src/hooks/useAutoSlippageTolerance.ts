@@ -9,7 +9,7 @@ import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import useGasPrice from './useGasPrice'
-import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
+import useStablecoinPrice, { useUSDCValue } from './useStablecoinPrice'
 
 const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
@@ -42,7 +42,7 @@ export default function useAutoSlippageTolerance(
 
   const gasEstimate = guesstimateGas(trade)
   const nativeCurrency = useNativeCurrency()
-  const nativeCurrencyPrice = useUSDCPrice((trade && nativeCurrency) ?? undefined)
+  const nativeCurrencyPrice = useStablecoinPrice((trade && nativeCurrency) ?? undefined)
 
   return useMemo(() => {
     if (!trade || onL2) return DEFAULT_AUTO_SLIPPAGE
