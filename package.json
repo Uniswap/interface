@@ -34,7 +34,7 @@
     "upload": "scp -r build/* root@159.223.217.6:/www/test/",
     "format:write": "prettier src --write \"**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "eslint src --fix --ext .ts,.tsx,.js,.jsx",
-    "onserver": "git pull origin main && yarn && yarn build"
+    "onserver": "git pull origin master && yarn && yarn build"
   },
   "devDependencies": {
     "@ethersproject/experimental": "^5.4.0",
