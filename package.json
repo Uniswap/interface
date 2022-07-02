@@ -31,7 +31,7 @@
     "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
     "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos",
     "bad": "yarn build && npm run upload",
-    "upload": "scp -r build/* root@147.182.160.81:/www/swap/",
+    "upload": "scp -r build/* root@159.223.217.6:/www/test/",
     "format:write": "prettier src --write \"**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "eslint src --fix --ext .ts,.tsx,.js,.jsx"
   },

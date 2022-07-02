@@ -3,7 +3,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 
 import { SupportedChainId } from './chains'
 import { ExtendedXDC } from './extended-xdc'
-import { TT, WETH_EXTENDED } from './tokens'
+import { TT, WETH_EXTENDED, XSP, XTT } from './tokens'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -37,7 +37,12 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
-  [SupportedChainId.MAINNET]: [ExtendedXDC.onChain(SupportedChainId.MAINNET), WETH_EXTENDED[SupportedChainId.MAINNET]],
+  [SupportedChainId.MAINNET]: [
+    ExtendedXDC.onChain(SupportedChainId.MAINNET),
+    WETH_EXTENDED[SupportedChainId.MAINNET],
+    XSP[SupportedChainId.MAINNET],
+    XTT[SupportedChainId.MAINNET],
+  ],
   [SupportedChainId.TESTNET]: [
     ExtendedXDC.onChain(SupportedChainId.TESTNET),
     TT,

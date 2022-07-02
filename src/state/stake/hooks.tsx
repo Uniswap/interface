@@ -7,7 +7,7 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { ReactNode, useMemo } from 'react'
 
-import { UNI } from '../../constants/tokens'
+import { XSP } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
@@ -75,7 +75,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     [chainId, pairToFilterBy]
   )
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? XSP[chainId] : undefined
 
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
@@ -210,7 +210,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
 export function useTotalUniEarned(): CurrencyAmount<Token> | undefined {
   const { chainId } = useActiveWeb3React()
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? XSP[chainId] : undefined
   const stakingInfos = useStakingInfo()
 
   return useMemo(() => {

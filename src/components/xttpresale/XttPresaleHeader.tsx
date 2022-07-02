@@ -32,8 +32,8 @@ export default function XttPresaleHeader({ state, bonus, tokenBalance }: Props) 
       return null
     }
     return {
-      hardCap: formatEther(state.hardCapEthAmount),
-      totalBought: formatEther(state.totalBought),
+      hardCap: formatEther(state.hardCapEthAmount || '0'),
+      totalBought: formatEther(state.totalBought || '0'),
     }
   }, [state])
 
@@ -94,7 +94,7 @@ export default function XttPresaleHeader({ state, bonus, tokenBalance }: Props) 
         </RowFixed>
       </RowBetween>
 
-      {Number(formatEther(state.balanceOf)) > 0 && (
+      {Number(formatEther(state.balanceOf || '0')) > 0 && (
         <RowBetween>
           <RowFixed>
             <ThemedText.Black fontWeight={200} fontSize={16}>
@@ -106,7 +106,7 @@ export default function XttPresaleHeader({ state, bonus, tokenBalance }: Props) 
           </RowFixed>
         </RowBetween>
       )}
-      {Number(formatEther(tokenBalance)) > 0 && (
+      {Number(formatEther(tokenBalance || '0')) > 0 && (
         <RowBetween>
           <RowFixed>
             <ThemedText.Black fontWeight={200} fontSize={16}>
@@ -118,7 +118,7 @@ export default function XttPresaleHeader({ state, bonus, tokenBalance }: Props) 
           </RowFixed>
         </RowBetween>
       )}
-      {Number(formatEther(state.balanceOf)) === 0 && state.claimEnabledStart > Date.now() / 1000 && (
+      {Number(formatEther(state.balanceOf || '0')) === 0 && state.claimEnabledStart > Date.now() / 1000 && (
         <RowBetween>
           <RowFixed>
             <ThemedText.Black fontWeight={200} fontSize={16}>

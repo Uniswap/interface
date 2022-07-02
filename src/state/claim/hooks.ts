@@ -3,7 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 
-import { UNI } from '../../constants/tokens'
+import { XSP } from '../../constants/tokens'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
@@ -137,7 +137,7 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? XSP[chainId] : undefined
   if (!uni) return undefined
   if (!canClaim || !userClaimData) {
     return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(0))

@@ -5,7 +5,7 @@ import { Erc20Interface } from 'abis/types/Erc20'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
-import { UNI } from '../../constants/tokens'
+import { XSP } from '../../constants/tokens'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useMulticall2Contract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -154,7 +154,7 @@ export function useAllTokenBalances(): { [tokenAddress: string]: CurrencyAmount<
 export function useAggregateUniBalance(): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useActiveWeb3React()
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? XSP[chainId] : undefined
 
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(account ?? undefined, uni)
   const uniUnclaimed: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
