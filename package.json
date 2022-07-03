@@ -152,7 +152,8 @@
     "web-vitals": "^2.1.0",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
-    "workbox-routing": "^6.1.0"
+    "workbox-routing": "^6.1.0",
+    "date-fns": "^2.28.0"
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "1.6.5"
@@ -170,7 +171,5 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "date-fns": "^2.28.0"
-  }
+  "dependencies": {}
 }
