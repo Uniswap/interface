@@ -1,0 +1,15 @@
+name: xswap-app
+region: blr
+static_sites:
+- build_command: yarn build
+  catchall_document: index.html
+  environment_slug: node-js
+  github:
+    branch: master
+    deploy_on_push: true
+    repo: RomanowAgency/x-swap-protocol
+  name: x-swap-protocol
+  output_dir: build
+  routes:
+  - path: /
+  source_dir: /
