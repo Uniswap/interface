@@ -7,11 +7,12 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { formattedNum } from 'utils'
 import { useRef } from 'react'
 import { formatDollarAmount } from 'utils/numbers'
-import { isMobile } from 'react-device-detect'
+import { isMobile, isIOS } from 'react-device-detect'
 import { TokenInfo } from 'hooks/useTokenInfo'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { MAP_TOKEN_NAME } from 'constants/tokenLists/token-info'
 import { getSymbolSlug } from 'utils/string'
+import { useIsDarkMode } from 'state/user/hooks'
 
 const NOT_AVAIALBLE = '--'
 // 2 styles: border and no border
@@ -89,7 +90,14 @@ const DescText = styled(InfoRowLabel)<{ showLimitLine: boolean }>`
           height: unset;
         `}
 `
-const SeeMore = styled.a<{ isSeeMore: boolean }>`
+
+function transparent(isDarkMode: boolean) {
+  // https://stackoverflow.com/questions/38391457/linear-gradient-to-transparent-bug-in-latest-safari
+  const value = isDarkMode ? 0 : 255
+  return isIOS ? `rgba(${value}, ${value}, ${value}, 0)` : `rgba(255, 255, 255, 0)`
+}
+
+const SeeMore = styled.a<{ isSeeMore: boolean; isDarkMode: boolean }>`
   cursor: pointer;
   margin: 20px 0px;
   display: block;
@@ -102,8 +110,8 @@ const SeeMore = styled.a<{ isSeeMore: boolean }>`
     bottom: 20px;
     width: 100%;
     height: 8em;
-    background: ${({ theme, isSeeMore }) =>
-      isSeeMore ? `linear-gradient(180deg, rgba(255, 255, 255, 0), ${theme.bg12})` : 'transparent'};
+    background: ${({ theme, isSeeMore, isDarkMode }) =>
+      isSeeMore ? `linear-gradient(180deg, ${transparent(isDarkMode)}, ${theme.bg12})` : 'transparent'};
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 10px 0px;
@@ -182,6 +190,7 @@ const SingleTokenInfo = ({
   borderBottom?: boolean
   loading: boolean
 }) => {
+  const isDarkMode = useIsDarkMode()
   const description = replaceHtml(tokenInfo?.description?.en)
   const [seeMoreStatus, setShowMoreDesc] = useState(SeeStatus.NOT_SHOW)
 
@@ -237,7 +246,7 @@ const SingleTokenInfo = ({
         ></div>
       </DescText>
       {seeMoreStatus !== SeeStatus.NOT_SHOW && (
-        <SeeMore onClick={toggleSeeMore} isSeeMore={isSeeMore}>
+        <SeeMore onClick={toggleSeeMore} isSeeMore={isSeeMore} isDarkMode={isDarkMode}>
           {isSeeMore ? <Trans>See more</Trans> : <Trans>See less</Trans>}
         </SeeMore>
       )}
