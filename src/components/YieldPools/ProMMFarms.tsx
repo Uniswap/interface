@@ -223,7 +223,7 @@ function ProMMFarms({
 
           <Flex grid-area="apy" alignItems="center" justifyContent="flex-end">
             <ClickableText>
-              <Trans>AVG APY</Trans>
+              <Trans>AVG APR</Trans>
             </ClickableText>
             <InfoHelper
               text={

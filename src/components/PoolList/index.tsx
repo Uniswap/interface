@@ -165,7 +165,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
               setSortDirection(sortedColumn !== SORT_FIELD.APR ? true : !sortDirection)
             }}
           >
-            <Trans>APY</Trans>
+            <Trans>APR</Trans>
             {sortedColumn === SORT_FIELD.APR ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />

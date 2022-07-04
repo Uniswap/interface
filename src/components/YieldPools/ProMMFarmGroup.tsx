@@ -351,7 +351,7 @@ const Row = ({
 
           <InfoRow>
             <Text color={theme.subText}>
-              <Trans>AVG APY</Trans>
+              <Trans>AVG APR</Trans>
               <InfoHelper
                 text={
                   qs.tab === 'active'

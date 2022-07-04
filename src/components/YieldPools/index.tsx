@@ -218,7 +218,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
 
           <Flex grid-area="apy" alignItems="center" justifyContent="flex-end">
             <ClickableText>
-              <Trans>APY</Trans>
+              <Trans>APR</Trans>
             </ClickableText>
             <InfoHelper
               text={
