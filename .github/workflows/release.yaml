@@ -19,8 +19,8 @@ jobs:
     # needs: wait-on-test
     runs-on: ubuntu-latest
     outputs:
-      new_tag: ${{ steps.github_tag_action.outputs.new_tag }}
-      changelog: ${{ steps.github_tag_action.outputs.changelog }}
+      new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
+      changelog: ${{ steps.github-tag-action.outputs.changelog }}
     steps:
       - uses: actions/checkout@v3
       - name: Bump and tag
