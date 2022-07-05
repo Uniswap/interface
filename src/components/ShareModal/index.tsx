@@ -86,7 +86,7 @@ const ButtonWithHoverEffect = ({ children, onClick }: { children: (color: string
   )
 }
 
-export default function ShareModal({ url, onShared = () => {} }: { url?: string; onShared?: () => void }) {
+export default function ShareModal({ url, onShared = () => null }: { url?: string; onShared?: () => void }) {
   const isOpen = useModalOpen(ApplicationModal.SHARE)
   const toggle = useToggleModal(ApplicationModal.SHARE)
   const theme = useContext(ThemeContext)

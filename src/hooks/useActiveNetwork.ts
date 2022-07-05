@@ -57,10 +57,9 @@ export function useActiveNetwork() {
         dispatch(updateChainIdWhenNotConnected(chainId))
       }
 
+      history.push(locationWithoutNetworkId)
       const activeProvider = library?.provider ?? window.ethereum
       if (activeProvider && activeProvider.request) {
-        history.push(locationWithoutNetworkId)
-
         try {
           await activeProvider.request({
             method: 'wallet_switchEthereumChain',

@@ -562,7 +562,7 @@ export default function Swap({ history }: RouteComponentProps) {
           currencyOut as Currency,
           chainId,
         )}&networkId=${chainId}`
-      : undefined
+      : window.location.origin + `/swap?networkId=${chainId}`
 
   const renderTokenInfo = Boolean(isShowTokenInfoSetting && (currencyIn || currencyOut))
 
