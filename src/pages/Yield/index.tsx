@@ -61,7 +61,7 @@ const Farms = () => {
   const { loading, data: farms } = useFarmsData()
   const qs = useParsedQueryString()
   const tab = qs.tab || 'active'
-  const farmType = qs.farmType || VERSION.CLASSIC
+  const farmType = qs.farmType || VERSION.ELASTIC
   const history = useHistory()
   const { chainId } = useActiveWeb3React()
 

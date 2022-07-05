@@ -574,7 +574,7 @@ function AboutKyberSwap() {
                           }&search=${dataToShow.maxAPRAvailable.id}`}
                           style={{ textDecorationLine: 'none' }}
                         >
-                          <Trans>Max APY Available</Trans>↗
+                          <Trans>Max APR Available</Trans>↗
                         </Link>
                       </Text>
                     </StatisticItem>

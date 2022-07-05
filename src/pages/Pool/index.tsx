@@ -157,7 +157,7 @@ export default function PoolCombination() {
   const history = useHistory()
   const location = useLocation()
   const qs = useParsedQueryString()
-  const tab = (qs.tab as string) || VERSION.CLASSIC
+  const tab = (qs.tab as string) || VERSION.ELASTIC
   const setTab = (tab: VERSION) => {
     history.replace(location.pathname + '?tab=' + tab)
   }
