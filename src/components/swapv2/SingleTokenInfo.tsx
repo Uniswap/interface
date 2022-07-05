@@ -7,7 +7,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { formattedNum } from 'utils'
 import { useRef } from 'react'
 import { formatDollarAmount } from 'utils/numbers'
-import { isMobile, isIOS } from 'react-device-detect'
+import { isMobile, isIOS, isSafari } from 'react-device-detect'
 import { TokenInfo } from 'hooks/useTokenInfo'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { MAP_TOKEN_NAME } from 'constants/tokenLists/token-info'
@@ -94,7 +94,7 @@ const DescText = styled(InfoRowLabel)<{ showLimitLine: boolean }>`
 function transparent(isDarkMode: boolean) {
   // https://stackoverflow.com/questions/38391457/linear-gradient-to-transparent-bug-in-latest-safari
   const value = isDarkMode ? 0 : 255
-  return isIOS ? `rgba(${value}, ${value}, ${value}, 0)` : `rgba(255, 255, 255, 0)`
+  return isIOS || isSafari ? `rgba(${value}, ${value}, ${value}, 0)` : `rgba(255, 255, 255, 0)`
 }
 
 const SeeMore = styled.a<{ isSeeMore: boolean; isDarkMode: boolean }>`
