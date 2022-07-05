@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -71,10 +71,18 @@ export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
 
   const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onNext)
 
-  if (!currencies[CurrencyField.OUTPUT] || !currencies[CurrencyField.INPUT]) return null
+  if (
+    !currencies[CurrencyField.OUTPUT] ||
+    !currencies[CurrencyField.INPUT] ||
+    !currencyAmounts[CurrencyField.INPUT] ||
+    !currencyAmounts[CurrencyField.OUTPUT]
+  )
+    return null
 
   const currencyIn = currencies[CurrencyField.INPUT] as Currency
   const currencyOut = currencies[CurrencyField.OUTPUT] as Currency
+  const currencyAmountOut = currencyAmounts[CurrencyField.OUTPUT] as CurrencyAmount<Currency>
+
   return (
     <>
       <Flex centered flexGrow={1} gap="xs">
@@ -135,11 +143,7 @@ export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
       </Flex>
       <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
         {!isWrapAction(wrapType) && trade && (
-          <SwapDetails
-            currencyIn={currencyAmounts[CurrencyField.INPUT]}
-            currencyOut={currencyAmounts[CurrencyField.OUTPUT]}
-            trade={trade}
-          />
+          <SwapDetails currencyOut={currencyAmountOut} trade={trade} />
         )}
         <Flex row gap="xs">
           <Button

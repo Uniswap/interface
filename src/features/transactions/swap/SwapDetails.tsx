@@ -2,69 +2,75 @@ import {
   Currency,
   CurrencyAmount,
   NativeCurrency,
-  Percent,
+  Price,
   Token,
   TradeType,
 } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
+import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
+import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailsProps {
-  currencyIn: CurrencyAmount<NativeCurrency | Token> | null | undefined
-  currencyOut: CurrencyAmount<NativeCurrency | Token> | null | undefined
+  currencyOut: CurrencyAmount<NativeCurrency | Token>
   trade: Trade<Currency, Currency, TradeType>
+}
+
+const spacerProps: ComponentProps<typeof Box> = {
+  borderBottomColor: 'backgroundOutline',
+  borderBottomWidth: 1,
+}
+
+const getFormattedPrice = (price: Price<Currency, Currency>) => {
+  try {
+    return price.invert()?.toSignificant(4) ?? '-'
+  } catch (error) {
+    return '0'
+  }
 }
 
 export function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
   const { t } = useTranslation()
+  const account = useActiveAccountWithThrow()
 
-  const minReceived = trade.worstExecutionPrice(new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100))
+  const price = trade.executionPrice
+  const usdcPrice = useUSDCPrice(currencyOut.currency)
+
+  const rate = `1 ${price.quoteCurrency?.symbol} = ${getFormattedPrice(price)} ${
+    price.baseCurrency?.symbol
+  }`
+
+  // TODO: replace with updated gas fee estimate
   const gasFeeUSD = parseFloat(trade.quote!.gasUseEstimateUSD).toFixed(2)
 
   return (
-    <Flex borderColor="deprecated_gray100" borderRadius="md" borderWidth={1} gap="xs" p="md">
-      <Text color="deprecated_textColor" variant="smallLabel">
-        {t('Transaction Details')}
-      </Text>
-      <Box bg="deprecated_gray100" height={1} my="xs" />
-      <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {t('Expected Output')}
-        </Text>
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {`${formatCurrencyAmount(currencyOut)} ${currencyOut?.currency.symbol}`}
-        </Text>
-      </Box>
-      <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {t('Price Impact')}
-        </Text>
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {trade.priceImpact ? `${trade.priceImpact.multiply(-1).toFixed(2)}%` : '-'}
-        </Text>
-      </Box>
-      <Box bg="deprecated_gray100" height={1} my="xs" />
-      <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {`${t('Min. received after slippage')} (${DEFAULT_SLIPPAGE_TOLERANCE}%)`}
-        </Text>
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {`${formatPrice(minReceived).replace('$', '')} ${currencyOut?.currency.symbol}`}
-        </Text>
-      </Box>
-      <Box flexDirection="row" justifyContent="space-between">
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {t('Network Fee')}
-        </Text>
-        <Text color="deprecated_gray600" variant="smallLabel">
-          {`~$${gasFeeUSD}`}
-        </Text>
+    <Flex
+      backgroundColor="backgroundContainer"
+      borderRadius="lg"
+      gap="none"
+      spacerProps={spacerProps}>
+      <Flex row justifyContent="space-between" p="md">
+        <Text color="mainForeground">{t('Rate')}</Text>
+        <Flex row gap="none">
+          <Text color="mainForeground">{rate}</Text>
+          <Text color="textSecondary">
+            {usdcPrice &&
+              ` (${formatPrice(usdcPrice, { maximumFractionDigits: 6, notation: 'standard' })})`}
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex row justifyContent="space-between" p="md">
+        <Text color="mainForeground">{t('Network fee')}</Text>
+        <Text color="mainForeground">${gasFeeUSD}</Text>
+      </Flex>
+      <Box p="md">
+        <AccountDetails address={account?.address} />
       </Box>
     </Flex>
   )
