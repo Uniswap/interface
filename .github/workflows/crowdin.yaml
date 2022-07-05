@@ -6,28 +6,11 @@ on:
       - main
 
 jobs:
-  synchronize-with-crowdin:
-    name: Upload sources to Crowdin
+  upload-sources:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org
-          cache: 'yarn'
-
-      - uses: actions/cache@v3
-        id: install-cache
-        with:
-          path: node_modules/
-          key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
-
-      - if: steps.install-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile --ignore-scripts
-
+      - uses: ./.github/actions/setup
       - run: yarn i18n:extract
 
       - name: Upload Crowdin sources

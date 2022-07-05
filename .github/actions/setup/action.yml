@@ -1,0 +1,21 @@
+name: Setup
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
+        registry-url: https://registry.npmjs.org
+        cache: yarn
+
+    - uses: actions/cache@v3
+      id: install-cache
+      with:
+        path: node_modules/
+        key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
+
+    - if: steps.install-cache.outputs.cache-hit != 'true'
+      run: yarn install --frozen-lockfile --ignore-scripts
+      shell: bash
