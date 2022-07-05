@@ -536,14 +536,13 @@ const CampaignDetailImageContainer = styled.div`
   position: relative;
   border-radius: 8px;
   width: 100%;
-  padding-bottom: 22.27%; // 180 / 808
+  padding-bottom: 25%; // 200 / 800
   height: 0;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  ${css`
-    padding-bottom: 38.48%; // 132 / 343
-  `}
-  `}
+  ${({ theme }) =>
+    theme.mediaWidth.upToSmall`${css`
+      padding-bottom: 38.48%; // 132 / 343
+    `}`}
 `
 
 const CampaignDetailImage = styled.img`
@@ -553,6 +552,7 @@ const CampaignDetailImage = styled.img`
   position: absolute;
   top: 0;
   left: 0;
+  border-radius: 8px;
 `
 
 const HTMLWrapper = styled.div`

@@ -28,6 +28,10 @@ import CommunityAMALivestreamWithCEODesktop from 'assets/banners/community-ama-l
 import CommunityAMALivestreamWithCEOTablet from 'assets/banners/community-ama-livestream-with-ceo-tablet.png'
 import CommunityAMALivestreamWithCEOMobile from 'assets/banners/community-ama-livestream-with-ceo-mobile.png'
 
+import KyberSwapTradingCampaignAcross5ChainsDesktop from 'assets/banners/kyberswap-trading-campaign-across-5-chains-desktop.png'
+import KyberSwapTradingCampaignAcross5ChainsTablet from 'assets/banners/kyberswap-trading-campaign-across-5-chains-tablet.png'
+import KyberSwapTradingCampaignAcross5ChainsMobile from 'assets/banners/kyberswap-trading-campaign-across-5-chains-mobile.png'
+
 const BannerWrapper = styled(Flex)`
   --swiper-navigation-size: 12px;
 
@@ -114,15 +118,29 @@ function Banner({
 
   const ALL_BANNERS = [
     {
+      // KyberSwap Trading Campaign Across 5 Chains
+      id: 'kyberSwap-trading-campaign-across-5-chains',
+      start: new Date(1656979200000), // July 5, 2022 0:00:00
+      end: new Date(1657900800000), // July 15, 2022 16:00:00
+      img: isInModal
+        ? KyberSwapTradingCampaignAcross5ChainsMobile
+        : w > 768
+        ? KyberSwapTradingCampaignAcross5ChainsDesktop
+        : w > 500
+        ? KyberSwapTradingCampaignAcross5ChainsTablet
+        : KyberSwapTradingCampaignAcross5ChainsMobile,
+      link: '',
+    },
+    {
       // Community AMA livestream with CEO
       id: 'community-ama-livestream-with-ceo',
       start: new Date(1654473600000), // June 6, 2022 0:00:00
       end: new Date(1654905599000), // June 10, 2022 23:59:59
       img: isInModal
         ? CommunityAMALivestreamWithCEOMobile
-        : w >= 768
+        : w > 768
         ? CommunityAMALivestreamWithCEODesktop
-        : w >= 500
+        : w > 500
         ? CommunityAMALivestreamWithCEOTablet
         : CommunityAMALivestreamWithCEOMobile,
       link: 'https://twitter.com/KyberNetwork/status/1533697331463303169',
@@ -134,9 +152,9 @@ function Banner({
       end: new Date(1653609599000), // May 26, 2022 23:59:59
       img: isInModal
         ? ReferralCampaignMobile
-        : w >= 768
+        : w > 768
         ? ReferralCampaignDesktop
-        : w >= 500
+        : w > 500
         ? ReferralCampaignTablet
         : ReferralCampaignMobile,
       link: isInModal
@@ -148,7 +166,7 @@ function Banner({
       id: 'bttc-liquidity-mining',
       start: new Date(1650585600000), // April 22, 2022 0:00:00
       end: new Date(1654041599000), // May 31, 2022 23:59:59
-      img: isInModal ? B2_Mobile : w >= 768 ? B2_Desktop : w >= 500 ? B2_Tablet : B2_Mobile,
+      img: isInModal ? B2_Mobile : w > 768 ? B2_Desktop : w > 500 ? B2_Tablet : B2_Mobile,
       // img: B2_Mobile,
       link:
         'https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------',
@@ -158,7 +176,7 @@ function Banner({
       id: 'bttc-liquidity-mining-2',
       start: new Date(1650585600000), // April 22, 2022 0:00:00
       end: new Date(1654041599000), // May 31, 2022 23:59:59
-      img: isInModal ? B1_Mobile : w >= 768 ? B1_Desktop : w >= 500 ? B1_Tablet : B1_Mobile,
+      img: isInModal ? B1_Mobile : w > 768 ? B1_Desktop : w > 500 ? B1_Tablet : B1_Mobile,
       link:
         'https://blog.kyber.network/kyberswap-leads-dex-integration-with-bittorrent-chain-providing-liquidity-and-accessibility-across-2da780082b19?source=collection_home---4------0-----------------------',
     },
@@ -167,7 +185,7 @@ function Banner({
       id: 'avax-lm',
       start: new Date(1647820800000), // March 21, 2022 0:00:00
       end: new Date(1654041599000), // May 31, 2022 23:59:59
-      img: isInModal ? LM_Mobile : w >= 768 ? LM_Desktop : w >= 500 ? LM_Tablet : LM_Mobile,
+      img: isInModal ? LM_Mobile : w > 768 ? LM_Desktop : w > 500 ? LM_Tablet : LM_Mobile,
       link:
         'https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=avaxphase2&utm_content=lm#/farms?networkId=43114',
     },
