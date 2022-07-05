@@ -2,13 +2,11 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { useMemo } from 'react'
 import { ArrowUpRight } from 'react-feather'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
 
-import celoAlternativeLogo from '../../assets/svg/celo/celo_green.svg'
 import { AutoRow } from '../Row'
 
 const L2Icon = styled.img`
@@ -58,8 +56,10 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
     [SupportedChainId.POLYGON_MUMBAI]:
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
-    [SupportedChainId.CELO]: 'rgba(120, 250, 160, 0.55)',
-    [SupportedChainId.CELO_ALFAJORES]: 'rgba(120, 250, 160, 0.55)',
+    [SupportedChainId.CELO_ALFAJORES]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.01) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.05) 0%, rgba(53, 208, 127, 0.05) 100%), hsla(0, 0%, 100%, 0.05)',
+    [SupportedChainId.CELO]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.01) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.05) 0%, rgba(53, 208, 127, 0.05) 100%), hsla(0, 0%, 100%, 0.05)',
     [SupportedChainId.OPTIMISM]:
       'radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.01) 0%, rgba(255, 255, 255, 0.04) 100%),radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.01) 0%, rgba(235, 0, 255, 0.01) 96%)',
     [SupportedChainId.OPTIMISTIC_KOVAN]:
@@ -74,8 +74,10 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
     [SupportedChainId.POLYGON_MUMBAI]:
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
-    [SupportedChainId.CELO]: 'rgba(50, 200, 167, 0.15)',
-    [SupportedChainId.CELO_ALFAJORES]: 'rgba(50, 200, 167, 0.15)',
+    [SupportedChainId.CELO]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(53,208,127, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(149, 662%, 51%, 0.01), hsla(158, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
+    [SupportedChainId.CELO_ALFAJORES]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(53,208,127, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(149, 662%, 51%, 0.01), hsla(158, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
     [SupportedChainId.OPTIMISM]:
       'radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.1)',
     [SupportedChainId.OPTIMISTIC_KOVAN]:
@@ -137,8 +139,8 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
 const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
   [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
-  [SupportedChainId.CELO]: 'rgba(1, 63, 44, 1)',
-  [SupportedChainId.CELO_ALFAJORES]: 'rgba(46,51,56)',
+  [SupportedChainId.CELO]: '#35D07F',
+  [SupportedChainId.CELO_ALFAJORES]: '#35D07F',
   [SupportedChainId.OPTIMISM]: '#ff3856',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',
   [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
@@ -153,19 +155,11 @@ export function NetworkAlert() {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
 
-  const logoUrl = useMemo(() => {
-    if (!chainId) return ''
-    if ([SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)) {
-      return celoAlternativeLogo
-    }
-    return CHAIN_INFO[chainId].logoUrl
-  }, [chainId])
-
   if (!shouldShowAlert(chainId)) {
     return null
   }
 
-  const { label, bridge } = CHAIN_INFO[chainId]
+  const { label, logoUrl, bridge } = CHAIN_INFO[chainId]
   const textColor = TEXT_COLORS[chainId]
 
   return bridge ? (
