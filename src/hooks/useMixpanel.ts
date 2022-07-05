@@ -1,4 +1,3 @@
-import { useActiveWeb3React } from 'hooks/index'
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
@@ -17,15 +16,15 @@ import { formatUnits, isAddress } from 'ethers/lib/utils'
 import { useLocation } from 'react-router-dom'
 import { TransactionDetails } from 'state/transactions/reducer'
 import {
-  TRANSACTION_SWAP_AMOUNT_USD,
-  GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
-  GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
   GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS,
+  GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
+  GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
+  TRANSACTION_SWAP_AMOUNT_USD,
 } from 'apollo/queries'
 import {
-  PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
-  PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
   PROMM_GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS,
+  PROMM_GET_POOL_VALUES_AFTER_BURNS_SUCCESS,
+  PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
 } from 'apollo/queries/promm'
 import { checkedSubgraph } from 'state/transactions/actions'
 
