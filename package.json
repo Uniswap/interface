@@ -121,7 +121,7 @@
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@uniswap/redux-multicall": "^1.1.1",
+    "@uniswap/redux-multicall": "^1.1.5",
     "@uniswap/router-sdk": "^1.0.3",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/smart-order-router": "^2.5.26",

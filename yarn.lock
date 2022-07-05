@@ -4507,10 +4507,10 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/redux-multicall@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.1.tgz#095285a9f9951d92ca0f8785bc4d2270676c309c"
-  integrity sha512-sXX2pAbxJj1OrErSc7zMEFo7j1EXqTBbllYuUDEWCZ/A12sK/4RXgXW2+zSoXOHCN6djyVUc3FmEt0v3x2jLSw==
+"@uniswap/redux-multicall@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.5.tgz#7c097047d489c1624038c0fbbd3d76dc705bf153"
+  integrity sha512-RSMhfuAX2rPimnevvAAiwoyV2bCGTIKhVHEBOLTMF+oVxYcKKe9hCwx/cffY12t/usXWHlEJ//V7JoxTKI1Lyg==
 
 "@uniswap/router-sdk@^1.0.3", "@uniswap/router-sdk@^1.0.5":
   version "1.0.5"
