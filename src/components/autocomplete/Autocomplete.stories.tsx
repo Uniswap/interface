@@ -16,7 +16,7 @@ export default {
   component: Autocomplete,
   decorators: [
     (Story) => (
-      <Box bg="deprecated_gray100" borderRadius="md" p="lg" width={400}>
+      <Box bg="backgroundBackdrop" borderRadius="md" p="lg" width={400}>
         <Story />
       </Box>
     ),
@@ -30,14 +30,18 @@ export default {
     placeholder: 'Search tokens',
     renderOption: (option: typeof DEFAULT_OPTIONS[0]) => (
       <Flex row alignItems="center" gap="sm">
-        <Box bg="black" borderRadius="full" p="md" />
-        <Text>{option.data}</Text>
+        <Box bg="accentAction" borderRadius="full" p="md" />
+        <Text color="textPrimary">{option.data}</Text>
       </Flex>
     ),
     EmptyComponent: (
       <Flex centered gap="sm" mt="lg" px="lg">
-        <Text variant="mediumLabel">😔</Text>
-        <Text variant="mediumLabel">No results found</Text>
+        <Text color="textSecondary" variant="mediumLabel">
+          😔
+        </Text>
+        <Text color="textSecondary" variant="mediumLabel">
+          No results found
+        </Text>
       </Flex>
     ),
   },
@@ -50,20 +54,21 @@ export const Custom: ComponentStory<typeof Autocomplete> = (args) => (
     {...args}
     InitialComponent={
       <Flex>
-        <Text color="deprecated_gray400">Can provide an initial component</Text>
-        <Text fontSize={16}>Suggestions</Text>
+        <Text color="textSecondary" fontSize={16}>
+          Suggestions
+        </Text>
         <Flex>
           <Flex row alignItems="center" gap="sm">
-            <Box bg="black" borderRadius="full" p="md" />
-            <Text>ETH</Text>
+            <Box bg="accentAction" borderRadius="full" p="md" />
+            <Text color="textPrimary">ETH</Text>
           </Flex>
           <Flex row alignItems="center" gap="sm">
-            <Box bg="black" borderRadius="full" p="md" />
-            <Text>DAI</Text>
+            <Box bg="accentAction" borderRadius="full" p="md" />
+            <Text color="textPrimary">DAI</Text>
           </Flex>
           <Flex row alignItems="center" gap="sm">
-            <Box bg="black" borderRadius="full" p="md" />
-            <Text>MKR</Text>
+            <Box bg="accentAction" borderRadius="full" p="md" />
+            <Text color="textPrimary">MKR</Text>
           </Flex>
         </Flex>
       </Flex>

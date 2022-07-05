@@ -163,6 +163,7 @@
     "react-native-web": "^0.17.5",
     "react-test-renderer": "17.0.2",
     "redux-saga-test-plan": "^4.0.4",
+    "storybook-dark-mode": "^1.1.0",
     "relay-compiler": "^14.0.0",
     "relay-test-utils": "^14.0.0",
     "svg-react-loader": "^0.4.6",
