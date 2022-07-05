@@ -157,10 +157,8 @@ export function NetworkAlert() {
     if (!chainId) return ''
     if ([SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)) {
       return celoAlternativeLogo
-    } else {
-      const { logoUrl } = CHAIN_INFO[chainId]
-      return logoUrl
     }
+    return CHAIN_INFO[chainId].logoUrl
   }, [chainId])
 
   if (!shouldShowAlert(chainId)) {

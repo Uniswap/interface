@@ -459,14 +459,10 @@ export class ExtendedEther extends Ether {
 
 const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
 export function nativeOnChain(chainId: number): NativeCurrency {
-  return (
-    cachedNativeCurrency[chainId] ??
-    (cachedNativeCurrency[chainId] = isMatic(chainId)
-      ? new MaticNativeCurrency(chainId)
-      : (cachedNativeCurrency[chainId] = isCelo(chainId)
-          ? new CeloNativeCurrency(chainId)
-          : ExtendedEther.onChain(chainId)))
-  )
+  if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
+  if (isMatic(chainId)) return (cachedNativeCurrency[chainId] = new MaticNativeCurrency(chainId))
+  if (isCelo(chainId)) return (cachedNativeCurrency[chainId] = new CeloNativeCurrency(chainId))
+  return (cachedNativeCurrency[chainId] = ExtendedEther.onChain(chainId))
 }
 
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {
