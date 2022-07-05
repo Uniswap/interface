@@ -17,6 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "serve": "serve build -l 3000",
+    "lint": "yarn eslint .",
     "test": "react-scripts test --coverage",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e"

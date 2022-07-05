@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-06 00:15\n"
+"PO-Revision-Date: 2022-06-30 17:10\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Thêm thanh khoản"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "Thêm {0} vào Metamask <0/>"
+msgid "Add {0}"
+msgstr "Thêm {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "Thêm {0}/{1} thanh khoản V3"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Đã thêm {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Thêm đề xuất này vào hàng đợi sẽ cho phép nó được thực thi, sau một khoảng thời gian trì hoãn."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -481,6 +485,8 @@ msgstr "Xác nhận Hoán đổi"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Xác nhận giao dịch này trong ví của bạn"
@@ -735,13 +741,8 @@ msgid "Error"
 msgstr "Lỗi"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Lỗi kết nối"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Lỗi kết nối. Hãy thử làm mới trang."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +760,34 @@ msgstr "Phí mạng ước tính"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Hành hình"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "Thực hiện Đề xuất {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Thực hiện đề xuất {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Thực thi"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Đang thực thi"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "Việc thực thi đề xuất này sẽ tạo ra calldata trên chuỗi."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Thực thi đã được đệ trình"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -898,8 +924,8 @@ msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transacti
 msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0} {1}</0> hoặc giao dịch sẽ hoàn nguyên."
 
 #: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Cài đặt Metamask"
+msgid "Install MetaMask"
+msgstr "Cài đặt MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +987,6 @@ msgstr "Tìm hiểu thêm"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pháp lý & Quyền riêng tư"
 
@@ -1173,10 +1198,6 @@ msgstr "Một khi bạn hài lòng với tỷ lệ, nhấp vào cung cấp để
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Chỉ những phiếu bầu UNI đã được tự ủy quyền hoặc được ủy quyền cho một địa chỉ khác trước khối {0} đủ điều kiện để bỏ phiếu."
 
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Ối! Đã xảy ra lỗi không xác định. Vui lòng làm mới trang hoặc truy cập từ trình duyệt hoặc thiết bị khác."
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
 msgstr "Cầu lạc quan"
@@ -1225,10 +1246,6 @@ msgstr "Vui lòng xác nhận rằng bạn muốn xóa danh sách này bằng c�
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Vui lòng kết nối với Ethereum Lớp 1"
-
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Vui lòng kết nối với mạng được hỗ trợ trong menu thả xuống hoặc trong ví của bạn."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1347,9 +1364,26 @@ msgstr "Người đề xuất"
 msgid "Protocol Disclaimer"
 msgstr "Tuyên bố từ chối trách nhiệm"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Xếp hàng"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Đề xuất hàng đợi {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Đề xuất hàng đợi {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Đã xếp hàng"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "Xếp hàng"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1702,6 +1736,10 @@ msgstr "Ứng dụng này sử dụng các API của bên thứ ba sau:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Nhóm này phải được khởi tạo trước khi bạn có thể thêm thanh khoản. Để khởi tạo, hãy chọn giá khởi điểm cho nhóm. Sau đó, nhập phạm vi giá thanh khoản và số tiền ký quỹ của bạn. Phí gas sẽ cao hơn bình thường do giao dịch khởi tạo."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Đề xuất này có thể được thực hiện sau {0}."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Lộ trình này tối ưu hóa tổng sản lượng của bạn bằng cách xem xét các lộ trình chia nhỏ, nhiều bước nhảy và chi phí xăng của mỗi bước."
@@ -1779,6 +1817,7 @@ msgstr "Cài đặt giao dịch"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Giao dịch đã được gửi"
@@ -1933,8 +1972,8 @@ msgid "User"
 msgstr "Người dùng"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 không khả dụng trên Lớp 2. Chuyển sang Lớp 1 Ethereum."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 Pool không khả dụng trên Lớp 2. Chuyển sang Lớp 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1967,6 +2006,8 @@ msgstr "Xem trên Explorer"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Xem giao dịch trên Explorer"
@@ -2091,7 +2132,6 @@ msgstr "Bọc lại"
 msgid "Wrap <0/> to {0}"
 msgstr "Kết thúc từ <0/> đến {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Mạng sai"

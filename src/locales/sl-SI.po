@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-06 00:15\n"
+"PO-Revision-Date: 2022-06-30 17:10\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Dodaj dodatno likvidnost"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "Dodaj {0} v Metamask <0/>"
+msgid "Add {0}"
+msgstr "Dodaj {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "Dodaj V3-likvidnost {0}/{1}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Dodano v {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Pobudo je potrebno dodati v čakalno vrsto, da se potem po določenem času lahko izvrši."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -481,6 +485,8 @@ msgstr "Potrdi menjavo"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Odobrite to transakcijo in svoji denarnici"
@@ -735,13 +741,8 @@ msgid "Error"
 msgstr "Napaka"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Napaka pri povezovanju"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Napaka pri povezovanju. Poskusite osvežiti stran."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +760,34 @@ msgstr "Ocena omrežne provizije"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Izvršitev"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "Izrši pobudo {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Ivrši pobudo {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Izvršena"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Izvrševanje"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "Izvršitev te pobude bo uveljavila klicne podatke (calldata) v verigi."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Izvedba predložena"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -898,8 +924,8 @@ msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transacti
 msgstr "Vhodni znesek je ocenjen. Prodali boste največ <0>{0} {1}</0> ali pa bo transakcija stornirana."
 
 #: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Namesti Metamask"
+msgid "Install MetaMask"
+msgstr "Namestite MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +987,6 @@ msgstr "Več o tem"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pravna obvestila in zasebnost"
 
@@ -1173,10 +1198,6 @@ msgstr "Ko ste zadovoljni s tečajem, kliknite Položi za pregled."
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Do glasovanja so upravičeni samo glasovi UNI, ki so bili samozastopani ali so pooblastili drugega zastopnika pred blokom {0}."
 
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Ojej! Prišlo je do neznane napake. Osvežite stran ali poskusite v drugem brskalniku ali napravi."
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
 msgstr "Most optimizma"
@@ -1225,10 +1246,6 @@ msgstr "Prosimo, vtipkajte REMOVE, s čimer boste potrdili, da želite odstranit
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Prosimo, povežite se z Ethereumom prvega sloja (layer 1)"
-
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Povežite se s podprtim omrežjem v spustnem meniju ali v svoji denarnici."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1347,9 +1364,26 @@ msgstr "Pobudnik"
 msgid "Protocol Disclaimer"
 msgstr "Izjava o omejitvi odgovornosti za protokol"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Čakalna vrsta"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Oddaj pobudo {proposalId} v čakalno vrsto"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Oddaj pobudo {proposalKey} v čakalno vrsto."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "V čakalni vrsti"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "Čakalna vrsta"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1702,6 +1736,10 @@ msgstr "Ta aplikacija uporablja naslednje API-je tretjih oseb:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ta sklad je treba inicializirati, preden lahko dodate likvidnost. Za inicializacijo izberite začetno ceno za sklad. Nato vnesite svoj cenovni razpon likvidnosti in znesek depozita. Provizije za plin (gas) bodo zaradi inicializacijske transakcije višje kot običajno."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Ta pobuda se lahko izvrši po {0}."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "To je pot, po kateri iz menjave dobite največ ob upoštevanju razcepljenih poti, zaporednih menjav in stroškov plina na vsakem koraku."
@@ -1779,6 +1817,7 @@ msgstr "Nastavitve transakcije"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transakcija oddana"
@@ -1933,8 +1972,8 @@ msgid "User"
 msgstr "Uporabnik"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 ni na voljo v sloju 2 (layer 2). Preklopite na Ethereumov sloj 1 (layer 1)."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "Sklad V2 ni na voljo na sloju 2. Preklopite na Ethereum sloja 1."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1967,6 +2006,8 @@ msgstr "Prikaži v raziskovalcu"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Prikaži transakcijo v raziskovalcu"
@@ -2091,7 +2132,6 @@ msgstr "Ovij"
 msgid "Wrap <0/> to {0}"
 msgstr "Ovijte <0/> v {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Napačno omrežje"

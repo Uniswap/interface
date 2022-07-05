@@ -103,6 +103,7 @@ const LabelRow = styled.div`
 
 const FiatRow = styled(LabelRow)`
   justify-content: flex-end;
+  height: 16px;
 `
 
 const Aligner = styled.span`
@@ -270,14 +271,15 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {!hideInput && !hideBalance && currency && (
-          <FiatRow>
+
+        <FiatRow>
+          {!hideInput && !hideBalance && currency && (
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
               </LoadingOpacityContainer>
               {account ? (
-                <RowFixed style={{ height: '17px' }}>
+                <RowFixed>
                   <ThemedText.Body
                     onClick={onMax}
                     color={theme.text3}
@@ -303,8 +305,8 @@ export default function CurrencyInputPanel({
                 <span />
               )}
             </RowBetween>
-          </FiatRow>
-        )}
+          )}
+        </FiatRow>
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal
