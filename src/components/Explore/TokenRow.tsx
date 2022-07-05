@@ -463,6 +463,7 @@ export default function LoadedRow({
   const tokenData = data[tokenAddress]
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
   const theme = useTheme()
+  const isFavorited = favoriteTokens.includes(tokenAddress)
   // TODO: remove magic number colors
   const tokenPercentChangeInfo = (
     <>
@@ -479,13 +480,13 @@ export default function LoadedRow({
 
   /* handle favorite token logic */
   const toggleFavoriteToken = () => {
-    let updatedFavoriteTokens = favoriteTokens.slice()
+    let updatedFavoriteTokens
     if (favoriteTokens.includes(tokenAddress)) {
       updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
         return address !== tokenAddress
       })
     } else {
-      updatedFavoriteTokens.push(tokenAddress)
+      updatedFavoriteTokens = [...favoriteTokens, tokenAddress]
     }
     updateFavoriteTokens(updatedFavoriteTokens)
   }
@@ -499,8 +500,8 @@ export default function LoadedRow({
         <ClickFavorited onClick={() => toggleFavoriteToken()}>
           <Heart
             size={15}
-            color={favoriteTokens.includes(tokenAddress) ? theme.primary1 : undefined}
-            fill={favoriteTokens.includes(tokenAddress) ? theme.primary1 : undefined}
+            color={isFavorited ? theme.primary1 : undefined}
+            fill={isFavorited ? theme.primary1 : undefined}
           />
         </ClickFavorited>
       }
