@@ -11,7 +11,7 @@ const StyledSearchBar = styled.div<{ focused: boolean }>`
   gap: 8px;
   border-radius: 12px;
   background-color: ${({ theme, focused }) => (focused ? theme.bg2 : theme.bg0)};
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text2};
   font-size: 16px;
 `
 const SearchInput = styled.input`
@@ -19,7 +19,7 @@ const SearchInput = styled.input`
   background-color: transparent;
   border: none;
   font-size: 16px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text2};
 
   :focus {
     outline: none;

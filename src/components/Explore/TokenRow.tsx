@@ -3,7 +3,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
-import { atom, useAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { darken } from 'polished'
 import React, { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
@@ -462,27 +462,25 @@ export default function LoadedRow({
   const tokenSymbol = token?.symbol
   const tokenData = data[tokenAddress]
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
+  const theme = useTheme()
   // TODO: remove magic number colors
   const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
       <ArrowCell>
         {Math.sign(tokenData.delta) > 0 ? (
-          <ArrowUpRight size={16} color={'#57bd0f'} />
+          <ArrowUpRight size={16} color={theme.green1} />
         ) : (
-          <ArrowDownRight size={16} color={'red'} />
+          <ArrowDownRight size={16} color={theme.red1} />
         )}
       </ArrowCell>
     </>
   )
-  const theme = useTheme()
 
   /* handle favorite token logic */
-  const isTokenFavorited = atom<boolean>(favoriteTokens.includes(tokenAddress))
-  const [tokenFavorited, setTokenFavorite] = useAtom(isTokenFavorited)
   const toggleFavoriteToken = () => {
-    let updatedFavoriteTokens = favoriteTokens
-    if (tokenFavorited) {
+    let updatedFavoriteTokens = favoriteTokens.slice()
+    if (favoriteTokens.includes(tokenAddress)) {
       updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
         return address !== tokenAddress
       })
@@ -490,7 +488,6 @@ export default function LoadedRow({
       updatedFavoriteTokens.push(tokenAddress)
     }
     updateFavoriteTokens(updatedFavoriteTokens)
-    setTokenFavorite(!tokenFavorited)
   }
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
@@ -502,8 +499,8 @@ export default function LoadedRow({
         <ClickFavorited onClick={() => toggleFavoriteToken()}>
           <Heart
             size={15}
-            color={tokenFavorited ? theme.primary1 : undefined}
-            fill={tokenFavorited ? theme.primary1 : undefined}
+            color={favoriteTokens.includes(tokenAddress) ? theme.primary1 : undefined}
+            fill={favoriteTokens.includes(tokenAddress) ? theme.primary1 : undefined}
           />
         </ClickFavorited>
       }
