@@ -17,7 +17,7 @@ function getBlocksPerFetchForChainId(chainId: number | undefined): number {
     case SupportedChainId.ARBITRUM_ONE:
       return 15
     case SupportedChainId.OPTIMISM:
-      return 10
+      return 15
     default:
       return 1
   }
