@@ -397,11 +397,11 @@ export default function Swap({ history }: RouteComponentProps) {
     if (txHash) {
       onUserInput(Field.INPUT, '')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, onUserInput, showVdf, swapErrorMessage, swapResponse, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, swapResponse, showVdf })
-  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+  }, [attemptingTxn, showConfirm, showVdf, swapErrorMessage, swapResponse, trade, txHash])
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
