@@ -415,9 +415,10 @@ export default function TransactionConfirmationModal({
   // confirmation screen
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {isL2 && (hash || attemptingTxn) ? (
+      {/* {isL2 && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
-      ) : attemptingTxn ? (
+      ) :  */}
+      {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash || showVdf ? (
         <TransactionSubmittedContent
