@@ -42,12 +42,12 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
                 <Separator />
                 <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                   <NetworkLogo chainId={chainId} size={24} />
-                  <Text color="textPrimary" variant="subhead">
+                  <Text color="textPrimary" variant="body">
                     {info.label}
                   </Text>
                   <Box height={24} width={24}>
                     {chainId === toSupportedChainId(selectedSession.dapp.chain_id) && (
-                      <Check color={theme.colors.textSecondary} height={24} width={24} />
+                      <Check color={theme.colors.accentActive} height={24} width={24} />
                     )}
                   </Box>
                 </Flex>
@@ -81,7 +81,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
       selectedSession.dapp.chain_id,
       selectedSession.id,
       t,
-      theme.colors.textSecondary,
+      theme.colors.accentActive,
     ]
   )
 

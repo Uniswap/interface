@@ -50,23 +50,31 @@ const SitePermissions = () => {
 
   return (
     <Flex gap="sm" p="md">
-      <Text color="textSecondary">{t('Site permissions')}</Text>
+      <Text color="textSecondary" variant="subheadSmall">
+        {t('Site permissions')}
+      </Text>
       <Flex row alignItems="center" gap="xs">
         <Checkmark color={theme.colors.accentSuccess} height={11} width={11} />
         <Box>
-          <Text color="textPrimary">{t('View your wallet address and ENS name')}</Text>
+          <Text color="textPrimary" variant="bodySmall">
+            {t('View your wallet address and ENS name')}
+          </Text>
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="xs">
         <Checkmark color={theme.colors.accentSuccess} height={11} width={11} />
         <Box>
-          <Text color="textPrimary">{t('View your token balances')}</Text>
+          <Text color="textPrimary" variant="bodySmall">
+            {t('View your token balances')}
+          </Text>
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="xs">
         <X color={theme.colors.accentFailure} height={11} width={11} />
         <Box>
-          <Text color="textPrimary">{t('Transfer your assets without your consent')}</Text>
+          <Text color="textPrimary" variant="bodySmall">
+            {t('Transfer your assets without your consent')}
+          </Text>
         </Box>
       </Flex>
     </Flex>
@@ -86,7 +94,7 @@ const SwitchNetworkRow = ({ onPress, selectedChainId }: SwitchNetworkProps) => {
       <Flex row shrink alignItems="center" gap="sm" justifyContent="space-between" p="sm">
         <Flex row shrink gap="sm">
           <NetworkLogo chainId={selectedChainId} size={20} />
-          <Text color="textPrimary" variant="bodySmall">
+          <Text color="textPrimary" variant="subheadSmall">
             {CHAIN_INFO[selectedChainId].label}
           </Text>
         </Flex>
@@ -111,7 +119,7 @@ const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
           address={activeAddress}
           showNotificationBadge={false}
           size={20}
-          variant="bodySmall"
+          variant="subheadSmall"
           verticalGap="none"
         />
         <Flex centered row shrink gap="xs">
@@ -178,12 +186,11 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
             </Trans>
           </Text>
           <LinkButton
-            backgroundColor="translucentBackground"
-            borderRadius="xs"
+            backgroundColor="backgroundContainer"
+            borderRadius="sm"
             label={pendingSession.dapp.url}
             mb="sm"
-            px="xs"
-            py="xxs"
+            p="xs"
             textVariant="caption"
             url={pendingSession.dapp.url}
           />
@@ -205,7 +212,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
         <Flex flexDirection="row" gap="xs" justifyContent="space-between">
           <TextButton
             alignItems="center"
-            backgroundColor="translucentBackground"
+            backgroundColor="backgroundAction"
             borderRadius="md"
             flex={1}
             flexDirection="row"

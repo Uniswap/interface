@@ -9,6 +9,8 @@ import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
+import { theme } from 'src/styles/theme'
+import { opacify } from 'src/utils/colors'
 
 export interface MenuItemProp {
   key: string
@@ -62,7 +64,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
           selectionAsync()
           onClose()
         }}>
-        <Flex centered bg="backgroundSurface" borderRadius="lg" py="md">
+        <Flex centered bg="backgroundAction" borderRadius="md" py="md">
           <Text color="textPrimary" variant="subhead">
             {closeButtonLabel}
           </Text>
@@ -81,7 +83,7 @@ export function ActionSheetModal({ isVisible, onClose, ...rest }: ActionSheetMod
   return (
     <BottomSheetDetachedModal
       hideHandlebar
-      backgroundColor="transparent"
+      backgroundColor={opacify(30, theme.colors.black)}
       isVisible={isVisible}
       name={ModalName.NetworkSelector}
       onClose={onClose}>

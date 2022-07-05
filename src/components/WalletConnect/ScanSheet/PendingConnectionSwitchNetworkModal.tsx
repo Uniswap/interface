@@ -38,12 +38,12 @@ export const PendingConnectionSwitchNetworkModal = ({
               <Separator />
               <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                 <NetworkLogo chainId={chainId} size={24} />
-                <Text color="textPrimary" variant="subhead">
+                <Text color="textPrimary" variant="body">
                   {info.label}
                 </Text>
                 <Box height={24} width={24}>
                   {chainId === selectedChainId && (
-                    <Check color={theme.colors.textSecondary} height={24} width={24} />
+                    <Check color={theme.colors.accentActive} height={24} width={24} />
                   )}
                 </Box>
               </Flex>
@@ -51,7 +51,7 @@ export const PendingConnectionSwitchNetworkModal = ({
           ),
         }
       }),
-    [activeChains, selectedChainId, onPressChain, theme.colors.textSecondary]
+    [activeChains, selectedChainId, onPressChain, theme.colors.accentActive]
   )
 
   return (

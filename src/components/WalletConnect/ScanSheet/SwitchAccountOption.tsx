@@ -35,7 +35,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
           <Text
             color="textPrimary"
             testID={`address-display/name/${displayName?.name}`}
-            variant="subhead">
+            variant="body">
             {displayName?.name}
           </Text>
           {!nameTypeIsAddress && (
@@ -46,7 +46,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
         </Box>
         <Box height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
-            <Check color={theme.colors.textSecondary} height={ICON_SIZE} width={ICON_SIZE} />
+            <Check color={theme.colors.accentAction} height={ICON_SIZE} width={ICON_SIZE} />
           )}
         </Box>
       </Flex>
