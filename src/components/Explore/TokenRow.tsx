@@ -481,7 +481,7 @@ export default function LoadedRow({
   /* handle favorite token logic */
   const toggleFavoriteToken = () => {
     let updatedFavoriteTokens
-    if (favoriteTokens.includes(tokenAddress)) {
+    if (isFavorited) {
       updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
         return address !== tokenAddress
       })
