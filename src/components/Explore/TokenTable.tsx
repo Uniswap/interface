@@ -7,6 +7,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
+import { MOBILE_MEDIA_BREAKPOINT } from './TokenRow'
 
 const GridContainer = styled.div`
   display: flex;
@@ -20,9 +21,8 @@ const GridContainer = styled.div`
   border-radius: 8px;
   justify-content: center;
   align-items: center;
-  padding: 4px 0px 8px 0px;
 
-  @media only screen and (max-width: 410px) {
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     padding: 12px 16px;
   }
 `
@@ -30,10 +30,13 @@ const NoTokenDisplay = styled.div`
   display: flex;
   width: 100%;
   height: 60px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text3};
   font-size: 16px;
   align-items: center;
   padding: 0px 28px;
+`
+const TokenRowsContainer = styled.div`
+  padding: 4px 12px;
 `
 const LOADING_ROWS = Array(10)
   .fill(0)
@@ -87,7 +90,7 @@ export default function TokenTable() {
   return (
     <GridContainer>
       <HeaderRow timeframe={timePeriod} />
-      {tokenRows}
+      <TokenRowsContainer>{tokenRows}</TokenRowsContainer>
     </GridContainer>
   )
 }
