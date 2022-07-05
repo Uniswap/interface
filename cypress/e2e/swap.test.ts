@@ -1,6 +1,6 @@
 describe('Swap', () => {
   beforeEach(() => {
-    cy.visit('/swap')
+    cy.visit('/swap').get('#swap-currency-input .token-amount-input')
   })
 
   it('starts with ETH selected by default', () => {
