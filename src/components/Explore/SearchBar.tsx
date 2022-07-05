@@ -3,21 +3,23 @@ import { useState } from 'react'
 import { Search } from 'react-feather'
 import styled from 'styled-components/macro'
 
+export const SMALL_MEDIA_BREAKPOINT = '580px'
+
 const StyledSearchBar = styled.div<{ focused: boolean }>`
   display: flex;
-  width: 100%;
-  justify-content: center;
+  flex: 1;
   align-items: center;
   gap: 8px;
   border-radius: 12px;
   background-color: ${({ theme, focused }) => (focused ? theme.bg2 : theme.bg0)};
   color: ${({ theme }) => theme.text2};
   font-size: 16px;
+  padding: 0px 12px;
 `
 const SearchInput = styled.input`
-  width: 90%;
   background-color: transparent;
   border: none;
+  width: 90%;
   font-size: 16px;
   color: ${({ theme }) => theme.text2};
 
@@ -27,12 +29,16 @@ const SearchInput = styled.input`
   }
   ::placeholder {
     color: ${({ theme }) => theme.text3};
+    @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+      color: transparent;
+    }
   }
 `
 
 export default function SearchBar() {
   const theme = useTheme()
   const [isFocused, setFocused] = useState(false)
+
   return (
     <StyledSearchBar focused={isFocused}>
       <Search size={20} color={theme.text3} />

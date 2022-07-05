@@ -11,6 +11,13 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
+import {
+  LARGE_MEDIA_BREAKPOINT,
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MEDIUM_MEDIA_BREAKPOINT,
+  MOBILE_MEDIA_BREAKPOINT,
+  SMALL_MEDIA_BREAKPOINT,
+} from './constants'
 import { TIME_DISPLAYS } from './TimeSelector'
 import { favoritesAtom } from './TokenTable'
 
@@ -25,11 +32,6 @@ enum SortDirection {
   Decreasing = 'Decreasing',
 }
 const SORT_CATEGORIES = Object.values(Category)
-const MAX_WIDTH_MEDIA_BREAKPOINT = '960px'
-const LARGE_MEDIA_BREAKPOINT = '880px'
-const MEDIUM_MEDIA_BREAKPOINT = '776px'
-const SMALL_MEDIA_BREAKPOINT = '640px'
-const MOBILE_MEDIA_BREAKPOINT = '410px'
 
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -44,7 +46,6 @@ const StyledTokenRow = styled.div`
   width: 100%;
   height: 60px;
   display: grid;
-  padding: 0px 12px;
   grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 4fr 5fr 2fr;
   font-size: 15px;
   line-height: 24px;
@@ -111,6 +112,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
+  padding: 0px 12px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
