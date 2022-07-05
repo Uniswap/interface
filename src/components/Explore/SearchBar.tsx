@@ -7,6 +7,7 @@ export const SMALL_MEDIA_BREAKPOINT = '580px'
 
 const StyledSearchBar = styled.div<{ focused: boolean }>`
   display: flex;
+  flex: 1;
   align-items: center;
   gap: 8px;
   border-radius: 12px;

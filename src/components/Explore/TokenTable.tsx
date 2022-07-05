@@ -6,8 +6,8 @@ import { showFavoritesAtom } from 'pages/Explore/index'
 import React from 'react'
 import styled from 'styled-components/macro'
 
+import { MOBILE_MEDIA_BREAKPOINT } from './constants'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
-import { MOBILE_MEDIA_BREAKPOINT } from './TokenRow'
 
 const GridContainer = styled.div`
   display: flex;

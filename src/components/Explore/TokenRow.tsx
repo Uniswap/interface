@@ -11,14 +11,15 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
+import {
+  LARGE_MEDIA_BREAKPOINT,
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MEDIUM_MEDIA_BREAKPOINT,
+  MOBILE_MEDIA_BREAKPOINT,
+  SMALL_MEDIA_BREAKPOINT,
+} from './constants'
 import { TIME_DISPLAYS } from './TimeSelector'
 import { favoritesAtom } from './TokenTable'
-
-export const MAX_WIDTH_MEDIA_BREAKPOINT = '960px'
-export const LARGE_MEDIA_BREAKPOINT = '880px'
-export const MEDIUM_MEDIA_BREAKPOINT = '776px'
-export const SMALL_MEDIA_BREAKPOINT = '580px'
-export const MOBILE_MEDIA_BREAKPOINT = '410px'
 
 enum Category {
   percent_change = '% Change',

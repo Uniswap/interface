@@ -1,11 +1,10 @@
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Explore/constants'
 import FavoriteButton from 'components/Explore/FavoriteButton'
 import SearchBar from 'components/Explore/SearchBar'
 import TimeSelector from 'components/Explore/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable'
 import { atomWithStorage } from 'jotai/utils'
 import styled from 'styled-components/macro'
-
-const MAX_WIDTH_MEDIA_BREAKPOINT = '960px'
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -15,7 +14,7 @@ const TokenTableContainer = styled.div`
   padding: 16px 12px;
 `
 const FiltersContainer = styled.div`
-  display: grid;
+  display: flex;
   gap: 8px;
   height: 44px;
   max-width: 960px;
