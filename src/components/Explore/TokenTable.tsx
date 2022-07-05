@@ -58,7 +58,7 @@ export default function TokenTable() {
     return (
       <GridContainer>
         <HeaderRow timeframe={timePeriod} />
-        {LOADING_ROWS}
+        <TokenRowsContainer>{LOADING_ROWS}</TokenRowsContainer>
       </GridContainer>
     )
   } else if (error || data === null) {

@@ -30,6 +30,9 @@ const SearchInput = styled.input`
   }
   ::placeholder {
     color: ${({ theme }) => theme.text3};
+    @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+      color: transparent;
+    }
   }
 `
 
