@@ -1,4 +1,5 @@
 import numbro from 'numbro'
+import { EPSILON } from 'constants/index'
 
 // using a currency library here in case we want to add more in future
 export const formatDollarAmount = (num: number | undefined, digits = 2, round = true) => {
@@ -33,4 +34,8 @@ export const formatAmount = (num: number | undefined, digits = 2) => {
       billion: 'B',
     },
   })
+}
+
+export function isEqual(a: number, b: number, ep = EPSILON) {
+  return Math.abs(a - b) < ep
 }

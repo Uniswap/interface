@@ -966,3 +966,8 @@ export const SWR_KEYS = {
   getListCampaign: CAMPAIGN_BASE_URL,
   getLeaderboard: (id: number) => CAMPAIGN_BASE_URL + '/' + id + '/leaderboard',
 }
+
+// Epsilon 0 is absolute permittivity of free space whose value is 8.854×10^-12 and unit is C^2N^-1m–2.
+export const EPSILON = 0.000000000008854
+
+export const MAX_SLIPPAGE_IN_BIPS = 2000
