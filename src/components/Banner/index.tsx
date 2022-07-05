@@ -129,7 +129,8 @@ function Banner({
         : w > 500
         ? KyberSwapTradingCampaignAcross5ChainsTablet
         : KyberSwapTradingCampaignAcross5ChainsMobile,
-      link: '',
+      link:
+        'https://kyberswap.com/campaigns?selectedCampaignId=1&utm_source=kyberswap&utm_medium=banner&utm_campaign=tradingleaderboard&utm_content=onsite',
     },
     {
       // Community AMA livestream with CEO
