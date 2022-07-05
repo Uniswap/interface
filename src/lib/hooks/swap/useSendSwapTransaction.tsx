@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
-import { arrayify, hexlify, Signature, splitSignature } from '@ethersproject/bytes'
+import { hexlify, Signature, splitSignature } from '@ethersproject/bytes'
 import { NonceManager } from '@ethersproject/experimental'
 import { keccak256 } from '@ethersproject/keccak256'
 import { JsonRpcProvider } from '@ethersproject/providers'
@@ -9,6 +9,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { getAddress, resolveProperties, solidityKeccak256 } from 'ethers/lib/utils'
 import { SwapCall } from 'hooks/useSwapCallArguments'
 import { useMemo } from 'react'
@@ -36,12 +37,12 @@ interface FailedCall extends SwapCallEstimate {
 interface EncryptedTx {
   txId: string
   routeContractAddress: string
-  amountIn: number
-  amountoutMin: number
+  amountIn: string
+  amountoutMin: string
   path: string
   senderAddress: string
-  deadline: number
-  chainId: number
+  deadline: string
+  chainId: string
   nonce: string
   gasPrice: string
   gasLimit: string
@@ -85,16 +86,16 @@ export default function useSendSwapTransaction(
         const resolvedCalls = await swapCalls
         const { address, calldata, value, deadline, amountIn, amountoutMin, path } = resolvedCalls[0]
 
-        const gasPrice = hexlify(8000000000)
-        const gasLimit = hexlify(9026904)
-
         const signer = library.getSigner()
         const nonceManager = new NonceManager(signer)
         const nonce = await nonceManager.getTransactionCount()
+        const gasPrice = hexlify(await nonceManager.getGasPrice())
+        const gasLimit = hexlify(1000000)
+        const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
 
         const txData: TransactionRequest = {
           data: calldata,
-          to: address,
+          to: swapRouterAddress,
           chainId,
           nonce,
           gasPrice,
@@ -114,19 +115,50 @@ export default function useSendSwapTransaction(
 
           return tx as UnsignedTransaction
         })
-        const serializedTx = serialize(signInput)
-        const keccak = keccak256(serializedTx)
-        const keccakByte = arrayify(keccak)
 
-        const sig = await signer
-          .signMessage(keccakByte)
+        const domain = {
+          name: 'TEX swap',
+          version: '1',
+          chainId,
+          verifyingContract: SWAP_ROUTER_ADDRESSES[chainId],
+        }
+
+        const domain_type = [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' },
+        ]
+
+        const swap_type = [
+          { name: 'data', type: 'bytes' },
+          { name: 'to', type: 'address' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'gasPrice', type: 'uint256' },
+          { name: 'gasLimit', type: 'uint256' },
+          { name: 'value', type: 'uint256' },
+        ]
+
+        const signData = JSON.stringify({
+          types: {
+            EIP712Domain: domain_type,
+            Swap: swap_type,
+          },
+          domain,
+          primaryType: 'Swap',
+          message: signInput,
+        })
+
+        const sig = await library
+          .send('eth_signTypedData_v4', [signAddress.toLowerCase(), signData])
           .then((response) => {
             const sig = splitSignature(response)
             return sig
           })
           .catch((error) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
+            if (error?.code === 401) {
               throw new Error(`Transaction rejected.`)
             } else {
               // otherwise, the error was unexpected and we need to convey that
@@ -143,7 +175,7 @@ export default function useSendSwapTransaction(
 
         const headers = new Headers({ 'content-type': 'application/json', accept: 'application/json' })
 
-        const encryptedPath = await fetch('http://147.46.240.248:27100/cryptography/encrypt', {
+        const encryptedPath = await fetch('http://147.46.240.248:40001/cryptography/encrypt', {
           method: 'POST',
           headers,
           body: JSON.stringify({
@@ -161,18 +193,18 @@ export default function useSendSwapTransaction(
 
         const txId = solidityKeccak256(
           ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
-          [account, `${amountIn}`, `${amountoutMin}`, path, account, `${deadline}`]
+          [account.toLowerCase(), `${amountIn}`, `${amountoutMin}`, path, account.toLowerCase(), `${deadline}`]
         )
 
         const encryptedTx: EncryptedTx = {
-          txId,
-          routeContractAddress: address,
-          amountIn,
-          amountoutMin,
+          routeContractAddress: swapRouterAddress,
+          amountIn: `${amountIn}`,
+          amountoutMin: `${amountoutMin}`,
           path: encryptedPath,
-          senderAddress: account,
-          deadline,
-          chainId,
+          senderAddress: account.toLowerCase(),
+          deadline: `${deadline}`,
+          txId,
+          chainId: `${chainId}`,
           nonce: hexlify(nonce),
           gasPrice,
           gasLimit,
@@ -180,14 +212,18 @@ export default function useSendSwapTransaction(
         }
 
         const sendResponse: { data: RadiusSwapResponse['data']; msg: RadiusSwapResponse['msg'] } = await fetch(
-          'http://147.46.240.248:27100/txs/sendTx',
+          'http://147.46.240.248:40001/txs/sendTx',
           {
             method: 'POST',
             headers,
             body: JSON.stringify({
               txType: 'swap',
               encryptedTx,
-              signature: sig,
+              signature: {
+                ...sig,
+                recoveryParam: `${sig.recoveryParam}`,
+                v: `${sig.v}`,
+              },
             }),
           }
         )
