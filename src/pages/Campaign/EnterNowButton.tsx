@@ -56,7 +56,7 @@ export default function EnterNowButton({ campaign }: { campaign: CampaignData | 
               >
                 <img src={NETWORKS_INFO[chainId].icon} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
                 <Text marginLeft="4px" color={theme.subText} fontSize="12px" fontWeight={500} minWidth="fit-content">
-                  <Trans>{NETWORKS_INFO[chainId].name}</Trans>
+                  <Trans>Swap on {NETWORKS_INFO[chainId].name}</Trans>
                 </Text>
               </Flex>
             )

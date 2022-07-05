@@ -140,7 +140,7 @@ const ClaimRewardButton = styled(ButtonPrimary)`
   width: max-content;
 `
 
-const NewLabel = styled.span`
+export const NewLabel = styled.span`
   font-size: 10px;
   color: ${({ theme }) => theme.red};
   height: calc(100% + 4px);

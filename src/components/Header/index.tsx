@@ -10,7 +10,7 @@ import { PROMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import Settings from 'components/Settings'
-import Menu from 'components/Menu'
+import Menu, { NewLabel } from 'components/Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
@@ -465,6 +465,9 @@ export default function Header() {
           <CampaignWrapper>
             <StyledNavLink id={`campaigns`} to={'/campaigns'} isActive={match => Boolean(match)}>
               <Trans>Campaigns</Trans>
+              <NewLabel>
+                <Trans>New</Trans>
+              </NewLabel>
             </StyledNavLink>
           </CampaignWrapper>
 
