@@ -172,7 +172,7 @@ export const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.CELO]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://optics.app/',
+    bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
     explorer: 'https://explorer.celo.org/',
     infoLink: 'https://info.uniswap.org/#/',
@@ -184,7 +184,7 @@ export const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.CELO_ALFAJORES]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://optics.app/',
+    bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
     explorer: 'https://alfajores-blockscout.celo-testnet.org/',
     infoLink: 'https://info.uniswap.org/#/',

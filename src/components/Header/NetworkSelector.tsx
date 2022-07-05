@@ -160,7 +160,7 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
       return <Trans>Polygon Bridge</Trans>
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
-      return <Trans>Optix (Celo) Bridge</Trans>
+      return <Trans>Portal Bridge</Trans>
     default:
       return <Trans>Bridge</Trans>
   }
