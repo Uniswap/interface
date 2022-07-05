@@ -3,6 +3,7 @@ import {
   COINGECKO_API_URL,
   COVALENT_API_KEY,
   DEBUG,
+  GRAPHQL_API_URL,
   INFURA_PROJECT_ID,
   LOG_BUFFER_SIZE,
   ONESIGNAL_APP_ID,
@@ -21,6 +22,7 @@ export interface Config {
   coingeckoApiUrl: string
   covalentApiKey: string
   debug: boolean
+  graphqlApiUrl: string
   infuraProjectId: string
   logBufferSize: number
   onesignalAppId: string
@@ -35,6 +37,7 @@ const _config: Config = {
   coingeckoApiUrl: COINGECKO_API_URL,
   covalentApiKey: COVALENT_API_KEY,
   debug: parseBoolean(DEBUG),
+  graphqlApiUrl: GRAPHQL_API_URL,
   infuraProjectId: INFURA_PROJECT_ID,
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
   onesignalAppId: ONESIGNAL_APP_ID,

@@ -38,12 +38,12 @@ Run `yarn` to install packages, then run `pod install` in the `/ios` directory.
 
 Get familiar with the following (no particular order):
 
-* [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/): state management
-* [redux-saga](https://redux-saga.js.org/) & [typed-redux-saga](https://github.com/agiledigital/typed-redux-saga): Redux side effect manager -- used for complex/stateful network calls
-* [ethers](https://docs.ethers.io/v5/)
-* [Shopify/restyle](https://github.com/Shopify/restyle): UI framework
-* [React navigation](https://reactnavigation.org/): routing and navigation with animations and gestures
-* [react-i18next](https://react.i18next.com/): i18n
+- [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/): state management
+- [redux-saga](https://redux-saga.js.org/) & [typed-redux-saga](https://github.com/agiledigital/typed-redux-saga): Redux side effect manager -- used for complex/stateful network calls
+- [ethers](https://docs.ethers.io/v5/)
+- [Shopify/restyle](https://github.com/Shopify/restyle): UI framework
+- [React navigation](https://reactnavigation.org/): routing and navigation with animations and gestures
+- [react-i18next](https://react.i18next.com/): i18n
 
 #### Storybook
 
@@ -91,6 +91,12 @@ See [e2e/README.md](e2e/README.md)
 
 ## Deployment
 
-A [Github workflow runs a Fastlane build and deploy](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml) at 2AM UTC everyday from M-F. 
+A [Github workflow runs a Fastlane build and deploy](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml) at 2AM UTC everyday from M-F.
 
-Deploys can also be triggered by running the [`Fastlane deploy iOS` workflow manually](https://github.com/Uniswap/mobile/actions/workflows/fastlane.yml)  
+Deploys can also be triggered by running the [`Fastlane deploy iOS` workflow manually](https://github.com/Uniswap/mobile/actions/workflows/fastlane.yml)
+
+### GraphQL/Relay
+
+If the server schema changes, run `yarn relay:schema` in order to update it.
+
+If you want to write a new query, you should run `yarn relay:compile` in order to generate the TS type to import in your component

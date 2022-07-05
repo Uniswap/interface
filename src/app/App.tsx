@@ -5,6 +5,7 @@ import { StatusBar, useColorScheme } from 'react-native'
 import { enableLayoutAnimations } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
+import { RelayEnvironmentProvider } from 'react-relay'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { DrawerNavigator } from 'src/app/navigation/navigation'
@@ -13,6 +14,7 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { AppModals } from 'src/app/modals/AppModals'
 import { config } from 'src/config'
+import RelayEnvironment from 'src/data/relay'
 import { TransactionHistoryUpdater } from 'src/features/dataApi/zerion/updater'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
@@ -41,19 +43,21 @@ export function App() {
     <StrictMode>
       <SafeAreaProvider>
         <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <DynamicThemeProvider>
-              <ErrorBoundary>
-                <WalletContextProvider>
-                  <DataUpdaters />
-                  <BottomSheetModalProvider>
-                    <AppModals />
-                    <NavStack isDarkMode={isDarkMode} />
-                  </BottomSheetModalProvider>
-                </WalletContextProvider>
-              </ErrorBoundary>
-            </DynamicThemeProvider>
-          </PersistGate>
+          <RelayEnvironmentProvider environment={RelayEnvironment}>
+            <PersistGate loading={null} persistor={persistor}>
+              <DynamicThemeProvider>
+                <ErrorBoundary>
+                  <WalletContextProvider>
+                    <DataUpdaters />
+                    <BottomSheetModalProvider>
+                      <AppModals />
+                      <NavStack isDarkMode={isDarkMode} />
+                    </BottomSheetModalProvider>
+                  </WalletContextProvider>
+                </ErrorBoundary>
+              </DynamicThemeProvider>
+            </PersistGate>
+          </RelayEnvironmentProvider>
         </Provider>
       </SafeAreaProvider>
     </StrictMode>

@@ -5,6 +5,7 @@ declare module 'react-native-dotenv' {
   export const COINGECKO_API_URL: string
   export const COVALENT_API_KEY: string
   export const DEBUG: string
+  export const GRAPHQL_API_URL: string
   export const INFURA_PROJECT_ID: string
   export const LOG_BUFFER_SIZE: string
   export const OPENSEA_API_KEY: string
@@ -12,4 +13,8 @@ declare module 'react-native-dotenv' {
   export const VERSION: string
   export const ONESIGNAL_APP_ID: string
   export const ZERION_API_KEY: string
+}
+
+declare module 'babel-plugin-relay/macro' {
+  export { graphql } from 'react-relay'
 }

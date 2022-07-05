@@ -2,6 +2,8 @@
 // For example: https://reactnavigation.org/docs/testing/
 
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock'
+// required polyfill for rtk-query baseQueryFn
+import 'cross-fetch/polyfill'
 
 // Mock Sentry crash reporting
 jest.mock('@sentry/react-native', () => ({ init: () => jest.fn() }))
@@ -41,8 +43,8 @@ jest.mock('@react-native-firebase/firestore', () => {})
 
 const mockPerf = {
   firebase: {
-    perf: () => ({ setPerformanceCollectionEnabled: () => jest.fn() })
-  }
+    perf: () => ({ setPerformanceCollectionEnabled: () => jest.fn() }),
+  },
 }
 jest.mock('@react-native-firebase/perf', () => mockPerf)
 
@@ -62,7 +64,9 @@ jest.mock('@ledgerhq/react-native-hw-transport-ble', () => {})
 
 jest.mock('expo-linear-gradient', () => {})
 
-// required polyfill for rtk-query baseQueryFn
-import 'cross-fetch/polyfill'
+jest.mock('src/data/relay', () => {
+  const { createMockEnvironment } = require('relay-test-utils')
+  return createMockEnvironment()
+})
 
 global.__reanimatedWorkletInit = jest.fn()
