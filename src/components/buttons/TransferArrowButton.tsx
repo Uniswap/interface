@@ -8,7 +8,7 @@ const ICON_SIZE = 20
 
 type ArrowDownButtonProps = Pick<
   ComponentProps<typeof Button>,
-  'disabled' | 'name' | 'onPress' | 'borderColor'
+  'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg'
 >
 
 export function TransferArrowButton({ name, onPress, disabled, ...rest }: ArrowDownButtonProps) {

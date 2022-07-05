@@ -104,7 +104,7 @@ export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
               {currencyIn.symbol}
             </Text>
           </Flex>
-          <TransferArrowButton disabled borderColor="none" />
+          <TransferArrowButton disabled bg="none" borderColor="none" />
         </Flex>
 
         <Text color="textSecondary" variant="bodySmall">
