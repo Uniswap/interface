@@ -53,6 +53,20 @@ export const USDC_OPTIMISTIC_KOVAN = new Token(
   'USDC',
   'USD//C'
 )
+export const T1_OPTIMISTIC_KOVAN = new Token(
+  SupportedChainId.OPTIMISTIC_KOVAN,
+  '0xD773ce9bCC38b441015d4Af8780eEB5859d3ed42',
+  18,
+  'T1',
+  'Test token-1'
+)
+export const T2_OPTIMISTIC_KOVAN = new Token(
+  SupportedChainId.OPTIMISTIC_KOVAN,
+  '0xaC50fF6E28325e5F974487a6Dc9D667BF7C89Df4',
+  18,
+  'T2',
+  'Test token-2'
+)
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
   '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
