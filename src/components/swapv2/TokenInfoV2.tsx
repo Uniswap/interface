@@ -84,8 +84,8 @@ const TokenInfoV2 = ({
     chainId,
   })
 
-  const showToken1 = !isEmptyData(tokenInfo1)
-  const showToken2 = !isEmptyData(tokenInfo2)
+  const showToken1 = !isEmptyData(tokenInfo1) && isHardCode
+  const showToken2 = !isEmptyData(tokenInfo2) && isHardCode
 
   useEffect(() => {
     callback(showToken2 || showToken1)
