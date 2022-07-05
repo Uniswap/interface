@@ -145,7 +145,6 @@ class WalletConnectServerWrapper {
       let icons = session.dAppInfo.peerMeta.icons
       
       self.eventEmitter.sendEvent(withName: EventType.networkChanged.rawValue, body: [
-        "session_name": session.dAppInfo.peerMeta.name,
         "session_id": session.url.topic,
         "account": session.getAccount(),
         "dapp": [
@@ -228,7 +227,6 @@ extension WalletConnectServerWrapper: ServerDelegate {
     self.settlePendingSession = completion
     let icons = session.dAppInfo.peerMeta.icons
     self.eventEmitter.sendEvent(withName: EventType.sessionPending.rawValue, body: [
-      "session_name": session.dAppInfo.peerMeta.name,
       "session_id": session.url.topic,
       "dapp": [
         "name": session.dAppInfo.peerMeta.name,
@@ -241,29 +239,29 @@ extension WalletConnectServerWrapper: ServerDelegate {
   
   func server(_ server: Server, didConnect session: Session) {
     let sessionDatas = UserDefaults.standard.object(forKey: WALLET_CONNECT_SESSION_STORAGE_KEY) as? [String: Data] ?? [:]
-    var showNotification = false
+    var isNewConnection = false
     
     // Add new session to UserDefaults cache if it doesn't already exist (ignores reconnections)
     if (sessionDatas[session.url.topic] == nil) {
       self.updateStoredSession(session)
-      showNotification = true
+      isNewConnection = true
     }
-    
+
     // Send connected event back to React Native (no notification if reconnection)
     let icons = session.dAppInfo.peerMeta.icons
     self.eventEmitter.sendEvent(withName: EventType.sessionConnected.rawValue, body: [
-      "session_name": session.dAppInfo.peerMeta.name,
       "session_id": session.url.topic,
       "account": session.getAccount(),
-      "show_notification": showNotification,
       "dapp": [
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
         "chain_id": session.walletInfo?.chainId ?? 1,
-      ]
+      ],
+      "bridge_url": session.url.bridgeURL.absoluteString,
+      "is_new_connection": isNewConnection,
     ])
-    
+
     self.topicToSession.updateValue(session, forKey: session.url.topic)
   }
   
@@ -279,7 +277,6 @@ extension WalletConnectServerWrapper: ServerDelegate {
     let icons = session.dAppInfo.peerMeta.icons
     self.eventEmitter.sendEvent(withName: EventType.sessionDisconnected.rawValue, body: [
       "session_id": session.url.topic,
-      "session_name": session.url.topic,
       "account": session.getAccount(),
       "dapp": [
         "name": session.dAppInfo.peerMeta.name,

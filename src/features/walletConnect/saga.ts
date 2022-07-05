@@ -15,6 +15,10 @@ import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
+  deregisterWcPushNotifications,
+  registerWcPushNotifications,
+} from 'src/features/walletConnect/api'
+import {
   DappInfo,
   EthMethod,
   EthSignMethod,
@@ -63,7 +67,9 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           account: req.account,
         })
       )
-      if (req.show_notification) {
+
+      // Only show local notification and register for push notifs if new connection, not a reconnection
+      if (req.is_new_connection) {
         emit(
           pushNotification({
             type: AppNotificationType.WalletConnect,
@@ -74,6 +80,13 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
             chainId: req.dapp.chain_id,
           })
         )
+        registerWcPushNotifications({
+          bridge: req.bridge_url,
+          topic: req.session_id,
+          address: req.account,
+          peerName: req.dapp.name,
+          language: 'en', // TODO: Use local user language
+        })
       }
     }
 
@@ -105,6 +118,9 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           chainId: req.dapp.chain_id,
         })
       )
+      deregisterWcPushNotifications({
+        topic: req.session_id,
+      })
     }
 
     const sessionPendingHandler = (req: SessionPendingEvent) => {

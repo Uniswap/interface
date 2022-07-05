@@ -45,13 +45,11 @@ interface BaseSessionEvent {
 }
 
 export interface SessionConnectedEvent extends BaseSessionEvent {
-  session_name: string
-  show_notification: boolean
+  bridge_url: string
+  is_new_connection: boolean
 }
 
-export interface SessionUpdatedEvent extends BaseSessionEvent {
-  session_name: string
-}
+export interface SessionUpdatedEvent extends BaseSessionEvent {}
 
 export interface SessionDisconnectedEvent extends BaseSessionEvent {}
 
