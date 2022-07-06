@@ -11,7 +11,7 @@ import Fortmatic from 'fortmatic'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 
-export enum Wallet {
+export enum ConnectionType {
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',

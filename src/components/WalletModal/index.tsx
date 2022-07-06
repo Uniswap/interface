@@ -4,12 +4,12 @@ import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { getWalletForConnector } from 'connectors/utils'
+import { getConnectionTypeForConnector } from 'connectors/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import { updateWalletError } from 'state/wallet/reducer'
+import { updateConnectionError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -127,7 +127,7 @@ export default function WalletModal({
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
-    pendingConnector ? state.wallet.errorByWallet[getWalletForConnector(pendingConnector)] : undefined
+    pendingConnector ? state.wallet.errorByConnectionType[getConnectionTypeForConnector(pendingConnector)] : undefined
   )
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
@@ -145,20 +145,20 @@ export default function WalletModal({
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
-      updateWalletError({ wallet: getWalletForConnector(pendingConnector), error: undefined })
+      updateConnectionError({ connectionType: getConnectionTypeForConnector(pendingConnector), error: undefined })
       setPendingConnector(undefined)
     }
   }, [pendingConnector, walletView])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
-      const wallet = getWalletForConnector(connector)
+      const connectionType = getConnectionTypeForConnector(connector)
 
       // log selected wallet
       sendEvent({
         category: 'Wallet',
         action: 'Change Wallet',
-        label: wallet,
+        label: connectionType,
       })
 
       try {
@@ -170,14 +170,14 @@ export default function WalletModal({
 
         setPendingConnector(connector)
         setWalletView(WALLET_VIEWS.PENDING)
-        dispatch(updateWalletError({ wallet, error: undefined }))
+        dispatch(updateConnectionError({ connectionType, error: undefined }))
 
         await connector.activate()
 
-        dispatch(updateSelectedWallet({ wallet }))
+        dispatch(updateSelectedWallet({ wallet: connectionType }))
       } catch (error) {
         console.debug(`web3-react connection error: ${error}`)
-        dispatch(updateWalletError({ wallet, error: error.message }))
+        dispatch(updateConnectionError({ connectionType, error: error.message }))
       }
     },
     [dispatch, toggleWalletModal]

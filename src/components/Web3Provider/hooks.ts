@@ -1,24 +1,28 @@
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { gnosisSafe, injected, network, Wallet } from 'connectors'
-import { getConnectorForWallet, getHooksForWallet } from 'connectors/utils'
+import { ConnectionType, gnosisSafe, injected, network } from 'connectors'
+import { getConnectorForConnectionType, getHooksForConnectionType } from 'connectors/utils'
 import { useEffect, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
 import { isMobile } from '../../utils/userAgent'
 
-export const BACKFILLABLE_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED]
-export const SELECTABLE_WALLETS = [...BACKFILLABLE_WALLETS, Wallet.FORTMATIC]
+export const BACKFILLABLE_WALLETS = [
+  ConnectionType.COINBASE_WALLET,
+  ConnectionType.WALLET_CONNECT,
+  ConnectionType.INJECTED,
+]
+export const SELECTABLE_WALLETS = [...BACKFILLABLE_WALLETS, ConnectionType.FORTMATIC]
 
 interface Connection {
   connector: Connector
   hooks: Web3ReactHooks
 }
 
-function getConnectionForWallet(wallet: Wallet) {
+function getConnectionForConnectionType(connectionType: ConnectionType) {
   return {
-    connector: getConnectorForWallet(wallet),
-    hooks: getHooksForWallet(wallet),
+    connector: getConnectorForConnectionType(connectionType),
+    hooks: getHooksForConnectionType(connectionType),
   }
 }
 
@@ -28,16 +32,18 @@ export function useConnectors() {
     const connections: Connection[] = []
 
     // Always attempt to use to Gnosis Safe first, as we can't know if we're in a SafeContext.
-    connections.push(getConnectionForWallet(Wallet.GNOSIS_SAFE))
+    connections.push(getConnectionForConnectionType(ConnectionType.GNOSIS_SAFE))
 
     // Add the `selectedWallet` to the top so it's prioritized, then add the other selectable wallets.
     if (selectedWallet) {
-      connections.push(getConnectionForWallet(selectedWallet))
+      connections.push(getConnectionForConnectionType(selectedWallet))
     }
-    connections.push(...SELECTABLE_WALLETS.filter((wallet) => wallet !== selectedWallet).map(getConnectionForWallet))
+    connections.push(
+      ...SELECTABLE_WALLETS.filter((wallet) => wallet !== selectedWallet).map(getConnectionForConnectionType)
+    )
 
     // Add network connection last as it should be the fallback.
-    connections.push(getConnectionForWallet(Wallet.NETWORK))
+    connections.push(getConnectionForConnectionType(ConnectionType.NETWORK))
 
     // Convert to web3-react's representation of connectors.
     return connections.map(({ connector, hooks }) => [connector, hooks])
@@ -69,9 +75,9 @@ export function useEagerlyConnect() {
     if (isMobile && isMetaMask) {
       injected.activate()
     } else if (selectedWallet) {
-      connect(getConnectorForWallet(selectedWallet))
+      connect(getConnectorForConnectionType(selectedWallet))
     } else if (!selectedWalletBackfilled) {
-      BACKFILLABLE_WALLETS.map(getConnectorForWallet).forEach(connect)
+      BACKFILLABLE_WALLETS.map(getConnectorForConnectionType).forEach(connect)
     }
     // The dependency list is empty so this is only run once on mount
   }, []) // eslint-disable-line react-hooks/exhaustive-deps

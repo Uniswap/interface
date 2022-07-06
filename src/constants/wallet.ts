@@ -5,11 +5,11 @@ import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
 import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
-import { coinbaseWallet, fortmatic, injected, Wallet, walletConnect } from '../connectors'
+import { coinbaseWallet, ConnectionType, fortmatic, injected, walletConnect } from '../connectors'
 
 interface WalletInfo {
   connector?: Connector
-  wallet?: Wallet
+  connectionType?: ConnectionType
   name: string
   iconURL: string
   description: string
@@ -23,7 +23,7 @@ interface WalletInfo {
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   INJECTED: {
     connector: injected,
-    wallet: Wallet.INJECTED,
+    connectionType: ConnectionType.INJECTED,
     name: 'Injected',
     iconURL: INJECTED_ICON_URL,
     description: 'Injected web3 provider.',
@@ -33,7 +33,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   METAMASK: {
     connector: injected,
-    wallet: Wallet.INJECTED,
+    connectionType: ConnectionType.INJECTED,
     name: 'MetaMask',
     iconURL: METAMASK_ICON_URL,
     description: 'Easy-to-use browser extension.',
@@ -42,7 +42,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   WALLET_CONNECT: {
     connector: walletConnect,
-    wallet: Wallet.WALLET_CONNECT,
+    connectionType: ConnectionType.WALLET_CONNECT,
     name: 'WalletConnect',
     iconURL: WALLETCONNECT_ICON_URL,
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
@@ -52,7 +52,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   COINBASE_WALLET: {
     connector: coinbaseWallet,
-    wallet: Wallet.COINBASE_WALLET,
+    connectionType: ConnectionType.COINBASE_WALLET,
     name: 'Coinbase Wallet',
     iconURL: COINBASE_ICON_URL,
     description: 'Use Coinbase Wallet app on mobile device',
@@ -70,7 +70,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   FORTMATIC: {
     connector: fortmatic,
-    wallet: Wallet.FORTMATIC,
+    connectionType: ConnectionType.FORTMATIC,
     name: 'Fortmatic',
     iconURL: FORTMATIC_ICON_URL,
     description: 'Login using Fortmatic hosted wallet',

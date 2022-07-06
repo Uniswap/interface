@@ -1,33 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { Wallet } from 'connectors'
+import { ConnectionType } from 'connectors'
 
-export interface WalletState {
-  errorByWallet: Record<Wallet, string | undefined>
+export interface ConnectionState {
+  errorByConnectionType: Record<ConnectionType, string | undefined>
 }
 
-export const initialState: WalletState = {
-  errorByWallet: {
-    [Wallet.INJECTED]: undefined,
-    [Wallet.FORTMATIC]: undefined,
-    [Wallet.WALLET_CONNECT]: undefined,
-    [Wallet.COINBASE_WALLET]: undefined,
-    [Wallet.NETWORK]: undefined,
-    [Wallet.GNOSIS_SAFE]: undefined,
+export const initialState: ConnectionState = {
+  errorByConnectionType: {
+    [ConnectionType.INJECTED]: undefined,
+    [ConnectionType.FORTMATIC]: undefined,
+    [ConnectionType.WALLET_CONNECT]: undefined,
+    [ConnectionType.COINBASE_WALLET]: undefined,
+    [ConnectionType.NETWORK]: undefined,
+    [ConnectionType.GNOSIS_SAFE]: undefined,
   },
 }
 
-const walletSlice = createSlice({
-  name: 'wallet',
+const connectionSlice = createSlice({
+  name: 'connection',
   initialState,
   reducers: {
-    updateWalletError(
+    updateConnectionError(
       state,
-      { payload: { wallet, error } }: { payload: { wallet: Wallet; error: string | undefined } }
+      { payload: { connectionType, error } }: { payload: { connectionType: ConnectionType; error: string | undefined } }
     ) {
-      state.errorByWallet[wallet] = error
+      state.errorByConnectionType[connectionType] = error
     },
   },
 })
 
-export const { updateWalletError } = walletSlice.actions
-export default walletSlice.reducer
+export const { updateConnectionError } = connectionSlice.actions
+export default connectionSlice.reducer
