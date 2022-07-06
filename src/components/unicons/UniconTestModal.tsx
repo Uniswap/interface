@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -13,9 +16,23 @@ import {
   UniconNumOptions,
 } from 'src/components/unicons/types'
 import { EXPORT_FOR_TESTING, Unicon } from 'src/components/unicons/Unicon'
+import { isEthAddress } from 'src/components/unicons/utils'
+import { ChainId } from 'src/constants/chains'
+import { useENS } from 'src/features/ens/useENS'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import {
+  useAccounts,
+  useActiveAccountAddressWithThrow,
+  useDisplayName,
+} from 'src/features/wallet/hooks'
+
+const enum VisibleUnicons {
+  EmblemContainerCombos,
+  ColorCombos,
+  Default,
+  AndrewOnly,
+}
 
 function UniconShapeBlock({ shapeIndex }: { shapeIndex: number }) {
   return (
@@ -39,10 +56,72 @@ function UniconShapeBlock({ shapeIndex }: { shapeIndex: number }) {
   )
 }
 
-export function UniconTestModal() {
+function UniconGradientStartBlock({ gradientStartIndex }: { gradientStartIndex: number }) {
+  return (
+    <Flex row flex={1} flexWrap="wrap" gap="sm" p="sm">
+      {Array.from(Array(UniconNumOptions[UniconAttributes.GradientEnd]).keys()).map((i) => (
+        <Box key={`GradientStart${gradientStartIndex}-${i}`} height={36} width={36}>
+          <EXPORT_FOR_TESTING.UniconSvg
+            attributeIndices={
+              {
+                [UniconAttributes.GradientStart]: gradientStartIndex,
+                [UniconAttributes.GradientEnd]: i,
+                [UniconAttributes.Container]: 0,
+                [UniconAttributes.Shape]: 0,
+              } as UniconAttributesToIndices
+            }
+            size={36}
+          />
+        </Box>
+      ))}
+    </Flex>
+  )
+}
+
+function UniconOptions({ address, ensName }: { address: string; ensName?: string }) {
+  const displayName = useDisplayName(address)
+  return (
+    <Flex centered gap="sm" p="sm">
+      <Text variant="subhead">
+        {ensName ? ensName : displayName?.name}: {address}
+      </Text>
+      <Flex row>
+        <Flex>
+          <Text variant="subhead">Option 1</Text>
+          <Unicon address={address} randomSeed={0} size={50} />
+        </Flex>
+        <Flex>
+          <Text variant="subhead">Option 2</Text>
+          <Unicon address={address} randomSeed={545} size={50} />
+        </Flex>
+        <Flex>
+          <Text variant="subhead">Option 3</Text>
+          <Unicon address={address} randomSeed={424} size={50} />
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+}
+
+function AddressSearchResult({ searchQuery }: { searchQuery: string }) {
+  const { address: ensAddress, name: ensName } = useENS(ChainId.Mainnet, searchQuery, true)
+
+  if (!ensAddress || !ensName) return null
+  if (!isEthAddress(ensAddress)) {
+    return <Text variant="subhead">Not a valid address</Text>
+  }
+
+  return <UniconOptions address={ensAddress} ensName={ensName} />
+}
+
+export function UniconTestModal({ onClose }: { onClose: () => void }) {
   const theme = useAppTheme()
+  const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
-  const [toggleCombos, setToggleCombos] = useState(false)
+  const addressToAccount = useAccounts()
+  const addresses = Object.keys(addressToAccount)
+  const [screenState, setScreenState] = useState<VisibleUnicons>(VisibleUnicons.Default)
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
   return (
     <BottomSheetModal
@@ -50,27 +129,79 @@ export function UniconTestModal() {
       hideHandlebar
       backgroundColor={theme.colors.mainBackground}
       isVisible={true}
-      name={ModalName.WalletConnectScan}>
+      name={ModalName.WalletConnectScan}
+      onClose={onClose}>
       <ScrollView>
-        <PrimaryButton
-          label="Show / hide all possible Unicons"
-          onPress={() => setToggleCombos(!toggleCombos)}
-        />
-        {toggleCombos &&
+        <Flex gap="md">
+          <PrimaryButton label="Close modal" onPress={onClose} />
+          <Flex row gap="sm" justifyContent="space-between">
+            <PrimaryButton
+              flex={1}
+              label="Emblem-Container Combos"
+              onPress={() => setScreenState(VisibleUnicons.EmblemContainerCombos)}
+            />
+            <PrimaryButton
+              flex={1}
+              label="Color Combos"
+              onPress={() => setScreenState(VisibleUnicons.ColorCombos)}
+            />
+            <PrimaryButton
+              flex={1}
+              label="Default"
+              onPress={() => setScreenState(VisibleUnicons.Default)}
+            />
+          </Flex>
+        </Flex>
+        {screenState === VisibleUnicons.EmblemContainerCombos &&
           Array.from(Array(UniconNumOptions[UniconAttributes.Shape]).keys()).map((i) => (
-            <Flex key={'Flex' + i}>
+            <Flex key={'EmblemContainerCombo' + i}>
               <Text variant="body">Shape {i + 1}</Text>
               <UniconShapeBlock shapeIndex={i} />
             </Flex>
           ))}
-        {!toggleCombos && (
+        {screenState === VisibleUnicons.ColorCombos &&
+          Array.from(Array(UniconNumOptions[UniconAttributes.GradientStart]).keys()).map((i) => (
+            <Flex key={'ColorCombo' + i}>
+              <Text variant="body">GradientStart {i + 1}</Text>
+              <UniconGradientStartBlock gradientStartIndex={i} />
+            </Flex>
+          ))}
+        {screenState === VisibleUnicons.Default && (
+          <>
+            <SearchTextInput
+              backgroundColor="backgroundBackdrop"
+              placeholder={t('Input an address or ENS to view its Unicon')}
+              value={searchQuery}
+              onCancel={() => setSearchQuery('')}
+              onChangeText={setSearchQuery}
+              onFocus={() => null}
+            />
+            {searchQuery && <AddressSearchResult searchQuery={searchQuery} />}
+            {addresses.map((address) => (
+              <UniconOptions key={address} address={address} />
+            ))}
+          </>
+        )}
+        {screenState === VisibleUnicons.AndrewOnly && (
           <Box>
-            <Flex flexDirection={'row'} gap="md" p="md">
-              <AccountCardItem
-                account={{ address: '0x3Ec390c6372353703Dfece9755e4CC7Ab59A1372' } as Account}
-                isActive={true}
-                onPressQRCode={() => null}
+            <Flex gap="sm" p="sm">
+              <AddressDisplay
+                showAddressAsSubtitle
+                address="0x3Ec390c6372353703Dfece9755e4CC7Ab59A1372"
+                showNotificationBadge={true}
+                size={36}
+                variant="body"
+                verticalGap="none"
               />
+              <Flex row>
+                <AccountCardItem
+                  account={{ address: '0x3Ec390c6372353703Dfece9755e4CC7Ab59A1372' } as Account}
+                  isActive={true}
+                  onPressQRCode={() => null}
+                />
+              </Flex>
+            </Flex>
+            <Flex flexDirection={'row'} gap="md" p="md">
               <Unicon address={activeAddress} size={36} />
               <Unicon address={'0xb794f5ea0ba39494ce839613fffba74279579268'} size={36} />
               <Unicon address={'0x71C7656EC7ab88b098defB751B7401B5f6d8976F'} size={36} />

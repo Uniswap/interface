@@ -29,7 +29,7 @@ exports[`renders a Unicon 1`] = `
           transform={
             Array [
               Object {
-                "scale": 1,
+                "scale": 0.972972972972973,
               },
             ]
           }
@@ -73,14 +73,14 @@ exports[`renders a Unicon 1`] = `
         transform={
           Array [
             Object {
-              "scale": 1,
+              "scale": 0.972972972972973,
             },
           ]
         }
       >
         <View
-          height={36}
-          width={36}
+          height={37}
+          width={37}
           x={0}
           y={0}
         >
@@ -97,9 +97,9 @@ exports[`renders a Unicon 1`] = `
         </View>
         <View
           color="#9D99F5"
-          cx={18}
-          cy={-13}
-          r={30}
+          cx={18.5}
+          cy={-13.36111111111111}
+          r={30.833333333333336}
         >
           <View
             blur={15}

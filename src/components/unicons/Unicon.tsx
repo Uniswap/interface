@@ -12,7 +12,7 @@ import {
 } from '@shopify/react-native-skia'
 import React, { useMemo } from 'react'
 import 'react-native-reanimated'
-import { Box } from 'src/components/layout/Box'
+import { Box } from 'src/components/layout'
 import { svgPaths as containerPaths } from 'src/components/unicons/Container'
 import { svgPaths as emblemPaths } from 'src/components/unicons/Emblem'
 import {
@@ -26,7 +26,8 @@ import {
 import { deriveUniconAttributeIndices, isEthAddress } from 'src/components/unicons/utils'
 import { flex } from 'src/styles/flex'
 
-const ORIGINAL_SVG_SIZE = 36
+// HACK: Add 1 to effectively increase margin between svg and surrounding box, otherwise get a cropping issue
+const ORIGINAL_SVG_SIZE = 36 + 1
 const EMBLEM_XY_SHIFT = 10
 
 const GradientBlur = ({
@@ -121,11 +122,16 @@ function UniconSvg({
 interface Props {
   address: string
   size: number
+  randomSeed?: number
+  border?: boolean
 }
 
-export function Unicon({ address, size }: Props) {
+export function Unicon({ address, size, randomSeed = 0 }: Props) {
   // Renders a Unicon inside a (size) x (size) pixel square Box
-  const attributeIndices = useMemo(() => deriveUniconAttributeIndices(address), [address])
+  const attributeIndices = useMemo(
+    () => deriveUniconAttributeIndices(address, randomSeed),
+    [address, randomSeed]
+  )
 
   if (!address || !isEthAddress(address) || !attributeIndices) return null
 

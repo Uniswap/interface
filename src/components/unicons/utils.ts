@@ -13,7 +13,8 @@ export const isEthAddress = (address: string) => {
 }
 
 export const deriveUniconAttributeIndices = (
-  address: string
+  address: string,
+  randomSeed: number = 0
 ): UniconAttributesToIndices | undefined => {
   if (!isEthAddress(address)) return
 
@@ -29,7 +30,7 @@ export const deriveUniconAttributeIndices = (
       NUM_CHARS_TO_USE_PER_ATTRIBUTE * a,
       NUM_CHARS_TO_USE_PER_ATTRIBUTE * (a + 1)
     )
-    const optionDec = parseInt(optionHex, 16)
+    const optionDec = parseInt(optionHex, 16) + randomSeed
     const optionIndex = optionDec % UniconNumOptions[a]
     newIndices[a] = optionIndex
   }

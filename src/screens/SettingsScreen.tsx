@@ -26,13 +26,15 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
+import { Unicon } from 'src/components/unicons/Unicon'
+import { UniconTestModal } from 'src/components/unicons/UniconTestModal'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { useAccounts } from 'src/features/wallet/hooks'
+import { useAccounts, useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 
@@ -101,6 +103,14 @@ export function SettingsScreen() {
             },
             text: t('Uniswap Labs Terms of Service'),
             icon: <BookOpenIcon color={theme.colors.textSecondary} />,
+          },
+        ],
+      },
+      {
+        subTitle: t('Testing'),
+        data: [
+          {
+            component: <TestUniconsRow />,
           },
         ],
       },
@@ -228,6 +238,37 @@ function OnboardingRow() {
         <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
       </Box>
     </Button>
+  )
+}
+
+function TestUniconsRow() {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const [showUniconsModal, setShowUniconsModal] = useState(false)
+  const activeAddress = useActiveAccountAddress()
+
+  return (
+    <>
+      <Button
+        name="DEBUG_Settings_Unicons"
+        pb="md"
+        pl="xxs"
+        onPress={() => setShowUniconsModal(true)}>
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+          <Box alignItems="center" flexDirection="row">
+            <Unicon
+              address={activeAddress ?? '0x11e4857bb9993a50c685a79afad4e6f65d518dda'}
+              size={32}
+            />
+            <Text fontWeight="500" ml="md" variant="subhead">
+              {t('Show Unicons')}
+            </Text>
+          </Box>
+          <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
+        </Box>
+      </Button>
+      {showUniconsModal && <UniconTestModal onClose={() => setShowUniconsModal(false)} />}
+    </>
   )
 }
 
