@@ -1,7 +1,7 @@
 import { BlurView } from 'expo-blur'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TextInput, useColorScheme, ViewStyle } from 'react-native'
+import { KeyboardAvoidingView, TextInput, useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolate,
   FadeIn,
@@ -25,6 +25,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { AnimatedText } from 'src/components/Text'
 import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
+import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
@@ -126,12 +127,14 @@ export function ExploreScreen() {
       </AnimatedBlurView>
 
       {isSearchMode ? (
-        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="md">
-          <VirtualizedList>
-            <Box height={CONTENT_MAX_SCROLL_Y} mb="md" />
-            <SearchResultsSection searchQuery={searchQuery} />
-          </VirtualizedList>
-        </AnimatedFlex>
+        <KeyboardAvoidingView behavior="height" style={flex.fill}>
+          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="md">
+            <VirtualizedList>
+              <Box height={CONTENT_MAX_SCROLL_Y} mb="md" />
+              <SearchResultsSection searchQuery={searchQuery} />
+            </VirtualizedList>
+          </AnimatedFlex>
+        </KeyboardAvoidingView>
       ) : (
         <VirtualizedList onScroll={scrollHandler}>
           <Box height={HEADER_HEIGHT} mb="md" />
