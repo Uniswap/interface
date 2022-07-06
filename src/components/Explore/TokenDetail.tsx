@@ -9,6 +9,15 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { favoritesAtom } from './TokenTable'
 
+const TIME_OPTIONS: { [key: string]: TimePeriod } = {
+  '1H': TimePeriod.hour,
+  '1D': TimePeriod.day,
+  '1W': TimePeriod.week,
+  '1M': TimePeriod.month,
+  '1Y': TimePeriod.year,
+}
+const TIMES = Object.keys(TIME_OPTIONS)
+
 const ArrowCell = styled.div`
   padding-left: 2px;
   display: flex;
@@ -144,21 +153,17 @@ export default function TokenDetail({ address }: { address: string }) {
         </DeltaContainer>
         <ChartContainer></ChartContainer>
         <TimeOptionsContainer>
-          <TimeButton active={timePeriod === TimePeriod.hour} onClick={() => setTimePeriod(TimePeriod.hour)}>
-            1H
-          </TimeButton>
-          <TimeButton active={timePeriod === TimePeriod.day} onClick={() => setTimePeriod(TimePeriod.day)}>
-            1D
-          </TimeButton>
-          <TimeButton active={timePeriod === TimePeriod.week} onClick={() => setTimePeriod(TimePeriod.week)}>
-            1W
-          </TimeButton>
-          <TimeButton active={timePeriod === TimePeriod.month} onClick={() => setTimePeriod(TimePeriod.month)}>
-            1M
-          </TimeButton>
-          <TimeButton active={timePeriod === TimePeriod.year} onClick={() => setTimePeriod(TimePeriod.year)}>
-            1Y
-          </TimeButton>
+          {TIMES.map((time) => {
+            return (
+              <TimeButton
+                key={time}
+                active={timePeriod === TIME_OPTIONS[time]}
+                onClick={() => setTimePeriod(TIME_OPTIONS[time])}
+              >
+                {time}
+              </TimeButton>
+            )
+          })}
         </TimeOptionsContainer>
       </ChartHeader>
     </TopArea>
