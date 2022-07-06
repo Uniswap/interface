@@ -29,7 +29,6 @@ const ChartHeader = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   color: ${({ theme }) => theme.text1};
   gap: 4px;
 `
@@ -38,22 +37,21 @@ const DeltaContainer = styled.div`
   align-items: center;
 `
 const TokenNameCell = styled.div`
-  width: 100%;
   display: flex;
-  justify-content: flex-start;
   gap: 8px;
   font-size: 20px;
   line-height: 28px;
+  align-items: center;
 `
 const TokenActions = styled.div`
   display: flex;
-  justify-content: right;
   gap: 24px;
   color: ${({ theme }) => theme.text2};
 `
 const TokenInfoContainer = styled.div`
-  width: 100%;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 `
 const TokenPrice = styled.span`
   font-size: 36px;
@@ -81,10 +79,11 @@ export default function TokenDetail({ address }: { address: string }) {
   const tokenSymbol = token.symbol
 
   // dummy data for now until Jordan writes token detail hooks
-  const tokenPrice = 3243.22
+  // format price
+  const tokenPrice = '3,243.22'
   const tokenDelta = 1.22
-  const deltaSign = Math.sign(tokenDelta) > 0 ? '+' : '-'
-  const isPositive = deltaSign === '+' ? true : false
+  const isPositive = Math.sign(tokenDelta) > 0
+  const deltaSign = isPositive ? '+' : '-'
 
   return (
     <TopArea>
