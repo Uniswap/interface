@@ -19,6 +19,7 @@ const BreadcrumbNavLink = styled(Link)`
   align-items: center;
   gap: 4px;
   text-decoration: none;
+  margin-bottom: 16px;
 
   &:hover {
     text-decoration: underline;
@@ -63,10 +64,7 @@ const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.text2};
 `
 const TopArea = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 832px;
-  gap: 20px;
 `
 
 export default function TokenDetail({ address }: { address: string }) {
@@ -76,6 +74,7 @@ export default function TokenDetail({ address }: { address: string }) {
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = atom<boolean>(favoriteTokens.includes(address))
 
+  // catch token error and loading state
   if (!token) {
     return <div>No Token</div>
   }
@@ -86,6 +85,7 @@ export default function TokenDetail({ address }: { address: string }) {
   const tokenPrice = 3243.22
   const tokenDelta = 1.22
   const deltaSign = Math.sign(tokenDelta) > 0 ? '+' : '-'
+  const isPositive = deltaSign === '+' ? true : false
 
   return (
     <TopArea>
@@ -114,7 +114,7 @@ export default function TokenDetail({ address }: { address: string }) {
           {deltaSign}
           {tokenDelta}%
           <ArrowCell>
-            {deltaSign === '+' ? (
+            {isPositive ? (
               <ArrowUpRight size={16} color={theme.green1} />
             ) : (
               <ArrowDownRight size={16} color={theme.red1} />
