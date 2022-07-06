@@ -59,17 +59,19 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
           </ScrollView>
         </Flex>
       </Flex>
-      <Button
-        onPress={() => {
-          selectionAsync()
-          onClose()
-        }}>
-        <Flex centered bg="backgroundAction" borderRadius="md" py="md">
-          <Text color="textPrimary" variant="subhead">
-            {closeButtonLabel}
-          </Text>
-        </Flex>
-      </Button>
+      <Flex bg="backgroundSurface" borderRadius="md">
+        <Button
+          onPress={() => {
+            selectionAsync()
+            onClose()
+          }}>
+          <Flex centered bg="backgroundAction" borderRadius="md" py="md">
+            <Text color="textPrimary" variant="subhead">
+              {closeButtonLabel}
+            </Text>
+          </Flex>
+        </Button>
+      </Flex>
     </Flex>
   )
 }

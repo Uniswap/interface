@@ -31,7 +31,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
         px="lg"
         py={!nameTypeIsAddress ? 'xs' : 'md'}>
         <Unicon address={account.address} size={ICON_SIZE} />
-        <Box p="none">
+        <Flex alignItems="center" gap="none" p="none">
           <Text
             color="textPrimary"
             testID={`address-display/name/${displayName?.name}`}
@@ -43,7 +43,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
               {shortenAddress(account.address)}
             </Text>
           )}
-        </Box>
+        </Flex>
         <Box height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
             <Check color={theme.colors.accentAction} height={ICON_SIZE} width={ICON_SIZE} />

@@ -2,7 +2,7 @@ import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import Checkmark from 'src/assets/icons/checkmark.svg'
+import Checkmark from 'src/assets/icons/check.svg'
 import X from 'src/assets/icons/x.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
@@ -54,7 +54,7 @@ const SitePermissions = () => {
         {t('Site permissions')}
       </Text>
       <Flex row alignItems="center" gap="xs">
-        <Checkmark color={theme.colors.accentSuccess} height={11} width={11} />
+        <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
         <Box>
           <Text color="textPrimary" variant="bodySmall">
             {t('View your wallet address and ENS name')}
@@ -62,7 +62,7 @@ const SitePermissions = () => {
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="xs">
-        <Checkmark color={theme.colors.accentSuccess} height={11} width={11} />
+        <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
         <Box>
           <Text color="textPrimary" variant="bodySmall">
             {t('View your token balances')}
@@ -70,7 +70,7 @@ const SitePermissions = () => {
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="xs">
-        <X color={theme.colors.accentFailure} height={11} width={11} />
+        <X color={theme.colors.accentFailure} height={16} width={16} />
         <Box>
           <Text color="textPrimary" variant="bodySmall">
             {t('Transfer your assets without your consent')}
