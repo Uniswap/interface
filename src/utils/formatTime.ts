@@ -14,19 +14,25 @@ export const getFormattedTimeFromSecond = (numberOfSeconds: number, showDetail =
 
   let unit: string
 
-  if (estimatedRemainingDays) {
+  if (estimatedRemainingDays || !showDetail) {
     unit = (showDetail ? ' Day' : 'D') + (showDetail && estimatedRemainingDays > 1 ? 's ' : ' ')
     formattedEstimatedRemainingTime += estimatedRemainingDays + unit
   }
 
-  if (hour) {
+  if (hour || !showDetail) {
     unit = (showDetail ? ' Hour' : 'H') + (showDetail && hour > 1 ? 's ' : ' ')
     formattedEstimatedRemainingTime += hour + unit
   }
 
-  if (minute) {
+  if (minute || !showDetail) {
     unit = (showDetail ? ' Minute' : 'M') + (showDetail && minute > 1 ? 's ' : ' ')
     formattedEstimatedRemainingTime += minute + unit
+  }
+
+  const showSecond = estimatedRemainingDays === 0 && hour === 0 && minute === 0
+  if (showSecond) {
+    unit = (showDetail ? ' Second' : 'S') + (showDetail && second > 1 ? 's ' : ' ')
+    formattedEstimatedRemainingTime += Math.trunc(second) + unit
   }
 
   return formattedEstimatedRemainingTime

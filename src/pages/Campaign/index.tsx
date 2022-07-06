@@ -15,7 +15,7 @@ import ModalSelectCampaign from './ModalSelectCampaign'
 import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
 import { ApplicationModal } from 'state/application/actions'
 import ShareModal from 'components/ShareModal'
-import { CampaignData } from 'state/campaigns/actions'
+import { CampaignData, setSelectedCampaign } from 'state/campaigns/actions'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
@@ -29,6 +29,7 @@ import useInterval from 'hooks/useInterval'
 import { SWR_KEYS } from 'constants/index'
 import { useSWRConfig } from 'swr'
 import { Loading } from 'pages/ProAmmPool/ContentLoader'
+import { useAppDispatch } from 'state/hooks'
 
 const LoaderParagraphs = () => (
   <>
@@ -66,6 +67,12 @@ export default function Campaign() {
   const campaignDetailImageRef = useRef<HTMLImageElement>(null)
   const [campaignDetailMediaLoadedMap, setCampaignDetailMediaLoadedMap] = useState<{ [id: string]: boolean }>({})
   const isSelectedCampaignMediaLoaded = selectedCampaign && campaignDetailMediaLoadedMap[selectedCampaign.id]
+
+  useEffect(() => {
+    if (selectedCampaign?.status === 'Ongoing' || selectedCampaign?.status === 'Ended') {
+      setActiveTab('leaderboard')
+    }
+  }, [selectedCampaign])
 
   useEffect(() => {
     if (selectedCampaign === undefined) return
@@ -198,8 +205,15 @@ export default function Campaign() {
   const MINUTE_TO_REFRESH = 5
   const [campaignsRefreshIn, setCampaignsRefreshIn] = useState(MINUTE_TO_REFRESH * 60)
   const { mutate } = useSWRConfig()
+  const dispatch = useAppDispatch()
   useInterval(
     () => {
+      if (selectedCampaign && selectedCampaign.status === 'Upcoming' && selectedCampaign.startTime < now + 1000) {
+        dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: 'Ongoing' } }))
+      }
+      if (selectedCampaign && selectedCampaign.status === 'Ongoing' && selectedCampaign.endTime < now + 1000) {
+        dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: 'Ended' } }))
+      }
       setCampaignsRefreshIn(prev => {
         if (prev === 0) {
           return MINUTE_TO_REFRESH * 60
