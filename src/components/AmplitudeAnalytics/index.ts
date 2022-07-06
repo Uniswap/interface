@@ -18,8 +18,8 @@ export function initializeAnalytics() {
 
   init(
     API_KEY,
-    undefined, // User ID should be undefined to let Amplitude default to Device ID
-    {
+    /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
+    /* options= */ {
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
         ipAddress: false,
@@ -35,6 +35,10 @@ export function initializeAnalytics() {
 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('amplitude event log:', `${eventName}: ${JSON.stringify(eventProperties)}`)
+  }
+
   track(eventName, eventProperties)
 }
 
@@ -50,6 +54,10 @@ export function updateAnalyticsUserModel(
   propertyName: string,
   propertyValue: string | number
 ) {
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`amplitude user model update with operation ${operation}:`, `${propertyName}: ${propertyValue}`)
+  }
+
   const identifyObj = new Identify()
   switch (operation) {
     case UserPropertyOperations.SET:
