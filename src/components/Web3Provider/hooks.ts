@@ -19,7 +19,7 @@ interface Connection {
   hooks: Web3ReactHooks
 }
 
-function getConnectionForConnectionType(connectionType: ConnectionType) {
+function getConnectionForConnectionType(connectionType: ConnectionType): Connection {
   return {
     connector: getConnectorForConnectionType(connectionType),
     hooks: getHooksForConnectionType(connectionType),
@@ -46,7 +46,8 @@ export function useConnectors() {
     connections.push(getConnectionForConnectionType(ConnectionType.NETWORK))
 
     // Convert to web3-react's representation of connectors.
-    return connections.map(({ connector, hooks }) => [connector, hooks])
+    const web3Connectors: [Connector, Web3ReactHooks][] = connections.map(({ connector, hooks }) => [connector, hooks])
+    return web3Connectors
   }, [selectedWallet])
 }
 
