@@ -5,5 +5,5 @@ export function TokenDetails({
     params: { tokenAddress },
   },
 }: RouteComponentProps<{ tokenAddress: string }>) {
-  return <TokenDetail tokenAddress={tokenAddress} />
+  return <TokenDetail address={tokenAddress} />
 }
