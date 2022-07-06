@@ -46,7 +46,7 @@ export const GlobalData = () => {
 
 export const Instruction = () => {
   const qs = useParsedQueryString()
-  const tab = (qs.tab as string) || VERSION.CLASSIC
+  const tab = (qs.tab as string) || VERSION.ELASTIC
 
   const below1412 = useMedia('(max-width: 1412px)')
   const above1000 = useMedia('(min-width: 1001px)')

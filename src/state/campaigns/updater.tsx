@@ -179,7 +179,7 @@ export default function CampaignsUpdater(): null {
             pageSize: CAMPAIGN_ITEM_PER_PAGE,
             pageNumber: selectedCampaignLeaderboardPageNumber,
             userAddress: account?.toLowerCase() ?? '',
-            lookupAddress: selectedCampaignLeaderboardLookupAddress,
+            lookupAddress: selectedCampaignLeaderboardLookupAddress.toLowerCase(),
           },
         })
         const data = response.data.data
