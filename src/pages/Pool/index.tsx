@@ -9,13 +9,14 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
-import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
+import { Activity, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { HideSmall, ThemedText } from 'theme'
+import { ExternalLink, HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
+import { isChainAllowed } from 'utils/switchChain'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
@@ -89,6 +90,16 @@ const NoLiquidity = styled.div`
   max-width: 300px;
   min-height: 25vh;
 `
+
+const WrongNetwork = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  max-width: 300px;
+  min-height: 25vh;
+`
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
@@ -126,14 +137,54 @@ function PositionsLoadingPlaceholder() {
   )
 }
 
+function WrongNetworkCard() {
+  const theme = useContext(ThemeContext)
+  return (
+    <>
+      <PageWrapper>
+        <SwapPoolTabs active={'pool'} />
+        <AutoColumn gap="lg" justify="center">
+          <AutoColumn gap="lg" style={{ width: '100%' }}>
+            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <ThemedText.Body fontSize={'20px'}>
+                <Trans>Pools Overview</Trans>
+              </ThemedText.Body>
+            </TitleRow>
+
+            <MainContentWrapper>
+              <WrongNetwork>
+                <ThemedText.Body color={theme.text3} textAlign="center">
+                  <Activity size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
+                  <div>
+                    <Trans>
+                      Your connected network is unsupported. Request support{' '}
+                      <ExternalLink href="https://uniswap.canny.io/feature-requests">here</ExternalLink>.
+                    </Trans>
+                  </div>
+                </ThemedText.Body>
+              </WrongNetwork>
+            </MainContentWrapper>
+          </AutoColumn>
+        </AutoColumn>
+      </PageWrapper>
+      <SwitchLocaleLink />
+    </>
+  )
+}
+
 export default function Pool() {
-  const { account, chainId } = useWeb3React()
+  const { account, connector, chainId } = useWeb3React()
+
   const toggleWalletModal = useWalletModalToggle()
 
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
+
+  if (chainId && !isChainAllowed(connector, chainId)) {
+    return <WrongNetworkCard />
+  }
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
