@@ -12,7 +12,6 @@ import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
-import TallyIcon from '../../assets/images/tally.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { fortmatic, getWalletForConnector, injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
@@ -185,7 +184,6 @@ export default function WalletModal({
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetaMask = !!window.ethereum?.isMetaMask
-    const isTally = !!window.ethereum?.isTally
     const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
@@ -249,24 +247,6 @@ export default function WalletModal({
         // likewise for generic
         else if (option.name === 'Injected' && isMetaMask) {
           return null
-        } else if (option.name === 'Injected' && isTally) {
-          return (
-            <Option
-              id={`connect-${key}`}
-              key={key}
-              onClick={() => {
-                option.connector === connector
-                  ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                  : !option.href && option.connector && tryActivation(option.connector)
-              }}
-              color={'#E8831D'}
-              header={<Trans>Tally</Trans>}
-              isActive={option.connector === connector}
-              subheader={null}
-              link={null}
-              icon={TallyIcon}
-            />
-          )
         }
       }
 
