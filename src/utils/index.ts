@@ -25,22 +25,22 @@ export function shortenAddress(address: string, chars = 4): string {
 }
 
 // account is not optional
-function getSigner(library: JsonRpcProvider, account: string): JsonRpcSigner {
-  return library.getSigner(account).connectUnchecked()
+function getSigner(provider: JsonRpcProvider, account: string): JsonRpcSigner {
+  return provider.getSigner(account).connectUnchecked()
 }
 
 // account is optional
-function getProviderOrSigner(library: JsonRpcProvider, account?: string): JsonRpcProvider | JsonRpcSigner {
-  return account ? getSigner(library, account) : library
+function getProviderOrSigner(provider: JsonRpcProvider, account?: string): JsonRpcProvider | JsonRpcSigner {
+  return account ? getSigner(provider, account) : provider
 }
 
 // account is optional
-export function getContract(address: string, ABI: any, library: JsonRpcProvider, account?: string): Contract {
+export function getContract(address: string, ABI: any, provider: JsonRpcProvider, account?: string): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
+  return new Contract(address, ABI, getProviderOrSigner(provider, account) as any)
 }
 
 export function escapeRegExp(string: string): string {
