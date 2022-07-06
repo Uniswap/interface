@@ -18,6 +18,7 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
 import Explore from './Explore'
+import { TokenDetails } from './Explore/TokenDetails'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -92,6 +93,7 @@ export default function App() {
           <Suspense fallback={<Loader />}>
             <Switch>
               <Route exact strict path="/explore" component={Explore} />
+              <Route exact strict path="/tokens/:tokenAddress" component={TokenDetails} />
 
               <Route strict path="/vote" component={Vote} />
               <Route exact strict path="/create-proposal">
