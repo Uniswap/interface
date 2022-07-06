@@ -4,7 +4,6 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
-import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
@@ -23,59 +22,6 @@ export enum Wallet {
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
-}
-
-export function getWalletForConnector(connector: Connector) {
-  switch (connector) {
-    case injected:
-      return Wallet.INJECTED
-    case coinbaseWallet:
-      return Wallet.COINBASE_WALLET
-    case walletConnect:
-      return Wallet.WALLET_CONNECT
-    case fortmatic:
-      return Wallet.FORTMATIC
-    case network:
-      return Wallet.NETWORK
-    case gnosisSafe:
-      return Wallet.GNOSIS_SAFE
-    default:
-      throw Error('unsupported connector')
-  }
-}
-
-export function getConnectorForWallet(wallet: Wallet) {
-  switch (wallet) {
-    case Wallet.INJECTED:
-      return injected
-    case Wallet.COINBASE_WALLET:
-      return coinbaseWallet
-    case Wallet.WALLET_CONNECT:
-      return walletConnect
-    case Wallet.FORTMATIC:
-      return fortmatic
-    case Wallet.NETWORK:
-      return network
-    case Wallet.GNOSIS_SAFE:
-      return gnosisSafe
-  }
-}
-
-export function getHooksForWallet(wallet: Wallet) {
-  switch (wallet) {
-    case Wallet.INJECTED:
-      return injectedHooks
-    case Wallet.COINBASE_WALLET:
-      return coinbaseWalletHooks
-    case Wallet.WALLET_CONNECT:
-      return walletConnectHooks
-    case Wallet.FORTMATIC:
-      return fortmaticHooks
-    case Wallet.NETWORK:
-      return networkHooks
-    case Wallet.GNOSIS_SAFE:
-      return gnosisSafeHooks
-  }
 }
 
 export const [network, networkHooks] = initializeConnector<Network>(

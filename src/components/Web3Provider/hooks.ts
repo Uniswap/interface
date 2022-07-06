@@ -1,15 +1,7 @@
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import {
-  getConnectorForWallet,
-  getHooksForWallet,
-  gnosisSafe,
-  gnosisSafeHooks,
-  injected,
-  network,
-  networkHooks,
-  Wallet,
-} from 'connectors'
+import { gnosisSafe, gnosisSafeHooks, injected, network, networkHooks, Wallet } from 'connectors'
+import { getConnectorForWallet, getHooksForWallet } from 'connectors/utils'
 import { useEffect, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
