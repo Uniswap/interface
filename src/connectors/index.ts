@@ -1,5 +1,5 @@
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
-import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
+import { initializeConnector } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
@@ -9,7 +9,6 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import Fortmatic from 'fortmatic'
-import { useMemo } from 'react'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 
@@ -21,9 +20,6 @@ export enum Wallet {
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
-
-export const BACKFILLABLE_WALLETS = [Wallet.COINBASE_WALLET, Wallet.WALLET_CONNECT, Wallet.INJECTED]
-export const SELECTABLE_WALLETS = [...BACKFILLABLE_WALLETS, Wallet.FORTMATIC]
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -65,7 +61,7 @@ export function getConnectorForWallet(wallet: Wallet) {
   }
 }
 
-function getHooksForWallet(wallet: Wallet) {
+export function getHooksForWallet(wallet: Wallet) {
   switch (wallet) {
     case Wallet.INJECTED:
       return injectedHooks
@@ -119,33 +115,3 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
       onError,
     })
 )
-
-interface ConnectorListItem {
-  connector: Connector
-  hooks: Web3ReactHooks
-}
-
-function getConnectorListItemForWallet(wallet: Wallet) {
-  return {
-    connector: getConnectorForWallet(wallet),
-    hooks: getHooksForWallet(wallet),
-  }
-}
-
-export function useConnectors(selectedWallet: Wallet | undefined) {
-  return useMemo(() => {
-    const connectors: ConnectorListItem[] = [{ connector: gnosisSafe, hooks: gnosisSafeHooks }]
-    if (selectedWallet) {
-      connectors.push(getConnectorListItemForWallet(selectedWallet))
-    }
-    connectors.push(
-      ...SELECTABLE_WALLETS.filter((wallet) => wallet !== selectedWallet).map(getConnectorListItemForWallet)
-    )
-    connectors.push({ connector: network, hooks: networkHooks })
-    const web3ReactConnectors: [Connector, Web3ReactHooks][] = connectors.map(({ connector, hooks }) => [
-      connector,
-      hooks,
-    ])
-    return web3ReactConnectors
-  }, [selectedWallet])
-}
