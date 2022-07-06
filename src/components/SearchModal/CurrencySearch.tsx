@@ -117,6 +117,7 @@ export function CurrencySearch({
   const native = useNativeCurrency()
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
+    // Use Celo ERC20 Implementation and exclude the native asset
     if (!native || (chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId))) {
       return filteredSortedTokens
     }
