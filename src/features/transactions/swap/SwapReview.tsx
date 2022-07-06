@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { LongPressButton } from 'src/components/buttons/LongPressButton'
@@ -10,7 +11,7 @@ import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
-import { Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -85,7 +86,7 @@ export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
 
   return (
     <>
-      <Flex centered flexGrow={1} gap="xs">
+      <AnimatedFlex centered entering={FadeInUp} exiting={FadeOut} flexGrow={1} gap="xs">
         <Text color="textSecondary" variant="bodySmall">
           {t('Swap')}
         </Text>
@@ -140,8 +141,16 @@ export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
             {currencyOut.symbol}
           </Text>
         </Flex>
-      </Flex>
-      <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
+      </AnimatedFlex>
+      <AnimatedFlex
+        entering={FadeInUp}
+        exiting={FadeOut}
+        flexGrow={1}
+        gap="sm"
+        justifyContent="flex-end"
+        mb="xl"
+        mt="xs"
+        px="sm">
         {!isWrapAction(wrapType) && trade && (
           <SwapDetails currencyOut={currencyAmountOut} trade={trade} />
         )}
@@ -179,7 +188,7 @@ export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
             />
           </Flex>
         </Flex>
-      </Flex>
+      </AnimatedFlex>
     </>
   )
 }

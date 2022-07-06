@@ -3,11 +3,12 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
+import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
-import { Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -72,7 +73,7 @@ export function SwapForm({ state, dispatch, onNext }: SwapFormProps) {
 
   return (
     <>
-      <Flex gap="sm" justifyContent="center">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm" justifyContent="center">
         <Trace section={SectionName.CurrencyInputPanel}>
           <CurrencyInputPanel
             autoFocus
@@ -127,8 +128,15 @@ export function SwapForm({ state, dispatch, onNext }: SwapFormProps) {
             </Flex>
           </Flex>
         </Trace>
-      </Flex>
-      <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
+      </AnimatedFlex>
+      <AnimatedFlex
+        exiting={FadeOutDown}
+        flexGrow={1}
+        gap="sm"
+        justifyContent="flex-end"
+        mb="xl"
+        mt="xs"
+        px="sm">
         <DecimalPad
           setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
           value={formattedAmounts[exactCurrencyField]}
@@ -142,7 +150,7 @@ export function SwapForm({ state, dispatch, onNext }: SwapFormProps) {
           variant="blue"
           onPress={onNext}
         />
-      </Flex>
+      </AnimatedFlex>
     </>
   )
 }
