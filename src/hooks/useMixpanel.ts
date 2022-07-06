@@ -902,7 +902,7 @@ export const useGlobalMixpanelEvents = () => {
         case 'discover':
           pageName = 'Discover'
           break
-        case 'campaign':
+        case 'campaigns':
           pageName = 'Campaign'
           break
         case 'elastic/remove':
