@@ -35,7 +35,6 @@ const ChartHeader = styled.div`
 `
 const DeltaContainer = styled.div`
   display: flex;
-  font-size: 16px;
   align-items: center;
 `
 const TokenNameCell = styled.div`
