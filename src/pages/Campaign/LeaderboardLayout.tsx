@@ -152,7 +152,7 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
           </CountdownContainer>
         </RefreshTextContainer>
         <Search
-          placeholder={t`Search by address`}
+          placeholder={t`Search by full address`}
           searchValue={searchValue}
           onSearch={setSearchValue}
           style={{ background: theme.buttonBlack }}
