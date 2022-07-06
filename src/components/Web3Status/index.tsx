@@ -142,7 +142,9 @@ function WrappedStatusIcon({ connector }: { connector: Connector }) {
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
 
-  const error = useAppSelector((state) => state.wallet.errorByConnectionType[getConnectionTypeForConnector(connector)])
+  const error = useAppSelector(
+    (state) => state.connection.errorByConnectionType[getConnectionTypeForConnector(connector)]
+  )
 
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
 

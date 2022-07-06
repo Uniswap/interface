@@ -7,9 +7,9 @@ import { AutoRow } from 'components/Row'
 import { getConnectionTypeForConnector } from 'connectors/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import { updateConnectionError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -127,7 +127,9 @@ export default function WalletModal({
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
-    pendingConnector ? state.wallet.errorByConnectionType[getConnectionTypeForConnector(pendingConnector)] : undefined
+    pendingConnector
+      ? state.connection.errorByConnectionType[getConnectionTypeForConnector(pendingConnector)]
+      : undefined
   )
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)

@@ -9,8 +9,8 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
+import { useCurrencyBalances } from '../connection/hooks'
 import { AppState } from '../index'
-import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, typeInput } from './actions'
 
 const ZERO = JSBI.BigInt(0)
