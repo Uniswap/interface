@@ -9,14 +9,14 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { favoritesAtom } from './TokenTable'
 
-const TIME_OPTIONS: { [key: string]: TimePeriod } = {
-  '1H': TimePeriod.hour,
-  '1D': TimePeriod.day,
-  '1W': TimePeriod.week,
-  '1M': TimePeriod.month,
-  '1Y': TimePeriod.year,
+const TIME_DISPLAYS: Record<TimePeriod, string> = {
+  [TimePeriod.hour]: '1H',
+  [TimePeriod.day]: '1D',
+  [TimePeriod.week]: '1W',
+  [TimePeriod.month]: '1M',
+  [TimePeriod.year]: '1Y',
 }
-const TIMES = Object.keys(TIME_OPTIONS)
+const TIME_PERIODS = [TimePeriod.hour, TimePeriod.day, TimePeriod.week, TimePeriod.month, TimePeriod.year]
 
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -101,7 +101,7 @@ export default function TokenDetail({ address }: { address: string }) {
   const currency = useCurrency(address)
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = atom<boolean>(favoriteTokens.includes(address))
-  const [timePeriod, setTimePeriod] = useState(TimePeriod.hour)
+  const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
 
   // catch token error and loading state
   if (!token) {
@@ -153,14 +153,14 @@ export default function TokenDetail({ address }: { address: string }) {
         </DeltaContainer>
         <ChartContainer></ChartContainer>
         <TimeOptionsContainer>
-          {TIMES.map((time) => {
+          {TIME_PERIODS.map((timePeriod) => {
             return (
               <TimeButton
-                key={time}
-                active={timePeriod === TIME_OPTIONS[time]}
-                onClick={() => setTimePeriod(TIME_OPTIONS[time])}
+                key={timePeriod}
+                active={activeTimePeriod === timePeriod}
+                onClick={() => setTimePeriod(timePeriod)}
               >
-                {time}
+                {TIME_DISPLAYS[timePeriod]}
               </TimeButton>
             )
           })}
