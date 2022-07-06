@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { addScreenshotListener } from 'expo-screen-capture'
 import React, { ReactNode, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
@@ -21,6 +22,7 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
+
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
 enum View {
@@ -49,6 +51,15 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
       )
     }
   }
+
+  useEffect(() => {
+    if (view !== View.View) {
+      return
+    }
+
+    const listener = addScreenshotListener(() => setShowScreenShotWarningModal(true))
+    return () => listener?.remove()
+  }, [view])
 
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Manual)) {
@@ -104,8 +115,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
             isVisible={showScreenShotWarningModal}
             modalName={ModalName.ScreenshotWarning}
             title={t('Screenshots aren’t secure')}
-            onClose={() => setShowScreenShotWarningModal(false)}
-            onConfirm={onValidationSuccessful}
+            onConfirm={() => setShowScreenShotWarningModal(false)}
           />
           <Flex grow justifyContent="space-between">
             <MnemonicDisplay address={activeAccount!.address} style={flex.fill} />
@@ -115,7 +125,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
                 name={ElementName.Next}
                 testID={ElementName.Next}
                 variant="onboard"
-                onPress={() => setShowScreenShotWarningModal(true)}
+                onPress={onValidationSuccessful}
               />
             </Flex>
           </Flex>

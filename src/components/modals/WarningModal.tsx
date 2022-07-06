@@ -18,8 +18,8 @@ export default function WarningModal({
   confirmText,
 }: {
   isVisible: boolean
-  onClose: () => void
-  onConfirm: () => void
+  onClose?: () => void
+  onConfirm?: () => void
   modalName: ModalName
   title: string
   caption: string
@@ -43,15 +43,15 @@ export default function WarningModal({
         </Text>
         <Flex centered row gap="sm" paddingTop="lg">
           {closeText && (
-            <PrimaryButton label={closeText} variant="gray" width="50%" onPress={onClose} />
+            <PrimaryButton flex={1} label={closeText} variant="gray" onPress={onClose} />
           )}
           {confirmText && (
             <PrimaryButton
+              flex={1}
               label={confirmText}
               name={ElementName.Confirm}
               testID={ElementName.Confirm}
               variant="blue"
-              width="50%"
               onPress={onConfirm}
             />
           )}

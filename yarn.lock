@@ -9860,6 +9860,11 @@ expo-modules-core@~0.4.4, expo-modules-core@~0.4.7, expo-modules-core@~0.4.8:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
+expo-screen-capture@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/expo-screen-capture/-/expo-screen-capture-4.2.0.tgz#f7cac5fd41ccdc42b86bf2c55d0ffc78ac260d01"
+  integrity sha512-wbvvAqfySKB+iMJqREbzo77l/AwXgopDiYLNTvtK0uGR53NJ9365Q2JAdGnyb9NIwlsRKz/PbRuQ0k49KBklvg==
+
 expo-splash-screen@^0.13.5:
   version "0.13.5"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.13.5.tgz#ece76c092f2ce88e4660a70e532ed47909a01ddd"
