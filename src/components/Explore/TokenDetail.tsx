@@ -1,6 +1,8 @@
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
+import { TimePeriod } from 'hooks/useTopTokens'
 import { atom, useAtom } from 'jotai'
+import { useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Heart, Share } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
@@ -32,9 +34,29 @@ const ChartHeader = styled.div`
   color: ${({ theme }) => theme.text1};
   gap: 4px;
 `
+const ChartContainer = styled.div`
+  height: 332px;
+  border-bottom: 1px solid ${({ theme }) => theme.bg3};
+`
 const DeltaContainer = styled.div`
   display: flex;
   align-items: center;
+`
+
+const TimeButton = styled.button<{ active: boolean }>`
+  background-color: ${({ theme, active }) => (active ? theme.primary1 : 'transparent')};
+  font-size: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text1};
+`
+const TimeOptionsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
 `
 const TokenNameCell = styled.div`
   display: flex;
@@ -70,6 +92,7 @@ export default function TokenDetail({ address }: { address: string }) {
   const currency = useCurrency(address)
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = atom<boolean>(favoriteTokens.includes(address))
+  const [timePeriod, setTimePeriod] = useState(TimePeriod.hour)
 
   // catch token error and loading state
   if (!token) {
@@ -79,7 +102,7 @@ export default function TokenDetail({ address }: { address: string }) {
   const tokenSymbol = token.symbol
 
   // dummy data for now until Jordan writes token detail hooks
-  // format price
+  // TODO: format price, add sparkline
   const tokenPrice = '3,243.22'
   const tokenDelta = 1.22
   const isPositive = Math.sign(tokenDelta) > 0
@@ -119,6 +142,24 @@ export default function TokenDetail({ address }: { address: string }) {
             )}
           </ArrowCell>
         </DeltaContainer>
+        <ChartContainer></ChartContainer>
+        <TimeOptionsContainer>
+          <TimeButton active={timePeriod === TimePeriod.hour} onClick={() => setTimePeriod(TimePeriod.hour)}>
+            1H
+          </TimeButton>
+          <TimeButton active={timePeriod === TimePeriod.day} onClick={() => setTimePeriod(TimePeriod.day)}>
+            1D
+          </TimeButton>
+          <TimeButton active={timePeriod === TimePeriod.week} onClick={() => setTimePeriod(TimePeriod.week)}>
+            1W
+          </TimeButton>
+          <TimeButton active={timePeriod === TimePeriod.month} onClick={() => setTimePeriod(TimePeriod.month)}>
+            1M
+          </TimeButton>
+          <TimeButton active={timePeriod === TimePeriod.year} onClick={() => setTimePeriod(TimePeriod.year)}>
+            1Y
+          </TimeButton>
+        </TimeOptionsContainer>
       </ChartHeader>
     </TopArea>
   )
