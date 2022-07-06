@@ -8,7 +8,7 @@ exports[`renders a relative change 1`] = `
         "alignItems": "stretch",
         "display": "flex",
         "flexDirection": "row",
-        "justifyContent": "flex-end",
+        "justifyContent": "flex-start",
       },
     ]
   }
@@ -68,7 +68,7 @@ exports[`renders placeholders without a change 1`] = `
         "alignItems": "stretch",
         "display": "flex",
         "flexDirection": "row",
-        "justifyContent": "flex-end",
+        "justifyContent": "flex-start",
       },
     ]
   }

@@ -11,7 +11,7 @@ interface RelativeChangeProps {
 export function RelativeChange({ change, variant = 'caption' }: RelativeChangeProps) {
   const direction: 'up' | 'down' | undefined = change ? (change > 0 ? 'up' : 'down') : undefined
   return (
-    <Flex row gap="none" justifyContent="flex-end">
+    <Flex row gap="none">
       <Text color="textSecondary" variant={variant}>
         {change ? `${change.toFixed(1)}%` : '-'}{' '}
       </Text>
