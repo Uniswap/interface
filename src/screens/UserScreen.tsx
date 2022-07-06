@@ -117,7 +117,7 @@ export function UserScreen({
               icon={
                 <EyeIcon height={20} stroke={theme.colors.textPrimary} strokeWidth={2} width={20} />
               }
-              label={isWatching ? t('Remove') : t('Watch')}
+              label={isWatching ? t('Unwatch') : t('Watch')}
               px="lg"
               variant="transparent"
               onPress={onWatchPress}
