@@ -2,6 +2,12 @@ import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 
 import { UserPropertyOperations } from './constants'
 
+/**
+ * Initializes Amplitude with API key for project.
+ *
+ * Uniswap has two Amplitude projects: test and production. You must be a
+ * member of the organization on Amplitude to view details.
+ */
 export function initializeAnalytics() {
   if (process.env.NODE_ENV === 'development') return
 
@@ -10,13 +16,35 @@ export function initializeAnalytics() {
     throw new Error(`REACT_APP_AMPLITUDE_KEY must be a defined environment variable`)
   }
 
-  init(API_KEY)
+  init(
+    API_KEY,
+    undefined, // User ID should be undefined to let Amplitude default to Device ID
+    {
+      // Disable tracking of private user information by Amplitude
+      trackingOptions: {
+        ipAddress: false,
+        carrier: false,
+        city: false,
+        region: false,
+        country: false,
+        dma: false, // Disables designated market area tracking
+      },
+    }
+  )
 }
 
+/** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   track(eventName, eventProperties)
 }
 
+/**
+ * Updates the User Model's properties in Amplitude that represents
+ * the current session's user.
+ *
+ * See https://help.amplitude.com/hc/en-us/articles/115002380567-User-properties-and-event-properties
+ * for details.
+ */
 export function updateAnalyticsUserModel(
   operation: UserPropertyOperations,
   propertyName: string,
