@@ -4,7 +4,7 @@ import { Box } from '../layout'
 import { ColorSelector } from './ColorSelector'
 
 export default {
-  title: 'Components/ColorSelector',
+  title: 'WIP/Components/ColorSelector',
   component: ColorSelector,
   decorators: [
     (Story) => (

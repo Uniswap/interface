@@ -4,7 +4,7 @@ import { Box } from '../layout'
 import { AssetLogoWithFallback } from './AssetLogo'
 
 export default {
-  title: 'Logos/AssetLogo',
+  title: 'WIP/Logos/AssetLogo',
   component: AssetLogoWithFallback,
   decorators: [
     (Story) => (

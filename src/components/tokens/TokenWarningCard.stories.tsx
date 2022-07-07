@@ -5,7 +5,7 @@ import { TokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import { Box } from '../layout'
 
 export default {
-  title: 'Tokens/TokenWarningCard',
+  title: 'WIP/Tokens/TokenWarningCard',
   component: TokenWarningCard,
   args: {
     tokenWarningLevel: TokenWarningLevel.LOW,

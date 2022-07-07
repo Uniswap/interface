@@ -4,7 +4,7 @@ import { Box } from '../layout'
 import { DecimalPad } from './DecimalPad'
 
 export default {
-  title: 'Inputs/DecimalPad',
+  title: 'WIP/Inputs/DecimalPad',
   component: DecimalPad,
   decorators: [
     (Story) => (

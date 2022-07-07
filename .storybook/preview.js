@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@shopify/restyle'
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { useDarkMode } from 'storybook-dark-mode'
 import { darkTheme, theme } from '../src/styles/theme'
 import { NavigationDecorator } from './StoryNavigator'
@@ -35,7 +36,19 @@ export const parameters = {
       colorSecondary: theme.colors.accentAction,
     },
   },
+  options: {
+    storySort: { order: ['Introduction', '*', 'WIP'] },
+  },
   parameters: { actions: { argTypesRegex: '^on.*' } },
+  viewport: {
+    viewports: INITIAL_VIEWPORTS,
+    defaultViewport: 'iphone12',
+  },
+  docs: {
+    inlineStories: false,
+    // TODO: eventually make this value dynamically adjust to content height
+    iframeHeight: 300,
+  },
 }
 
 export const decorators = [

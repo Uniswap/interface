@@ -12,7 +12,7 @@ const DEFAULT_OPTIONS = [
 ]
 
 export default {
-  title: 'Components/Autocomplete',
+  title: 'WIP/Components/Autocomplete',
   component: Autocomplete,
   decorators: [
     (Story) => (

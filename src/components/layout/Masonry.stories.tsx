@@ -21,7 +21,7 @@ const data = [
 ]
 
 export default {
-  title: 'Layout/Masonry',
+  title: 'WIP/Layout/Masonry',
   component: Masonry,
   decorators: [
     (Story) => (

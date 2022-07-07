@@ -8,7 +8,7 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 
 export default {
-  title: 'Notifications/NotificationToasts',
+  title: 'WIP/Notifications/NotificationToasts',
   component: WCNotification,
   decorators: [
     (Story) => (

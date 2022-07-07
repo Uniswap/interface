@@ -6,7 +6,7 @@ import { Text } from 'src/components/Text'
 import { Box } from '.'
 
 export default {
-  title: 'Layout/BaseCard',
+  title: 'WIP/Layout/BaseCard',
   component: BaseCard.Container,
   decorators: [
     (Story) => (
