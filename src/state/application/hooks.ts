@@ -82,6 +82,10 @@ export function useToggleDelegateModal(): () => void {
   return useToggleModal(ApplicationModal.DELEGATE)
 }
 
+export function useToggleYourCampaignTransactionsModal(): () => void {
+  return useToggleModal(ApplicationModal.YOUR_CAMPAIGN_TRANSACTIONS)
+}
+
 export function useToggleVoteModal(): () => void {
   return useToggleModal(ApplicationModal.VOTE)
 }

@@ -63,6 +63,7 @@ export enum ApplicationModal {
   FAUCET_POPUP,
   SELECT_CAMPAIGN,
   UNSUBSCRIBE_TRUESIGHT,
+  YOUR_CAMPAIGN_TRANSACTIONS,
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')

@@ -44,7 +44,7 @@ export const TRUESIGHT_NETWORK_TO_CHAINID: NetToChain = {
   cronos: ChainId.CRONOS,
 }
 
-const NETWORKS_INFO_CONFIG: { [chain in ChainId]: NetworkInfo } = {
+export const NETWORKS_INFO_CONFIG: { [chain in ChainId]: NetworkInfo } = {
   [ChainId.MAINNET]: ethereum,
   [ChainId.ROPSTEN]: ropsten,
   [ChainId.RINKEBY]: rinkeby,

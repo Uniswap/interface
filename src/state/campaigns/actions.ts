@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export type CampaignStatus = 'Upcoming' | 'Ongoing' | 'Ended'
 
@@ -11,7 +12,7 @@ export type RewardSingle = {
   type: 'Single'
   rank?: number
   amount?: number
-  token?: string
+  tokenSymbol?: string
 }
 
 export type RewardRange = {
@@ -19,7 +20,7 @@ export type RewardRange = {
   from?: number
   to?: number
   amount?: number
-  token?: string
+  tokenSymbol?: string
 }
 
 export type RewardRandom = {
@@ -28,7 +29,7 @@ export type RewardRandom = {
   to?: number
   nWinners?: number
   amount?: number
-  token?: string
+  tokenSymbol?: string
 }
 
 export type RewardDistribution = RewardSingle | RewardRange | RewardRandom
@@ -41,7 +42,7 @@ export interface CampaignLeaderboard {
     point: number
     rank: number
     rewardAmount: number
-    token: string
+    tokenSymbol: string
   }[]
 }
 
@@ -63,6 +64,14 @@ export interface CampaignData {
   rewardState: RewardState
   chainIds: string
   rewardChainIds: string
+}
+
+export interface CampaignProofData {
+  id: number
+  chainId: ChainId
+  txPoint: string
+  utcTimestamp: number
+  txHash: string
 }
 
 export const setCampaignData = createAction<{ campaigns: CampaignData[] }>('campaigns/setCampaignData')

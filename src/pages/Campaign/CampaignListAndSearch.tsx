@@ -75,7 +75,9 @@ export default function CampaignListAndSearch({
                 </Flex>
                 {!!totalRewardAmount && (
                   <Text fontSize="14px">
-                    {totalRewardAmount} {campaign.rewardDistribution[0].token}
+                    {/* TODO: Wait for backend refactoring. */}
+                    {/*{totalRewardAmount} {campaign.rewardDistribution[0].tokenSymbol}*/}
+                    {totalRewardAmount} KNC
                   </Text>
                 )}
               </Flex>

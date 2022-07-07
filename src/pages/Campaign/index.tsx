@@ -8,7 +8,12 @@ import { BarChart, ChevronDown, Clock, Share2, Star, Users } from 'react-feather
 import { ButtonEmpty, ButtonLight } from 'components/Button'
 import { formatNumberWithPrecisionRange } from 'utils'
 import { useActiveWeb3React } from 'hooks'
-import { useSelectCampaignModalToggle, useToggleModal, useWalletModalToggle } from 'state/application/hooks'
+import {
+  useSelectCampaignModalToggle,
+  useToggleModal,
+  useToggleYourCampaignTransactionsModal,
+  useWalletModalToggle,
+} from 'state/application/hooks'
 import Divider from 'components/Divider'
 import LeaderboardLayout from 'pages/Campaign/LeaderboardLayout'
 import ModalSelectCampaign from './ModalSelectCampaign'
@@ -30,6 +35,8 @@ import { SWR_KEYS } from 'constants/index'
 import { useSWRConfig } from 'swr'
 import { Loading } from 'pages/ProAmmPool/ContentLoader'
 import { useAppDispatch } from 'state/hooks'
+import { rgba } from 'polished'
+import YourCampaignTransactionsModal from 'components/YourCampaignTransactionsModal'
 
 const LoaderParagraphs = () => (
   <>
@@ -42,6 +49,8 @@ const LoaderParagraphs = () => (
 export default function Campaign() {
   const { account } = useActiveWeb3React()
   const theme = useTheme()
+
+  const toggleYourCampaignTransactionModal = useToggleYourCampaignTransactionsModal()
 
   const [activeTab, setActiveTab] = useState<'how_to_win' | 'rewards' | 'leaderboard' | 'lucky_winners'>('how_to_win')
 
@@ -201,6 +210,7 @@ export default function Campaign() {
   const now = Date.now()
 
   const campaigns = useSelector((state: AppState) => state.campaigns.data)
+  const isLoadingCampaigns = useSelector((state: AppState) => state.campaigns.loadingCampaignData)
 
   const MINUTE_TO_REFRESH = 5
   const [campaignsRefreshIn, setCampaignsRefreshIn] = useState(MINUTE_TO_REFRESH * 60)
@@ -249,7 +259,7 @@ export default function Campaign() {
     account,
   ])
 
-  if (!campaigns.length)
+  if (!campaigns.length && !isLoadingCampaigns)
     return (
       <div style={{ margin: '10%', fontSize: '20px' }}>
         <Trans>Currently, there is no campaign.</Trans>
@@ -257,162 +267,170 @@ export default function Campaign() {
     )
 
   return (
-    <PageWrapper>
-      <CampaignContainer>
-        <HideMedium style={{ maxWidth: '400px' }}>
-          <CampaignListAndSearch onSelectCampaign={onSelectCampaign} />
-        </HideMedium>
+    <>
+      <PageWrapper>
+        <CampaignContainer>
+          <HideMedium style={{ maxWidth: '400px' }}>
+            <CampaignListAndSearch onSelectCampaign={onSelectCampaign} />
+          </HideMedium>
 
-        <CampaignDetail>
-          <MediumOnly>
-            <Flex justifyContent="space-between" alignItems="center">
-              <Text fontSize="20px" lineHeight="24px" fontWeight={500}>
-                <Trans>Campaigns</Trans>
-              </Text>
-              <ButtonEmpty
-                style={{ padding: '9px 9px', background: theme.background, width: 'fit-content' }}
-                onClick={toggleSelectCampaignModal}
-              >
-                <BarChart
-                  size={16}
-                  strokeWidth={3}
-                  color={theme.subText}
-                  style={{ transform: 'rotate(90deg) scaleX(-1)' }}
-                />
-              </ButtonEmpty>
-              <ModalSelectCampaign />
-            </Flex>
-          </MediumOnly>
+          <CampaignDetail>
+            <MediumOnly>
+              <Flex justifyContent="space-between" alignItems="center">
+                <Text fontSize="20px" lineHeight="24px" fontWeight={500}>
+                  <Trans>Campaigns</Trans>
+                </Text>
+                <ButtonEmpty
+                  style={{ padding: '9px 9px', background: theme.background, width: 'fit-content' }}
+                  onClick={toggleSelectCampaignModal}
+                >
+                  <BarChart
+                    size={16}
+                    strokeWidth={3}
+                    color={theme.subText}
+                    style={{ transform: 'rotate(90deg) scaleX(-1)' }}
+                  />
+                </ButtonEmpty>
+                <ModalSelectCampaign />
+              </Flex>
+            </MediumOnly>
 
-          <CampaignDetailImageContainer>
-            <Loading style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} />
-            <CampaignDetailImage
-              src={above768 ? selectedCampaign?.desktopBanner : selectedCampaign?.mobileBanner}
-              alt="campaign-image"
-              ref={campaignDetailImageRef}
-              onLoad={() => {
-                setTimeout(() => {
+            <CampaignDetailImageContainer>
+              <Loading style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} />
+              <CampaignDetailImage
+                src={above768 ? selectedCampaign?.desktopBanner : selectedCampaign?.mobileBanner}
+                alt="campaign-image"
+                ref={campaignDetailImageRef}
+                onLoad={() => {
+                  setTimeout(() => {
+                    if (selectedCampaign)
+                      setCampaignDetailMediaLoadedMap(prev => ({ ...prev, [selectedCampaign.id]: true }))
+                  }, 500)
+                }}
+                onError={() => {
                   if (selectedCampaign)
                     setCampaignDetailMediaLoadedMap(prev => ({ ...prev, [selectedCampaign.id]: true }))
-                }, 500)
-              }}
-              onError={() => {
-                if (selectedCampaign)
-                  setCampaignDetailMediaLoadedMap(prev => ({ ...prev, [selectedCampaign.id]: true }))
-                if (campaignDetailImageRef && campaignDetailImageRef.current) {
-                  campaignDetailImageRef.current.style.display = 'none'
-                }
-              }}
-            />
-          </CampaignDetailImageContainer>
-          <CampaignDetailHeader>
-            <Text fontSize="20px" fontWeight={500}>
-              {selectedCampaign?.name}
-            </Text>
-            <EnterNowAndShareContainer>
-              <EnterNowButton campaign={selectedCampaign} />
-              <ButtonLight borderRadius="50%" style={{ padding: '8px 11px', flex: 0 }} onClick={toggleShareModal}>
-                <Share2 size={20} color={theme.primary} style={{ minWidth: '20px', minHeight: '20px' }} />
-              </ButtonLight>
-              <ShareModal
-                url={window.location.href}
-                onShared={() =>
-                  mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED, {
-                    campaign_name: selectedCampaign?.name,
-                  })
-                }
+                  if (campaignDetailImageRef && campaignDetailImageRef.current) {
+                    campaignDetailImageRef.current.style.display = 'none'
+                  }
+                }}
               />
-            </EnterNowAndShareContainer>
-          </CampaignDetailHeader>
-          <CampaignDetailBoxGroup>
-            <CampaignDetailBoxGroupItem>
-              <Text fontSize={14} fontWeight={500} color={theme.subText}>
-                <Trans>
-                  {selectedCampaign?.status === 'Upcoming'
-                    ? 'Starting In'
-                    : selectedCampaign?.status === 'Ongoing'
-                    ? 'Ending In'
-                    : 'Ended In'}
-                </Trans>
+            </CampaignDetailImageContainer>
+            <CampaignDetailHeader>
+              <Text fontSize="20px" fontWeight={500}>
+                {selectedCampaign?.name}
               </Text>
-              <Clock size={20} color={theme.subText} />
-              {isSelectedCampaignMediaLoaded ? (
-                <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
-                  {selectedCampaign
-                    ? selectedCampaign.status === 'Upcoming'
-                      ? getFormattedTimeFromSecond((selectedCampaign.startTime - now) / 1000)
-                      : selectedCampaign.status === 'Ongoing'
-                      ? getFormattedTimeFromSecond((selectedCampaign.endTime - now) / 1000)
-                      : 'ENDED'
-                    : '--'}
+              <EnterNowAndShareContainer>
+                <EnterNowButton campaign={selectedCampaign} />
+                <ButtonLight borderRadius="50%" style={{ padding: '8px 11px', flex: 0 }} onClick={toggleShareModal}>
+                  <Share2 size={20} color={theme.primary} style={{ minWidth: '20px', minHeight: '20px' }} />
+                </ButtonLight>
+                <ShareModal
+                  url={window.location.href}
+                  onShared={() =>
+                    mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED, {
+                      campaign_name: selectedCampaign?.name,
+                    })
+                  }
+                />
+              </EnterNowAndShareContainer>
+            </CampaignDetailHeader>
+            <CampaignDetailBoxGroup>
+              <CampaignDetailBoxGroupItem>
+                <Text fontSize={14} fontWeight={500} color={theme.subText}>
+                  <Trans>
+                    {selectedCampaign?.status === 'Upcoming'
+                      ? 'Starting In'
+                      : selectedCampaign?.status === 'Ongoing'
+                      ? 'Ending In'
+                      : 'Ended In'}
+                  </Trans>
                 </Text>
-              ) : (
-                <Loading style={{ height: '24px' }} />
-              )}
-            </CampaignDetailBoxGroupItem>
-            <CampaignDetailBoxGroupItem>
-              <Text fontSize={14} fontWeight={500} color={theme.subText}>
-                <Trans>Participants</Trans>
-              </Text>
-              <Users size={20} color={theme.subText} />
-              {isSelectedCampaignMediaLoaded ? (
-                <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
-                  {selectedCampaignLeaderboard?.numberOfParticipants
-                    ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard.numberOfParticipants, 0, 0)
-                    : '--'}
-                </Text>
-              ) : (
-                <Loading style={{ height: '24px' }} />
-              )}
-            </CampaignDetailBoxGroupItem>
-            <CampaignDetailBoxGroupItem>
-              <Text fontSize={14} fontWeight={500} color={theme.subText}>
-                <Trans>Your Rank</Trans>
-              </Text>
-              <Star size={20} color={theme.subText} />
-              {isSelectedCampaignMediaLoaded ? (
-                account ? (
+                <Clock size={20} color={theme.subText} />
+                {isSelectedCampaignMediaLoaded ? (
                   <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
-                    {selectedCampaignLeaderboard?.userRank || '--'}
+                    {selectedCampaign
+                      ? selectedCampaign.status === 'Upcoming'
+                        ? getFormattedTimeFromSecond((selectedCampaign.startTime - now) / 1000)
+                        : selectedCampaign.status === 'Ongoing'
+                        ? getFormattedTimeFromSecond((selectedCampaign.endTime - now) / 1000)
+                        : 'ENDED'
+                      : '--'}
                   </Text>
                 ) : (
-                  <ButtonLight
-                    style={{ gridColumn: '1 / -1', padding: '8px', margin: '0', borderRadius: '18px' }}
-                    onClick={toggleWalletModal}
-                  >
-                    <Trans>Connect Wallet</Trans>
-                  </ButtonLight>
-                )
-              ) : (
-                <Loading style={{ height: '24px' }} />
-              )}
-            </CampaignDetailBoxGroupItem>
-          </CampaignDetailBoxGroup>
+                  <Loading style={{ height: '24px' }} />
+                )}
+              </CampaignDetailBoxGroupItem>
+              <CampaignDetailBoxGroupItem>
+                <Text fontSize={14} fontWeight={500} color={theme.subText}>
+                  <Trans>Participants</Trans>
+                </Text>
+                <Users size={20} color={theme.subText} />
+                {isSelectedCampaignMediaLoaded ? (
+                  <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
+                    {selectedCampaignLeaderboard?.numberOfParticipants
+                      ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard.numberOfParticipants, 0, 0)
+                      : '--'}
+                  </Text>
+                ) : (
+                  <Loading style={{ height: '24px' }} />
+                )}
+              </CampaignDetailBoxGroupItem>
+              <CampaignDetailBoxGroupItem>
+                <Text fontSize={14} fontWeight={500} color={theme.subText}>
+                  <Trans>Your Rank</Trans>
+                </Text>
+                <Star size={20} color={theme.subText} />
+                {isSelectedCampaignMediaLoaded ? (
+                  account ? (
+                    <Flex justifyContent="space-between" alignItems="center" style={{ gridColumn: '1 / -1' }}>
+                      <Text fontSize={20} fontWeight={500}>
+                        {selectedCampaignLeaderboard?.userRank || '--'}
+                      </Text>
+                      <YourTransactionButton onClick={toggleYourCampaignTransactionModal}>
+                        {above768 ? <Trans>Your Transactions</Trans> : <Trans>History</Trans>}
+                      </YourTransactionButton>
+                    </Flex>
+                  ) : (
+                    <ButtonLight
+                      style={{ gridColumn: '1 / -1', padding: '8px', margin: '0', borderRadius: '18px' }}
+                      onClick={toggleWalletModal}
+                    >
+                      <Trans>Connect Wallet</Trans>
+                    </ButtonLight>
+                  )
+                ) : (
+                  <Loading style={{ height: '24px' }} />
+                )}
+              </CampaignDetailBoxGroupItem>
+            </CampaignDetailBoxGroup>
 
-          <CampaignDetailTabRow>
-            <CampaignDetailTab active={activeTab === 'how_to_win'} onClick={() => setActiveTab('how_to_win')}>
-              <Trans>How to win</Trans>
-            </CampaignDetailTab>
-            <CampaignDetailTab active={activeTab === 'rewards'} onClick={() => setActiveTab('rewards')}>
-              <Trans>Rewards</Trans>
-            </CampaignDetailTab>
-            <CampaignDetailTab active={activeTab === 'leaderboard'} onClick={() => setActiveTab('leaderboard')}>
-              <Trans>Leaderboard</Trans>
-            </CampaignDetailTab>
-            {/*<CampaignDetailTab active={activeTab === 'lucky_winners'} onClick={() => setActiveTab('lucky_winners')}>*/}
-            {/*  <Trans>Lucky Winners</Trans>*/}
-            {/*</CampaignDetailTab>*/}
-          </CampaignDetailTabRow>
+            <CampaignDetailTabRow>
+              <CampaignDetailTab active={activeTab === 'how_to_win'} onClick={() => setActiveTab('how_to_win')}>
+                <Trans>How to win</Trans>
+              </CampaignDetailTab>
+              <CampaignDetailTab active={activeTab === 'rewards'} onClick={() => setActiveTab('rewards')}>
+                <Trans>Rewards</Trans>
+              </CampaignDetailTab>
+              <CampaignDetailTab active={activeTab === 'leaderboard'} onClick={() => setActiveTab('leaderboard')}>
+                <Trans>Leaderboard</Trans>
+              </CampaignDetailTab>
+              {/*<CampaignDetailTab active={activeTab === 'lucky_winners'} onClick={() => setActiveTab('lucky_winners')}>*/}
+              {/*  <Trans>Lucky Winners</Trans>*/}
+              {/*</CampaignDetailTab>*/}
+            </CampaignDetailTabRow>
 
-          <CampaignDetailContent>
-            {activeTab === 'how_to_win' && <TabHowToWinContent />}
-            {activeTab === 'rewards' && <TabRewardsContent />}
-            {activeTab === 'leaderboard' && <LeaderboardLayout refreshIn={campaignsRefreshIn} />}
-            {activeTab === 'lucky_winners' && <LeaderboardLayout refreshIn={campaignsRefreshIn} />}
-          </CampaignDetailContent>
-        </CampaignDetail>
-      </CampaignContainer>
-    </PageWrapper>
+            <CampaignDetailContent>
+              {activeTab === 'how_to_win' && <TabHowToWinContent />}
+              {activeTab === 'rewards' && <TabRewardsContent />}
+              {activeTab === 'leaderboard' && <LeaderboardLayout refreshIn={campaignsRefreshIn} />}
+              {activeTab === 'lucky_winners' && <LeaderboardLayout refreshIn={campaignsRefreshIn} />}
+            </CampaignDetailContent>
+          </CampaignDetail>
+        </CampaignContainer>
+      </PageWrapper>
+      <YourCampaignTransactionsModal />
+    </>
   )
 }
 
@@ -597,4 +615,12 @@ const HTMLWrapper = styled.div`
     font-size: 14px;
     line-height: 16px;
   }
+`
+
+const YourTransactionButton = styled(ButtonLight)`
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 2px 8px;
+  width: fit-content;
 `

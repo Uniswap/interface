@@ -939,7 +939,8 @@ export const TRENDING_SOON_ITEM_PER_PAGE = 10
 export const TRENDING_SOON_MAX_ITEMS = 50
 export const TRENDING_ITEM_PER_PAGE = 25
 export const TRENDING_MAX_ITEM = 50
-export const CAMPAIGN_ITEM_PER_PAGE = 10
+export const CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE = 10
+export const CAMPAIGN_YOUR_TRANSACTIONS_ITEM_PER_PAGE = 10000
 
 // Keys are present_on_chains' value.
 export const TRENDING_SOON_SUPPORTED_NETWORKS: { [p: string]: ChainId } = {
@@ -965,6 +966,8 @@ const CAMPAIGN_BASE_URL = `${process.env.REACT_APP_CAMPAIGN_BASE_URL}/api/v1/cam
 export const SWR_KEYS = {
   getListCampaign: CAMPAIGN_BASE_URL,
   getLeaderboard: (id: number) => CAMPAIGN_BASE_URL + '/' + id + '/leaderboard',
+  getCampaignTransactions: (campaignId: number, limit: number, offset: number, account: string) =>
+    `${CAMPAIGN_BASE_URL}/${campaignId}/proofs?limit=${limit}&offset=${offset}&userAddress=${account}`,
 }
 
 // Epsilon 0 is absolute permittivity of free space whose value is 8.854×10^-12 and unit is C^2N^-1m–2.
