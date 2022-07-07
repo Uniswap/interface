@@ -10,6 +10,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
+import { DOMAIN_TYPE, SWAP_TYPE } from 'constants/eip712'
 import { getAddress, resolveProperties, solidityKeccak256 } from 'ethers/lib/utils'
 import { SwapCall } from 'hooks/useSwapCallArguments'
 import { useMemo } from 'react'
@@ -123,27 +124,10 @@ export default function useSendSwapTransaction(
           verifyingContract: SWAP_ROUTER_ADDRESSES[chainId],
         }
 
-        const domain_type = [
-          { name: 'name', type: 'string' },
-          { name: 'version', type: 'string' },
-          { name: 'chainId', type: 'uint256' },
-          { name: 'verifyingContract', type: 'address' },
-        ]
-
-        const swap_type = [
-          { name: 'data', type: 'bytes' },
-          { name: 'to', type: 'address' },
-          { name: 'chainId', type: 'uint256' },
-          { name: 'nonce', type: 'uint256' },
-          { name: 'gasPrice', type: 'uint256' },
-          { name: 'gasLimit', type: 'uint256' },
-          { name: 'value', type: 'uint256' },
-        ]
-
         const signData = JSON.stringify({
           types: {
-            EIP712Domain: domain_type,
-            Swap: swap_type,
+            EIP712Domain: DOMAIN_TYPE,
+            Swap: SWAP_TYPE,
           },
           domain,
           primaryType: 'Swap',
