@@ -102,7 +102,7 @@ const ClickableName = styled(Link)`
   color: ${({ theme }) => theme.text1};
 
   &:hover,
-  :focus {
+  &:focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 `
