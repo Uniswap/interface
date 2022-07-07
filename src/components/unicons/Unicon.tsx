@@ -10,7 +10,7 @@ import {
   Rect,
   vec,
 } from '@shopify/react-native-skia'
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import 'react-native-reanimated'
 import { Box } from 'src/components/layout'
 import { svgPaths as containerPaths } from 'src/components/unicons/Container'
@@ -126,7 +126,9 @@ interface Props {
   border?: boolean
 }
 
-export function Unicon({ address, size, randomSeed = 0 }: Props) {
+export const Unicon = memo(_Unicon)
+
+export function _Unicon({ address, size, randomSeed = 0 }: Props) {
   // Renders a Unicon inside a (size) x (size) pixel square Box
   const attributeIndices = useMemo(
     () => deriveUniconAttributeIndices(address, randomSeed),
