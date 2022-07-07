@@ -54,6 +54,7 @@ export default function BalanceSummary({ address }: { address: string }) {
   const { label, logoUrl } = CHAIN_INFO[chainId]
   const multipleBalances = true // for testing purposes
   const totalBalance = 4.3
+  const logoUrl2 = CHAIN_INFO[137].logoUrl
 
   return (
     <BalancesCard>
@@ -80,7 +81,7 @@ export default function BalanceSummary({ address }: { address: string }) {
         label={label}
       />
       <NetworkBalance
-        logoUrl={logoUrl}
+        logoUrl={logoUrl2}
         balance={'3.3'}
         tokenSymbol={tokenSymbol ?? 'XXX'}
         fiatValue={3200}
