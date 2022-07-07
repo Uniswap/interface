@@ -3,17 +3,18 @@ on:
   # Scheduled deploys are disabled until they can be tested. This is currently blocked on flaky cypress tests.
   # schedule:
   #   - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
+  # In the meantime, deploy manually. There is a 10-minute timeout, during which you should request the resources through Cloudflare.
   # manual trigger
   workflow_dispatch:
 
 jobs:
-  # wait-on-test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: jitterbit/await-check-suites@v1
-  #       with:
-  #         # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
-  #         onlyFirstCheckSuite: true
+  wait-on-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jitterbit/await-check-suites@v1
+        with:
+          # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
+          onlyFirstCheckSuite: true
 
   tag:
     # needs: wait-on-test
@@ -64,6 +65,7 @@ jobs:
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
       
+      - run: sleep 600
       # - uses: actions/cache@v3
       #   id: cypress-cache
       #   with:
