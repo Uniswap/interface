@@ -160,7 +160,8 @@ const ResourceLink = styled(ExternalLink)`
   gap: 4px;
   text-decoration: none;
 
-  &:hover {
+  &:hover,
+  :focus {
     color: ${({ theme }) => darken(0.1, theme.primary1)};
     text-decoration: none;
   }
