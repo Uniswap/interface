@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
-import { SwapTransaction } from 'state/routing/types'
+import { SwapTransaction } from 'state/validator/types'
 
 import {
   KROMATIKA_METASWAP_ADDRESSES,
@@ -115,7 +115,6 @@ export function useApproveCallbackFromTrade(
 ) {
   const { chainId } = useActiveWeb3React()
   const v3SwapRouterAddress = chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
-  const kromatikaMetaswap = chainId ? KROMATIKA_METASWAP_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? (allowedSlippage ? trade.maximumAmountIn(allowedSlippage) : trade.inputAmount) : undefined),
     [allowedSlippage, trade]
@@ -125,7 +124,7 @@ export function useApproveCallbackFromTrade(
     amountToApprove,
     chainId
       ? swapTransaction
-        ? kromatikaMetaswap
+        ? swapTransaction.allowanceTarget
         : trade instanceof V3Trade
         ? v3SwapRouterAddress
         : undefined

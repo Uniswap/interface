@@ -3,7 +3,7 @@ import { Route, SwapQuoter, Trade } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { V3TradeState } from 'state/routing/types'
+import { V3TradeState } from 'state/validator/types'
 
 import { useSingleContractWithCallData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'

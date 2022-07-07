@@ -9,7 +9,7 @@ import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { SwapTransaction, V3TradeState } from 'state/routing/types'
+import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { isTradeBetter } from 'utils/isTradeBetter'
 
 import { useCurrency } from '../../hooks/Tokens'
@@ -116,7 +116,10 @@ function involvesAddress(
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
+export function useDerivedMarketInfo(
+  toggledVersion: Version | undefined,
+  gasless: boolean
+): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
@@ -157,6 +160,7 @@ export function useDerivedMarketInfo(toggledVersion: Version | undefined): {
   )
 
   const v2Trade = useBestMarketTrade(
+    gasless,
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     toggledVersion !== Version.v3 ? parsedAmount : undefined,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined

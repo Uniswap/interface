@@ -27,7 +27,7 @@ import { SignatureData, UseERC20PermitState } from './useERC20Permit'
 import { useGaslessCallback } from './useGaslessCallback'
 import { useActiveWeb3React } from './web3'
 
-const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
+const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 enum SwapCallbackState {
   INVALID,

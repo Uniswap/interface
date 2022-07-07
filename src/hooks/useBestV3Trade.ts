@@ -4,19 +4,17 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ChainName } from 'constants/chains'
 import { BETTER_TRADE_LESS_HOPS_THRESHOLD, TWO_PERCENT } from 'constants/misc'
 import { useMemo } from 'react'
-import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
-import { SwapTransaction, V3TradeState } from 'state/routing/types'
-import { useInchQuoteAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
-import { isTradeBetter } from 'utils/isTradeBetter'
+import { SwapTransaction, V3TradeState } from 'state/validator/types'
+import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
 
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 import { useUSDCValue } from './useUSDCPrice'
-import { useActiveWeb3React } from './web3'
 
 export function useBestMarketTrade(
+  gasless: boolean,
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
@@ -28,65 +26,31 @@ export function useBestMarketTrade(
 } {
   const isWindowVisible = useIsWindowVisible()
 
-  const { chainId } = useActiveWeb3React()
   const debouncedAmount = useDebounce(amountSpecified, 100)
 
   const routingAPIEnabled = useRoutingAPIEnabled()
-  const routingAPITrade = use0xQuoteAPITrade(
+  const quoteTrade = useValidatorAPITrade(
     tradeType,
     null,
     null,
     true,
-    false,
+    !gasless,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
     otherCurrency
   )
 
-  const nameOfNetwork = useMemo(() => {
-    if (!chainId) return undefined
-    return ChainName[chainId]
-  }, [chainId])
-
-  const protocols = useMemo(() => {
-    if (!nameOfNetwork) return undefined
-
-    if (nameOfNetwork === 'ethereum') {
-      return 'UNISWAP_V2,UNISWAP_V3'
-    }
-    return nameOfNetwork.toUpperCase().concat('_UNISWAP_V2,').concat(nameOfNetwork.toUpperCase()).concat('_UNISWAP_V3')
-  }, [nameOfNetwork])
-
-  // use 1inch with only v2,v3
-  const uniswapAPITrade = useInchQuoteAPITrade(
+  const gaslessTrade = useGaslessAPITrade(
     tradeType,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency,
-    protocols
-  )
-
-  const swapAPITrade = useInchQuoteAPITrade(
-    tradeType,
+    null,
+    null,
+    true,
+    gasless,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
     otherCurrency
   )
 
-  const isLoading = routingAPITrade.state === V3TradeState.LOADING || swapAPITrade.state === V3TradeState.LOADING
-
-  const betterTrade = useMemo(() => {
-    try {
-      // compare if tradeB is better than tradeA
-      return !isLoading
-        ? isTradeBetter(swapAPITrade.trade, routingAPITrade.trade, BETTER_TRADE_LESS_HOPS_THRESHOLD)
-          ? routingAPITrade
-          : swapAPITrade
-        : undefined
-    } catch (e) {
-      // v3 trade may be debouncing or fetching and have different
-      // inputs/ouputs than v2
-      console.log('Error')
-      return undefined
-    }
-  }, [isLoading, routingAPITrade, swapAPITrade])
+  const betterTrade = gasless ? gaslessTrade : quoteTrade
+  const isLoading = betterTrade.state === V3TradeState.LOADING
 
   const debouncing =
     betterTrade?.trade &&
@@ -99,7 +63,7 @@ export function useBestMarketTrade(
         !amountSpecified.currency.equals(betterTrade?.trade.outputAmount.currency) ||
         !otherCurrency?.equals(betterTrade?.trade.inputAmount.currency))
 
-  const savings = useUSDCValue(uniswapAPITrade.trade?.outputAmount)
+  const savings = useUSDCValue(betterTrade.uniswapAmount)
 
   return useMemo(
     () => ({

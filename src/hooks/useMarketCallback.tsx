@@ -8,10 +8,11 @@ import { SwapRouter, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { poll } from 'ethers/lib/utils'
 import { ReactNode, useMemo } from 'react'
-import { use0xQuoteAPITrade } from 'state/quote/useQuoteAPITrade'
-import { SwapTransaction, V3TradeState } from 'state/routing/types'
-import { useInchSwapAPITrade } from 'state/routing/useRoutingAPITrade'
+import { useLazyFeeTierDistributionQuery } from 'state/data/generated'
 import { useIsGaslessMode } from 'state/user/hooks'
+import { SwapTransaction, V3TradeState } from 'state/validator/types'
+import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
+import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
 import { KROMATIKA_METASWAP_ADDRESSES, SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
@@ -70,7 +71,8 @@ function useMarketCallArguments(
   signatureData: SignatureData | null | undefined,
   parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | null | undefined,
-  showConfirm: boolean
+  showConfirm: boolean,
+  gasless: boolean
 ): {
   state: V3TradeState
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined | null // trade to execute, required
@@ -86,33 +88,72 @@ function useMarketCallArguments(
   const argentWalletContract = useArgentWalletContract()
   const kromatikaMetaswap = useKromatikaMetaswap()
 
-  // 1 - 0xProtocol ; 2-1inch
+  let signaturePermitData
+  if (signatureData && kromatikaMetaswap && parsedAmount) {
+    // create call data
+    const inputTokenPermit =
+      'allowed' in signatureData
+        ? {
+            expiry: signatureData.deadline,
+            nonce: signatureData.nonce,
+            s: signatureData.s,
+            r: signatureData.r,
+            v: signatureData.v as any,
+          }
+        : {
+            deadline: signatureData.deadline,
+            amount: signatureData.amount,
+            s: signatureData.s,
+            r: signatureData.r,
+            v: signatureData.v as any,
+          }
 
-  const swapAPITrade = useInchSwapAPITrade(
-    swapTransaction,
-    swapTransaction?.type == 1 ? TradeType.EXACT_OUTPUT : trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
-    recipient,
-    affiliate,
-    showConfirm,
-    trade?.inputAmount,
-    trade?.outputAmount.currency
-  )
+    if ('nonce' in inputTokenPermit) {
+      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermitAllowed', [
+        parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
+        inputTokenPermit.nonce,
+        inputTokenPermit.expiry,
+        inputTokenPermit.v,
+        inputTokenPermit.r,
+        inputTokenPermit.s,
+      ])
+    } else {
+      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermit', [
+        parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
+        inputTokenPermit.amount,
+        inputTokenPermit.deadline,
+        inputTokenPermit.v,
+        inputTokenPermit.r,
+        inputTokenPermit.s,
+      ])
+    }
+  }
 
-  const routingAPITrade = use0xQuoteAPITrade(
+  // get swap txn
+  const quoteTrade = useValidatorAPITrade(
     trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
     recipient,
     affiliate,
-    true,
-    showConfirm,
+    false,
+    !showConfirm || gasless,
     trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
-    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency
+    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency,
+    signaturePermitData
   )
 
-  const updatedSwapTxn = useMemo(() => {
-    if (swapTransaction?.type == 1) return routingAPITrade
+  // get swap txn
+  const gaslessSwapTrade = useGaslessAPITrade(
+    trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
+    recipient,
+    affiliate,
+    false,
+    !showConfirm || !gasless,
+    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
+    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency,
+    signaturePermitData
+  )
 
-    return swapAPITrade
-  }, [routingAPITrade, swapAPITrade, swapTransaction?.type])
+  const updatedSwapTxn = showConfirm ? (gasless ? gaslessSwapTrade : quoteTrade) : undefined
 
   return useMemo(() => {
     if (
@@ -133,95 +174,7 @@ function useMarketCallArguments(
         marketcall: [],
       }
     // trade is V3Trade
-    let swapRouterAddress
-    let callData
-    if (kromatikaMetaswap) {
-      const calldatas: string[] = []
-
-      if (signatureData) {
-        // create call data
-        const inputTokenPermit =
-          'allowed' in signatureData
-            ? {
-                expiry: signatureData.deadline,
-                nonce: signatureData.nonce,
-                s: signatureData.s,
-                r: signatureData.r,
-                v: signatureData.v as any,
-              }
-            : {
-                deadline: signatureData.deadline,
-                amount: signatureData.amount,
-                s: signatureData.s,
-                r: signatureData.r,
-                v: signatureData.v as any,
-              }
-
-        if ('nonce' in inputTokenPermit) {
-          calldatas.push(
-            kromatikaMetaswap.interface.encodeFunctionData('selfPermitAllowed', [
-              parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
-              inputTokenPermit.nonce,
-              inputTokenPermit.expiry,
-              inputTokenPermit.v,
-              inputTokenPermit.r,
-              inputTokenPermit.s,
-            ])
-          )
-        } else {
-          calldatas.push(
-            kromatikaMetaswap.interface.encodeFunctionData('selfPermit', [
-              parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
-              inputTokenPermit.amount,
-              inputTokenPermit.deadline,
-              inputTokenPermit.v,
-              inputTokenPermit.r,
-              inputTokenPermit.s,
-            ])
-          )
-        }
-      }
-
-      swapRouterAddress = kromatikaMetaswap.address
-      const tokenFrom = trade?.inputAmount.currency.isNative
-        ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
-        : trade?.inputAmount.currency.wrapped.address
-      const amountFrom = trade?.inputAmount.quotient.toString()
-
-      calldatas.push(
-        kromatikaMetaswap.interface.encodeFunctionData('swap', [
-          tokenFrom,
-          toHex(amountFrom),
-          recipient,
-          {
-            adapterId: 'SwapAggregator',
-            data: defaultAbiCoder.encode(
-              ['tuple(address tokenFrom,address tokenTo,uint256 amountFrom,address aggregator,bytes aggregatorData)'],
-              [
-                {
-                  tokenFrom,
-                  tokenTo: trade.outputAmount.currency.isNative
-                    ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
-                    : trade.outputAmount.currency.wrapped.address,
-                  amountFrom: toHex(amountFrom),
-                  aggregator: updatedSwapTxn.tx.to,
-                  aggregatorData: updatedSwapTxn.tx.data,
-                },
-              ]
-            ),
-          },
-        ])
-      )
-
-      callData = kromatikaMetaswap.interface.encodeFunctionData('multicall(uint256,bytes[])', [
-        deadline.toString(),
-        calldatas,
-      ])
-    } else {
-      callData = updatedSwapTxn.tx.data
-      swapRouterAddress = updatedSwapTxn.tx?.to
-    }
-
+    const callData = updatedSwapTxn.tx.data
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return {
         state: updatedSwapTxn.state,
@@ -232,9 +185,9 @@ function useMarketCallArguments(
             address: argentWalletContract.address,
             calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
               [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
+                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), updatedSwapTxn.tx?.to),
                 {
-                  to: swapRouterAddress,
+                  to: updatedSwapTxn.tx?.to,
                   value: updatedSwapTxn.tx.value,
                   data: callData,
                 },
@@ -252,7 +205,7 @@ function useMarketCallArguments(
       tx: updatedSwapTxn.tx,
       marketcall: [
         {
-          address: swapRouterAddress,
+          address: updatedSwapTxn.tx?.to,
           value: toHex(updatedSwapTxn.tx.value),
           calldata: callData,
           gas: updatedSwapTxn.tx.gas,
@@ -268,9 +221,7 @@ function useMarketCallArguments(
     deadline,
     parsedAmount,
     updatedSwapTxn,
-    kromatikaMetaswap,
     argentWalletContract,
-    signatureData,
     allowedSlippage,
   ])
 }
@@ -364,16 +315,12 @@ export function useMarketCallback(
   signatureData: SignatureData | undefined | null,
   parsedAmount: CurrencyAmount<Currency> | undefined,
   swapTransaction: SwapTransaction | undefined | null,
-  showConfirm: boolean
+  showConfirm: boolean,
+  gasless: boolean
 ): { state: MarketCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
   const { gaslessCallback } = useGaslessCallback()
-
-  // TODO enable this
-  const isExpertMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
-
-  const kromatikaRouter = useKromatikaRouter()
 
   const swapCalls = useMarketCallArguments(
     trade,
@@ -383,7 +330,8 @@ export function useMarketCallback(
     signatureData,
     parsedAmount,
     swapTransaction,
-    showConfirm
+    showConfirm,
+    gasless
   )
 
   const addTransaction = useTransactionAdder()
@@ -465,20 +413,15 @@ export function useMarketCallback(
           call: { address, calldata, value },
         } = bestCallOption
 
-        if (isExpertMode && kromatikaRouter) {
-          const routerCalldata = kromatikaRouter.interface.encodeFunctionData('executeCall', [
-            KROMATIKA_METASWAP_ADDRESSES[chainId],
-            calldata,
-          ])
-
+        if (gasless) {
           const gasLimit =
             'gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) } : {}
           const txParams = {
-            data: routerCalldata,
-            to: kromatikaRouter.address,
+            data: calldata,
+            to: address,
             from: account,
             gasLimit: gasLimit ? gasLimit?.gasLimit?.add(200000).toHexString() : 700000,
-            signatureType: 'EIP712_SIGN',
+            signatureType: library.provider.isMetaMask ? 'EIP712_SIGN' : 'PERSONAL_SIGN',
             ...(value && !isZero(value) ? { value } : {}),
           }
           // sending gasless txn
@@ -596,8 +539,7 @@ export function useMarketCallback(
     swapCalls.state,
     swapCalls.marketcall,
     recipientAddressOrName,
-    isExpertMode,
-    kromatikaRouter,
+    gasless,
     gaslessCallback,
     addTransaction,
     allowedSlippage,

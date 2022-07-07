@@ -15,6 +15,7 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import { SupportedChainId } from 'constants/chains'
 import { useMarketCallback } from 'hooks/useMarketCallback'
 import JSBI from 'jsbi'
 import { LoadingRows } from 'pages/Pool/styleds'
@@ -24,7 +25,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
-import { V3TradeState } from 'state/routing/types'
+import { V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { shortenAddress } from 'utils'
 
@@ -63,7 +64,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/market/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, usePoolAddress } from '../../state/swap/hooks'
-import { useDarkModeManager, useExpertModeManager } from '../../state/user/hooks'
+import { useDarkModeManager, useExpertModeManager, useIsGaslessMode } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -247,7 +248,7 @@ const StyledCopyButton = styled.a`
 `
 
 export default function Market({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const refEnabled = false
@@ -280,7 +281,7 @@ export default function Market({ history }: RouteComponentProps) {
   const toggleWalletModal = useWalletModalToggle()
 
   // for expert mode
-  const [isExpertMode] = [false]
+  const isExpertMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
   const obj = sessionStorage.getItem('referral')
 
@@ -315,7 +316,7 @@ export default function Market({ history }: RouteComponentProps) {
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedMarketInfo(toggledVersion)
+  } = useDerivedMarketInfo(toggledVersion, isExpertMode)
 
   if (currencies.OUTPUT == undefined) currencies.OUTPUT = null
   if (currencies.INPUT == undefined) currencies.INPUT = null
@@ -457,7 +458,8 @@ export default function Market({ history }: RouteComponentProps) {
     signatureData,
     parsedAmounts[Field.INPUT],
     swapTransaction,
-    showConfirm
+    showConfirm,
+    isExpertMode
   )
 
   const handleSwap = useCallback(() => {
