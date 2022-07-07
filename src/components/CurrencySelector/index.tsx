@@ -47,7 +47,7 @@ export function CurrencySelector({
   return (
     <Box>
       <Toggle
-        backgroundColor={!selectedCurrency ? 'accentActive' : undefined}
+        backgroundColor={!selectedCurrency ? 'accentActive' : 'backgroundAction'}
         filled={!selectedCurrency}
         testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
         onToggle={() => {

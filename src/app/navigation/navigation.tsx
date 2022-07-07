@@ -63,7 +63,6 @@ import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
-import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
 import { UserScreen } from 'src/screens/UserScreen'
 import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
@@ -337,7 +336,6 @@ export function AppStackNavigator() {
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
         <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
         <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />
-        <AppStack.Screen component={TransferTokenScreen} name={Screens.Transfer} />
         <AppStack.Screen component={EducationScreen} name={Screens.Education} />
       </AppStack.Group>
     </AppStack.Navigator>

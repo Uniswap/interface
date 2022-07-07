@@ -200,7 +200,7 @@ type ActionButtonProps = {
   callback: () => void
 }
 
-function ActionButton({ callback, disabled, label, name }: ActionButtonProps) {
+export function ActionButton({ callback, disabled, label, name }: ActionButtonProps) {
   const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(callback)
 
   return (

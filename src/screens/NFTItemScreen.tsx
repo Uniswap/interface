@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
@@ -17,10 +17,11 @@ import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
+import { openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
   TransactionState,
@@ -35,10 +36,10 @@ export function NFTItemScreen({
   route: {
     params: { owner, address, token_id },
   },
-  navigation,
 }: HomeStackScreenProp<Screens.NFTItem>) {
   const theme = useAppTheme()
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
 
   const { asset } = useNFT(owner, address, token_id)
   const accountAddress = useActiveAccountAddress()
@@ -58,7 +59,7 @@ export function NFTItemScreen({
       },
       [CurrencyField.OUTPUT]: null,
     }
-    navigation.push(Screens.Transfer, { transferFormState })
+    dispatch(openModal({ name: ModalName.Send, initialState: transferFormState }))
   }
 
   const isMyNFT = owner && owner === accountAddress

@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
+import { HomeStackScreenProp } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -92,7 +92,6 @@ export function TokenDetailsScreen({ route }: HomeStackScreenProp<Screens.TokenD
 }
 
 function TokenDetails({ currency }: { currency: Currency }) {
-  const navigation = useHomeStackNavigation()
   const balance = useSingleBalance(currency)
 
   const theme = useAppTheme()
@@ -167,7 +166,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
       },
       [CurrencyField.OUTPUT]: null,
     }
-    navigation.push(Screens.Transfer, { transferFormState })
+    dispatch(openModal({ name: ModalName.Send, initialState: transferFormState }))
   }
 
   return (

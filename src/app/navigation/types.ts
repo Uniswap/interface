@@ -11,7 +11,6 @@ import { EducationContentType } from 'src/components/education'
 import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType } from 'src/features/onboarding/utils'
-import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
@@ -129,7 +128,6 @@ export type AppStackParamList = {
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
-  [Screens.Transfer]: { transferFormState?: TransactionState } | undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 

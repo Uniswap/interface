@@ -4,7 +4,7 @@ import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { AppStackParamList, useHomeStackNavigation } from 'src/app/navigation/types'
+import { AppStackParamList } from 'src/app/navigation/types'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
@@ -102,13 +102,12 @@ function QuickActions() {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const navigation = useHomeStackNavigation()
 
   const onPressSwap = () => {
     dispatch(openModal({ name: ModalName.Swap }))
   }
   const onPressSend = () => {
-    navigation.navigate(Screens.Transfer, {})
+    dispatch(openModal({ name: ModalName.Send }))
   }
 
   return (

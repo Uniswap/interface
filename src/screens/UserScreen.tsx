@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { ExploreStackParamList, useAppStackNavigation } from 'src/app/navigation/types'
+import { ExploreStackParamList } from 'src/app/navigation/types'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -20,6 +20,8 @@ import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 
@@ -33,21 +35,23 @@ export function UserScreen({
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const navigation = useAppStackNavigation()
 
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
 
   const onSendPress = async () => {
-    navigation.navigate(Screens.Transfer, {
-      transferFormState: {
-        recipient: address,
-        exactAmountToken: '',
-        exactAmountUSD: '',
-        exactCurrencyField: CurrencyField.INPUT,
-        [CurrencyField.INPUT]: null,
-        [CurrencyField.OUTPUT]: null,
-      },
-    })
+    dispatch(
+      openModal({
+        name: ModalName.Send,
+        initialState: {
+          recipient: address,
+          exactAmountToken: '',
+          exactAmountUSD: '',
+          exactCurrencyField: CurrencyField.INPUT,
+          [CurrencyField.INPUT]: null,
+          [CurrencyField.OUTPUT]: null,
+        },
+      })
+    )
   }
 
   const onWatchPress = () => {

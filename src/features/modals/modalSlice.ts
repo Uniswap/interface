@@ -15,11 +15,14 @@ type WalletConnectModalParams = {
 }
 type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 
-type OpenModalParams = WalletConnectModalParams | SwapModalParams
+type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
+
+type OpenModalParams = WalletConnectModalParams | SwapModalParams | SendModalParams
 
 export interface ModalsState {
   [ModalName.WalletConnectScan]: AppModalState<WalletConnectModalState>
   [ModalName.Swap]: AppModalState<TransactionState>
+  [ModalName.Send]: AppModalState<TransactionState>
 }
 
 export const initialModalState: ModalsState = {
@@ -28,6 +31,10 @@ export const initialModalState: ModalsState = {
     initialState: WalletConnectModalState.ScanQr,
   },
   [ModalName.Swap]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.Send]: {
     isOpen: false,
     initialState: undefined,
   },
@@ -54,6 +61,9 @@ const slice = createSlice({
 // TODO: combine both of these using a selector factory while preserving return types
 export const selectSwapModalState = (state: RootState): AppModalState<TransactionState> => {
   return state.modals[ModalName.Swap]
+}
+export const selectSendModalState = (state: RootState): AppModalState<TransactionState> => {
+  return state.modals[ModalName.Send]
 }
 export const selectWCModalState = (state: RootState): AppModalState<WalletConnectModalState> => {
   return state.modals[ModalName.WalletConnectScan]

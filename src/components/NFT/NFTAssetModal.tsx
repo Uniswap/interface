@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, Share, StyleSheet } from 'react-native'
-import { useAppStackNavigation } from 'src/app/navigation/types'
+import { useAppDispatch } from 'src/app/hooks'
 import SendIcon from 'src/assets/icons/send.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
@@ -16,6 +16,7 @@ import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
+import { openModal } from 'src/features/modals/modalSlice'
 import { NFTAsset } from 'src/features/nfts/types'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
@@ -24,7 +25,6 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
 import { theme } from 'src/styles/theme'
@@ -41,7 +41,7 @@ const COLLECTION_IMAGE_WIDTH = 20
 
 export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
   const { t } = useTranslation()
-  const navigation = useAppStackNavigation()
+  const dispatch = useAppDispatch()
 
   if (!nftAsset) return null
 
@@ -66,7 +66,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
       },
       [CurrencyField.OUTPUT]: null,
     }
-    navigation.push(Screens.Transfer, { transferFormState })
+    dispatch(openModal({ name: ModalName.Send, initialState: transferFormState }))
   }
 
   const onPressShare = async () => {

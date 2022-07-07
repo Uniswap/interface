@@ -1,16 +1,16 @@
-import { useBottomSheetModal } from '@gorhom/bottom-sheet'
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
-import { notificationAsync } from 'expo-haptics'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { StyleSheet } from 'react-native'
+import { Button } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
+import { Text } from 'src/components/Text'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -19,25 +19,16 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import {
-  useDerivedTransferInfo,
-  useTransferERC20Callback,
-  useTransferNFTCallback,
-} from 'src/features/transactions/transfer/hooks'
-import { currencyAddress } from 'src/utils/currencyId'
+import { useDerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 
 interface TransferTokenProps {
   state: TransactionState
   dispatch: React.Dispatch<AnyAction>
+  onNext: () => void
 }
 
-export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
+export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProps) {
   const { t } = useTranslation()
-  const { dismiss } = useBottomSheetModal()
-
-  const onSubmit = useCallback(() => {
-    dismiss()
-  }, [dismiss])
 
   const derivedTransferInfo = useDerivedTransferInfo(state)
   const {
@@ -62,22 +53,6 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
   const currencyIn = !isNFT ? (currencies[CurrencyField.INPUT] as Currency) : undefined
   const nftIn = isNFT ? (currencies[CurrencyField.INPUT] as NFTAsset.Asset) : undefined
 
-  const transferERC20Callback = useTransferERC20Callback(
-    currencyIn?.chainId,
-    recipient,
-    currencyIn ? currencyAddress(currencyIn) : undefined,
-    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
-    onSubmit
-  )
-  // TODO: if readonly account, not sendable
-  const transferNFTCallback = useTransferNFTCallback(
-    nftIn?.chainId,
-    recipient,
-    nftIn?.asset_contract.address,
-    nftIn?.token_id,
-    onSubmit
-  )
-
   useUSDTokenUpdater(
     dispatch,
     isUSDInput,
@@ -88,7 +63,7 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
 
   return (
     <Flex grow justifyContent="space-between" p="md">
-      <Flex centered grow gap="md">
+      <Flex gap="md">
         {isNFT ? (
           <Flex centered mx="xl">
             <NFTAssetItem nft={nftIn} />
@@ -110,10 +85,29 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
             onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
           />
         )}
-
-        <TransferArrowButton disabled />
-
-        <RecipientInputPanel recipientAddress={recipient} setRecipientAddress={onSelectRecipient} />
+        <Flex
+          backgroundColor={recipient ? 'backgroundContainer' : 'none'}
+          borderRadius="lg"
+          mt="xl"
+          width="100%">
+          <Box zIndex="popover">
+            <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
+              <Box alignItems="center" position="absolute" top={-24}>
+                <TransferArrowButton
+                  disabled
+                  bg="backgroundAction"
+                  borderColor="backgroundSurface"
+                />
+              </Box>
+            </Box>
+          </Box>
+          <Flex pb="xl" pt="xl" px="md">
+            <RecipientInputPanel
+              recipientAddress={recipient}
+              setRecipientAddress={onSelectRecipient}
+            />
+          </Flex>
+        </Flex>
       </Flex>
 
       {isNFT ? null : (
@@ -123,17 +117,18 @@ export function TransferTokenForm({ state, dispatch }: TransferTokenProps) {
         />
       )}
 
-      <PrimaryButton
-        disabled={false}
-        label={t('Send')}
-        name={ElementName.Submit}
-        py="md"
-        textVariant="largeLabel"
-        onPress={() => {
-          notificationAsync()
-          isNFT ? transferNFTCallback?.() : transferERC20Callback?.()
-        }}
-      />
+      <Button disabled={false} name={ElementName.Submit} py="md" onPress={onNext}>
+        <Box
+          alignItems="center"
+          backgroundColor="accentAction"
+          borderRadius="lg"
+          overflow="hidden"
+          py="md">
+          <Text color="white" variant="largeLabel">
+            {t('Review transfer')}
+          </Text>
+        </Box>
+      </Button>
     </Flex>
   )
 }

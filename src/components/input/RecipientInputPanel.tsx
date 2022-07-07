@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { useAppStackNavigation } from 'src/app/navigation/types'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -27,36 +27,29 @@ export function RecipientInputPanel({
   recipientAddress,
   setRecipientAddress,
 }: RecipientInputPanelProps) {
-  const navigation = useAppStackNavigation()
-  const { t } = useTranslation()
   const theme = useAppTheme()
 
   return (
     <Flex centered gap="sm">
-      {recipientAddress && (
-        <Text color="deprecated_gray400" variant="bodySmall">
-          {t('To')}
-        </Text>
-      )}
       <Button
-        bg={recipientAddress ? 'tokenSelector' : 'accentActive'}
+        bg={recipientAddress ? 'none' : 'accentActive'}
         borderRadius="lg"
         name={ElementName.SelectRecipient}
         p="xs"
         px="sm"
         onPress={() => {
-          navigation.navigate(Screens.RecipientSelector, {
+          navigate(Screens.RecipientSelector, {
             selectedRecipient: recipientAddress,
             setSelectedRecipient: (newRecipient: string) => setRecipientAddress(newRecipient),
           })
         }}>
-        <Flex row gap="sm">
+        <Flex centered row gap="sm">
           {recipientAddress ? (
             <RecipientMetadata recipient={recipientAddress} />
           ) : (
             <RecipientInput />
           )}
-          <Chevron color={theme.colors.white} direction="e" height={8} width={12} />
+          <Chevron color={theme.colors.textPrimary} direction="e" />
         </Flex>
       </Button>
     </Flex>
