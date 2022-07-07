@@ -4,7 +4,7 @@ import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { fortmaticConnection, injectedConnection } from 'connection'
+import { ConnectionType, injectedConnection } from 'connection'
 import { getConnection } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -122,6 +122,7 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, account } = useWeb3React()
+  const connectionType = getConnection(connector).type
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -164,7 +165,7 @@ export default function WalletModal({
       try {
         // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
         // collision into the WalletModal, so we special case by closing the modal.
-        if (connector === fortmaticConnection.connector) {
+        if (connectionType === ConnectionType.FORTMATIC) {
           toggleWalletModal()
         }
 
