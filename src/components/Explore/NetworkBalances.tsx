@@ -27,9 +27,6 @@ const Logo = styled.img`
   width: 32px;
   margin-right: 8px;
 `
-const NetworkBalancesSection = styled.div`
-  height: fit-content;
-`
 const Network = styled.span`
   font-size: 12px;
   line-height: 16px;
@@ -48,34 +45,9 @@ const SingleNetworkBalance = styled.div`
   font-size: 16px;
   line-height: 24px;
 `
-const TotalBalanceSection = styled.div`
-  height: fit-content;
-  border-bottom: 1px solid ${({ theme }) => theme.bg3};
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-`
-const TotalBalance = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 20px;
-  line-height: 28px;
-  margin-top: 12px;
-  align-items: center;
-`
 const TotalBalanceItem = styled.div`
   display: flex;
 `
-
-/*
-  <TotalBalanceSection>
-        Your balance across all networks
-        <TotalBalance>
-          <TotalBalanceItem>{`${totalBalance} ${tokenSymbol}`}</TotalBalanceItem>{' '}
-          <TotalBalanceItem>$4,210.12</TotalBalanceItem>
-        </TotalBalance>
-      </TotalBalanceSection>
-      <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
-  */
 
 export default function NetworkBalances({ address }: { address: string }) {
   const tokenSymbol = useToken(address)?.symbol
