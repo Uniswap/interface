@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useSWR from 'swr'
+import useSWRImmutable from 'swr/immutable'
 import axios from 'axios'
 import {
   CampaignData,
@@ -151,8 +152,6 @@ export default function CampaignsUpdater(): null {
     }
   }, [campaignData, dispatch, selectedCampaignId, history])
 
-  useEffect(() => {}, [campaignData, dispatch])
-
   useEffect(() => {
     dispatch(setLoadingCampaignData(isLoadingData))
   }, [dispatch, isLoadingData])
@@ -164,9 +163,14 @@ export default function CampaignsUpdater(): null {
   const selectedCampaignLeaderboardLookupAddress = useSelector(
     (state: AppState) => state.campaigns.selectedCampaignLeaderboardLookupAddress,
   )
-  const { data: leaderboard, isValidating: isLoadingLeaderboard } = useSWR(
+  const { data: leaderboard, isValidating: isLoadingLeaderboard } = useSWRImmutable(
     selectedCampaign
-      ? [selectedCampaign.id, selectedCampaignLeaderboardPageNumber, selectedCampaignLeaderboardLookupAddress, account]
+      ? [
+          SWR_KEYS.getLeaderboard(selectedCampaign.id),
+          selectedCampaignLeaderboardPageNumber,
+          selectedCampaignLeaderboardLookupAddress,
+          account,
+        ]
       : null,
     async () => {
       if (selectedCampaign === undefined || selectedCampaign.status === 'Upcoming') return
@@ -203,9 +207,6 @@ export default function CampaignsUpdater(): null {
         }
         return res
       }
-    },
-    {
-      refreshInterval: undefined,
     },
   )
 

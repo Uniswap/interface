@@ -225,9 +225,29 @@ export default function Campaign() {
     true,
   )
 
+  const selectedCampaignLeaderboardPageNumber = useSelector(
+    (state: AppState) => state.campaigns.selectedCampaignLeaderboardPageNumber,
+  )
+  const selectedCampaignLeaderboardLookupAddress = useSelector(
+    (state: AppState) => state.campaigns.selectedCampaignLeaderboardLookupAddress,
+  )
   useEffect(() => {
-    if (campaignsRefreshIn === 0 && selectedCampaign) mutate(SWR_KEYS.getLeaderboard(selectedCampaign.id))
-  }, [mutate, campaignsRefreshIn, selectedCampaign])
+    if (campaignsRefreshIn === 0 && selectedCampaign) {
+      mutate([
+        SWR_KEYS.getLeaderboard(selectedCampaign.id),
+        selectedCampaignLeaderboardPageNumber,
+        selectedCampaignLeaderboardLookupAddress,
+        account,
+      ])
+    }
+  }, [
+    mutate,
+    campaignsRefreshIn,
+    selectedCampaign,
+    selectedCampaignLeaderboardPageNumber,
+    selectedCampaignLeaderboardLookupAddress,
+    account,
+  ])
 
   if (!campaigns.length)
     return (
