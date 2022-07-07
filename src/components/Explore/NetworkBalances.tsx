@@ -57,7 +57,7 @@ export default function NetworkBalances({ address }: { address: string }) {
   const currencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const fiatValue = Number(useUSDCValue(currencyBalance)?.toFixed())
   const totalBalance = formatCurrencyAmount(currencyBalance, 4)
-  if (!chainId || totalBalance === '0') return null
+  if (!chainId || !fiatValue) return null
   const { label, logoUrl } = CHAIN_INFO[chainId]
 
   return (
