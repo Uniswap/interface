@@ -1,5 +1,6 @@
+import { useScrollToTop } from '@react-navigation/native'
 import { BlurView } from 'expo-blur'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useRef } from 'react'
 import { FlatListProps, useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolate,
@@ -12,7 +13,9 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AnimatedFlex, Box } from 'src/components/layout'
+import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { Screen } from 'src/components/layout/Screen'
+import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 
 const CONTENT_MAX_SCROLL_Y = 50
 
@@ -32,6 +35,10 @@ export function HeaderListScreen({
   ...listProps
 }: HeaderListScreenProps) {
   const isDarkMode = useColorScheme() === 'dark'
+
+  const listRef = useRef(null)
+  useScrollToTop(listRef)
+
   const insets = useSafeAreaInsets()
   const scrollY = useSharedValue(0)
 
@@ -83,17 +90,20 @@ export function HeaderListScreen({
         },
       ]}
       tint={isDarkMode ? 'dark' : 'default'}>
-      <Box mx="md" my="sm">
-        {fixedHeader}
-      </Box>
+      <WithScrollToTop ref={listRef}>
+        <Box mx="md" my="sm">
+          {fixedHeader}
+        </Box>
+      </WithScrollToTop>
     </AnimatedBlurView>
   )
 
   return (
     <Screen edges={['top', 'left', 'right']}>
       {FixedHeaderBar}
-      <Animated.FlatList
+      <AnimatedFlatList
         {...listProps}
+        ref={listRef}
         ListHeaderComponent={ContentHeader}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

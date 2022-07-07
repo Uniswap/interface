@@ -1,3 +1,4 @@
+import { useScrollToTop } from '@react-navigation/native'
 import { BlurView } from 'expo-blur'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -41,6 +42,10 @@ const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.sm // Scroll dist
 
 export function ExploreScreen() {
   const { t } = useTranslation()
+
+  const listRef = useRef(null)
+  useScrollToTop(listRef)
+
   const insets = useSafeAreaInsets()
   const isDarkMode = useColorScheme() === 'dark'
 
@@ -136,7 +141,7 @@ export function ExploreScreen() {
           </AnimatedFlex>
         </KeyboardAvoidingView>
       ) : (
-        <VirtualizedList onScroll={scrollHandler}>
+        <VirtualizedList ref={listRef} onScroll={scrollHandler}>
           <Box height={HEADER_HEIGHT} mb="md" />
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="md">
             <WatchedWalletsCard

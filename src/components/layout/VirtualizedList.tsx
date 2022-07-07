@@ -1,15 +1,14 @@
-import React, { PropsWithChildren } from 'react'
-import { FlatListProps } from 'react-native'
-import Animated, { AnimateProps } from 'react-native-reanimated'
+import React, { ComponentProps, PropsWithChildren } from 'react'
+import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+
+type VirtualizedListProps = PropsWithChildren<Partial<ComponentProps<typeof AnimatedFlatList>>>
 
 /** Dummy component wrapping `FlatList` to behave like a ScrollView */
-export const VirtualizedList = ({
-  children,
-  ...props
-}: PropsWithChildren<Partial<AnimateProps<FlatListProps<any>>>>) => {
-  return (
-    <Animated.FlatList
+export const VirtualizedList = React.forwardRef<any, VirtualizedListProps>(
+  ({ children, ...props }: VirtualizedListProps, ref) => (
+    <AnimatedFlatList
       {...props}
+      ref={ref}
       ListHeaderComponent={<>{children}</>}
       data={[]}
       keyExtractor={() => 'key'}
@@ -20,4 +19,4 @@ export const VirtualizedList = ({
       showsVerticalScrollIndicator={false}
     />
   )
-}
+)

@@ -1,5 +1,6 @@
+import { useScrollToTop } from '@react-navigation/native'
 import { BlurView } from 'expo-blur'
-import React, { PropsWithChildren, ReactElement } from 'react'
+import React, { PropsWithChildren, ReactElement, useRef } from 'react'
 import { useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolate,
@@ -13,6 +14,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AnimatedFlex, Box } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 
 const CONTENT_MAX_SCROLL_Y = 50
@@ -34,6 +36,9 @@ export function HeaderScrollScreen({
   background,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>) {
+  const listRef = useRef(null)
+  useScrollToTop(listRef)
+
   const isDarkMode = useColorScheme() === 'dark'
   const insets = useSafeAreaInsets()
   const scrollY = useSharedValue(0)
@@ -86,9 +91,11 @@ export function HeaderScrollScreen({
         },
       ]}
       tint={isDarkMode ? 'dark' : 'default'}>
-      <Box mx="md" my="sm">
-        {fixedHeader}
-      </Box>
+      <WithScrollToTop ref={listRef}>
+        <Box mx="md" my="sm">
+          {fixedHeader}
+        </Box>
+      </WithScrollToTop>
     </AnimatedBlurView>
   )
 
@@ -97,6 +104,7 @@ export function HeaderScrollScreen({
       {background}
       {FixedHeaderBar}
       <VirtualizedList
+        ref={listRef}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
