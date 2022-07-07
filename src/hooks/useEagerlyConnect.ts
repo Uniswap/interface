@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
-import { gnosisSafe, injected, network } from 'connectors'
-import { getConnectionForConnectionType } from 'connectors/utils'
+import { gnosisSafe, injected, network } from 'connection'
+import { getConnectionForConnectionType } from 'connection/utils'
 import { useEffect } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
 import { useAppSelector } from 'state/hooks'

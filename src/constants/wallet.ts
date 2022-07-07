@@ -1,11 +1,11 @@
 import { Connector } from '@web3-react/types'
+import { coinbaseWallet, ConnectionType, fortmatic, injected, walletConnect } from 'connection'
 
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
 import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
-import { coinbaseWallet, ConnectionType, fortmatic, injected, walletConnect } from '../connectors'
 
 interface WalletInfo {
   connector?: Connector

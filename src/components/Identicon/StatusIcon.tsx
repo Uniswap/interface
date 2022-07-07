@@ -1,9 +1,9 @@
 import { Connector } from '@web3-react/types'
+import { coinbaseWallet, fortmatic, injected, walletConnect } from 'connection'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import { coinbaseWallet, fortmatic, injected, walletConnect } from '../../connectors'
 import Identicon from '../Identicon'
 
 export default function StatusIcon({ connector }: { connector: Connector }) {

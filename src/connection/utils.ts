@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import { coinbaseWallet, ConnectionType, fortmatic, gnosisSafe, injected, network, walletConnect } from 'connectors'
+import { coinbaseWallet, ConnectionType, fortmatic, gnosisSafe, injected, network, walletConnect } from 'connection'
 
 const CONNECTIONS = [coinbaseWallet, fortmatic, injected, network, walletConnect, gnosisSafe]
 

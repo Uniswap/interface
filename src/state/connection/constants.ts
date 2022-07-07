@@ -1,4 +1,4 @@
-import { ConnectionType } from 'connectors'
+import { ConnectionType } from 'connection'
 
 export const BACKFILLABLE_WALLETS = [
   ConnectionType.COINBASE_WALLET,

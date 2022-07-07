@@ -2,7 +2,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { getConnectionForConnector } from 'connectors/utils'
+import { getConnectionForConnector } from 'connection/utils'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
