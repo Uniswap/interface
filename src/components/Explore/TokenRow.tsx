@@ -234,7 +234,6 @@ const SparkLineImg = styled(Cell)`
   max-height: 28px;
   flex-direction: column;
   transform: scale(1.2);
-  margin-left: 8px;
 `
 const TokenInfoCell = styled(Cell)`
   gap: 8px;
