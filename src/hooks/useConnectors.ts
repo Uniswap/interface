@@ -23,7 +23,7 @@ export default function useConnectors() {
     orderedConnectionTypes.push(...SELECTABLE_WALLETS.filter((wallet) => wallet !== selectedWallet))
 
     // Add network connection last as it should be the fallback.
-    orderedConnectionTypes.push(ConnectionType.NETWORK)
+    orderedConnectionTypes.push(ConnectionType.INFURA)
 
     // Convert to web3-react's representation of connectors.
     const web3Connectors: [Connector, Web3ReactHooks][] = orderedConnectionTypes

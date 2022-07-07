@@ -11,7 +11,7 @@ export const initialState: ConnectionState = {
     [ConnectionType.FORTMATIC]: undefined,
     [ConnectionType.WALLET_CONNECT]: undefined,
     [ConnectionType.COINBASE_WALLET]: undefined,
-    [ConnectionType.NETWORK]: undefined,
+    [ConnectionType.INFURA]: undefined,
     [ConnectionType.GNOSIS_SAFE]: undefined,
   },
 }

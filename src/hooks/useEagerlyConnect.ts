@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import { gnosisSafeConnection, injectedConnection, networkConnection } from 'connection'
+import { gnosisSafeConnection, infuraConnection, injectedConnection } from 'connection'
 import { getConnection } from 'connection/utils'
 import { useEffect } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
@@ -26,7 +26,7 @@ export default function useEagerlyConnect() {
 
   useEffect(() => {
     connect(gnosisSafeConnection.connector)
-    connect(networkConnection.connector)
+    connect(infuraConnection.connector)
 
     if (isMobile && isMetaMask) {
       injectedConnection.connector.activate()

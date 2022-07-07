@@ -3,8 +3,8 @@ import {
   coinbaseWalletConnection,
   fortmaticConnection,
   gnosisSafeConnection,
+  infuraConnection,
   injectedConnection,
-  networkConnection,
   walletConnectConnection,
 } from 'connection'
 import { CHAIN_INFO } from 'constants/chainInfo'
@@ -44,7 +44,7 @@ export function isChainAllowed(connector: Connector, chainId: number) {
     case injectedConnection.connector:
     case coinbaseWalletConnection.connector:
     case walletConnectConnection.connector:
-    case networkConnection.connector:
+    case infuraConnection.connector:
     case gnosisSafeConnection.connector:
       return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
     default:
@@ -55,7 +55,7 @@ export function isChainAllowed(connector: Connector, chainId: number) {
 export const switchChain = async (connector: Connector, chainId: number) => {
   if (!isChainAllowed(connector, chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
-  } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
+  } else if (connector === walletConnectConnection.connector || connector === infuraConnection.connector) {
     await connector.activate(chainId)
   } else {
     const info = CHAIN_INFO[chainId]

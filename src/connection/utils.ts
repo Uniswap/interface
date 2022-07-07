@@ -4,8 +4,8 @@ import {
   ConnectionType,
   fortmaticConnection,
   gnosisSafeConnection,
+  infuraConnection,
   injectedConnection,
-  networkConnection,
   walletConnectConnection,
 } from 'connection'
 
@@ -13,7 +13,7 @@ const CONNECTIONS = [
   coinbaseWalletConnection,
   fortmaticConnection,
   injectedConnection,
-  networkConnection,
+  infuraConnection,
   walletConnectConnection,
   gnosisSafeConnection,
 ]
@@ -35,8 +35,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return walletConnectConnection
       case ConnectionType.FORTMATIC:
         return fortmaticConnection
-      case ConnectionType.NETWORK:
-        return networkConnection
+      case ConnectionType.INFURA:
+        return infuraConnection
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
     }
