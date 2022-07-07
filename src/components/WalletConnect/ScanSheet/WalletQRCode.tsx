@@ -52,14 +52,15 @@ export function WalletQRCode({ address }: Props) {
       </Flex>
       <Box backgroundColor="white" borderRadius="lg" mb="lg" padding="lg">
         <QRCode size={200} value={address} />
+        {/* TODO: Once unicons are hosted as svgs then pass them as a prop into the QRCode component rather than overlaying the Unicon here. */}
         <Flex
           backgroundColor="white"
           borderRadius="full"
-          left={88}
+          left={103}
           padding="sm"
           position={'absolute'}
-          top={88}>
-          <Unicon address={address} size={54} />
+          top={103}>
+          <Unicon address={address} size={24} />
         </Flex>
       </Box>
       <Box flexDirection="row" justifyContent="space-between" width={'80%'}>
