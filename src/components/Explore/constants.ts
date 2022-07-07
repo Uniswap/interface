@@ -1,5 +1,5 @@
 export const MAX_WIDTH_MEDIA_BREAKPOINT = '960px'
-export const LARGE_MEDIA_BREAKPOINT = '880px'
-export const MEDIUM_MEDIA_BREAKPOINT = '776px'
-export const SMALL_MEDIA_BREAKPOINT = '580px'
+export const LARGE_MEDIA_BREAKPOINT = '840px'
+export const MEDIUM_MEDIA_BREAKPOINT = '720px'
+export const SMALL_MEDIA_BREAKPOINT = '540px'
 export const MOBILE_MEDIA_BREAKPOINT = '410px'

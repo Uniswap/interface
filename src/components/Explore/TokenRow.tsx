@@ -47,7 +47,7 @@ const StyledTokenRow = styled.div`
   width: 100%;
   height: 60px;
   display: grid;
-  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 4fr 5fr 2fr;
+  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
   font-size: 15px;
   line-height: 24px;
 
@@ -55,17 +55,18 @@ const StyledTokenRow = styled.div`
   min-width: 390px;
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.2fr 1fr 6fr 4fr 4fr 4fr 4fr 3fr;
+    grid-template-columns: 1.7fr 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr;
     width: fit-content;
+    padding-right: 12px;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 2.5fr;
+    grid-template-columns: 1.7fr 1fr 7.5fr 4.5fr 4.5fr 4.5fr;
     width: fit-content;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.2fr 1fr 8fr 5fr 5fr 3.5fr;
+    grid-template-columns: 1.2fr 1fr 8fr 5fr 5fr;
     width: fit-content;
   }
 
@@ -125,6 +126,10 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-color: ${({ theme }) => theme.bg3};
   border-radius: 8px 8px 0px 0px;
   padding: 0px 12px;
+
+  @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-right: 24px;
+  }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
@@ -230,30 +235,6 @@ const SparkLineImg = styled(Cell)`
   flex-direction: column;
   transform: scale(1.2);
 `
-const SwapCell = styled(Cell)`
-  justify-content: flex-end;
-
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    display: none;
-  }
-`
-const SwapButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  width: 54px;
-  height: 32px;
-  background: ${({ theme }) => theme.primary2};
-  border-radius: 12px;
-  border: none;
-  color: ${({ theme }) => theme.white};
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary2)};
-  }
-`
 const TokenInfoCell = styled(Cell)`
   gap: 8px;
   line-height: 24px;
@@ -354,7 +335,6 @@ export function TokenRow({
   marketCap,
   volume,
   sparkLine,
-  swap,
 }: {
   header: boolean
   favorited: ReactNode
@@ -365,7 +345,6 @@ export function TokenRow({
   marketCap: ReactNode
   volume: ReactNode
   sparkLine: ReactNode
-  swap: ReactNode
 }) {
   const rowCells = (
     <>
@@ -377,7 +356,6 @@ export function TokenRow({
       <MarketCapCell>{marketCap}</MarketCapCell>
       <VolumeCell>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
-      <SwapCell>{swap}</SwapCell>
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
@@ -431,7 +409,6 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
         />
       }
       sparkLine={null}
-      swap={null}
     />
   )
 }
@@ -454,7 +431,6 @@ export function LoadingRow() {
       marketCap={<LoadingBubble />}
       volume={<LoadingBubble />}
       sparkLine={<SparkLineLoadingBubble />}
-      swap={<LongLoadingBubble />}
     />
   )
 }
@@ -539,11 +515,6 @@ export default function LoadedRow({
       marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
       volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />}
-      swap={
-        <SwapButton>
-          <Trans>Swap</Trans>
-        </SwapButton>
-      }
     />
   )
 }
