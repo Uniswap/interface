@@ -4,6 +4,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { isChainAllowed } from 'utils/switchChain'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 
@@ -53,11 +54,11 @@ export default function NetworkBalances({ address }: { address: string }) {
   const tokenSymbol = useToken(address)?.symbol
   const currency = useCurrency(address)
 
-  const { account, chainId } = useActiveWeb3React()
+  const { connector, account, chainId } = useActiveWeb3React()
   const currencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const fiatValue = Number(useUSDCValue(currencyBalance)?.toFixed())
   const totalBalance = formatCurrencyAmount(currencyBalance, 4)
-  if (!chainId || !fiatValue) return null
+  if (!chainId || !fiatValue || !isChainAllowed(connector, chainId)) return null
   const { label, logoUrl } = CHAIN_INFO[chainId]
 
   return (
