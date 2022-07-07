@@ -1,6 +1,7 @@
+import MaskedView from '@react-native-masked-view/masked-view'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, LayoutRectangle, StyleSheet } from 'react-native'
+import { Alert, LayoutRectangle, StyleSheet, ViewStyle } from 'react-native'
 import { FadeIn, FadeOut, runOnJS } from 'react-native-reanimated'
 import {
   Camera,
@@ -8,14 +9,15 @@ import {
   useCameraDevices,
   useFrameProcessor,
 } from 'react-native-vision-camera'
-import { useAppTheme } from 'src/app/hooks'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { dimensions } from 'src/styles/sizing'
+import { theme } from 'src/styles/theme'
 import { opacify } from 'src/utils/colors'
 import { openSettings } from 'src/utils/linking'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
@@ -27,7 +29,8 @@ type QRCodeScannerProps = {
   shouldFreezeCamera: boolean
 }
 
-const SCAN_ICON_WIDTH_RATIO = 0.8
+const SCAN_ICON_WIDTH_RATIO = 0.7
+const SCAN_ICON_MASK_OFFSET = 10 // used for mask to match spacing in CameraScan SVG
 
 export function QRCodeScanner({
   numConnections,
@@ -36,7 +39,6 @@ export function QRCodeScanner({
   shouldFreezeCamera,
 }: QRCodeScannerProps) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   // restricted is an iOS-only permission status: https://mrousavy.com/react-native-vision-camera/docs/guides
   const [permission, setPermission] = useState<CameraPermissionRequestResult | null | 'restricted'>(
@@ -49,7 +51,8 @@ export function QRCodeScanner({
   // QR codes are a "type" of Barcode in the scanning library
   const [barcodes, setBarcodes] = useState<Barcode[]>([])
   const data = barcodes[0]?.content.data
-  const [layout, setLayout] = useState<LayoutRectangle | null>()
+  const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
+  const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
 
   useEffect(() => {
     async function getPermissionStatuses() {
@@ -95,24 +98,45 @@ export function QRCodeScanner({
   }, [])
 
   return (
-    <AnimatedFlex
-      grow
-      borderRadius="md"
-      entering={FadeIn}
-      exiting={FadeOut}
-      overflow="hidden"
-      onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
-      {backCamera && (
-        <Camera
-          device={backCamera}
-          frameProcessor={frameProcessor}
-          isActive={!shouldFreezeCamera}
-          style={StyleSheet.absoluteFill}
-        />
-      )}
-      {layout && (
-        <Flex centered gap="xxl" style={StyleSheet.absoluteFill}>
-          <Flex centered gap="xs">
+    <AnimatedFlex grow borderRadius="md" entering={FadeIn} exiting={FadeOut} overflow="hidden">
+      <MaskedView
+        maskElement={
+          <Box
+            alignItems="center"
+            bg="backgroundScrim"
+            justifyContent="center"
+            position="absolute"
+            style={StyleSheet.absoluteFill}>
+            <Box
+              bg="white"
+              height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO - SCAN_ICON_MASK_OFFSET}
+              style={scanIconMaskStyle}
+              width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO - SCAN_ICON_MASK_OFFSET}
+            />
+          </Box>
+        }
+        style={StyleSheet.absoluteFill}>
+        {backCamera && (
+          <Camera
+            device={backCamera}
+            frameProcessor={frameProcessor}
+            isActive={!shouldFreezeCamera}
+            style={StyleSheet.absoluteFill}
+          />
+        )}
+      </MaskedView>
+      <Flex centered gap="xxl" style={StyleSheet.absoluteFill}>
+        <Flex alignItems="center" gap="none">
+          <Flex
+            centered
+            gap="xs"
+            position="absolute"
+            style={{
+              transform: [{ translateY: infoLayout ? -infoLayout.height - theme.spacing.lg : 0 }],
+            }}
+            top={0}
+            width="100%"
+            onLayout={(event: any) => setInfoLayout(event.nativeEvent.layout)}>
             <Text color="textPrimary" variant="largeLabel">
               {t('Scan a QR code')}
             </Text>
@@ -128,12 +152,21 @@ export function QRCodeScanner({
           </Flex>
           <CameraScan
             color={theme.colors.white}
-            height={layout.width * SCAN_ICON_WIDTH_RATIO}
+            height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
             strokeWidth={5}
-            width={layout.width * SCAN_ICON_WIDTH_RATIO}
+            width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
           />
-          {numConnections && (
-            <Button onPress={onPressConnections}>
+          {numConnections > 0 && (
+            <Button
+              bottom={0}
+              position="absolute"
+              style={{
+                transform: [
+                  { translateY: connectionLayout ? connectionLayout.height + theme.spacing.lg : 0 },
+                ],
+              }}
+              onLayout={(event: any) => setConnectionLayout(event.nativeEvent.layout)}
+              onPress={onPressConnections}>
               <Flex
                 row
                 alignItems="center"
@@ -151,7 +184,11 @@ export function QRCodeScanner({
             </Button>
           )}
         </Flex>
-      )}
+      </Flex>
     </AnimatedFlex>
   )
+}
+
+const scanIconMaskStyle: ViewStyle = {
+  borderRadius: 30,
 }
