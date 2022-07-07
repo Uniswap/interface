@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { useAllV3Routes } from './useAllV3Routes'
-import { CHAIN_USES_V2_QUOTER, useV3Quoter } from './useContract'
+import { useQuoter } from './useContract'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.ARBITRUM_ONE]: 25_000_000,
@@ -35,18 +35,19 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, currencyOut)
 
   const { chainId } = useWeb3React()
-  const quoter = useV3Quoter(chainId)
+  const useQuoterV2 = useMemo(
+    () => Boolean(chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)),
+    [chainId]
+  )
+  const quoter = useQuoter(useQuoterV2)
   const callData = useMemo(
     () =>
       amountSpecified
         ? routes.map(
-            (route) =>
-              SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType, {
-                useQuoterV2: Boolean(chainId && CHAIN_USES_V2_QUOTER.includes(chainId)),
-              }).calldata
+            (route) => SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType, { useQuoterV2 }).calldata
           )
         : [],
-    [amountSpecified, chainId, routes, tradeType]
+    [amountSpecified, routes, tradeType, useQuoterV2]
   )
 
   const quotesResults = useSingleContractWithCallData(quoter, callData, {
