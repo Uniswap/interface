@@ -18,7 +18,11 @@ import {
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { swapActions, swapSagaName } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
-import { getWrapType, isWrapAction } from 'src/features/transactions/swap/utils'
+import {
+  getWrapType,
+  isWrapAction,
+  tradeToTransactionInfo,
+} from 'src/features/transactions/swap/utils'
 import {
   tokenWrapActions,
   tokenWrapSagaName,
@@ -34,19 +38,15 @@ import {
   updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
-import {
-  ExactInputSwapTransactionInfo,
-  ExactOutputSwapTransactionInfo,
-  TransactionType,
-} from 'src/features/transactions/types'
+import { TransactionType } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { buildCurrencyId, currencyAddress, currencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
-const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
+export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 const NUM_CURRENCY_DECIMALS_DISPLAY = 8
 const NUM_USD_DECIMALS_DISPLAY = 2
 
@@ -397,34 +397,6 @@ export function useWrapCallback(
       },
     }
   }, [account, appDispatch, inputCurrencyAmount, wrapType])
-}
-
-function tradeToTransactionInfo(
-  trade: Trade
-): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
-  return trade.tradeType === TradeType.EXACT_INPUT
-    ? {
-        type: TransactionType.Swap,
-        inputCurrencyId: currencyId(trade.inputAmount.currency),
-        outputCurrencyId: currencyId(trade.outputAmount.currency),
-        tradeType: TradeType.EXACT_INPUT,
-        inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-        minimumOutputCurrencyAmountRaw: trade
-          .minimumAmountOut(DEFAULT_SLIPPAGE_TOLERANCE_PERCENT)
-          .quotient.toString(),
-      }
-    : {
-        type: TransactionType.Swap,
-        inputCurrencyId: currencyId(trade.inputAmount.currency),
-        outputCurrencyId: currencyId(trade.outputAmount.currency),
-        tradeType: TradeType.EXACT_OUTPUT,
-        outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-        expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        maximumInputCurrencyAmountRaw: trade
-          .maximumAmountIn(DEFAULT_SLIPPAGE_TOLERANCE_PERCENT)
-          .quotient.toString(),
-      }
 }
 
 export function useUpdateSwapGasEstimate(
