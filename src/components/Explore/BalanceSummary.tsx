@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { isChainAllowed } from 'utils/switchChain'
 
-import { useUSDCValue } from '../../hooks/useUSDCPrice'
+// import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import NetworkBalance from './NetworkBalance'
 
 const BalancesCard = styled.div`
@@ -47,13 +47,13 @@ export default function BalanceSummary({ address }: { address: string }) {
 
   const { connector, account, chainId } = useActiveWeb3React()
   const currencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
-  const fiatValue = Number(useUSDCValue(currencyBalance)?.toFixed())
-  // const fiatValue = 1000 for testing purposes
+  // const fiatValue = Number(useUSDCValue(currencyBalance)?.toFixed())
+  const fiatValue = 1010.12 // for testing purposes
   const balance = formatCurrencyAmount(currencyBalance, 4)
   if (!chainId || !fiatValue || !isChainAllowed(connector, chainId)) return null
   const { label, logoUrl } = CHAIN_INFO[chainId]
   const multipleBalances = true // for testing purposes
-  const totalBalance = 1000
+  const totalBalance = 4.3
 
   return (
     <BalancesCard>
@@ -74,10 +74,17 @@ export default function BalanceSummary({ address }: { address: string }) {
 
       <NetworkBalance
         logoUrl={logoUrl}
-        balance={balance}
+        balance={'1'}
         tokenSymbol={tokenSymbol ?? 'XXX'}
         fiatValue={fiatValue}
         label={label}
+      />
+      <NetworkBalance
+        logoUrl={logoUrl}
+        balance={'3.3'}
+        tokenSymbol={tokenSymbol ?? 'XXX'}
+        fiatValue={3200}
+        label={'Polygon'}
       />
     </BalancesCard>
   )
