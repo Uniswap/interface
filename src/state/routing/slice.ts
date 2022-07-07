@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit
 import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
 import { RPC_URLS } from 'constants/networks'
-import { AUTO_ROUTER_SUPPORTED_CHAINS, getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
 
@@ -14,8 +14,9 @@ function getRouterProvider(chainId: ChainId): BaseProvider {
   const provider = routerProviders.get(chainId)
   if (provider) return provider
 
-  if (AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
-    const provider = new JsonRpcProvider(RPC_URLS[chainId])
+  const supportedChainId = toSupportedChainId(chainId)
+  if (supportedChainId) {
+    const provider = new JsonRpcProvider(RPC_URLS[supportedChainId])
     routerProviders.set(chainId, provider)
     return provider
   }

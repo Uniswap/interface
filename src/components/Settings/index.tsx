@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
-import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
@@ -199,7 +199,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <Text fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
             </Text>
-            {chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId) && (
+            {isSupportedChainId(chainId) && (
               <RowBetween>
                 <RowFixed>
                   <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
