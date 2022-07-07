@@ -4,7 +4,7 @@ import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { fortmatic, injected } from 'connection'
+import { fortmaticConnection, injectedConnection } from 'connection'
 import { getConnection } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -164,7 +164,7 @@ export default function WalletModal({
       try {
         // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
         // collision into the WalletModal, so we special case by closing the modal.
-        if (connector === fortmatic.connector) {
+        if (connector === fortmaticConnection.connector) {
           toggleWalletModal()
         }
 
@@ -224,7 +224,7 @@ export default function WalletModal({
       }
 
       // overwrite injected when needed
-      if (option.connector === injected.connector) {
+      if (option.connector === injectedConnection.connector) {
         // don't show injected if there's no injected provider
         if (!(window.web3 || window.ethereum)) {
           if (option.name === 'MetaMask') {

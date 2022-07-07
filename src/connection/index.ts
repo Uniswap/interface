@@ -34,21 +34,21 @@ function onError(error: Error) {
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, defaultChainId: 1 })
 )
-export const network: Connection = {
+export const networkConnection: Connection = {
   connector: web3Network,
   hooks: web3NetworkHooks,
   type: ConnectionType.NETWORK,
 }
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
-export const injected: Connection = {
+export const injectedConnection: Connection = {
   connector: web3Injected,
   hooks: web3InjectedHooks,
   type: ConnectionType.INJECTED,
 }
 
 const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
-export const gnosisSafe: Connection = {
+export const gnosisSafeConnection: Connection = {
   connector: web3GnosisSafe,
   hooks: web3GnosisSafeHooks,
   type: ConnectionType.GNOSIS_SAFE,
@@ -65,7 +65,7 @@ const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletCo
       onError,
     })
 )
-export const walletConnect: Connection = {
+export const walletConnectConnection: Connection = {
   connector: web3WalletConnect,
   hooks: web3WalletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
@@ -74,7 +74,7 @@ export const walletConnect: Connection = {
 const [web3Fortmatic, web3FortmaticHooks] = initializeConnector<EIP1193>(
   (actions) => new EIP1193({ actions, provider: new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY).getProvider() })
 )
-export const fortmatic: Connection = {
+export const fortmaticConnection: Connection = {
   connector: web3Fortmatic,
   hooks: web3FortmaticHooks,
   type: ConnectionType.FORTMATIC,
@@ -93,7 +93,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
       onError,
     })
 )
-export const coinbaseWallet: Connection = {
+export const coinbaseWalletConnection: Connection = {
   connector: web3CoinbaseWallet,
   hooks: web3CoinbaseWalletHooks,
   type: ConnectionType.COINBASE_WALLET,

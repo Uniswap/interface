@@ -1,5 +1,11 @@
 import { Connector } from '@web3-react/types'
-import { coinbaseWallet, ConnectionType, fortmatic, injected, walletConnect } from 'connection'
+import {
+  coinbaseWalletConnection,
+  ConnectionType,
+  fortmaticConnection,
+  injectedConnection,
+  walletConnectConnection,
+} from 'connection'
 
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
@@ -22,7 +28,7 @@ interface WalletInfo {
 
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   INJECTED: {
-    connector: injected.connector,
+    connector: injectedConnection.connector,
     connectionType: ConnectionType.INJECTED,
     name: 'Injected',
     iconURL: INJECTED_ICON_URL,
@@ -32,7 +38,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     primary: true,
   },
   METAMASK: {
-    connector: injected.connector,
+    connector: injectedConnection.connector,
     connectionType: ConnectionType.INJECTED,
     name: 'MetaMask',
     iconURL: METAMASK_ICON_URL,
@@ -41,7 +47,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#E8831D',
   },
   WALLET_CONNECT: {
-    connector: walletConnect.connector,
+    connector: walletConnectConnection.connector,
     connectionType: ConnectionType.WALLET_CONNECT,
     name: 'WalletConnect',
     iconURL: WALLETCONNECT_ICON_URL,
@@ -51,7 +57,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobile: true,
   },
   COINBASE_WALLET: {
-    connector: coinbaseWallet.connector,
+    connector: coinbaseWalletConnection.connector,
     connectionType: ConnectionType.COINBASE_WALLET,
     name: 'Coinbase Wallet',
     iconURL: COINBASE_ICON_URL,
@@ -69,7 +75,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobileOnly: true,
   },
   FORTMATIC: {
-    connector: fortmatic.connector,
+    connector: fortmaticConnection.connector,
     connectionType: ConnectionType.FORTMATIC,
     name: 'Fortmatic',
     iconURL: FORTMATIC_ICON_URL,

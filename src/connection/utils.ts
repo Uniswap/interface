@@ -1,7 +1,22 @@
 import { Connector } from '@web3-react/types'
-import { coinbaseWallet, ConnectionType, fortmatic, gnosisSafe, injected, network, walletConnect } from 'connection'
+import {
+  coinbaseWalletConnection,
+  ConnectionType,
+  fortmaticConnection,
+  gnosisSafeConnection,
+  injectedConnection,
+  networkConnection,
+  walletConnectConnection,
+} from 'connection'
 
-const CONNECTIONS = [coinbaseWallet, fortmatic, injected, network, walletConnect, gnosisSafe]
+const CONNECTIONS = [
+  coinbaseWalletConnection,
+  fortmaticConnection,
+  injectedConnection,
+  networkConnection,
+  walletConnectConnection,
+  gnosisSafeConnection,
+]
 
 export function getConnection(c: Connector | ConnectionType) {
   if (c instanceof Connector) {
@@ -13,17 +28,17 @@ export function getConnection(c: Connector | ConnectionType) {
   } else {
     switch (c) {
       case ConnectionType.INJECTED:
-        return injected
+        return injectedConnection
       case ConnectionType.COINBASE_WALLET:
-        return coinbaseWallet
+        return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT:
-        return walletConnect
+        return walletConnectConnection
       case ConnectionType.FORTMATIC:
-        return fortmatic
+        return fortmaticConnection
       case ConnectionType.NETWORK:
-        return network
+        return networkConnection
       case ConnectionType.GNOSIS_SAFE:
-        return gnosisSafe
+        return gnosisSafeConnection
     }
   }
 }
