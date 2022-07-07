@@ -273,10 +273,10 @@ export default function NetworkSelector() {
 
   // Can't use `usePrevious` because `chainId` can be undefined while activating.
   useEffect(() => {
-    if (chainId) {
+    if (chainId && chainId !== previousChainId) {
       setPreviousChainId(chainId)
     }
-  }, [chainId])
+  }, [chainId, previousChainId])
 
   const parsedQs = useParsedQueryString()
   const urlChainId = getParsedChainId(parsedQs)
