@@ -54,7 +54,7 @@ const ChartHeader = styled.div`
   flex-direction: column;
   color: ${({ theme }) => theme.text1};
   gap: 4px;
-  margin-bottom: 56px;
+  margin-bottom: 24px;
 `
 const ContractAddress = styled.button`
   display: flex;
