@@ -70,6 +70,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
       ) : (
         <>
           <BaseCard.Header
+            borderBottomWidth={0}
             title={t('NFTs ({{totalCount}})', { totalCount })}
             onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
           />

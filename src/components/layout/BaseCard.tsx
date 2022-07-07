@@ -12,7 +12,7 @@ import { Trace } from 'src/features/telemetry/Trace'
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
   return (
     <Trace {...trace}>
-      <Box bg="translucentBackground" borderRadius="md" overflow="hidden">
+      <Box bg="backgroundContainer" borderRadius="md" overflow="hidden">
         {children}
       </Box>
     </Trace>
@@ -20,14 +20,14 @@ export function Container({ children, ...trace }: PropsWithChildren<ComponentPro
 }
 
 // Header
-interface HeaderProps {
+type HeaderProps = {
   title: string | ReactNode
   subtitle?: string | ReactNode
   onPress?: () => void
   icon?: ReactElement
-}
+} & ComponentProps<typeof Button>
 
-function Header({ title, subtitle, onPress, icon }: HeaderProps) {
+function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps) {
   const theme = useAppTheme()
 
   return (
@@ -36,7 +36,8 @@ function Header({ title, subtitle, onPress, icon }: HeaderProps) {
       borderBottomWidth={0.5}
       px="md"
       py="sm"
-      onPress={onPress}>
+      onPress={onPress}
+      {...buttonProps}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex gap="xxs">
           <Flex row alignItems="center" gap="xs">

@@ -115,7 +115,7 @@ export function ExploreScreen() {
           },
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
-        <Flex gap="lg" mx="md" my="sm">
+        <Flex gap="lg" mx="sm" my="sm">
           <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
             {t('Explore')}
           </AnimatedText>
@@ -133,7 +133,7 @@ export function ExploreScreen() {
 
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
-          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="md">
+          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="sm">
             <VirtualizedList>
               <Box height={CONTENT_MAX_SCROLL_Y} mb="md" />
               <SearchResultsSection searchQuery={searchQuery} />
@@ -143,20 +143,20 @@ export function ExploreScreen() {
       ) : (
         <VirtualizedList ref={listRef} onScroll={scrollHandler}>
           <Box height={HEADER_HEIGHT} mb="md" />
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="md">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="sm">
             <WatchedWalletsCard
               onSearchWallets={() => {
                 textInputRef.current?.focus()
               }}
             />
           </AnimatedFlex>
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="md">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="sm">
             <FavoriteTokensCard
               fixedCount={5}
               metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
             />
           </AnimatedFlex>
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="lg" mx="md">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="lg" mx="sm">
             <TopTokensCard
               fixedCount={15}
               metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}

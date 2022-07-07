@@ -5,10 +5,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
+import CameraScan from 'src/assets/icons/camera-scan.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
-import WalletIcon from 'src/assets/icons/wallet.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
@@ -87,7 +87,7 @@ export function HomeScreen({ navigation }: Props) {
           </Flex>
           <QuickActions />
         </Flex>
-        <Flex gap="md" mx="md">
+        <Flex gap="md" mx="sm">
           <PortfolioTokensSection count={4} />
           <PortfolioNFTsSection count={6} />
         </Flex>
@@ -115,11 +115,12 @@ function QuickActions() {
       <PrimaryButton
         borderRadius="lg"
         flex={1}
-        icon={
-          <WalletIcon color={theme.colors.mainForeground} height={20} strokeWidth={2} width={20} />
+        icon={<CameraScan height={20} stroke={theme.colors.mainForeground} width={20} />}
+        label={t('Scan')}
+        name={
+          // Note. Leaving as buy since scan will be reverted before launch
+          ElementName.NavigateBuy
         }
-        label={t('Buy')}
-        name={ElementName.NavigateBuy}
         py="sm"
         testID={ElementName.NavigateBuy}
         variant="transparent"
