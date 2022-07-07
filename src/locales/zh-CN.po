@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-06 21:05\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1611,10 +1611,6 @@ msgstr "将 {0} {1} 兑换为 {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "参加 10 分钟调查，以帮助我们改善您在 Uniswap 中的体验。"
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "相符"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
