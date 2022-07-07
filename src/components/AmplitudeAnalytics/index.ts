@@ -1,7 +1,5 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 
-import { UserPropertyOperations } from './constants'
-
 /**
  * Initializes Amplitude with API key for project.
  *
@@ -43,47 +41,71 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
 }
 
 /**
- * Updates the User Model's properties in Amplitude that represents
- * the current session's user.
+ * Singleton that exposes methods to modify the User Model's properties in
+ * Amplitude that represents the current session's user.
  *
  * See https://help.amplitude.com/hc/en-us/articles/115002380567-User-properties-and-event-properties
  * for details.
  */
-export function updateAnalyticsUserModel(
-  operation: UserPropertyOperations,
-  propertyName: string,
-  propertyValue: string | number
-) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`amplitude user model update with operation ${operation}:`, `${propertyName}: ${propertyValue}`)
+export class UserModel {
+  private static _instance: UserModel
+  private _isDevEnvironemnt = true
+
+  private constructor() {
+    process.env.NODE_ENV === 'development' ? (this._isDevEnvironemnt = true) : (this._isDevEnvironemnt = false)
   }
 
-  const identifyObj = new Identify()
-  switch (operation) {
-    case UserPropertyOperations.SET:
-      identifyObj.set(propertyName, propertyValue)
-      break
-    case UserPropertyOperations.SET_ONCE:
-      identifyObj.setOnce(propertyName, propertyValue)
-      break
-    case UserPropertyOperations.ADD:
-      identifyObj.add(propertyName, typeof propertyValue === 'number' ? propertyValue : 0)
-      break
-    case UserPropertyOperations.ARRAY_PREPEND:
-      identifyObj.prepend(propertyName, propertyValue)
-      break
-    case UserPropertyOperations.ARRAY_APPEND:
-      identifyObj.append(propertyName, propertyValue)
-      break
-    case UserPropertyOperations.ARRAY_PREINSERT:
-      identifyObj.preInsert(propertyName, propertyValue)
-      break
-    case UserPropertyOperations.ARRAY_POSTINSERT:
-      identifyObj.postInsert(propertyName, propertyValue)
-      break
-    case UserPropertyOperations.ARRAY_REMOVE:
-      identifyObj.remove(propertyName, propertyValue)
-      break
+  public static get Instance() {
+    return this._instance || (this._instance = new this())
   }
-  identify(identifyObj)
+
+  public set(propertyName: string, propertyValue: string | number) {
+    if (this._isDevEnvironemnt) {
+      console.log('amplitude user model update with operation set:', `${propertyName}: ${propertyValue}`)
+      return
+    }
+    const identifyObj = new Identify()
+    identifyObj.set(propertyName, propertyValue)
+    identify(identifyObj)
+  }
+
+  public setOnce(propertyName: string, propertyValue: string | number) {
+    if (this._isDevEnvironemnt) {
+      console.log('amplitude user model update with operation setOnce:', `${propertyName}: ${propertyValue}`)
+      return
+    }
+    const identifyObj = new Identify()
+    identifyObj.setOnce(propertyName, propertyValue)
+    identify(identifyObj)
+  }
+
+  public add(propertyName: string, propertyValue: string | number) {
+    if (this._isDevEnvironemnt) {
+      console.log('amplitude user model update with operation add:', `${propertyName}: ${propertyValue}`)
+      return
+    }
+    const identifyObj = new Identify()
+    identifyObj.add(propertyName, typeof propertyValue === 'number' ? propertyValue : 0)
+    identify(identifyObj)
+  }
+
+  public postInsert(propertyName: string, propertyValue: string | number) {
+    if (this._isDevEnvironemnt) {
+      console.log('amplitude user model update with operation postInsert:', `${propertyName}: ${propertyValue}`)
+      return
+    }
+    const identifyObj = new Identify()
+    identifyObj.postInsert(propertyName, propertyValue)
+    identify(identifyObj)
+  }
+
+  public remove(propertyName: string, propertyValue: string | number) {
+    if (this._isDevEnvironemnt) {
+      console.log('amplitude user model update with operation remove:', `${propertyName}: ${propertyValue}`)
+      return
+    }
+    const identifyObj = new Identify()
+    identifyObj.remove(propertyName, propertyValue)
+    identify(identifyObj)
+  }
 }
