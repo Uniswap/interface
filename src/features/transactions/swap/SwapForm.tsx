@@ -13,33 +13,29 @@ import { Box } from 'src/components/layout/Box'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import {
-  useDerivedSwapInfo,
+  DerivedSwapInfo,
   useSwapActionHandlers,
   useUpdateSwapGasEstimate,
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/validate'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'src/features/transactions/transactionState/transactionState'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
-  state: TransactionState
   dispatch: Dispatch<AnyAction>
   onNext: () => void
+  derivedSwapInfo: DerivedSwapInfo
 }
 
 // TODO:
 // -check erc20 permits
 // -handle price impact too high
 // TODO: token warnings
-export function SwapForm({ state, dispatch, onNext }: SwapFormProps) {
+export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
-  const derivedSwapInfo = useDerivedSwapInfo(state)
 
   const {
     currencies,

@@ -16,7 +16,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
-  useDerivedSwapInfo,
+  DerivedSwapInfo,
   useSwapCallback,
   useUpdateSwapGasEstimate,
   useWrapCallback,
@@ -25,27 +25,23 @@ import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/validate'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'src/features/transactions/transactionState/transactionState'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
-  state: TransactionState
   dispatch: Dispatch<AnyAction>
   onNext: () => void
   onPrev: () => void
+  derivedSwapInfo: DerivedSwapInfo
 }
 
 // TODO:
 // -check erc20 permits
 // -handle price impact too high
 // TODO: token warnings
-export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
+export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
-  const derivedSwapInfo = useDerivedSwapInfo(state)
   const theme = useAppTheme()
 
   const {
@@ -55,10 +51,13 @@ export function SwapReview({ state, dispatch, onNext, onPrev }: SwapFormProps) {
     trade: { trade: trade },
     wrapType,
     isUSDInput = false,
+    gasSpendEstimate,
+    gasPrice,
+    exactApproveRequired,
   } = derivedSwapInfo
 
   useUpdateSwapGasEstimate(dispatch, trade)
-  const { gasSpendEstimate, gasPrice, exactApproveRequired } = state
+
   const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
   const swapDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
 

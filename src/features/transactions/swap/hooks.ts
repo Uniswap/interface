@@ -69,6 +69,9 @@ export type DerivedSwapInfo<
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
   isUSDInput?: boolean
+  gasSpendEstimate?: GasSpendEstimate
+  gasPrice?: string
+  exactApproveRequired?: boolean
 }
 
 /** Returns information derived from the current swap state */
@@ -80,6 +83,9 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountToken,
     exactCurrencyField,
     isUSDInput,
+    gasSpendEstimate,
+    gasPrice,
+    exactApproveRequired,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -182,6 +188,9 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     trade,
     wrapType,
     isUSDInput,
+    gasSpendEstimate,
+    gasPrice,
+    exactApproveRequired,
   }
 }
 

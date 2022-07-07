@@ -3,6 +3,7 @@ import React, { Dispatch, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { DerivedSwapInfo, useDerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
 import {
@@ -24,20 +25,32 @@ export enum SwapStep {
 
 type InnerContentProps = {
   dispatch: Dispatch<AnyAction>
-  state: TransactionState
+  derivedSwapInfo: DerivedSwapInfo
   step: SwapStep
   setStep: (step: SwapStep) => void
   onClose: () => void
 }
 
-function SwapInnerContent({ dispatch, state, step, setStep, onClose }: InnerContentProps) {
+function SwapInnerContent({
+  dispatch,
+  step,
+  setStep,
+  onClose,
+  derivedSwapInfo,
+}: InnerContentProps) {
   if (step === SwapStep.FORM)
-    return <SwapForm dispatch={dispatch} state={state} onNext={() => setStep(SwapStep.REVIEW)} />
+    return (
+      <SwapForm
+        derivedSwapInfo={derivedSwapInfo}
+        dispatch={dispatch}
+        onNext={() => setStep(SwapStep.REVIEW)}
+      />
+    )
 
   return (
     <SwapReview
+      derivedSwapInfo={derivedSwapInfo}
       dispatch={dispatch}
-      state={state}
       onNext={onClose}
       onPrev={() => setStep(SwapStep.FORM)}
     />
@@ -47,6 +60,7 @@ function SwapInnerContent({ dispatch, state, step, setStep, onClose }: InnerCont
 export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const [step, setStep] = useState<SwapStep>(SwapStep.FORM)
+  const derivedSwapInfo = useDerivedSwapInfo(state)
   const { t } = useTranslation()
 
   return (
@@ -55,9 +69,9 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
         {t('Swap')}
       </Text>
       <SwapInnerContent
+        derivedSwapInfo={derivedSwapInfo}
         dispatch={dispatch}
         setStep={setStep}
-        state={state}
         step={step}
         onClose={onClose}
       />
