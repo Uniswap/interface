@@ -2,7 +2,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { getConnectionForConnector } from 'connection/utils'
+import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
@@ -142,9 +142,7 @@ function WrappedStatusIcon({ connector }: { connector: Connector }) {
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
 
-  const error = useAppSelector(
-    (state) => state.connection.errorByConnectionType[getConnectionForConnector(connector).type]
-  )
+  const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
 

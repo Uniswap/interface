@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { getConnectionForConnector } from 'connection/utils'
+import { getConnection } from 'connection/utils'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -285,7 +285,7 @@ export default function NetworkSelector() {
     async (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
-      const connectionType = getConnectionForConnector(connector).type
+      const connectionType = getConnection(connector).type
 
       try {
         dispatch(updateConnectionError({ connectionType, error: undefined }))

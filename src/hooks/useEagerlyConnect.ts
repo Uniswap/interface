@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import { gnosisSafe, injected, network } from 'connection'
-import { getConnectionForConnectionType } from 'connection/utils'
+import { getConnection } from 'connection/utils'
 import { useEffect } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
 import { useAppSelector } from 'state/hooks'
@@ -31,9 +31,9 @@ export default function useEagerlyConnect() {
     if (isMobile && isMetaMask) {
       injected.connector.activate()
     } else if (selectedWallet) {
-      connect(getConnectionForConnectionType(selectedWallet).connector)
+      connect(getConnection(selectedWallet).connector)
     } else if (!selectedWalletBackfilled) {
-      BACKFILLABLE_WALLETS.map(getConnectionForConnectionType)
+      BACKFILLABLE_WALLETS.map(getConnection)
         .map((connection) => connection.connector)
         .forEach(connect)
     }

@@ -5,7 +5,7 @@ import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { fortmatic, injected } from 'connection'
-import { getConnectionForConnector } from 'connection/utils'
+import { getConnection } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -127,9 +127,7 @@ export default function WalletModal({
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
-    pendingConnector
-      ? state.connection.errorByConnectionType[getConnectionForConnector(pendingConnector).type]
-      : undefined
+    pendingConnector ? state.connection.errorByConnectionType[getConnection(pendingConnector).type] : undefined
   )
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
@@ -147,14 +145,14 @@ export default function WalletModal({
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
-      updateConnectionError({ connectionType: getConnectionForConnector(pendingConnector).type, error: undefined })
+      updateConnectionError({ connectionType: getConnection(pendingConnector).type, error: undefined })
       setPendingConnector(undefined)
     }
   }, [pendingConnector, walletView])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
-      const connectionType = getConnectionForConnector(connector).type
+      const connectionType = getConnection(connector).type
 
       // log selected wallet
       sendEvent({

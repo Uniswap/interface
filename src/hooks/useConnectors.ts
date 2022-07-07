@@ -1,7 +1,7 @@
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { ConnectionType } from 'connection'
-import { getConnectionForConnectionType } from 'connection/utils'
+import { getConnection } from 'connection/utils'
 import { useMemo } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
 import { useAppSelector } from 'state/hooks'
@@ -27,7 +27,7 @@ export default function useConnectors() {
 
     // Convert to web3-react's representation of connectors.
     const web3Connectors: [Connector, Web3ReactHooks][] = orderedConnectionTypes
-      .map(getConnectionForConnectionType)
+      .map(getConnection)
       .map(({ connector, hooks }) => [connector, hooks])
     return web3Connectors
   }, [selectedWallet])
