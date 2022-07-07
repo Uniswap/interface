@@ -122,7 +122,6 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, account } = useWeb3React()
-  const connectionType = getConnection(connector).type
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
