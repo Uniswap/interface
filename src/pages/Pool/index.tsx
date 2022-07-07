@@ -81,7 +81,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   background-color: ${({ theme }) => theme.bg0};
   margin-right: 8px;
 `
-const NoLiquidity = styled.div`
+const ErrorContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -91,15 +91,6 @@ const NoLiquidity = styled.div`
   min-height: 25vh;
 `
 
-const WrongNetwork = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  max-width: 300px;
-  min-height: 25vh;
-`
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
@@ -152,7 +143,7 @@ function WrongNetworkCard() {
             </TitleRow>
 
             <MainContentWrapper>
-              <WrongNetwork>
+              <ErrorContainer>
                 <ThemedText.Body color={theme.text3} textAlign="center">
                   <Activity size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                   <div>
@@ -162,7 +153,7 @@ function WrongNetworkCard() {
                     </Trans>
                   </div>
                 </ThemedText.Body>
-              </WrongNetwork>
+              </ErrorContainer>
             </MainContentWrapper>
           </AutoColumn>
         </AutoColumn>
@@ -244,7 +235,7 @@ export default function Pool() {
   return (
     <>
       <PageWrapper>
-        <SwapPoolTabs active={'pool'} />
+        <SwapPoolTabs active="pool" />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
@@ -282,7 +273,7 @@ export default function Pool() {
                   userHideClosedPositions={userHideClosedPositions}
                 />
               ) : (
-                <NoLiquidity>
+                <ErrorContainer>
                   <ThemedText.Body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
@@ -302,7 +293,7 @@ export default function Pool() {
                       <Trans>Connect a wallet</Trans>
                     </ButtonPrimary>
                   )}
-                </NoLiquidity>
+                </ErrorContainer>
               )}
             </MainContentWrapper>
             <HideSmall>
