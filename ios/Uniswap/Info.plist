@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -61,7 +63,7 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling FaceId helps Uniswap keep your assets secure.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter-Bold.ttf</string>
@@ -86,5 +88,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>ShakeBugsConfig</key>
+	<dict>
+		<key>SHAKE_CLIENT_ID</key>
+		<string>9bgtXsNl5elttAyFUCCXJFYQyNKjVS7StF7oLpWk</string>
+		<key>SHAKE_CLIENT_SECRET</key>
+		<string>LcZeccXtiLuo4O0T5pwdFXysmdpsY25JsIKExd3XzABh4VoDEzXpe30</string>
+	</dict>
 </dict>
 </plist>
