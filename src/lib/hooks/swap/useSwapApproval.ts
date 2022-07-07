@@ -110,7 +110,7 @@ export function useSwapApprovalOptimizedTrade(
           return V3Trade.createUncheckedTradeWithMultipleRoutes({
             routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
               route: new V3Route(
-                route.pools.filter((p) => p instanceof Pool) as unknown as Pool[],
+                route.pools.filter((p): p is Pool => p instanceof Pool),
                 inputAmount.currency,
                 outputAmount.currency
               ),

@@ -4889,20 +4889,7 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-sdk@^3.7.0", "@uniswap/v3-sdk@^3.8.3":
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.8.3.tgz#7e0c3fc4fff4e88c0d5348885e0493b57eaa865b"
-  integrity sha512-5zx8Fi41KyL7IhleZsRTRiX2lo+i0E4ks+IhVeyq0nrRPzO9f4drgHi29VwZaDw0+RWf+OCLm0CURURsJO2MZg==
-  dependencies:
-    "@ethersproject/abi" "^5.0.12"
-    "@ethersproject/solidity" "^5.0.9"
-    "@uniswap/sdk-core" "^3.0.1"
-    "@uniswap/v3-periphery" "^1.1.1"
-    "@uniswap/v3-staker" "1.0.0"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
-
-"@uniswap/v3-sdk@^3.9.0":
+"@uniswap/v3-sdk@^3.7.0", "@uniswap/v3-sdk@^3.8.3", "@uniswap/v3-sdk@^3.9.0":
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.9.0.tgz#de93fa19f89c29d460996aa4d0b4bb6531641105"
   integrity sha512-LuoF3UcY1DxSAQKJ3E4/1Eq4HaNp+x+7q9mvbpiu+/PBj+O1DjLforAMrKxu+RsA0aarmZtz7yBnAPy+akgfgQ==
