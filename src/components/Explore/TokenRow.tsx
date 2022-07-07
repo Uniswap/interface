@@ -8,6 +8,7 @@ import { darken } from 'polished'
 import React, { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
 import { ArrowDown, ArrowUp } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
@@ -94,6 +95,17 @@ const ClickFavorited = styled.span`
     color: ${({ theme }) => theme.primary1};
   }
 `
+const ClickableName = styled(Link)`
+  display: flex;
+  gap: 8px;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text1};
+
+  &:hover,
+  &:focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
+  }
+`
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
   color: ${({ theme }) => theme.text2};
@@ -139,8 +151,8 @@ const MarketCapCell = styled(Cell)`
 const NameCell = styled(Cell)`
   justify-content: flex-start;
   padding-left: 8px;
-  gap: 8px;
   min-width: 200px;
+  gap: 8px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     min-width: fit-content;
@@ -509,12 +521,13 @@ export default function LoadedRow({
       }
       listNumber={listNumber}
       tokenInfo={
-        <>
+        <ClickableName to={`tokens/${tokenAddress}`}>
           <CurrencyLogo currency={useCurrency(tokenAddress)} />
           <TokenInfoCell>
-            {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            {tokenName}
+            <TokenSymbol>{tokenSymbol}</TokenSymbol>
           </TokenInfoCell>
-        </>
+        </ClickableName>
       }
       price={
         <PriceInfoCell>
