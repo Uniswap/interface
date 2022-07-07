@@ -38,11 +38,12 @@ const getHTML = (svgContent: string) => `
 `
 
 type SvgUriProps = {
+  maxHeight?: number
   uri: string
 }
 
 /* Re-implementation of `react-native-svg#SvgUri` that has better SVG support (animations, text, etc.) */
-export function WebSvgUri({ uri }: SvgUriProps) {
+export function WebSvgUri({ maxHeight, uri }: SvgUriProps) {
   const [svgContent, setSvgContent] = useState<string | null>(null)
   const [{ width, height }, setDimensions] = useState<{ width?: number; height?: number }>({})
 
@@ -88,6 +89,7 @@ export function WebSvgUri({ uri }: SvgUriProps) {
           webviewStyle.fullWidth,
           {
             aspectRatio: width / height,
+            maxHeight,
           },
         ]}
         useWebKit={false}

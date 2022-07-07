@@ -4,19 +4,19 @@ import { WebSvgUri } from 'src/components/images/WebSvgUri'
 import { uriToHttp } from 'src/utils/uriToHttp'
 
 type Props = {
-  borderRadius?: number
+  maxHeight?: number
   uri: string
 }
 
 /**
  * Renders a remote NFT image or SVG and automatically expands to fill parent container
  */
-export function NFTViewer({ uri, ...rest }: Props) {
+export function NFTViewer({ maxHeight, uri }: Props) {
   const imageHttpUri = uriToHttp(uri)[0]
 
   if (imageHttpUri?.endsWith('.svg')) {
-    return <WebSvgUri uri={imageHttpUri} />
+    return <WebSvgUri maxHeight={maxHeight} uri={imageHttpUri} />
   } else {
-    return <ImageUri uri={imageHttpUri} {...rest} />
+    return <ImageUri maxHeight={maxHeight} uri={imageHttpUri} />
   }
 }

@@ -58,7 +58,6 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
             <Flex row shrink alignItems="center" gap="xs">
               {image_url && (
                 <NFTViewer
-                  borderRadius={theme.borderRadii.md}
                   // height={20}
                   uri={image_url}
                   // width={20}

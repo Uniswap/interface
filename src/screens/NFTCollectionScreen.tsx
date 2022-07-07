@@ -60,11 +60,11 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             p="md">
             <Flex row alignItems="center" gap="sm">
               {collection?.image_url && (
-                <Box height={24} width={24}>
-                  <NFTViewer borderRadius={theme.borderRadii.md} uri={collection?.image_url} />
+                <Box height={32} width={32}>
+                  <NFTViewer uri={collection?.image_url} />
                 </Box>
               )}
-              <Text style={flex.shrink} variant="mediumLabel">
+              <Text color="textPrimary" style={flex.shrink} variant="subhead">
                 {collectionName}
               </Text>
               {collection?.safelist_request_status === 'verified' && (

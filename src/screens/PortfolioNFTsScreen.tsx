@@ -19,6 +19,8 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
+const MAX_NFT_IMAGE_SIZE = 375
+
 export function PortfolioNFTsScreen({
   route: {
     params: { owner },
@@ -51,8 +53,8 @@ export function PortfolioNFTsScreen({
   const renderItem = useCallback(
     (asset: NFTAsset.Asset) => {
       return (
-        <Button onPress={() => onPressItem(asset)}>
-          <NFTAssetItem nft={asset} />
+        <Button alignItems="center" onPress={() => onPressItem(asset)}>
+          <NFTAssetItem maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
         </Button>
       )
     },

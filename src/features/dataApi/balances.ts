@@ -152,7 +152,6 @@ function formatSerializedBalanceItems(
           relativeChange24: percentDifference(item.quote_rate, item.quote_rate_24h),
         }
       }
-
       return portfolioBalances
     },
     {}

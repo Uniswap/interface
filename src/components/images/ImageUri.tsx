@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { Loading } from 'src/components/loading'
 
-export function ImageUri({ uri }: { uri?: string }) {
+export function ImageUri({ maxHeight, uri }: { maxHeight?: number; uri?: string }) {
   const [height, setHeight] = useState<number | null>(null)
   const [width, setWidth] = useState<number | null>(null)
 
@@ -26,6 +26,7 @@ export function ImageUri({ uri }: { uri?: string }) {
       style={[
         {
           aspectRatio: width / height,
+          maxHeight,
         },
         styles.fullWidth,
       ]}

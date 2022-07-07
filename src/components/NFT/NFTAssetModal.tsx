@@ -85,7 +85,6 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
       <Flex gap="md" mx="lg" my="md">
         <Box>
           <NFTViewer
-            borderRadius={theme.borderRadii.lg}
             // TODO: fix dimensions when nft work kicks off
             // height={ITEM_WIDTH}
             uri={imageUrl}
@@ -156,7 +155,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
                 variant="bodySmall">{t`From the Collection`}</Text>
               <Flex row alignItems="center" gap="xs">
                 <Box height={COLLECTION_IMAGE_WIDTH} width={COLLECTION_IMAGE_WIDTH}>
-                  <NFTViewer borderRadius={theme.borderRadii.full} uri={collectionImageUrl} />
+                  <NFTViewer uri={collectionImageUrl} />
                 </Box>
                 <Text ml="xs" variant="body">
                   {collectionName}

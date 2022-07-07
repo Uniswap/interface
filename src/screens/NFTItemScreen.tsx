@@ -8,8 +8,9 @@ import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { RemoteImage } from 'src/components/images/RemoteImage'
-import { Flex } from 'src/components/layout'
+import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
+import { NFTViewer } from 'src/components/images/NFTViewer'
+import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette'
@@ -27,6 +28,8 @@ import {
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
+
+const MAX_NFT_IMAGE_SIZE = 512
 
 export function NFTItemScreen({
   route: {
@@ -64,79 +67,92 @@ export function NFTItemScreen({
     <HeaderScrollScreen
       contentHeader={<BackButton showButtonLabel />}
       fixedHeader={<BackButton showButtonLabel />}>
-      <Flex borderRadius="md" p="md">
+      <Flex my="sm">
         <Flex centered>
-          <NFTAssetItem nft={asset} />
+          <NFTAssetItem maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
 
-          <Flex
-            alignItems="flex-end"
-            justifyContent="space-between"
-            mx="none"
-            my="lg"
-            style={StyleSheet.absoluteFill}>
-            <ApplyNFTPaletteButton asset={asset} />
-            {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={asset} />}
-          </Flex>
+          <DevelopmentOnly>
+            <Flex
+              alignItems="flex-end"
+              justifyContent="space-between"
+              mx="none"
+              my="lg"
+              style={StyleSheet.absoluteFill}>
+              <ApplyNFTPaletteButton asset={asset} />
+              {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={asset} />}
+            </Flex>
+          </DevelopmentOnly>
         </Flex>
 
-        {/* Collection info */}
-        <Flex gap="xs">
-          <Text variant="headlineMedium">{asset?.name}</Text>
-          <Flex row alignItems="center" gap="xxs">
-            {asset.collection.image_url ? (
-              <RemoteImage
-                borderRadius={theme.borderRadii.full}
-                height={16}
-                uri={asset.collection.image_url}
-                width={16}
+        <Flex mx="md">
+          {/* Collection info */}
+          <Flex gap="xs">
+            <Text variant="headlineSmall">{asset?.name}</Text>
+            <Flex
+              row
+              alignItems="center"
+              borderColor="backgroundOutline"
+              borderRadius="md"
+              borderWidth={1}
+              gap="sm"
+              p="md">
+              {asset.collection.image_url ? (
+                <Box borderRadius="full" height={32} overflow="hidden" width={32}>
+                  <NFTViewer uri={asset.collection.image_url} />
+                </Box>
+              ) : null}
+              <Flex row gap="xs">
+                <Text color="textPrimary" variant="subhead">
+                  {asset.collection.name}
+                </Text>
+                {asset.collection.safelist_request_status === 'verified' && (
+                  <VerifiedIcon height={25} width={25} />
+                )}
+              </Flex>
+            </Flex>
+          </Flex>
+
+          {/* Action buttons */}
+          <Flex centered row gap="xs">
+            <PrimaryButton
+              flex={1}
+              icon={<OpenSeaIcon color={theme.colors.textPrimary} height={20} width={20} />}
+              label="OpenSea"
+              name={ElementName.NFTAssetViewOnOpensea}
+              testID={ElementName.NFTAssetViewOnOpensea}
+              variant="transparent"
+              onPress={() => openUri(asset.permalink)}
+            />
+            {isMyNFT && (
+              <PrimaryButton
+                flex={1}
+                icon={
+                  <SendIcon
+                    height={20}
+                    stroke={theme.colors.textPrimary}
+                    strokeWidth={2}
+                    width={20}
+                  />
+                }
+                label={t('Send')}
+                name={ElementName.Send}
+                testID={ElementName.Send}
+                variant="transparent"
+                onPress={onPressSend}
               />
-            ) : null}
-            <Text color="textSecondary" ml="xs" variant="subheadSmall">
-              {asset.collection.name}
-            </Text>
-            {asset.collection.safelist_request_status === 'verified' && (
-              <VerifiedIcon height={25} width={25} />
             )}
           </Flex>
-        </Flex>
 
-        {/* Action buttons */}
-        <Flex centered row>
-          <PrimaryButton
-            borderColor="backgroundOutline"
-            borderWidth={1}
-            flex={1}
-            icon={<OpenSeaIcon color={theme.colors.white} height={20} width={20} />}
-            label="OpenSea"
-            name={ElementName.NFTAssetViewOnOpensea}
-            testID={ElementName.NFTAssetViewOnOpensea}
-            variant="black"
-            onPress={() => openUri(asset.permalink)}
-          />
-          {isMyNFT && (
-            <PrimaryButton
-              borderColor="backgroundOutline"
-              borderWidth={1}
-              flex={1}
-              icon={<SendIcon height={20} stroke={theme.colors.white} strokeWidth={2} width={20} />}
-              label={t('Send')}
-              name={ElementName.Send}
-              testID={ElementName.Send}
-              variant="black"
-              onPress={onPressSend}
-            />
-          )}
-        </Flex>
-
-        {/* Metadata */}
-        <Flex gap="sm">
+          {/* Metadata */}
           <Flex gap="sm">
-            <Text color="textSecondary" variant="headlineSmall">
-              {t('Description')}
-            </Text>
-            <Text color="textPrimary" variant="bodySmall">
-              {asset.collection.description}
-            </Text>
+            <Flex gap="sm">
+              <Text color="textSecondary" variant="headlineSmall">
+                {t('Description')}
+              </Text>
+              <Text color="textPrimary" variant="bodySmall">
+                {asset.collection.description}
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
       </Flex>

@@ -1,17 +1,16 @@
 import React from 'react'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { NFTAsset } from 'src/features/nfts/types'
-import { theme } from 'src/styles/theme'
 
 type Props = {
+  maxHeight?: number
   nft?: NFTAsset.Asset
-  onPress?: (nft: NFTAsset.Asset) => void
 }
 
-export function NFTAssetItem({ nft }: Props) {
+export function NFTAssetItem({ maxHeight, nft }: Props) {
   if (!nft) return null
 
   const { image_url: imageUrl } = nft
 
-  return <NFTViewer borderRadius={theme.borderRadii.none} uri={imageUrl} />
+  return <NFTViewer maxHeight={maxHeight} uri={imageUrl} />
 }
