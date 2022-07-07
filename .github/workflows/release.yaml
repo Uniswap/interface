@@ -1,9 +1,7 @@
 name: Release
 on:
-  # Scheduled deploys are disabled until they can be tested. This is currently blocked on flaky cypress tests.
-  # schedule:
-  #   - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
-  # In the meantime, deploy manually. There is a 10-minute timeout, during which you should request the resources through Cloudflare.
+  schedule:
+    - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
@@ -13,11 +11,12 @@ jobs:
     steps:
       - uses: jitterbit/await-check-suites@v1
         with:
+          timeoutSeconds: 600
           # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
           onlyFirstCheckSuite: true
 
   tag:
-    # needs: wait-on-test
+    needs: wait-on-test
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
@@ -65,20 +64,8 @@ jobs:
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
       
+      # Delay updating DNS to give IPFS a chance to propagate.
       - run: sleep 600
-      # - uses: actions/cache@v3
-      #   id: cypress-cache
-      #   with:
-      #     path: /home/runner/.cache/Cypress
-      #     key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
-      # - if: steps.cypress-cache.outputs.cache-hit != 'true'
-      #   run: yarn cypress install
-      # - uses: cypress-io/github-action@v4
-      #   with:
-      #     install: false
-      #     browser: chrome
-      #     spec: cypress/e2e/landing.test.ts
-      #     config: pageLoadTimeout=180000,retries=4,baseUrl=https://cloudflare-ipfs.com/ipfs/${{ steps.pinata.outputs.hash }}
 
       - name: Update DNS with new IPFS hash
         env:
