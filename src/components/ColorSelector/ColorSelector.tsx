@@ -5,7 +5,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { ElementName } from 'src/features/telemetry/constants'
 
-interface WordListProps {
+interface ColorSelectorProps {
   selectedColor?: string
   updateColor: (color: string) => void
 }
@@ -13,7 +13,7 @@ interface WordListProps {
 const COLORS = ['#FC72FF', '#5065FD', '#FF6F1E', '#B1F13C', '#36DBFF', '#7E887D']
 
 /** Renders color selector for theme update */
-export function ColorSelector({ selectedColor, updateColor }: WordListProps) {
+export function ColorSelector({ selectedColor, updateColor }: ColorSelectorProps) {
   const theme = useTheme()
 
   const renderItem = ({ item: color }: ListRenderItemInfo<string>) => (
