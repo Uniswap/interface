@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react'
-import { Flex, Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import Modal from 'components/Modal'
 import { useModalOpen, useToggleYourCampaignTransactionsModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { Trans } from '@lingui/macro'
-import { CheckCircle, Copy, ExternalLink, X } from 'react-feather'
+import { CheckCircle, Copy, ExternalLink, Info, X } from 'react-feather'
 import useTheme from 'hooks/useTheme'
 import styled, { css } from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
@@ -89,6 +89,17 @@ export default function YourCampaignTransactionsModal() {
             <TableHeaderItem style={{ textAlign: 'right' }}>Points</TableHeaderItem>
           </TableHeader>
           <TableBodyWrapper>
+            {userCampaignTransactions && userCampaignTransactions.length === 0 && (
+              <Flex flexDirection="column" alignItems="center" justifyContent="center" style={{ minHeight: '20vh' }}>
+                <Info size={48} color={theme.subText} style={{ marginBottom: '16px' }} />
+                <Text>
+                  <Trans>You have no Transaction History.</Trans>
+                </Text>
+                <Text>
+                  <Trans>Go to Swap!</Trans>
+                </Text>
+              </Flex>
+            )}
             {userCampaignTransactions &&
               userCampaignTransactions.map((ct, index) => (
                 <TableBody key={ct.id}>

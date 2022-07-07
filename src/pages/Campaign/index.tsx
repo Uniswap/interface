@@ -35,7 +35,6 @@ import { SWR_KEYS } from 'constants/index'
 import { useSWRConfig } from 'swr'
 import { Loading } from 'pages/ProAmmPool/ContentLoader'
 import { useAppDispatch } from 'state/hooks'
-import { rgba } from 'polished'
 import YourCampaignTransactionsModal from 'components/YourCampaignTransactionsModal'
 
 const LoaderParagraphs = () => (
@@ -610,10 +609,13 @@ const CampaignDetailImage = styled.img`
 const HTMLWrapper = styled.div`
   padding-bottom: 20px;
   word-break: break-word;
+  line-height: 1.5;
 
-  p {
+  p,
+  li,
+  span,
+  div {
     font-size: 14px;
-    line-height: 16px;
   }
 `
 
