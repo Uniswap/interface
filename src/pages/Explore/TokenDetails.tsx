@@ -1,4 +1,4 @@
-import NetworkBalances from 'components/Explore/NetworkBalances'
+import BalanceSummary from 'components/Explore/BalanceSummary'
 import TokenDetail from 'components/Explore/TokenDetail'
 import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -14,7 +14,7 @@ export function TokenDetails({
   return (
     <TokenDetailsLayout>
       <TokenDetail address={tokenAddress} />
-      <NetworkBalances address={tokenAddress} />
+      <BalanceSummary address={tokenAddress} />
     </TokenDetailsLayout>
   )
 }
