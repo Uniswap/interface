@@ -313,6 +313,7 @@ export default function NetworkSelector() {
         dispatch(updateWalletError({ wallet, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
 
+        // If we activate a chain and it fails, reset the query param to the current chainId
         replaceURLChainParam()
       }
 
@@ -323,6 +324,7 @@ export default function NetworkSelector() {
     [connector, toggle, dispatch, replaceURLChainParam]
   )
 
+  // If there is no chain query param, set it to the current chain
   useEffect(() => {
     const chainQueryUnpopulated = !urlChainId
     if (chainQueryUnpopulated && chainId) {
@@ -330,14 +332,16 @@ export default function NetworkSelector() {
     }
   }, [chainId, urlChainId, replaceURLChainParam])
 
+  // If the chain changed but the query param is stale, update to the current chain
   useEffect(() => {
     const chainChanged = chainId !== previousChainId
-    const chainQueryUnsynced = urlChainId !== chainId
-    if (chainChanged && chainQueryUnsynced) {
+    const chainQueryStale = urlChainId !== chainId
+    if (chainChanged && chainQueryStale) {
       replaceURLChainParam()
     }
   }, [chainId, previousChainId, replaceURLChainParam, urlChainId])
 
+  // If the query param changed, and the chain didn't change, then activate the new chain
   useEffect(() => {
     const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
     if (chainQueryManuallyUpdated && isActive) {
