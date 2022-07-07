@@ -6,6 +6,7 @@ import { load, save } from 'redux-localstorage-simple'
 import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
+import connection from './connection/reducer'
 import { api as dataApi } from './data/slice'
 import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
@@ -16,7 +17,6 @@ import { routingApi } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
-import wallet from './wallet/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -24,7 +24,7 @@ const store = configureStore({
   reducer: {
     application,
     user,
-    wallet,
+    connection,
     transactions,
     swap,
     mint,
