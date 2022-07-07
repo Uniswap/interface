@@ -14,11 +14,10 @@ describe(fetchSVG, () => {
       })
     ) as jest.Mock
 
-    const result = await fetchSVG('regular.svg')
+    const result = await fetchSVG('regular.svg', false)
 
     expect(result.content).toEqual(REGULAR_SVG)
-    expect(result.viewboxWidth).toEqual(10)
-    expect(result.viewboxHeight).toEqual(20)
+    expect(result.aspectRatio).toEqual(10 / 20)
   })
 
   it('removes <animate>', async () => {
@@ -28,10 +27,9 @@ describe(fetchSVG, () => {
       })
     ) as jest.Mock
 
-    const result = await fetchSVG('with-animate.svg')
+    const result = await fetchSVG('with-animate.svg', false)
 
     expect(result.content).toEqual(SVG_WITH_ANIMATES_STRIPPED)
-    expect(result.viewboxWidth).toEqual(15)
-    expect(result.viewboxHeight).toEqual(25)
+    expect(result.aspectRatio).toEqual(15 / 25)
   })
 })

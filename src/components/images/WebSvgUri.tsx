@@ -38,14 +38,15 @@ const getHTML = (svgContent: string) => `
 `
 
 type SvgUriProps = {
+  autoplay: boolean
   maxHeight?: number
   uri: string
 }
 
 /* Re-implementation of `react-native-svg#SvgUri` that has better SVG support (animations, text, etc.) */
-export function WebSvgUri({ maxHeight, uri }: SvgUriProps) {
+export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps) {
   const [svgContent, setSvgContent] = useState<string | null>(null)
-  const [{ width, height }, setDimensions] = useState<{ width?: number; height?: number }>({})
+  const [aspectRatio, setDimensions] = useState<number | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -53,10 +54,10 @@ export function WebSvgUri({ maxHeight, uri }: SvgUriProps) {
 
     async function fetchSvg() {
       try {
-        const { content, viewboxWidth, viewboxHeight } = await fetchSVG(uri, signal)
+        const { content, aspectRatio: _aspectRatio } = await fetchSVG(uri, autoplay, signal)
 
         setSvgContent(content)
-        setDimensions({ width: viewboxWidth, height: viewboxHeight })
+        setDimensions(_aspectRatio)
       } catch (err: any) {
         if (err.hasOwnProperty('name') && err.name === 'AbortError') {
           return // expect AbortError on unmount
@@ -71,9 +72,9 @@ export function WebSvgUri({ maxHeight, uri }: SvgUriProps) {
       // abort fetch on unmount
       controller.abort()
     }
-  }, [uri])
+  }, [autoplay, uri])
 
-  if (svgContent && width && height) {
+  if (svgContent && aspectRatio) {
     const html = getHTML(svgContent)
 
     return (
@@ -88,7 +89,7 @@ export function WebSvgUri({ maxHeight, uri }: SvgUriProps) {
         style={[
           webviewStyle.fullWidth,
           {
-            aspectRatio: width / height,
+            aspectRatio,
             maxHeight,
           },
         ]}

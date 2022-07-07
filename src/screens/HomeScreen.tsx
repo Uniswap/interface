@@ -89,7 +89,7 @@ export function HomeScreen({ navigation }: Props) {
         </Flex>
         <Flex gap="md" mx="md">
           <PortfolioTokensSection count={4} />
-          <PortfolioNFTsSection count={16} />
+          <PortfolioNFTsSection count={6} />
         </Flex>
       </HeaderScrollScreen>
       {/* TODO: remove when app secures funds  */}

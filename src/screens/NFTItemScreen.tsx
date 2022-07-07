@@ -70,7 +70,7 @@ export function NFTItemScreen({
       fixedHeader={<BackButton showButtonLabel />}>
       <Flex my="sm">
         <Flex centered>
-          <NFTAssetItem maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
+          <NFTAssetItem autoplay maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
 
           <DevelopmentOnly>
             <Flex

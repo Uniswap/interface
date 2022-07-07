@@ -66,7 +66,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
       <Flex gap="md">
         {isNFT ? (
           <Flex centered mx="xl">
-            <NFTAssetItem nft={nftIn} />
+            <NFTAssetItem autoplay={false} nft={nftIn} />
           </Flex>
         ) : (
           <CurrencyInputPanel
