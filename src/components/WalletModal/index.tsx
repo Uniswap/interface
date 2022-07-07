@@ -4,16 +4,17 @@ import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
+import { ConnectionType, injectedConnection } from 'connection'
+import { getConnection } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, getWalletForConnector, injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -125,7 +126,7 @@ export default function WalletModal({
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
-    pendingConnector ? state.wallet.errorByWallet[getWalletForConnector(pendingConnector)] : undefined
+    pendingConnector ? state.connection.errorByConnectionType[getConnection(pendingConnector).type] : undefined
   )
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
@@ -143,39 +144,39 @@ export default function WalletModal({
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
-      updateWalletError({ wallet: getWalletForConnector(pendingConnector), error: undefined })
+      updateConnectionError({ connectionType: getConnection(pendingConnector).type, error: undefined })
       setPendingConnector(undefined)
     }
   }, [pendingConnector, walletView])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
-      const wallet = getWalletForConnector(connector)
+      const connectionType = getConnection(connector).type
 
       // log selected wallet
       sendEvent({
         category: 'Wallet',
         action: 'Change Wallet',
-        label: wallet,
+        label: connectionType,
       })
 
       try {
         // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
         // collision into the WalletModal, so we special case by closing the modal.
-        if (connector === fortmatic) {
+        if (connectionType === ConnectionType.FORTMATIC) {
           toggleWalletModal()
         }
 
         setPendingConnector(connector)
         setWalletView(WALLET_VIEWS.PENDING)
-        dispatch(updateWalletError({ wallet, error: undefined }))
+        dispatch(updateConnectionError({ connectionType, error: undefined }))
 
         await connector.activate()
 
-        dispatch(updateSelectedWallet({ wallet }))
+        dispatch(updateSelectedWallet({ wallet: connectionType }))
       } catch (error) {
         console.debug(`web3-react connection error: ${error}`)
-        dispatch(updateWalletError({ wallet, error: error.message }))
+        dispatch(updateConnectionError({ connectionType, error: error.message }))
       }
     },
     [dispatch, toggleWalletModal]
@@ -221,7 +222,7 @@ export default function WalletModal({
       }
 
       // overwrite injected when needed
-      if (option.connector === injected) {
+      if (option.connector === injectedConnection.connector) {
         // don't show injected if there's no injected provider
         if (!(window.web3 || window.ethereum)) {
           if (option.name === 'MetaMask') {

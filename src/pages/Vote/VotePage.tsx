@@ -38,6 +38,7 @@ import {
   useToggleVoteModal,
 } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
+import { useTokenBalance } from '../../state/connection/hooks'
 import {
   ProposalData,
   ProposalState,
@@ -47,7 +48,6 @@ import {
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
