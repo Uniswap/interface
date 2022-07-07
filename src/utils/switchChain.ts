@@ -32,13 +32,13 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
 
 export function isChainAllowed(connector: Connector, chainId: number) {
   switch (connector) {
-    case fortmatic:
+    case fortmatic.connector:
       return chainId === SupportedChainId.MAINNET
-    case injected:
-    case coinbaseWallet:
-    case walletConnect:
-    case network:
-    case gnosisSafe:
+    case injected.connector:
+    case coinbaseWallet.connector:
+    case walletConnect.connector:
+    case network.connector:
+    case gnosisSafe.connector:
       return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
     default:
       return false
@@ -48,7 +48,7 @@ export function isChainAllowed(connector: Connector, chainId: number) {
 export const switchChain = async (connector: Connector, chainId: number) => {
   if (!isChainAllowed(connector, chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
-  } else if (connector === walletConnect || connector === network) {
+  } else if (connector === walletConnect.connector || connector === network.connector) {
     await connector.activate(chainId)
   } else {
     const info = CHAIN_INFO[chainId]

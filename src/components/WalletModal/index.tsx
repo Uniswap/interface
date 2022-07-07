@@ -4,7 +4,7 @@ import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { getConnectionTypeForConnector } from 'connectors/utils'
+import { getConnectionForConnector } from 'connectors/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -128,7 +128,7 @@ export default function WalletModal({
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
     pendingConnector
-      ? state.connection.errorByConnectionType[getConnectionTypeForConnector(pendingConnector)]
+      ? state.connection.errorByConnectionType[getConnectionForConnector(pendingConnector).type]
       : undefined
   )
 
@@ -147,14 +147,14 @@ export default function WalletModal({
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
-      updateConnectionError({ connectionType: getConnectionTypeForConnector(pendingConnector), error: undefined })
+      updateConnectionError({ connectionType: getConnectionForConnector(pendingConnector).type, error: undefined })
       setPendingConnector(undefined)
     }
   }, [pendingConnector, walletView])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
-      const connectionType = getConnectionTypeForConnector(connector)
+      const connectionType = getConnectionForConnector(connector).type
 
       // log selected wallet
       sendEvent({
@@ -166,7 +166,7 @@ export default function WalletModal({
       try {
         // Fortmatic opens it's own modal on activation to log in. This modal has a tabIndex
         // collision into the WalletModal, so we special case by closing the modal.
-        if (connector === fortmatic) {
+        if (connector === fortmatic.connector) {
           toggleWalletModal()
         }
 
@@ -226,7 +226,7 @@ export default function WalletModal({
       }
 
       // overwrite injected when needed
-      if (option.connector === injected) {
+      if (option.connector === injected.connector) {
         // don't show injected if there's no injected provider
         if (!(window.web3 || window.ethereum)) {
           if (option.name === 'MetaMask') {

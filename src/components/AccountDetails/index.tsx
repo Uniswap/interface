@@ -241,7 +241,8 @@ export default function AccountDetails({
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         (k) =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+          SUPPORTED_WALLETS[k].connector === connector &&
+          (connector !== injected.connector || isMetaMask === (k === 'METAMASK'))
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return (
@@ -281,7 +282,7 @@ export default function AccountDetails({
                             // Coinbase Wallet SDK does not emit a disconnect event to the provider,
                             // which is what web3-react uses to reset state. As a workaround we manually
                             // reset state.
-                            if (connector === coinbaseWallet) {
+                            if (connector === coinbaseWallet.connector) {
                               connector.resetState()
                             }
                           } else {

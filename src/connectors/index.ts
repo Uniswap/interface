@@ -1,9 +1,10 @@
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
-import { initializeConnector } from '@web3-react/core'
+import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
+import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
@@ -20,19 +21,40 @@ export enum ConnectionType {
   GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
 
+export interface Connection {
+  connector: Connector
+  hooks: Web3ReactHooks
+  type: ConnectionType
+}
+
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
 }
 
-export const [network, networkHooks] = initializeConnector<Network>(
+const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, defaultChainId: 1 })
 )
+export const network: Connection = {
+  connector: web3Network,
+  hooks: web3NetworkHooks,
+  type: ConnectionType.NETWORK,
+}
 
-export const [injected, injectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
+const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
+export const injected: Connection = {
+  connector: web3Injected,
+  hooks: web3InjectedHooks,
+  type: ConnectionType.INJECTED,
+}
 
-export const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
+const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
+export const gnosisSafe: Connection = {
+  connector: web3GnosisSafe,
+  hooks: web3GnosisSafeHooks,
+  type: ConnectionType.GNOSIS_SAFE,
+}
 
-export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
+const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnect>(
   (actions) =>
     new WalletConnect({
       actions,
@@ -43,12 +65,22 @@ export const [walletConnect, walletConnectHooks] = initializeConnector<WalletCon
       onError,
     })
 )
+export const walletConnect: Connection = {
+  connector: web3WalletConnect,
+  hooks: web3WalletConnectHooks,
+  type: ConnectionType.WALLET_CONNECT,
+}
 
-export const [fortmatic, fortmaticHooks] = initializeConnector<EIP1193>(
+const [web3Fortmatic, web3FortmaticHooks] = initializeConnector<EIP1193>(
   (actions) => new EIP1193({ actions, provider: new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY).getProvider() })
 )
+export const fortmatic: Connection = {
+  connector: web3Fortmatic,
+  hooks: web3FortmaticHooks,
+  type: ConnectionType.FORTMATIC,
+}
 
-export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
+const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
     new CoinbaseWallet({
       actions,
@@ -61,3 +93,8 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
       onError,
     })
 )
+export const coinbaseWallet: Connection = {
+  connector: web3CoinbaseWallet,
+  hooks: web3CoinbaseWalletHooks,
+  type: ConnectionType.COINBASE_WALLET,
+}

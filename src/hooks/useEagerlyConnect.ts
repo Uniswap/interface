@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import { gnosisSafe, injected, network } from 'connectors'
-import { getConnectorForConnectionType } from 'connectors/utils'
+import { getConnectionForConnectionType } from 'connectors/utils'
 import { useEffect } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
 import { useAppSelector } from 'state/hooks'
@@ -25,15 +25,17 @@ export default function useEagerlyConnect() {
   const isMetaMask = !!window.ethereum?.isMetaMask
 
   useEffect(() => {
-    connect(gnosisSafe)
-    connect(network)
+    connect(gnosisSafe.connector)
+    connect(network.connector)
 
     if (isMobile && isMetaMask) {
-      injected.activate()
+      injected.connector.activate()
     } else if (selectedWallet) {
-      connect(getConnectorForConnectionType(selectedWallet))
+      connect(getConnectionForConnectionType(selectedWallet).connector)
     } else if (!selectedWalletBackfilled) {
-      BACKFILLABLE_WALLETS.map(getConnectorForConnectionType).forEach(connect)
+      BACKFILLABLE_WALLETS.map(getConnectionForConnectionType)
+        .map((connection) => connection.connector)
+        .forEach(connect)
     }
     // The dependency list is empty so this is only run once on mount
   }, []) // eslint-disable-line react-hooks/exhaustive-deps

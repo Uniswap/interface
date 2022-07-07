@@ -22,7 +22,7 @@ interface WalletInfo {
 
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   INJECTED: {
-    connector: injected,
+    connector: injected.connector,
     connectionType: ConnectionType.INJECTED,
     name: 'Injected',
     iconURL: INJECTED_ICON_URL,
@@ -32,7 +32,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     primary: true,
   },
   METAMASK: {
-    connector: injected,
+    connector: injected.connector,
     connectionType: ConnectionType.INJECTED,
     name: 'MetaMask',
     iconURL: METAMASK_ICON_URL,
@@ -41,7 +41,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#E8831D',
   },
   WALLET_CONNECT: {
-    connector: walletConnect,
+    connector: walletConnect.connector,
     connectionType: ConnectionType.WALLET_CONNECT,
     name: 'WalletConnect',
     iconURL: WALLETCONNECT_ICON_URL,
@@ -51,7 +51,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobile: true,
   },
   COINBASE_WALLET: {
-    connector: coinbaseWallet,
+    connector: coinbaseWallet.connector,
     connectionType: ConnectionType.COINBASE_WALLET,
     name: 'Coinbase Wallet',
     iconURL: COINBASE_ICON_URL,
@@ -69,7 +69,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobileOnly: true,
   },
   FORTMATIC: {
-    connector: fortmatic,
+    connector: fortmatic.connector,
     connectionType: ConnectionType.FORTMATIC,
     name: 'Fortmatic',
     iconURL: FORTMATIC_ICON_URL,
