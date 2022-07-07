@@ -7,8 +7,8 @@ import { useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart, Share } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
-import { ExternalLink } from 'theme'
 
+import Resource from './Resource'
 import { favoritesAtom } from './TokenTable'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
@@ -73,7 +73,7 @@ const ContractAddress = styled.button`
 const ContractAddressSection = styled.div`
   padding: 24px 0px;
 `
-const ContractCell = styled.div`
+const Contract = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.text2};
@@ -88,7 +88,7 @@ const DeltaContainer = styled.div`
   display: flex;
   align-items: center;
 `
-const StatCell = styled.div`
+const Stat = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.text2};
@@ -150,21 +150,6 @@ const TopArea = styled.div`
 const ResourcesContainer = styled.div`
   display: flex;
   gap: 14px;
-`
-const ResourceLink = styled(ExternalLink)`
-  display: flex;
-  color: ${({ theme }) => theme.primary1};
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  gap: 4px;
-  text-decoration: none;
-
-  &:hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.primary1)};
-    text-decoration: none;
-  }
 `
 
 export default function TokenDetail({ address }: { address: string }) {
@@ -244,32 +229,26 @@ export default function TokenDetail({ address }: { address: string }) {
       <AboutSection>
         <AboutHeader>About</AboutHeader> {aboutToken}
         <ResourcesContainer>
-          <ResourceLink href="https://etherscan.io/">
-            Etherscan
-            <sup>↗</sup>
-          </ResourceLink>
-          <ResourceLink href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-            Protocol Info
-            <sup>↗</sup>
-          </ResourceLink>
+          <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+          <Resource name={'Protocol Info'} link={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'} />
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
-        <StatCell>
+        <Stat>
           Market Cap<StatPrice>${tokenMarketCap}</StatPrice>
-        </StatCell>
-        <StatCell>
+        </Stat>
+        <Stat>
           {TIME_DISPLAYS[activeTimePeriod]} Volume
           <StatPrice>${tokenVolume}</StatPrice>
-        </StatCell>
+        </Stat>
       </StatsSection>
       <ContractAddressSection>
-        <ContractCell>
+        <Contract>
           Contract Address
           <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
             {address} <Copy size={13} color={theme.text2} />
           </ContractAddress>
-        </ContractCell>
+        </Contract>
       </ContractAddressSection>
     </TopArea>
   )
