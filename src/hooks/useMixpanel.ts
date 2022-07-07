@@ -107,6 +107,7 @@ export enum MIXPANEL_TYPE {
   CAMPAIGN_ENTER_NOW_CLICKED,
   CAMPAIGN_SHARE_TRADING_CONTEST_CLICKED,
   CAMPAIGN_CLAIM_REWARDS_CLICKED,
+  CAMPAIGN_WALLET_CONNECTED,
   TRANSAK_BUY_CRYPTO_CLICKED,
   TRANSAK_DOWNLOAD_WALLET_CLICKED,
 }
@@ -139,6 +140,8 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
   const ethPrice = useETHPrice()
   const dispatch = useDispatch<AppDispatch>()
   const apolloClient = NETWORKS_INFO[(chainId as ChainId) || (ChainId.MAINNET as ChainId)].classicClient
+  const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
+
   const mixpanelHandler = useCallback(
     (type: MIXPANEL_TYPE, payload?: any) => {
       if (!account) {
@@ -562,6 +565,12 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Campaign - Claim Rewards Trading Contest "Claim Rewards"')
           break
         }
+        case MIXPANEL_TYPE.CAMPAIGN_WALLET_CONNECTED: {
+          setTimeout(() => {
+            mixpanel?.track('Campaign - Wallet Connected', { campaign_name: selectedCampaign?.name })
+          }, 500)
+          break
+        }
         case MIXPANEL_TYPE.TRANSAK_DOWNLOAD_WALLET_CLICKED: {
           mixpanel.track('Buy Crypto - Download a wallet "Download Wallet”')
           break
@@ -797,8 +806,8 @@ export const useGlobalMixpanelEvents = () => {
   const oldNetwork = usePrevious(chainId)
   const location = useLocation()
   const pathName = useMemo(() => {
-    if (location.pathname.split('/')[1] !== 'proamm') return location.pathname.split('/')[1]
-    return 'proamm/' + location.pathname.split('/')[2]
+    if (location.pathname.split('/')[1] !== 'elastic') return location.pathname.split('/')[1]
+    return 'elastic/' + location.pathname.split('/')[2]
   }, [location])
 
   useEffect(() => {

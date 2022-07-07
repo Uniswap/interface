@@ -39,7 +39,7 @@ const auroraInfo: NetworkInfo = {
     oldStatic: {
       zap: '0xd1f345593cb69fa546852b2DEb90f373F8AdC903',
       router: '0x0622973c3A8893838A3bc0c5309a8c6897148795',
-      factory: '0x39a8809fbbf22ccaeac450eaf559c076843eb910',
+      factory: '0x39a8809fBbF22cCaeAc450EaF559C076843eB910',
     },
     dynamic: NOT_SUPPORT,
     routerV2: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',

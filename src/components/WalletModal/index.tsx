@@ -20,6 +20,8 @@ import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
 import WrongNetworkModal from 'components/WrongNetworkModal'
+import { useLocation } from 'react-router-dom'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -152,10 +154,15 @@ export default function WalletModal({
   const [isAccepted, setIsAccepted] = useState(true)
 
   const isWrongNetwork = error instanceof UnsupportedChainIdError
+  const location = useLocation()
+  const { mixpanelHandler } = useMixpanel()
 
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
+      if (location.pathname.startsWith('/campaigns')) {
+        mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_WALLET_CONNECTED)
+      }
       toggleWalletModal()
     }
   }, [account, previousAccount, toggleWalletModal, walletModalOpen])
