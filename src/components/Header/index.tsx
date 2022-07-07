@@ -220,7 +220,8 @@ const StyledNavLink = styled(NavLink).attrs({
 
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName,
-})<{ isActive?: boolean }>`
+  // eslint-disable-next-line prettier/prettier
+}) <{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -282,6 +283,9 @@ export default function Header() {
       <HeaderLinks>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Trans>Swap</Trans>
+        </StyledNavLink>
+        <StyledNavLink id={`explore-nav-link`} to={'/explore'}>
+          <Trans>Explore</Trans>
         </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
