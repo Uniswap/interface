@@ -57,8 +57,10 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-  [SHKShake startWithClientId:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"SHAKE_CLIENT_ID"]
- clientSecret:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"SHAKE_CLIENT_SECRET"]];
+  NSDictionary *shake_config = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"ShakeBugsConfig"];
+  NSString *client_id =[shake_config objectForKey:@"SHAKE_CLIENT_ID"];
+  NSString *client_secret = [shake_config objectForKey:@"SHAKE_CLIENT_SECRET"];
+  [SHKShake startWithClientId:client_id clientSecret:client_secret];
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
 
