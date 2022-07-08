@@ -310,7 +310,13 @@ export const CEUR_CELO = new Token(
   'CEUR',
   'Celo Euro Stablecoin'
 )
-
+export const PORTAL_ETH_CELO = new Token(
+  SupportedChainId.CELO,
+  '0x66803FB87aBd4aaC3cbB3fAd7C3aa01f6F3FB207',
+  18,
+  'ETH',
+  'Portal Ether'
+)
 export const WBTC_CELO = new Token(
   SupportedChainId.CELO,
   '0xBAAB46E28388d2779e6E31Fd00cF0e5Ad95E327B',
