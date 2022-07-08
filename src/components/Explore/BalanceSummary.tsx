@@ -1,5 +1,4 @@
-import { TEXT_COLORS } from 'components/NetworkAlert/NetworkAlert'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { CHAIN_INFO, TEXT_COLORS } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
