@@ -12,7 +12,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import useTheme from '../../hooks/useTheme'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
 import CurrencyLogo from '../CurrencyLogo'
@@ -103,6 +103,7 @@ const LabelRow = styled.div`
 
 const FiatRow = styled(LabelRow)`
   justify-content: flex-end;
+  height: 16px;
 `
 
 const Aligner = styled.span`
@@ -270,14 +271,15 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {!hideInput && !hideBalance && currency && (
-          <FiatRow>
+
+        <FiatRow>
+          {!hideInput && !hideBalance && currency && (
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
               </LoadingOpacityContainer>
               {account ? (
-                <RowFixed style={{ height: '17px' }}>
+                <RowFixed>
                   <ThemedText.Body
                     onClick={onMax}
                     color={theme.text3}
@@ -303,8 +305,8 @@ export default function CurrencyInputPanel({
                 <span />
               )}
             </RowBetween>
-          </FiatRow>
-        )}
+          )}
+        </FiatRow>
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal

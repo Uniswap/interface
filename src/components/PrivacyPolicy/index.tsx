@@ -70,7 +70,7 @@ const EXTERNAL_APIS = [
     ),
   },
   {
-    name: 'Google Analytics',
+    name: 'Google Analytics & Amplitude',
     description: <Trans>The app logs anonymized usage statistics in order to improve over time.</Trans>,
   },
   {

@@ -1,3 +1,4 @@
+import { initializeAnalytics } from 'components/AmplitudeAnalytics'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
@@ -66,6 +67,7 @@ const Marginer = styled.div`
 export default function App() {
   const history = useHistory()
   useAnalyticsReporter(useLocation())
+  initializeAnalytics()
 
   useEffect(() => {
     const unlisten = history.listen(() => {
