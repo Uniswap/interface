@@ -23,7 +23,7 @@ export const enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
 }
 
-/** Known modals for telemetry purposes. */
+/** Known modals for analytics purposes. */
 export const enum ModalName {
   SWAP = 'swap-modal',
 }
