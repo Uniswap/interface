@@ -28,9 +28,7 @@ static void InitializeFlipper(UIApplication *application) {
 }
 #endif
 
-#if DEBUG
 @import Shake;
-#endif
 
 @implementation AppDelegate
 
@@ -59,10 +57,8 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-#if DEBUG
   [SHKShake startWithClientId:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"SHAKE_CLIENT_ID"]
  clientSecret:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"SHAKE_CLIENT_SECRET"]];
-#endif
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
 
