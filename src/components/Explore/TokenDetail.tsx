@@ -67,7 +67,7 @@ const ContractAddress = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.primary2};
+    color: ${({ theme }) => darken(0.08, theme.text1)};
   }
 `
 const ContractAddressSection = styled.div`

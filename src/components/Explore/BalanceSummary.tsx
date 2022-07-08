@@ -65,7 +65,7 @@ export default function BalanceSummary({ address }: { address: string }) {
           <TotalBalanceSection>
             Your balance across all networks
             <TotalBalance>
-              <TotalBalanceItem>{`${totalBalance} ${tokenSymbol}`}</TotalBalanceItem>{' '}
+              <TotalBalanceItem>{`${totalBalance} ${tokenSymbol}`}</TotalBalanceItem>
               <TotalBalanceItem>$4,210.12</TotalBalanceItem>
             </TotalBalance>
           </TotalBalanceSection>

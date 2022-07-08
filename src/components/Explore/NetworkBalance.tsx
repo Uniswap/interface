@@ -1,5 +1,12 @@
 import styled from 'styled-components/macro'
 
+const Balance = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 20px;
+`
 const BalanceItem = styled.div`
   display: flex;
 `
@@ -16,19 +23,12 @@ const Network = styled.span<{ color: string }>`
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: ${({ color, theme }) => color ?? theme.primary1};
+  color: ${({ color }) => color};
 `
-const SingleNetworkBalanceContainer = styled.div`
+const NetworkBalanceContainer = styled.div`
   display: flex;
   padding-top: 16px;
   align-items: center;
-`
-const SingleNetworkBalance = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  line-height: 20px;
 `
 
 export default function NetworkBalance({
@@ -47,15 +47,15 @@ export default function NetworkBalance({
   networkColor: string
 }) {
   return (
-    <SingleNetworkBalanceContainer>
+    <NetworkBalanceContainer>
       <Logo src={logoUrl} />
-      <SingleNetworkBalance>
+      <Balance>
         <BalanceRow>
           <BalanceItem>{`${balance} ${tokenSymbol}`}</BalanceItem>
           <BalanceItem>${fiatValue}</BalanceItem>
         </BalanceRow>
         <Network color={networkColor}>{label}</Network>
-      </SingleNetworkBalance>
-    </SingleNetworkBalanceContainer>
+      </Balance>
+    </NetworkBalanceContainer>
   )
 }
