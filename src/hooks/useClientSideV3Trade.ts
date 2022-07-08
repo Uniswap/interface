@@ -35,6 +35,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, currencyOut)
 
   const { chainId } = useWeb3React()
+  // Chains deployed using the deploy-v3 script only deploy QuoterV2.
   const useQuoterV2 = useMemo(
     () => Boolean(chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)),
     [chainId]
