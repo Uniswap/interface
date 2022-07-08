@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { RootState } from 'src/app/rootReducer'
 import { ChainId } from 'src/constants/chains'
 import {
@@ -11,7 +12,7 @@ import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export const makeSelectAddressTransactions = (address: Address | null) => (state: RootState) => {
   if (!address || !state.transactions[address]) return undefined
-  return flattenObjectOfObjects(state.transactions[address])
+  return useMemo(() => flattenObjectOfObjects(state.transactions[address]), [state.transactions])
 }
 
 export const makeSelectTransaction =

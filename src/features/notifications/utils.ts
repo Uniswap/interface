@@ -156,18 +156,21 @@ const formTransferTxTitle = (
 
 export const createBalanceUpdate = (
   txType: TransactionType.Send | TransactionType.Receive | TransactionType.Swap,
-  txStatus: TransactionStatus.Success | TransactionStatus.Failed,
+  txStatus: TransactionStatus,
   currency: Nullable<Currency>,
   currencyAmountRaw: string,
   spotPrices?: SpotPrices // despite what typescript says about `useSpotPrices`, `spotPrices` can be undefined while loading
 ) => {
-  if (!currency || txStatus === TransactionStatus.Failed || txType === TransactionType.Send) {
+  if (!currency || txStatus !== TransactionStatus.Success) {
     return undefined
   }
 
   const currencyAmount = getFormattedCurrencyAmount(currency, currencyAmountRaw)
+
   return {
-    assetIncrease: `+${currencyAmount}${currency.symbol}`,
+    assetIncrease: `${txType === TransactionType.Send ? '-' : '+'}${currencyAmount}${
+      currency.symbol
+    }`,
     usdIncrease: getUSDValue(spotPrices, currencyAmountRaw, currency),
   }
 }
@@ -198,8 +201,15 @@ const getUSDValue = (
   return formatUSDPrice(usdValue)
 }
 
-const getCurrencySymbol = (currency: Nullable<Currency>, tokenAddress: Address) =>
-  currency?.symbol ? currency.symbol : shortenAddress(tokenAddress)
+export const getCurrencySymbol = (
+  currency: Nullable<Currency>,
+  tokenAddressString: Address | undefined
+) =>
+  currency?.symbol
+    ? currency.symbol
+    : tokenAddressString && isValidAddress(tokenAddressString)
+    ? shortenAddress(tokenAddressString)
+    : tokenAddressString
 
 const getShortenedAddressOrEns = (addressOrENS: string) =>
   isValidAddress(addressOrENS) ? shortenAddress(addressOrENS) : addressOrENS

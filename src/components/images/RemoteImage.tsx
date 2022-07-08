@@ -15,7 +15,7 @@ export function RemoteImage({ borderRadius, uri, height, width }: Props) {
   const imageHttpUrl = uriToHttp(uri)[0]
 
   if (imageHttpUrl.endsWith('.svg')) {
-    return <SvgUri style={{ borderRadius, width, height }} uri={imageHttpUrl} />
+    return <SvgUri height={height} style={{ borderRadius }} uri={imageHttpUrl} width={width} />
   }
 
   return (

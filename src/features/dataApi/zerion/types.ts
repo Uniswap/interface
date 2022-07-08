@@ -57,8 +57,63 @@ export type AssetData = {
 }
 
 export type Asset = {
-  asset: AssetData
-  market_cap?: number
+  /**
+   * TODO mark this as diff vs docs for data team
+   */
+  id: string
+  asset_code: string
+  name: string
+  symbol: string
+  decimals: number
+  type?: AssetType
+  icon_url?: string
+  price?: Price
+  is_displayable?: boolean
+  is_verified?: boolean
+}
+
+export interface Collection {
+  description: string
+  icon_url: string
+  name: string
+}
+
+export interface NFTAssetDetails {
+  asset_code: string
+  changed_at?: any
+  collection: Collection
+  contract_address: string
+  detail: {
+    meta?: any
+    url: string
+  }
+  floor_price?: any
+  interface: string
+  is_displayable: boolean
+  is_verified: boolean
+  last_price?: any
+  name: string
+  preview: {
+    meta?: any
+    url: string
+  }
+  symbol: string
+  tags?: any
+  token_id: string
+  total_floor_price?: any
+  total_last_price?: any
+  type: string
+}
+
+export interface NFTAsset {
+  asset: NFTAssetDetails
+  attributes: any[]
+  collection: Collection
+  description: string
+  relevant_urls: {
+    name: string
+    url: string
+  }[]
 }
 
 export type Transaction = {
@@ -74,7 +129,7 @@ export type Transaction = {
   address_to?: string
   contract?: string
   nonce?: number
-  changes?: TransactionChange
+  changes?: TransactionChange[]
   fee?: TransactionFee
   meta?: string
 }
@@ -86,13 +141,14 @@ type TransactionChange = {
   address_from: string
   address_to: string
   price?: number
+  nft_asset?: NFTAsset | undefined | null
 }
 
 type TransactionFee = { value: number; price: number }
 
 type Direction = 'in' | 'out' | 'self'
 
-type RDBTransactionType =
+export type RDBTransactionType =
   | 'authorize'
   | 'borrow'
   | 'cancel'

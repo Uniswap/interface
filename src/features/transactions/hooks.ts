@@ -1,13 +1,20 @@
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { TradeType } from '@uniswap/sdk-core'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, CurrencyAsset } from 'src/entities/assets'
+import { useTransactionHistoryQuery } from 'src/features/dataApi/zerion/api'
+import { Namespace } from 'src/features/dataApi/zerion/types'
+import { requests } from 'src/features/dataApi/zerion/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import { extractTransactionSummaryInfo } from 'src/features/transactions/conversion'
 import {
   makeSelectAddressTransactions,
   makeSelectTransaction,
 } from 'src/features/transactions/selectors'
+import { TransactionSummaryInfo } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
 import {
   CurrencyField,
   TransactionState,
@@ -20,6 +27,7 @@ import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 // sorted oldest to newest
 export function useSortedTransactions(address: Address | null) {
   const transactions = useSelectAddressTransactions(address)
+
   return useMemo(() => {
     if (!transactions) return
     return transactions.sort((a, b) => a.addedTime - b.addedTime)
@@ -50,7 +58,7 @@ export function useSelectTransaction(address: Address | null, chainId: ChainId, 
 }
 
 export function useSelectAddressTransactions(address: Address | null) {
-  return useAppSelector(useMemo(() => makeSelectAddressTransactions(address), [address]))
+  return useAppSelector(makeSelectAddressTransactions(address))
 }
 
 export function useCreateSwapFormState(
@@ -143,5 +151,80 @@ export function useCreateSwapFormState(
   } catch (error: any) {
     logger.info('hooks', 'useRecreateSwapFormState', error?.message)
     return null
+  }
+}
+
+/**
+ * @param address Account address for lookup
+ * @returns Combined arrays of local and external txns, split into time periods.
+ */
+export function useAllFormattedTransactions(address: string | undefined | null): {
+  combinedTransactionList: TransactionSummaryInfo[]
+  todayTransactionList: TransactionSummaryInfo[]
+  weekTransactionList: TransactionSummaryInfo[]
+  beforeCurrentWeekTransactionList: TransactionSummaryInfo[]
+} {
+  // Retreive all transactions for account.
+  const { currentData: txData } = useTransactionHistoryQuery(
+    address ? requests[Namespace.Address].transactions([address]) : skipToken
+  )
+
+  const allTransactionsFromApi = useMemo(
+    () => txData?.info?.[address ?? ''] ?? [],
+    [address, txData?.info]
+  )
+
+  const localTransactions = useSelectAddressTransactions(address ?? null)
+
+  // Merge local and remote txns into array of single type.
+  const combinedTransactionList = useMemo(() => {
+    const localHashes: Set<string> = new Set()
+    const formattedLocal = (localTransactions ?? []).reduce(
+      (accum: TransactionSummaryInfo[], t) => {
+        localHashes.add(t.hash)
+        const txn = extractTransactionSummaryInfo(t)
+        accum.push(txn)
+        return accum
+      },
+      []
+    )
+    const formattedExternal = allTransactionsFromApi.reduce(
+      (accum: TransactionSummaryInfo[], t) => {
+        const txn = extractTransactionSummaryInfo(t)
+        if (!localHashes.has(txn.hash)) accum.push(txn) // dedupe
+        return accum
+      },
+      []
+    )
+    return formattedLocal
+      .concat(formattedExternal)
+      .sort((a, b) => (a.msTimestampAdded > b.msTimestampAdded ? -1 : 1))
+  }, [allTransactionsFromApi, localTransactions])
+
+  // Segement by current day, current week, and rest.
+  const [todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList] =
+    useMemo(() => {
+      const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000 // timestamp in ms for start of day local time
+      const msTimestampCutoffWeek = dayjs().subtract(1, 'week').unix() * 1000
+      return combinedTransactionList.reduce(
+        (accum: TransactionSummaryInfo[][], item) => {
+          if (item.msTimestampAdded > msTimestampCutoffDay) {
+            accum[0].push(item)
+          } else if (item.msTimestampAdded > msTimestampCutoffWeek) {
+            accum[1].push(item)
+          } else {
+            accum[2].push(item)
+          }
+          return accum
+        },
+        [[], [], []]
+      )
+    }, [combinedTransactionList])
+
+  return {
+    combinedTransactionList,
+    todayTransactionList,
+    weekTransactionList,
+    beforeCurrentWeekTransactionList,
   }
 }

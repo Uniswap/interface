@@ -18,23 +18,23 @@ const boxTokenLogoStyle: ImageStyle = { width: 18, height: 18, borderRadius: 18 
 export function TokenItem({ token, onPress }: TokenItemProps) {
   return (
     // TODO add test
-    <Pressable testID={`token-item-${token.asset.symbol}`} onPress={onPress}>
+    <Pressable testID={`token-item-${token.symbol}`} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
-          <Image source={{ uri: token.asset.icon_url }} style={tokenLogoStyle} />
+          <Image source={{ uri: token.icon_url }} style={tokenLogoStyle} />
           <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
             <Flex row>
-              <Text variant="mediumLabel">{token.asset.name ?? ''}</Text>
+              <Text variant="mediumLabel">{token.name ?? ''}</Text>
             </Flex>
             <Flex row>
-              <Text variant="caption">{token.asset.symbol ?? ''}</Text>
+              <Text variant="caption">{token.symbol ?? ''}</Text>
             </Flex>
           </Flex>
         </Flex>
         <Flex row justifyContent="flex-end">
           <TokenMetadata
-            main={formatUSDPrice(token.asset.price?.value)}
-            sub={<RelativeChange change={token?.asset.price?.relative_change_24h} />}
+            main={formatUSDPrice(token.price?.value)}
+            sub={<RelativeChange change={token?.price?.relative_change_24h} />}
           />
         </Flex>
       </Flex>
@@ -44,18 +44,18 @@ export function TokenItem({ token, onPress }: TokenItemProps) {
 
 export function TokenItemBox({ token, onPress }: TokenItemProps) {
   return (
-    <Pressable testID={`token-box-${token.asset.symbol}`} onPress={onPress}>
+    <Pressable testID={`token-box-${token.symbol}`} onPress={onPress}>
       <Box bg="translucentBackground" borderRadius="lg" justifyContent="space-between">
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="body">{token.asset.symbol ?? ''}</Text>
-            <Image source={{ uri: token.asset.icon_url }} style={boxTokenLogoStyle} />
+            <Text variant="body">{token.symbol ?? ''}</Text>
+            <Image source={{ uri: token.icon_url }} style={boxTokenLogoStyle} />
           </Flex>
           <Flex row>
             <TokenMetadata
               align="flex-start"
-              main={<Text variant="bodySmall">{formatUSDPrice(token.asset.price?.value)}</Text>}
-              sub={<RelativeChange change={token?.asset.price?.relative_change_24h} />}
+              main={<Text variant="bodySmall">{formatUSDPrice(token.price?.value)}</Text>}
+              sub={<RelativeChange change={token?.price?.relative_change_24h} />}
             />
           </Flex>
         </Flex>

@@ -18,7 +18,7 @@ import { useSortedTransactions } from 'src/features/transactions/hooks'
 import {
   HistoricalTransactionSummaryCard,
   TransactionSummaryCard,
-} from 'src/features/transactions/TransactionSummaryCard'
+} from 'src/features/transactions/SummaryCards/TransactionSummaryCard'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { openUri } from 'src/utils/linking'

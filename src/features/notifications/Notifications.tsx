@@ -211,13 +211,10 @@ export function TransferCurrencyNotification({
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
   const { spotPrices } = useSpotPrices([currency])
-  const balanceUpdate = createBalanceUpdate(
-    txType,
-    txStatus,
-    currency,
-    currencyAmountRaw,
-    spotPrices
-  )
+  const balanceUpdate =
+    txType === TransactionType.Send && txStatus === TransactionStatus.Success // dont render balance change on succesful sends
+      ? undefined
+      : createBalanceUpdate(txType, txStatus, currency, currencyAmountRaw, spotPrices)
   const title = formTransferCurrencyNotificationTitle(
     txType,
     txStatus,
@@ -266,7 +263,7 @@ export function TransferNFTNotification({
   const icon = (
     <LogoWithTxStatus
       assetType={assetType}
-      nft={nft}
+      nftImageUrl={nft?.image_preview_url}
       size={NOTIFICATION_SIZING}
       txStatus={txStatus}
       txType={txType}
