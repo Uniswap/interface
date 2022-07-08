@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { getWalletForConnector } from 'connectors'
+import { getConnection } from 'connection/utils'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -12,8 +12,8 @@ import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
+import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
@@ -285,15 +285,15 @@ export default function NetworkSelector() {
     async (targetChain: number, skipToggle?: boolean) => {
       if (!connector) return
 
-      const wallet = getWalletForConnector(connector)
+      const connectionType = getConnection(connector).type
 
       try {
-        dispatch(updateWalletError({ wallet, error: undefined }))
+        dispatch(updateConnectionError({ connectionType, error: undefined }))
         await switchChain(connector, targetChain)
       } catch (error) {
         console.error('Failed to switch networks', error)
 
-        dispatch(updateWalletError({ wallet, error: error.message }))
+        dispatch(updateConnectionError({ connectionType, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }
 

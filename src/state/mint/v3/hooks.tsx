@@ -23,8 +23,8 @@ import { replaceURLParam } from 'utils/routes'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
+import { useCurrencyBalances } from '../../connection/hooks'
 import { AppState } from '../../index'
-import { useCurrencyBalances } from '../../wallet/hooks'
 import {
   Bound,
   Field,

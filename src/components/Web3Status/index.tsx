@@ -1,8 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Connector } from '@web3-react/types'
-import { getWalletForConnector } from 'connectors'
+import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
@@ -20,16 +19,6 @@ import StatusIcon from '../Identicon/StatusIcon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-
-const IconWrapper = styled.div<{ size?: number }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  & > * {
-    height: ${({ size }) => (size ? size + 'px' : '32px')};
-    width: ${({ size }) => (size ? size + 'px' : '32px')};
-  }
-`
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -131,18 +120,11 @@ function Sock() {
   )
 }
 
-function WrappedStatusIcon({ connector }: { connector: Connector }) {
-  return (
-    <IconWrapper size={16}>
-      <StatusIcon connector={connector} />
-    </IconWrapper>
-  )
-}
-
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
+  const connectionType = getConnection(connector).type
 
-  const error = useAppSelector((state) => state.wallet.errorByWallet[getWalletForConnector(connector)])
+  const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
@@ -199,7 +181,7 @@ function Web3StatusInner() {
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
-        {!hasPendingTransactions && connector && <WrappedStatusIcon connector={connector} />}
+        {!hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
       </Web3StatusConnected>
     )
   } else {
