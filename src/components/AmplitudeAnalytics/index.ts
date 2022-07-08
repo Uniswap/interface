@@ -35,28 +35,24 @@ export function initializeAnalytics() {
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (process.env.NODE_ENV === 'development') {
     console.log('amplitude event log:', `${eventName}: ${JSON.stringify(eventProperties)}`)
+    return
   }
 
   track(eventName, eventProperties)
 }
 
 /**
- * Singleton that exposes methods to modify the User Model's properties in
+ * Class that exposes methods to modify the User Model's properties in
  * Amplitude that represents the current session's user.
  *
  * See https://help.amplitude.com/hc/en-us/articles/115002380567-User-properties-and-event-properties
  * for details.
  */
-export class UserModel {
-  private static _instance: UserModel
+class UserModel {
   private _isDevEnvironemnt = true
 
-  private constructor() {
+  constructor() {
     process.env.NODE_ENV === 'development' ? (this._isDevEnvironemnt = true) : (this._isDevEnvironemnt = false)
-  }
-
-  public static get Instance() {
-    return this._instance || (this._instance = new this())
   }
 
   public set(propertyName: string, propertyValue: string | number) {
@@ -109,3 +105,5 @@ export class UserModel {
     identify(identifyObj)
   }
 }
+
+export const userModel = new UserModel()
