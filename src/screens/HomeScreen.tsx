@@ -25,6 +25,7 @@ import { BiometricCheck } from 'src/features/biometrics'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
+import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -37,6 +38,7 @@ type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 export function HomeScreen({ navigation }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
+  promptPushPermission()
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()

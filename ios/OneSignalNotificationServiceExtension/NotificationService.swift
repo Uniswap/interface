@@ -20,7 +20,6 @@ class NotificationService: UNNotificationServiceExtension {
             Setting an attachment or action buttons automatically adds this */
             #if DEBUG
                 OneSignal.setLogLevel(.LL_VERBOSE, visualLevel: .LL_NONE)
-                bestAttemptContent.body = "[Modified] " + bestAttemptContent.body
             #endif
 
             OneSignal.didReceiveNotificationExtensionRequest(self.receivedRequest, with: bestAttemptContent, withContentHandler: self.contentHandler)
