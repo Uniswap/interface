@@ -1,4 +1,4 @@
-import React, { useCallback, useState, ReactNode } from 'react'
+import React, { useCallback, useState, ReactNode, CSSProperties } from 'react'
 import { Info } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
@@ -61,6 +61,7 @@ export default function InfoHelper({
   color,
   placement,
   width,
+  style,
 }: {
   text: string | ReactNode
   size?: number
@@ -68,6 +69,7 @@ export default function InfoHelper({
   color?: string
   placement?: Placement
   width?: string
+  style?: CSSProperties
 }) {
   const [show, setShow] = useState<boolean>(false)
 
@@ -75,7 +77,7 @@ export default function InfoHelper({
   const close = useCallback(() => setShow(false), [setShow])
 
   return (
-    <InfoHelperWrapper>
+    <InfoHelperWrapper style={style}>
       <Tooltip text={text} show={show} placement={placement} width={width} size={size}>
         <InfoWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} isActive={isActive}>
           <Info size={size || 12} color={color} />

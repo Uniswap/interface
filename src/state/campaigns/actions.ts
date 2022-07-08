@@ -64,6 +64,7 @@ export interface CampaignData {
   rewardState: RewardState
   chainIds: string
   rewardChainIds: string
+  tradingVolumeRequired: number
 }
 
 export interface CampaignProofData {

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Box, Flex, Text } from 'rebass'
+import { Flex, Text } from 'rebass'
 import Modal from 'components/Modal'
 import { useModalOpen, useToggleYourCampaignTransactionsModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'

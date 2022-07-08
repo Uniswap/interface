@@ -124,6 +124,7 @@ export default function CampaignsUpdater(): null {
           rewardState: campaign.rewardState,
           chainIds: campaign.chainIds,
           rewardChainIds: campaign.rewardChainIds,
+          tradingVolumeRequired: campaign.tradingVolumeRequired,
         }
       })
       return formattedCampaigns
