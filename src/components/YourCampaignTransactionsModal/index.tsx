@@ -96,7 +96,12 @@ export default function YourCampaignTransactionsModal() {
                   <Trans>You have no Transaction History.</Trans>
                 </Text>
                 <Text>
-                  <Trans>Go to Swap!</Trans>
+                  <Trans>
+                    Go to{' '}
+                    <a href="https://kyberswap.com" target="_blank" rel="noopener noreferrer">
+                      Swap!
+                    </a>
+                  </Trans>
                 </Text>
               </Flex>
             )}
