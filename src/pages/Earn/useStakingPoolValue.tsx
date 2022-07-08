@@ -5,6 +5,8 @@ import { useTotalSupply } from 'data/TotalSupply'
 import { StakingInfo } from 'state/stake/hooks'
 import { useCUSDPrice } from 'utils/useCUSDPrice'
 
+import { CustomStakingInfo } from './useCustomStakingInfo'
+
 interface IStakingPoolValue {
   valueCUSD?: TokenAmount
   amountTokenA?: TokenAmount
@@ -15,12 +17,12 @@ interface IStakingPoolValue {
 }
 
 export const useStakingPoolValue = (
-  stakingInfo?: StakingInfo | null,
+  stakingInfo?: StakingInfo | CustomStakingInfo | null,
   stakingTokenPair?: Pair | null
 ): IStakingPoolValue => {
   const { network } = useContractKit()
   const chainId = network.chainId
-  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakingToken)
+  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakingToken ?? undefined)
 
   const cusd = cUSD[chainId as unknown as UbeswapChainId]
   const cusdPrice0 = useCUSDPrice(stakingTokenPair?.token0)
@@ -45,7 +47,10 @@ export const useStakingPoolValue = (
         cusd,
         JSBI.divide(
           JSBI.multiply(
-            JSBI.multiply(stakingInfo.totalStakedAmount.raw, amount.raw),
+            JSBI.multiply(
+              stakingInfo.totalStakedAmount ? stakingInfo.totalStakedAmount.raw : JSBI.BigInt(0),
+              amount.raw
+            ),
             // this is b/c the value of LP shares are ~double the value of the cUSD they entitle owner to
             JSBI.BigInt(2)
           ),

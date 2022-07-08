@@ -40,9 +40,16 @@ interface StakingModalProps {
   onDismiss: () => void
   stakingInfo: StakingInfo | CustomStakingInfo
   userLiquidityUnstaked: TokenAmount | undefined
+  dummyPair?: Pair | null
 }
 
-export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
+export default function StakingModal({
+  isOpen,
+  onDismiss,
+  stakingInfo,
+  userLiquidityUnstaked,
+  dummyPair,
+}: StakingModalProps) {
   const library = useProvider()
 
   // track and parse user input
@@ -71,10 +78,6 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     onDismiss()
   }, [onDismiss])
 
-  // pair contract for this token to be staked
-  const dummyPair = stakingInfo.tokens
-    ? new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
-    : undefined
   const pairContract = usePairContract(dummyPair ? dummyPair.liquidityToken.address : undefined)
 
   // approval data for stake

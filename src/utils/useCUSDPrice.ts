@@ -83,7 +83,7 @@ export function useCUSDPrice(token?: Token): Price | undefined {
     [CUSD, celo, mcUSD, token]
   )
   const [[, cUSDPair], [, celoPair], [, mcUSDPair], [, celoCUSDPair]] = usePairs(tokenPairs)
-  const cusdPairAddr = token ? Pair.getAddress(token, CUSD) : undefined
+  const cusdPairAddr = token ? (currencyEquals(token, CUSD) ? undefined : Pair.getAddress(token, CUSD)) : undefined
   const cusdPairTotalSupply = useTotalSupply(useToken(cusdPairAddr) || undefined)
   const mcusdPairAddr = token && mcUSD && token.address !== mcUSD.address ? Pair.getAddress(token, mcUSD) : undefined
   const mcusdPairTotalSupply = useTotalSupply(useToken(mcusdPairAddr) || undefined)

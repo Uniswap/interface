@@ -26,6 +26,7 @@ import { usePairMultiStakingInfo } from '../../state/stake/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLinkIcon, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
+import { useCustomStakingInfo } from './useCustomStakingInfo'
 import { useStakingPoolValue } from './useStakingPoolValue'
 
 const PageWrapper = styled(AutoColumn)`
@@ -104,9 +105,9 @@ export default function Manage({
   const singleStakingInfo = usePairStakingInfo(stakingTokenPair)
   const multiStakingInfo = usePairMultiStakingInfo(singleStakingInfo, stakingAddress)
   const externalSingleStakingInfo = usePairStakingInfo(stakingTokenPair, stakingAddress)
-
+  const customStakingInfo = useCustomStakingInfo(stakingAddress)
   // Check external before we check single staking
-  const stakingInfo = multiStakingInfo || externalSingleStakingInfo || singleStakingInfo
+  const stakingInfo = (multiStakingInfo || externalSingleStakingInfo || singleStakingInfo) ?? customStakingInfo
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -236,6 +237,7 @@ export default function Manage({
             isOpen={showStakingModal}
             onDismiss={() => setShowStakingModal(false)}
             stakingInfo={stakingInfo}
+            dummyPair={stakingTokenPair}
             userLiquidityUnstaked={userLiquidityUnstaked}
           />
           <UnstakingModal
@@ -268,7 +270,7 @@ export default function Manage({
                     <TYPE.white>
                       UBE-LP {tokenA?.symbol}-{tokenB?.symbol}
                     </TYPE.white>
-                    {stakingInfo && (
+                    {stakingInfo && stakingInfo.stakingToken && (
                       <PairLinkIcon
                         href={`https://info.ubeswap.org/pair/${stakingInfo.stakingToken.address.toLowerCase()}`}
                       />
