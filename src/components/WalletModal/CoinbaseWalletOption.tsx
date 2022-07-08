@@ -1,8 +1,8 @@
 import { Connector } from '@web3-react/types'
+import COINBASE_ICON_URL from 'assets/images/coinbaseWalletIcon.svg'
 import { coinbaseWalletConnection } from 'connection'
 
 import { isMobile } from '../../utils/userAgent'
-import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
 import Option from './Option'
 
 const BASE_PROPS = {

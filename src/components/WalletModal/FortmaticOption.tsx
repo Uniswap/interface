@@ -1,7 +1,7 @@
 import { Connector } from '@web3-react/types'
+import FORTMATIC_ICON_URL from 'assets/images/fortmaticIcon.png'
 import { fortmaticConnection } from 'connection'
 
-import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import Option from './Option'
 
 const BASE_PROPS = {

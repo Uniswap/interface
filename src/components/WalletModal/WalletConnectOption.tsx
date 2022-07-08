@@ -1,7 +1,7 @@
 import { Connector } from '@web3-react/types'
+import WALLET_CONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import { walletConnectConnection } from 'connection'
 
-import WALLET_CONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
 import Option from './Option'
 
 const BASE_PROPS = {
