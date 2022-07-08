@@ -23,7 +23,6 @@ import Modal from '../Modal'
 import CoinbaseWalletOption from './CoinbaseWalletOption'
 import FortmaticOption from './FortmaticOption'
 import InjectedOption from './InjectedOption'
-import MetaMaskOption from './MetaMaskOption'
 import PendingView from './PendingView'
 import WalletConnectOption from './WalletConnectOption'
 
@@ -186,11 +185,7 @@ export default function WalletModal({
   function getOptions() {
     return (
       <>
-        {window.ethereum && !window.ethereum.isMetaMask ? (
-          <InjectedOption tryActivation={tryActivation} />
-        ) : (
-          <MetaMaskOption tryActivation={tryActivation} />
-        )}
+        <InjectedOption tryActivation={tryActivation} />
         <CoinbaseWalletOption tryActivation={tryActivation} />
         <WalletConnectOption tryActivation={tryActivation} />
         <FortmaticOption tryActivation={tryActivation} />
