@@ -112,6 +112,16 @@ function QuickActions() {
     dispatch(openModal({ name: ModalName.Send }))
   }
 
+  // TODO: remove when buy flow ready
+  const onPressScan = () => {
+    selectionAsync()
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
+    )
+  }
+
   return (
     <Flex centered row gap="xs">
       <PrimaryButton
@@ -126,7 +136,7 @@ function QuickActions() {
         py="sm"
         testID={ElementName.NavigateBuy}
         variant="transparent"
-        onPress={onPressSwap}
+        onPress={onPressScan}
       />
       <PrimaryButton
         borderRadius="lg"
