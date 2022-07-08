@@ -1,6 +1,7 @@
 import { Connector } from '@web3-react/types'
 import METAMASK_ICON_URL from 'assets/images/metamask.png'
-import { injectedConnection } from 'connection'
+import { ConnectionType, injectedConnection } from 'connection'
+import { getConnectionName } from 'connection/utils'
 
 import { isMobile } from '../../utils/userAgent'
 import Option from './Option'
@@ -20,7 +21,7 @@ const MetaMaskOption = ({ tryActivation }: { tryActivation: (connector: Connecto
       <Option
         {...BASE_PROPS}
         isActive={isActive}
-        header="MetaMask"
+        header={getConnectionName(ConnectionType.INJECTED)}
         onClick={() => tryActivation(injectedConnection.connector)}
       />
     )

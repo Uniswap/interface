@@ -1,6 +1,7 @@
 import { Connector } from '@web3-react/types'
 import INJECTED_ICON_URL from 'assets/images/arrow-right.svg'
-import { injectedConnection } from 'connection'
+import { ConnectionType, injectedConnection } from 'connection'
+import { getConnectionName } from 'connection/utils'
 
 import { isMobile } from '../../utils/userAgent'
 import Option from './Option'
@@ -19,8 +20,8 @@ const InjectedOption = ({ tryActivation }: { tryActivation: (connector: Connecto
       <Option
         {...BASE_PROPS}
         isActive={isActive}
-        header="Injected"
         onClick={() => tryActivation(injectedConnection.connector)}
+        header={getConnectionName(ConnectionType.INJECTED)}
       />
     )
   } else {

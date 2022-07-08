@@ -1,6 +1,7 @@
 import { Connector } from '@web3-react/types'
 import WALLET_CONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
-import { walletConnectConnection } from 'connection'
+import { ConnectionType, walletConnectConnection } from 'connection'
+import { getConnectionName } from 'connection/utils'
 
 import Option from './Option'
 
@@ -18,7 +19,7 @@ const WalletConnectOption = ({ tryActivation }: { tryActivation: (connector: Con
       {...BASE_PROPS}
       isActive={isActive}
       onClick={() => tryActivation(walletConnectConnection.connector)}
-      header="WalletConnect"
+      header={getConnectionName(ConnectionType.WALLET_CONNECT)}
     />
   )
 }

@@ -42,3 +42,21 @@ export function getConnection(c: Connector | ConnectionType) {
     }
   }
 }
+
+export function getConnectionName(connectionType: ConnectionType) {
+  switch (connectionType) {
+    case ConnectionType.INJECTED:
+      const isMetaMask = !!window.ethereum?.isMetaMask
+      return isMetaMask ? 'MetaMask' : 'Injected'
+    case ConnectionType.COINBASE_WALLET:
+      return 'Coinbase Wallet'
+    case ConnectionType.WALLET_CONNECT:
+      return 'WalletConnect'
+    case ConnectionType.FORTMATIC:
+      return 'Fortmatic'
+    case ConnectionType.NETWORK:
+      return 'Network'
+    case ConnectionType.GNOSIS_SAFE:
+      return 'Gnosis Safe'
+  }
+}

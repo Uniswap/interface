@@ -1,6 +1,7 @@
 import { Connector } from '@web3-react/types'
 import FORTMATIC_ICON_URL from 'assets/images/fortmaticIcon.png'
-import { fortmaticConnection } from 'connection'
+import { ConnectionType, fortmaticConnection } from 'connection'
+import { getConnectionName } from 'connection/utils'
 
 import Option from './Option'
 
@@ -18,7 +19,7 @@ const FortmaticOption = ({ tryActivation }: { tryActivation: (connector: Connect
       {...BASE_PROPS}
       isActive={isActive}
       onClick={() => tryActivation(fortmaticConnection.connector)}
-      header="Fortmatic"
+      header={getConnectionName(ConnectionType.FORTMATIC)}
     />
   )
 }

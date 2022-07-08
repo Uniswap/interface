@@ -1,6 +1,7 @@
 import { Connector } from '@web3-react/types'
 import COINBASE_ICON_URL from 'assets/images/coinbaseWalletIcon.svg'
-import { coinbaseWalletConnection } from 'connection'
+import { coinbaseWalletConnection, ConnectionType } from 'connection'
+import { getConnectionName } from 'connection/utils'
 
 import { isMobile } from '../../utils/userAgent'
 import Option from './Option'
@@ -16,7 +17,7 @@ const CoinbaseWalletOption = ({ tryActivation }: { tryActivation: (connector: Co
   const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
 
   if (!isMobile || isCoinbaseWallet) {
-    return <Option {...BASE_PROPS} isActive={isActive} header="Coinbase Wallet" />
+    return <Option {...BASE_PROPS} isActive={isActive} header={getConnectionName(ConnectionType.COINBASE_WALLET)} />
   } else {
     return (
       <Option
