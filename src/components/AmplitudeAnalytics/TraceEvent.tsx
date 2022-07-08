@@ -8,6 +8,7 @@ import { ITraceContext, Trace, TraceContext } from './Trace'
 type TraceEventProps = {
   actionProps: PartialActionProps
   eventName: EventName
+  eventProperties?: Record<string, unknown>
 } & ITraceContext
 
 /**
@@ -19,7 +20,7 @@ type TraceEventProps = {
  *  </TraceEvent>
  */
 function _TraceEvent(props: PropsWithChildren<TraceEventProps>) {
-  const { eventName, actionProps, children, ...logEventProps } = props
+  const { eventName, eventProperties, actionProps, children, ...logEventProps } = props
 
   return (
     <Trace {...logEventProps}>
@@ -31,7 +32,10 @@ function _TraceEvent(props: PropsWithChildren<TraceEventProps>) {
             }
 
             // For each child, augment event handlers defined in `actionProps`  with event tracing
-            return React.cloneElement(child, getEventHandlers(child, consumedProps, actionProps, eventName))
+            return React.cloneElement(
+              child,
+              getEventHandlers(child, consumedProps, actionProps, eventName, eventProperties)
+            )
           })
         }
       </TraceContext.Consumer>
@@ -53,7 +57,8 @@ function getEventHandlers(
   child: React.ReactElement,
   consumedProps: ITraceContext,
   actionProps: PartialActionProps,
-  eventName: EventName
+  eventName: EventName,
+  eventProperties?: Record<string, unknown>
 ) {
   const eventHandlers: Partial<Record<keyof PartialActionProps, (e: SyntheticEvent<Element, Event>) => void>> = {}
 
@@ -63,9 +68,7 @@ function getEventHandlers(
       child.props[eventHandlerName]?.apply(child, eventHandlerArgs)
 
       // augment handler with analytics logging
-      sendAnalyticsEvent(actionProps[eventHandlerName]?.action ?? eventName, {
-        ...consumedProps,
-      })
+      sendAnalyticsEvent(eventName, { ...consumedProps, ...eventProperties })
     }
   }
 
