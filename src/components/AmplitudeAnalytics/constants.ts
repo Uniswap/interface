@@ -7,6 +7,7 @@
 export enum EventName {
   SWAP_SUBMITTED = 'Swap Submitted',
   PAGE_VIEWED = 'Page Viewed',
+  TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
 }
 
 export const enum PageName {
@@ -26,6 +27,7 @@ export const enum SectionName {
 /** Known modals for analytics purposes. */
 export const enum ModalName {
   SWAP = 'swap-modal',
+  TOKEN_SELECTOR = 'token-selector-modal',
 }
 
 /**
