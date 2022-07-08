@@ -126,7 +126,7 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
   height: 24px;
 `
 
-const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
+export const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
   [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
   [SupportedChainId.OPTIMISM]: '#ff3856',
