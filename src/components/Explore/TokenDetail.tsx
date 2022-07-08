@@ -230,7 +230,7 @@ export default function TokenDetail({ address }: { address: string }) {
         <AboutHeader>About</AboutHeader> {aboutToken}
         <ResourcesContainer>
           <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
-          <Resource name={'Protocol Info'} link={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'} />
+          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
