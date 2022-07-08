@@ -1,18 +1,17 @@
+import { LayoutProps } from '@shopify/restyle'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Button } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
-import { UniconWithNotificationBadge } from 'src/components/unicons/UniconWithNotificationBadge'
+import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 import { setClipboard } from 'src/utils/clipboard'
-import { opacify } from 'src/utils/colors'
 
 type AddressDisplayProps = {
   address: string
@@ -28,7 +27,7 @@ type AddressDisplayProps = {
   showCopy?: boolean
   showUnicon?: boolean
   showViewOnly?: boolean
-}
+} & LayoutProps<Theme>
 
 /** Helper component to display identicon and formatted address */
 export function AddressDisplay({
@@ -40,13 +39,12 @@ export function AddressDisplay({
   captionColor = 'textSecondary',
   verticalGap = 'xxs',
   showAddressAsSubtitle,
-  showNotificationBadge,
   direction = 'row',
   showCopy = false,
   showUnicon = true,
-  showViewOnly,
+  showViewOnly = false,
+  ...rest
 }: AddressDisplayProps) {
-  const { t } = useTranslation()
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
   const nameTypeIsAddress = displayName?.type === 'address'
@@ -63,19 +61,21 @@ export function AddressDisplay({
   const captionSize = theme.textVariants[captionVariant].fontSize
 
   return (
-    <Flex alignItems="center" flexDirection={direction} gap="sm">
-      {showUnicon &&
-        (showNotificationBadge ? (
-          <UniconWithNotificationBadge address={address} size={size} />
-        ) : (
-          <Unicon address={address} size={size} />
-        ))}
+    <Flex alignItems="center" flexDirection={direction} gap="sm" {...rest}>
+      {showUnicon ? (
+        <UniconWithVisibilityBadge address={address} showViewOnlyBadge={showViewOnly} size={size} />
+      ) : (
+        <Unicon address={address} size={size} />
+      )}
       <Flex
         alignItems={!showUnicon || direction === 'column' ? 'center' : 'flex-start'}
+        flexShrink={1}
         gap={verticalGap}>
         <Flex centered row gap="sm">
           <Text
             color={color}
+            ellipsizeMode="tail"
+            numberOfLines={1}
             testID={`address-display/name/${displayName?.name}`}
             variant={variant}>
             {displayName?.name}
@@ -84,17 +84,6 @@ export function AddressDisplay({
             <Button name={ElementName.Copy} onPress={onPressCopyAddress}>
               <CopyIcon color={theme.colors.textPrimary} height={mainSize} width={mainSize} />
             </Button>
-          )}
-          {showViewOnly && (
-            <Box
-              borderRadius="md"
-              px="xs"
-              py="xxs"
-              style={{ backgroundColor: opacify(8, theme.colors.textSecondary) }}>
-              <Text color="textPrimary" variant="caption">
-                {t('View only')}
-              </Text>
-            </Box>
           )}
         </Flex>
         {showCaption && (

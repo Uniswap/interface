@@ -1,15 +1,16 @@
 import { DrawerContentComponentProps } from '@react-navigation/drawer'
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, SectionList, useColorScheme, ViewStyle } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAppDispatch } from 'src/app/hooks'
+import { ListRenderItemInfo } from 'react-native'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import PlusSquareIcon from 'src/assets/icons/plus-square.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { Button } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -21,19 +22,13 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
-import { darkTheme, theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
-
-const drawerContentStyle: ViewStyle = {
-  justifyContent: 'space-between',
-  flex: 1,
-}
 
 const key = (account: Account) => account.address
 
 export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
-  const isDarkMode = useColorScheme() === 'dark'
+  const theme = useAppTheme()
 
   const activeAccount = useActiveAccount()
   const addressToAccount = useAccounts()
@@ -44,17 +39,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
 
-  const [signerAccounts, readOnlyAccounts] = useMemo(() => {
+  const accountsData = useMemo(() => {
     const accounts = Object.values(addressToAccount)
     const _signerAccounts = accounts.filter((a) => a.type !== AccountType.Readonly)
     const _readOnlyAccounts = accounts.filter((a) => a.type === AccountType.Readonly)
-    return [_signerAccounts, _readOnlyAccounts]
+    return [..._signerAccounts, ..._readOnlyAccounts]
   }, [addressToAccount])
-
-  const sectionData = [
-    ...(signerAccounts.length > 0 ? [{ title: t('Your accounts'), data: signerAccounts }] : []),
-    ...(readOnlyAccounts.length > 0 ? [{ title: t('Watching'), data: readOnlyAccounts }] : []),
-  ]
 
   const onPressEdit = (address: Address) => {
     setShowEditAccountModal(true)
@@ -102,14 +92,25 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
 
-  const renderItem = ({ item }: ListRenderItemInfo<Account>) => (
-    <AccountCardItem
-      account={item}
-      isActive={!!activeAccount && activeAccount.address === item.address}
-      onPress={onPressAccount}
-      onPressEdit={onPressEdit}
-      onPressQRCode={onPressQRCode}
-    />
+  const renderItem = ({ item }: ListRenderItemInfo<Account>) => {
+    return (
+      <AccountCardItem
+        account={item}
+        isActive={!!activeAccount && activeAccount.address === item.address}
+        isViewOnly={item.type === AccountType.Readonly}
+        onPress={onPressAccount}
+        onPressEdit={onPressEdit}
+        onPressQRCode={onPressQRCode}
+      />
+    )
+  }
+
+  const header = (
+    <AnimatedFlex bg="mainBackground" borderBottomColor="backgroundOutline" px="lg" py="sm">
+      <Text color="textPrimary" variant="headlineSmall">
+        {t('Your wallets')}
+      </Text>
+    </AnimatedFlex>
   )
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
@@ -132,7 +133,18 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     const onPressRemove = () => {
       if (!pendingEditAddress) return
       setShowEditAccountModal(false)
-      setPendingRemoveAddress(pendingEditAddress)
+
+      // For view-only wallets, we don't show the remove wallet modal and instead remove immediately
+      if (addressToAccount[pendingEditAddress].type === AccountType.Readonly) {
+        dispatch(
+          editAccountActions.trigger({
+            type: EditAccountAction.Remove,
+            address: pendingEditAddress,
+          })
+        )
+      } else {
+        setPendingRemoveAddress(pendingEditAddress)
+      }
     }
 
     return [
@@ -166,56 +178,46 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         ),
       },
     ]
-  }, [navigation, pendingEditAddress, t])
+  }, [navigation, pendingEditAddress, t, addressToAccount, dispatch])
 
   return (
-    <SafeAreaView
-      style={{
-        ...drawerContentStyle,
-        backgroundColor: isDarkMode ? darkTheme.colors.mainBackground : theme.colors.mainBackground,
-      }}>
-      <Box flex={1} justifyContent="space-between" px="lg">
-        <SectionList
-          keyExtractor={key}
-          renderItem={renderItem}
-          renderSectionHeader={({ section: { title } }) => (
-            <Box bg="mainBackground" py="md">
-              <Text color="textPrimary" variant="subhead">
-                {title}
+    <Screen bg="backgroundBackdrop" width="100%">
+      <AnimatedFlatList
+        ListHeaderComponent={header}
+        data={accountsData}
+        keyExtractor={key}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[0]}
+      />
+      <Flex>
+        <Box bg="backgroundOutline" height={0.5} mb="sm" />
+        <Flex gap="xl" pb="xl" px="lg">
+          <Button
+            name={ElementName.ImportAccount}
+            testID={ElementName.ImportAccount}
+            onPress={onPressNewAccount}>
+            <Flex row alignItems="center" gap="sm">
+              <PlusSquareIcon color={theme.colors.textSecondary} height={24} width={24} />
+              <Text color="textSecondary" variant="subhead">
+                {t('Add wallet')}
               </Text>
-            </Box>
-          )}
-          sections={sectionData}
-          showsVerticalScrollIndicator={false}
-        />
-        <Flex mb="sm">
-          <Box bg="backgroundOutline" height={1} mb="md" />
-          <Flex gap="xl">
-            <Button
-              name={ElementName.ImportAccount}
-              testID={ElementName.ImportAccount}
-              onPress={onPressNewAccount}>
-              <Flex row alignItems="center" gap="sm">
-                <PlusSquareIcon color={theme.colors.textSecondary} height={24} width={24} />
-                <Text color="textSecondary" variant="subhead">
-                  {t('New account')}
-                </Text>
-              </Flex>
-            </Button>
-            <Button
-              name={ElementName.Settings}
-              testID={ElementName.Settings}
-              onPress={onPressSettings}>
-              <Flex row alignItems="center" gap="sm">
-                <SettingsIcon color={theme.colors.textSecondary} height={24} width={24} />
-                <Text color="textSecondary" variant="subhead">
-                  {t('Settings')}
-                </Text>
-              </Flex>
-            </Button>
-          </Flex>
+            </Flex>
+          </Button>
+          <Button
+            name={ElementName.Settings}
+            testID={ElementName.Settings}
+            onPress={onPressSettings}>
+            <Flex row alignItems="center" gap="sm">
+              <SettingsIcon color={theme.colors.textSecondary} height={24} width={24} />
+              <Text color="textSecondary" variant="subhead">
+                {t('Settings')}
+              </Text>
+            </Flex>
+          </Button>
         </Flex>
-      </Box>
+      </Flex>
       <ActionSheetModal
         isVisible={showEditAccountModal}
         name={ModalName.Account}
@@ -231,6 +233,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         onClose={onCloseQrCode}>
         <WalletQRCode address={qrCodeAddress} />
       </BottomSheetModal>
-    </SafeAreaView>
+    </Screen>
   )
 }

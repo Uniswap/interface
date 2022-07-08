@@ -17,12 +17,20 @@ import { opacify } from 'src/utils/colors'
 interface Props {
   account: Account
   isActive?: boolean
+  isViewOnly: boolean
   onPress?: (address: Address) => void
   onPressQRCode: (address: Address) => void
   onPressEdit?: (address: Address) => void
 }
 
-export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onPressEdit }: Props) {
+export function AccountCardItem({
+  account,
+  isActive,
+  isViewOnly,
+  onPress,
+  onPressQRCode,
+  onPressEdit,
+}: Props) {
   const { address } = account
   const isDarkMode = useColorScheme() === 'dark'
   const theme = useAppTheme()
@@ -33,41 +41,45 @@ export function AccountCardItem({ account, isActive, onPress, onPressQRCode, onP
   const { balances } = useAllBalancesByChainId(address, currentChains)
 
   return (
-    <Button onPress={onPress ? () => onPress(address) : undefined}>
+    <Button mx="lg" onPress={onPress ? () => onPress(address) : undefined}>
       <Flex
         borderRadius="lg"
-        borderWidth={0.5}
+        borderWidth={isActive ? 0.5 : 0}
         flexDirection="column"
-        gap="xl"
+        gap="sm"
         my="xs"
         p="md"
-        // eslint-disable-next-line react-native/no-inline-styles
         style={{
-          borderColor: isActive ? color : 'none',
-          backgroundColor: opacify(10, color),
+          borderColor: color,
+          backgroundColor: isActive ? opacify(12, color) : theme.colors.backgroundContainer,
         }}
         testID={`account_item/${address.toLowerCase()}`}>
-        <Flex row alignItems="center" borderRadius="sm" justifyContent="space-between">
+        <Flex row alignItems="flex-start" borderRadius="sm" justifyContent="space-between">
           <AddressDisplay
             showAddressAsSubtitle
             address={address}
+            flexShrink={1}
             showNotificationBadge={true}
+            showViewOnly={isViewOnly}
             size={36}
-            variant="body"
+            variant="subhead"
             verticalGap="none"
           />
-          <Button
-            alignItems="center"
-            height={20}
-            justifyContent="center"
-            padding="sm"
-            width={20}
-            onPress={() => onPressQRCode(address)}>
-            <QrCode color={theme.colors.textSecondary} height={20} strokeWidth={1} width={20} />
-          </Button>
+
+          {isActive && (
+            <Button
+              alignItems="center"
+              height={24}
+              justifyContent="center"
+              padding="sm"
+              width={24}
+              onPress={() => onPressQRCode(address)}>
+              <QrCode color={theme.colors.textSecondary} height={24} strokeWidth={2} width={24} />
+            </Button>
+          )}
         </Flex>
         <Flex row alignItems="center" justifyContent="space-between">
-          <TotalBalance balances={balances} variant="headlineSmall" />
+          <TotalBalance balances={balances} variant="body" />
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots

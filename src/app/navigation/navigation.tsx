@@ -168,9 +168,10 @@ export function DrawerNavigator() {
       drawerContent={(props) => <AccountDrawer {...props} />}
       screenOptions={{
         drawerStyle: {
-          width: dimensions.fullWidth - theme.spacing.xxl,
+          width: SIDEBAR_WIDTH,
         },
         headerShown: false,
+        overlayColor: theme.colors.backgroundScrim,
       }}>
       <Drawer.Screen
         component={AppStackNavigator}
@@ -353,3 +354,4 @@ const DRAWER_ENABLED_SCREENS = [
   Tabs.Explore.valueOf(),
   Tabs.Profile.valueOf(),
 ]
+const SIDEBAR_WIDTH = Math.min(dimensions.fullWidth * 0.8, 320)

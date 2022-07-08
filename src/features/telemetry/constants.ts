@@ -120,8 +120,8 @@ export const enum ElementName {
   WCOpenDapp = 'wc-open-dapp',
   WCViewDappConnections = 'wc-view-dapp-connections',
   WalletConnectScan = 'wallet-connect-scan',
-  Wrap = 'wrap',
   WalletSettings = 'WalletSettings',
+  Wrap = 'wrap',
 }
 
 /**

@@ -1,0 +1,35 @@
+import React from 'react'
+import { useAppTheme } from 'src/app/hooks'
+import Eye from 'src/assets/icons/eye.svg'
+import { Box, Flex } from 'src/components/layout'
+import { Unicon } from 'src/components/unicons/Unicon'
+
+interface Props {
+  address: string
+  size: number
+  showViewOnlyBadge: boolean
+}
+
+export function UniconWithVisibilityBadge({ address, size, showViewOnlyBadge }: Props) {
+  const theme = useAppTheme()
+  if (!showViewOnlyBadge) {
+    return <Unicon address={address} size={size} />
+  }
+
+  return (
+    <Box position="relative">
+      <Unicon address={address} size={size} />
+      <Flex
+        centered
+        backgroundColor="backgroundBackdrop"
+        borderRadius="full"
+        bottom={-4}
+        height={20}
+        position="absolute"
+        right={-4}
+        width={20}>
+        <Eye height={10} stroke={theme.colors.textPrimary} strokeWidth={2} width={14} />
+      </Flex>
+    </Box>
+  )
+}
