@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
+import { ActionProps } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
@@ -9,6 +10,8 @@ import { Text } from 'rebass'
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
 import { SwapCallbackError } from './styleds'
+
+const ButtonActionProps = (({ onClick }) => ({ onClick }))(ActionProps)
 
 export default function SwapModalFooter({
   onConfirm,
