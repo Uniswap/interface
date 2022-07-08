@@ -21,13 +21,22 @@ export const TraceContext = createContext<ITraceContext>({})
 type TraceProps = {
   logImpression?: boolean // whether to log impression on mount
   eventName?: EventName
+  eventProperties?: Record<string, unknown>
 } & ITraceContext
 
 /**
  * Analytics instrumentation component that combines parent context
  * with its own context.
  */
-function _Trace({ children, logImpression, page, section, elementName, eventName }: PropsWithChildren<TraceProps>) {
+function _Trace({
+  children,
+  logImpression,
+  page,
+  section,
+  elementName,
+  eventName,
+  eventProperties,
+}: PropsWithChildren<TraceProps>) {
   const [hasAlreadyLoggedImpression, setHasAlreadyLoggedImpression] = useState(false)
   const parentTrace = useContext(TraceContext)
 
@@ -43,10 +52,10 @@ function _Trace({ children, logImpression, page, section, elementName, eventName
 
   useEffect(() => {
     if (logImpression && !hasAlreadyLoggedImpression) {
-      sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, combinedProps)
+      sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, { ...combinedProps, ...eventProperties })
       setHasAlreadyLoggedImpression(true)
     }
-  }, [combinedProps, hasAlreadyLoggedImpression, logImpression, eventName])
+  }, [combinedProps, hasAlreadyLoggedImpression, logImpression, eventName, eventProperties])
 
   return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
 }
