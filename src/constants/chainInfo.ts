@@ -2,6 +2,7 @@ import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
+import { NetworkAlertChains } from 'components/NetworkAlert/NetworkAlert'
 import ms from 'ms.macro'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
@@ -44,6 +45,15 @@ export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainIn
   readonly [chainId in SupportedL2ChainId]: L2ChainInfo
 } &
   { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
+
+export const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
+  [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
+  [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
+  [SupportedChainId.OPTIMISM]: '#ff3856',
+  [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',
+  [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
+  [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
+}
 
 export const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.MAINNET]: {

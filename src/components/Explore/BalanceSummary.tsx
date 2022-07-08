@@ -1,8 +1,8 @@
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { CHAIN_INFO, TEXT_COLORS } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -42,6 +42,7 @@ const TotalBalanceItem = styled.div`
 `
 
 export default function BalanceSummary({ address }: { address: string }) {
+  const theme = useTheme()
   const tokenSymbol = useToken(address)?.symbol
   const currency = useCurrency(address)
 
@@ -68,25 +69,36 @@ export default function BalanceSummary({ address }: { address: string }) {
             </TotalBalance>
           </TotalBalanceSection>
           <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
+          <NetworkBalance
+            logoUrl={logoUrl}
+            balance={'1'}
+            tokenSymbol={tokenSymbol ?? 'XXX'}
+            fiatValue={fiatValue}
+            label={label}
+            networkColor={theme.primary1}
+          />
+          <NetworkBalance
+            logoUrl={logoUrl2}
+            balance={'3.3'}
+            tokenSymbol={tokenSymbol ?? 'XXX'}
+            fiatValue={3200}
+            label={'Polygon'}
+            networkColor={TEXT_COLORS['137']}
+          />
         </>
       ) : (
-        `Your balance on ${label}`
+        <>
+          Your balance on {label}
+          <NetworkBalance
+            logoUrl={logoUrl}
+            balance={'1'}
+            tokenSymbol={tokenSymbol ?? 'XXX'}
+            fiatValue={fiatValue}
+            label={label}
+            networkColor={theme.primary1}
+          />
+        </>
       )}
-
-      <NetworkBalance
-        logoUrl={logoUrl}
-        balance={'1'}
-        tokenSymbol={tokenSymbol ?? 'XXX'}
-        fiatValue={fiatValue}
-        label={label}
-      />
-      <NetworkBalance
-        logoUrl={logoUrl2}
-        balance={'3.3'}
-        tokenSymbol={tokenSymbol ?? 'XXX'}
-        fiatValue={3200}
-        label={'Polygon'}
-      />
     </BalancesCard>
   )
 }

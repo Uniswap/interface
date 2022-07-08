@@ -248,6 +248,12 @@ const TokenInfoCell = styled(Cell)`
     font-weight: 500;
   }
 `
+const TokenName = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+  white-space: nowrap;
+`
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.text3};
 
@@ -326,6 +332,7 @@ function HeaderCell({
 
 /* Token Row: skeleton row component */
 export function TokenRow({
+  address,
   header,
   favorited,
   listNumber,
@@ -336,6 +343,7 @@ export function TokenRow({
   volume,
   sparkLine,
 }: {
+  address: ReactNode
   header: boolean
   favorited: ReactNode
   listNumber: ReactNode
@@ -359,7 +367,7 @@ export function TokenRow({
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return <StyledTokenRow>{rowCells}</StyledTokenRow>
+  return <StyledTokenRow> {rowCells}</StyledTokenRow>
 }
 
 /* Header Row: top header row component for table */
@@ -368,6 +376,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
   const sortedBy = SORT_CATEGORIES[1]
   return (
     <TokenRow
+      address={null}
       header={true}
       favorited={null}
       listNumber={null}
@@ -417,6 +426,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
 export function LoadingRow() {
   return (
     <TokenRow
+      address={null}
       header={false}
       favorited={null}
       listNumber={<SmallLoadingBubble />}
@@ -485,6 +495,7 @@ export default function LoadedRow({
   // TODO: fix listNumber as number on most popular (should be fixed)
   return (
     <TokenRow
+      address={tokenAddress}
       header={false}
       favorited={
         <ClickFavorited onClick={() => toggleFavoriteToken()}>
@@ -500,7 +511,7 @@ export default function LoadedRow({
         <ClickableName to={`tokens/${tokenAddress}`}>
           <CurrencyLogo currency={useCurrency(tokenAddress)} />
           <TokenInfoCell>
-            {tokenName}
+            <TokenName>{tokenName}</TokenName>
             <TokenSymbol>{tokenSymbol}</TokenSymbol>
           </TokenInfoCell>
         </ClickableName>

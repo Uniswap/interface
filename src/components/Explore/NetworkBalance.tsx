@@ -5,7 +5,7 @@ const Balance = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 20px;
 `
 const BalanceItem = styled.div`
   display: flex;
@@ -19,11 +19,11 @@ const Logo = styled.img`
   width: 32px;
   margin-right: 8px;
 `
-const Network = styled.span`
+const Network = styled.span<{ color: string }>`
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ color }) => color};
 `
 const NetworkBalanceContainer = styled.div`
   display: flex;
@@ -37,12 +37,14 @@ export default function NetworkBalance({
   tokenSymbol,
   fiatValue,
   label,
+  networkColor,
 }: {
   logoUrl: string
   balance: string
   tokenSymbol: string
   fiatValue: number
   label: string
+  networkColor: string
 }) {
   return (
     <NetworkBalanceContainer>
@@ -52,7 +54,7 @@ export default function NetworkBalance({
           <BalanceItem>{`${balance} ${tokenSymbol}`}</BalanceItem>
           <BalanceItem>${fiatValue}</BalanceItem>
         </BalanceRow>
-        <Network>{label}</Network>
+        <Network color={networkColor}>{label}</Network>
       </Balance>
     </NetworkBalanceContainer>
   )

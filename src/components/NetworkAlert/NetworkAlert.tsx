@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { CHAIN_INFO, TEXT_COLORS } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ArrowUpRight } from 'react-feather'
@@ -44,7 +44,7 @@ const SHOULD_SHOW_ALERT = {
   [SupportedChainId.POLYGON_MUMBAI]: true,
 }
 
-type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
+export type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
 
 const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   [darkMode in 'dark' | 'light']: { [chainId in NetworkAlertChains]: string }
@@ -125,15 +125,6 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
   width: 24px;
   height: 24px;
 `
-
-const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
-  [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
-  [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
-  [SupportedChainId.OPTIMISM]: '#ff3856',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',
-  [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
-  [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
-}
 
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {
   return Boolean(chainId && SHOULD_SHOW_ALERT[chainId as unknown as NetworkAlertChains])
