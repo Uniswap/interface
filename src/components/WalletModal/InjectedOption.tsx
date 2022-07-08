@@ -24,7 +24,7 @@ const InjectedOption = ({ tryActivation }: { tryActivation: (connector: Connecto
   const isActive = injectedConnection.hooks.useIsActive()
   const isMetaMask = window.ethereum?.isMetaMask
 
-  if (!window.ethereum) {
+  if (!window.ethereum && !isMobile) {
     return <Option {...METAMASK_PROPS} header={<Trans>Install MetaMask</Trans>} link={'https://metamask.io/'} />
   } else if (isMetaMask) {
     return (
