@@ -1,5 +1,10 @@
 import { isAddress } from 'ethers/lib/utils'
+import { svgPaths as containerPaths } from 'src/components/unicons/Container'
+import { svgPaths as emblemPaths } from 'src/components/unicons/Emblem'
 import {
+  gradientEnds,
+  gradientStarts,
+  UniconAttributeData,
   UniconAttributes,
   UniconAttributesArray,
   UniconAttributesToIndices,
@@ -35,4 +40,16 @@ export const deriveUniconAttributeIndices = (
     newIndices[a] = optionIndex
   }
   return newIndices
+}
+
+export const getUniconAttributeData = (
+  attributeIndices: UniconAttributesToIndices
+): UniconAttributeData => {
+  return {
+    [UniconAttributes.GradientStart]:
+      gradientStarts[attributeIndices[UniconAttributes.GradientStart]],
+    [UniconAttributes.GradientEnd]: gradientEnds[attributeIndices[UniconAttributes.GradientEnd]],
+    [UniconAttributes.Container]: containerPaths[attributeIndices[UniconAttributes.Container]],
+    [UniconAttributes.Shape]: emblemPaths[attributeIndices[UniconAttributes.Shape]],
+  } as UniconAttributeData
 }

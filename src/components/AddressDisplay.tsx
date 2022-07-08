@@ -26,6 +26,7 @@ type AddressDisplayProps = {
   showNotificationBadge?: boolean
   direction?: 'row' | 'column'
   showCopy?: boolean
+  showUnicon?: boolean
   showViewOnly?: boolean
 }
 
@@ -42,6 +43,7 @@ export function AddressDisplay({
   showNotificationBadge,
   direction = 'row',
   showCopy = false,
+  showUnicon = true,
   showViewOnly,
 }: AddressDisplayProps) {
   const { t } = useTranslation()
@@ -62,12 +64,15 @@ export function AddressDisplay({
 
   return (
     <Flex alignItems="center" flexDirection={direction} gap="sm">
-      {showNotificationBadge ? (
-        <UniconWithNotificationBadge address={address} size={size} />
-      ) : (
-        <Unicon address={address} size={size} />
-      )}
-      <Flex alignItems={direction === 'column' ? 'center' : 'flex-start'} gap={verticalGap}>
+      {showUnicon &&
+        (showNotificationBadge ? (
+          <UniconWithNotificationBadge address={address} size={size} />
+        ) : (
+          <Unicon address={address} size={size} />
+        ))}
+      <Flex
+        alignItems={!showUnicon || direction === 'column' ? 'center' : 'flex-start'}
+        gap={verticalGap}>
         <Flex centered row gap="sm">
           <Text
             color={color}

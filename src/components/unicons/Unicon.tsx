@@ -13,17 +13,12 @@ import {
 import React, { memo, useMemo } from 'react'
 import 'react-native-reanimated'
 import { Box } from 'src/components/layout'
-import { svgPaths as containerPaths } from 'src/components/unicons/Container'
-import { svgPaths as emblemPaths } from 'src/components/unicons/Emblem'
+import { blurs, UniconAttributes, UniconAttributesToIndices } from 'src/components/unicons/types'
 import {
-  blurs,
-  gradientEnds,
-  gradientStarts,
-  UniconAttributeData,
-  UniconAttributes,
-  UniconAttributesToIndices,
-} from 'src/components/unicons/types'
-import { deriveUniconAttributeIndices, isEthAddress } from 'src/components/unicons/utils'
+  deriveUniconAttributeIndices,
+  getUniconAttributeData,
+  isEthAddress,
+} from 'src/components/unicons/utils'
 import { flex } from 'src/styles/flex'
 
 // HACK: Add 1 to effectively increase margin between svg and surrounding box, otherwise get a cropping issue
@@ -77,16 +72,7 @@ function UniconSvg({
   // For best results, wrap in a Box with width and height set to size
   // const [attributeData, setAttributeData] = useState<UniconAttributeData>()
 
-  const attributeData = useMemo(() => {
-    if (!attributeIndices) return
-    return {
-      [UniconAttributes.GradientStart]:
-        gradientStarts[attributeIndices[UniconAttributes.GradientStart]],
-      [UniconAttributes.GradientEnd]: gradientEnds[attributeIndices[UniconAttributes.GradientEnd]],
-      [UniconAttributes.Container]: containerPaths[attributeIndices[UniconAttributes.Container]],
-      [UniconAttributes.Shape]: emblemPaths[attributeIndices[UniconAttributes.Shape]],
-    } as UniconAttributeData
-  }, [attributeIndices])
+  const attributeData = useMemo(() => getUniconAttributeData(attributeIndices), [attributeIndices])
 
   if (!attributeIndices || !attributeData) return null
 
