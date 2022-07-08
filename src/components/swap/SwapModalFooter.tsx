@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
 
@@ -18,19 +20,28 @@ export default function SwapModalFooter({
   swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
 }) {
+  const eventProperties = {}
+
   return (
     <>
       <AutoRow>
-        <ButtonError
-          onClick={onConfirm}
-          disabled={disabledConfirm}
-          style={{ margin: '10px 0 0 0' }}
-          id="confirm-swap-or-send"
+        <TraceEvent
+          actionProps={ButtonActionProps}
+          elementName={'something'}
+          eventName={EventName.SWAP_SUBMITTED}
+          eventProperties={eventProperties}
         >
-          <Text fontSize={20} fontWeight={500}>
-            <Trans>Confirm Swap</Trans>
-          </Text>
-        </ButtonError>
+          <ButtonError
+            onClick={onConfirm}
+            disabled={disabledConfirm}
+            style={{ margin: '10px 0 0 0' }}
+            id="confirm-swap-or-send"
+          >
+            <Text fontSize={20} fontWeight={500}>
+              <Trans>Confirm Swap</Trans>
+            </Text>
+          </ButtonError>
+        </TraceEvent>
 
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
       </AutoRow>

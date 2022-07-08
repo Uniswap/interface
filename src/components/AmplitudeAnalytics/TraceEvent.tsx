@@ -12,7 +12,7 @@ type TraceEventProps = {
 } & ITraceContext
 
 /**
- * Telemetry instrumentation component that wraps event callbacks with logging logic.
+ * Analytics instrumentation component that wraps event callbacks with logging logic.
  *
  * @example
  *  <TraceEvent actionProps={{ onClick: { action: 'click' }}} elementType='button'>
@@ -51,7 +51,7 @@ function getKeys<T>(obj: T) {
 
 /**
  * Given a set of child element and action props, returns a spreadabble
- * object of the event handlers augmented with telemetry logging.
+ * object of the event handlers augmented with analytics logging.
  */
 function getEventHandlers(
   child: React.ReactElement,
