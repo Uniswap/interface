@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Connector } from '@web3-react/types'
 import METAMASK_ICON_URL from 'assets/images/metamask.png'
 import { ConnectionType, injectedConnection } from 'connection'
@@ -25,6 +26,8 @@ const MetaMaskOption = ({ tryActivation }: { tryActivation: (connector: Connecto
         onClick={() => tryActivation(injectedConnection.connector)}
       />
     )
+  } else if (!(window.web3 || window.ethereum)) {
+    return <Option {...BASE_PROPS} header={<Trans>Install MetaMask</Trans>} link={'https://metamask.io/'} />
   } else {
     return null
   }
