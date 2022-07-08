@@ -19,7 +19,6 @@ const WalletConnectOption = ({ tryActivation }: { tryActivation: (connector: Con
       isActive={isActive}
       onClick={() => tryActivation(walletConnectConnection.connector)}
       header="WalletConnect"
-      subheader="Connect to Trust Wallet, Rainbow Wallet and more..."
     />
   )
 }

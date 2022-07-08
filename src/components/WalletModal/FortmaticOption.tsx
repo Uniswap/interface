@@ -19,7 +19,6 @@ const FortmaticOption = ({ tryActivation }: { tryActivation: (connector: Connect
       isActive={isActive}
       onClick={() => tryActivation(fortmaticConnection.connector)}
       header="Fortmatic"
-      subheader="Login using Fortmatic hosted wallet"
     />
   )
 }

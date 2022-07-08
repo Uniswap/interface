@@ -95,7 +95,7 @@ export default function Option({
   onClick = null,
   color,
   header,
-  subheader = null,
+  subheader,
   icon,
   isActive = false,
   id,
@@ -106,7 +106,7 @@ export default function Option({
   onClick?: null | (() => void)
   color: string
   header: React.ReactNode
-  subheader: React.ReactNode | null
+  subheader?: React.ReactNode
   icon: string
   isActive?: boolean
   id: string

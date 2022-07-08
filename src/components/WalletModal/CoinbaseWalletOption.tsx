@@ -15,15 +15,8 @@ const CoinbaseWalletOption = ({ tryActivation }: { tryActivation: (connector: Co
   const isActive = coinbaseWalletConnection.hooks.useIsActive()
   const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
 
-  if (!isMobile && isCoinbaseWallet) {
-    return (
-      <Option
-        {...BASE_PROPS}
-        isActive={isActive}
-        header="Coinbase Wallet"
-        subheader="Use Coinbase Wallet app on mobile device"
-      />
-    )
+  if (!isMobile || isCoinbaseWallet) {
+    return <Option {...BASE_PROPS} isActive={isActive} header="Coinbase Wallet" />
   } else {
     return (
       <Option
@@ -32,7 +25,6 @@ const CoinbaseWalletOption = ({ tryActivation }: { tryActivation: (connector: Co
         onClick={() => tryActivation(coinbaseWalletConnection.connector)}
         link="https://go.cb-w.com/mtUDhEZPy1"
         header="Open in Coinbase Wallet"
-        subheader="Open in Coinbase Wallet app."
       />
     )
   }
