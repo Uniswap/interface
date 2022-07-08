@@ -4,7 +4,7 @@ import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { ConnectionType, injectedConnection } from 'connection'
+import { ConnectionType } from 'connection'
 import { getConnection } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -13,18 +13,17 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 
-import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
-import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
 import { LightCard } from '../Card'
 import Modal from '../Modal'
-import Option from './Option'
+import CoinbaseWalletOption from './CoinbaseWalletOption'
+import FortmaticOption from './FortmaticOption'
 import PendingView from './PendingView'
+import WalletConnectOption from './WalletConnectOption'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -120,7 +119,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, account } = useWeb3React()
+  const { account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -182,91 +181,14 @@ export default function WalletModal({
     [dispatch, toggleWalletModal]
   )
 
-  // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetaMask = !!window.ethereum?.isMetaMask
-    const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
-    return Object.keys(SUPPORTED_WALLETS).map((key) => {
-      const option = SUPPORTED_WALLETS[key]
-
-      const optionProps = {
-        isActive: option.connector === connector,
-        id: `connect-${key}`,
-        link: option.href,
-        header: option.name,
-        color: option.color,
-        key,
-        icon: option.iconURL,
-      }
-
-      // check for mobile options
-      if (isMobile) {
-        if (
-          (!window.web3 && !window.ethereum && option.mobile) ||
-          (isMetaMask && option.name === 'MetaMask') ||
-          (isCoinbaseWallet && option.name === 'Coinbase Wallet')
-        ) {
-          return (
-            <Option
-              {...optionProps}
-              onClick={() => {
-                if (!option.href && !!option.connector) {
-                  tryActivation(option.connector)
-                }
-              }}
-              subheader={null}
-            />
-          )
-        }
-        return null
-      }
-
-      // overwrite injected when needed
-      if (option.connector === injectedConnection.connector) {
-        // don't show injected if there's no injected provider
-        if (!(window.web3 || window.ethereum)) {
-          if (option.name === 'MetaMask') {
-            return (
-              <Option
-                id={`connect-${key}`}
-                key={key}
-                color={'#E8831D'}
-                header={<Trans>Install MetaMask</Trans>}
-                subheader={null}
-                link={'https://metamask.io/'}
-                icon={MetamaskIcon}
-              />
-            )
-          } else {
-            return null //dont want to return install twice
-          }
-        }
-        // don't return metamask if injected provider isn't metamask
-        else if (option.name === 'MetaMask' && !isMetaMask) {
-          return null
-        }
-        // likewise for generic
-        else if (option.name === 'Injected' && isMetaMask) {
-          return null
-        }
-      }
-
-      // return rest of options
-      return (
-        !isMobile &&
-        !option.mobileOnly && (
-          <Option
-            {...optionProps}
-            onClick={() => {
-              option.connector === connector
-                ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                : !option.href && option.connector && tryActivation(option.connector)
-            }}
-            subheader={null} //use option.descriptio to bring back multi-line
-          />
-        )
-      )
-    })
+    return (
+      <>
+        <CoinbaseWalletOption tryActivation={tryActivation} />
+        <WalletConnectOption tryActivation={tryActivation} />
+        <FortmaticOption tryActivation={tryActivation} />
+      </>
+    )
   }
 
   function getModalContent() {
