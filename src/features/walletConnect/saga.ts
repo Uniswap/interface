@@ -319,7 +319,11 @@ async function signTransaction(
   return ensureLeading0x(signature)
 }
 
-async function signTypedData(message: string, account: Account, signerManager: SignerManager) {
+export async function signTypedData(
+  message: string,
+  account: Account,
+  signerManager: SignerManager
+) {
   const parsedData: EthTypedMessage = JSON.parse(message)
   const signer = await signerManager.getSignerForAccount(account)
 

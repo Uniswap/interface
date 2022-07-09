@@ -10,6 +10,7 @@ import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ApproveParams, maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
+import { Trade } from 'src/features/transactions/swap/useTrade'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockProvider } from 'src/test/fixtures'
 import { currencyId } from 'src/utils/currencyId'
@@ -20,6 +21,7 @@ const methodParameters: MethodParameters = {
 }
 
 const CHAIN_ID = ChainId.Rinkeby
+const swapRouterAddress = SWAP_ROUTER_ADDRESSES[CHAIN_ID]
 
 const transactionTypeInfo: ExactInputSwapTransactionInfo = {
   type: TransactionType.Swap,
@@ -31,14 +33,16 @@ const transactionTypeInfo: ExactInputSwapTransactionInfo = {
   minimumOutputCurrencyAmountRaw: '300000',
 }
 
+const mockTrade = {
+  inputAmount: { currency: new NativeCurrency(CHAIN_ID) },
+  quote: { amount: MaxUint256 },
+} as unknown as Trade
+
 const swapParams: SwapParams = {
   account,
-  chainId: ChainId.Rinkeby,
+  trade: mockTrade,
+  exactApproveRequired: false,
   methodParameters,
-  swapRouterAddress: SWAP_ROUTER_ADDRESSES[CHAIN_ID],
-  typeInfo: transactionTypeInfo,
-  inputTokenAddress: NATIVE_ADDRESS,
-  approveAmount: MaxUint256,
   gasSpendEstimate: {
     [TransactionType.Approve]: '0',
     [TransactionType.Swap]: '115000',
@@ -48,10 +52,10 @@ const swapParams: SwapParams = {
 
 const approveParams: ApproveParams = {
   account: swapParams.account,
-  chainId: swapParams.chainId,
+  chainId: mockTrade.inputAmount.currency.chainId,
   approveAmount: MaxUint256,
-  inputTokenAddress: swapParams.inputTokenAddress,
-  spender: swapParams.swapRouterAddress,
+  inputTokenAddress: NATIVE_ADDRESS,
+  spender: swapRouterAddress,
   gasLimit: swapParams.gasSpendEstimate[TransactionType.Approve] as string,
   gasPrice: swapParams.gasPrice,
 }
@@ -60,7 +64,7 @@ const nonce = 1
 
 const tx = {
   from: swapParams.account.address,
-  to: swapParams.swapRouterAddress,
+  to: swapRouterAddress,
   data: swapParams.methodParameters.calldata,
   gasLimit: swapParams.gasSpendEstimate.swap,
   gasPrice: swapParams.gasPrice,
@@ -75,7 +79,7 @@ describe(approveAndSwap, () => {
         [call(maybeApprove, approveParams), true],
         [
           call(sendTransaction, {
-            chainId: swapParams.chainId,
+            chainId: mockTrade.inputAmount.currency.chainId,
             account: swapParams.account,
             options: { request: tx },
             typeInfo: transactionTypeInfo,
@@ -93,7 +97,7 @@ describe(approveAndSwap, () => {
         [call(maybeApprove, approveParams), true],
         [
           call(sendTransaction, {
-            chainId: swapParams.chainId,
+            chainId: mockTrade.inputAmount.currency.chainId,
             account: swapParams.account,
             options: { request: { ...tx, nonce: nonce + 1 } },
             typeInfo: transactionTypeInfo,

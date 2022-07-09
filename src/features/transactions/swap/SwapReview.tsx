@@ -36,7 +36,6 @@ interface SwapFormProps {
 }
 
 // TODO:
-// -check erc20 permits
 // -handle price impact too high
 // TODO: token warnings
 export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
@@ -54,6 +53,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     gasSpendEstimate,
     gasPrice,
     exactApproveRequired,
+    swapMethodParameters,
   } = derivedSwapInfo
 
   useUpdateSwapGasEstimate(dispatch, trade)
@@ -66,6 +66,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     gasSpendEstimate,
     gasPrice,
     exactApproveRequired,
+    swapMethodParameters,
     onNext
   )
 

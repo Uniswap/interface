@@ -1,10 +1,9 @@
-import { MaxUint256 } from '@ethersproject/constants'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
-import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
@@ -18,18 +17,14 @@ import {
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { swapActions, swapSagaName } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
-import {
-  getWrapType,
-  isWrapAction,
-  tradeToTransactionInfo,
-} from 'src/features/transactions/swap/utils'
+import { getWrapType, isWrapAction } from 'src/features/transactions/swap/utils'
 import {
   tokenWrapActions,
   tokenWrapSagaName,
   WrapType,
 } from 'src/features/transactions/swap/wrapSaga'
 import {
-  clearGasEstimates,
+  clearGasSwapData,
   CurrencyField,
   GasSpendEstimate,
   TransactionState,
@@ -72,6 +67,7 @@ export type DerivedSwapInfo<
   gasSpendEstimate?: GasSpendEstimate
   gasPrice?: string
   exactApproveRequired?: boolean
+  swapMethodParameters?: MethodParameters
 }
 
 /** Returns information derived from the current swap state */
@@ -86,6 +82,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     gasSpendEstimate,
     gasPrice,
     exactApproveRequired,
+    swapMethodParameters,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -191,6 +188,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     gasSpendEstimate,
     gasPrice,
     exactApproveRequired,
+    swapMethodParameters,
   }
 }
 
@@ -264,7 +262,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 
   const onSwitchCurrencies = () => {
     dispatch(transactionStateActions.switchCurrencySides())
-    dispatch(clearGasEstimates)
+    dispatch(clearGasSwapData)
   }
   const onSelectRecipient = (recipient: Address) =>
     dispatch(transactionStateActions.selectRecipient({ recipient }))
@@ -287,6 +285,7 @@ export function useSwapCallback(
   gasSpendEstimate: GasSpendEstimate | undefined,
   gasPrice: string | undefined,
   exactApproveRequired: boolean | undefined,
+  swapMethodParameters: MethodParameters | undefined,
   onSubmit: () => void
 ): {
   swapState: SagaState | null
@@ -306,34 +305,16 @@ export function useSwapCallback(
   return useMemo(() => {
     if (
       !account ||
-      !trade?.quote ||
+      !trade ||
+      exactApproveRequired === undefined ||
       !gasSpendEstimate?.approve ||
       !gasSpendEstimate?.swap ||
-      !gasPrice
+      !gasPrice ||
+      !swapMethodParameters
     ) {
       return {
         swapCallback: () => {
-          logger.error(
-            'hooks',
-            'useSwapCallback',
-            'Missing swapCallback parameters. Is the provider enabled?'
-          )
-        },
-        swapState: null,
-      }
-    }
-
-    const { amount, methodParameters } = trade.quote
-    const chainId = trade.inputAmount.currency.chainId
-
-    if (!methodParameters) {
-      return {
-        swapCallback: () => {
-          logger.error(
-            'hooks',
-            'useSwapCallback',
-            'Missing swapCallback parameter `methodParameters`, which should always be supplied by the swap router endpoint'
-          )
+          logger.error('hooks', 'useSwapCallback', 'Missing swapCallback parameters')
         },
         swapState: null,
       }
@@ -344,12 +325,9 @@ export function useSwapCallback(
         appDispatch(
           swapActions.trigger({
             account,
-            chainId,
-            inputTokenAddress: currencyAddress(trade.inputAmount.currency),
-            methodParameters,
-            swapRouterAddress: SWAP_ROUTER_ADDRESSES[chainId],
-            typeInfo: tradeToTransactionInfo(trade),
-            approveAmount: exactApproveRequired ? BigNumber.from(amount) : MaxUint256,
+            trade,
+            exactApproveRequired,
+            methodParameters: swapMethodParameters,
             gasSpendEstimate,
             gasPrice,
           })
@@ -357,7 +335,16 @@ export function useSwapCallback(
       },
       swapState,
     }
-  }, [account, swapState, appDispatch, trade, gasSpendEstimate, gasPrice, exactApproveRequired])
+  }, [
+    account,
+    swapState,
+    appDispatch,
+    trade,
+    gasSpendEstimate,
+    gasPrice,
+    exactApproveRequired,
+    swapMethodParameters,
+  ])
 }
 
 export function useWrapCallback(
@@ -413,51 +400,10 @@ export function useUpdateSwapGasEstimate(
   trade: Trade | null
 ) {
   const dispatch = useAppDispatch()
-
-  const chainId = trade?.inputAmount.currency.chainId
-  const tokenAddress = trade ? currencyAddress(trade?.inputAmount.currency) : undefined
-  const txAmount = trade?.quote?.amount
-  const gasUseEstimate = trade?.quote?.gasUseEstimate
-  const callData = trade?.quote?.methodParameters?.calldata
-  const value = trade?.quote?.methodParameters?.value
-
   useEffect(() => {
-    if (!chainId || !tokenAddress) return
-
-    if (txAmount) {
-      dispatch(
-        estimateGasAction({
-          txType: TransactionType.Approve,
-          chainId,
-          transactionStateDispatch,
-          tokenAddress,
-          txAmount,
-        })
-      )
-    }
-
-    if (callData && gasUseEstimate) {
-      dispatch(
-        estimateGasAction({
-          txType: TransactionType.Swap,
-          chainId,
-          transactionStateDispatch,
-          callData,
-          gasUseEstimate,
-          value,
-        })
-      )
-    }
-  }, [
-    chainId,
-    dispatch,
-    txAmount,
-    tokenAddress,
-    transactionStateDispatch,
-    callData,
-    value,
-    gasUseEstimate,
-  ])
+    if (!trade) return
+    dispatch(estimateGasAction({ txType: TransactionType.Swap, trade, transactionStateDispatch }))
+  }, [trade, transactionStateDispatch, dispatch])
 }
 
 export function useSwapGasFee(state: TransactionState) {

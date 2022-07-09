@@ -1,5 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { AnyAction, createAction } from '@reduxjs/toolkit'
+import { SwapRouter } from '@uniswap/router-sdk'
 import { BigNumber, FixedNumber, providers } from 'ethers'
 import { Dispatch } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
@@ -11,36 +12,46 @@ import { ChainId } from 'src/constants/chains'
 import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
 import { FeeType } from 'src/features/gas/types'
+import { PermitOptions, signPermitMessage } from 'src/features/transactions/approve/permitSaga'
+import { PERMITTABLE_TOKENS } from 'src/features/transactions/approve/permittableTokens'
+import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
+import { Trade } from 'src/features/transactions/swap/useTrade'
 import {
   setExactApproveRequired,
   updateGasEstimates,
+  updateSwapMethodParamaters,
 } from 'src/features/transactions/transactionState/transactionState'
 import { TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { isNativeCurrencyAddress } from 'src/utils/currencyId'
+import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { fixedNumberToInt, isZero } from 'src/utils/number'
 import { call, takeEvery } from 'typed-redux-saga'
 
-export type GasEstimateParams = ApproveGasEstimateParmams | SwapGasEstimateParams
+export type GasEstimateParams = SwapGasEstimateParams
 
-interface BaseGasEstimateParams {
-  txType: TransactionType
-  chainId: ChainId
+export interface SwapGasEstimateParams {
+  txType: TransactionType.Swap
+  trade: Trade
   transactionStateDispatch: Dispatch<AnyAction>
 }
 
-export interface ApproveGasEstimateParmams extends BaseGasEstimateParams {
-  txType: TransactionType.Approve
-  tokenAddress: string
+interface EstimateGasInfoBase {
+  address: Address
+  chainId: ChainId
+  provider: providers.Provider
+}
+
+interface EstiamteApproveGasInfo extends EstimateGasInfoBase {
+  spender: Address
+  tokenAddress: Address
   txAmount: string
 }
 
-export interface SwapGasEstimateParams extends BaseGasEstimateParams {
-  txType: TransactionType.Swap
-  callData: string
-  gasUseEstimate: string
-  value?: string
+interface EstimateSwapGasInfo extends EstimateGasInfoBase {
+  spender: Address
+  trade: Trade
+  permitOptions: PermitOptions | undefined
 }
 
 export const estimateGasAction = createAction<GasEstimateParams>('estimateGas/trigger')
@@ -50,58 +61,81 @@ export function* estimateGasWatcher() {
 }
 
 export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) {
-  const address = yield* appSelect(selectActiveAccountAddress)
-  if (!address) return
+  try {
+    const address = yield* appSelect(selectActiveAccountAddress)
+    if (!address) throw new Error('No active address. This should never happen')
 
-  const { txType, chainId, transactionStateDispatch } = payload
-  const provider = yield* call(getProvider, chainId)
-  const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
+    switch (payload.txType) {
+      case TransactionType.Swap:
+        const { trade, transactionStateDispatch } = payload
+        if (!trade.quote) throw new Error('No trade quote provided by the router endpoint')
 
-  switch (txType) {
-    case TransactionType.Approve:
-      const { tokenAddress, txAmount } = payload
-      yield* call(
-        estimateApproveGasLimit,
-        address,
-        chainId,
-        provider,
-        tokenAddress,
-        swapRouterAddress,
-        txAmount,
-        transactionStateDispatch
-      )
-      break
-    case TransactionType.Swap:
-      const { callData, gasUseEstimate, value } = payload
-      yield* call(
-        estimateSwapGasInfo,
-        chainId,
-        address,
-        swapRouterAddress,
-        callData,
-        gasUseEstimate,
-        value,
-        provider as providers.JsonRpcProvider,
-        transactionStateDispatch
-      )
-      break
+        const chainId = trade.inputAmount.currency.chainId
+        const provider = yield* call(getProvider, chainId)
+
+        const tokenAddress = currencyAddress(trade.inputAmount.currency)
+        const spender = SWAP_ROUTER_ADDRESSES[chainId]
+        const txAmount = trade.quote.amount
+
+        const { allowance, exactApproveRequired, ...approveData } = yield* call(
+          estimateApproveGasLimit,
+          {
+            address,
+            chainId,
+            provider,
+            tokenAddress,
+            spender,
+            txAmount,
+          }
+        )
+
+        const permitOptions = yield* call(signPermitMessage, {
+          address,
+          chainId,
+          tokenAddress,
+          spender,
+          txAmount,
+          allowance,
+        })
+
+        const swapData = yield* call(estimateSwapGasInfo, {
+          address,
+          chainId,
+          trade,
+          spender,
+          permitOptions,
+          provider,
+        })
+
+        transactionStateDispatch(setExactApproveRequired(exactApproveRequired))
+        transactionStateDispatch(updateSwapMethodParamaters(swapData.methodParameters))
+        transactionStateDispatch(
+          updateGasEstimates({
+            gasEstimates: {
+              [TransactionType.Approve]: approveData.gasEstimates[TransactionType.Approve],
+              [TransactionType.Swap]: swapData.gasEstimates[TransactionType.Swap],
+            },
+            gasPrice: swapData.gasPrice,
+          })
+        )
+
+        break
+    }
+  } catch (error) {
+    logger.error('estimateGasSaga', 'estimateGas', 'Failed:', error)
   }
 }
 
-function* estimateApproveGasLimit(
-  address: Address,
-  chainId: ChainId,
-  provider: providers.Provider,
-  tokenAddress: Address,
-  spender: Address,
-  txAmount: string,
-  transactionStateDispatch: Dispatch<AnyAction>
-) {
+function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
+  const { address, chainId, provider, tokenAddress, spender, txAmount } = params
+  let exactApproveRequired = false
+
   if (isNativeCurrencyAddress(tokenAddress)) {
-    transactionStateDispatch(
-      updateGasEstimates({ gasEstimates: { [TransactionType.Approve]: '0' } })
-    )
-    return
+    return {
+      allowance: MaxUint256,
+      exactApproveRequired,
+      gasEstimates: { [TransactionType.Approve]: '0' },
+    }
   }
 
   const contractManager = yield* call(getContractManager)
@@ -113,16 +147,15 @@ function* estimateApproveGasLimit(
   )
 
   const allowance = yield* call(tokenContract.allowance, address, spender)
-  if (allowance.gt(txAmount)) {
-    transactionStateDispatch(
-      updateGasEstimates({ gasEstimates: { [TransactionType.Approve]: '0' } })
-    )
-    return
+
+  if (allowance.gt(txAmount) || PERMITTABLE_TOKENS[chainId]?.[tokenAddress]) {
+    return { allowance, exactApproveRequired, gasEstimates: { [TransactionType.Approve]: '0' } }
   }
 
-  let amountToApprove = MaxUint256
   let approveGasEstimate: BigNumber
+
   try {
+    const amountToApprove = MaxUint256
     approveGasEstimate = yield* call(tokenContract.estimateGas.approve, spender, amountToApprove, {
       from: address,
     })
@@ -130,69 +163,79 @@ function* estimateApproveGasLimit(
     logger.info(
       'hooks',
       'getApproveGasLimit',
-      'Gas estimation for approve max amount failed (token may restrict approval amounts). Attempting to approve exact'
+      'Gas estimation for approve max amount failed (token may restrict approval amounts). Attempting to approve exact amount'
     )
-    approveGasEstimate = yield* call(
-      tokenContract.estimateGas.approve,
-      spender,
-      BigNumber.from(txAmount),
-      {
-        from: address,
-      }
-    )
+    const amountToApprove = BigNumber.from(txAmount)
+    approveGasEstimate = yield* call(tokenContract.estimateGas.approve, spender, amountToApprove, {
+      from: address,
+    })
 
-    transactionStateDispatch(setExactApproveRequired(true))
+    exactApproveRequired = true
   }
 
-  transactionStateDispatch(
-    updateGasEstimates({
-      gasEstimates: {
-        [TransactionType.Approve]: fixedNumberToInt(
-          FixedNumber.from(approveGasEstimate).mulUnsafe(
-            FixedNumber.from(GAS_INFLATION_FACTOR.toString())
-          )
-        ),
-      },
-    })
-  )
+  return {
+    allowance,
+    exactApproveRequired,
+    gasEstimates: {
+      [TransactionType.Approve]: fixedNumberToInt(
+        FixedNumber.from(approveGasEstimate).mulUnsafe(
+          FixedNumber.from(GAS_INFLATION_FACTOR.toString())
+        )
+      ),
+    },
+  }
 }
 
-function* estimateSwapGasInfo(
-  chainId: ChainId,
-  address: Address,
-  spender: Address,
-  callData: string,
-  gasUseEstimate: string,
-  value: string | undefined,
-  provider: providers.JsonRpcProvider,
-  transactionStateDispatch: Dispatch<AnyAction>
-) {
+function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {
+  const { address, chainId, trade, spender, permitOptions, provider } = params
+  if (!trade.quote?.methodParameters) {
+    throw new Error('Trade quote methodParameters were not provided by the router endpoint')
+  }
+
+  let { calldata, value } = trade.quote.methodParameters
+
+  if (permitOptions) {
+    // eslint-disable-next-line no-extra-semi
+    ;({ calldata, value } = SwapRouter.swapCallParameters(trade, {
+      slippageTolerance: DEFAULT_SLIPPAGE_TOLERANCE_PERCENT,
+      recipient: address,
+      inputTokenPermit: permitOptions,
+    }))
+  }
+
   const valueObject = !value || isZero(value) ? {} : { value }
   const tx: providers.TransactionRequest = {
     from: address,
     to: spender,
-    data: callData,
+    data: calldata,
     ...valueObject,
   }
 
-  const swapGasInfo = yield* call(computeGasFee, chainId, tx, provider, gasUseEstimate)
+  const swapGasInfo = yield* call(
+    computeGasFee,
+    chainId,
+    tx,
+    provider as providers.JsonRpcProvider,
+    trade.quote.gasUseEstimate
+  )
   const gasPrice =
     swapGasInfo.type === FeeType.Eip1559
-      ? BigNumber.from(swapGasInfo.feeDetails.currentBaseFeePerGas)
+      ? BigNumber.from(swapGasInfo.feeDetails.maxBaseFeePerGas)
           .add(swapGasInfo.feeDetails.maxPriorityFeePerGas.urgent)
           .toString()
       : swapGasInfo.gasPrice
 
-  transactionStateDispatch(
-    updateGasEstimates({
-      gasEstimates: {
-        [TransactionType.Swap]: fixedNumberToInt(
-          FixedNumber.from(swapGasInfo.gasLimit).mulUnsafe(
-            FixedNumber.from(GAS_INFLATION_FACTOR.toString())
-          )
-        ),
-      },
-      gasPrice,
-    })
-  )
+  const methodParameters = calldata && value ? { calldata, value } : undefined
+
+  return {
+    gasEstimates: {
+      [TransactionType.Swap]: fixedNumberToInt(
+        FixedNumber.from(swapGasInfo.gasLimit).mulUnsafe(
+          FixedNumber.from(GAS_INFLATION_FACTOR.toString())
+        )
+      ),
+    },
+    gasPrice,
+    methodParameters,
+  }
 }

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { MethodParameters } from '@uniswap/v3-sdk'
 import { shallowEqual } from 'react-redux'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
@@ -23,6 +24,7 @@ export interface TransactionState {
   gasSpendEstimate?: GasSpendEstimate
   gasPrice?: string // gas price in native currency
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
+  swapMethodParameters?: MethodParameters
 }
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
@@ -146,12 +148,17 @@ const slice = createSlice({
         ...(gasEstimates ?? {}),
       }
     },
+    updateSwapMethodParamaters: (state, action: PayloadAction<MethodParameters | undefined>) => {
+      state.swapMethodParameters = action.payload
+    },
     setExactApproveRequired: (state, action: PayloadAction<boolean>) => {
       state.exactApproveRequired = action.payload
     },
-    clearGasEstimates: (state) => {
+    clearGasSwapData: (state) => {
       state.gasPrice = undefined
       state.gasSpendEstimate = undefined
+      state.exactApproveRequired = undefined
+      state.swapMethodParameters = undefined
     },
   },
 })
@@ -164,7 +171,8 @@ export const {
   selectRecipient,
   toggleUSDInput,
   updateGasEstimates,
-  clearGasEstimates,
+  updateSwapMethodParamaters,
+  clearGasSwapData,
   setExactApproveRequired,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice
