@@ -56,9 +56,17 @@ function useTicksFromTickLens(
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = pool?.tickCurrent && tickSpacing ? nearestUsableTick(pool?.tickCurrent, tickSpacing) : undefined
 
+  const { chainId } = useWeb3React()
+
   const poolAddress =
     currencyA && currencyB && feeAmount && poolState === PoolState.EXISTS
-      ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
+      ? Pool.getAddress(
+          currencyA?.wrapped,
+          currencyB?.wrapped,
+          feeAmount,
+          undefined,
+          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
+        )
       : undefined
 
   // it is also possible to grab all tick data but it is extremely slow
