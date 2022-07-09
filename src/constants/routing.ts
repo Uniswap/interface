@@ -4,8 +4,6 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from './chains'
 import {
   AMPL,
-  CELO_CELO,
-  CELO_CELO_ALFAJORES,
   CEUR_CELO,
   CEUR_CELO_ALFAJORES,
   CUSD_CELO,
@@ -175,8 +173,20 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH_POLYGON_MUMBAI,
   ],
 
-  [SupportedChainId.CELO]: [CELO_CELO, CEUR_CELO, CUSD_CELO, USDC_CELO, DAI_CELO, PORTAL_ETH_CELO, WBTC_CELO],
-  [SupportedChainId.CELO_ALFAJORES]: [CELO_CELO_ALFAJORES, CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
+  [SupportedChainId.CELO]: [
+    nativeOnChain(SupportedChainId.CELO),
+    CEUR_CELO,
+    CUSD_CELO,
+    USDC_CELO,
+    DAI_CELO,
+    PORTAL_ETH_CELO,
+    WBTC_CELO,
+  ],
+  [SupportedChainId.CELO_ALFAJORES]: [
+    nativeOnChain(SupportedChainId.CELO_ALFAJORES),
+    CUSD_CELO_ALFAJORES,
+    CEUR_CELO_ALFAJORES,
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

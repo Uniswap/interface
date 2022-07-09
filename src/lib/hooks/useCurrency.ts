@@ -8,7 +8,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { isChainAllowed } from 'utils/switchChain'
 
-import { NATIVE_CURRENCY_IS_TOKEN, TOKEN_SHORTHANDS } from '../../constants/tokens'
+import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
 
@@ -111,9 +111,6 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
-
-  // Use Celo ERC20 representation instead of native asset
-  if (isNative && chainId && NATIVE_CURRENCY_IS_TOKEN[chainId]) return wrappedNative
 
   return isNative ? nativeCurrency : token
 }

@@ -7,7 +7,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { NATIVE_CURRENCY_IS_TOKEN } from '../../constants/tokens'
+import { isCelo, nativeOnChain } from '../../constants/tokens'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism'
 
@@ -44,15 +44,11 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
 
-  // Use Celo ERC20 logo
-  const nativeCurrencyAsToken = NATIVE_CURRENCY_IS_TOKEN[chainId]
-
-  if (
-    nativeCurrencyAsToken &&
-    nativeCurrencyAsToken.address === address &&
-    [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)
-  ) {
-    return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
+  // Celo logo logo is hosted elsewhere.
+  if (isCelo(chainId)) {
+    if (address === nativeOnChain(chainId).wrapped.address) {
+      return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
+    }
   }
 }
 
