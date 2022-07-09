@@ -287,7 +287,7 @@ export const CELO_CELO = new Token(
   '0x471EcE3750Da237f93B8E339c536989b8978a438',
   18,
   'CELO',
-  'Celo native asset'
+  'Celo'
 )
 export const DAI_CELO = new Token(
   SupportedChainId.CELO,
@@ -329,7 +329,7 @@ export const CELO_CELO_ALFAJORES = new Token(
   '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
   18,
   'CELO',
-  'Celo native asset'
+  'Celo'
 )
 export const CUSD_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
@@ -352,11 +352,6 @@ export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
-}
-
-export const NATIVE_CURRENCY_IS_TOKEN: { [chainId: number]: Token | undefined } = {
-  [SupportedChainId.CELO]: CELO_CELO,
-  [SupportedChainId.CELO_ALFAJORES]: CELO_CELO_ALFAJORES,
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
@@ -405,25 +400,18 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   ),
 }
 
-function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {
+export function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {
   return chainId === SupportedChainId.CELO_ALFAJORES || chainId === SupportedChainId.CELO
 }
 
-class CeloNativeCurrency extends NativeCurrency {
-  equals(other: Currency): boolean {
-    return other.isNative && other.chainId === this.chainId
-  }
-
-  get wrapped(): Token {
-    if (!isCelo(this.chainId)) throw new Error('Not celo')
-    const wrapped = NATIVE_CURRENCY_IS_TOKEN[this.chainId]
-    invariant(wrapped instanceof Token)
-    return wrapped
-  }
-
-  public constructor(chainId: number) {
-    if (!isCelo(chainId)) throw new Error('Not celo')
-    super(chainId, 18, 'Celo', 'Celo')
+function getCeloNativeCurrency(chainId: number) {
+  switch (chainId) {
+    case SupportedChainId.CELO_ALFAJORES:
+      return CELO_CELO_ALFAJORES
+    case SupportedChainId.CELO:
+      return CELO_CELO
+    default:
+      throw new Error('Not celo')
   }
 }
 
@@ -463,11 +451,11 @@ export class ExtendedEther extends Ether {
   }
 }
 
-const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
-export function nativeOnChain(chainId: number): NativeCurrency {
+const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
+export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   if (isMatic(chainId)) return (cachedNativeCurrency[chainId] = new MaticNativeCurrency(chainId))
-  if (isCelo(chainId)) return (cachedNativeCurrency[chainId] = new CeloNativeCurrency(chainId))
+  if (isCelo(chainId)) return (cachedNativeCurrency[chainId] = getCeloNativeCurrency(chainId))
   return (cachedNativeCurrency[chainId] = ExtendedEther.onChain(chainId))
 }
 

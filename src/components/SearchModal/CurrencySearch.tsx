@@ -18,7 +18,6 @@ import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
 import styled from 'styled-components/macro'
 
-import { SupportedChainId } from '../../constants/chains'
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
@@ -118,16 +117,17 @@ export function CurrencySearch({
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
     // Use Celo ERC20 Implementation and exclude the native asset
-    if (!native || (chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId))) {
+    if (!native) {
       return filteredSortedTokens
     }
 
     const s = debouncedQuery.toLowerCase().trim()
     if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
-      return native ? [native, ...filteredSortedTokens] : filteredSortedTokens
+      // Always bump the native token to the top of the list.
+      return native ? [native, ...filteredSortedTokens.filter((t) => !t.equals(native))] : filteredSortedTokens
     }
     return filteredSortedTokens
-  }, [native, chainId, debouncedQuery, filteredSortedTokens])
+  }, [debouncedQuery, native, filteredSortedTokens])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
