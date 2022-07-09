@@ -42,7 +42,7 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
 }
 
 /**
- * Class that exposes methods to modify the User Model's properties in
+ * Class that exposes methods to mutate the User Model's properties in
  * Amplitude that represents the current session's user.
  *
  * See https://help.amplitude.com/hc/en-us/articles/115002380567-User-properties-and-event-properties
@@ -51,37 +51,37 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
 class UserModel {
   constructor(private isDevEnvironment = process.env.NODE_ENV === 'development') {}
 
-  private log(method: string, key: string, value: unknown) {
-    console.debug(`[amplitude(User)]: ${method}(${key}, ${value})`)
+  private log(method: string, ...parameters: unknown[]) {
+    console.debug(`[amplitude(Identify)]: ${method}(${parameters})`)
   }
 
-  private call(method: 'set' | 'setOnce' | 'add' | 'postInsert' | 'remove', key: string, value: string | number) {
+  private call(mutate: (event: Identify) => Identify) {
     if (this.isDevEnvironment) {
-      return this.log(method, key, value)
+      const log = (_: Identify, method: string) => this.log.bind(this, method)
+      mutate(new Proxy(new Identify(), { get: log }))
+      return
     }
-    const identifyObj = new Identify()
-    identifyObj[method]()(key, value)
-    identify(identifyObj)
+    identify(mutate(new Identify()))
   }
 
   set(key: string, value: string | number) {
-    this.call('set', key, value)
+    this.call((event) => event.set(key, value))
   }
 
   setOnce(key: string, value: string | number) {
-    this.call('setOnce', key, value)
+    this.call((event) => event.setOnce(key, value))
   }
 
   add(key: string, value: string | number) {
-    this.call('add', key, typeof value === 'number' ? value : 0)
+    this.call((event) => event.add(key, typeof value === 'number' ? value : 0))
   }
 
   postInsert(key: string, value: string | number) {
-    this.call('postInsert', key, value)
+    this.call((event) => event.postInsert(key, value))
   }
 
   remove(key: string, value: string | number) {
-    this.call('remove', key, value)
+    this.call((event) => event.remove(key, value))
   }
 }
 
