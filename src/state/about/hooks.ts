@@ -45,7 +45,7 @@ export function useGlobalData() {
     const getSumValues = (results: { data: GlobalData }[], field: string) => {
       return results
         .reduce((total, item) => {
-          if (!item?.data?.dmmFactories?.length) return 0
+          if (!item?.data?.dmmFactories?.length) return total
           const sum = item.data.dmmFactories.reduce((sum, factory) => sum + parseFloat(factory[field] || '0'), 0)
           return total + sum
         }, 0)
