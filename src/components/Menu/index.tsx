@@ -26,7 +26,7 @@ import styled, { css } from 'styled-components/macro'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { useModalOpen, useToggleModal } from '../../state/application/hooks'
+import { useModalIsOpen, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
@@ -210,7 +210,7 @@ export default function Menu() {
   const { account, chainId } = useWeb3React()
 
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.MENU)
+  const open = useModalIsOpen(ApplicationModal.MENU)
   const toggleMenu = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
@@ -334,7 +334,7 @@ const ExternalMenuItem = styled(MenuItem)`
 
 export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: NewMenuProps) => {
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.POOL_OVERVIEW_OPTIONS)
+  const open = useModalIsOpen(ApplicationModal.POOL_OVERVIEW_OPTIONS)
   const toggle = useToggleModal(ApplicationModal.POOL_OVERVIEW_OPTIONS)
   useOnClickOutside(node, open ? toggle : undefined)
   const ToggleElement = ToggleUI || StyledMenuIcon

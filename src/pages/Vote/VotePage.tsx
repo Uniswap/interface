@@ -31,7 +31,7 @@ import {
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import {
-  useModalOpen,
+  useModalIsOpen,
   useToggleDelegateModal,
   useToggleExecuteModal,
   useToggleQueueModal,
@@ -168,19 +168,19 @@ export default function VotePage({
   const [voteOption, setVoteOption] = useState<VoteOption | undefined>(undefined)
 
   // modal for casting votes
-  const showVoteModal = useModalOpen(ApplicationModal.VOTE)
+  const showVoteModal = useModalIsOpen(ApplicationModal.VOTE)
   const toggleVoteModal = useToggleVoteModal()
 
   // toggle for showing delegation modal
-  const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
+  const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
 
   // toggle for showing queue modal
-  const showQueueModal = useModalOpen(ApplicationModal.QUEUE)
+  const showQueueModal = useModalIsOpen(ApplicationModal.QUEUE)
   const toggleQueueModal = useToggleQueueModal()
 
   // toggle for showing execute modal
-  const showExecuteModal = useModalOpen(ApplicationModal.EXECUTE)
+  const showExecuteModal = useModalIsOpen(ApplicationModal.EXECUTE)
   const toggleExecuteModal = useToggleExecuteModal()
 
   // get and format date from data
