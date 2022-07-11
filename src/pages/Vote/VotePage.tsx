@@ -302,8 +302,8 @@ export default function VotePage({
                 <ThemedText.Black>
                   <Trans>
                     Only UNI votes that were self delegated or delegated to another address before block{' '}
-                    {proposalData.startBlock} are eligible for voting.{' '}
-                  </Trans>
+                    {proposalData.startBlock} are eligible for voting.
+                  </Trans>{' '}
                   {showLinkForUnlock && (
                     <span>
                       <Trans>
