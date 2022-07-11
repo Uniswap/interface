@@ -89,4 +89,4 @@ jobs:
     needs: cypress-test-matrix
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Finished cypress tests: https://dashboard.cypress.io/projects/yp82ef'
+      - run: echo 'Finished cypress tests https\://dashboard.cypress.io/projects/yp82ef'
