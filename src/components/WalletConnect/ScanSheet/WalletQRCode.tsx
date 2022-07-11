@@ -4,7 +4,6 @@ import { Share } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import CopySheets from 'src/assets/icons/copy-sheets.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryCopyTextButton } from 'src/components/buttons/CopyTextButton'
@@ -85,15 +84,7 @@ export function WalletQRCode({ address }: Props) {
           </Flex>
         </Box>
         <Box flexDirection="row">
-          <PrimaryCopyTextButton
-            borderRadius="md"
-            borderWidth={1}
-            copyText={address}
-            icon={<CopySheets color={theme.colors.textPrimary} height={18} width={18} />}
-            label={t`Copy`}
-            textColor="textPrimary"
-            variant="transparent"
-          />
+          <PrimaryCopyTextButton borderRadius="md" borderWidth={1} copyText={address} />
           <PrimaryButton
             borderRadius="md"
             icon={<ShareIcon color={theme.colors.textPrimary} height={18} width={18} />}

@@ -2,10 +2,10 @@ import { selectionAsync } from 'expo-haptics'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import QRCode from 'react-native-qrcode-svg'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import Scan from 'src/assets/icons/qr-simple.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -132,22 +132,20 @@ export function WalletConnectModal({
           )}
           <Flex mb="xl" mt="md" mx="md">
             <Button
+              borderColor="backgroundOutline"
               borderRadius="lg"
+              borderWidth={1}
               name={ElementName.QRCodeModalToggle}
               p="md"
               style={{ backgroundColor: theme.colors.backgroundContainer }}
               onPress={onPressBottomToggle}>
-              <Flex row gap="sm">
+              <Flex row alignItems="center" gap="sm">
                 {currentScreenState === WalletConnectModalState.ScanQr ? (
-                  <Flex centered backgroundColor="white" borderRadius="sm" padding="xs">
-                    <QRCode size={30} value={activeAddress} />
-                  </Flex>
+                  <Scan color={theme.colors.textSecondary} height={24} width={24} />
                 ) : (
-                  <Flex centered>
-                    <ScanQRIcon color={theme.colors.textTertiary} height={35} width={35} />
-                  </Flex>
+                  <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
                 )}
-                <Flex shrink flexGrow={1} gap="xxs">
+                <Flex shrink flexGrow={1} gap="none">
                   <Text color="textPrimary" variant="subhead">
                     {currentScreenState === WalletConnectModalState.ScanQr
                       ? t('Show my QR code')
@@ -157,13 +155,13 @@ export function WalletConnectModal({
                     adjustsFontSizeToFit
                     color="textSecondary"
                     numberOfLines={1}
-                    variant="bodySmall">
+                    variant="caption">
                     {currentScreenState === WalletConnectModalState.ScanQr
                       ? displayName?.name
                       : t('Connect to an app with WalletConnect')}
                   </Text>
                 </Flex>
-                <Chevron color={theme.colors.textTertiary} direction="e" height="20" width="15" />
+                <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="15" />
               </Flex>
             </Button>
           </Flex>
