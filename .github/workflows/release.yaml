@@ -6,17 +6,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  wait-on-test:
+  wait-on-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: jitterbit/await-check-suites@v1
+      - id: unit-tests
+        uses: fountainhead/action-wait-for-check@v1.0.0
         with:
-          timeoutSeconds: 600
-          # Only wait for the first check suite, so that only tests are awaited, and not eg crowdin.
-          onlyFirstCheckSuite: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: unit-tests
+      - id: cypress-tests
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: cypress-tests
+      - if: steps.unit-tests.outputs.conclusion != 'success' || steps.cypress-tests.outputs.conclusion != 'success'
+        run: exit 1
 
   tag:
-    needs: wait-on-test
+    needs: wait-on-tests
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
@@ -64,8 +71,19 @@ jobs:
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
       
-      # Delay updating DNS to give IPFS a chance to propagate.
-      - run: sleep 600
+      - uses: actions/cache@v3
+        id: cypress-cache
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+      - if: steps.cypress-cache.outputs.cache-hit != 'true'
+        run: yarn cypress install
+      - uses: cypress-io/github-action@v4
+        with:
+          install: false
+          browser: chrome
+          config-file: cypress.release.config.ts
+          config: baseUrl=https://cloudflare-ipfs.com/ipfs/${{ steps.pinata.outputs.hash }}
 
       - name: Update DNS with new IPFS hash
         env:

@@ -11,7 +11,7 @@ import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
 import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { useWalletModalToggle } from 'state/application/hooks'
+import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
@@ -128,7 +128,7 @@ function PositionsLoadingPlaceholder() {
 
 export default function Pool() {
   const { account, chainId } = useWeb3React()
-  const toggleWalletModal = useWalletModalToggle()
+  const toggleWalletModal = useToggleWalletModal()
 
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
