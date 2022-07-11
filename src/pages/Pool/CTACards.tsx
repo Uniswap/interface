@@ -109,7 +109,7 @@ export default function CTACards() {
           </ThemedText.Body>
         </ResponsiveColumn>
       </CTA1>
-      <CTA2 href={infoLink + 'pools'}>
+      <CTA2 data-testid="cta-infolink" href={infoLink + 'pools'}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗

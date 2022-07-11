@@ -166,7 +166,7 @@ function WrongNetworkCard() {
               <ErrorContainer>
                 <ThemedText.Body color={theme.text3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
-                  <div>
+                  <div data-testid="pools-unsupported-err">
                     <Trans>
                       Your connected network is unsupported. Request support{' '}
                       <ExternalLink href="https://uniswap.canny.io/feature-requests">here</ExternalLink>.

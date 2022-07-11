@@ -1,6 +1,6 @@
 import * as useV3Positions from 'hooks/useV3Positions'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { act, render } from 'test-utils'
+import { act, render, screen } from 'test-utils'
 import * as switchChain from 'utils/switchChain'
 
 import CTACards from './CTACards'
@@ -22,14 +22,12 @@ describe('CTAcard links', () => {
       return { loading: false, positions: undefined }
     })
 
-    act(() => {
-      const { asFragment } = render(
-        <Router>
-          <CTACards />
-        </Router>
-      )
-      expect(asFragment()).toMatchSnapshot()
-    })
+    render(
+      <Router>
+        <CTACards />
+      </Router>
+    )
+    expect(screen.getByTestId('cta-infolink')).toHaveAttribute('href', 'https://info.uniswap.org/#/pools')
   })
 
   it('renders specific link when chain is supported', () => {
@@ -38,13 +36,11 @@ describe('CTAcard links', () => {
       return { loading: false, positions: undefined }
     })
 
-    act(() => {
-      const { asFragment } = render(
-        <Router>
-          <CTACards />
-        </Router>
-      )
-      expect(asFragment()).toMatchSnapshot()
-    })
+    render(
+      <Router>
+        <CTACards />
+      </Router>
+    )
+    expect(screen.getByTestId('cta-infolink')).toHaveAttribute('href', 'https://info.uniswap.org/#/optimism/pools')
   })
 })

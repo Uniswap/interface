@@ -1,6 +1,6 @@
 import * as useV3Positions from 'hooks/useV3Positions'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { act, render } from 'test-utils'
+import { render, screen } from 'test-utils'
 import * as switchChain from 'utils/switchChain'
 
 import Pool from '.'
@@ -22,14 +22,12 @@ describe('networks', () => {
       return { loading: false, positions: undefined }
     })
 
-    act(() => {
-      const { asFragment } = render(
-        <Router>
-          <Pool />
-        </Router>
-      )
-      expect(asFragment()).toMatchSnapshot()
-    })
+    const { findByText } = render(
+      <Router>
+        <Pool />
+      </Router>
+    )
+    expect(screen.getAllByTestId('pools-unsupported-err')).toHaveLength(1)
   })
 
   it('renders empty positions card when on supported chain with no positions', () => {
@@ -38,13 +36,11 @@ describe('networks', () => {
       return { loading: false, positions: undefined }
     })
 
-    act(() => {
-      const { asFragment } = render(
-        <Router>
-          <Pool />
-        </Router>
-      )
-      expect(asFragment()).toMatchSnapshot()
-    })
+    render(
+      <Router>
+        <Pool />
+      </Router>
+    )
+    expect(screen.getByText('Your active V3 liquidity positions will appear here.')).toBeInTheDocument()
   })
 })
