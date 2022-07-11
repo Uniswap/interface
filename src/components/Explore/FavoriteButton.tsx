@@ -1,9 +1,10 @@
 import useTheme from 'hooks/useTheme'
 import { useAtom } from 'jotai'
-import { showFavoritesAtom } from 'pages/Explore/index'
 import { darken } from 'polished'
 import { Heart } from 'react-feather'
 import styled from 'styled-components/macro'
+
+import { showFavoritesAtom } from './TokenTable'
 
 const FavoriteButtonContent = styled.div`
   display: flex;
@@ -11,7 +12,7 @@ const FavoriteButtonContent = styled.div`
   align-items: center;
   gap: 8px;
 `
-const StyledFavoriteButton = styled.button<{ active: any }>`
+const StyledFavoriteButton = styled.button<{ active: boolean }>`
   padding: 0px 16px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg0};
