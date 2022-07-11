@@ -133,7 +133,8 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
   justify-content: space-between;
   padding: 6px 8px;
 `
-const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
+// eslint-disable-next-line prettier/prettier
+const SelectorLogo = styled(Logo) <{ interactive?: boolean }>`
   margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     margin-right: 8px;
