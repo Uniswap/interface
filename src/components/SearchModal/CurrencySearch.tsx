@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
+import { sendEvent } from 'components/analytics'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -11,11 +12,10 @@ import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
-import ReactGA from 'react-ga4'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useAllTokenBalances } from 'state/wallet/hooks'
+import { useAllTokenBalances } from 'state/connection/hooks'
 import styled from 'styled-components/macro'
 
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
@@ -71,8 +71,10 @@ export function CurrencySearch({
   showImportView,
   setImportToken,
 }: CurrencySearchProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const theme = useTheme()
+
+  const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
 
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
@@ -91,7 +93,7 @@ export function CurrencySearch({
 
   useEffect(() => {
     if (isAddressSearch) {
-      ReactGA.event({
+      sendEvent({
         category: 'Currency Select',
         action: 'Search by address',
         label: isAddressSearch,
@@ -103,10 +105,11 @@ export function CurrencySearch({
     return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
   }, [allTokens, debouncedQuery])
 
-  const balances = useAllTokenBalances()
+  const [balances, balancesIsLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
-    return filteredTokens.sort(tokenComparator.bind(null, balances))
-  }, [balances, filteredTokens])
+    void balancesIsLoading // creates a new array once balances load to update hooks
+    return [...filteredTokens].sort(tokenComparator.bind(null, balances))
+  }, [balances, filteredTokens, balancesIsLoading])
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
@@ -173,6 +176,14 @@ export function CurrencySearch({
     filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
   )
 
+  // Timeout token loader after 3 seconds to avoid hanging in a loading state.
+  useEffect(() => {
+    const tokenLoaderTimer = setTimeout(() => {
+      setTokenLoaderTimerElapsed(true)
+    }, 3000)
+    return () => clearTimeout(tokenLoaderTimer)
+  }, [])
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="16px">
@@ -218,6 +229,7 @@ export function CurrencySearch({
                 showImportView={showImportView}
                 setImportToken={setImportToken}
                 showCurrencyAmount={showCurrencyAmount}
+                isLoading={balancesIsLoading && !tokenLoaderTimerElapsed}
               />
             )}
           </AutoSizer>

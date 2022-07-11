@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
+import { sendEvent } from 'components/analytics'
 import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -11,7 +12,6 @@ import useTheme from 'hooks/useTheme'
 import { transparentize } from 'polished'
 import { useCallback, useState } from 'react'
 import { AlertTriangle, ArrowLeft } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { useAppDispatch } from 'state/hooks'
 import { enableList, removeList } from 'state/lists/actions'
 import { useAllLists } from 'state/lists/hooks'
@@ -54,7 +54,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
     setAddError(null)
     fetchList(listURL)
       .then(() => {
-        ReactGA.event({
+        sendEvent({
           category: 'Lists',
           action: 'Add List',
           label: listURL,
@@ -66,7 +66,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
         setModalView(CurrencyModalView.manage)
       })
       .catch((error) => {
-        ReactGA.event({
+        sendEvent({
           category: 'Lists',
           action: 'Add List Failed',
           label: listURL,

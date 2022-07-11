@@ -3,10 +3,10 @@ import { keccak256, pack } from '@ethersproject/solidity'
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import { useWeb3React } from '@web3-react/core'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useContext, useMemo } from 'react'
 import { Text } from 'rebass'
@@ -18,8 +18,8 @@ import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
+import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { BackArrow, StyledInternalLink, ThemedText } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
@@ -52,7 +52,7 @@ function toSushiLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 
 export default function MigrateV2() {
   const theme = useContext(ThemeContext)
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
 

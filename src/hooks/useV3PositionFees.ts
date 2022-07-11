@@ -23,13 +23,11 @@ export function useV3PositionFees(
   const tokenIdHexString = tokenId?.toHexString()
   const latestBlockNumber = useBlockNumber()
 
-  // TODO find a way to get this into multicall
+  // we can't use multicall for this because we need to simulate the call from a specific address
   // latestBlockNumber is included to ensure data stays up-to-date every block
-  const [amounts, setAmounts] = useState<[BigNumber, BigNumber]>()
+  const [amounts, setAmounts] = useState<[BigNumber, BigNumber] | undefined>()
   useEffect(() => {
-    let stale = false
-
-    if (positionManager && tokenIdHexString && owner && typeof latestBlockNumber === 'number') {
+    if (positionManager && tokenIdHexString && owner) {
       positionManager.callStatic
         .collect(
           {
@@ -41,19 +39,15 @@ export function useV3PositionFees(
           { from: owner } // need to simulate the call as the owner
         )
         .then((results) => {
-          if (!stale) setAmounts([results.amount0, results.amount1])
+          setAmounts([results.amount0, results.amount1])
         })
-    }
-
-    return () => {
-      stale = true
     }
   }, [positionManager, tokenIdHexString, owner, latestBlockNumber])
 
   if (pool && amounts) {
     return [
-      CurrencyAmount.fromRawAmount(!asWETH ? unwrappedToken(pool.token0) : pool.token0, amounts[0].toString()),
-      CurrencyAmount.fromRawAmount(!asWETH ? unwrappedToken(pool.token1) : pool.token1, amounts[1].toString()),
+      CurrencyAmount.fromRawAmount(asWETH ? pool.token0 : unwrappedToken(pool.token0), amounts[0].toString()),
+      CurrencyAmount.fromRawAmount(asWETH ? pool.token1 : unwrappedToken(pool.token1), amounts[1].toString()),
     ]
   } else {
     return [undefined, undefined]

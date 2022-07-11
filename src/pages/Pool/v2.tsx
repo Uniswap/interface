@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Pair } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
+import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useContext, useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
@@ -20,9 +20,9 @@ import { Dots } from '../../components/swap/styleds'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useV2Pairs } from '../../hooks/useV2Pairs'
+import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { ExternalLink, HideSmall, ThemedText } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
@@ -84,10 +84,12 @@ const Layer2Prompt = styled(EmptyProposals)`
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
+  const unsupportedV2Network = chainId && UNSUPPORTED_V2POOL_CHAIN_IDS.includes(chainId)
 
   // fetch the user's balances of all tracked V2 LP tokens
-  const trackedTokenPairs = useTrackedTokenPairs()
+  let trackedTokenPairs = useTrackedTokenPairs()
+  if (unsupportedV2Network) trackedTokenPairs = []
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
@@ -132,8 +134,6 @@ export default function Pool() {
     )
   })
 
-  const ON_L2 = chainId && L2_CHAIN_IDS.includes(chainId)
-
   return (
     <>
       <PageWrapper>
@@ -171,12 +171,12 @@ export default function Pool() {
           <CardNoise />
         </VoteCard>
 
-        {ON_L2 ? (
+        {unsupportedV2Network ? (
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="md" style={{ width: '100%' }}>
               <Layer2Prompt>
                 <ThemedText.Body color={theme.text3} textAlign="center">
-                  <Trans>V2 is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
+                  <Trans>V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
                 </ThemedText.Body>
               </Layer2Prompt>
             </AutoColumn>

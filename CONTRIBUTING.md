@@ -1,24 +1,73 @@
-
 # Contributing
 
 Thank you for your interest in contributing to the Uniswap interface! 🦄
 
 # Development
 
+Before running anything, you'll need to install the dependencies:
+
+```
+yarn install
+```
+
 ## Running the interface locally
 
-1. `yarn install`
-1. `yarn start`
+```
+yarn start
+```
+
+The interface should automatically open. If it does not, navigate to [http://localhost:3000].
 
 ## Creating a production build
 
-1. `yarn install`
-1. `yarn build`
+```
+yarn build
+```
+
+To serve the production build:
+
+```
+yarn serve
+```
+
+Then, navigate to [http://localhost:3000] to see it.
+
+## Running unit tests
+
+```
+yarn test
+```
+
+By default, this runs only unit tests that have been affected since the last commit. To run _all_ unit tests:
+
+```
+yarn test --watchAll
+```
+
+## Running integration tests (cypress)
+
+Integration tests require a server to be running. In order to see your changes quickly, run `start` in its own tab/window:
+
+```
+yarn start
+```
+
+Integration tests are run using `cypress`. When developing locally, use `cypress:open` for an interactive UI, and to inspect the rendered page:
+
+```
+yarn cypress:open
+```
+
+To run _all_ cypress integration tests _from the command line_:
+
+```
+yarn cypress:run
+```
 
 ## Engineering standards
 
-Code merged into the `main` branch of this repository should adhere to high standards of correctness and maintainability. 
-Use your best judgment when applying these standards.  If code is in the critical path, will be frequently visited, or 
+Code merged into the `main` branch of this repository should adhere to high standards of correctness and maintainability.
+Use your best judgment when applying these standards. If code is in the critical path, will be frequently visited, or
 makes large architectural changes, consider following all the standards.
 
 - Have at least one engineer approve of large code refactorings
@@ -39,7 +88,7 @@ The following points should help guide your development:
   - Avoid adding steps to the development/build processes
   - The build must be deterministic, i.e. a particular commit hash always produces the same build
 - Decentralization: anyone can run the interface
-  - An Ethereum node should be the only critical dependency 
+  - An Ethereum node should be the only critical dependency
   - All other external dependencies should only enhance the UX ([graceful degradation](https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation))
 - Accessibility: anyone can use the interface
   - The interface should be responsive, small and also run well on low performance devices (majority of swaps on mobile!)
@@ -48,14 +97,14 @@ The following points should help guide your development:
 
 Releases are cut automatically from the `main` branch Monday-Thursday in the morning according to the [release workflow](./.github/workflows/release.yaml).
 
-Fix pull requests should be merged whenever ready and tested. 
+Fix pull requests should be merged whenever ready and tested.
 If a fix is urgently needed in production, releases can be manually triggered on [GitHub](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml)
 after the fix is merged into `main`.
 
 Features should not be merged into `main` until they are ready for users.
 When building larger features or collaborating with other developers, create a new branch from `main` to track its development.
 Use the automatic Vercel preview for sharing the feature to collect feedback.  
-When the feature is ready for review, create a new pull request from the feature branch into `main` and request reviews from 
+When the feature is ready for review, create a new pull request from the feature branch into `main` and request reviews from
 the appropriate UX reviewers (PMs or designers).
 
 ## Finding a first issue
@@ -65,7 +114,7 @@ Start with issues with the label
 
 # Translations
 
-Uniswap uses [Crowdin](https://crowdin.com/project/uniswap-interface) for managing translations. 
+Uniswap uses [Crowdin](https://crowdin.com/project/uniswap-interface) for managing translations.
 [This workflow](./.github/workflows/crowdin.yaml) uploads new strings for translation to the Crowdin project whenever code using the [lingui translation macros](https://lingui.js.org/ref/macro.html) is merged into `main`.
 
 Every hour, translations are synced back down from Crowdin to the repository in [this other workflow](./.github/workflows/crowdin-sync.yaml).

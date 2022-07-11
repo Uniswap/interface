@@ -1,6 +1,6 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -8,8 +8,8 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { UNI } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
+import { useTokenBalance } from '../../state/connection/hooks'
 import { useDelegateCallback } from '../../state/governance/hooks'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonPrimary } from '../Button'
@@ -42,7 +42,7 @@ interface VoteModalProps {
 }
 
 export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalProps) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   // state for delegate input
   const [usingDelegate, setUsingDelegate] = useState(false)
@@ -66,7 +66,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   const [attempting, setAttempting] = useState(false)
 
   // wrapper to reset state on modal close
-  function wrappedOndismiss() {
+  function wrappedOnDismiss() {
     setHash(undefined)
     setAttempting(false)
     onDismiss()
@@ -90,13 +90,13 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOndismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.MediumHeader fontWeight={500}>{title}</ThemedText.MediumHeader>
-              <StyledClosed stroke="black" onClick={wrappedOndismiss} />
+              <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.Body>
               <Trans>Earned UNI tokens represent voting shares in Uniswap governance.</Trans>
@@ -119,7 +119,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         </ContentWrapper>
       )}
       {attempting && !hash && (
-        <LoadingView onDismiss={wrappedOndismiss}>
+        <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <ThemedText.LargeHeader>
               {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
@@ -129,7 +129,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         </LoadingView>
       )}
       {hash && (
-        <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <ThemedText.LargeHeader>
               <Trans>Transaction Submitted</Trans>

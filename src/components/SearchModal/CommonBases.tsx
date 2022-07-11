@@ -49,6 +49,8 @@ export default function CommonBases({
           const isSelected = selectedCurrency?.equals(currency)
           return (
             <BaseWrapper
+              tabIndex={0}
+              onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
               onClick={() => !isSelected && onSelect(currency)}
               disable={isSelected}
               key={currencyId(currency)}

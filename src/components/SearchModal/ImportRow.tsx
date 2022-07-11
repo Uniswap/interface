@@ -63,7 +63,7 @@ export default function ImportRow({
   const list = token instanceof WrappedTokenInfo ? token.list : undefined
 
   return (
-    <TokenSection style={style}>
+    <TokenSection tabIndex={0} style={style}>
       <CurrencyLogo currency={token} size={'24px'} style={{ opacity: dim ? '0.6' : '1' }} />
       <AutoColumn gap="4px" style={{ opacity: dim ? '0.6' : '1' }}>
         <AutoRow>

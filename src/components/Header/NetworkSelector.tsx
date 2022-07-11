@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import { getConnection } from 'connection/utils'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
@@ -10,12 +12,12 @@ import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useCloseModal, useModalOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
+import { updateConnectionError } from 'state/connection/reducer'
+import { useAppDispatch } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-
-import { useAppDispatch } from '../../state/hooks'
-import { switchToNetwork } from '../../utils/switchToNetwork'
+import { isChainAllowed, switchChain } from 'utils/switchChain'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -92,6 +94,13 @@ const FlyoutRowActiveIndicator = styled.div`
   height: 9px;
   width: 9px;
 `
+
+const CircleContainer = styled.div`
+  width: 20px;
+  display: flex;
+  justify-content: center;
+`
+
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 16px;
@@ -145,7 +154,7 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
       return <Trans>Arbitrum Bridge</Trans>
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimism Gateway</Trans>
+      return <Trans>Optimism Bridge</Trans>
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return <Trans>Polygon Bridge</Trans>
@@ -176,8 +185,8 @@ function Row({
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
 }) {
-  const { library, chainId } = useActiveWeb3React()
-  if (!library || !chainId) {
+  const { provider, chainId } = useWeb3React()
+  if (!provider || !chainId) {
     return null
   }
   const active = chainId === targetChain
@@ -187,7 +196,11 @@ function Row({
     <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
       <Logo src={logoUrl} />
       <NetworkLabel>{label}</NetworkLabel>
-      {chainId === targetChain && <FlyoutRowActiveIndicator />}
+      {chainId === targetChain && (
+        <CircleContainer>
+          <FlyoutRowActiveIndicator />
+        </CircleContainer>
+      )}
     </FlyoutRow>
   )
 
@@ -196,21 +209,30 @@ function Row({
       <ActiveRowWrapper>
         {rowContent}
         <ActiveRowLinkList>
-          {bridge ? (
+          {bridge && (
             <ExternalLink href={bridge}>
-              <BridgeLabel chainId={chainId} /> <LinkOutCircle />
+              <BridgeLabel chainId={chainId} />
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
-          {explorer ? (
+          )}
+          {explorer && (
             <ExternalLink href={explorer}>
-              <ExplorerLabel chainId={chainId} /> <LinkOutCircle />
+              <ExplorerLabel chainId={chainId} />
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
-          {helpCenterUrl ? (
+          )}
+          {helpCenterUrl && (
             <ExternalLink href={helpCenterUrl}>
-              <Trans>Help Center</Trans> <LinkOutCircle />
+              <Trans>Help Center</Trans>
+              <CircleContainer>
+                <LinkOutCircle />
+              </CircleContainer>
             </ExternalLink>
-          ) : null}
+          )}
         </ActiveRowLinkList>
       </ActiveRowWrapper>
     )
@@ -236,11 +258,20 @@ const getChainNameFromId = (id: string | number) => {
   return CHAIN_IDS_TO_NAMES[id as SupportedChainId] || ''
 }
 
+const NETWORK_SELECTOR_CHAINS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+]
+
 export default function NetworkSelector() {
-  const { chainId, library } = useActiveWeb3React()
+  const dispatch = useAppDispatch()
+  const { chainId, provider, connector } = useWeb3React()
+  const previousChainId = usePrevious(chainId)
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
-  const prevChainId = usePrevious(chainId)
+  const previousUrlChainId = usePrevious(urlChainId)
   const node = useRef<HTMLDivElement>(null)
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -250,50 +281,44 @@ export default function NetworkSelector() {
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
-  const dispatch = useAppDispatch()
+  const onSelectChain = useCallback(
+    async (targetChain: number, skipToggle?: boolean) => {
+      if (!connector) return
 
-  const handleChainSwitch = useCallback(
-    (targetChain: number, skipToggle?: boolean) => {
-      if (!library?.provider) return
-      switchToNetwork({ provider: library.provider, chainId: targetChain })
-        .then(() => {
-          if (!skipToggle) {
-            toggle()
-          }
-          history.replace({
-            search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
-          })
-        })
-        .catch((error) => {
-          console.error('Failed to switch networks', error)
+      const connectionType = getConnection(connector).type
 
-          // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
-          // but the request fails, revert the URL back to current chainId
-          if (chainId) {
-            history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-          }
+      try {
+        dispatch(updateConnectionError({ connectionType, error: undefined }))
+        await switchChain(connector, targetChain)
+      } catch (error) {
+        console.error('Failed to switch networks', error)
 
-          if (!skipToggle) {
-            toggle()
-          }
+        dispatch(updateConnectionError({ connectionType, error: error.message }))
+        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
+      }
 
-          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
-        })
+      if (!skipToggle) {
+        toggle()
+      }
     },
-    [dispatch, library, toggle, history, chainId]
+    [connector, toggle, dispatch]
   )
 
   useEffect(() => {
-    if (!chainId || !prevChainId) return
+    if (!chainId || !previousChainId) return
 
     // when network change originates from wallet or dropdown selector, just update URL
-    if (chainId !== prevChainId) {
+    if (chainId !== previousChainId && chainId !== urlChainId) {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
-    } else if (urlChainId && urlChainId !== chainId) {
-      handleChainSwitch(urlChainId, true)
+    } else if (urlChainId && urlChainId !== previousUrlChainId && urlChainId !== chainId) {
+      onSelectChain(urlChainId, true).catch(() => {
+        // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
+        // but the request fails, revert the URL back to current chainId
+        history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+      })
     }
-  }, [chainId, urlChainId, prevChainId, handleChainSwitch, history])
+  }, [chainId, urlChainId, previousChainId, previousUrlChainId, onSelectChain, history])
 
   // set chain parameter on initial load if not there
   useEffect(() => {
@@ -302,7 +327,7 @@ export default function NetworkSelector() {
     }
   }, [chainId, history, urlChainId, urlChain])
 
-  if (!chainId || !info || !library) {
+  if (!chainId || !info || !provider) {
     return null
   }
 
@@ -319,10 +344,11 @@ export default function NetworkSelector() {
             <FlyoutHeader>
               <Trans>Select a network</Trans>
             </FlyoutHeader>
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MAINNET} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.POLYGON} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.OPTIMISM} />
-            <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.ARBITRUM_ONE} />
+            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
+              isChainAllowed(connector, chainId) ? (
+                <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} />
+              ) : null
+            )}
           </FlyoutMenuContents>
         </FlyoutMenu>
       )}

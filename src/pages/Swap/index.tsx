@@ -3,17 +3,17 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
+import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { TradeState } from 'state/routing/types'
@@ -64,7 +64,7 @@ const AlertWrapper = styled.div`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -147,9 +147,11 @@ export default function Swap({ history }: RouteComponentProps) {
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
-
-  const fiatValueInput = useUSDCValue(trade?.inputAmount)
-  const fiatValueOutput = useUSDCValue(trade?.outputAmount)
+  // show price estimates based on wrap trade
+  const inputValue = showWrap ? parsedAmount : trade?.inputAmount
+  const outputValue = showWrap ? parsedAmount : trade?.outputAmount
+  const fiatValueInput = useUSDCValue(inputValue)
+  const fiatValueOutput = useUSDCValue(outputValue)
   const priceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
@@ -237,7 +239,7 @@ export default function Swap({ history }: RouteComponentProps) {
     } else {
       await approveCallback()
 
-      ReactGA.event({
+      sendEvent({
         category: 'Swap',
         action: 'Approve',
         label: [approvalOptimizedTradeString, approvalOptimizedTrade?.inputAmount?.currency.symbol].join('/'),
@@ -286,7 +288,12 @@ export default function Swap({ history }: RouteComponentProps) {
     swapCallback()
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-        ReactGA.event({
+        sendEvent({
+          category: 'Swap',
+          action: 'transaction hash',
+          label: hash,
+        })
+        sendEvent({
           category: 'Swap',
           action:
             recipient === null
@@ -373,7 +380,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    ReactGA.event({
+    sendEvent({
       category: 'Swap',
       action: 'Max',
     })
@@ -421,7 +428,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 }
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={showMaxButton}
-                currency={currencies[Field.INPUT]}
+                currency={currencies[Field.INPUT] ?? null}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
                 fiatValue={fiatValueInput ?? undefined}
@@ -449,7 +456,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
                 priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
+                currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}

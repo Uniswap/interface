@@ -3,6 +3,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
+import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -15,7 +17,6 @@ import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { useToken } from 'hooks/Tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -25,7 +26,6 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import ReactGA from 'react-ga4'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -42,7 +42,7 @@ import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import useTheme from '../../hooks/useTheme'
-import { TransactionType } from '../../state/transactions/actions'
+import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
@@ -318,7 +318,7 @@ export function PositionPage({
     params: { tokenId: tokenIdFromUrl },
   },
 }: RouteComponentProps<{ tokenId?: string }>) {
-  const { chainId, account, library } = useActiveWeb3React()
+  const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
@@ -336,10 +336,10 @@ export function PositionPage({
 
   const removed = liquidity?.eq(0)
 
+  const metadata = usePositionTokenURI(parsedTokenId)
+
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
-
-  const metadata = usePositionTokenURI(parsedTokenId)
 
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
@@ -389,6 +389,10 @@ export function PositionPage({
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails?.tokenId, receiveWETH)
 
+  // these currencies will match the feeValue{0,1} currencies for the purposes of fee collection
+  const currency0ForFeeCollectionPurposes = pool ? (receiveWETH ? pool.token0 : unwrappedToken(pool.token0)) : undefined
+  const currency1ForFeeCollectionPurposes = pool ? (receiveWETH ? pool.token1 : unwrappedToken(pool.token1)) : undefined
+
   const [collecting, setCollecting] = useState<boolean>(false)
   const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
   const isCollectPending = useIsTransactionPending(collectMigrationHash ?? undefined)
@@ -422,14 +426,25 @@ export function PositionPage({
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const collect = useCallback(() => {
-    if (!chainId || !feeValue0 || !feeValue1 || !positionManager || !account || !tokenId || !library) return
+    if (
+      !currency0ForFeeCollectionPurposes ||
+      !currency1ForFeeCollectionPurposes ||
+      !chainId ||
+      !positionManager ||
+      !account ||
+      !tokenId ||
+      !provider
+    )
+      return
 
     setCollecting(true)
 
+    // we fall back to expecting 0 fees in case the fetch fails, which is safe in the
+    // vast majority of cases
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: feeValue0,
-      expectedCurrencyOwed1: feeValue1,
+      expectedCurrencyOwed0: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
+      expectedCurrencyOwed1: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
       recipient: account,
     })
 
@@ -439,7 +454,7 @@ export function PositionPage({
       value,
     }
 
-    library
+    provider
       .getSigner()
       .estimateGas(txn)
       .then((estimate) => {
@@ -448,23 +463,23 @@ export function PositionPage({
           gasLimit: calculateGasMargin(estimate),
         }
 
-        return library
+        return provider
           .getSigner()
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
             setCollectMigrationHash(response.hash)
             setCollecting(false)
 
-            ReactGA.event({
+            sendEvent({
               category: 'Liquidity',
               action: 'CollectV3',
-              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+              label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
             })
 
             addTransaction(response, {
               type: TransactionType.COLLECT_FEES,
-              currencyId0: currencyId(feeValue0.currency),
-              currencyId1: currencyId(feeValue1.currency),
+              currencyId0: currencyId(currency0ForFeeCollectionPurposes),
+              currencyId1: currencyId(currency1ForFeeCollectionPurposes),
             })
           })
       })
@@ -472,7 +487,18 @@ export function PositionPage({
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
+  }, [
+    chainId,
+    feeValue0,
+    feeValue1,
+    currency0ForFeeCollectionPurposes,
+    currency1ForFeeCollectionPurposes,
+    positionManager,
+    account,
+    tokenId,
+    addTransaction,
+    provider,
+  ])
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account

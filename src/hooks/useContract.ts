@@ -6,6 +6,7 @@ import TickLensJson from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLen
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
+import { useWeb3React } from '@web3-react/core'
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
 import EIP_2612 from 'abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
@@ -27,7 +28,6 @@ import {
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
@@ -48,21 +48,21 @@ export function useContract<T extends Contract = Contract>(
   ABI: any,
   withSignerIfPossible = true
 ): T | null {
-  const { library, account, chainId } = useActiveWeb3React()
+  const { provider, account, chainId } = useWeb3React()
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !library || !chainId) return null
+    if (!addressOrAddressMap || !ABI || !provider || !chainId) return null
     let address: string | undefined
     if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
     else address = addressOrAddressMap[chainId]
     if (!address) return null
     try {
-      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+      return getContract(address, ABI, provider, withSignerIfPossible && account ? account : undefined)
     } catch (error) {
       console.error('Failed to get contract', error)
       return null
     }
-  }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T
+  }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
 }
 
 export function useV2MigratorContract() {
@@ -74,7 +74,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   return useContract<Weth>(
     chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
     WETH_ABI,
@@ -135,7 +135,7 @@ export function useV3Quoter() {
 }
 
 export function useTickLens(): TickLens | null {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const address = chainId ? TICK_LENS_ADDRESSES[chainId] : undefined
   return useContract(address, TickLensABI) as TickLens | null
 }

@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { useToken } from 'hooks/Tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -30,7 +30,7 @@ export function useDerivedV3BurnInfo(
   outOfRange: boolean
   error?: ReactNode
 } {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const { percent } = useBurnV3State()
 
   const token0 = useToken(position?.token0)

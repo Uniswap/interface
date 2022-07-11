@@ -47,6 +47,15 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
 ]
 
 /**
+ * Unsupported networks for V2 pool behavior.
+ */
+export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+]
+
+/**
  * All the chain IDs that are running the Ethereum protocol.
  */
 export const L1_CHAIN_IDS = [

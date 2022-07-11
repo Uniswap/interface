@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -93,7 +93,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 `
 
 export default function CTACards() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
     <CTASection>

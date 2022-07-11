@@ -1,7 +1,7 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
@@ -51,7 +51,7 @@ export default function ClaimModal() {
   const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleClaimModal = useToggleSelfClaimModal()
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   // used for UI loading states
   const [attempting, setAttempting] = useState<boolean>(false)

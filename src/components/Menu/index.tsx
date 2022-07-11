@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
 import {
@@ -207,7 +207,7 @@ function LanguageMenu({ close }: { close: () => void }) {
 }
 
 export default function Menu() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)

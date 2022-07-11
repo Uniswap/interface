@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-29 06:07\n"
+"PO-Revision-Date: 2022-07-06 21:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -121,17 +121,12 @@ msgid "About"
 msgstr "概要"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "同意する"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "アカウント"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Acknowledge"
-msgstr "認めます"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -169,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "流動性を追加する"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "{0} をメタマスクに追加 <0/>"
+msgid "Add {0}"
+msgstr "{0}を追加"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -184,6 +179,10 @@ msgstr "{0}/{1} V3の流動性を追加"
 msgid "Added {0}"
 msgstr "{0} を追加"
 
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "この提案をキューに追加すると、遅延後に実行できるようになります。"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
 msgstr "請求可能なアドレスではありません"
@@ -191,10 +190,6 @@ msgstr "請求可能なアドレスではありません"
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
 msgstr "反対"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow"
-msgstr "許可する"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
@@ -204,21 +199,9 @@ msgstr "LPトークンの移行を許可する"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "価格への大きな影響がある取引を許可し、確認画面をスキップします。自己責任でご利用ください。"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow in your wallet"
-msgstr "ウォレットで許可する"
-
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "{0} の使用をUniswapに許可する"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "最初に {0} を許可する"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allowance pending"
-msgstr "保留中の手当"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -232,12 +215,7 @@ msgstr "数量"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "スワップ実行時にエラーが発生しました。スリッページの許容範囲を広げる必要がある可能性があります。それでも上手くいかない場合、取引しているトークンとの互換性がない可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approval pending"
-msgstr "承認待ち"
-
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "承認"
@@ -246,10 +224,6 @@ msgstr "承認"
 msgid "Approve Token"
 msgstr "トークンを承認する"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve in your wallet"
-msgstr "ウォレットで承認する"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -257,10 +231,6 @@ msgstr "ウォレットで承認する"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "{0} を承認する"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "最初に {0} を承認する"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -303,13 +273,8 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "少なくとも {0} の {1} と {2} の {3} は設定した価格範囲のため、ウォレットに返金されます。"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "自動"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "Auto Router"
-msgstr "自動ルーター"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -318,6 +283,10 @@ msgstr "自動ルーターAPI"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "預け入れ可能： {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "ウォレットの選択に戻る"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -342,6 +311,10 @@ msgstr "非常に安定したペアに最適"
 #: src/components/swap/SwapRoute.tsx
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
 msgstr "ベスト価格のルートでガス代として〜{formattedGasPriceString} の費用がかかります。"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "Blocked Address"
+msgstr "ブロックされたアドレス"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -454,7 +427,6 @@ msgstr "すべてクリア"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "閉じる"
 
@@ -509,19 +481,12 @@ msgstr "供給を確認"
 msgid "Confirm Swap"
 msgstr "スワップの確認"
 
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Confirm in your wallet"
-msgstr "ウォレットで確認する"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Confirm swap"
-msgstr "スワップを確認する"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "ウォレットで取引を確認する"
@@ -563,21 +528,13 @@ msgstr "ウォレットに接続してV2の流動性を確認します。"
 msgid "Connect to a wallet to view your liquidity."
 msgstr "ウォレットに接続して流動性を確認します。"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connect wallet to swap"
-msgstr "ウォレットを接続してスワップする"
-
-#: src/lib/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "ウォレットを接続する"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "{name} と接続しました"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1} with no slippage"
-msgstr "スリッページなしで {0} を {1} に変換します"
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "接続しています..."
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -715,7 +672,6 @@ msgid "Discord"
 msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "注文を取り下げる"
 
@@ -757,7 +713,6 @@ msgstr "UNIの請求を行うためのアドレスを入力してください。
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -786,21 +741,8 @@ msgid "Error"
 msgstr "エラー"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "接続エラー"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "接続中にエラーが発生しました。ページを更新してください。"
-
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Error details"
-msgstr "エラーの詳細"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Error fetching trade"
-msgstr "取引の取得中にエラーが発生しました"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -818,11 +760,36 @@ msgstr "推定ネットワーク料金"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "実行する"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "提案 {proposalId}を実行する"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "提案 {proposalKey}を実行します。"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "実行済"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "実行中"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "この提案を実行すると、calldataがチェーン上で成立します。"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "実行が送信されました"
+
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "あなたが利用していないトークンリストからの検索結果"
 
@@ -862,11 +829,6 @@ msgstr "手数料レベル"
 msgid "Fetching best price..."
 msgstr "ベストな価格を取得中…"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Fetching best price…"
-msgstr "ベストな価格を取得中…"
-
-#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "賛成"
@@ -904,35 +866,18 @@ msgstr "ヘルプセンター"
 msgid "Hide"
 msgstr "非表示"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "決済したポジションを隠す"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "大きな価格への影響"
-
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High price impact"
-msgstr "価格への影響が大きい"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High slippage"
-msgstr "高いスリッページ"
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "High slippage increases the risk of price movement"
-msgstr "高いスリッページは価格変動のリスクを高めます"
-
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "このアプリがAPIを使用する方法"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "理解しました"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "If you believe this is an error, please send an email including your address to"
+msgstr "これがエラーであると思われる場合は、アドレスを含む電子メールをに送信してください"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
@@ -974,29 +919,20 @@ msgstr "流動性を上げる"
 msgid "Initial prices and pool share"
 msgstr "初期価格とプールシェア"
 
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "初期化中..."
-
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "上記は概算です。最大で<0>{0} {1}</0>を売れなければ、取引は差し戻されます。"
 
 #: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "メタマスクのインストール"
+msgid "Install MetaMask"
+msgstr "MetaMaskをインストールする"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "流動性が不足しているため、取引できません。"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Insufficient liquidity in the pool for your trade"
-msgstr "流動性が不足しているため、取引できません。"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1051,7 +987,6 @@ msgstr "より詳しく"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "法律とプライバシー"
 
@@ -1067,10 +1002,6 @@ msgstr "流動性"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "流動性データはありません。"
-
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "流動性プロバイダー手数料"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1123,7 +1054,6 @@ msgstr "トークンリストを管理"
 msgid "Manage this pool."
 msgstr "プールを管理"
 
-#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "最大"
@@ -1137,16 +1067,11 @@ msgstr "最大価格"
 msgid "Max price"
 msgstr "最大価格"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Max slippage"
-msgstr "最大スリッページ"
-
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "最大："
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "最大売却数"
 
@@ -1197,17 +1122,12 @@ msgid "Min:"
 msgstr "最小:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "最小購入数"
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "依存関係がありません"
-
-#: src/lib/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "モックトグル"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1259,7 +1179,6 @@ msgid "No proposals found."
 msgstr "提案が見つかりません。"
 
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "結果が見つかりませんでした。"
 
@@ -1267,27 +1186,9 @@ msgstr "結果が見つかりませんでした。"
 msgid "Not created"
 msgstr "未作成"
 
-#: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
-msgid "OFF"
-msgstr "OFF"
-
-#: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
-msgid "ON"
-msgstr "ON"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "このモードは、あなたが何をしているかを理解している場合にのみご使用ください。"
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "OFF"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "ON"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1297,13 +1198,9 @@ msgstr "価格に問題がなければ、「追加」をクリックして確認
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "ブロック{0} 以前に自己委任、または他のアドレスに委任されたUNIのみが投票の対象となります。"
 
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "不明なエラーが発生しました。ページを更新するか、別のブラウザまたはデバイスからアクセスしてください。"
-
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimism Gateway"
-msgstr "Optimismゲートウェイ"
+msgid "Optimism Bridge"
+msgstr "オプティミズムブリッジ"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1325,14 +1222,6 @@ msgstr "取引結果は概算です。価格が {0}%以上変化した場合、�
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "取引結果は概算です。<0>{0} {1}</0> 以上を買えない場合は、取引は差し戻されます。"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "取引結果は概算です。{0} {1} 以上を買えない場合は、取引は差し戻されます。"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
-msgstr "出力は推定されます。最大 {0} {1} を送信するか、トランザクションが元に戻ります。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1357,14 +1246,6 @@ msgstr "REMOVEと入力して、このリストを削除することを確認し
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "イーサリアムのレイヤー1に接続してください"
-
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "ドロップダウンメニューまたはウォレットでサポートされているネットワークに接続してください。"
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Please enter a valid slippage %"
-msgstr "有効なスリッページ％を入力してください"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1415,10 +1296,6 @@ msgstr "プールしている {0}:"
 msgid "Pools Overview"
 msgstr "プールの概要"
 
-#: src/lib/components/BrandedFooter.tsx
-msgid "Powered by the Uniswap protocol"
-msgstr "Uniswapプロトコルによって提供"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "プレビュー"
@@ -1443,17 +1320,9 @@ msgstr "価格の影響が大きすぎます"
 msgid "Price Updated"
 msgstr "価格が更新されています"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "価格への影響"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "価格範囲"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Price updated"
-msgstr "価格が更新されました"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1495,9 +1364,26 @@ msgstr "提案者"
 msgid "Protocol Disclaimer"
 msgstr "プロトコルの免責事項"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "列"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "キュー提案 {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "キュー提案 {proposalKey}。"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "処理待ち"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "キューイング"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1523,17 +1409,9 @@ msgstr "サポートされていないアセットの詳細を見る"
 msgid "Recent Transactions"
 msgstr "最近の取引"
 
-#: src/lib/components/RecentTransactionsDialog.tsx
-msgid "Recent transactions"
-msgstr "最近の取引"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "受取人"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page"
-msgstr "ページを再読み込みする"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1577,23 +1455,11 @@ msgstr "{0} {1} と {2} {3} を削除"
 msgid "Request Features"
 msgstr "機能のリクエスト"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Reset"
-msgstr "リセット"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "戻る"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Review swap"
-msgstr "スワップを確認する"
-
-#: src/lib/components/TokenSelect/index.tsx
-msgid "Search by token name or address"
-msgstr "トークン名またはアドレスで検索"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1609,8 +1475,6 @@ msgstr "ネットワークを選択"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/TokenButton.tsx
-#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1647,10 +1511,6 @@ msgstr "価格範囲を設定"
 msgid "Set Starting Price"
 msgstr "開始価格を設定"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Settings"
-msgstr "設定"
-
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "プールのシェア"
@@ -1659,10 +1519,12 @@ msgstr "プールのシェア"
 msgid "Share of Pool:"
 msgstr "プールのシェア:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Portisを表示"
+#: src/pages/Vote/Landing.tsx
+msgid "Show Cancelled"
+msgstr "キャンセルされた表示"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "決済したポジションを表示"
@@ -1672,7 +1534,6 @@ msgid "Simple"
 msgstr "シンプル"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "スリッページの許容範囲"
 
@@ -1683,11 +1544,6 @@ msgstr "一部のトークンは、スマートコントラクトでうまく動
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "何らかの問題が発生しました"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Something went wrong."
-msgstr "問題が発生しました。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1724,7 +1580,6 @@ msgstr "{0} {1} と {2} {3} を追加中"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/lib/components/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1740,14 +1595,6 @@ msgstr "<0/> を <1/>にスワップ"
 msgid "Swap Anyway"
 msgstr "問題発生の可能性があるが、スワップする"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap confirmed"
-msgstr "スワップが確認されました"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap details"
-msgstr "スワップの詳細"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "<0/>を<1/>にスワップ"
@@ -1756,14 +1603,6 @@ msgstr "<0/>を<1/>にスワップ"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "スワップに失敗しました： {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap pending"
-msgstr "スワップ保留中"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap summary"
-msgstr "スワップの概要"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1789,6 +1628,10 @@ msgstr "設定する手数料率"
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap不変式 x * y = kはスワップで満たされませんでした。これは通常、スワップするトークンの1つが転送時のカスタム動作を組み込んでいることを意味します。"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
+msgstr "現在の市場価格で受け取ると予想される金額。取引が保留されている間に市場価格が変更された場合、受け取る金額は増減する可能性があります。"
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
 msgstr "アプリはThe Graphがホストするサービスからブロックチェーンデータを取得します。"
@@ -1809,6 +1652,10 @@ msgstr "アプリは、時間の経過とともに改善するために、匿名
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "アプリはリスクとコンプライアンスの理由からウォレットアドレスを安全に収集し、TRM LabsInc. と共有します。"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "接続に失敗しました。 [再試行]をクリックして、手順に従ってウォレットに接続してください。"
+
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."
 msgstr "この取引を送信するコストは、入力した数量の価値の半分以上です。"
@@ -1821,6 +1668,14 @@ msgstr "L1でトランザクションを送信するための現在の高速ガ�
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "入力金額と出力金額のUSD値の推定差。"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
+msgstr "取引を処理する鉱夫に支払われる料金。これは {0}で支払う必要があります。"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The impact your trade has on the market price of this pool."
+msgstr "あなたの取引がこのプールの市場価格に与える影響。"
+
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "売るトークンが転送できません。売るトークンに問題がある可能性があります。"
@@ -1828,6 +1683,10 @@ msgstr "売るトークンが転送できません。売るトークンに問題
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "市場価格が設定した価格範囲から外れています。単一トークンのみ預け入れできます。"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "あなたが受け取ることが保証されている最低額。価格がさらに下落した場合、取引は元に戻ります。"
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
@@ -1861,6 +1720,10 @@ msgstr "期限が過ぎたため、取引を送信できませんでした。期
 msgid "There is no liquidity data."
 msgstr "流動性データはありません。"
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgstr "このアドレスは、1つ以上に関連付けられているため、UniswapLabsインターフェイスでブロックされています。"
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "このアプリは、次のサードパーティAPIを使用します。"
@@ -1868,6 +1731,10 @@ msgstr "このアプリは、次のサードパーティAPIを使用します。
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "流動性を追加する前に、このプールを初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預け入れ数量を入力します。初期化取引のため、ガス料金は通常より高くなります。"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "この提案は {0}以降に実行される場合があります。"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -1915,7 +1782,7 @@ msgstr "トークンは対応していません"
 msgid "Tokens"
 msgstr "トークン"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "あなたが利用していないリストにあるトークンです。以下の特定のトークンをインポートするか、[管理] をクリックして他のリストを有効にしてください。"
 
@@ -1946,6 +1813,7 @@ msgstr "取引設定"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "取引が送信されました"
@@ -1954,18 +1822,9 @@ msgstr "取引が送信されました"
 msgid "Transaction completed in"
 msgstr "で完了した取引"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction confirmed"
-msgstr "取引が確認されました"
-
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "取引期限"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction pending"
-msgstr "保留中の取引"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -1979,10 +1838,6 @@ msgstr "トークンを転送する"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "もう一度試す"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "スリッページの許容範囲を広げてみてください。<0/>注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2084,10 +1939,6 @@ msgstr "サポートされていないトークン"
 msgid "Unsupported Assets"
 msgstr "サポートされていないアセット"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade"
-msgstr "サポートされていないネットワーク-別のネットワークに切り替えて取引する"
-
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "タイトル未設定"
@@ -2099,18 +1950,6 @@ msgstr "アンラップ"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "<0/> から {0} にアンラップ"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap confirmed"
-msgstr "開封確認済み"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap pending"
-msgstr "保留中のアンラップ"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "{0}をアンラップ"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2129,8 +1968,8 @@ msgid "User"
 msgstr "ユーザー"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2はレイヤー2では使用できません。イーサリアムのレイヤー1に切り替えてください。"
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2プールはレイヤー2では使用できません。レイヤー1イーサリアムに切り替えます。"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2149,7 +1988,6 @@ msgstr "発生した報酬と分析を見る<0>↗</0>"
 msgid "View list"
 msgstr "リストを表示"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Etherscanで見る"
@@ -2164,6 +2002,8 @@ msgstr "エクスプローラーで見る"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "エクスプローラーで取引を表示する"
@@ -2288,19 +2128,6 @@ msgstr "ラップ"
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> から {0} にラップ"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "ラップが確認されました"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "ラップ保留中"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "ラップ {0}"
-
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "ネットワークが間違っています"
@@ -2445,16 +2272,11 @@ msgstr "あなたの取引はフロントランニングかもしれません"
 msgid "Your transaction may fail"
 msgstr "取引が失敗する可能性があります"
 
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
-msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "この期間より長く保留されている場合、トランザクションは元に戻ります。"
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "取引がこの期間を超えても保留されている場合、取引は差し戻されます。"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "価格が設定したパーセンテージよりも不利な価格に変動した場合、取引は差し戻されます。"
 
@@ -2469,6 +2291,10 @@ msgstr "未請求のUNI"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "スリッページ後"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "blocked activities"
+msgstr "ブロックされたアクティビティ"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2495,7 +2321,6 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https://、ipfs://またはENS名"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "分"
 
@@ -2506,10 +2331,6 @@ msgstr "{0} から"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "{0} トークンリストから"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {1ホップ経由のベストルート} other {＃ホップ経由の最適ルート}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
@@ -2606,7 +2427,7 @@ msgstr "{0} {1} 価格:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • ユーザーにより追加"
 
@@ -2658,25 +2479,13 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} トークン"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "{integrator} fee"
-msgstr "{integrator} 手数料"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
 msgstr "{label} トークンブリッジ"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{min}m {sec}s"
-msgstr "{min}分 {sec}秒"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{sec}s"
-msgstr "{sec}秒"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

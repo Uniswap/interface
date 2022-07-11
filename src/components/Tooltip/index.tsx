@@ -18,6 +18,7 @@ export const TooltipContainer = styled.div`
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {
   text: ReactNode
+  disableHover?: boolean // disable the hover and content display
 }
 
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
@@ -29,19 +30,20 @@ interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {
-  return <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
+  return <Popover content={text && <TooltipContainer>{text}</TooltipContainer>} {...rest} />
 }
 
 function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps) {
   return <Popover content={wrap ? <TooltipContainer>{content}</TooltipContainer> : content} {...rest} />
 }
 
-export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {
+/** Standard text tooltip. */
+export function MouseoverTooltip({ text, disableHover, children, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
   return (
-    <Tooltip {...rest} show={show}>
+    <Tooltip {...rest} show={show} text={disableHover ? null : text}>
       <div onMouseEnter={open} onMouseLeave={close}>
         {children}
       </div>
@@ -49,6 +51,7 @@ export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show
   )
 }
 
+/** Tooltip that displays custom content. */
 export function MouseoverTooltipContent({
   content,
   children,

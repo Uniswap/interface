@@ -1,8 +1,8 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { L2_CHAIN_IDS } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
@@ -13,6 +13,7 @@ import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
 
 const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
+export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
 
 /**
  * Return a guess of the gas cost used in computing slippage tolerance for a given trade
@@ -34,7 +35,7 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 export default function useAutoSlippageTolerance(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 ): Percent {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useUSDCValue(trade?.outputAmount)
   const nativeGasPrice = useGasPrice()
@@ -44,7 +45,7 @@ export default function useAutoSlippageTolerance(
   const nativeCurrencyPrice = useUSDCPrice((trade && nativeCurrency) ?? undefined)
 
   return useMemo(() => {
-    if (!trade || onL2) return ONE_TENTHS_PERCENT
+    if (!trade || onL2) return DEFAULT_AUTO_SLIPPAGE
 
     const nativeGasCost =
       nativeGasPrice && typeof gasEstimate === 'number'
