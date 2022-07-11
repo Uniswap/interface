@@ -20,9 +20,10 @@ const StyledFavoriteButton = styled.button<{ active: any }>`
   font-size: 16px;
   cursor: pointer;
 
-  &:hover {
+  &:hover,
+  &:focus {
     outline: none;
-    color: ${({ theme }) => darken(0.08, theme.text1)};
+    color: ${({ theme, active }) => (active ? '#869EFF' : darken(0.08, theme.text1))};
   }
 `
 
@@ -36,7 +37,7 @@ export default function FavoriteButton() {
           size={17}
           color={showFavorites ? '#869EFF' : theme.text1}
           fill={showFavorites ? '#869EFF' : theme.text1}
-        />{' '}
+        />
         Favorites
       </FavoriteButtonContent>
     </StyledFavoriteButton>
