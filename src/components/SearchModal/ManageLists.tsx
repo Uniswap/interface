@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
+import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Card from 'components/Card'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useListColor } from 'hooks/useColor'
 import parseENSAddress from 'lib/utils/parseENSAddress'
 import uriToHttp from 'lib/utils/uriToHttp'
@@ -95,7 +95,7 @@ function listUrlRowHTMLId(listUrl: string) {
 }
 
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const listsByUrl = useAppSelector((state) => state.lists.byUrl)
   const dispatch = useAppDispatch()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
@@ -242,7 +242,7 @@ export function ManageLists({
   setImportList: (list: TokenList) => void
   setListUrl: (url: string) => void
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const theme = useTheme()
 
   const [listUrlInput, setListUrlInput] = useState<string>('')

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useContext, useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -41,7 +41,7 @@ interface ExecuteModalProps {
 }
 
 export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteModalProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const executeCallback = useExecuteCallback()
 
   // monitor call to help UI loading state

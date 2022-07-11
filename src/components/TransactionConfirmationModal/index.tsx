@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useContext, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -96,7 +96,7 @@ function TransactionSubmittedContent({
 }) {
   const theme = useContext(ThemeContext)
 
-  const { connector } = useActiveWeb3React()
+  const { connector } = useWeb3React()
 
   const token = currencyToAdd?.wrapped
   const logoURL = useCurrencyLogoURIs(token)[0]
@@ -342,7 +342,7 @@ export default function TransactionConfirmationModal({
   content,
   currencyToAdd,
 }: ConfirmationModalProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
 

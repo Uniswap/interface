@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
@@ -19,8 +19,8 @@ import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModa
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { nativeOnChain } from '../../constants/tokens'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
+import { useTokenBalance } from '../../state/connection/hooks'
 import { usePairAdder } from '../../state/user/hooks'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
 import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -39,7 +39,7 @@ function useQuery() {
 export default function PoolFinder() {
   const query = useQuery()
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)

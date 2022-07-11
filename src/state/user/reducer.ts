@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { Wallet } from 'connectors'
+import { ConnectionType } from 'connection'
 import { SupportedLocale } from 'constants/locales'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
@@ -14,7 +14,7 @@ export interface UserState {
   // we want to handle that case by backfilling them manually. Once we backfill, we set the backfilled field to `true`.
   // After some period of time, our active users will have this property set so we can likely remove the backfilling logic.
   selectedWalletBackfilled: boolean
-  selectedWallet?: Wallet
+  selectedWallet?: ConnectionType
 
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number

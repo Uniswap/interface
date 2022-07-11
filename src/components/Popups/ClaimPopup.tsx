@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import styled, { keyframes } from 'styled-components/macro'
 
 import tokenLogo from '../../assets/images/token-logo.png'
 import {
-  useModalOpen,
+  useModalIsOpen,
   useShowClaimPopup,
   useToggleSelfClaimModal,
   useToggleShowClaimPopup,
@@ -55,14 +55,14 @@ const UniToken = styled.img`
 `
 
 export default function ClaimPopup() {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
 
   // dont store these in persisted state yet
   const showClaimPopup: boolean = useShowClaimPopup()
   const toggleShowClaimPopup = useToggleShowClaimPopup()
 
   // toggle for showing this modal
-  const showClaimModal = useModalOpen(ApplicationModal.SELF_CLAIM)
+  const showClaimModal = useModalIsOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
   const handleToggleSelfClaimModal = useCallback(() => {
     sendEvent({

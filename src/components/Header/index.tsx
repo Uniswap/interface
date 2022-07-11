@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import { useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
+import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
-import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -247,7 +247,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 export default function Header() {
-  const { account, chainId, connector } = useActiveWeb3React()
+  const { account, chainId, connector } = useWeb3React()
 
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
 

@@ -1,4 +1,4 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { UaEventOptions } from 'react-ga4/types/ga4'
 import { RouteComponentProps } from 'react-router-dom'
@@ -71,7 +71,7 @@ export function useAnalyticsReporter({ pathname, search }: RouteComponentProps['
     getCLS(reportWebVitals)
   }, [])
 
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   useEffect(() => {
     // cd1 - custom dimension 1 - chainId
     googleAnalytics.set({ cd1: chainId ?? 0 })

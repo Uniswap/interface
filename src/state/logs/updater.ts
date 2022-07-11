@@ -1,5 +1,5 @@
 import { Filter } from '@ethersproject/providers'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 
@@ -10,7 +10,7 @@ import { isHistoricalLog, keyToFilter } from './utils'
 export default function Updater(): null {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.logs)
-  const { chainId, provider } = useActiveWeb3React()
+  const { chainId, provider } = useWeb3React()
 
   const blockNumber = useBlockNumber()
 

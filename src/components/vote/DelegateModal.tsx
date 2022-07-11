@@ -1,6 +1,6 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -8,8 +8,8 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { UNI } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
+import { useTokenBalance } from '../../state/connection/hooks'
 import { useDelegateCallback } from '../../state/governance/hooks'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonPrimary } from '../Button'
@@ -42,7 +42,7 @@ interface VoteModalProps {
 }
 
 export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalProps) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   // state for delegate input
   const [usingDelegate, setUsingDelegate] = useState(false)

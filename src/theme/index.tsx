@@ -113,7 +113,7 @@ function colors(darkMode: boolean): Colors {
   }
 }
 
-function theme(darkMode: boolean): DefaultTheme {
+function getTheme(darkMode: boolean): DefaultTheme {
   return {
     ...colors(darkMode),
 
@@ -144,7 +144,7 @@ function theme(darkMode: boolean): DefaultTheme {
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const darkMode = useIsDarkMode()
 
-  const themeObject = useMemo(() => theme(darkMode), [darkMode])
+  const themeObject = useMemo(() => getTheme(darkMode), [darkMode])
 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }

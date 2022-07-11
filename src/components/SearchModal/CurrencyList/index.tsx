@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
@@ -11,9 +11,9 @@ import styled from 'styled-components/macro'
 
 import TokenListLogo from '../../../assets/svg/tokenlist.svg'
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
+import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { useCombinedActiveList } from '../../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
-import { useCurrencyBalance } from '../../../state/wallet/hooks'
 import { ThemedText } from '../../../theme'
 import { isTokenOnList } from '../../../utils'
 import Column from '../../Column'
@@ -114,7 +114,7 @@ function CurrencyRow({
   style: CSSProperties
   showCurrencyAmount?: boolean
 }) {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const key = currencyKey(currency)
   const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency.isToken ? currency : undefined)

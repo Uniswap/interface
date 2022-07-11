@@ -1,7 +1,7 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -30,7 +30,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromNetwork(tokenAddress: string | null | undefined): Token | null | undefined {
-  const { chainId, connector } = useActiveWeb3React()
+  const { chainId, connector } = useWeb3React()
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
   const formattedAddress = isAddress(tokenAddress)
@@ -96,7 +96,7 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  */
 export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
   const nativeCurrency = useNativeCurrency()
-  const { chainId, connector } = useActiveWeb3React()
+  const { chainId, connector } = useWeb3React()
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
     const chain = supportedChainId(chainId)

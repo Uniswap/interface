@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -31,13 +31,14 @@ import {
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import {
-  useModalOpen,
+  useModalIsOpen,
   useToggleDelegateModal,
   useToggleExecuteModal,
   useToggleQueueModal,
   useToggleVoteModal,
 } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
+import { useTokenBalance } from '../../state/connection/hooks'
 import {
   ProposalData,
   ProposalState,
@@ -47,7 +48,6 @@ import {
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -157,7 +157,7 @@ export default function VotePage({
 }: RouteComponentProps<{ governorIndex: string; id: string }>) {
   const parsedGovernorIndex = Number.parseInt(governorIndex)
 
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account } = useWeb3React()
 
   const quorumAmount = useQuorum(parsedGovernorIndex)
 
@@ -168,19 +168,19 @@ export default function VotePage({
   const [voteOption, setVoteOption] = useState<VoteOption | undefined>(undefined)
 
   // modal for casting votes
-  const showVoteModal = useModalOpen(ApplicationModal.VOTE)
+  const showVoteModal = useModalIsOpen(ApplicationModal.VOTE)
   const toggleVoteModal = useToggleVoteModal()
 
   // toggle for showing delegation modal
-  const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
+  const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
 
   // toggle for showing queue modal
-  const showQueueModal = useModalOpen(ApplicationModal.QUEUE)
+  const showQueueModal = useModalIsOpen(ApplicationModal.QUEUE)
   const toggleQueueModal = useToggleQueueModal()
 
   // toggle for showing execute modal
-  const showExecuteModal = useModalOpen(ApplicationModal.EXECUTE)
+  const showExecuteModal = useModalIsOpen(ApplicationModal.EXECUTE)
   const toggleExecuteModal = useToggleExecuteModal()
 
   // get and format date from data
@@ -302,8 +302,8 @@ export default function VotePage({
                 <ThemedText.Black>
                   <Trans>
                     Only UNI votes that were self delegated or delegated to another address before block{' '}
-                    {proposalData.startBlock} are eligible for voting.{' '}
-                  </Trans>
+                    {proposalData.startBlock} are eligible for voting.
+                  </Trans>{' '}
                   {showLinkForUnlock && (
                     <span>
                       <Trans>

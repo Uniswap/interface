@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -50,7 +50,7 @@ export function SubmittedView({
   hash: string | undefined
 }) {
   const theme = useContext(ThemeContext)
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   return (
     <ConfirmOrLoadingWrapper>
