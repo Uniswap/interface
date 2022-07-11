@@ -8,7 +8,7 @@ import TransactionSummaryItem, {
 } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
 
 const renderItem = (item: ListRenderItemInfo<TransactionSummaryInfo>) => {
-  return <TransactionSummaryItem {...item.item} />
+  return <TransactionSummaryItem transactionSummaryInfo={item.item} />
 }
 
 const key = (info: TransactionSummaryInfo) => info.hash

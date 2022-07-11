@@ -45,21 +45,23 @@ export interface TransactionSummaryInfo {
 }
 
 export default function TransactionSummaryItem({
-  type,
-  hash,
-  chainId,
-  tokenAddress,
-  amountRaw,
-  assetType,
-  msTimestampAdded,
-  status,
-  otherTokenAddress,
-  nftMetaData,
-}: /**
- * @TODO
- * use fullDetails to add action buttons for pending, failed txns.
- */
-TransactionSummaryInfo) {
+  transactionSummaryInfo,
+}: {
+  transactionSummaryInfo: TransactionSummaryInfo
+}) {
+  const {
+    type,
+    hash,
+    chainId,
+    tokenAddress,
+    amountRaw,
+    assetType,
+    msTimestampAdded,
+    status,
+    otherTokenAddress,
+    nftMetaData,
+  } = transactionSummaryInfo
+
   const currencyId = buildCurrencyId(chainId, tokenAddress ?? '')
   const otherCurrencyId = buildCurrencyId(chainId, otherTokenAddress ?? '')
   const currency = useCurrency(currencyId)
@@ -140,10 +142,10 @@ TransactionSummaryInfo) {
       <Flex
         row
         alignItems="flex-start"
+        bg="translucentBackground"
         gap="xs"
         justifyContent="space-between"
-        padding="md"
-        width="100%">
+        padding="md">
         <Flex
           row
           shrink

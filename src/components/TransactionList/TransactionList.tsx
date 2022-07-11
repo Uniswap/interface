@@ -5,19 +5,25 @@ import { Box } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
+import PendingSummaryItem from 'src/features/transactions/SummaryCards/PendingSummaryItem'
 import TransactionSummaryItem, {
   TransactionSummaryInfo,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
+import { TransactionStatus } from 'src/features/transactions/types'
 
 const key = (info: TransactionSummaryInfo) => info.hash
 
+/**
+ * Displays historical and pending transactions for a given address.
+ */
 export function TransactionList({ address }: { address: string }) {
   const { t } = useTranslation()
-  const { todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList } =
+  const { pending, todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList } =
     useAllFormattedTransactions(address)
 
   const sectionData = useMemo(() => {
     return [
+      ...(pending.length > 0 ? [{ title: t('Pending'), data: pending }] : []),
       ...(todayTransactionList.length > 0
         ? [{ title: t('Today'), data: todayTransactionList }]
         : []),
@@ -28,10 +34,13 @@ export function TransactionList({ address }: { address: string }) {
         ? [{ title: t('All'), data: beforeCurrentWeekTransactionList }]
         : []),
     ]
-  }, [beforeCurrentWeekTransactionList, t, todayTransactionList, weekTransactionList])
+  }, [beforeCurrentWeekTransactionList, pending, t, todayTransactionList, weekTransactionList])
 
   const renderItem = (item: ListRenderItemInfo<TransactionSummaryInfo>) => {
-    return <TransactionSummaryItem {...item.item} />
+    if (item.item.status === TransactionStatus.Pending) {
+      return <PendingSummaryItem transactionSummaryInfo={item.item} />
+    }
+    return <TransactionSummaryItem transactionSummaryInfo={item.item} />
   }
 
   return (

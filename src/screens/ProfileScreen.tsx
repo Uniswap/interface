@@ -97,7 +97,9 @@ export function ProfileScreen({ navigation }: Props) {
         </Flex>
       }>
       {sessions.length > 0 && <SessionsButton sessions={sessions} onPress={onPressSessions} />}
-      <TransactionList address={address} />
+      <Flex px="sm">
+        <TransactionList address={address} />
+      </Flex>
     </HeaderScrollScreen>
   )
 }

@@ -161,7 +161,10 @@ export const createBalanceUpdate = (
   currencyAmountRaw: string,
   spotPrices?: SpotPrices // despite what typescript says about `useSpotPrices`, `spotPrices` can be undefined while loading
 ) => {
-  if (!currency || txStatus !== TransactionStatus.Success) {
+  if (
+    !currency ||
+    !(txStatus === TransactionStatus.Success || txStatus === TransactionStatus.Pending)
+  ) {
     return undefined
   }
 

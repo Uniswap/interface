@@ -163,6 +163,7 @@ export function useAllFormattedTransactions(address: string | undefined | null):
   todayTransactionList: TransactionSummaryInfo[]
   weekTransactionList: TransactionSummaryInfo[]
   beforeCurrentWeekTransactionList: TransactionSummaryInfo[]
+  pending: TransactionSummaryInfo[]
 } {
   // Retreive all transactions for account.
   const { currentData: txData } = useTransactionHistoryQuery(
@@ -202,13 +203,15 @@ export function useAllFormattedTransactions(address: string | undefined | null):
   }, [allTransactionsFromApi, localTransactions])
 
   // Segement by current day, current week, and rest.
-  const [todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList] =
+  const [todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList, pending] =
     useMemo(() => {
       const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000 // timestamp in ms for start of day local time
       const msTimestampCutoffWeek = dayjs().subtract(1, 'week').unix() * 1000
       return combinedTransactionList.reduce(
         (accum: TransactionSummaryInfo[][], item) => {
-          if (item.msTimestampAdded > msTimestampCutoffDay) {
+          if (item.status === TransactionStatus.Pending) {
+            accum[3].push(item)
+          } else if (item.msTimestampAdded > msTimestampCutoffDay) {
             accum[0].push(item)
           } else if (item.msTimestampAdded > msTimestampCutoffWeek) {
             accum[1].push(item)
@@ -217,7 +220,7 @@ export function useAllFormattedTransactions(address: string | undefined | null):
           }
           return accum
         },
-        [[], [], []]
+        [[], [], [], []]
       )
     }, [combinedTransactionList])
 
@@ -226,5 +229,6 @@ export function useAllFormattedTransactions(address: string | undefined | null):
     todayTransactionList,
     weekTransactionList,
     beforeCurrentWeekTransactionList,
+    pending,
   }
 }
