@@ -10,7 +10,7 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'https://kovan-optimistic.etherscan.io',
   [SupportedChainId.POLYGON]: 'https://polygonscan.com',
   [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
-  [SupportedChainId.CELO]: 'https://explorer.celo.org',
+  [SupportedChainId.CELO]: 'https://celoscan.io',
   [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
 }
 
