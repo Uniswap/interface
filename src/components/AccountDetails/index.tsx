@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import CopyHelper from 'components/AccountDetails/Copy'
 import { coinbaseWalletConnection } from 'connection'
-import { getConnection, getConnectionName } from 'connection/utils'
+import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
@@ -209,8 +209,8 @@ export default function AccountDetails({
   const theme = useContext(ThemeContext)
   const dispatch = useAppDispatch()
 
-  const isMetaMask = !!window.ethereum?.isMetaMask
-  const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
+  const isMetaMask = getIsMetaMask()
+  const isCoinbaseWallet = getIsCoinbaseWallet()
   const isInjectedMobileBrowser = (isMetaMask || isCoinbaseWallet) && isMobile
 
   function formatConnectorName() {
