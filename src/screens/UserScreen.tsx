@@ -101,7 +101,7 @@ export function UserScreen({
         </BackHeader>
       }>
       <VirtualizedList>
-        <Flex gap="lg" px="md">
+        <Flex gap="lg" mb="md" px="md">
           {/* profile info */}
           <Flex centered row gap="xs" mt="md">
             <PrimaryButton
