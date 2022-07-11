@@ -6,8 +6,8 @@ import { Identify, identify, init, track } from '@amplitude/analytics-browser'
  * Uniswap has two Amplitude projects: test and production. You must be a
  * member of the organization on Amplitude to view details.
  */
-export function initializeAnalytics() {
-  if (process.env.NODE_ENV === 'development') return
+export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 'development') {
+  if (isDevEnvironment) return
 
   const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
   if (typeof API_KEY === 'undefined') {
@@ -25,7 +25,7 @@ export function initializeAnalytics() {
         city: false,
         region: false,
         country: false,
-        dma: false, // Disables designated market area tracking
+        dma: false, // designated market area
       },
     }
   )
@@ -34,7 +34,7 @@ export function initializeAnalytics() {
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (process.env.NODE_ENV === 'development') {
-    console.log('amplitude event log:', `${eventName}: ${JSON.stringify(eventProperties)}`)
+    console.debug(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
 
@@ -42,68 +42,47 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
 }
 
 /**
- * Class that exposes methods to modify the User Model's properties in
+ * Class that exposes methods to mutate the User Model's properties in
  * Amplitude that represents the current session's user.
  *
  * See https://help.amplitude.com/hc/en-us/articles/115002380567-User-properties-and-event-properties
  * for details.
  */
 class UserModel {
-  private _isDevEnvironemnt = true
+  constructor(private isDevEnvironment = process.env.NODE_ENV === 'development') {}
 
-  constructor() {
-    process.env.NODE_ENV === 'development' ? (this._isDevEnvironemnt = true) : (this._isDevEnvironemnt = false)
+  private log(method: string, ...parameters: unknown[]) {
+    console.debug(`[amplitude(Identify)]: ${method}(${parameters})`)
   }
 
-  public set(propertyName: string, propertyValue: string | number) {
-    if (this._isDevEnvironemnt) {
-      console.log('amplitude user model update with operation set:', `${propertyName}: ${propertyValue}`)
+  private call(mutate: (event: Identify) => Identify) {
+    if (this.isDevEnvironment) {
+      const log = (_: Identify, method: string) => this.log.bind(this, method)
+      mutate(new Proxy(new Identify(), { get: log }))
       return
     }
-    const identifyObj = new Identify()
-    identifyObj.set(propertyName, propertyValue)
-    identify(identifyObj)
+    identify(mutate(new Identify()))
   }
 
-  public setOnce(propertyName: string, propertyValue: string | number) {
-    if (this._isDevEnvironemnt) {
-      console.log('amplitude user model update with operation setOnce:', `${propertyName}: ${propertyValue}`)
-      return
-    }
-    const identifyObj = new Identify()
-    identifyObj.setOnce(propertyName, propertyValue)
-    identify(identifyObj)
+  set(key: string, value: string | number) {
+    this.call((event) => event.set(key, value))
   }
 
-  public add(propertyName: string, propertyValue: string | number) {
-    if (this._isDevEnvironemnt) {
-      console.log('amplitude user model update with operation add:', `${propertyName}: ${propertyValue}`)
-      return
-    }
-    const identifyObj = new Identify()
-    identifyObj.add(propertyName, typeof propertyValue === 'number' ? propertyValue : 0)
-    identify(identifyObj)
+  setOnce(key: string, value: string | number) {
+    this.call((event) => event.setOnce(key, value))
   }
 
-  public postInsert(propertyName: string, propertyValue: string | number) {
-    if (this._isDevEnvironemnt) {
-      console.log('amplitude user model update with operation postInsert:', `${propertyName}: ${propertyValue}`)
-      return
-    }
-    const identifyObj = new Identify()
-    identifyObj.postInsert(propertyName, propertyValue)
-    identify(identifyObj)
+  add(key: string, value: string | number) {
+    this.call((event) => event.add(key, typeof value === 'number' ? value : 0))
   }
 
-  public remove(propertyName: string, propertyValue: string | number) {
-    if (this._isDevEnvironemnt) {
-      console.log('amplitude user model update with operation remove:', `${propertyName}: ${propertyValue}`)
-      return
-    }
-    const identifyObj = new Identify()
-    identifyObj.remove(propertyName, propertyValue)
-    identify(identifyObj)
+  postInsert(key: string, value: string | number) {
+    this.call((event) => event.postInsert(key, value))
+  }
+
+  remove(key: string, value: string | number) {
+    this.call((event) => event.remove(key, value))
   }
 }
 
-export const userModel = new UserModel()
+export const user = new UserModel()

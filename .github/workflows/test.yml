@@ -48,7 +48,7 @@ jobs:
       - if: steps.cypress-cache.outputs.cache-hit != 'true'
         run: yarn cypress install
   
-  cypress-tests:
+  cypress-test-matrix:
     needs: cypress-build
     runs-on: ubuntu-latest
     strategy:
@@ -83,3 +83,10 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Included as a single job to check against for cypress test success, as cypress runs in a matrix.
+  cypress-tests:
+    needs: cypress-test-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Finished cypress tests https\://dashboard.cypress.io/projects/yp82ef'
