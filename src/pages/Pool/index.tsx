@@ -13,7 +13,7 @@ import { Activity, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCirc
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { css, ThemeContext } from 'styled-components/macro'
 import { ExternalLink, HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 import { isChainAllowed } from 'utils/switchChain'
@@ -81,6 +81,12 @@ const MoreOptionsButton = styled(ButtonGray)`
   background-color: ${({ theme }) => theme.bg0};
   margin-right: 8px;
 `
+
+const MoreOptionsText = styled(ThemedText.Body)`
+  align-items: center;
+  display: flex;
+`
+
 const ErrorContainer = styled.div`
   align-items: center;
   display: flex;
@@ -89,6 +95,20 @@ const ErrorContainer = styled.div`
   margin: auto;
   max-width: 300px;
   min-height: 25vh;
+`
+
+const IconStyle = css`
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.5rem;
+`
+
+const NetworkIcon = styled(Activity)`
+  ${IconStyle}
+`
+
+const InboxIcon = styled(Inbox)`
+  ${IconStyle}
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
@@ -133,7 +153,7 @@ function WrongNetworkCard() {
   return (
     <>
       <PageWrapper>
-        <SwapPoolTabs active={'pool'} />
+        <SwapPoolTabs active="pool" />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
@@ -145,7 +165,7 @@ function WrongNetworkCard() {
             <MainContentWrapper>
               <ErrorContainer>
                 <ThemedText.Body color={theme.text3} textAlign="center">
-                  <Activity size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
+                  <NetworkIcon strokeWidth={1.2} />
                   <div>
                     <Trans>
                       Your connected network is unsupported. Request support{' '}
@@ -164,6 +184,7 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
+  console.log(useWeb3React)
   const { account, connector, chainId } = useWeb3React()
 
   const toggleWalletModal = useWalletModalToggle()
@@ -173,6 +194,7 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
+  console.log(chainId)
   if (chainId && !isChainAllowed(connector, chainId)) {
     return <WrongNetworkCard />
   }
@@ -249,10 +271,10 @@ export default function Pool() {
                     flyoutAlignment={FlyoutAlignment.LEFT}
                     ToggleUI={(props: any) => (
                       <MoreOptionsButton {...props}>
-                        <ThemedText.Body style={{ alignItems: 'center', display: 'flex' }}>
+                        <MoreOptionsText>
                           <Trans>More</Trans>
                           <ChevronDown size={15} />
-                        </ThemedText.Body>
+                        </MoreOptionsText>
                       </MoreOptionsButton>
                     )}
                   />
@@ -275,7 +297,7 @@ export default function Pool() {
               ) : (
                 <ErrorContainer>
                   <ThemedText.Body color={theme.text3} textAlign="center">
-                    <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
+                    <InboxIcon strokeWidth={1} />
                     <div>
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>
