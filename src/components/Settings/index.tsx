@@ -10,7 +10,7 @@ import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
+import { useModalIsOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
@@ -122,7 +122,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const { chainId } = useWeb3React()
 
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.SETTINGS)
+  const open = useModalIsOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
   const theme = useContext(ThemeContext)
