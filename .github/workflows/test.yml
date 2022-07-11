@@ -86,7 +86,7 @@ jobs:
 
   # Included as a single job to check against for cypress test success, as cypress runs in a matrix.
   cypress-tests:
-    needs: cypress-test-matrix
+    needs: [cypress-test-matrix (1), cypress-test-matrix (2), cypress-test-matrix (3), cypress-test-matrix (4)]
     runs-on: ubuntu-latest
   steps:
     - run: echo 'Finished cypress tests: https://dashboard.cypress.io/projects/yp82ef'
