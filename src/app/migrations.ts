@@ -1,4 +1,6 @@
+import dayjs from 'dayjs'
 import { ChainId } from 'src/constants/chains'
+import { AccountType } from 'src/features/wallet/accounts/types'
 
 export const migrations = {
   0: (state: any) => {
@@ -47,6 +49,20 @@ export const migrations = {
   3: (state: any) => {
     const newState = { ...state }
     newState.searchHistory = { results: [] }
+    return newState
+  },
+
+  4: (state: any) => {
+    const newState = { ...state }
+    const accounts = newState.wallet.accounts
+    let derivationIndex = 0
+    for (const account of Object.keys(accounts)) {
+      newState.wallet.accounts[account].timeImportedMs = dayjs().valueOf()
+      if (newState.wallet.accounts[account].type === AccountType.Native) {
+        newState.wallet.accounts[account].derivationIndex = derivationIndex
+        derivationIndex += 1
+      }
+    }
     return newState
   },
 }

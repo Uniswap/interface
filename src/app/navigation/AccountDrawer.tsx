@@ -17,7 +17,7 @@ import { Text } from 'src/components/Text'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { Account, AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
@@ -41,9 +41,22 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
   const accountsData = useMemo(() => {
     const accounts = Object.values(addressToAccount)
-    const _signerAccounts = accounts.filter((a) => a.type !== AccountType.Readonly)
-    const _readOnlyAccounts = accounts.filter((a) => a.type === AccountType.Readonly)
-    return [..._signerAccounts, ..._readOnlyAccounts]
+    const _mnemonicWallets = accounts
+      .filter((a) => a.type === AccountType.Native)
+      .sort((a, b) => {
+        return (a as NativeAccount).derivationIndex - (b as NativeAccount).derivationIndex
+      })
+    const _privateKeyWallets = accounts
+      .filter((a) => a.type === AccountType.Local)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+    const _viewOnlyWallets = accounts
+      .filter((a) => a.type === AccountType.Readonly)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+    return [..._mnemonicWallets, ..._privateKeyWallets, ..._viewOnlyWallets]
   }, [addressToAccount])
 
   const onPressEdit = (address: Address) => {

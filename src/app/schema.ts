@@ -101,6 +101,10 @@ export const v3Schema = {
   },
 }
 
+export const v4Schema = {
+  ...v3Schema,
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v3Schema
+export const getSchema = () => v4Schema

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
 import { generateAndStoreMnemonic, generateAndStorePrivateKey } from 'src/lib/RNEthersRs'
@@ -10,7 +11,15 @@ export function* createAccount(derivationIndex = 0) {
   const mnemonicId = yield* call(generateAndStoreMnemonic)
   const address = yield* call(generateAndStorePrivateKey, mnemonicId, derivationIndex)
   const type = AccountType.Native
-  yield* put(addAccount({ type, address, pending: true }))
+  yield* put(
+    addAccount({
+      type,
+      address,
+      pending: true,
+      timeImportedMs: dayjs().valueOf(),
+      derivationIndex,
+    })
+  )
   yield* put(activateAccount(address))
   logger.info('createAccountSaga', '', 'New account created:', address)
 }

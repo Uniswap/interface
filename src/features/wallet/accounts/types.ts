@@ -34,6 +34,7 @@ export interface AccountBase {
   backups?: BackupType[]
   flashbotsEnabled?: boolean
   pending?: boolean
+  timeImportedMs: number
 }
 
 export interface LocalAccount extends AccountBase {
@@ -44,6 +45,7 @@ export interface LocalAccount extends AccountBase {
 
 export interface NativeAccount extends AccountBase {
   type: AccountType.Native
+  derivationIndex: number
 }
 
 export interface WalletConnectAccount extends AccountBase {

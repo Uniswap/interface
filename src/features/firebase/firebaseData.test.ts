@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
 import {
   addAccountDataToFirebase,
@@ -24,17 +25,22 @@ const readonlyAccount: Account = {
   type: AccountType.Readonly,
   address: '0xaddress1',
   name: 'READONLY ACCOUNT',
+  timeImportedMs: dayjs().valueOf(),
 }
 
 const importedAccount: Account = {
   type: AccountType.Native,
   address: '0xaddress2',
   name: 'IMPORTED ACCOUNT',
+  timeImportedMs: dayjs().valueOf(),
+  derivationIndex: 3,
 }
 
 const importedNamelessAccount: Account = {
   type: AccountType.Native,
   address: '0xaddress3',
+  timeImportedMs: dayjs().valueOf(),
+  derivationIndex: 4,
 }
 
 const renamedAccount: EditAccountParams = {

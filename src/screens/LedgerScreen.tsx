@@ -1,4 +1,5 @@
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
@@ -178,6 +179,7 @@ export function LedgerScreen({ navigation }: AccountStackScreenProp<Screens.Impo
             name: device!.name!,
             address: address,
             path: bt.path,
+            timeImportedMs: dayjs().valueOf(),
           })
         )
         navigation.navigate(Screens.Accounts)

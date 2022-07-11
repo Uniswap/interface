@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { getProvider, getProviderManager, getSignerManager } from 'src/app/walletContext'
@@ -83,6 +84,7 @@ describe(sendTransaction, () => {
       type: AccountType.Readonly,
       address: '0xabc',
       name: 'readonly',
+      timeImportedMs: dayjs().valueOf(),
     }
     const params = {
       ...sendParams,

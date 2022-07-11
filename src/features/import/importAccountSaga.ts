@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { Wallet } from 'ethers'
 import { ImportAccountParams, ImportAccountType } from 'src/features/import/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
@@ -38,6 +39,7 @@ function* importAddressAccount(address: string, name?: string, ignoreActivate?: 
     address: formattedAddress,
     name,
     pending: true,
+    timeImportedMs: dayjs().valueOf(),
   }
   yield* call(onAccountImport, account, ignoreActivate)
 }
@@ -58,8 +60,15 @@ function* importMnemonicAccounts(
     })
   )
   yield* all(
-    addresses.slice(1, addresses.length).map((address) => {
-      const account: Account = { type: AccountType.Native, address, name, pending: true }
+    addresses.slice(1, addresses.length).map((address, index) => {
+      const account: Account = {
+        type: AccountType.Native,
+        address,
+        name,
+        pending: true,
+        timeImportedMs: dayjs().valueOf(),
+        derivationIndex: index + 1,
+      }
       return put(addAccount(account))
     })
   )
@@ -69,6 +78,8 @@ function* importMnemonicAccounts(
     address: addresses[0],
     name,
     pending: !markAsActive,
+    timeImportedMs: dayjs().valueOf(),
+    derivationIndex: indexes[0],
   }
   yield* call(onAccountImport, activeAccount, ignoreActivate)
 }
@@ -76,7 +87,14 @@ function* importMnemonicAccounts(
 function* importPrivateKeyAccount(privateKey: string, name?: string, ignoreActivate?: boolean) {
   const wallet = new Wallet(ensureLeading0x(privateKey))
   const address = wallet.address
-  const account: Account = { type: AccountType.Local, privateKey, name, address, pending: true }
+  const account: Account = {
+    type: AccountType.Local,
+    privateKey,
+    name,
+    address,
+    pending: true,
+    timeImportedMs: dayjs().valueOf(),
+  }
   // TODO save key to keychain: https://github.com/Uniswap/mobile/issues/131
   yield* call(onAccountImport, account, ignoreActivate)
 }

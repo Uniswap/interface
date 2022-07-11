@@ -1,7 +1,8 @@
 import { BigNumber } from 'ethers'
+import mockdate from 'mockdate'
 import { createMigrate } from 'redux-persist'
 import { migrations } from 'src/app/migrations'
-import { initialSchema, v1Schema, v2Schema } from 'src/app/schema'
+import { initialSchema, v1Schema, v2Schema, v3Schema } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
@@ -11,6 +12,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
+import { AccountType } from 'src/features/wallet/accounts/types'
 
 describe('Redux state migrations', () => {
   it('is able to perform all migrations starting from the initial schema', async () => {
@@ -144,5 +146,49 @@ describe('Redux state migrations', () => {
   it('migrates from v2 to v3', () => {
     const v3 = migrations[3](v2Schema)
     expect(v3.searchHistory.results).toEqual([])
+  })
+
+  it('migrates from v3 to v4', () => {
+    const TEST_ADDRESSES = ['0xTest', '0xTest2', '0xTest3', '0xTest4']
+    const TEST_IMPORT_TIME_MS = 12345678912345
+
+    const v3SchemaStub = {
+      ...v3Schema,
+      wallet: {
+        ...v3Schema.wallet,
+        accounts: [
+          {
+            type: AccountType.Readonly,
+            address: TEST_ADDRESSES[0],
+            name: 'Test Account 1',
+            pending: false,
+          },
+          {
+            type: AccountType.Readonly,
+            address: TEST_ADDRESSES[1],
+            name: 'Test Account 2',
+            pending: false,
+          },
+          {
+            type: AccountType.Native,
+            address: TEST_ADDRESSES[2],
+            name: 'Test Account 3',
+            pending: false,
+          },
+          {
+            type: AccountType.Native,
+            address: TEST_ADDRESSES[3],
+            name: 'Test Account 4',
+            pending: false,
+          },
+        ],
+      },
+    }
+
+    mockdate.set(TEST_IMPORT_TIME_MS)
+
+    const v4 = migrations[4](v3SchemaStub)
+    expect(v4.wallet.accounts[0].timeImportedMs).toEqual(TEST_IMPORT_TIME_MS)
+    expect(v4.wallet.accounts[2].derivationIndex).toBeDefined()
   })
 })

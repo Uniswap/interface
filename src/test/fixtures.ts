@@ -1,4 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
+import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20, Weth } from 'src/abis/types'
@@ -25,6 +26,7 @@ export const account: Account = {
   address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
   privateKey: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
   name: 'Test Account',
+  timeImportedMs: dayjs().valueOf(),
 }
 
 const mockSigner = new (class {
