@@ -36,7 +36,7 @@ export function TokenDetails({
       {tokenDetailState}
       <RightPanel>
         <Widget />
-        {loading ? <></> : <BalanceSummary address={tokenAddress} />}
+        {!loading && <BalanceSummary address={tokenAddress} />}
       </RightPanel>
     </TokenDetailsLayout>
   )
