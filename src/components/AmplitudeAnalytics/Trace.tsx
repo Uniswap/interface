@@ -1,4 +1,4 @@
-import { createContext, memo, PropsWithChildren, useCallback, useContext, useEffect, useMemo } from 'react'
+import { createContext, memo, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 
 import { sendAnalyticsEvent } from '.'
 import { ElementName, EventName, ModalName, PageName, SectionName } from './constants'
@@ -13,7 +13,7 @@ export interface ITraceContext {
 
   // Element name mostly used to identify events sources
   // Does not need to be unique given the higher order page and section.
-  elementName?: ElementName
+  element?: ElementName
 }
 
 export const TraceContext = createContext<ITraceContext>({})
@@ -34,27 +34,28 @@ export const Trace = memo(
     shouldLogImpression,
     page,
     section,
-    elementName,
+    element,
     eventName,
     eventProperties,
   }: PropsWithChildren<TraceProps>) => {
+    const [hasAlreadyLoggedImpression, setHasAlreadyLoggedImpression] = useState(false)
     const parentTrace = useContext(TraceContext)
 
     // Component props are destructured to ensure shallow comparison
     const combinedProps = useMemo(
       () => ({
         ...parentTrace,
-        ...Object.fromEntries(Object.entries({ page, section, elementName }).filter(([_, v]) => v !== undefined)),
+        ...Object.fromEntries(Object.entries({ page, section, element }).filter(([_, v]) => v !== undefined)),
       }),
-      [elementName, parentTrace, page, section]
+      [element, parentTrace, page, section]
     )
 
-    const onMount = useCallback(() => {
-      sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, { ...combinedProps, ...eventProperties })
-    }, [combinedProps, eventName, eventProperties])
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(onMount, [])
+    useEffect(() => {
+      if (shouldLogImpression && !hasAlreadyLoggedImpression) {
+        sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, { ...combinedProps, ...eventProperties })
+        setHasAlreadyLoggedImpression(true)
+      }
+    }, [combinedProps, hasAlreadyLoggedImpression, shouldLogImpression, eventName, eventProperties])
 
     return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
   }

@@ -5,9 +5,10 @@
  * and logged.
  */
 export enum EventName {
-  SWAP_SUBMITTED = 'Swap Submitted',
   PAGE_VIEWED = 'Page Viewed',
+  SWAP_SUBMITTED = 'Swap Submitted',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
+  TOKEN_SELECTED_SELECTION_MADE = 'Token Selector Selection Made',
 }
 
 export const enum PageName {
@@ -48,6 +49,7 @@ export const enum ElementName {
  */
 export const ActionNames = {
   onClick: { action: 'click' },
+  onSelect: { action: 'select' },
 }
 
 export type PartialActionNames = Partial<typeof ActionNames>

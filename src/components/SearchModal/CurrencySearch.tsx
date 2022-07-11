@@ -187,7 +187,7 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <Trace eventName={EventName.TOKEN_SELECTOR_OPENED} section={ModalName.TOKEN_SELECTOR} logImpression={true}>
+    <Trace eventName={EventName.TOKEN_SELECTOR_OPENED} section={ModalName.TOKEN_SELECTOR} shouldLogImpression={true}>
       <ContentWrapper className={ModalName.TOKEN_SELECTOR}>
         <PaddedColumn gap="16px">
           <RowBetween>
@@ -209,7 +209,13 @@ export function CurrencySearch({
             />
           </Row>
           {showCommonBases && (
-            <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
+            <CommonBases
+              chainId={chainId}
+              onSelect={handleCurrencySelect}
+              selectedCurrency={selectedCurrency}
+              searchQuery={searchQuery}
+              isAddressSearch={isAddressSearch}
+            />
           )}
         </PaddedColumn>
         <Separator />
@@ -233,6 +239,8 @@ export function CurrencySearch({
                   setImportToken={setImportToken}
                   showCurrencyAmount={showCurrencyAmount}
                   isLoading={balancesIsLoading && !tokenLoaderTimerElapsed}
+                  searchQuery={searchQuery}
+                  isAddressSearch={isAddressSearch}
                 />
               )}
             </AutoSizer>

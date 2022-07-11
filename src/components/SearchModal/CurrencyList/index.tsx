@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ActionNames, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
@@ -198,6 +200,8 @@ export default function CurrencyList({
   setImportToken,
   showCurrencyAmount,
   isLoading,
+  searchQuery,
+  isAddressSearch,
 }: {
   height: number
   currencies: Currency[]
@@ -210,6 +214,8 @@ export default function CurrencyList({
   setImportToken: (token: Token) => void
   showCurrencyAmount?: boolean
   isLoading: boolean
+  searchQuery: string
+  isAddressSearch: string | false
 }) {
   const itemData: (Currency | BreakLine)[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
@@ -249,15 +255,36 @@ export default function CurrencyList({
           <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
       } else if (currency) {
+        const eventProperties = {
+          token_symbol: token?.symbol,
+          token_address: token?.address,
+          is_suggested_token: false,
+          is_selected_from_list: true,
+          search_token_address_input: '',
+          scroll_position: '',
+          token_list_index: index + 1, // 1-indexed
+          token_list_length: data.length,
+          ...(isAddressSearch === false
+            ? { search_token_symbol_input: searchQuery }
+            : { search_token_address_input: isAddressSearch }),
+        }
+        const CurrencyRowActionName = (({ onSelect }) => ({ onSelect }))(ActionNames)
+
         return (
-          <CurrencyRow
-            style={style}
-            currency={currency}
-            isSelected={isSelected}
-            onSelect={handleSelect}
-            otherSelected={otherSelected}
-            showCurrencyAmount={showCurrencyAmount}
-          />
+          <TraceEvent
+            actionNames={CurrencyRowActionName}
+            eventName={EventName.TOKEN_SELECTED_SELECTION_MADE}
+            eventProperties={eventProperties}
+          >
+            <CurrencyRow
+              style={style}
+              currency={currency}
+              isSelected={isSelected}
+              onSelect={handleSelect}
+              otherSelected={otherSelected}
+              showCurrencyAmount={showCurrencyAmount}
+            />
+          </TraceEvent>
         )
       } else {
         return null

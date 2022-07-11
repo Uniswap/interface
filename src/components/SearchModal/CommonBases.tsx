@@ -1,4 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { ActionNames, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AutoRow } from 'components/Row'
@@ -35,10 +37,14 @@ export default function CommonBases({
   chainId,
   onSelect,
   selectedCurrency,
+  searchQuery,
+  isAddressSearch,
 }: {
   chainId?: number
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
+  searchQuery: string
+  isAddressSearch: string | false
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
 
@@ -47,19 +53,39 @@ export default function CommonBases({
       <AutoRow gap="4px">
         {bases.map((currency: Currency) => {
           const isSelected = selectedCurrency?.equals(currency)
+          const token_address = currency instanceof Token ? currency?.address : undefined
+          const eventProperties = {
+            token_symbol: currency?.symbol,
+            token_chain_id: currency?.chainId,
+            ...(token_address ? { token_address } : {}),
+            is_suggested_token: true,
+            is_selected_from_list: false,
+            ...(isAddressSearch === false
+              ? { search_token_symbol_input: searchQuery }
+              : { search_token_address_input: isAddressSearch }),
+          }
+          const CurrencyRowActionName = (({ onClick }) => ({ onClick }))(ActionNames)
+
           return (
-            <BaseWrapper
-              tabIndex={0}
-              onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
-              onClick={() => !isSelected && onSelect(currency)}
-              disable={isSelected}
+            <TraceEvent
+              actionNames={CurrencyRowActionName}
+              eventName={EventName.TOKEN_SELECTED_SELECTION_MADE}
+              eventProperties={eventProperties}
               key={currencyId(currency)}
             >
-              <CurrencyLogoFromList currency={currency} />
-              <Text fontWeight={500} fontSize={16}>
-                {currency.symbol}
-              </Text>
-            </BaseWrapper>
+              <BaseWrapper
+                tabIndex={0}
+                onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
+                onClick={() => !isSelected && onSelect(currency)}
+                disable={isSelected}
+                key={currencyId(currency)}
+              >
+                <CurrencyLogoFromList currency={currency} />
+                <Text fontWeight={500} fontSize={16}>
+                  {currency.symbol}
+                </Text>
+              </BaseWrapper>
+            </TraceEvent>
           )
         })}
       </AutoRow>
