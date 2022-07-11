@@ -1,5 +1,6 @@
 import BalanceSummary from 'components/Explore/BalanceSummary'
-import LoadedTokenDetail, { LoadingTokenDetail } from 'components/Explore/TokenDetail'
+import LoadingTokenDetail from 'components/Explore/LoadingTokenDetail'
+import LoadedTokenDetail from 'components/Explore/TokenDetail'
 import { useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
