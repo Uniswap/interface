@@ -1,12 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO, TEXT_COLORS } from 'constants/chainInfo'
-import { useCurrency, useToken } from 'hooks/Tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
+import { useToken } from 'hooks/Tokens'
 import styled, { useTheme } from 'styled-components/macro'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { isChainAllowed } from 'utils/switchChain'
 
-// import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import NetworkBalance from './NetworkBalance'
 
 const BalancesCard = styled.div`
@@ -44,13 +41,10 @@ const TotalBalanceItem = styled.div`
 export default function BalanceSummary({ address }: { address: string }) {
   const theme = useTheme()
   const tokenSymbol = useToken(address)?.symbol
-  const currency = useCurrency(address)
 
-  const { connector, account, chainId } = useActiveWeb3React()
-  const currencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
-  // const fiatValue = Number(useUSDCValue(currencyBalance)?.toFixed())
+  const { connector, chainId } = useWeb3React()
+
   const fiatValue = 1010.12 // for testing purposes
-  const balance = formatCurrencyAmount(currencyBalance, 4)
   if (!chainId || !fiatValue || !isChainAllowed(connector, chainId)) return null
   const { label, logoUrl } = CHAIN_INFO[chainId]
   const multipleBalances = true // for testing purposes

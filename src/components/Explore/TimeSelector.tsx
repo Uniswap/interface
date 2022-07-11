@@ -1,9 +1,8 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { TimePeriod } from 'hooks/useTopTokens'
-import { useRef } from 'react'
-import React, { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components/macro'
 
@@ -135,7 +134,7 @@ const Chevron = styled.span`
 // TODO: change this to reflect data pipeline
 export default function TimeSelector() {
   const node = useRef<HTMLDivElement | null>(null)
-  const open = useModalOpen(ApplicationModal.TIME_SELECTOR)
+  const open = useModalIsOpen(ApplicationModal.TIME_SELECTOR)
   const toggleMenu = useToggleModal(ApplicationModal.TIME_SELECTOR)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeTime, setTime] = useState(TimePeriod.day)
