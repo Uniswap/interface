@@ -16,11 +16,11 @@ import { darken } from 'polished'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
-import { useModalOpen, useToggleDelegateModal } from 'state/application/hooks'
+import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
-import { useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
@@ -112,7 +112,7 @@ export default function Landing() {
   const [hideCancelled, setHideCancelled] = useState(true)
 
   // toggle for showing delegation modal
-  const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
+  const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
 
   // get data to list all proposals

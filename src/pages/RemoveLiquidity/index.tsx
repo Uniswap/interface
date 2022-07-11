@@ -30,7 +30,7 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -58,7 +58,7 @@ export default function RemoveLiquidity({
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useWalletModalToggle()
+  const toggleWalletModal = useToggleWalletModal()
 
   // burn state
   const { independentField, typedValue } = useBurnState()

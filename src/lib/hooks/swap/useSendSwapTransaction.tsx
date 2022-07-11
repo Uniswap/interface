@@ -40,12 +40,12 @@ interface FailedCall extends SwapCallEstimate {
 export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
-  library: JsonRpcProvider | undefined,
+  provider: JsonRpcProvider | undefined,
   trade: AnyTrade | undefined, // trade to execute, required
   swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId) {
+    if (!trade || !provider || !account || !chainId) {
       return { callback: null }
     }
     return {
@@ -64,7 +64,7 @@ export default function useSendSwapTransaction(
                     value,
                   }
 
-            return library
+            return provider
               .estimateGas(tx)
               .then((gasEstimate) => {
                 return {
@@ -75,7 +75,7 @@ export default function useSendSwapTransaction(
               .catch((gasError) => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return library
+                return provider
                   .call(tx)
                   .then((result) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
@@ -110,7 +110,7 @@ export default function useSendSwapTransaction(
           call: { address, calldata, value },
         } = bestCallOption
 
-        return library
+        return provider
           .getSigner()
           .sendTransaction({
             from: account,
@@ -136,5 +136,5 @@ export default function useSendSwapTransaction(
           })
       },
     }
-  }, [account, chainId, library, swapCalls, trade])
+  }, [account, chainId, provider, swapCalls, trade])
 }

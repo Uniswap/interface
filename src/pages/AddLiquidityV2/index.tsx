@@ -29,7 +29,7 @@ import { useV2RouterContract } from '../../hooks/useContract'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PairState } from '../../hooks/useV2Pairs'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -68,7 +68,7 @@ export default function AddLiquidity({
       ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
-  const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
+  const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
 

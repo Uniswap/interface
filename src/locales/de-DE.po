@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-06 21:05\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -1611,10 +1611,6 @@ msgstr "Tausche {0} {1} gegen {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Nehmen Sie an einer 10-minütigen Umfrage teil, um uns dabei zu helfen, Ihre Erfahrung in der Uniswap-App zu verbessern."
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "Übereinstimmen"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"

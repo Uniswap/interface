@@ -11,7 +11,7 @@ import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
 import { Activity, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { useWalletModalToggle } from 'state/application/hooks'
+import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, ThemeContext } from 'styled-components/macro'
 import { ExternalLink, HideSmall, ThemedText } from 'theme'
@@ -184,17 +184,14 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
-  console.log(useWeb3React)
-  const { account, connector, chainId } = useWeb3React()
-
-  const toggleWalletModal = useWalletModalToggle()
+  const { account, chainId, connector } = useWeb3React()
+  const toggleWalletModal = useToggleWalletModal()
 
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  console.log(chainId)
   if (chainId && !isChainAllowed(connector, chainId)) {
     return <WrongNetworkCard />
   }

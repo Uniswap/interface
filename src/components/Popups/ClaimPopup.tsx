@@ -8,7 +8,7 @@ import styled, { keyframes } from 'styled-components/macro'
 
 import tokenLogo from '../../assets/images/token-logo.png'
 import {
-  useModalOpen,
+  useModalIsOpen,
   useShowClaimPopup,
   useToggleSelfClaimModal,
   useToggleShowClaimPopup,
@@ -62,7 +62,7 @@ export default function ClaimPopup() {
   const toggleShowClaimPopup = useToggleShowClaimPopup()
 
   // toggle for showing this modal
-  const showClaimModal = useModalOpen(ApplicationModal.SELF_CLAIM)
+  const showClaimModal = useModalIsOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
   const handleToggleSelfClaimModal = useCallback(() => {
     sendEvent({
