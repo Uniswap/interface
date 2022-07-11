@@ -12,7 +12,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -102,7 +102,7 @@ export default function Swap({ history }: RouteComponentProps) {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  const theme = useContext(ThemeContext as React.Context<DefaultTheme>)
+  const theme = useContext(ThemeContext as Context<DefaultTheme>)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
