@@ -23,10 +23,9 @@ import {
 } from 'src/features/transactions/swap/hooks'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
-import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/validate'
+import { SwapWarningAction } from 'src/features/transactions/swap/validate'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -39,7 +38,6 @@ interface SwapFormProps {
 // -handle price impact too high
 // TODO: token warnings
 export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
-  const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -54,12 +52,16 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     gasPrice,
     exactApproveRequired,
     swapMethodParameters,
+    warnings,
   } = derivedSwapInfo
 
   useUpdateSwapGasEstimate(dispatch, trade)
 
-  const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
-  const swapDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
+  // TODO: handle blocking/unblocking submission for warnings with popups
+  const swapDisabled = Boolean(
+    !(isWrapAction(wrapType) || trade) ||
+      warnings.some((warning) => warning.action === SwapWarningAction.DisableSwapSubmit)
+  )
 
   const { swapCallback } = useSwapCallback(
     trade,

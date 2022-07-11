@@ -10,6 +10,7 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
+import { SwapWarning, SwapWarningLabel } from 'src/features/transactions/swap/validate'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount } from 'src/utils/format'
 
@@ -30,6 +31,7 @@ type CurrentInputPanelProps = {
   isUSDInput?: boolean
   onSetMax?: (amount: string) => void
   onToggleUSDInput?: () => void
+  warnings: SwapWarning[]
 } & RestyleProps
 
 /** Input panel for a single side of a transfer action. */
@@ -48,6 +50,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     isOutput = false,
     isUSDInput = false,
     onToggleUSDInput,
+    warnings,
     ...rest
   } = props
 
@@ -57,7 +60,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const isBlankOutputState = isOutput && !currency
 
   const showInsufficientBalance =
-    !isOutput && currencyBalance && currencyAmount && currencyBalance.lessThan(currencyAmount)
+    !isOutput && warnings.some((warning) => warning.name === SwapWarningLabel.InsufficientFunds)
 
   return (
     <Flex

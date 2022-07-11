@@ -18,6 +18,7 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import { swapActions, swapSagaName } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
 import { getWrapType, isWrapAction } from 'src/features/transactions/swap/utils'
+import { getSwapWarnings } from 'src/features/transactions/swap/validate'
 import {
   tokenWrapActions,
   tokenWrapSagaName,
@@ -168,13 +169,22 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     return isUSDInput ? tradeUSDValue?.toFixed(2) : currencyAmounts[CurrencyField.OUTPUT]?.toExact()
   }
 
+  const currencyBalances = {
+    [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
+    [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
+  }
+
+  const warnings = getSwapWarnings({
+    currencyAmounts,
+    currencyBalances,
+    exactCurrencyField,
+    currencies,
+  })
+
   return {
     currencies,
     currencyAmounts,
-    currencyBalances: {
-      [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
-      [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
-    },
+    currencyBalances,
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,
@@ -189,6 +199,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     gasPrice,
     exactApproveRequired,
     swapMethodParameters,
+    warnings,
   }
 }
 

@@ -41,6 +41,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     exactAmountUSD = '',
     recipient,
     isUSDInput = false,
+    warnings,
   } = derivedTransferInfo
 
   const { onSelectCurrency, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
@@ -76,6 +77,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
             currencyBalance={currencyBalances[CurrencyField.INPUT]}
             isUSDInput={isUSDInput}
             value={formattedAmounts[CurrencyField.INPUT]}
+            warnings={warnings}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }

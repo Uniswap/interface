@@ -18,6 +18,7 @@ import {
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'src/features/transactions/transfer/types'
+import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { SagaStatus } from 'src/utils/saga'
@@ -74,13 +75,20 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const currencyAmounts = {
     [CurrencyField.INPUT]: amountSpecified,
   }
+  const currencyBalances = {
+    [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
+  }
+  const warnings = getTransferWarnings({
+    currencies,
+    currencyAmounts,
+    currencyBalances,
+    recipient,
+  })
 
   return {
     currencies,
     currencyAmounts,
-    currencyBalances: {
-      [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
-    },
+    currencyBalances,
     currencyTypes: {
       [CurrencyField.INPUT]: tradeableAsset?.type,
     },
@@ -92,6 +100,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     },
     isUSDInput,
     recipient,
+    warnings,
   }
 }
 

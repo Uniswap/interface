@@ -19,9 +19,8 @@ import {
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
-import { getHumanReadableSwapInputStatus } from 'src/features/transactions/swap/validate'
+import { SwapWarningAction } from 'src/features/transactions/swap/validate'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -34,7 +33,6 @@ interface SwapFormProps {
 // -handle price impact too high
 // TODO: token warnings
 export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
-  const activeAccount = useActiveAccount()
   const { t } = useTranslation()
 
   const {
@@ -48,6 +46,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     trade: { trade: trade },
     wrapType,
     isUSDInput = false,
+    warnings,
   } = derivedSwapInfo
 
   const { onSelectCurrency, onSwitchCurrencies, onSetAmount, onSetMax, onToggleUSDInput } =
@@ -64,8 +63,10 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
 
   useUpdateSwapGasEstimate(dispatch, trade)
 
-  const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
-  const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
+  const actionButtonDisabled = Boolean(
+    !(isWrapAction(wrapType) || trade) ||
+      warnings.some((warning) => warning.action === SwapWarningAction.DisableSwapReview)
+  )
 
   return (
     <>
@@ -79,6 +80,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             isUSDInput={isUSDInput}
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
             value={formattedAmounts[CurrencyField.INPUT]}
+            warnings={warnings}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
@@ -116,6 +118,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                 otherSelectedCurrency={currencies[CurrencyField.INPUT]}
                 showNonZeroBalancesOnly={false}
                 value={formattedAmounts[CurrencyField.OUTPUT]}
+                warnings={warnings}
                 onSelectCurrency={(newCurrency: Currency) =>
                   onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
                 }

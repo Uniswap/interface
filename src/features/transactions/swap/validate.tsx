@@ -1,91 +1,73 @@
-import { TFunction } from 'i18next'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
-enum FieldError {
-  InsufficientFunds,
-  MissingInputAmount,
-  MissingInputCurrency,
-  MissingOutputAmount,
-  MissingOutputCurrency,
-  UnsupportedNetwork,
+export enum SwapWarningLabel {
+  InsufficientFunds = 'insufficient_funds',
+  FormIncomplete = 'form_incomplete',
+  UnsupportedNetwork = 'unsupported_network',
 }
 
-/** Validates the entire DeriveSwapInfo payload for errors  */
-export function getHumanReadableSwapInputStatus(
-  activeAccount: Account | null,
-  derivedSwapInfo: DerivedSwapInfo,
-  t: TFunction
-) {
-  // chain function calls for early exits
-  return (
-    getHumanReadableInputError(validateSwapInfo(derivedSwapInfo), t) ??
-    getHumanReadbleContextError(activeAccount, t) ??
-    getHumanReadableQuoteStatus(derivedSwapInfo.trade, t)
-  )
+export enum SwapWarningSeverity {
+  None = 'none',
+  Medium = 'medium',
+  High = 'high',
 }
 
-/** Errors specific to the current in which the swap is executing */
-function getHumanReadbleContextError(activeAccount: Account | null, t: TFunction) {
-  if (activeAccount && activeAccount.type === AccountType.Readonly) {
-    return t('Cannot swap on watched account')
-  }
-  return null
+export enum SwapWarningAction {
+  None = 'none',
+
+  // prevents users from continuing to the review screen
+  DisableSwapReview = 'disable_swap_review',
+
+  // allows users to continue to review screen, but requires them to
+  // acknowledge a popup warning before submitting
+  WarnBeforeSwapSubmit = 'warn_before_swap_submit',
+
+  // prevents submission altogether
+  DisableSwapSubmit = 'disable_swap_submit',
 }
 
-function getHumanReadableQuoteStatus(trade: DerivedSwapInfo['trade'], t: TFunction) {
-  if (trade.loading) return t('Fetching best price...')
-  else if (trade.error) return t('Failed to fetch a quote')
-
-  return null
+export type SwapWarning = {
+  name: SwapWarningLabel
+  severity: SwapWarningSeverity
+  action: SwapWarningAction
 }
 
-function getHumanReadableInputError(error: FieldError | null, t: TFunction) {
-  if (error === null) return null
+export type PartialDerivedSwapInfo = Pick<
+  DerivedSwapInfo,
+  'currencyBalances' | 'currencyAmounts' | 'currencies' | 'exactCurrencyField'
+>
 
-  switch (error) {
-    case FieldError.MissingInputAmount:
-      return t('Select an input amount')
-    case FieldError.MissingOutputAmount:
-      return t('Select an output amount')
-    case FieldError.MissingInputCurrency:
-      return t('Select an input currency')
-    case FieldError.MissingOutputCurrency:
-      return t('Select an output currency')
-    case FieldError.InsufficientFunds:
-      return t('Insufficient funds')
-    case FieldError.UnsupportedNetwork:
-      return t('Switch to Rinkeby')
-  }
-}
+// TODO: add swap warnings for: price impact, router errors, insufficient gas funds, low liquidity
+export function getSwapWarnings(state: PartialDerivedSwapInfo) {
+  const { currencyBalances, currencyAmounts, currencies, exactCurrencyField } = state
 
-function validateSwapInfo(swapInfo: DerivedSwapInfo) {
-  const { currencies, currencyAmounts, currencyBalances, exactCurrencyField } = swapInfo
+  const warnings: SwapWarning[] = []
 
-  // Note. order matters here
-
-  if (!currencies[CurrencyField.INPUT]) {
-    return FieldError.MissingInputCurrency
+  // insufficient balance for swap
+  const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
+  const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
+  if (currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)) {
+    warnings.push({
+      name: SwapWarningLabel.InsufficientFunds,
+      severity: SwapWarningSeverity.None,
+      action: SwapWarningAction.DisableSwapReview,
+    })
   }
 
-  if (!currencies[CurrencyField.OUTPUT]) {
-    return FieldError.MissingOutputCurrency
+  // swap form is missing input, output fields
+  if (
+    !currencies[CurrencyField.INPUT] ||
+    !currencies[CurrencyField.OUTPUT] ||
+    (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) ||
+    (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT])
+  ) {
+    warnings.push({
+      name: SwapWarningLabel.FormIncomplete,
+      severity: SwapWarningSeverity.None,
+      action: SwapWarningAction.DisableSwapReview,
+    })
   }
 
-  if (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) {
-    return FieldError.MissingInputAmount
-  }
-
-  if (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT]) {
-    return FieldError.MissingOutputAmount
-  }
-
-  const exactCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
-  const balance = currencyBalances[CurrencyField.INPUT]
-  if (!balance || (exactCurrencyAmount && balance.lessThan(exactCurrencyAmount))) {
-    return FieldError.InsufficientFunds
-  }
-
-  return null
+  return warnings
 }
