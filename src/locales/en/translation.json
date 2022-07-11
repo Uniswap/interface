@@ -111,7 +111,7 @@
   "1 site connected": "1 site connected",
   "{{numConnections}} sites connected": "{{numConnections}} sites connected",
   "Invalid QR Code": "Invalid QR Code",
-  "Please scan a WalletConnect or Ethereum address QR code.": "Please scan a WalletConnect or Ethereum address QR code.",
+  "Make sure that you're scanning a valid WalletConnect or Ethereum address QR code before trying again.": "Make sure that you're scanning a valid WalletConnect or Ethereum address QR code before trying again.",
   "Try again": "Try again",
   "Show my QR code": "Show my QR code",
   "{{siteText}} connected": "{{siteText}} connected",

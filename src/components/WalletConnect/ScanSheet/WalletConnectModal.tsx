@@ -68,7 +68,9 @@ export function WalletConnectModal({
       setHasScanError(true)
       Alert.alert(
         t('Invalid QR Code'),
-        t('Please scan a WalletConnect or Ethereum address QR code.'),
+        t(
+          "Make sure that you're scanning a valid WalletConnect or Ethereum address QR code before trying again."
+        ),
         [
           {
             text: t('Try again'),
