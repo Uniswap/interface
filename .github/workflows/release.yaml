@@ -71,8 +71,19 @@ jobs:
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
       
-      # Delay updating DNS to give IPFS a chance to propagate.
-      - run: sleep 600
+      - uses: actions/cache@v3
+        id: cypress-cache
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+      - if: steps.cypress-cache.outputs.cache-hit != 'true'
+        run: yarn cypress install
+      - uses: cypress-io/github-action@v4
+        with:
+          install: false
+          browser: chrome
+          config-file: cypress.release.config.ts
+          config: baseUrl=https://cloudflare-ipfs.com/ipfs/${{ steps.pinata.outputs.hash }}
 
       - name: Update DNS with new IPFS hash
         env:
