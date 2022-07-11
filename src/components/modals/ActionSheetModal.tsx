@@ -42,7 +42,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
         )}
 
         <Flex gap="none" maxHeight={dimensions.fullHeight * 0.5} width="100%">
-          <ScrollView style={flex.grow}>
+          <ScrollView bounces={false} style={flex.grow}>
             {options.map(({ key, onPress, render }) => {
               return (
                 <Button
