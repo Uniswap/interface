@@ -311,7 +311,7 @@ export default function Menu() {
 
 interface NewMenuProps {
   flyoutAlignment?: FlyoutAlignment
-  ToggleUI?: React.FunctionComponent
+  ToggleUI?: React.FunctionComponent<React.PropsWithChildren<unknown>>
   menuItems: {
     content: any
     link: string

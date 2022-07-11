@@ -42,30 +42,29 @@ function Updaters() {
   )
 }
 
-const container = document.getElementById('root')
+const container = document.getElementById('root') as HTMLElement
 
-if (container)
-  createRoot(container).render(
-    <StrictMode>
-      <Provider store={store}>
-        <HashRouter>
-          <LanguageProvider>
-            <Web3Provider>
-              <Blocklist>
-                <BlockNumberProvider>
-                  <Updaters />
-                  <ThemeProvider>
-                    <ThemedGlobalStyle />
-                    <App />
-                  </ThemeProvider>
-                </BlockNumberProvider>
-              </Blocklist>
-            </Web3Provider>
-          </LanguageProvider>
-        </HashRouter>
-      </Provider>
-    </StrictMode>
-  )
+createRoot(container).render(
+  <StrictMode>
+    <Provider store={store}>
+      <HashRouter>
+        <LanguageProvider>
+          <Web3Provider>
+            <Blocklist>
+              <BlockNumberProvider>
+                <Updaters />
+                <ThemeProvider>
+                  <ThemedGlobalStyle />
+                  <App />
+                </ThemeProvider>
+              </BlockNumberProvider>
+            </Blocklist>
+          </Web3Provider>
+        </LanguageProvider>
+      </HashRouter>
+    </Provider>
+  </StrictMode>
+)
 
 if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   serviceWorkerRegistration.register()

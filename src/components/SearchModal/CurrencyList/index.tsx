@@ -186,6 +186,12 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
   )
 }
 
+interface TokenRowProps {
+  data: Array<Currency | BreakLine>
+  index: number
+  style: CSSProperties
+}
+
 export default function CurrencyList({
   height,
   currencies,
@@ -219,15 +225,7 @@ export default function CurrencyList({
   }, [currencies, otherListTokens])
 
   const Row = useCallback(
-    function TokenRow({
-      data,
-      index,
-      style,
-    }: {
-      data: Array<Currency | BreakLine>
-      index: number
-      style: CSSProperties
-    }) {
+    function TokenRow({ data, index, style }: TokenRowProps) {
       const row: Currency | BreakLine = data[index]
 
       if (isBreakLine(row)) {

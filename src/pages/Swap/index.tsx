@@ -12,12 +12,12 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { TradeState } from 'state/routing/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -102,7 +102,7 @@ export default function Swap({ history }: RouteComponentProps) {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext as React.Context<DefaultTheme>)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -148,8 +148,11 @@ export default function Swap({ history }: RouteComponentProps) {
     [trade, tradeState]
   )
 
-  const fiatValueInput = useUSDCValue(trade?.inputAmount)
-  const fiatValueOutput = useUSDCValue(trade?.outputAmount)
+  // show price estimates based on wrap trade
+  const inputValue = showWrap ? parsedAmount : trade?.inputAmount
+  const outputValue = showWrap ? parsedAmount : trade?.outputAmount
+  const fiatValueInput = useUSDCValue(inputValue)
+  const fiatValueOutput = useUSDCValue(outputValue)
   const priceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
