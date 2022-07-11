@@ -11,6 +11,7 @@ export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json
 const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
+export const TEX_LIST = 'http://147.46.240.248:27100/tex.tokenlist.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 
@@ -29,6 +30,7 @@ const DEFAULT_LIST_OF_LISTS_TO_DISPLAY: string[] = [
   ROLL_LIST,
   ARBITRUM_LIST,
   OPTIMISM_LIST,
+  TEX_LIST,
 ]
 
 export const DEFAULT_LIST_OF_LISTS: string[] = [

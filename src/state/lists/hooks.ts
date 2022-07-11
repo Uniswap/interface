@@ -48,28 +48,57 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
   const lists = useAllLists()
   return useMemo(() => {
     if (!urls) return {}
-    return (
-      urls
-        .slice()
-        // sort by priority so top priority goes last
-        .sort(sortByListPriority)
-        .reduce((allTokens, currentUrl) => {
-          const current = lists[currentUrl]?.current
-          if (!current) return allTokens
-          try {
-            return combineMaps(allTokens, tokensToChainTokenMap(current))
-          } catch (error) {
-            console.error('Could not show token list due to error', error)
-            return allTokens
-          }
-        }, {})
-    )
+    const sorted = urls
+      .slice()
+      // sort by priority so top priority goes last
+      .sort(sortByListPriority)
+    const a = sorted.reduce((allTokens, currentUrl) => {
+      let current = lists[currentUrl]?.current
+      if (currentUrl === 'http://147.46.240.248:27100/tex.tokenlist.json') {
+        current = {
+          name: 'Tex',
+          logoURI: 'https://ethereum-optimism.github.io/logos/optimism.svg',
+          keywords: ['scaling', 'layer2', 'infrastructure'],
+          timestamp: '2021-03-22T10:01:21.042+00:00',
+          tokens: [
+            {
+              chainId: 420,
+              address: '0xDadd1125B8Df98A66Abd5EB302C0d9Ca5A061dC2',
+              name: 'USD Coin',
+              symbol: 'USDC',
+              decimals: 6,
+              logoURI: 'https://ethereum-optimism.github.io/logos/USDC.svg',
+              extensions: {
+                optimismBridgeAddress: '0x22F24361D548e5FaAfb36d1437839f080363982B',
+              },
+            },
+          ],
+          version: {
+            major: 4,
+            minor: 2,
+            patch: 0,
+          },
+        }
+        // debugger
+      }
+      if (!current) return allTokens
+      try {
+        return combineMaps(allTokens, tokensToChainTokenMap(current))
+      } catch (error) {
+        console.error('Could not show token list due to error', error)
+        return allTokens
+      }
+    }, {})
+
+    return a
   }, [lists, urls])
 }
 
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
-  const activeListUrls = useAppSelector((state) => state.lists.activeListUrls)
+  const activeListUrls = useAppSelector((state) => {
+    return state.lists.activeListUrls
+  })
   return useMemo(() => activeListUrls?.filter((url) => !UNSUPPORTED_LIST_URLS.includes(url)), [activeListUrls])
 }
 
@@ -86,6 +115,7 @@ export function useInactiveListUrls(): string[] {
 export function useCombinedActiveList(): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
+  // debugger
   return activeTokens
 }
 

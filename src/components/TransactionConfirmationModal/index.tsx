@@ -1,15 +1,19 @@
 import { Trans } from '@lingui/macro'
+import ProgressBar from '@ramonak/react-progress-bar'
 import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
-import { ReactNode, useContext } from 'react'
-import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
+import { RadiusSwapResponse } from 'lib/hooks/swap/useSendSwapTransaction'
+import useInterval from 'lib/hooks/useInterval'
+import { ReactNode, useContext, useState } from 'react'
+import { AlertCircle, AlertTriangle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
@@ -20,6 +24,7 @@ import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
+import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
@@ -55,6 +60,14 @@ function ConfirmationPendingContent({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
+  const [progressBarValue, setProgressBarValue] = useState<number>(0)
+
+  useInterval(() => {
+    if (progressBarValue < 100) {
+      setProgressBarValue(progressBarValue + 1)
+    }
+  }, 100)
+
   return (
     <Wrapper>
       <AutoColumn gap="md">
@@ -74,9 +87,7 @@ function ConfirmationPendingContent({
           <Text fontWeight={400} fontSize={16} textAlign="center">
             {pendingText}
           </Text>
-          <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
-            <Trans>Confirm this transaction in your wallet</Trans>
-          </Text>
+          <div style={{ marginBottom: 12 }} />
         </AutoColumn>
       </AutoColumn>
     </Wrapper>
@@ -88,18 +99,32 @@ function TransactionSubmittedContent({
   hash,
   currencyToAdd,
   inline,
+  swapResponse,
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: number
   currencyToAdd?: Currency | undefined
   inline?: boolean // not in modal
+  swapResponse?: RadiusSwapResponse | undefined
 }) {
   const theme = useContext(ThemeContext)
 
   const { library } = useActiveWeb3React()
 
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
+
+  const [progressBarValue, setProgressBarValue] = useState<number>(0)
+
+  const showConfirmMessage = progressBarValue >= 100 && swapResponse
+
+  const txHash = swapResponse?.txHash
+
+  useInterval(() => {
+    if (progressBarValue < 100) {
+      setProgressBarValue(progressBarValue + 1)
+    }
+  }, 80)
 
   return (
     <Wrapper>
@@ -110,42 +135,90 @@ function TransactionSubmittedContent({
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
-        <ConfirmedIcon inline={inline}>
-          <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
-        </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <div style={{ margin: 20 }}>
           <Text fontWeight={500} fontSize={20} textAlign="center">
-            <Trans>Transaction Submitted</Trans>
+            <Trans>1. Transaction Encryption</Trans>
           </Text>
-          {chainId && hash && (
-            <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                <Trans>View on Explorer</Trans>
+        </div>
+        <RowBetween>
+          <RowFixed>
+            <ThemedText.Black fontSize={14} fontWeight={400} color={'#565A69'}>
+              {'Encryption Progress'}
+            </ThemedText.Black>
+            <QuestionHelper text="Your VDF is currently being generated. Once the VDF is generated, your transaction would be submitted. Please wait for the progress bar to reach the end." />
+          </RowFixed>
+          <RowFixed>
+            {progressBarValue < 100 ? (
+              <ThemedText.Blue fontSize={14}>{'In Progress'}</ThemedText.Blue>
+            ) : (
+              <ThemedText.Blue fontSize={14}>{'Complete'}</ThemedText.Blue>
+            )}
+          </RowFixed>
+        </RowBetween>
+        <div style={{ padding: 5 }} />
+
+        <ProgressBar
+          completed={progressBarValue}
+          labelSize={'12px'}
+          transitionDuration={'0.2s'}
+          transitionTimingFunction={'ease-in-out'}
+          labelAlignment={'outside'}
+          labelColor={'#ef9231'}
+          bgColor={'#ef9231'}
+        />
+
+        <div style={{ marginBottom: 30 }} />
+
+        {showConfirmMessage && (
+          <>
+            <AutoColumn gap="12px" justify={'center'}>
+              <Text fontWeight={500} fontSize={20} textAlign="center">
+                <Trans>2. Transaction Submitted</Trans>
               </Text>
-            </ExternalLink>
-          )}
-          {currencyToAdd && library?.provider?.isMetaMask && (
-            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
-              {!success ? (
-                <RowFixed>
-                  <Trans>
-                    Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
-                  </Trans>
-                </RowFixed>
-              ) : (
-                <RowFixed>
-                  <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
-                </RowFixed>
+              <Text fontWeight={500} fontSize={14}>
+                <Trans>
+                  Round: {swapResponse.data.round}, Order: {swapResponse.data.order}
+                </Trans>
+              </Text>
+              <Text fontWeight={500} fontSize={14}>
+                <Trans>
+                  Transaction Hash: {txHash?.substring(0, 4)}...{txHash?.substring(txHash.length - 4, txHash.length)}
+                </Trans>
+              </Text>
+              <Text fontWeight={400} fontSize={14} color={'#565A69'}>
+                <Trans>Your transaction would be executed on fixed order.</Trans>
+              </Text>
+              {chainId && txHash && (
+                <ExternalLink href={getExplorerLink(chainId, txHash, ExplorerDataType.TRANSACTION)}>
+                  <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+                    <Trans>View on Explorer</Trans>
+                  </Text>
+                </ExternalLink>
               )}
-            </ButtonLight>
-          )}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
-              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </Text>
-          </ButtonPrimary>
-        </AutoColumn>
+              {currencyToAdd && library?.provider?.isMetaMask && (
+                <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
+                  {!success ? (
+                    <RowFixed>
+                      <Trans>
+                        Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+                      </Trans>
+                    </RowFixed>
+                  ) : (
+                    <RowFixed>
+                      <Trans>Added {currencyToAdd.symbol} </Trans>
+                      <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
+                    </RowFixed>
+                  )}
+                </ButtonLight>
+              )}
+              <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
+                <Text fontWeight={500} fontSize={20}>
+                  {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+                </Text>
+              </ButtonPrimary>
+            </AutoColumn>
+          </>
+        )}
       </Section>
     </Wrapper>
   )
@@ -318,6 +391,8 @@ interface ConfirmationModalProps {
   attemptingTxn: boolean
   pendingText: ReactNode
   currencyToAdd?: Currency | undefined
+  swapResponse?: RadiusSwapResponse | undefined
+  showVdf?: boolean
 }
 
 export default function TransactionConfirmationModal({
@@ -328,6 +403,8 @@ export default function TransactionConfirmationModal({
   pendingText,
   content,
   currencyToAdd,
+  swapResponse,
+  showVdf,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -338,16 +415,18 @@ export default function TransactionConfirmationModal({
   // confirmation screen
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {isL2 && (hash || attemptingTxn) ? (
+      {/* {isL2 && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
-      ) : attemptingTxn ? (
+      ) :  */}
+      {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
-      ) : hash ? (
+      ) : hash || showVdf ? (
         <TransactionSubmittedContent
           chainId={chainId}
           hash={hash}
           onDismiss={onDismiss}
           currencyToAdd={currencyToAdd}
+          swapResponse={swapResponse}
         />
       ) : (
         content()

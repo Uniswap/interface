@@ -1876,7 +1876,7 @@ msgid "Uniswap Labs' Terms of Service"
 msgstr "Termos de serviço do Uniswap Labs"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
+msgid "TEX available in: <0>{0}</0>"
 msgstr "Uniswap disponível em: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx

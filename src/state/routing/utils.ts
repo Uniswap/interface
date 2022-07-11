@@ -22,8 +22,12 @@ export function computeRoutes(
   const parsedTokenIn = parseToken(quoteResult.route[0][0].tokenIn)
   const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
-  if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
-  if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
+  if (parsedTokenIn.address !== currencyIn.wrapped.address) {
+    return undefined
+  }
+  if (parsedTokenOut.address !== currencyOut.wrapped.address) {
+    return undefined
+  }
 
   const parsedCurrencyIn = currencyIn.isNative ? nativeOnChain(currencyIn.chainId) : parsedTokenIn
   const parsedCurrencyOut = currencyOut.isNative ? nativeOnChain(currencyOut.chainId) : parsedTokenOut

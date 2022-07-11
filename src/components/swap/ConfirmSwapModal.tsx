@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { RadiusSwapResponse } from 'lib/hooks/swap/useSendSwapTransaction'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -24,6 +25,8 @@ export default function ConfirmSwapModal({
   isOpen,
   attemptingTxn,
   txHash,
+  swapResponse,
+  showVdf,
 }: {
   isOpen: boolean
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
@@ -36,6 +39,8 @@ export default function ConfirmSwapModal({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
+  swapResponse?: RadiusSwapResponse | undefined
+  showVdf: boolean
 }) {
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
@@ -97,6 +102,8 @@ export default function ConfirmSwapModal({
       content={confirmationContent}
       pendingText={pendingText}
       currencyToAdd={trade?.outputAmount.currency}
+      swapResponse={swapResponse}
+      showVdf={showVdf}
     />
   )
 }

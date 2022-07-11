@@ -1,26 +1,25 @@
+import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
+import { hexlify, Signature, splitSignature } from '@ethersproject/bytes'
+import { NonceManager } from '@ethersproject/experimental'
+import { keccak256 } from '@ethersproject/keccak256'
 import { JsonRpcProvider } from '@ethersproject/providers'
-// eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { serialize, UnsignedTransaction } from '@ethersproject/transactions'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
+import { DOMAIN_TYPE, SWAP_TYPE } from 'constants/eip712'
+import { getAddress, resolveProperties, solidityKeccak256 } from 'ethers/lib/utils'
+import { SwapCall } from 'hooks/useSwapCallArguments'
 import { useMemo } from 'react'
-// import { calculateGasMargin } from 'utils/calculateGasMargin'
-import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 type AnyTrade =
   | V2Trade<Currency, Currency, TradeType>
   | V3Trade<Currency, Currency, TradeType>
   | Trade<Currency, Currency, TradeType>
-
-interface SwapCall {
-  address: string
-  calldata: string
-  value: string
-}
 
 interface SwapCallEstimate {
   call: SwapCall
@@ -36,103 +35,206 @@ interface FailedCall extends SwapCallEstimate {
   error: Error
 }
 
+interface EncryptedTx {
+  txId: string
+  routeContractAddress: string
+  amountIn: string
+  amountoutMin: string
+  path: string
+  senderAddress: string
+  deadline: string
+  chainId: string
+  nonce: string
+  gasPrice: string
+  gasLimit: string
+  value: string
+}
+
+export interface RadiusSwapRequest {
+  sig: Signature
+  encryptedTx: EncryptedTx
+}
+
+export interface RadiusSwapResponse {
+  data: {
+    round: number
+    order: number
+    mmr_size: number
+    proof: string[]
+    hash: string
+  }
+  msg: string
+  txHash: string
+}
+
 // returns a function that will execute a swap, if the parameters are all valid
 export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
   library: JsonRpcProvider | undefined,
   trade: AnyTrade | undefined, // trade to execute, required
-  swapCalls: SwapCall[]
-): { callback: null | (() => Promise<string>) } {
+  swapCalls: Promise<SwapCall[]>,
+  deadline: BigNumber | undefined,
+  allowedSlippage: Percent,
+  sigHandler: () => void
+): { callback: null | (() => Promise<RadiusSwapResponse>) } {
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { callback: null }
     }
     return {
-      callback: async function onSwap(): Promise<string> {
-        const estimatedCalls: SwapCallEstimate[] = await Promise.all(
-          swapCalls.map((call) => {
-            const { address, calldata, value } = call
+      callback: async function onSwap(): Promise<RadiusSwapResponse> {
+        const resolvedCalls = await swapCalls
+        const { address, calldata, value, deadline, amountIn, amountoutMin, path } = resolvedCalls[0]
 
-            const tx =
-              !value || isZero(value)
-                ? { from: account, to: address, data: calldata }
-                : {
-                    from: account,
-                    to: address,
-                    data: calldata,
-                    value,
-                  }
+        const signer = library.getSigner()
+        const nonceManager = new NonceManager(signer)
+        const nonce = await nonceManager.getTransactionCount()
+        const gasPrice = hexlify(await nonceManager.getGasPrice())
+        const gasLimit = hexlify(1000000)
+        const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
 
-            return library
-              .estimateGas(tx)
-              .then((gasEstimate) => {
-                return {
-                  call,
-                  gasEstimate,
-                }
-              })
-              .catch((gasError) => {
-                console.debug('Gas estimate failed, trying eth_call to extract error', call)
-
-                return library
-                  .call(tx)
-                  .then((result) => {
-                    console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: <Trans>Unexpected issue with estimating the gas. Please try again.</Trans> }
-                  })
-                  .catch((callError) => {
-                    console.debug('Call threw error', call, callError)
-                    return { call, error: swapErrorToUserReadableMessage(callError) }
-                  })
-              })
-          })
-        )
-
-        // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
-        let bestCallOption: SuccessfulCall | SwapCallEstimate | undefined = estimatedCalls.find(
-          (el, ix, list): el is SuccessfulCall =>
-            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
-        )
-
-        // check if any calls errored with a recognizable error
-        if (!bestCallOption) {
-          const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
-          if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          const firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
-            (call): call is SwapCallEstimate => !('error' in call)
-          )
-          if (!firstNoErrorCall) throw new Error(t`Unexpected error. Could not estimate gas for the swap.`)
-          bestCallOption = firstNoErrorCall
+        const txData: TransactionRequest = {
+          data: calldata,
+          to: swapRouterAddress,
+          chainId,
+          nonce,
+          gasPrice,
+          gasLimit,
+          value,
         }
 
-        const {
-          call: { address, calldata, value },
-        } = bestCallOption
+        const signAddress = await signer.getAddress()
 
-        return library
-          .getSigner()
-          .signMessage(calldata) // sign하고 서버에 날리고 서버가 제출한 트랜잭션 정보를 response로 가져와야함
+        const signInput = await resolveProperties(txData).then(async (tx: TransactionRequest) => {
+          if (tx.from != null) {
+            if (getAddress(tx.from) !== signAddress) {
+              console.log('Tx from address mismatch', 'tx.from', tx.from)
+            }
+            delete tx.from
+          }
+          return tx as UnsignedTransaction
+        })
+
+        const domain = {
+          name: 'TEX swap',
+          version: '1',
+          chainId,
+          verifyingContract: SWAP_ROUTER_ADDRESSES[chainId],
+        }
+
+        const signMessage = {
+          txOwner: signAddress,
+          amountIn,
+          amountOutMin: amountoutMin,
+          path,
+          to: swapRouterAddress,
+          deadline,
+        }
+
+        const signData = JSON.stringify({
+          types: {
+            EIP712Domain: DOMAIN_TYPE,
+            Swap: SWAP_TYPE,
+          },
+          domain,
+          primaryType: 'Swap',
+          message: signMessage,
+        })
+
+        const sig = await library
+          .send('eth_signTypedData_v4', [signAddress.toLowerCase(), signData])
           .then((response) => {
-            /* TODO */
-            // 1. encrypt tx by 147.46.240.248:27100/cryptography/encrypt
-            // 2. send tx by 147.46.240.248:27100/txs/signTx
-            // 3. fetch/track transaction by Provider api
-            // [just for typescript logic] 4. change response type to Promise<TransactionResponse>
-            return response
+            const sig = splitSignature(response)
+            return sig
           })
           .catch((error) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error(t`Transaction rejected.`)
+            if (error?.code === 401) {
+              throw new Error(`Transaction rejected.`)
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, address, calldata, value)
 
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+              throw new Error(`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
             }
           })
+
+        sigHandler()
+
+        const signedRawtx = serialize(signInput, sig)
+        const txHash = keccak256(signedRawtx)
+
+        const headers = new Headers({ 'content-type': 'application/json', accept: 'application/json' })
+
+        const encryptedPath = await fetch('http://147.46.240.248:40001/cryptography/encrypt', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            msg: `${path[0]},${path[1]}`,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            return res.data
+          })
+          .catch((error) => {
+            console.log(error)
+            return error
+          })
+
+        const txId = solidityKeccak256(
+          ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
+          [account.toLowerCase(), `${amountIn}`, `${amountoutMin}`, path, account.toLowerCase(), `${deadline}`]
+        )
+
+        const encryptedTx: EncryptedTx = {
+          routeContractAddress: swapRouterAddress,
+          amountIn: `${amountIn}`,
+          amountoutMin: `${amountoutMin}`,
+          path: encryptedPath,
+          senderAddress: account.toLowerCase(),
+          deadline: `${deadline}`,
+          txId,
+          chainId: `${chainId}`,
+          nonce: hexlify(nonce),
+          gasPrice,
+          gasLimit,
+          value,
+        }
+
+        const sendResponse: { data: RadiusSwapResponse['data']; msg: RadiusSwapResponse['msg'] } = await fetch(
+          'http://147.46.240.248:40001/txs/sendTx',
+          {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              txType: 'swap',
+              encryptedTx,
+              signature: {
+                ...sig,
+                recoveryParam: `${sig.recoveryParam}`,
+                v: `${sig.v}`,
+              },
+            }),
+          }
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            return res
+          })
+          .catch((error) => {
+            console.log(error)
+            return error
+          })
+
+        const finalResponse = {
+          data: sendResponse.data,
+          msg: sendResponse.msg,
+          txHash,
+        }
+        return finalResponse
       },
     }
-  }, [account, chainId, library, swapCalls, trade])
+  }, [account, chainId, library, swapCalls, trade, sigHandler])
 }

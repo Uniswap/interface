@@ -53,6 +53,20 @@ export const USDC_OPTIMISTIC_KOVAN = new Token(
   'USDC',
   'USD//C'
 )
+export const T1_OPTIMISTIC_KOVAN = new Token(
+  SupportedChainId.OPTIMISTIC_KOVAN,
+  '0xD773ce9bCC38b441015d4Af8780eEB5859d3ed42',
+  18,
+  'T1',
+  'Test token-1'
+)
+export const T2_OPTIMISTIC_KOVAN = new Token(
+  SupportedChainId.OPTIMISTIC_KOVAN,
+  '0xaC50fF6E28325e5F974487a6Dc9D667BF7C89Df4',
+  18,
+  'T2',
+  'Test token-2'
+)
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
   '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
@@ -80,6 +94,13 @@ export const USDC_POLYGON_MUMBAI = new Token(
   6,
   'USDC',
   'USD//C'
+)
+export const USDC_TEX_PRIVATE = new Token(
+  SupportedChainId.TEX_PRIVATE,
+  '0xDadd1125B8Df98A66Abd5EB302C0d9Ca5A061dC2',
+  6,
+  'USDC',
+  'USD/C'
 )
 
 export const AMPL = new Token(
@@ -122,6 +143,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
   [SupportedChainId.KOVAN]: USDC_KOVAN,
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
+  [SupportedChainId.TEX_PRIVATE]: USDC_TEX_PRIVATE,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -256,6 +278,20 @@ export const WETH_POLYGON_MUMBAI = new Token(
   'WETH',
   'Wrapped Ether'
 )
+export const UNI_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0x8F4EAf4475a45DDDf70A8c9132b72Cf0BA036FE8',
+  18,
+  'UNI',
+  'Uniswap'
+)
+export const rMATIC_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xA510e8077EA0cC32Ff393905fdA20CDdC97B909F',
+  18,
+  'MATIC',
+  'rMATIC'
+)
 
 export const WETH_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -315,6 +351,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WMATIC',
     'Wrapped MATIC'
+  ),
+  [SupportedChainId.TEX_PRIVATE]: new Token(
+    SupportedChainId.TEX_PRIVATE,
+    '0xD499f5F7d3C918D0e553BA03954c4E02af16B6e4',
+    18,
+    'WETH',
+    'Wrapped ETH'
   ),
 }
 

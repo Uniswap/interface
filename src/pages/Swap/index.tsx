@@ -11,6 +11,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
+import { RadiusSwapResponse } from 'lib/hooks/swap/useSendSwapTransaction'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga4'
@@ -179,18 +180,25 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [history])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [
+    { showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, swapResponse, showVdf },
+    setSwapState,
+  ] = useState<{
     showConfirm: boolean
     tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
+    swapResponse: RadiusSwapResponse | undefined
+    showVdf: boolean
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined,
+    swapResponse: undefined,
+    showVdf: false,
   })
 
   const formattedAmounts = useMemo(
@@ -267,12 +275,25 @@ export default function Swap({ history }: RouteComponentProps) {
   )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
+  const sigHandler = () => {
+    setSwapState({
+      attemptingTxn: false,
+      tradeToConfirm,
+      showConfirm,
+      swapErrorMessage: undefined,
+      txHash,
+      swapResponse: undefined,
+      showVdf: true,
+    })
+  }
+
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     approvalOptimizedTrade,
     allowedSlippage,
     recipient,
-    signatureData
+    signatureData,
+    sigHandler
   )
 
   const handleSwap = useCallback(() => {
@@ -282,10 +303,26 @@ export default function Swap({ history }: RouteComponentProps) {
     if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({
+      attemptingTxn: true,
+      tradeToConfirm,
+      showConfirm,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+      swapResponse: undefined,
+      showVdf: false,
+    })
     swapCallback()
-      .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+      .then((res) => {
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          swapErrorMessage: undefined,
+          txHash: res.txHash,
+          swapResponse: res,
+          showVdf,
+        })
         ReactGA.event({
           category: 'Swap',
           action:
@@ -309,6 +346,8 @@ export default function Swap({ history }: RouteComponentProps) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
+          swapResponse: undefined,
+          showVdf,
         })
       })
   }, [
@@ -322,6 +361,7 @@ export default function Swap({ history }: RouteComponentProps) {
     approvalOptimizedTradeString,
     approvalOptimizedTrade?.inputAmount?.currency?.symbol,
     approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+    showVdf,
   ])
 
   // errors
@@ -352,16 +392,16 @@ export default function Swap({ history }: RouteComponentProps) {
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, swapResponse, showVdf })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, onUserInput, showVdf, swapErrorMessage, swapResponse, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
-  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, swapResponse, showVdf })
+  }, [attemptingTxn, showConfirm, showVdf, swapErrorMessage, swapResponse, trade, txHash])
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
@@ -411,6 +451,8 @@ export default function Swap({ history }: RouteComponentProps) {
             onConfirm={handleSwap}
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
+            swapResponse={swapResponse}
+            showVdf={showVdf}
           />
 
           <AutoColumn gap={'sm'}>
@@ -568,6 +610,8 @@ export default function Swap({ history }: RouteComponentProps) {
                             swapErrorMessage: undefined,
                             showConfirm: true,
                             txHash: undefined,
+                            swapResponse: undefined,
+                            showVdf: false,
                           })
                         }
                       }}
@@ -606,6 +650,8 @@ export default function Swap({ history }: RouteComponentProps) {
                         swapErrorMessage: undefined,
                         showConfirm: true,
                         txHash: undefined,
+                        swapResponse: undefined,
+                        showVdf: false,
                       })
                     }
                   }}

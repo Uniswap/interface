@@ -1,6 +1,6 @@
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { SupportedChainId } from 'constants/chains'
-import { ARBITRUM_LIST, OPTIMISM_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { ARBITRUM_LIST, OPTIMISM_LIST, TEX_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect } from 'react'
@@ -35,6 +35,9 @@ export default function Updater(): null {
     }
     if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
       dispatch(enableList(ARBITRUM_LIST))
+    }
+    if (chainId && [SupportedChainId.TEX_PRIVATE].includes(chainId)) {
+      dispatch(enableList(TEX_LIST))
     }
   }, [chainId, dispatch])
   // fetch all lists every 10 minutes, but only after we initialize library

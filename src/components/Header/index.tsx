@@ -14,7 +14,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import Logo from '../../assets/images/radius_sun.png'
 import { ExternalLink, ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
@@ -139,7 +139,7 @@ const UNIAmount = styled(AccountElement)`
   height: 36px;
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #e84523 0%, #2172e5 100%), #edeef2;
 `
 
 const UNIWrapper = styled.span`
@@ -272,7 +272,7 @@ export default function Header() {
       <ClaimModal />
       <Title href=".">
         <UniIcon>
-          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <img src={Logo} width="28px" height="100%" alt="logo" />
           <HolidayOrnament />
         </UniIcon>
       </Title>
