@@ -1,8 +1,9 @@
-import { render, act } from 'test-utils'
-import CTACards from './CTACards'
-import * as switchChain from 'utils/switchChain'
 import * as useV3Positions from 'hooks/useV3Positions'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { act, render } from 'test-utils'
+import * as switchChain from 'utils/switchChain'
+
+import CTACards from './CTACards'
 
 jest.mock('@web3-react/core', () => {
   const web3React = jest.requireActual('@web3-react/core')
