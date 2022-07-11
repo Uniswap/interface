@@ -78,7 +78,7 @@ import {
 import { ButtonEmpty } from 'components/Button'
 import { FooterSocialLink } from 'components/Footer/Footer'
 import { dexListConfig } from 'constants/dexes'
-import { SUPPORTED_NETWORKS } from 'constants/networks'
+import { MAINNET_NETWORKS } from 'constants/networks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import Banner from 'components/Banner'
 // import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
@@ -141,7 +141,7 @@ export const KSStatistic = () => {
           <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
             <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
               <Text fontWeight="600" fontSize="24px">
-                {SUPPORTED_NETWORKS.length}
+                {MAINNET_NETWORKS.length}
               </Text>
               <Text color={theme.subText} marginTop="4px" fontSize="14px">
                 <Trans>Chains</Trans>

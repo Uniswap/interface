@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client'
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { BUNDLE_ID } from '../../constants'
 
 export const SUBGRAPH_BLOCK_NUMBER = () => gql`
@@ -64,7 +63,25 @@ export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
   return gql(queryString)
 }
 
-export const GLOBAL_DATA = (chainId: ChainId, block?: number) => {
+export const GLOBAL_DATA_ELASTIC = () => {
+  const queryString = `query factories {
+    factories {
+        id
+        poolCount
+        txCount
+        totalVolumeUSD
+        totalVolumeETH
+        totalFeesUSD
+        untrackedVolumeUSD
+        totalValueLockedUSD
+        totalValueLockedETH
+      }
+    }`
+
+  return gql(queryString)
+}
+
+export const GLOBAL_DATA = (block?: number) => {
   const queryString = `query dmmFactories {
     dmmFactories${block ? `(block: { number: ${block}})` : ``} {
         id
