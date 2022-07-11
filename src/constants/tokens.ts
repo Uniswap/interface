@@ -81,15 +81,13 @@ export const USDC_POLYGON_MUMBAI = new Token(
   'USDC',
   'USD//C'
 )
-
-export const USDC_CELO = new Token(
+export const PORTAL_USDC_CELO = new Token(
   SupportedChainId.CELO,
-  '0xef4229c8c3250C675F21BCefa42f58EfbfF6002a',
+  '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
   6,
-  'USDC',
-  'USD//C'
+  'USDCet',
+  'USDC (Portal from Ethereum)'
 )
-
 export const USDC_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
   '0x41F4a5d2632b019Ae6CE9625bE3c9CaC143AcC7D',
@@ -97,7 +95,6 @@ export const USDC_CELO_ALFAJORES = new Token(
   'USDC',
   'USD//C'
 )
-
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -134,7 +131,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN,
   [SupportedChainId.POLYGON]: USDC_POLYGON,
   [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
-  [SupportedChainId.CELO]: USDC_CELO,
+  [SupportedChainId.CELO]: PORTAL_USDC_CELO,
   [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES,
   [SupportedChainId.GOERLI]: USDC_GOERLI,
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
@@ -289,13 +286,6 @@ export const CELO_CELO = new Token(
   'CELO',
   'Celo'
 )
-export const DAI_CELO = new Token(
-  SupportedChainId.CELO,
-  '0xE4fE50cdD716522A56204352f00AA110F731932d',
-  18,
-  'DAI',
-  'Dai Stablecoin'
-)
 export const CUSD_CELO = new Token(
   SupportedChainId.CELO,
   '0x765DE816845861e75A25fCA122bb6898B8B1282a',
@@ -317,12 +307,12 @@ export const PORTAL_ETH_CELO = new Token(
   'ETH',
   'Portal Ether'
 )
-export const WBTC_CELO = new Token(
+export const CMC02_CELO = new Token(
   SupportedChainId.CELO,
-  '0xBAAB46E28388d2779e6E31Fd00cF0e5Ad95E327B',
-  8,
-  'WBTC',
-  'Wrapped BTC'
+  '0x32A9FE697a32135BFd313a6Ac28792DaE4D9979d',
+  18,
+  'cMCO2',
+  'Celo Moss Carbon Credit'
 )
 export const CELO_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
@@ -474,8 +464,8 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN.address,
     [SupportedChainId.POLYGON]: USDC_POLYGON.address,
     [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
-    [SupportedChainId.CELO]: USDC_CELO.address,
-    [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES.address,
+    [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
+    [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
     [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
     [SupportedChainId.KOVAN]: USDC_KOVAN.address,
