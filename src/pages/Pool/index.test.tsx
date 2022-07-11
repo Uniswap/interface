@@ -22,7 +22,7 @@ describe('networks', () => {
       return { loading: false, positions: undefined }
     })
 
-    const { findByText } = render(
+    render(
       <Router>
         <Pool />
       </Router>

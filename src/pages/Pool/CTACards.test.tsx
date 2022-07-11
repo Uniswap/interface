@@ -1,6 +1,6 @@
 import * as useV3Positions from 'hooks/useV3Positions'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { act, render, screen } from 'test-utils'
+import { render, screen } from 'test-utils'
 import * as switchChain from 'utils/switchChain'
 
 import CTACards from './CTACards'
