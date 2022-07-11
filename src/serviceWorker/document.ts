@@ -98,12 +98,14 @@ export class CachedDocument extends Response {
   static async from(response: Response) {
     const text = await response.text()
 
-    // Some browsers (Android 12; Chrome 91) duplicate the content-type header, invalidating it.
-    response.headers.set('Content-Type', 'text/html; charset=utf-8')
+    // Set the content-type explicitly. Some browsers (Android 12; Chrome 91) use an invalid content-type header.
+    const headers = new Headers(response.headers)
+    headers.set('Content-Type', 'text/html; charset=utf-8')
+    const init = { ...response, headers }
 
     // Injects a marker into the document so that client code knows it was served from cache.
     // The marker should be injected immediately in the <body> so it is available to client code.
-    return new CachedDocument(text.replace('<body>', '<body><script>window.__isDocumentCached=true</script>'), response)
+    return new CachedDocument(text.replace('<body>', '<body><script>window.__isDocumentCached=true</script>'), init)
   }
 
   private constructor(text: string, response: Response) {

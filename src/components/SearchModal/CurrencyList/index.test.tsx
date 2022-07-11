@@ -33,7 +33,7 @@ jest.mock('@web3-react/core', () => {
   }
 })
 
-jest.mock('../../../state/wallet/hooks', () => {
+jest.mock('../../../state/connection/hooks', () => {
   return {
     useCurrencyBalance: (currency: Currency) => {
       return mockCurrencyAmt[(currency as mockToken)?.address]
