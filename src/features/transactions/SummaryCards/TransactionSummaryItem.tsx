@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { default as React } from 'react'
+import { default as React, memo } from 'react'
 import { i18n } from 'src/app/i18n'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
@@ -44,7 +44,7 @@ export interface TransactionSummaryInfo {
   fullDetails?: TransactionDetails // for resubmitting failed local transactions or canceling
 }
 
-export default function TransactionSummaryItem({
+function TransactionSummaryItem({
   transactionSummaryInfo,
 }: {
   transactionSummaryInfo: TransactionSummaryInfo
@@ -185,3 +185,5 @@ export default function TransactionSummaryItem({
     </Button>
   )
 }
+
+export default memo(TransactionSummaryItem)

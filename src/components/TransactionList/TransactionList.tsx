@@ -36,16 +36,14 @@ export function TransactionList({ address }: { address: string }) {
     ]
   }, [beforeCurrentWeekTransactionList, pending, t, todayTransactionList, weekTransactionList])
 
-  const renderItem = (item: ListRenderItemInfo<TransactionSummaryInfo>) => {
-    // @TODO: only render this in Dev to boost perf in testflight for demo.
-    if (__DEV__) {
+  const renderItem = useMemo(() => {
+    return (item: ListRenderItemInfo<TransactionSummaryInfo>) => {
       if (item.item.status === TransactionStatus.Pending) {
         return <PendingSummaryItem transactionSummaryInfo={item.item} />
       }
       return <TransactionSummaryItem transactionSummaryInfo={item.item} />
     }
-    return null
-  }
+  }, [])
 
   return (
     <SectionList
