@@ -131,7 +131,7 @@ export function UserScreen({
             />
           </Flex>
           {combinedTransactionList.length > 0 && (
-            <TransactionListSection transactions={combinedTransactionList} />
+            <TransactionListSection owner={address} transactions={combinedTransactionList} />
           )}
           <PortfolioNFTsSection count={4} owner={address} />
           <PortfolioTokensSection count={3} owner={address} />

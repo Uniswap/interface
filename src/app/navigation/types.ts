@@ -40,6 +40,7 @@ export type ExploreStackParamList = {
   [Screens.User]: { address: string }
   [Screens.NFTItem]: NFTItem
   [Screens.PortfolioTokens]: { owner: Address | undefined }
+  [Screens.UserTransactions]: { owner: Address }
 }
 
 export type AccountStackParamList = {
