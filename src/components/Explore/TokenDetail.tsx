@@ -3,7 +3,7 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { atom, useAtom } from 'jotai'
 import { darken } from 'polished'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart, Share } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
@@ -81,8 +81,11 @@ const Contract = styled.div`
   gap: 4px;
 `
 const ChartContainer = styled.div`
+  display: flex;
   height: 332px;
   border-bottom: 1px solid ${({ theme }) => theme.bg3};
+  align-items: center;
+  overflow: hidden;
 `
 const DeltaContainer = styled.div`
   display: flex;
@@ -152,7 +155,52 @@ const ResourcesContainer = styled.div`
   gap: 14px;
 `
 
-export default function TokenDetail({ address }: { address: string }) {
+export function TokenDetail({
+  breadcrumb,
+  tokenInfo,
+  tokenPrice,
+  deltaInfo,
+  chartGraphic,
+  timeInfo,
+  about,
+  aboutInfo,
+  resources,
+  stats,
+  contractInfo,
+}: {
+  breadcrumb: ReactNode
+  tokenInfo: ReactNode
+  tokenPrice: ReactNode
+  deltaInfo: ReactNode
+  chartGraphic: ReactNode
+  timeInfo: ReactNode
+  about: ReactNode
+  aboutInfo: ReactNode
+  resources: ReactNode
+  stats: ReactNode
+  contractInfo: ReactNode
+}) {
+  return (
+    <TopArea>
+      <BreadcrumbNavLink to="/explore">{breadcrumb}</BreadcrumbNavLink>
+      <ChartHeader>
+        <TokenInfoContainer>{tokenInfo}</TokenInfoContainer>
+        <TokenPrice>{tokenPrice}</TokenPrice>
+        <DeltaContainer>{deltaInfo}</DeltaContainer>
+        <ChartContainer>{chartGraphic}</ChartContainer>
+        <TimeOptionsContainer>{timeInfo}</TimeOptionsContainer>
+      </ChartHeader>
+      <AboutSection>
+        <AboutHeader>{about}</AboutHeader> {aboutInfo}
+        <ResourcesContainer>{resources}</ResourcesContainer>
+      </AboutSection>
+      <StatsSection>{stats}</StatsSection>
+      <ContractAddressSection>{contractInfo}</ContractAddressSection>
+    </TopArea>
+  )
+}
+
+export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
@@ -178,13 +226,14 @@ export default function TokenDetail({ address }: { address: string }) {
   const tokenMarketCap = '23.02B'
   const tokenVolume = '1.6B'
   return (
-    <TopArea>
-      <BreadcrumbNavLink to="/explore">
-        <ArrowLeft size={14} /> Explore
-      </BreadcrumbNavLink>
-
-      <ChartHeader>
-        <TokenInfoContainer>
+    <TokenDetail
+      breadcrumb={
+        <>
+          <ArrowLeft size={14} /> Explore
+        </>
+      }
+      tokenInfo={
+        <>
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
@@ -197,10 +246,11 @@ export default function TokenDetail({ address }: { address: string }) {
               fill={isFavorited ? theme.primary1 : undefined}
             />
           </TokenActions>
-        </TokenInfoContainer>
-
-        <TokenPrice>${tokenPrice}</TokenPrice>
-        <DeltaContainer>
+        </>
+      }
+      tokenPrice={`$${tokenPrice}`}
+      deltaInfo={
+        <>
           {deltaSign}
           {tokenDelta}%
           <ArrowCell>
@@ -210,46 +260,47 @@ export default function TokenDetail({ address }: { address: string }) {
               <ArrowDownRight size={16} color={theme.red1} />
             )}
           </ArrowCell>
-        </DeltaContainer>
-        <ChartContainer></ChartContainer>
-        <TimeOptionsContainer>
-          {TIME_PERIODS.map((timePeriod) => {
-            return (
-              <TimeButton
-                key={timePeriod}
-                active={activeTimePeriod === timePeriod}
-                onClick={() => setTimePeriod(timePeriod)}
-              >
-                {TIME_DISPLAYS[timePeriod]}
-              </TimeButton>
-            )
-          })}
-        </TimeOptionsContainer>
-      </ChartHeader>
-      <AboutSection>
-        <AboutHeader>About</AboutHeader> {aboutToken}
-        <ResourcesContainer>
+        </>
+      }
+      chartGraphic={null}
+      timeInfo={TIME_PERIODS.map((timePeriod) => {
+        return (
+          <TimeButton
+            key={timePeriod}
+            active={activeTimePeriod === timePeriod}
+            onClick={() => setTimePeriod(timePeriod)}
+          >
+            {TIME_DISPLAYS[timePeriod]}
+          </TimeButton>
+        )
+      })}
+      about={'About'}
+      aboutInfo={`${aboutToken}`}
+      resources={
+        <>
           <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-        </ResourcesContainer>
-      </AboutSection>
-      <StatsSection>
-        <Stat>
-          Market Cap<StatPrice>${tokenMarketCap}</StatPrice>
-        </Stat>
-        <Stat>
-          {TIME_DISPLAYS[activeTimePeriod]} Volume
-          <StatPrice>${tokenVolume}</StatPrice>
-        </Stat>
-      </StatsSection>
-      <ContractAddressSection>
+        </>
+      }
+      stats={
+        <>
+          <Stat>
+            Market Cap<StatPrice>${tokenMarketCap}</StatPrice>
+          </Stat>
+          <Stat>
+            {TIME_DISPLAYS[activeTimePeriod]} Volume
+            <StatPrice>${tokenVolume}</StatPrice>
+          </Stat>
+        </>
+      }
+      contractInfo={
         <Contract>
           Contract Address
           <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
             {address} <Copy size={13} color={theme.text2} />
           </ContractAddress>
         </Contract>
-      </ContractAddressSection>
-    </TopArea>
+      }
+    />
   )
 }
