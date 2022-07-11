@@ -10,6 +10,7 @@ import { Flex } from 'src/components/layout'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { usePendingAccounts } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
@@ -27,7 +28,10 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
   const loadingAccounts = status === SagaStatus.Started
 
   const pendingAccounts = usePendingAccounts()
-  const addresses = Object.keys(pendingAccounts)
+  const addresses = Object.values(pendingAccounts)
+    .filter((a) => a.type === AccountType.Native)
+    .sort((a, b) => (a as NativeAccount).derivationIndex - (b as NativeAccount).derivationIndex)
+    .map((account) => account.address)
 
   const [selectedAddresses, setSelectedAddresses] = useReducer(
     (currentAddresses: string[], addressToProcess: string) =>
