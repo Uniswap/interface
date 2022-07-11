@@ -18,8 +18,8 @@ jest.mock('utils/userAgent', () => ({
 
 jest.mock('.../../state/application/hooks', () => {
   return {
-    useModalOpen: (_modal: ApplicationModal) => true,
-    useWalletModalToggle: () => {
+    useModalIsOpen: (_modal: ApplicationModal) => true,
+    useToggleWalletModal: () => {
       return
     },
   }
