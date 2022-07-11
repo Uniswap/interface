@@ -6,11 +6,10 @@ export const DOMAIN_TYPE = [
 ]
 
 export const SWAP_TYPE = [
-  { name: 'data', type: 'bytes' },
+  { name: 'txOwner', type: 'address' },
+  { name: 'amountIn', type: 'uint256' },
+  { name: 'amountOutMin', type: 'uint256' },
+  { name: 'path', type: 'address[]' },
   { name: 'to', type: 'address' },
-  { name: 'chainId', type: 'uint256' },
-  { name: 'nonce', type: 'uint256' },
-  { name: 'gasPrice', type: 'uint256' },
-  { name: 'gasLimit', type: 'uint256' },
-  { name: 'value', type: 'uint256' },
+  { name: 'deadline', type: 'uint256' },
 ]

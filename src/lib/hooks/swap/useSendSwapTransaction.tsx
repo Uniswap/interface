@@ -113,7 +113,6 @@ export default function useSendSwapTransaction(
             }
             delete tx.from
           }
-
           return tx as UnsignedTransaction
         })
 
@@ -124,6 +123,15 @@ export default function useSendSwapTransaction(
           verifyingContract: SWAP_ROUTER_ADDRESSES[chainId],
         }
 
+        const signMessage = {
+          txOwner: signAddress,
+          amountIn,
+          amountOutMin: amountoutMin,
+          path,
+          to: swapRouterAddress,
+          deadline,
+        }
+
         const signData = JSON.stringify({
           types: {
             EIP712Domain: DOMAIN_TYPE,
@@ -131,7 +139,7 @@ export default function useSendSwapTransaction(
           },
           domain,
           primaryType: 'Swap',
-          message: signInput,
+          message: signMessage,
         })
 
         const sig = await library
