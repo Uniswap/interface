@@ -18,10 +18,12 @@ import { Screen } from 'src/components/layout/Screen'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Text } from 'src/components/Text'
+import { TransactionListSection } from 'src/components/TransactionList/TransactionListSection'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 
@@ -37,6 +39,7 @@ export function UserScreen({
   const { t } = useTranslation()
 
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
+  const { combinedTransactionList } = useAllFormattedTransactions(address)
 
   const onSendPress = async () => {
     dispatch(
@@ -127,6 +130,9 @@ export function UserScreen({
               onPress={onWatchPress}
             />
           </Flex>
+          {combinedTransactionList.length > 0 && (
+            <TransactionListSection transactions={combinedTransactionList} />
+          )}
           <PortfolioNFTsSection count={4} owner={address} />
           <PortfolioTokensSection count={3} owner={address} />
         </Flex>

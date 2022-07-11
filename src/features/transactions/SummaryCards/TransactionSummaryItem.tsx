@@ -140,7 +140,6 @@ TransactionSummaryInfo) {
       <Flex
         row
         alignItems="flex-start"
-        bg="translucentBackground"
         gap="xs"
         justifyContent="space-between"
         padding="md"
