@@ -1,4 +1,5 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 import { i18n } from 'src/app/i18n'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { SpotPrices } from 'src/features/dataApi/types'
@@ -9,6 +10,7 @@ import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
 import { buildCurrencyId, currencyIdToAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
+import { logger } from 'src/utils/logger'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification) => {
   const { event, dappName, chainId } = appNotification
@@ -178,17 +180,57 @@ export const createBalanceUpdate = (
   }
 }
 
+export function convertScientificNotationToNumber(value: string) {
+  let convertedValue: string | BigintIsh = value
+
+  // Convert scientific notation into number format so it can be parsed by BigInt properly
+  if (value.includes('e')) {
+    const [xStr, eStr] = value.split('e')
+    let x = Number(xStr)
+    let e = Number(eStr)
+    if (xStr.includes('.')) {
+      const splitX = xStr.split('.')
+      const decimalPlaces = splitX[1].split('').length
+      e -= decimalPlaces
+      x *= Math.pow(10, decimalPlaces)
+    }
+    try {
+      convertedValue = JSBI.multiply(
+        JSBI.BigInt(x),
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(e))
+      )
+    } catch (error) {
+      // If the numbers can't be converted to BigInts then just do regular arithmetic (i.e. when the exponent is negative)
+      logger.info(
+        'notifications/utils',
+        'convertScientificNotationToNumber',
+        'BigInt arithmetic unsuccessful',
+        e
+      )
+      convertedValue = (x * Math.pow(10, e)).toString()
+    }
+  }
+
+  return convertedValue
+}
+
 const getFormattedCurrencyAmount = (
   currency: Nullable<Currency>,
   currencyAmountRaw: string,
   isApproximateAmount = false
 ) => {
   if (!currency) return ''
+
   try {
-    const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, currencyAmountRaw)
+    // Convert scientific notation into number format so it can be parsed by BigInt properly
+    const parsedCurrencyAmountRaw: string | BigintIsh =
+      convertScientificNotationToNumber(currencyAmountRaw)
+
+    const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, parsedCurrencyAmountRaw)
     const formattedAmount = formatCurrencyAmount(currencyAmount)
     return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
-  } catch {
+  } catch (e) {
+    logger.info('notifications/utils', 'getFormattedCurrencyAmount', 'could not format amount', e)
     return ''
   }
 }
