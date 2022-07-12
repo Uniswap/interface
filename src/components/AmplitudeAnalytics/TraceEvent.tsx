@@ -49,19 +49,19 @@ function getEventHandlers(
   child: React.ReactElement,
   traceContext: ITraceContext,
   events: Event[],
-  eventName: EventName,
-  eventProperties?: Record<string, unknown>
+  name: EventName,
+  properties?: Record<string, unknown>
 ) {
   const eventHandlers: Partial<Record<Event, (e: SyntheticEvent<Element, Event>) => void>> = {}
 
-  for (const eventHandlerName of events) {
-    eventHandlers[eventHandlerName] = (eventHandlerArgs: unknown) => {
+  for (const event of events) {
+    eventHandlers[event] = (eventHandlerArgs: unknown) => {
       // call child event handler with original arguments, must be in array
       const args = Array.isArray(eventHandlerArgs) ? eventHandlerArgs : [eventHandlerArgs]
-      child.props[eventHandlerName]?.apply(child, args)
+      child.props[event]?.apply(child, args)
 
       // augment handler with analytics logging
-      sendAnalyticsEvent(eventName, { ...traceContext, ...eventProperties })
+      sendAnalyticsEvent(name, { ...traceContext, ...properties })
     }
   }
 

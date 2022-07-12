@@ -20,8 +20,8 @@ export const TraceContext = createContext<ITraceContext>({})
 
 type TraceProps = {
   shouldLogImpression?: boolean // whether to log impression on mount
-  eventName?: EventName
-  eventProperties?: Record<string, unknown>
+  name?: EventName
+  properties?: Record<string, unknown>
 } & ITraceContext
 
 /**
@@ -29,15 +29,7 @@ type TraceProps = {
  * and propagates the context to child traces.
  */
 export const Trace = memo(
-  ({
-    shouldLogImpression,
-    eventName,
-    children,
-    page,
-    section,
-    element,
-    eventProperties,
-  }: PropsWithChildren<TraceProps>) => {
+  ({ shouldLogImpression, name, children, page, section, element, properties }: PropsWithChildren<TraceProps>) => {
     const parentTrace = useContext(TraceContext)
 
     const combinedProps = useMemo(
@@ -50,8 +42,9 @@ export const Trace = memo(
 
     useEffect(() => {
       if (shouldLogImpression) {
-        sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, { ...combinedProps, ...eventProperties })
+        sendAnalyticsEvent(name ?? EventName.PAGE_VIEWED, { ...combinedProps, ...properties })
       }
+      // Impressions should only be logged on mount.
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

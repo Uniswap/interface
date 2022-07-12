@@ -7,7 +7,7 @@
 export enum EventName {
   PAGE_VIEWED = 'Page Viewed',
   SWAP_SUBMITTED = 'Swap Submitted',
-  // alphabeticize additional event names.
+  // alphabetize additional event names.
 }
 
 /**
@@ -15,7 +15,7 @@ export enum EventName {
  */
 export const enum PageName {
   SWAP_PAGE = 'swap-page',
-  // alphabeticize additional page names.
+  // alphabetize additional page names.
 }
 
 /**
@@ -25,13 +25,13 @@ export const enum PageName {
  */
 export const enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
-  // alphabeticize additional section names.
+  // alphabetize additional section names.
 }
 
 /** Known modals for analytics purposes. */
 export const enum ModalName {
   SWAP = 'swap-modal',
-  // alphabeticize additional modal names.
+  // alphabetize additional modal names.
 }
 
 /**
@@ -41,17 +41,15 @@ export const enum ModalName {
 export const enum ElementName {
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
   SWAP_BUTTON = 'swap-button',
-  // alphabeticize additional element names.
+  // alphabetize additional element names.
 }
 
 /**
- * Known actions and their properties.
- * Use destructure assignments to pick properties.
+ * Known events that trigger callbacks.
  * @example
- *  const ButtonActionProps = (({ onClick }) => ({ onClick }))(ActionProps)
- *  <TraceEvent actionProps={ButtonActionProps} element={name}>
+ *  <TraceEvent events={[Event.onClick]} element={name}>
  */
 export enum Event {
   onClick = 'onClick',
-  // alphabeticize additional events.
+  // alphabetize additional events.
 }
