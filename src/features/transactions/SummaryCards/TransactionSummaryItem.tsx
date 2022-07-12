@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { default as React, memo } from 'react'
+import { default as React, memo, useState } from 'react'
 import { i18n } from 'src/app/i18n'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
@@ -12,6 +12,7 @@ import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { createBalanceUpdate, getCurrencySymbol } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -41,7 +42,7 @@ export interface TransactionSummaryInfo {
     name: string
     imageURL: string
   }
-  fullDetails?: TransactionDetails // for resubmitting failed local transactions or canceling
+  fullDetails?: TransactionDetails // for resubmission or canceling
 }
 
 function TransactionSummaryItem({
@@ -61,6 +62,7 @@ function TransactionSummaryItem({
     otherTokenAddress,
     nftMetaData,
   } = transactionSummaryInfo
+  const [showActionsModal, setShowActionsModal] = useState(false)
 
   const currencyId = buildCurrencyId(chainId, tokenAddress ?? '')
   const otherCurrencyId = buildCurrencyId(chainId, otherTokenAddress ?? '')
@@ -138,51 +140,65 @@ function TransactionSummaryItem({
   }
 
   return (
-    <Button onPress={() => openUri(`${explorerUrl}/tx/${hash}`)}>
-      <Flex
-        row
-        alignItems="flex-start"
-        bg="translucentBackground"
-        gap="xs"
-        justifyContent="space-between"
-        padding="md">
+    <>
+      <Button onPress={() => setShowActionsModal(true)}>
         <Flex
           row
-          shrink
-          alignItems="center"
-          flexBasis={balanceUpdate ? '75%' : '100%'}
+          alignItems="flex-start"
+          bg="translucentBackground"
           gap="xs"
-          justifyContent="flex-start">
-          {icon && (
-            <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
-              {icon}
+          justifyContent="space-between"
+          padding="md">
+          <Flex
+            row
+            shrink
+            alignItems="center"
+            flexBasis={balanceUpdate ? '75%' : '100%'}
+            gap="xs"
+            justifyContent="flex-start">
+            {icon && (
+              <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
+                {icon}
+              </Flex>
+            )}
+            <Flex shrink gap="xxxs">
+              <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="mediumLabel">
+                {title}
+              </Text>
+              <Text color="textSecondary" variant="badge">
+                {dateAdded.toLocaleString()}
+              </Text>
+            </Flex>
+          </Flex>
+          {balanceUpdate && (
+            <Flex alignItems="flex-end" flexBasis="25%" gap="xs">
+              <>
+                <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
+                  {balanceUpdate.assetIncrease}
+                </Text>
+                {balanceUpdate.usdIncrease && (
+                  <Text
+                    adjustsFontSizeToFit
+                    color="textSecondary"
+                    numberOfLines={1}
+                    variant="badge">
+                    {balanceUpdate.usdIncrease}
+                  </Text>
+                )}
+              </>
             </Flex>
           )}
-          <Flex shrink gap="xxxs">
-            <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="mediumLabel">
-              {title}
-            </Text>
-            <Text color="textSecondary" variant="badge">
-              {dateAdded.toLocaleString()}
-            </Text>
-          </Flex>
         </Flex>
-        {balanceUpdate && (
-          <Flex alignItems="flex-end" flexBasis="25%" gap="xs">
-            <>
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
-                {balanceUpdate.assetIncrease}
-              </Text>
-              {balanceUpdate.usdIncrease && (
-                <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="badge">
-                  {balanceUpdate.usdIncrease}
-                </Text>
-              )}
-            </>
-          </Flex>
-        )}
-      </Flex>
-    </Button>
+      </Button>
+      <TransactionActionsModal
+        isVisible={showActionsModal}
+        showCancelButton={true}
+        onClose={() => {
+          setShowActionsModal(false)
+        }}
+        onExplore={() => openUri(`${explorerUrl}/tx/${hash}`)}
+      />
+    </>
   )
 }
 

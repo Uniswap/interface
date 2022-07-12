@@ -41,6 +41,7 @@ export const enum ModalName {
   Send = 'send-modal',
   Swap = 'swap-modal',
   TokenWarningModal = 'token-warning-modal',
+  TransactionActions = 'transaction-actions',
   WalletConnectScan = 'wallet-connect-scan-modal',
   WCSignRequest = 'wc-sign-request-modal',
   RemoveWallet = 'remove-wallet-modal',
