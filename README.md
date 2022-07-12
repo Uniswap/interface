@@ -67,7 +67,7 @@ We use `redux-persist` to persist Redux state between user sessions. When the Re
 
 #### When to define a migration
 
-Anytime Redux state properties are renamed or deleted. Migrations are not necessary when properties are added, though you should update the latest schema within the `schema.ts` file.
+Anytime a slice is added or Redux state properties are renamed or deleted. Migrations are not necessary when properties are added to an existing slice, though you should update the latest schema within the `schema.ts` file.
 
 #### How to migrate
 

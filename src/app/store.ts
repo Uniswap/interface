@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
 import {
-  createMigrate,
   FLUSH,
   PAUSE,
   PERSIST,
@@ -12,6 +11,7 @@ import {
   REHYDRATE,
 } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
+import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
 import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
@@ -50,7 +50,7 @@ export const persistConfig = {
     dataApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 4,
+  version: 5,
   migrate: createMigrate(migrations),
 }
 

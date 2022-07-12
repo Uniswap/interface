@@ -76,12 +76,20 @@ export const v1Schema = {
   modals: {
     [ModalName.WalletConnectScan]: {
       isOpen: false,
+      initialState: 0,
+    },
+    [ModalName.Swap]: {
+      isOpen: false,
       initialState: undefined,
     },
-    wallet: {
-      ...v0Schema.wallet,
-      settings: {},
+    [ModalName.Send]: {
+      isOpen: false,
+      initialState: undefined,
     },
+  },
+  wallet: {
+    ...v0Schema.wallet,
+    settings: {},
   },
 }
 
@@ -105,6 +113,20 @@ export const v4Schema = {
   ...v3Schema,
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { balances, ...restV4Schema } = v4Schema
+delete restV4Schema.favorites.followedAddresses
+
+// adding in missed properties
+export const v5Schema = {
+  ...restV4Schema,
+  walletConnect: { ...restV4Schema.walletConnect, pendingSession: null },
+  wallet: {
+    ...restV4Schema.wallet,
+    settings: { tokensOrderBy: undefined, tokensMetadataDisplayType: undefined },
+  },
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v4Schema
+export const getSchema = () => v5Schema

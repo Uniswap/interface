@@ -1,15 +1,16 @@
 import dayjs from 'dayjs'
 import { ChainId } from 'src/constants/chains'
+import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 
 export const migrations = {
   0: (state: any) => {
-    const oldTransactionState = state.transactions
+    const oldTransactionState = state?.transactions
     const newTransactionState: any = {}
 
-    const chainIds = Object.keys(oldTransactionState.byChainId)
+    const chainIds = Object.keys(oldTransactionState?.byChainId ?? {})
     for (const chainId of chainIds) {
-      const transactions = oldTransactionState.byChainId[chainId]
+      const transactions = oldTransactionState.byChainId?.[chainId] ?? []
       const txIds = Object.keys(transactions)
       for (const txId of txIds) {
         const txDetails = transactions[txId]
@@ -22,7 +23,7 @@ export const migrations = {
 
     const oldNotificationState = state.notifications
     const newNotificationState = { ...oldNotificationState, lastTxNotificationUpdate: {} }
-    const addresses = Object.keys(oldTransactionState.lastTxHistoryUpdate)
+    const addresses = Object.keys(oldTransactionState?.lastTxHistoryUpdate || [])
     for (const address of addresses) {
       newNotificationState.lastTxNotificationUpdate[address] = {
         [ChainId.Mainnet]: oldTransactionState.lastTxHistoryUpdate[address],
@@ -34,18 +35,19 @@ export const migrations = {
 
   1: (state: any) => {
     const newState = { ...state }
-    delete newState.walletConnect.modalState
+    delete newState.walletConnect?.modalState
     return newState
   },
 
   2: (state: any) => {
     const newState = { ...state }
-    const oldFollowingAddresses = state.favorites.followedAddresses
-    newState.favorites.watchedAddresses = oldFollowingAddresses
-    delete newState.favorites.followedAddresses
+    const oldFollowingAddresses = state?.favorites?.followedAddresses
+    if (oldFollowingAddresses) newState.favorites.watchedAddresses = oldFollowingAddresses
+    delete newState?.favorites?.followedAddresses
     return newState
   },
 
+  // This is an unncessary migration
   3: (state: any) => {
     const newState = { ...state }
     newState.searchHistory = { results: [] }
@@ -54,7 +56,7 @@ export const migrations = {
 
   4: (state: any) => {
     const newState = { ...state }
-    const accounts = newState.wallet.accounts
+    const accounts = newState?.wallet?.accounts ?? {}
     let derivationIndex = 0
     for (const account of Object.keys(accounts)) {
       newState.wallet.accounts[account].timeImportedMs = dayjs().valueOf()
@@ -63,6 +65,27 @@ export const migrations = {
         derivationIndex += 1
       }
     }
+    return newState
+  },
+
+  5: (state: any) => {
+    const newState = { ...state }
+    newState.modals = {
+      [ModalName.WalletConnectScan]: {
+        isOpen: false,
+        initialState: 0,
+      },
+      [ModalName.Swap]: {
+        isOpen: false,
+        initialState: undefined,
+      },
+      [ModalName.Send]: {
+        isOpen: false,
+        initialState: undefined,
+      },
+    }
+
+    delete newState?.balances
     return newState
   },
 }

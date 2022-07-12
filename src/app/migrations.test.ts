@@ -1,12 +1,13 @@
 import { BigNumber } from 'ethers'
 import mockdate from 'mockdate'
-import { createMigrate } from 'redux-persist'
+import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
-import { initialSchema, v1Schema, v2Schema, v3Schema } from 'src/app/schema'
+import { getSchema, initialSchema, v1Schema, v2Schema, v3Schema, v4Schema } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
+import { ModalName } from 'src/features/telemetry/constants'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -23,6 +24,28 @@ describe('Redux state migrations', () => {
 
     const migrate = createMigrate(migrations)
     const migratedSchema = await migrate(intialSchemaStub, persistConfig.version)
+    expect(typeof migratedSchema).toBe('object')
+
+    const migratedSchemaKeys = new Set(Object.keys(migratedSchema as any))
+    const latestSchemaKeys = new Set(Object.keys(getSchema()))
+
+    for (const key of migratedSchemaKeys) {
+      if (latestSchemaKeys.has(key)) latestSchemaKeys.delete(key)
+      migratedSchemaKeys.delete(key)
+    }
+
+    // if this fails then it's likely a slice was added but a migration was not created for it
+    expect(migratedSchemaKeys.size).toBe(0)
+    expect(latestSchemaKeys.size).toBe(0)
+  })
+
+  // This is a precaution to ensure we do not attempt to access undefined properties during migrations
+  // If this test fails, make sure all property references to state are using optional chaining
+  it('uses optional chaining when accessing old state variables', async () => {
+    const emptyStub = { _persist: { version: -1, rehydrated: false } }
+
+    const migrate = createMigrate(migrations)
+    const migratedSchema = await migrate(emptyStub, persistConfig.version)
     expect(typeof migratedSchema).toBe('object')
   })
 
@@ -190,5 +213,15 @@ describe('Redux state migrations', () => {
     const v4 = migrations[4](v3SchemaStub)
     expect(v4.wallet.accounts[0].timeImportedMs).toEqual(TEST_IMPORT_TIME_MS)
     expect(v4.wallet.accounts[2].derivationIndex).toBeDefined()
+  })
+
+  it('migrates from v4 to v5', () => {
+    const v5 = migrations[5](v4Schema)
+
+    expect(v4Schema.balances).toBeDefined()
+    expect(v5.balances).toBeUndefined()
+
+    expect(v5.modals[ModalName.Swap].isOpen).toEqual(false)
+    expect(v5.modals[ModalName.Send].isOpen).toEqual(false)
   })
 })
