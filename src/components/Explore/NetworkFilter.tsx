@@ -1,0 +1,172 @@
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useRef, useState } from 'react'
+import { Check, ChevronDown, ChevronUp } from 'react-feather'
+import { Circle } from 'react-feather'
+import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
+import styled, { css } from 'styled-components/macro'
+
+export const NETWORK_DISPLAYS: { [key: string]: string } = {
+  Ethereum: 'Ethereum',
+  Arbitrum: 'Arbitrum',
+  Optimism: 'Optimism',
+  Polygon: 'Polygon',
+}
+
+const NETWORKS = Object.values(NETWORK_DISPLAYS)
+
+enum FlyoutAlignment {
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT',
+}
+
+const InternalMenuItem = styled.div`
+  flex: 1;
+  padding: 8px;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
+const InternalLinkMenuItem = styled(InternalMenuItem)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+  justify-content: space-between;
+  text-decoration: none;
+  cursor: pointer;
+
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    text-decoration: none;
+  }
+`
+const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
+  min-width: 200px;
+  max-height: 350px;
+  overflow: auto;
+  background-color: ${({ theme }) => theme.bg1};
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
+  border: 1px solid ${({ theme }) => theme.bg0};
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  position: absolute;
+  top: 48px;
+  z-index: 100;
+
+  ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
+    flyoutAlignment === FlyoutAlignment.RIGHT
+      ? css`
+          right: 0px;
+        `
+      : css`
+          left: 0px;
+        `};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    bottom: unset;
+    right: 0;
+    left: unset;
+  `};
+`
+
+const StyledMenuButton = styled.button`
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg0};
+  padding: 6px 12px 6px 12px;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.bg3};
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+`
+
+const StyledMenu = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: none;
+  text-align: left;
+  width: 160px;
+`
+
+const StyledMenuContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  width: 100%;
+  vertical-align: middle;
+  color: ${({ theme }) => theme.text1};
+`
+
+const Chevron = styled.span`
+  color: ${({ theme }) => theme.text2};
+`
+
+// TODO: change this to reflect data pipeline
+export default function NetworkFilter() {
+  const node = useRef<HTMLDivElement | null>(null)
+  const open = useModalIsOpen(ApplicationModal.NETWORK_FILTER)
+  const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
+  useOnClickOutside(node, open ? toggleMenu : undefined)
+  const [activeNetwork, setNetwork] = useState('Ethereum')
+
+  return (
+    <StyledMenu ref={node}>
+      <StyledMenuButton onClick={toggleMenu} aria-label={`networkFilter`}>
+        <StyledMenuContent>
+          <Circle size={12} /> {NETWORK_DISPLAYS[activeNetwork]}
+          <Chevron>
+            {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
+          </Chevron>
+        </StyledMenuContent>
+      </StyledMenuButton>
+      {/* handles the actual flyout of the menu*/}
+      {open && (
+        <MenuTimeFlyout>
+          {NETWORKS.map((network) => (
+            <InternalLinkMenuItem
+              key={network}
+              onClick={() => {
+                setNetwork(network)
+                toggleMenu()
+              }}
+            >
+              <div>
+                <Circle size={12} /> {NETWORK_DISPLAYS[network]}
+              </div>
+              {network === activeNetwork && <Check opacity={0.6} size={16} />}
+            </InternalLinkMenuItem>
+          ))}
+        </MenuTimeFlyout>
+      )}
+    </StyledMenu>
+  )
+}

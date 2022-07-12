@@ -12,24 +12,31 @@ const ExploreContainer = styled.div`
 const TokenTableContainer = styled.div`
   padding: 16px 0px;
 `
+const TitleContainer = styled.div`
+  font-size: 32px;
+  margin-bottom: 16px;
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+`
 const FiltersContainer = styled.div`
   display: flex;
   gap: 8px;
   height: 44px;
   max-width: 960px;
-  grid-template-columns: 9fr 1.5fr 1fr;
   margin-left: auto;
   margin-right: auto;
 `
 const Explore = () => {
   return (
     <ExploreContainer>
+      <TitleContainer>Explore Tokens</TitleContainer>
       <FiltersContainer>
         <FavoriteButton />
         <TimeSelector />
         <SearchBar />
       </FiltersContainer>
-
       <TokenTableContainer>
         <TokenTable />
       </TokenTableContainer>

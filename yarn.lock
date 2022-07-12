@@ -2,28 +2,28 @@
 # yarn lockfile v1
 
 
-"@amplitude/analytics-browser@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@amplitude/analytics-browser/-/analytics-browser-0.5.1.tgz#0d7304a64251b9b65e826948e5afd311d6118576"
-  integrity sha512-CDeV9S+clElWsO56L8+hGyG/nFSDb56cSlHZhnTEovA1H6YNqI7/NXPDTVE619YEKIY/boNKSSqgNIcf4NN0VQ==
+"@amplitude/analytics-browser@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-browser/-/analytics-browser-1.0.0.tgz#60b228ae174b05e02581bb95851a5a4cc977f2ca"
+  integrity sha512-JzNXibg7dsRMIhwkrilLvplOLuQ2KGZpO3eMwm5qZB1dhMDHC1NpKRXa60+MOrZt4H6ACxD/gvuyBoXnbjgUyA==
   dependencies:
-    "@amplitude/analytics-core" "^0.4.1"
-    "@amplitude/analytics-types" "^0.3.0"
+    "@amplitude/analytics-core" "^0.6.1"
+    "@amplitude/analytics-types" "^0.5.1"
     "@amplitude/ua-parser-js" "^0.7.31"
     tslib "^2.3.1"
 
-"@amplitude/analytics-core@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@amplitude/analytics-core/-/analytics-core-0.4.1.tgz#0e1a7ae6470bcec277a0389e16dd110519f6750e"
-  integrity sha512-letpuJVuWI6TAkaZ0Szi4FxqD2xukjvOHQ+D/GHBpspUiK9ETpjT9vXNrczw5Zs1B5hgLHfNOlhMfdWHoG+3qg==
+"@amplitude/analytics-core@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-core/-/analytics-core-0.6.1.tgz#91a7430515f93789180c9f5ef4af173037c2f426"
+  integrity sha512-CpWQNejb7Kfnu6QYaZIeoU8xrGhUBVYtc243BH4LVi2pqiS4ATb/IkJfFdaerE8HEJyjXXzKGRnT6ouagZYmBA==
   dependencies:
-    "@amplitude/analytics-types" "^0.3.0"
+    "@amplitude/analytics-types" "^0.5.1"
     tslib "^2.3.1"
 
-"@amplitude/analytics-types@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.3.0.tgz#3626f2907e4dd353f0ca3a21b847d7560a1c4da9"
-  integrity sha512-Hu/emt6mEpSGmOnLyqZGe75a5BNH3j9WJWBDFMBOZ1gLsbrxKtrb6w3EQy6yRROZ8Uyn04wC0veVUYyETwH3vg==
+"@amplitude/analytics-types@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.5.1.tgz#6a25750c175bd86ccd8cb5e45a5b390bf9fd9ef1"
+  integrity sha512-/42ffX8qQbmxGTtBqmuHWKP/FkxrJ2/n9hBgikdrYd8T5Qg1IG9gfpP/Up7FNMV3md2sIaklpG7ou04C818rxg==
 
 "@amplitude/ua-parser-js@^0.7.31":
   version "0.7.31"
