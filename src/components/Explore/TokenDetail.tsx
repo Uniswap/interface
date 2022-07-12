@@ -1,7 +1,7 @@
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
-import { atom, useAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { darken } from 'polished'
 import { ReactNode, useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart, Share } from 'react-feather'
@@ -55,6 +55,15 @@ const ChartHeader = styled.div`
   color: ${({ theme }) => theme.text1};
   gap: 4px;
   margin-bottom: 24px;
+`
+const ClickFavorited = styled.span`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.primary1};
+  }
 `
 const ContractAddress = styled.button`
   display: flex;
@@ -204,10 +213,24 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
-  const [favoriteTokens] = useAtom(favoritesAtom)
-  const isFavorited = atom<boolean>(favoriteTokens.includes(address))
+  const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
+  // const isFavorited = atom<boolean>(favoriteTokens.includes(address))
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
+  const isFavorited = favoriteTokens.includes(address)
+  const heartColor = isFavorited ? theme.primary1 : undefined
 
+  /* handle favorite token logic */
+  const toggleFavoriteToken = () => {
+    let updatedFavoriteTokens
+    if (isFavorited) {
+      updatedFavoriteTokens = favoriteTokens.filter((tokenAddress: string) => {
+        return tokenAddress !== address
+      })
+    } else {
+      updatedFavoriteTokens = [...favoriteTokens, address]
+    }
+    updateFavoriteTokens(updatedFavoriteTokens)
+  }
   // catch token error and loading state
   if (!token) {
     return <div>No Token</div>
@@ -240,11 +263,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </TokenNameCell>
           <TokenActions>
             <Share size={18} />
-            <Heart
-              size={15}
-              color={isFavorited ? theme.primary1 : undefined}
-              fill={isFavorited ? theme.primary1 : undefined}
-            />
+            <ClickFavorited onClick={() => toggleFavoriteToken()}>
+              <Heart size={15} color={heartColor} fill={heartColor} />
+            </ClickFavorited>
           </TokenActions>
         </>
       }
