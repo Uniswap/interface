@@ -31,16 +31,15 @@ type TraceProps = {
 export const Trace = memo(
   ({
     shouldLogImpression,
+    eventName,
     children,
     page,
     section,
     element,
-    eventName,
     eventProperties,
   }: PropsWithChildren<TraceProps>) => {
     const parentTrace = useContext(TraceContext)
 
-    // Component props are destructured to ensure shallow comparison
     const combinedProps = useMemo(
       () => ({
         ...parentTrace,
