@@ -131,38 +131,59 @@ export const TOKEN_INFO_DESCRIPTION: { [key: string]: string } = {
 }
 
 const USDT_SUPPORTS = ['usdt.e', 'usdt_e', 'usdt_b', 'usdt_t']
+const KNC_SUPPORTS = ['knc_b', 'knc_e']
 USDT_SUPPORTS.forEach(key => {
   TOKEN_INFO_DESCRIPTION[key] = TOKEN_INFO_DESCRIPTION.usdt
 })
+KNC_SUPPORTS.forEach(key => {
+  TOKEN_INFO_DESCRIPTION[key] = TOKEN_INFO_DESCRIPTION.knc
+})
 
-// pairs in white list desc will be hardcode for now, the other will get data from api
-export const WHITE_LIST_TOKEN_INFO_PAIR: { [chain in ChainId]?: { [key: string]: boolean } } = {
+/**
+ * pairs in white list will be hardcode for now
+ * value has name => override name
+ * value is {} => just in white list, not override any thing
+ */
+export const WHITE_LIST_TOKEN_INFO_PAIR: {
+  [chain in ChainId]?: { [key: string]: { [tokenName: string]: { address?: string; name?: string } } }
+} = {
   [ChainId.BSCMAINNET]: {
-    'trx,usdt': true,
-    'gmt,usdt': true,
-    'axs,usdt': true,
-    'dot,usdt': true,
-    'tlm,usdt': true,
+    'trx,usdt': {},
+    'gmt,usdt': {},
+    'axs,usdt': {},
+    'dot,usdt': {},
+    'tlm,usdt': { tlm: { name: 'Alien Worlds' } },
+    'knc,usdt': {},
   },
   [ChainId.MATIC]: {
-    'pgx,usdt': true,
-    'knc,usdt': true,
+    'pgx,usdt': {},
+    'knc,usdt': {},
   },
   [ChainId.BTTC]: {
-    'btt,usdt_e': true,
-    'btt,usdt_b': true,
-    'btt,usdt_t': true,
+    'btt,usdt_e': {},
+    'btt,usdt_b': {},
+    'btt,usdt_t': {},
+    'knc_e,usdt_e': {},
+    'knc_b,usdt_e': {},
+    'knc_e,usdt_b': {},
+    'knc_b,usdt_b': {},
+    'knc_e,usdt_t': {},
+    'knc_b,usdt_t': {},
   },
   [ChainId.MAINNET]: {
-    'slp,usdt': true,
+    'slp,usdt': {},
+    'knc,usdt': {},
   },
   [ChainId.AVAXMAINNET]: {
-    'avax,usdt.e': true,
-    'avax,usdt': true,
+    'avax,usdt.e': {},
+    'avax,usdt': {},
+    'knc,usdt': {},
+    'knc,usdt.e': {},
   },
 }
 
-export const MAP_TOKEN_NAME: { [key: string]: string } = {
-  // hardcode token name. in the future will have api
-  tlm: 'Alien Worlds',
+export const MAP_TOKEN_HAS_MULTI_BY_NETWORK: { [key: string]: { [key: string]: string } } = {
+  // these network have many type of usdt, .... =>  hardcode 1 type
+  avalanche: { usdt: 'usdt.e' },
+  bittorrent: { usdt: 'usdt_e' },
 }

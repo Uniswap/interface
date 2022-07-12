@@ -10,8 +10,6 @@ import { formatDollarAmount } from 'utils/numbers'
 import { isMobile, isIOS, isSafari } from 'react-device-detect'
 import { TokenInfo } from 'hooks/useTokenInfo'
 import { Currency } from '@kyberswap/ks-sdk-core'
-import { MAP_TOKEN_NAME } from 'constants/tokenLists/token-info'
-import { getSymbolSlug } from 'utils/string'
 import { useIsDarkMode } from 'state/user/hooks'
 
 const NOT_AVAIALBLE = '--'
@@ -138,6 +136,15 @@ enum SeeStatus {
   SEE_LESS,
 }
 
+/**
+ * Tether (USDT) => Tether
+ * @param text
+ * @returns
+ */
+function formatString(text: string | undefined) {
+  return text ? text.replace(/\s\(.*\)/i, '') : ''
+}
+
 export function HowToSwap({
   fromCurrency,
   toCurrency,
@@ -155,11 +162,9 @@ export function HowToSwap({
   const name1 = fromCurrency.name
   const name2 = toCurrency.name
 
-  let fromName = name1 !== symbol1 ? name1 : fromCurrencyInfo.name || name1
-  let toName = name2 !== symbol2 ? name2 : toCurrencyInfo.name || name2
+  const fromName = formatString(fromCurrencyInfo.name || name1)
+  const toName = formatString(toCurrencyInfo.name || name2)
 
-  fromName = MAP_TOKEN_NAME[getSymbolSlug(fromCurrency)] || fromName
-  toName = MAP_TOKEN_NAME[getSymbolSlug(toCurrency)] || toName
   return (
     <Wrapper borderBottom={false}>
       <Flex>
@@ -232,7 +237,7 @@ const SingleTokenInfo = ({
         <CurrencyLogo currency={currency} size="24px" style={{ marginRight: 10 }} />
         <AboutText>
           {/* About Usdt (Tether(...)) => Usdt (Tether) */}
-          About {symbol} {currencyName !== symbol ? `(${currencyName?.replace(/\s\(.*\)/i, '')})` : null}
+          About {symbol} {currencyName !== symbol ? `(${formatString(currencyName)})` : null}
         </AboutText>
       </Flex>
 

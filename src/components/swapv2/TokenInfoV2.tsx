@@ -4,12 +4,18 @@ import useTokenInfo, { TokenInfo } from 'hooks/useTokenInfo'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { TokenInfoWrapper } from './styleds'
 import SingleTokenInfo, { HowToSwap } from 'components/swapv2/SingleTokenInfo'
-import { TOKEN_INFO_DESCRIPTION, WHITE_LIST_TOKEN_INFO_PAIR } from 'constants/tokenLists/token-info'
+import { TOKEN_INFO_DESCRIPTION } from 'constants/tokenLists/token-info'
+import { checkPairInWhiteList } from 'utils/tokenInfo'
 import { getSymbolSlug } from 'utils/string'
 import { useActiveWeb3React } from 'hooks'
 
 const isEmptyData = (tokenInfo: TokenInfo) => {
   return !tokenInfo.price && !tokenInfo?.description?.en && !tokenInfo.tradingVolume && !tokenInfo.marketCapRank
+}
+
+const copyToken = (tokenInfo: TokenInfo) => {
+  const result: TokenInfo = { ...tokenInfo, description: { ...tokenInfo.description } }
+  return result
 }
 
 const checkTokenDescription = ({
@@ -26,33 +32,29 @@ const checkTokenDescription = ({
   chainId: ChainId | undefined
 }) => {
   // hard code pair description for SEO
-  const rs1 = JSON.parse(JSON.stringify(tokenInfo1))
-  const rs2 = JSON.parse(JSON.stringify(tokenInfo2))
-  let isHardCode = false
+  const rs1: TokenInfo = copyToken(tokenInfo1)
+  const rs2: TokenInfo = copyToken(tokenInfo2)
+  let inWhiteList = false
   if (tokenWrapped1 && tokenWrapped2 && chainId) {
-    const mapByNetwork = WHITE_LIST_TOKEN_INFO_PAIR[chainId]
     const symbol1 = getSymbolSlug(tokenWrapped1)
     const symbol2 = getSymbolSlug(tokenWrapped2)
-    const str1 = `${symbol1},${symbol2}`
-    const str2 = `${symbol2},${symbol1}`
-
-    if (mapByNetwork && (mapByNetwork[str1] || mapByNetwork[str2])) {
+    const { isInWhiteList, data } = checkPairInWhiteList(chainId, symbol1, symbol2)
+    if (isInWhiteList) {
+      inWhiteList = isInWhiteList
       const descHardCode1 = TOKEN_INFO_DESCRIPTION[symbol1]
       const descHardCode2 = TOKEN_INFO_DESCRIPTION[symbol2]
-      if (descHardCode1) {
-        rs1.description.en = descHardCode1
-        isHardCode = true
-      }
-      if (descHardCode2) {
-        rs2.description.en = descHardCode2
-        isHardCode = true
-      }
+      const nameHardCode1 = data[symbol1]?.name
+      const nameHardCode2 = data[symbol2]?.name
+      if (nameHardCode1) rs1.name = nameHardCode1
+      if (nameHardCode2) rs2.name = nameHardCode2
+      if (descHardCode1) rs1.description.en = descHardCode1
+      if (descHardCode2) rs2.description.en = descHardCode2
     }
   }
   return {
     tokenInfo1: rs1,
     tokenInfo2: rs2,
-    isHardCode,
+    isInWhiteList: inWhiteList,
   }
 }
 
@@ -76,7 +78,7 @@ const TokenInfoV2 = ({
 
   const { chainId } = useActiveWeb3React()
 
-  const { tokenInfo1, tokenInfo2, isHardCode } = checkTokenDescription({
+  const { tokenInfo1, tokenInfo2, isInWhiteList } = checkTokenDescription({
     tokenInfo1: data1,
     tokenInfo2: data2,
     tokenWrapped1: currencyIn,
@@ -84,15 +86,15 @@ const TokenInfoV2 = ({
     chainId,
   })
 
-  const showToken1 = !isEmptyData(tokenInfo1) && isHardCode
-  const showToken2 = !isEmptyData(tokenInfo2) && isHardCode
+  const showToken1 = !isEmptyData(tokenInfo1) && isInWhiteList
+  const showToken2 = !isEmptyData(tokenInfo2) && isInWhiteList
 
   useEffect(() => {
     callback(showToken2 || showToken1)
   }, [callback, showToken2, showToken1])
 
   if (!showToken2 && !showToken1) return null
-  const showHow2Swap = Boolean(showToken1 && showToken2 && currencyIn && currencyOut && isHardCode)
+  const showHow2Swap = Boolean(showToken1 && showToken2 && currencyIn && currencyOut && isInWhiteList)
   return (
     <TokenInfoWrapper>
       {showToken1 && (
