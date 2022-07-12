@@ -17,7 +17,7 @@ export const enum PageName {
 
 /**
  * Sections. Disambiguates low-level elements that may share a name.
- * eg a `back` button in a modal will have the same `elementName`,
+ * eg a `back` button in a modal will have the same `element`,
  * but a different `section`.
  */
 export const enum SectionName {
@@ -45,7 +45,7 @@ export const enum ElementName {
  * Use destructure assignments to pick properties.
  * @example
  *  const ButtonActionProps = (({ onClick }) => ({ onClick }))(ActionProps)
- *  <TraceEvent actionProps={ButtonActionProps} elementName={name}>
+ *  <TraceEvent actionProps={ButtonActionProps} element={name}>
  */
 export const ActionNames = {
   onClick: { action: 'click' },
