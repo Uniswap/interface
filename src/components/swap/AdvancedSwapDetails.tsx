@@ -24,7 +24,6 @@ interface AdvancedSwapDetailsProps {
   trade?: InterfaceTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
-  hideRouteDiagram?: boolean
   hideInfoTooltips?: boolean
 }
 
