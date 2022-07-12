@@ -11,18 +11,20 @@ import {
   TickMath,
   tickToPrice,
 } from '@uniswap/v3-sdk'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
+import { replaceURLParam } from 'utils/routes'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
+import { useCurrencyBalances } from '../../connection/hooks'
 import { AppState } from '../../index'
-import { useCurrencyBalances } from '../../wallet/hooks'
 import {
   Bound,
   Field,
@@ -46,6 +48,7 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
   onStartPriceInput: (typedValue: string) => void
 } {
   const dispatch = useAppDispatch()
+  const history = useHistory()
 
   const onFieldAInput = useCallback(
     (typedValue: string) => {
@@ -64,15 +67,17 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
   const onLeftRangeInput = useCallback(
     (typedValue: string) => {
       dispatch(typeLeftRangeInput({ typedValue }))
+      history.replace({ search: replaceURLParam(history.location.search, 'minPrice', typedValue) })
     },
-    [dispatch]
+    [dispatch, history]
   )
 
   const onRightRangeInput = useCallback(
     (typedValue: string) => {
       dispatch(typeRightRangeInput({ typedValue }))
+      history.replace({ search: replaceURLParam(history.location.search, 'maxPrice', typedValue) })
     },
-    [dispatch]
+    [dispatch, history]
   )
 
   const onStartPriceInput = useCallback(
@@ -121,7 +126,7 @@ export function useV3DerivedMintInfo(
   invertPrice: boolean
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 } {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
 
   const { independentField, typedValue, leftRangeTypedValue, rightRangeTypedValue, startPriceTypedValue } =
     useV3MintState()

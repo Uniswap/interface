@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { AlertOctagon } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
@@ -42,7 +42,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
  * Shows a downtime warning for the network if it's relevant
  */
 export default function DowntimeWarning() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   if (!isL2ChainId(chainId)) {
     return null
   }

@@ -3,8 +3,8 @@ import { SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 import approveAmountCalldata from 'utils/approveAmountCalldata'
 
@@ -39,7 +39,7 @@ export function useSwapCallArguments(
   deadline: BigNumber | undefined,
   feeOptions: FeeOptions | undefined
 ): SwapCall[] {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
@@ -47,7 +47,7 @@ export function useSwapCallArguments(
   const argentWalletContract = useArgentWalletContract()
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!trade || !recipient || !provider || !account || !chainId || !deadline) return []
 
     if (trade instanceof V2Trade) {
       if (!routerContract) return []
@@ -175,7 +175,7 @@ export function useSwapCallArguments(
     chainId,
     deadline,
     feeOptions,
-    library,
+    provider,
     recipient,
     routerContract,
     signatureData,

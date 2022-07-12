@@ -1,4 +1,4 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ function useQueryCacheInvalidator() {
 }
 
 export default function Updater(): null {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, provider } = useWeb3React()
   const dispatch = useAppDispatch()
   const windowVisible = useIsWindowVisible()
 
@@ -31,10 +31,10 @@ export default function Updater(): null {
   useQueryCacheInvalidator()
 
   useEffect(() => {
-    if (library && chainId && windowVisible) {
+    if (provider && chainId && windowVisible) {
       setActiveChainId(chainId)
     }
-  }, [dispatch, chainId, library, windowVisible])
+  }, [dispatch, chainId, provider, windowVisible])
 
   const debouncedChainId = useDebounce(activeChainId, 100)
 

@@ -1,23 +1,24 @@
 import { Trans } from '@lingui/macro'
-import { Connector } from '@web3-react/types'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
+import CopyHelper from 'components/AccountDetails/Copy'
+import { injectedConnection } from 'connection'
+import { getConnection } from 'connection/utils'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
+import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { AbstractConnector } from 'web3-react-abstract-connector'
+import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import { clearAllTransactions } from '../../state/transactions/actions'
+import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { AutoRow } from '../Row'
-import Copy from './Copy'
 import Transaction from './Transaction'
 
 const HeaderRow = styled.div`
@@ -162,29 +163,6 @@ const WalletName = styled.div`
   color: ${({ theme }) => theme.text3};
 `
 
-const IconWrapper = styled.div<{ size?: number }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  margin-right: 8px;
-  & > img,
-  span {
-    height: ${({ size }) => (size ? size + 'px' : '32px')};
-    width: ${({ size }) => (size ? size + 'px' : '32px')};
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    align-items: flex-end;
-  `};
-`
-
-function WrappedStatusIcon({ connector }: { connector: AbstractConnector | Connector }) {
-  return (
-    <IconWrapper size={16}>
-      <StatusIcon connector={connector} />
-    </IconWrapper>
-  )
-}
-
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
 `
@@ -226,9 +204,15 @@ export default function AccountDetails({
   ENSName,
   openOptions,
 }: AccountDetailsProps) {
-  const { chainId, account, connector } = useActiveWeb3React()
+  const { chainId, account, connector } = useWeb3React()
+  const connectionType = getConnection(connector).type
+
   const theme = useContext(ThemeContext)
   const dispatch = useAppDispatch()
+
+  const isMetaMask = !!window.ethereum?.isMetaMask
+  const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
+  const isInjectedMobileBrowser = (isMetaMask || isCoinbaseWallet) && isMobile
 
   function formatConnectorName() {
     const { ethereum } = window
@@ -236,7 +220,8 @@ export default function AccountDetails({
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         (k) =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+          SUPPORTED_WALLETS[k].connector === connector &&
+          (connector !== injectedConnection.connector || isMetaMask === (k === 'METAMASK'))
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return (
@@ -265,43 +250,41 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== walletlink && (
-                    <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                      onClick={() => {
-                        ;(connector as any).close()
-                      }}
-                    >
-                      <Trans>Disconnect</Trans>
-                    </WalletAction>
+                  {!isInjectedMobileBrowser && (
+                    <>
+                      <WalletAction
+                        style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                        onClick={() => {
+                          if (connector.deactivate) {
+                            connector.deactivate()
+                          } else {
+                            connector.resetState()
+                          }
+
+                          dispatch(updateSelectedWallet({ wallet: undefined }))
+                          openOptions()
+                        }}
+                      >
+                        <Trans>Disconnect</Trans>
+                      </WalletAction>
+                      <WalletAction
+                        style={{ fontSize: '.825rem', fontWeight: 400 }}
+                        onClick={() => {
+                          openOptions()
+                        }}
+                      >
+                        <Trans>Change</Trans>
+                      </WalletAction>
+                    </>
                   )}
-                  <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400 }}
-                    onClick={() => {
-                      openOptions()
-                    }}
-                  >
-                    <Trans>Change</Trans>
-                  </WalletAction>
                 </div>
               </AccountGroupingRow>
-              <AccountGroupingRow id="web3-account-identifier-row">
+              <AccountGroupingRow data-testid="web3-account-identifier-row">
                 <AccountControl>
-                  {ENSName ? (
-                    <>
-                      <div>
-                        {connector && <WrappedStatusIcon connector={connector} />}
-                        <p> {ENSName}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        {connector && <WrappedStatusIcon connector={connector} />}
-                        <p> {account && shortenAddress(account)}</p>
-                      </div>
-                    </>
-                  )}
+                  <div>
+                    <StatusIcon connectionType={connectionType} />
+                    <p>{ENSName ? ENSName : account && shortenAddress(account)}</p>
+                  </div>
                 </AccountControl>
               </AccountGroupingRow>
               <AccountGroupingRow>
@@ -310,11 +293,11 @@ export default function AccountDetails({
                     <AccountControl>
                       <div>
                         {account && (
-                          <Copy toCopy={account}>
+                          <CopyHelper toCopy={account} iconPosition="left">
                             <span style={{ marginLeft: '4px' }}>
                               <Trans>Copy Address</Trans>
                             </span>
-                          </Copy>
+                          </CopyHelper>
                         )}
                         {chainId && account && (
                           <AddressLink
@@ -336,11 +319,11 @@ export default function AccountDetails({
                     <AccountControl>
                       <div>
                         {account && (
-                          <Copy toCopy={account}>
+                          <CopyHelper toCopy={account} iconPosition="left">
                             <span style={{ marginLeft: '4px' }}>
                               <Trans>Copy Address</Trans>
                             </span>
-                          </Copy>
+                          </CopyHelper>
                         )}
                         {chainId && account && (
                           <AddressLink
