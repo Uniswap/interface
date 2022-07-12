@@ -1,3 +1,4 @@
+import { TFunction } from 'react-i18next'
 import {
   SwapWarning,
   SwapWarningAction,
@@ -12,7 +13,7 @@ type PartialDerivedTransferInfo = Pick<
   'currencyBalances' | 'currencyAmounts' | 'currencies' | 'recipient'
 >
 
-export function getTransferWarnings(state: PartialDerivedTransferInfo) {
+export function getTransferWarnings(t: TFunction, state: PartialDerivedTransferInfo) {
   const { currencyBalances, currencyAmounts, currencies, recipient } = state
 
   const warnings: SwapWarning[] = []
@@ -22,16 +23,19 @@ export function getTransferWarnings(state: PartialDerivedTransferInfo) {
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   if (currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)) {
     warnings.push({
-      name: SwapWarningLabel.InsufficientFunds,
+      type: SwapWarningLabel.InsufficientFunds,
       severity: SwapWarningSeverity.None,
       action: SwapWarningAction.DisableSwapReview,
+      title: t('You don’t have enough {{ symbol }}.', {
+        symbol: currencyAmountIn.currency?.symbol,
+      }),
     })
   }
 
   // transfer form is missing fields
   if (!currencies[CurrencyField.INPUT] || !recipient) {
     warnings.push({
-      name: SwapWarningLabel.FormIncomplete,
+      type: SwapWarningLabel.FormIncomplete,
       severity: SwapWarningSeverity.None,
       action: SwapWarningAction.DisableSwapReview,
     })

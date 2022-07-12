@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import React, { useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
@@ -87,6 +88,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   } = state
 
   const activeAccount = useActiveAccount()
+  const { t } = useTranslation()
 
   const currencyIn = useCurrency(
     currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn?.address) : undefined
@@ -174,7 +176,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
   }
 
-  const warnings = getSwapWarnings({
+  const warnings = getSwapWarnings(t, {
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,

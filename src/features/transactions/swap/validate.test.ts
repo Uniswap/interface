@@ -43,17 +43,19 @@ const insufficientBalanceState: PartialDerivedSwapInfo = {
   exactCurrencyField: CurrencyField.INPUT,
 }
 
+const mockTranslate = jest.fn()
+
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
-    const warnings = getSwapWarnings(partialSwapState)
+    const warnings = getSwapWarnings(mockTranslate, partialSwapState)
     expect(warnings.length).toBe(1)
-    expect(warnings[0].name).toEqual(SwapWarningLabel.FormIncomplete)
+    expect(warnings[0].type).toEqual(SwapWarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getSwapWarnings(insufficientBalanceState)
+    const warnings = getSwapWarnings(mockTranslate, insufficientBalanceState)
     expect(warnings.length).toBe(1)
-    expect(warnings[0].name).toEqual(SwapWarningLabel.InsufficientFunds)
+    expect(warnings[0].type).toEqual(SwapWarningLabel.InsufficientFunds)
   })
 
   it('catches multiple errors', () => {
@@ -65,7 +67,7 @@ describe(getSwapWarnings, () => {
       },
     }
 
-    const warnings = getSwapWarnings(incompleteAndInsufficientBalanceState)
+    const warnings = getSwapWarnings(mockTranslate, incompleteAndInsufficientBalanceState)
     expect(warnings.length).toBe(2)
   })
 })

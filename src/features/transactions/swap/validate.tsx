@@ -1,3 +1,4 @@
+import { TFunction } from 'react-i18next'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
@@ -28,9 +29,11 @@ export enum SwapWarningAction {
 }
 
 export type SwapWarning = {
-  name: SwapWarningLabel
+  type: SwapWarningLabel
   severity: SwapWarningSeverity
   action: SwapWarningAction
+  title?: string
+  message?: string
 }
 
 export type PartialDerivedSwapInfo = Pick<
@@ -39,7 +42,7 @@ export type PartialDerivedSwapInfo = Pick<
 >
 
 // TODO: add swap warnings for: price impact, router errors, insufficient gas funds, low liquidity
-export function getSwapWarnings(state: PartialDerivedSwapInfo) {
+export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   const { currencyBalances, currencyAmounts, currencies, exactCurrencyField } = state
 
   const warnings: SwapWarning[] = []
@@ -49,9 +52,12 @@ export function getSwapWarnings(state: PartialDerivedSwapInfo) {
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   if (currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)) {
     warnings.push({
-      name: SwapWarningLabel.InsufficientFunds,
+      type: SwapWarningLabel.InsufficientFunds,
       severity: SwapWarningSeverity.None,
       action: SwapWarningAction.DisableSwapReview,
+      title: t('You don’t have enough {{ symbol }}.', {
+        symbol: currencyAmountIn.currency?.symbol,
+      }),
     })
   }
 
@@ -63,7 +69,7 @@ export function getSwapWarnings(state: PartialDerivedSwapInfo) {
     (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT])
   ) {
     warnings.push({
-      name: SwapWarningLabel.FormIncomplete,
+      type: SwapWarningLabel.FormIncomplete,
       severity: SwapWarningSeverity.None,
       action: SwapWarningAction.DisableSwapReview,
     })

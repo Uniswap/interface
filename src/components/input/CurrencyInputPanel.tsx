@@ -59,8 +59,9 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const transformedProps = useRestyle(restyleFunctions, rest)
   const isBlankOutputState = isOutput && !currency
 
-  const showInsufficientBalance =
-    !isOutput && warnings.some((warning) => warning.name === SwapWarningLabel.InsufficientFunds)
+  const insufficientBalanceWarning = warnings.find(
+    (warning) => warning.type === SwapWarningLabel.InsufficientFunds
+  )
 
   return (
     <Flex
@@ -90,13 +91,13 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         />
       )}
 
-      {showInsufficientBalance && (
+      {!isOutput && insufficientBalanceWarning && (
         <Text color="accentWarning" variant="bodySmall">
-          {t('You don’t have enough {{ symbol }}.', { symbol: currency?.symbol })}
+          {insufficientBalanceWarning.title}
         </Text>
       )}
 
-      {!isOutput && currency && !showInsufficientBalance && (
+      {!isOutput && currency && !insufficientBalanceWarning && (
         <Text color="textSecondary" variant="bodySmall">
           {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
         </Text>

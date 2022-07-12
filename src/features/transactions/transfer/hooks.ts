@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
 import { useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
@@ -40,6 +41,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     recipient,
     isUSDInput,
   } = state
+  const { t } = useTranslation()
 
   const activeAccount = useActiveAccount()
   const chainId = tradeableAsset?.chainId ?? ChainId.Mainnet
@@ -78,7 +80,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const currencyBalances = {
     [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
   }
-  const warnings = getTransferWarnings({
+  const warnings = getTransferWarnings(t, {
     currencies,
     currencyAmounts,
     currencyBalances,
