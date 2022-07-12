@@ -5,8 +5,8 @@ import { render, screen } from '../../test-utils'
 import WalletModal from './index'
 
 afterEach(() => {
-  jest.resetModules()
   jest.clearAllMocks()
+  jest.resetModules()
 })
 
 const UserAgentMock = jest.requireMock('utils/userAgent')
@@ -85,7 +85,7 @@ it('loads Wallet Modal on mobile', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(3)
 })
 
-it.skip('loads Wallet Modal on MetaMask browser', async () => {
+it('loads Wallet Modal on MetaMask browser', async () => {
   UserAgentMock.isMobile = true
 
   jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)

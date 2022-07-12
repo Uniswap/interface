@@ -1,7 +1,7 @@
 import { Connector } from '@web3-react/types'
 import COINBASE_ICON_URL from 'assets/images/coinbaseWalletIcon.svg'
 import { coinbaseWalletConnection, ConnectionType } from 'connection'
-import { getConnectionName, getIsCoinbaseWallet } from 'connection/utils'
+import { getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
 
 import { isMobile } from '../../utils/userAgent'
 import Option from './Option'
@@ -14,7 +14,12 @@ const BASE_PROPS = {
 
 const CoinbaseWalletOption = ({ tryActivation }: { tryActivation: (connector: Connector) => void }) => {
   const isActive = coinbaseWalletConnection.hooks.useIsActive()
+  const isMetaMask = getIsMetaMask()
   const isCoinbaseWallet = getIsCoinbaseWallet()
+
+  if (isMobile && isMetaMask) {
+    return null
+  }
 
   if (!isMobile || isCoinbaseWallet) {
     return <Option {...BASE_PROPS} isActive={isActive} header={getConnectionName(ConnectionType.COINBASE_WALLET)} />
