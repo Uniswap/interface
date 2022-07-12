@@ -16,7 +16,7 @@ import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
-import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
 const MAX_NFT_IMAGE_SIZE = 375
@@ -29,7 +29,6 @@ export function PortfolioNFTsScreen({
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
-  const displayName = useDisplayName(owner)
 
   const { t } = useTranslation()
 
@@ -75,9 +74,7 @@ export function PortfolioNFTsScreen({
             <BackButton showButtonLabel />
           )}
           <Text mb="md" mx="xs" variant="headlineSmall">
-            {isOtherOwner
-              ? t("{{displayName}}'s NFTs", { displayName: displayName?.name || owner })
-              : t('Your NFTs')}
+            {isOtherOwner ? t('NFTs') : t('Your NFTs')}
           </Text>
         </Flex>
       }
