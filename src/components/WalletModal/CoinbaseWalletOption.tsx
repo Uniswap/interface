@@ -11,6 +11,18 @@ const BASE_PROPS = {
   id: 'coinbase-wallet',
 }
 
+export function OpenCoinbaseWalletOption() {
+  const isActive = coinbaseWalletConnection.hooks.useIsActive()
+  return (
+    <Option
+      {...BASE_PROPS}
+      isActive={isActive}
+      link="https://go.cb-w.com/mtUDhEZPy1"
+      header="Open in Coinbase Wallet"
+    />
+  )
+}
+
 export function CoinbaseWalletOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {
   const isActive = coinbaseWalletConnection.hooks.useIsActive()
   return (
@@ -18,12 +30,7 @@ export function CoinbaseWalletOption({ tryActivation }: { tryActivation: (connec
       {...BASE_PROPS}
       isActive={isActive}
       onClick={() => tryActivation(coinbaseWalletConnection.connector)}
-      link="https://go.cb-w.com/mtUDhEZPy1"
-      header="Open in Coinbase Wallet"
+      header={getConnectionName(ConnectionType.COINBASE_WALLET)}
     />
   )
-}
-
-export function OpenInCoinbaseWalletOption() {
-  return <Option {...BASE_PROPS} isActive={false} header={getConnectionName(ConnectionType.COINBASE_WALLET)} />
 }

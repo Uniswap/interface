@@ -21,7 +21,7 @@ import { ExternalLink, ThemedText } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import { LightCard } from '../Card'
 import Modal from '../Modal'
-import { CoinbaseWalletOption, OpenInCoinbaseWalletOption } from './CoinbaseWalletOption'
+import { CoinbaseWalletOption, OpenCoinbaseWalletOption } from './CoinbaseWalletOption'
 import { FortmaticOption } from './FortmaticOption'
 import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
 import PendingView from './PendingView'
@@ -202,7 +202,7 @@ export default function WalletModal({
           ) : (
             <InjectedOption tryActivation={tryActivation} />
           ))}
-        {isMobile && !isCoinbaseWallet && !isMetaMask && <OpenInCoinbaseWalletOption />}
+        {isMobile && !isInjectedMobileBrowser && <OpenCoinbaseWalletOption />}
         {!isMetaMaskBrowser && <CoinbaseWalletOption tryActivation={tryActivation} />}
         {!isInjectedMobileBrowser && <WalletConnectOption tryActivation={tryActivation} />}
         {!isInjectedMobileBrowser && <FortmaticOption tryActivation={tryActivation} />}
