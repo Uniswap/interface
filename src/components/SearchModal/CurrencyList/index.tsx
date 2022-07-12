@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
@@ -260,7 +260,6 @@ export default function CurrencyList({
           token_address: token?.address,
           is_suggested_token: false,
           is_selected_from_list: true,
-          search_token_address_input: '',
           scroll_position: '',
           token_list_index: index + 1, // 1-indexed
           token_list_length: data.length,
@@ -274,6 +273,7 @@ export default function CurrencyList({
             events={[Event.onSelect]}
             name={EventName.TOKEN_SELECTED_SELECTION_MADE}
             properties={eventProperties}
+            element={ElementName.CURRENCY_ROW}
           >
             <CurrencyRow
               style={style}

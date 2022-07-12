@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -319,6 +319,10 @@ msgstr "ブロックされたアドレス"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "ブロックされたアドレス"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "ブロックスカウト"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "プールしている {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "プールの概要"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "ポータルブリッジ"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "V2の流動性"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "アクティブなV3流動性ポジションがここに表示されます。"
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "接続されているネットワークはサポートされていません。ここでサポート <0>をリクエストします</0>。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
