@@ -192,20 +192,37 @@ export default function WalletModal({
     const isMetaMaskBrowser = isMobile && isMetaMask
     const isInjectedMobileBrowser = isCoinbaseWalletBrowser || isMetaMaskBrowser
 
+    let injectedOption
+    if (!isInjected) {
+      if (!isMobile) {
+        injectedOption = <InstallMetaMaskOption />
+      }
+    } else if (!isCoinbaseWallet) {
+      if (isMetaMask) {
+        injectedOption = <MetaMaskOption tryActivation={tryActivation} />
+      } else {
+        injectedOption = <InjectedOption tryActivation={tryActivation} />
+      }
+    }
+
+    let coinbaseWalletOption
+    if (isMobile && !isInjectedMobileBrowser) {
+      coinbaseWalletOption = <OpenCoinbaseWalletOption />
+    } else if (!isMobile || isCoinbaseWalletBrowser) {
+      coinbaseWalletOption = <CoinbaseWalletOption tryActivation={tryActivation} />
+    }
+
+    const walletConnectionOption =
+      (!isInjectedMobileBrowser && <WalletConnectOption tryActivation={tryActivation} />) ?? null
+
+    const fortmaticOption = (!isInjectedMobileBrowser && <FortmaticOption tryActivation={tryActivation} />) ?? null
+
     return (
       <>
-        {!isMobile && !isInjected && <InstallMetaMaskOption />}
-        {isInjected &&
-          !isCoinbaseWalletBrowser &&
-          (isMetaMask ? (
-            <MetaMaskOption tryActivation={tryActivation} />
-          ) : (
-            <InjectedOption tryActivation={tryActivation} />
-          ))}
-        {isMobile && !isInjectedMobileBrowser && <OpenCoinbaseWalletOption />}
-        {(!isMobile || isCoinbaseWalletBrowser) && <CoinbaseWalletOption tryActivation={tryActivation} />}
-        {!isInjectedMobileBrowser && <WalletConnectOption tryActivation={tryActivation} />}
-        {!isInjectedMobileBrowser && <FortmaticOption tryActivation={tryActivation} />}
+        {injectedOption}
+        {coinbaseWalletOption}
+        {walletConnectionOption}
+        {fortmaticOption}
       </>
     )
   }
