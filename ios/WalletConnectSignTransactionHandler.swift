@@ -45,6 +45,7 @@ class WalletConnectSignTransactionHandler: RequestHandler {
             "nonce": transaction.nonce,
           ],
           "dapp": [
+            "peer_id": session.dAppInfo.peerId,
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
             "icon": icons.isEmpty ? "" : icons[0].absoluteString,

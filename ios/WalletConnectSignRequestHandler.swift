@@ -62,6 +62,7 @@ class WalletConnectSignRequestHandler: RequestHandler {
           "request_internal_id": internalId,
           "account": session.getAccount(),
           "dapp": [
+            "peer_id": session.dAppInfo.peerId,
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
             "icon": icons.isEmpty ? "" : icons[0].absoluteString,

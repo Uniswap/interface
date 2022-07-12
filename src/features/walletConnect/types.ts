@@ -56,6 +56,7 @@ export interface SessionDisconnectedEvent extends BaseSessionEvent {}
 export interface SessionPendingEvent extends BaseSessionEvent {}
 
 export interface DappInfo {
+  peer_id: string
   name: string
   url: string
   icon: string

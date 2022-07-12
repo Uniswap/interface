@@ -82,7 +82,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
         )
         registerWcPushNotifications({
           bridge: req.bridge_url,
-          topic: req.session_id,
+          topic: req.dapp.peer_id,
           address: req.account,
           peerName: req.dapp.name,
           language: 'en', // TODO: Use local user language
