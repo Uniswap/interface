@@ -5,7 +5,8 @@ declare module 'react-native-dotenv' {
   export const COINGECKO_API_URL: string
   export const COVALENT_API_KEY: string
   export const DEBUG: string
-  export const GRAPHQL_API_URL: string
+  export const UNISWAP_API_URL: string
+  export const UNISWAP_API_KEY: string
   export const INFURA_PROJECT_ID: string
   export const LOG_BUFFER_SIZE: string
   export const OPENSEA_API_KEY: string

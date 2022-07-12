@@ -18,7 +18,6 @@ import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { RelativeChange } from 'src/components/text/RelativeChange'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { BiometricCheck } from 'src/features/biometrics'
@@ -83,10 +82,7 @@ export function HomeScreen({ navigation }: Props) {
           </Flex>
         }>
         <Flex gap="lg" mx="lg" my="lg">
-          <Flex gap="xxs">
-            <TotalBalance balances={balances} />
-            <RelativeChange change={4.2} variant="body" />
-          </Flex>
+          <TotalBalance balances={balances} />
           <QuickActions />
         </Flex>
         <Flex gap="md" mx="sm">

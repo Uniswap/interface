@@ -1,6 +1,13 @@
-import React from 'react'
+import { graphql } from 'babel-plugin-relay/macro'
+import React, { Suspense } from 'react'
+import { useLazyLoadQuery } from 'react-relay'
+import { Flex } from 'src/components/layout'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
+import { RelativeChange } from 'src/components/text/RelativeChange'
+import { TotalBalanceQuery } from 'src/features/balances/__generated__/TotalBalanceQuery.graphql'
 import { ChainIdToCurrencyIdToPortfolioBalance } from 'src/features/dataApi/types'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { formatUSDPrice } from 'src/utils/format'
 import { getKeys } from 'src/utils/objects'
@@ -11,6 +18,7 @@ interface TotalBalanceViewProps {
 }
 
 export function TotalBalance({ balances, variant = 'headlineLarge' }: TotalBalanceViewProps) {
+  const owner = useActiveAccountAddressWithThrow()
   const totalBalance = getKeys(balances).reduce((sum, chainId) => {
     return (
       sum +
@@ -20,6 +28,29 @@ export function TotalBalance({ balances, variant = 'headlineLarge' }: TotalBalan
     )
   }, 0)
 
-  // TODO (tina): add loading placeholder once useTotalBalance.isLoading is behaving correctly
-  return <Text variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
+  return (
+    <Flex gap="xxs">
+      <Text variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
+      <Suspense fallback={<Loading type="header" />}>
+        <BalanceRelativeChange owner={owner} />
+      </Suspense>
+    </Flex>
+  )
+}
+
+function BalanceRelativeChange({
+  owner,
+}: Pick<TotalBalanceViewProps, 'variant'> & { owner: Address }) {
+  const balance = useLazyLoadQuery<TotalBalanceQuery>(
+    graphql`
+      query TotalBalanceQuery($owner: String!) {
+        portfolio(ownerAddress: $owner) {
+          relativeChange24H
+        }
+      }
+    `,
+    { owner }
+  )
+
+  return <RelativeChange change={balance.portfolio?.relativeChange24H ?? 0} variant="body" />
 }

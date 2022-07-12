@@ -9,10 +9,11 @@ import {
 import { config } from 'src/config'
 
 async function fetchRelay(params: RequestParameters, variables: Variables) {
-  const response = await fetch(config.graphqlApiUrl, {
+  const response = await fetch(config.uniswapApiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-API-KEY': config.uniswapApiKey,
     },
     body: JSON.stringify({
       query: params.text,
