@@ -18,16 +18,16 @@ const CONNECTIONS = [
   gnosisSafeConnection,
 ]
 
-export function getIsInjected() {
-  return !!window.ethereum
+export function getIsInjected(): boolean {
+  return Boolean(window.ethereum)
 }
 
-export function getIsMetaMask() {
-  return window.ethereum?.isMetaMask
+export function getIsMetaMask(): boolean {
+  return window.ethereum?.isMetaMask ?? false
 }
 
-export function getIsCoinbaseWallet() {
-  return window.ethereum?.isCoinbaseWallet
+export function getIsCoinbaseWallet(): boolean {
+  return window.ethereum?.isCoinbaseWallet ?? false
 }
 
 export function getConnection(c: Connector | ConnectionType) {
@@ -55,10 +55,9 @@ export function getConnection(c: Connector | ConnectionType) {
   }
 }
 
-export function getConnectionName(connectionType: ConnectionType) {
+export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean) {
   switch (connectionType) {
     case ConnectionType.INJECTED:
-      const isMetaMask = getIsMetaMask()
       return isMetaMask ? 'MetaMask' : 'Injected'
     case ConnectionType.COINBASE_WALLET:
       return 'Coinbase Wallet'

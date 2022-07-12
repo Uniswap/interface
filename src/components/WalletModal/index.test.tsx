@@ -1,3 +1,4 @@
+import * as connectionUtils from 'connection/utils'
 import { ApplicationModal } from 'state/application/reducer'
 
 import { render, screen } from '../../test-utils'
@@ -47,16 +48,10 @@ it('loads Wallet Modal on desktop', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
 })
 
-it.skip('loads Wallet Modal on desktop with generic Injected', async () => {
-  jest.doMock('connection/utils', () => {
-    const connectionUtils = jest.requireActual('connection/utils')
-    return {
-      getIsCoinbaseWallet: () => false,
-      getIsMetaMask: () => false,
-      getIsInjected: () => true,
-      ...connectionUtils,
-    }
-  })
+it('loads Wallet Modal on desktop with generic Injected', async () => {
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Injected')).toBeInTheDocument()
@@ -67,15 +62,9 @@ it.skip('loads Wallet Modal on desktop with generic Injected', async () => {
 })
 
 it('loads Wallet Modal on desktop with MetaMask installed', async () => {
-  jest.doMock('connection/utils', () => {
-    const connectionUtils = jest.requireActual('connection/utils')
-    return {
-      getIsCoinbaseWallet: () => false,
-      getIsMetaMask: () => true,
-      getIsInjected: () => true,
-      ...connectionUtils,
-    }
-  })
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('MetaMask')).toBeInTheDocument()
@@ -85,17 +74,10 @@ it('loads Wallet Modal on desktop with MetaMask installed', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
 })
 
-it.skip('loads Wallet Modal on mobile', async () => {
-  UserAgentMock.isMobile = true
-  jest.doMock('connection/utils', () => {
-    const connectionUtils = jest.requireActual('connection/utils')
-    return {
-      getIsCoinbaseWallet: () => false,
-      getIsMetaMask: () => false,
-      getIsInjected: () => false,
-      ...connectionUtils,
-    }
-  })
+it('loads Wallet Modal on mobile', async () => {
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Open in Coinbase Wallet')).toBeInTheDocument()
@@ -104,34 +86,24 @@ it.skip('loads Wallet Modal on mobile', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(3)
 })
 
-it.skip('loads Wallet Modal on MetaMask browser', async () => {
+it('loads Wallet Modal on MetaMask browser', async () => {
   UserAgentMock.isMobile = true
-  jest.doMock('connection/utils', () => {
-    const connectionUtils = jest.requireActual('connection/utils')
-    return {
-      getIsCoinbaseWallet: () => false,
-      getIsMetaMask: () => true,
-      getIsInjected: () => true,
-      ...connectionUtils,
-    }
-  })
+
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('MetaMask')).toBeInTheDocument()
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(1)
 })
 
-it.skip('loads Wallet Modal on Coinbase Wallet browser', async () => {
+it('loads Wallet Modal on Coinbase Wallet browser', async () => {
   UserAgentMock.isMobile = true
-  jest.doMock('connection/utils', () => {
-    const connectionUtils = jest.requireActual('connection/utils')
-    return {
-      getIsCoinbaseWallet: () => true,
-      getIsMetaMask: () => false,
-      getIsInjected: () => true,
-      ...connectionUtils,
-    }
-  })
+
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(true)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()

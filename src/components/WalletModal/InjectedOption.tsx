@@ -24,28 +24,21 @@ const InjectedOption = ({ tryActivation }: { tryActivation: (connector: Connecto
   const isActive = injectedConnection.hooks.useIsActive()
   const isMetaMask = getIsMetaMask()
   const isInjected = getIsInjected()
-  console.log('is injeceted', isInjected)
+
+  const props = {
+    isActive,
+    header: getConnectionName(ConnectionType.INJECTED, isMetaMask),
+    onClick() {
+      tryActivation(injectedConnection.connector)
+    },
+  }
 
   if (!isInjected && !isMobile) {
     return <Option {...METAMASK_PROPS} header={<Trans>Install MetaMask</Trans>} link={'https://metamask.io/'} />
   } else if (isMetaMask) {
-    return (
-      <Option
-        {...METAMASK_PROPS}
-        isActive={isActive}
-        onClick={() => tryActivation(injectedConnection.connector)}
-        header={getConnectionName(ConnectionType.INJECTED)}
-      />
-    )
+    return <Option {...METAMASK_PROPS} {...props} />
   } else if (!isMobile) {
-    return (
-      <Option
-        {...INJECTED_PROPS}
-        isActive={isActive}
-        header={getConnectionName(ConnectionType.INJECTED)}
-        onClick={() => tryActivation(injectedConnection.connector)}
-      />
-    )
+    return <Option {...INJECTED_PROPS} {...props} />
   } else {
     return null
   }
