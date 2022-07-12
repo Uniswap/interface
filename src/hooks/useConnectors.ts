@@ -1,3 +1,5 @@
+import { Web3ReactHooks } from '@web3-react/core'
+import { Connector } from '@web3-react/types'
 import { ConnectionType } from 'connection'
 import { getConnection } from 'connection/utils'
 import { useMemo } from 'react'
@@ -6,7 +8,7 @@ import { useAppSelector } from 'state/hooks'
 
 const SELECTABLE_WALLETS = [...BACKFILLABLE_WALLETS, ConnectionType.FORTMATIC]
 
-export default function useOrderedConnections() {
+export default function useConnectors() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   return useMemo(() => {
     const orderedConnectionTypes: ConnectionType[] = []
@@ -23,6 +25,10 @@ export default function useOrderedConnections() {
     // Add network connection last as it should be the fallback.
     orderedConnectionTypes.push(ConnectionType.NETWORK)
 
-    return orderedConnectionTypes.map(getConnection)
+    // Convert to web3-react's representation of connectors.
+    const web3Connectors: [Connector, Web3ReactHooks][] = orderedConnectionTypes
+      .map(getConnection)
+      .map(({ connector, hooks }) => [connector, hooks])
+    return web3Connectors
   }, [selectedWallet])
 }
