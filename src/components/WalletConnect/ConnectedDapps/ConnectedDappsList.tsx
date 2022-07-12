@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import 'react-native-reanimated'
@@ -13,23 +13,33 @@ import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSl
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
-  goBack?: () => void //TODO: handle this case for the WC modal
+  backButton?: ReactElement
 }
 
-export function ConnectedDappsList({ sessions }: ConnectedDappsProps) {
+export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
+  const headerText = (
+    <Text color="textPrimary" variant="subhead">
+      {t('Manage connections')}
+    </Text>
+  )
+  const header = backButton ? (
+    <Flex row alignItems="center">
+      {backButton}
+      {headerText}
+    </Flex>
+  ) : (
+    <BackHeader alignment="left">{headerText}</BackHeader>
+  )
+
   return (
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} px="lg" py="lg">
-        <BackHeader alignment="left">
-          <Text color="textPrimary" variant="subhead">
-            {t('Manage connections')}
-          </Text>
-        </BackHeader>
+        {header}
 
         {sessions.length > 0 ? (
           <FlatList

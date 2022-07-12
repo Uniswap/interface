@@ -117,7 +117,14 @@ export function WalletConnectModal({
       ) : (
         <>
           {currentScreenState === WalletConnectModalState.ConnectedDapps && (
-            <ConnectedDappsList goBack={onPressShowScanQr} sessions={sessions} />
+            <ConnectedDappsList
+              backButton={
+                <Button onPress={onPressShowScanQr}>
+                  <Chevron color={theme.colors.textSecondary} height={24} width={24} />
+                </Button>
+              }
+              sessions={sessions}
+            />
           )}
           {currentScreenState === WalletConnectModalState.ScanQr && (
             <QRCodeScanner
