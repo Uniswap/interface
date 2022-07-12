@@ -53,9 +53,8 @@ function getEventHandlers(
   eventProperties?: Record<string, unknown>
 ) {
   const eventHandlers: Partial<Record<Event, (e: SyntheticEvent<Element, Event>) => void>> = {}
-  const keys = events
 
-  for (const eventHandlerName of keys) {
+  for (const eventHandlerName of events) {
     eventHandlers[eventHandlerName] = (eventHandlerArgs: unknown) => {
       // call child event handler with original arguments, must be in array
       const args = Array.isArray(eventHandlerArgs) ? eventHandlerArgs : [eventHandlerArgs]

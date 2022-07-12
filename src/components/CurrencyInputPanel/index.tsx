@@ -271,15 +271,14 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-
-        <FiatRow>
-          {!hideInput && !hideBalance && currency && (
+        {!hideInput && !hideBalance && currency && (
+          <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
               </LoadingOpacityContainer>
               {account ? (
-                <RowFixed>
+                <RowFixed style={{ height: '17px' }}>
                   <ThemedText.Body
                     onClick={onMax}
                     color={theme.text3}
@@ -305,8 +304,8 @@ export default function CurrencyInputPanel({
                 <span />
               )}
             </RowBetween>
-          )}
-        </FiatRow>
+          </FiatRow>
+        )}
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal
