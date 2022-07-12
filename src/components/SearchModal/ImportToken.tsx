@@ -1,6 +1,8 @@
 import { Plural, Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
@@ -42,6 +44,13 @@ export function ImportToken(props: ImportProps) {
   if (intersection.size > 0) {
     return <BlockedToken onBack={onBack} onDismiss={onDismiss} blockedTokens={Array.from(intersection)} />
   }
+
+  const eventPropertiesList = tokens.map((token) => ({
+    token_symbol: token?.symbol,
+    token_address: token?.address,
+    token_chain_id: token?.chainId,
+  }))
+
   return (
     <Wrapper>
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
@@ -67,18 +76,25 @@ export function ImportToken(props: ImportProps) {
         {tokens.map((token) => (
           <TokenImportCard token={token} list={list} key={'import' + token.address} />
         ))}
-        <ButtonPrimary
-          altDisabledStyle={true}
-          $borderRadius="20px"
-          padding="10px 1rem"
-          onClick={() => {
-            tokens.map((token) => addToken(token))
-            handleCurrencySelect && handleCurrencySelect(tokens[0])
-          }}
-          className=".token-dismiss-button"
+        <TraceEvent
+          events={[Event.onClick]}
+          name={EventName.TOKEN_IMPORTED}
+          propertiesList={eventPropertiesList}
+          element={ElementName.IMPORT_TOKEN_BUTTON}
         >
-          <Trans>Import</Trans>
-        </ButtonPrimary>
+          <ButtonPrimary
+            altDisabledStyle={true}
+            $borderRadius="20px"
+            padding="10px 1rem"
+            onClick={() => {
+              tokens.map((token) => addToken(token))
+              handleCurrencySelect && handleCurrencySelect(tokens[0])
+            }}
+            className=".token-dismiss-button"
+          >
+            <Trans>Import</Trans>
+          </ButtonPrimary>
+        </TraceEvent>
       </AutoColumn>
     </Wrapper>
   )

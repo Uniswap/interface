@@ -108,6 +108,7 @@ function CurrencyRow({
   otherSelected,
   style,
   showCurrencyAmount,
+  eventProperties,
 }: {
   currency: Currency
   onSelect: () => void
@@ -115,6 +116,7 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
   showCurrencyAmount?: boolean
+  eventProperties: Record<string, unknown>
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
@@ -125,35 +127,42 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   return (
-    <MenuItem
-      tabIndex={0}
-      style={style}
-      className={`token-item-${key}`}
-      onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect() : null)}
-      onClick={() => (isSelected ? null : onSelect())}
-      disabled={isSelected}
-      selected={otherSelected}
+    <TraceEvent
+      events={[Event.onClick, Event.onKeyPress]}
+      name={EventName.TOKEN_SELECTED}
+      properties={{ is_imported_by_user: customAdded, ...eventProperties }}
+      element={ElementName.TOKEN_SELECTOR_ROW}
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
-      <Column>
-        <Text title={currency.name} fontWeight={500}>
-          {currency.symbol}
-        </Text>
-        <ThemedText.DarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
-          {!currency.isNative && !isOnSelectedList && customAdded ? (
-            <Trans>{currency.name} • Added by user</Trans>
-          ) : (
-            currency.name
-          )}
-        </ThemedText.DarkGray>
-      </Column>
-      <TokenTags currency={currency} />
-      {showCurrencyAmount && (
-        <RowFixed style={{ justifySelf: 'flex-end' }}>
-          {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-        </RowFixed>
-      )}
-    </MenuItem>
+      <MenuItem
+        tabIndex={0}
+        style={style}
+        className={`token-item-${key}`}
+        onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect() : null)}
+        onClick={() => (isSelected ? null : onSelect())}
+        disabled={isSelected}
+        selected={otherSelected}
+      >
+        <CurrencyLogo currency={currency} size={'24px'} />
+        <Column>
+          <Text title={currency.name} fontWeight={500}>
+            {currency.symbol}
+          </Text>
+          <ThemedText.DarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
+            {!currency.isNative && !isOnSelectedList && customAdded ? (
+              <Trans>{currency.name} • Added by user</Trans>
+            ) : (
+              currency.name
+            )}
+          </ThemedText.DarkGray>
+        </Column>
+        <TokenTags currency={currency} />
+        {showCurrencyAmount && (
+          <RowFixed style={{ justifySelf: 'flex-end' }}>
+            {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+          </RowFixed>
+        )}
+      </MenuItem>
+    </TraceEvent>
   )
 }
 
@@ -269,21 +278,15 @@ export default function CurrencyList({
         }
 
         return (
-          <TraceEvent
-            events={[Event.onSelect]}
-            name={EventName.TOKEN_SELECTED_SELECTION_MADE}
-            properties={eventProperties}
-            element={ElementName.CURRENCY_ROW}
-          >
-            <CurrencyRow
-              style={style}
-              currency={currency}
-              isSelected={isSelected}
-              onSelect={handleSelect}
-              otherSelected={otherSelected}
-              showCurrencyAmount={showCurrencyAmount}
-            />
-          </TraceEvent>
+          <CurrencyRow
+            style={style}
+            currency={currency}
+            isSelected={isSelected}
+            onSelect={handleSelect}
+            otherSelected={otherSelected}
+            showCurrencyAmount={showCurrencyAmount}
+            eventProperties={eventProperties}
+          />
         )
       } else {
         return null

@@ -8,6 +8,7 @@ type TraceEventProps = {
   events: Event[]
   name: EventName
   properties?: Record<string, unknown>
+  propertiesList?: Record<string, unknown>[]
 } & ITraceContext
 
 /**
@@ -19,7 +20,7 @@ type TraceEventProps = {
  *  </TraceEvent>
  */
 export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
-  const { name, properties, events, children, ...traceProps } = props
+  const { name, properties, propertiesList, events, children, ...traceProps } = props
 
   return (
     <Trace {...traceProps}>
@@ -30,8 +31,8 @@ export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
               return child
             }
 
-            // For each child, augment event handlers defined in `actionNames`  with event tracing
-            return cloneElement(child, getEventHandlers(child, traceContext, events, name, properties))
+            // For each child, augment event handlers defined in `events` with event tracing.
+            return cloneElement(child, getEventHandlers(child, traceContext, events, name, properties, propertiesList))
           })
         }
       </TraceContext.Consumer>
@@ -42,7 +43,7 @@ export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
 TraceEvent.displayName = 'TraceEvent'
 
 /**
- * Given a set of child element and action props, returns a spreadable
+ * Given a set of child element and event props, returns a spreadable
  * object of the event handlers augmented with analytics logging.
  */
 function getEventHandlers(
@@ -50,7 +51,8 @@ function getEventHandlers(
   traceContext: ITraceContext,
   events: Event[],
   name: EventName,
-  properties?: Record<string, unknown>
+  properties?: Record<string, unknown>,
+  propertiesList?: Record<string, unknown>[]
 ) {
   const eventHandlers: Partial<Record<Event, (e: SyntheticEvent<Element, Event>) => void>> = {}
 
@@ -61,7 +63,11 @@ function getEventHandlers(
       child.props[event]?.apply(child, args)
 
       // augment handler with analytics logging
-      sendAnalyticsEvent(name, { ...traceContext, ...properties })
+      if (properties) sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event })
+
+      // if multiple properties objects present, send one event for each properties object
+      if (propertiesList)
+        propertiesList.map((properties) => sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event }))
     }
   }
 

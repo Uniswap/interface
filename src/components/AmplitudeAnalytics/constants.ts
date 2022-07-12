@@ -7,8 +7,9 @@
 export enum EventName {
   PAGE_VIEWED = 'Page Viewed',
   SWAP_SUBMITTED = 'Swap Submitted',
+  TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
-  TOKEN_SELECTED_SELECTION_MADE = 'Token Selector Selection Made',
+  TOKEN_SELECTED = 'Token Selected',
   // alphabetize additional event names.
 }
 
@@ -44,9 +45,10 @@ export const enum ModalName {
  */
 export const enum ElementName {
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
-  CURRENCY_ROW = 'currency-row',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
+  IMPORT_TOKEN_BUTTON = 'import-token-button',
   SWAP_BUTTON = 'swap-button',
+  TOKEN_SELECTOR_ROW = 'token-selector-row',
   // alphabetize additional element names.
 }
 
@@ -57,6 +59,7 @@ export const enum ElementName {
  */
 export enum Event {
   onClick = 'onClick',
+  onKeyPress = 'onKeyPress',
   onSelect = 'onSelect',
   // alphabetize additional events.
 }

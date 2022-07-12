@@ -60,6 +60,7 @@ export default function CommonBases({
             ...(token_address ? { token_address } : {}),
             is_suggested_token: true,
             is_selected_from_list: false,
+            is_imported_by_user: false,
             ...(isAddressSearch === false
               ? { search_token_symbol_input: searchQuery }
               : { search_token_address_input: isAddressSearch }),
@@ -67,7 +68,7 @@ export default function CommonBases({
           return (
             <TraceEvent
               events={[Event.onClick]}
-              name={EventName.TOKEN_SELECTED_SELECTION_MADE}
+              name={EventName.TOKEN_SELECTED}
               properties={eventProperties}
               element={ElementName.COMMON_BASES_CURRENCY_BUTTON}
               key={currencyId(currency)}
