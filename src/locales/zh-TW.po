@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -319,6 +319,10 @@ msgstr "封鎖地址"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "已屏蔽地址"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "塊偵察"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "流動池匯集 {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "流動池概覽"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "門戶橋"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "您的V2流動資金"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "您的 V3 流動性倉位將在此顯示。"
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "您連接的網絡不受支持。請求支持 <0>這裡</0>。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
