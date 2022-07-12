@@ -67,7 +67,7 @@ export default function CommonBases({
           }
           return (
             <TraceEvent
-              events={[Event.onClick]}
+              events={[Event.onClick, Event.onKeyPress]}
               name={EventName.TOKEN_SELECTED}
               properties={eventProperties}
               element={ElementName.COMMON_BASES_CURRENCY_BUTTON}
