@@ -203,7 +203,7 @@ export default function WalletModal({
             <InjectedOption tryActivation={tryActivation} />
           ))}
         {isMobile && !isInjectedMobileBrowser && <OpenCoinbaseWalletOption />}
-        {!isMetaMaskBrowser && <CoinbaseWalletOption tryActivation={tryActivation} />}
+        {(!isMobile || isCoinbaseWalletBrowser) && <CoinbaseWalletOption tryActivation={tryActivation} />}
         {!isInjectedMobileBrowser && <WalletConnectOption tryActivation={tryActivation} />}
         {!isInjectedMobileBrowser && <FortmaticOption tryActivation={tryActivation} />}
       </>
