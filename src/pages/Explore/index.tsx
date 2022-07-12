@@ -3,7 +3,6 @@ import FavoriteButton from 'components/Explore/FavoriteButton'
 import SearchBar from 'components/Explore/SearchBar'
 import TimeSelector from 'components/Explore/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable'
-import { atomWithStorage } from 'jotai/utils'
 import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
@@ -26,7 +25,6 @@ const FiltersContainer = styled.div`
     padding: 0px 12px;
   }
 `
-export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 const Explore = () => {
   return (
     <ExploreContainer>

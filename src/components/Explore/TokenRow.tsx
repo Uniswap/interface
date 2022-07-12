@@ -19,8 +19,8 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from './constants'
+import { favoritesAtom } from './state'
 import { TIME_DISPLAYS } from './TimeSelector'
-import { favoritesAtom } from './TokenTable'
 
 enum Category {
   percent_change = '% Change',
@@ -145,12 +145,18 @@ const ListNumberCell = styled(Cell)`
     min-width: 20px;
   }
 `
-const MarketCapCell = styled(Cell)`
+const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: max-content;
+  padding-right: 4px;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     display: none;
+  }
+
+  &:hover {
+    color: ${({ theme, sortable }) => sortable && theme.text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
   }
 `
 const NameCell = styled(Cell)`
@@ -165,12 +171,18 @@ const NameCell = styled(Cell)`
   }
 `
 
-const PercentChangeCell = styled(Cell)`
+const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
+  padding-right: 4px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
+  }
+
+  &:hover {
+    color: ${({ theme, sortable }) => sortable && theme.text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
@@ -183,12 +195,18 @@ const PercentChangeInfoCell = styled(Cell)`
     line-height: 16px;
   }
 `
-const PriceCell = styled(Cell)`
+const PriceCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
+  padding-right: 4px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     min-width: max-content;
+  }
+
+  &:hover {
+    color: ${({ theme, sortable }) => sortable && theme.text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
   }
 `
 const PriceInfoCell = styled(Cell)`
@@ -264,12 +282,18 @@ const TokenSymbol = styled(Cell)`
     width: 100%;
   }
 `
-const VolumeCell = styled(Cell)`
+const VolumeCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: max-content;
+  padding-right: 4px;
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
+  }
+
+  &:hover {
+    color: ${({ theme, sortable }) => sortable && theme.text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
   }
 `
 /* Loading state bubbles */
@@ -359,15 +383,15 @@ export function TokenRow({
       <FavoriteCell>{favorited}</FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
-      <PriceCell>{price}</PriceCell>
-      <PercentChangeCell>{percentChange}</PercentChangeCell>
-      <MarketCapCell>{marketCap}</MarketCapCell>
-      <VolumeCell>{volume}</VolumeCell>
+      <PriceCell sortable={header}>{price}</PriceCell>
+      <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
+      <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
+      <VolumeCell sortable={header}>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return <StyledTokenRow> {rowCells}</StyledTokenRow>
+  return <StyledTokenRow>{rowCells}</StyledTokenRow>
 }
 
 /* Header Row: top header row component for table */
@@ -386,7 +410,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.price}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.price}
-          sortable={false}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -395,7 +419,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.percent_change}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.percent_change}
-          sortable={false}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -404,7 +428,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.market_cap}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.market_cap}
-          sortable={true}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -413,7 +437,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.volume}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.volume}
-          sortable={true}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -464,7 +488,7 @@ export default function LoadedRow({
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
   const theme = useTheme()
   const isFavorited = favoriteTokens.includes(tokenAddress)
-  // TODO: remove magic number colors
+
   const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
@@ -491,6 +515,7 @@ export default function LoadedRow({
     updateFavoriteTokens(updatedFavoriteTokens)
   }
 
+  const heartColor = isFavorited ? theme.primary1 : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   // TODO: fix listNumber as number on most popular (should be fixed)
   return (
@@ -499,11 +524,7 @@ export default function LoadedRow({
       header={false}
       favorited={
         <ClickFavorited onClick={() => toggleFavoriteToken()}>
-          <Heart
-            size={15}
-            color={isFavorited ? theme.primary1 : undefined}
-            fill={isFavorited ? theme.primary1 : undefined}
-          />
+          <Heart size={15} color={heartColor} fill={heartColor} />
         </ClickFavorited>
       }
       listNumber={listNumber}

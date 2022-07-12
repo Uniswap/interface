@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import Resource from './Resource'
-import { favoritesAtom } from './TokenTable'
+import { favoritesAtom } from './state'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.hour]: '1H',
