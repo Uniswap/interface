@@ -48,7 +48,9 @@ jobs:
       - run: yarn prepare
       - run: yarn build
 
-      - name: Pin to IPFS
+      # Cloudflare IPFS nodes peer with Pinata nodes
+      # https://blog.cloudflare.com/continuing-to-improve-our-ipfs-gateway/#connecting-with-pinata
+      - name: Pin to IPFS (Pinata)
         id: pinata
         uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
         with:
@@ -57,7 +59,7 @@ jobs:
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
-      - name: Pin to Crust
+      - name: Pin to IPFS (Crust)
         uses: crustio/ipfs-crust-action@v2.0.3
         continue-on-error: true
         timeout-minutes: 2
@@ -84,7 +86,18 @@ jobs:
           browser: chrome
           record: false
           config-file: cypress.release.config.ts
-          config: baseUrl=https://cloudflare-ipfs.com/ipfs/${{ steps.pinata.outputs.hash }}
+          config: baseUrl=https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
+      # This only guarantees that pinata has pinned the file such that it is available to
+      # cloudflare's gateway *in this locality*. We have no guarantee that cloudflare's gateway
+      # retains served files [1].
+      #
+      # When it is requested through our dedicated gateway *in a new locality*, it should be
+      # available within a few minutes [2]. uniswap.org explicitly sets the proxy read timeout [3]
+      # to 480 (8m) to facilitate initial IPFS requests.
+      #
+      # [1]: https://github.com/aragon/aragon-cli/issues/1114#issuecomment-579250246
+      # [2]: https://spectrum.chat/aragon/app-development/how-to-use-pinata-for-propagation~33e4c1d0-3c86-4cc9-b7e7-e5e392acf902
+      # [3]: https://api.cloudflare.com/#zone-settings-change-proxy-read-timeout-setting
 
       - name: Update DNS with new IPFS hash
         env:
