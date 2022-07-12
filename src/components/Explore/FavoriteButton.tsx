@@ -16,7 +16,7 @@ const StyledFavoriteButton = styled.button<{ active: boolean }>`
   padding: 0px 16px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme, active }) => (active ? theme.blue5 : theme.bg1)};
+  border: 1px solid ${({ theme, active }) => (active ? theme.primary1 : theme.bg1)};
   color: ${({ theme, active }) => (active ? theme.blue5 : theme.text1)};
   font-size: 16px;
   cursor: pointer;
