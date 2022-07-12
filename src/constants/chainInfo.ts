@@ -174,7 +174,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
-    explorer: 'https://explorer.celo.org/',
+    explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo',
     label: 'Celo',
     logoUrl: celoLogo,
