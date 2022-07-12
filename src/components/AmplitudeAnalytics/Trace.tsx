@@ -1,4 +1,4 @@
-import { createContext, memo, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, memo, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 
 import { sendAnalyticsEvent } from '.'
 import { ElementName, EventName, ModalName, PageName, SectionName } from './constants'
@@ -38,7 +38,6 @@ export const Trace = memo(
     eventName,
     eventProperties,
   }: PropsWithChildren<TraceProps>) => {
-    const [hasAlreadyLoggedImpression, setHasAlreadyLoggedImpression] = useState(false)
     const parentTrace = useContext(TraceContext)
 
     // Component props are destructured to ensure shallow comparison
@@ -51,11 +50,10 @@ export const Trace = memo(
     )
 
     useEffect(() => {
-      if (shouldLogImpression && !hasAlreadyLoggedImpression) {
+      if (shouldLogImpression) {
         sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, { ...combinedProps, ...eventProperties })
-        setHasAlreadyLoggedImpression(true)
       }
-    }, [combinedProps, hasAlreadyLoggedImpression, shouldLogImpression, eventName, eventProperties])
+    }, [combinedProps, shouldLogImpression, eventName, eventProperties])
 
     return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
   }
