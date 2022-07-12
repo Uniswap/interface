@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -319,6 +319,10 @@ msgstr "Alamat yang Diblokir"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Alamat diblokir"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blockscout"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Dikumpulkan {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Gambaran Umum Pool"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Jembatan Portal"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "Likuiditas V2 Anda"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Posisi likuiditas V3 aktif Anda akan muncul di sini."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Jaringan Anda yang terhubung tidak didukung. Minta dukungan <0>di sini</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

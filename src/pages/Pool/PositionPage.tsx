@@ -20,7 +20,7 @@ import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
-import useUSDCPrice from 'hooks/useUSDCPrice'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -399,8 +399,8 @@ export function PositionPage({
   const [showConfirm, setShowConfirm] = useState(false)
 
   // usdc prices always in terms of tokens
-  const price0 = useUSDCPrice(token0 ?? undefined)
-  const price1 = useUSDCPrice(token1 ?? undefined)
+  const price0 = useStablecoinPrice(token0 ?? undefined)
+  const price1 = useStablecoinPrice(token1 ?? undefined)
 
   const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null

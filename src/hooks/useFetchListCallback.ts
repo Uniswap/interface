@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
-import { MAINNET_PROVIDER } from 'constants/infura'
+import { MAINNET_PROVIDER } from 'constants/networks'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'

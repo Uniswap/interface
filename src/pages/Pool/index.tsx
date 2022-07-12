@@ -9,13 +9,14 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
-import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
+import { Activity, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { HideSmall, ThemedText } from 'theme'
+import styled, { css, ThemeContext } from 'styled-components/macro'
+import { ExternalLink, HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
+import { isChainAllowed } from 'utils/switchChain'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
@@ -80,7 +81,13 @@ const MoreOptionsButton = styled(ButtonGray)`
   background-color: ${({ theme }) => theme.bg0};
   margin-right: 8px;
 `
-const NoLiquidity = styled.div`
+
+const MoreOptionsText = styled(ThemedText.Body)`
+  align-items: center;
+  display: flex;
+`
+
+const ErrorContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -89,6 +96,21 @@ const NoLiquidity = styled.div`
   max-width: 300px;
   min-height: 25vh;
 `
+
+const IconStyle = css`
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.5rem;
+`
+
+const NetworkIcon = styled(Activity)`
+  ${IconStyle}
+`
+
+const InboxIcon = styled(Inbox)`
+  ${IconStyle}
+`
+
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
@@ -126,14 +148,53 @@ function PositionsLoadingPlaceholder() {
   )
 }
 
+function WrongNetworkCard() {
+  const theme = useContext(ThemeContext)
+  return (
+    <>
+      <PageWrapper>
+        <SwapPoolTabs active="pool" />
+        <AutoColumn gap="lg" justify="center">
+          <AutoColumn gap="lg" style={{ width: '100%' }}>
+            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <ThemedText.Body fontSize={'20px'}>
+                <Trans>Pools Overview</Trans>
+              </ThemedText.Body>
+            </TitleRow>
+
+            <MainContentWrapper>
+              <ErrorContainer>
+                <ThemedText.Body color={theme.text3} textAlign="center">
+                  <NetworkIcon strokeWidth={1.2} />
+                  <div data-testid="pools-unsupported-err">
+                    <Trans>
+                      Your connected network is unsupported. Request support{' '}
+                      <ExternalLink href="https://uniswap.canny.io/feature-requests">here</ExternalLink>.
+                    </Trans>
+                  </div>
+                </ThemedText.Body>
+              </ErrorContainer>
+            </MainContentWrapper>
+          </AutoColumn>
+        </AutoColumn>
+      </PageWrapper>
+      <SwitchLocaleLink />
+    </>
+  )
+}
+
 export default function Pool() {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId, connector } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
+
+  if (chainId && !isChainAllowed(connector, chainId)) {
+    return <WrongNetworkCard />
+  }
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
@@ -193,7 +254,7 @@ export default function Pool() {
   return (
     <>
       <PageWrapper>
-        <SwapPoolTabs active={'pool'} />
+        <SwapPoolTabs active="pool" />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
@@ -207,10 +268,10 @@ export default function Pool() {
                     flyoutAlignment={FlyoutAlignment.LEFT}
                     ToggleUI={(props: any) => (
                       <MoreOptionsButton {...props}>
-                        <ThemedText.Body style={{ alignItems: 'center', display: 'flex' }}>
+                        <MoreOptionsText>
                           <Trans>More</Trans>
                           <ChevronDown size={15} />
-                        </ThemedText.Body>
+                        </MoreOptionsText>
                       </MoreOptionsButton>
                     )}
                   />
@@ -231,9 +292,9 @@ export default function Pool() {
                   userHideClosedPositions={userHideClosedPositions}
                 />
               ) : (
-                <NoLiquidity>
+                <ErrorContainer>
                   <ThemedText.Body color={theme.text3} textAlign="center">
-                    <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
+                    <InboxIcon strokeWidth={1} />
                     <div>
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>
@@ -251,7 +312,7 @@ export default function Pool() {
                       <Trans>Connect a wallet</Trans>
                     </ButtonPrimary>
                   )}
-                </NoLiquidity>
+                </ErrorContainer>
               )}
             </MainContentWrapper>
             <HideSmall>

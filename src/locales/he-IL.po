@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -319,6 +319,10 @@ msgstr "כתובת חסומה"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "כתובת חסומה"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "בלוסקאוט"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "מאוגד {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "סקירת מאגרים"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "גשר פורטל"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "נזילות ה- V2 שלך"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "עמדות הנזילות הפעילות V3 שלך יופיעו כאן."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "הרשת המחוברת שלך אינה נתמכת. בקש תמיכה <0>כאן</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

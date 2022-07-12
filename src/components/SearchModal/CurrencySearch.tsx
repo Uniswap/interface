@@ -116,11 +116,15 @@ export function CurrencySearch({
   const native = useNativeCurrency()
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
-    if (!native) return filteredSortedTokens
+    // Use Celo ERC20 Implementation and exclude the native asset
+    if (!native) {
+      return filteredSortedTokens
+    }
 
     const s = debouncedQuery.toLowerCase().trim()
     if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
-      return native ? [native, ...filteredSortedTokens] : filteredSortedTokens
+      // Always bump the native token to the top of the list.
+      return native ? [native, ...filteredSortedTokens.filter((t) => !t.equals(native))] : filteredSortedTokens
     }
     return filteredSortedTokens
   }, [debouncedQuery, native, filteredSortedTokens])
