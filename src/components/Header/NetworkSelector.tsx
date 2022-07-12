@@ -3,14 +3,13 @@ import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection/utils'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch } from 'state/hooks'
@@ -272,17 +271,17 @@ export default function NetworkSelector() {
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
-  const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
-  const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
-  useOnClickOutside(node, open ? toggle : undefined)
-
+  const node = useRef<HTMLDivElement>(null)
+  const isOpen = useModalIsOpen(ApplicationModal.NETWORK_SELECTOR)
+  const openModal = useOpenModal(ApplicationModal.NETWORK_SELECTOR)
+  const closeModal = useCloseModal(ApplicationModal.NETWORK_SELECTOR)
+  const toggleModal = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
   const history = useHistory()
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
   const onSelectChain = useCallback(
-    async (targetChain: number, skipToggle?: boolean) => {
+    async (targetChain: number, skipClose?: boolean) => {
       if (!connector) return
 
       const connectionType = getConnection(connector).type
@@ -297,11 +296,11 @@ export default function NetworkSelector() {
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
       }
 
-      if (!skipToggle) {
-        toggle()
+      if (!skipClose) {
+        closeModal()
       }
     },
-    [connector, toggle, dispatch]
+    [connector, closeModal, dispatch]
   )
 
   useEffect(() => {
@@ -332,13 +331,13 @@ export default function NetworkSelector() {
   }
 
   return (
-    <SelectorWrapper ref={node as any} onMouseEnter={toggle} onMouseLeave={toggle}>
+    <SelectorWrapper ref={node} onMouseEnter={openModal} onMouseLeave={closeModal} onClick={toggleModal}>
       <SelectorControls interactive>
         <SelectorLogo interactive src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         <StyledChevronDown />
       </SelectorControls>
-      {open && (
+      {isOpen && (
         <FlyoutMenu>
           <FlyoutMenuContents>
             <FlyoutHeader>

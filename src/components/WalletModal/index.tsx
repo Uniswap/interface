@@ -14,7 +14,7 @@ import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
+import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
 import AccountDetails from '../AccountDetails'
@@ -129,8 +129,8 @@ export default function WalletModal({
     pendingConnector ? state.connection.errorByConnectionType[getConnection(pendingConnector).type] : undefined
   )
 
-  const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
-  const toggleWalletModal = useWalletModalToggle()
+  const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
+  const toggleWalletModal = useToggleWalletModal()
 
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
