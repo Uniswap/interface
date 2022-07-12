@@ -5,7 +5,7 @@ import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex, Flex } from 'src/components/layout'
-import { BackButtonRow } from 'src/components/layout/BackButtonRow'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Text } from 'src/components/Text'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
@@ -13,10 +13,10 @@ import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSl
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
-  goBack?: () => void
+  goBack?: () => void //TODO: handle this case for the WC modal
 }
 
-export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
+export function ConnectedDappsList({ sessions }: ConnectedDappsProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
@@ -25,11 +25,11 @@ export function ConnectedDappsList({ sessions, goBack }: ConnectedDappsProps) {
   return (
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} px="lg" py="lg">
-        <BackButtonRow onPressBack={goBack}>
+        <BackHeader alignment="left">
           <Text color="textPrimary" variant="subhead">
             {t('Manage connections')}
           </Text>
-        </BackButtonRow>
+        </BackHeader>
 
         {sessions.length > 0 ? (
           <FlatList

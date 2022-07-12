@@ -12,7 +12,7 @@ import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Switch } from 'src/components/buttons/Switch'
-import { BackButtonRow } from 'src/components/layout/BackButtonRow'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import {
@@ -112,14 +112,14 @@ export function SettingsWallet({
   return (
     <Screen px="lg" py="lg">
       <Box flex={1}>
-        <BackButtonRow>
+        <BackHeader alignment="left" mb="lg">
           <AddressDisplay
             address={address}
             showViewOnly={readonly}
             variant="subhead"
             verticalGap="none"
           />
-        </BackButtonRow>
+        </BackHeader>
         <SectionList
           keyExtractor={(_item, index) => 'wallet_settings' + index}
           renderItem={renderItem}

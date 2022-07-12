@@ -11,9 +11,9 @@ import { ColorSelector } from 'src/components/ColorSelector/ColorSelector'
 import { useUpdateColorCallback } from 'src/components/ColorSelector/hooks'
 import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-import { SettingsBackButtonRow } from 'src/components/Settings/BackButtonRow'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
@@ -66,9 +66,9 @@ export function SettingsWalletEdit({
 
   return (
     <Screen px="lg" py="lg">
-      <SettingsBackButtonRow>
-        <Text variant="largeLabel">{t('Edit nickname or theme')}</Text>
-      </SettingsBackButtonRow>
+      <BackHeader alignment="left" mb="lg">
+        <Text variant="subhead">{t('Edit nickname or theme')}</Text>
+      </BackHeader>
       <Flex gap="xl">
         <Flex gap="none">
           <Box bg="mainBackground" pb="md">
