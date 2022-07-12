@@ -27,7 +27,9 @@ describe('networks', () => {
         <Pool />
       </Router>
     )
-    expect(screen.getAllByTestId('pools-unsupported-err')).toHaveLength(1)
+    expect(
+      screen.getByText('Your connected network is unsupported. Request support', { exact: false })
+    ).toBeInTheDocument()
   })
 
   it('renders empty positions card when on supported chain with no positions', () => {
