@@ -146,7 +146,8 @@ const SelectorWrapper = styled.div`
 const StyledChevronDown = styled(ChevronDown)`
   width: 16px;
 `
-const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
+
+function getBridgeLabel(chainId: SupportedChainId) {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
@@ -164,7 +165,8 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
       return 'Bridge'
   }
 }
-const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
+
+function getExplorerLabel(chainId: SupportedChainId) {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
@@ -216,7 +218,7 @@ function Row({
         <ActiveRowLinkList>
           {bridge && (
             <ExternalLink href={bridge}>
-              <BridgeLabel chainId={chainId} />
+              {getBridgeLabel(chainId)}
               <CircleContainer>
                 <LinkOutCircle />
               </CircleContainer>
@@ -224,7 +226,7 @@ function Row({
           )}
           {explorer && (
             <ExternalLink href={explorer}>
-              <ExplorerLabel chainId={chainId} />
+              {getExplorerLabel(chainId)}
               <CircleContainer>
                 <LinkOutCircle />
               </CircleContainer>
