@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -319,6 +319,10 @@ msgstr "Geblokkeerd adres"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Geblokkeerd adres"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blokscout"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Gepoold {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Pools overzicht"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Portaalbrug"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "Uw V2-liquiditeit"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Uw actieve V3-liquiditeitsposities verschijnen hier."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Uw verbonden netwerk wordt niet ondersteund. Vraag hier ondersteuning <0>aan</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

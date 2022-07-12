@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -319,6 +319,10 @@ msgstr "Địa chỉ bị chặn"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Địa chỉ bị chặn"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blockscout"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Pool {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Tổng quan về pool"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Cầu Cổng thông tin"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "Thanh khoản V2 của bạn"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Các vị trí thanh khoản V3 đang hoạt động của bạn sẽ xuất hiện tại đây."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Mạng đã kết nối của bạn không được hỗ trợ. Yêu cầu hỗ trợ <0>tại đây</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

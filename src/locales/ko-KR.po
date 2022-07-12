@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -319,6 +319,10 @@ msgstr "차단된 주소"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "차단된 주소"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "블록스카우트"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "{0} 풀링 됨:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "풀 개요"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "포털 브리지"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "V2 유동성"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "활성 V3 유동성 위치가 여기에 표시됩니다."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "연결된 네트워크가 지원되지 않습니다. 지원 요청 <0>여기</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

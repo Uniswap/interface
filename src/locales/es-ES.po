@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:04\n"
+"PO-Revision-Date: 2022-07-12 16:04\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -319,6 +319,10 @@ msgstr "Dirección bloqueada"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Dirección bloqueada"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Explorador de bloque"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Conjunto {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Vista general del fondo común"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Puente del Portal"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "Su liquidez V2"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Sus posiciones activas de liquidez V3 aparecerán aquí."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Su red conectada no es compatible. Solicite soporte <0>aquí</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
