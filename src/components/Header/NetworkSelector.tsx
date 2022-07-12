@@ -150,36 +150,36 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
-      return <Trans>Arbitrum Bridge</Trans>
+      return 'Arbitrum Bridge'
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimism Bridge</Trans>
+      return 'Optimism Bridge'
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
-      return <Trans>Polygon Bridge</Trans>
+      return 'Polygon Bridge'
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
-      return <Trans>Portal Bridge</Trans>
+      return 'Portal Bridge'
     default:
-      return <Trans>Bridge</Trans>
+      return 'Bridge'
   }
 }
 const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
-      return <Trans>Arbiscan</Trans>
+      return 'Arbiscan'
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimistic Etherscan</Trans>
+      return 'Optimistic Etherscan'
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
-      return <Trans>Polygonscan</Trans>
+      return 'Polygonscan'
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
-      return <Trans>Blockscout</Trans>
+      return 'Blockscout'
     default:
-      return <Trans>Etherscan</Trans>
+      return 'Etherscan'
   }
 }
 
