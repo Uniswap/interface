@@ -8,8 +8,8 @@ export enum EventName {
   PAGE_VIEWED = 'Page Viewed',
   SWAP_SUBMITTED = 'Swap Submitted',
   TOKEN_IMPORTED = 'Token Imported',
-  TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
   TOKEN_SELECTED = 'Token Selected',
+  TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
   // alphabetize additional event names.
 }
 
