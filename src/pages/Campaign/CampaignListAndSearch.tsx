@@ -12,6 +12,7 @@ import { AppState } from 'state'
 import { SelectedHighlight } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import { NETWORKS_INFO } from 'constants/networks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { formatNumberWithPrecisionRange } from 'utils'
 
 export default function CampaignListAndSearch({
   onSelectCampaign,
@@ -76,8 +77,8 @@ export default function CampaignListAndSearch({
                 {!!totalRewardAmount && (
                   <Text fontSize="14px">
                     {/* TODO: Wait for backend refactoring. */}
-                    {/*{totalRewardAmount} {campaign.rewardDistribution[0].tokenSymbol}*/}
-                    {totalRewardAmount} KNC
+                    {/*{formatNumberWithPrecisionRange(totalRewardAmount, 0, 2)} {campaign.rewardDistribution[0].tokenSymbol}*/}
+                    {formatNumberWithPrecisionRange(totalRewardAmount, 0, 2)} KNC
                   </Text>
                 )}
               </Flex>
