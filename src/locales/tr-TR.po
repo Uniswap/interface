@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:05\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -319,6 +319,10 @@ msgstr "Engellenen Adres"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Engellenen adres"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "blok izci"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Havuza alınmış {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Havuzlara Genel Bakış"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Portal Köprüsü"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "V2 likiditeniz"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Aktif V3 likidite pozisyonlarınız burada görünecektir."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Bağlı ağınız desteklenmiyor. Destek isteyin <0>burada</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

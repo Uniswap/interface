@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-06 21:05\n"
+"PO-Revision-Date: 2022-07-12 16:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -319,6 +319,10 @@ msgstr "Αποκλεισμένη διεύθυνση"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Αποκλεισμένη διεύθυνση"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Μπλοκσκάουτ"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Συγκεντρώθηκε(αν) {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Επισκόπηση Δεξαμενών"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Γέφυρα Πύλης"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -2208,6 +2217,10 @@ msgstr "Η ρευστότητα V2 σας"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Οι ενεργές σας θέσεις ρευστότητας V3 θα εμφανίζονται εδώ."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Το συνδεδεμένο δίκτυό σας δεν υποστηρίζεται. Ζητήστε υποστήριξη <0>εδώ</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
