@@ -5,12 +5,17 @@
  * and logged.
  */
 export enum EventName {
-  SWAP_SUBMITTED = 'Swap Submitted',
   PAGE_VIEWED = 'Page Viewed',
+  SWAP_SUBMITTED = 'Swap Submitted',
+  // alphabeticize additional event names.
 }
 
+/**
+ * Known pages in the app. Highest order context.
+ */
 export const enum PageName {
   SWAP_PAGE = 'swap-page',
+  // alphabeticize additional page names.
 }
 
 /**
@@ -20,21 +25,23 @@ export const enum PageName {
  */
 export const enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
+  // alphabeticize additional section names.
 }
 
 /** Known modals for analytics purposes. */
 export const enum ModalName {
   SWAP = 'swap-modal',
+  // alphabeticize additional modal names.
 }
 
 /**
  * Known element names for analytics purposes.
  * Use to identify low-level components given a TraceContext
  */
-
 export const enum ElementName {
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
   SWAP_BUTTON = 'swap-button',
+  // alphabeticize additional element names.
 }
 
 /**
@@ -44,8 +51,7 @@ export const enum ElementName {
  *  const ButtonActionProps = (({ onClick }) => ({ onClick }))(ActionProps)
  *  <TraceEvent actionProps={ButtonActionProps} element={name}>
  */
-export const ActionNames = {
-  onClick: { action: 'click' },
+export enum Event {
+  onClick = 'onClick',
+  // alphabeticize additional events.
 }
-
-export type PartialActionNames = Partial<typeof ActionNames>

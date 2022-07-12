@@ -30,8 +30,8 @@ type TraceProps = {
  */
 export const Trace = memo(
   ({
-    children,
     shouldLogImpression,
+    children,
     page,
     section,
     element,
