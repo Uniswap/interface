@@ -215,7 +215,7 @@ export default function AccountDetails({
   function formatConnectorName() {
     return (
       <WalletName>
-        <Trans>Connected with</Trans> {getConnectionName(connectionType)}
+        <Trans>Connected with</Trans> {getConnectionName(connectionType, isMetaMask)}
       </WalletName>
     )
   }
