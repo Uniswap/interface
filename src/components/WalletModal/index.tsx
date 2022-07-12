@@ -1,17 +1,19 @@
 import { Trans } from '@lingui/macro'
+import { isInaccessible } from '@testing-library/react'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
-import { getConnection } from 'connection/utils'
+import { getConnection, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
+import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
@@ -20,9 +22,9 @@ import { ExternalLink, ThemedText } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import { LightCard } from '../Card'
 import Modal from '../Modal'
-import CoinbaseWalletOption from './CoinbaseWalletOption'
+import CoinbaseWalletOption, { OpenInCoinbaseWalletOption } from './CoinbaseWalletOption'
 import FortmaticOption from './FortmaticOption'
-import InjectedOption from './InjectedOption'
+import InjectedOption, { InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
 import PendingView from './PendingView'
 import WalletConnectOption from './WalletConnectOption'
 
@@ -183,12 +185,28 @@ export default function WalletModal({
   )
 
   function getOptions() {
+    const isInjected = getIsInjected()
+    const isMetaMask = getIsMetaMask()
+    const isCoinbaseWallet = getIsCoinbaseWallet()
+
+    const isCoinbaseWalletBrowser = isMobile && isCoinbaseWallet
+    const isMetaMaskBrowser = isMobile && isMetaMask
+    const isInjectedMobileBrowser = isCoinbaseWalletBrowser || isMetaMaskBrowser
+
     return (
       <>
-        <InjectedOption tryActivation={tryActivation} />
-        <CoinbaseWalletOption tryActivation={tryActivation} />
-        <WalletConnectOption tryActivation={tryActivation} />
-        <FortmaticOption tryActivation={tryActivation} />
+        {!isMobile && !isInjected && <InstallMetaMaskOption />}
+        {isInjected &&
+          !isCoinbaseWalletBrowser &&
+          (isMetaMask ? (
+            <MetaMaskOption tryActivation={tryActivation} />
+          ) : (
+            <InjectedOption tryActivation={tryActivation} />
+          ))}
+        {isMobile && !isCoinbaseWallet && !isMetaMask && <OpenInCoinbaseWalletOption />}
+        {!isMetaMaskBrowser && <CoinbaseWalletOption tryActivation={tryActivation} />}
+        {!isInjectedMobileBrowser && <WalletConnectOption tryActivation={tryActivation} />}
+        {!isInjectedMobileBrowser && <FortmaticOption tryActivation={tryActivation} />}
       </>
     )
   }

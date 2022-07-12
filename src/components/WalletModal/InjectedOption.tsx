@@ -3,9 +3,8 @@ import { Connector } from '@web3-react/types'
 import INJECTED_ICON_URL from 'assets/images/arrow-right.svg'
 import METAMASK_ICON_URL from 'assets/images/metamask.png'
 import { ConnectionType, injectedConnection } from 'connection'
-import { getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import { getConnectionName } from 'connection/utils'
 
-import { isMobile } from '../../utils/userAgent'
 import Option from './Option'
 
 const INJECTED_PROPS = {
@@ -20,37 +19,30 @@ const METAMASK_PROPS = {
   id: 'metamask',
 }
 
-const InjectedOption = ({ tryActivation }: { tryActivation: (connector: Connector) => void }) => {
-  const isActive = injectedConnection.hooks.useIsActive()
-  const isInjected = getIsInjected()
-  const isMetaMask = getIsMetaMask()
-  const isCoinbaseWallet = getIsCoinbaseWallet()
-
-  const props = {
-    isActive,
-    header: getConnectionName(ConnectionType.INJECTED, isMetaMask),
-    onClick() {
-      tryActivation(injectedConnection.connector)
-    },
-  }
-
-  if (!isInjected && !isMobile) {
-    return <Option {...METAMASK_PROPS} header={<Trans>Install MetaMask</Trans>} link={'https://metamask.io/'} />
-  }
-
-  if (isMetaMask) {
-    return <Option {...METAMASK_PROPS} {...props} />
-  }
-
-  if (isCoinbaseWallet) {
-    return null
-  }
-
-  if (isInjected) {
-    return <Option {...INJECTED_PROPS} {...props} />
-  }
-
-  return null
+export function InstallMetaMaskOption() {
+  return <Option {...METAMASK_PROPS} header={<Trans>Install MetaMask</Trans>} link={'https://metamask.io/'} />
 }
 
-export default InjectedOption
+export function MetaMaskOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {
+  const isActive = injectedConnection.hooks.useIsActive()
+  return (
+    <Option
+      {...METAMASK_PROPS}
+      isActive={isActive}
+      header={getConnectionName(ConnectionType.INJECTED, true)}
+      onClick={() => tryActivation(injectedConnection.connector)}
+    />
+  )
+}
+
+export function InjectedOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {
+  const isActive = injectedConnection.hooks.useIsActive()
+  return (
+    <Option
+      {...INJECTED_PROPS}
+      isActive={isActive}
+      header={getConnectionName(ConnectionType.INJECTED, false)}
+      onClick={() => tryActivation(injectedConnection.connector)}
+    />
+  )
+}

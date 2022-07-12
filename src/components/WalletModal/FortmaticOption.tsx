@@ -1,8 +1,7 @@
 import { Connector } from '@web3-react/types'
 import FORTMATIC_ICON_URL from 'assets/images/fortmaticIcon.png'
 import { ConnectionType, fortmaticConnection } from 'connection'
-import { getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
-import { isMobile } from 'utils/userAgent'
+import { getConnectionName } from 'connection/utils'
 
 import Option from './Option'
 
@@ -12,13 +11,8 @@ const BASE_PROPS = {
   id: 'fortmatic',
 }
 
-const FortmaticOption = ({ tryActivation }: { tryActivation: (connector: Connector) => void }) => {
+export function FortmaticOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {
   const isActive = fortmaticConnection.hooks.useIsActive()
-
-  const isMetaMask = getIsMetaMask()
-  const isCoinbaseWallet = getIsCoinbaseWallet()
-  if (isMobile && (isMetaMask || isCoinbaseWallet)) return null
-
   return (
     <Option
       {...BASE_PROPS}
@@ -28,5 +22,3 @@ const FortmaticOption = ({ tryActivation }: { tryActivation: (connector: Connect
     />
   )
 }
-
-export default FortmaticOption
