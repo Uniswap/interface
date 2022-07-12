@@ -82,6 +82,7 @@ jobs:
         with:
           install: false
           browser: chrome
+          record: false
           config-file: cypress.release.config.ts
           config: baseUrl=https://cloudflare-ipfs.com/ipfs/${{ steps.pinata.outputs.hash }}
 
