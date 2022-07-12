@@ -184,9 +184,13 @@ const getFormattedCurrencyAmount = (
   isApproximateAmount = false
 ) => {
   if (!currency) return ''
-  const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, currencyAmountRaw)
-  const formattedAmount = formatCurrencyAmount(currencyAmount)
-  return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
+  try {
+    const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, currencyAmountRaw)
+    const formattedAmount = formatCurrencyAmount(currencyAmount)
+    return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
+  } catch {
+    return ''
+  }
 }
 
 const getUSDValue = (
