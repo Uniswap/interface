@@ -20,7 +20,7 @@ describe('#getExplorerLink', () => {
     expect(getExplorerLink(137, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://polygonscan.com/address/abc')
   })
   it('celo', () => {
-    expect(getExplorerLink(42220, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://explorer.celo.org/address/abc')
+    expect(getExplorerLink(42220, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://celoscan.io/address/abc')
   })
   it('ropsten', () => {
     expect(getExplorerLink(3, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://ropsten.etherscan.io/address/abc')
