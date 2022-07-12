@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useEffect } from 'react'
 import { MessageCircle, X } from 'react-feather'
-import ReactGA from 'react-ga4'
 import { useShowSurveyPopup } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText, Z_INDEX } from 'theme'
@@ -62,7 +62,7 @@ export default function SurveyPopup() {
       if (Math.random() < 0.01) {
         setShowSurveyPopup(true)
         // log a case of succesful view
-        ReactGA.event({
+        sendEvent({
           category: 'Survey',
           action: 'Saw Survey',
         })
@@ -80,7 +80,7 @@ export default function SurveyPopup() {
         <Wrapper gap="10px">
           <WrappedCloseIcon
             onClick={() => {
-              ReactGA.event({
+              sendEvent({
                 category: 'Survey',
                 action: 'Clicked Survey Link',
               })

@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
+import { sendEvent } from 'components/analytics'
 import Card, { DarkGreyCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
-import ReactGA from 'react-ga4'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { isMobile } from 'utils/userAgent'
 
-import { useModalOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
+import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -70,7 +70,7 @@ const EXTERNAL_APIS = [
     ),
   },
   {
-    name: 'Google Analytics',
+    name: 'Google Analytics & Amplitude',
     description: <Trans>The app logs anonymized usage statistics in order to improve over time.</Trans>,
   },
   {
@@ -81,13 +81,13 @@ const EXTERNAL_APIS = [
 
 export function PrivacyPolicyModal() {
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.PRIVACY_POLICY)
+  const open = useModalIsOpen(ApplicationModal.PRIVACY_POLICY)
   const toggle = useTogglePrivacyPolicy()
 
   useEffect(() => {
     if (!open) return
 
-    ReactGA.event({
+    sendEvent({
       category: 'Modal',
       action: 'Show Legal',
     })
@@ -167,11 +167,13 @@ export function PrivacyPolicy() {
               </AutoColumn>
             </DarkGreyCard>
           ))}
-          <Row justify="center" marginBottom="1rem">
-            <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
-              <Trans>Learn more</Trans>
-            </ExternalLink>
-          </Row>
+          <ThemedText.Body fontSize={12}>
+            <Row justify="center" marginBottom="1rem">
+              <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
+                <Trans>Learn more</Trans>
+              </ExternalLink>
+            </Row>
+          </ThemedText.Body>
         </AutoColumn>
       </AutoColumn>
     </Wrapper>

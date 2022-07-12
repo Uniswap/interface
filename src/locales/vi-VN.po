@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-24 20:06\n"
+"PO-Revision-Date: 2022-07-06 21:05\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -121,17 +121,12 @@ msgid "About"
 msgstr "Giới thiệu"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "Chấp nhận"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Tài khoản"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Acknowledge"
-msgstr "Công nhận"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -169,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Thêm thanh khoản"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "Thêm {0} vào Metamask <0/>"
+msgid "Add {0}"
+msgstr "Thêm {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -184,6 +179,10 @@ msgstr "Thêm {0}/{1} thanh khoản V3"
 msgid "Added {0}"
 msgstr "Đã thêm {0}"
 
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Thêm đề xuất này vào hàng đợi sẽ cho phép nó được thực thi, sau một khoảng thời gian trì hoãn."
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
 msgstr "Địa chỉ không có yêu cầu"
@@ -191,10 +190,6 @@ msgstr "Địa chỉ không có yêu cầu"
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
 msgstr "Chống lại"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow"
-msgstr "Cho phép"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
@@ -204,21 +199,9 @@ msgstr "Cho phép di chuyển mã token LP"
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Cho phép các giao dịch tác động đến giá cao và bỏ qua màn hình xác nhận. Sử dụng và tự gánh chịu mọi rủi ro."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow in your wallet"
-msgstr "Cho phép trong ví của bạn"
-
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Cho phép Giao thức hoán đổi Uniswap sử dụng {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Cho phép {0} trước"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allowance pending"
-msgstr "Trợ cấp đang chờ xử lý"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -232,12 +215,7 @@ msgstr "Số tiền"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approval pending"
-msgstr "Đang chờ phê duyệt"
-
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Phê duyệt"
@@ -246,10 +224,6 @@ msgstr "Phê duyệt"
 msgid "Approve Token"
 msgstr "Phê duyệt mã thông báo"
 
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve in your wallet"
-msgstr "Phê duyệt trong ví của bạn"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -257,10 +231,6 @@ msgstr "Phê duyệt trong ví của bạn"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Phê duyệt {0}"
-
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Phê duyệt {0} trước"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -303,13 +273,8 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Ít nhất {0} {1} và {2} {3} sẽ được hoàn lại vào ví của bạn do phạm vi giá đã chọn."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Tự động"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "Auto Router"
-msgstr "Bộ định tuyến tự động"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -318,6 +283,10 @@ msgstr "API bộ định tuyến tự động"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Có sẵn để đặt cọc: {0}"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Back to wallet selection"
+msgstr "Quay lại lựa chọn ví"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -342,6 +311,10 @@ msgstr "Tốt nhất cho các cặp rất ổn định."
 #: src/components/swap/SwapRoute.tsx
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
 msgstr "Tuyến đường giá tốt nhất chi phí ~{formattedGasPriceString} xăng."
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "Blocked Address"
+msgstr "Địa chỉ bị chặn"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -454,7 +427,6 @@ msgstr "Xóa tất cả"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Đóng"
 
@@ -509,19 +481,12 @@ msgstr "Xác nhận cung cấp"
 msgid "Confirm Swap"
 msgstr "Xác nhận Hoán đổi"
 
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Confirm in your wallet"
-msgstr "Xác nhận trong ví của bạn"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Confirm swap"
-msgstr "Xác nhận hoán đổi"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Xác nhận giao dịch này trong ví của bạn"
@@ -563,21 +528,13 @@ msgstr "Kết nối với ví để xem tính thanh khoản V2 của bạn."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Kết nối với ví để xem tính thanh khoản của bạn."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Connect wallet to swap"
-msgstr "Kết nối ví để hoán đổi"
-
-#: src/lib/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "Kết nối ví của bạn"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Đã kết nối với {name}"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Convert {0} to {1} with no slippage"
-msgstr "Chuyển đổi {0} thành {1} mà không bị trượt"
+#: src/components/WalletModal/PendingView.tsx
+msgid "Connecting..."
+msgstr "Đang kết nối..."
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -715,7 +672,6 @@ msgid "Discord"
 msgstr "Bất hòa"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "Bỏ qua"
 
@@ -757,7 +713,6 @@ msgstr "Nhập địa chỉ để kích hoạt khiếu nại UNI. Nếu địa c
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -786,21 +741,8 @@ msgid "Error"
 msgstr "Lỗi"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Lỗi kết nối"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Lỗi kết nối. Hãy thử làm mới trang."
-
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Error details"
-msgstr "Chi tiết lỗi"
-
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Error fetching trade"
-msgstr "Lỗi khi tìm nạp giao dịch"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -818,11 +760,36 @@ msgstr "Phí mạng ước tính"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Hành hình"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "Thực hiện Đề xuất {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Thực hiện đề xuất {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Thực thi"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Đang thực thi"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "Việc thực thi đề xuất này sẽ tạo ra calldata trên chuỗi."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Thực thi đã được đệ trình"
+
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Kết quả mở rộng từ Danh sách mã token không hoạt động"
 
@@ -862,11 +829,6 @@ msgstr "Bậc phí"
 msgid "Fetching best price..."
 msgstr "Đang tìm nạp giá tốt nhất ..."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Fetching best price…"
-msgstr "Tìm nạp giá tốt nhất…"
-
-#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Đối với"
@@ -904,35 +866,18 @@ msgstr "Trung tâm trợ giúp"
 msgid "Hide"
 msgstr "Ẩn giấu"
 
-#: src/components/PositionList/index.tsx
-msgid "Hide closed positions"
-msgstr "Ẩn các vị trí đã đóng"
-
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Tác động giá cao"
-
-#: src/lib/components/Swap/Summary/index.tsx
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High price impact"
-msgstr "Tác động giá cao"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "High slippage"
-msgstr "Trượt cao"
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "High slippage increases the risk of price movement"
-msgstr "Trượt giá cao làm tăng rủi ro biến động giá"
-
-#: src/components/WalletModal/index.tsx
-msgid "How this app uses APIs"
-msgstr "Cách ứng dụng này sử dụng API"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Tôi hiểu"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "If you believe this is an error, please send an email including your address to"
+msgstr "Nếu bạn cho rằng đây là lỗi, vui lòng gửi email bao gồm địa chỉ của bạn tới"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
@@ -974,29 +919,20 @@ msgstr "Tăng tính thanh khoản"
 msgid "Initial prices and pool share"
 msgstr "Giá ban đầu và tỷ trọng pool"
 
-#: src/components/WalletModal/PendingView.tsx
-msgid "Initializing..."
-msgstr "Đang khởi tạo..."
-
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0} {1}</0> hoặc giao dịch sẽ hoàn nguyên."
 
 #: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Cài đặt Metamask"
+msgid "Install MetaMask"
+msgstr "Cài đặt MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Không đủ thanh khoản cho giao dịch này."
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Insufficient liquidity in the pool for your trade"
-msgstr "Không đủ thanh khoản trong pool cho giao dịch của bạn"
-
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1051,7 +987,6 @@ msgstr "Tìm hiểu thêm"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pháp lý & Quyền riêng tư"
 
@@ -1067,10 +1002,6 @@ msgstr "Thanh khoản"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Dữ liệu thanh khoản không có sẵn."
-
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Phí nhà cung cấp thanh khoản"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1123,7 +1054,6 @@ msgstr "Quản lý danh sách mã Token"
 msgid "Manage this pool."
 msgstr "Quản lý pool này."
 
-#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Tối đa"
@@ -1137,16 +1067,11 @@ msgstr "Giá tối đa"
 msgid "Max price"
 msgstr "Giá tối đa"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Max slippage"
-msgstr "Độ trượt tối đa"
-
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Tối đa:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Đã gửi tối đa"
 
@@ -1197,17 +1122,12 @@ msgid "Min:"
 msgstr "Tối thiểu:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Số tiền nhận được tối thiểu"
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Thiếu phụ thuộc"
-
-#: src/lib/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Mock Toggle"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1259,7 +1179,6 @@ msgid "No proposals found."
 msgstr "Không tìm thấy đề xuất nào."
 
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "Không có kết quả nào được tìm thấy."
 
@@ -1267,27 +1186,9 @@ msgstr "Không có kết quả nào được tìm thấy."
 msgid "Not created"
 msgstr "Chưa tạo"
 
-#: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
-msgid "OFF"
-msgstr "TẮT"
-
-#: src/components/Toggle/ListToggle.tsx
-#: src/lib/components/Toggle.tsx
-msgid "ON"
-msgstr "BẬT"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "CHỈ SỬ DỤNG CHẾ ĐỘ NÀY NẾU BẠN BIẾT BẠN ĐANG LÀM GÌ."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Tắt"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Bật"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1297,13 +1198,9 @@ msgstr "Một khi bạn hài lòng với tỷ lệ, nhấp vào cung cấp để
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Chỉ những phiếu bầu UNI đã được tự ủy quyền hoặc được ủy quyền cho một địa chỉ khác trước khối {0} đủ điều kiện để bỏ phiếu."
 
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Ối! Đã xảy ra lỗi không xác định. Vui lòng làm mới trang hoặc truy cập từ trình duyệt hoặc thiết bị khác."
-
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimism Gateway"
-msgstr "Cổng lạc quan"
+msgid "Optimism Bridge"
+msgstr "Cầu lạc quan"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1325,14 +1222,6 @@ msgstr "Đầu ra được ước tính. Nếu giá thay đổi nhiều hơn {0}
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Đầu ra được ước tính. Bạn sẽ nhận được ít nhất <0>{0} {1}</0> hoặc giao dịch sẽ hoàn nguyên."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "Sản lượng được ước tính. Bạn sẽ nhận được ít nhất {0} {1} hoặc giao dịch sẽ hoàn nguyên."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
-msgstr "Sản lượng được ước tính. Bạn sẽ gửi nhiều nhất là {0} {1} hoặc giao dịch sẽ hoàn nguyên."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1357,14 +1246,6 @@ msgstr "Vui lòng xác nhận rằng bạn muốn xóa danh sách này bằng c�
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Vui lòng kết nối với Ethereum Lớp 1"
-
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Vui lòng kết nối với mạng được hỗ trợ trong menu thả xuống hoặc trong ví của bạn."
-
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Please enter a valid slippage %"
-msgstr "Vui lòng nhập% trượt giá hợp lệ"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1415,10 +1296,6 @@ msgstr "Pool {0}:"
 msgid "Pools Overview"
 msgstr "Tổng quan về pool"
 
-#: src/lib/components/BrandedFooter.tsx
-msgid "Powered by the Uniswap protocol"
-msgstr "Được hỗ trợ bởi giao thức Uniswap"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
 msgstr "Xem trước"
@@ -1443,17 +1320,9 @@ msgstr "Tác động giá quá cao"
 msgid "Price Updated"
 msgstr "Đã cập nhật giá"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "Tác động giá"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Phạm vi giá"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Price updated"
-msgstr "Đã cập nhật giá"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1495,9 +1364,26 @@ msgstr "Người đề xuất"
 msgid "Protocol Disclaimer"
 msgstr "Tuyên bố từ chối trách nhiệm"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Xếp hàng"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Đề xuất hàng đợi {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Đề xuất hàng đợi {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Đã xếp hàng"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "Xếp hàng"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1523,17 +1409,9 @@ msgstr "Đọc thêm về nội dung không được hỗ trợ"
 msgid "Recent Transactions"
 msgstr "Giao dịch gần đây"
 
-#: src/lib/components/RecentTransactionsDialog.tsx
-msgid "Recent transactions"
-msgstr "Giao dịch gần đây"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Người nhận"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page"
-msgstr "Tải lại trang"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1577,23 +1455,11 @@ msgstr "Loại bỏ {0} {1} và{2} {3}"
 msgid "Request Features"
 msgstr "Yêu cầu tính năng"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Reset"
-msgstr "Cài lại"
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Trở về"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Review swap"
-msgstr "Đánh giá hoán đổi"
-
-#: src/lib/components/TokenSelect/index.tsx
-msgid "Search by token name or address"
-msgstr "Tìm kiếm theo tên hoặc địa chỉ mã thông báo"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1609,8 +1475,6 @@ msgstr "Chọn một mạng"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
-#: src/lib/components/TokenSelect/TokenButton.tsx
-#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1647,10 +1511,6 @@ msgstr "Đặt phạm vi giá"
 msgid "Set Starting Price"
 msgstr "Đặt giá khởi điểm"
 
-#: src/lib/components/Swap/Settings/index.tsx
-msgid "Settings"
-msgstr "Cài đặt"
-
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "Chia sẻ của Pool"
@@ -1659,10 +1519,12 @@ msgstr "Chia sẻ của Pool"
 msgid "Share of Pool:"
 msgstr "Chia sẻ của Pool:"
 
-#: src/components/AccountDetails/index.tsx
-msgid "Show Portis"
-msgstr "Hiển thị Portis"
+#: src/pages/Vote/Landing.tsx
+msgid "Show Cancelled"
+msgstr "Hiển thị Đã bị Hủy"
 
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
 msgstr "Hiển thị các vị trí đã đóng"
@@ -1672,7 +1534,6 @@ msgid "Simple"
 msgstr "Đơn giản"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "Khả năng chịu trượt"
 
@@ -1683,11 +1544,6 @@ msgstr "Một số tài sản không khả dụng thông qua giao diện này v�
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Đã xảy ra sự cố"
-
-#: src/lib/components/Error/ErrorBoundary.tsx
-#: src/lib/components/Error/ErrorDialog.tsx
-msgid "Something went wrong."
-msgstr "Đã xảy ra lỗi."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1724,7 +1580,6 @@ msgstr "Cung cấp {0} {1} và {2} {3}"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/lib/components/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1740,14 +1595,6 @@ msgstr "Hoán đổi <0 /> lấy chính xác <1 />"
 msgid "Swap Anyway"
 msgstr "Vẫn hoán đổi"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap confirmed"
-msgstr "Hoán đổi được xác nhận"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap details"
-msgstr "Hoán đổi chi tiết"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Hoán đổi chính xác <0 /> lấy <1 />"
@@ -1756,14 +1603,6 @@ msgstr "Hoán đổi chính xác <0 /> lấy <1 />"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Hoán đổi không thành công: {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Swap pending"
-msgstr "Hoán đổi đang chờ xử lý"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Swap summary"
-msgstr "Tóm tắt hoán đổi"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1789,6 +1628,10 @@ msgstr "% Bạn sẽ kiếm được từ phí."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã token bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
+msgstr "Số tiền bạn mong đợi nhận được theo giá thị trường hiện tại. Bạn có thể nhận được ít hơn hoặc nhiều hơn nếu giá thị trường thay đổi trong khi giao dịch của bạn đang chờ xử lý."
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
 msgstr "Ứng dụng tìm nạp dữ liệu blockchain từ dịch vụ lưu trữ của The Graph."
@@ -1809,6 +1652,10 @@ msgstr "Ứng dụng ghi lại số liệu thống kê sử dụng ẩn danh đ�
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Ứng dụng thu thập địa chỉ ví của bạn một cách an toàn và chia sẻ nó với TRM Labs Inc. vì lý do rủi ro và tuân thủ."
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "Nỗ lực kết nối không thành công. Vui lòng nhấp vào thử lại và làm theo các bước để kết nối trong ví của bạn."
+
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."
 msgstr "Chi phí gửi giao dịch này là hơn một nửa giá trị của số tiền đầu vào."
@@ -1821,6 +1668,14 @@ msgstr "Lượng gas nhanh hiện tại để gửi một giao dịch trên L1. 
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Chênh lệch ước tính giữa giá trị USD của lượng đầu vào và đầu ra."
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
+msgstr "Phí trả cho thợ đào xử lý giao dịch của bạn. Cái này phải được trả bằng {0}."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The impact your trade has on the market price of this pool."
+msgstr "Tác động của giao dịch của bạn lên giá thị trường của nhóm này."
+
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
@@ -1828,6 +1683,10 @@ msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố v�
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định của bạn. Chỉ gửi một tài sản duy nhất."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "Số tiền tối thiểu bạn được đảm bảo nhận được. Nếu giá trượt thêm nữa, giao dịch của bạn sẽ hoàn nguyên."
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
@@ -1861,6 +1720,10 @@ msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng ki
 msgid "There is no liquidity data."
 msgstr "Không có dữ liệu thanh khoản."
 
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgstr "Địa chỉ này bị chặn trên giao diện Uniswap Labs vì nó được liên kết với một hoặc nhiều"
+
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "Ứng dụng này sử dụng các API của bên thứ ba sau:"
@@ -1868,6 +1731,10 @@ msgstr "Ứng dụng này sử dụng các API của bên thứ ba sau:"
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Nhóm này phải được khởi tạo trước khi bạn có thể thêm thanh khoản. Để khởi tạo, hãy chọn giá khởi điểm cho nhóm. Sau đó, nhập phạm vi giá thanh khoản và số tiền ký quỹ của bạn. Phí gas sẽ cao hơn bình thường do giao dịch khởi tạo."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Đề xuất này có thể được thực hiện sau {0}."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -1915,7 +1782,7 @@ msgstr "Mã thông báo không được hỗ trợ"
 msgid "Tokens"
 msgstr "Token"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
 msgstr "Mã token từ danh sách không hoạt động. Nhập mã token cụ thể bên dưới hoặc nhấp vào Quản lý để kích hoạt thêm danh sách."
 
@@ -1946,6 +1813,7 @@ msgstr "Cài đặt giao dịch"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Giao dịch đã được gửi"
@@ -1954,18 +1822,9 @@ msgstr "Giao dịch đã được gửi"
 msgid "Transaction completed in"
 msgstr "Giao dịch đã hoàn tất trong"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction confirmed"
-msgstr "Đã xác nhận giao dịch"
-
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "Thời hạn giao dịch"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction pending"
-msgstr "Giao dịch đang chờ xử lý"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
@@ -1979,10 +1838,6 @@ msgstr "Mã thông báo chuyển"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Thử lại"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Hãy thử tăng khả năng chịu trượt của bạn.<0/>LƯU Ý: Phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2084,10 +1939,6 @@ msgstr "Tài sản không được hỗ trợ"
 msgid "Unsupported Assets"
 msgstr "Tài sản không được hỗ trợ"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade"
-msgstr "Mạng không được hỗ trợ - chuyển sang mạng khác để giao dịch"
-
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Không có tiêu đề"
@@ -2099,18 +1950,6 @@ msgstr "Tháo"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Bỏ gói <0/> thành {0}"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap confirmed"
-msgstr "Đã xác nhận mở gói"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Unwrap pending"
-msgstr "Mở gói đang chờ xử lý"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Unwrap {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2129,8 +1968,8 @@ msgid "User"
 msgstr "Người dùng"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 không khả dụng trên Lớp 2. Chuyển sang Lớp 1 Ethereum."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 Pool không khả dụng trên Lớp 2. Chuyển sang Lớp 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2149,7 +1988,6 @@ msgstr "Xem phí đã tích lũy và số liệu phân tích <0>↗</0>"
 msgid "View list"
 msgstr "Danh sách xem"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Xem trên Etherscan"
@@ -2164,6 +2002,8 @@ msgstr "Xem trên Explorer"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Xem giao dịch trên Explorer"
@@ -2288,19 +2128,6 @@ msgstr "Bọc lại"
 msgid "Wrap <0/> to {0}"
 msgstr "Kết thúc từ <0/> đến {0}"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Đã xác nhận kết thúc"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Gói đang chờ xử lý"
-
-#: src/lib/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "Bọc {0}"
-
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Mạng sai"
@@ -2445,16 +2272,11 @@ msgstr "Giao dịch của bạn có thể chạy trước"
 msgid "Your transaction may fail"
 msgstr "Giao dịch của bạn có thể thất bại"
 
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
-msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu nó đã chờ xử lý lâu hơn khoảng thời gian này."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu nó đang chờ xử lý trong hơn khoảng thời gian này."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu giá thay đổi bất lợi hơn tỷ lệ phần trăm này."
 
@@ -2469,6 +2291,10 @@ msgstr "UNI chưa được nhận của bạn"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "sau khi trượt"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "blocked activities"
+msgstr "các hoạt động bị chặn"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2495,7 +2321,6 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// hoặc ipfs:// hoặc tên ENS"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "phút"
 
@@ -2506,10 +2331,6 @@ msgstr "qua {0}"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "thông qua {0} mã token"
-
-#: src/lib/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {Tuyến đường tốt nhất thông qua 1 bước nhảy} other {Tuyến đường tốt nhất thông qua # bước nhảy}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
@@ -2606,7 +2427,7 @@ msgstr "{0} {1} Giá:"
 msgid "{0} {nativeCurrencySymbol}"
 msgstr "{0} {nativeCurrencySymbol}"
 
-#: src/components/SearchModal/CurrencyList.tsx
+#: src/components/SearchModal/CurrencyList/index.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Người dùng thêm vào"
 
@@ -2658,25 +2479,13 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} mã thông báo"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "{integrator} fee"
-msgstr "{integrator} phí"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
 msgstr "{label} mã thông báo"
 
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{min}m {sec}s"
-msgstr "{min}m {sec}giây"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "{sec}s"
-msgstr "{sec}giây"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

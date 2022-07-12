@@ -1,16 +1,16 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
+import { isChainAllowed } from 'utils/switchChain'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
-import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -30,7 +30,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromNetwork(tokenAddress: string | null | undefined): Token | null | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, connector } = useWeb3React()
+  const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
   const formattedAddress = isAddress(tokenAddress)
 
@@ -44,7 +45,7 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
   const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   return useMemo(() => {
-    if (typeof tokenAddress !== 'string' || !chainId || !formattedAddress) return undefined
+    if (typeof tokenAddress !== 'string' || !chainAllowed || !formattedAddress) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (decimals.result) {
       return new Token(
@@ -59,6 +60,7 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
   }, [
     formattedAddress,
     chainId,
+    chainAllowed,
     decimals.loading,
     decimals.result,
     symbol.loading,
@@ -70,6 +72,8 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
     tokenNameBytes32.result,
   ])
 }
+
+type TokenMap = { [address: string]: Token }
 
 /**
  * Returns a Token from the tokenAddress.
@@ -86,23 +90,13 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
 }
 
 /**
- * Returns a Token from the tokenAddress.
- * Returns null if token is loading or null was passed.
- * Returns undefined if tokenAddress is invalid or token does not exist.
- */
-export function useToken(tokenAddress?: string | null): Token | null | undefined {
-  const tokens = useTokenMap()
-  return useTokenFromMapOrNetwork(tokens, tokenAddress)
-}
-
-/**
  * Returns a Currency from the currencyId.
  * Returns null if currency is loading or null was passed.
  * Returns undefined if currencyId is invalid or token does not exist.
  */
 export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
   const nativeCurrency = useNativeCurrency()
-  const { chainId } = useActiveWeb3React()
+  const { chainId, connector } = useWeb3React()
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
     const chain = supportedChainId(chainId)
@@ -111,21 +105,12 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
-  if (currencyId === null || currencyId === undefined) return currencyId
+  const chainAllowed = chainId && isChainAllowed(connector, chainId)
+  if (currencyId === null || currencyId === undefined || !chainAllowed) return null
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
 
   return isNative ? nativeCurrency : token
-}
-
-/**
- * Returns a Currency from the currencyId.
- * Returns null if currency is loading or null was passed.
- * Returns undefined if currencyId is invalid or token does not exist.
- */
-export default function useCurrency(currencyId?: string | null): Currency | null | undefined {
-  const tokens = useTokenMap()
-  return useCurrencyFromMap(tokens, currencyId)
 }

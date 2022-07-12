@@ -6,6 +6,7 @@ import { load, save } from 'redux-localstorage-simple'
 import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
+import connection from './connection/reducer'
 import { api as dataApi } from './data/slice'
 import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
@@ -23,6 +24,7 @@ const store = configureStore({
   reducer: {
     application,
     user,
+    connection,
     transactions,
     swap,
     mint,

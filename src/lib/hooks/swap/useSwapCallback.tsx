@@ -4,7 +4,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
 import { AnyTrade, useSwapCallArguments } from 'hooks/useSwapCallArguments'
@@ -42,7 +42,7 @@ export function useSwapCallback({
   deadline,
   feeOptions,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
 
   const swapCalls = useSwapCallArguments(
     trade,
@@ -52,13 +52,13 @@ export function useSwapCallback({
     deadline,
     feeOptions
   )
-  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls)
+  const { callback } = useSendSwapTransaction(account, chainId, provider, trade, swapCalls)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId || !callback) {
+    if (!trade || !provider || !account || !chainId || !callback) {
       return { state: SwapCallbackState.INVALID, error: <Trans>Missing dependencies</Trans> }
     }
     if (!recipient) {
@@ -73,5 +73,5 @@ export function useSwapCallback({
       state: SwapCallbackState.VALID,
       callback: async () => callback(),
     }
-  }, [trade, library, account, chainId, callback, recipient, recipientAddressOrName])
+  }, [trade, provider, account, chainId, callback, recipient, recipientAddressOrName])
 }

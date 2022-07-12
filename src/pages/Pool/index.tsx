@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -6,12 +7,11 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
 import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { useWalletModalToggle } from 'state/application/hooks'
+import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
@@ -127,8 +127,8 @@ function PositionsLoadingPlaceholder() {
 }
 
 export default function Pool() {
-  const { account, chainId } = useActiveWeb3React()
-  const toggleWalletModal = useWalletModalToggle()
+  const { account, chainId } = useWeb3React()
+  const toggleWalletModal = useToggleWalletModal()
 
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()

@@ -1,18 +1,19 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import { useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
+import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
-import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
+import { isChainAllowed } from 'utils/switchChain'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -76,7 +77,7 @@ const HeaderElement = styled.div`
     margin-left: 0.5em;
   }
 
-  /* addresses safari's lack of support for "gap" */
+  /* addresses safaris lack of support for "gap" */
   & > *:not(:first-child) {
     margin-left: 8px;
   }
@@ -246,7 +247,9 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, connector } = useWeb3React()
+
+  const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
@@ -265,7 +268,7 @@ export default function Header() {
   const {
     infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  } = CHAIN_INFO[!chainId || !chainAllowed ? SupportedChainId.MAINNET : chainId]
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>

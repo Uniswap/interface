@@ -6,8 +6,8 @@ import useSwapApproval, { useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/u
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useCallback } from 'react'
 
-import { TransactionType } from '../state/transactions/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
+import { TransactionType } from '../state/transactions/types'
 export { ApprovalState } from 'lib/hooks/useApproval'
 
 function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) {
