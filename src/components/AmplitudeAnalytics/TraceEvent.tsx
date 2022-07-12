@@ -14,7 +14,7 @@ type TraceEventProps = {
  * Analytics instrumentation component that wraps event callbacks with logging logic.
  *
  * @example
- *  <TraceEvent actionNames={{ onClick: { action: 'click' }}} elementName={ElementName.SWAP_BUTTON}>
+ *  <TraceEvent actionNames={{ onClick: { action: 'click' }}} element={ElementName.SWAP_BUTTON}>
  *    <Button onClick={() => console.log('clicked')}>Click me</Button>
  *  </TraceEvent>
  */
@@ -57,8 +57,9 @@ function getEventHandlers(
 
   for (const eventHandlerName of keys) {
     eventHandlers[eventHandlerName] = (eventHandlerArgs: unknown) => {
-      // call child event handler with original arguments
-      child.props[eventHandlerName]?.apply(child, eventHandlerArgs)
+      // call child event handler with original arguments, must be in array
+      const args = Array.isArray(eventHandlerArgs) ? eventHandlerArgs : [eventHandlerArgs]
+      child.props[eventHandlerName]?.apply(child, args)
 
       // augment handler with analytics logging
       sendAnalyticsEvent(eventName, { ...traceContext, ...eventProperties })
