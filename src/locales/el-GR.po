@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 16:04\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -533,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτε την ρευστότητά σας."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Συνδέθηκε με {name}"
+msgid "Connected with"
+msgstr "Συνδεδεμένη με"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -927,7 +927,7 @@ msgstr "Αρχικές τιμές και μερίδιο δεξαμενής"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Η τιμή που εισάγετε εκτιμήθηκε. Θα πουλήσετε το πολύ <0>{0} {1}</0> ή η συναλλαγή θα υπαναχωρήσει."
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "Εγκαταστήστε το MetaMask"
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 16:05\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -533,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Połącz się z portfelem, aby zobaczyć płynność."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Połączony z {name}"
+msgid "Connected with"
+msgstr "Połączony z"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -927,7 +927,7 @@ msgstr "Ceny początkowe i udział w pule"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Dane wejściowe są szacowane. Sprzedawasz najwyżej <0>{0} {1}</0> lub transakcja zostanie przywrócona."
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "Zainstaluj metamaskę"
 
