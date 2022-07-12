@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ActionNames, EventName } from 'components/AmplitudeAnalytics/constants'
+import { Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
@@ -268,13 +268,12 @@ export default function CurrencyList({
             ? { search_token_symbol_input: searchQuery }
             : { search_token_address_input: isAddressSearch }),
         }
-        const CurrencyRowActionName = (({ onSelect }) => ({ onSelect }))(ActionNames)
 
         return (
           <TraceEvent
-            actionNames={CurrencyRowActionName}
-            eventName={EventName.TOKEN_SELECTED_SELECTION_MADE}
-            eventProperties={eventProperties}
+            events={[Event.onSelect]}
+            name={EventName.TOKEN_SELECTED_SELECTION_MADE}
+            properties={eventProperties}
           >
             <CurrencyRow
               style={style}
@@ -299,6 +298,8 @@ export default function CurrencyList({
       showImportView,
       showCurrencyAmount,
       isLoading,
+      isAddressSearch,
+      searchQuery,
     ]
   )
 

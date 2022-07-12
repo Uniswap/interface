@@ -1,5 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { ActionNames, EventName } from 'components/AmplitudeAnalytics/constants'
+import { Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -64,13 +64,11 @@ export default function CommonBases({
               ? { search_token_symbol_input: searchQuery }
               : { search_token_address_input: isAddressSearch }),
           }
-          const CurrencyRowActionName = (({ onClick }) => ({ onClick }))(ActionNames)
-
           return (
             <TraceEvent
-              actionNames={CurrencyRowActionName}
-              eventName={EventName.TOKEN_SELECTED_SELECTION_MADE}
-              eventProperties={eventProperties}
+              events={[Event.onClick]}
+              name={EventName.TOKEN_SELECTED_SELECTION_MADE}
+              properties={eventProperties}
               key={currencyId(currency)}
             >
               <BaseWrapper
