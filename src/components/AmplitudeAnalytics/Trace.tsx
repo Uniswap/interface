@@ -53,7 +53,8 @@ export const Trace = memo(
       if (shouldLogImpression) {
         sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, { ...combinedProps, ...eventProperties })
       }
-    }, [combinedProps, shouldLogImpression, eventName, eventProperties])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
   }
