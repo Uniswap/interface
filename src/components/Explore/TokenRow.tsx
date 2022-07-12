@@ -19,8 +19,8 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from './constants'
+import { favoritesAtom } from './state'
 import { TIME_DISPLAYS } from './TimeSelector'
-import { favoritesAtom } from './TokenTable'
 
 enum Category {
   percent_change = '% Change',
@@ -410,7 +410,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.price}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.price}
-          sortable={true}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -419,7 +419,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.percent_change}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.percent_change}
-          sortable={true}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -428,7 +428,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.market_cap}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.market_cap}
-          sortable={true}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -437,7 +437,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
           category={Category.volume}
           sortDirection={SortDirection.Decreasing}
           isSorted={sortedBy === Category.volume}
-          sortable={true}
+          sortable
           timeframe={timeframe}
         />
       }
@@ -488,7 +488,7 @@ export default function LoadedRow({
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
   const theme = useTheme()
   const isFavorited = favoriteTokens.includes(tokenAddress)
-  // TODO: remove magic number colors
+
   const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
@@ -515,6 +515,7 @@ export default function LoadedRow({
     updateFavoriteTokens(updatedFavoriteTokens)
   }
 
+  const heartColor = isFavorited ? theme.primary1 : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   // TODO: fix listNumber as number on most popular (should be fixed)
   return (
@@ -523,11 +524,7 @@ export default function LoadedRow({
       header={false}
       favorited={
         <ClickFavorited onClick={() => toggleFavoriteToken()}>
-          <Heart
-            size={15}
-            color={isFavorited ? theme.primary1 : undefined}
-            fill={isFavorited ? theme.primary1 : undefined}
-          />
+          <Heart size={15} color={heartColor} fill={heartColor} />
         </ClickFavorited>
       }
       listNumber={listNumber}

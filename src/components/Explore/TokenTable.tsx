@@ -1,11 +1,11 @@
 import { TimePeriod } from 'hooks/useTopTokens'
 import useTopTokens from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
 import React from 'react'
 import styled from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT } from './constants'
+import { favoritesAtom, showFavoritesAtom } from './state'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
@@ -42,10 +42,6 @@ const LOADING_ROWS = Array(10)
   .map((item, index) => {
     return <LoadingRow key={`${index}`} />
   })
-
-// TODO: add to shared location and possibly make a set
-export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
-export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
