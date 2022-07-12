@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { isInaccessible } from '@testing-library/react'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
@@ -22,11 +21,11 @@ import { ExternalLink, ThemedText } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import { LightCard } from '../Card'
 import Modal from '../Modal'
-import CoinbaseWalletOption, { OpenInCoinbaseWalletOption } from './CoinbaseWalletOption'
-import FortmaticOption from './FortmaticOption'
-import InjectedOption, { InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
+import { CoinbaseWalletOption, OpenInCoinbaseWalletOption } from './CoinbaseWalletOption'
+import { FortmaticOption } from './FortmaticOption'
+import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
 import PendingView from './PendingView'
-import WalletConnectOption from './WalletConnectOption'
+import { WalletConnectOption } from './WalletConnectOption'
 
 const CloseIcon = styled.div`
   position: absolute;
