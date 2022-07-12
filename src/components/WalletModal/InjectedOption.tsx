@@ -34,23 +34,23 @@ const InjectedOption = ({ tryActivation }: { tryActivation: (connector: Connecto
     },
   }
 
-  if (isMobile) {
-    if (isCoinbaseWallet) {
-      return null
-    }
-
-    if (isMetaMask) {
-      return <Option {...METAMASK_PROPS} {...props} />
-    }
-
-    return null
-  }
-
-  if (!isInjected) {
+  if (!isInjected && !isMobile) {
     return <Option {...METAMASK_PROPS} header={<Trans>Install MetaMask</Trans>} link={'https://metamask.io/'} />
   }
 
-  return <Option {...METAMASK_PROPS} {...props} />
+  if (isMetaMask) {
+    return <Option {...METAMASK_PROPS} {...props} />
+  }
+
+  if (isCoinbaseWallet) {
+    return null
+  }
+
+  if (isInjected) {
+    return <Option {...INJECTED_PROPS} {...props} />
+  }
+
+  return null
 }
 
 export default InjectedOption
