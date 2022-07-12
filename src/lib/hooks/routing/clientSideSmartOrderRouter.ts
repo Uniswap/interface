@@ -2,24 +2,29 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
+import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
-export const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
-  Number.isInteger(chainId)
-)
+export function toSupportedChainId(chainId: ChainId): SupportedChainId | undefined {
+  const numericChainId: number = chainId
+  if (SupportedChainId[numericChainId]) return numericChainId
+  return undefined
+}
+export function isSupportedChainId(chainId: ChainId | undefined): boolean {
+  if (chainId === undefined) return false
+  return toSupportedChainId(chainId) !== undefined
+}
 
 async function getQuote(
   {
     type,
-    chainId,
     tokenIn,
     tokenOut,
     amount: amountRaw,
   }: {
     type: 'exactIn' | 'exactOut'
-    chainId: ChainId
     tokenIn: { address: string; chainId: number; decimals: number; symbol?: string }
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
@@ -81,7 +86,6 @@ export async function getClientSideQuote(
   return getQuote(
     {
       type,
-      chainId: tokenInChainId,
       tokenIn: {
         address: tokenInAddress,
         chainId: tokenInChainId,
