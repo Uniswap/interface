@@ -45,7 +45,7 @@ export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainIn
 } &
   { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
-export const CHAIN_INFO: ChainInfoMap = {
+const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
@@ -167,4 +167,24 @@ export const CHAIN_INFO: ChainInfoMap = {
     logoUrl: polygonMaticLogo,
     nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
   },
+}
+
+export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
+export function getChainInfo(chainId: SupportedL2ChainId): L2ChainInfo
+export function getChainInfo(chainId: SupportedChainId): L1ChainInfo | L2ChainInfo
+export function getChainInfo(
+  chainId: SupportedChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined
+): L1ChainInfo | L2ChainInfo | undefined
+export function getChainInfo(
+  chainId: SupportedChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined
+): L1ChainInfo | L2ChainInfo | undefined {
+  if (chainId) {
+    return CHAIN_INFO[chainId] ?? undefined
+  }
+  return undefined
+}
+
+const MAINNET_INFO = CHAIN_INFO[SupportedChainId.MAINNET]
+export function getChainInfoOrDefault(chainId: number | undefined) {
+  return getChainInfo(chainId) || MAINNET_INFO
 }

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection/utils'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
@@ -189,7 +189,7 @@ function Row({
     return null
   }
   const active = chainId === targetChain
-  const { helpCenterUrl, explorer, bridge, label, logoUrl } = CHAIN_INFO[targetChain]
+  const { helpCenterUrl, explorer, bridge, label, logoUrl } = getChainInfo(targetChain)
 
   const rowContent = (
     <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
@@ -278,7 +278,7 @@ export default function NetworkSelector() {
   const toggleModal = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
   const history = useHistory()
 
-  const info = chainId ? CHAIN_INFO[chainId] : undefined
+  const info = getChainInfo(chainId)
 
   const onSelectChain = useCallback(
     async (targetChain: number, skipClose?: boolean) => {

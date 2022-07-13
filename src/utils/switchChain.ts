@@ -7,7 +7,7 @@ import {
   networkConnection,
   walletConnectConnection,
 } from 'connection'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 
@@ -58,7 +58,7 @@ export const switchChain = async (connector: Connector, chainId: number) => {
   } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
     await connector.activate(chainId)
   } else {
-    const info = CHAIN_INFO[chainId]
+    const info = getChainInfo(chainId as SupportedChainId)
     const addChainParameter = {
       chainId,
       chainName: info.label,
