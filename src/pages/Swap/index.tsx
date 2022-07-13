@@ -398,7 +398,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
   return (
-    <Trace page={PageName.SWAP_PAGE} shouldLogImpression={false}>
+    <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
         <TokenWarningModal
           isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}

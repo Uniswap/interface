@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { PageName } from 'components/AmplitudeAnalytics/constants'
+import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -252,76 +254,78 @@ export default function Pool() {
   ]
 
   return (
-    <>
-      <PageWrapper>
-        <SwapPoolTabs active="pool" />
-        <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <ThemedText.Body fontSize={'20px'}>
-                <Trans>Pools Overview</Trans>
-              </ThemedText.Body>
-              <ButtonRow>
-                {showV2Features && (
-                  <Menu
-                    menuItems={menuItems}
-                    flyoutAlignment={FlyoutAlignment.LEFT}
-                    ToggleUI={(props: any) => (
-                      <MoreOptionsButton {...props}>
-                        <MoreOptionsText>
-                          <Trans>More</Trans>
-                          <ChevronDown size={15} />
-                        </MoreOptionsText>
-                      </MoreOptionsButton>
-                    )}
-                  />
-                )}
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>New Position</Trans>
-                </ResponsiveButtonPrimary>
-              </ButtonRow>
-            </TitleRow>
+    <Trace page={PageName.POOL_PAGE} shouldLogImpression>
+      <>
+        <PageWrapper>
+          <SwapPoolTabs active="pool" />
+          <AutoColumn gap="lg" justify="center">
+            <AutoColumn gap="lg" style={{ width: '100%' }}>
+              <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+                <ThemedText.Body fontSize={'20px'}>
+                  <Trans>Pools Overview</Trans>
+                </ThemedText.Body>
+                <ButtonRow>
+                  {showV2Features && (
+                    <Menu
+                      menuItems={menuItems}
+                      flyoutAlignment={FlyoutAlignment.LEFT}
+                      ToggleUI={(props: any) => (
+                        <MoreOptionsButton {...props}>
+                          <MoreOptionsText>
+                            <Trans>More</Trans>
+                            <ChevronDown size={15} />
+                          </MoreOptionsText>
+                        </MoreOptionsButton>
+                      )}
+                    />
+                  )}
+                  <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
+                    + <Trans>New Position</Trans>
+                  </ResponsiveButtonPrimary>
+                </ButtonRow>
+              </TitleRow>
 
-            <MainContentWrapper>
-              {positionsLoading ? (
-                <PositionsLoadingPlaceholder />
-              ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (
-                <PositionList
-                  positions={filteredPositions}
-                  setUserHideClosedPositions={setUserHideClosedPositions}
-                  userHideClosedPositions={userHideClosedPositions}
-                />
-              ) : (
-                <ErrorContainer>
-                  <ThemedText.Body color={theme.text3} textAlign="center">
-                    <InboxIcon strokeWidth={1} />
-                    <div>
-                      <Trans>Your active V3 liquidity positions will appear here.</Trans>
-                    </div>
-                  </ThemedText.Body>
-                  {!showConnectAWallet && closedPositions.length > 0 && (
-                    <ButtonText
-                      style={{ marginTop: '.5rem' }}
-                      onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
-                    >
-                      <Trans>Show closed positions</Trans>
-                    </ButtonText>
-                  )}
-                  {showConnectAWallet && (
-                    <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                      <Trans>Connect a wallet</Trans>
-                    </ButtonPrimary>
-                  )}
-                </ErrorContainer>
-              )}
-            </MainContentWrapper>
-            <HideSmall>
-              <CTACards />
-            </HideSmall>
+              <MainContentWrapper>
+                {positionsLoading ? (
+                  <PositionsLoadingPlaceholder />
+                ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (
+                  <PositionList
+                    positions={filteredPositions}
+                    setUserHideClosedPositions={setUserHideClosedPositions}
+                    userHideClosedPositions={userHideClosedPositions}
+                  />
+                ) : (
+                  <ErrorContainer>
+                    <ThemedText.Body color={theme.text3} textAlign="center">
+                      <InboxIcon strokeWidth={1} />
+                      <div>
+                        <Trans>Your active V3 liquidity positions will appear here.</Trans>
+                      </div>
+                    </ThemedText.Body>
+                    {!showConnectAWallet && closedPositions.length > 0 && (
+                      <ButtonText
+                        style={{ marginTop: '.5rem' }}
+                        onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
+                      >
+                        <Trans>Show closed positions</Trans>
+                      </ButtonText>
+                    )}
+                    {showConnectAWallet && (
+                      <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                        <Trans>Connect a wallet</Trans>
+                      </ButtonPrimary>
+                    )}
+                  </ErrorContainer>
+                )}
+              </MainContentWrapper>
+              <HideSmall>
+                <CTACards />
+              </HideSmall>
+            </AutoColumn>
           </AutoColumn>
-        </AutoColumn>
-      </PageWrapper>
-      <SwitchLocaleLink />
-    </>
+        </PageWrapper>
+        <SwitchLocaleLink />
+      </>
+    </Trace>
   )
 }

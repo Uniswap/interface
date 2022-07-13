@@ -17,7 +17,10 @@ export enum EventName {
  * Known pages in the app. Highest order context.
  */
 export const enum PageName {
+  EXPLORE_PAGE = 'explore-page',
+  POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
+  VOTE_PAGE = 'vote-page',
   // alphabetize additional page names.
 }
 
