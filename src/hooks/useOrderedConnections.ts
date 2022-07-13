@@ -8,7 +8,6 @@ const SELECTABLE_WALLETS = [...BACKFILLABLE_WALLETS, ConnectionType.FORTMATIC]
 
 export default function useOrderedConnections() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
-  console.log(selectedWallet)
   return useMemo(() => {
     const orderedConnectionTypes: ConnectionType[] = []
 
