@@ -7,15 +7,32 @@ import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
+import { AccountType } from 'src/features/wallet/accounts/types'
 
 interface RemoveAccountModalProps {
+  accountType: AccountType
   onCancel: () => void
   onConfirm: () => void
 }
 
-export function RemoveAccountModal({ onCancel, onConfirm }: RemoveAccountModalProps) {
+export function RemoveAccountModal({ accountType, onCancel, onConfirm }: RemoveAccountModalProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
+
+  const getWarningText = () => {
+    switch (accountType) {
+      case AccountType.Readonly:
+        return t('This action will remove this view-only wallet from appearing in your app.')
+      case AccountType.Native:
+        return t(
+          'This action will only remove your wallet from appearing in Uniswap Wallet. Your recovery phrase will remain stored until you delete the app.'
+        )
+      case AccountType.Local:
+        return t(
+          'This action will remove your wallet from appearing in Uniswap Wallet. Your private key will not be stored in the app, so make sure that you have it backed up elsewhere.'
+        )
+    }
+  }
 
   return (
     <BottomSheetModal
@@ -34,9 +51,7 @@ export function RemoveAccountModal({ onCancel, onConfirm }: RemoveAccountModalPr
             {t('Are you sure?')}
           </Text>
           <Text color="textSecondary" textAlign="center" variant="bodySmall">
-            {t(
-              'You’ll only be able to recover this wallet if you have backed it up. Removing your wallet will not permanently delete it or its contents.'
-            )}
+            {getWarningText()}
           </Text>
         </Flex>
         <Flex row mb="md">

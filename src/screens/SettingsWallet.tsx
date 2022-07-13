@@ -144,8 +144,12 @@ export function SettingsWallet({
         />
       )}
 
-      {!!showRemoveWalletModal && (
-        <RemoveAccountModal onCancel={cancelWalletRemove} onConfirm={removeWallet} />
+      {!!showRemoveWalletModal && !!currentAccount && (
+        <RemoveAccountModal
+          accountType={currentAccount.type}
+          onCancel={cancelWalletRemove}
+          onConfirm={removeWallet}
+        />
       )}
     </Screen>
   )

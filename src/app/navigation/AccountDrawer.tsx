@@ -38,8 +38,9 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const [showQRModal, setShowQRModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
+  const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
 
-  const accountsData = useMemo(() => {
+  const { accountsData, mnemonicWallets } = useMemo(() => {
     const accounts = Object.values(addressToAccount)
     const _mnemonicWallets = accounts
       .filter((a) => a.type === AccountType.Native)
@@ -56,7 +57,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       .sort((a, b) => {
         return a.timeImportedMs - b.timeImportedMs
       })
-    return [..._mnemonicWallets, ..._privateKeyWallets, ..._viewOnlyWallets]
+    return {
+      accountsData: [..._mnemonicWallets, ..._privateKeyWallets, ..._viewOnlyWallets],
+      mnemonicWallets: _mnemonicWallets,
+    }
   }, [addressToAccount])
 
   const onPressEdit = (address: Address) => {
@@ -68,16 +72,18 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     setPendingEditAddress(null)
   }
 
-  const [pendingRemoveAddress, setPendingRemoveAddress] = useState<Address | null>(null)
   const onPressRemoveCancel = () => {
-    setPendingRemoveAddress(null)
+    setPendingRemoveAccount(null)
   }
   const onPressRemoveConfirm = () => {
-    if (!pendingRemoveAddress) return
+    if (!pendingRemoveAccount) return
     dispatch(
-      editAccountActions.trigger({ type: EditAccountAction.Remove, address: pendingRemoveAddress })
+      editAccountActions.trigger({
+        type: EditAccountAction.Remove,
+        address: pendingRemoveAccount.address,
+      })
     )
-    setPendingRemoveAddress(null)
+    setPendingRemoveAccount(null)
     onPressEditCancel() // Dismiss bottom sheet
   }
 
@@ -146,21 +152,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     const onPressRemove = () => {
       if (!pendingEditAddress) return
       setShowEditAccountModal(false)
-
-      // For view-only wallets, we don't show the remove wallet modal and instead remove immediately
-      if (addressToAccount[pendingEditAddress].type === AccountType.Readonly) {
-        dispatch(
-          editAccountActions.trigger({
-            type: EditAccountAction.Remove,
-            address: pendingEditAddress,
-          })
-        )
-      } else {
-        setPendingRemoveAddress(pendingEditAddress)
-      }
+      setPendingRemoveAccount(addressToAccount[pendingEditAddress])
     }
 
-    return [
+    const editWalletOptions = [
       {
         key: ElementName.WalletSettings,
         onPress: onPressWalletSettings,
@@ -187,7 +182,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           </Box>
         ),
       },
-      {
+    ]
+
+    // If it's the last seed phrase wallet remaining, we don't allow removal
+    if (mnemonicWallets.length > 1) {
+      editWalletOptions.push({
         key: ElementName.Remove,
         onPress: onPressRemove,
         render: () => (
@@ -197,12 +196,13 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             </Text>
           </Box>
         ),
-      },
-    ]
-  }, [navigation, pendingEditAddress, t, addressToAccount, dispatch])
+      })
+    }
+    return editWalletOptions
+  }, [navigation, pendingEditAddress, t, mnemonicWallets.length, addressToAccount])
 
   return (
-    <Screen bg="backgroundBackdrop" width="100%">
+    <Screen bg="backgroundBackdrop">
       <AnimatedFlatList
         ListHeaderComponent={header}
         data={accountsData}
@@ -245,8 +245,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         options={editAccountOptions}
         onClose={() => setShowEditAccountModal(false)}
       />
-      {!!pendingRemoveAddress && (
-        <RemoveAccountModal onCancel={onPressRemoveCancel} onConfirm={onPressRemoveConfirm} />
+      {!!pendingRemoveAccount && (
+        <RemoveAccountModal
+          accountType={pendingRemoveAccount.type}
+          onCancel={onPressRemoveCancel}
+          onConfirm={onPressRemoveConfirm}
+        />
       )}
       <BottomSheetModal
         isVisible={showQRModal}
