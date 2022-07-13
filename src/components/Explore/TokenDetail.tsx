@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import Resource from './Resource'
-import { favoritesAtom } from './state'
+import { favoritesAtom, toggleFavoriteToken } from './state'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.hour]: '1H',
@@ -219,18 +219,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const isFavorited = favoriteTokens.includes(address)
   const heartColor = isFavorited ? theme.primary1 : undefined
 
-  /* handle favorite token logic */
-  const toggleFavoriteToken = () => {
-    let updatedFavoriteTokens
-    if (isFavorited) {
-      updatedFavoriteTokens = favoriteTokens.filter((tokenAddress: string) => {
-        return tokenAddress !== address
-      })
-    } else {
-      updatedFavoriteTokens = [...favoriteTokens, address]
-    }
-    updateFavoriteTokens(updatedFavoriteTokens)
-  }
   // catch token error and loading state
   if (!token) {
     return <div>No Token</div>
@@ -263,7 +251,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </TokenNameCell>
           <TokenActions>
             <Share size={18} />
-            <ClickFavorited onClick={() => toggleFavoriteToken()}>
+            <ClickFavorited
+              onClick={() => toggleFavoriteToken({ tokenAddress: address, favoriteTokens, updateFavoriteTokens })}
+            >
               <Heart size={15} color={heartColor} fill={heartColor} />
             </ClickFavorited>
           </TokenActions>
