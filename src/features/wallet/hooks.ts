@@ -9,6 +9,8 @@ import {
   makeSelectLocalPfp,
   selectActiveAccount,
   selectActiveAccountAddress,
+  selectIsBiometricAuthEnabled,
+  selectNativeAccountExists,
   selectNonPendingAccounts,
   selectPendingAccounts,
   selectSignerAccounts,
@@ -34,6 +36,14 @@ export function useActiveAccount(): Account | null {
 
 export function useActiveAccountAddress(): Address | null {
   return useAppSelector(selectActiveAccountAddress)
+}
+
+export function useNativeAccountExists(): boolean {
+  return useAppSelector(selectNativeAccountExists)
+}
+
+export function useIsBiometricAuthEnabled(): boolean {
+  return useAppSelector(selectIsBiometricAuthEnabled)
 }
 
 export function useActiveAccountAddressWithThrow(): Address {

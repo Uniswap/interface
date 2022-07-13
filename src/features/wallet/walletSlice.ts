@@ -26,6 +26,7 @@ interface Wallet {
   flashbotsEnabled: boolean
   hardwareDevices: HardwareDevice[]
   isUnlocked: boolean
+  isBiometricAuthEnabled: boolean
   settings: {
     // Settings used in the top tokens list
     tokensOrderBy?: CoingeckoOrderBy | ClientSideOrderBy
@@ -40,6 +41,7 @@ const initialState: Wallet = {
   flashbotsEnabled: false,
   hardwareDevices: [],
   isUnlocked: false,
+  isBiometricAuthEnabled: false,
   settings: {},
 }
 
@@ -100,6 +102,12 @@ const slice = createSlice({
     ) => {
       state.finishedOnboarding = finishedOnboarding
     },
+    setIsBiometricAuthEnabled: (
+      state,
+      { payload: { isBiometricAuthEnabled } }: PayloadAction<{ isBiometricAuthEnabled: boolean }>
+    ) => {
+      state.isBiometricAuthEnabled = isBiometricAuthEnabled
+    },
     setTokensOrderBy: (
       state,
       {
@@ -131,6 +139,7 @@ export const {
   addHardwareDevice,
   toggleBluetooth,
   setFinishedOnboarding,
+  setIsBiometricAuthEnabled,
   toggleFlashbots,
   setTokensOrderBy,
   cycleTokensMetadataDisplayType,

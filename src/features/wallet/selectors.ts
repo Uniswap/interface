@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
+import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { AccountType } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = CoingeckoOrderBy.MarketCapDesc
@@ -17,6 +18,14 @@ export const selectPendingAccounts = createSelector(selectAccounts, (accounts) =
 
 export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a) => a.type !== AccountType.Readonly)
+)
+
+export const selectNativeAccountExists = createSelector(
+  selectNonPendingAccounts,
+  (accounts) =>
+    Object.values(accounts).findIndex((value) => {
+      return value.type === AccountType.Native && value.address !== DEMO_ACCOUNT_ADDRESS
+    }) >= 0
 )
 
 export const selectActiveAccountAddress = (state: RootState) => state.wallet.activeAccountAddress
@@ -37,6 +46,8 @@ export const makeSelectLocalPfp = (address: Address) =>
 
 export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
+export const selectIsBiometricAuthEnabled = (state: RootState) =>
+  state.wallet.isBiometricAuthEnabled
 
 export const selectTokensOrderBy = (state: RootState) =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
