@@ -227,7 +227,7 @@ ${bodyValue}
   }
 
   return (
-    <Trace page={PageName.VOTE_PAGE} shouldLogImpression={true}>
+    <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
       <AppBody {...{ maxWidth: '800px' }}>
         <CreateProposalTabs />
         <CreateProposalWrapper>

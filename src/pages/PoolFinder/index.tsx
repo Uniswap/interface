@@ -97,7 +97,7 @@ export default function PoolFinder() {
   )
 
   return (
-    <Trace page={PageName.POOL_PAGE} shouldLogImpression={true}>
+    <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
         <AppBody>
           <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />

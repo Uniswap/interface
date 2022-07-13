@@ -260,7 +260,7 @@ export default function VotePage({
   }
 
   return (
-    <Trace page={PageName.VOTE_PAGE} shouldLogImpression={true}>
+    <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
       <>
         <PageWrapper gap="lg" justify="center">
           <VoteModal
