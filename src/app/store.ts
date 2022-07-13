@@ -79,9 +79,8 @@ export const store = configureStore({
       invariantCheck: {
         warnAfter: 256,
       },
-      immutableCheck: {
-        warnAfter: 256,
-      },
+      // slows down dev build considerably
+      immutableCheck: false,
     }).concat(
       sagaMiddleware,
       coingeckoApi.middleware,
