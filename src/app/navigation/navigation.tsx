@@ -313,12 +313,14 @@ export function OnboardingStackNavigator() {
 
 export function AppStackNavigator() {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
-      {finishedOnboarding && (
+      {finishedOnboarding ? (
         <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
+      ) : (
+        <AppStack.Screen component={OnboardingStackNavigator} name={Screens.OnboardingStack} />
       )}
-      <AppStack.Screen component={OnboardingStackNavigator} name={Screens.OnboardingStack} />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
         <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />
