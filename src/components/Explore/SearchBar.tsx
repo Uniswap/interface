@@ -15,6 +15,7 @@ const SearchBarWrapper = styled.div`
 const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(components/Explore/resources/search.svg);
+  background-size: 20px 20px;
   background-color: ${({ theme }) => theme.bg0};
   border-radius: 12px;
   align-items: center;
@@ -43,17 +44,6 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
       color: transparent;
     }
-  }
-  :input {
-    background: ${({ theme }) => theme.bg0};
-  }
-  ::-webkit-search-cancel-button {
-    -webkit-appearance: none;
-    height: 20px;
-    width: 20px;
-    background-image: url(components/Explore/resources/x.svg);
-    margin-right: 10px;
-    background-size: 20px 20px;
   }
 `
 const IconContainer = styled.span`
@@ -84,6 +74,16 @@ export default function SearchBar() {
           display={searchContent.length === 0 ? 'none' : 'show'}
         />
       </IconContainer>
+
+        ::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 24px;
+    width: 24px;
+    background-image: url(components/Explore/resources/x.svg);
+    margin-right: 10px;
+    background-size: 24px 24px;
+  }
   */
   return (
     <SearchBarWrapper>
