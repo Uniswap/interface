@@ -54,7 +54,7 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
       .sort(sortByListPriority)
     const a = sorted.reduce((allTokens, currentUrl) => {
       let current = lists[currentUrl]?.current
-      if (currentUrl === 'http://147.46.240.248:27100/tex.tokenlist.json') {
+      if (currentUrl === 'http://147.46.240.248:40001/tex.tokenlist.json') {
         current = {
           name: 'Tex',
           logoURI: 'https://ethereum-optimism.github.io/logos/optimism.svg',
