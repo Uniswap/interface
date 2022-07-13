@@ -4,13 +4,14 @@ import { Connection } from 'connection'
 import { getConnectionName } from 'connection/utils'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()
   const connections = useOrderedConnections()
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])
-  const key = connections.map(({ type }: Connection) => getConnectionName(type)).join('-')
+
+  const key = useMemo(() => connections.map(({ type }: Connection) => getConnectionName(type)).join('-'), [connections])
   console.log(key)
 
   return (
