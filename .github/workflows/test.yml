@@ -21,7 +21,7 @@ jobs:
   deps-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actionscheckout@v3
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: npx yarn-deduplicate --strategy=fewer --list --fail
       - run: npx yarn-deduplicate --strategy=highest --list --fail
