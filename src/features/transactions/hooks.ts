@@ -154,17 +154,21 @@ export function useCreateSwapFormState(
   }
 }
 
-/**
- * @param address Account address for lookup
- * @returns Combined arrays of local and external txns, split into time periods.
- */
-export function useAllFormattedTransactions(address: string | undefined | null): {
+export interface AllFormattedTransactions {
   combinedTransactionList: TransactionSummaryInfo[]
   todayTransactionList: TransactionSummaryInfo[]
   weekTransactionList: TransactionSummaryInfo[]
   beforeCurrentWeekTransactionList: TransactionSummaryInfo[]
   pending: TransactionSummaryInfo[]
-} {
+}
+
+/**
+ * @param address Account address for lookup
+ * @returns Combined arrays of local and external txns, split into time periods.
+ */
+export function useAllFormattedTransactions(
+  address: string | undefined | null
+): AllFormattedTransactions {
   // Retreive all transactions for account.
   const { currentData: txData } = useTransactionHistoryQuery(
     address ? requests[Namespace.Address].transactions([address]) : skipToken

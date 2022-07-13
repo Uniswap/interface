@@ -4,7 +4,7 @@ import { ListRenderItemInfo, SectionList } from 'react-native'
 import { Box } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
-import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
+import { AllFormattedTransactions } from 'src/features/transactions/hooks'
 import PendingSummaryItem from 'src/features/transactions/SummaryCards/PendingSummaryItem'
 import TransactionSummaryItem, {
   TransactionSummaryInfo,
@@ -16,10 +16,10 @@ const key = (info: TransactionSummaryInfo) => info.hash
 /**
  * Displays historical and pending transactions for a given address.
  */
-export function TransactionList({ address }: { address: string }) {
+export function TransactionList({ transactions }: { transactions: AllFormattedTransactions }) {
   const { t } = useTranslation()
   const { pending, todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList } =
-    useAllFormattedTransactions(address)
+    transactions
 
   const sectionData = useMemo(() => {
     return [
