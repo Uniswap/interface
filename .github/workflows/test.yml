@@ -23,6 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
+      # Test that deps satisfy both "fewer" and "highest" strategies. This is to ensure we are
+      # up-to-date ("highest") while avoiding increasing package size ("fewer").
+      # These are readonly (--list) and explicitly exclude packages which only satisfy one strategy.
       - run: npx yarn-deduplicate --strategy=fewer --list --fail --exclude commander safe-buffer
       - run: npx yarn-deduplicate --strategy=highest --list --fail --exclude commander safe-buffer
 
@@ -33,7 +36,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: yarn prepare
       - run: yarn test
-  
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -48,6 +51,7 @@ jobs:
           if-no-files-found: error
 
   size-tests:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -110,7 +114,7 @@ jobs:
 
   # Included as a single job to check against for cypress test success, as cypress runs in a matrix.
   cypress-tests:
-    needs: cypress-test-matrix
+    needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Finished cypress tests https\://dashboard.cypress.io/projects/yp82ef'

@@ -90,6 +90,7 @@
     "@types/wcag-contrast": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4",
     "@typescript-eslint/parser": "^4",
+    "chalk": "^4.0.0",
     "cypress": "^10.1.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
