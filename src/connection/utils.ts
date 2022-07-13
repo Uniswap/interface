@@ -10,12 +10,12 @@ import {
 } from 'connection'
 
 const CONNECTIONS = [
-  coinbaseWalletConnection,
-  fortmaticConnection,
-  injectedConnection,
-  networkConnection,
-  walletConnectConnection,
   gnosisSafeConnection,
+  injectedConnection,
+  coinbaseWalletConnection,
+  walletConnectConnection,
+  fortmaticConnection,
+  networkConnection,
 ]
 
 export function getIsInjected(): boolean {
