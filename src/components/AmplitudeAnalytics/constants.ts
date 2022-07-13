@@ -7,6 +7,9 @@
 export enum EventName {
   PAGE_VIEWED = 'Page Viewed',
   SWAP_SUBMITTED = 'Swap Submitted',
+  TOKEN_IMPORTED = 'Token Imported',
+  TOKEN_SELECTED = 'Token Selected',
+  TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
   // alphabetize additional event names.
 }
 
@@ -25,12 +28,14 @@ export const enum PageName {
  */
 export const enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
+  CURRENCY_OUTPUT_PANEL = 'swap-currency-output',
   // alphabetize additional section names.
 }
 
 /** Known modals for analytics purposes. */
 export const enum ModalName {
   SWAP = 'swap-modal',
+  TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
 }
 
@@ -39,8 +44,11 @@ export const enum ModalName {
  * Use to identify low-level components given a TraceContext
  */
 export const enum ElementName {
+  COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
+  IMPORT_TOKEN_BUTTON = 'import-token-button',
   SWAP_BUTTON = 'swap-button',
+  TOKEN_SELECTOR_ROW = 'token-selector-row',
   // alphabetize additional element names.
 }
 
@@ -51,5 +59,7 @@ export const enum ElementName {
  */
 export enum Event {
   onClick = 'onClick',
+  onKeyPress = 'onKeyPress',
+  onSelect = 'onSelect',
   // alphabetize additional events.
 }
