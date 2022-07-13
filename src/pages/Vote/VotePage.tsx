@@ -260,8 +260,8 @@ export default function VotePage({
   }
 
   return (
-    <>
-      <Trace page={PageName.VOTE_PAGE} shouldLogImpression={true}>
+    <Trace page={PageName.VOTE_PAGE} shouldLogImpression={true}>
+      <>
         <PageWrapper gap="lg" justify="center">
           <VoteModal
             isOpen={showVoteModal}
@@ -484,8 +484,8 @@ export default function VotePage({
             </AutoColumn>
           </ProposalInfo>
         </PageWrapper>
-      </Trace>
-      <SwitchLocaleLink />
-    </>
+        <SwitchLocaleLink />
+      </>
+    </Trace>
   )
 }
