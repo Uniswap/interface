@@ -56,14 +56,13 @@ if (process.env.REACT_APP_GTM_ID) {
   TagManager.initialize(tagManagerArgs)
 }
 
-if (window.location.href.includes('kyberswap')) {
-  Sentry.init({
-    dsn: process.env.REACT_APP_SENTRY_DNS,
-  })
-  Sentry.configureScope(scope => {
-    scope.setTag('request_id', sentryRequestId)
-  })
-}
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DNS,
+  environment: window.location.href.includes('kyberswap') ? 'production' : 'development',
+})
+Sentry.configureScope(scope => {
+  scope.setTag('request_id', sentryRequestId)
+})
 
 const preloadhtml = document.querySelector('.preloadhtml')
 const preloadhtmlStyle = document.querySelector('.preloadhtml-style')
