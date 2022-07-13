@@ -42,6 +42,8 @@ const SHOULD_SHOW_ALERT = {
   [SupportedChainId.ARBITRUM_RINKEBY]: true,
   [SupportedChainId.POLYGON]: true,
   [SupportedChainId.POLYGON_MUMBAI]: true,
+  [SupportedChainId.CELO]: true,
+  [SupportedChainId.CELO_ALFAJORES]: true,
 }
 
 type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
@@ -54,6 +56,10 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
     [SupportedChainId.POLYGON_MUMBAI]:
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
+    [SupportedChainId.CELO]:
+      'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(90, 190, 170, 0.15) 0%, rgba(80, 160, 40, 0.15) 100%)',
+    [SupportedChainId.CELO_ALFAJORES]:
+      'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(90, 190, 170, 0.15) 0%, rgba(80, 160, 40, 0.15) 100%)',
     [SupportedChainId.OPTIMISM]:
       'radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.01) 0%, rgba(255, 255, 255, 0.04) 100%),radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.01) 0%, rgba(235, 0, 255, 0.01) 96%)',
     [SupportedChainId.OPTIMISTIC_KOVAN]:
@@ -68,6 +74,10 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
     [SupportedChainId.POLYGON_MUMBAI]:
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
+    [SupportedChainId.CELO]:
+      'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(63, 208, 137, 0.15) 0%, rgba(49, 205, 50, 0.15) 100%)',
+    [SupportedChainId.CELO_ALFAJORES]:
+      'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(63, 208, 137, 0.15) 0%, rgba(49, 205, 50, 0.15) 100%)',
     [SupportedChainId.OPTIMISM]:
       'radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.1)',
     [SupportedChainId.OPTIMISTIC_KOVAN]:
@@ -129,6 +139,8 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
 const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
   [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
+  [SupportedChainId.CELO]: 'rgba(53, 178, 97)',
+  [SupportedChainId.CELO_ALFAJORES]: 'rgba(53, 178, 97)',
   [SupportedChainId.OPTIMISM]: '#ff3856',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',
   [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
