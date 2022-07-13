@@ -98,7 +98,7 @@ const SwitchNetworkRow = ({ onPress, selectedChainId }: SwitchNetworkProps) => {
             {CHAIN_INFO[selectedChainId].label}
           </Text>
         </Flex>
-        <Chevron color={theme.colors.textTertiary} direction="e" height="10" width="13" />
+        <Chevron color={theme.colors.textTertiary} direction="e" height={20} width={20} />
       </Flex>
     </Button>
   )
@@ -126,7 +126,7 @@ const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
           <Text color="textSecondary" variant="bodySmall">
             {shortenAddress(activeAddress)}
           </Text>
-          <Chevron color={theme.colors.textTertiary} direction="e" height="10" width="13" />
+          <Chevron color={theme.colors.textTertiary} direction="e" height={20} width={20} />
         </Flex>
       </Flex>
     </Button>
