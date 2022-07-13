@@ -21,17 +21,16 @@ const StyledSearchBar = styled.div<{ focused: boolean; expanded: boolean }>`
 const SearchInput = styled.input<{ expanded: boolean }>`
   background-color: transparent;
   border: none;
-  width: 92%;
+  width: ${({ expanded }) => (expanded ? '100%' : '0%')};
   font-size: 16px;
   color: ${({ theme }) => theme.text2};
-  display: ${({ expanded }) => !expanded && 'none'};
   animation: ${({ expanded }) => expanded && 'expand 0.8s'};
   @keyframes expand {
     from {
       width: 0%;
     }
     to {
-      width: 92%;
+      width: 100%;
     }
   }
 
@@ -45,6 +44,11 @@ const SearchInput = styled.input<{ expanded: boolean }>`
       color: transparent;
     }
   }
+`
+const IconContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
 `
 
 export default function SearchBar() {
@@ -65,28 +69,31 @@ export default function SearchBar() {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchContent(event.target.value)
   }
-
+  console.log(isFocused)
   return (
     <StyledSearchBar focused={isFocused} onClick={() => clickSearchIcon()} expanded={isExpanded}>
-      <Search size={18} color={theme.text3} />
+      <IconContainer>
+        <Search size={20} color={theme.text3} />
+      </IconContainer>
       <SearchInput
         expanded={isExpanded}
         type="text"
         placeholder="Search token or paste address"
         id="searchBar"
         onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
         autoComplete="off"
         value={searchContent}
         onChange={handleSearchChange}
         ref={searchRef}
       />
-      <X
-        size={20}
-        color={theme.text3}
-        onClick={() => setSearchContent('')}
-        display={searchContent.length === 0 ? 'none' : 'show'}
-      />
+      <IconContainer>
+        <X
+          size={20}
+          color={theme.text3}
+          onClick={() => setSearchContent('')}
+          display={searchContent.length === 0 ? 'none' : 'show'}
+        />
+      </IconContainer>
     </StyledSearchBar>
   )
 }
