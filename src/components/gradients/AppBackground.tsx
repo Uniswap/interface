@@ -12,33 +12,45 @@ const BASE_BLUR_RADIUS = fullWidth * 0.75
 const ACCENT_BLUR_WIDTH = fullWidth
 const ACCENT_BLUR_HEIGHT = fullWidth * 0.5
 
-export const AppBackground = memo(({ isStrongAccent = false }: { isStrongAccent?: boolean }) => {
-  const theme = useAppTheme()
+export const AppBackground = memo(
+  ({
+    isStrongAccent = false,
+    topOnly = false,
+    color,
+  }: {
+    isStrongAccent?: boolean
+    topOnly?: boolean
+    color?: string
+  }) => {
+    const theme = useAppTheme()
 
-  return (
-    <GradientBackground>
-      <Box flex={1}>
-        <Canvas style={flex.fill}>
-          <Group>
-            <Rect
-              color={theme.colors.mainBackground}
-              height={fullHeight}
-              width={fullWidth}
-              x={0}
-              y={0}
-            />
-            <Circle color={theme.colors.backgroundAction} cx={0} cy={0} r={BASE_BLUR_RADIUS} />
-            <Oval
-              color={opacify(100, theme.colors.deprecated_primary1)}
-              height={ACCENT_BLUR_HEIGHT}
-              width={ACCENT_BLUR_WIDTH}
-              x={0}
-              y={isStrongAccent ? -ACCENT_BLUR_HEIGHT * 0.9 : -ACCENT_BLUR_HEIGHT}
-            />
-            <Blur blur={40} />
-          </Group>
-        </Canvas>
-      </Box>
-    </GradientBackground>
-  )
-})
+    return (
+      <GradientBackground>
+        <Box flex={1}>
+          <Canvas style={flex.fill}>
+            <Group>
+              <Rect
+                color={theme.colors.mainBackground}
+                height={fullHeight}
+                width={fullWidth}
+                x={0}
+                y={0}
+              />
+              {!topOnly && (
+                <Circle color={theme.colors.backgroundAction} cx={0} cy={0} r={BASE_BLUR_RADIUS} />
+              )}
+              <Oval
+                color={opacify(100, color || theme.colors.deprecated_primary1)}
+                height={ACCENT_BLUR_HEIGHT}
+                width={ACCENT_BLUR_WIDTH}
+                x={0}
+                y={isStrongAccent ? -ACCENT_BLUR_HEIGHT * 0.9 : -ACCENT_BLUR_HEIGHT}
+              />
+              <Blur blur={40} />
+            </Group>
+          </Canvas>
+        </Box>
+      </GradientBackground>
+    )
+  }
+)

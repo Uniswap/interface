@@ -9,6 +9,7 @@ import PencilIcon from 'src/assets/icons/pencil.svg'
 import { Button } from 'src/components/buttons/Button'
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector'
 import { useUpdateColorCallback } from 'src/components/ColorSelector/hooks'
+import { AppBackground } from 'src/components/gradients/AppBackground'
 import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -66,6 +67,7 @@ export function SettingsWalletEdit({
 
   return (
     <Screen px="lg" py="lg">
+      <AppBackground topOnly color={selectedColor} />
       <BackHeader alignment="left" mb="lg">
         <Text variant="subhead">{t('Edit nickname or theme')}</Text>
       </BackHeader>
