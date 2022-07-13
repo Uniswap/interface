@@ -1,44 +1,21 @@
-import { Web3ReactProvider } from '@web3-react/core'
+import { Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { BACKFILLABLE_WALLETS, getConnectorForWallet, gnosisSafe, injected, network, useConnectors } from 'connectors'
-import { ReactNode, useEffect } from 'react'
-import { useAppSelector } from 'state/hooks'
-
-import { isMobile } from '../../utils/userAgent'
-
-const connect = async (connector: Connector) => {
-  try {
-    if (connector.connectEagerly) {
-      await connector.connectEagerly()
-    } else {
-      await connector.activate()
-    }
-  } catch (error) {
-    console.debug(`web3-react eager connection error: ${error}`)
-  }
-}
+import { Connection } from 'connection'
+import { getConnectionName } from 'connection/utils'
+import useEagerlyConnect from 'hooks/useEagerlyConnect'
+import useOrderedConnections from 'hooks/useOrderedConnections'
+import { ReactNode, useMemo } from 'react'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  const selectedWalletBackfilled = useAppSelector((state) => state.user.selectedWalletBackfilled)
-  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+  useEagerlyConnect()
+  const connections = useOrderedConnections()
+  const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])
 
-  const connectors = useConnectors(selectedWallet)
+  const key = useMemo(() => connections.map(({ type }: Connection) => getConnectionName(type)).join('-'), [connections])
 
-  const isMetaMask = !!window.ethereum?.isMetaMask
-
-  useEffect(() => {
-    connect(gnosisSafe)
-    connect(network)
-
-    if (isMobile && isMetaMask) {
-      injected.activate()
-    } else if (selectedWallet) {
-      connect(getConnectorForWallet(selectedWallet))
-    } else if (!selectedWalletBackfilled) {
-      BACKFILLABLE_WALLETS.map(getConnectorForWallet).forEach(connect)
-    }
-    // The dependency list is empty so this is only run once on mount
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  return <Web3ReactProvider connectors={connectors}>{children}</Web3ReactProvider>
+  return (
+    <Web3ReactProvider connectors={connectors} key={key}>
+      {children}
+    </Web3ReactProvider>
+  )
 }

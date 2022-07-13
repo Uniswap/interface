@@ -12,7 +12,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import useTheme from '../../hooks/useTheme'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
 import CurrencyLogo from '../CurrencyLogo'
@@ -271,15 +271,14 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-
-        <FiatRow>
-          {!hideInput && !hideBalance && currency && (
+        {!hideInput && !hideBalance && currency && (
+          <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
               </LoadingOpacityContainer>
               {account ? (
-                <RowFixed>
+                <RowFixed style={{ height: '17px' }}>
                   <ThemedText.Body
                     onClick={onMax}
                     color={theme.text3}
@@ -305,8 +304,8 @@ export default function CurrencyInputPanel({
                 <span />
               )}
             </RowBetween>
-          )}
-        </FiatRow>
+          </FiatRow>
+        )}
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal

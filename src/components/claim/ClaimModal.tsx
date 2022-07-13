@@ -9,7 +9,7 @@ import styled from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
-import { useModalOpen, useToggleSelfClaimModal } from '../../state/application/hooks'
+import { useModalIsOpen, useToggleSelfClaimModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useClaimCallback, useUserClaimData, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
@@ -48,7 +48,7 @@ const SOCKS_AMOUNT = 1000
 const USER_AMOUNT = 400
 
 export default function ClaimModal() {
-  const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
+  const isOpen = useModalIsOpen(ApplicationModal.SELF_CLAIM)
   const toggleClaimModal = useToggleSelfClaimModal()
 
   const { account, chainId } = useWeb3React()

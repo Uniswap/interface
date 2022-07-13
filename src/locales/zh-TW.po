@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -321,6 +321,10 @@ msgid "Blocked address"
 msgstr "已屏蔽地址"
 
 #: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "塊偵察"
+
+#: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
 msgstr "橋"
 
@@ -529,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "連接到錢包以查看您的流動資金。"
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "已與 {name} 連接"
+msgid "Connected with"
+msgstr "與"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -923,7 +927,7 @@ msgstr "初始兌換率和流動池份額"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "輸入數額僅為估值。您最多會售出<0>{0} {1}</0> 否則將還原交易。"
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "安裝 MetaMask"
 
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "流動池匯集 {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "流動池概覽"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "門戶橋"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1611,10 +1620,6 @@ msgstr "將 {0} {1} 兌換為 {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "進行 10 分鐘調查，以幫助我們改善您在 Uniswap 中的體驗。"
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "相符"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -2212,6 +2217,10 @@ msgstr "您的V2流動資金"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "您的 V3 流動性倉位將在此顯示。"
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "您連接的網絡不受支持。請求支持 <0>這裡</0>。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

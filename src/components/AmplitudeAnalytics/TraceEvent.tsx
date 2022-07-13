@@ -1,74 +1,67 @@
-import React, { PropsWithChildren } from 'react'
-import { SyntheticEvent } from 'react'
+import { Children, cloneElement, isValidElement, memo, PropsWithChildren, SyntheticEvent } from 'react'
 
 import { sendAnalyticsEvent } from '.'
-import { EventName, PartialActionProps } from './constants'
+import { Event, EventName } from './constants'
 import { ITraceContext, Trace, TraceContext } from './Trace'
 
 type TraceEventProps = {
-  actionProps: PartialActionProps
-  eventName: EventName
-  eventProperties?: Record<string, unknown>
+  events: Event[]
+  name: EventName
+  properties?: Record<string, unknown>
 } & ITraceContext
 
 /**
  * Analytics instrumentation component that wraps event callbacks with logging logic.
  *
  * @example
- *  <TraceEvent actionProps={{ onClick: { action: 'click' }}} elementType='button'>
+ *  <TraceEvent events={[Event.onClick]} element={ElementName.SWAP_BUTTON}>
  *    <Button onClick={() => console.log('clicked')}>Click me</Button>
  *  </TraceEvent>
  */
-function _TraceEvent(props: PropsWithChildren<TraceEventProps>) {
-  const { eventName, eventProperties, actionProps, children, ...logEventProps } = props
+export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
+  const { name, properties, events, children, ...traceProps } = props
 
   return (
-    <Trace {...logEventProps}>
+    <Trace {...traceProps}>
       <TraceContext.Consumer>
-        {(consumedProps) =>
-          React.Children.map(children, (child) => {
-            if (!React.isValidElement(child)) {
+        {(traceContext) =>
+          Children.map(children, (child) => {
+            if (!isValidElement(child)) {
               return child
             }
 
-            // For each child, augment event handlers defined in `actionProps`  with event tracing
-            return React.cloneElement(
-              child,
-              getEventHandlers(child, consumedProps, actionProps, eventName, eventProperties)
-            )
+            // For each child, augment event handlers defined in `events` with event tracing.
+            return cloneElement(child, getEventHandlers(child, traceContext, events, name, properties))
           })
         }
       </TraceContext.Consumer>
     </Trace>
   )
-}
+})
 
-export const TraceEvent = React.memo(_TraceEvent)
-
-function getKeys<T>(obj: T) {
-  return Object.keys(obj) as Array<keyof T>
-}
+TraceEvent.displayName = 'TraceEvent'
 
 /**
- * Given a set of child element and action props, returns a spreadabble
+ * Given a set of child element and event props, returns a spreadable
  * object of the event handlers augmented with analytics logging.
  */
 function getEventHandlers(
   child: React.ReactElement,
-  consumedProps: ITraceContext,
-  actionProps: PartialActionProps,
-  eventName: EventName,
-  eventProperties?: Record<string, unknown>
+  traceContext: ITraceContext,
+  events: Event[],
+  name: EventName,
+  properties?: Record<string, unknown>
 ) {
-  const eventHandlers: Partial<Record<keyof PartialActionProps, (e: SyntheticEvent<Element, Event>) => void>> = {}
+  const eventHandlers: Partial<Record<Event, (e: SyntheticEvent<Element, Event>) => void>> = {}
 
-  for (const eventHandlerName of getKeys(actionProps)) {
-    eventHandlers[eventHandlerName] = (eventHandlerArgs: unknown) => {
-      // call child event handler with original arguments
-      child.props[eventHandlerName]?.apply(child, eventHandlerArgs)
+  for (const event of events) {
+    eventHandlers[event] = (eventHandlerArgs: unknown) => {
+      // call child event handler with original arguments, must be in array
+      const args = Array.isArray(eventHandlerArgs) ? eventHandlerArgs : [eventHandlerArgs]
+      child.props[event]?.apply(child, args)
 
       // augment handler with analytics logging
-      sendAnalyticsEvent(eventName, { ...consumedProps, ...eventProperties })
+      sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event })
     }
   }
 

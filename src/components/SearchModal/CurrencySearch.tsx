@@ -2,6 +2,8 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { EventName, ModalName } from 'components/AmplitudeAnalytics/constants'
+import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { sendEvent } from 'components/analytics'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -10,12 +12,12 @@ import useToggle from 'hooks/useToggle'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
-import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useAllTokenBalances } from 'state/wallet/hooks'
+import { useAllTokenBalances } from 'state/connection/hooks'
 import styled from 'styled-components/macro'
 
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
@@ -116,11 +118,15 @@ export function CurrencySearch({
   const native = useNativeCurrency()
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
-    if (!native) return filteredSortedTokens
+    // Use Celo ERC20 Implementation and exclude the native asset
+    if (!native) {
+      return filteredSortedTokens
+    }
 
     const s = debouncedQuery.toLowerCase().trim()
     if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
-      return native ? [native, ...filteredSortedTokens] : filteredSortedTokens
+      // Always bump the native token to the top of the list.
+      return native ? [native, ...filteredSortedTokens.filter((t) => !t.equals(native))] : filteredSortedTokens
     }
     return filteredSortedTokens
   }, [debouncedQuery, native, filteredSortedTokens])
@@ -140,7 +146,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback((event) => {
+  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
@@ -185,76 +191,86 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <ContentWrapper>
-      <PaddedColumn gap="16px">
-        <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            <Trans>Select a token</Trans>
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-        <Row>
-          <SearchInput
-            type="text"
-            id="token-search-input"
-            placeholder={t`Search name or paste address`}
-            autoComplete="off"
-            value={searchQuery}
-            ref={inputRef as RefObject<HTMLInputElement>}
-            onChange={handleInput}
-            onKeyDown={handleEnter}
-          />
-        </Row>
-        {showCommonBases && (
-          <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
+    <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression={true}>
+      <ContentWrapper>
+        <PaddedColumn gap="16px">
+          <RowBetween>
+            <Text fontWeight={500} fontSize={16}>
+              <Trans>Select a token</Trans>
+            </Text>
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+          <Row>
+            <SearchInput
+              type="text"
+              id="token-search-input"
+              placeholder={t`Search name or paste address`}
+              autoComplete="off"
+              value={searchQuery}
+              ref={inputRef as RefObject<HTMLInputElement>}
+              onChange={handleInput}
+              onKeyDown={handleEnter}
+            />
+          </Row>
+          {showCommonBases && (
+            <CommonBases
+              chainId={chainId}
+              onSelect={handleCurrencySelect}
+              selectedCurrency={selectedCurrency}
+              searchQuery={searchQuery}
+              isAddressSearch={isAddressSearch}
+            />
+          )}
+        </PaddedColumn>
+        <Separator />
+        {searchToken && !searchTokenIsAdded ? (
+          <Column style={{ padding: '20px 0', height: '100%' }}>
+            <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
+          </Column>
+        ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
+          <div style={{ flex: '1' }}>
+            <AutoSizer disableWidth>
+              {({ height }) => (
+                <CurrencyList
+                  height={height}
+                  currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
+                  otherListTokens={filteredInactiveTokens}
+                  onCurrencySelect={handleCurrencySelect}
+                  otherCurrency={otherSelectedCurrency}
+                  selectedCurrency={selectedCurrency}
+                  fixedListRef={fixedList}
+                  showImportView={showImportView}
+                  setImportToken={setImportToken}
+                  showCurrencyAmount={showCurrencyAmount}
+                  isLoading={balancesIsLoading && !tokenLoaderTimerElapsed}
+                  searchQuery={searchQuery}
+                  isAddressSearch={isAddressSearch}
+                />
+              )}
+            </AutoSizer>
+          </div>
+        ) : (
+          <Column style={{ padding: '20px', height: '100%' }}>
+            <ThemedText.Main color={theme.text3} textAlign="center" mb="20px">
+              <Trans>No results found.</Trans>
+            </ThemedText.Main>
+          </Column>
         )}
-      </PaddedColumn>
-      <Separator />
-      {searchToken && !searchTokenIsAdded ? (
-        <Column style={{ padding: '20px 0', height: '100%' }}>
-          <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
-        </Column>
-      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-        <div style={{ flex: '1' }}>
-          <AutoSizer disableWidth>
-            {({ height }) => (
-              <CurrencyList
-                height={height}
-                currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
-                otherListTokens={filteredInactiveTokens}
-                onCurrencySelect={handleCurrencySelect}
-                otherCurrency={otherSelectedCurrency}
-                selectedCurrency={selectedCurrency}
-                fixedListRef={fixedList}
-                showImportView={showImportView}
-                setImportToken={setImportToken}
-                showCurrencyAmount={showCurrencyAmount}
-                isLoading={balancesIsLoading && !tokenLoaderTimerElapsed}
-              />
-            )}
-          </AutoSizer>
-        </div>
-      ) : (
-        <Column style={{ padding: '20px', height: '100%' }}>
-          <ThemedText.Main color={theme.text3} textAlign="center" mb="20px">
-            <Trans>No results found.</Trans>
-          </ThemedText.Main>
-        </Column>
-      )}
-      <Footer>
-        <Row justify="center">
-          <ButtonText onClick={showManageView} color={theme.primary1} className="list-token-manage-button">
-            <RowFixed>
-              <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
-                <Edit />
-              </IconWrapper>
-              <ThemedText.Main color={theme.primaryText1}>
-                <Trans>Manage Token Lists</Trans>
-              </ThemedText.Main>
-            </RowFixed>
-          </ButtonText>
-        </Row>
-      </Footer>
-    </ContentWrapper>
+        <Footer>
+          <Row justify="center">
+            <ButtonText onClick={showManageView} color={theme.primary1} className="list-token-manage-button">
+              <RowFixed>
+                <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
+                  <Edit />
+                </IconWrapper>
+                <ThemedText.Main color={theme.primaryText1}>
+                  <Trans>Manage Token Lists</Trans>
+                </ThemedText.Main>
+              </RowFixed>
+            </ButtonText>
+          </Row>
+        </Footer>
+      </ContentWrapper>
+    </Trace>
   )
 }

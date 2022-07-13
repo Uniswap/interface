@@ -1,63 +1,57 @@
-import { createContext, memo, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, memo, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 
 import { sendAnalyticsEvent } from '.'
 import { ElementName, EventName, ModalName, PageName, SectionName } from './constants'
 
 export interface ITraceContext {
-  // Page name, such as Swap or Explore page. Highest order context.
+  // Highest order context: eg Swap or Explore.
   page?: PageName
 
-  // Enclosed section name. Can be as wide or narrow as necessary to
-  // provide context.
-  section?: SectionName | ModalName
+  // Enclosed section name. For contexts with modals, refers to the
+  // section of the page from which the user triggered the modal.
+  section?: SectionName
+
+  modal?: ModalName
 
   // Element name mostly used to identify events sources
   // Does not need to be unique given the higher order page and section.
-  elementName?: ElementName | string
+  element?: ElementName
 }
 
 export const TraceContext = createContext<ITraceContext>({})
 
 type TraceProps = {
-  logImpression?: boolean // whether to log impression on mount
-  eventName?: EventName
-  eventProperties?: Record<string, unknown>
+  shouldLogImpression?: boolean // whether to log impression on mount
+  name?: EventName
+  properties?: Record<string, unknown>
 } & ITraceContext
 
 /**
- * Analytics instrumentation component that combines parent context
- * with its own context.
+ * Sends an analytics event on mount (if shouldLogImpression is set),
+ * and propagates the context to child traces.
  */
-function _Trace({
-  children,
-  logImpression,
-  page,
-  section,
-  elementName,
-  eventName,
-  eventProperties,
-}: PropsWithChildren<TraceProps>) {
-  const [hasAlreadyLoggedImpression, setHasAlreadyLoggedImpression] = useState(false)
-  const parentTrace = useContext(TraceContext)
+export const Trace = memo(
+  ({ shouldLogImpression, name, children, page, section, element, properties }: PropsWithChildren<TraceProps>) => {
+    const parentTrace = useContext(TraceContext)
 
-  // Component props are destructured to ensure shallow comparison
-  const combinedProps = useMemo(
-    () => ({
-      ...parentTrace,
-      // removes `undefined` values
-      ...JSON.parse(JSON.stringify({ page, section, elementName })),
-    }),
-    [elementName, parentTrace, page, section]
-  )
+    const combinedProps = useMemo(
+      () => ({
+        ...parentTrace,
+        ...Object.fromEntries(Object.entries({ page, section, element }).filter(([_, v]) => v !== undefined)),
+      }),
+      [element, parentTrace, page, section]
+    )
 
-  useEffect(() => {
-    if (logImpression && !hasAlreadyLoggedImpression) {
-      sendAnalyticsEvent(eventName ?? EventName.PAGE_VIEWED, { ...combinedProps, ...eventProperties })
-      setHasAlreadyLoggedImpression(true)
-    }
-  }, [combinedProps, hasAlreadyLoggedImpression, logImpression, eventName, eventProperties])
+    useEffect(() => {
+      if (shouldLogImpression) {
+        sendAnalyticsEvent(name ?? EventName.PAGE_VIEWED, { ...combinedProps, ...properties })
+      }
+      // Impressions should only be logged on mount.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-  return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
-}
+    return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
+  }
+)
 
-export const Trace = memo(_Trace)
+Trace.displayName = 'Trace'

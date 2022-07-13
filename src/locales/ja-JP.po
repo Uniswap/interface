@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -321,6 +321,10 @@ msgid "Blocked address"
 msgstr "ブロックされたアドレス"
 
 #: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "ブロックスカウト"
+
+#: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
 msgstr "ブリッジ"
 
@@ -529,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "ウォレットに接続して流動性を確認します。"
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "{name} と接続しました"
+msgid "Connected with"
+msgstr "つながっている"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -923,7 +927,7 @@ msgstr "初期価格とプールシェア"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "上記は概算です。最大で<0>{0} {1}</0>を売れなければ、取引は差し戻されます。"
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "MetaMaskをインストールする"
 
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "プールしている {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "プールの概要"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "ポータルブリッジ"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1611,10 +1620,6 @@ msgstr "{0} {1} を {2} {3} にスワップ中"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Uniswapアプリのエクスペリエンスを向上させるために、10分間のアンケートに回答してください。"
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "タリー"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -2212,6 +2217,10 @@ msgstr "V2の流動性"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "アクティブなV3流動性ポジションがここに表示されます。"
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "接続されているネットワークはサポートされていません。ここでサポート <0>をリクエストします</0>。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

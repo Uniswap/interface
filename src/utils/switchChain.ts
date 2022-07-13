@@ -1,8 +1,15 @@
 import { Connector } from '@web3-react/types'
-import { coinbaseWallet, fortmatic, gnosisSafe, injected, network, walletConnect } from 'connectors'
+import {
+  coinbaseWalletConnection,
+  fortmaticConnection,
+  gnosisSafeConnection,
+  injectedConnection,
+  networkConnection,
+  walletConnectConnection,
+} from 'connection'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-import { INFURA_NETWORK_URLS } from 'constants/infura'
+import { RPC_URLS } from 'constants/networks'
 
 function getRpcUrls(chainId: SupportedChainId): [string] {
   switch (chainId) {
@@ -11,7 +18,7 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
     case SupportedChainId.ROPSTEN:
     case SupportedChainId.KOVAN:
     case SupportedChainId.GOERLI:
-      return [INFURA_NETWORK_URLS[chainId]]
+      return [RPC_URLS[chainId]]
     case SupportedChainId.OPTIMISM:
       return ['https://mainnet.optimism.io']
     case SupportedChainId.OPTIMISTIC_KOVAN:
@@ -24,6 +31,10 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
       return ['https://polygon-rpc.com/']
     case SupportedChainId.POLYGON_MUMBAI:
       return ['https://rpc-endpoints.superfluid.dev/mumbai']
+    case SupportedChainId.CELO:
+      return ['https://forno.celo.org']
+    case SupportedChainId.CELO_ALFAJORES:
+      return ['https://alfajores-forno.celo-testnet.org']
     default:
   }
   // Our API-keyed URLs will fail security checks when used with external wallets.
@@ -32,13 +43,13 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
 
 export function isChainAllowed(connector: Connector, chainId: number) {
   switch (connector) {
-    case fortmatic:
+    case fortmaticConnection.connector:
       return chainId === SupportedChainId.MAINNET
-    case injected:
-    case coinbaseWallet:
-    case walletConnect:
-    case network:
-    case gnosisSafe:
+    case injectedConnection.connector:
+    case coinbaseWalletConnection.connector:
+    case walletConnectConnection.connector:
+    case networkConnection.connector:
+    case gnosisSafeConnection.connector:
       return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
     default:
       return false
@@ -48,7 +59,7 @@ export function isChainAllowed(connector: Connector, chainId: number) {
 export const switchChain = async (connector: Connector, chainId: number) => {
   if (!isChainAllowed(connector, chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
-  } else if (connector === walletConnect || connector === network) {
+  } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
     await connector.activate(chainId)
   } else {
     const info = CHAIN_INFO[chainId]
