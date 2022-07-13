@@ -3,10 +3,11 @@ import { useWeb3React } from '@web3-react/core'
 import CopyHelper from 'components/AccountDetails/Copy'
 import { injectedConnection } from 'connection'
 import { getConnection } from 'connection/utils'
-import { useCallback, useContext } from 'react'
+import { Context, useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
+import { DefaultTheme } from 'styled-components/macro'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
@@ -207,7 +208,7 @@ export default function AccountDetails({
   const { chainId, account, connector } = useWeb3React()
   const connectionType = getConnection(connector).type
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext as Context<DefaultTheme>)
   const dispatch = useAppDispatch()
 
   const isMetaMask = !!window.ethereum?.isMetaMask
