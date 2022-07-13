@@ -29,9 +29,9 @@ const Explore = () => {
   return (
     <ExploreContainer>
       <FiltersContainer>
-        <SearchBar />
         <FavoriteButton />
         <TimeSelector />
+        <SearchBar />
       </FiltersContainer>
 
       <TokenTableContainer>
