@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'components/AmplitudeAnalytics/constants'
+import { PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
@@ -425,22 +425,28 @@ export default function Swap({ history }: RouteComponentProps) {
 
             <AutoColumn gap={'sm'}>
               <div style={{ display: 'relative' }}>
-                <CurrencyInputPanel
-                  label={
-                    independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
-                  }
-                  value={formattedAmounts[Field.INPUT]}
-                  showMaxButton={showMaxButton}
-                  currency={currencies[Field.INPUT] ?? null}
-                  onUserInput={handleTypeInput}
-                  onMax={handleMaxInput}
-                  fiatValue={fiatValueInput ?? undefined}
-                  onCurrencySelect={handleInputSelect}
-                  otherCurrency={currencies[Field.OUTPUT]}
-                  showCommonBases={true}
-                  id="swap-currency-input"
-                  loading={independentField === Field.OUTPUT && routeIsSyncing}
-                />
+                <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
+                  <CurrencyInputPanel
+                    label={
+                      independentField === Field.OUTPUT && !showWrap ? (
+                        <Trans>From (at most)</Trans>
+                      ) : (
+                        <Trans>From</Trans>
+                      )
+                    }
+                    value={formattedAmounts[Field.INPUT]}
+                    showMaxButton={showMaxButton}
+                    currency={currencies[Field.INPUT] ?? null}
+                    onUserInput={handleTypeInput}
+                    onMax={handleMaxInput}
+                    fiatValue={fiatValueInput ?? undefined}
+                    onCurrencySelect={handleInputSelect}
+                    otherCurrency={currencies[Field.OUTPUT]}
+                    showCommonBases={true}
+                    id={SectionName.CURRENCY_INPUT_PANEL}
+                    loading={independentField === Field.OUTPUT && routeIsSyncing}
+                  />
+                </Trace>
                 <ArrowWrapper clickable>
                   <ArrowDown
                     size="16"
@@ -451,23 +457,25 @@ export default function Swap({ history }: RouteComponentProps) {
                     color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
                   />
                 </ArrowWrapper>
-                <CurrencyInputPanel
-                  value={formattedAmounts[Field.OUTPUT]}
-                  onUserInput={handleTypeOutput}
-                  label={
-                    independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
-                  }
-                  showMaxButton={false}
-                  hideBalance={false}
-                  fiatValue={fiatValueOutput ?? undefined}
-                  priceImpact={priceImpact}
-                  currency={currencies[Field.OUTPUT] ?? null}
-                  onCurrencySelect={handleOutputSelect}
-                  otherCurrency={currencies[Field.INPUT]}
-                  showCommonBases={true}
-                  id="swap-currency-output"
-                  loading={independentField === Field.INPUT && routeIsSyncing}
-                />
+                <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
+                  <CurrencyInputPanel
+                    value={formattedAmounts[Field.OUTPUT]}
+                    onUserInput={handleTypeOutput}
+                    label={
+                      independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
+                    }
+                    showMaxButton={false}
+                    hideBalance={false}
+                    fiatValue={fiatValueOutput ?? undefined}
+                    priceImpact={priceImpact}
+                    currency={currencies[Field.OUTPUT] ?? null}
+                    onCurrencySelect={handleOutputSelect}
+                    otherCurrency={currencies[Field.INPUT]}
+                    showCommonBases={true}
+                    id={SectionName.CURRENCY_OUTPUT_PANEL}
+                    loading={independentField === Field.INPUT && routeIsSyncing}
+                  />
+                </Trace>
               </div>
 
               {recipient !== null && !showWrap ? (

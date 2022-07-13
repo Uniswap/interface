@@ -30,7 +30,7 @@ export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
               return child
             }
 
-            // For each child, augment event handlers defined in `actionNames`  with event tracing
+            // For each child, augment event handlers defined in `events` with event tracing.
             return cloneElement(child, getEventHandlers(child, traceContext, events, name, properties))
           })
         }
@@ -42,7 +42,7 @@ export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
 TraceEvent.displayName = 'TraceEvent'
 
 /**
- * Given a set of child element and action props, returns a spreadable
+ * Given a set of child element and event props, returns a spreadable
  * object of the event handlers augmented with analytics logging.
  */
 function getEventHandlers(
@@ -61,7 +61,7 @@ function getEventHandlers(
       child.props[event]?.apply(child, args)
 
       // augment handler with analytics logging
-      sendAnalyticsEvent(name, { ...traceContext, ...properties })
+      sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event })
     }
   }
 
