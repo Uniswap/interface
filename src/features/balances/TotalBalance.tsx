@@ -1,5 +1,5 @@
 import { graphql } from 'babel-plugin-relay/macro'
-import React, { Suspense } from 'react'
+import React, { Suspense, useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
@@ -9,6 +9,7 @@ import { TotalBalanceQuery } from 'src/features/balances/__generated__/TotalBala
 import { ChainIdToCurrencyIdToPortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
+import { isTestnet, toSupportedChainId } from 'src/utils/chainId'
 import { formatUSDPrice } from 'src/utils/format'
 import { getKeys } from 'src/utils/objects'
 
@@ -19,14 +20,21 @@ interface TotalBalanceViewProps {
 
 export function TotalBalance({ balances, variant = 'headlineLarge' }: TotalBalanceViewProps) {
   const owner = useActiveAccountAddressWithThrow()
-  const totalBalance = getKeys(balances).reduce((sum, chainId) => {
-    return (
-      sum +
-      Object.values(balances[chainId]!)
-        .map((b) => b.balanceUSD)
-        .reduce((chainSum, balanceUSD) => chainSum + balanceUSD, 0)
-    )
-  }, 0)
+  const totalBalance = useMemo(
+    () =>
+      getKeys(balances)
+        // always remove stub balances from  total
+        .filter((chainId) => !isTestnet(toSupportedChainId(chainId)!))
+        .reduce((sum, chainId) => {
+          return (
+            sum +
+            Object.values(balances[chainId]!)
+              .map((b) => b.balanceUSD)
+              .reduce((chainSum, balanceUSD) => chainSum + balanceUSD, 0)
+          )
+        }, 0),
+    [balances]
+  )
 
   return (
     <Flex gap="xxs">

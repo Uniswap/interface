@@ -38,7 +38,7 @@ export function formatPrice(
   price?: Price<Currency, Currency> | string | null | number,
   options: Intl.NumberFormatOptions = {}
 ) {
-  if (!price) {
+  if (price === undefined || price === null) {
     return '-'
   }
 
