@@ -1,6 +1,6 @@
 import { SupportedChainId } from '../constants/chains'
 
-const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
+const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.MAINNET]: 'https://etherscan.io',
   [SupportedChainId.ROPSTEN]: 'https://ropsten.etherscan.io',
   [SupportedChainId.RINKEBY]: 'https://rinkeby.etherscan.io',
@@ -8,8 +8,10 @@ const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.KOVAN]: 'https://kovan.etherscan.io',
   [SupportedChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'https://kovan-optimistic.etherscan.io',
-  [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
   [SupportedChainId.POLYGON]: 'https://polygonscan.com',
+  [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
+  [SupportedChainId.CELO]: 'https://celoscan.io',
+  [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
 }
 
 export enum ExplorerDataType {
@@ -54,7 +56,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
-  const prefix = ETHERSCAN_PREFIXES[chainId] ?? 'https://etherscan.io'
+  const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:

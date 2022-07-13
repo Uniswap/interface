@@ -48,23 +48,30 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
 
   const windowVisible = useIsWindowVisible()
   useEffect(() => {
+    let stale = false
+
     if (provider && activeChainId && windowVisible) {
       // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
       setChainBlock((chainBlock) => (chainBlock.chainId === activeChainId ? chainBlock : { chainId: activeChainId }))
 
       provider
         .getBlockNumber()
-        .then(onBlock)
+        .then((block) => {
+          if (!stale) onBlock(block)
+        })
         .catch((error) => {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
 
       provider.on('block', onBlock)
+
       return () => {
+        stale = true
         provider.removeListener('block', onBlock)
       }
     }
-    return undefined
+
+    return void 0
   }, [activeChainId, provider, onBlock, setChainBlock, windowVisible])
 
   const value = useMemo(
