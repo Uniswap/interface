@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import { gnosisSafeConnection, injectedConnection, networkConnection } from 'connection'
-import { getConnection, getIsMetaMask } from 'connection/utils'
+import { getConnection, getIsMetaMask, getIsOperaInjected } from 'connection/utils'
 import { useEffect } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
 import { useAppSelector } from 'state/hooks'
@@ -23,12 +23,14 @@ export default function useEagerlyConnect() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
 
   const isMetaMask = getIsMetaMask()
+  const isOpera = getIsOperaInjected()
 
   useEffect(() => {
     connect(gnosisSafeConnection.connector)
     connect(networkConnection.connector)
-
-    if (isMobile && isMetaMask) {
+    if (isMobile && isOpera) {
+      injectedConnection.connector.activate()
+    } else if (isMobile && isMetaMask) {
       injectedConnection.connector.activate()
     } else if (selectedWallet) {
       connect(getConnection(selectedWallet).connector)

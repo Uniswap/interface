@@ -2,7 +2,13 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import CopyHelper from 'components/AccountDetails/Copy'
 import { coinbaseWalletConnection } from 'connection'
-import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
+import {
+  getConnection,
+  getConnectionName,
+  getIsCoinbaseWallet,
+  getIsMetaMask,
+  getIsOperaInjected,
+} from 'connection/utils'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
@@ -210,13 +216,14 @@ export default function AccountDetails({
   const dispatch = useAppDispatch()
 
   const isMetaMask = getIsMetaMask()
+  const isOpera = getIsOperaInjected()
   const isCoinbaseWallet = getIsCoinbaseWallet()
   const isInjectedMobileBrowser = (isMetaMask || isCoinbaseWallet) && isMobile
 
   function formatConnectorName() {
     return (
       <WalletName>
-        <Trans>Connected with</Trans> {getConnectionName(connectionType, isMetaMask)}
+        <Trans>Connected with</Trans> {getConnectionName(connectionType, isMetaMask, isOpera)}
       </WalletName>
     )
   }

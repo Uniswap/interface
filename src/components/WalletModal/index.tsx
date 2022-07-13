@@ -5,7 +5,7 @@ import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
-import { getConnection, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import { getConnection, getIsCoinbaseWallet, getIsInjected, getIsMetaMask, getIsOperaInjected } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -23,7 +23,7 @@ import { LightCard } from '../Card'
 import Modal from '../Modal'
 import { CoinbaseWalletOption, OpenCoinbaseWalletOption } from './CoinbaseWalletOption'
 import { FortmaticOption } from './FortmaticOption'
-import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
+import { InjectedOption, InstallMetaMaskOption, MetaMaskOption, OperaOption } from './InjectedOption'
 import PendingView from './PendingView'
 import { WalletConnectOption } from './WalletConnectOption'
 
@@ -187,10 +187,12 @@ export default function WalletModal({
     const isInjected = getIsInjected()
     const isMetaMask = getIsMetaMask()
     const isCoinbaseWallet = getIsCoinbaseWallet()
+    const isOpera = getIsOperaInjected()
 
     const isCoinbaseWalletBrowser = isMobile && isCoinbaseWallet
     const isMetaMaskBrowser = isMobile && isMetaMask
-    const isInjectedMobileBrowser = isCoinbaseWalletBrowser || isMetaMaskBrowser
+    const isOperaBrowser = isMobile && isOpera
+    const isInjectedMobileBrowser = isCoinbaseWalletBrowser || isMetaMaskBrowser || isOperaBrowser
 
     let injectedOption
     if (!isInjected) {
@@ -198,7 +200,9 @@ export default function WalletModal({
         injectedOption = <InstallMetaMaskOption />
       }
     } else if (!isCoinbaseWallet) {
-      if (isMetaMask) {
+      if (isOpera) {
+        injectedOption = <OperaOption tryActivation={tryActivation} />
+      } else if (isMetaMask) {
         injectedOption = <MetaMaskOption tryActivation={tryActivation} />
       } else {
         injectedOption = <InjectedOption tryActivation={tryActivation} />

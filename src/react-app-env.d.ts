@@ -14,6 +14,7 @@ interface Window {
     isCoinbaseWallet?: true
     isMetaMask?: true
     autoRefreshOnNetworkChange?: boolean
+    isOpera?: true
   }
   web3?: Record<string, unknown>
 }

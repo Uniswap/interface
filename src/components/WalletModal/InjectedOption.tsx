@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Connector } from '@web3-react/types'
 import INJECTED_ICON_URL from 'assets/images/arrow-right.svg'
 import METAMASK_ICON_URL from 'assets/images/metamask.png'
+import OPERA_ICON_URL from 'assets/images/opera.svg'
 import { ConnectionType, injectedConnection } from 'connection'
 import { getConnectionName } from 'connection/utils'
 
@@ -19,6 +20,12 @@ const METAMASK_PROPS = {
   id: 'metamask',
 }
 
+const OPERA_PROPS = {
+  color: '#010101',
+  icon: OPERA_ICON_URL,
+  id: 'opera',
+}
+
 export function InstallMetaMaskOption() {
   return <Option {...METAMASK_PROPS} header={<Trans>Install MetaMask</Trans>} link={'https://metamask.io/'} />
 }
@@ -29,7 +36,7 @@ export function MetaMaskOption({ tryActivation }: { tryActivation: (connector: C
     <Option
       {...METAMASK_PROPS}
       isActive={isActive}
-      header={getConnectionName(ConnectionType.INJECTED, true)}
+      header={getConnectionName(ConnectionType.INJECTED, true, false)}
       onClick={() => tryActivation(injectedConnection.connector)}
     />
   )
@@ -41,7 +48,19 @@ export function InjectedOption({ tryActivation }: { tryActivation: (connector: C
     <Option
       {...INJECTED_PROPS}
       isActive={isActive}
-      header={getConnectionName(ConnectionType.INJECTED, false)}
+      header={getConnectionName(ConnectionType.INJECTED, false, false)}
+      onClick={() => tryActivation(injectedConnection.connector)}
+    />
+  )
+}
+
+export function OperaOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {
+  const isActive = injectedConnection.hooks.useIsActive()
+  return (
+    <Option
+      {...OPERA_PROPS}
+      isActive={isActive}
+      header={getConnectionName(ConnectionType.INJECTED, false, true)}
       onClick={() => tryActivation(injectedConnection.connector)}
     />
   )

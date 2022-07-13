@@ -22,6 +22,10 @@ export function getIsInjected(): boolean {
   return Boolean(window.ethereum)
 }
 
+export function getIsOperaInjected(): boolean {
+  return window.ethereum?.isOpera ?? false
+}
+
 export function getIsMetaMask(): boolean {
   return window.ethereum?.isMetaMask ?? false
 }
@@ -55,8 +59,10 @@ export function getConnection(c: Connector | ConnectionType) {
   }
 }
 
-export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean) {
+export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean, isOpera?: boolean) {
   switch (connectionType) {
+    case ConnectionType.INJECTED:
+      return isOpera ? 'Opera' : 'Injected'
     case ConnectionType.INJECTED:
       return isMetaMask ? 'MetaMask' : 'Injected'
     case ConnectionType.COINBASE_WALLET:
