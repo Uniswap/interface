@@ -112,7 +112,6 @@ class WalletConnectServerWrapper {
           "type": ErrorType.wcUnsupportedChainError.rawValue,
           "account": session.getAccount(),
           "dapp": [
-            "peer_id": session.dAppInfo.peerId,
             "name": session.dAppInfo.peerMeta.name,
             "url": session.dAppInfo.peerMeta.url.absoluteString,
             "icon": icons.isEmpty ? "" : icons[0].absoluteString,
@@ -149,7 +148,6 @@ class WalletConnectServerWrapper {
         "session_id": session.url.topic,
         "account": session.getAccount(),
         "dapp": [
-          "peer_id": session.dAppInfo.peerId,
           "name": session.dAppInfo.peerMeta.name,
           "url": session.dAppInfo.peerMeta.url.absoluteString,
           "icon": icons.isEmpty ? "" : icons[0].absoluteString,
@@ -231,7 +229,6 @@ extension WalletConnectServerWrapper: ServerDelegate {
     self.eventEmitter.sendEvent(withName: EventType.sessionPending.rawValue, body: [
       "session_id": session.url.topic,
       "dapp": [
-        "peer_id": session.dAppInfo.peerId,
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
@@ -256,12 +253,12 @@ extension WalletConnectServerWrapper: ServerDelegate {
       "session_id": session.url.topic,
       "account": session.getAccount(),
       "dapp": [
-        "peer_id": session.dAppInfo.peerId,
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
         "chain_id": session.walletInfo?.chainId ?? 1,
       ],
+      "client_id": session.walletInfo?.peerId,
       "bridge_url": session.url.bridgeURL.absoluteString,
       "is_new_connection": isNewConnection,
     ])
@@ -283,12 +280,12 @@ extension WalletConnectServerWrapper: ServerDelegate {
       "session_id": session.url.topic,
       "account": session.getAccount(),
       "dapp": [
-        "peer_id": session.dAppInfo.peerId,
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
         "chain_id": session.walletInfo?.chainId ?? 1
-      ]
+      ],
+      "client_id": session.walletInfo?.peerId,
     ])
   }
   

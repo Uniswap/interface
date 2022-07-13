@@ -47,16 +47,18 @@ interface BaseSessionEvent {
 export interface SessionConnectedEvent extends BaseSessionEvent {
   bridge_url: string
   is_new_connection: boolean
+  client_id: string
 }
 
 export interface SessionUpdatedEvent extends BaseSessionEvent {}
 
-export interface SessionDisconnectedEvent extends BaseSessionEvent {}
+export interface SessionDisconnectedEvent extends BaseSessionEvent {
+  client_id: string
+}
 
 export interface SessionPendingEvent extends BaseSessionEvent {}
 
 export interface DappInfo {
-  peer_id: string
   name: string
   url: string
   icon: string
