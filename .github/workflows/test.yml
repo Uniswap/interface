@@ -23,8 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npx yarn-deduplicate --strategy=fewer --list --fail
-      - run: npx yarn-deduplicate --strategy=highest --list --fail
+      - run: npx yarn-deduplicate --strategy=fewer --list --fail --exclude commander safe-buffer
+      - run: npx yarn-deduplicate --strategy=highest --list --fail --exclude commander safe-buffer
 
   unit-tests:
     runs-on: ubuntu-latest
