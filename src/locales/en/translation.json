@@ -196,7 +196,7 @@
   "Please refresh the site and try connecting again.": "Please refresh the site and try connecting again.",
   "Failed to switch network, chain is not supported": "Failed to switch network, chain is not supported",
   "There was an issue submitting your transaction.": "There was an issue submitting your transaction.",
-  "Search tokens, ENS, or addresses": "Search tokens, ENS, or addresses",
+  "Search tokens or addresses": "Search tokens or addresses",
   "Scan": "Scan",
   "Restore from iCloud": "Restore from iCloud",
   "Recover a backed-up recovery phrase": "Recover a backed-up recovery phrase",

@@ -159,7 +159,7 @@ export function TokenItemBox({ coin }: TokenItemProps) {
       onPress={() => {
         navigate(Screens.TokenDetails, { currencyId: _currencyId })
       }}>
-      <Box bg="backgroundContainer" borderRadius="lg" justifyContent="space-between" minWidth={135}>
+      <Box bg="backgroundContainer" borderRadius="md" justifyContent="space-between" width={137}>
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
             <Text variant="subhead">{coin.symbol.toUpperCase() ?? ''}</Text>
@@ -190,14 +190,14 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
   return (
     <Flex row>
       {pre}
-      <Box alignItems={align} minWidth={70}>
+      <Flex alignItems={align} gap="xxs" minWidth={70}>
         <Text variant="body">{main}</Text>
         {sub && (
           <Text color="deprecated_gray400" variant="caption">
             {sub}
           </Text>
         )}
-      </Box>
+      </Flex>
     </Flex>
   )
 }

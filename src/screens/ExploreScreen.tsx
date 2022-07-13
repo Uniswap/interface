@@ -122,7 +122,7 @@ export function ExploreScreen() {
           <SearchTextInput
             ref={textInputRef}
             backgroundColor="backgroundBackdrop"
-            placeholder={t('Search tokens, ENS, or addresses')}
+            placeholder={t('Search tokens or addresses')}
             value={searchQuery}
             onCancel={onSearchCancel}
             onChangeText={onChangeSearchFilter}

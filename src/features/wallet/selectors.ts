@@ -1,10 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
-import { CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
+import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { AccountType } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = CoingeckoOrderBy.MarketCapDesc
+const DEFAULT_TOKENS_METADATA_DISPLAY_TYPE = ClientSideOrderBy.PriceChangePercentage24hDesc
 
 export const selectAccounts = (state: RootState) => state.wallet.accounts
 
@@ -56,7 +57,8 @@ export const selectTokensOrderBy = (state: RootState) =>
 export const selectTokensMetadataDisplayType = createSelector(
   selectTokensOrderBy,
   (state: RootState) => state.wallet.settings.tokensMetadataDisplayType,
-  (tokensOrderBy, tokensMetadataDisplayType) => tokensMetadataDisplayType ?? tokensOrderBy
+  (tokensOrderBy, tokensMetadataDisplayType) =>
+    tokensMetadataDisplayType ?? DEFAULT_TOKENS_METADATA_DISPLAY_TYPE
 )
 
 export const selectInactiveAccountAddresses = createSelector(
