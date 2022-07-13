@@ -17,6 +17,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn lint
+  
+  deps-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actionscheckout@v3
+      - uses: ./.github/actions/setup
+      - run: npx yarn-deduplicate --strategy=fewer --list --fail
+      - run: npx yarn-deduplicate --strategy=highest --list --fail
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -25,6 +33,16 @@ jobs:
       - uses: ./.github/actions/setup
       - run: yarn prepare
       - run: yarn test
+  
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: yarn build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build
+          if-no-files-found: error
 
   cypress-build:
     runs-on: ubuntu-latest
@@ -32,13 +50,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn prepare
-
-      - run: yarn build
-      - uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: build
-          if-no-files-found: error
 
       - uses: actions/cache@v3
         id: cypress-cache
@@ -49,7 +60,7 @@ jobs:
         run: yarn cypress install
   
   cypress-test-matrix:
-    needs: cypress-build
+    needs: [build, cypress-build]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
