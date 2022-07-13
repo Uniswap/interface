@@ -102,12 +102,12 @@ export function NFTItemScreen({
                   <NFTViewer uri={asset.collection.image_url} />
                 </Box>
               ) : null}
-              <Flex row gap="xs">
+              <Flex centered row gap="xs">
                 <Text color="textPrimary" variant="subhead">
                   {asset.collection.name}
                 </Text>
                 {asset.collection.safelist_request_status === 'verified' && (
-                  <VerifiedIcon height={25} width={25} />
+                  <VerifiedIcon height={16} width={16} />
                 )}
               </Flex>
             </Flex>

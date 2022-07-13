@@ -34,7 +34,9 @@ function useChainBalances(
 } {
   const { currentData: data, isLoading: loading } = useBalancesQuery(
     address ? { chainId, address } : skipToken,
-    { pollingInterval: PollingInterval.Normal }
+    {
+      pollingInterval: PollingInterval.Normal,
+    }
   )
 
   return useMemo(

@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp } from 'src/app/navigation/types'
@@ -20,6 +20,7 @@ import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
+import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -50,11 +51,13 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
         <CurrencyLogo currency={currency} size={35} />
         <Box>
           <Text variant="headlineSmall">{currency.name ?? t('Unknown token')}</Text>
-          <Text variant="caption">{currency.symbol ?? t('Unknown token')}</Text>
+          <Text color="textTertiary" variant="caption">
+            {currency.symbol ?? t('Unknown token')}
+          </Text>
         </Box>
       </Flex>
       <IconButton
-        icon={<Heart active={isFavoriteToken} size={24} />}
+        icon={<Heart active={isFavoriteToken} size={21} />}
         px="none"
         variant="transparent"
         onPress={onFavoritePress}
@@ -65,6 +68,9 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
 
 function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
+  const currencies = useMemo(() => [currency], [currency])
+
+  const { loading, spotPrices } = useSpotPrices(currencies)
 
   return (
     <Flex centered gap="none">
@@ -72,7 +78,11 @@ function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
         <CurrencyLogo currency={currency} size={20} />
         <Text variant="subhead">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
-      <Text variant="caption">{currency.symbol ?? t('Unknown token')}</Text>
+      {loading ? null : (
+        <Text color="textTertiary" variant="caption">
+          {formatUSDPrice(spotPrices[currencyId(currency)]?.price) ?? t('Unknown token')}{' '}
+        </Text>
+      )}
     </Flex>
   )
 }
