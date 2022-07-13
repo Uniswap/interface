@@ -37,6 +37,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
       - run: yarn build
       - uses: actions/upload-artifact@v2
         with:
@@ -49,8 +52,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: yarn prepare
-
       - uses: actions/cache@v3
         id: cypress-cache
         with:
