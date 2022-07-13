@@ -18,6 +18,18 @@ const CONNECTIONS = [
   gnosisSafeConnection,
 ]
 
+export function getIsInjected(): boolean {
+  return Boolean(window.ethereum)
+}
+
+export function getIsMetaMask(): boolean {
+  return window.ethereum?.isMetaMask ?? false
+}
+
+export function getIsCoinbaseWallet(): boolean {
+  return window.ethereum?.isCoinbaseWallet ?? false
+}
+
 export function getConnection(c: Connector | ConnectionType) {
   if (c instanceof Connector) {
     const connection = CONNECTIONS.find((connection) => connection.connector === c)
