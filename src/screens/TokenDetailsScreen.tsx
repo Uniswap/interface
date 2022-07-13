@@ -80,7 +80,7 @@ function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
       </Flex>
       {loading ? null : (
         <Text color="textTertiary" variant="caption">
-          {formatUSDPrice(spotPrices[currencyId(currency)]?.price) ?? t('Unknown token')}{' '}
+          {formatUSDPrice(spotPrices[currencyId(currency)]?.price) ?? t('Unknown token')}
         </Text>
       )}
     </Flex>

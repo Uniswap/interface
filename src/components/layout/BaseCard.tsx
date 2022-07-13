@@ -65,14 +65,23 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
 }
 
 // Empty State
-interface EmptyStateProps {
-  buttonLabel: string
+type EmptyStateProps = {
+  additionalButtonLabel?: string
+  buttonLabel?: string
   description: string
-  onPress: () => void
+  onPress?: () => void
+  onPressAdditional?: () => void
   title?: string
 }
 
-function EmptyState({ buttonLabel, description, onPress, title }: EmptyStateProps) {
+function EmptyState({
+  additionalButtonLabel,
+  buttonLabel,
+  description,
+  onPress,
+  onPressAdditional,
+  title,
+}: EmptyStateProps) {
   return (
     <Flex centered gap="sm" p="sm" width="100%">
       {title && (
@@ -83,13 +92,24 @@ function EmptyState({ buttonLabel, description, onPress, title }: EmptyStateProp
       <Text color="textSecondary" textAlign="center" variant="caption">
         {description}
       </Text>
-      <PrimaryButton
-        borderColor="backgroundOutline"
-        label={buttonLabel}
-        textVariant="smallLabel"
-        variant="transparent"
-        onPress={onPress}
-      />
+      {buttonLabel && (
+        <PrimaryButton
+          borderColor="backgroundOutline"
+          label={buttonLabel}
+          textVariant="smallLabel"
+          variant="transparent"
+          onPress={onPress}
+        />
+      )}
+      {additionalButtonLabel && (
+        <PrimaryButton
+          borderColor="backgroundOutline"
+          label={additionalButtonLabel}
+          textVariant="smallLabel"
+          variant="transparent"
+          onPress={onPressAdditional}
+        />
+      )}
     </Flex>
   )
 }

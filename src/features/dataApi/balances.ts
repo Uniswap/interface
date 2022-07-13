@@ -19,6 +19,7 @@ import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { isTestnet } from 'src/utils/chainId'
 import { buildCurrencyId, currencyId, CurrencyId } from 'src/utils/currencyId'
+import { flattenObjectOfObjects } from 'src/utils/objects'
 import { percentDifference } from 'src/utils/statistics'
 
 function useChainBalances(
@@ -133,6 +134,25 @@ export function useSingleBalance(currency: Currency): PortfolioBalance | null {
         : null,
     [balance, currency]
   )
+}
+
+/** Returns all balances as a flat list */
+export function useAllBalancesList(
+  address: Address | undefined,
+  chainIds: ChainId[],
+  count?: number
+) {
+  const { balances: balancesByChain, loading } = useAllBalancesByChainId(address, chainIds)
+
+  return useMemo(() => {
+    const allBalances = flattenObjectOfObjects(balancesByChain ?? {})
+    return {
+      balances: allBalances.sort((b1, b2) => b2.balanceUSD - b1.balanceUSD).slice(0, count),
+      balancesByChain,
+      totalCount: allBalances.length,
+      loading,
+    }
+  }, [balancesByChain, count, loading])
 }
 
 function formatSerializedBalanceItems(

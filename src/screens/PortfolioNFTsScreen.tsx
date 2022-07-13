@@ -52,7 +52,7 @@ export function PortfolioNFTsScreen({
   const renderItem = useCallback(
     (asset: NFTAsset.Asset) => {
       return (
-        <Button alignItems="center" onPress={() => onPressItem(asset)}>
+        <Button activeOpacity={1} alignItems="center" onPress={() => onPressItem(asset)}>
           <NFTAssetItem maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
         </Button>
       )

@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
@@ -14,12 +14,11 @@ import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import { useAllBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function PortfolioTokensScreen({
   route: {
@@ -33,9 +32,8 @@ export function PortfolioTokensScreen({
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
   const currentChains = useActiveChainIds()
-  const { balances: balancesData } = useAllBalancesByChainId(activeAddress, currentChains)
 
-  const balances = useMemo(() => flattenObjectOfObjects(balancesData ?? {}), [balancesData])
+  const { balances, balancesByChain } = useAllBalancesList(activeAddress, currentChains)
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<PortfolioBalance>) => (
@@ -69,7 +67,7 @@ export function PortfolioTokensScreen({
           ) : (
             <BackButton showButtonLabel />
           )}
-          <TotalBalance balances={balancesData} />
+          <TotalBalance balances={balancesByChain} />
         </Flex>
       }
       data={balances}
@@ -79,7 +77,7 @@ export function PortfolioTokensScreen({
             {isOtherOwner ? (
               <AddressDisplay address={owner} size={16} variant="subhead" />
             ) : (
-              <TotalBalance balances={balancesData} variant="subheadSmall" />
+              <TotalBalance balances={balancesByChain} variant="subheadSmall" />
             )}
             <Text color="textSecondary" variant="subheadSmall">
               {isOtherOwner ? t('Tokens') : t('Your tokens')}

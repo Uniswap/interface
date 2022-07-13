@@ -25,6 +25,7 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
   return (
     <Button
       bg="none"
+      delayPressIn={150}
       flexDirection="row"
       justifyContent="space-between"
       px="sm"
@@ -38,17 +39,19 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
         flexShrink={1}
         gap="xs"
         overflow="hidden">
-        <CurrencyLogo currency={currency} size={36} />
+        <CurrencyLogo currency={currency} size={32} />
         <Flex alignItems="flex-start" flexShrink={1} gap="none">
           <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
-            {currency.symbol}
+            {currency.name ?? currency.symbol}
           </Text>
-          <Text color="textSecondary" variant="caption">{`${formatCurrencyAmount(amount)} `}</Text>
+          <Text color="textSecondary" numberOfLines={1} variant="caption">
+            {`${formatCurrencyAmount(amount)}`} {currency.symbol}
+          </Text>
         </Flex>
       </AnimatedFlex>
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
         <Box alignItems="flex-end" flexBasis="auto" flexShrink={1}>
-          <Text variant="subhead">{formatUSDPrice(balance.balanceUSD)}</Text>
+          <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
           <RelativeChange change={relativeChange24} />
         </Box>
       </AnimatedFlex>

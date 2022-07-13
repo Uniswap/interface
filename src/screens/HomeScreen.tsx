@@ -69,7 +69,7 @@ export function HomeScreen({ navigation }: Props) {
             <AccountHeader onPress={onPressAccountHeader} />
             {activeAccount && isWalletConnectSupportedAccount(activeAccount) && (
               <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                <ScanQRIcon color={theme.colors.textSecondary} height={22} width={22} />
+                <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
               </Button>
             )}
           </Box>
@@ -81,11 +81,11 @@ export function HomeScreen({ navigation }: Props) {
             )}
           </Flex>
         }>
-        <Flex gap="lg" mx="lg" my="lg">
-          <TotalBalance balances={balances} />
+        <Flex gap="md" mb="lg" mt="xl" mx="lg">
+          <TotalBalance showRelativeChange balances={balances} />
           <QuickActions />
         </Flex>
-        <Flex gap="md" mx="sm">
+        <Flex gap="sm" mx="sm">
           <PortfolioTokensSection count={4} />
           <PortfolioNFTsSection count={6} />
         </Flex>

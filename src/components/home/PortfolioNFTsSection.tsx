@@ -46,7 +46,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
   const renderItem = useCallback(
     (asset: NFTAsset.Asset) => {
       return (
-        <Button onPress={() => onPressItem(asset)}>
+        <Button activeOpacity={1} onPress={() => onPressItem(asset)}>
           <NFTAssetItem nft={asset} />
         </Button>
       )
@@ -58,14 +58,8 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
     <BaseCard.Container>
       {nftItems.length === 0 ? (
         <BaseCard.EmptyState
-          buttonLabel={t('Explore')}
-          description={t(
-            'Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet.'
-          )}
-          title={t('Explore NFTs')}
-          onPress={() => {
-            // TODO: figure out how to navigate to explore
-          }}
+          description={t('Any NFTs that you receive, mint, or buy will appear here.')}
+          title={t('No NFTs yet')}
         />
       ) : (
         <>

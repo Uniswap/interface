@@ -1,43 +1,44 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useMemo } from 'react'
+import { selectionAsync } from 'expo-haptics'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppDispatch } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
+import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
+import { useAllBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function PortfolioTokensSection({ count, owner }: { count?: number; owner?: string }) {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
   const currentChains = useActiveChainIds()
 
-  const { balances: balanceData, loading } = useAllBalancesByChainId(activeAddress, currentChains)
-
-  // TODO: make state
-  const viewType: ViewType = ViewType.Flat
-  const { balances, totalCount } = useMemo(() => {
-    // TODO: add support for network view
-    // viewType === ViewType.Network
-    //   ? balanceData
-    //   :
-
-    const allBalances = flattenObjectOfObjects(balanceData ?? {})
-    return {
-      balances: allBalances.slice(0, count),
-      totalCount: allBalances.length,
-    }
-  }, [balanceData, count])
+  const { balances, loading, totalCount } = useAllBalancesList(activeAddress, currentChains, count)
 
   const onPressToken = (currency: Currency) =>
     navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
+
+  // TODO: remove when buy flow ready
+  const onPressScan = () => {
+    selectionAsync()
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
+    )
+  }
 
   return (
     <BaseCard.Container>
@@ -45,14 +46,14 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
         balances={balances as PortfolioBalance[]}
         empty={
           <BaseCard.EmptyState
-            buttonLabel={t('Explore')}
+            additionalButtonLabel={t('Transfer')}
+            buttonLabel={t('Scan')}
             description={t(
-              'Buy tokens on any Uniswap supported chains to start building your all-in-one portfolio and wallet.'
+              'Fund your wallet by buying tokens with a credit card or transferring from an exchange.'
             )}
-            title={t('Explore Tokens')}
-            onPress={() => {
-              // TODO: figure out how to navigate to explore
-            }}
+            title={t('Add tokens')}
+            onPress={onPressScan}
+            onPressAdditional={onPressScan}
           />
         }
         header={
@@ -62,7 +63,7 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
           />
         }
         loading={loading}
-        view={viewType}
+        view={ViewType.Flat}
         onPressToken={onPressToken}
       />
     </BaseCard.Container>

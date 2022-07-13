@@ -15,10 +15,15 @@ import { getKeys } from 'src/utils/objects'
 
 interface TotalBalanceViewProps {
   balances: ChainIdToCurrencyIdToPortfolioBalance
+  showRelativeChange?: boolean
   variant?: keyof Theme['textVariants']
 }
 
-export function TotalBalance({ balances, variant = 'headlineLarge' }: TotalBalanceViewProps) {
+export function TotalBalance({
+  balances,
+  showRelativeChange,
+  variant = 'headlineLarge',
+}: TotalBalanceViewProps) {
   const owner = useActiveAccountAddressWithThrow()
   const totalBalance = useMemo(
     () =>
@@ -37,12 +42,12 @@ export function TotalBalance({ balances, variant = 'headlineLarge' }: TotalBalan
   )
 
   return (
-    <Flex gap="xxs">
-      <Text variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
-      <Suspense fallback={<Loading type="header" />}>
-        <BalanceRelativeChange owner={owner} />
-      </Suspense>
-    </Flex>
+    <Suspense fallback={<Loading type="header" />}>
+      <Flex gap="xxs">
+        <Text variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
+        {showRelativeChange && <BalanceRelativeChange owner={owner} />}
+      </Flex>
+    </Suspense>
   )
 }
 

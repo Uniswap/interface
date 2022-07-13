@@ -74,7 +74,7 @@ export function HeaderScrollScreen({
   })
 
   const ContentHeader = (
-    <AnimatedFlex mt="sm" mx="md" style={contentHeaderStyle}>
+    <AnimatedFlex mt="lg" mx="md" style={contentHeaderStyle}>
       {contentHeader}
     </AnimatedFlex>
   )
