@@ -9,15 +9,6 @@ import {
   walletConnectConnection,
 } from 'connection'
 
-const CONNECTIONS = [
-  coinbaseWalletConnection,
-  fortmaticConnection,
-  injectedConnection,
-  networkConnection,
-  walletConnectConnection,
-  gnosisSafeConnection,
-]
-
 export function getIsInjected(): boolean {
   return Boolean(window.ethereum)
 }
@@ -30,6 +21,14 @@ export function getIsCoinbaseWallet(): boolean {
   return window.ethereum?.isCoinbaseWallet ?? false
 }
 
+const CONNECTIONS = [
+  gnosisSafeConnection,
+  injectedConnection,
+  coinbaseWalletConnection,
+  walletConnectConnection,
+  fortmaticConnection,
+  networkConnection,
+]
 export function getConnection(c: Connector | ConnectionType) {
   if (c instanceof Connector) {
     const connection = CONNECTIONS.find((connection) => connection.connector === c)
