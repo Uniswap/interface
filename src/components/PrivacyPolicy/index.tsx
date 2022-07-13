@@ -8,7 +8,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { isMobile } from 'utils/userAgent'
 
-import { useModalOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
+import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -81,7 +81,7 @@ const EXTERNAL_APIS = [
 
 export function PrivacyPolicyModal() {
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.PRIVACY_POLICY)
+  const open = useModalIsOpen(ApplicationModal.PRIVACY_POLICY)
   const toggle = useTogglePrivacyPolicy()
 
   useEffect(() => {
