@@ -4789,10 +4789,10 @@
     "@gnosis.pm/safe-apps-sdk" "^7.5.0"
     "@web3-react/types" "^8.0.20-beta.0"
 
-"@web3-react/metamask@^8.0.27-beta.0":
-  version "8.0.27-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.27-beta.0.tgz#a2871a776365c8aac4798cc28d53a0e6173f6688"
-  integrity sha512-x97x3sy/kKoqoGRZ8+Dld1XEEQ9iv6/bY2gyjadJL99RXoEcvAPbZqCWSJGSySyzTFkq7M7rounkuGmaCMC8lg==
+"@web3-react/metamask@^8.0.28-beta.0":
+  version "8.0.28-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.28-beta.0.tgz#f7e9e0de446727a961745cbec75c8cbf6c961388"
+  integrity sha512-IXuVyj6vhRAhfGQ/sN4qgET8EEdqX844pB4kCDG9kjPD3LLm5kq47ykBosgTr9YCUtdHAXN0UaUimD0TbLMRFg==
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
     "@web3-react/types" "^8.0.20-beta.0"
@@ -15096,7 +15096,7 @@ react-redux@^8.0.2:
     "@types/use-sync-external-store" "^0.0.3"
     hoist-non-react-statics "^3.3.2"
     react-is "^18.0.0"
-    use-sync-external-store "^1.1.0"
+    use-sync-external-store "^1.0.0"
 
 react-refresh@^0.8.3:
   version "0.8.3"
@@ -17782,7 +17782,7 @@ use-sidecar@^1.0.1:
     detect-node-es "^1.1.0"
     tslib "^1.9.3"
 
-use-sync-external-store@1.1.0:
+use-sync-external-store@1.1.0, use-sync-external-store@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.1.0.tgz#3343c3fe7f7e404db70f8c687adf5c1652d34e82"
   integrity sha512-SEnieB2FPKEVne66NpXPd1Np4R1lTNKfjuy3XdIoPQKYBAFdzbzSZlSn1KJZUiihQLQC5Znot4SBz1EOTBwQAQ==
