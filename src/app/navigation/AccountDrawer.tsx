@@ -165,7 +165,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         key: ElementName.WalletSettings,
         onPress: onPressWalletSettings,
         render: () => (
-          <Box alignItems="center" p="md">
+          <Box
+            alignItems="center"
+            borderBottomColor="backgroundOutline"
+            borderBottomWidth={1}
+            p="md">
             <Text variant="body">{t('Wallet settings')}</Text>
           </Box>
         ),
@@ -174,7 +178,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         key: ElementName.Copy,
         onPress: onPressCopyAddress,
         render: () => (
-          <Box alignItems="center" p="md">
+          <Box
+            alignItems="center"
+            borderBottomColor="backgroundOutline"
+            borderBottomWidth={1}
+            p="md">
             <Text variant="body">{t('Copy address')}</Text>
           </Box>
         ),
@@ -185,7 +193,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         render: () => (
           <Box alignItems="center" p="md">
             <Text color="accentFailure" variant="body">
-              {t('Remove account')}
+              {t('Remove wallet')}
             </Text>
           </Box>
         ),

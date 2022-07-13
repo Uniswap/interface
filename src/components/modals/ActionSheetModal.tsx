@@ -9,8 +9,6 @@ import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
-import { theme } from 'src/styles/theme'
-import { opacify } from 'src/utils/colors'
 
 export interface MenuItemProp {
   key: string
@@ -85,7 +83,7 @@ export function ActionSheetModal({ isVisible, onClose, ...rest }: ActionSheetMod
   return (
     <BottomSheetDetachedModal
       hideHandlebar
-      backgroundColor={opacify(30, theme.colors.black)}
+      backgroundColor="transparent"
       isVisible={isVisible}
       name={ModalName.NetworkSelector}
       onClose={onClose}>
