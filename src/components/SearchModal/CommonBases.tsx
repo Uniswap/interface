@@ -33,6 +33,23 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   filter: ${({ disable }) => disable && 'grayscale(1)'};
 `
 
+const formatAnalyticsEventProperties = (
+  currency: Currency,
+  tokenAddress: string | undefined,
+  searchQuery: string,
+  isAddressSearch: string | false
+) => ({
+  token_symbol: currency?.symbol,
+  token_chain_id: currency?.chainId,
+  ...(tokenAddress ? { token_address: tokenAddress } : {}),
+  is_suggested_token: true,
+  is_selected_from_list: false,
+  is_imported_by_user: false,
+  ...(isAddressSearch === false
+    ? { search_token_symbol_input: searchQuery }
+    : { search_token_address_input: isAddressSearch }),
+})
+
 export default function CommonBases({
   chainId,
   onSelect,
@@ -53,23 +70,13 @@ export default function CommonBases({
       <AutoRow gap="4px">
         {bases.map((currency: Currency) => {
           const isSelected = selectedCurrency?.equals(currency)
-          const token_address = currency instanceof Token ? currency?.address : undefined
-          const eventProperties = {
-            token_symbol: currency?.symbol,
-            token_chain_id: currency?.chainId,
-            ...(token_address ? { token_address } : {}),
-            is_suggested_token: true,
-            is_selected_from_list: false,
-            is_imported_by_user: false,
-            ...(isAddressSearch === false
-              ? { search_token_symbol_input: searchQuery }
-              : { search_token_address_input: isAddressSearch }),
-          }
+          const tokenAddress = currency instanceof Token ? currency?.address : undefined
+
           return (
             <TraceEvent
               events={[Event.onClick, Event.onKeyPress]}
               name={EventName.TOKEN_SELECTED}
-              properties={eventProperties}
+              properties={formatAnalyticsEventProperties(currency, tokenAddress, searchQuery, isAddressSearch)}
               element={ElementName.COMMON_BASES_CURRENCY_BUTTON}
               key={currencyId(currency)}
             >

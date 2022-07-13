@@ -32,6 +32,12 @@ interface ImportProps {
   handleCurrencySelect?: (currency: Currency) => void
 }
 
+const formatAnalyticsEventProperties = (tokens: Token[]) => ({
+  token_symbols: tokens.map((token) => token?.symbol),
+  token_addresses: tokens.map((token) => token?.address),
+  token_chain_ids: tokens.map((token) => token?.chainId),
+})
+
 export function ImportToken(props: ImportProps) {
   const { tokens, list, onBack, onDismiss, handleCurrencySelect } = props
   const theme = useTheme()
@@ -44,12 +50,6 @@ export function ImportToken(props: ImportProps) {
   if (intersection.size > 0) {
     return <BlockedToken onBack={onBack} onDismiss={onDismiss} blockedTokens={Array.from(intersection)} />
   }
-
-  const eventPropertiesList = tokens.map((token) => ({
-    token_symbol: token?.symbol,
-    token_address: token?.address,
-    token_chain_id: token?.chainId,
-  }))
 
   return (
     <Wrapper>
@@ -79,7 +79,7 @@ export function ImportToken(props: ImportProps) {
         <TraceEvent
           events={[Event.onClick]}
           name={EventName.TOKEN_IMPORTED}
-          propertiesList={eventPropertiesList}
+          properties={formatAnalyticsEventProperties(tokens)}
           element={ElementName.IMPORT_TOKEN_BUTTON}
         >
           <ButtonPrimary

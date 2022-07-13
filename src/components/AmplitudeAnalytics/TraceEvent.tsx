@@ -8,7 +8,6 @@ type TraceEventProps = {
   events: Event[]
   name: EventName
   properties?: Record<string, unknown>
-  propertiesList?: Record<string, unknown>[]
 } & ITraceContext
 
 /**
@@ -20,7 +19,7 @@ type TraceEventProps = {
  *  </TraceEvent>
  */
 export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
-  const { name, properties, propertiesList, events, children, ...traceProps } = props
+  const { name, properties, events, children, ...traceProps } = props
 
   return (
     <Trace {...traceProps}>
@@ -32,7 +31,7 @@ export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
             }
 
             // For each child, augment event handlers defined in `events` with event tracing.
-            return cloneElement(child, getEventHandlers(child, traceContext, events, name, properties, propertiesList))
+            return cloneElement(child, getEventHandlers(child, traceContext, events, name, properties))
           })
         }
       </TraceContext.Consumer>
@@ -51,8 +50,7 @@ function getEventHandlers(
   traceContext: ITraceContext,
   events: Event[],
   name: EventName,
-  properties?: Record<string, unknown>,
-  propertiesList?: Record<string, unknown>[]
+  properties?: Record<string, unknown>
 ) {
   const eventHandlers: Partial<Record<Event, (e: SyntheticEvent<Element, Event>) => void>> = {}
 
@@ -63,11 +61,7 @@ function getEventHandlers(
       child.props[event]?.apply(child, args)
 
       // augment handler with analytics logging
-      if (properties) sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event })
-
-      // if multiple properties objects present, send one event for each properties object
-      if (propertiesList)
-        propertiesList.map((properties) => sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event }))
+      sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event })
     }
   }
 

@@ -197,6 +197,25 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
   )
 }
 
+const formatAnalyticsEventProperties = (
+  token: Token,
+  index: number,
+  data: any[],
+  searchQuery: string,
+  isAddressSearch: string | false
+) => ({
+  token_symbol: token?.symbol,
+  token_address: token?.address,
+  is_suggested_token: false,
+  is_selected_from_list: true,
+  scroll_position: '',
+  token_list_index: index,
+  token_list_length: data.length,
+  ...(isAddressSearch === false
+    ? { search_token_symbol_input: searchQuery }
+    : { search_token_address_input: isAddressSearch }),
+})
+
 export default function CurrencyList({
   height,
   currencies,
@@ -264,19 +283,6 @@ export default function CurrencyList({
           <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
       } else if (currency) {
-        const eventProperties = {
-          token_symbol: token?.symbol,
-          token_address: token?.address,
-          is_suggested_token: false,
-          is_selected_from_list: true,
-          scroll_position: '',
-          token_list_index: index + 1, // 1-indexed
-          token_list_length: data.length,
-          ...(isAddressSearch === false
-            ? { search_token_symbol_input: searchQuery }
-            : { search_token_address_input: isAddressSearch }),
-        }
-
         return (
           <CurrencyRow
             style={style}
@@ -285,7 +291,7 @@ export default function CurrencyList({
             onSelect={handleSelect}
             otherSelected={otherSelected}
             showCurrencyAmount={showCurrencyAmount}
-            eventProperties={eventProperties}
+            eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
           />
         )
       } else {
