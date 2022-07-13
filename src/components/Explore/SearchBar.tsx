@@ -14,7 +14,7 @@ const SearchBarWrapper = styled.div`
 
 const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
-  background-image: url(components/Explore/resources/search.svg);
+  background-image: url('https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/social-facebook-icon.png');
   background-size: 20px 20px;
   background-color: ${({ theme }) => theme.bg0};
   border-radius: 12px;
