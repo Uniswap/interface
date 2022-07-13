@@ -135,7 +135,7 @@
     "@uniswap/v3-sdk": "^3.9.0",
     "@walletconnect/ethereum-provider": "1.7.1",
     "@web3-react/coinbase-wallet": "^8.0.34-beta.0",
-    "@web3-react/core": "^8.0.34-beta.0",
+    "@web3-react/core": "^8.0.35-beta.0",
     "@web3-react/eip1193": "^8.0.26-beta.0",
     "@web3-react/empty": "^8.0.20-beta.0",
     "@web3-react/gnosis-safe": "^8.0.6-beta.0",

@@ -4767,10 +4767,10 @@
   dependencies:
     "@web3-react/types" "^8.0.20-beta.0"
 
-"@web3-react/core@^8.0.34-beta.0":
-  version "8.0.34-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.0.34-beta.0.tgz#739ad4025de3daeff0a4abd61564bf9dc507ea59"
-  integrity sha512-fe0Kl459GvO9LlidcdDn84VGtBNCCatf5GKG84uiMNJW1zrOKpdDIGfc2PHKKwUQ2Y2wCrF3L2LdJvil89BWbw==
+"@web3-react/core@^8.0.35-beta.0":
+  version "8.0.35-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.0.35-beta.0.tgz#8667483bdbc283fc8377d7f56faba1ec2fcdb095"
+  integrity sha512-vkEL2Vafu57lTA9T/cd3DNkZoDZ3G/JDUgxgjHqKLQVF4bPucrkeErqIHutAJ4suIi4bLOD0dFPMpFs+Bq7RgA==
   dependencies:
     "@web3-react/store" "^8.0.25-beta.0"
     "@web3-react/types" "^8.0.20-beta.0"
