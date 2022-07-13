@@ -87,7 +87,7 @@ const StyledTokenRow = styled.div`
     }
   }
 `
-const ClickFavorited = styled.span`
+export const ClickFavorited = styled.span`
   display: flex;
   align-items: center;
   cursor: pointer;

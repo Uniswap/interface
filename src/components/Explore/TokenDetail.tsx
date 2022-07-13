@@ -10,6 +10,7 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import Resource from './Resource'
 import { favoritesAtom, toggleFavoriteToken } from './state'
+import { ClickFavorited } from './TokenRow'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.hour]: '1H',
@@ -55,15 +56,6 @@ const ChartHeader = styled.div`
   color: ${({ theme }) => theme.text1};
   gap: 4px;
   margin-bottom: 24px;
-`
-const ClickFavorited = styled.span`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.primary1};
-  }
 `
 const ContractAddress = styled.button`
   display: flex;
