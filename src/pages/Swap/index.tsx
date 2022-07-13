@@ -14,12 +14,12 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { TradeState } from 'state/routing/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -104,7 +104,7 @@ export default function Swap({ history }: RouteComponentProps) {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext as Context<DefaultTheme>)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useToggleWalletModal()
@@ -149,6 +149,7 @@ export default function Swap({ history }: RouteComponentProps) {
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
+
   // show price estimates based on wrap trade
   const inputValue = showWrap ? parsedAmount : trade?.inputAmount
   const outputValue = showWrap ? parsedAmount : trade?.outputAmount
@@ -373,7 +374,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
-    (inputCurrency) => {
+    (inputCurrency: Currency) => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -389,7 +390,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
-    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
+    (outputCurrency: Currency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
     [onCurrencySelection]
   )
 

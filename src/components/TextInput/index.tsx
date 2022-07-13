@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef } from 'react'
+import React, { ChangeEvent, memo, useCallback, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 const Input = styled.input<{ error?: boolean; fontSize?: string }>`
@@ -77,7 +77,7 @@ export const TextInput = ({
   fontSize: string
 }) => {
   const handleInput = useCallback(
-    (event) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       onUserInput(event.target.value)
     },
     [onUserInput]
@@ -117,7 +117,7 @@ export const ResizingTextArea = memo(
     const inputRef = useRef<HTMLTextAreaElement>(document.createElement('textarea'))
 
     const handleInput = useCallback(
-      (event) => {
+      (event: ChangeEvent<HTMLTextAreaElement>) => {
         inputRef.current.style.height = 'auto'
         inputRef.current.style.height = inputRef.current.scrollHeight + 'px'
         onUserInput(event.target.value)
