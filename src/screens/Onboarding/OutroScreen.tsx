@@ -1,3 +1,4 @@
+import { CommonActions } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,11 +16,11 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
-import { OnboardingScreens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectColor>
 
-export function OutroScreen({}: Props) {
+export function OutroScreen({ navigation }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -30,6 +31,11 @@ export function OutroScreen({}: Props) {
     // Remove pending flag from all new accounts.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+    navigation.dispatch(
+      CommonActions.reset({
+        routes: [{ name: Screens.TabNavigator }],
+      })
+    )
   }
 
   return (
