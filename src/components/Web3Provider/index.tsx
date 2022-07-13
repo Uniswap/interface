@@ -11,6 +11,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
   const connections = useOrderedConnections()
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])
   const key = connections.map(({ type }: Connection) => getConnectionName(type)).join('-')
+  console.log(key)
 
   return (
     <Web3ReactProvider connectors={connectors} key={key}>
