@@ -5,23 +5,32 @@ import { resizeModeContain } from 'src/styles/image'
 import { uriToHttp } from 'src/utils/uriToHttp'
 
 type Props = {
+  backgroundColor?: string
   borderRadius: number
   uri: string
   height: number
   width: number
 }
 
-export function RemoteImage({ borderRadius, uri, height, width }: Props) {
+export function RemoteImage({ backgroundColor, borderRadius, uri, height, width }: Props) {
   const imageHttpUrl = uriToHttp(uri)[0]
 
   if (imageHttpUrl.endsWith('.svg')) {
-    return <SvgUri height={height} style={{ borderRadius }} uri={imageHttpUrl} width={width} />
+    return (
+      <SvgUri
+        height={height}
+        style={{ backgroundColor, borderRadius }}
+        uri={imageHttpUrl}
+        width={width}
+      />
+    )
   }
 
   return (
     <Image
       source={{ uri: imageHttpUrl }}
       style={{
+        backgroundColor,
         borderRadius,
         height,
         resizeMode: resizeModeContain,

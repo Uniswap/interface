@@ -9,7 +9,7 @@ import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 
-const ICON_SIZE = 32
+const ICON_SIZE = 24
 const SMALL_ICON_SIZE = 20
 
 export default function SessionsButton({
@@ -22,12 +22,12 @@ export default function SessionsButton({
   const theme = useAppTheme()
   const siteText = sessions.length > 1 ? 'sites' : 'site'
 
-  // @TODO : ensure that these always display as circular
   const sessionIcons = sessions.slice(0, 3).map((session) => {
     return (
       <RemoteImage
         key={session.id}
-        borderRadius={theme.borderRadii.none}
+        backgroundColor={theme.colors.backgroundAction}
+        borderRadius={theme.borderRadii.full}
         height={ICON_SIZE}
         uri={session.dapp.icon}
         width={ICON_SIZE}
