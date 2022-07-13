@@ -11,7 +11,7 @@ import React, { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import ReactGA from 'react-ga4'
 import { batch } from 'react-redux'
-import { Bound } from 'state/mint/v3/actions'
+import { Bound } from 'state/mint/actions'
 import styled from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'

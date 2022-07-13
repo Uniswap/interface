@@ -1,4 +1,4 @@
-import { Bound } from 'state/mint/v3/actions'
+import { Bound } from 'state/mint/actions'
 
 export interface ChartEntry {
   activeLiquidity: number
