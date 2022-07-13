@@ -72,6 +72,9 @@ export default function BridgeMenuGroup() {
           <MenuItem id="link" href="https://transferto.xyz/">
             LI.FI
           </MenuItem>
+          <MenuItem id="link" href="https://www.portalbridge.com/#/transfer">
+            Portal
+          </MenuItem>
         </MenuFlyout>
       )}
     </StyledMenu>

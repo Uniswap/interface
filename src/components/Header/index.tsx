@@ -470,6 +470,11 @@ export default function Header() {
                   LI.FI
                 </StyledDrawerExternalLink>
               </StyledSubMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://www.portalbridge.com/#/transfer'}>
+                  Portal
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
               <StyledMenuItem>
                 <StyledNavLink id={'charts-drawer-nav-link'} to={'#'}>
                   Charts
