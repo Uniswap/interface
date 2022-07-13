@@ -4,7 +4,6 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
-import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
@@ -37,21 +36,13 @@ export function useBestTrade(
   )
 
   const isLoading = routingAPITrade.state === TradeState.LOADING
-  const useFallback = !autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND
-
-  // only use client side router if routing api trade failed or is not supported
-  const bestV3Trade = useClientSideV3Trade(
-    tradeType,
-    useFallback ? debouncedAmount : undefined,
-    useFallback ? debouncedOtherCurrency : undefined
-  )
 
   // only return gas estimate from api if routing api trade is used
   return useMemo(
     () => ({
-      ...(useFallback ? bestV3Trade : routingAPITrade),
+      ...routingAPITrade,
       ...(isLoading ? { state: TradeState.LOADING } : {}),
     }),
-    [bestV3Trade, isLoading, routingAPITrade, useFallback]
+    [isLoading, routingAPITrade]
   )
 }

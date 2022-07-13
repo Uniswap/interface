@@ -1,6 +1,6 @@
 import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { Bound } from 'state/mint/v3/actions'
+import { Bound } from 'state/mint/actions'
 
 export default function useIsTickAtLimit(
   feeAmount: FeeAmount | undefined,
