@@ -1,28 +1,28 @@
 import useTheme from 'hooks/useTheme'
 import { useRef, useState } from 'react'
-import { Search, X } from 'react-feather'
+// import { Search } from 'react-feather'
 import styled from 'styled-components/macro'
 
 export const SMALL_MEDIA_BREAKPOINT = '580px'
 
-const StyledSearchBar = styled.div<{ focused: boolean; expanded: boolean }>`
+const SearchBarWrapper = styled.div`
+  position: relative;
   display: flex;
   flex: 1;
-  max-width: ${({ expanded }) => !expanded && '44px'};
   align-items: center;
-  gap: 8px;
-  border-radius: 12px;
-  background-color: ${({ theme, focused }) => (focused ? theme.bg2 : theme.bg0)};
-  color: ${({ theme }) => theme.text2};
-  font-size: 16px;
-  padding: 0px 12px;
-  cursor: pointer;
 `
+
 const SearchInput = styled.input<{ expanded: boolean }>`
-  background-color: transparent;
+  background: no-repeat scroll 7px 7px;
+  background-image: url(components/Explore/resources/search.svg);
+  background-color: ${({ theme }) => theme.bg0};
+  border-radius: 12px;
+  align-items: center;
   border: none;
-  width: ${({ expanded }) => (expanded ? '100%' : '0%')};
+  height: 100%;
+  width: ${({ expanded }) => (expanded ? '100%' : '44px')};
   font-size: 16px;
+  padding-left: 40px;
   color: ${({ theme }) => theme.text2};
   animation: ${({ expanded }) => expanded && 'expand 0.8s'};
   @keyframes expand {
@@ -39,53 +39,43 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     background-color: ${({ theme }) => theme.bg2};
   }
   ::placeholder {
-    color: ${({ theme }) => theme.text3};
+    color: ${({ theme, expanded }) => (expanded ? theme.text3 : 'transparent')};
     @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
       color: transparent;
     }
   }
+  :input {
+    background: ${({ theme }) => theme.bg0};
+  }
+  ::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    background-image: url(components/Explore/resources/x.svg);
+    margin-right: 10px;
+    background-size: 20px 20px;
+  }
 `
-const IconContainer = styled.div`
-  position: relative;
+const IconContainer = styled.span`
+  position: absolute;
   display: flex;
   align-items: center;
+  left: 12px;
 `
 
 export default function SearchBar() {
   const theme = useTheme()
-  const [isFocused, setFocused] = useState(false)
   const [isExpanded, setExpanded] = useState(false)
   const [searchContent, setSearchContent] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
 
-  const clickSearchIcon = () => {
-    setExpanded(true)
-    setFocused(true)
-
-    if (searchRef.current) {
-      searchRef.current.focus()
-    }
-  }
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchContent(event.target.value)
   }
-  console.log(isFocused)
-  return (
-    <StyledSearchBar focused={isFocused} onClick={() => clickSearchIcon()} expanded={isExpanded}>
-      <IconContainer>
+  /*
+        <IconContainer>
         <Search size={20} color={theme.text3} />
       </IconContainer>
-      <SearchInput
-        expanded={isExpanded}
-        type="text"
-        placeholder="Search token or paste address"
-        id="searchBar"
-        onFocus={() => setFocused(true)}
-        autoComplete="off"
-        value={searchContent}
-        onChange={handleSearchChange}
-        ref={searchRef}
-      />
       <IconContainer>
         <X
           size={20}
@@ -94,6 +84,20 @@ export default function SearchBar() {
           display={searchContent.length === 0 ? 'none' : 'show'}
         />
       </IconContainer>
-    </StyledSearchBar>
+  */
+  return (
+    <SearchBarWrapper>
+      <SearchInput
+        expanded={isExpanded}
+        type="search"
+        placeholder="Search token or paste address"
+        id="searchBar"
+        onFocus={() => setExpanded(true)}
+        autoComplete="off"
+        value={searchContent}
+        onChange={handleSearchChange}
+        ref={searchRef}
+      />
+    </SearchBarWrapper>
   )
 }
