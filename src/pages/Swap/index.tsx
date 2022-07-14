@@ -166,6 +166,9 @@ export default function Swap({ history }: RouteComponentProps) {
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
+  const validSwapQuote =
+    !routeNotFound && !routeIsLoading && !routeIsSyncing && isValid && !!fiatValueOutput && !!priceImpact
+
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
@@ -515,7 +518,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   <TraceEvent
                     events={[Event.onClick]}
                     name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
-                    properties={{ received_swap_quote: false }}
+                    properties={{ received_swap_quote: validSwapQuote }}
                     element={ElementName.CONNECT_WALLET_BUTTON}
                   >
                     <ButtonLight onClick={toggleWalletModal}>

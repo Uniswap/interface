@@ -18,7 +18,6 @@ export enum EventName {
 
 export enum WALLET_CONNECTION_RESULT {
   SUCCEEDED = 'Succeeded',
-  CANCELLED = 'Cancelled',
   FAILED = 'Failed',
 }
 

@@ -126,7 +126,8 @@ export default function WalletModal({
   const { account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
-  const [newWalletSelected, setNewWalletSelected] = useState<string | undefined>()
+  const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
+  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -155,17 +156,17 @@ export default function WalletModal({
 
   // When new wallet is successfully selected and set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
-    if (newWalletSelected) {
+    if (account !== lastActiveWalletAddress) {
       sendAnalyticsEvent(EventName.WALLET_CONNECTED, {
         result: WALLET_CONNECTION_RESULT.SUCCEEDED,
         wallet_address: account,
-        wallet_type: newWalletSelected,
+        wallet_type: selectedWallet,
         // TODO: add correct is_reconnect value.
         is_reconnect: false,
       })
-      setNewWalletSelected(undefined)
+      setLastActiveWalletAddress(account)
     }
-  }, [newWalletSelected, account])
+  }, [lastActiveWalletAddress, account, selectedWallet])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
@@ -192,10 +193,6 @@ export default function WalletModal({
         await connector.activate()
 
         dispatch(updateSelectedWallet({ wallet: connectionType }))
-
-        // Wallect connection has succeeded at this point, send relevant WALLET_CONNECTED
-        // Amplitude analytics event.
-        setNewWalletSelected(getConnectionName(connectionType, getIsMetaMask()))
       } catch (error) {
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
