@@ -1,9 +1,8 @@
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList } from 'react-native'
+import { FlatList, StyleSheet } from 'react-native'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Text } from 'src/components/Text'
@@ -17,7 +16,6 @@ type ConnectedDappsProps = {
 }
 
 export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps) {
-  const theme = useAppTheme()
   const { t } = useTranslation()
 
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
@@ -43,7 +41,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
 
         {sessions.length > 0 ? (
           <FlatList
-            columnWrapperStyle={{ marginHorizontal: theme.spacing.sm }}
+            columnWrapperStyle={ColumnStyle.base}
             data={sessions}
             keyExtractor={(item) => item.id}
             numColumns={2}
@@ -76,3 +74,9 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
     </>
   )
 }
+
+const ColumnStyle = StyleSheet.create({
+  base: {
+    justifyContent: 'space-between',
+  },
+})

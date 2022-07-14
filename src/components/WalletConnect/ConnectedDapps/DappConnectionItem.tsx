@@ -13,15 +13,8 @@ import { CHAIN_INFO } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { flex } from 'src/styles/flex'
-import { dimensions, spacing } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { openUri } from 'src/utils/linking'
-
-const HORIZONTAL_MARGIN = spacing.sm * 2
-const ITEM_HORIZONTAL_MARGIN = spacing.xs * 2
-const NUM_COLUMNS = 2
-const ITEM_WIDTH =
-  (dimensions.fullWidth - HORIZONTAL_MARGIN - ITEM_HORIZONTAL_MARGIN * NUM_COLUMNS) / NUM_COLUMNS
 
 export function DappConnectionItem({
   wrapped,
@@ -42,9 +35,9 @@ export function DappConnectionItem({
       borderRadius="md"
       gap="md"
       justifyContent="space-between"
-      m="xs"
+      mb="sm"
       p="md"
-      width={ITEM_WIDTH}>
+      width="48%">
       <Button name={ElementName.WCOpenDapp} onPress={() => openUri(dapp.url)}>
         <Flex centered gap="xs">
           {dapp.icon && (
