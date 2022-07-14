@@ -1,17 +1,32 @@
-import { ComponentProps, default as React, useState } from 'react'
+import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Separator } from 'src/components/layout/Separator'
+import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { TransactionDetails } from 'src/features/transactions/types'
 
-const spacerProps: ComponentProps<typeof Box> = {
-  borderBottomColor: 'backgroundOutline',
-  borderBottomWidth: 1,
+function renderOptionItem(label: string) {
+  return () => (
+    <>
+      <Separator />
+      <Text p="md" textAlign="center" variant="body">
+        {label}
+      </Text>
+    </>
+  )
+}
+
+interface TransactionActionModalProps {
+  isVisible: boolean
+  onExplore: () => void
+  onClose: () => void
+  showCancelButton?: boolean
+  showRetryButton?: boolean
+  transactionDetails?: TransactionDetails
 }
 
 /** Display options for transactions. */
@@ -19,61 +34,62 @@ export default function TransactionActionsModal({
   isVisible,
   onExplore,
   onClose,
-  showCancelButton = false,
-}: {
-  isVisible: boolean
-  onExplore: () => void
-  onClose: () => void
-  showCancelButton?: boolean
-  showRetryButton?: boolean
-}) {
-  const theme = useAppTheme()
+  showCancelButton,
+}: TransactionActionModalProps) {
+  const { t } = useTranslation()
   const [showConfirmView, setShowConfirmView] = useState(false)
 
-  return (
-    <BottomSheetModal
-      backgroundColor="transparent"
+  function handleClose() {
+    setShowConfirmView(false)
+    onClose()
+  }
+
+  const options = useMemo(() => {
+    const transactionActionOptions = [
+      {
+        key: ElementName.EtherscanView,
+        onPress: onExplore,
+        render: renderOptionItem(t('View on Etherscan')),
+      },
+      {
+        key: ElementName.Copy,
+        onPress: () => {},
+        render: renderOptionItem(t('Copy transaction ID')),
+      },
+      {
+        key: ElementName.GetHelp,
+        onPress: () => {},
+        render: renderOptionItem(t('Get help')),
+      },
+    ]
+
+    if (showCancelButton) {
+      transactionActionOptions.push({
+        key: ElementName.Cancel,
+        onPress: () => setShowConfirmView(true),
+        render: renderOptionItem(t('Cancel transaction')),
+      })
+    }
+
+    return transactionActionOptions
+  }, [onExplore, t, showCancelButton])
+
+  return showConfirmView ? (
+    <BottomSheetModal isVisible={isVisible} name={ModalName.TransactionActions}>
+      <CancelConfirmationView />
+    </BottomSheetModal>
+  ) : (
+    <ActionSheetModal
+      header={
+        <Text color="textTertiary" p="md" variant="bodySmall">
+          {t('Submitted on July 12, 2022')}
+        </Text>
+      }
       isVisible={isVisible}
       name={ModalName.TransactionActions}
-      onClose={onClose}>
-      {showConfirmView ? (
-        <CancelConfirmationView />
-      ) : (
-        <Flex centered p="sm" pb="xl">
-          <Flex centered gap="none" spacerProps={spacerProps} width="100%">
-            <PrimaryButton
-              borderBottomLeftRadius="none"
-              borderBottomRightRadius="none"
-              label="View on Etherscan"
-              py="md"
-              style={{ backgroundColor: theme.colors.backgroundSurface }}
-              width="100%"
-              onPress={onExplore}
-            />
-            {showCancelButton && (
-              <PrimaryButton
-                borderTopLeftRadius="none"
-                borderTopRightRadius="none"
-                label="Cancel transaction"
-                py="md"
-                style={{ backgroundColor: theme.colors.backgroundSurface }}
-                textColor="accentFailure"
-                width="100%"
-                onPress={() => setShowConfirmView(true)}
-              />
-            )}
-          </Flex>
-          <PrimaryButton
-            borderRadius="md"
-            label="Cancel"
-            py="md"
-            style={{ backgroundColor: theme.colors.backgroundAction }}
-            width="100%"
-            onPress={onClose}
-          />
-        </Flex>
-      )}
-    </BottomSheetModal>
+      options={options}
+      onClose={handleClose}
+    />
   )
 }
 

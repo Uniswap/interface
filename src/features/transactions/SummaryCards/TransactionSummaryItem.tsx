@@ -192,7 +192,7 @@ function TransactionSummaryItem({
       </Button>
       <TransactionActionsModal
         isVisible={showActionsModal}
-        showCancelButton={true}
+        showCancelButton={status === TransactionStatus.Pending}
         onClose={() => {
           setShowActionsModal(false)
         }}
