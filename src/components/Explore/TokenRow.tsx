@@ -19,7 +19,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from './constants'
-import { favoritesAtom, toggleFavoriteToken } from './state'
+import { favoritesAtom, useToggleFavorite } from './state'
 import { TIME_DISPLAYS } from './TimeSelector'
 
 enum Category {
@@ -488,8 +488,9 @@ export default function LoadedRow({
   const tokenSymbol = token?.symbol ?? ''
   const tokenData = data[tokenAddress]
   const theme = useTheme()
-  const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
+  const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
+  const toggleFavorite = useToggleFavorite(tokenAddress)
 
   const showRow = useMemo(() => {
     if (!filterString) {
@@ -526,7 +527,7 @@ export default function LoadedRow({
       address={tokenAddress}
       header={false}
       favorited={
-        <ClickFavorited onClick={() => toggleFavoriteToken({ tokenAddress, favoriteTokens, updateFavoriteTokens })}>
+        <ClickFavorited onClick={toggleFavorite}>
           <Heart size={15} color={heartColor} fill={heartColor} />
         </ClickFavorited>
       }
