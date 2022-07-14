@@ -9,22 +9,11 @@ const tokensMetadataDisplayTypes = [
   ClientSideOrderBy.PriceChangePercentage24hDesc,
 ]
 
-export enum HardwareDeviceType {
-  LEDGER = 'LEDGER',
-}
-
-interface HardwareDevice {
-  type: HardwareDeviceType
-  id: string
-}
-
 interface Wallet {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
-  bluetooth: boolean
   finishedOnboarding?: boolean
   flashbotsEnabled: boolean
-  hardwareDevices: HardwareDevice[]
   isUnlocked: boolean
   isBiometricAuthEnabled: boolean
   settings: {
@@ -37,9 +26,7 @@ interface Wallet {
 const initialState: Wallet = {
   accounts: {},
   activeAccountAddress: null,
-  bluetooth: false,
   flashbotsEnabled: false,
-  hardwareDevices: [],
   isUnlocked: false,
   isBiometricAuthEnabled: false,
   settings: {},
@@ -89,13 +76,6 @@ const slice = createSlice({
     toggleFlashbots: (state, action: PayloadAction<boolean>) => {
       state.flashbotsEnabled = action.payload
     },
-    addHardwareDevice: (state, action: PayloadAction<HardwareDevice>) => {
-      state.hardwareDevices ??= []
-      state.hardwareDevices.push(action.payload)
-    },
-    toggleBluetooth: (state, action: PayloadAction<boolean>) => {
-      state.bluetooth = action.payload
-    },
     setFinishedOnboarding: (
       state,
       { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>
@@ -136,8 +116,6 @@ export const {
   activateAccount,
   unlockWallet,
   resetWallet,
-  addHardwareDevice,
-  toggleBluetooth,
   setFinishedOnboarding,
   setIsBiometricAuthEnabled,
   toggleFlashbots,

@@ -59,9 +59,6 @@ jest.mock('react-native-onesignal', () => {
   }
 })
 
-// Ledger bluetooth library doesn't have JS mock
-jest.mock('@ledgerhq/react-native-hw-transport-ble', () => {})
-
 jest.mock('expo-linear-gradient', () => {})
 
 jest.mock('src/data/relay', () => {

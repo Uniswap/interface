@@ -11,6 +11,3 @@ import 'src/polyfills/arrayAt'
 
 // Import the Intl polyfills for Hermes
 import 'src/polyfills/intl'
-
-// Import buffer for Ledger communication
-import 'src/polyfills/buffer'

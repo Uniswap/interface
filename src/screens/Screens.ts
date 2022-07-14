@@ -10,7 +10,6 @@ export enum Screens {
   ExploreFavorites = 'ExploreFavorites',
   Home = 'Home',
   ImportAccount = 'ImportAccount',
-  Ledger = 'Ledger',
   Notifications = 'Notifications',
   NFTCollection = 'NFTCollection',
   NFTItem = 'NFTItem',

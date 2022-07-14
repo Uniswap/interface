@@ -36,7 +36,6 @@ import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
-import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
@@ -337,7 +336,6 @@ export function AppStackNavigator() {
       )}
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
-        <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />
       </AppStack.Group>
       <AppStack.Group>
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />

@@ -46,7 +46,6 @@ export type ExploreStackParamList = {
 export type AccountStackParamList = {
   [Screens.Accounts]: undefined
   [Screens.ImportAccount]: undefined
-  [Screens.Ledger]: undefined
 }
 
 export type SettingsStackParamList = {

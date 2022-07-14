@@ -44,12 +44,6 @@ import {
   editAccountSagaName,
 } from 'src/features/wallet/editAccountSaga'
 import {
-  ledgerActions,
-  ledgerReducer,
-  ledgerSaga,
-  ledgerSagaName,
-} from 'src/features/wallet/ledgerSaga'
-import {
   pendingAccountActions,
   pendingAccountReducer,
   pendingAccountSaga,
@@ -99,12 +93,6 @@ export const monitoredSagas: {
     wrappedSaga: importAccountSaga,
     reducer: importAccountReducer,
     actions: importAccountActions,
-  },
-  [ledgerSagaName]: {
-    name: ledgerSagaName,
-    wrappedSaga: ledgerSaga,
-    reducer: ledgerReducer,
-    actions: ledgerActions,
   },
   [pendingAccountSagaName]: {
     name: pendingAccountSagaName,
