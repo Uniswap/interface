@@ -1,6 +1,6 @@
 import BalanceSummary from 'components/Explore/BalanceSummary'
 import LoadingTokenDetail from 'components/Explore/LoadingTokenDetail'
-import LoadedTokenDetail from 'components/Explore/TokenDetail'
+import TokenDetail from 'components/Explore/TokenDetail'
 import { useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -31,10 +31,9 @@ export function TokenDetails({
     setLoading(false)
   }, 1000)
 
-  const tokenDetailState = loading ? <LoadingTokenDetail /> : <LoadedTokenDetail address={tokenAddress} />
   return (
     <TokenDetailsLayout>
-      {tokenDetailState}
+      {loading ? <LoadingTokenDetail /> : <TokenDetail address={tokenAddress} />}
       <RightPanel>
         <Widget />
         {!loading && <BalanceSummary address={tokenAddress} />}

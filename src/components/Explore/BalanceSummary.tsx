@@ -1,6 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_INFO, TEXT_COLORS } from 'constants/chainInfo'
+import { CHAIN_INFO } from 'constants/chainInfo'
 import { useToken } from 'hooks/Tokens'
+import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import styled, { useTheme } from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -41,19 +43,24 @@ const TotalBalanceItem = styled.div`
 export default function BalanceSummary({ address }: { address: string }) {
   const theme = useTheme()
   const tokenSymbol = useToken(address)?.symbol
+  const { loading, error, data } = useNetworkTokenBalances({ address })
 
-  const { connector, chainId } = useWeb3React()
+  const { connector, chainId: connectedChainId } = useWeb3React()
 
-  const fiatValue = 1010.12 // for testing purposes
-  if (!chainId || !fiatValue || !isChainAllowed(connector, chainId)) return null
-  const { label, logoUrl } = CHAIN_INFO[chainId]
+  const { label: connectedLabel, logoUrl: connectedLogoUrl } = CHAIN_INFO[connectedChainId || 1]
+  const connectedFiatValue = 1
   const multipleBalances = true // for testing purposes
   const totalBalance = 4.3
-  const logoUrl2 = CHAIN_INFO[137].logoUrl
 
   return (
     <BalancesCard>
-      {multipleBalances ? (
+      {loading ? (
+        <span>loading...</span>
+      ) : error ? (
+        <p>
+          <Trans>Error fetching user balances</Trans>
+        </p>
+      ) : multipleBalances ? (
         <>
           <TotalBalanceSection>
             Your balance across all networks
@@ -63,32 +70,34 @@ export default function BalanceSummary({ address }: { address: string }) {
             </TotalBalance>
           </TotalBalanceSection>
           <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
-          <NetworkBalance
-            logoUrl={logoUrl}
-            balance={'1'}
-            tokenSymbol={tokenSymbol ?? 'XXX'}
-            fiatValue={fiatValue}
-            label={label}
-            networkColor={theme.primary1}
-          />
-          <NetworkBalance
-            logoUrl={logoUrl2}
-            balance={'3.3'}
-            tokenSymbol={tokenSymbol ?? 'XXX'}
-            fiatValue={3200}
-            label={'Polygon'}
-            networkColor={TEXT_COLORS['137']}
-          />
+          {data &&
+            Object.entries(data).map(([chainId, amount]) => {
+              const fiatValue = 1010.12 // for testing purposes
+              const chain = parseInt(chainId)
+              if (!fiatValue || !isChainAllowed(connector, chain)) return null
+              const { label, logoUrl } = CHAIN_INFO[chain]
+              return (
+                <NetworkBalance
+                  key={chainId}
+                  logoUrl={logoUrl}
+                  balance={'1'}
+                  tokenSymbol={tokenSymbol ?? 'XXX'}
+                  fiatValue={fiatValue}
+                  label={label}
+                  networkColor={theme.primary1}
+                />
+              )
+            })}
         </>
       ) : (
         <>
-          Your balance on {label}
+          Your balance on {connectedLabel}
           <NetworkBalance
-            logoUrl={logoUrl}
+            logoUrl={connectedLogoUrl}
             balance={'1'}
             tokenSymbol={tokenSymbol ?? 'XXX'}
-            fiatValue={fiatValue}
-            label={label}
+            fiatValue={connectedFiatValue}
+            label={connectedLabel}
             networkColor={theme.primary1}
           />
         </>
