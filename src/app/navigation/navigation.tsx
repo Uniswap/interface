@@ -80,6 +80,8 @@ const ProfileStack = createNativeStackNavigator<ProfileStackParamList>()
 
 const Drawer = createDrawerNavigator()
 
+const TAB_NAVIGATOR_HEIGHT = 90
+
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -92,8 +94,11 @@ function TabNavigator() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: theme.colors.mainBackground,
-          borderTopColor: theme.colors.backgroundOutline,
-          paddingBottom: 16,
+          borderColor: theme.colors.backgroundOutline,
+          borderStyle: 'solid',
+          borderTopWidth: 0.5,
+          height: TAB_NAVIGATOR_HEIGHT,
+          paddingTop: theme.spacing.md,
         },
       }}>
       <Tab.Screen
@@ -104,6 +109,9 @@ function TabNavigator() {
           tabBarIcon: ({ focused, color }) => (
             <WalletIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
           ),
+          tabBarIconStyle: {
+            paddingTop: theme.spacing.md,
+          },
         }}
       />
       <Tab.Screen
@@ -115,6 +123,9 @@ function TabNavigator() {
           tabBarIcon: ({ focused, color }) => (
             <DiscoverIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
           ),
+          tabBarIconStyle: {
+            paddingTop: theme.spacing.md,
+          },
         }}
       />
       <Tab.Screen
@@ -125,6 +136,9 @@ function TabNavigator() {
           tabBarIcon: ({ focused, color }) => (
             <ProfileIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
           ),
+          tabBarIconStyle: {
+            paddingTop: theme.spacing.md,
+          },
         }}
       />
     </Tab.Navigator>
