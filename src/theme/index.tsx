@@ -7,6 +7,9 @@ import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
 } from 'styled-components/macro'
 
+import { cssStringFromTheme } from '../css/cssStringFromTheme'
+import { darkTheme } from '../css/darkTheme'
+import { lightTheme } from '../css/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { Colors } from './styled'
 
@@ -216,5 +219,9 @@ html {
 
 a {
  color: ${({ theme }) => theme.blue1}; 
+}
+
+:root {
+  ${({ theme }) => (theme.darkMode ? cssStringFromTheme(darkTheme) : cssStringFromTheme(lightTheme))}
 }
 `
