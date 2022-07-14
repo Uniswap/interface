@@ -288,7 +288,7 @@ export default function NetworkSelector() {
   const info = getChainInfo(chainId)
 
   const onSelectChain = useCallback(
-    async (targetChain: number, skipClose?: boolean) => {
+    async (targetChain: SupportedChainId, skipClose?: boolean) => {
       if (!connector) return
 
       const connectionType = getConnection(connector).type

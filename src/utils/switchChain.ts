@@ -56,13 +56,13 @@ export function isChainAllowed(connector: Connector, chainId: number) {
   }
 }
 
-export const switchChain = async (connector: Connector, chainId: number) => {
+export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
   if (!isChainAllowed(connector, chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
   } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
     await connector.activate(chainId)
   } else {
-    const info = getChainInfo(chainId as SupportedChainId)
+    const info = getChainInfo(chainId)
     const addChainParameter = {
       chainId,
       chainName: info.label,
