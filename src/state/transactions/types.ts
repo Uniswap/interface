@@ -1,7 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
 
-import { VoteOption } from '../governance/types'
-
 interface SerializableTransactionReceipt {
   to: string
   from: string
@@ -23,7 +21,6 @@ export enum TransactionType {
   DEPOSIT_LIQUIDITY_STAKING = 2,
   WITHDRAW_LIQUIDITY_STAKING = 3,
   CLAIM = 4,
-  VOTE = 5,
   DELEGATE = 6,
   WRAP = 7,
   CREATE_V3_POOL = 8,
@@ -37,14 +34,6 @@ export enum TransactionType {
 
 export interface BaseTransactionInfo {
   type: TransactionType
-}
-
-export interface VoteTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.VOTE
-  governorAddress: string
-  proposalId: number
-  decision: VoteOption
-  reason: string
 }
 
 export interface DelegateTransactionInfo extends BaseTransactionInfo {
@@ -157,7 +146,6 @@ export type TransactionInfo =
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
-  | VoteTransactionInfo
   | DelegateTransactionInfo
   | DepositLiquidityStakingTransactionInfo
   | WithdrawLiquidityStakingTransactionInfo

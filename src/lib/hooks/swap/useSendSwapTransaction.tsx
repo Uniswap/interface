@@ -10,7 +10,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
-import { DOMAIN_TYPE, SWAP_TYPE } from 'constants/eip712'
+import { domain, DOMAIN_TYPE, SWAP_TYPE } from 'constants/eip712'
 import { getAddress, resolveProperties, solidityKeccak256 } from 'ethers/lib/utils'
 import { SwapCall } from 'hooks/useSwapCallArguments'
 import { useMemo } from 'react'
@@ -23,16 +23,6 @@ type AnyTrade =
 
 interface SwapCallEstimate {
   call: SwapCall
-}
-
-interface SuccessfulCall extends SwapCallEstimate {
-  call: SwapCall
-  gasEstimate: BigNumber
-}
-
-interface FailedCall extends SwapCallEstimate {
-  call: SwapCall
-  error: Error
 }
 
 interface EncryptedTx {
@@ -66,6 +56,8 @@ export interface RadiusSwapResponse {
   msg: string
   txHash: string
 }
+
+const headers = new Headers({ 'content-type': 'application/json', accept: 'application/json' })
 
 // returns a function that will execute a swap, if the parameters are all valid
 export default function useSendSwapTransaction(
@@ -116,13 +108,6 @@ export default function useSendSwapTransaction(
           return tx as UnsignedTransaction
         })
 
-        const domain = {
-          name: 'TEX swap',
-          version: '1',
-          chainId,
-          verifyingContract: SWAP_ROUTER_ADDRESSES[chainId],
-        }
-
         const signMessage = {
           txOwner: signAddress,
           amountIn,
@@ -137,51 +122,18 @@ export default function useSendSwapTransaction(
             EIP712Domain: DOMAIN_TYPE,
             Swap: SWAP_TYPE,
           },
-          domain,
+          domain: domain(chainId),
           primaryType: 'Swap',
           message: signMessage,
         })
 
-        const sig = await library
-          .send('eth_signTypedData_v4', [signAddress.toLowerCase(), signData])
-          .then((response) => {
-            const sig = splitSignature(response)
-            return sig
-          })
-          .catch((error) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 401) {
-              throw new Error(`Transaction rejected.`)
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
-
-              throw new Error(`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
-            }
-          })
+        const sig = await signWithEIP712(library, signAddress, signData)
 
         sigHandler()
 
         const signedRawtx = serialize(signInput, sig)
         const txHash = keccak256(signedRawtx)
-
-        const headers = new Headers({ 'content-type': 'application/json', accept: 'application/json' })
-
-        const encryptedPath = await fetch('http://147.46.240.248:40001/cryptography/encrypt', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            msg: `${path[0]},${path[1]}`,
-          }),
-        })
-          .then((res) => res.json())
-          .then((res) => {
-            return res.data
-          })
-          .catch((error) => {
-            console.log(error)
-            return error
-          })
+        const encryptedPath = await poseidonEncrypt(`${path[0]},${path[1]}`)
 
         const txId = solidityKeccak256(
           ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
@@ -203,32 +155,8 @@ export default function useSendSwapTransaction(
           value,
         }
 
-        const sendResponse: { data: RadiusSwapResponse['data']; msg: RadiusSwapResponse['msg'] } = await fetch(
-          'http://147.46.240.248:40001/txs/sendTx',
-          {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-              txType: 'swap',
-              encryptedTx,
-              signature: {
-                ...sig,
-                recoveryParam: `${sig.recoveryParam}`,
-                v: `${sig.v}`,
-              },
-            }),
-          }
-        )
-          .then((res) => res.json())
-          .then((res) => {
-            return res
-          })
-          .catch((error) => {
-            console.log(error)
-            return error
-          })
-
-        const finalResponse = {
+        const sendResponse = await sendTx(encryptedTx, sig)
+        const finalResponse: RadiusSwapResponse = {
           data: sendResponse.data,
           msg: sendResponse.msg,
           txHash,
@@ -237,4 +165,72 @@ export default function useSendSwapTransaction(
       },
     }
   }, [account, chainId, library, swapCalls, trade, sigHandler])
+}
+
+async function signWithEIP712(library: JsonRpcProvider, signAddress: string, signData: string): Promise<Signature> {
+  const sig = await library
+    .send('eth_signTypedData_v4', [signAddress.toLowerCase(), signData])
+    .then((response) => {
+      const sig = splitSignature(response)
+      return sig
+    })
+    .catch((error) => {
+      // if the user rejected the sign, pass this along
+      if (error?.code === 401) {
+        throw new Error(`Sign rejected.`)
+      } else {
+        // otherwise, the error was unexpected and we need to convey that
+        console.error(`Sign failed`, error, signAddress, signData)
+
+        throw new Error(`Sign failed: ${swapErrorToUserReadableMessage(error)}`)
+      }
+    })
+
+  return sig
+}
+
+async function poseidonEncrypt(plainText: string): Promise<string> {
+  const cipherText = await fetch('http://147.46.240.248:40001/cryptography/encrypt', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      msg: plainText,
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      return res.data
+    })
+    .catch((error) => {
+      console.log(error)
+      return error
+    })
+
+  return cipherText
+}
+
+async function sendTx(encryptedTx: EncryptedTx, signature: Signature): Promise<RadiusSwapResponse> {
+  const sendResponse = await fetch('http://147.46.240.248:40001/txs/sendTx', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      txType: 'swap',
+      encryptedTx,
+      signature: {
+        ...signature,
+        recoveryParam: `${signature.recoveryParam}`,
+        v: `${signature.v}`,
+      },
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      return res
+    })
+    .catch((error) => {
+      console.log(error)
+      return error
+    })
+
+  return sendResponse
 }

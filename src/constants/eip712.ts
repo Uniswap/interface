@@ -1,3 +1,5 @@
+import { SWAP_ROUTER_ADDRESSES } from './addresses'
+
 export const DOMAIN_TYPE = [
   { name: 'name', type: 'string' },
   { name: 'version', type: 'string' },
@@ -13,3 +15,12 @@ export const SWAP_TYPE = [
   { name: 'to', type: 'address' },
   { name: 'deadline', type: 'uint256' },
 ]
+
+export const domain = (chainId: number) => {
+  return {
+    name: 'TEX swap',
+    version: '1',
+    chainId,
+    verifyingContract: SWAP_ROUTER_ADDRESSES[chainId],
+  }
+}
