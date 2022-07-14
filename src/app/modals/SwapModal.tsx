@@ -27,7 +27,7 @@ export function SwapModal() {
   return (
     <BottomSheetModal
       fullScreen
-      backgroundColor={theme.colors.mainBackground}
+      backgroundColor={theme.colors.backgroundSurface}
       isVisible={modalState.isOpen}
       name={ModalName.Swap}
       onClose={onClose}>

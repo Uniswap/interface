@@ -11,13 +11,19 @@ type ArrowDownButtonProps = Pick<
   'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg'
 >
 
-export function TransferArrowButton({ name, onPress, disabled, ...rest }: ArrowDownButtonProps) {
+export function TransferArrowButton({
+  name,
+  onPress,
+  disabled,
+  bg = 'backgroundSurface',
+  ...rest
+}: ArrowDownButtonProps) {
   const theme = useAppTheme()
   return (
     <IconButton
       alignItems="center"
       alignSelf="center"
-      bg="backgroundSurface"
+      bg={bg}
       borderColor="backgroundBackdrop"
       borderRadius="md"
       borderWidth={4}

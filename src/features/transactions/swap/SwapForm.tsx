@@ -92,7 +92,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
 
         <Trace section={SectionName.CurrencyOutputPanel}>
           <Flex
-            backgroundColor={currencies[CurrencyField.OUTPUT] ? 'backgroundSurface' : 'none'}
+            backgroundColor={currencies[CurrencyField.OUTPUT] ? 'backgroundContainer' : 'none'}
             borderRadius="lg"
             mb="sm"
             mt="xl"
@@ -102,6 +102,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
               <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
                 <Box alignItems="center" position="absolute" top={-24}>
                   <TransferArrowButton
+                    bg={currencies[CurrencyField.OUTPUT] ? 'backgroundAction' : 'backgroundSurface'}
                     disabled={!currencies[CurrencyField.OUTPUT]}
                     onPress={onSwitchCurrencies}
                   />
