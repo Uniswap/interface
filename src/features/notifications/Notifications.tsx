@@ -56,7 +56,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
   const icon = (
     <>
       <RemoteImage
-        borderRadius={NOTIFICATION_SIZING.primaryImage / 2}
+        borderRadius={theme.borderRadii.none}
         height={NOTIFICATION_SIZING.primaryImage}
         uri={imageUrl}
         width={NOTIFICATION_SIZING.primaryImage}
