@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { CHAIN_INFO } from 'constants/chainInfo'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useMemo } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -52,6 +54,15 @@ export default function BalanceSummary({ address }: { address: string }) {
   const multipleBalances = true // for testing purposes
   const totalBalance = 4.3
 
+  const chainsToList = useMemo(() => {
+    let chainIds = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
+    const userConnectedToATestNetwork = connectedChainId && TESTNET_CHAIN_IDS.includes(connectedChainId)
+    if (!userConnectedToATestNetwork) {
+      chainIds = chainIds.filter((id) => !(TESTNET_CHAIN_IDS as unknown as SupportedChainId[]).includes(id))
+    }
+    return chainIds
+  }, [connectedChainId])
+
   return (
     <BalancesCard>
       {loading ? (
@@ -71,18 +82,18 @@ export default function BalanceSummary({ address }: { address: string }) {
           </TotalBalanceSection>
           <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
           {data &&
-            Object.entries(data).map(([chainId, amount]) => {
-              const fiatValue = 1010.12 // for testing purposes
-              const chain = parseInt(chainId)
-              if (!fiatValue || !isChainAllowed(connector, chain)) return null
-              const { label, logoUrl } = CHAIN_INFO[chain]
+            chainsToList.map((chainId) => {
+              const amount = data[chainId]
+              const fiatValue = amount // for testing purposes
+              if (!fiatValue || !isChainAllowed(connector, chainId)) return null
+              const { label, logoUrl } = CHAIN_INFO[chainId]
               return (
                 <NetworkBalance
                   key={chainId}
                   logoUrl={logoUrl}
                   balance={'1'}
                   tokenSymbol={tokenSymbol ?? 'XXX'}
-                  fiatValue={fiatValue}
+                  fiatValue={fiatValue.toSignificant(2)}
                   label={label}
                   networkColor={theme.primary1}
                 />

@@ -1,3 +1,4 @@
+import { BigintIsh } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
 const Balance = styled.div`
@@ -42,7 +43,7 @@ export default function NetworkBalance({
   logoUrl: string
   balance: string
   tokenSymbol: string
-  fiatValue: number
+  fiatValue: BigintIsh
   label: string
   networkColor: string
 }) {
