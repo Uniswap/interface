@@ -21,6 +21,8 @@ import {
   updateGasEstimates,
   updateSwapMethodParamaters,
 } from 'src/features/transactions/transactionState/transactionState'
+import { createTransactionRequest } from 'src/features/transactions/transfer/transferTokenSaga'
+import { TransferTokenParams } from 'src/features/transactions/transfer/types'
 import { TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'
@@ -28,11 +30,17 @@ import { logger } from 'src/utils/logger'
 import { fixedNumberToInt, isZero } from 'src/utils/number'
 import { call, takeEvery } from 'typed-redux-saga'
 
-export type GasEstimateParams = SwapGasEstimateParams
+export type GasEstimateParams = SwapGasEstimateParams | TransferGasEstimateParams
 
 export interface SwapGasEstimateParams {
   txType: TransactionType.Swap
   trade: Trade
+  transactionStateDispatch: Dispatch<AnyAction>
+}
+
+export interface TransferGasEstimateParams {
+  txType: TransactionType.Send
+  params: TransferTokenParams
   transactionStateDispatch: Dispatch<AnyAction>
 }
 
@@ -66,7 +74,7 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
     if (!address) throw new Error('No active address. This should never happen')
 
     switch (payload.txType) {
-      case TransactionType.Swap:
+      case TransactionType.Swap: {
         const { trade, transactionStateDispatch } = payload
         if (!trade.quote) throw new Error('No trade quote provided by the router endpoint')
 
@@ -120,6 +128,22 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
         )
 
         break
+      }
+      case TransactionType.Send: {
+        const { params, transactionStateDispatch } = payload
+        const provider = yield* call(getProvider, params.chainId)
+
+        const transferData = yield* call(estimateTransferGasLimit, provider, params)
+
+        transactionStateDispatch(
+          updateGasEstimates({
+            gasEstimates: {
+              [TransactionType.Send]: transferData.gasEstimates[TransactionType.Send],
+            },
+          })
+        )
+        break
+      }
     }
   } catch (error) {
     logger.error('estimateGasSaga', 'estimateGas', 'Failed:', error)
@@ -182,6 +206,28 @@ function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
           FixedNumber.from(GAS_INFLATION_FACTOR.toString())
         )
       ),
+    },
+  }
+}
+
+function* estimateTransferGasLimit(provider: providers.Provider, params: TransferTokenParams) {
+  const { chainId } = params
+
+  const transferRequest: providers.TransactionRequest = yield* call(
+    createTransactionRequest,
+    params
+  )
+
+  const transferGasInfo = yield* call(
+    computeGasFee,
+    chainId,
+    transferRequest,
+    provider as providers.JsonRpcProvider
+  )
+
+  return {
+    gasEstimates: {
+      [TransactionType.Send]: transferGasInfo.fee.urgent,
     },
   }
 }

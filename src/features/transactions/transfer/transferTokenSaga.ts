@@ -23,41 +23,13 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
 export function* transferToken(params: TransferTokenParams) {
-  const { account, chainId, type: assetType, tokenAddress } = params
-  const provider = yield* call(getProvider, chainId)
-  const contractManager = yield* call(getContractManager)
+  const { account, chainId } = params
 
-  let transactionRequest: providers.TransactionRequest
-  let typeInfo: SendTokenTransactionInfo = {
-    assetType,
-    recipient: params.toAddress,
-    tokenAddress,
-    type: TransactionType.Send,
-  }
-
-  switch (assetType) {
-    case AssetType.ERC1155:
-    case AssetType.ERC721:
-      typeInfo = {
-        ...typeInfo,
-        tokenId: params.tokenId,
-      }
-      transactionRequest = yield* call(prepareNFTTransfer, params, provider, contractManager)
-      break
-    case AssetType.Currency:
-      typeInfo = {
-        ...typeInfo,
-        currencyAmountRaw: params.amountInWei,
-      }
-
-      if (tokenAddress === NATIVE_ADDRESS) {
-        transactionRequest = yield* call(prepareNativeTransfer, params, provider)
-      } else {
-        transactionRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
-      }
-
-      break
-  }
+  const transactionRequest: providers.TransactionRequest = yield* call(
+    createTransactionRequest,
+    params
+  )
+  const typeInfo: SendTokenTransactionInfo = yield* call(createTypeInfo, params)
 
   const options: TransactionOptions = {
     request: transactionRequest,
@@ -73,7 +45,62 @@ export function* transferToken(params: TransferTokenParams) {
   logger.debug('transferToken', '', 'Transfer complete')
 }
 
-async function prepareNativeTransfer(params: TransferCurrencyParams, provider: providers.Provider) {
+export function* createTransactionRequest(params: TransferTokenParams) {
+  const { chainId, type: assetType, tokenAddress } = params
+  const provider = yield* call(getProvider, chainId)
+  const contractManager = yield* call(getContractManager)
+
+  let transactionRequest: providers.TransactionRequest
+
+  switch (assetType) {
+    case AssetType.ERC1155:
+    case AssetType.ERC721:
+      transactionRequest = yield* call(prepareNFTTransfer, params, provider, contractManager)
+      break
+    case AssetType.Currency:
+      if (tokenAddress === NATIVE_ADDRESS) {
+        transactionRequest = yield* call(prepareNativeTransfer, params, provider)
+      } else {
+        transactionRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
+      }
+
+      break
+  }
+  return transactionRequest
+}
+
+export function* createTypeInfo(params: TransferTokenParams) {
+  const { type: assetType, tokenAddress } = params
+  let typeInfo: SendTokenTransactionInfo = {
+    assetType,
+    recipient: params.toAddress,
+    tokenAddress,
+    type: TransactionType.Send,
+  }
+
+  switch (assetType) {
+    case AssetType.ERC1155:
+    case AssetType.ERC721:
+      typeInfo = {
+        ...typeInfo,
+        tokenId: params.tokenId,
+      }
+      break
+    case AssetType.Currency:
+      typeInfo = {
+        ...typeInfo,
+        currencyAmountRaw: params.amountInWei,
+      }
+
+      break
+  }
+  return typeInfo
+}
+
+export async function prepareNativeTransfer(
+  params: TransferCurrencyParams,
+  provider: providers.Provider
+) {
   const { account, toAddress, amountInWei } = params
   const currentBalance = await provider.getBalance(account.address)
   validateTransferAmount(amountInWei, currentBalance)
@@ -85,7 +112,7 @@ async function prepareNativeTransfer(params: TransferCurrencyParams, provider: p
   return transactionRequest
 }
 
-async function prepareTokenTransfer(
+export async function prepareTokenTransfer(
   params: TransferCurrencyParams,
   provider: providers.Provider,
   contractManager: ContractManager
@@ -101,12 +128,13 @@ async function prepareTokenTransfer(
   validateTransferAmount(amountInWei, currentBalance)
   const transactionRequest = await tokenContract.populateTransaction.transfer(
     toAddress,
-    amountInWei
+    amountInWei,
+    { from: account.address }
   )
   return transactionRequest
 }
 
-async function prepareNFTTransfer(
+export async function prepareNFTTransfer(
   params: TransferNFTParams,
   provider: providers.Provider,
   contractManager: ContractManager

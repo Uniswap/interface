@@ -19,7 +19,11 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { useDerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import {
+  useDerivedTransferInfo,
+  useUpdateTransferGasEstimate,
+} from 'src/features/transactions/transfer/hooks'
+import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferTokenProps {
   state: TransactionState
@@ -60,6 +64,16 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     exactAmountToken,
     exactAmountUSD,
     currencyIn ?? undefined
+  )
+
+  useUpdateTransferGasEstimate(
+    dispatch,
+    isNFT ? nftIn?.chainId : currencyIn?.chainId,
+    isNFT ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
+    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    recipient,
+    nftIn?.token_id,
+    currencyTypes[CurrencyField.INPUT]
   )
 
   return (

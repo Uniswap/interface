@@ -1,11 +1,13 @@
 import { Currency } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
-import { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
+import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
 import { useNFT } from 'src/features/nfts/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
@@ -18,10 +20,16 @@ import {
   transferTokenActions,
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
-import { TransferTokenParams } from 'src/features/transactions/transfer/types'
+import {
+  TransferCurrencyParams,
+  TransferNFTParams,
+  TransferTokenParams,
+} from 'src/features/transactions/transfer/types'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { TransactionType } from 'src/features/transactions/types'
+import { useActiveAccount, useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
+import { logger } from 'src/utils/logger'
 import { SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
@@ -178,4 +186,75 @@ function useTransferCallback(
         }
       : null
   }, [dispatch, transferTokenParams])
+}
+
+export function useUpdateTransferGasEstimate(
+  transactionStateDispatch: React.Dispatch<AnyAction>,
+  chainId: ChainId | undefined,
+  tokenAddress: string | undefined,
+  amount: string | undefined,
+  toAddress: string | undefined,
+  tokenId: string | undefined,
+  assetType: AssetType | undefined
+) {
+  const dispatch = useAppDispatch()
+  const account = useActiveAccountWithThrow()
+
+  useEffect(() => {
+    const isNFT = assetType === AssetType.ERC1155 || assetType === AssetType.ERC721
+    if (
+      !chainId ||
+      !tokenAddress ||
+      !toAddress ||
+      !assetType ||
+      (!isNFT && !amount) ||
+      (isNFT && !tokenId)
+    ) {
+      logger.info(
+        'hooks',
+        'useUpdateTransferGasEstimate',
+        'One of the required parameters is undefined'
+      )
+      return
+    }
+
+    let params: TransferTokenParams
+    if (isNFT) {
+      params = {
+        account,
+        chainId,
+        toAddress,
+        tokenAddress,
+        type: assetType,
+        tokenId,
+      } as TransferNFTParams
+    } else {
+      params = {
+        account,
+        chainId,
+        toAddress,
+        tokenAddress,
+        type: AssetType.Currency,
+        amountInWei: amount || '1',
+      } as TransferCurrencyParams
+    }
+
+    dispatch(
+      estimateGasAction({
+        txType: TransactionType.Send,
+        params,
+        transactionStateDispatch,
+      })
+    )
+  }, [
+    account,
+    toAddress,
+    tokenId,
+    chainId,
+    dispatch,
+    amount,
+    tokenAddress,
+    transactionStateDispatch,
+    assetType,
+  ])
 }

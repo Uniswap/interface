@@ -39,7 +39,14 @@ function TransferInnerContent({ dispatch, state, step, setStep, onClose }: Inner
         onNext={() => setStep(TransferStep.REVIEW)}
       />
     )
-  return <TransferReview state={state} onNext={onClose} onPrev={() => setStep(TransferStep.FORM)} />
+  return (
+    <TransferReview
+      dispatch={dispatch}
+      state={state}
+      onNext={onClose}
+      onPrev={() => setStep(TransferStep.FORM)}
+    />
+  )
 }
 
 export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {

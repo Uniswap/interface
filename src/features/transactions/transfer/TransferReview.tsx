@@ -1,6 +1,7 @@
+import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
-import React from 'react'
+import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -23,6 +24,7 @@ import {
   useDerivedTransferInfo,
   useTransferERC20Callback,
   useTransferNFTCallback,
+  useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
 import { dimensions } from 'src/styles/sizing'
@@ -30,15 +32,12 @@ import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferFormProps {
   state: TransactionState
-  // dispatch: Dispatch<AnyAction>
+  dispatch: Dispatch<AnyAction>
   onNext: () => void
   onPrev: () => void
 }
 
-// TODO:
-// - transfer gas estimate
-export function TransferReview({ state, onNext, onPrev }: TransferFormProps) {
-  // const activeAccount = useActiveAccount()
+export function TransferReview({ state, dispatch, onNext, onPrev }: TransferFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -58,6 +57,17 @@ export function TransferReview({ state, onNext, onPrev }: TransferFormProps) {
     currencyTypes[CurrencyField.INPUT] === AssetType.ERC1155
   const currencyIn = !isNFT ? (currencies[CurrencyField.INPUT] as Currency) : undefined
   const nftIn = isNFT ? (currencies[CurrencyField.INPUT] as NFTAsset.Asset) : undefined
+
+  useUpdateTransferGasEstimate(
+    dispatch,
+    isNFT ? nftIn?.chainId : currencyIn?.chainId,
+    isNFT ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
+    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    recipient,
+    nftIn?.token_id,
+    currencyTypes[CurrencyField.INPUT]
+  )
+  const { gasSpendEstimate } = state
 
   const transferERC20Callback = useTransferERC20Callback(
     currencyIn?.chainId,
@@ -135,7 +145,10 @@ export function TransferReview({ state, onNext, onPrev }: TransferFormProps) {
         <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
       </Flex>
       <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
-        <TransferDetails />
+        <TransferDetails
+          chainId={currencyIn?.chainId || nftIn?.chainId}
+          gasSpendEstimate={gasSpendEstimate?.send}
+        />
         <Flex row gap="xs">
           <Button
             alignItems="center"
