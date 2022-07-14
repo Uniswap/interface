@@ -37,8 +37,8 @@ const HEADER_HEIGHT =
   theme.textVariants.headlineSmall.lineHeight +
   theme.spacing.lg +
   SEARCH_BAR_HEIGHT +
-  theme.spacing.sm
-const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.sm // Scroll distance for pinned search bar state
+  theme.spacing.xl
+const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.xl // Scroll distance for pinned search bar state
 
 export function ExploreScreen() {
   const { t } = useTranslation()
@@ -115,7 +115,7 @@ export function ExploreScreen() {
           },
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
-        <Flex gap="lg" mx="sm" my="sm">
+        <Flex gap="lg" mb="sm" mt="xl" mx="sm">
           <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
             {t('Explore')}
           </AnimatedText>
