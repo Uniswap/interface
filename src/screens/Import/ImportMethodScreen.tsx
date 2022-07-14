@@ -15,6 +15,7 @@ import { Text } from 'src/components/Text'
 import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
+import { ElementName } from 'src/features/telemetry/constants'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -27,6 +28,7 @@ const backupOption = {
   icon: <CloudIcon />,
   nav: OnboardingScreens.RestoreWallet,
   importType: ImportType.Restore,
+  name: ElementName.OnboardingImportBackup,
 }
 
 const options: {
@@ -35,6 +37,7 @@ const options: {
   icon: React.ReactNode
   nav: any
   importType: ImportType
+  name: ElementName
 }[] = [
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
@@ -42,6 +45,7 @@ const options: {
     icon: <SeedPhraseIcon />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
+    name: ElementName.OnboardingImportSeedPhrase,
   },
   {
     title: (t: TFunction) => t('Import a private key'),
@@ -49,6 +53,7 @@ const options: {
     icon: <KeyIcon />,
     nav: OnboardingScreens.PrivateKeyInput,
     importType: ImportType.PrivateKey,
+    name: ElementName.OnboardingImportPrivateKey,
   },
   {
     title: (t: TFunction) => t('View only'),
@@ -56,6 +61,7 @@ const options: {
     icon: <EyeIcon />,
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
+    name: ElementName.OnboardingImportWatchedAccount,
   },
 ]
 
@@ -84,11 +90,12 @@ export function ImportMethodScreen({ navigation }: Props) {
     <OnboardingScreen title={t('Choose how to connect your wallet')}>
       <Flex grow gap="md">
         {[...(backupFound ? [backupOption] : []), ...options].map(
-          ({ title, blurb, icon, nav, importType }) => (
+          ({ title, blurb, icon, nav, importType, name }) => (
             <OptionCard
               key={'connection-option-' + title}
               blurb={blurb(t)}
               icon={icon}
+              name={name}
               title={title(t)}
               onPress={() => handleOnPress(nav, importType)}
             />
@@ -107,11 +114,13 @@ function OptionCard({
   blurb,
   icon,
   onPress,
+  name,
 }: {
   title: string
   blurb: string
   icon: React.ReactNode
   onPress: () => void
+  name: ElementName
 }) {
   const theme = useAppTheme()
   return (
@@ -119,8 +128,10 @@ function OptionCard({
       backgroundColor="mainBackground"
       borderRadius="lg"
       borderWidth={1}
+      name={name}
       p="md"
       style={{ borderColor: theme.colors.backgroundOutline }}
+      testID={name}
       onPress={onPress}>
       <Flex row alignItems="center" gap="md" justifyContent="space-between">
         <Flex gap="xs">

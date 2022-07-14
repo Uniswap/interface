@@ -53,6 +53,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
           />
           <TextButton
             name={ElementName.Skip}
+            testID={ElementName.Skip}
             textColor="deprecated_textColor"
             textVariant="mediumLabel"
             onPress={onPressNext}>

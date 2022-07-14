@@ -1,5 +1,5 @@
+import { by, device, element, expect } from 'detox'
 import { ElementName } from '../../src/features/telemetry/constants'
-import { by, element, device, expect } from 'detox'
 import { sleep } from '../../src/utils/timing'
 import { maybeDismissTokenWarning } from '../utils/utils'
 
@@ -38,6 +38,7 @@ export function Swap() {
   })
 
   it('submit a swap tx', async () => {
+    await element(by.id(ElementName.ReviewSwap)).tap()
     await element(by.id(ElementName.Swap)).longPress(2000)
 
     await device.matchFace()

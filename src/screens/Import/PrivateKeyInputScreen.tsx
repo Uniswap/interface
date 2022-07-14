@@ -10,6 +10,7 @@ import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { isValidPrivateKey } from 'src/utils/privateKeys'
 
@@ -53,7 +54,13 @@ export function PrivateKeyInputScreen({ navigation, route: { params } }: Props) 
           onSubmit={() => Keyboard.dismiss()}
         />
       </Flex>
-      <PrimaryButton disabled={!valid} label={t('Next')} variant="onboard" onPress={onSubmit} />
+      <PrimaryButton
+        disabled={!valid}
+        label={t('Next')}
+        testID={ElementName.Submit}
+        variant="onboard"
+        onPress={onSubmit}
+      />
     </OnboardingScreen>
   )
 }

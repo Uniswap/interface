@@ -146,6 +146,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
           label={t('Review swap')}
           name={ElementName.ReviewSwap}
           py="md"
+          testID={ElementName.ReviewSwap}
           textVariant="largeLabel"
           variant="blue"
           onPress={onNext}

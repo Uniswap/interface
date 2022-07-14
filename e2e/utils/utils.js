@@ -1,29 +1,37 @@
-import { Accounts } from '../utils/fixtures'
+import { by, device, element } from 'detox'
 import { ElementName } from '../../src/features/telemetry/constants'
-import { device, element, by } from 'detox'
 import { sleep } from '../../src/utils/timing'
+import { Accounts } from '../utils/fixtures'
 
 /** Opens Account page and imports a managed account */
 export async function quickOnboarding() {
   await device.setBiometricEnrollment(true)
 
-  // open app, open account drawer, and start import flow
-  await element(by.id(ElementName.OnboardingExplore)).tap()
-  await sleep(500) // wait for account activation
-  await element(by.id(ElementName.Manage)).tap()
-  await element(by.id(ElementName.ImportAccount)).tap()
+  // open app, import existing account
+  await element(by.id(ElementName.OnboardingImportWallet)).tap()
+  await element(by.id(ElementName.OnboardingImportPrivateKey)).tap()
 
   // enter address / eth
   await element(by.id('import_account_form/input')).typeText(Accounts.managed.privateKey)
   await sleep(500)
   await element(by.id(ElementName.Submit)).tap()
-  await sleep(500) // wait for account activation
 
+  // skip nickname
+  await element(by.id(ElementName.Next)).tap()
+
+  // Choose a color
+  await element(by.id(ElementName.SelectColor + '-' + '#FC72FF')).tap()
+  await element(by.id(ElementName.Next)).tap()
+
+  // skip notifs
+  await element(by.id(ElementName.Skip)).tap()
+
+  // Face ID
+  await element(by.id(ElementName.Enable)).tap()
   await device.matchFace()
 
-  // enter account name
-  await element(by.id('import_account_form/input')).typeText(Accounts.managed.name)
-  await element(by.id(ElementName.Submit)).tap()
+  // Outro
+  await element(by.id(ElementName.Next)).tap()
 }
 
 export async function maybeDismissTokenWarning() {
