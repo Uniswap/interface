@@ -1,24 +1,65 @@
 import Fuse from 'fuse.js'
 import { AutocompleteOption } from 'src/components/autocomplete/Autocomplete'
+import { SearchableRecipient } from 'src/components/RecipientSelect/types'
+import { unique } from 'src/utils/array'
 
-const searchOptions: Fuse.IFuseOptions<AutocompleteOption<string>> = {
+const defaultOptions: Fuse.IFuseOptions<AutocompleteOption<SearchableRecipient>> = {
   includeMatches: true,
   isCaseSensitive: false,
-  threshold: 0.5,
-  // search list is already sorted by preference
-  shouldSort: false,
-  keys: ['data'],
+  shouldSort: false, // search list is already sorted by preference
 }
 
-export function filterRecipients(
+const searchAddressOptions: Fuse.IFuseOptions<AutocompleteOption<SearchableRecipient>> = {
+  ...defaultOptions,
+  threshold: 0,
+  location: 0,
+  keys: ['data.address'],
+}
+
+const searchNameOptions: Fuse.IFuseOptions<AutocompleteOption<SearchableRecipient>> = {
+  ...defaultOptions,
+  threshold: 0.5,
+  keys: ['data.name'],
+}
+
+export function filterRecipientsByName(
   searchPattern: string | null,
-  list: AutocompleteOption<string>[]
-): AutocompleteOption<string>[] {
+  list: AutocompleteOption<SearchableRecipient>[]
+): AutocompleteOption<SearchableRecipient>[] {
   if (!searchPattern) return []
 
-  const fuse = new Fuse(list, searchOptions)
+  const fuse = new Fuse(list, searchNameOptions)
 
   const r = fuse.search(searchPattern)
 
   return r.map((result) => ({ data: result.item.data, key: result.item.key }))
+}
+
+export function filterRecipientsByAddress(
+  searchPattern: string | null,
+  list: AutocompleteOption<SearchableRecipient>[]
+): AutocompleteOption<SearchableRecipient>[] {
+  if (!searchPattern) return []
+
+  const fuse = new Fuse(list, searchAddressOptions)
+
+  const r = fuse.search(searchPattern)
+
+  return r.map((result) => ({ data: result.item.data, key: result.item.key }))
+}
+
+export function filterRecipientByNameAndAddress(
+  searchPattern: string | null,
+  list: AutocompleteOption<SearchableRecipient>[]
+): AutocompleteOption<SearchableRecipient>[] {
+  if (!searchPattern) return []
+
+  // run both fuses and remove dupes
+  return unique(
+    [
+      ...filterRecipientsByAddress(searchPattern, list),
+      ...filterRecipientsByName(searchPattern, list),
+    ],
+    (v, i, a) => a.findIndex((v2) => (v2 as any).data.address === (v as any).data.address) === i
+  )
 }

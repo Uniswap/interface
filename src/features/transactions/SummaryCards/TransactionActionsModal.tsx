@@ -104,7 +104,7 @@ function CancelConfirmationView() {
       <Text variant="mediumLabel">{t('Cancel this transaction?')}</Text>
       <Text color="textSecondary" variant="smallLabel">
         {t(
-          'If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the the original one.'
+          'If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.'
         )}
       </Text>
       <Flex centered bg="translucentBackground" borderRadius="xl" flexGrow={1} padding="md">

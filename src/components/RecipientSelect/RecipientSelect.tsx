@@ -1,13 +1,11 @@
-import { default as React } from 'react'
+import { default as React, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Autocomplete } from 'src/components/autocomplete/Autocomplete'
+import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Flex } from 'src/components/layout'
-import { filterRecipients } from 'src/components/RecipientSelect/filter'
+import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
-import {
-  RecipientRow,
-  SuggestedRecipientList,
-} from 'src/components/RecipientSelect/SuggestedRecipientList'
+import { RecipientList, RecipientLoadingRow } from 'src/components/RecipientSelect/RecipientList'
+import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
 
 interface RecipientSelectProps {
@@ -20,12 +18,31 @@ interface RecipientSelectProps {
 export function RecipientSelect({ setRecipientAddress }: RecipientSelectProps) {
   const { t } = useTranslation()
 
-  const { sections, searchableRecipientOptions, onChangePattern } = useRecipients()
+  const { sections, searchableRecipientOptions, pattern, onChangePattern, loading } =
+    useRecipients()
+
+  const filteredSections = useMemo(() => {
+    const filteredAddresses = filterRecipientByNameAndAddress(
+      pattern,
+      searchableRecipientOptions
+    ).map((item) => item.data.address)
+    return filterSections(sections, filteredAddresses)
+  }, [pattern, searchableRecipientOptions, sections])
+  const noResults = pattern && pattern?.length > 0 && !loading && filteredSections.length === 0
 
   return (
     <Flex px="md">
-      <Autocomplete
-        EmptyComponent={
+      <Flex>
+        <Flex row alignItems="center" gap="sm">
+          <SearchTextInput
+            showBackButton
+            placeholder={t('Input address or ENS')}
+            value={pattern}
+            onChangeText={onChangePattern}
+          />
+        </Flex>
+        {loading && <RecipientLoadingRow />}
+        {noResults ? (
           <Flex centered gap="sm" mt="lg" px="lg">
             <Text variant="mediumLabel">😔</Text>
             <Text variant="mediumLabel">{t('No results found')}</Text>
@@ -33,18 +50,14 @@ export function RecipientSelect({ setRecipientAddress }: RecipientSelectProps) {
               {t('The address you typed either does not exist or is spelled incorrectly.')}
             </Text>
           </Flex>
-        }
-        InitialComponent={
-          <SuggestedRecipientList sections={sections} onPress={setRecipientAddress} />
-        }
-        filterOptions={filterRecipients}
-        options={searchableRecipientOptions}
-        placeholder={t('Input address or ENS')}
-        renderOption={(info) => (
-          <RecipientRow recipient={info.data} onPress={() => setRecipientAddress(info.data)} />
+        ) : (
+          // Show either suggested recipients or filtered sections based on query
+          <RecipientList
+            sections={filteredSections.length === 0 ? sections : filteredSections}
+            onPress={setRecipientAddress}
+          />
         )}
-        onChangePattern={onChangePattern}
-      />
+      </Flex>
     </Flex>
   )
 }

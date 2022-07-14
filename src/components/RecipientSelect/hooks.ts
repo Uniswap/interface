@@ -2,16 +2,24 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionListData } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
+import { SearchableRecipient } from 'src/components/RecipientSelect/types'
+import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
+import { ChainId } from 'src/constants/chains'
+import { useENS } from 'src/features/ens/useENS'
 import { selectRecipientsByRecency } from 'src/features/transactions/selectors'
-import { selectInactiveAccountAddresses } from 'src/features/wallet/selectors'
+import { selectInactiveAccounts } from 'src/features/wallet/selectors'
 import { parseAddress } from 'src/utils/addresses'
-import { unique } from 'src/utils/array'
 
 const MAX_RECENT_RECIPIENTS = 15
 
-export function useFullAddressRecipient(searchTerm: string | null): string[] {
-  const validatedAddress = parseAddress(searchTerm)
-  return useMemo(() => (validatedAddress ? [validatedAddress] : []), [validatedAddress])
+export function useFullAddressRecipient(searchTerm: string | null) {
+  const { loading, address: ensAddress, name } = useENS(ChainId.Mainnet, searchTerm, true)
+  return useMemo(() => {
+    const address = parseAddress(searchTerm) || parseAddress(ensAddress)
+    const validatedRecipient = address ? { address, name } : null
+    const recipient = validatedRecipient ? [validatedRecipient] : []
+    return { recipient, loading }
+  }, [name, loading, searchTerm, ensAddress])
 }
 
 export function useRecipients() {
@@ -19,33 +27,50 @@ export function useRecipients() {
 
   const [pattern, setPattern] = useState<string | null>(null)
 
-  const inactiveLocalAddresses = useAppSelector(selectInactiveAccountAddresses)
+  const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts) as SearchableRecipient[]
   const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
-  const validatedAddressRecipient = useFullAddressRecipient(pattern)
+  const { recipient: validatedAddressRecipient, loading } = useFullAddressRecipient(pattern)
 
   const sections = useMemo(
     () =>
       [
-        ...(recentRecipients.length > 0 ? [{ title: t('Recent'), data: recentRecipients }] : []),
-        ...(inactiveLocalAddresses.length > 0
+        ...(validatedAddressRecipient.length > 0
           ? [
               {
-                title: t('Your Wallets'),
-                data: inactiveLocalAddresses,
+                title: t('Search Results'),
+                data: validatedAddressRecipient,
               },
             ]
           : []),
-      ] as SectionListData<string>[],
-    [recentRecipients, t, inactiveLocalAddresses]
+        ...(recentRecipients.length > 0
+          ? [
+              {
+                title: t('Recent'),
+                data: recentRecipients,
+              },
+            ]
+          : []),
+        ...(inactiveLocalAccounts.length > 0
+          ? [
+              {
+                title: t('Your Wallets'),
+                data: inactiveLocalAccounts,
+              },
+            ]
+          : []),
+      ] as SectionListData<SearchableRecipient>[],
+    [validatedAddressRecipient, recentRecipients, t, inactiveLocalAccounts]
   )
 
   const searchableRecipientOptions = useMemo(
     () =>
-      unique([...validatedAddressRecipient, ...inactiveLocalAddresses, ...recentRecipients]).map(
-        (item) => ({ data: item, key: item })
-      ),
-    [recentRecipients, validatedAddressRecipient, inactiveLocalAddresses]
+      uniqueAddressesOnly([
+        ...validatedAddressRecipient,
+        ...inactiveLocalAccounts,
+        ...recentRecipients,
+      ] as SearchableRecipient[]).map((item) => ({ data: item, key: item.address })),
+    [recentRecipients, validatedAddressRecipient, inactiveLocalAccounts]
   )
 
   const onChangePattern = useCallback((newPattern) => setPattern(newPattern), [])
@@ -54,8 +79,10 @@ export function useRecipients() {
     () => ({
       sections,
       searchableRecipientOptions,
+      pattern,
       onChangePattern,
+      loading,
     }),
-    [onChangePattern, searchableRecipientOptions, sections]
+    [pattern, onChangePattern, searchableRecipientOptions, sections, loading]
   )
 }

@@ -1,7 +1,6 @@
 import React, { ReactElement, useMemo, useState } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Flex, Inset } from 'src/components/layout'
@@ -61,8 +60,8 @@ export function Autocomplete<T>({
   return (
     <Flex>
       <Flex row alignItems="center" gap="sm">
-        <BackButton />
         <SearchTextInput
+          showBackButton
           clearIcon={clearIcon}
           disableClearable={disableClearable}
           endAdornment={inputEndAdornment}

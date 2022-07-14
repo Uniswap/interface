@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 import { RootState } from 'src/app/rootReducer'
+import { SearchableRecipient } from 'src/components/RecipientSelect/types'
+import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { ChainId } from 'src/constants/chains'
 import {
   SendTokenTransactionInfo,
@@ -7,7 +9,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { unique } from 'src/utils/array'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export const makeSelectAddressTransactions = (address: Address | null) => (state: RootState) => {
@@ -26,6 +27,8 @@ export const makeSelectTransaction =
   }
 
 // Returns a list of past recipients ordered from most to least recent
+// TODO: either revert this to return addresses or keep but also return
+//     displayName so that it's searchable for RecipientSelect
 export const selectRecipientsByRecency = (state: RootState) => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   const sendTransactions = transactionsByChainId.reduce<TransactionDetails[]>(
@@ -39,8 +42,13 @@ export const selectRecipientsByRecency = (state: RootState) => {
   )
   const sortedRecipients = sendTransactions
     .sort((a, b) => (a.addedTime < b.addedTime ? 1 : -1))
-    .map((transaction) => (transaction.typeInfo as SendTokenTransactionInfo)?.recipient)
-  return unique(sortedRecipients)
+    .map((transaction) => {
+      return {
+        address: (transaction.typeInfo as SendTokenTransactionInfo)?.recipient,
+        name: '',
+      } as SearchableRecipient
+    })
+  return uniqueAddressesOnly(sortedRecipients)
 }
 
 export const selectIncompleteTransactions = (state: RootState) => {

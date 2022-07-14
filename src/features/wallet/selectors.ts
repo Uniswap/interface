@@ -66,3 +66,10 @@ export const selectInactiveAccountAddresses = createSelector(
   selectAccounts,
   (activeAddress, accounts) => Object.keys(accounts).filter((address) => address !== activeAddress)
 )
+
+export const selectInactiveAccounts = createSelector(
+  selectActiveAccountAddress,
+  selectAccounts,
+  (activeAddress, accounts) =>
+    Object.values(accounts).filter((account) => account.address !== activeAddress)
+)

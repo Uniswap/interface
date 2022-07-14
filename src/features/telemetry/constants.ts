@@ -36,6 +36,7 @@ export const enum ModalName {
   WalletQRCode = 'wallet-qr-code-modal',
   NFTAsset = 'nft-asset',
   TermsModal = 'terms-modal',
+  RecipientSelect = 'recipient-select-modal',
   RecoveryWarning = 'recovery-warning',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',

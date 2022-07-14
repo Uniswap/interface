@@ -4,6 +4,7 @@ import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } 
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedButton } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { TextInput } from 'src/components/input/TextInput'
@@ -32,6 +33,7 @@ export interface SearchTextInputProps {
   disableClearable?: boolean
   endAdornment?: ReactElement
   placeholder?: string
+  showBackButton?: boolean
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>((props, ref) => {
@@ -48,6 +50,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     onChangeText,
     onFocus,
     placeholder,
+    showBackButton,
     value,
   } = props
 
@@ -131,6 +134,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
   return (
     <Flex centered row gap="none">
+      {showBackButton && <BackButton pr="sm" />}
       <AnimatedFlex
         row
         alignItems="center"
