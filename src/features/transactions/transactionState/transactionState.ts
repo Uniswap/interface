@@ -13,6 +13,12 @@ export enum CurrencyField {
 
 export type GasSpendEstimate = Partial<Record<TransactionType, string>>
 
+export enum WarningModalType {
+  INFORMATIONAL, // contains text that users can acknowledge
+  ACTION, // calls callback function on ok
+  NONE, // hidden
+}
+
 export interface TransactionState {
   [CurrencyField.INPUT]: TradeableAsset | null
   [CurrencyField.OUTPUT]: TradeableAsset | null
@@ -25,6 +31,7 @@ export interface TransactionState {
   gasPrice?: string // gas price in native currency
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
   swapMethodParameters?: MethodParameters
+  warningModalType?: WarningModalType
 }
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
@@ -42,6 +49,7 @@ export const initialState: Readonly<TransactionState> = {
   exactAmountToken: '',
   exactAmountUSD: '',
   isUSDInput: false,
+  warningModalType: WarningModalType.NONE,
 }
 
 // using `createSlice` for convenience -- slice is not added to root reducer
@@ -160,6 +168,12 @@ const slice = createSlice({
       state.exactApproveRequired = undefined
       state.swapMethodParameters = undefined
     },
+    showWarningModal: (state, action: PayloadAction<WarningModalType>) => {
+      state.warningModalType = action.payload
+    },
+    closeWarningModal: (state) => {
+      state.warningModalType = WarningModalType.NONE
+    },
   },
 })
 
@@ -174,5 +188,7 @@ export const {
   updateSwapMethodParamaters,
   clearGasSwapData,
   setExactApproveRequired,
+  showWarningModal,
+  closeWarningModal,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice

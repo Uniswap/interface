@@ -6,6 +6,7 @@ import { Text } from 'src/components/Text'
 import { DerivedSwapInfo, useDerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
+import { SwapWarningModal } from 'src/features/transactions/swap/SwapWarningModal'
 import {
   initialState as emptyState,
   TransactionState,
@@ -65,6 +66,11 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
 
   return (
     <Flex fill gap="xs" justifyContent="space-between" py="md">
+      <SwapWarningModal
+        closeSwapModal={onClose}
+        derivedSwapInfo={derivedSwapInfo}
+        dispatch={dispatch}
+      />
       <Text textAlign="center" variant="subhead">
         {t('Swap')}
       </Text>

@@ -25,6 +25,7 @@ const partialSwapState: PartialDerivedSwapInfo = {
     [CurrencyField.OUTPUT]: undefined,
   },
   exactCurrencyField: CurrencyField.INPUT,
+  trade: { loading: false, error: undefined, trade: null },
 }
 
 const insufficientBalanceState: PartialDerivedSwapInfo = {
@@ -41,6 +42,7 @@ const insufficientBalanceState: PartialDerivedSwapInfo = {
     [CurrencyField.OUTPUT]: DAI,
   },
   exactCurrencyField: CurrencyField.INPUT,
+  trade: { loading: false, error: undefined, trade: null },
 }
 
 const mockTranslate = jest.fn()

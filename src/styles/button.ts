@@ -49,6 +49,14 @@ export const primaryButtonVariants = {
     py: 'md',
     backgroundColor: 'accentActive',
   },
+  warning: {
+    backgroundColor: 'accentWarningSoft',
+    color: 'accentWarning',
+  },
+  failure: {
+    backgroundColor: 'accentFailureSoft',
+    color: 'accentFailure',
+  },
 }
 
 export const iconButtonVariants = {

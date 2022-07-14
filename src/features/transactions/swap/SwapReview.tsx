@@ -17,6 +17,7 @@ import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
+  useSwapActionHandlers,
   useSwapCallback,
   useUpdateSwapGasEstimate,
   useWrapCallback,
@@ -25,7 +26,10 @@ import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { SwapWarningAction } from 'src/features/transactions/swap/validate'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import {
+  CurrencyField,
+  WarningModalType,
+} from 'src/features/transactions/transactionState/transactionState'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -56,6 +60,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   } = derivedSwapInfo
 
   useUpdateSwapGasEstimate(dispatch, trade)
+  const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
   // TODO: handle blocking/unblocking submission for warnings with popups
   const swapDisabled = Boolean(
@@ -71,6 +76,15 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     swapMethodParameters,
     onNext
   )
+
+  const onSwap = () => {
+    if (warnings.some((warning) => warning.action === SwapWarningAction.WarnBeforeSwapSubmit)) {
+      onShowSwapWarning(WarningModalType.ACTION)
+      return
+    }
+
+    swapCallback()
+  }
 
   const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onNext)
 
@@ -154,7 +168,12 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
         mt="xs"
         px="sm">
         {!isWrapAction(wrapType) && trade && (
-          <SwapDetails currencyOut={currencyAmountOut} trade={trade} />
+          <SwapDetails
+            currencyOut={currencyAmountOut}
+            dispatch={dispatch}
+            trade={trade}
+            warnings={warnings}
+          />
         )}
         <Flex row gap="xs">
           <Button
@@ -171,7 +190,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
           </Button>
           <Flex grow>
             <ActionButton
-              callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
+              callback={isWrapAction(wrapType) ? wrapCallback : onSwap}
               disabled={swapDisabled}
               label={
                 wrapType === WrapType.Wrap

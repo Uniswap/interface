@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, Price } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
 export function formatCurrencyAmount(
@@ -25,6 +25,12 @@ export function formatCurrencyAmount(
   })
 
   return formatter.format(parseFloat(amount.toSignificant()))
+}
+
+export function formatPriceImpact(priceImpact: Percent | undefined) {
+  if (!priceImpact) return '-'
+
+  return `${priceImpact.multiply(-1).toFixed(3)}%`
 }
 
 const baseFormatOptions: Intl.NumberFormatOptions = {

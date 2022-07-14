@@ -4,12 +4,16 @@ import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
+import InfoCircle from 'src/assets/icons/info-circle.svg'
+import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
+import { Text } from 'src/components/Text'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import {
@@ -19,8 +23,15 @@ import {
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
-import { SwapWarningAction } from 'src/features/transactions/swap/validate'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import {
+  getSwapWarningColor,
+  showWarningInPanel,
+  SwapWarningAction,
+} from 'src/features/transactions/swap/validate'
+import {
+  CurrencyField,
+  WarningModalType,
+} from 'src/features/transactions/transactionState/transactionState'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -34,6 +45,7 @@ interface SwapFormProps {
 // TODO: token warnings
 export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const {
     currencies,
@@ -49,8 +61,14 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     warnings,
   } = derivedSwapInfo
 
-  const { onSelectCurrency, onSwitchCurrencies, onSetAmount, onSetMax, onToggleUSDInput } =
-    useSwapActionHandlers(dispatch)
+  const {
+    onSelectCurrency,
+    onSwitchCurrencies,
+    onSetAmount,
+    onSetMax,
+    onToggleUSDInput,
+    onShowSwapWarning,
+  } = useSwapActionHandlers(dispatch)
 
   const exactCurrency = currencies[exactCurrencyField]
   useUSDTokenUpdater(
@@ -67,6 +85,9 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     !(isWrapAction(wrapType) || trade) ||
       warnings.some((warning) => warning.action === SwapWarningAction.DisableSwapReview)
   )
+
+  const swapWarning = warnings.find(showWarningInPanel)
+  const swapWarningColor = getSwapWarningColor(swapWarning)
 
   return (
     <>
@@ -109,7 +130,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                 </Box>
               </Box>
             </Box>
-            <Flex pb="md" pt="md" px="md">
+            <Flex pb={swapWarning ? 'xxs' : 'md'} pt="md" px="md">
               <CurrencyInputPanel
                 isOutput
                 currency={currencies[CurrencyField.OUTPUT]}
@@ -126,6 +147,28 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                 onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
               />
             </Flex>
+            {swapWarning ? (
+              <Button onPress={() => onShowSwapWarning(WarningModalType.INFORMATIONAL)}>
+                <Flex
+                  centered
+                  row
+                  alignItems="center"
+                  alignSelf="stretch"
+                  backgroundColor={swapWarningColor.background}
+                  borderBottomLeftRadius="lg"
+                  borderBottomRightRadius="lg"
+                  flexGrow={1}
+                  gap="xs"
+                  p="sm">
+                  <Text color={swapWarningColor.text}>{swapWarning.title}</Text>
+                  <InfoCircle
+                    color={theme.colors.accentTextLightSecondary}
+                    height={18}
+                    width={18}
+                  />
+                </Flex>
+              </Button>
+            ) : null}
           </Flex>
         </Trace>
       </AnimatedFlex>

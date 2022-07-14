@@ -33,6 +33,7 @@ import {
   transactionStateActions,
   updateExactAmountToken,
   updateExactAmountUSD,
+  WarningModalType,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { TransactionType } from 'src/features/transactions/types'
@@ -70,6 +71,7 @@ export type DerivedSwapInfo<
   gasPrice?: string
   exactApproveRequired?: boolean
   swapMethodParameters?: MethodParameters
+  warningModalType?: WarningModalType
 }
 
 /** Returns information derived from the current swap state */
@@ -85,6 +87,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     gasPrice,
     exactApproveRequired,
     swapMethodParameters,
+    warningModalType,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -181,6 +184,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     currencyBalances,
     exactCurrencyField,
     currencies,
+    trade,
   })
 
   return {
@@ -202,6 +206,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactApproveRequired,
     swapMethodParameters,
     warnings,
+    warningModalType,
   }
 }
 
@@ -281,6 +286,8 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(transactionStateActions.selectRecipient({ recipient }))
   const onToggleUSDInput = (isUSDInput: boolean) =>
     dispatch(transactionStateActions.toggleUSDInput(isUSDInput))
+  const onShowSwapWarning = (type: WarningModalType) =>
+    dispatch(transactionStateActions.showWarningModal(type))
 
   return {
     onSelectCurrency,
@@ -289,6 +296,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     onToggleUSDInput,
     onSetAmount,
     onSetMax,
+    onShowSwapWarning,
   }
 }
 
