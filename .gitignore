@@ -38,7 +38,3 @@ package-lock.json
 
 cypress/videos
 cypress/screenshots
-
-.eslintrc.json
-.vscode/settings.json
-
