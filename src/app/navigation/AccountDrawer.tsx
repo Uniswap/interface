@@ -184,8 +184,14 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       },
     ]
 
-    // If it's the last seed phrase wallet remaining, we don't allow removal
-    if (mnemonicWallets.length > 1) {
+    // Should not show remove option if we have only one account remaining, or only one seed phrase wallet remaining
+    const shouldHideRemoveOption =
+      accountsData.length === 1 ||
+      (mnemonicWallets.length === 1 &&
+        !!pendingEditAddress &&
+        addressToAccount[pendingEditAddress].type === AccountType.Native)
+
+    if (!shouldHideRemoveOption) {
       editWalletOptions.push({
         key: ElementName.Remove,
         onPress: onPressRemove,
@@ -199,7 +205,14 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       })
     }
     return editWalletOptions
-  }, [navigation, pendingEditAddress, t, mnemonicWallets.length, addressToAccount])
+  }, [
+    navigation,
+    pendingEditAddress,
+    t,
+    accountsData.length,
+    mnemonicWallets.length,
+    addressToAccount,
+  ])
 
   return (
     <Screen bg="backgroundBackdrop">
