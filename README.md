@@ -14,7 +14,7 @@ Install the [yarn package manager](https://yarnpkg.com/getting-started/install) 
 
 #### React Native
 
-Follow the general [React Native setup instructions](https://reactnative.dev/docs/environment-setup) with the following additional (optional) recommendations:
+Follow the general [React Native setup instructions](https://reactnative.dev/docs/environment-setup) with the following additional steps:
 
 1. After installing Node: also install NVM to help you manage versions. Use the latest v14.x
 2. Before installing cocoapods: install RBEnv and use it to install Ruby v3 globally. When installing cocoapods, follow the non-sudo instructions.
