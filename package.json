@@ -166,7 +166,7 @@
     "polished": "^3.3.2",
     "polyfill-object.fromentries": "^1.0.1",
     "popper-max-size-modifier": "^0.2.0",
-    "prettier": "^2.2.1",
+    "prettier": "^2.7.1",
     "qs": "^6.9.4",
     "react": "^18.2.0",
     "react-confetti": "^6.0.0",
