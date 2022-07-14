@@ -7,10 +7,10 @@ import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
-import { INFURA_NETWORK_URLS } from 'constants/infura'
 import Fortmatic from 'fortmatic'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
+import { RPC_URLS } from '../constants/networks'
 
 export enum ConnectionType {
   INJECTED = 'INJECTED',
@@ -32,7 +32,7 @@ function onError(error: Error) {
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: INFURA_NETWORK_URLS, defaultChainId: 1 })
+  (actions) => new Network({ actions, urlMap: RPC_URLS, defaultChainId: 1 })
 )
 export const networkConnection: Connection = {
   connector: web3Network,
@@ -59,7 +59,7 @@ const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletCo
     new WalletConnect({
       actions,
       options: {
-        rpc: INFURA_NETWORK_URLS,
+        rpc: RPC_URLS,
         qrcode: true,
       },
       onError,
@@ -85,7 +85,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
+        url: RPC_URLS[SupportedChainId.MAINNET],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO_URL,
         reloadOnDisconnect: false,

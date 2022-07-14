@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import CopyHelper from 'components/AccountDetails/Copy'
-import { injectedConnection } from 'connection'
-import { getConnection } from 'connection/utils'
+import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
 import { Context, useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
@@ -12,7 +11,6 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
@@ -211,23 +209,14 @@ export default function AccountDetails({
   const theme = useContext(ThemeContext as Context<DefaultTheme>)
   const dispatch = useAppDispatch()
 
-  const isMetaMask = !!window.ethereum?.isMetaMask
-  const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
+  const isMetaMask = getIsMetaMask()
+  const isCoinbaseWallet = getIsCoinbaseWallet()
   const isInjectedMobileBrowser = (isMetaMask || isCoinbaseWallet) && isMobile
 
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        (k) =>
-          SUPPORTED_WALLETS[k].connector === connector &&
-          (connector !== injectedConnection.connector || isMetaMask === (k === 'METAMASK'))
-      )
-      .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return (
       <WalletName>
-        <Trans>Connected with {name}</Trans>
+        <Trans>Connected with</Trans> {getConnectionName(connectionType, isMetaMask)}
       </WalletName>
     )
   }
