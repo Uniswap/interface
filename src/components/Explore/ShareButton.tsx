@@ -52,7 +52,10 @@ export default function ShareButton() {
   const open = useModalIsOpen(ApplicationModal.SHARE)
   const toggleShare = useToggleModal(ApplicationModal.SHARE)
   useOnClickOutside(node, open ? toggleShare : undefined)
-  console.log(open)
+  const shareTweet = () => {
+    toggleShare()
+    window.open(`https://twitter.com/intent/tweet?text=app.uniswap.org`)
+  }
 
   return (
     <ShareButtonDisplay ref={node}>
@@ -64,7 +67,7 @@ export default function ShareButton() {
             Copy link
           </ShareAction>
 
-          <ShareAction>
+          <ShareAction onClick={shareTweet}>
             <Twitter color={theme.text2} />
             Share to Twitter
           </ShareAction>
