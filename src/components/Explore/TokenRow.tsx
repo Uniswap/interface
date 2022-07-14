@@ -4,10 +4,10 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
-import React, { ReactNode } from 'react'
-import { ArrowDownRight, ArrowUpRight, Heart } from 'react-feather'
-import { ArrowDown, ArrowUp } from 'react-feather'
+import { ReactNode } from 'react'
+import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
@@ -19,7 +19,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from './constants'
-import { favoritesAtom } from './state'
+import { favoritesAtom, filterStringAtom } from './state'
 import { TIME_DISPLAYS } from './TimeSelector'
 
 enum Category {
@@ -481,14 +481,23 @@ export default function LoadedRow({
   listNumber: number
   timePeriod: TimePeriod
 }) {
+  const filterString = useAtomValue(filterStringAtom)
   const token = useToken(tokenAddress)
-  const tokenName = token?.name
-  const tokenSymbol = token?.symbol
+  const currency = useCurrency(tokenAddress)
+  const tokenName = token?.name ?? ''
+  const tokenSymbol = token?.symbol ?? ''
   const tokenData = data[tokenAddress]
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
   const theme = useTheme()
   const isFavorited = favoriteTokens.includes(tokenAddress)
 
+  const lowercaseFilterString = filterString.toLowerCase()
+  const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
+  const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
+  const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
+  if (!!filterString && !nameIncludesFilterString && !symbolIncludesFilterString && !addressIncludesFilterString) {
+    return null
+  }
   const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
@@ -530,7 +539,7 @@ export default function LoadedRow({
       listNumber={listNumber}
       tokenInfo={
         <ClickableName to={`tokens/${tokenAddress}`}>
-          <CurrencyLogo currency={useCurrency(tokenAddress)} />
+          <CurrencyLogo currency={currency} />
           <TokenInfoCell>
             <TokenName>{tokenName}</TokenName>
             <TokenSymbol>{tokenSymbol}</TokenSymbol>
