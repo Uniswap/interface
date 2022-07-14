@@ -4,7 +4,6 @@ import { AutoColumn } from 'components/Column'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { ExternalLink } from '../../theme'
 
@@ -95,7 +94,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 export default function CTACards() {
   const { chainId } = useWeb3React()
   const { infoLink } = getChainInfoOrDefault(chainId)
-
+  console.log(chainId)
   return (
     <CTASection>
       <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
