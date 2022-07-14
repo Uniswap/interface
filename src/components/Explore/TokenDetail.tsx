@@ -1,7 +1,7 @@
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
-import { atom, useAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { darken } from 'polished'
 import { ReactNode, useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart, Share } from 'react-feather'
@@ -9,7 +9,8 @@ import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import Resource from './Resource'
-import { favoritesAtom } from './state'
+import { favoritesAtom, useToggleFavorite } from './state'
+import { ClickFavorited } from './TokenRow'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.hour]: '1H',
@@ -205,8 +206,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
   const currency = useCurrency(address)
   const [favoriteTokens] = useAtom(favoritesAtom)
-  const isFavorited = atom<boolean>(favoriteTokens.includes(address))
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
+  const isFavorited = favoriteTokens.includes(address)
+  const toggleFavorite = useToggleFavorite(address)
 
   // catch token error and loading state
   if (!token) {
@@ -240,11 +242,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </TokenNameCell>
           <TokenActions>
             <Share size={18} />
-            <Heart
-              size={15}
-              color={isFavorited ? theme.primary1 : undefined}
-              fill={isFavorited ? theme.primary1 : undefined}
-            />
+            <ClickFavorited onClick={toggleFavorite}>
+              <Heart
+                size={15}
+                color={isFavorited ? theme.primary1 : theme.text2}
+                fill={isFavorited ? theme.primary1 : 'transparent'}
+              />
+            </ClickFavorited>
           </TokenActions>
         </>
       }

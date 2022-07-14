@@ -19,7 +19,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from './constants'
-import { favoritesAtom, filterStringAtom } from './state'
+import { favoritesAtom, filterStringAtom, useToggleFavorite } from './state'
 import { TIME_DISPLAYS } from './TimeSelector'
 
 enum Category {
@@ -87,7 +87,7 @@ const StyledTokenRow = styled.div`
     }
   }
 `
-const ClickFavorited = styled.span`
+export const ClickFavorited = styled.span`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -487,9 +487,10 @@ export default function LoadedRow({
   const tokenName = token?.name ?? ''
   const tokenSymbol = token?.symbol ?? ''
   const tokenData = data[tokenAddress]
-  const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
   const theme = useTheme()
+  const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
+  const toggleFavorite = useToggleFavorite(tokenAddress)
 
   const showRow = useMemo(() => {
     if (!filterString) {
@@ -518,19 +519,6 @@ export default function LoadedRow({
     </>
   )
 
-  /* handle favorite token logic */
-  const toggleFavoriteToken = () => {
-    let updatedFavoriteTokens
-    if (isFavorited) {
-      updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
-        return address !== tokenAddress
-      })
-    } else {
-      updatedFavoriteTokens = [...favoriteTokens, tokenAddress]
-    }
-    updateFavoriteTokens(updatedFavoriteTokens)
-  }
-
   const heartColor = isFavorited ? theme.primary1 : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   // TODO: fix listNumber as number on most popular (should be fixed)
@@ -539,7 +527,7 @@ export default function LoadedRow({
       address={tokenAddress}
       header={false}
       favorited={
-        <ClickFavorited onClick={() => toggleFavoriteToken()}>
+        <ClickFavorited onClick={toggleFavorite}>
           <Heart size={15} color={heartColor} fill={heartColor} />
         </ClickFavorited>
       }
