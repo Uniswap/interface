@@ -5,8 +5,7 @@ import { useCallback } from 'react'
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 
-/* handle favorite token logic */
-export function useToggleFavorite(tokenAddress: string): () => void {
+export function useToggleFavorite(tokenAddress: string) {
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
 
   return useCallback(() => {

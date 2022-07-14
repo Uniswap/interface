@@ -206,7 +206,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
   const currency = useCurrency(address)
   const [favoriteTokens] = useAtom(favoritesAtom)
-  // const isFavorited = atom<boolean>(favoriteTokens.includes(address))
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)

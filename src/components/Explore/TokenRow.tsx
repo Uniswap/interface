@@ -145,7 +145,7 @@ const ListNumberCell = styled(Cell)`
     min-width: 20px;
   }
 `
-const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
+const MarketCapCell = styled(Cell) <{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: max-content;
   padding-right: 4px;
@@ -171,7 +171,7 @@ const NameCell = styled(Cell)`
   }
 `
 
-const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
+const PercentChangeCell = styled(Cell) <{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
   padding-right: 4px;
@@ -195,7 +195,7 @@ const PercentChangeInfoCell = styled(Cell)`
     line-height: 16px;
   }
 `
-const PriceCell = styled(Cell)<{ sortable: boolean }>`
+const PriceCell = styled(Cell) <{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
   padding-right: 4px;
@@ -282,7 +282,7 @@ const TokenSymbol = styled(Cell)`
     width: 100%;
   }
 `
-const VolumeCell = styled(Cell)<{ sortable: boolean }>`
+const VolumeCell = styled(Cell) <{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: max-content;
   padding-right: 4px;
