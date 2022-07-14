@@ -81,7 +81,20 @@ export const USDC_POLYGON_MUMBAI = new Token(
   'USDC',
   'USD//C'
 )
-
+export const PORTAL_USDC_CELO = new Token(
+  SupportedChainId.CELO,
+  '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
+  6,
+  'USDCet',
+  'USDC (Portal from Ethereum)'
+)
+export const USDC_CELO_ALFAJORES = new Token(
+  SupportedChainId.CELO_ALFAJORES,
+  '0x41F4a5d2632b019Ae6CE9625bE3c9CaC143AcC7D',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -118,6 +131,8 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN,
   [SupportedChainId.POLYGON]: USDC_POLYGON,
   [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
+  [SupportedChainId.CELO]: PORTAL_USDC_CELO,
+  [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES,
   [SupportedChainId.GOERLI]: USDC_GOERLI,
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
   [SupportedChainId.KOVAN]: USDC_KOVAN,
@@ -264,6 +279,63 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
+export const CELO_CELO = new Token(
+  SupportedChainId.CELO,
+  '0x471EcE3750Da237f93B8E339c536989b8978a438',
+  18,
+  'CELO',
+  'Celo'
+)
+export const CUSD_CELO = new Token(
+  SupportedChainId.CELO,
+  '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+  18,
+  'cUSD',
+  'Celo Dollar'
+)
+export const CEUR_CELO = new Token(
+  SupportedChainId.CELO,
+  '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73',
+  18,
+  'cEUR',
+  'Celo Euro Stablecoin'
+)
+export const PORTAL_ETH_CELO = new Token(
+  SupportedChainId.CELO,
+  '0x66803FB87aBd4aaC3cbB3fAd7C3aa01f6F3FB207',
+  18,
+  'ETH',
+  'Portal Ether'
+)
+export const CMC02_CELO = new Token(
+  SupportedChainId.CELO,
+  '0x32A9FE697a32135BFd313a6Ac28792DaE4D9979d',
+  18,
+  'cMCO2',
+  'Celo Moss Carbon Credit'
+)
+export const CELO_CELO_ALFAJORES = new Token(
+  SupportedChainId.CELO_ALFAJORES,
+  '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
+  18,
+  'CELO',
+  'Celo'
+)
+export const CUSD_CELO_ALFAJORES = new Token(
+  SupportedChainId.CELO_ALFAJORES,
+  '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
+  18,
+  'CUSD',
+  'Celo Dollar'
+)
+export const CEUR_CELO_ALFAJORES = new Token(
+  SupportedChainId.CELO_ALFAJORES,
+  '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
+  18,
+  'CEUR',
+  'Celo Euro Stablecoin'
+)
+
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
@@ -318,6 +390,21 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   ),
 }
 
+export function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {
+  return chainId === SupportedChainId.CELO_ALFAJORES || chainId === SupportedChainId.CELO
+}
+
+function getCeloNativeCurrency(chainId: number) {
+  switch (chainId) {
+    case SupportedChainId.CELO_ALFAJORES:
+      return CELO_CELO_ALFAJORES
+    case SupportedChainId.CELO:
+      return CELO_CELO
+    default:
+      throw new Error('Not celo')
+  }
+}
+
 function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
   return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
 }
@@ -354,14 +441,18 @@ export class ExtendedEther extends Ether {
   }
 }
 
-const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
-export function nativeOnChain(chainId: number): NativeCurrency {
-  return (
-    cachedNativeCurrency[chainId] ??
-    (cachedNativeCurrency[chainId] = isMatic(chainId)
-      ? new MaticNativeCurrency(chainId)
-      : ExtendedEther.onChain(chainId))
-  )
+const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
+export function nativeOnChain(chainId: number): NativeCurrency | Token {
+  if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
+  let nativeCurrency: NativeCurrency | Token
+  if (isMatic(chainId)) {
+    nativeCurrency = new MaticNativeCurrency(chainId)
+  } else if (isCelo(chainId)) {
+    nativeCurrency = getCeloNativeCurrency(chainId)
+  } else {
+    nativeCurrency = ExtendedEther.onChain(chainId)
+  }
+  return (cachedNativeCurrency[chainId] = nativeCurrency)
 }
 
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {
@@ -373,6 +464,8 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN.address,
     [SupportedChainId.POLYGON]: USDC_POLYGON.address,
     [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
+    [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
+    [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
     [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
     [SupportedChainId.KOVAN]: USDC_KOVAN.address,

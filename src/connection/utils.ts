@@ -9,15 +9,26 @@ import {
   walletConnectConnection,
 } from 'connection'
 
-const CONNECTIONS = [
-  coinbaseWalletConnection,
-  fortmaticConnection,
-  injectedConnection,
-  networkConnection,
-  walletConnectConnection,
-  gnosisSafeConnection,
-]
+export function getIsInjected(): boolean {
+  return Boolean(window.ethereum)
+}
 
+export function getIsMetaMask(): boolean {
+  return window.ethereum?.isMetaMask ?? false
+}
+
+export function getIsCoinbaseWallet(): boolean {
+  return window.ethereum?.isCoinbaseWallet ?? false
+}
+
+const CONNECTIONS = [
+  gnosisSafeConnection,
+  injectedConnection,
+  coinbaseWalletConnection,
+  walletConnectConnection,
+  fortmaticConnection,
+  networkConnection,
+]
 export function getConnection(c: Connector | ConnectionType) {
   if (c instanceof Connector) {
     const connection = CONNECTIONS.find((connection) => connection.connector === c)
@@ -40,5 +51,22 @@ export function getConnection(c: Connector | ConnectionType) {
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
     }
+  }
+}
+
+export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean) {
+  switch (connectionType) {
+    case ConnectionType.INJECTED:
+      return isMetaMask ? 'MetaMask' : 'Injected'
+    case ConnectionType.COINBASE_WALLET:
+      return 'Coinbase Wallet'
+    case ConnectionType.WALLET_CONNECT:
+      return 'WalletConnect'
+    case ConnectionType.FORTMATIC:
+      return 'Fortmatic'
+    case ConnectionType.NETWORK:
+      return 'Network'
+    case ConnectionType.GNOSIS_SAFE:
+      return 'Gnosis Safe'
   }
 }

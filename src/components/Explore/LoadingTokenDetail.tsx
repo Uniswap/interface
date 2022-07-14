@@ -1,4 +1,3 @@
-import { svg } from 'd3'
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
 

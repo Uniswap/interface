@@ -1,14 +1,12 @@
+import * as connectionUtils from 'connection/utils'
 import { ApplicationModal } from 'state/application/reducer'
 
 import { render, screen } from '../../test-utils'
 import WalletModal from './index'
 
-beforeEach(() => {
-  delete global.window.ethereum
-})
-
-afterAll(() => {
-  delete global.window.ethereum
+afterEach(() => {
+  jest.clearAllMocks()
+  jest.resetModules()
 })
 
 const UserAgentMock = jest.requireMock('utils/userAgent')
@@ -47,8 +45,23 @@ it('loads Wallet Modal on desktop', async () => {
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
 })
 
+it('loads Wallet Modal on desktop with generic Injected', async () => {
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
+
+  render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
+  expect(screen.getByText('Injected')).toBeInTheDocument()
+  expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
+  expect(screen.getByText('WalletConnect')).toBeInTheDocument()
+  expect(screen.getByText('Fortmatic')).toBeInTheDocument()
+  expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(4)
+})
+
 it('loads Wallet Modal on desktop with MetaMask installed', async () => {
-  global.window.ethereum = { isMetaMask: true }
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('MetaMask')).toBeInTheDocument()
@@ -61,6 +74,10 @@ it('loads Wallet Modal on desktop with MetaMask installed', async () => {
 it('loads Wallet Modal on mobile', async () => {
   UserAgentMock.isMobile = true
 
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
+
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Open in Coinbase Wallet')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
@@ -70,7 +87,10 @@ it('loads Wallet Modal on mobile', async () => {
 
 it('loads Wallet Modal on MetaMask browser', async () => {
   UserAgentMock.isMobile = true
-  global.window.ethereum = { isMetaMask: true }
+
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('MetaMask')).toBeInTheDocument()
@@ -79,7 +99,10 @@ it('loads Wallet Modal on MetaMask browser', async () => {
 
 it('loads Wallet Modal on Coinbase Wallet browser', async () => {
   UserAgentMock.isMobile = true
-  global.window.ethereum = { isCoinbaseWallet: true }
+
+  jest.spyOn(connectionUtils, 'getIsInjected').mockReturnValue(true)
+  jest.spyOn(connectionUtils, 'getIsMetaMask').mockReturnValue(false)
+  jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(true)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()

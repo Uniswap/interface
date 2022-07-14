@@ -34,7 +34,7 @@ export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (process.env.NODE_ENV === 'development') {
-    console.debug(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
+    console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
 
