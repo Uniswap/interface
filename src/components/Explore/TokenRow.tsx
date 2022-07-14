@@ -6,7 +6,7 @@ import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -491,11 +491,18 @@ export default function LoadedRow({
   const theme = useTheme()
   const isFavorited = favoriteTokens.includes(tokenAddress)
 
-  const lowercaseFilterString = filterString.toLowerCase()
-  const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
-  const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
-  const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
-  if (!!filterString && !nameIncludesFilterString && !symbolIncludesFilterString && !addressIncludesFilterString) {
+  const showRow = useMemo(() => {
+    if (!filterString) {
+      return true
+    }
+    const lowercaseFilterString = filterString.toLowerCase()
+    const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
+    const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
+    const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
+    return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+  }, [filterString, tokenAddress, tokenName, tokenSymbol])
+
+  if (!showRow) {
     return null
   }
   const tokenPercentChangeInfo = (
