@@ -29,7 +29,11 @@ export function useSwapCallback(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  const { state, callback: libCallback, error } = useLibSwapCallBack({
+  const {
+    state,
+    callback: libCallback,
+    error,
+  } = useLibSwapCallBack({
     trade,
     allowedSlippage,
     recipientAddressOrName: recipient,

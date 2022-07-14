@@ -148,7 +148,7 @@ const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
 }
 
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {
-  return Boolean(chainId && SHOULD_SHOW_ALERT[(chainId as unknown) as NetworkAlertChains])
+  return Boolean(chainId && SHOULD_SHOW_ALERT[chainId as unknown as NetworkAlertChains])
 }
 
 export function NetworkAlert() {

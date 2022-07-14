@@ -27,12 +27,18 @@ const multiRoute: RoutingDiagramEntry[] = [
   },
 ]
 
-jest.mock('components/CurrencyLogo', () => ({ currency }: { currency: Currency }) =>
-  `CurrencyLogo currency=${currency.symbol}`
+jest.mock(
+  'components/CurrencyLogo',
+  () =>
+    ({ currency }: { currency: Currency }) =>
+      `CurrencyLogo currency=${currency.symbol}`
 )
 
-jest.mock('components/DoubleLogo', () => ({ currency0, currency1 }: { currency0: Currency; currency1: Currency }) =>
-  `DoubleCurrencyLogo currency0=${currency0.symbol} currency1=${currency1.symbol}`
+jest.mock(
+  'components/DoubleLogo',
+  () =>
+    ({ currency0, currency1 }: { currency0: Currency; currency1: Currency }) =>
+      `DoubleCurrencyLogo currency0=${currency0.symbol} currency1=${currency1.symbol}`
 )
 
 jest.mock('../Popover', () => () => 'Popover')

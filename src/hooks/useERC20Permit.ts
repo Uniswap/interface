@@ -277,10 +277,10 @@ export function useERC20PermitFromTrade(
       ? V3_ROUTER_ADDRESS[chainId]
       : SWAP_ROUTER_ADDRESSES[chainId]
     : undefined
-  const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
-    trade,
-    allowedSlippage,
-  ])
+  const amountToApprove = useMemo(
+    () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
+    [trade, allowedSlippage]
+  )
 
   return useERC20Permit(amountToApprove, swapRouterAddress, transactionDeadline, null)
 }

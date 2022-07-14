@@ -41,8 +41,8 @@ describe('document', () => {
 
     beforeAll(() => {
       fetch = jest.spyOn(window, 'fetch')
-      getCacheKeyForURL = (getCacheKeyForURLMock as unknown) as jest.SpyInstance
-      matchPrecache = (matchPrecacheMock as unknown) as jest.SpyInstance
+      getCacheKeyForURL = getCacheKeyForURLMock as unknown as jest.SpyInstance
+      matchPrecache = matchPrecacheMock as unknown as jest.SpyInstance
     })
 
     beforeEach(() => {

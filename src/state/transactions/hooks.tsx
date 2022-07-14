@@ -93,9 +93,7 @@ export function useHasPendingApproval(token?: Token, spender?: string): boolean 
 
 // watch for submissions to claim
 // return null if not done loading, return undefined if not found
-export function useUserHasSubmittedClaim(
-  account?: string
-): {
+export function useUserHasSubmittedClaim(account?: string): {
   claimSubmitted: boolean
   claimTxn: TransactionDetails | undefined
 } {

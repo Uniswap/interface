@@ -56,15 +56,8 @@ export const routingApi = createApi({
       }
     >({
       async queryFn(args, _api, _extraOptions, fetch) {
-        const {
-          tokenInAddress,
-          tokenInChainId,
-          tokenOutAddress,
-          tokenOutChainId,
-          amount,
-          useClientSideRouter,
-          type,
-        } = args
+        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, useClientSideRouter, type } =
+          args
 
         let result
 
