@@ -1,7 +1,5 @@
-import { TimePeriod } from 'hooks/useTopTokens'
-import useTopTokens from 'hooks/useTopTokens'
+import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
-import React from 'react'
 import styled from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT } from './constants'
@@ -39,7 +37,7 @@ const TokenRowsContainer = styled.div`
 `
 const LOADING_ROWS = Array(10)
   .fill(0)
-  .map((item, index) => {
+  .map((_item, index) => {
     return <LoadingRow key={`${index}`} />
   })
 

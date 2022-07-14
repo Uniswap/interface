@@ -1,7 +1,10 @@
 import useTheme from 'hooks/useTheme'
+import { useAtom } from 'jotai'
 import { useState } from 'react'
 import { Search } from 'react-feather'
 import styled from 'styled-components/macro'
+
+import { filterStringAtom } from './state'
 
 export const SMALL_MEDIA_BREAKPOINT = '580px'
 
@@ -38,12 +41,15 @@ const SearchInput = styled.input`
 export default function SearchBar() {
   const theme = useTheme()
   const [isFocused, setFocused] = useState(false)
+  const [filterString, setFilterString] = useAtom(filterStringAtom)
 
   return (
     <StyledSearchBar focused={isFocused}>
       <Search size={20} color={theme.text3} />
       <SearchInput
         type="text"
+        value={filterString}
+        onChange={({ target: { value } }) => setFilterString(value)}
         placeholder="Search token or paste address"
         id="searchBar"
         onFocus={() => setFocused(true)}
