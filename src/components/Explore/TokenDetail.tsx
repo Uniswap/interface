@@ -209,7 +209,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
-  const heartColor = isFavorited ? theme.primary1 : undefined
 
   // catch token error and loading state
   if (!token) {
@@ -244,7 +243,11 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenActions>
             <Share size={18} />
             <ClickFavorited onClick={toggleFavorite}>
-              <Heart size={15} color={heartColor} fill={heartColor} />
+              <Heart
+                size={15}
+                color={isFavorited ? theme.primary1 : theme.text2}
+                fill={isFavorited ? theme.primary1 : 'transparent'}
+              />
             </ClickFavorited>
           </TokenActions>
         </>
