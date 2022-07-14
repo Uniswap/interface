@@ -87,7 +87,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
     const unsupportedSet = new Set(Object.keys(unsupportedTokens))
 
     return list.tokens.reduce((acc, tokenInfo) => {
-      const bridgeInfo = tokenInfo.extensions?.bridgeInfo as unknown as BridgeInfo
+      const bridgeInfo = (tokenInfo.extensions?.bridgeInfo as unknown) as BridgeInfo
       if (
         bridgeInfo &&
         bridgeInfo[SupportedChainId.MAINNET] &&

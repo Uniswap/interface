@@ -139,10 +139,13 @@ function useTicksFromTickLens(
     }
   }, [isError, isLoading, IsSyncing, tickData, isValid])
 
-  return useMemo(
-    () => ({ isLoading, IsSyncing, isError, isValid, tickData: tickDataLatestSynced }),
-    [isLoading, IsSyncing, isError, isValid, tickDataLatestSynced]
-  )
+  return useMemo(() => ({ isLoading, IsSyncing, isError, isValid, tickData: tickDataLatestSynced }), [
+    isLoading,
+    IsSyncing,
+    isError,
+    isValid,
+    tickDataLatestSynced,
+  ])
 }
 
 function useTicksFromSubgraph(

@@ -15,11 +15,8 @@ const mockCurrencyAmt = {
   [WBTC.address]: mockCurrencyAmount.fromRawAmount(WBTC, mockJSBI.default.BigInt(1)),
 }
 
-jest.mock(
-  'components/CurrencyLogo',
-  () =>
-    ({ currency }: { currency: Currency }) =>
-      `CurrencyLogo currency=${currency.symbol}`
+jest.mock('components/CurrencyLogo', () => ({ currency }: { currency: Currency }) =>
+  `CurrencyLogo currency=${currency.symbol}`
 )
 
 jest.mock('@web3-react/core', () => {

@@ -53,7 +53,7 @@ const transactionSlice = createSlice({
     builder.addCase(updateVersion, (transactions) => {
       // in case there are any transactions in the store with the old format, remove them
       Object.keys(transactions).forEach((chainId) => {
-        const chainTransactions = transactions[chainId as unknown as number]
+        const chainTransactions = transactions[(chainId as unknown) as number]
         Object.keys(chainTransactions).forEach((hash) => {
           if (!('info' in chainTransactions[hash])) {
             // clear old transactions that don't have the right format
@@ -65,6 +65,10 @@ const transactionSlice = createSlice({
   },
 })
 
-export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction } =
-  transactionSlice.actions
+export const {
+  addTransaction,
+  clearAllTransactions,
+  checkedTransaction,
+  finalizeTransaction,
+} = transactionSlice.actions
 export default transactionSlice.reducer

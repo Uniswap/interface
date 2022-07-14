@@ -8,7 +8,9 @@ import { useLocation } from 'react-router-dom'
 
 import { useActiveLocale } from './useActiveLocale'
 
-export function useLocationLinkProps(locale: SupportedLocale | null): {
+export function useLocationLinkProps(
+  locale: SupportedLocale | null
+): {
   to?: LocationDescriptor
   onClick?: () => void
 } {

@@ -53,7 +53,7 @@ async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
   const ready = await navigator.serviceWorker.ready
   // the return type of update is incorrectly typed as Promise<void>. See
   // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/update
-  return ready.update() as unknown as Promise<ServiceWorkerRegistration>
+  return (ready.update() as unknown) as Promise<ServiceWorkerRegistration>
 }
 
 export default class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, ErrorBoundaryState> {

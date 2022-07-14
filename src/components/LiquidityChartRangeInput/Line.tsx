@@ -18,7 +18,8 @@ export const Line = ({
   xScale: ScaleLinear<number, number>
   innerHeight: number
 }) =>
-  useMemo(
-    () => <StyledLine x1={xScale(value)} y1="0" x2={xScale(value)} y2={innerHeight} />,
-    [value, xScale, innerHeight]
-  )
+  useMemo(() => <StyledLine x1={xScale(value)} y1="0" x2={xScale(value)} y2={innerHeight} />, [
+    value,
+    xScale,
+    innerHeight,
+  ])

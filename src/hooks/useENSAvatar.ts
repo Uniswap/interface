@@ -100,10 +100,12 @@ function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: st
     }
   }, [http])
 
-  return useMemo(
-    () => ({ avatar, loading: erc721.loading || erc1155.loading || loading }),
-    [avatar, erc1155.loading, erc721.loading, loading]
-  )
+  return useMemo(() => ({ avatar, loading: erc721.loading || erc1155.loading || loading }), [
+    avatar,
+    erc1155.loading,
+    erc721.loading,
+    loading,
+  ])
 }
 
 function useERC721Uri(

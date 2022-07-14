@@ -40,7 +40,9 @@ export function useV3MintState(): AppState['mintV3'] {
   return useAppSelector((state) => state.mintV3)
 }
 
-export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
+export function useV3MintActionHandlers(
+  noLiquidity: boolean | undefined
+): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
   onLeftRangeInput: (typedValue: string) => void
@@ -128,8 +130,13 @@ export function useV3DerivedMintInfo(
 } {
   const { account } = useWeb3React()
 
-  const { independentField, typedValue, leftRangeTypedValue, rightRangeTypedValue, startPriceTypedValue } =
-    useV3MintState()
+  const {
+    independentField,
+    typedValue,
+    leftRangeTypedValue,
+    rightRangeTypedValue,
+    startPriceTypedValue,
+  } = useV3MintState()
 
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
@@ -143,10 +150,11 @@ export function useV3DerivedMintInfo(
   )
 
   // formatted with tokens
-  const [tokenA, tokenB, baseToken] = useMemo(
-    () => [currencyA?.wrapped, currencyB?.wrapped, baseCurrency?.wrapped],
-    [currencyA, currencyB, baseCurrency]
-  )
+  const [tokenA, tokenB, baseToken] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped, baseCurrency?.wrapped], [
+    currencyA,
+    currencyB,
+    baseCurrency,
+  ])
 
   const [token0, token1] = useMemo(
     () =>

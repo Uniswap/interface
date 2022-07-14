@@ -52,10 +52,12 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
 
-  const route = useMemo(
-    () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
-    [currencyIn, currencyOut, quoteResult, tradeType]
-  )
+  const route = useMemo(() => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult), [
+    currencyIn,
+    currencyOut,
+    quoteResult,
+    tradeType,
+  ])
 
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
