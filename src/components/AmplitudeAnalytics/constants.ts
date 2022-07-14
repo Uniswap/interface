@@ -16,6 +16,12 @@ export enum EventName {
   // alphabetize additional event names.
 }
 
+export enum WALLET_CONNECTION_RESULT {
+  SUCCEEDED = 'Succeeded',
+  CANCELLED = 'Cancelled',
+  FAILED = 'Failed',
+}
+
 /**
  * Known pages in the app. Highest order context.
  */

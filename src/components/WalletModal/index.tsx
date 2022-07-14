@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
+import { EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
-import { getConnection, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -124,6 +126,7 @@ export default function WalletModal({
   const { account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const [newWalletSelected, setNewWalletSelected] = useState<string | undefined>()
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -150,6 +153,20 @@ export default function WalletModal({
     }
   }, [pendingConnector, walletView])
 
+  // When new wallet is successfully selected and set by the user, trigger logging of Amplitude analytics event.
+  useEffect(() => {
+    if (newWalletSelected) {
+      sendAnalyticsEvent(EventName.WALLET_CONNECTED, {
+        result: WALLET_CONNECTION_RESULT.SUCCEEDED,
+        wallet_address: account,
+        wallet_type: newWalletSelected,
+        // TODO: add correct is_reconnect value.
+        is_reconnect: false,
+      })
+      setNewWalletSelected(undefined)
+    }
+  }, [newWalletSelected, account])
+
   const tryActivation = useCallback(
     async (connector: Connector) => {
       const connectionType = getConnection(connector).type
@@ -175,9 +192,20 @@ export default function WalletModal({
         await connector.activate()
 
         dispatch(updateSelectedWallet({ wallet: connectionType }))
+
+        // Wallect connection has succeeded at this point, send relevant WALLET_CONNECTED
+        // Amplitude analytics event.
+        setNewWalletSelected(getConnectionName(connectionType, getIsMetaMask()))
       } catch (error) {
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
+
+        // Wallect connection has failed at this point, send failed WALLET_CONNECTED
+        // Amplitude analytics event.
+        sendAnalyticsEvent(EventName.WALLET_CONNECTED, {
+          result: WALLET_CONNECTION_RESULT.FAILED,
+          wallet_type: getConnectionName(connectionType, getIsMetaMask()),
+        })
       }
     },
     [dispatch, toggleWalletModal]
