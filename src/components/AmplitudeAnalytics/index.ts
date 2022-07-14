@@ -28,7 +28,6 @@ export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 
         carrier: false,
         city: false,
         region: false,
-        country: false,
         dma: false, // designated market area
       },
     }
