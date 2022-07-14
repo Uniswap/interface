@@ -1,4 +1,4 @@
-describe('Swap', () => {
+describe.skip('Swap', () => {
   beforeEach(() => {
     cy.visit('/swap').get('#swap-currency-input .token-amount-input')
   })

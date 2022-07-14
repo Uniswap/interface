@@ -5,6 +5,7 @@ import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { isChainAllowed } from 'utils/switchChain'
 
 import { ExternalLink } from '../../theme'
 
@@ -93,8 +94,9 @@ const ResponsiveColumn = styled(AutoColumn)`
 `
 
 export default function CTACards() {
-  const { chainId } = useWeb3React()
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  const { chainId, connector } = useWeb3React()
+  const { infoLink } = CHAIN_INFO[chainId && isChainAllowed(connector, chainId) ? chainId : SupportedChainId.MAINNET]
+
   return (
     <CTASection>
       <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
@@ -107,7 +109,7 @@ export default function CTACards() {
           </ThemedText.Body>
         </ResponsiveColumn>
       </CTA1>
-      <CTA2 href={infoLink + 'pools'}>
+      <CTA2 data-testid="cta-infolink" href={infoLink + 'pools'}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
