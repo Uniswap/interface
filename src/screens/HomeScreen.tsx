@@ -65,7 +65,12 @@ export function HomeScreen({ navigation }: Props) {
       <HeaderScrollScreen
         background={<AppBackground isStrongAccent />}
         contentHeader={
-          <Box alignItems="center" flexDirection="row" justifyContent="space-between" mx="xs">
+          <Box
+            alignItems="center"
+            flexDirection="row"
+            justifyContent="space-between"
+            px="xs"
+            py="sm">
             <AccountHeader onPress={onPressAccountHeader} />
             {activeAccount && isWalletConnectSupportedAccount(activeAccount) && (
               <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
@@ -81,13 +86,15 @@ export function HomeScreen({ navigation }: Props) {
             )}
           </Flex>
         }>
-        <Flex gap="md" mb="lg" mt="xl" mx="lg">
-          <TotalBalance showRelativeChange balances={balances} />
-          <QuickActions />
-        </Flex>
-        <Flex gap="sm" mx="sm">
-          <PortfolioTokensSection count={4} />
-          <PortfolioNFTsSection count={6} />
+        <Flex gap="sm" px="sm">
+          <Flex gap="lg" p="sm">
+            <TotalBalance showRelativeChange balances={balances} />
+            <QuickActions />
+          </Flex>
+          <Flex gap="sm">
+            <PortfolioTokensSection count={4} />
+            <PortfolioNFTsSection count={6} />
+          </Flex>
         </Flex>
       </HeaderScrollScreen>
       {/* TODO: remove when app secures funds  */}
@@ -121,7 +128,7 @@ function QuickActions() {
   return (
     <Flex centered row gap="xs">
       <PrimaryButton
-        borderRadius="lg"
+        borderRadius="md"
         flex={1}
         icon={<CameraScan height={20} stroke={theme.colors.mainForeground} width={20} />}
         label={t('Scan')}
@@ -135,7 +142,7 @@ function QuickActions() {
         onPress={onPressScan}
       />
       <PrimaryButton
-        borderRadius="lg"
+        borderRadius="md"
         flex={1}
         icon={
           <SwapIcon color={theme.colors.mainForeground} height={20} strokeWidth={2} width={20} />
@@ -148,7 +155,7 @@ function QuickActions() {
         onPress={onPressSwap}
       />
       <PrimaryButton
-        borderRadius="lg"
+        borderRadius="md"
         flex={1}
         icon={
           <SendIcon height={20} stroke={theme.colors.mainForeground} strokeWidth={2} width={20} />

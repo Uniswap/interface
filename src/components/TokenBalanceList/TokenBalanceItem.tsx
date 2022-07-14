@@ -24,12 +24,13 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
 
   return (
     <Button
+      alignItems="center"
       bg="none"
       delayPressIn={150}
       flexDirection="row"
       justifyContent="space-between"
-      px="sm"
-      py="xs"
+      minHeight={56}
+      p="sm"
       onPress={onPress}>
       <AnimatedFlex
         row

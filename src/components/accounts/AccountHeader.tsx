@@ -31,7 +31,7 @@ export function AccountHeader({ children, onPress }: AccountHeaderProps) {
           {activeAddress && (
             <Flex row gap="xs">
               <AddressDisplay address={activeAddress} variant="mediumLabel" />
-              <Chevron color={theme.colors.textSecondary} direction="s" />
+              <Chevron color={theme.colors.textSecondary} direction="s" height={20} width={20} />
             </Flex>
           )}
         </Button>

@@ -3,6 +3,7 @@ import React, { ReactElement, useCallback, useMemo } from 'react'
 import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
 import { Inset } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
+import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { TokenBalanceListHeader } from 'src/components/TokenBalanceList/TokenBalanceListHeader'
@@ -84,6 +85,7 @@ function FlatBalanceList({
   Pick<TokenBalanceListProps, 'onPressToken' | 'empty' | 'header'>) {
   return (
     <FlatList
+      ItemSeparatorComponent={() => <Separator />}
       ListEmptyComponent={empty}
       ListHeaderComponent={header}
       data={balances}
@@ -119,6 +121,7 @@ function NetworkBalanceList({
   return (
     <Trace logImpression section={SectionName.TokenBalance}>
       <SectionList
+        ItemSeparatorComponent={() => <Separator />}
         ListFooterComponent={
           <Inset all="xxl">
             <Inset all="md" />
