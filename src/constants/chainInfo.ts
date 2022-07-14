@@ -54,6 +54,8 @@ export const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',
   [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
   [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
+  [SupportedChainId.CELO]: 'rgba(53, 178, 97)',
+  [SupportedChainId.CELO_ALFAJORES]: 'rgba(53, 178, 97)',
 }
 
 export const CHAIN_INFO: ChainInfoMap = {
