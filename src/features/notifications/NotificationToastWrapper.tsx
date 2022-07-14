@@ -11,6 +11,7 @@ import {
   TransferNFTNotification,
   UnknownTxNotification,
   WCNotification,
+  CopiedNotification,
 } from 'src/features/notifications/Notifications'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
@@ -37,6 +38,8 @@ export function NotificationToastRouter({ notification }: { notification: AppNot
       return <DefaultNotification notification={notification} />
     case AppNotificationType.Favorites:
       return <FavoriteNotification notification={notification} />
+    case AppNotificationType.Copied:
+      return <CopiedNotification />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

@@ -1,13 +1,18 @@
-import { default as React, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppDispatch } from 'src/app/hooks'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout/Flex'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { TransactionDetails } from 'src/features/transactions/types'
+import { setClipboard } from 'src/utils/clipboard'
+import { openUri } from 'src/utils/linking'
 
 function renderOptionItem(label: string) {
   return () => (
@@ -21,6 +26,7 @@ function renderOptionItem(label: string) {
 }
 
 interface TransactionActionModalProps {
+  hash: string
   isVisible: boolean
   onExplore: () => void
   onClose: () => void
@@ -31,18 +37,21 @@ interface TransactionActionModalProps {
 
 /** Display options for transactions. */
 export default function TransactionActionsModal({
+  hash,
   isVisible,
   onExplore,
   onClose,
   showCancelButton,
 }: TransactionActionModalProps) {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+
   const [showConfirmView, setShowConfirmView] = useState(false)
 
-  function handleClose() {
+  const handleClose = useCallback(() => {
     setShowConfirmView(false)
     onClose()
-  }
+  }, [onClose])
 
   const options = useMemo(() => {
     const transactionActionOptions = [
@@ -53,12 +62,21 @@ export default function TransactionActionsModal({
       },
       {
         key: ElementName.Copy,
-        onPress: () => {},
+        onPress: () => {
+          setClipboard(hash)
+          dispatch(pushNotification({ type: AppNotificationType.Copied }))
+          handleClose()
+        },
         render: renderOptionItem(t('Copy transaction ID')),
       },
       {
         key: ElementName.GetHelp,
-        onPress: () => {},
+        onPress: () => {
+          openUri(
+            `mailto:support@uniswap.org?subject=Help with Uniswap Wallet transaction&body=Transaction ID: ${hash}\n\nPlease tell us how we can help you with this transaction:`
+          )
+          handleClose()
+        },
         render: renderOptionItem(t('Get help')),
       },
     ]
@@ -72,7 +90,7 @@ export default function TransactionActionsModal({
     }
 
     return transactionActionOptions
-  }, [onExplore, t, showCancelButton])
+  }, [onExplore, t, showCancelButton, handleClose, dispatch, hash])
 
   return showConfirmView ? (
     <BottomSheetModal isVisible={isVisible} name={ModalName.TransactionActions}>

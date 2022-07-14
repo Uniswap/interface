@@ -10,6 +10,7 @@ export enum AppNotificationType {
   WalletConnect,
   Transaction,
   Favorites,
+  Copied,
 }
 
 interface AppNotificationBase {
@@ -115,9 +116,14 @@ export interface FavoriteNotification extends AppNotificationBase {
   currencyId: string
 }
 
+export interface CopyNotification extends AppNotificationBase {
+  type: AppNotificationType.Copied
+}
+
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
+  | CopyNotification
   | WalletConnectNotification
   | TransactionNotification
   | FavoriteNotification

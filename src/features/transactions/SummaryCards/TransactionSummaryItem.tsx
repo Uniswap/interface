@@ -191,6 +191,7 @@ function TransactionSummaryItem({
         </Flex>
       </Button>
       <TransactionActionsModal
+        hash={hash}
         isVisible={showActionsModal}
         showCancelButton={status === TransactionStatus.Pending}
         onClose={() => {

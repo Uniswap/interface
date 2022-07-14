@@ -3,6 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import Approve from 'src/assets/icons/approve.svg'
+import CheckCircle from 'src/assets/icons/check-circle.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
@@ -327,6 +328,18 @@ export function FavoriteNotification({
       title={title}
       // TODO: re-enable when press on toasts are supported
       // onPress={() => navigate(Screens.TokenDetails, { currencyId })}
+    />
+  )
+}
+
+export function CopiedNotification() {
+  const { t } = useTranslation()
+  const theme = useAppTheme()
+
+  return (
+    <NotificationToast
+      icon={<CheckCircle color={theme.colors.accentSuccess} height={20} width={20} />}
+      title={t('Copied to clipboard')}
     />
   )
 }

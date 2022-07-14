@@ -146,6 +146,7 @@
   "Retry": "Retry",
   "Added to favorite tokens": "Added to favorite tokens",
   "Removed from favorite tokens": "Removed from favorite tokens",
+  "Copied to clipboard": "Copied to clipboard",
   "Connected to {{dappName}}": "Connected to {{dappName}}",
   "Disconnected from {{dappName}}": "Disconnected from {{dappName}}",
   "{{dappName}} switched to {{networkName}}": "{{dappName}} switched to {{networkName}}",
