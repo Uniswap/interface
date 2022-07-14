@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ArrowUpRight } from 'react-feather'
 import { useDarkModeManager } from 'state/user/hooks'
@@ -159,7 +159,7 @@ export function NetworkAlert() {
     return null
   }
 
-  const { label, logoUrl, bridge } = CHAIN_INFO[chainId]
+  const { label, logoUrl, bridge } = getChainInfo(chainId)
   const textColor = TEXT_COLORS[chainId]
 
   return bridge ? (

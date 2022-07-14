@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
@@ -13,7 +13,6 @@ import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -247,9 +246,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 export default function Header() {
-  const { account, chainId, connector } = useWeb3React()
-
-  const chainAllowed = chainId && isChainAllowed(connector, chainId)
+  const { account, chainId } = useWeb3React()
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
@@ -268,7 +265,7 @@ export default function Header() {
   const {
     infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = CHAIN_INFO[!chainId || !chainAllowed ? SupportedChainId.MAINNET : chainId]
+  } = getChainInfoOrDefault(chainId)
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
