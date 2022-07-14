@@ -20,4 +20,13 @@ export const SEO = ({ title, description }: SEOProps) => {
   )
 }
 
+export const SEOSwap = ({ canonicalUrl }: { canonicalUrl: string }) => {
+  if (!canonicalUrl) return null
+  return (
+    <Helmet>
+      <link href={canonicalUrl} rel="canonical"></link>
+    </Helmet>
+  )
+}
+
 export default SEO

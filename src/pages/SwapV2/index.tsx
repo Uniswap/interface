@@ -7,7 +7,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps, useParams } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { BrowserView, MobileView } from 'react-device-detect'
-
+import { SEOSwap } from 'components/SEO'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import Card, { GreyCard } from 'components/Card/index'
@@ -562,16 +562,24 @@ export default function Swap({ history }: RouteComponentProps) {
         )}&networkId=${chainId}`
       : window.location.origin + `/swap?networkId=${chainId}`
 
-  const shouldRenderTokenInfo =
-    isShowTokenInfoSetting &&
-    currencyIn &&
-    currencyOut &&
-    checkPairInWhiteList(chainId, getSymbolSlug(currencyIn), getSymbolSlug(currencyOut)).isInWhiteList
+  const { isInWhiteList: isPairInWhiteList, canonicalUrl } = checkPairInWhiteList(
+    chainId,
+    getSymbolSlug(currencyIn),
+    getSymbolSlug(currencyOut),
+  )
+
+  const shouldRenderTokenInfo = isShowTokenInfoSetting && currencyIn && currencyOut && isPairInWhiteList
 
   const [actualShowTokenInfo, setActualShowTokenInfo] = useState(true)
 
   return (
     <>
+      {/**
+       * /swap/bnb/knc-to-usdt vs /swap/bnb/usdt-to-knc has same content
+       * => add canonical link that specify which is main page, => /swap/bnb/knc-to-usdt
+       */}
+      <SEOSwap canonicalUrl={canonicalUrl} />
+
       <TokenWarningModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokens={importTokensNotInDefault}
