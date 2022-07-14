@@ -4,6 +4,11 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from './chains'
 import {
   AMPL,
+  CEUR_CELO,
+  CEUR_CELO_ALFAJORES,
+  CMC02_CELO,
+  CUSD_CELO,
+  CUSD_CELO_ALFAJORES,
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
@@ -13,6 +18,8 @@ import {
   FRAX,
   FXS,
   nativeOnChain,
+  PORTAL_ETH_CELO,
+  PORTAL_USDC_CELO,
   renBTC,
   rETH2,
   sETH2,
@@ -78,6 +85,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT_POLYGON,
     WETH_POLYGON,
   ],
+  [SupportedChainId.CELO]: [CUSD_CELO, CEUR_CELO, CMC02_CELO, PORTAL_USDC_CELO, PORTAL_ETH_CELO],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
@@ -162,6 +170,20 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI] as Token,
     WETH_POLYGON_MUMBAI,
+  ],
+
+  [SupportedChainId.CELO]: [
+    nativeOnChain(SupportedChainId.CELO),
+    CEUR_CELO,
+    CUSD_CELO,
+    PORTAL_ETH_CELO,
+    PORTAL_USDC_CELO,
+    CMC02_CELO,
+  ],
+  [SupportedChainId.CELO_ALFAJORES]: [
+    nativeOnChain(SupportedChainId.CELO_ALFAJORES),
+    CUSD_CELO_ALFAJORES,
+    CEUR_CELO_ALFAJORES,
   ],
 }
 

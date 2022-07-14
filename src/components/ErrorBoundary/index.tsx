@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendEvent } from 'components/analytics'
-import React, { ErrorInfo } from 'react'
+import React, { ErrorInfo, PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 
 import store, { AppState } from '../../state'
@@ -56,8 +56,8 @@ async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
   return ready.update() as unknown as Promise<ServiceWorkerRegistration>
 }
 
-export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
-  constructor(props: unknown) {
+export default class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, ErrorBoundaryState> {
+  constructor(props: PropsWithChildren<unknown>) {
     super(props)
     this.state = { error: null }
   }
