@@ -1,6 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_INFO, TEXT_COLORS } from 'constants/chainInfo'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { useToken } from 'hooks/Tokens'
+import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useMemo } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -41,19 +45,33 @@ const TotalBalanceItem = styled.div`
 export default function BalanceSummary({ address }: { address: string }) {
   const theme = useTheme()
   const tokenSymbol = useToken(address)?.symbol
+  const { loading, error, data } = useNetworkTokenBalances({ address })
 
-  const { connector, chainId } = useWeb3React()
+  const { connector, chainId: connectedChainId } = useWeb3React()
 
-  const fiatValue = 1010.12 // for testing purposes
-  if (!chainId || !fiatValue || !isChainAllowed(connector, chainId)) return null
-  const { label, logoUrl } = CHAIN_INFO[chainId]
+  const { label: connectedLabel, logoUrl: connectedLogoUrl } = CHAIN_INFO[connectedChainId || 1]
+  const connectedFiatValue = 1
   const multipleBalances = true // for testing purposes
   const totalBalance = 4.3
-  const logoUrl2 = CHAIN_INFO[137].logoUrl
+
+  const chainsToList = useMemo(() => {
+    let chainIds = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
+    const userConnectedToATestNetwork = connectedChainId && TESTNET_CHAIN_IDS.includes(connectedChainId)
+    if (!userConnectedToATestNetwork) {
+      chainIds = chainIds.filter((id) => !(TESTNET_CHAIN_IDS as unknown as SupportedChainId[]).includes(id))
+    }
+    return chainIds
+  }, [connectedChainId])
 
   return (
     <BalancesCard>
-      {multipleBalances ? (
+      {loading ? (
+        <span>loading...</span>
+      ) : error ? (
+        <p>
+          <Trans>Error fetching user balances</Trans>
+        </p>
+      ) : multipleBalances ? (
         <>
           <TotalBalanceSection>
             Your balance across all networks
@@ -63,32 +81,34 @@ export default function BalanceSummary({ address }: { address: string }) {
             </TotalBalance>
           </TotalBalanceSection>
           <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
-          <NetworkBalance
-            logoUrl={logoUrl}
-            balance={'1'}
-            tokenSymbol={tokenSymbol ?? 'XXX'}
-            fiatValue={fiatValue}
-            label={label}
-            networkColor={theme.primary1}
-          />
-          <NetworkBalance
-            logoUrl={logoUrl2}
-            balance={'3.3'}
-            tokenSymbol={tokenSymbol ?? 'XXX'}
-            fiatValue={3200}
-            label={'Polygon'}
-            networkColor={TEXT_COLORS['137']}
-          />
+          {data &&
+            chainsToList.map((chainId) => {
+              const amount = data[chainId]
+              const fiatValue = amount // for testing purposes
+              if (!fiatValue || !isChainAllowed(connector, chainId)) return null
+              const { label, logoUrl } = CHAIN_INFO[chainId]
+              return (
+                <NetworkBalance
+                  key={chainId}
+                  logoUrl={logoUrl}
+                  balance={'1'}
+                  tokenSymbol={tokenSymbol ?? 'XXX'}
+                  fiatValue={fiatValue.toSignificant(2)}
+                  label={label}
+                  networkColor={theme.primary1}
+                />
+              )
+            })}
         </>
       ) : (
         <>
-          Your balance on {label}
+          Your balance on {connectedLabel}
           <NetworkBalance
-            logoUrl={logoUrl}
+            logoUrl={connectedLogoUrl}
             balance={'1'}
             tokenSymbol={tokenSymbol ?? 'XXX'}
-            fiatValue={fiatValue}
-            label={label}
+            fiatValue={connectedFiatValue}
+            label={connectedLabel}
             networkColor={theme.primary1}
           />
         </>
