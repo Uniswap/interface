@@ -1,13 +1,15 @@
+import { useAtom } from 'jotai'
 import { useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import searchIcon from './search.svg'
+import { filterStringAtom } from './state'
 import xIcon from './x.svg'
 
 export const SMALL_MEDIA_BREAKPOINT = '580px'
+const ICON_SIZE = '18px'
 
-const SearchBarWrapper = styled.div`
-  position: relative;
+const SearchBarContainer = styled.div`
   display: flex;
   flex: 1;
 `
@@ -20,20 +22,31 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   background-color: ${({ theme }) => theme.bg0};
   left: 10px;
   border-radius: 12px;
-  align-items: center;
   border: none;
   height: 100%;
   width: ${({ expanded }) => (expanded ? '100%' : '44px')};
   font-size: 16px;
   padding-left: 40px;
   color: ${({ theme }) => theme.text2};
-  animation: ${({ expanded }) => expanded && 'expand 0.8s'};
+  animation: ${({ expanded }) => (expanded ? 'expand 0.4s' : 'shrink 0.4s')};
   @keyframes expand {
     from {
       width: 0%;
+      background-color: ${({ theme }) => theme.bg0};
     }
     to {
       width: 100%;
+      background-color: ${({ theme }) => theme.bg2};
+    }
+  }
+  @keyframes shrink {
+    from {
+      width: 100%;
+      background-color: ${({ theme }) => theme.bg2};
+    }
+    to {
+      width: 0%;
+      background-color: ${({ theme }) => theme.bg0};
     }
   }
 
@@ -48,38 +61,35 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     }
   }
   ::-webkit-search-cancel-button {
-    -webkit-appearance: none;
     appearance: none;
-    height: 24px;
-    width: 24px;
+    height: ${ICON_SIZE};
+    width: ${ICON_SIZE};
     background-image: url(${xIcon});
     margin-right: 10px;
-    background-size: 24px 24px;
+    margin-bottom: 2px;
+    background-size: ${ICON_SIZE} ${ICON_SIZE};
   }
 `
 
 export default function SearchBar() {
+  const [filterString, setFilterString] = useAtom(filterStringAtom)
   const [isExpanded, setExpanded] = useState(false)
-  const [searchContent, setSearchContent] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchContent(event.target.value)
-  }
-
   return (
-    <SearchBarWrapper>
+    <SearchBarContainer>
       <SearchInput
         expanded={isExpanded}
         type="search"
         placeholder="Search token or paste address"
         id="searchBar"
         onFocus={() => setExpanded(true)}
+        onBlur={() => filterString.length === 0 && setExpanded(false)}
         autoComplete="off"
-        value={searchContent}
-        onChange={handleSearchChange}
+        value={filterString}
+        onChange={({ target: { value } }) => setFilterString(value)}
         ref={searchRef}
       />
-    </SearchBarWrapper>
+    </SearchBarContainer>
   )
 }
