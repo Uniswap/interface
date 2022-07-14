@@ -59,7 +59,7 @@ export function useNetworkTokenBalances({ address }: useNetworkTokenBalancesArgs
       })
       .catch((e) => setError(e))
       .finally(() => setLoading(false))
-  }, [address])
+  }, [address, query])
 
   return {
     data,

@@ -1,7 +1,21 @@
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
 
-import { TokenDetail } from './TokenDetail'
+import {
+  AboutHeader,
+  AboutSection,
+  BreadcrumbNavLink,
+  ChartContainer,
+  ChartHeader,
+  ContractAddressSection,
+  DeltaContainer,
+  ResourcesContainer,
+  StatsSection,
+  TimeOptionsContainer,
+  TokenInfoContainer,
+  TokenPrice,
+  TopArea,
+} from './TokenDetail'
 
 const Stat = styled.div`
   display: flex;
@@ -73,46 +87,51 @@ const ChartAnimation = styled.div`
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
-    <TokenDetail
-      breadcrumb={null}
-      tokenInfo={
-        <TokenNameCell>
-          <IconLoadingBubble />
-          <TitleLoadingBubble />
-        </TokenNameCell>
-      }
-      tokenPrice={<PriceLoadingBubble />}
-      deltaInfo={null}
-      chartGraphic={
-        <ChartAnimation>
-          <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-          </svg>
-          <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-          </svg>
-          <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-          </svg>
-          <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-          </svg>
-          <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-          </svg>
-        </ChartAnimation>
-      }
-      timeInfo={null}
-      about={<SquareLoadingBubble />}
-      aboutInfo={
-        <>
-          <LongLoadingBubble />
-          <LongLoadingBubble />
-          <HalfLoadingBubble />
-        </>
-      }
-      resources={null}
-      stats={
+    <TopArea>
+      <BreadcrumbNavLink to="/explore">{null}</BreadcrumbNavLink>
+      <ChartHeader>
+        <TokenInfoContainer>
+          <TokenNameCell>
+            <IconLoadingBubble />
+            <TitleLoadingBubble />
+          </TokenNameCell>
+        </TokenInfoContainer>
+        <TokenPrice>
+          <PriceLoadingBubble />
+        </TokenPrice>
+        <DeltaContainer>{null}</DeltaContainer>
+        <ChartContainer>
+          <ChartAnimation>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+          </ChartAnimation>
+        </ChartContainer>
+        <TimeOptionsContainer>{null}</TimeOptionsContainer>
+      </ChartHeader>
+      <AboutSection>
+        <AboutHeader>
+          <SquareLoadingBubble />
+        </AboutHeader>
+        <LongLoadingBubble />
+        <LongLoadingBubble />
+        <HalfLoadingBubble />
+
+        <ResourcesContainer>{null}</ResourcesContainer>
+      </AboutSection>
+      <StatsSection>
         <StatsLoadingContainer>
           <Stat>
             <HalfLoadingBubble />
@@ -131,8 +150,8 @@ export default function LoadingTokenDetail() {
             <StatLoadingBubble />
           </Stat>
         </StatsLoadingContainer>
-      }
-      contractInfo={null}
-    />
+      </StatsSection>
+      <ContractAddressSection>{null}</ContractAddressSection>
+    </TopArea>
   )
 }
