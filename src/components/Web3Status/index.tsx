@@ -1,31 +1,31 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { TradeType } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
-import { InterfaceTrade } from 'state/routing/types'
-import { TradeType } from '@uniswap/sdk-core'
-import { Currency } from '@uniswap/sdk-core'
-import { useEffect, useMemo, useState, ReactNode} from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Activity } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
+import { InterfaceTrade } from 'state/routing/types'
+import { TradeState } from 'state/routing/types'
+import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { css } from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useToggleWalletModal } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import { TransactionDetails } from '../../state/transactions/types
-import { useDerivedSwapInfo } from 'state/swap/hooks'
+import { TransactionDetails } from '../../state/transactions/types'
 import { shortenAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-import { TradeState } from 'state/routing/types'
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -127,10 +127,13 @@ function Sock() {
   )
 }
 
-function getIsValidSwapQuote(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined, tradeState: TradeState, swapInputError?: ReactNode
+function getIsValidSwapQuote(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  tradeState: TradeState,
+  swapInputError?: ReactNode
 ): boolean {
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
-  }
+}
 
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
@@ -158,7 +161,9 @@ function Web3StatusInner() {
   const hasSocks = useHasSocks()
   const toggleWalletModal = useToggleWalletModal()
 
-  useEffect(() => {setValidSwapQuote(getIsValidSwapQuote(trade, tradeState, swapInputError))}, [tradeState, trade, swapInputError])
+  useEffect(() => {
+    setValidSwapQuote(getIsValidSwapQuote(trade, tradeState, swapInputError))
+  }, [tradeState, trade, swapInputError])
 
   if (!chainId) {
     return null
