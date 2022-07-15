@@ -2,7 +2,7 @@
 
 Fixes MOB-#
 
-Summary of the change, motiviation and context:
+Summary of the change, motivation and context:
 
 Screen capture:
 
