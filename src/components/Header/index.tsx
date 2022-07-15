@@ -7,7 +7,6 @@ import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
-import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
@@ -264,11 +263,7 @@ function getCurrentPageFromLocation(locationPathname: string): PageName {
 export default function Header() {
   const { account, chainId } = useWeb3React()
   const location = useLocation()
-  const [currentPage, setCurrentPage] = useState(getCurrentPageFromLocation(location.pathname))
-
-  useEffect(() => {
-    setCurrentPage(getCurrentPageFromLocation(location.pathname))
-  }, [location])
+  const currentPage = getCurrentPageFromLocation(location.pathname)
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()

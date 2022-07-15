@@ -7,7 +7,7 @@ import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/con
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade } from 'state/routing/types'
@@ -142,7 +142,7 @@ function Web3StatusInner() {
     trade: { state: tradeState, trade },
     inputError: swapInputError,
   } = useDerivedSwapInfo()
-  const [validSwapQuote, setValidSwapQuote] = useState(getIsValidSwapQuote(trade, tradeState, swapInputError))
+  const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -160,10 +160,6 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useToggleWalletModal()
-
-  useEffect(() => {
-    setValidSwapQuote(getIsValidSwapQuote(trade, tradeState, swapInputError))
-  }, [tradeState, trade, swapInputError])
 
   if (!chainId) {
     return null
