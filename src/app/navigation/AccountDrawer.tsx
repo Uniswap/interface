@@ -2,13 +2,22 @@ import { DrawerContentComponentProps } from '@react-navigation/drawer'
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
+import 'react-native-gesture-handler'
+import {
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import PlusSquareIcon from 'src/assets/icons/plus-square.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { Button } from 'src/components/buttons/Button'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
@@ -25,6 +34,7 @@ import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 
 const key = (account: Account) => account.address
+const CONTENT_MAX_SCROLL_Y = 20
 
 export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
@@ -124,12 +134,30 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     )
   }
 
+  const scrollY = useSharedValue(0)
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y
+    },
+    onEndDrag: (event) => {
+      scrollY.value = withTiming(
+        event.contentOffset.y > CONTENT_MAX_SCROLL_Y / 2 ? CONTENT_MAX_SCROLL_Y : 0
+      )
+    },
+  })
+  const headerBorderStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [0, 1], Extrapolate.CLAMP),
+    }
+  })
+
   const header = (
-    <AnimatedFlex bg="mainBackground" borderBottomColor="backgroundOutline" px="lg" py="sm">
-      <Text color="textPrimary" variant="headlineSmall">
+    <Flex bg="mainBackground" borderBottomColor="backgroundOutline" pt="sm">
+      <Text color="textPrimary" px="lg" variant="headlineSmall">
         {t('Your wallets')}
       </Text>
-    </AnimatedFlex>
+      <AnimatedBox bg="backgroundOutline" height={1} style={headerBorderStyle} />
+    </Flex>
   )
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
@@ -224,6 +252,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={[0]}
+        onScroll={scrollHandler}
       />
       <Flex>
         <Box bg="backgroundOutline" height={0.5} mb="sm" />
