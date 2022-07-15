@@ -11,7 +11,7 @@ export enum EventName {
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
-  WALLET_CONNECTED = 'Wallet Connected',
+  WALLET_CONNECT_TXN_COMPLETED = 'Wallet Connect Transaction Completed',
   WALLET_SELECTED = 'Wallet Selected',
   // alphabetize additional event names.
 }

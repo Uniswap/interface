@@ -155,13 +155,12 @@ export default function WalletModal({
 
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
-    if (!!account && account !== lastActiveWalletAddress) {
-      sendAnalyticsEvent(EventName.WALLET_CONNECTED, {
+    if (account && account !== lastActiveWalletAddress) {
+      sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
         result: WALLET_CONNECTION_RESULT.SUCCEEDED,
         wallet_address: account,
         wallet_type: getConnectionName(getConnection(connector).type, getIsMetaMask()),
         // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
-        is_reconnect: false,
       })
     }
     setLastActiveWalletAddress(account)
@@ -196,9 +195,7 @@ export default function WalletModal({
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
 
-        // Wallect connection has failed at this point, send failed WALLET_CONNECTED
-        // Amplitude analytics event.
-        sendAnalyticsEvent(EventName.WALLET_CONNECTED, {
+        sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
           result: WALLET_CONNECTION_RESULT.FAILED,
           wallet_type: getConnectionName(connectionType, getIsMetaMask()),
         })

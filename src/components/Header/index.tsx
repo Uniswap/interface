@@ -247,7 +247,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   }
 `
 
-function getCurrentPageFromLocation(locationPathname: string): PageName {
+function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
   switch (locationPathname) {
     case '/swap':
       return PageName.SWAP_PAGE
@@ -256,7 +256,7 @@ function getCurrentPageFromLocation(locationPathname: string): PageName {
     case '/pool':
       return PageName.POOL_PAGE
     default:
-      return PageName.SWAP_PAGE
+      return undefined
   }
 }
 

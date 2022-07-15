@@ -92,7 +92,7 @@ export default function App() {
           <TopLevelModals />
           <Suspense fallback={<Loader />}>
             <Switch>
-              <Route strict path="/vote" component={Vote} />
+              <Route path="/vote" component={Vote} />
               <Route exact strict path="/create-proposal">
                 <Redirect to="/vote/create-proposal" />
               </Route>
@@ -102,7 +102,7 @@ export default function App() {
 
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/swap" component={Swap} />
+              <Route path="/swap" component={Swap} />
 
               <Route exact strict path="/pool/v2/find" component={PoolFinder} />
               <Route exact strict path="/pool/v2" component={PoolV2} />
