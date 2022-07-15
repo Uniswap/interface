@@ -48,6 +48,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     background-image: url(${xIcon});
     margin-right: 10px;
     background-size: ${ICON_SIZE} ${ICON_SIZE};
+    cursor: pointer;
   }
 `
 
