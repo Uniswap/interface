@@ -7,7 +7,7 @@ import {
   networkConnection,
   walletConnectConnection,
 } from 'connection'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { RPC_URLS } from 'constants/networks'
 
@@ -56,13 +56,13 @@ export function isChainAllowed(connector: Connector, chainId: number) {
   }
 }
 
-export const switchChain = async (connector: Connector, chainId: number) => {
+export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
   if (!isChainAllowed(connector, chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
   } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
     await connector.activate(chainId)
   } else {
-    const info = CHAIN_INFO[chainId]
+    const info = getChainInfo(chainId)
     const addChainParameter = {
       chainId,
       chainName: info.label,
