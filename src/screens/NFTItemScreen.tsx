@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { HomeStackScreenProp } from 'src/app/navigation/types'
 import SendIcon from 'src/assets/icons/send.svg'
@@ -8,19 +7,15 @@ import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
-import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
-import { isEnabled } from 'src/features/remoteConfig'
-import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
@@ -71,18 +66,6 @@ export function NFTItemScreen({
       <Flex my="sm">
         <Flex centered>
           <NFTAssetItem autoplay maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
-
-          <DevelopmentOnly>
-            <Flex
-              alignItems="flex-end"
-              justifyContent="space-between"
-              mx="none"
-              my="lg"
-              style={StyleSheet.absoluteFill}>
-              <ApplyNFTPaletteButton asset={asset} />
-              {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={asset} />}
-            </Flex>
-          </DevelopmentOnly>
         </Flex>
 
         <Flex mx="md">

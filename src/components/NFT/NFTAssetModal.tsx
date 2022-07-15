@@ -12,14 +12,11 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { BottomSheetScrollModal } from 'src/components/modals/BottomSheetModal'
-import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { openModal } from 'src/features/modals/modalSlice'
 import { NFTAsset } from 'src/features/nfts/types'
-import { isEnabled } from 'src/features/remoteConfig'
-import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
@@ -84,20 +81,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
     <BottomSheetScrollModal isVisible={isVisible} name={ModalName.NFTAsset} onClose={onClose}>
       <Flex gap="md" mx="lg" my="md">
         <Box>
-          <NFTViewer
-            // TODO: fix dimensions when nft work kicks off
-            // height={ITEM_WIDTH}
-            uri={imageUrl}
-            // width={ITEM_WIDTH}
-          />
-          <Flex
-            alignItems="flex-end"
-            justifyContent="space-between"
-            m="md"
-            style={StyleSheet.absoluteFill}>
-            <ApplyNFTPaletteButton asset={nftAsset} />
-            {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={nftAsset} />}
-          </Flex>
+          <NFTViewer uri={imageUrl} />
         </Box>
         <Flex alignItems="center" flexDirection="row" mt="xs">
           <Text style={flex.fill} variant="headlineSmall">
