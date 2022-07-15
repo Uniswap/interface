@@ -29,7 +29,7 @@ export function AccountItem({ account, isActive, onPress, onEdit }: Props) {
         onPress={onPress ? () => onPress(address) : undefined}>
         <Box
           alignItems="center"
-          backgroundColor={isActive ? 'deprecated_gray50' : 'none'}
+          backgroundColor={isActive ? 'accentAction' : 'none'}
           borderRadius="lg"
           flexDirection="row"
           justifyContent="space-between"
@@ -40,7 +40,7 @@ export function AccountItem({ account, isActive, onPress, onEdit }: Props) {
           {onEdit && (
             <Button mx="sm" my="md" name={ElementName.Edit} onPress={() => onEdit(address)}>
               <TripleDots
-                color={theme.colors.deprecated_textColor}
+                color={theme.colors.textPrimary}
                 height={12}
                 strokeLinecap="round"
                 strokeWidth="2"

@@ -47,10 +47,10 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(
     const theme = useTheme<Theme>()
 
     // Set defaults for style values
-    rest.backgroundColor ??= 'mainBackground'
+    rest.backgroundColor ??= 'backgroundBackdrop'
     rest.px ??= 'md'
     rest.py ??= 'sm'
-    rest.color ??= 'mainForeground'
+    rest.color ??= 'textPrimary'
     rest.borderRadius ??= 'md'
 
     // restyle doesn't parse placeholderTextColorCorrectly

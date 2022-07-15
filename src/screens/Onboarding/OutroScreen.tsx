@@ -36,10 +36,10 @@ export function OutroScreen({}: Props) {
     <Screen>
       <Flex grow justifyContent="space-between" px="md" py="lg">
         <Flex centered grow gap="xl" mb="sm">
-          <Box borderColor="deprecated_primary1" borderRadius="lg" borderWidth={2} padding="lg">
+          <Box borderColor="accentAction" borderRadius="lg" borderWidth={2} padding="lg">
             <QRCode
-              backgroundColor={theme.colors.deprecated_background1}
-              color={theme.colors.deprecated_primary1}
+              backgroundColor={theme.colors.backgroundSurface}
+              color={theme.colors.accentAction}
               size={190}
               value={activeAddress ?? ''}
             />

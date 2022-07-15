@@ -50,7 +50,7 @@ export const SeedPhraseEducationContent = () => [
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           A recovery phrase is a set of 12 unique words that you can use to access to your wallet—
-          <Text color="deprecated_pink">it's like your wallet's secret password.</Text>
+          <Text color="accentAction">it's like your wallet's secret password.</Text>
         </Trans>
       </Text>
     }
@@ -60,7 +60,7 @@ export const SeedPhraseEducationContent = () => [
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           You can{' '}
-          <Text color="deprecated_pink">
+          <Text color="accentAction">
             enter your recovery phrase on a new device to recover your wallet
           </Text>{' '}
           and access your funds.
@@ -73,8 +73,8 @@ export const SeedPhraseEducationContent = () => [
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           Instead of memorizing your recovery phrase,{' '}
-          <Text color="deprecated_pink">you can back it up to iCloud</Text> and protect it by
-          setting a PIN.
+          <Text color="accentAction">you can back it up to iCloud</Text> and protect it by setting a
+          PIN.
         </Trans>
       </Text>
     }
@@ -84,9 +84,7 @@ export const SeedPhraseEducationContent = () => [
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           You can also{' '}
-          <Text color="deprecated_pink">
-            manually back up your recovery phrase by writing it down
-          </Text>{' '}
+          <Text color="accentAction">manually back up your recovery phrase by writing it down</Text>{' '}
           and storing it in a safe place.
         </Trans>
       </Text>
@@ -97,7 +95,7 @@ export const SeedPhraseEducationContent = () => [
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           We recommend using both types of backups, because{' '}
-          <Text color="deprecated_pink">
+          <Text color="accentAction">
             if you lose all of your backups, you won’t be able to recover your wallet.
           </Text>
         </Trans>

@@ -18,10 +18,10 @@ export function RelativeChange({ change, variant = 'caption' }: RelativeChangePr
       <Text
         color={
           direction === 'up'
-            ? 'deprecated_green'
+            ? 'accentSuccess'
             : direction === 'down'
-            ? 'deprecated_red'
-            : 'deprecated_gray600'
+            ? 'accentFailure'
+            : 'textSecondary'
         }
         variant={variant}>
         {direction === 'up' ? '↗' : direction === 'down' ? '↘' : ''}

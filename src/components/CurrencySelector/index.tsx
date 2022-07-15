@@ -57,17 +57,17 @@ export function CurrencySelector({
           {selectedCurrency ? (
             <Flex centered row flexDirection="row" gap="sm" px="sm" py="xs">
               <CurrencyLogo currency={selectedCurrency} size={25} />
-              <Text color="mainForeground" variant="headlineSmall">
+              <Text color="textPrimary" variant="headlineSmall">
                 {selectedCurrency.symbol}
               </Text>
-              <Chevron color={theme.colors.deprecated_textColor} direction="e" />
+              <Chevron color={theme.colors.textPrimary} direction="e" />
             </Flex>
           ) : (
             <Flex centered row gap="xs" px="md" py="xs">
-              <Text color="white" lineHeight={20} variant="mediumLabel">
+              <Text color="accentTextLightPrimary" lineHeight={20} variant="mediumLabel">
                 {t('Choose token')}
               </Text>
-              <Chevron color="white" direction="e" />
+              <Chevron color="accentTextLightPrimary" direction="e" />
             </Flex>
           )}
         </CenterBox>

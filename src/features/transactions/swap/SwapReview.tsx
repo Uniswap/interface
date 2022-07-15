@@ -125,7 +125,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
         <Flex centered gap="none">
           <Flex centered row gap="xs">
             <CurrencyLogo currency={currencyIn} size={28} />
-            <Text color="mainForeground" variant="largeLabel">
+            <Text color="textPrimary" variant="largeLabel">
               {currencyIn.symbol}
             </Text>
           </Flex>
@@ -153,7 +153,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
         />
         <Flex centered row gap="xs">
           <CurrencyLogo currency={currencyOut} size={28} />
-          <Text color="mainForeground" variant="largeLabel">
+          <Text color="textPrimary" variant="largeLabel">
             {currencyOut.symbol}
           </Text>
         </Flex>

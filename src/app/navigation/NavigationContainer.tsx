@@ -27,7 +27,7 @@ export const NavigationContainer: FC = ({ children }) => {
       // avoid white flickering background on screen navigation
       theme={{
         ...DefaultTheme,
-        colors: { ...DefaultTheme.colors, background: theme.colors.mainBackground },
+        colors: { ...DefaultTheme.colors, background: theme.colors.backgroundBackdrop },
       }}
       onReady={() => {
         setRouteName(navigationRef.getCurrentRoute()?.name)

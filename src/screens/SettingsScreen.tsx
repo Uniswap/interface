@@ -194,7 +194,7 @@ export function SettingsScreen() {
         keyExtractor={(_item, index) => 'settings' + index}
         renderItem={renderItem}
         renderSectionHeader={({ section: { subTitle } }) => (
-          <Box bg="mainBackground" pb="md">
+          <Box bg="backgroundBackdrop" pb="md">
             <Text color="textSecondary" fontWeight="500" variant="body">
               {subTitle}
             </Text>
@@ -231,7 +231,7 @@ function OnboardingRow() {
             strokeWidth="1.5"
             width={20}
           />
-          <Text fontWeight="500" ml="md" variant="subhead">
+          <Text fontWeight="500" ml="sm" variant="subhead">
             {t('Onboarding')}
           </Text>
         </Box>

@@ -122,7 +122,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
           {!isNFT && currencyIn && (
             <Flex centered row gap="xs">
               <CurrencyLogo currency={currencyIn} size={28} />
-              <Text color="mainForeground" variant="largeLabel">
+              <Text color="textPrimary" variant="largeLabel">
                 {currencyIn.symbol}
               </Text>
             </Flex>

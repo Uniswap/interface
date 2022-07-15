@@ -44,7 +44,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
       <NFTLogoOrPlaceholder nftImageUrl={props.nftImageUrl} size={size.primaryImage} />
     )
 
-  const fill = theme.colors.mainBackground
+  const fill = theme.colors.backgroundBackdrop
   const gray = theme.colors.textSecondary
   const green = theme.colors.accentSuccess
   const yellow = theme.colors.accentWarning

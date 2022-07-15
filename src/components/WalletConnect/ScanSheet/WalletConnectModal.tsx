@@ -108,7 +108,7 @@ export function WalletConnectModal({
     <BottomSheetModal
       fullScreen
       hideHandlebar
-      backgroundColor={theme.colors.mainBackground}
+      backgroundColor={theme.colors.backgroundBackdrop}
       isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>

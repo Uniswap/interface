@@ -130,7 +130,7 @@ function QuickActions() {
       <PrimaryButton
         borderRadius="md"
         flex={1}
-        icon={<CameraScan height={20} stroke={theme.colors.mainForeground} width={20} />}
+        icon={<CameraScan height={20} stroke={theme.colors.textPrimary} width={20} />}
         label={t('Scan')}
         name={
           // Note. Leaving as buy since scan will be reverted before launch
@@ -144,9 +144,7 @@ function QuickActions() {
       <PrimaryButton
         borderRadius="md"
         flex={1}
-        icon={
-          <SwapIcon color={theme.colors.mainForeground} height={20} strokeWidth={2} width={20} />
-        }
+        icon={<SwapIcon color={theme.colors.textPrimary} height={20} strokeWidth={2} width={20} />}
         label={t('Swap')}
         name={ElementName.NavigateSwap}
         py="sm"
@@ -157,9 +155,7 @@ function QuickActions() {
       <PrimaryButton
         borderRadius="md"
         flex={1}
-        icon={
-          <SendIcon height={20} stroke={theme.colors.mainForeground} strokeWidth={2} width={20} />
-        }
+        icon={<SendIcon height={20} stroke={theme.colors.textPrimary} strokeWidth={2} width={20} />}
         label={t('Send')}
         name={ElementName.NavigateSend}
         py="sm"

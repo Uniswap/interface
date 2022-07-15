@@ -18,14 +18,8 @@ export const theme = createTheme({
     largeTablet: 1024,
   },
   colors: {
-    mainBackground: colorsLight.backgroundBackdrop,
-    mainForeground: colorsLight.black,
     translucentBackground: opacify(50, colorsLight.backgroundBackdrop),
-    imageTintBackground: opacify(80, colorsLight.deprecated_background1),
-    tokenSelector: colorsLight.deprecated_gray50,
-    shimmer: colorsLight.white,
-    lightBorder: colorsLight.deprecated_gray100,
-    iconButtonPrimaryBackground: colorsLight.white,
+    imageTintBackground: opacify(80, colorsLight.backgroundSurface),
     ...colorsLight,
   },
   iconButtonVariants,
@@ -38,14 +32,8 @@ export const theme = createTheme({
 export const darkTheme: Theme = {
   ...theme,
   colors: {
-    mainBackground: colorsDark.backgroundBackdrop,
-    mainForeground: colorsDark.white,
     translucentBackground: opacify(5, colorsDark.white),
-    imageTintBackground: opacify(80, colorsDark.deprecated_background1),
-    tokenSelector: colorsDark.deprecated_gray50,
-    shimmer: colorsDark.deprecated_gray100,
-    lightBorder: colorsDark.deprecated_gray50,
-    iconButtonPrimaryBackground: colorsDark.deprecated_pink,
+    imageTintBackground: opacify(80, colorsDark.backgroundSurface),
     ...colorsDark,
   },
 }

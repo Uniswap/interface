@@ -93,9 +93,9 @@ export function SwapDetails({ currencyOut, trade, warnings, dispatch }: SwapDeta
         </Button>
       ) : null}
       <Flex row justifyContent="space-between" p="md">
-        <Text color="mainForeground">{t('Rate')}</Text>
+        <Text color="textPrimary">{t('Rate')}</Text>
         <Flex row gap="none">
-          <Text color="mainForeground">{rate}</Text>
+          <Text color="textPrimary">{rate}</Text>
           <Text color="textSecondary">
             {usdcPrice &&
               ` (${formatPrice(usdcPrice, { maximumFractionDigits: 6, notation: 'standard' })})`}
@@ -103,8 +103,8 @@ export function SwapDetails({ currencyOut, trade, warnings, dispatch }: SwapDeta
         </Flex>
       </Flex>
       <Flex row justifyContent="space-between" p="md">
-        <Text color="mainForeground">{t('Network fee')}</Text>
-        <Text color="mainForeground">${gasFeeUSD}</Text>
+        <Text color="textPrimary">{t('Network fee')}</Text>
+        <Text color="textPrimary">${gasFeeUSD}</Text>
       </Flex>
       <Box p="md">
         <AccountDetails address={account?.address} />

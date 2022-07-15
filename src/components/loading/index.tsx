@@ -7,7 +7,6 @@ import { HeaderLoader } from 'src/components/loading/HeaderLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
 import GraphCurveArea from './graph-curve-area.svg'
-import GraphCurve from './graph-curve.svg'
 
 type SkeletonType = 'box' | 'graph' | 'header' | 'token' | 'image'
 
@@ -30,8 +29,8 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
     case 'graph':
       return (
         <Box overflow="hidden">
-          <GraphCurve color={theme.colors.deprecated_gray100} />
-          <GraphCurveArea fill={theme.colors.deprecated_gray50} style={StyleSheet.absoluteFill} />
+          <GraphCurveArea color={theme.colors.backgroundAction} />
+          <GraphCurveArea fill={theme.colors.backgroundAction} style={StyleSheet.absoluteFill} />
         </Box>
       )
     case 'token':

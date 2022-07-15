@@ -28,7 +28,7 @@ export function ChangeNetworkModal({ chainId, setChainId, onPressClose }: Change
       />
       <TextButton
         alignSelf="center"
-        textColor="deprecated_blue"
+        textColor="accentActive"
         textVariant="mediumLabel"
         onPress={onPressClose}>
         {t('Close')}

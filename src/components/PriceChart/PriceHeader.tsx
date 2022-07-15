@@ -67,7 +67,7 @@ export const PriceHeader = ({ graphs, index, isPanning, translation }: HeaderPro
   )
 
   const percentChangeIconStyle = useAnimatedStyle(() => ({
-    color: percentChange.value > 0 ? theme.colors.deprecated_green : theme.colors.deprecated_red,
+    color: percentChange.value > 0 ? theme.colors.accentSuccess : theme.colors.accentFailure,
   }))
 
   const percentChangeIcon = useDerivedValue(() => (percentChange.value > 0 ? '↗' : '↘'))
@@ -94,7 +94,7 @@ export const PriceHeader = ({ graphs, index, isPanning, translation }: HeaderPro
   return (
     <Box mb="lg" mx="md">
       <StyledReText
-        color="mainForeground"
+        color="textPrimary"
         fontWeight="300"
         text={priceFormatted}
         variant="headlineLarge"

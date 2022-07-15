@@ -124,7 +124,7 @@ export function SettingsWallet({
           keyExtractor={(_item, index) => 'wallet_settings' + index}
           renderItem={renderItem}
           renderSectionHeader={({ section: { subTitle } }) => (
-            <Box bg="mainBackground" pb="md">
+            <Box bg="backgroundBackdrop" pb="md">
               <Text color="textSecondary" fontWeight="500" variant="body">
                 {subTitle}
               </Text>

@@ -237,7 +237,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
         )}
         {balance && (
           <IconButton
-            bg="deprecated_gray100"
+            bg="backgroundAction"
             borderRadius="md"
             disabled={!balance}
             icon={

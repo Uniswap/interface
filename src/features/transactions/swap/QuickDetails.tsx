@@ -46,19 +46,19 @@ export function QuickDetails(props: QuickDetailsProps) {
         <Flex centered row gap="xs">
           {willUseFlashbots ? (
             <FlashbotsIcon
-              color={label ? theme.colors.deprecated_gray400 : theme.colors.mainForeground}
+              color={label ? theme.colors.textSecondary : theme.colors.textPrimary}
               height={20}
               width={20}
             />
           ) : (
             <InfoCircle
-              color={label ? theme.colors.deprecated_gray400 : theme.colors.mainForeground}
+              color={label ? theme.colors.textSecondary : theme.colors.textPrimary}
               height={20}
               width={20}
             />
           )}
           <Text
-            color={label ? 'deprecated_gray400' : 'mainForeground'}
+            color={label ? 'textSecondary' : 'textPrimary'}
             fontWeight="500"
             variant="bodySmall">
             {label || formatExecutionPrice(trade?.executionPrice)}

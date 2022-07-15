@@ -1,6 +1,6 @@
 export const primaryButtonVariants = {
   defaults: {
-    backgroundColor: 'deprecated_primary1',
+    backgroundColor: 'accentAction',
     color: 'white',
   },
   black: {
@@ -9,20 +9,20 @@ export const primaryButtonVariants = {
     borderRadius: 'md',
   },
   gray: {
-    backgroundColor: 'deprecated_gray100',
-    color: 'deprecated_textColor',
+    backgroundColor: 'backgroundAction',
+    color: 'textPrimary',
   },
   green: {
-    backgroundColor: 'deprecated_green',
+    backgroundColor: 'accentSuccess',
     color: 'white',
   },
   palePink: {
-    backgroundColor: 'deprecated_secondary1',
+    backgroundColor: 'accentActionSoft',
     color: 'white',
   },
   paleOrange: {
-    backgroundColor: 'deprecated_paleOrange',
-    color: 'deprecated_orange',
+    backgroundColor: 'accentFailureSoft',
+    color: 'accentFailure',
   },
   transparent: {
     backgroundColor: 'none',
@@ -37,11 +37,11 @@ export const primaryButtonVariants = {
     color: 'accentActive',
   },
   blue: {
-    backgroundColor: 'deprecated_blue',
+    backgroundColor: 'accentActive',
     color: 'white',
   },
   yellow: {
-    backgroundColor: 'deprecated_yellow',
+    backgroundColor: 'accentWarning',
     color: 'white',
   },
   // used in full screen onboarding views
@@ -63,7 +63,6 @@ export const iconButtonVariants = {
   defaults: {},
   primary: {
     alignSelf: 'center',
-    backgroundColor: 'iconButtonPrimaryBackground', // custom background defined in theme
     borderRadius: 'md',
     letterSpacing: 'headline',
     paddingHorizontal: 'lg',

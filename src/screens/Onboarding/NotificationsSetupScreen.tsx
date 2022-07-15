@@ -54,7 +54,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
           <TextButton
             name={ElementName.Skip}
             testID={ElementName.Skip}
-            textColor="deprecated_textColor"
+            textColor="textPrimary"
             textVariant="mediumLabel"
             onPress={onPressNext}>
             {t('Maybe later')}

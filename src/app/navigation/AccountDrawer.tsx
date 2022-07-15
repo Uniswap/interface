@@ -152,7 +152,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   })
 
   const header = (
-    <Flex bg="mainBackground" borderBottomColor="backgroundOutline" pt="sm">
+    <Flex bg="backgroundBackdrop" borderBottomColor="backgroundOutline" pt="sm">
       <Text color="textPrimary" px="lg" variant="headlineSmall">
         {t('Your wallets')}
       </Text>

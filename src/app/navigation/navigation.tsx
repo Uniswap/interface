@@ -92,8 +92,8 @@ function TabNavigator() {
         tabBarShowLabel: false,
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.colors.mainBackground,
-          borderColor: theme.colors.backgroundOutline,
+          backgroundColor: theme.colors.backgroundBackdrop,
+          borderTopColor: theme.colors.backgroundOutline,
           borderStyle: 'solid',
           borderTopWidth: 0.5,
           height: TAB_NAVIGATOR_HEIGHT,
@@ -106,7 +106,7 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Home'),
           tabBarIcon: ({ focused, color }) => (
-            <WalletIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
+            <WalletIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
           ),
           tabBarIconStyle: {
             paddingTop: theme.spacing.md,
@@ -120,7 +120,7 @@ function TabNavigator() {
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
           tabBarIcon: ({ focused, color }) => (
-            <DiscoverIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
+            <DiscoverIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
           ),
           tabBarIconStyle: {
             paddingTop: theme.spacing.md,
@@ -133,7 +133,7 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Me'),
           tabBarIcon: ({ focused, color }) => (
-            <ProfileIcon color={focused ? theme.colors.deprecated_primary1 : color} height={24} />
+            <ProfileIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
           ),
           tabBarIconStyle: {
             paddingTop: theme.spacing.md,
@@ -261,7 +261,7 @@ export function OnboardingStackNavigator() {
           headerTitle: (props) => <OnboardingHeader {...props} />,
           headerBackTitleVisible: false,
           headerStyle: {
-            backgroundColor: theme.colors.mainBackground,
+            backgroundColor: theme.colors.backgroundBackdrop,
             shadowColor: theme.colors.none,
           },
           headerTintColor: theme.colors.textSecondary,
@@ -326,7 +326,6 @@ export function OnboardingStackNavigator() {
 
 export function AppStackNavigator() {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
-
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
       {finishedOnboarding ? (

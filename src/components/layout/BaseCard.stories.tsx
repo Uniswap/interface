@@ -10,7 +10,7 @@ export default {
   component: BaseCard.Container,
   decorators: [
     (Story) => (
-      <Box bg="deprecated_gray50" width={300}>
+      <Box bg="backgroundAction" width={300}>
         <Story />
       </Box>
     ),

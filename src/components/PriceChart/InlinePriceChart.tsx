@@ -78,7 +78,7 @@ export const InlinePriceChart = ({ currency }: InlineGraphProps) => {
       <Svg height={HEIGHT} width={WIDTH}>
         <Path
           d={serialize(graph.path)}
-          stroke={theme.colors.deprecated_primary1}
+          stroke={theme.colors.accentAction}
           strokeLinecap="square"
           strokeWidth={2}
         />

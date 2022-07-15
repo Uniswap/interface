@@ -6,8 +6,8 @@ import { renderWithTheme } from 'src/test/render'
 it('renders a Pill without image', () => {
   const tree = renderWithTheme(
     <Pill
-      backgroundColor="deprecated_orange"
-      foregroundColor="deprecated_blue"
+      backgroundColor="backgroundSurface"
+      foregroundColor="accentActive"
       label="My Pill Label"
     />
   )
@@ -16,7 +16,7 @@ it('renders a Pill without image', () => {
 
 it('renders a Pill with border', () => {
   const tree = renderWithTheme(
-    <Pill borderColor="deprecated_green" icon={<Text>Icon</Text>} label="My Second Pill Label" />
+    <Pill borderColor="accentSuccess" icon={<Text>Icon</Text>} label="My Second Pill Label" />
   )
   expect(tree).toMatchSnapshot()
 })

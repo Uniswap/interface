@@ -35,7 +35,7 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
   return (
     <Button name={ElementName.NFTCollectionItem} onPress={() => onPressCollection(nftAssets)}>
       <Box
-        borderColor="deprecated_gray100"
+        borderColor="backgroundOutline"
         borderRadius="md"
         borderWidth={1}
         flexDirection="column"
@@ -67,10 +67,10 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
                 {name}
               </Text>
               {safelist_request_status === 'verified' && (
-                <VerifiedIcon fill={theme.colors.deprecated_blue} height={16} width={16} />
+                <VerifiedIcon fill={theme.colors.accentActive} height={16} width={16} />
               )}
             </Flex>
-            <Chevron color={theme.colors.deprecated_gray400} direction="e" height={16} width={16} />
+            <Chevron color={theme.colors.textSecondary} direction="e" height={16} width={16} />
           </Flex>
           <FlatList
             horizontal

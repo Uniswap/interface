@@ -11,7 +11,7 @@ export function Indicator({ stepCount, currentStep }: { stepCount: number; curre
       {[...Array(stepCount)].map((_, i) => (
         <Box
           key={`indicator-${i}`}
-          bg="deprecated_textColor"
+          bg="textPrimary"
           borderRadius="lg"
           height={4}
           opacity={i === currentStep ? 1 : 0.2}
@@ -49,7 +49,7 @@ function AnimatedIndicatorPill({ index, scroll }: { index: number; scroll: Share
   return (
     <AnimatedBox
       key={`indicator-${index}`}
-      bg="deprecated_textColor"
+      bg="textPrimary"
       borderRadius="lg"
       flex={1}
       height={4}

@@ -82,7 +82,7 @@ export function LandingScreen({ navigation }: Props) {
             name={ElementName.OnboardingImportWallet}
             testID={ElementName.OnboardingImportWallet}
             onPress={onPressImportWallet}>
-            <Text color="deprecated_textColor" variant="mediumLabel">
+            <Text color="textPrimary" variant="mediumLabel">
               {t('I Already Have a Wallet')}
             </Text>
           </TextButton>
@@ -95,7 +95,7 @@ export function LandingScreen({ navigation }: Props) {
               testID={ElementName.OnboardingExplore}
               onPress={onPressExplore}>
               <Text variant="caption">{t('Not ready? Try')}</Text>
-              <Text color="deprecated_purple" variant="caption">
+              <Text color="accentAction" variant="caption">
                 {' '}
                 {t('Exploring')}{' '}
               </Text>

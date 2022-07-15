@@ -51,7 +51,7 @@ export function TransactionList({ transactions }: { transactions: AllFormattedTr
       keyExtractor={key}
       renderItem={renderItem}
       renderSectionHeader={({ section: { title } }) => (
-        <Box bg="mainBackground" px="xs" py="md">
+        <Box bg="backgroundBackdrop" px="xs" py="md">
           <Text color="textSecondary" variant="smallLabel">
             {title}
           </Text>

@@ -53,7 +53,7 @@ export function DappConnectionItem({
           <Text numberOfLines={2} textAlign="center" variant="mediumLabel">
             {dapp.name}
           </Text>
-          <Text color="deprecated_blue" numberOfLines={1} textAlign="center" variant="caption">
+          <Text color="accentActive" numberOfLines={1} textAlign="center" variant="caption">
             {dapp.url}
           </Text>
         </Flex>
@@ -62,7 +62,7 @@ export function DappConnectionItem({
         <Flex
           row
           shrink
-          borderColor="lightBorder"
+          borderColor="backgroundOutline"
           borderRadius="lg"
           borderWidth={1}
           gap="sm"
@@ -71,12 +71,12 @@ export function DappConnectionItem({
           {chainId ? (
             <Flex row shrink gap="xs">
               <NetworkLogo chainId={chainId} size={20} />
-              <Text color="deprecated_gray600" variant="bodySmall">
+              <Text color="textSecondary" variant="bodySmall">
                 {CHAIN_INFO[chainId].label}
               </Text>
             </Flex>
           ) : (
-            <Text color="deprecated_gray600" style={flex.shrink} variant="bodySmall">
+            <Text color="textSecondary" style={flex.shrink} variant="bodySmall">
               {t('Unsupported chain')}
             </Text>
           )}

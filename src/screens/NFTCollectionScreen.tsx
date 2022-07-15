@@ -53,7 +53,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           )}
           <Flex
             bg={collection?.image_url ? 'imageTintBackground' : 'translucentBackground'}
-            borderColor="deprecated_gray100"
+            borderColor="backgroundOutline"
             borderRadius="md"
             borderWidth={1}
             gap="sm"
@@ -72,7 +72,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               )}
             </Flex>
             {collection?.description && (
-              <Text color="deprecated_gray400" variant="caption">
+              <Text color="textSecondary" variant="caption">
                 {collection?.description}
               </Text>
             )}
@@ -113,7 +113,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             </Flex>
             <Flex flexDirection="row" gap="xl">
               <Flex gap="xs">
-                <Text color="deprecated_gray400" variant="caption">
+                <Text color="textSecondary" variant="caption">
                   {t('Items')}
                 </Text>
                 {collection?.stats.total_supply && (
@@ -123,7 +123,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 )}
               </Flex>
               <Flex gap="xs">
-                <Text color="deprecated_gray400" variant="caption">
+                <Text color="textSecondary" variant="caption">
                   {t('Owners')}
                 </Text>
                 {collection?.stats.num_owners && (
@@ -134,7 +134,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               </Flex>
               {collection?.stats.floor_price && (
                 <Flex gap="xs">
-                  <Text color="deprecated_gray400" variant="caption">
+                  <Text color="textSecondary" variant="caption">
                     {t('Floor')}
                   </Text>
                   <Text fontWeight="600" variant="headlineSmall">
@@ -146,8 +146,8 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           </Flex>
         </Box>
         <Button
-          bg="deprecated_gray50"
-          borderColor="deprecated_gray200"
+          bg="backgroundAction"
+          borderColor="backgroundOutline"
           borderRadius="md"
           borderWidth={1}
           name={ElementName.NFTCollectionViewOnOpensea}
@@ -155,7 +155,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
           testID={ElementName.NFTCollectionViewOnOpensea}
           onPress={() => openUri(`https://opensea.io/collection/${collection?.slug}`)}>
           <Flex alignItems="center" flexDirection="row" gap="xs" justifyContent="center">
-            <OpenSeaIcon color={appTheme.colors.deprecated_textColor} height={16} width={16} />
+            <OpenSeaIcon color={appTheme.colors.textPrimary} height={16} width={16} />
             <Text variant="body">{t('View Collection')}</Text>
           </Flex>
         </Button>

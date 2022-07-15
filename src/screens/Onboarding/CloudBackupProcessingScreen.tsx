@@ -67,10 +67,7 @@ export function CloudBackupProcessingScreen({
         </Flex>
       ) : (
         <Flex centered grow gap="none" mb="lg">
-          <CheckmarkCircle
-            color={theme.colors.deprecated_primary1}
-            size={dimensions.fullWidth / 4}
-          />
+          <CheckmarkCircle color={theme.colors.accentAction} size={dimensions.fullWidth / 4} />
           <Text variant="headlineMedium">{t('iCloud backup successful')}</Text>
         </Flex>
       )}

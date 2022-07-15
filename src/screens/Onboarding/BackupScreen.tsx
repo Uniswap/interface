@@ -92,7 +92,7 @@ function BackupOptions({
       <BackupOptionButton
         caption={t('Easily restore your wallet by backing up your recovery phrase to your iCloud.')}
         completed={backupMethods?.includes(BackupType.Cloud)}
-        icon={<CloudIcon color={theme.colors.deprecated_blue} height={20} width={20} />}
+        icon={<CloudIcon color={theme.colors.accentActive} height={20} width={20} />}
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
         onPress={() => {
@@ -106,7 +106,7 @@ function BackupOptions({
       <BackupOptionButton
         caption={t('Write down your recovery phrase and store it in a safe yet memorable place.')}
         completed={backupMethods?.includes(BackupType.Manual)}
-        icon={<PencilIcon color={theme.colors.deprecated_yellow} height={20} width={20} />}
+        icon={<PencilIcon color={theme.colors.accentWarning} height={20} width={20} />}
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
         onPress={() => {
@@ -138,7 +138,7 @@ function BackupOptionButton({
   return (
     <Button
       backgroundColor="translucentBackground"
-      borderColor={!completed ? 'lightBorder' : 'none'}
+      borderColor={!completed ? 'backgroundOutline' : 'none'}
       borderRadius="lg"
       borderWidth={1}
       disabled={completed}
@@ -146,7 +146,7 @@ function BackupOptionButton({
       padding="lg"
       testID={name}
       onPress={onPress}>
-      <Flex row alignItems="center" justifyContent="space-between">
+      <Flex row alignItems="center" justifyContent="space-between" opacity={completed ? 0.4 : 1}>
         <Flex flexShrink={1} gap="xs" maxWidth="80%">
           <Flex row gap="sm">
             <Box height={20} width={20}>
@@ -162,7 +162,7 @@ function BackupOptionButton({
           {completed ? (
             <CheckmarkCircle backgroundColor="none" color={theme.colors.accentSuccess} size={40} />
           ) : (
-            <Chevron color={theme.colors.lightBorder} direction="e" height="20" width="15" />
+            <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="15" />
           )}
         </Flex>
       </Flex>

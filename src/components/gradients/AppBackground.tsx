@@ -30,7 +30,7 @@ export const AppBackground = memo(
           <Canvas style={flex.fill}>
             <Group>
               <Rect
-                color={theme.colors.mainBackground}
+                color={theme.colors.backgroundBackdrop}
                 height={fullHeight}
                 width={fullWidth}
                 x={0}
@@ -40,7 +40,7 @@ export const AppBackground = memo(
                 <Circle color={theme.colors.backgroundAction} cx={0} cy={0} r={BASE_BLUR_RADIUS} />
               )}
               <Oval
-                color={opacify(100, color || theme.colors.deprecated_primary1)}
+                color={opacify(100, color || theme.colors.userThemeColor)}
                 height={ACCENT_BLUR_HEIGHT}
                 width={ACCENT_BLUR_WIDTH}
                 x={0}

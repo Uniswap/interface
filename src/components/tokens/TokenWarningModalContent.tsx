@@ -74,16 +74,10 @@ export default function TokenWarningModalContent({ currency, onClose, onAccept }
         {getWarningText(tokenWarningLevel, t)} <Text fontWeight="700">{t('Learn more')}</Text>
       </Text>
       <Button onPress={() => openUri(explorerLink)}>
-        <Flex
-          centered
-          row
-          borderRadius="md"
-          gap="xs"
-          p="sm"
-          style={{ backgroundColor: opacify(20, theme.colors.deprecated_blue) }}>
+        <Flex centered row bg="accentActiveSoft" borderRadius="md" gap="xs" p="sm">
           <EtherscanIcon />
           <Text
-            color="deprecated_blue"
+            color="accentActive"
             ellipsizeMode="tail"
             fontWeight="bold"
             mr="sm"

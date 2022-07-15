@@ -112,7 +112,7 @@ function CustomizationSection({
             autoFocus={true}
             fontSize={28}
             placeholder="Nickname"
-            placeholderTextColor={theme.colors.accentAction}
+            placeholderTextColor={theme.colors.textTertiary}
             testID="customize/name"
             textAlign="center"
             value={accountName}
@@ -142,11 +142,11 @@ function CustomizationSection({
             {items.map((item) => (
               <TextButton
                 key={item}
-                backgroundColor="translucentBackground"
+                backgroundColor="backgroundSurface"
                 borderRadius="xl"
                 px="md"
                 py="sm"
-                textColor="white"
+                textColor="textPrimary"
                 textVariant="smallLabel"
                 onPress={() => setAccountName(item)}>
                 {item}

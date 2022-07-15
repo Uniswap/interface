@@ -20,7 +20,7 @@ export function TextWithFuseMatches({
 }: TextWithFuseMatchesProps & TextProps) {
   if (!matches || matches.length === 0) {
     return (
-      <Text color="deprecated_textColor" numberOfLines={numberOfLines} variant={variant}>
+      <Text color="textPrimary" numberOfLines={numberOfLines} variant={variant}>
         {text}
       </Text>
     )

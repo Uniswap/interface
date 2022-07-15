@@ -6,14 +6,14 @@ export function HeaderLoader() {
   return (
     <Box>
       <Box
-        backgroundColor="deprecated_gray50"
+        backgroundColor="backgroundAction"
         borderRadius="md"
         height={50}
         marginBottom="sm"
         width="100%"
       />
       <Box
-        backgroundColor="deprecated_gray50"
+        backgroundColor="backgroundAction"
         borderRadius="md"
         height={10}
         marginBottom="sm"

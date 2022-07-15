@@ -54,7 +54,7 @@ export function NotificationsScreen() {
         <TextButton
           mt="md"
           px="xs"
-          textColor="deprecated_gray600"
+          textColor="textSecondary"
           textVariant="body"
           onPress={onPressEtherscan}>
           {t('View details on Etherscan')}
@@ -92,7 +92,7 @@ function EmptyList() {
   const { t } = useTranslation()
   return (
     <CenterBox flex={1}>
-      <Text color="deprecated_gray600" p="lg" textAlign="center" variant="body">
+      <Text color="textSecondary" p="lg" textAlign="center" variant="body">
         {t('No transactions yet, try making a swap from this wallet!')}
       </Text>
     </CenterBox>

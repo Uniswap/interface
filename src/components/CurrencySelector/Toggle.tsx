@@ -19,8 +19,8 @@ export function Toggle({
 }: PropsWithChildren<ToggleProps>) {
   return (
     <Button
-      bg={backgroundColor ?? (filled ? 'backgroundAction' : 'tokenSelector')}
-      borderRadius="full"
+      bg={backgroundColor ?? (filled ? 'accentActive' : 'backgroundAction')}
+      borderRadius="lg"
       name={ElementName.CurrencySelectorToggle}
       testID={testID}
       onPress={onToggle}>

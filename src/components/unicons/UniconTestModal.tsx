@@ -127,7 +127,7 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
     <BottomSheetModal
       fullScreen
       hideHandlebar
-      backgroundColor={theme.colors.mainBackground}
+      backgroundColor={theme.colors.backgroundBackdrop}
       isVisible={true}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>

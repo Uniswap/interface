@@ -45,7 +45,7 @@ export function FilterGroup({
             <Pill
               backgroundColor="backgroundSurface"
               borderColor={selected === 'favorites' ? 'backgroundOutline' : 'backgroundSurface'}
-              foregroundColor={theme.colors.deprecated_textColor}
+              foregroundColor={theme.colors.textPrimary}
               height={36}
               icon={<Heart active size={20} />}
               label=""
@@ -55,7 +55,7 @@ export function FilterGroup({
             <Pill
               backgroundColor="backgroundSurface"
               borderColor={selected === 'reset' ? 'backgroundOutline' : 'backgroundSurface'}
-              foregroundColor={theme.colors.deprecated_textColor}
+              foregroundColor={theme.colors.textPrimary}
               height={36}
               label={resetButtonLabel}
             />

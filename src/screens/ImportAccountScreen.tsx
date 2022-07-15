@@ -36,13 +36,13 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
         <Box flex={1} px="lg">
           <Box alignItems="center" flexDirection="row" mb="lg">
             <BackButton mr="md" />
-            <Text color="deprecated_textColor" variant="subhead">
+            <Text color="textPrimary" variant="subhead">
               {t('Import Account')}
             </Text>
           </Box>
           {!importDone ? (
             <>
-              <Text color="deprecated_textColor" mb="xl" mt="sm" variant="body">
+              <Text color="textPrimary" mb="xl" mt="sm" variant="body">
                 {t(
                   'Watch or manage an account by inputting its ENS name, address, or secret phrase.'
                 )}
@@ -51,7 +51,7 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
             </>
           ) : (
             <>
-              <Text color="deprecated_textColor" mb="xl" mt="sm" variant="body">
+              <Text color="textPrimary" mb="xl" mt="sm" variant="body">
                 {t('Set a name for this account to help you stay organized.')}
               </Text>
               <NameAccountForm

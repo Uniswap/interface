@@ -31,12 +31,11 @@ const HandleBar = () => {
   return (
     <Box
       alignSelf="center"
-      backgroundColor="deprecated_gray400"
+      backgroundColor="backgroundAction"
       borderRadius="xs"
       height={4}
       mt="sm"
-      opacity={0.3}
-      width={36}
+      width={32}
     />
   )
 }
@@ -80,7 +79,7 @@ export function BottomSheetModal({
     <BaseModal
       ref={modalRef}
       backdropComponent={Backdrop}
-      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.mainBackground }}
+      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.backgroundSurface }}
       contentHeight={animatedContentHeight}
       handleComponent={hideHandlebar ? null : HandleBar}
       handleHeight={animatedHandleHeight}
@@ -125,7 +124,7 @@ export function BottomSheetScrollModal({
     <BaseModal
       ref={modalRef}
       backdropComponent={Backdrop}
-      backgroundStyle={{ backgroundColor: theme.colors.mainBackground }}
+      backgroundStyle={{ backgroundColor: theme.colors.backgroundBackdrop }}
       handleComponent={HandleBar}
       snapPoints={snapPoints}
       stackBehavior={stackBehavior}
@@ -169,7 +168,7 @@ export function BottomSheetDetachedModal({
     <BaseModal
       ref={modalRef}
       backdropComponent={Backdrop}
-      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.mainBackground }}
+      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.backgroundBackdrop }}
       bottomInset={theme.spacing.xxl}
       contentHeight={animatedContentHeight}
       detached={true}

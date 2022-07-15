@@ -12,7 +12,7 @@ type Props = BackgroundColorShorthandProps<Theme> &
 
 export function Screen(props: PropsWithChildren<Props>) {
   return (
-    <SafeAreaBox flex={1} {...props} bg="mainBackground">
+    <SafeAreaBox flex={1} {...props} bg="backgroundBackdrop">
       {props.children}
     </SafeAreaBox>
   )

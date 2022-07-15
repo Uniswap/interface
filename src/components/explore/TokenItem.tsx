@@ -193,7 +193,7 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
       <Flex alignItems={align} gap="xxs" minWidth={70}>
         <Text variant="body">{main}</Text>
         {sub && (
-          <Text color="deprecated_gray400" variant="caption">
+          <Text color="textSecondary" variant="caption">
             {sub}
           </Text>
         )}

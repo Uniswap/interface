@@ -37,7 +37,7 @@ export function SwapConfigScreen() {
           />
         </Box>
         <Box alignItems="center" flexDirection="row">
-          <CheckmarkCircle backgroundColor="deprecated_blue" size={20} />
+          <CheckmarkCircle backgroundColor="accentActive" size={20} />
         </Box>
         <Box
           alignItems="center"

@@ -4,7 +4,7 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { editAccount } from 'src/features/wallet/walletSlice'
 
 export function useUpdateColorCallback() {
-  // TODO: Rename deprecated_primary1 and update DynamicThemeProvider
+  // TODO: update DynamicThemeProvider
   const dispatch = useAppDispatch()
   return useCallback(
     (activeAccount: Account, color?: string) => {
@@ -16,12 +16,7 @@ export function useUpdateColorCallback() {
             customizations: {
               ...activeAccount.customizations,
               palette: {
-                ...(activeAccount?.customizations?.palette ?? {
-                  deprecated_secondary1: 'deprecated_secondary1',
-                  deprecated_background1: 'deprecated_background1',
-                  deprecated_textColor: 'deprecated_textColor',
-                }),
-                deprecated_primary1: color || 'deprecated_primary1',
+                userThemeColor: color || 'userThemeColor',
               },
             },
           },

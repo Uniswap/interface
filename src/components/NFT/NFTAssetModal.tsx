@@ -116,7 +116,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
         <Flex gap="sm">
           <Box
             bg="translucentBackground"
-            borderColor="deprecated_gray100"
+            borderColor="backgroundOutline"
             borderRadius="md"
             borderWidth={1}>
             {collectionImageUrl && (
@@ -128,13 +128,13 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
             )}
             <Flex
               bg={collectionImageUrl ? 'imageTintBackground' : 'translucentBackground'}
-              borderColor="deprecated_gray100"
+              borderColor="backgroundOutline"
               borderRadius="md"
               borderWidth={1}
               gap="sm"
               p="md">
               <Text
-                color="deprecated_gray400"
+                color="textSecondary"
                 style={flex.fill}
                 variant="bodySmall">{t`From the Collection`}</Text>
               <Flex row alignItems="center" gap="xs">
@@ -145,14 +145,14 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
                   {collectionName}
                 </Text>
                 {safelistRequestStatus === 'verified' && (
-                  <VerifiedIcon fill={theme.colors.deprecated_blue} height={16} width={16} />
+                  <VerifiedIcon fill={theme.colors.accentActive} height={16} width={16} />
                 )}
               </Flex>
             </Flex>
           </Box>
           <Flex gap="md" mt="sm">
             <Text variant="mediumLabel">{t`Description`}</Text>
-            <Text color="deprecated_gray400" variant="bodySmall">
+            <Text color="textSecondary" variant="bodySmall">
               {collectionDescription}
             </Text>
           </Flex>

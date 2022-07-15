@@ -106,7 +106,7 @@ exports[`renders placeholders without a change 1`] = `
     style={
       Array [
         Object {
-          "color": "#44495A",
+          "color": "#5F667D",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 12,

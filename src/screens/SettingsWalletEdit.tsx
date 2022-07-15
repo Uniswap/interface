@@ -40,7 +40,7 @@ export function SettingsWalletEdit({
   const [nickname, setNickname] = useState(ensName || activeAccount?.name)
   const [showEditInput, setShowEditInput] = useState(false)
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
-    activeAccount?.customizations?.palette?.deprecated_primary1
+    activeAccount?.customizations?.palette?.userThemeColor
   )
   const updateThemeColor = useUpdateColorCallback()
 
@@ -73,7 +73,7 @@ export function SettingsWalletEdit({
       </BackHeader>
       <Flex gap="xl">
         <Flex gap="none">
-          <Box bg="mainBackground" pb="md">
+          <Box bg="backgroundBackdrop" pb="md">
             <Text color="textSecondary" fontWeight="500" variant="body">
               {t('Nickname')}
             </Text>
@@ -99,7 +99,7 @@ export function SettingsWalletEdit({
               />
             ) : (
               <>
-                <Text color={nickname ? 'mainForeground' : 'textTertiary'} variant="largeLabel">
+                <Text color={nickname ? 'textPrimary' : 'textTertiary'} variant="largeLabel">
                   {nickname || shortenAddress(address)}
                 </Text>
                 {!ensName && (
@@ -125,7 +125,7 @@ export function SettingsWalletEdit({
           </Flex>
         </Flex>
         <Flex gap="none">
-          <Box bg="mainBackground" pb="md">
+          <Box bg="backgroundBackdrop" pb="md">
             <Text color="textSecondary" fontWeight="500" variant="body">
               {t('Theme')}
             </Text>

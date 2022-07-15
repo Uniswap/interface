@@ -90,7 +90,7 @@ export function DappSwitchNetworkModal({ selectedSession, onClose }: DappSwitchN
       header={
         <Flex centered gap="xxs" py="md">
           <Text variant="mediumLabel">{t('Switch Network')}</Text>
-          <Text color="deprecated_blue" variant="caption">
+          <Text color="accentActive" variant="caption">
             {selectedSession.dapp.url}
           </Text>
         </Flex>

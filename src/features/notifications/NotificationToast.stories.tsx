@@ -12,7 +12,7 @@ export default {
   component: WCNotification,
   decorators: [
     (Story) => (
-      <Box bg="mainBackground" p="md" width={300}>
+      <Box bg="backgroundBackdrop" p="md" width={300}>
         <Story />
       </Box>
     ),

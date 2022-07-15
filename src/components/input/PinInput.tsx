@@ -16,8 +16,8 @@ export default function PinInput({ length, setValue, value }: PinInputProps) {
           {[...Array(length)].map((_, i) => (
             <Box
               key={i}
-              bg={i < value.length ? 'deprecated_textColor' : 'none'}
-              borderColor="deprecated_gray600"
+              bg={i < value.length ? 'textPrimary' : 'backgroundAction'}
+              borderColor="backgroundOutline"
               borderRadius="full"
               borderWidth={1}
               height={15}

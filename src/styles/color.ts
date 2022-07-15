@@ -72,6 +72,7 @@ export interface GlobalPalette {
   blue800: string
   blue900: string
   blueVibrant: string
+  magentaVibrant: string
   networkEthereum: string
   networkOptimism: string
   networkOptimismSoft: string
@@ -152,6 +153,9 @@ export const colors: GlobalPalette = {
   blue800: '#06163B',
   blue900: '#00072F',
   blueVibrant: '#587BFF',
+  // TODO: add magenta 50-900
+  magentaVibrant: '#FC72FF',
+  // TODO: add all other vibrant variations
   networkEthereum: '#627EEA',
   networkOptimism: '#FF0420',
   networkOptimismSoft: 'rgba(255, 4, 32, 0.16)',
@@ -162,31 +166,7 @@ export const colors: GlobalPalette = {
 }
 
 export interface Palette {
-  deprecated_primary1: string
-  deprecated_primary2: string
-  deprecated_primary3: string
-  deprecated_primaryText: string
-  deprecated_secondary1: string
-  deprecated_secondary2: string
-  deprecated_background1: string
-  deprecated_textColor: string
-  deprecated_gray50: string
-  deprecated_gray100: string
-  deprecated_gray200: string
-  deprecated_gray400: string
-  deprecated_gray600: string
-  deprecated_paleBlue: string
-  deprecated_blue: string
-  deprecated_green: string
-  deprecated_pink: string
-  deprecated_purple: string
-  deprecated_orange: string
-  deprecated_paleOrange: string
-  deprecated_red: string
-  deprecated_yellow: string
-  deprecated_success: string
-  deprecated_warning: string
-  deprecated_error: string
+  userThemeColor: string
 
   backgroundBackdrop: string
   backgroundSurface: string
@@ -237,31 +217,8 @@ export interface Palette {
 }
 
 export const colorsLight: Palette = {
-  deprecated_primary1: colors.pink400,
-  deprecated_primary2: colors.pink300,
-  deprecated_primary3: colors.pink200,
-  deprecated_primaryText: colors.pink400,
-  deprecated_secondary1: colors.pink100,
-  deprecated_secondary2: colors.pink50,
-  deprecated_background1: colors.gray50,
-  deprecated_textColor: colors.gray900,
-  deprecated_gray50: colors.gray50,
-  deprecated_gray100: colors.gray100,
-  deprecated_gray200: colors.gray200,
-  deprecated_gray400: colors.gray400,
-  deprecated_gray600: colors.gray600,
-  deprecated_paleBlue: colors.blue50,
-  deprecated_blue: colors.blue400,
-  deprecated_green: colors.green400,
-  deprecated_pink: colors.pink400,
-  deprecated_purple: colors.pink400,
-  deprecated_orange: colors.red400,
-  deprecated_paleOrange: colors.red50,
-  deprecated_red: colors.red400,
-  deprecated_yellow: colors.yellow200,
-  deprecated_success: colors.green400,
-  deprecated_warning: colors.yellow200,
-  deprecated_error: colors.red400,
+  userThemeColor: colors.magentaVibrant,
+
   none: 'transparent',
 
   backgroundBackdrop: colors.white,
@@ -312,31 +269,7 @@ export const colorsLight: Palette = {
 }
 
 export const colorsDark: Palette = {
-  deprecated_primary1: colors.blue400,
-  deprecated_primary2: colors.blue300,
-  deprecated_primary3: colors.blue200,
-  deprecated_primaryText: colors.blue400,
-  deprecated_secondary1: colors.blue700,
-  deprecated_secondary2: colors.blue800,
-  deprecated_background1: colors.gray900,
-  deprecated_textColor: colors.white,
-  deprecated_gray50: colors.gray600,
-  deprecated_gray100: colors.gray400,
-  deprecated_gray200: colors.gray200,
-  deprecated_gray400: colors.gray100,
-  deprecated_gray600: colors.gray50,
-  deprecated_paleBlue: colors.blue800,
-  deprecated_blue: colors.blue400,
-  deprecated_green: colors.green400,
-  deprecated_pink: colors.pink400,
-  deprecated_purple: colors.pink400,
-  deprecated_orange: colors.red400,
-  deprecated_paleOrange: colors.red50,
-  deprecated_red: colors.red400,
-  deprecated_yellow: colors.yellow200,
-  deprecated_success: colors.green400,
-  deprecated_warning: colors.yellow200,
-  deprecated_error: colors.red400,
+  userThemeColor: colors.magentaVibrant,
 
   backgroundBackdrop: colors.black,
   backgroundSurface: colors.gray900,
@@ -360,8 +293,6 @@ export const colorsDark: Palette = {
   accentSuccessSoft: opacify(12, colors.green400),
   accentWarningSoft: opacify(12, colors.gold200),
   accentFailureSoft: opacify(12, colors.red400),
-
-  // TODO: rgba(white) or rgba(black)
 
   accentTextDarkPrimary: opacify(80, colors.black),
   accentTextDarkSecondary: opacify(60, colors.black),
