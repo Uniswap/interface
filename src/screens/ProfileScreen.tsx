@@ -18,7 +18,7 @@ import SessionsButton from 'src/components/WalletConnect/SessionsButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Screens } from 'src/screens/Screens'
 import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
@@ -30,8 +30,9 @@ export function ProfileScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  const activeAccount = useActiveAccount()
-  const address = useMemo(() => activeAccount?.address, [activeAccount])
+  const activeAccount = useActiveAccountWithThrow()
+  const address = activeAccount.address
+
   const { sessions } = useWalletConnect(address)
 
   const transactions = useAllFormattedTransactions(address)
@@ -59,39 +60,38 @@ export function ProfileScreen({ navigation }: Props) {
     }
   }, [address, navigation])
 
-  if (!activeAccount || !address) {
-    return <Text>Loading To Do</Text>
-  }
-
-  const ContentHeader = (
-    <Flex gap="lg" my="sm">
-      {/* nav header */}
-      <Flex row justifyContent="space-between">
-        <Text variant="headlineSmall">{t('Activity')}</Text>
-        <Flex centered row gap="md">
-          {isWalletConnectSupportedAccount(activeAccount) && (
-            <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-              <Scan color={theme.colors.textSecondary} height={24} width={24} />
+  const ContentHeader = useMemo(
+    () => (
+      <Flex gap="lg" my="sm">
+        {/* nav header */}
+        <Flex row justifyContent="space-between">
+          <Text variant="headlineSmall">{t('Activity')}</Text>
+          <Flex centered row gap="md">
+            {isWalletConnectSupportedAccount(activeAccount) && (
+              <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+                <Scan color={theme.colors.textSecondary} height={24} width={24} />
+              </Button>
+            )}
+            <Button name={ElementName.Settings} onPress={onPressSettings}>
+              <Settings color={theme.colors.textSecondary} height={24} width={24} />
             </Button>
-          )}
-          <Button name={ElementName.Settings} onPress={onPressSettings}>
-            <Settings color={theme.colors.textSecondary} height={24} width={24} />
-          </Button>
+          </Flex>
+        </Flex>
+        {/* profile info */}
+        <Flex centered gap="sm" my="lg">
+          <AddressDisplay
+            address={address}
+            captionVariant="mediumLabel"
+            direction="column"
+            showAddressAsSubtitle={true}
+            showCopy={true}
+            size={48}
+            variant="headlineMedium"
+          />
         </Flex>
       </Flex>
-      {/* profile info */}
-      <Flex centered gap="sm" my="lg">
-        <AddressDisplay
-          address={address}
-          captionVariant="mediumLabel"
-          direction="column"
-          showAddressAsSubtitle={true}
-          showCopy={true}
-          size={48}
-          variant="headlineMedium"
-        />
-      </Flex>
-    </Flex>
+    ),
+    [activeAccount, address, onPressScan, onPressSettings, t, theme.colors.textSecondary]
   )
 
   return (

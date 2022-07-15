@@ -1,10 +1,9 @@
 import { DrawerActions } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { AppStackParamList } from 'src/app/navigation/types'
+import { useHomeStackNavigation } from 'src/app/navigation/types'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SendIcon from 'src/assets/icons/send.svg'
@@ -27,14 +26,15 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import {
+  useActiveAccount,
+  useActiveAccountAddressWithThrow,
+  useActiveAccountWithThrow,
+} from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Screens } from 'src/screens/Screens'
 import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 
-type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
-
-export function HomeScreen({ navigation }: Props) {
+export function HomeScreen() {
   // imports test account for easy development/testing
   useTestAccount()
   promptPushPermission()
@@ -42,50 +42,14 @@ export function HomeScreen({ navigation }: Props) {
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
 
-  const dispatch = useAppDispatch()
-  const theme = useAppTheme()
-
   const { balances } = useAllBalancesByChainId(activeAccount?.address, currentChains)
-
-  const onPressScan = () => {
-    selectionAsync()
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
-    )
-  }
-
-  const onPressAccountHeader = () => {
-    navigation.dispatch(DrawerActions.toggleDrawer())
-  }
 
   return (
     <>
       <HeaderScrollScreen
         background={<AppBackground isStrongAccent />}
-        contentHeader={
-          <Box
-            alignItems="center"
-            flexDirection="row"
-            justifyContent="space-between"
-            px="xs"
-            py="sm">
-            <AccountHeader onPress={onPressAccountHeader} />
-            {activeAccount && isWalletConnectSupportedAccount(activeAccount) && (
-              <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
-              </Button>
-            )}
-          </Box>
-        }
-        fixedHeader={
-          <Flex centered mb="xxs">
-            {activeAccount && (
-              <AddressDisplay address={activeAccount.address} variant="mediumLabel" />
-            )}
-          </Flex>
-        }>
+        contentHeader={<ContentHeader />}
+        fixedHeader={<FixedHeader />}>
         <Flex gap="sm" px="sm">
           <Flex gap="lg" p="sm">
             <TotalBalance showRelativeChange balances={balances} />
@@ -100,6 +64,47 @@ export function HomeScreen({ navigation }: Props) {
       {/* TODO: remove when app secures funds  */}
       <BiometricCheck />
     </>
+  )
+}
+
+function FixedHeader() {
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  return (
+    <Flex centered mb="xxs">
+      <AddressDisplay address={activeAccountAddress} variant="mediumLabel" />
+    </Flex>
+  )
+}
+
+function ContentHeader() {
+  const navigation = useHomeStackNavigation()
+  const dispatch = useAppDispatch()
+  const theme = useAppTheme()
+
+  const onPressScan = useCallback(() => {
+    selectionAsync()
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
+    )
+  }, [dispatch])
+
+  const onPressAccountHeader = useCallback(() => {
+    navigation.dispatch(DrawerActions.toggleDrawer())
+  }, [navigation])
+
+  const activeAccount = useActiveAccountWithThrow()
+
+  return (
+    <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="xs" py="sm">
+      <AccountHeader onPress={onPressAccountHeader} />
+      {isWalletConnectSupportedAccount(activeAccount) && (
+        <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+          <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
+        </Button>
+      )}
+    </Box>
   )
 }
 

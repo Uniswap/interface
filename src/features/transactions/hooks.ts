@@ -169,7 +169,7 @@ export interface AllFormattedTransactions {
 export function useAllFormattedTransactions(
   address: string | undefined | null
 ): AllFormattedTransactions {
-  // Retreive all transactions for account.
+  // Retrieve all transactions for account.
   const { currentData: txData } = useTransactionHistoryQuery(
     address ? requests[Namespace.Address].transactions([address]) : skipToken
   )

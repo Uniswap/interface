@@ -11,11 +11,7 @@ import TransactionSummaryItem, {
 } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
 import { TransactionStatus } from 'src/features/transactions/types'
 
-const key = (info: TransactionSummaryInfo) => info.hash
-
-/**
- * Displays historical and pending transactions for a given address.
- */
+/** Displays historical and pending transactions for a given address. */
 export function TransactionList({ transactions }: { transactions: AllFormattedTransactions }) {
   const { t } = useTranslation()
   const { pending, todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList } =
@@ -47,17 +43,25 @@ export function TransactionList({ transactions }: { transactions: AllFormattedTr
 
   return (
     <SectionList
-      ItemSeparatorComponent={() => <Separator px="md" />}
+      ItemSeparatorComponent={SectionSeparator}
       keyExtractor={key}
       renderItem={renderItem}
-      renderSectionHeader={({ section: { title } }) => (
-        <Box bg="backgroundBackdrop" px="xs" py="md">
-          <Text color="textSecondary" variant="smallLabel">
-            {title}
-          </Text>
-        </Box>
-      )}
+      renderSectionHeader={SectionTitle}
       sections={sectionData}
     />
   )
+}
+
+const key = (info: TransactionSummaryInfo) => info.hash
+
+const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
+  <Box bg="backgroundBackdrop" px="xs" py="md">
+    <Text color="textSecondary" variant="smallLabel">
+      {title}
+    </Text>
+  </Box>
+)
+
+function SectionSeparator() {
+  return <Separator px="md" />
 }

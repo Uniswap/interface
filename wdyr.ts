@@ -6,5 +6,7 @@ if (process.env.NODE_ENV === 'development') {
   // Default to not tracking all components, add whyDidYouRender = true to component functions you want to track
   whyDidYouRender(React, {
     trackAllPureComponents: false,
+    // trackHooks: true,
+    // trackExtraHooks: [[ReactRedux, 'useSelector']],
   })
 }

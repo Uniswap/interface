@@ -1,6 +1,6 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { BlurView } from 'expo-blur'
-import React, { PropsWithChildren, ReactElement, useRef } from 'react'
+import React, { PropsWithChildren, ReactElement, useMemo, useRef } from 'react'
 import { useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolate,
@@ -73,30 +73,36 @@ export function HeaderScrollScreen({
     }
   })
 
-  const ContentHeader = (
-    <AnimatedFlex mt="lg" mx="md" style={contentHeaderStyle}>
-      {contentHeader}
-    </AnimatedFlex>
+  const ContentHeader = useMemo(
+    () => (
+      <AnimatedFlex mt="lg" mx="md" style={contentHeaderStyle}>
+        {contentHeader}
+      </AnimatedFlex>
+    ),
+    [contentHeader, contentHeaderStyle]
   )
 
-  const FixedHeaderBar = (
-    <AnimatedBlurView
-      animatedProps={blurViewProps}
-      intensity={95}
-      style={[
-        headerStyle,
-        BlurHeaderStyle,
-        {
-          paddingTop: insets.top,
-        },
-      ]}
-      tint={isDarkMode ? 'dark' : 'default'}>
-      <WithScrollToTop ref={listRef}>
-        <Box mx="md" my="sm">
-          {fixedHeader}
-        </Box>
-      </WithScrollToTop>
-    </AnimatedBlurView>
+  const FixedHeaderBar = useMemo(
+    () => (
+      <AnimatedBlurView
+        animatedProps={blurViewProps}
+        intensity={95}
+        style={[
+          headerStyle,
+          BlurHeaderStyle,
+          {
+            paddingTop: insets.top,
+          },
+        ]}
+        tint={isDarkMode ? 'dark' : 'default'}>
+        <WithScrollToTop ref={listRef}>
+          <Box mx="md" my="sm">
+            {fixedHeader}
+          </Box>
+        </WithScrollToTop>
+      </AnimatedBlurView>
+    ),
+    [blurViewProps, fixedHeader, headerStyle, insets.top, isDarkMode]
   )
 
   return (
