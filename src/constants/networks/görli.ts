@@ -52,7 +52,7 @@ const görliInfo: NetworkInfo = {
     quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
   },
-  avgrageBlockTimeInSeconds: 13.13,
+  averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
 }

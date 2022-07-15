@@ -61,7 +61,7 @@ const bnbTestnetInfo: NetworkInfo = {
     quoter: '0xF4117D3c57BFe20fB2600eaE4028FB12bF99Ac10',
     routers: '0x785b8893342dfEf9B5D565f67be971b859d34a15',
   },
-  avgrageBlockTimeInSeconds: 3,
+  averageBlockTimeInSeconds: 3,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
 }

@@ -318,7 +318,7 @@ export const WBTC_ARBITRUM = new Token(
 )
 
 export const BLOCKS_PER_YEAR = (chainId: ChainId): number =>
-  Math.floor((60 / NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds) * 60 * 24 * 365)
+  Math.floor((60 / NETWORKS_INFO[chainId].averageBlockTimeInSeconds) * 60 * 24 * 365)
 
 export const SECONDS_PER_YEAR = 31556926
 

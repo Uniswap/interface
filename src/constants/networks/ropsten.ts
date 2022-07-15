@@ -59,7 +59,7 @@ const ropstenInfo: NetworkInfo = {
     quoter: '0x7BA7cC55D3Ef5226b421bb3fD689251855B4cd21',
     routers: '0x1A46dCaC1d91F1731574BEfAEDaC4E0392726e35',
   },
-  avgrageBlockTimeInSeconds: 13.13,
+  averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
 }

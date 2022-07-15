@@ -57,7 +57,7 @@ export type NetworkInfo = {
   //   USDC: Token
   //   USDT: Token
   // }
-  readonly avgrageBlockTimeInSeconds: number
+  readonly averageBlockTimeInSeconds: number
   readonly coingeckoNetworkId: string //https://api.coingecko.com/api/v3/asset_platforms
   readonly coingeckoNativeTokenId: string //https://api.coingecko.com/api/v3/coins/list
 }

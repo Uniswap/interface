@@ -104,13 +104,13 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
           if (!isFarmStarted) {
             remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
             estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].avgrageBlockTimeInSeconds
+              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].averageBlockTimeInSeconds
             formattedEstimatedRemainingTime =
               estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           } else {
             remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
             estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].avgrageBlockTimeInSeconds
+              remainingBlocks && remainingBlocks * NETWORKS_INFO[chainId || ChainId.MAINNET].averageBlockTimeInSeconds
             formattedEstimatedRemainingTime =
               estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           }

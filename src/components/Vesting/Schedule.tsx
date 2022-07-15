@@ -53,7 +53,7 @@ const Schedule = ({
       startTimestampFromBlock +
         schedule[1]
           .sub(schedule[0])
-          .mul(100 * NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds)
+          .mul(100 * NETWORKS_INFO[chainId].averageBlockTimeInSeconds)
           .div(100)
           .toNumber())
   const startTimestamp =
@@ -68,7 +68,7 @@ const Schedule = ({
       chainId && currentBlockNumber && schedule[1].toNumber() > currentBlockNumber
         ? BigNumber.from(schedule[1])
             .sub(currentBlockNumber)
-            .mul(100 * NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds)
+            .mul(100 * NETWORKS_INFO[chainId].averageBlockTimeInSeconds)
             .div(100)
             .toNumber()
         : undefined
@@ -191,7 +191,7 @@ const Schedule = ({
     chainId &&
     getFormattedTimeFromSecond(
       schedule[1].sub(schedule[0]).toNumber() *
-        (rewardLockerVersion === RewardLockerVersion.V1 ? NETWORKS_INFO[chainId].avgrageBlockTimeInSeconds : 1),
+        (rewardLockerVersion === RewardLockerVersion.V1 ? NETWORKS_INFO[chainId].averageBlockTimeInSeconds : 1),
     )
 
   return (

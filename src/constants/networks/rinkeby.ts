@@ -56,7 +56,7 @@ const rinkebyInfo: NetworkInfo = {
     quoter: '0x5BcbB0bb7236d9fb3DB4C996B05f0e6162Ba5B64',
     routers: '0x335cB9b399e3c33c4a0d1bE7407675C888f66e86',
   },
-  avgrageBlockTimeInSeconds: 13.13,
+  averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
 }
