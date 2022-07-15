@@ -31,6 +31,7 @@ export const enum SectionName {
 /** Known modals for telemetry purposes. */
 export const enum ModalName {
   Account = 'account-modal',
+  AddWallet = 'add-wallet-modal',
   ConnectedDapps = 'connected-dapps',
   NetworkSelector = 'network-selector-modal',
   WalletQRCode = 'wallet-qr-code-modal',
@@ -58,6 +59,7 @@ export const enum ElementName {
   AccountCard = 'account-card',
   AddManualBackup = 'add-manual-backup',
   AddiCloudBackup = 'add-icloud-backup',
+  AddViewOnlyWallet = 'add-view-only-wallet',
   ApplyThemeFromNFT = 'apply-theme-from-nft',
   Back = 'back',
   BuyToken = 'buy-token',

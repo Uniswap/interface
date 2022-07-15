@@ -1,10 +1,9 @@
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-import { getStepCount, getStepNumber, ImportType } from 'src/features/onboarding/utils'
+import { getFlow, ImportType } from 'src/features/onboarding/utils'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { getWrapType, serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
-import { OnboardingScreens } from 'src/screens/Screens'
 
 describe(serializeQueryParams, () => {
   it('handles the correct types', () => {
@@ -48,16 +47,20 @@ describe(getWrapType, () => {
   })
 })
 
-describe(getStepCount, () => {
-  it('correctly returns length of create flow', () => {
-    expect(getStepCount(ImportType.Create)).toBe(5)
+describe(getFlow, () => {
+  it('correctly returns length of onboarding create flow without seed phrase with add security screen ', () => {
+    expect(getFlow(ImportType.Create, true, false, true)).toHaveLength(5)
   })
 
-  it('identifies correct step number', () => {
-    expect(getStepNumber(ImportType.Watch, OnboardingScreens.Notifications)).toEqual(1)
+  it('correctly returns length of onboarding create flow with seed phrase existing without add security screen ', () => {
+    expect(getFlow(ImportType.Create, true, true, true)).toHaveLength(4)
   })
 
-  it('returns undefined for incorrect screen', () => {
-    expect(getStepNumber(ImportType.Watch, OnboardingScreens.Backup)).toEqual(undefined)
+  it('correctly returns length of add account create flow showing add security screen and seed phrase does not exist', () => {
+    expect(getFlow(ImportType.Create, false, false, false)).toHaveLength(5)
+  })
+
+  it('correctly returns length of add account with view-only wallet not showing add security screen, but face ID was already added', () => {
+    expect(getFlow(ImportType.Watch, true, false, false)).toHaveLength(2)
   })
 })

@@ -8,7 +8,12 @@ export enum ImportType {
   Restore = 'Restore',
 }
 
-// Screens in order based on the import method being used.
+export enum OnboardingEntryPoint {
+  Sidebar = 'Sidebar',
+  FreshInstall = 'FreshInstall',
+}
+
+// Screens in order based on the import method being used. Currently only used for onboarding header indicator
 const FLOWS: Record<ImportType, OnboardingScreens[]> = {
   [ImportType.Create]: [
     OnboardingScreens.EditName,
@@ -39,18 +44,26 @@ const FLOWS: Record<ImportType, OnboardingScreens[]> = {
   [ImportType.Restore]: [],
 }
 
-// Get the total amount of steps based on the import method type.
-export function getStepCount(importType: ImportType | undefined) {
-  if (!importType) return undefined
-  return FLOWS[importType]?.length ?? undefined
+export function getFlow(
+  importType: ImportType,
+  isBiometricAuthEnabled: boolean,
+  hasSeedPhrase: boolean,
+  isInitialOnboarding: boolean
+): OnboardingScreens[] {
+  let flows = FLOWS[importType]
+  if (isBiometricAuthEnabled && !isInitialOnboarding) {
+    flows = flows.filter((screen) => screen !== OnboardingScreens.Security)
+  }
+
+  if (hasSeedPhrase) {
+    flows = flows.filter((screen) => screen !== OnboardingScreens.Backup)
+  }
+  return flows
 }
 
 // Reference the flow description to detect the index within total steps based on screen name.
-export function getStepNumber(
-  importType: ImportType | undefined,
-  screenName: OnboardingScreens | undefined
-) {
-  if (!screenName || !importType) return undefined
-  const stepNumber = FLOWS[importType].indexOf(screenName)
+export function getStepNumber(flow: OnboardingScreens[], screenName?: OnboardingScreens) {
+  if (!screenName) return undefined
+  const stepNumber = flow.indexOf(screenName)
   return stepNumber === -1 ? undefined : stepNumber
 }

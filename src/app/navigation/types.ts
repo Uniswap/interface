@@ -10,7 +10,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { EducationContentType } from 'src/components/education'
 import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
-import { ImportType } from 'src/features/onboarding/utils'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
@@ -69,7 +69,8 @@ export type ProfileStackParamList = {
 
 export type OnboardingStackBaseParams =
   | {
-      importType?: ImportType | undefined
+      importType?: ImportType
+      entryPoint?: OnboardingEntryPoint
     }
   | undefined
 
