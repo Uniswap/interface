@@ -8,7 +8,6 @@ import { useMemo } from 'react'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
-
 export { ApprovalState } from '../useApproval'
 
 /** Returns approval state for all known swap routers */
