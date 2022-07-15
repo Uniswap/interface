@@ -123,11 +123,10 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { connector, account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
-  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -154,19 +153,19 @@ export default function WalletModal({
     }
   }, [pendingConnector, walletView])
 
-  // When new wallet is successfully selected and set by the user, trigger logging of Amplitude analytics event.
+  // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
-    if (account !== lastActiveWalletAddress) {
+    if (!!account && account !== lastActiveWalletAddress) {
       sendAnalyticsEvent(EventName.WALLET_CONNECTED, {
         result: WALLET_CONNECTION_RESULT.SUCCEEDED,
         wallet_address: account,
-        wallet_type: selectedWallet,
-        // TODO: add correct is_reconnect value.
+        wallet_type: getConnectionName(getConnection(connector).type, getIsMetaMask()),
+        // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
         is_reconnect: false,
       })
-      setLastActiveWalletAddress(account)
     }
-  }, [lastActiveWalletAddress, account, selectedWallet])
+    setLastActiveWalletAddress(account)
+  }, [lastActiveWalletAddress, account, connector])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {

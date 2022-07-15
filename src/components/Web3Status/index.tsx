@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
 import { useMemo } from 'react'
@@ -186,11 +188,18 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
-        <Text>
-          <Trans>Connect Wallet</Trans>
-        </Text>
-      </Web3StatusConnect>
+      <TraceEvent
+        events={[Event.onClick]}
+        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+        properties={{ received_swap_quote: false }}
+        element={ElementName.CONNECT_WALLET_BUTTON}
+      >
+        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
+          <Text>
+            <Trans>Connect Wallet</Trans>
+          </Text>
+        </Web3StatusConnect>
+      </TraceEvent>
     )
   }
 }

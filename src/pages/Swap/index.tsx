@@ -20,6 +20,7 @@ import { Context, useCallback, useContext, useEffect, useMemo, useState } from '
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useToggleWalletModal } from 'state/application/hooks'
 import { TradeState } from 'state/routing/types'
 import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
 
@@ -46,7 +47,6 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useUSDCValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
