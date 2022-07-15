@@ -1,12 +1,10 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import QrCode from 'src/assets/icons/qr-code.svg'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
-import { UniconAttributes } from 'src/components/unicons/types'
-import { deriveUniconAttributeIndices, getUniconAttributeData } from 'src/components/unicons/utils'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
@@ -34,22 +32,6 @@ export function AccountCardItem({
   const { address } = account
   const theme = useAppTheme()
 
-  const gradientData = useMemo(() => {
-    const attributeIndices = deriveUniconAttributeIndices(address || '')
-    if (!attributeIndices) return undefined
-
-    const attributeData = getUniconAttributeData(attributeIndices)
-    return {
-      start: attributeData[UniconAttributes.GradientStart].toString(),
-      end: attributeData[UniconAttributes.GradientEnd].toString(),
-    }
-  }, [address])
-
-  // TODO: make the outline / bg an actual gradient as per design
-  // instead of just one solid color (gradientStart for now)
-  const gradientStart = gradientData?.start ?? 'accentActive'
-  // const gradientEnd = gradientData?.end ?? 'accentActive'
-
   const currentChains = useActiveChainIds()
   const { balances } = useAllBalancesByChainId(address, currentChains)
 
@@ -63,8 +45,10 @@ export function AccountCardItem({
         my="xs"
         p="md"
         style={{
-          borderColor: gradientStart,
-          backgroundColor: isActive ? opacify(12, gradientStart) : theme.colors.backgroundContainer,
+          borderColor: theme.colors.userThemeColor,
+          backgroundColor: isActive
+            ? opacify(12, theme.colors.userThemeColor)
+            : theme.colors.backgroundContainer,
         }}
         testID={`account_item/${address.toLowerCase()}`}>
         <Flex row alignItems="flex-start" borderRadius="sm" justifyContent="space-between">
