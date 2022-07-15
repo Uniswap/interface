@@ -50,7 +50,7 @@ export function useTokenBalance(
 export function useNativeCurrencyBalance(
   chainId: ChainId,
   accountAddress?: Address
-): { balance: CurrencyAmount<Currency>; loading: boolean } {
+): { balance: CurrencyAmount<NativeCurrency>; loading: boolean } {
   const multicallContract = useMulticall2Contract(chainId)
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
 

@@ -26,6 +26,8 @@ const partialSwapState: PartialDerivedSwapInfo = {
   },
   exactCurrencyField: CurrencyField.INPUT,
   trade: { loading: false, error: undefined, trade: null },
+  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '11000'),
+  gasFee: '100',
 }
 
 const insufficientBalanceState: PartialDerivedSwapInfo = {
@@ -43,6 +45,27 @@ const insufficientBalanceState: PartialDerivedSwapInfo = {
   },
   exactCurrencyField: CurrencyField.INPUT,
   trade: { loading: false, error: undefined, trade: null },
+  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '11000'),
+  gasFee: '100',
+}
+
+const insufficientGasBalanceState: PartialDerivedSwapInfo = {
+  currencyAmounts: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '1000'),
+    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '2'),
+  },
+  currencyBalances: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '10000'),
+    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '0'),
+  },
+  currencies: {
+    [CurrencyField.INPUT]: DAI,
+    [CurrencyField.OUTPUT]: ETH,
+  },
+  exactCurrencyField: CurrencyField.INPUT,
+  trade: { loading: false, error: undefined, trade: null },
+  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '0'),
+  gasFee: '100',
 }
 
 const mockTranslate = jest.fn()
@@ -58,6 +81,13 @@ describe(getSwapWarnings, () => {
     const warnings = getSwapWarnings(mockTranslate, insufficientBalanceState)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(SwapWarningLabel.InsufficientFunds)
+  })
+
+  it('catches insufficient gas errors', () => {
+    const warnings = getSwapWarnings(mockTranslate, insufficientGasBalanceState)
+    expect(
+      warnings.find((warning) => warning.type === SwapWarningLabel.InsufficientGasFunds)
+    ).toBeTruthy()
   })
 
   it('catches multiple errors', () => {

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import React, { useEffect, useMemo, useRef } from 'react'
@@ -70,6 +70,7 @@ export type DerivedSwapInfo<
   gasSpendEstimate?: GasSpendEstimate
   gasPrice?: string
   exactApproveRequired?: boolean
+  nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
   swapMethodParameters?: MethodParameters
   warningModalType?: WarningModalType
 }
@@ -119,6 +120,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     currencyIn?.chainId ?? ChainId.Mainnet,
     activeAccount?.address
   )
+
   const { balance: nativeOutBalance } = useNativeCurrencyBalance(
     currencyOut?.chainId ?? ChainId.Mainnet,
     activeAccount?.address
@@ -179,12 +181,16 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
   }
 
+  const gasFee = useSwapGasFee(state)
+
   const warnings = getSwapWarnings(t, {
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,
     currencies,
     trade,
+    gasFee,
+    nativeCurrencyBalance: nativeInBalance,
   })
 
   return {
@@ -204,6 +210,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     gasSpendEstimate,
     gasPrice,
     exactApproveRequired,
+    nativeCurrencyBalance: nativeInBalance,
     swapMethodParameters,
     warnings,
     warningModalType,

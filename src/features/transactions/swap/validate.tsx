@@ -1,7 +1,8 @@
-import { Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, NativeCurrency, Percent } from '@uniswap/sdk-core'
 import { TFunction } from 'react-i18next'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { Theme } from 'src/styles/theme'
 import { formatPriceImpact } from 'src/utils/format'
 
@@ -10,6 +11,7 @@ const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 
 export enum SwapWarningLabel {
   InsufficientFunds = 'insufficient_funds',
+  InsufficientGasFunds = 'insufficient_gas_funds',
   FormIncomplete = 'form_incomplete',
   UnsupportedNetwork = 'unsupported_network',
   PriceImpactMedium = 'price_impact_medium',
@@ -46,8 +48,15 @@ export type SwapWarning = {
 
 export type PartialDerivedSwapInfo = Pick<
   DerivedSwapInfo,
-  'currencyBalances' | 'currencyAmounts' | 'currencies' | 'exactCurrencyField' | 'trade'
->
+  | 'currencyBalances'
+  | 'currencyAmounts'
+  | 'currencies'
+  | 'exactCurrencyField'
+  | 'trade'
+  | 'nativeCurrencyBalance'
+> & {
+  gasFee?: string
+}
 
 export function showWarningInPanel(warning: SwapWarning) {
   return (
@@ -75,7 +84,15 @@ export function getSwapWarningColor(warning?: SwapWarning): SwapWarningColor {
 
 // TODO: add swap warnings for: price impact, router errors, insufficient gas funds, low liquidity
 export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
-  const { currencyBalances, currencyAmounts, currencies, exactCurrencyField, trade } = state
+  const {
+    currencyBalances,
+    currencyAmounts,
+    currencies,
+    exactCurrencyField,
+    trade,
+    nativeCurrencyBalance,
+    gasFee,
+  } = state
 
   const warnings: SwapWarning[] = []
   const priceImpact = trade.trade?.priceImpact
@@ -83,13 +100,42 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   // insufficient balance for swap
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
-  if (currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)) {
+  const swapBalanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
+  if (swapBalanceInsufficient) {
     warnings.push({
       type: SwapWarningLabel.InsufficientFunds,
       severity: SwapWarningSeverity.None,
       action: SwapWarningAction.DisableSwapReview,
       title: t('You don’t have enough {{ symbol }}.', {
         symbol: currencyAmountIn.currency?.symbol,
+      }),
+    })
+  }
+
+  // insufficient funds for gas
+  const nativeAmountIn = currencyAmountIn?.currency.isNative
+    ? (currencyAmountIn as CurrencyAmount<NativeCurrency>)
+    : undefined
+  const hasGasFunds = hasSufficientFundsIncludingGas({
+    transactionAmount: nativeAmountIn,
+    gasFee,
+    nativeCurrencyBalance,
+  })
+  if (
+    // if input balance is already insufficient for swap, don't show balance warning for gas
+    !swapBalanceInsufficient &&
+    nativeCurrencyBalance &&
+    !hasGasFunds
+  ) {
+    warnings.push({
+      type: SwapWarningLabel.InsufficientGasFunds,
+      severity: SwapWarningSeverity.Medium,
+      action: SwapWarningAction.DisableSwapSubmit,
+      title: t('Not enough {{ nativeCurrency }} to pay network fee', {
+        nativeCurrency: nativeCurrencyBalance.currency.symbol,
+      }),
+      message: t('Network fees are paid in the native token. Buy more {{ nativeCurrency }}.', {
+        nativeCurrency: nativeCurrencyBalance.currency.symbol,
       }),
     })
   }

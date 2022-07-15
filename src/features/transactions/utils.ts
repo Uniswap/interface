@@ -1,3 +1,4 @@
+import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
@@ -36,4 +37,29 @@ export function getNotificationName(transaction: TransactionDetails, t: TFunctio
   }
 
   return t('Transaction')
+}
+
+function getNativeCurrencyTotalSpend(
+  value?: CurrencyAmount<NativeCurrency>,
+  gasFee?: string,
+  nativeCurrency?: NativeCurrency
+): Nullable<CurrencyAmount<NativeCurrency>> {
+  if (!gasFee || !nativeCurrency) return value
+
+  const gasFeeAmount = CurrencyAmount.fromRawAmount(nativeCurrency, gasFee)
+  return value ? gasFeeAmount.add(value) : gasFeeAmount
+}
+
+export function hasSufficientFundsIncludingGas(params: {
+  transactionAmount?: CurrencyAmount<NativeCurrency>
+  gasFee?: string
+  nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
+}) {
+  const { transactionAmount, gasFee, nativeCurrencyBalance } = params
+  const totalSpend = getNativeCurrencyTotalSpend(
+    transactionAmount,
+    gasFee,
+    nativeCurrencyBalance?.currency
+  )
+  return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
 }

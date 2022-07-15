@@ -4,6 +4,7 @@ import { ChainId } from 'src/constants/chains'
 import { useNativeCurrencyBalance } from 'src/features/balances/hooks'
 import { FeeInfo } from 'src/features/gas/types'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 
 export function useHasSufficientFunds({
   account,
@@ -20,27 +21,16 @@ export function useHasSufficientFunds({
   const nativeBalance = useNativeCurrencyBalance(chainId || ChainId.Mainnet, account)
 
   const hasSufficientFunds = useMemo(() => {
-    if (!gasFeeInfo || !chainId) return true
-
-    const gasFeeAmount = gasFeeInfo
-      ? CurrencyAmount.fromRawAmount(nativeCurrency, gasFeeInfo.fee.urgent)
-      : undefined
     const transactionAmount = value
       ? CurrencyAmount.fromRawAmount(nativeCurrency, value)
       : undefined
 
-    let totalTransactionCost
-    if (gasFeeAmount && transactionAmount) {
-      totalTransactionCost = gasFeeAmount.add(transactionAmount)
-    } else if (gasFeeAmount) {
-      totalTransactionCost = gasFeeAmount
-    } else if (transactionAmount) {
-      totalTransactionCost = transactionAmount
-    }
-
-    if (!totalTransactionCost) return true
-    return nativeBalance.balance.greaterThan(totalTransactionCost)
-  }, [chainId, value, gasFeeInfo, nativeCurrency, nativeBalance])
+    return hasSufficientFundsIncludingGas({
+      transactionAmount,
+      gasFee: gasFeeInfo?.fee.urgent,
+      nativeCurrencyBalance: nativeBalance.balance,
+    })
+  }, [value, gasFeeInfo, nativeCurrency, nativeBalance])
 
   return hasSufficientFunds
 }

@@ -196,6 +196,8 @@
   "Cancel swap": "Cancel swap",
   "Swap anyway": "Swap anyway",
   "You don’t have enough {{ symbol }}.": "You don’t have enough {{ symbol }}.",
+  "Not enough {{ nativeCurrency }} to pay network fee": "Not enough {{ nativeCurrency }} to pay network fee",
+  "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.": "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.",
   "Rate impacted by swap size ({{ swapSize }})": "Rate impacted by swap size ({{ swapSize }})",
   "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.": "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.",
   "Error while checking transaction status": "Error while checking transaction status",
