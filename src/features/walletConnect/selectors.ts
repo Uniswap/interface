@@ -1,4 +1,5 @@
 import { RootState } from 'src/app/rootReducer'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import {
   WalletConnectRequest,
   WalletConnectSession,
@@ -7,7 +8,7 @@ import {
 export const selectSessions =
   (address: Nullable<string>) =>
   (state: RootState): WalletConnectSession[] => {
-    if (!address || !state.walletConnect.byAccount[address]) return []
+    if (!address || !state.walletConnect.byAccount[address]) return EMPTY_ARRAY
 
     return Object.values(state.walletConnect.byAccount[address].sessions)
   }

@@ -7,3 +7,6 @@ export enum PollingInterval {
   Normal = 60 * 1000, // 1 minute
   Fast = 15 * 1000, // 15 seconds
 }
+
+// Used when referential equality is required
+export const EMPTY_ARRAY: any[] = []
