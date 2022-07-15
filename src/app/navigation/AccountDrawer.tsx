@@ -178,7 +178,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     }
 
     const onPressRemove = () => {
-      if (!pendingEditAddress) return
+      if (!pendingEditAddress || !addressToAccount[pendingEditAddress]) return
       setShowEditAccountModal(false)
       setPendingRemoveAccount(addressToAccount[pendingEditAddress])
     }
@@ -217,7 +217,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       accountsData.length === 1 ||
       (mnemonicWallets.length === 1 &&
         !!pendingEditAddress &&
-        addressToAccount[pendingEditAddress].type === AccountType.Native)
+        addressToAccount[pendingEditAddress]?.type === AccountType.Native)
 
     if (!shouldHideRemoveOption) {
       editWalletOptions.push({
