@@ -8,6 +8,7 @@ import { UNISWAP_SPLASH_LOGO } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { RainbowLinearGradientStops } from 'src/components/gradients'
 import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
 import { Box, Flex } from 'src/components/layout'
@@ -85,20 +86,22 @@ export function LandingScreen({ navigation }: Props) {
               {t('I Already Have a Wallet')}
             </Text>
           </TextButton>
-          <Button
-            flexDirection="row"
-            justifyContent="center"
-            name={ElementName.OnboardingExplore}
-            pt="sm"
-            testID={ElementName.OnboardingExplore}
-            onPress={onPressExplore}>
-            <Text variant="caption">{t('Not ready? Try')}</Text>
-            <Text color="deprecated_purple" variant="caption">
-              {' '}
-              {t('Exploring')}{' '}
-            </Text>
-            <Text variant="caption">{t('first.')}</Text>
-          </Button>
+          <DevelopmentOnly>
+            <Button
+              flexDirection="row"
+              justifyContent="center"
+              name={ElementName.OnboardingExplore}
+              pt="sm"
+              testID={ElementName.OnboardingExplore}
+              onPress={onPressExplore}>
+              <Text variant="caption">{t('Not ready? Try')}</Text>
+              <Text color="deprecated_purple" variant="caption">
+                {' '}
+                {t('Exploring')}{' '}
+              </Text>
+              <Text variant="caption">{t('first.')}</Text>
+            </Button>
+          </DevelopmentOnly>
         </Flex>
       </Box>
     </Screen>
