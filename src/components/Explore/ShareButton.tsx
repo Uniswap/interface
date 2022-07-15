@@ -15,7 +15,7 @@ const ShareButtonDisplay = styled.div`
     color: ${({ theme }) => darken(0.1, theme.text2)};
   }
 `
-const ShareContainer = styled.div`
+const ShareActions = styled.div`
   position: absolute;
   top: 28px;
   right: 0px;
@@ -61,7 +61,7 @@ export default function ShareButton() {
     <ShareButtonDisplay ref={node}>
       <Share size={18} onClick={toggleShare} aria-label={`ShareOptions`} />
       {open && (
-        <ShareContainer>
+        <ShareActions>
           <ShareAction onClick={() => navigator.clipboard.writeText(window.location.href)}>
             <Link color={theme.text2} />
             Copy link
@@ -71,7 +71,7 @@ export default function ShareButton() {
             <Twitter color={theme.text2} />
             Share to Twitter
           </ShareAction>
-        </ShareContainer>
+        </ShareActions>
       )}
     </ShareButtonDisplay>
   )
