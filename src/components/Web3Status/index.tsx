@@ -5,7 +5,10 @@ import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/con
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
-import { useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
+import { TradeType } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
+import { useEffect, useMemo, useState, ReactNode} from 'react'
 import { Activity } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
@@ -14,13 +17,15 @@ import { isChainAllowed } from 'utils/switchChain'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useToggleWalletModal } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import { TransactionDetails } from '../../state/transactions/types'
+import { TransactionDetails } from '../../state/transactions/types
+import { useDerivedSwapInfo } from 'state/swap/hooks'
 import { shortenAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
+import { TradeState } from 'state/routing/types'
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -122,9 +127,19 @@ function Sock() {
   )
 }
 
+function getIsValidSwapQuote(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined, tradeState: TradeState, swapInputError?: ReactNode
+): boolean {
+  return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+  }
+
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
   const connectionType = getConnection(connector).type
+  const {
+    trade: { state: tradeState, trade },
+    inputError: swapInputError,
+  } = useDerivedSwapInfo()
+  const [validSwapQuote, setValidSwapQuote] = useState(getIsValidSwapQuote(trade, tradeState, swapInputError))
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -142,6 +157,8 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useToggleWalletModal()
+
+  useEffect(() => {setValidSwapQuote(getIsValidSwapQuote(trade, tradeState, swapInputError))}, [tradeState, trade, swapInputError])
 
   if (!chainId) {
     return null
@@ -191,7 +208,7 @@ function Web3StatusInner() {
       <TraceEvent
         events={[Event.onClick]}
         name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
-        properties={{ received_swap_quote: false }}
+        properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
         <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
