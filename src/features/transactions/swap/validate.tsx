@@ -1,5 +1,6 @@
 import { CurrencyAmount, NativeCurrency, Percent } from '@uniswap/sdk-core'
 import { TFunction } from 'react-i18next'
+import { SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
@@ -16,6 +17,8 @@ export enum SwapWarningLabel {
   UnsupportedNetwork = 'unsupported_network',
   PriceImpactMedium = 'price_impact_medium',
   PriceImpactHigh = 'price_impact_high',
+  LowLiquidity = 'low_liquidity',
+  SwapRouterError = 'swap_router_error',
 }
 
 export enum SwapWarningSeverity {
@@ -110,6 +113,34 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
         symbol: currencyAmountIn.currency?.symbol,
       }),
     })
+  }
+
+  // low liquidity and other swap errors
+  if (trade.error) {
+    // cast as any here because rtk-query recommends not typing error objects
+    // https://github.com/reduxjs/redux-toolkit/issues/1591
+    const errorData = trade.error as any
+    // assume swaps with no routes available are due to low liquidity
+    if (errorData?.data?.errorCode === SWAP_NO_ROUTE_ERROR) {
+      warnings.push({
+        type: SwapWarningLabel.LowLiquidity,
+        severity: SwapWarningSeverity.Medium,
+        action: SwapWarningAction.DisableSwapReview,
+        title: t('Not enough liquidity'),
+        message: t(
+          'There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.'
+        ),
+      })
+    } else {
+      // catch all other router errors in a generic swap router error message
+      warnings.push({
+        type: SwapWarningLabel.SwapRouterError,
+        severity: SwapWarningSeverity.Medium,
+        action: SwapWarningAction.DisableSwapReview,
+        title: t('Swap router error'),
+        message: t('The Uniswap router is experiencing issues—please try again later.'),
+      })
+    }
   }
 
   // insufficient funds for gas

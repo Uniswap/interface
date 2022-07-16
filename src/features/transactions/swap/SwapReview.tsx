@@ -62,10 +62,13 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   useUpdateSwapGasEstimate(dispatch, trade)
   const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
-  // TODO: handle blocking/unblocking submission for warnings with popups
   const swapDisabled = Boolean(
     !(isWrapAction(wrapType) || trade) ||
-      warnings.some((warning) => warning.action === SwapWarningAction.DisableSwapSubmit)
+      warnings.some(
+        (warning) =>
+          warning.action === SwapWarningAction.DisableSwapSubmit ||
+          warning.action === SwapWarningAction.DisableSwapReview
+      )
   )
 
   const { swapCallback } = useSwapCallback(

@@ -68,6 +68,29 @@ const insufficientGasBalanceState: PartialDerivedSwapInfo = {
   gasFee: '100',
 }
 
+const tradeErrorState: PartialDerivedSwapInfo = {
+  currencyAmounts: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '1000'),
+    [CurrencyField.OUTPUT]: null,
+  },
+  currencyBalances: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '10000'),
+    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '0'),
+  },
+  currencies: {
+    [CurrencyField.INPUT]: DAI,
+    [CurrencyField.OUTPUT]: ETH,
+  },
+  exactCurrencyField: CurrencyField.INPUT,
+  trade: {
+    loading: false,
+    error: { status: 404, data: { errorCode: 'GENERIC_ERROR' } },
+    trade: null,
+  },
+  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '0'),
+  gasFee: undefined,
+}
+
 const mockTranslate = jest.fn()
 
 describe(getSwapWarnings, () => {
@@ -101,5 +124,12 @@ describe(getSwapWarnings, () => {
 
     const warnings = getSwapWarnings(mockTranslate, incompleteAndInsufficientBalanceState)
     expect(warnings.length).toBe(2)
+  })
+
+  it('catches errors returned by the routing api', () => {
+    const warnings = getSwapWarnings(mockTranslate, tradeErrorState)
+    expect(
+      warnings.find((warning) => warning.type === SwapWarningLabel.SwapRouterError)
+    ).toBeTruthy()
   })
 })

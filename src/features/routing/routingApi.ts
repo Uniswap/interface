@@ -15,6 +15,9 @@ const DEFAULT_QUERY_PARAMS = {
   // minSplits: '5',
 }
 
+// error string hardcoded in @uniswap/routing-api
+export const SWAP_NO_ROUTE_ERROR = 'NO_ROUTE'
+
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
