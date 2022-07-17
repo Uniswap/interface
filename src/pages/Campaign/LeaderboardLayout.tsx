@@ -131,13 +131,11 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
                 {getShortenAddress(data.userAddress, above1200)}
               </LeaderboardTableBodyItem>
               <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-                {formatNumberWithPrecisionRange(data.totalPoint, 0, 2)}
+                {formatNumberWithPrecisionRange(Number(data.totalPoint), 0, 2)}
               </LeaderboardTableBodyItem>
               {showRewards && (
                 <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-                  {/* TODO nguyenhuudungz: Wait for backend refactoring. */}
-                  {/*{formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} {data.tokenSymbol}*/}
-                  {formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} KNC
+                  {formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} {data.tokenSymbol}
                 </LeaderboardTableBodyItem>
               )}
             </LeaderboardTableBody>

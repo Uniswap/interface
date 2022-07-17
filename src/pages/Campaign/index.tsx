@@ -397,7 +397,9 @@ export default function Campaign() {
                   account ? (
                     <Flex justifyContent="space-between" alignItems="center" style={{ gridColumn: '1 / -1' }}>
                       <Text fontSize={20} fontWeight={500}>
-                        {selectedCampaignLeaderboard?.userRank || '--'}
+                        {selectedCampaignLeaderboard?.userRank
+                          ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard?.userRank, 0, 2)
+                          : '--'}
                       </Text>
                       <YourTransactionButton onClick={toggleYourCampaignTransactionModal}>
                         {above768 ? <Trans>Your Transactions</Trans> : <Trans>History</Trans>}
