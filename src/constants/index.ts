@@ -974,3 +974,7 @@ export const SWR_KEYS = {
 export const EPSILON = 0.000000000008854
 
 export const MAX_SLIPPAGE_IN_BIPS = 2000
+
+export const REWARD_SERVICE_BASE_URL = `${process.env.REACT_APP_REWARD_SERVICE_BASE_URL}/api/v1`
+
+export const CAMPAIGN_NATIVE_TOKEN_SYMBOL = 'Native Token'

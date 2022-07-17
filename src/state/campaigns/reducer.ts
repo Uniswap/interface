@@ -5,6 +5,7 @@ import {
   CampaignLeaderboard,
   setCampaignData,
   setLoadingCampaignData,
+  setLoadingCampaignDataError,
   setLoadingSelectedCampaignLeaderboard,
   setSelectedCampaign,
   setSelectedCampaignLeaderboard,
@@ -15,6 +16,7 @@ import {
 export interface CampaignsState {
   readonly data: CampaignData[]
   readonly loadingCampaignData: boolean
+  readonly loadingCampaignDataError: Error | undefined
 
   readonly selectedCampaign: CampaignData | undefined
 
@@ -26,6 +28,7 @@ export interface CampaignsState {
 const initialState: CampaignsState = {
   data: [],
   loadingCampaignData: false,
+  loadingCampaignDataError: undefined,
 
   selectedCampaign: undefined,
 
@@ -46,6 +49,12 @@ export default createReducer<CampaignsState>(initialState, builder =>
       return {
         ...state,
         loadingCampaignData: loading,
+      }
+    })
+    .addCase(setLoadingCampaignDataError, (state, { payload: error }) => {
+      return {
+        ...state,
+        loadingCampaignDataError: error,
       }
     })
     .addCase(setSelectedCampaign, (state, { payload: { campaign } }) => {

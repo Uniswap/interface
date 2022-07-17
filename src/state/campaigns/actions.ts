@@ -3,9 +3,10 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export type CampaignStatus = 'Upcoming' | 'Ongoing' | 'Ended'
 
-export enum RewardState {
-  RewardStateReady,
-  RewardStateRewarded,
+export enum CampaignState {
+  CampaignStateReady,
+  CampaignStateFinalizedLeaderboard,
+  CampaignStateDistributedRewards,
 }
 
 export type RewardSingle = {
@@ -34,16 +35,32 @@ export type RewardRandom = {
 
 export type RewardDistribution = RewardSingle | RewardRange | RewardRandom
 
+export interface CampaignLeaderboardRankings {
+  userAddress: string
+  totalPoint: number
+  rankNo: number
+  rewardAmount: number
+  tokenSymbol: string
+}
+
+export interface CampaignLeaderboardRewards {
+  rewardAmount: number
+  tokenSymbol: string
+  ref: string
+  claimed: boolean
+}
+
 export interface CampaignLeaderboard {
   numberOfParticipants: number
   userRank: number
-  ranking: {
-    address: string
-    point: number
-    rank: number
-    rewardAmount: number
-    tokenSymbol: string
-  }[]
+  rankings: CampaignLeaderboardRankings[]
+  rewards: CampaignLeaderboardRewards[]
+}
+
+export interface CampaignLuckyWinner {
+  userAddress: string
+  rewardAmount: string
+  tokenAddress: string
 }
 
 export interface CampaignData {
@@ -61,7 +78,7 @@ export interface CampaignData {
   isRewardShown: boolean
   enterNowUrl: string
   rewardDistribution: RewardDistribution[]
-  rewardState: RewardState
+  campaignState: CampaignState
   chainIds: string
   rewardChainIds: string
   tradingVolumeRequired: number
@@ -77,6 +94,7 @@ export interface CampaignProofData {
 
 export const setCampaignData = createAction<{ campaigns: CampaignData[] }>('campaigns/setCampaignData')
 export const setLoadingCampaignData = createAction<boolean>('campaigns/setLoadingCampaignData')
+export const setLoadingCampaignDataError = createAction<Error | undefined>('campaigns/setLoadingCampaignDataError')
 
 export const setSelectedCampaign = createAction<{ campaign: CampaignData }>('campaigns/setSelectedCampaign')
 
@@ -91,4 +109,17 @@ export const setSelectedCampaignLeaderboardPageNumber = createAction<number>(
 )
 export const setSelectedCampaignLeaderboardLookupAddress = createAction<string>(
   'campaigns/setSelectedCampaignLeaderboardLookupAddress',
+)
+
+export const setSelectedCampaignLuckyWinners = createAction<{ luckyWinners: CampaignLuckyWinner[] }>(
+  'campaigns/setSelectedCampaignLuckyWinners',
+)
+export const setLoadingSelectedCampaignLuckyWinners = createAction<boolean>(
+  'campaigns/setLoadingSelectedCampaignLuckyWinners',
+)
+export const setSelectedCampaignLuckyWinnersPageNumber = createAction<number>(
+  'campaigns/setSelectedCampaignLuckyWinnersPageNumber',
+)
+export const setSelectedCampaignLuckyWinnersLookupAddress = createAction<string>(
+  'campaigns/setSelectedCampaignLuckyWinnersLookupAddress',
 )

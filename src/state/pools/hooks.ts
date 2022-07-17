@@ -301,7 +301,7 @@ export async function getBulkPoolDataWithPagination(
         current.data.pools.map(async (pool: any) => {
           let data = { ...pool }
           const oneDayHistory = oneDayData?.[pool.id]
-          // TODO: If number of pools > 1000 then uncomment this.
+          // TODO nguyenhuudungz: If number of pools > 1000 then uncomment this.
           // if (!oneDayHistory) {
           //   const newData = await apolloClient.query({
           //     query: POOL_DATA(pool.id, b1),

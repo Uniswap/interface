@@ -29,13 +29,13 @@ import { useHistory } from 'react-router-dom'
 import { stringify } from 'qs'
 import oembed2iframe from 'utils/oembed2iframe'
 import { useMedia } from 'react-use'
-import EnterNowButton from 'pages/Campaign/EnterNowButton'
 import useInterval from 'hooks/useInterval'
 import { SWR_KEYS } from 'constants/index'
 import { useSWRConfig } from 'swr'
 import { Loading } from 'pages/ProAmmPool/ContentLoader'
 import { useAppDispatch } from 'state/hooks'
 import YourCampaignTransactionsModal from 'components/YourCampaignTransactionsModal'
+import EnterNowOrClaimButton from 'pages/Campaign/EnterNowOrClaimButton'
 
 const LoaderParagraphs = () => (
   <>
@@ -209,7 +209,8 @@ export default function Campaign() {
   const now = Date.now()
 
   const campaigns = useSelector((state: AppState) => state.campaigns.data)
-  const isLoadingCampaigns = useSelector((state: AppState) => state.campaigns.loadingCampaignData)
+  const loadingCampaignData = useSelector((state: AppState) => state.campaigns.loadingCampaignData)
+  const loadingCampaignDataError = useSelector((state: AppState) => state.campaigns.loadingCampaignDataError)
 
   const MINUTE_TO_REFRESH = 5
   const [campaignsRefreshIn, setCampaignsRefreshIn] = useState(MINUTE_TO_REFRESH * 60)
@@ -258,7 +259,15 @@ export default function Campaign() {
     account,
   ])
 
-  if (!campaigns.length && !isLoadingCampaigns)
+  if (loadingCampaignDataError) {
+    return (
+      <div style={{ margin: '10%', fontSize: '20px' }}>
+        <Trans>There is an error while loading campaigns.</Trans>
+      </div>
+    )
+  }
+
+  if (!campaigns.length && !loadingCampaignData)
     return (
       <div style={{ margin: '10%', fontSize: '20px' }}>
         <Trans>Currently, there is no campaign.</Trans>
@@ -319,9 +328,13 @@ export default function Campaign() {
               <Text fontSize="20px" fontWeight={500}>
                 {selectedCampaign?.name}
               </Text>
-              <EnterNowAndShareContainer>
-                <EnterNowButton campaign={selectedCampaign} />
-                <ButtonLight borderRadius="50%" style={{ padding: '8px 11px', flex: 0 }} onClick={toggleShareModal}>
+              <ButtonContainer>
+                <EnterNowOrClaimButton />
+                <ButtonLight
+                  borderRadius="50%"
+                  style={{ padding: '8px', flex: 0, minWidth: '44px', minHeight: '44px' }}
+                  onClick={toggleShareModal}
+                >
                   <Share2 size={20} color={theme.primary} style={{ minWidth: '20px', minHeight: '20px' }} />
                 </ButtonLight>
                 <ShareModal
@@ -332,7 +345,7 @@ export default function Campaign() {
                     })
                   }
                 />
-              </EnterNowAndShareContainer>
+              </ButtonContainer>
             </CampaignDetailHeader>
             <CampaignDetailBoxGroup>
               <CampaignDetailBoxGroupItem>
@@ -543,7 +556,7 @@ const CampaignDetailHeader = styled.div`
   `}
 `
 
-const EnterNowAndShareContainer = styled.div`
+const ButtonContainer = styled.div`
   gap: 12px;
   min-width: fit-content;
   display: flex;

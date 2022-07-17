@@ -21,6 +21,7 @@ import {
   useSelectedCampaignLeaderboardPageNumberManager,
 } from 'state/campaigns/hooks'
 import InfoHelper from 'components/InfoHelper'
+import { CampaignState } from 'state/campaigns/actions'
 
 const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
   1: `linear-gradient(90deg, rgba(255, 204, 102, 0.25) 0%, rgba(255, 204, 102, 0) 54.69%, rgba(255, 204, 102, 0) 100%)`,
@@ -58,18 +59,22 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
   return (
     <LeaderboardContainer>
       <RefreshTextAndSearchContainer>
-        <RefreshTextContainer>
-          <RefreshText>
-            <Trans>Leaderboard refresh in</Trans>
-          </RefreshText>
-          <CountdownContainer>
-            <Clock size={12} />
-            <Text fontSize="12px" lineHeight="14px">
-              {refreshInMinute.toString().length === 1 ? '0' + refreshInMinute : refreshInMinute} :{' '}
-              {refreshInSecond.toString().length === 1 ? '0' + refreshInSecond : refreshInSecond}
-            </Text>
-          </CountdownContainer>
-        </RefreshTextContainer>
+        {selectedCampaign.campaignState !== CampaignState.CampaignStateDistributedRewards ? (
+          <RefreshTextContainer>
+            <RefreshText>
+              <Trans>Leaderboard refresh in</Trans>
+            </RefreshText>
+            <CountdownContainer>
+              <Clock size={12} />
+              <Text fontSize="12px" lineHeight="14px">
+                {refreshInMinute.toString().length === 1 ? '0' + refreshInMinute : refreshInMinute} :{' '}
+                {refreshInSecond.toString().length === 1 ? '0' + refreshInSecond : refreshInSecond}
+              </Text>
+            </CountdownContainer>
+          </RefreshTextContainer>
+        ) : (
+          <div />
+        )}
         <Search
           placeholder={t`Search by full address`}
           searchValue={searchValue}
@@ -92,15 +97,15 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
             </LeaderboardTableHeaderItem>
           )}
         </LeaderboardTableHeader>
-        {(selectedCampaignLeaderboard?.ranking ?? []).map((data, index) => {
-          const isThisRankingEligible = selectedCampaign && data.point >= selectedCampaign.tradingVolumeRequired
+        {(selectedCampaignLeaderboard?.rankings ?? []).map((data, index) => {
+          const isThisRankingEligible = selectedCampaign && data.totalPoint >= selectedCampaign.tradingVolumeRequired
           return (
             <LeaderboardTableBody
               key={index}
               showRewards={showRewards}
-              showMedal={data.rank <= 3}
+              showMedal={data.rankNo <= 3}
               style={{
-                background: leaderboardTableBodyBackgroundColorsByRank[data.rank.toString()] ?? 'transparent',
+                background: leaderboardTableBodyBackgroundColorsByRank[data.rankNo.toString()] ?? 'transparent',
               }}
             >
               <LeaderboardTableBodyItem
@@ -108,14 +113,14 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
                 style={{ width: (rankWidth === Infinity ? 33 : rankWidth) + 'px', maxHeight: '24px' }}
                 isThisRankingEligible={isThisRankingEligible}
               >
-                {data.rank === 1 ? (
+                {data.rankNo === 1 ? (
                   <MedalImg src={Gold} />
-                ) : data.rank === 2 ? (
+                ) : data.rankNo === 2 ? (
                   <MedalImg src={Silver} />
-                ) : data.rank === 3 ? (
+                ) : data.rankNo === 3 ? (
                   <MedalImg src={Bronze} />
                 ) : isThisRankingEligible ? (
-                  data.rank
+                  data.rankNo
                 ) : (
                   <InfoHelperWrapper>
                     <InfoHelper size={14} text={t`Not enough trading volume`} placement="top" style={{ margin: 0 }} />
@@ -123,14 +128,14 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
                 )}
               </LeaderboardTableBodyItem>
               <LeaderboardTableBodyItem isThisRankingEligible={isThisRankingEligible}>
-                {getShortenAddress(data.address, above1200)}
+                {getShortenAddress(data.userAddress, above1200)}
               </LeaderboardTableBodyItem>
               <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-                {formatNumberWithPrecisionRange(data.point, 0, 2)}
+                {formatNumberWithPrecisionRange(data.totalPoint, 0, 2)}
               </LeaderboardTableBodyItem>
               {showRewards && (
                 <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-                  {/* TODO: Wait for backend refactoring. */}
+                  {/* TODO nguyenhuudungz: Wait for backend refactoring. */}
                   {/*{formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} {data.tokenSymbol}*/}
                   {formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} KNC
                 </LeaderboardTableBodyItem>

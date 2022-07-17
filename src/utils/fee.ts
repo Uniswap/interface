@@ -10,7 +10,7 @@ import JSBI from 'jsbi'
 // Eg. 0.9999 (amountIn) * 0.0008 (fee bps currency_in) = 0.000799 (round 6 number, for example, swap from usdt)
 // => amount without fee in = 0.9999 - 0.000799 = 0.999101
 // We have amountPlusFee = 0.999101 / (1 - 0.0008) = 0.9999009207 => Wrong.
-// TODO: Delete this function and logic of encoding in frontend after releasing it in backend.
+// TODO nguyenhuudungz: Delete this function and logic of encoding in frontend after releasing it in backend.
 export function getAmountPlusFeeInQuotient(
   amount: CurrencyAmount<Currency> | string,
   feeConfig: FeeConfig | undefined,

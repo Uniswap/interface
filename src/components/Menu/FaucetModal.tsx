@@ -75,7 +75,7 @@ function FaucetModal() {
   const claimRewardCallBack = async () => {
     if (!rewardData) return
     try {
-      const rawResponse = await fetch(process.env.REACT_APP_FAUCET_API + '/rewards/claim', {
+      const rawResponse = await fetch(process.env.REACT_APP_REWARD_SERVICE_API + '/rewards/claim', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ function FaucetModal() {
     const getRewardAmount = async () => {
       try {
         const { data } = await fetch(
-          `${process.env.REACT_APP_FAUCET_API}/faucets?wallet=${account}&chainId=${chainId}`,
+          `${process.env.REACT_APP_REWARD_SERVICE_API}/faucets?wallet=${account}&chainId=${chainId}`,
         ).then(res => res.json())
         if (data[0])
           setRewardData({
