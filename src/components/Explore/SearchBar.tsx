@@ -1,5 +1,4 @@
 import { useAtom } from 'jotai'
-import { useState } from 'react'
 import styled from 'styled-components/macro'
 
 import searchIcon from './search.svg'
@@ -14,7 +13,7 @@ const SearchBarContainer = styled.div`
   flex: 1;
 `
 
-const SearchInput = styled.input<{ expanded: boolean }>`
+const SearchInput = styled.input`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});
   background-size: 20px 20px;
@@ -24,7 +23,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   border-radius: 12px;
   border: none;
   height: 100%;
-  width: ${({ expanded }) => (expanded ? '100%' : '44px')};
+  width: 44px;
   font-size: 16px;
   padding-left: 40px;
   color: ${({ theme }) => theme.text2};
@@ -33,11 +32,15 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   :focus {
     outline: none;
     background-color: ${({ theme }) => theme.bg2};
+    width: 100%;
   }
   ::placeholder {
-    color: ${({ theme, expanded }) => (expanded ? theme.text3 : 'transparent')};
+    color: none;
     @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
       color: transparent;
+    }
+    :focus {
+      color: ${({ theme }) => theme.text3};
     }
   }
   ::-webkit-search-cancel-button {
@@ -54,17 +57,14 @@ const SearchInput = styled.input<{ expanded: boolean }>`
 
 export default function SearchBar() {
   const [filterString, setFilterString] = useAtom(filterStringAtom)
-  const [isExpanded, setExpanded] = useState(false)
 
   return (
     <SearchBarContainer>
       <SearchInput
-        expanded={isExpanded}
         type="search"
         placeholder="Search token or paste address"
         id="searchBar"
-        onBlur={() => isExpanded && filterString.length === 0 && setExpanded(false)}
-        onFocus={() => setExpanded(true)}
+        onBlur={() => filterString.length === 0}
         autoComplete="off"
         value={filterString}
         onChange={({ target: { value } }) => setFilterString(value)}
