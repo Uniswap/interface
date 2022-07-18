@@ -1,10 +1,11 @@
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef, useState } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
-import { Circle } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 export const NETWORK_DISPLAYS: { [key: string]: string } = {
   Ethereum: 'Ethereum',
@@ -13,7 +14,12 @@ export const NETWORK_DISPLAYS: { [key: string]: string } = {
   Polygon: 'Polygon',
 }
 
-const NETWORKS = Object.values(NETWORK_DISPLAYS)
+const NETWORKS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+]
 
 enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -22,8 +28,9 @@ enum FlyoutAlignment {
 
 const InternalMenuItem = styled.div`
   flex: 1;
-  padding: 8px;
+  padding: 12px 16px;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
@@ -36,15 +43,13 @@ const InternalMenuItem = styled.div`
 
 const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 8px;
   justify-content: space-between;
   text-decoration: none;
   cursor: pointer;
 
   :hover {
-    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.bg2};
     text-decoration: none;
   }
 `
@@ -57,7 +62,7 @@ const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border: 1px solid ${({ theme }) => theme.bg0};
   border-radius: 12px;
-  padding: 8px;
+  padding: 8px 0px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -122,6 +127,7 @@ const StyledMenuContent = styled.div`
   align-items: center;
   border: none;
   width: 100%;
+  font-weight: 600;
   vertical-align: middle;
   color: ${({ theme }) => theme.text1};
 `
@@ -129,20 +135,37 @@ const StyledMenuContent = styled.div`
 const Chevron = styled.span`
   color: ${({ theme }) => theme.text2};
 `
+const NetworkLabel = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`
+const Logo = styled.img`
+  height: 20px;
+  width: 20px;
+`
+const CheckContainer = styled.div`
+  display: flex;
+  flex-direction: flex-end;
+`
 
 // TODO: change this to reflect data pipeline
 export default function NetworkFilter() {
+  const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.NETWORK_FILTER)
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
-  const [activeNetwork, setNetwork] = useState('Ethereum')
+  const [activeNetwork, setNetwork] = useState(SupportedChainId.MAINNET)
+  const { label, logoUrl } = CHAIN_INFO[activeNetwork]
 
   return (
     <StyledMenu ref={node}>
       <StyledMenuButton onClick={toggleMenu} aria-label={`networkFilter`}>
         <StyledMenuContent>
-          <Circle size={12} /> {NETWORK_DISPLAYS[activeNetwork]}
+          <NetworkLabel>
+            <Logo src={logoUrl} /> {label}
+          </NetworkLabel>
           <Chevron>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
@@ -150,7 +173,7 @@ export default function NetworkFilter() {
       </StyledMenuButton>
       {/* handles the actual flyout of the menu*/}
       {open && (
-        <MenuTimeFlyout>
+        <MenuTimeFlyout flyoutAlignment={FlyoutAlignment.LEFT}>
           {NETWORKS.map((network) => (
             <InternalLinkMenuItem
               key={network}
@@ -159,10 +182,14 @@ export default function NetworkFilter() {
                 toggleMenu()
               }}
             >
-              <div>
-                <Circle size={12} /> {NETWORK_DISPLAYS[network]}
-              </div>
-              {network === activeNetwork && <Check opacity={0.6} size={16} />}
+              <NetworkLabel>
+                <Logo src={CHAIN_INFO[network].logoUrl} /> {CHAIN_INFO[network].label}
+              </NetworkLabel>
+              {network === activeNetwork && (
+                <CheckContainer>
+                  <Check size={16} color={theme.primary1} />{' '}
+                </CheckContainer>
+              )}
             </InternalLinkMenuItem>
           ))}
         </MenuTimeFlyout>

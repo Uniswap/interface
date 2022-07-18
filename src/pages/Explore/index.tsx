@@ -1,4 +1,5 @@
 import FavoriteButton from 'components/Explore/FavoriteButton'
+import NetworkFilter from 'components/Explore/NetworkFilter'
 import SearchBar from 'components/Explore/SearchBar'
 import TimeSelector from 'components/Explore/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable'
@@ -33,6 +34,7 @@ const Explore = () => {
     <ExploreContainer>
       <TitleContainer>Explore Tokens</TitleContainer>
       <FiltersContainer>
+        <NetworkFilter />
         <FavoriteButton />
         <TimeSelector />
         <SearchBar />
