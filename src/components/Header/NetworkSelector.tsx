@@ -1,13 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonSecondary } from 'components/Button'
 import { getConnection } from 'connection/utils'
 import { getChainInfo } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
+import { darken } from 'polished'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef } from 'react'
-import { ArrowDownCircle, ChevronDown } from 'react-feather'
+import { AlertTriangle, ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
@@ -120,7 +122,7 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div<{ interactive: boolean }>`
+const SelectorControls = styled.div<{ interactive: boolean; supportedChain: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg0};
   border: 2px solid ${({ theme }) => theme.bg0};
@@ -131,6 +133,16 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
+  ${({ supportedChain, theme }) =>
+    !supportedChain &&
+    `
+    color: ${theme.white};
+    background-color: ${theme.red1};
+    border: 2px solid ${theme.red1};
+  `}
+  :focus {
+    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+  }
 `
 const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
   margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
@@ -146,6 +158,47 @@ const SelectorWrapper = styled.div`
 const StyledChevronDown = styled(ChevronDown)`
   width: 16px;
 `
+const Web3StatusGeneric = styled(ButtonSecondary)`
+  ${({ theme }) => theme.flexRowNoWrap}
+  width: 100%;
+  align-items: center;
+  border-radius: 14px;
+  cursor: pointer;
+  user-select: none;
+  height: 36px;
+  :focus {
+    outline: none;
+  }
+`
+const Web3StatusError = styled(Web3StatusGeneric)`
+  background-color: ${({ theme }) => theme.red1};
+  border: 1px solid ${({ theme }) => theme.red1};
+  color: ${({ theme }) => theme.white};
+  font-weight: 500;
+  :hover,
+  :focus {
+    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+  }
+`
+
+const NetworkIcon = styled(AlertTriangle)`
+  margin-left: 0.25rem;
+  margin-right: 0.5rem;
+  width: 16px;
+  height: 16px;
+`
+
+const Text = styled.p`
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 0.5rem 0 0.25rem;
+  font-size: 1rem;
+  width: fit-content;
+  font-weight: 500;
+`
+
 const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
@@ -333,22 +386,35 @@ export default function NetworkSelector() {
     }
   }, [chainId, history, urlChainId, urlChain])
 
-  if (!chainId || !info || !provider) {
+  if (!chainId || !provider) {
     return null
   }
 
+  const currentChainAllowed = isChainAllowed(connector, chainId)
   return (
     <SelectorWrapper ref={node} onMouseEnter={openModal} onMouseLeave={closeModal} onClick={toggleModal}>
-      <SelectorControls interactive>
-        <SelectorLogo interactive src={info.logoUrl} />
-        <SelectorLabel>{info.label}</SelectorLabel>
-        <StyledChevronDown />
+      <SelectorControls interactive supportedChain={currentChainAllowed}>
+        {currentChainAllowed ? (
+          <>
+            <SelectorLogo interactive src={info!.logoUrl} />
+            <SelectorLabel>{info!.label}</SelectorLabel>
+            <StyledChevronDown />
+          </>
+        ) : (
+          <>
+            <NetworkIcon />
+            <Text>
+              <Trans>Switch Network</Trans>
+            </Text>
+            <StyledChevronDown />
+          </>
+        )}
       </SelectorControls>
       {isOpen && (
         <FlyoutMenu>
           <FlyoutMenuContents>
             <FlyoutHeader>
-              <Trans>Select a network</Trans>
+              <Trans>Select a {!currentChainAllowed ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(connector, chainId) ? (

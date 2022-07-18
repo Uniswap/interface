@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
 import { useMemo } from 'react'
-import { Activity } from 'react-feather'
+import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
@@ -30,7 +30,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   user-select: none;
   height: 36px;
   margin-right: 2px;
-  margin-left: 1px;
+  margin-left: 2px;
   :focus {
     outline: none;
   }
@@ -100,11 +100,15 @@ const Text = styled.p`
   font-weight: 500;
 `
 
-const NetworkIcon = styled(Activity)`
+const NetworkIcon = styled(AlertTriangle)`
   margin-left: 0.25rem;
   margin-right: 0.5rem;
   width: 16px;
   height: 16px;
+`
+
+const StyledChevronDown = styled(ChevronDown)`
+  width: 16px;
 `
 
 // we want the latest one to come first, so return negative if a is after b
@@ -143,15 +147,6 @@ function Web3StatusInner() {
 
   if (!chainId) {
     return null
-  } else if (!chainAllowed) {
-    return (
-      <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
-        <Text>
-          <Trans>Wrong Network</Trans>
-        </Text>
-      </Web3StatusError>
-    )
   } else if (error) {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
