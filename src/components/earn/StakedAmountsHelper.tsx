@@ -8,11 +8,13 @@ interface Props {
 }
 
 export default function StakedAmountsHelper({ userAmountTokenA, userAmountTokenB }: Props) {
-  return <QuestionHelper text={`${formatStakedAmount(userAmountTokenA)} | ${formatStakedAmount(userAmountTokenB)}`} />
+  return userAmountTokenA && userAmountTokenB ? (
+    <QuestionHelper text={`${formatStakedAmount(userAmountTokenA)} | ${formatStakedAmount(userAmountTokenB)}`} />
+  ) : null
 }
 
 export function SingleStakedAmountsHelper({ userAmountToken }: { userAmountToken: TokenAmount | undefined }) {
-  return <QuestionHelper text={`${formatStakedAmount(userAmountToken)}`} />
+  return userAmountToken ? <QuestionHelper text={`${formatStakedAmount(userAmountToken)}`} /> : null
 }
 
 // Format amount based on the size, when under 1 show significant digits, when 1 to 10 show 1 decimal, over 10 round

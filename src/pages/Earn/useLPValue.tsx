@@ -1,10 +1,9 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId as UbeswapChainId, cUSD, JSBI, TokenAmount } from '@ubeswap/sdk'
+import { ChainId as UbeswapChainId, cUSD, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { BIG_INT_ZERO } from 'constants/index'
 import { usePair } from 'data/Reserves'
 import { useTotalSupply } from 'data/TotalSupply'
 import { BigNumber } from 'ethers'
-import { useToken } from 'hooks/Tokens'
 import { useCUSDPrice } from 'utils/useCUSDPrice'
 
 import { FarmSummary } from './useFarmRegistry'
@@ -19,13 +18,16 @@ interface IStakingPoolValue {
   totalSupplyOfStakingToken?: TokenAmount
 }
 
-export const useLPValue = (stakedAmount: BigNumber, farmSummary: FarmSummary | undefined): IStakingPoolValue => {
+export const useLPValue = (
+  stakedAmount: BigNumber,
+  farmSummary: FarmSummary | undefined,
+  token0: Token | undefined,
+  token1: Token | undefined,
+  stakingToken: Token | undefined
+): IStakingPoolValue => {
   const { network } = useContractKit()
   const chainId = network.chainId
-  const lpToken = useToken(farmSummary ? farmSummary.lpAddress : undefined) || undefined
-  const totalSupplyOfStakingToken = useTotalSupply(lpToken)
-  const token0 = useToken(farmSummary ? farmSummary.token0Address : undefined) || undefined
-  const token1 = useToken(farmSummary ? farmSummary.token1Address : undefined) || undefined
+  const totalSupplyOfStakingToken = useTotalSupply(stakingToken)
   const isSingle = Boolean(farmSummary ? farmSummary.token0Address === farmSummary.token1Address : undefined)
   const [, stakingTokenPair] = usePair(token0, token1)
 

@@ -119,7 +119,13 @@ export const PoolCard: React.FC<Props> = ({ farmSummary, onRemoveImportedFarm }:
   const stakedTokenAmount =
     isStaking && stakingToken ? new TokenAmount(stakingToken, JSBI.BigInt(stakedAmount)) : undefined
 
-  const { userValueCUSD, userAmountTokenA, userAmountTokenB } = useLPValue(stakedAmount ?? 0, farmSummary)
+  const { userValueCUSD, userAmountTokenA, userAmountTokenB } = useLPValue(
+    stakedAmount ?? 0,
+    farmSummary,
+    token0,
+    token1,
+    stakingToken ?? undefined
+  )
 
   const displayedPercentageReturn = farmSummary.apr
     ? farmSummary.apr.denominator.toString() !== '0'

@@ -120,6 +120,35 @@ export const StyledButton = styled.div`
   }
 `
 
+const ClaimAllRewardPanelComponent = React.memo(ClaimAllRewardPanel)
+const ImportedPoolCardComponent = React.memo(ImportedPoolCard)
+const ImportFarmModalComponent = React.memo(ImportFarmModal)
+const PoolCardComponent = React.memo(PoolCard)
+
+interface PoolCardProps {
+  poolLabel: string
+  farmSummaries: FarmSummary[]
+  handleRemoveFarm?: (farmAddress: string) => void
+}
+
+const PoolCards = ({ poolLabel, farmSummaries, handleRemoveFarm }: PoolCardProps) => {
+  const { t } = useTranslation()
+  return farmSummaries.length > 0 ? (
+    <>
+      <Header>{t(poolLabel)}</Header>
+      {farmSummaries.map((farmSummary) => (
+        <PoolWrapper key={farmSummary.stakingAddress}>
+          <ErrorBoundary>
+            <PoolCardComponent farmSummary={farmSummary} onRemoveImportedFarm={handleRemoveFarm} />
+          </ErrorBoundary>
+        </PoolWrapper>
+      ))}
+    </>
+  ) : null
+}
+
+const PoolCardsComponent = React.memo(PoolCards)
+
 function useTokenFilter(): [Token | null, (t: Token | null) => void] {
   const [token, setToken] = useState<Token | null>(null)
   return [token, setToken]
@@ -181,7 +210,7 @@ export default function Earn() {
 
   return (
     <PageWrapper>
-      <ClaimAllRewardPanel stakedFarms={stakedFarms} />
+      <ClaimAllRewardPanelComponent stakedFarms={stakedFarms} />
       <LiquidityWarning />
       {stakedFarms.length === 0 && (
         <TopSection gap="md">
@@ -276,61 +305,25 @@ export default function Earn() {
         {farmSummaries.length > 0 && filteredFarms.length == 0 && `No Farms for ${filteringToken?.symbol}`}
         {farmSummaries.length === 0 && <Loader size="48px" />}
       </ColumnCenter>
-      {stakedFarms.length > 0 && (
-        <>
-          <Header>{t('yourPools')}</Header>
-          {stakedFarms.map((farmSummary, index) => (
-            <PoolWrapper key={index}>
-              <ErrorBoundary>
-                <PoolCard farmSummary={farmSummary} />
-              </ErrorBoundary>
-            </PoolWrapper>
-          ))}
-        </>
-      )}
-      {importedFarms.length > 0 && (
-        <>
-          <Header>{t('importedPools')}</Header>
-          {importedFarms.map((farmSummary, index) => (
-            <PoolWrapper key={index}>
-              <ErrorBoundary>
-                <PoolCard farmSummary={farmSummary} onRemoveImportedFarm={handleRemoveFarm} />
-              </ErrorBoundary>
-            </PoolWrapper>
-          ))}
-        </>
-      )}
-      {featuredFarms.length > 0 && (
-        <>
-          <Header>{t('featuredPools')}</Header>
-          {featuredFarms.map((farmSummary) => (
-            <PoolWrapper key={farmSummary.stakingAddress}>
-              <ErrorBoundary>
-                <PoolCard farmSummary={farmSummary} />
-              </ErrorBoundary>
-            </PoolWrapper>
-          ))}
-        </>
-      )}
-      {unstakedFarms.length > 0 && (
-        <>
-          <Header>{t('availablePools')}</Header>
-          {unstakedFarms.map((farmSummary) => (
-            <PoolWrapper key={farmSummary.stakingAddress}>
-              <ErrorBoundary>
-                <PoolCard farmSummary={farmSummary} />
-              </ErrorBoundary>
-            </PoolWrapper>
-          ))}
-        </>
-      )}
-      <ImportFarmModal
+      <PoolCardsComponent farmSummaries={stakedFarms} poolLabel={'yourPools'} />
+      <PoolCardsComponent
+        farmSummaries={importedFarms}
+        poolLabel={'importedPools'}
+        handleRemoveFarm={handleRemoveFarm}
+      />
+      <PoolCardsComponent farmSummaries={featuredFarms} poolLabel={'featuredPools'} />
+      <PoolCardsComponent farmSummaries={unstakedFarms} poolLabel={'availablePools'} />
+      <ImportFarmModalComponent
         farmSummaries={farmSummaries}
         isOpen={showImportFarmModal}
         onDismiss={() => setShowImportFarmModal(false)}
       />
       {customFarms.map((farmAddress, index) => (
-        <ImportedPoolCard key={index} farmAddress={farmAddress} onUpdateFarm={(farm) => handleUpdateFarm(farm)} />
+        <ImportedPoolCardComponent
+          key={index}
+          farmAddress={farmAddress}
+          onUpdateFarm={(farm) => handleUpdateFarm(farm)}
+        />
       ))}
     </PageWrapper>
   )
