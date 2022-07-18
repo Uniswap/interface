@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { PollingInterval } from 'src/constants/misc'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { currencyAddress } from 'src/utils/currencyId'
+import { currencyAddressForSwapQuote } from 'src/utils/currencyId'
 
 export interface UseQuoteProps {
   amountSpecified: CurrencyAmount<Currency> | null | undefined
@@ -29,9 +29,9 @@ export function useRouterQuote(params: UseQuoteProps) {
   const currencyOut =
     tradeType === TradeType.EXACT_OUTPUT ? amountSpecified?.currency : otherCurrency
 
-  const tokenInAddress = currencyIn ? currencyAddress(currencyIn) : undefined
+  const tokenInAddress = currencyIn ? currencyAddressForSwapQuote(currencyIn) : undefined
   const tokenInChainId = currencyIn?.chainId
-  const tokenOutAddress = currencyOut ? currencyAddress(currencyOut) : undefined
+  const tokenOutAddress = currencyOut ? currencyAddressForSwapQuote(currencyOut) : undefined
   const tokenOutChainId = currencyOut?.chainId
 
   const skipQuery =
