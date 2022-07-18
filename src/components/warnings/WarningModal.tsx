@@ -7,14 +7,11 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { WarningAction, WarningSeverity } from 'src/components/warnings/types'
+import { getWarningColor } from 'src/components/warnings/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo, useSwapCallback } from 'src/features/transactions/swap/hooks'
-import {
-  getSwapWarningColor,
-  showWarningInPanel,
-  SwapWarningAction,
-  SwapWarningSeverity,
-} from 'src/features/transactions/swap/validate'
+import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import {
   transactionStateActions,
   WarningModalType,
@@ -23,10 +20,11 @@ import {
 type Props = {
   dispatch: Dispatch<AnyAction>
   derivedSwapInfo: DerivedSwapInfo
-  closeSwapModal: () => void
+  closeModal: () => void
 }
 
-export function SwapWarningModal({ dispatch, derivedSwapInfo, closeSwapModal }: Props) {
+// TODO: there is a WarningModal already in modals, should combine the two to have a unified warning schema for whole app
+export function WarningModal({ dispatch, derivedSwapInfo, closeModal }: Props) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const {
@@ -45,7 +43,7 @@ export function SwapWarningModal({ dispatch, derivedSwapInfo, closeSwapModal }: 
 
   const onExitSwap = () => {
     onClose()
-    closeSwapModal()
+    closeModal()
   }
 
   const { swapCallback } = useSwapCallback(
@@ -57,14 +55,14 @@ export function SwapWarningModal({ dispatch, derivedSwapInfo, closeSwapModal }: 
     onExitSwap
   )
 
-  const swapWarning =
+  const warning =
     warningModalType === WarningModalType.INFORMATIONAL
       ? warnings.find(showWarningInPanel)
-      : warnings.find((warning) => warning.action === SwapWarningAction.WarnBeforeSwapSubmit)
+      : warnings.find((w) => w.action === WarningAction.WarnBeforeSubmit)
 
-  if (warningModalType === WarningModalType.NONE || !swapWarning) return null
+  if (warningModalType === WarningModalType.NONE || !warning) return null
 
-  const swapWarningColor = getSwapWarningColor(swapWarning)
+  const warningColor = getWarningColor(warning)
 
   return (
     <BottomSheetModal
@@ -76,17 +74,17 @@ export function SwapWarningModal({ dispatch, derivedSwapInfo, closeSwapModal }: 
         <Flex
           centered
           alignSelf="center"
-          borderColor={swapWarningColor.text}
+          borderColor={warningColor.text}
           borderRadius="md"
           borderWidth={1}
           p="md">
-          <AlertTriangle color={theme.colors[swapWarningColor.text]} height={20} width={20} />
+          <AlertTriangle color={theme.colors[warningColor.text]} height={20} width={20} />
         </Flex>
         <Text textAlign="center" variant="subhead">
-          {swapWarning.title}
+          {warning.title}
         </Text>
         <Text color="textSecondary" textAlign="center" variant="bodySmall">
-          {swapWarning.message}
+          {warning.message}
         </Text>
         {warningModalType === WarningModalType.INFORMATIONAL ? (
           <PrimaryButton
@@ -112,7 +110,7 @@ export function SwapWarningModal({ dispatch, derivedSwapInfo, closeSwapModal }: 
               label={t('Swap anyway')}
               name={ElementName.SwapAnyway}
               py="md"
-              variant={swapWarning.severity === SwapWarningSeverity.Medium ? 'warning' : 'failure'}
+              variant={warning.severity === WarningSeverity.Medium ? 'warning' : 'failure'}
               onPress={swapCallback}
             />
           </Flex>

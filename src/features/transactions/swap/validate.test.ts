@@ -1,12 +1,9 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { WarningLabel } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import {
-  getSwapWarnings,
-  PartialDerivedSwapInfo,
-  SwapWarningLabel,
-} from 'src/features/transactions/swap/validate'
+import { getSwapWarnings, PartialDerivedSwapInfo } from 'src/features/transactions/swap/validate'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
@@ -97,19 +94,19 @@ describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
     const warnings = getSwapWarnings(mockTranslate, partialSwapState)
     expect(warnings.length).toBe(1)
-    expect(warnings[0].type).toEqual(SwapWarningLabel.FormIncomplete)
+    expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
     const warnings = getSwapWarnings(mockTranslate, insufficientBalanceState)
     expect(warnings.length).toBe(1)
-    expect(warnings[0].type).toEqual(SwapWarningLabel.InsufficientFunds)
+    expect(warnings[0].type).toEqual(WarningLabel.InsufficientFunds)
   })
 
   it('catches insufficient gas errors', () => {
     const warnings = getSwapWarnings(mockTranslate, insufficientGasBalanceState)
     expect(
-      warnings.find((warning) => warning.type === SwapWarningLabel.InsufficientGasFunds)
+      warnings.find((warning) => warning.type === WarningLabel.InsufficientGasFunds)
     ).toBeTruthy()
   })
 
@@ -128,8 +125,6 @@ describe(getSwapWarnings, () => {
 
   it('catches errors returned by the routing api', () => {
     const warnings = getSwapWarnings(mockTranslate, tradeErrorState)
-    expect(
-      warnings.find((warning) => warning.type === SwapWarningLabel.SwapRouterError)
-    ).toBeTruthy()
+    expect(warnings.find((warning) => warning.type === WarningLabel.SwapRouterError)).toBeTruthy()
   })
 })

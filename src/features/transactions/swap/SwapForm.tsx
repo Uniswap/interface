@@ -14,6 +14,8 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { WarningAction } from 'src/components/warnings/types'
+import { getWarningColor } from 'src/components/warnings/utils'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import {
@@ -23,11 +25,7 @@ import {
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
-import {
-  getSwapWarningColor,
-  showWarningInPanel,
-  SwapWarningAction,
-} from 'src/features/transactions/swap/validate'
+import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import {
   CurrencyField,
   WarningModalType,
@@ -83,11 +81,11 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
 
   const actionButtonDisabled = Boolean(
     !(isWrapAction(wrapType) || trade) ||
-      warnings.some((warning) => warning.action === SwapWarningAction.DisableSwapReview)
+      warnings.some((warning) => warning.action === WarningAction.DisableReview)
   )
 
   const swapWarning = warnings.find(showWarningInPanel)
-  const swapWarningColor = getSwapWarningColor(swapWarning)
+  const swapWarningColor = getWarningColor(swapWarning)
 
   return (
     <>

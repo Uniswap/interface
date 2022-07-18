@@ -17,14 +17,12 @@ import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
+import { Warning } from 'src/components/warnings/types'
+import { getWarningColor } from 'src/components/warnings/utils'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import {
-  getSwapWarningColor,
-  showWarningInPanel,
-  SwapWarning,
-} from 'src/features/transactions/swap/validate'
+import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import { WarningModalType } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { formatPrice } from 'src/utils/format'
@@ -32,7 +30,7 @@ import { formatPrice } from 'src/utils/format'
 interface SwapDetailsProps {
   currencyOut: CurrencyAmount<NativeCurrency | Token>
   trade: Trade<Currency, Currency, TradeType>
-  warnings: SwapWarning[]
+  warnings: Warning[]
   dispatch: Dispatch<AnyAction>
 }
 
@@ -65,7 +63,7 @@ export function SwapDetails({ currencyOut, trade, warnings, dispatch }: SwapDeta
   // TODO: replace with updated gas fee estimate
   const gasFeeUSD = parseFloat(trade.quote!.gasUseEstimateUSD).toFixed(2)
   const swapWarning = warnings.find(showWarningInPanel)
-  const swapWarningColor = getSwapWarningColor(swapWarning)
+  const swapWarningColor = getWarningColor(swapWarning)
 
   return (
     <Flex

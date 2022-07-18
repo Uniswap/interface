@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { SwapWarning } from 'src/features/transactions/swap/validate'
+import { Warning } from 'src/components/warnings/types'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
 export type BaseDerivedInfo<TInput = Currency> = {
@@ -18,5 +18,5 @@ export type BaseDerivedInfo<TInput = Currency> = {
   exactAmountUSD?: string
   exactAmountToken: string
   exactCurrencyField: CurrencyField
-  warnings: SwapWarning[]
+  warnings: Warning[]
 }

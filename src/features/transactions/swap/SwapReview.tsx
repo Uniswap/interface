@@ -13,6 +13,7 @@ import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { WarningAction } from 'src/components/warnings/types'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
@@ -24,7 +25,6 @@ import {
 } from 'src/features/transactions/swap/hooks'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
-import { SwapWarningAction } from 'src/features/transactions/swap/validate'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
   CurrencyField,
@@ -65,9 +65,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   const swapDisabled = Boolean(
     !(isWrapAction(wrapType) || trade) ||
       warnings.some(
-        (warning) =>
-          warning.action === SwapWarningAction.DisableSwapSubmit ||
-          warning.action === SwapWarningAction.DisableSwapReview
+        (warning) => warning.action === WarningAction.DisableSubmit || WarningAction.DisableReview
       )
   )
 
@@ -81,7 +79,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   )
 
   const onSwap = () => {
-    if (warnings.some((warning) => warning.action === SwapWarningAction.WarnBeforeSwapSubmit)) {
+    if (warnings.some((warning) => warning.action === WarningAction.WarnBeforeSubmit)) {
       onShowSwapWarning(WarningModalType.ACTION)
       return
     }
