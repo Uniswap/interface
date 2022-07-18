@@ -6,7 +6,7 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import React, { useEffect, useRef, useState } from 'react'
+import { FunctionComponent, PropsWithChildren, useEffect, useRef, useState } from 'react'
 import {
   BookOpen,
   Check,
@@ -311,7 +311,7 @@ export default function Menu() {
 
 interface NewMenuProps {
   flyoutAlignment?: FlyoutAlignment
-  ToggleUI?: React.FunctionComponent
+  ToggleUI?: FunctionComponent<PropsWithChildren<unknown>>
   menuItems: {
     content: any
     link: string

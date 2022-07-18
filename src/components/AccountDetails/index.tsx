@@ -1,18 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import CopyHelper from 'components/AccountDetails/Copy'
-import { coinbaseWalletConnection } from 'connection'
-import {
-  getConnection,
-  getConnectionName,
-  getIsCoinbaseWallet,
-  getIsMetaMask,
-  getIsOperaInjected,
-} from 'connection/utils'
-import { useCallback, useContext } from 'react'
+import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask, getIsOperaInjected } from 'connection/utils'
+import { Context, useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
+import { DefaultTheme } from 'styled-components/macro'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
@@ -212,7 +206,7 @@ export default function AccountDetails({
   const { chainId, account, connector } = useWeb3React()
   const connectionType = getConnection(connector).type
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext as Context<DefaultTheme>)
   const dispatch = useAppDispatch()
 
   const isMetaMask = getIsMetaMask()
@@ -254,13 +248,6 @@ export default function AccountDetails({
                         onClick={() => {
                           if (connector.deactivate) {
                             connector.deactivate()
-
-                            // Coinbase Wallet SDK does not emit a disconnect event to the provider,
-                            // which is what web3-react uses to reset state. As a workaround we manually
-                            // reset state.
-                            if (connector === coinbaseWalletConnection.connector) {
-                              connector.resetState()
-                            }
                           } else {
                             connector.resetState()
                           }
