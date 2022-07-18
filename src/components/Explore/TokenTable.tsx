@@ -2,14 +2,14 @@ import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import styled from 'styled-components/macro'
 
-import { MOBILE_MEDIA_BREAKPOINT } from './constants'
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from './constants'
 import { favoritesAtom, showFavoritesAtom } from './state'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 960px;
+  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   background: ${({ theme }) => theme.bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -18,10 +18,6 @@ const GridContainer = styled.div`
   border-radius: 8px;
   justify-content: center;
   align-items: center;
-
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding: 12px 16px;
-  }
 `
 const NoTokenDisplay = styled.div`
   display: flex;
