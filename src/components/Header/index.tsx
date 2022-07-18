@@ -100,7 +100,7 @@ const HeaderLinks = styled(Row)`
   overflow: auto;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-self: start;  
+    justify-self: start;
     `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
@@ -298,6 +298,7 @@ export default function Header() {
           <Trans>Swap</Trans>
         </StyledNavLink>
         <StyledNavLink
+          data-cy="pool-nav-link"
           id={`pool-nav-link`}
           to={'/pool'}
           isActive={(match, { pathname }) =>
