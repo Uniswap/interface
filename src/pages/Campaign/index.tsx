@@ -457,11 +457,11 @@ export default function Campaign() {
                 <Trans>Leaderboard</Trans>
               </CampaignDetailTab>
               {/* TODO nguyenhuudungz: Check có leaderboard mới show. */}
-              {selectedCampaign && selectedCampaign.campaignState !== CampaignState.CampaignStateReady && (
-                <CampaignDetailTab active={activeTab === 'lucky_winners'} onClick={() => setActiveTab('lucky_winners')}>
-                  <Trans>Lucky Winners</Trans>
-                </CampaignDetailTab>
-              )}
+              {/*{selectedCampaign && selectedCampaign.campaignState !== CampaignState.CampaignStateReady && (*/}
+              {/*  <CampaignDetailTab active={activeTab === 'lucky_winners'} onClick={() => setActiveTab('lucky_winners')}>*/}
+              {/*    <Trans>Lucky Winners</Trans>*/}
+              {/*  </CampaignDetailTab>*/}
+              {/*)}*/}
             </CampaignDetailTabRow>
 
             <CampaignDetailContent>
