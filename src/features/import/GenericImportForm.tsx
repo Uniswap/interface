@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
+import { Keyboard, LayoutRectangle } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -34,6 +34,7 @@ export function GenericImportForm({
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [focused, setFocused] = useState(false)
+  const [layout, setLayout] = useState<LayoutRectangle | null>()
 
   const handleSubmit = () => {
     onSubmit && onSubmit()
@@ -70,15 +71,15 @@ export function GenericImportForm({
               justifyContent="center"
               multiline={true}
               numberOfLines={5}
-              px={value ? 'none' : 'md'}
-              py={'none'}
+              px="none"
+              py="none"
               returnKeyType="done"
-              selectionColor="white"
+              selectionColor={theme.colors.textPrimary}
               spellCheck={false}
               testID="import_account_form/input"
               textAlign={value ? 'center' : 'left'}
               value={value}
-              width={value ? 'auto' : '100%'}
+              width={value ? 'auto' : layout?.width}
               onBlur={() => setFocused(false)}
               onChangeText={onChange}
               onFocus={() => setFocused(true)}
@@ -91,7 +92,13 @@ export function GenericImportForm({
             )}
           </Flex>
           {!value && (
-            <Flex centered row gap="xs" position="absolute" top={54}>
+            <Flex
+              centered
+              row
+              gap="xs"
+              position="absolute"
+              top={54}
+              onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
               <Text color="textSecondary" variant="body">
                 {t('Type or')}
               </Text>
