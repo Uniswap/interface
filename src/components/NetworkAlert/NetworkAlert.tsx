@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_INFO, TEXT_COLORS } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ArrowUpRight } from 'react-feather'
 import { useDarkModeManager } from 'state/user/hooks'
@@ -136,6 +136,17 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
   height: 24px;
 `
 
+const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
+  [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
+  [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
+  [SupportedChainId.CELO]: 'rgba(53, 178, 97)',
+  [SupportedChainId.CELO_ALFAJORES]: 'rgba(53, 178, 97)',
+  [SupportedChainId.OPTIMISM]: '#ff3856',
+  [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',
+  [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
+  [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
+}
+
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {
   return Boolean(chainId && SHOULD_SHOW_ALERT[chainId as unknown as NetworkAlertChains])
 }
@@ -148,7 +159,7 @@ export function NetworkAlert() {
     return null
   }
 
-  const { label, logoUrl, bridge } = CHAIN_INFO[chainId]
+  const { label, logoUrl, bridge } = getChainInfo(chainId)
   const textColor = TEXT_COLORS[chainId]
 
   return bridge ? (

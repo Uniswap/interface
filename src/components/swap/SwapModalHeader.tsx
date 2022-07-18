@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { useUSDCValue } from '../../hooks/useStablecoinPrice'
+import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import { ThemedText } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
@@ -55,8 +55,8 @@ export default function SwapModalHeader({
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const fiatValueInput = useUSDCValue(trade.inputAmount)
-  const fiatValueOutput = useUSDCValue(trade.outputAmount)
+  const fiatValueInput = useStablecoinValue(trade.inputAmount)
+  const fiatValueOutput = useStablecoinValue(trade.outputAmount)
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
