@@ -28,12 +28,12 @@ import {
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { BAD_RECIPIENT_ADDRESSES, KNC, USDC } from '../../constants'
+import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from '../../constants'
 import { nativeOnChain } from 'constants/tokens'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 export function useSwapState(): AppState['swap'] {
-  return useSelector<AppState, AppState['swap']>(state => state.swap)
+  return useSelector<AppState, AppState['swap']>((state) => state.swap)
 }
 
 export function useSwapActionHandlers(): {
@@ -139,8 +139,8 @@ export function tryParseAmount<T extends Currency>(
  */
 function involvesAddress(trade: Trade<Currency, Currency, TradeType>, checksummedAddress: string): boolean {
   return (
-    trade.route.path.some(token => token.address === checksummedAddress) ||
-    trade.route.pairs.some(pair => pair.liquidityToken.address === checksummedAddress)
+    trade.route.path.some((token) => token.address === checksummedAddress) ||
+    trade.route.pairs.some((pair) => pair.liquidityToken.address === checksummedAddress)
   )
 }
 
@@ -304,25 +304,30 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
   }
 }
 
-function getAddressCurency(curency: Currency | undefined) {
-  if (!curency) return ''
-  return curency.isNative ? curency.symbol : curency.address
+const getCurrencySymbolOrAddress = (currency: Currency | undefined): string | undefined => {
+  if (!currency) return ''
+  return currency.isNative ? currency.symbol : currency.address
 }
 
 // updates the swap state to use the defaults for a given network
-export function useDefaultsFromURLSearch():
+export const useDefaultsFromURLSearch = ():
   | {
-      inputCurrencyId: string | undefined
-      outputCurrencyId: string | undefined
+      inputCurrencyId?: string
+      outputCurrencyId?: string
     }
-  | undefined {
+  | undefined => {
+  // TODO: this hook is called more than 100 times just on startup, need to check
+
   const { chainId } = useActiveWeb3React()
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch()
+
+  // this is already memo-ed
   const parsedQs = useParsedQueryString()
+
   const [result, setResult] = useState<
     | {
-        inputCurrencyId: string | undefined
-        outputCurrencyId: string | undefined
+        inputCurrencyId?: string
+        outputCurrencyId?: string
       }
     | undefined
   >()
@@ -330,29 +335,27 @@ export function useDefaultsFromURLSearch():
   const { currencies } = useDerivedSwapInfo()
 
   useEffect(() => {
-    if (!chainId) return
+    if (!chainId) {
+      return
+    }
+
     const parsed = queryParametersToSwapState(parsedQs, chainId)
-    const outputCurrencyAddress = [
-      ChainId.MAINNET,
-      ChainId.ROPSTEN,
-      ChainId.BSCMAINNET,
-      ChainId.MATIC,
-      ChainId.AVAXMAINNET,
-      ChainId.BTTC,
-    ].includes(chainId)
-      ? KNC[chainId].address
-      : USDC[chainId].address
 
-    const oldInputValue = getAddressCurency(currencies[Field.INPUT])
-    const oldOutputValue = getAddressCurency(currencies[Field.OUTPUT])
+    const outputCurrencyAddress = DEFAULT_OUTPUT_TOKEN_BY_CHAIN[chainId]?.address || ''
 
-    const newInputValue = parsed[Field.INPUT].currencyId
-    const newOutputValue = parsed[Field.OUTPUT].currencyId || outputCurrencyAddress
+    // symbol or address of the input
+    const storedInputValue = getCurrencySymbolOrAddress(currencies[Field.INPUT])
+    const storedOutputValue = getCurrencySymbolOrAddress(currencies[Field.OUTPUT])
 
-    // priority order: address on url (inputCurrency, outputCurrency) => previous curency (to not reset default pair when back to swap page) => default pair
+    const parsedInputValue = parsed[Field.INPUT].currencyId // default inputCurrency is the native token
+    const parsedOutputValue = parsed[Field.OUTPUT].currencyId || outputCurrencyAddress
 
-    const inputCurrencyId = parsedQs.inputCurrency ? newInputValue : oldInputValue || newInputValue
-    const outputCurrencyId = parsedQs.outputCurrency ? newOutputValue : oldOutputValue || newOutputValue
+    // priority order
+    // 1. address on url (inputCurrency, outputCurrency)
+    // 2. previous currency (to not reset default pair when back to swap page)
+    // 3. default pair
+    const inputCurrencyId = parsedQs.inputCurrency ? parsedInputValue : storedInputValue || parsedInputValue
+    const outputCurrencyId = parsedQs.outputCurrency ? parsedOutputValue : storedOutputValue || parsedOutputValue
 
     dispatch(
       replaceSwapState({
