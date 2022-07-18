@@ -933,7 +933,7 @@ export const ONLY_STATIC_FEE_CHAINS = [
 ] //todo namgold: generate this
 
 // hardcode for unavailable subgraph
-export const ONLY_DYNAMIC_FEE_CHAINS = []
+export const ONLY_DYNAMIC_FEE_CHAINS: ChainId[] = []
 
 export const TRENDING_SOON_ITEM_PER_PAGE = 10
 export const TRENDING_SOON_MAX_ITEMS = 50
