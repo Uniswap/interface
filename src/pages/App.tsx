@@ -4,7 +4,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
-import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -66,7 +66,7 @@ const Marginer = styled.div`
 
 export default function App() {
   const history = useHistory()
-  useAnalyticsReporter(useLocation())
+  useAnalyticsReporter()
   initializeAnalytics()
 
   useEffect(() => {
