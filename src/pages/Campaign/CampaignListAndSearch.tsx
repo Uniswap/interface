@@ -13,7 +13,6 @@ import { SelectedHighlight } from 'pages/TrueSight/components/TrendingSoonLayout
 import { NETWORKS_INFO } from 'constants/networks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CAMPAIGN_NATIVE_TOKEN_SYMBOL } from 'constants/index'
 import BigNumberJS from 'bignumber.js'
 import { formatNumberWithPrecisionRange } from 'utils'
 
@@ -88,9 +87,7 @@ export default function CampaignListAndSearch({
                 {totalRewardAmount.gt(0) && (
                   <Text fontSize="14px">
                     {formatNumberWithPrecisionRange(totalRewardAmount.toNumber(), 0, 2)}{' '}
-                    {campaign.rewardDistribution[0].tokenSymbol === CAMPAIGN_NATIVE_TOKEN_SYMBOL
-                      ? NETWORKS_INFO[(campaign.rewardChainIds as unknown) as ChainId].nativeToken.symbol
-                      : campaign.rewardDistribution[0].tokenSymbol}
+                    {campaign.rewardDistribution[0].tokenSymbol}
                   </Text>
                 )}
               </Flex>

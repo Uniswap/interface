@@ -992,5 +992,3 @@ export const DEFAULT_OUTPUT_TOKEN_BY_CHAIN: Partial<Record<ChainId, Token>> = {
 }
 
 export const REWARD_SERVICE_BASE_URL = `${process.env.REACT_APP_REWARD_SERVICE_BASE_URL}/api/v1`
-
-export const CAMPAIGN_NATIVE_TOKEN_SYMBOL = 'Native Token'

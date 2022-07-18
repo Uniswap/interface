@@ -132,6 +132,7 @@ export default function CampaignButtonWithOptions({
                     mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_ENTER_NOW_CLICKED, { campaign_name: campaign?.name })
                     window.open(campaign?.enterNowUrl + '?networkId=' + chainId)
                   } else {
+                    mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_CLAIM_REWARDS_CLICKED, { campaign_name: campaign?.name })
                     await changeNetwork(chainId, claimRewards)
                   }
                 }}
