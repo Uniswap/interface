@@ -123,14 +123,7 @@ export default function LeaderboardLayout({
 
   const luckyWinnersTableBody = selectedCampaignLuckyWinners.map((luckyWinner, index) => {
     return (
-      <LeaderboardTableBody key={index} noColumns={3} showMedal={false} style={{ background: 'transparent' }}>
-        <LeaderboardTableBodyItem
-          align="center"
-          style={{ width: (rankWidth === Infinity ? 33 : rankWidth) + 'px', maxHeight: '24px' }}
-          isThisRankingEligible={true}
-        >
-          {index + 1}
-        </LeaderboardTableBodyItem>
+      <LeaderboardTableBody key={index} noColumns={2} showMedal={false} style={{ background: 'transparent' }}>
         <LeaderboardTableBodyItem isThisRankingEligible={true}>
           {getShortenAddress(luckyWinner.userAddress, above1200)}
         </LeaderboardTableBodyItem>
@@ -180,8 +173,8 @@ export default function LeaderboardLayout({
         />
       </RefreshTextAndSearchContainer>
       <LeaderboardTable>
-        <LeaderboardTableHeader noColumns={type === 'leaderboard' && isRewardShown ? 4 : 3}>
-          <LeaderboardTableHeaderItem>{rank}</LeaderboardTableHeaderItem>
+        <LeaderboardTableHeader noColumns={type === 'lucky_winner' ? 2 : isRewardShown ? 4 : 3}>
+          {type === 'leaderboard' && <LeaderboardTableHeaderItem>{rank}</LeaderboardTableHeaderItem>}
           <LeaderboardTableHeaderItem>
             <Trans>Wallet</Trans>
           </LeaderboardTableHeaderItem>
@@ -252,7 +245,7 @@ const CountdownContainer = styled.div`
 
 const LeaderboardTable = styled.div``
 
-const LeaderboardTableHeader = styled.div<{ noColumns: 3 | 4 }>`
+const LeaderboardTableHeader = styled.div<{ noColumns: 2 | 3 | 4 }>`
   padding: 19px 20px;
   display: grid;
   align-items: center;
@@ -265,8 +258,12 @@ const LeaderboardTableHeader = styled.div<{ noColumns: 3 | 4 }>`
       ? css`
           grid-template-columns: 7.5fr 52.6fr 19.9fr 19.9fr;
         `
-      : css`
+      : noColumns === 3
+      ? css`
           grid-template-columns: 7.5fr 52.6fr 39.8fr;
+        `
+      : css`
+          grid-template-columns: 1fr 1fr;
         `}
 
   ${({ theme, noColumns }) => theme.mediaWidth.upToMedium`
@@ -275,8 +272,12 @@ const LeaderboardTableHeader = styled.div<{ noColumns: 3 | 4 }>`
         ? css`
             grid-template-columns: 1fr 2fr 2fr 2fr;
           `
-        : css`
+        : noColumns === 3
+        ? css`
             grid-template-columns: 1fr 2fr 1fr;
+          `
+        : css`
+            grid-template-columns: 1fr 1fr;
           `
     }
     }`}
