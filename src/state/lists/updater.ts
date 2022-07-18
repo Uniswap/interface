@@ -7,6 +7,7 @@ import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { useAllLists } from 'state/lists/hooks'
 
+import { isCelo } from '../../constants/tokens'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { acceptListUpdate, enableList } from './actions'
@@ -36,7 +37,7 @@ export default function Updater(): null {
     if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
       dispatch(enableList(ARBITRUM_LIST))
     }
-    if (chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)) {
+    if (chainId && isCelo(chainId)) {
       dispatch(enableList(CELO_LIST))
     }
   }, [chainId, dispatch])

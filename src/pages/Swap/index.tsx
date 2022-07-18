@@ -42,7 +42,7 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useUSDCValue } from '../../hooks/useStablecoinPrice'
+import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
 import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -153,8 +153,8 @@ export default function Swap({ history }: RouteComponentProps) {
   // show price estimates based on wrap trade
   const inputValue = showWrap ? parsedAmount : trade?.inputAmount
   const outputValue = showWrap ? parsedAmount : trade?.outputAmount
-  const fiatValueInput = useUSDCValue(inputValue)
-  const fiatValueOutput = useUSDCValue(outputValue)
+  const fiatValueInput = useStablecoinValue(inputValue)
+  const fiatValueOutput = useStablecoinValue(outputValue)
   const priceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]

@@ -62,7 +62,7 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   return lastPrice.current
 }
 
-export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
+export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
   const price = useStablecoinPrice(currencyAmount?.currency)
 
   return useMemo(() => {
