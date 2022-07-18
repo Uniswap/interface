@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo, getChainInfoOrDefault } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
@@ -49,7 +49,7 @@ export default function BalanceSummary({ address }: { address: string }) {
 
   const { connector, chainId: connectedChainId } = useWeb3React()
 
-  const { label: connectedLabel, logoUrl: connectedLogoUrl } = CHAIN_INFO[connectedChainId || 1]
+  const { label: connectedLabel, logoUrl: connectedLogoUrl } = getChainInfoOrDefault(connectedChainId)
   const connectedFiatValue = 1
   const multipleBalances = true // for testing purposes
   const totalBalance = 4.3
@@ -86,15 +86,16 @@ export default function BalanceSummary({ address }: { address: string }) {
               const amount = data[chainId]
               const fiatValue = amount // for testing purposes
               if (!fiatValue || !isChainAllowed(connector, chainId)) return null
-              const { label, logoUrl } = CHAIN_INFO[chainId]
+              const chainInfo = getChainInfo(chainId)
+              if (!chainInfo) return null
               return (
                 <NetworkBalance
                   key={chainId}
-                  logoUrl={logoUrl}
+                  logoUrl={chainInfo.logoUrl}
                   balance={'1'}
                   tokenSymbol={tokenSymbol ?? 'XXX'}
                   fiatValue={fiatValue.toSignificant(2)}
-                  label={label}
+                  label={chainInfo.label}
                   networkColor={theme.primary1}
                 />
               )
