@@ -14,6 +14,7 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { Box, Flex } from 'src/components/layout'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
+import { WarningAction } from 'src/components/warnings/types'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -52,6 +53,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
     formattedAmounts,
     recipient,
     isUSDInput = false,
+    warnings,
   } = derivedTransferInfo
 
   // TODO: consider simplifying this logic
@@ -61,11 +63,17 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
   const currencyIn = !isNFT ? (currencies[CurrencyField.INPUT] as Currency) : undefined
   const nftIn = isNFT ? (currencies[CurrencyField.INPUT] as NFTAsset.Asset) : undefined
 
+  // TODO: how should we surface this warning?
+  const actionButtonDisabled = warnings.some(
+    (warning) => warning.action === WarningAction.DisableReview
+  )
+
+  // if action button is disabled, make amount undefined so that gas estimate doesn't run
   useUpdateTransferGasEstimate(
     dispatch,
     isNFT ? nftIn?.chainId : currencyIn?.chainId,
     isNFT ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
-    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    !actionButtonDisabled ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString() : undefined,
     recipient,
     nftIn?.token_id,
     currencyTypes[CurrencyField.INPUT]
@@ -171,7 +179,11 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
             <Arrow color={theme.colors.textSecondary} direction="w" size={20} />
           </Button>
           <Flex grow>
-            <Button disabled={false} name={ElementName.Send} onPress={onSubmit}>
+            <Button
+              disabled={actionButtonDisabled}
+              name={ElementName.Send}
+              opacity={actionButtonDisabled ? 0.5 : 1}
+              onPress={onSubmit}>
               <Box
                 alignItems="center"
                 backgroundColor="accentAction"

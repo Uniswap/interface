@@ -3,19 +3,18 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { Button } from 'src/components/buttons/Button'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { Box, Flex } from 'src/components/layout'
 import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
-import { Text } from 'src/components/Text'
+import { WarningAction } from 'src/components/warnings/types'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
-import { SwapWarningAction } from 'src/features/transactions/swap/validate'
 import {
   CurrencyField,
   TransactionState,
@@ -68,10 +67,10 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
   )
 
   const actionButtonDisabled = warnings.some(
-    (warning) => warning.action === SwapWarningAction.DisableSwapReview
+    (warning) => warning.action === WarningAction.DisableReview
   )
 
-  // if action button is diabled, make amount undefined so that gas estimate doesn't run
+  // if action button is disabled, make amount undefined so that gas estimate doesn't run
   useUpdateTransferGasEstimate(
     dispatch,
     isNFT ? nftIn?.chainId : currencyIn?.chainId,
@@ -139,18 +138,16 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
         />
       )}
 
-      <Button disabled={false} name={ElementName.Submit} py="md" onPress={onNext}>
-        <Box
-          alignItems="center"
-          backgroundColor="accentAction"
-          borderRadius="lg"
-          overflow="hidden"
-          py="md">
-          <Text color="white" variant="largeLabel">
-            {t('Review transfer')}
-          </Text>
-        </Box>
-      </Button>
+      <PrimaryButton
+        disabled={actionButtonDisabled}
+        label={t('Review transfer')}
+        name={ElementName.ReviewTransfer}
+        py="md"
+        testID={ElementName.ReviewTransfer}
+        textVariant="largeLabel"
+        variant="blue"
+        onPress={onNext}
+      />
     </Flex>
   )
 }
